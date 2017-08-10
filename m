@@ -1,43 +1,445 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v1 0/3] ipmi: bt-i2c: added IPMI Block Transfer over I2C
-Date: Wed, 9 Aug 2017 18:14:43 -0700
-Message-ID: <CAFd5g47LA0jyhvnRb4i6GXsQOdPbJJrn+uCsQgnMRQgah6gKfA@mail.gmail.com>
-References: <20170804231854.19730-1-brendanhiggins@google.com> <57021502276176@webcorp01h.yandex-team.ru>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: add rk3328-rock64 board
+Date: Thu, 10 Aug 2017 09:24:18 +0800
+Message-ID: <8e116c15-905b-3392-5b1f-c6e31c342d94@rock-chips.com>
+References: <20170809220408.4301-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57021502276176-OEmCjAEqX0ITMcy66jKROkXOewmhPV1Zh13vi7wywA4@public.gmane.org>
+In-Reply-To: <20170809220408.4301-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Anton D. Kachalov" <mouse-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org>
-Cc: "corbet-T1hC0tSOHrs@public.gmane.org" <corbet-T1hC0tSOHrs@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "minyard-HInyCGIudOg@public.gmane.org" <minyard-HInyCGIudOg@public.gmane.org>, "joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org" <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 9, 2017 at 3:56 AM, Anton D. Kachalov <mouse-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org> wrote:
-> Hello,
->
-> I would like to mention one of the our related work for IPMI and I2C.
->
-> We use OpenIPMI stack to connect to the computing nodes through the I2C
-> using IPMB (BT is not supported by nodes):
->
-> https://github.com/ya-mouse/meta-openbmc-yandex/blob/master/meta-yandex/meta-openrack/meta-shaosi/recipes-kernel/linux/linux-obmc/ipmi_i2c.c
->
-> It lacks complete slave support (slave part is only for receiving known
-> packets with query results due to OpenIPMI implementation in kernel) and use
-> one local slave to communicate with a number of target systems on the same
-> bus (currently supported only 1-to-1 schema).
->
-> With this stuff we able to use ipmitool across different /dev/ipmiX devices
-> to communicate with nodes.
+Hi Heiko,
 
-Cool, I met someone else who had a similar use case which is part of why
-I decided to share this (not sure if should say who).
+On 2017/8/10 6:04, Heiko Stuebner wrote:
+> The ROCK64 is a credit card size 4K60P HDR Media Board Computer using the
+> Rockchip RK3328 Quad-Core ARM Cortex A53 64-Bit Processor and supporting
+> up to 4GB 1600MHz LPDDR3 memory. It provides eMMC module socket, MicroSD
+> Card slot, Pi-2 Bus, Pi-P5+ Bus, USB 3.0 and many others peripheral
+> devices interface for makers to integrate with sensors and devices.
+> 
+> The devicetree currently supports basic peripherals, with more to be
+> added later on.
+> 
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+> Depends on rk805 pmic support landing, which hopefully will happen
+> in the next days.
+> 
+>   Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>   arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+>   arch/arm64/boot/dts/rockchip/rk3328-rock64.dts     | 362 +++++++++++++++++++++
+>   3 files changed, 367 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index 88d95323d301..b54e9bfd9562 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -134,6 +134,10 @@ Rockchip platforms device tree bindings
+>       Required root node properties:
+>        - compatible = "phytec,rk3288-pcm-947", "phytec,rk3288-phycore-som", "rockchip,rk3288";
+>   
+> +- Pine64 Rock64 board:
+> +    Required root node properties:
+> +    - compatible = "pine64,rock64", "rockchip,rk3328";
+> +
+>   - Rockchip PX3 Evaluation board:
+>       Required root node properties:
+>         - compatible = "rockchip,px3-evb", "rockchip,px3", "rockchip,rk3188";
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index d0ad366bbd12..106fb8e0f2f8 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -1,4 +1,5 @@
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+> new file mode 100644
+> index 000000000000..a77a94200f96
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+> @@ -0,0 +1,362 @@
+> +/*
+> + * Copyright (c) 2017 PINE64
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3328.dtsi"
+> +
+> +/ {
+> +	model = "Pine64 Rock64";
+> +	compatible = "pine64,rock64", "rockchip,rk3328";
+> +
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+> +	};
+> +
+> +	gmac_clkin: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "gmac_clkin";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wifi_enable_h>;
+> +
+> +		/*
+> +		 * On the module itself this is one of these (depending
+> +		 * on the actual card populated):
+> +		 * - SDIO_RESET_L_WL_REG_ON
+> +		 * - PDN (power down when low)
+> +		 */
+> +		reset-gpios = <&gpio1 18 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	vcc_sd: sdmmc-regulator {
+> +		compatible = "regulator-fixed";
+> +		gpio = <&gpio0 30 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sdmmc0m1_gpio>;
+> +		regulator-name = "vcc_sd";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc_io>;
+> +	};
+> +
+> +	vcc_host_5v: vcc-host-5v-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb30_host_drv>;
+> +		regulator-name = "vcc_host_5v";
+> +		regulator-always-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio0 RK_PD3 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb20_host_drv>;
+> +		regulator-name = "vcc_host1_5v";
+> +		regulator-always-on;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	vcc_sys: vcc-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply = <&vdd_arm>;
+> +};
+> +
+> +&emmc {
+> +	bus-width = <8>;
+> +	cap-mmc-highspeed;
+> +	supports-emmc;
+> +	disable-wp;
+> +	non-removable;
+> +	num-slots = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+> +	status = "okay";
+> +};
+> +
 
-So it sounds like we are probably not going to go with the approach I proposed;
-if you indeed find this useful, I would suggest that we put this in our OpenBMC
-repository and switch it out with the suggested method at some point.
+supports-{emmc, sd, sdio} aren't vaild properties.
+If you do want to speedup the init process and you
+could add no-sd and no-sdio for emmc.
 
-Let me know what you think
+num-slots is deprecated and would be cleaned from all dts for 4.14
+cycle. And disable-wp is only used for SD card now.
+
+The same comment for the following sd and sdio nodes.
+
+> +&gmac2io {
+> +	phy-supply = <&vcc_io>;
+> +	phy-mode = "rgmii";
+> +	clock_in_out = "input";
+> +	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+> +	snps,reset-active-low;
+> +	snps,reset-delays-us = <0 10000 50000>;
+> +	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
+> +	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rgmiim1_pins>;
+> +	tx_delay = <0x26>;
+> +	rx_delay = <0x11>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +
+> +	rk805: rk805@18 {
+> +		compatible = "rockchip,rk805";
+> +		reg = <0x18>;
+> +		interrupt-parent = <&gpio2>;
+> +		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
+> +		#clock-cells = <1>;
+> +		clock-output-names = "xin32k", "rk805-clkout2";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_int_l>;
+> +		rockchip,system-power-controller;
+> +		wakeup-source;
+> +
+> +		vcc1-supply = <&vcc_sys>;
+> +		vcc2-supply = <&vcc_sys>;
+> +		vcc3-supply = <&vcc_sys>;
+> +		vcc4-supply = <&vcc_sys>;
+> +		vcc5-supply = <&vcc_io>;
+> +		vcc6-supply = <&vcc_sys>;
+> +
+> +		regulators {
+> +			vdd_logic: DCDC_REG1 {
+> +				regulator-name = "vdd_logic";
+> +				regulator-min-microvolt = <712500>;
+> +				regulator-max-microvolt = <1450000>;
+> +				regulator-initial-mode = <0x1>;
+> +				regulator-ramp-delay = <12500>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-mode = <0x2>;
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			vdd_arm: DCDC_REG2 {
+> +				regulator-name = "vdd_arm";
+> +				regulator-min-microvolt = <712500>;
+> +				regulator-max-microvolt = <1450000>;
+> +				regulator-initial-mode = <0x1>;
+> +				regulator-ramp-delay = <12500>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-mode = <0x2>;
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <950000>;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-name = "vcc_ddr";
+> +				regulator-initial-mode = <0x1>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-mode = <0x2>;
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_io: DCDC_REG4 {
+> +				regulator-name = "vcc_io";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-initial-mode = <0x1>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-mode = <0x2>;
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc_18: LDO_REG1 {
+> +				regulator-name = "vdd_18";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc18_emmc: LDO_REG2 {
+> +				regulator-name = "vcc_18emmc";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vdd_10: LDO_REG3 {
+> +				regulator-name = "vdd_10";
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&io_domains {
+> +	status = "okay";
+> +
+> +	vccio1-supply = <&vcc_io>;
+> +	vccio2-supply = <&vcc18_emmc>;
+> +	vccio3-supply = <&vcc_io>;
+> +	vccio4-supply = <&vcc_18>;
+> +	vccio5-supply = <&vcc_io>;
+> +	vccio6-supply = <&vcc_io>;
+> +	pmuio-supply = <&vcc_io>;
+> +};
+> +
+> +&pinctrl {
+> +	pmic {
+> +		pmic_int_l: pmic-int-l {
+> +			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
+> +		};
+> +	};
+> +
+> +	sdio-pwrseq {
+> +		wifi_enable_h: wifi-enable-h {
+> +			rockchip,pins = <1 18 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	usb2 {
+> +		usb20_host_drv: usb20-host-drv {
+> +			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	usb3 {
+> +		usb30_host_drv: usb30-host-drv {
+> +			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +};
+> +
+> +&sdio {
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+> +	disable-wp > +	keep-power-in-suspend;
+> +	max-frequency = <150000000>;
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +	non-removable;
+> +	num-slots = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_cmd &sdmmc1_clk>;
+> +	supports-sdio;
+> +	status = "disabled";
+> +};
+> +
+> +&sdmmc {
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
+> +	disable-wp;
+> +	max-frequency = <150000000>;
+> +	num-slots = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
+> +	supports-sd;
+> +	vmmc-supply = <&vcc_sd>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&u2phy {
+> +	status = "okay";
+> +
+> +	u2phy_host: host-port {
+> +		status = "okay";
+> +	};
+> +
+> +	u2phy_otg: otg-port {
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&usb20_otg {
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ohci {
+> +	status = "okay";
+> +};
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
