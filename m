@@ -1,27 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 6/6] dt-bindings: Document the Rockchip RGA bindings
-Date: Thu, 10 Aug 2017 10:43:40 -0500
-Message-ID: <20170810154340.3ojgemwf64pyggek@rob-hp-laptop>
-References: <1501643987-27847-1-git-send-email-jacob-chen@iotwrt.com>
- <1501643987-27847-7-git-send-email-jacob-chen@iotwrt.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: aspeed: External reset signal
+ properties
+Date: Thu, 10 Aug 2017 10:45:22 -0500
+Message-ID: <20170810154522.7br6ta3f6plf7ytm@rob-hp-laptop>
+References: <20170802044529.30032-1-andrew@aj.id.au>
+ <20170802044529.30032-2-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1501643987-27847-7-git-send-email-jacob-chen@iotwrt.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacob-chen@iotwrt.com>
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, tfiga@chromium.org, nicolas@ndufresne.ca, Yakir Yang <ykk@rock-chips.com>
+In-Reply-To: <20170802044529.30032-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 02, 2017 at 11:19:47AM +0800, Jacob Chen wrote:
-> Add DT bindings documentation for Rockchip RGA
+On Wed, Aug 02, 2017 at 02:15:28PM +0930, Andrew Jeffery wrote:
+> For the AST2500 and compatible watchdog controllers the external reset
+> signal can be configured for push-pull or open-drain drive types, and in
+> the case of push-pull driving, active low or high.
 > 
-> Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/rockchip-rga.txt     | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
+>  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
