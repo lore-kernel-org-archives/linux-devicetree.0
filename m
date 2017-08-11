@@ -1,99 +1,63 @@
-From: Liam Breck <liam@networkimprov.net>
-Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190 battery charger
-Date: Fri, 11 Aug 2017 14:57:10 -0700
-Message-ID: <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
-References: <20170807195420.20767-1-liam@networkimprov.net>
- <20170807195420.20767-3-liam@networkimprov.net> <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 1/4] i2c: davinci: Preserve return value of devm_clk_get
+Date: Fri, 11 Aug 2017 17:00:35 -0500
+Message-ID: <3598274c-4567-eacb-adaa-24c4fd1c1ace@ti.com>
+References: <20170802221753.13786-1-fcooper@ti.com>
+ <20170802221753.13786-2-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170802221753.13786-2-fcooper@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, wsa@the-dreams.de, robh+dt@kernel.org, linux@armlinux.org.uk, nsekhar@ti.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Thu, Aug 10, 2017 at 7:50 PM, Rob Herring <robh@kernel.org> wrote:
-> On Mon, Aug 07, 2017 at 12:54:17PM -0700, Liam Breck wrote:
->> From: Liam Breck <kernel@networkimprov.net>
->>
->> Document monitored-battery and ti,system-minimum-microvolt properties.
->>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Liam Breck <kernel@networkimprov.net>
->> ---
->>  .../devicetree/bindings/power/supply/bq24190.txt   | 49 ++++++++++++++++++++++
->>  1 file changed, 49 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq24190.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
->> new file mode 100644
->> index 00000000..82a1c842
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
->> @@ -0,0 +1,49 @@
->> +TI BQ24190 Li-Ion Battery Charger
->> +
->> +Required properties:
->> +- compatible: contains one of the following:
->> +    * "ti,bq24190"
->> +    * "ti,bq24192i"
->> +- reg: integer, I2C address of the charger.
->> +- interrupts[-extended]: configuration for charger INT pin.
->> +
->> +Optional properties:
->> +- monitored-battery: phandle of battery characteristics devicetree node
->> +    The charger uses the following battery properties:
->> +    + precharge-current-microamp: maximum charge current during precharge
->> +      phase (typically 20% of battery capacity).
->> +    + charge-term-current-microamp: a charge cycle terminates when the
->> +      battery voltage is above recharge threshold, and the current is below
->> +      this setting (typically 10% of battery capacity).
->> +    See Documentation/devicetree/bindings/power/supply/battery.txt
->> +- ti,system-minimum-microvolt: when power is connected and the battery is below
->> +    minimum system voltage, the system will be regulated above this setting.
->> +
->> +Other features:
->> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current on USB SDP port.
->
-> Why doesn't the charger driver control this?
 
-This pin/gpio has to be high when USB is plugged in to make the
-charger chip negotiate 500mA from a SDP port. It should generally be
-configured that way even if the driver is not loaded, as the chip does
-not require a driver to function. Some boards may do that with a
-pull-up. Also the user may want to change this via sysfs and not have
-the driver "fix" it.
+On 08/02/2017 05:17 PM, Franklin S Cooper Jr wrote:
+> The i2c driver can run into driver dependency issues if its loaded
+> before a clock driver it depends on. Therefore, EPROBE_DEFER may be
+> returned by devm_clk_get and should be returned in probe to allow the
+> kernel to reprobe the driver at a later time. This patch allows the error
+> value returned by devm_clk_get to be passed through and not overwritten.
+> 
+> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 
->> +
->> +Example:
->> +
->> +     bat: battery {
->> +             compatible = "simple-battery";
->> +             precharge-current-microamp = <256000>;
->> +             charge-term-current-microamp = <128000>;
->> +             // etc.
->> +     };
->> +
->> +     bq24190: charger@6a {
->> +             compatible = "ti,bq24190";
->> +             reg = <0x6a>;
->> +             interrupts-extended = <&gpiochip 10 IRQ_TYPE_EDGE_FALLING>;
->> +             monitored-battery = <&bat>;
->> +             ti,system-minimum-microvolt = <3200000>;
->> +     };
->> +
->> +     &twl_gpio {
->> +             otg {
->> +                     gpio-hog;
->> +                     gpios = <6 0>;
->> +                     output-high;
->> +                     line-name = "otg-gpio";
->> +             };
->> +     };
->> --
->> 2.13.2
->>
+I think it's better to drop internal tags.
+
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+> ---
+>   drivers/i2c/busses/i2c-davinci.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
+> index 9e7ef5c..5749aac 100644
+> --- a/drivers/i2c/busses/i2c-davinci.c
+> +++ b/drivers/i2c/busses/i2c-davinci.c
+> @@ -801,7 +801,7 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>   
+>   	dev->clk = devm_clk_get(&pdev->dev, NULL);
+>   	if (IS_ERR(dev->clk))
+> -		return -ENODEV;
+> +		return PTR_ERR(dev->clk);
+>   	clk_prepare_enable(dev->clk);
+>   
+>   	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> 
+
+-- 
+regards,
+-grygorii
