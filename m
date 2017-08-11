@@ -1,36 +1,26 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [RESEND PATCH 1/2] dt-bindings: gpio: aspeed: Remove reference to
- clock name
-Date: Fri, 11 Aug 2017 12:29:41 +0930
-Message-ID: <CACPK8XdyYsuRq60HDxkZ_+fn3cm3FW5qBwdurv_E9z27ea5h=w@mail.gmail.com>
-References: <20170808061634.11857-1-andrew@aj.id.au> <20170808061634.11857-2-andrew@aj.id.au>
- <20170811025657.bw7kngklmnz7vpf3@rob-hp-laptop>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [RESEND PATCH 2/2] gpio: aspeed: Remove reference to clock name
+ in debounce warning message
+Date: Fri, 11 Aug 2017 12:30:34 +0930
+Message-ID: <CACPK8XfGohtL9d-RHryuLOGKGgyVQpmn-P3NejzeVg1TGaxbMQ@mail.gmail.com>
+References: <20170808061634.11857-1-andrew@aj.id.au> <20170808061634.11857-3-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170811025657.bw7kngklmnz7vpf3@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ryan Chen <ryan_chen@aspeedtech.com>, linux-gpio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170808061634.11857-3-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 11, 2017 at 12:26 PM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Aug 08, 2017 at 03:46:33PM +0930, Andrew Jeffery wrote:
->> HPLL was in fact not the clock we need. Remove prescription of which
->> clock to avoid further error. Please refer to your datasheet and double
->> check like I should have.
->>
->> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
->> ---
->>  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Aug 8, 2017 at 3:46 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+> HPLL was in fact not the clock we need. Remove description of which
+> clock to avoid any further error.
 >
-> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 
-Acked-by: Joel Stanley <joel@jms.id.au>
-
-Thanks Andrew!
-
-Cheers,
-
-Joel
+Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
