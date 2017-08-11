@@ -1,20 +1,27 @@
-From: Rob Herring <robh@kernel.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
 Subject: Re: [PATCH 1/3] firmware: of: populate /firmware/ node during init
-Date: Fri, 11 Aug 2017 10:05:43 -0500
-Message-ID: <CABGGisyQKfre_qMqnngOiKbqUaHF0KWKtZyYPJ47iPwgL5t6xw@mail.gmail.com>
+Date: Fri, 11 Aug 2017 16:16:14 +0100
+Message-ID: <7a3b73d0-988c-1d2a-43cc-4d30b4eac0f1@arm.com>
 References: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
- <1502458237-1683-2-git-send-email-sudeep.holla@arm.com> <CAK8P3a1p8xS4u5EQ9auqgcmhXaybhDdsa6ah3G-7TeEf+ko9kA@mail.gmail.com>
+ <1502458237-1683-2-git-send-email-sudeep.holla@arm.com>
+ <CABGGisx7d+SQ7Sbyyu2hoNeuCFHZt1erjMg3zd5mHsqUF-Zk-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1p8xS4u5EQ9auqgcmhXaybhDdsa6ah3G-7TeEf+ko9kA@mail.gmail.com>
+In-Reply-To: <CABGGisx7d+SQ7Sbyyu2hoNeuCFHZt1erjMg3zd5mHsqUF-Zk-Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 11, 2017 at 9:37 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Fri, Aug 11, 2017 at 3:30 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+
+
+On 11/08/17 15:15, Rob Herring wrote:
+> +Bjorn
+> 
+> On Fri, Aug 11, 2017 at 8:30 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
 >> Since "/firmware" does not have its own "compatible" property as it's
 >> just collection of nodes representing firmware interface, it's sub-nodes
 >> are not populated during system initialization.
@@ -25,26 +32,114 @@ On Fri, Aug 11, 2017 at 9:37 AM, Arnd Bergmann <arnd@arndb.de> wrote:
 >> populate the devices selectively.
 >>
 >> This patch adds initcall to achieve the same.
->
-> Hmm, I'm a bit skeptical whether representing anything under /firmware
-> as a platform device is a good idea. Having a more structured way to
-> probe those seems like a good idea, but maybe a different subsystem
-> would be more appropriate.
->
-> I do realize that a 'platform_device' has become a rather generic abstraction
-> for almost anything, but at some point we might want to draw the line
-> of what is a platform_device.
+>>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>> ---
+>>  drivers/firmware/Makefile |  1 +
+>>  drivers/firmware/of.c     | 34 ++++++++++++++++++++++++++++++++++
+>>  2 files changed, 35 insertions(+)
+>>  create mode 100644 drivers/firmware/of.c
+>>
+>> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+>> index 91d3ff62c653..d9a6fce43613 100644
+>> --- a/drivers/firmware/Makefile
+>> +++ b/drivers/firmware/Makefile
+>> @@ -17,6 +17,7 @@ obj-$(CONFIG_ISCSI_IBFT)      += iscsi_ibft.o
+>>  obj-$(CONFIG_FIRMWARE_MEMMAP)  += memmap.o
+>>  obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
+>>  obj-$(CONFIG_FW_CFG_SYSFS)     += qemu_fw_cfg.o
+>> +obj-$(CONFIG_OF)               += of.o
+>>  obj-$(CONFIG_QCOM_SCM)         += qcom_scm.o
+>>  obj-$(CONFIG_QCOM_SCM_64)      += qcom_scm-64.o
+>>  obj-$(CONFIG_QCOM_SCM_32)      += qcom_scm-32.o
+>> diff --git a/drivers/firmware/of.c b/drivers/firmware/of.c
+>> new file mode 100644
+>> index 000000000000..149b9660fb44
+>> --- /dev/null
+>> +++ b/drivers/firmware/of.c
+>> @@ -0,0 +1,34 @@
+>> +/*
+>> + * Populates the nodes under /firmware/ device tree node
+>> + *
+>> + * Copyright (C) 2017 ARM Ltd.
+>> + *
+>> + * This file is subject to the terms and conditions of the GNU General Public
+>> + * License.  See the file "COPYING" in the main directory of this archive
+>> + * for more details.
+>> + *
+>> + * Released under the GPLv2 only.
+> 
+> Why do you have both the above 2 paragraphs and an SPDX tag? I'd drop
+> the above (unless your lawyers told you otherwise).
+> 
 
-I guess the question how are they different? Most of what's under
-drivers/firmware/ are platform drivers. I think they are mostly either
-smc calls or mailbox interfaces. Would there be any advantage to
-creating an smc bus or mailbox bus?
+I thought so initially but then just copied from existing file
+(drivers/base/arch_topology.c in this case)
 
-It's easier to convert from a platform driver to some new bus_type
-than convert from a non-driver if we decide to do that later.
+>> + * SPDX-License-Identifier: GPL-2.0
+>> + */
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_platform.h>
+>> +
+>> +static int __init firmware_of_init(void)
+> 
+> I'd prefer this is added to of_platform_default_populate_init() and
+> handled like /reserved-memory.
+> 
 
-The other approach would be to do a whitelist of compatibles. That's
-what's being done for /reserved-memory (currently there's one
-(ramoops) and a 2nd is being added).
+Yes that was my other option, wanted to check in the cover letter but
+forgot.
 
-Rob
+> But be aware that Bjorn is reworking this function[1].
+> 
+
+OK, thanks for the pointers.
+
+>> +{
+>> +       struct device_node *fw_np;
+>> +       int ret;
+>> +
+>> +       fw_np = of_find_node_by_name(NULL, "firmware");
+> 
+> This matches any node named firmware. I see a few instances like RPi
+> that are not /firmware (though RPi we can move probably).
+> of_find_node_by_path would be safer.
+> 
+
+OK
+
+>> +
+>> +       if (!fw_np)
+>> +               return 0;
+>> +
+>> +       ret = of_platform_populate(fw_np, NULL, NULL, NULL);
+>> +
+>> +       of_node_put(fw_np);
+>> +
+>> +       return ret;
+>> +}
+>> +arch_initcall_sync(firmware_of_init);
+> 
+> You perhaps missed a few instances. "amlogic,meson-gxbb-sm" looks like
+> it could be converted to a driver.
+
+Indeed, was looking for the term "firmware" only :(, will add.
+
+ "tlm,trusted-foundations" appears
+> to be needed early for bringing up cores, so it probably can't change.
+
+That was my intially understand too when I looked at the way probe was
+handled, but then I see it's module_init, so I went ahead with this change.
+
+> They don't have to be converted as part of this series though.
+> 
+
+OK
+
+-- 
+Regards,
+Sudeep
