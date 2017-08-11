@@ -1,127 +1,114 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH  0/3] Add SMP support
-Date: Fri, 11 Aug 2017 09:37:45 +0000
-Message-ID: <KL1PR06MB1702CEF4633BD237ABDB3BDDB8890@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1502189793-59679-1-git-send-email-biju.das@bp.renesas.com>
- <20170809083554.GI2705@verge.net.au>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] drm/bridge/sii8620: add external connector handle
+Date: Fri, 11 Aug 2017 12:40:39 +0300
+Message-ID: <2097016.rlxulirhWA@avalon>
+References: <1502371530-32260-1-git-send-email-m.purski@samsung.com> <6478480.TjcUCueU5y@avalon> <5ce6bd99-c50e-84c2-f21f-eb611cac94c2@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5ce6bd99-c50e-84c2-f21f-eb611cac94c2@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Maciej Purski <m.purski@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, a.hajda@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Marek,
 
+On Friday 11 Aug 2017 08:39:31 Marek Szyprowski wrote:
+> On 2017-08-10 15:39, Laurent Pinchart wrote:
+> > On Thursday 10 Aug 2017 15:25:29 Maciej Purski wrote:
+> >> The driver should be switched on if an external connector is plugged and
+> >> switched off if it is unplugged. Extcon is optional. If it is not found,
+> >> the driver stays in "always-on" mode.
+> >> 
+> >> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+> >> ---
+> >> 
+> >>   .../bindings/display/bridge/sil-sii8620.txt        |  4 ++
+> >>   drivers/gpu/drm/bridge/sil-sii8620.c               | 83 ++++++++++++++-
+> >>   2 files changed, 85 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+> >> b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt index
+> >> 9409d9c..1f230bf 100644
+> >> --- a/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+> >> +++ b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+> >> @@ -10,6 +10,9 @@ Required properties:
+> >>   	- clocks, clock-names: specification and name of "xtal" clock
+> >>   	- video interfaces: Device node can contain video interface port
+> >>   			    node for HDMI encoder according to [1].
+> >> 
+> >> +Optional properties:
+> >> +	- extcon: phandle to external connector for MHL cable changes
+> >> +		  detection
+> > 
+> > The sii8620 DT node should model its connection to the MHL connector using
+> > OF graph, connecting a port to the MHL connector DT node through
+> > endpoints. I believe the extcon property should then be added to the MHL
+> > connector DT node, not the bridge.
+> 
+> I don't get this. Generic extcon bindings doesn't define connector DT
+> node, so I don't see how could we use endpoint DT approach here. Could you
+> give the example?
 
-> -----Original Message-----
-> From: Biju Das
-> Sent: 10 August 2017 12:19
-> To: 'Simon Horman' <horms@verge.net.au>
-> Cc: 'Rob Herring' <robh+dt@kernel.org>; 'Mark Rutland'
-> <mark.rutland@arm.com>; 'Magnus Damm' <magnus.damm@gmail.com>;
-> 'Russell King' <linux@armlinux.org.uk>; Chris Paterson
-> <Chris.Paterson2@renesas.com>; 'devicetree@vger.kernel.org'
-> <devicetree@vger.kernel.org>; 'linux-renesas-soc@vger.kernel.org' <linux-
-> renesas-soc@vger.kernel.org>; 'linux-arm-kernel@lists.infradead.org' <lin=
-ux-
-> arm-kernel@lists.infradead.org>
-> Subject: RE: [PATCH 0/3] Add SMP support
->
->
->
-> > -----Original Message-----
-> > From: Biju Das
-> > Sent: 10 August 2017 10:17
-> > To: 'Simon Horman' <horms@verge.net.au>
-> > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
-> Russell
-> > King <linux@armlinux.org.uk>; Chris Paterson
-> > <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org;
-> > linux-renesas- soc@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org
-> > Subject: RE: [PATCH 0/3] Add SMP support
-> >
-> >
-> > > -----Original Message-----
-> > > From: Simon Horman [mailto:horms@verge.net.au]
-> > > Sent: 09 August 2017 09:36
-> > > To: Biju Das <biju.das@bp.renesas.com>
-> > > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> > > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
-> > Russell
-> > > King <linux@armlinux.org.uk>; Chris Paterson
-> > > <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org;
-> > > linux-renesas- soc@vger.kernel.org;
-> > > linux-arm-kernel@lists.infradead.org
-> > > Subject: Re: [PATCH 0/3] Add SMP support
-> > >
-> > > On Tue, Aug 08, 2017 at 11:56:30AM +0100, Biju Das wrote:
-> > > > This series aims to add SMP support for r8a7743 SoC.
-> > > >
-> > > > This series has been tested against Linux-next tag 20170727 and
-> > > > renesas-dev branch.
-> > >
-> > > It seems that these patches are targeted at the renesas tree.
-> > > The best practice in that case is to base patches on the latest devel=
- branch.
-> > > Please consider doing so in future.
-> > >
-> > > The patches themselves seem good to me, however, I would like to
-> > > enquire about testing. In particular, have you tested CPU hotplug
-> > > and suspend to RAM with these patches (and without in the case of the
-> latter)?
-> >
-> > I have tested CPU hotplug with this patch and it works ok.
-> >
-> > Currently iWave platform doesn't support STR I guess. But we should
-> > check the changes on other M2 platforms to prove that things don't brea=
-k.
+Sure, here you are.
 
-I have tested STR on iWave RZ-G1M platform as well. I  used ttySC0 as wake =
-up
-Source(echo enabled > /sys/class/tty/ttySC0/power/wakeup)
+&hsi2c_7 {
+	...
 
-It works fine with and without the patch .
+        sii8620@39 {
+                reg = <0x39>;
+                compatible = "sil,sii8620";
+                cvcc10-supply = <&ldo36_reg>;
+                iovcc18-supply = <&ldo34_reg>;
+                interrupt-parent = <&gpf0>;
+                interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
+                reset-gpios = <&gpv7 0 GPIO_ACTIVE_LOW>;
+                clocks = <&pmu_system_controller 0>;
+                clock-names = "xtal";
 
-It is tested against renesas-developer branch tag 20170809-v4.13-rc4.
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
 
-> I have tested STR on RZ-G1M SK(r8a7743) platform using gpio-key as wake u=
-p
-> source.
-> It works fine with and without the patch . It is tested against renesas-d=
-eveloper
-> branch.
->
-> Also I have tested STR on R-Car M2 board.it works fine with gpio-key as w=
-ake
-> up source.
->
-> > [>]
-> > > I am cautious about any regressions that may creep in when going
-> > > from UP to SMP.
-> >
-> > > >
-> > > > Biju Das (3):
-> > > >   dt-bindings: apmu: Document r8a7743 support
-> > > >   ARM: dts: r8a7743: Add APMU node and second CPU core
-> > > >   ARM: dts: r8a7743: Add OPP table for frequency scaling
-> > > >
-> > > >  .../devicetree/bindings/power/renesas,apmu.txt     |  3 ++-
-> > > >  arch/arm/boot/dts/r8a7743.dtsi                     | 25
-> > ++++++++++++++++++++++
-> > > >  2 files changed, 27 insertions(+), 1 deletion(-)
-> > > >
-> > > > --
-> > > > 1.9.1
-> > > >
+	                port@0 {
+				reg = <0>;
+        	                mhl_to_hdmi: endpoint {
+                	                remote-endpoint = <&hdmi_to_mhl>;
+	                        };
+        	        };
+	                port@1 {
+				reg = <1>;
+        	                mhl_bridge_out: endpoint {
+                	                remote-endpoint = <&mhl_connector_in>;
+	                        };
+        	        };
+		};
+        };
+};
 
+/ {
+	mhl-connector {
+		compatible = "mhl-connector";
+		extcon = <&muic>;
 
+	        port {
+        	        mhl_connector_in: endpoint {
+                	        remote-endpoint = <&mhl_bridge_out>;
+	                };
+        	};
+	};
+};
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+Note that there's currently no DT binding for MHL connectors. One needs to be 
+developed, the HDMI connector DT binding can be used as a source of 
+inspiration.
+
+> >>   [1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+
+-- 
+Regards,
+
+Laurent Pinchart
