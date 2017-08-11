@@ -1,190 +1,97 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: [RFC/PATCH v4 1/4] Document nexus nodes/specifier remapping
-Date: Fri, 11 Aug 2017 08:42:33 -0700
-Message-ID: <20170811154236.12891-2-stephen.boyd@linaro.org>
-References: <20170811154236.12891-1-stephen.boyd@linaro.org>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v3 2/2] memory: ti-emif-sram: introduce relocatable
+ suspend/resume handlers
+Date: Fri, 11 Aug 2017 10:42:34 -0500
+Message-ID: <42672b14-8242-0a5b-f343-8e0fa38ffaaf@ti.com>
+References: <20170724212454.27574-1-d-gerlach@ti.com>
+ <20170724212454.27574-3-d-gerlach@ti.com>
+ <9b856bf5-f404-5cfc-6f1e-5ae527c6e0b1@oracle.com>
+ <cfb8007b-7f3a-1787-bb9d-9486f547f23f@oracle.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170811154236.12891-1-stephen.boyd@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cfb8007b-7f3a-1787-bb9d-9486f547f23f@oracle.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Keerthy J <j-keerthy@ti.com>, Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIGdlbmVyaWMgbmV4dXMgbm9kZSBwcm9wZXJ0aWVzLiBUaGlzIGNhbiBiZSB1
-c2VkIGJ5CmFueSBzcGVjaWZpZXIgdGhhdCBjb25mb3JtcyB0byAjPHNwZWNpZmllcj4tY2VsbHMg
-d2hlcmUgdGhleQp3YW50IHRvIHN1cHBvcnQgcmVtYXBwaW5nIHBoYW5kbGUgbGlzdHMgdGhyb3Vn
-aCBuZXh1cyBub2Rlcy4gVGhpcwppcyBzaW1pbGFyIHRvIGludGVycnVwdCByZW1hcHBpbmcsIGJ1
-dCBzbGlnaHRseSBkaWZmZXJlbnQgYmVjYXVzZQp3ZSBkb24ndCBjb25zaWRlciB1bml0IGFkZHJl
-c3NlcyB3aGVuIGRvaW5nIG1hcHBpbmdzLiBUaGlzIGlzCm1vc3RseSBhIGNvcHkvcGFzdGUgb2Yg
-dGhlIGludGVycnVwdCBzcGVjaWZpY2F0aW9uLCB3aXRoIHRoZSB1bml0CmFkZHJlc3MgcGFydHMg
-cmVtb3ZlZCBhbmQgZ2VuZXJhbGl6ZWQgdG8gYW55IHNwZWNpZmllci4gVGhlcmUncwphbHNvIHRo
-ZSBhZGRpdGlvbiBvZiBhIHBhc3MgdGhyb3VnaCBtZWNoYW5pc20gdG8gbWFrZSB0aGluZ3MgbW9y
-ZQpjb21wYWN0IGlmIGRlc2lyZWQgaW4gdGhlIG1hcHBpbmcgdGFibGUuCgpTaWduZWQtb2ZmLWJ5
-OiBTdGVwaGVuIEJveWQgPHN0ZXBoZW4uYm95ZEBsaW5hcm8ub3JnPgotLS0KCkkgc3RpbGwgbmVl
-ZCB0byB3cml0ZSB0aGUgYmx1cmIgYWJvdXQgd2hhdCB0aGlzIGlzIGFsbCBhYm91dCwgYnV0Ckkg
-d2FudGVkIHRvIHNlbmQgdGhpcyBvdXQgbm93IHRvIGdldCBlYXJseSBmZWVkYmFjay4gU29tZSBz
-dGFydGluZwpwb2ludHM6CgogMSkgUmVwbGFjZSBjaGlsZC9wYXJlbnQgd2l0aCBpbmNvbWluZy9v
-dXRnb2luZyBldmVyeXdoZXJlPwogCiAyKSBNYWtlIGEgcHJldHR5IHBpY3R1cmUgdG8gZGVzY3Jp
-YmUgcmVtYXBwaW5nIHBoYW5kbGUrc3BlY2lmaWVycwogICAgc2ltaWxhciB0byB0aGUgaW50ZXJy
-dXB0IGhpZXJhcmNoeSBkaWFncmFtPwoKIDMpIENvbWUgdXAgd2l0aCBzb21lIGJldHRlciBuYW1l
-IHRoYW4gPHNwZWNpZmllcj4/IEtlcm5lbC1kb2MgdXNlcyA8bGlzdD4KICAgIGJ1dCBJJ20gbm90
-IHN1cmUgdGhhdCdzIGFueSBiZXR0ZXIuCgogc291cmNlL2RldmljZXRyZWUtYmFzaWNzLnJzdCB8
-IDIwOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUg
-Y2hhbmdlZCwgMjA4IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9zb3VyY2UvZGV2aWNldHJl
-ZS1iYXNpY3MucnN0IGIvc291cmNlL2RldmljZXRyZWUtYmFzaWNzLnJzdAppbmRleCAwMjY5NmJh
-YzE1YzcuLmIwNTcxMTQ1ZWU0MCAxMDA2NDQKLS0tIGEvc291cmNlL2RldmljZXRyZWUtYmFzaWNz
-LnJzdAorKysgYi9zb3VyY2UvZGV2aWNldHJlZS1iYXNpY3MucnN0CkBAIC0xMjgwLDMgKzEyODAs
-MjExIEBAIHBlcmZvcm1lZDoKICogIFRoYXQgcmVzdWx0IGlzIGxvb2tlZCB1cCBpbiB0aGUgKmlu
-dGVycnVwdC1tYXAqIHRhYmxlLCB3aGljaCBtYXBzIHRvCiAgICB0aGUgcGFyZW50IGludGVycnVw
-dCBzcGVjaWZpZXIgYGA8NCAxPmBgLgogCisuLiBfc2VjdC1uZXh1czoKKworTmV4dXMgTm9kZXMg
-YW5kIFNwZWNpZmllciBNYXBwaW5nCistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
-KworVE9ETzogV3JpdGUgYmx1cmIgaGVyZSBhYm91dCBuZXh1cyBub2RlcyBhbmQgcmVtYXBwaW5n
-IHRoZW0KKworTmV4dXMgTm9kZSBQcm9wZXJ0aWVzCit+fn5+fn5+fn5+fn5+fn5+fn5+fn4KKwor
-QSBuZXh1cyBub2RlIHNoYWxsIGhhdmUgYSAqIzxzcGVjaWZpZXI+LWNlbGxzKiBwcm9wZXJ0eSwg
-d2hlcmUgPHNwZWNpZmllcj4gaXMKK3NvbWUgc3BlY2lmaWVyIHNwYWNlIGxpa2UgJ2dwaW8nLCAn
-Y2xvY2snLCAncmVzZXQnLCBldGMuCisKKzxzcGVjaWZpZXI+LW1hcAorXl5eXl5eXl5eXl5eXl5e
-CisKK1Byb3BlcnR5OiBgYDxzcGVjaWZpZXI+LW1hcGBgCisKK1ZhbHVlIHR5cGU6IGBgPHByb3At
-ZW5jb2RlZC1hcnJheT5gYCBlbmNvZGVkIGFzIGFuIGFyYml0cmFyeSBudW1iZXIgb2YKK3NwZWNp
-ZmllciBtYXBwaW5nIGVudHJpZXMuCisKK0Rlc2NyaXB0aW9uOgorCisgICBBICo8c3BlY2lmaWVy
-Pi1tYXAqIGlzIGEgcHJvcGVydHkgaW4gYSBuZXh1cyBub2RlIHRoYXQgYnJpZGdlcyBvbmUKKyAg
-IHNwZWNpZmllciBkb21haW4gd2l0aCBhIHNldCBvZiBwYXJlbnQgc3BlY2lmaWVyIGRvbWFpbnMg
-YW5kIGRlc2NyaWJlcworICAgaG93IHNwZWNpZmllcnMgaW4gdGhlIGNoaWxkIGRvbWFpbiBhcmUg
-bWFwcGVkIHRvIHRoZWlyIHJlc3BlY3RpdmUgcGFyZW50CisgICBkb21haW5zLgorCisgICBUaGUg
-bWFwIGlzIGEgdGFibGUgd2hlcmUgZWFjaCByb3cgaXMgYSBtYXBwaW5nIGVudHJ5CisgICBjb25z
-aXN0aW5nIG9mIHRocmVlIGNvbXBvbmVudHM6ICpjaGlsZCBzcGVjaWZpZXIqLCAqc3BlY2lmaWVy
-IHBhcmVudCosIGFuZAorICAgKnBhcmVudCBzcGVjaWZpZXIqLgorCisgICBjaGlsZCBzcGVjaWZp
-ZXIKKyAgICAgICBUaGUgc3BlY2lmaWVyIG9mIHRoZSBjaGlsZCBub2RlIGJlaW5nIG1hcHBlZC4g
-VGhlIG51bWJlcgorICAgICAgIG9mIDMyLWJpdCBjZWxscyByZXF1aXJlZCB0byBzcGVjaWZ5IHRo
-aXMgY29tcG9uZW50IGlzIGRlc2NyaWJlZCBieQorICAgICAgIHRoZSAqIzxzcGVjaWZpZXI+LWNl
-bGxzKiBwcm9wZXJ0eSBvZiB0aGlzIG5vZGXigJR0aGUgbmV4dXMgbm9kZQorICAgICAgIGNvbnRh
-aW5pbmcgdGhlICo8c3BlY2lmaWVyPi1tYXAqIHByb3BlcnR5LgorCisgICBzcGVjaWZpZXIgcGFy
-ZW50CisgICAgICAgQSBzaW5nbGUgKjxwaGFuZGxlPiogdmFsdWUgdGhhdCBwb2ludHMgdG8gdGhl
-IHNwZWNpZmllciBwYXJlbnQgdG8KKyAgICAgICB3aGljaCB0aGUgY2hpbGQgZG9tYWluIGlzIGJl
-aW5nIG1hcHBlZC4KKworICAgcGFyZW50IHNwZWNpZmllcgorICAgICAgIFRoZSBzcGVjaWZpZXIg
-aW4gdGhlIHBhcmVudCBkb21haW4uIFRoZSBudW1iZXIgb2YgMzItYml0CisgICAgICAgY2VsbHMg
-cmVxdWlyZWQgdG8gc3BlY2lmeSB0aGlzIGNvbXBvbmVudCBpcyBkZXNjcmliZWQgYnkgdGhlCisg
-ICAgICAgKiM8c3BlY2lmaWVyPi1jZWxscyogcHJvcGVydHkgb2YgdGhlIHNwZWNpZmllciBwYXJl
-bnQgbm9kZS4KKworICAgTG9va3VwcyBhcmUgcGVyZm9ybWVkIG9uIHRoZSBtYXBwaW5nIHRhYmxl
-IGJ5IG1hdGNoaW5nIGEgc3BlY2lmaWVyIGFnYWluc3QKKyAgIHRoZSBjaGlsZCBzcGVjaWZpZXIg
-aW4gdGhlIG1hcC4gQmVjYXVzZSBzb21lIGZpZWxkcyBpbiB0aGUgc3BlY2lmaWVyIG1heQorICAg
-bm90IGJlIHJlbGV2YW50IG9yIG5lZWQgdG8gYmUgbW9kaWZpZWQsIGEgbWFzayBpcyBhcHBsaWVk
-IGJlZm9yZSB0aGUgbG9va3VwCisgICBpcyBkb25lLiBUaGlzIG1hc2sgaXMgZGVmaW5lZCBpbiB0
-aGUgKjxzcGVjaWZpZXI+LW1hcC1tYXNrKiBwcm9wZXJ0eSAoc2VlCisgICBzZWN0aW9uIDpyZWY6
-YHNlY3Qtc3BlY2lmaWVyLW1hcC1tYXNrYCkuCisKKyAgIFNpbWlsYXJseSwgd2hlbiB0aGUgc3Bl
-Y2lmaWVyIGlzIG1hcHBlZCBzb21lIGZpZWxkcyBpbiB0aGUgdW5pdCBzcGVjaWZpZXIKKyAgIG1h
-eSBuZWVkIHRvIGJlIGtlcHQgdW5tb2RpZmllZCBhbmQgcGFzc2VkIHRocm91Z2ggZnJvbSB0aGUg
-Y2hpbGQgbm9kZSB0byB0aGUKKyAgIHBhcmVudCBub2RlLiBJbiB0aGlzIGNhc2UsIGEgKjxzcGVj
-aWZpZXI+LW1hcC1wYXNzLXRocnUqIHByb3BlcnR5IChzZWUKKyAgIHNlY3Rpb24gOnJlZjpgc2Vj
-dC1zcGVjaWZpZXItbWFwLXBhc3MtdGhydWApIG1heSBiZSBzcGVjaWZpZWQgdG8gYXBwbHkKKyAg
-IGEgbWFzayB0byB0aGUgaW5jb21pbmcgc3BlY2lmaWVyIGFuZCBjb3B5IGFueSBiaXRzIHRoYXQg
-bWF0Y2ggdG8gdGhlIG91dGdvaW5nCisgICB1bml0IHNwZWNpZmllci4KKworLi4gX3NlY3Qtc3Bl
-Y2lmaWVyLW1hcC1tYXNrOgorCis8c3BlY2lmaWVyPi1tYXAtbWFzaworXl5eXl5eXl5eXl5eXl5e
-Xl5eXl4KKworUHJvcGVydHk6IGBgPHNwZWNpZmllcj4tbWFwLW1hc2tgYAorCitWYWx1ZSB0eXBl
-OiBgYDxwcm9wLWVuY29kZWQtYXJyYXk+YGAgZW5jb2RlZCBhcyBhIGJpdCBtYXNrCisKK0Rlc2Ny
-aXB0aW9uOgorCisgICBBICo8c3BlY2lmaWVyPi1tYXAtbWFzayogcHJvcGVydHkgbWF5IGJlIHNw
-ZWNpZmllZCBmb3IgYSBuZXh1cyBub2RlLgorICAgVGhpcyBwcm9wZXJ0eSBzcGVjaWZpZXMgYSBt
-YXNrIHRoYXQgaXMgYXBwbGllZCB0byB0aGUgaW5jb21pbmcgdW5pdAorICAgc3BlY2lmaWVyIGJl
-aW5nIGxvb2tlZCB1cCBpbiB0aGUgdGFibGUgc3BlY2lmaWVkIGluIHRoZSAqPHNwZWNpZmllcj4t
-bWFwKgorICAgcHJvcGVydHkuIElmIHRoaXMgcHJvcGVydHkgaXMgbm90IHNwZWNpZmllZCwgdGhl
-IG1hc2sgaXMgYXNzdW1lZCB0byBiZQorICAgYSBtYXNrIHdpdGggYWxsIGJpdHMgc2V0LgorCisu
-LiBfc2VjdC1zcGVjaWZpZXItbWFwLXBhc3MtdGhydToKKworPHNwZWNpZmllcj4tbWFwLXBhc3Mt
-dGhydQorXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXgorCitQcm9wZXJ0eTogYGA8c3BlY2lmaWVy
-Pi1tYXAtcGFzcy10aHJ1YGAKKworVmFsdWUgdHlwZTogYGA8cHJvcC1lbmNvZGVkLWFycmF5PmBg
-IGVuY29kZWQgYXMgYSBiaXQgbWFzaworCitEZXNjcmlwdGlvbjoKKworICAgQSAqPHNwZWNpZmll
-cj4tbWFwLXBhc3MtdGhydSogcHJvcGVydHkgbWF5IGJlIHNwZWNpZmllZCBmb3IgYSBuZXh1cyBu
-b2RlLgorICAgVGhpcyBwcm9wZXJ0eSBzcGVjaWZpZXMgYSBtYXNrIHRoYXQgaXMgYXBwbGllZCB0
-byB0aGUgaW5jb21pbmcgdW5pdAorICAgc3BlY2lmaWVyIGJlaW5nIGxvb2tlZCB1cCBpbiB0aGUg
-dGFibGUgc3BlY2lmaWVkIGluIHRoZSAqPHNwZWNpZmllcj4tbWFwKgorICAgcHJvcGVydHkuIEFu
-eSBtYXRjaGluZyBiaXRzIGluIHRoZSBpbmNvbWluZyB1bml0IHNwZWNpZmllciBhcmUgY29waWVk
-IG92ZXIKKyAgIHRvIHRoZSBvdXRnb2luZyBzcGVjaWZpZXIuIElmIHRoaXMgcHJvcGVydHkgaXMg
-bm90IHNwZWNpZmllZCwgdGhlIG1hc2sgaXMKKyAgIGFzc3VtZWQgdG8gYmUgYSBtYXNrIHdpdGgg
-bm8gYml0cyBzZXQuCisKKyM8c3BlY2lmaWVyPi1jZWxscworXl5eXl5eXl5eXl5eXl5eXl5eCisK
-K1Byb3BlcnR5OiBgYCM8c3BlY2lmaWVyPi1jZWxsc2BgCisKK1ZhbHVlIHR5cGU6IGBgPHUzMj5g
-YAorCitEZXNjcmlwdGlvbjoKKworICAgVGhlICojPHNwZWNpZmllcj4tY2VsbHMqIHByb3BlcnR5
-IGRlZmluZXMgdGhlIG51bWJlciBvZiBjZWxscyByZXF1aXJlZCB0bworICAgZW5jb2RlIGEgc3Bl
-Y2lmaWVyIGZvciBhIGRvbWFpbi4KKworU3BlY2lmaWVyIE1hcHBpbmcgRXhhbXBsZQorfn5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fgorCitUaGUgZm9sbG93aW5nIHNob3dzIHRoZSByZXByZXNlbnRh
-dGlvbiBvZiBhIGZyYWdtZW50IG9mIGEgZGV2aWNldHJlZSB3aXRoCit0d28gR1BJTyBjb250cm9s
-bGVycyBhbmQgYSBzYW1wbGUgc3BlY2lmaWVyIG1hcCBmb3IgZGVzY3JpYmluZyB0aGUKK0dQSU8g
-cm91dGluZyBvZiBhIGZldyBncGlvcyBvbiBib3RoIG9mIHRoZSBjb250cm9sbGVycyB0aHJvdWdo
-IGEgY29ubmVjdG9yCitvbiBhIGJvYXJkIHRvIGEgZGV2aWNlLiBUaGUgZXhwYW5zaW9uIGRldmlj
-ZSBub2RlIGlzIG9uZSBvbmUgc2lkZSBvZiB0aGUKK2Nvbm5lY3RvciBub2RlIGFuZCB0aGUgU29D
-IHdpdGggdGhlIHR3byBHUElPIGNvbnRyb2xsZXJzIGlzIG9uIHRoZSBvdGhlcgorc2lkZSBvZiB0
-aGUgY29ubmVjdG9yLgorCisuLiBfZXhhbXBsZS1zcGVjaWZpZXItbWFwcGluZzoKKworLi4gY29k
-ZS1ibG9jazo6IGR0cworCisgICAgICAgIHNvYyB7CisgICAgICAgICAgICAgICAgc29jX2dwaW8x
-OiBncGlvLWNvbnRyb2xsZXIxIHsKKyAgICAgICAgICAgICAgICAgICAgICAgICNncGlvLWNlbGxz
-ID0gPDI+OworICAgICAgICAgICAgICAgIH07CisKKyAgICAgICAgICAgICAgICBzb2NfZ3BpbzI6
-IGdwaW8tY29udHJvbGxlcjIgeworICAgICAgICAgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMg
-PSA8Mj47CisgICAgICAgICAgICAgICAgfTsKKyAgICAgICAgfTsKKworICAgICAgICBjb25uZWN0
-b3I6IGNvbm5lY3RvciB7CisgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47CisgICAg
-ICAgICAgICAgICAgZ3Bpby1tYXAgPSA8MCAwICZzb2NfZ3BpbzEgMSAwPiwKKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDwxIDAgJnNvY19ncGlvMiA0IDA+LAorICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgPDIgMCAmc29jX2dwaW8xIDMgMD4sCisgICAgICAgICAgICAgICAgICAgICAgICAg
-ICA8MyAwICZzb2NfZ3BpbzIgMiAwPjsKKyAgICAgICAgICAgICAgICBncGlvLW1hcC1tYXNrID0g
-PDB4ZiAweDA+OworICAgICAgICAgICAgICAgIGdwaW8tbWFwLXBhc3MtdGhydSA9IDwweDAgMHgx
-PjsKKyAgICAgICAgfTsKKworICAgICAgICBleHBhbnNpb25fZGV2aWNlIHsKKyAgICAgICAgICAg
-ICAgICByZXNldC1ncGlvcyA9IDwmY29ubmVjdG9yIDIgR1BJT19BQ1RJVkVfTE9XPjsKKyAgICAg
-ICAgfTsKKworCitFYWNoIHJvdyBpbiB0aGUgZ3Bpby1tYXAgdGFibGUgY29uc2lzdHMgb2YgdGhy
-ZWUgcGFydHM6IGEgY2hpbGQgdW5pdAorc3BlY2lmaWVyLCB3aGljaCBpcyBtYXBwZWQgdG8gYSAq
-Z3Bpby1jb250cm9sbGVyKgorbm9kZSB3aXRoIGEgcGFyZW50IHNwZWNpZmllci4KKworKiBGb3Ig
-ZXhhbXBsZSwgdGhlIGZpcnN0IHJvdyBvZiB0aGUgc3BlY2lmaWVyLW1hcCB0YWJsZSBzcGVjaWZp
-ZXMgdGhlCisgIG1hcHBpbmcgZm9yIEdQSU8gMCBvZiB0aGUgY29ubmVjdG9yLiBUaGUgY29tcG9u
-ZW50cyBvZiB0aGF0IHJvdyBhcmUgc2hvd24KKyAgaGVyZQorCisgIHwgY2hpbGQgc3BlY2lmaWVy
-OiBgYDAgMGBgCisgIHwgc3BlY2lmaWVyIHBhcmVudDogYGAmc29jX2dwaW8xYGAKKyAgfCBwYXJl
-bnQgc3BlY2lmaWVyOiBgYDEgMGBgCisKKyAgKiBUaGUgY2hpbGQgc3BlY2lmaWVyIGlzIGBgPDAg
-MD5gYCwgd2hpY2ggc3BlY2lmaWVzIEdQSU8gMCBpbiB0aGUgY29ubmVjdG9yCisgICAgd2l0aCBh
-ICpmbGFncyogZmllbGQgb2YgYGAwYGAuIFRoaXMgdGFrZXMgdHdvIDMyLWJpdCBjZWxscyBhcyBz
-cGVjaWZpZWQKKyAgICBieSB0aGUgKiNncGlvLWNlbGxzKiBwcm9wZXJ0eSBvZiB0aGUgY29ubmVj
-dG9yIG5vZGUsIHdoaWNoIGlzIHRoZQorICAgIGNoaWxkIHNwZWNpZmllciBkb21pYW4uCisKKyAg
-KiBUaGUgc3BlY2lmaWVyIHBhcmVudCBpcyBzcGVjaWZpZWQgYnkgYSBwaGFuZGxlIHdoaWNoIHBv
-aW50cyB0byB0aGUKKyAgICBzcGVjaWZpZXIgcGFyZW50IG9mIHRoZSBjb25uZWN0b3IsIHRoZSBm
-aXJzdCBHUElPIGNvbnRyb2xsZXIgaW4gdGhlIFNvQy4KKworICAqIFRoZSBwYXJlbnQgc3BlY2lm
-aWVyIGlzIGBgPDEgMD5gYC4gVGhlIG51bWJlciBvZiBjZWxscyB0bworICAgIHJlcHJlc2VudCB0
-aGUgZ3BpbyBzcGVjaWZpZXIgKHR3byBjZWxscykgaXMgZGV0ZXJtaW5lZCBieSB0aGUKKyAgICAq
-I2dwaW8tY2VsbHMqIHByb3BlcnR5IG9uIHRoZSBzcGVjaWZpZXIgcGFyZW50LCB0aGUgc29jX2dw
-aW8xCisgICAgbm9kZS4KKworICAgICogVGhlIHZhbHVlIGBgPDEgMD5gYCBpcyBhIHZhbHVlIHNw
-ZWNpZmllZCBieSB0aGUgZGV2aWNlIGJpbmRpbmcgZm9yCisgICAgICB0aGUgR1BJTyBjb250cm9s
-bGVyLiBUaGUgdmFsdWUgYGA8MT5gYCBzcGVjaWZpZXMgdGhlCisgICAgICBHUElPIHBpbiBudW1i
-ZXIgb24gdGhlIEdQSU8gY29udHJvbGxlciB0byB3aGljaCBHUElPIDAgb24gdGhlIGNvbm5lY3Rv
-cgorICAgICAgaXMgd2lyZWQuIFRoZSB2YWx1ZSBgYDwwPmBgIHNwZWNpZmllcyB0aGUgZmxhZ3Mg
-KGFjdGl2ZSBsb3csCisgICAgICBhY3RpdmUgaGlnaCwgZXRjLikuCisKK0luIHRoaXMgZXhhbXBs
-ZSwgdGhlICpncGlvLW1hcC1tYXNrKiBwcm9wZXJ0eSBoYXMgYSB2YWx1ZSBvZiBgYDwweGYgMD5g
-YC4KK1RoaXMgbWFzayBpcyBhcHBsaWVkIHRvIGEgY2hpbGQgdW5pdCBzcGVjaWZpZXIgYmVmb3Jl
-IHBlcmZvcm1pbmcgYSBsb29rdXAgaW4KK3RoZSAqZ3Bpby1tYXAqIHRhYmxlLiBTaW1pbGFybHks
-IHRoZSAqZ3Bpby1tYXAtcGFzcy10aHJ1KiBwcm9wZXJ0eSBoYXMgYSB2YWx1ZQorb2YgYGA8MHgw
-IDB4MT5gYC4gVGhpcyBtYXNrIGlzIGFwcGxpZWQgdG8gYSBjaGlsZCB1bml0IHNwZWNpZmllciB3
-aGVuIG1hcHBpbmcKK2l0IHRvIHRoZSBwYXJlbnQgdW5pdCBzcGVjaWZpZXIuIEFueSBiaXRzIHNl
-dCBpbiB0aGUgbWFzayBhcmUgY2xlYXJlZCBvdXQgb2YKK3RoZSBwYXJlbnQgdW5pdCBzcGVjaWZp
-ZXIgYW5kIGNvcGllZCBvdmVyIGZyb20gdGhlIGNoaWxkIHVuaXQgc3BlY2lmaWVyCit0byB0aGUg
-cGFyZW50IHVuaXQgc3BlY2lmaWVyLgorCitUbyBwZXJmb3JtIGEgbG9va3VwIG9mIHRoZSBjb25u
-ZWN0b3IncyBzcGVjaWZpZXIgc291cmNlIG51bWJlciBmb3IgR1BJTyAyCitmcm9tIHRoZSBleHBh
-bnNpb24gZGV2aWNlJ3MgcmVzZXQtZ3Bpb3MgcHJvcGVydHksIHRoZSBmb2xsb3dpbmcgc3RlcHMg
-d291bGQgYmUKK3BlcmZvcm1lZDoKKworKiAgVGhlIGNoaWxkIHNwZWNpZmllciBmb3JtcyB0aGUg
-dmFsdWUKKyAgIGBgPDIgR1BJT19BQ1RJVkVfTE9XPmBgLgorCisgICAqICBUaGUgc3BlY2lmaWVy
-IGlzIGVuY29kaW5nIEdQSU8gMiB3aXRoIGFjdGl2ZSBsb3cgZmxhZ3MgcGVyIHRoZSBHUElPCisg
-ICAgICBiaW5kaW5nLgorCisqICBUaGUgKmdwaW8tbWFwLW1hc2sqIHZhbHVlIGBgPDB4ZiAweDA+
-YGAgaXMgYXBwbGllZCwgZ2l2aW5nIGEKKyAgIHJlc3VsdCBvZiBgYDwweDIgMD5gYC4KKworKiAg
-VGhhdCByZXN1bHQgaXMgbG9va2VkIHVwIGluIHRoZSAqZ3Bpby1tYXAqIHRhYmxlLCB3aGljaCBt
-YXBzIHRvCisgICB0aGUgcGFyZW50IHNwZWNpZmllciBgYDwzIDA+YGAgYW5kICZzb2NfZ3BpbzEg
-KnBoYW5kbGUqLgorCisqICBUaGF0ICpncGlvLW1hcC1wYXNzLXRocnUqIHZhbHVlIGBgPDB4MCAw
-eDE+YGAgaXMgYXBwbGllZCB0byBjaGlsZCBzcGVjaWZpZXIsCisgICBmb3JtaW5nIGBgPDAgR1BJ
-T19BQ1RJVkVfTE9XPmBgIHdoaWNoIGlzIHRoZW4gT1JlZCB3aXRoIHRoZSBwYXJlbnQKKyAgIHNw
-ZWNpZmllciBgYDwzIDA+YGAgQU5EZWQgd2l0aCB0aGUgaW52ZXJzZSBvZiB0aGUgcGFzcy10aHJ1
-IG1hc2sKKyAgIGBgPDB4ZmZmZmZmZmYgMHhmZmZmZmZlPmBgIHJlc3VsdGluZyBpbiBgYDwzIEdQ
-SU9fQUNUSVZFX0xPVz5gYC4KKworKiAgVGhhdCBzcGVjaWZpZXIgaXMgY29tYmluZWQgd2l0aCB0
-aGUgbWFwcGVkICpwaGFuZGxlKiAmc29jX2dwaW8xIHJlc3VsdGluZworICAgaW4gYGA8JnNvY19n
-cGlvMSAzIEdQSU9fQUNUSVZFX0xPVz5gYC4KLS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Russell/Johan,
+On 08/01/2017 01:08 PM, Santosh Shilimkar wrote:
+> On 7/26/2017 9:54 AM, Santosh Shilimkar wrote:
+>>
+>> On 7/24/2017 2:24 PM, Dave Gerlach wrote:
+>>> Certain SoCs like Texas Instruments AM335x and AM437x require parts
+>>> of the EMIF PM code to run late in the suspend sequence from SRAM,
+>>> such as saving and restoring the EMIF context and placing the memory
+>>> into self-refresh.
+>>>
+>>> One requirement for these SoCs to suspend and enter its lowest power
+>>> mode, called DeepSleep0, is that the PER power domain must be shut off.
+>>> Because the EMIF (DDR Controller) resides within this power domain, it
+>>> will lose context during a suspend operation, so we must save it so we
+>>> can restore once we resume. However, we cannot execute this code from
+>>> external memory, as it is not available at this point, so the code must
+>>> be executed late in the suspend path from SRAM.
+>>>
+>>> This patch introduces a ti-emif-sram driver that includes several
+>>> functions written in ARM ASM that are relocatable so the PM SRAM
+>>> code can use them. It also allocates a region of writable SRAM to
+>>> be used by the code running in the executable region of SRAM to save
+>>> and restore the EMIF context. It can export a table containing the
+>>> absolute addresses of the available PM functions so that other SRAM
+>>> code can branch to them. This code is required for suspend/resume on
+>>> AM335x and AM437x to work.
+>>>
+>>> In addition to this, to be able to share data structures between C and
+>>> the ti-emif-sram-pm assembly code, we can automatically generate all of
+>>> the C struct member offsets and sizes as macros by making use of the ARM
+>>> asm-offsets file. In the same header that we define our data structures
+>>> in we also define all the macros in an inline function and by adding a
+>>> call to this in the asm_offsets file all macros are properly generated
+>>> and available to the assembly code without cluttering up the asm-offsets
+>>> file.
+>>>
+>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>>> ---
+> [...]
+> 
+>>>
+>>>   arch/arm/kernel/asm-offsets.c    |   4 +
+>>>   drivers/memory/Kconfig           |  10 ++
+>>>   drivers/memory/Makefile          |   4 +
+>>>   drivers/memory/emif.h            |  17 ++
+>>>   drivers/memory/ti-emif-pm.c      | 339 
+>>> +++++++++++++++++++++++++++++++++++++++
+>>>   drivers/memory/ti-emif-sram-pm.S | 334 
+>>> ++++++++++++++++++++++++++++++++++++++
+>>>   include/linux/ti-emif-sram.h     | 147 +++++++++++++++++
+>>>   7 files changed, 855 insertions(+)
+>>>   create mode 100644 drivers/memory/ti-emif-pm.c
+>>>   create mode 100644 drivers/memory/ti-emif-sram-pm.S
+>>>   create mode 100644 include/linux/ti-emif-sram.h
+>>>
+>> I will need RMKs blessing since he reviewed the ASM code.
+>>
+>> Also need work out how to line this up. Typically I use to get
+>> driver/memory patches via Greg's driver-core but this is more
+>> PM code than memory driver and very SOC specific.
+>>
+>> Hi Arnd/Olof,
+>> Will you be ok to pull this via arm-soc ? There is also follow
+>> up platform PM code and DTS series which will make use of this.
+>>
+> Looks like I missed to copy Olof. Let me know guys if you are
+> ok to pull this into your driver-soc given the dependencies.
+
+Any additional comments here? I believe I have addressed everything from v2 so
+hopefully this is acceptable now.
+
+Regards,
+Dave
+
+> 
+> Regards
+> Santosh
+> 
