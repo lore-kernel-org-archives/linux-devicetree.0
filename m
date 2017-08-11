@@ -1,61 +1,55 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v2 0/5] thermal: rockchip: add tsadc support in thermal
- driver and IPA thermal control for rk3328 in dts
-Date: Fri, 11 Aug 2017 16:01:28 +0800
-Message-ID: <1502438488.2597.0.camel@intel.com>
-References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com>
-         <1502427095.2598.21.camel@intel.com> <3025917.NAhhjSz36M@phil>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: sun8i: sunxi-h3-h5: add phy-is-integrated
+ property to internal PHY
+Date: Fri, 11 Aug 2017 10:05:43 +0200
+Message-ID: <20170811080543.GA25147@Red>
+References: <20170810085129.20463-1-clabbe.montjoie@gmail.com>
+ <20170810085129.20463-3-clabbe.montjoie@gmail.com>
+ <CAGb2v64dBZgN6-8kHnnN1qiEXHnbXw_FM9WxGHPU0h-tZDbspA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3025917.NAhhjSz36M@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Rocky Hao <rocky.hao@rock-chips.com>, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64dBZgN6-8kHnnN1qiEXHnbXw_FM9WxGHPU0h-tZDbspA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-08-11 at 08:27 +0200, Heiko Stuebner wrote:
+On Fri, Aug 11, 2017 at 10:42:51AM +0800, Chen-Yu Tsai wrote:
 > Hi,
 > 
-> Am Freitag, 11. August 2017, 12:51:35 CEST schrieb Zhang Rui:
-> > 
-> > On Fri, 2017-08-04 at 16:06 +0800, Rocky Hao wrote:
-> > > 
-> > > This series patches add the tsadc support in thermal driver and
-> > > in
-> > > devicetree for rk3328.
-> > > Also add thermal control with Intelligent Power Allocation (IPA)
-> > > policy by default.  Please
-> > > refer to https://developer.arm.com/open-source/intelligent-power-
-> > > allo
-> > > cation for more information
-> > > about IPA.
-> > > 
-> > > Rocky Hao (5):
-> > >   dt-bindings: rockchip-thermal: Support the RK3328 SoC
-> > > compatible
-> > >   thermal: rockchip: Support the RK3328 SOC in thermal driver
-> > >   arm64: dts: rockchip: add tsadc node for rk3328 SoC
-> > >   arm64: dts: rockchip: add thermal nodes for rk3328 SoC
-> > >   arm64: dts: rockchip: Enable tsadc module on RK3328 eavluation
-> > > board
-> > > 
-> > I can take this patch set if we have ACK for patch 3, 4 and 5.
-> I would prefer if you would just apply patches 1+2 alone and I'd take
-> the devicetree patches through my tree.
+> On Thu, Aug 10, 2017 at 4:51 PM, Corentin Labbe
+> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > This patch add the new phy-is-integrated property to the internal PHY
+> > node.
+> >
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > index 4b599b5d26f6..54fc24e4c569 100644
+> > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > @@ -425,6 +425,7 @@
+> >                                         reg = <1>;
+> >                                         clocks = <&ccu CLK_BUS_EPHY>;
+> >                                         resets = <&ccu RST_BUS_EPHY>;
+> > +                                       phy-is-integrated;
 > 
-> Having devicetree stuff mingle in a lot of trees produces unnecessary
-> conflicts, so the general best practice is having code + binding.txt
-> going through the driver tree and devicetree stuff through the
-> platform
-> tree.
+> You also need to "delete" this property at the board level for
+> any board that has the external PHY at address <1>. Otherwise
+> they will stop working. This is due to the internal and external
+> PHYs having the same path and node name in the device tree, so
+> they are effectively the same node.
 > 
-OKay, I will take patch 1 and 2 and queue them for next merge window.
+> ChenYu
+> 
 
-thanks,
-rui
-> 
-> Thanks
-> Heiko
-> 
+They have not the same name, ext_rgmii_phy vs int_mii_phy.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
