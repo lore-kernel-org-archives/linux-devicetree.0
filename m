@@ -1,190 +1,250 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v4 09/20] mtd: nand: qcom: support for read location registers
-Date: Fri, 11 Aug 2017 17:09:24 +0530
-Message-ID: <1502451575-15712-10-git-send-email-absahu@codeaurora.org>
-References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: boris.brezillon@free-electrons.com
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH] PCI: mediatek: add msi support for mt2712 and mt7622
+Date: Fri, 11 Aug 2017 20:27:49 +0800
+Message-ID: <1502454469-29230-1-git-send-email-honghui.zhang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-In EBI2, all codeword data will be read in FLASH_BUF_ACC buffer
-and ADM will copy the data from source (FLASH_BUF_ACC) to
-destination (memory for data read).
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-In QPIC, there is no FLASH_BUF_ACC and all the codeword data will
-held in QPIC BAM FIFO buffers. It provides multiple READ_LOCATION
-registers which will be used for copying the data from FIFO to
-memory. The READ_LOCATION register will be used to read a
-specific amount of data from a specific offset within the flash
-buffer. It supports sequential offset requests. Each request is
-composed of the following fields:
+MT2712 and MT7622's PCIe host controller support 32bit address MSI, and it
+connect to GIC with the same IRQ number of INTx IRQ, so it shares the same
+IRQ with INTx IRQ.
 
-a. Offset within the flash buffer from which data should be
-   read
-b. Amount of data to be read
-c. Flag bit specifying the last read request from the flash
-   buffer. Following the last read request the NANDc refers to the
-   buffer as empty.
+This patch adds MSI support for MT2712 and MT7622.
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- drivers/mtd/nand/qcom_nandc.c | 64 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ drivers/pci/host/pcie-mediatek.c | 146 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 146 insertions(+)
 
-diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-index d9c8a6b..b452cfb 100644
---- a/drivers/mtd/nand/qcom_nandc.c
-+++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -53,6 +53,8 @@
- #define	NAND_VERSION			0xf08
- #define	NAND_READ_LOCATION_0		0xf20
- #define	NAND_READ_LOCATION_1		0xf24
-+#define	NAND_READ_LOCATION_2		0xf28
-+#define	NAND_READ_LOCATION_3		0xf2c
+diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+index c96cd8f..72cad4f 100644
+--- a/drivers/pci/host/pcie-mediatek.c
++++ b/drivers/pci/host/pcie-mediatek.c
+@@ -73,11 +73,17 @@
+ #define PCIE_CSR_ASPM_L1_EN(x)	BIT(1 + (x) * 8)
  
- /* dummy register offsets, used by write_reg_dma */
- #define	NAND_DEV_CMD1_RESTORE		0xdead
-@@ -135,6 +137,11 @@
- #define	ERASED_PAGE			(PAGE_ALL_ERASED | PAGE_ERASED)
- #define	ERASED_CW			(CODEWORD_ALL_ERASED | CODEWORD_ERASED)
+ /* PCIe V2 per-port registers */
++#define PCIE_MSI_VECTOR		0x0c0
+ #define PCIE_INT_MASK		0x420
+ #define INTX_MASK		GENMASK(19, 16)
+ #define INTX_SHIFT		16
+ #define INTX_NUM		4
+ #define PCIE_INT_STATUS		0x424
++#define MSI_STATUS		BIT(23)
++#define PCIE_IMSI_STATUS	0x42c
++#define PCIE_IMSI_ADDR		0x430
++#define MSI_MASK		BIT(23)
++#define MTK_MSI_IRQS_NUM	32
  
-+/* NAND_READ_LOCATION_n bits */
-+#define READ_LOCATION_OFFSET		0
-+#define READ_LOCATION_SIZE		16
-+#define READ_LOCATION_LAST		31
-+
- /* Version Mask */
- #define	NAND_VERSION_MAJOR_MASK		0xf0000000
- #define	NAND_VERSION_MAJOR_SHIFT	28
-@@ -177,6 +184,12 @@
- #define	ECC_BCH_4BIT	BIT(2)
- #define	ECC_BCH_8BIT	BIT(3)
+ #define PCIE_AHB_TRANS_BASE0_L	0x438
+ #define PCIE_AHB_TRANS_BASE0_H	0x43c
+@@ -128,11 +134,13 @@ struct mtk_pcie_port;
  
-+#define nandc_set_readl(nandc, reg, offset, size, is_last)	\
-+nandc_set_reg(nandc, NAND_READ_LOCATION_##reg,			\
-+	      ((offset) << READ_LOCATION_OFFSET) |		\
-+	      ((size) << READ_LOCATION_SIZE) |			\
-+	      ((is_last) << READ_LOCATION_LAST))
-+
- #define QPIC_PER_CW_CMD_SGL		32
- #define QPIC_PER_CW_DATA_SGL		8
- 
-@@ -260,6 +273,11 @@ struct nandc_regs {
- 	__le32 orig_vld;
- 
- 	__le32 ecc_buf_cfg;
-+	__le32 read_location0;
-+	__le32 read_location1;
-+	__le32 read_location2;
-+	__le32 read_location3;
-+
+ /**
+  * struct mtk_pcie_soc - differentiate between host generations
++ * @support_msi: whether this host support MSI interrupt or not
+  * @ops: pointer to configuration access functions
+  * @startup: pointer to controller setting functions
+  * @setup_irq: pointer to initialize IRQ functions
+  */
+ struct mtk_pcie_soc {
++	bool support_msi;
+ 	struct pci_ops *ops;
+ 	int (*startup)(struct mtk_pcie_port *port);
+ 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+@@ -156,6 +164,8 @@ struct mtk_pcie_soc {
+  * @lane: lane count
+  * @slot: port slot
+  * @irq_domain: legacy INTx IRQ domain
++ * @msi_domain: MSI IRQ domain
++ * @msi_irq_in_use: bit map for assigned MSI IRQ
+  */
+ struct mtk_pcie_port {
+ 	void __iomem *base;
+@@ -172,6 +182,8 @@ struct mtk_pcie_port {
+ 	u32 lane;
+ 	u32 slot;
+ 	struct irq_domain *irq_domain;
++	struct irq_domain *msi_domain;
++	DECLARE_BITMAP(msi_irq_in_use, MTK_MSI_IRQS_NUM);
  };
  
- /*
-@@ -516,6 +534,14 @@ static __le32 *offset_to_nandc_reg(struct nandc_regs *regs, int offset)
- 		return &regs->orig_vld;
- 	case NAND_EBI2_ECC_BUF_CFG:
- 		return &regs->ecc_buf_cfg;
-+	case NAND_READ_LOCATION_0:
-+		return &regs->read_location0;
-+	case NAND_READ_LOCATION_1:
-+		return &regs->read_location1;
-+	case NAND_READ_LOCATION_2:
-+		return &regs->read_location2;
-+	case NAND_READ_LOCATION_3:
-+		return &regs->read_location3;
- 	default:
- 		return NULL;
- 	}
-@@ -590,6 +616,10 @@ static void update_rw_regs(struct qcom_nand_host *host, int num_cw, bool read)
- 	nandc_set_reg(nandc, NAND_FLASH_STATUS, host->clrflashstatus);
- 	nandc_set_reg(nandc, NAND_READ_STATUS, host->clrreadstatus);
- 	nandc_set_reg(nandc, NAND_EXEC_CMD, 1);
-+
-+	if (read)
-+		nandc_set_readl(nandc, 0, 0, host->use_ecc ?
-+				host->cw_data : host->cw_size, 1);
+ /**
+@@ -427,6 +439,108 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 	return 0;
  }
  
- /*
-@@ -835,6 +865,10 @@ static void config_nand_page_read(struct qcom_nand_controller *nandc)
-  */
- static void config_nand_cw_read(struct qcom_nand_controller *nandc)
++static int mtk_pcie_assign_msi(struct mtk_pcie_port *port)
++{
++	int pos;
++
++	pos = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
++	if (pos < MTK_MSI_IRQS_NUM)
++		set_bit(pos, port->msi_irq_in_use);
++	else
++		return -ENOSPC;
++
++	return pos;
++}
++
++static int mtk_pcie_msi_setup_irq(struct msi_controller *chip,
++				  struct pci_dev *pdev,
++				  struct msi_desc *desc)
++{
++	struct mtk_pcie_port *port;
++	struct msi_msg msg;
++	int hwirq;
++	u32 irq;
++
++	port = mtk_pcie_find_port(pdev->bus, pdev->devfn);
++	if (!port)
++		return -EINVAL;
++
++	chip->dev = &pdev->dev;
++	hwirq = mtk_pcie_assign_msi(port);
++	if (hwirq < 0)
++		return hwirq;
++
++	irq = irq_create_mapping(port->msi_domain, hwirq);
++	if (!irq)
++		return -EINVAL;
++
++	irq_set_msi_desc(irq, desc);
++
++	/* MT2712/MT7622 only support 32 bit MSI address */
++	msg.address_hi = 0;
++	msg.address_lo = lower_32_bits((u64)(port->base + PCIE_MSI_VECTOR));
++	msg.data = hwirq;
++
++	pci_write_msi_msg(irq, &msg);
++
++	return 0;
++}
++
++static void mtk_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
++{
++	struct pci_dev *pdev = to_pci_dev(chip->dev);
++	struct irq_data *d = irq_get_irq_data(irq);
++	irq_hw_number_t hwirq = irqd_to_hwirq(d);
++	struct mtk_pcie_port *port;
++
++	port = mtk_pcie_find_port(pdev->bus, pdev->devfn);
++	if (!port)
++		return;
++
++	if (!test_bit(hwirq, port->msi_irq_in_use))
++		dev_err(&pdev->dev, "Trying to free unused MSI#%d\n", irq);
++	else
++		clear_bit(hwirq, port->msi_irq_in_use);
++}
++
++static struct msi_controller mtk_pcie_msi_chip = {
++	.setup_irq = mtk_pcie_msi_setup_irq,
++	.teardown_irq = mtk_msi_teardown_irq,
++};
++
++static struct irq_chip mtk_msi_irq_chip = {
++	.name = "MTK PCIe MSI",
++	.irq_enable = pci_msi_unmask_irq,
++	.irq_disable = pci_msi_mask_irq,
++	.irq_mask = pci_msi_mask_irq,
++	.irq_unmask = pci_msi_unmask_irq,
++};
++
++static int mtk_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
++			    irq_hw_number_t hwirq)
++{
++	irq_set_chip_and_handler(irq, &mtk_msi_irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, domain->host_data);
++
++	return 0;
++}
++
++static const struct irq_domain_ops msi_domain_ops = {
++	.map = mtk_pcie_msi_map,
++};
++
++static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
++{
++	u32 val;
++
++	val = lower_32_bits((u64)(port->base + PCIE_MSI_VECTOR));
++	writel(val, port->base + PCIE_IMSI_ADDR);
++
++	val = readl(port->base + PCIE_INT_MASK);
++	val &= ~MSI_MASK;
++	writel(val, port->base + PCIE_INT_MASK);
++}
++
+ static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+ 			     irq_hw_number_t hwirq)
  {
-+	if (nandc->props->is_bam)
-+		write_reg_dma(nandc, NAND_READ_LOCATION_0, 4,
-+			      NAND_BAM_NEXT_SGL);
+@@ -460,6 +574,18 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
+ 		return PTR_ERR(port->irq_domain);
+ 	}
+ 
++	/* Setup MSI */
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		port->msi_domain = irq_domain_add_linear(node, MTK_MSI_IRQS_NUM,
++							 &msi_domain_ops,
++							 &mtk_pcie_msi_chip);
++		if (!port->msi_domain) {
++			dev_err(dev, "Failed to get a MSI IRQ domain\n");
++			return PTR_ERR(port->msi_domain);
++		}
++		mtk_pcie_enable_msi(port);
++	}
 +
- 	write_reg_dma(nandc, NAND_FLASH_CMD, 1, NAND_BAM_NEXT_SGL);
- 	write_reg_dma(nandc, NAND_EXEC_CMD, 1, NAND_BAM_NEXT_SGL);
+ 	return 0;
+ }
  
-@@ -923,6 +957,7 @@ static int nandc_param(struct qcom_nand_host *host)
- 
- 	nandc_set_reg(nandc, NAND_DEV_CMD1_RESTORE, nandc->cmd1);
- 	nandc_set_reg(nandc, NAND_DEV_CMD_VLD_RESTORE, nandc->vld);
-+	nandc_set_readl(nandc, 0, 0, 512, 1);
- 
- 	write_reg_dma(nandc, NAND_DEV_CMD_VLD, 1, 0);
- 	write_reg_dma(nandc, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
-@@ -1398,6 +1433,19 @@ static int read_page_ecc(struct qcom_nand_host *host, u8 *data_buf,
- 			oob_size = host->ecc_bytes_hw + host->spare_bytes;
+@@ -480,6 +606,23 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
  		}
+ 	}
  
-+		if (nandc->props->is_bam) {
-+			if (data_buf && oob_buf) {
-+				nandc_set_readl(nandc, 0, 0, data_size, 0);
-+				nandc_set_readl(nandc, 1, data_size,
-+						oob_size, 1);
-+			} else if (data_buf) {
-+				nandc_set_readl(nandc, 0, 0, data_size, 1);
-+			} else {
-+				nandc_set_readl(nandc, 0, data_size,
-+						oob_size, 1);
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		while ((status = readl(port->base + PCIE_INT_STATUS)) & MSI_STATUS) {
++			unsigned long imsi_status;
++
++			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
++				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM) {
++					/* Clear the MSI */
++					writel(1 << bit, port->base + PCIE_IMSI_STATUS);
++					virq = irq_find_mapping(port->msi_domain, bit);
++					generic_handle_irq(virq);
++				}
 +			}
++			/* Clear MSI interrupt status */
++			writel(MSI_STATUS, port->base + PCIE_INT_STATUS);
 +		}
++	}
 +
- 		config_nand_cw_read(nandc);
+ 	return IRQ_HANDLED;
+ }
  
- 		if (data_buf)
-@@ -1457,6 +1505,7 @@ static int copy_last_cw(struct qcom_nand_host *host, int page)
+@@ -939,6 +1082,8 @@ static int mtk_pcie_register_host(struct pci_host_bridge *host)
+ 	host->map_irq = of_irq_parse_and_map_pci;
+ 	host->swizzle_irq = pci_common_swizzle;
+ 	host->sysdata = pcie;
++	if (IS_ENABLED(CONFIG_PCI_MSI) && pcie->soc->support_msi)
++		host->msi = &mtk_pcie_msi_chip;
  
- 	set_address(host, host->cw_size * (ecc->steps - 1), page);
- 	update_rw_regs(host, 1, true);
-+	nandc_set_readl(nandc, 0, 0, size, 1);
+ 	err = pci_scan_root_bus_bridge(host);
+ 	if (err < 0)
+@@ -1000,6 +1145,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
+ };
  
- 	config_nand_single_cw_page_read(nandc);
- 
-@@ -1502,6 +1551,7 @@ static int qcom_nandc_read_page_raw(struct mtd_info *mtd,
- 	u8 *data_buf, *oob_buf;
- 	struct nand_ecc_ctrl *ecc = &chip->ecc;
- 	int i, ret;
-+	int read_loc;
- 
- 	data_buf = buf;
- 	oob_buf = chip->oob_poi;
-@@ -1527,6 +1577,20 @@ static int qcom_nandc_read_page_raw(struct mtd_info *mtd,
- 			oob_size2 = host->ecc_bytes_hw + host->spare_bytes;
- 		}
- 
-+		if (nandc->props->is_bam) {
-+			read_loc = 0;
-+			nandc_set_readl(nandc, 0, read_loc, data_size1, 0);
-+			read_loc += data_size1;
-+
-+			nandc_set_readl(nandc, 1, read_loc, oob_size1, 0);
-+			read_loc += oob_size1;
-+
-+			nandc_set_readl(nandc, 2, read_loc, data_size2, 0);
-+			read_loc += data_size2;
-+
-+			nandc_set_readl(nandc, 3, read_loc, oob_size2, 1);
-+		}
-+
- 		config_nand_cw_read(nandc);
- 
- 		read_data_dma(nandc, reg_off, data_buf, data_size1, 0);
+ static const struct mtk_pcie_soc mtk_pcie_soc_v2 = {
++	.support_msi = true,
+ 	.ops = &mtk_pcie_ops_v2,
+ 	.startup = mtk_pcie_startup_port_v2,
+ 	.setup_irq = mtk_pcie_setup_irq,
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.6.4
