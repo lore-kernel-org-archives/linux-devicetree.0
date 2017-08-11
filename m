@@ -1,114 +1,83 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] drm/bridge/sii8620: add external connector handle
-Date: Fri, 11 Aug 2017 12:40:39 +0300
-Message-ID: <2097016.rlxulirhWA@avalon>
-References: <1502371530-32260-1-git-send-email-m.purski@samsung.com> <6478480.TjcUCueU5y@avalon> <5ce6bd99-c50e-84c2-f21f-eb611cac94c2@samsung.com>
+From: "rocky.hao" <rocky.hao@rock-chips.com>
+Subject: Re: [PATCH v2 3/5] arm64: dts: rockchip: add tsadc node for rk3328
+ SoC
+Date: Fri, 11 Aug 2017 17:45:00 +0800
+Message-ID: <903bc8ea-a597-80b9-a2bf-551c1b6288fb@rock-chips.com>
+References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com>
+ <1501833976-1100-4-git-send-email-rocky.hao@rock-chips.com>
+ <1ea7dab5-95c9-9d5f-5d4e-4c5a7f2a6254@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5ce6bd99-c50e-84c2-f21f-eb611cac94c2@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Maciej Purski <m.purski@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, a.hajda@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1ea7dab5-95c9-9d5f-5d4e-4c5a7f2a6254@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>, rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, cl@rock-chips.com, william.wu@rock-chips.com, jay.xu@rock-chips.com, xxx@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
 
-On Friday 11 Aug 2017 08:39:31 Marek Szyprowski wrote:
-> On 2017-08-10 15:39, Laurent Pinchart wrote:
-> > On Thursday 10 Aug 2017 15:25:29 Maciej Purski wrote:
-> >> The driver should be switched on if an external connector is plugged and
-> >> switched off if it is unplugged. Extcon is optional. If it is not found,
-> >> the driver stays in "always-on" mode.
-> >> 
-> >> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> >> ---
-> >> 
-> >>   .../bindings/display/bridge/sil-sii8620.txt        |  4 ++
-> >>   drivers/gpu/drm/bridge/sil-sii8620.c               | 83 ++++++++++++++-
-> >>   2 files changed, 85 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
-> >> b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt index
-> >> 9409d9c..1f230bf 100644
-> >> --- a/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
-> >> +++ b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
-> >> @@ -10,6 +10,9 @@ Required properties:
-> >>   	- clocks, clock-names: specification and name of "xtal" clock
-> >>   	- video interfaces: Device node can contain video interface port
-> >>   			    node for HDMI encoder according to [1].
-> >> 
-> >> +Optional properties:
-> >> +	- extcon: phandle to external connector for MHL cable changes
-> >> +		  detection
-> > 
-> > The sii8620 DT node should model its connection to the MHL connector using
-> > OF graph, connecting a port to the MHL connector DT node through
-> > endpoints. I believe the extcon property should then be added to the MHL
-> > connector DT node, not the bridge.
+
+在 2017/8/11 14:38, Caesar Wang 写道:
+> 在 2017年08月04日 16:06, Rocky Hao 写道:
+>> add tsadc needed main information for rk3328 SoC.
+>> 50000Hz is the max clock rate supported by tsadc module.
+>>
+>> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
+>> ---
+>> Change in v2:
+>> - remove gerrit Change-Id
+>>
+>>   arch/arm64/boot/dts/rockchip/rk3328.dtsi | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi 
+>> b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> index db4b2708084d..186fb93fdffd 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+>> @@ -308,6 +308,26 @@
+>>           interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+>>       };
+>> +    tsadc: tsadc@ff250000 {
+>> +        compatible = "rockchip,rk3328-tsadc";
+>> +        reg = <0x0 0xff250000 0x0 0x100>;
+>> +        interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH 0>;
+>> +        rockchip,grf = <&grf>;
+>> +        clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+>> +        clock-names = "tsadc", "apb_pclk";
+>> +        assigned-clocks = <&cru SCLK_TSADC>;
+>> +        assigned-clock-rates = <50000>;
+>> +        resets = <&cru SRST_TSADC>;
+>> +        reset-names = "tsadc-apb";
+>> +        pinctrl-names = "init", "default", "sleep";
+>> +        pinctrl-0 = <&otp_gpio>;
+>> +        pinctrl-1 = <&otp_out>;
+>> +        pinctrl-2 = <&otp_gpio>;
+>> +        #thermal-sensor-cells = <1>;
 > 
-> I don't get this. Generic extcon bindings doesn't define connector DT
-> node, so I don't see how could we use endpoint DT approach here. Could you
-> give the example?
+> Only one sensor, so maybe the value should be 0.
+Caesar, #thermal-sensor-cells means parameter counts used to match the 
+proper sensor registered. Both 0 and 1 work well.
 
-Sure, here you are.
+Case 0, i.e. #thermal-sensor-cells = <0>, it uses the default channel 
+number 0 to match tsadc channal.
+Case 1, i.e. #thermal-sensor-cells = <1>, it uses the setting 
+"thermal-sensors = <&tsadc 0>;" to match tsadc channal.
 
-&hsi2c_7 {
-	...
+Case 1 provides more readable info than case 0. By my understanding, 
+using the default value such as case 0, is not a good coding style.
 
-        sii8620@39 {
-                reg = <0x39>;
-                compatible = "sil,sii8620";
-                cvcc10-supply = <&ldo36_reg>;
-                iovcc18-supply = <&ldo34_reg>;
-                interrupt-parent = <&gpf0>;
-                interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-                reset-gpios = <&gpv7 0 GPIO_ACTIVE_LOW>;
-                clocks = <&pmu_system_controller 0>;
-                clock-names = "xtal";
-
-		ports {
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-	                port@0 {
-				reg = <0>;
-        	                mhl_to_hdmi: endpoint {
-                	                remote-endpoint = <&hdmi_to_mhl>;
-	                        };
-        	        };
-	                port@1 {
-				reg = <1>;
-        	                mhl_bridge_out: endpoint {
-                	                remote-endpoint = <&mhl_connector_in>;
-	                        };
-        	        };
-		};
-        };
-};
-
-/ {
-	mhl-connector {
-		compatible = "mhl-connector";
-		extcon = <&muic>;
-
-	        port {
-        	        mhl_connector_in: endpoint {
-                	        remote-endpoint = <&mhl_bridge_out>;
-	                };
-        	};
-	};
-};
-
-Note that there's currently no DT binding for MHL connectors. One needs to be 
-developed, the HDMI connector DT binding can be used as a source of 
-inspiration.
-
-> >>   [1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-
--- 
-Regards,
-
-Laurent Pinchart
+> 
+>> +        rockchip,hw-tshut-temp = <100000>;
+>> +        status = "disabled";
+>> +    };
+>> +
+>>       saradc: adc@ff280000 {
+>>           compatible = "rockchip,rk3328-saradc", 
+>> "rockchip,rk3399-saradc";
+>>           reg = <0x0 0xff280000 0x0 0x100>;
+> 
+> 
+> 
+> 
