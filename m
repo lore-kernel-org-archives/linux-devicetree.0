@@ -1,87 +1,45 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: sun8i: sunxi-h3-h5: add phy-is-integrated
- property to internal PHY
-Date: Fri, 11 Aug 2017 10:39:23 +0200
-Message-ID: <20170811083923.GC25147@Red>
-References: <20170810085129.20463-1-clabbe.montjoie@gmail.com>
- <20170810085129.20463-3-clabbe.montjoie@gmail.com>
- <CAGb2v64dBZgN6-8kHnnN1qiEXHnbXw_FM9WxGHPU0h-tZDbspA@mail.gmail.com>
- <20170811080543.GA25147@Red>
- <CAGb2v66wCRe8nFucJa5nAT1GhO75LmCyfNWQQbwxzh085Zwk+w@mail.gmail.com>
- <20170811081920.GB25147@Red>
- <CAGb2v66SGAKnFoHNqWR+DqS-mY3KA853NmKpdHqf8huOkisLKg@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
+Date: Fri, 11 Aug 2017 10:48:42 +0200
+Message-ID: <20170811084842.GB20909@verge.net.au>
+References: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
+ <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
+ <20170810080121.GE16647@verge.net.au>
+ <20170810112411.GA4380@katana>
+ <TY1PR06MB0702EA22AFE7D8145BF623A6B7880@TY1PR06MB0702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v66SGAKnFoHNqWR+DqS-mY3KA853NmKpdHqf8huOkisLKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <TY1PR06MB0702EA22AFE7D8145BF623A6B7880@TY1PR06MB0702.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 11, 2017 at 04:22:11PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Aug 11, 2017 at 4:19 PM, Corentin Labbe
-> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Fri, Aug 11, 2017 at 04:11:13PM +0800, Chen-Yu Tsai wrote:
-> >> On Fri, Aug 11, 2017 at 4:05 PM, Corentin Labbe
-> >> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> > On Fri, Aug 11, 2017 at 10:42:51AM +0800, Chen-Yu Tsai wrote:
-> >> >> Hi,
-> >> >>
-> >> >> On Thu, Aug 10, 2017 at 4:51 PM, Corentin Labbe
-> >> >> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> >> > This patch add the new phy-is-integrated property to the internal PHY
-> >> >> > node.
-> >> >> >
-> >> >> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> >> > ---
-> >> >> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 1 +
-> >> >> >  1 file changed, 1 insertion(+)
-> >> >> >
-> >> >> > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> >> > index 4b599b5d26f6..54fc24e4c569 100644
-> >> >> > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> >> > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> >> > @@ -425,6 +425,7 @@
-> >> >> >                                         reg = <1>;
-> >> >> >                                         clocks = <&ccu CLK_BUS_EPHY>;
-> >> >> >                                         resets = <&ccu RST_BUS_EPHY>;
-> >> >> > +                                       phy-is-integrated;
-> >> >>
-> >> >> You also need to "delete" this property at the board level for
-> >> >> any board that has the external PHY at address <1>. Otherwise
-> >> >> they will stop working. This is due to the internal and external
-> >> >> PHYs having the same path and node name in the device tree, so
-> >> >> they are effectively the same node.
-> >> >>
-> >> >> ChenYu
-> >> >>
-> >> >
-> >> > They have not the same name, ext_rgmii_phy vs int_mii_phy.
-> >>
-> >> That is just the label. The label plays no part in device tree merging. The path
-> >>
-> >>     /soc/ethernet@1c30000/mdio/ethernet-phy@1
-> >>
-> >> is the same. You can look under
-> >>
-> >>     /proc/device-tree/soc/ethernet@1c30000/mdio
-> >>
-> >> on the OrangePI Plus 2E or any other H3 board that uses an
-> >> external PHY at address 1.
-> >>
-> >> ChenYu
-> >
-> > Since we get the phy node by phy-handle and not by path, I think all should be good.
+On Thu, Aug 10, 2017 at 01:49:05PM +0000, Chris Paterson wrote:
+> Hello,
 > 
-> You are not getting me. The fact that the two seemingly separate
-> nodes are merged together means, whatever properties you put in
-> the internal PHY node, also affect the external PHY node. Once
-> compiled, they are the SAME node.
+> > From: Wolfram Sang [mailto:wsa@the-dreams.de]
+> > Sent: 10 August 2017 12:24
+> > 
+> > 
+> > > > >+		i2c6: i2c@e60b0000 {
+> > > >
+> > > >    I'd use iic0 as the label.
+> > >
+> > > I have no preference here other than that we try to be consistent in
+> > > DT for different R-Car SoCs. Wolfram, do you have an opinion on this?
+> > 
+> > Back then, for M2-W, I decided to go with the schematics/datasheets.
+> > And those mentioned i2c6 rather than iic0. For that reason, the comment
+> 
+> The M2 schematics still use i2c6, and for consistency I'd vote to use the same with RZ/G1M.
 
-So why not changing the internal node name from ethernet-phy to integrated-phy ?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++1
+
+> > "/* The memory map in the User's Manual maps the cores to bus numbers */"
+> > 
+> > exists in r8a7791.dtsi. Dunno the manual of this SoC here.
+> 
+> The manual for r8a7743 uses the same terminology as the r8a7791 manuals.
