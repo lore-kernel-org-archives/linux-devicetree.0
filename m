@@ -1,69 +1,55 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: OMAP2+: board-generic: add support for dra76x
- family
-Date: Fri, 11 Aug 2017 08:42:53 -0700
-Message-ID: <20170811154253.GT8569@atomide.com>
-References: <20170718195503.1700-1-lokeshvutla@ti.com>
- <20170718195503.1700-2-lokeshvutla@ti.com>
- <20170724190236.k3xbxrmgdfc5nogj@rob-hp-laptop>
- <5fcdf90c-4630-0834-ff09-46339dce90f6@ti.com>
- <f0d5b151-c699-c683-97ce-d6689135e3ac@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 4/4] gpio: Support gpio nexus dt bindings
+Date: Fri, 11 Aug 2017 08:42:36 -0700
+Message-ID: <20170811154236.12891-5-stephen.boyd@linaro.org>
+References: <20170811154236.12891-1-stephen.boyd@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f0d5b151-c699-c683-97ce-d6689135e3ac-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170811154236.12891-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Praneeth Bajjuri <praneeth-l0cyMroinI0@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170730 04:20]:
-> Rob,
-> 
-> On 7/25/2017 12:10 PM, Lokesh Vutla wrote:
-> > 
-> > 
-> > On 7/25/2017 12:32 AM, Rob Herring wrote:
-> >> On Wed, Jul 19, 2017 at 01:24:56AM +0530, Lokesh Vutla wrote:
-> >>> Adding board generic support for dra76 family.
-> >>>
-> >>> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/arm/omap/omap.txt | 3 +++
-> >>>  arch/arm/mach-omap2/board-generic.c                 | 1 +
-> >>>  2 files changed, 4 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> >>> index 8219b2c6bb29..ffe02755a285 100644
-> >>> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-> >>> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> >>> @@ -80,6 +80,9 @@ SoCs:
-> >>>  - OMAP5432
-> >>>    compatible = "ti,omap5432", "ti,omap5"
-> >>>  
-> >>> +- DRA762
-> >>> +  compatible = "ti,dra76", "ti,dra7"
-> >>
-> >> 76 or 762?
-> > 
-> > Just wanted to cover all variants of dra76x with this compatible. Okay
-> > ill use 762.
-> > 
-> >>
-> >> How many of these 2 or 3 compatible strings actually get used? I'd 
-> >> prefer to see one of these less specific compatibles get dropped.
-> > 
-> > ti,dra76 is being used. Ill try not to include ti,dra7 and post it again.
-> 
-> ti,dra7 is being used by cpufreq driver . So, I would like to use both
-> ti,dra762 and ti,dra7 as compatible.
+Platforms like 96boards have a standardized connector/expansion
+slot that exposes signals like GPIOs to expansion boards in an
+SoC agnostic way. We'd like the DT overlays for the expansion
+boards to be written once without knowledge of the SoC on the
+other side of the connector. This avoids the unscalable
+combinatorial explosion of a different DT overlay for each
+expansion board and SoC pair.
 
-So are you going to repost this one with ti,dra762 and ti,dra7?
+Now that we have nexus support in the OF core let's change the
+function call here that parses the phandle lists of gpios to use
+the nexus variant. This allows us to remap phandles and their
+arguments through any number of nexus nodes and end up with the
+actual gpio provider being used.
 
-Regards,
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/gpio/gpiolib-of.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Tony
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 54ce8dc58ad0..0d968c758129 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -75,8 +75,8 @@ struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+ 	struct gpio_desc *desc;
+ 	int ret;
+ 
+-	ret = of_parse_phandle_with_args(np, propname, "#gpio-cells", index,
+-					 &gpiospec);
++	ret = of_parse_phandle_with_args_map(np, propname, "gpio", index,
++					     &gpiospec);
+ 	if (ret) {
+ 		pr_debug("%s: can't parse '%s' property of node '%s[%d]'\n",
+ 			__func__, propname, np->full_name, index);
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
