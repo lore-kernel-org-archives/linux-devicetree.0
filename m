@@ -1,86 +1,145 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 11/13] ARM: dts: rockchip: add pwm backlight for rv1108 evb
-Date: Fri, 11 Aug 2017 11:47:38 +0800
-Message-ID: <1502423258-31269-1-git-send-email-andy.yan@rock-chips.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v3 12/13] ARM: dts: rockchip: add pmic rk805 dt node for rv1108 evb
+Date: Fri, 11 Aug 2017 11:48:43 +0800
+Message-ID: <1502423323-31322-1-git-send-email-andy.yan@rock-chips.com>
 References: <1502422578-30611-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502422578-30611-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502422578-30611-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-RV1108 EVB uses pwm0 modulate the backlight, add dt
-node to enable it.
+RK805 is used as the voltage regulator on rv1108 evaluation
+board. Add device tree node for it.
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 ---
 
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/rv1108-evb.dts | 43 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ arch/arm/boot/dts/rv1108-evb.dts | 108 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
 diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index 44feea7..77ce707 100644
+index 77ce707..a1bd95e 100644
 --- a/arch/arm/boot/dts/rv1108-evb.dts
 +++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -55,6 +55,49 @@
- 		stdout-path = "serial2:1500000n8";
- 		bootargs = "root=/dev/mtdblock2 mtdparts=spi-nor:256k@0(u-boot)ro,6m(kernel)ro,9m(rootfs),-(freedisk)";
+@@ -94,6 +94,114 @@
+ 			248 249 250 251 252 253 254 255>;
+ 		default-brightness-level = <200>;
  	};
 +
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm0 0 25000 0>;
-+		brightness-levels = <
-+			  0   1   2   3   4   5   6   7
-+			  8   9  10  11  12  13  14  15
-+			 16  17  18  19  20  21  22  23
-+			 24  25  26  27  28  29  30  31
-+			 32  33  34  35  36  37  38  39
-+			 40  41  42  43  44  45  46  47
-+			 48  49  50  51  52  53  54  55
-+			 56  57  58  59  60  61  62  63
-+			 64  65  66  67  68  69  70  71
-+			 72  73  74  75  76  77  78  79
-+			 80  81  82  83  84  85  86  87
-+			 88  89  90  91  92  93  94  95
-+			 96  97  98  99 100 101 102 103
-+			104 105 106 107 108 109 110 111
-+			112 113 114 115 116 117 118 119
-+			120 121 122 123 124 125 126 127
-+			128 129 130 131 132 133 134 135
-+			136 137 138 139 140 141 142 143
-+			144 145 146 147 148 149 150 151
-+			152 153 154 155 156 157 158 159
-+			160 161 162 163 164 165 166 167
-+			168 169 170 171 172 173 174 175
-+			176 177 178 179 180 181 182 183
-+			184 185 186 187 188 189 190 191
-+			192 193 194 195 196 197 198 199
-+			200 201 202 203 204 205 206 207
-+			208 209 210 211 212 213 214 215
-+			216 217 218 219 220 221 222 223
-+			224 225 226 227 228 229 230 231
-+			232 233 234 235 236 237 238 239
-+			240 241 242 243 244 245 246 247
-+			248 249 250 251 252 253 254 255>;
-+		default-brightness-level = <200>;
++	vcc_sys: vsys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vsys";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
 +	};
 +};
 +
-+&pwm0 {
++&i2c0 {
 +	status = "okay";
++	i2c-scl-rising-time-ns = <275>;
++	i2c-scl-falling-time-ns = <16>;
++	clock-frequency = <400000>;
++
++	rk805: pmic@18 {
++		compatible = "rockchip,rk805";
++		reg = <0x18>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PB4 IRQ_TYPE_LEVEL_LOW>;
++		rockchip,system-power-controller;
++
++		vcc1-supply = <&vcc_sys>;
++		vcc2-supply = <&vcc_sys>;
++		vcc3-supply = <&vcc_sys>;
++		vcc4-supply = <&vcc_sys>;
++		vcc5-supply = <&vcc_sys>;
++		vcc6-supply = <&vcc_sys>;
++
++		regulators {
++			vdd_core: DCDC_REG1 {
++				regulator-name= "vdd_core";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-state-mem {
++					regulator-state-enabled;
++					regulator-state-uv = <900000>;
++				};
++			};
++
++			vdd_cam: DCDC_REG2 {
++				regulator-name= "vdd_cam";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <2000000>;
++				regulator-state-mem {
++					regulator-state-disabled;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-name= "vcc_ddr";
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-state-mem {
++					regulator-state-enabled;
++				};
++			};
++
++			vcc_io: DCDC_REG4 {
++				regulator-name= "vcc_io";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-state-mem {
++					regulator-state-enabled;
++					regulator-state-uv = <3300000>;
++				};
++			};
++
++			vdd_10: LDO_REG1 {
++				regulator-name= "vdd_10";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-state-mem {
++					regulator-state-disabled;
++				};
++			};
++
++			vcc_18: LDO_REG2 {
++				regulator-name= "vcc_18";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-state-mem {
++					regulator-state-disabled;
++				};
++			};
++
++			vdd10_pmu: LDO_REG3 {
++				regulator-name= "vdd10_pmu";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-state-mem {
++					regulator-state-enabled;
++					regulator-state-uv = <1000000>;
++				};
++			};
++		};
++	};
  };
  
- &sdmmc {
+ &pwm0 {
 -- 
 2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
