@@ -1,74 +1,111 @@
-From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] dt-bindings: i2c: Add MediaTek MT7622 i2c
- binding
-Date: Fri, 11 Aug 2017 10:17:06 +0800
-Message-ID: <1502417826.10379.1.camel@mtksdaap41>
-References: <1502332061-25085-1-git-send-email-jun.gao@mediatek.com>
-         <1502332061-25085-2-git-send-email-jun.gao@mediatek.com>
-         <1502353140.17420.7.camel@mtksdaap41> <1502415473.930.72.camel@mhfsdcap03>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: ata: add DT bindings for MediaTek
+ SATA controller
+Date: Fri, 11 Aug 2017 10:25:56 +0800
+Message-ID: <1502418356.18608.10.camel@mtkswgap22>
+References: <cover.1502098458.git.ryder.lee@mediatek.com>
+         <a7ceb4ed8cc3542169ae8d2d995bdd4707f504e1.1502098458.git.ryder.lee@mediatek.com>
+         <20170810205149.lkphpv7krhdaa23y@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502415473.930.72.camel@mhfsdcap03>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20170810205149.lkphpv7krhdaa23y@rob-hp-laptop>
+Sender: linux-ide-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Long Cheng <long.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-08-11 at 09:37 +0800, Jun Gao wrote:
-> On Thu, 2017-08-10 at 16:19 +0800, Honghui Zhang wrote:
-> > On Thu, 2017-08-10 at 10:27 +0800, Jun Gao wrote:
-> > > From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > 
-> > > Add MT7622 i2c binding to binding file. Compare to MT8173 i2c
-> > > controller, MT7622 limits message numbers to 255, and does not
-> > > support 4GB DMA mode.
-> > > 
-> > > Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
-> > >  1 file changed, 6 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> > > index bd5a7be..ff9ac61 100644
-> > > --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> > > +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> > > @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
-> > >  
-> > >  Required properties:
-> > >    - compatible: value should be either of the following.
-> > > -      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek mt2701
-> > > -      "mediatek,mt6577-i2c": for i2c compatible with mt6577.
-> > > -      "mediatek,mt6589-i2c": for i2c compatible with mt6589.
-> > > -      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
-> > > -      "mediatek,mt8173-i2c": for i2c compatible with mt8173.
-> > > +	"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
-> > > +	"mediatek,mt6577-i2c": for Mediatek MT6577
-> > > +	"mediatek,mt6589-i2c": for Mediatek MT6589
+On Thu, 2017-08-10 at 15:51 -0500, Rob Herring wrote:
+> On Mon, Aug 07, 2017 at 05:52:21PM +0800, Ryder Lee wrote:
+> > Add DT bindings for the onboard SATA controller present on the MediaTek
+> > SoCs.
 > > 
-> > Better not change those and just add compatible strings for mt7622.
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  Documentation/devicetree/bindings/ata/ahci-mtk.txt | 50 ++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/ata/ahci-mtk.txt
 > > 
-> It seems better to use the same format for all SoCs. 
+> > diff --git a/Documentation/devicetree/bindings/ata/ahci-mtk.txt b/Documentation/devicetree/bindings/ata/ahci-mtk.txt
+> > new file mode 100644
+> > index 0000000..ed04dfc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/ata/ahci-mtk.txt
+> > @@ -0,0 +1,50 @@
+> > +MediaTek Seria ATA controller
 > 
+> s/Seria/Serial/
 
-Alright, do you need to put those changes in commit message?
-Thanks.
-
-> Jun
-> > > +	"mediatek,mt7622-i2c": for Mediatek MT7622
-> > > +	"mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-> > > +	"mediatek,mt8173-i2c": for Mediatek MT8173
-> > >    - reg: physical base address of the controller and dma base, length of memory
-> > >      mapped region.
-> > >    - interrupts: interrupt number to the cpu.
-> > 
-> > 
+Okay.
+> > +
+> > +Required properties:
+> > + - compatible	   : Must be "mediatek,ahci".
 > 
+> SoC specific compatible strings please.
+
+Okay.
+
+> > + - reg		   : Physical base addresses and length of register sets.
+> > + - interrupts	   : Interrupt associated with the SATA device.
+> > + - interrupt-names : Associated name must be: "hostc".
+> > + - clocks	   : A list of phandle and clock specifier pairs, one for each
+> > +		     entry in clock-names.
+> > + - clock-names	   : Associated names must be: "ahb", "axi", "asic", "rbc", "pm".
+> > + - phys		   : A phandle and PHY specifier pair for the PHY port.
+> > + - phy-names	   : Associated name must be: "sata-phy".
+> > + - ports-implemented : Mask that indicates which ports that the HBA supports
+> > +		       are available for software to use. Useful if PORTS_IMPL
+> > +		       is not programmed by the BIOS, which is true with some
+> > +		       embedded SOC's.
 > 
+> Do you have a variable number of ports and need this in DT? Because it 
+> looks like you only define having a single phy.
+
+We use this property to set PORTS_IMPL register value to 0x1, or there
+is no available port for use.
+
+> But this is a standard prop, so you can just say "see 
+> ./ahci-platform.txt"
+
+Okay.
+
+> > +
+> > +Optional properties:
+> > + - power-domains   : A phandle and power domain specifier pair to the power
+> > +		     domain which is responsible for collapsing and restoring
+> > +		     power to the peripheral.
+> > + - resets	   : Must contain an entry for each entry in reset-names.
+> > +		     See ../reset/reset.txt for details.
+> > + - reset-names	   : Associated names must be: "axi", "sw", "reg".
+> > + - mediatek,phy-mode : A phandle to the system controller, used to enable
+> > +		       SATA function.
+> > +
+> > +Example:
+> > +
+> > +	sata: sata@1a200000 {
+> > +		compatible = "mediatek,ahci";
+> > +		reg = <0 0x1a200000 0 0x1100>;
+> > +		interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-names = "hostc";
+> > +		clocks = <&pciesys CLK_SATA_AHB_EN>,
+> > +			 <&pciesys CLK_SATA_AXI_EN>,
+> > +			 <&pciesys CLK_SATA_ASIC_EN>,
+> > +			 <&pciesys CLK_SATA_RBC_EN>,
+> > +			 <&pciesys CLK_SATA_PM_EN>;
+> > +		clock-names = "ahb", "axi", "asic", "rbc", "pm";
+> > +		phys = <&u3port1 PHY_TYPE_SATA>;
+> > +		phy-names = "sata-phy";
+> > +		ports-implemented = <0x1>;
+> > +		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
+> > +		resets = <&pciesys MT7622_SATA_AXI_BUS_RST>,
+> > +			 <&pciesys MT7622_SATA_PHY_SW_RST>,
+> > +			 <&pciesys MT7622_SATA_PHY_REG_RST>;
+> > +		reset-names = "axi", "sw", "reg";
+> > +		mediatek,phy-mode = <&pciesys>;
+> > +	};
+> > -- 
+> > 1.9.1
+> > 
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
