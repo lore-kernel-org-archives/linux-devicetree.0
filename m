@@ -1,72 +1,69 @@
-From: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] thermal: add brcmstb AVS TMON driver
-Date: Fri, 11 Aug 2017 13:35:56 +0800
-Message-ID: <1502429756.2470.9.camel@intel.com>
-References: <20170809220257.4234-1-code@mmayer.net>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] dt-bindings: regulator: Add document for
+ MediaTek MT6380 regulator
+Date: Fri, 11 Aug 2017 14:13:38 +0800
+Message-ID: <1502432018.19230.29.camel@mtkswgap22>
+References: <cover.1500368529.git.sean.wang@mediatek.com>
+         <fef9412087f3961e03b77c067e227a31860a1417.1500368529.git.sean.wang@mediatek.com>
+         <20170724182242.ejrobnjks3ehprpw@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170809220257.4234-1-code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <20170724182242.ejrobnjks3ehprpw@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-08-09 at 15:02 -0700, Markus Mayer wrote:
-> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Mon, 2017-07-24 at 13:22 -0500, Rob Herring wrote:
+> On Tue, Jul 18, 2017 at 05:49:22PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > add dt-binding document for MediaTek MT6380 PMIC
+> > 
+> > Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../bindings/regulator/mt6380-regulator.txt        | 90 ++++++++++++++++++++++
+> >  1 file changed, 90 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
+> > new file mode 100644
+> > index 0000000..2a559f0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
+> > @@ -0,0 +1,90 @@
+> > +MediaTek MT6380 Regulator Driver
 > 
-> This series adds the brcmstb AVS TMON driver.
+> Bindings don't describe drivers.
 > 
-> The driver was originally written by Brian Norris.
-> 
-> This series is also available at
-> https://github.com/mmayer/linux/tree/brcmstb-thermal-4.13-v4.
-> 
-> v1 of this series can be found at https://lkml.org/lkml/2017/6/5/921
-> v2 of this series can be found at https://lkml.org/lkml/2017/7/21/585
-> v3 of this series can be found at https://lkml.org/lkml/2017/7/31/710
-> 
-> Changes since v3:
-> - Rebased on v4.13-rc3 to resolve conflicts in the MAINTAINERS file
-> 
-thanks, will apply this if we have ACK for patch 3 and 4.
+will fix it.
 
-thanks,
-rui
-> Changes since v2:
-> - replaced calls to pr_debug() with calls to dev_dbg() [PATCH 2/4
-> only]
-> - all other patches are unchanged from v2
+> > +
+> > +All voltage regulators are defined as subnodes of the regulators node. A list
 > 
-> Changes since v1:
-> - Fixed wording in binding document
-> - Fixed lincensing to consistently mention GPL v2
-> - Use thermal_zone_get_slope() and thermal_zone_get_offset()
-> - Some minor clean-ups
+> What's the regulators node a child of?
 > 
-> Brian Norris (2):
->   Documentation: devicetree: add binding for Broadcom STB AVS TMON
->   thermal: add brcmstb AVS TMON driver
-> 
-> Markus Mayer (2):
->   ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
->   arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
-> 
->  .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
->  MAINTAINERS                                        |   8 +
->  arch/arm/configs/multi_v7_defconfig                |   1 +
->  arch/arm64/configs/defconfig                       |   1 +
->  drivers/thermal/Kconfig                            |   2 +-
->  drivers/thermal/broadcom/Kconfig                   |   7 +
->  drivers/thermal/broadcom/Makefile                  |   1 +
->  drivers/thermal/broadcom/brcmstb_thermal.c         | 386
-> +++++++++++++++++++++
->  8 files changed, 425 insertions(+), 1 deletion(-)
->  create mode 100644
-> Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
->  create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
-> 
+
+this two line i felt are a little confusion, i will change them into "
+all voltage regulators provided by the MT6380 PMIC are described as the
+subnodes of the mt6380regulators node "
+
+> > +of regulators provided by this controller are defined as subnodes of the
+> > +PMIC's node. Each regulator is named according to its regulator type,
+> > +buck-<name> and ldo-<name>. The definition for each of these nodes is defined
+> > +using the standard binding for regulators at
+> > +Documentation/devicetree/bindings/regulator/regulator.txt.
+> > +
+> > +The valid names for regulators are:
+> > +BUCK:
+> > +  buck-core1, buck-vcore, buck-vrf
+> > +LDO:
+> > +  ldo-vm ,ldo-va , ldo-vphy, ldo-vddr, ldo-vt
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
