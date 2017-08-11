@@ -1,89 +1,86 @@
-From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4 00/20] Add QCOM QPIC NAND support
-Date: Fri, 11 Aug 2017 17:09:15 +0530
-Message-ID: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: [PATCH v4 01/20] mtd: nand: qcom: fix read failure without complete bootchain
+Date: Fri, 11 Aug 2017 17:09:16 +0530
+Message-ID: <1502451575-15712-2-git-send-email-absahu@codeaurora.org>
+References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: boris.brezillon@free-electrons.com
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* v4:
+The NAND page read fails without complete boot chain since
+NAND_DEV_CMD_VLD value is not proper. The default power on reset
+value for this register is
 
-1. Added Acked-by from Rob for DT documentation patches
-2. Removed ipq8074 compatible string from ipq4019 DT example.
-2. Used the BIT macro for NAND_CMD_VLD bits and consistent names
-   as suggested by Boris in v3.
+    0xe - ERASE_START_VALID | WRITE_START_VALID | READ_STOP_VALID
 
-* v3:
+The READ_START_VALID should be enabled for sending PAGE_READ
+command. READ_STOP_VALID should be cleared since normal NAND
+page read does not require READ_STOP command.
 
-1. Removed the patches already applied to linux-next and
-   rebased the remaining patches on [1]
-2. Reordered the patches and put the BAM DMA changes [2]
-   dependent patches and compatible string patches in last
-3. Removed the register offsets array and used the dev_cmd offsets
-4. Changed some macro names to small letters for better code readability
-5. Changed the compatible string to SoC specific
-6. Did minor code changes for adding comment, error handling, structure names
-7. Combined raw write (patch#18) and passing flag parameter (patch#22) patch
-   into one
-8. Made separate patch for compatible string and NAND properties
-9. Made separate patch for BAM command descriptor and data descriptors handling
-10. Changed commit message for some of the patches
-11. Addressed review comments given in v2
-12. Added Reviewed-by of Archit for some of the patches from v2
-13. All the MTD tests are working fine for IPQ8064 AP148, IPQ4019 DK04 and
-    IPQ8074 HK01 boards for v3 patches
+Fixes: c76b78d8ec05a ("mtd: nand: Qualcomm NAND controller driver")
+Cc: stable@vger.kernel.org
+Reviewed-by: Archit Taneja <architt@codeaurora.org>
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+---
+ drivers/mtd/nand/qcom_nandc.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-[1] http://git.infradead.org/l2-mtd.git/shortlog/refs/heads/nand/next
-[2] http://www.spinics.net/lists/dmaengine/msg13662.html
-
-* v2:
-
-1. Addressed the review comments given in v1
-2. Removed the DMA coherent buffer for register read and used
-   streaming DMA API’s
-3. Reorganized the NAND read and write functions
-4. Separated patch for driver and documentation changes
-5. Changed the compatible string for EBI2
-
-* v1:
-
-http://www.spinics.net/lists/devicetree/msg183706.html
-
-Abhishek Sahu (20):
-  mtd: nand: qcom: fix read failure without complete bootchain
-  mtd: nand: qcom: support for NAND controller properties
-  mtd: nand: qcom: add bam property for QPIC NAND controller
-  mtd: nand: qcom: add and initialize QPIC DMA resources
-  mtd: nand: qcom: DMA mapping support for register read buffer
-  mtd: nand: qcom: allocate BAM transaction
-  mtd: nand: qcom: add BAM DMA descriptor handling
-  mtd: nand: qcom: support for passing flags in transfer functions
-  mtd: nand: qcom: support for read location registers
-  mtd: nand: qcom: erased codeword detection configuration
-  mtd: nand: qcom: enable BAM or ADM mode
-  mtd: nand: qcom: QPIC data descriptors handling
-  mtd: nand: qcom: support for different DEV_CMD register offsets
-  mtd: nand: qcom: add command elements in BAM transaction
-  mtd: nand: qcom: support for command descriptor formation
-  dt-bindings: qcom_nandc: fix the ipq806x device tree example
-  dt-bindings: qcom_nandc: IPQ4019 QPIC NAND documentation
-  dt-bindings: qcom_nandc: IPQ8074 QPIC NAND documentation
-  mtd: nand: qcom: support for IPQ4019 QPIC NAND controller
-  mtd: nand: qcom: support for IPQ8074 QPIC NAND controller
-
- .../devicetree/bindings/mtd/qcom_nandc.txt         |  63 +-
- drivers/mtd/nand/qcom_nandc.c                      | 866 ++++++++++++++++++---
- 2 files changed, 814 insertions(+), 115 deletions(-)
-
+diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
+index 0e727d7..e5cb8f1 100644
+--- a/drivers/mtd/nand/qcom_nandc.c
++++ b/drivers/mtd/nand/qcom_nandc.c
+@@ -109,7 +109,11 @@
+ #define	READ_ADDR			0
+ 
+ /* NAND_DEV_CMD_VLD bits */
+-#define	READ_START_VLD			0
++#define	READ_START_VLD			BIT(0)
++#define	READ_STOP_VLD			BIT(1)
++#define	WRITE_START_VLD			BIT(2)
++#define	ERASE_START_VLD			BIT(3)
++#define	SEQ_READ_START_VLD		BIT(4)
+ 
+ /* NAND_EBI2_ECC_BUF_CFG bits */
+ #define	NUM_STEPS			0
+@@ -148,6 +152,10 @@
+ #define	FETCH_ID			0xb
+ #define	RESET_DEVICE			0xd
+ 
++/* Default Value for NAND_DEV_CMD_VLD */
++#define NAND_DEV_CMD_VLD_VAL		(READ_START_VLD | WRITE_START_VLD | \
++					 ERASE_START_VLD | SEQ_READ_START_VLD)
++
+ /*
+  * the NAND controller performs reads/writes with ECC in 516 byte chunks.
+  * the driver calls the chunks 'step' or 'codeword' interchangeably
+@@ -695,8 +703,7 @@ static int nandc_param(struct qcom_nand_host *host)
+ 
+ 	/* configure CMD1 and VLD for ONFI param probing */
+ 	nandc_set_reg(nandc, NAND_DEV_CMD_VLD,
+-		      (nandc->vld & ~(1 << READ_START_VLD))
+-		      | 0 << READ_START_VLD);
++		      (nandc->vld & ~READ_START_VLD));
+ 	nandc_set_reg(nandc, NAND_DEV_CMD1,
+ 		      (nandc->cmd1 & ~(0xFF << READ_ADDR))
+ 		      | NAND_CMD_PARAM << READ_ADDR);
+@@ -1995,13 +2002,14 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
+ {
+ 	/* kill onenand */
+ 	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
++	nandc_write(nandc, NAND_DEV_CMD_VLD, NAND_DEV_CMD_VLD_VAL);
+ 
+ 	/* enable ADM DMA */
+ 	nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
+ 
+ 	/* save the original values of these registers */
+ 	nandc->cmd1 = nandc_read(nandc, NAND_DEV_CMD1);
+-	nandc->vld = nandc_read(nandc, NAND_DEV_CMD_VLD);
++	nandc->vld = NAND_DEV_CMD_VLD_VAL;
+ 
+ 	return 0;
+ }
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
