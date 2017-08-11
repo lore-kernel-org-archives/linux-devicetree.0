@@ -1,65 +1,73 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] arm64: dts: hi3660: enable idle states
-Date: Fri, 11 Aug 2017 09:50:21 +0800
-Message-ID: <20170811015020.GF3819@leoy-ThinkPad-T440>
-References: <20170810022615.19204-1-guodong.xu@linaro.org>
- <20170810022615.19204-2-guodong.xu@linaro.org>
- <b3d8f55b-3d70-9b3a-a4c6-474a933a13a9@linaro.org>
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/2] dt-bindings: i2c: Add MediaTek MT7622 i2c
+ binding
+Date: Fri, 11 Aug 2017 10:17:06 +0800
+Message-ID: <1502417826.10379.1.camel@mtksdaap41>
+References: <1502332061-25085-1-git-send-email-jun.gao@mediatek.com>
+         <1502332061-25085-2-git-send-email-jun.gao@mediatek.com>
+         <1502353140.17420.7.camel@mtksdaap41> <1502415473.930.72.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b3d8f55b-3d70-9b3a-a4c6-474a933a13a9-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1502415473.930.72.camel@mhfsdcap03>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kevin Wang <jean.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On Fri, 2017-08-11 at 09:37 +0800, Jun Gao wrote:
+> On Thu, 2017-08-10 at 16:19 +0800, Honghui Zhang wrote:
+> > On Thu, 2017-08-10 at 10:27 +0800, Jun Gao wrote:
+> > > From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > 
+> > > Add MT7622 i2c binding to binding file. Compare to MT8173 i2c
+> > > controller, MT7622 limits message numbers to 255, and does not
+> > > support 4GB DMA mode.
+> > > 
+> > > Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
+> > >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> > > index bd5a7be..ff9ac61 100644
+> > > --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> > > +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> > > @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
+> > >  
+> > >  Required properties:
+> > >    - compatible: value should be either of the following.
+> > > -      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek mt2701
+> > > -      "mediatek,mt6577-i2c": for i2c compatible with mt6577.
+> > > -      "mediatek,mt6589-i2c": for i2c compatible with mt6589.
+> > > -      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
+> > > -      "mediatek,mt8173-i2c": for i2c compatible with mt8173.
+> > > +	"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
+> > > +	"mediatek,mt6577-i2c": for Mediatek MT6577
+> > > +	"mediatek,mt6589-i2c": for Mediatek MT6589
+> > 
+> > Better not change those and just add compatible strings for mt7622.
+> > 
+> It seems better to use the same format for all SoCs. 
+> 
 
-On Thu, Aug 10, 2017 at 12:07:07PM +0200, Daniel Lezcano wrote:
-> 
-> Hi Guodong, Leo,
-> 
-> there are several typos in the patch description. I *humbly* propose an
-> alternate description to make it a bit more English friendly.
-> 
-> """
-> 
-> There are two clusters on the Hi3660, the first one is Cortex-A53 based
-> and the other one is Cortex-A73 based. These two clusters have different
-> idle states.
-> 
-> Thanks to Daniel Lezcano's recent changes, the generic ARM cpuidle
-> driver can now support several clusters with different idle states, thus
-> supporting the big.Little architecture.
-> 
-> In addition to the WFI idle state which is the default shallowest state
-> for all ARM cpus, the Hi3660 supports the following states:
-> 
->  - CA53 CPUs:
-> 	- CPU_SLEEP:       CPU power off state
-> 	- CLUSTER_SLEEP_0: Cluster power off state
-> 
->  - CA73 CPUs:
-> 	- CPU_NAP:         CPU retention state
-> 	- CPU_SLEEP:       CPU power off state
-> 	- CLUSTER_SLEEP_1: Cluster power off state
-> 
-> This patch adds the idle states description for the Hi3660 to the device
-> tree.
-> 
-> """
-> 
-> 
-> Other than that.
-> 
-> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Alright, do you need to put those changes in commit message?
+Thanks.
 
-Thanks a lot for proposing commit log, it's much better :)
+> Jun
+> > > +	"mediatek,mt7622-i2c": for Mediatek MT7622
+> > > +	"mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
+> > > +	"mediatek,mt8173-i2c": for Mediatek MT8173
+> > >    - reg: physical base address of the controller and dma base, length of memory
+> > >      mapped region.
+> > >    - interrupts: interrupt number to the cpu.
+> > 
+> > 
+> 
+> 
 
-Thanks,
-Leo Yan
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
