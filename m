@@ -1,70 +1,57 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] dt-bindings: regulator: Add document for
- MediaTek MT6380 regulator
-Date: Fri, 11 Aug 2017 14:13:38 +0800
-Message-ID: <1502432018.19230.29.camel@mtkswgap22>
-References: <cover.1500368529.git.sean.wang@mediatek.com>
-         <fef9412087f3961e03b77c067e227a31860a1417.1500368529.git.sean.wang@mediatek.com>
-         <20170724182242.ejrobnjks3ehprpw@rob-hp-laptop>
+From: "rocky.hao" <rocky.hao@rock-chips.com>
+Subject: Re: [PATCH v2 0/5] thermal: rockchip: add tsadc support in thermal
+ driver and IPA thermal control for rk3328 in dts
+Date: Fri, 11 Aug 2017 14:22:02 +0800
+Message-ID: <f004afe1-f885-68f5-d769-30051f36d9f7@rock-chips.com>
+References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com>
+ <1502427095.2598.21.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170724182242.ejrobnjks3ehprpw@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1502427095.2598.21.camel@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-07-24 at 13:22 -0500, Rob Herring wrote:
-> On Tue, Jul 18, 2017 at 05:49:22PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > add dt-binding document for MediaTek MT6380 PMIC
-> > 
-> > Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../bindings/regulator/mt6380-regulator.txt        | 90 ++++++++++++++++++++++
-> >  1 file changed, 90 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-> > new file mode 100644
-> > index 0000000..2a559f0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-> > @@ -0,0 +1,90 @@
-> > +MediaTek MT6380 Regulator Driver
+Hi Rui,
+
+Thank you for the patch set acception.
+
+Thanks again,
+Rocky
+
+在 2017/8/11 12:51, Zhang Rui 写道:
+> On Fri, 2017-08-04 at 16:06 +0800, Rocky Hao wrote:
+>> This series patches add the tsadc support in thermal driver and in
+>> devicetree for rk3328.
+>> Also add thermal control with Intelligent Power Allocation (IPA)
+>> policy by default.  Please
+>> refer to https://developer.arm.com/open-source/intelligent-power-allo
+>> cation for more information
+>> about IPA.
+>>
+>> Rocky Hao (5):
+>>    dt-bindings: rockchip-thermal: Support the RK3328 SoC compatible
+>>    thermal: rockchip: Support the RK3328 SOC in thermal driver
+>>    arm64: dts: rockchip: add tsadc node for rk3328 SoC
+>>    arm64: dts: rockchip: add thermal nodes for rk3328 SoC
+>>    arm64: dts: rockchip: Enable tsadc module on RK3328 eavluation
+>> board
+>>
+> I can take this patch set if we have ACK for patch 3, 4 and 5.
 > 
-> Bindings don't describe drivers.
+> thanks,
+> rui
+>>   .../bindings/thermal/rockchip-thermal.txt          |  1 +
+>>   arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |  4 ++
+>>   arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 63
+>> +++++++++++++++++++++
+>>   drivers/thermal/rockchip_thermal.c                 | 65
+>> ++++++++++++++++++++++
+>>   4 files changed, 133 insertions(+)
+>>
 > 
-will fix it.
-
-> > +
-> > +All voltage regulators are defined as subnodes of the regulators node. A list
 > 
-> What's the regulators node a child of?
 > 
-
-this two line i felt are a little confusion, i will change them into "
-all voltage regulators provided by the MT6380 PMIC are described as the
-subnodes of the mt6380regulators node "
-
-> > +of regulators provided by this controller are defined as subnodes of the
-> > +PMIC's node. Each regulator is named according to its regulator type,
-> > +buck-<name> and ldo-<name>. The definition for each of these nodes is defined
-> > +using the standard binding for regulators at
-> > +Documentation/devicetree/bindings/regulator/regulator.txt.
-> > +
-> > +The valid names for regulators are:
-> > +BUCK:
-> > +  buck-core1, buck-vcore, buck-vrf
-> > +LDO:
-> > +  ldo-vm ,ldo-va , ldo-vphy, ldo-vddr, ldo-vt
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
