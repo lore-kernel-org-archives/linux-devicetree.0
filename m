@@ -1,35 +1,58 @@
 From: Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>
-Subject: [RESEND] arm64: dts: ls1088: Correction in Board name from "L1088A" to "LS1088A"
-Date: Fri, 11 Aug 2017 14:49:37 +0530
-Message-ID: <1502443177-15479-2-git-send-email-Ashish.Kumar@nxp.com>
-References: <1502443177-15479-1-git-send-email-Ashish.Kumar@nxp.com>
+Subject: [RESEND] arm64: dts: ls1088a: Added dcfg node in ls1088a dtsi
+Date: Fri, 11 Aug 2017 14:49:36 +0530
+Message-ID: <1502443177-15479-1-git-send-email-Ashish.Kumar@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502443177-15479-1-git-send-email-Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: leoyang.li-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>
+Cc: leoyang.li-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>, Amrita Kumari <amrita.kumari-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add debug configuration node(DCFG) in dtsi, helps guts driver to
+print the following information in kernel boot log
+
+[    0.526649] Machine: LS1088A RDB Board
+[    0.530430] SoC family: QorIQ LS1088A
+[    0.534115] SoC ID: svr:0x87030010, Revision: 1.0
+
+Signed-off-by: Amrita Kumari <amrita.kumari-3arQi8VN3Tc@public.gmane.org>
 Signed-off-by: Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |    6 ++++++
+ drivers/soc/fsl/guts.c                         |    1 +
+ 2 files changed, 7 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-index 213abb7..0f6fcda 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -49,7 +49,7 @@
- #include "fsl-ls1088a.dtsi"
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index c144d06..b5f2372 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -156,6 +156,12 @@
+ 			clocks = <&sysclk>;
+ 		};
  
- / {
--	model = "L1088A RDB Board";
-+	model = "LS1088A RDB Board";
- 	compatible = "fsl,ls1088a-rdb", "fsl,ls1088a";
++		dcfg: dcfg@1e00000 {
++			compatible = "fsl,ls1088a-dcfg", "syscon";
++			reg = <0x0 0x1e00000 0x0 0x10000>;
++			little-endian;
++		};
++
+ 		tmu: tmu@1f80000 {
+ 			compatible = "fsl,qoriq-tmu";
+ 			reg = <0x0 0x1f80000 0x0 0x10000>;
+diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
+index 6af7a11..d89a6a8 100644
+--- a/drivers/soc/fsl/guts.c
++++ b/drivers/soc/fsl/guts.c
+@@ -213,6 +213,7 @@ static int fsl_guts_remove(struct platform_device *dev)
+ 	{ .compatible = "fsl,ls1021a-dcfg", },
+ 	{ .compatible = "fsl,ls1043a-dcfg", },
+ 	{ .compatible = "fsl,ls2080a-dcfg", },
++	{ .compatible = "fsl,ls1088a-dcfg", },
+ 	{}
  };
- 
+ MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
 -- 
 1.7.6.GIT
 
