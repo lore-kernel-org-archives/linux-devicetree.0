@@ -1,138 +1,171 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: sun8i: sunxi-h3-h5: add phy-is-integrated
- property to internal PHY
-Date: Fri, 11 Aug 2017 15:25:26 +0200
-Message-ID: <20170811132526.GD25147@Red>
-References: <20170810085129.20463-1-clabbe.montjoie@gmail.com>
- <20170810085129.20463-3-clabbe.montjoie@gmail.com>
- <CAGb2v64dBZgN6-8kHnnN1qiEXHnbXw_FM9WxGHPU0h-tZDbspA@mail.gmail.com>
- <20170811080543.GA25147@Red>
- <CAGb2v66wCRe8nFucJa5nAT1GhO75LmCyfNWQQbwxzh085Zwk+w@mail.gmail.com>
- <20170811081920.GB25147@Red>
- <CAGb2v66SGAKnFoHNqWR+DqS-mY3KA853NmKpdHqf8huOkisLKg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 3/3] drivers: tee: rework optee_driver_{init,exit} to use platform device
+Date: Fri, 11 Aug 2017 14:30:37 +0100
+Message-ID: <1502458237-1683-4-git-send-email-sudeep.holla@arm.com>
+References: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66SGAKnFoHNqWR+DqS-mY3KA853NmKpdHqf8huOkisLKg@mail.gmail.com>
+In-Reply-To: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com
-Cc: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, alexandre.torgue@st.com, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, andrew@lunn.ch
+To: linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 11, 2017 at 04:22:11PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Aug 11, 2017 at 4:19 PM, Corentin Labbe
-> <clabbe.montjoie@gmail.com> wrote:
-> > On Fri, Aug 11, 2017 at 04:11:13PM +0800, Chen-Yu Tsai wrote:
-> >> On Fri, Aug 11, 2017 at 4:05 PM, Corentin Labbe
-> >> <clabbe.montjoie@gmail.com> wrote:
-> >> > On Fri, Aug 11, 2017 at 10:42:51AM +0800, Chen-Yu Tsai wrote:
-> >> >> Hi,
-> >> >>
-> >> >> On Thu, Aug 10, 2017 at 4:51 PM, Corentin Labbe
-> >> >> <clabbe.montjoie@gmail.com> wrote:
-> >> >> > This patch add the new phy-is-integrated property to the internal PHY
-> >> >> > node.
-> >> >> >
-> >> >> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> >> >> > ---
-> >> >> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 1 +
-> >> >> >  1 file changed, 1 insertion(+)
-> >> >> >
-> >> >> > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> >> > index 4b599b5d26f6..54fc24e4c569 100644
-> >> >> > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> >> > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> >> > @@ -425,6 +425,7 @@
-> >> >> >                                         reg = <1>;
-> >> >> >                                         clocks = <&ccu CLK_BUS_EPHY>;
-> >> >> >                                         resets = <&ccu RST_BUS_EPHY>;
-> >> >> > +                                       phy-is-integrated;
-> >> >>
-> >> >> You also need to "delete" this property at the board level for
-> >> >> any board that has the external PHY at address <1>. Otherwise
-> >> >> they will stop working. This is due to the internal and external
-> >> >> PHYs having the same path and node name in the device tree, so
-> >> >> they are effectively the same node.
-> >> >>
-> >> >> ChenYu
-> >> >>
-> >> >
-> >> > They have not the same name, ext_rgmii_phy vs int_mii_phy.
-> >>
-> >> That is just the label. The label plays no part in device tree merging. The path
-> >>
-> >>     /soc/ethernet@1c30000/mdio/ethernet-phy@1
-> >>
-> >> is the same. You can look under
-> >>
-> >>     /proc/device-tree/soc/ethernet@1c30000/mdio
-> >>
-> >> on the OrangePI Plus 2E or any other H3 board that uses an
-> >> external PHY at address 1.
-> >>
-> >> ChenYu
-> >
-> > Since we get the phy node by phy-handle and not by path, I think all should be good.
-> 
-> You are not getting me. The fact that the two seemingly separate
-> nodes are merged together means, whatever properties you put in
-> the internal PHY node, also affect the external PHY node. Once
-> compiled, they are the SAME node.
+Now that firmware_of_init takes care of populating all the devices
+under the /firmware/ node, this patch reworks/removes custom
+optee_driver_{init,exit} in favour of module_platform_driver.
 
-Hello Rob, florian, mark
-
-Adding a delete property on all external ethernet-phy@1 is a bit overkill, and I dont like the idea that nodes are merged.
-What do you think about other possible solutions:
-- Using integrated-phy@1 for the integrated PHY node name
-- Using a fake address like 31 (see patch below)
-
-If you have any other solution...
-
-Regards
-
->From fe39183946f7f4a6e21bce38fd8e4c1413012d68 Mon Sep 17 00:00:00 2001
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Date: Fri, 11 Aug 2017 14:49:54 +0200
-Subject: [PATCH] ARM: sun8i: sunxi-h3-h5: Prevent merge of external and
- integrated PHY
-
-Actually, some external and integrated PHY are merged due to same dtnode
-name "ethernet-phy@1".
-
-This is problematic when we will want to use the phy-is-integrated
-property. (Need to delete it on all external PHY node)
-
-An easy solution is to set integrated PHY nodeaddresss at a fake one
-that would never be used.
-Since board makers currently only provides PHY at addresses 1 and 7,
-we will use 31.
-
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/tee/optee/core.c | 74 ++++++++++++++++--------------------------------
+ 1 file changed, 25 insertions(+), 49 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 54fc24e4c569..2110b0069e33 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -420,7 +420,15 @@
- 			mdio: mdio {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				int_mii_phy: ethernet-phy@1 {
-+				/*
-+				 * Using 31 permits to make a separation between
-+				 * this integrated PHY and external ones.
-+				 * Without it, external "ethernet-phy@1" will be
-+				 * merged with it (due to same dtnode name).
-+				 * Board makers currently only provides PHY at
-+				 * addresses 1 and 7.
-+				 */
-+				int_mii_phy: ethernet-phy@31 {
- 					compatible = "ethernet-phy-ieee802.3-c22";
- 					reg = <1>;
- 					clocks = <&ccu CLK_BUS_EPHY>;
+diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+index 58169e519422..6c368508e835 100644
+--- a/drivers/tee/optee/core.c
++++ b/drivers/tee/optee/core.c
+@@ -445,8 +445,9 @@ static optee_invoke_fn *get_invoke_func(struct device_node *np)
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
+-static struct optee *optee_probe(struct device_node *np)
++static int optee_probe(struct platform_device *pdev)
+ {
++	struct device_node *np = pdev->dev.of_node;
+ 	optee_invoke_fn *invoke_fn;
+ 	struct tee_shm_pool *pool;
+ 	struct optee *optee = NULL;
+@@ -457,21 +458,21 @@ static struct optee *optee_probe(struct device_node *np)
+ 
+ 	invoke_fn = get_invoke_func(np);
+ 	if (IS_ERR(invoke_fn))
+-		return (void *)invoke_fn;
++		return PTR_ERR(invoke_fn);
+ 
+ 	if (!optee_msg_api_uid_is_optee_api(invoke_fn)) {
+ 		pr_warn("api uid mismatch\n");
+-		return ERR_PTR(-EINVAL);
++		return -EINVAL;
+ 	}
+ 
+ 	if (!optee_msg_api_revision_is_compatible(invoke_fn)) {
+ 		pr_warn("api revision mismatch\n");
+-		return ERR_PTR(-EINVAL);
++		return -EINVAL;
+ 	}
+ 
+ 	if (!optee_msg_exchange_capabilities(invoke_fn, &sec_caps)) {
+ 		pr_warn("capabilities mismatch\n");
+-		return ERR_PTR(-EINVAL);
++		return -EINVAL;
+ 	}
+ 
+ 	/*
+@@ -479,11 +480,11 @@ static struct optee *optee_probe(struct device_node *np)
+ 	 * doesn't have any reserved memory we can use we can't continue.
+ 	 */
+ 	if (!(sec_caps & OPTEE_SMC_SEC_CAP_HAVE_RESERVED_SHM))
+-		return ERR_PTR(-EINVAL);
++		return -EINVAL;
+ 
+ 	pool = optee_config_shm_memremap(invoke_fn, &memremaped_shm);
+ 	if (IS_ERR(pool))
+-		return (void *)pool;
++		return PTR_ERR(pool);
+ 
+ 	optee = kzalloc(sizeof(*optee), GFP_KERNEL);
+ 	if (!optee) {
+@@ -523,9 +524,10 @@ static struct optee *optee_probe(struct device_node *np)
+ 	optee->pool = pool;
+ 
+ 	optee_enable_shm_cache(optee);
++	platform_set_drvdata(pdev, optee);
+ 
+ 	pr_info("initialized driver\n");
+-	return optee;
++	return 0;
+ err:
+ 	if (optee) {
+ 		/*
+@@ -541,11 +543,12 @@ static struct optee *optee_probe(struct device_node *np)
+ 		tee_shm_pool_free(pool);
+ 	if (memremaped_shm)
+ 		memunmap(memremaped_shm);
+-	return ERR_PTR(rc);
++	return rc;
+ }
+ 
+-static void optee_remove(struct optee *optee)
++static int optee_remove(struct platform_device *pdev)
+ {
++	struct optee *optee = platform_get_drvdata(pdev);
+ 	/*
+ 	 * Ask OP-TEE to free all cached shared memory objects to decrease
+ 	 * reference counters and also avoid wild pointers in secure world
+@@ -568,52 +571,25 @@ static void optee_remove(struct optee *optee)
+ 	mutex_destroy(&optee->call_queue.mutex);
+ 
+ 	kfree(optee);
++	return 0;
+ }
+ 
+ static const struct of_device_id optee_match[] = {
+ 	{ .compatible = "linaro,optee-tz" },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, optee_match);
++
++static struct platform_driver optee_platdrv = {
++	.driver = {
++		.name = "optee",
++		.of_match_table = of_match_ptr(optee_match),
++	},
++	.probe = optee_probe,
++	.remove	= optee_remove,
++};
+ 
+-static struct optee *optee_svc;
+-
+-static int __init optee_driver_init(void)
+-{
+-	struct device_node *fw_np;
+-	struct device_node *np;
+-	struct optee *optee;
+-
+-	/* Node is supposed to be below /firmware */
+-	fw_np = of_find_node_by_name(NULL, "firmware");
+-	if (!fw_np)
+-		return -ENODEV;
+-
+-	np = of_find_matching_node(fw_np, optee_match);
+-	of_node_put(fw_np);
+-	if (!np)
+-		return -ENODEV;
+-
+-	optee = optee_probe(np);
+-	of_node_put(np);
+-
+-	if (IS_ERR(optee))
+-		return PTR_ERR(optee);
+-
+-	optee_svc = optee;
+-
+-	return 0;
+-}
+-module_init(optee_driver_init);
+-
+-static void __exit optee_driver_exit(void)
+-{
+-	struct optee *optee = optee_svc;
+-
+-	optee_svc = NULL;
+-	if (optee)
+-		optee_remove(optee);
+-}
+-module_exit(optee_driver_exit);
++module_platform_driver(optee_platdrv);
+ 
+ MODULE_AUTHOR("Linaro");
+ MODULE_DESCRIPTION("OP-TEE driver");
 -- 
-2.13.0
+2.7.4
