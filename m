@@ -1,304 +1,190 @@
 From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: [PATCH v4 2/4] of: Support parsing phandle argument lists through a nexus node
-Date: Fri, 11 Aug 2017 08:42:34 -0700
-Message-ID: <20170811154236.12891-3-stephen.boyd@linaro.org>
+Subject: [RFC/PATCH v4 1/4] Document nexus nodes/specifier remapping
+Date: Fri, 11 Aug 2017 08:42:33 -0700
+Message-ID: <20170811154236.12891-2-stephen.boyd@linaro.org>
 References: <20170811154236.12891-1-stephen.boyd@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170811154236.12891-1-stephen.boyd@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, devicetree-spec@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>
+Cc: devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Platforms like 96boards have a standardized connector/expansion
-slot that exposes signals like GPIOs to expansion boards in an
-SoC agnostic way. We'd like the DT overlays for the expansion
-boards to be written once without knowledge of the SoC on the
-other side of the connector. This avoids the unscalable
-combinatorial explosion of a different DT overlay for each
-expansion board and SoC pair.
-
-We need a way to describe the GPIOs routed through the connector
-in an SoC agnostic way. Let's introduce nexus property parsing
-into the OF core to do this. This is largely based on the
-interrupt nexus support we already have. This allows us to remap
-a phandle list in a consumer node (e.g. reset-gpios) through a
-connector in a generic way (e.g. via gpio-map). Do this in a
-generic routine so that we can remap any sort of variable length
-phandle list.
-
-Taking GPIOs as an example, the connector would be a GPIO nexus,
-supporting the remapping of a GPIO specifier space to multiple
-GPIO providers on the SoC. DT would look as shown below, where
-'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
-expansion port where boards can be plugged in, and
-'expansion_device' is a device on the expansion board.
-
-	soc {
-		soc_gpio1: gpio-controller1 {
-			#gpio-cells = <2>;
-		};
-
-		soc_gpio2: gpio-controller2 {
-			#gpio-cells = <2>;
-		};
-	};
-
-	connector: connector {
-		#gpio-cells = <2>;
-		gpio-map = <0 0 &soc_gpio1 1 0>,
-			   <1 0 &soc_gpio2 4 0>,
-			   <2 0 &soc_gpio1 3 0>,
-			   <3 0 &soc_gpio2 2 0>;
-		gpio-map-mask = <0xf 0x0>;
-		gpio-map-pass-thru = <0x0 0x1>
-	};
-
-	expansion_device {
-		reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
-	};
-
-The GPIO core would use of_parse_phandle_with_args_map() instead
-of of_parse_phandle_with_args() and arrive at the same type of
-result, a phandle and argument list. The difference is that the
-phandle and arguments will be remapped through the nexus node to
-the underlying SoC GPIO controller node. In the example above,
-we would remap 'reset-gpios' from <&connector 2 GPIO_ACTIVE_LOW>
-to <&soc_gpio1 3 GPIO_ACTIVE_LOW>.
-
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
----
- drivers/of/base.c  | 184 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of.h |  12 ++++
- 2 files changed, 196 insertions(+)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 686628d1dfa6..60f15bf56534 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1366,6 +1366,190 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
- EXPORT_SYMBOL(of_parse_phandle_with_args);
- 
- /**
-+ * of_parse_phandle_with_args_map() - Find a node pointed by phandle in a list and remap it
-+ * @np:		pointer to a device tree node containing a list
-+ * @list_name:	property name that contains a list
-+ * @stem_name:	stem of property names that specify phandles' arguments count
-+ * @index:	index of a phandle to parse out
-+ * @out_args:	optional pointer to output arguments structure (will be filled)
-+ *
-+ * This function is useful to parse lists of phandles and their arguments.
-+ * Returns 0 on success and fills out_args, on error returns appropriate errno
-+ * value. The difference between this function and of_parse_phandle_with_args()
-+ * is that this API remaps a phandle if the node the phandle points to has
-+ * a <@stem_name>-map property.
-+ *
-+ * Caller is responsible to call of_node_put() on the returned out_args->np
-+ * pointer.
-+ *
-+ * Example:
-+ *
-+ * phandle1: node1 {
-+ *	#list-cells = <2>;
-+ * }
-+ *
-+ * phandle2: node2 {
-+ *	#list-cells = <1>;
-+ * }
-+ *
-+ * phandle3: node3 {
-+ * 	#list-cells = <1>;
-+ * 	list-map = <0 &phandle2 3>,
-+ * 		   <1 &phandle2 2>,
-+ * 		   <2 &phandle1 5 1>;
-+ *	list-map-mask = <0x3>;
-+ * };
-+ *
-+ * node4 {
-+ *	list = <&phandle1 1 2 &phandle3 0>;
-+ * }
-+ *
-+ * To get a device_node of the `node2' node you may call this:
-+ * of_parse_phandle_with_args(node4, "list", "list", 1, &args);
-+ */
-+int of_parse_phandle_with_args_map(const struct device_node *np,
-+				   const char *list_name,
-+				   const char *stem_name,
-+				   int index, struct of_phandle_args *out_args)
-+{
-+	char *cells_name, *map_name = NULL, *mask_name = NULL;
-+	char *pass_name = NULL;
-+	struct device_node *cur, *new = NULL;
-+	const __be32 *map, *mask, *pass;
-+	static const __be32 dummy_mask[] = { [0 ... MAX_PHANDLE_ARGS] = ~0 };
-+	static const __be32 dummy_pass[] = { [0 ... MAX_PHANDLE_ARGS] = 0 };
-+	__be32 initial_match_array[MAX_PHANDLE_ARGS];
-+	const __be32 *match_array = initial_match_array;
-+	int i, ret, map_len, match;
-+	u32 list_size, new_size;
-+
-+	if (index < 0)
-+		return -EINVAL;
-+
-+	cells_name = kasprintf(GFP_KERNEL, "#%s-cells", stem_name);
-+	if (!cells_name)
-+		return -ENOMEM;
-+
-+	ret = -ENOMEM;
-+	map_name = kasprintf(GFP_KERNEL, "%s-map", stem_name);
-+	if (!map_name)
-+		goto free;
-+
-+	mask_name = kasprintf(GFP_KERNEL, "%s-map-mask", stem_name);
-+	if (!mask_name)
-+		goto free;
-+
-+	pass_name = kasprintf(GFP_KERNEL, "%s-map-pass-thru", stem_name);
-+	if (!pass_name)
-+		goto free;
-+
-+	ret = __of_parse_phandle_with_args(np, list_name, cells_name, 0, index,
-+					   out_args);
-+	if (ret)
-+		goto free;
-+
-+	/* Get the #<list>-cells property */
-+	cur = out_args->np;
-+	ret = of_property_read_u32(cur, cells_name, &list_size);
-+	if (ret < 0)
-+		goto put;
-+
-+	/* Precalculate the match array - this simplifies match loop */
-+	for (i = 0; i < list_size; i++)
-+		initial_match_array[i] = cpu_to_be32(out_args->args[i]);
-+
-+	ret = -EINVAL;
-+	while (cur) {
-+		/* Get the <list>-map property */
-+		map = of_get_property(cur, map_name, &map_len);
-+		if (!map) {
-+			ret = 0;
-+			goto free;
-+		}
-+		map_len /= sizeof(u32);
-+
-+		/* Get the <list>-map-mask property (optional) */
-+		mask = of_get_property(cur, mask_name, NULL);
-+		if (!mask)
-+			mask = dummy_mask;
-+		/* Iterate through <list>-map property */
-+		match = 0;
-+		while (map_len > (list_size + 1) && !match) {
-+			/* Compare specifiers */
-+			match = 1;
-+			for (i = 0; i < list_size; i++, map_len--)
-+				match &= !((match_array[i] ^ *map++) & mask[i]);
-+
-+			of_node_put(new);
-+			new = of_find_node_by_phandle(be32_to_cpup(map));
-+			map++;
-+			map_len--;
-+
-+			/* Check if not found */
-+			if (!new)
-+				goto put;
-+
-+			if (!of_device_is_available(new))
-+				match = 0;
-+
-+			ret = of_property_read_u32(new, cells_name, &new_size);
-+			if (ret)
-+				goto put;
-+
-+			/* Check for malformed properties */
-+			if (WARN_ON(new_size > MAX_PHANDLE_ARGS))
-+				goto put;
-+			if (map_len < new_size)
-+				goto put;
-+
-+			/* Move forward by new node's #<list>-cells amount */
-+			map += new_size;
-+			map_len -= new_size;
-+		}
-+		if (!match)
-+			goto put;
-+
-+		/* Get the <list>-map-pass-thru property (optional) */
-+		pass = of_get_property(cur, pass_name, NULL);
-+		if (!pass)
-+			pass = dummy_pass;
-+
-+		/*
-+		 * Successfully parsed a <list>-map translation; copy new
-+		 * specifier into the out_args structure, keeping the
-+		 * bits specified in <list>-map-pass-thru.
-+		 */
-+		match_array = map - new_size;
-+		for (i = 0; i < new_size; i++) {
-+			__be32 val = *(map - new_size + i);
-+
-+			if (i < list_size) {
-+				val &= ~pass[i];
-+				val |= cpu_to_be32(out_args->args[i]) & pass[i];
-+			}
-+
-+			out_args->args[i] = be32_to_cpu(val);
-+		}
-+		out_args->args_count = list_size = new_size;
-+		/* Iterate again with new provider */
-+		out_args->np = new;
-+		of_node_put(cur);
-+		cur = new;
-+	}
-+put:
-+	of_node_put(cur);
-+	of_node_put(new);
-+free:
-+	kfree(mask_name);
-+	kfree(map_name);
-+	kfree(cells_name);
-+	kfree(pass_name);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(of_parse_phandle_with_args_map);
-+
-+/**
-  * of_parse_phandle_with_fixed_args() - Find a node pointed by phandle in a list
-  * @np:		pointer to a device tree node containing a list
-  * @list_name:	property name that contains a list
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 23bf46ee8686..92fd032b76c7 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -362,6 +362,9 @@ extern struct device_node *of_parse_phandle(const struct device_node *np,
- extern int of_parse_phandle_with_args(const struct device_node *np,
- 	const char *list_name, const char *cells_name, int index,
- 	struct of_phandle_args *out_args);
-+extern int of_parse_phandle_with_args_map(const struct device_node *np,
-+	const char *list_name, const char *stem_name, int index,
-+	struct of_phandle_args *out_args);
- extern int of_parse_phandle_with_fixed_args(const struct device_node *np,
- 	const char *list_name, int cells_count, int index,
- 	struct of_phandle_args *out_args);
-@@ -764,6 +767,15 @@ static inline int of_parse_phandle_with_args(const struct device_node *np,
- 	return -ENOSYS;
- }
- 
-+static inline int of_parse_phandle_with_args_map(const struct device_node *np,
-+						 const char *list_name,
-+						 const char *stem_name,
-+						 int index,
-+						 struct of_phandle_args *out_args)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_parse_phandle_with_fixed_args(const struct device_node *np,
- 	const char *list_name, int cells_count, int index,
- 	struct of_phandle_args *out_args)
--- 
-2.7.4
+RG9jdW1lbnQgdGhlIGdlbmVyaWMgbmV4dXMgbm9kZSBwcm9wZXJ0aWVzLiBUaGlzIGNhbiBiZSB1
+c2VkIGJ5CmFueSBzcGVjaWZpZXIgdGhhdCBjb25mb3JtcyB0byAjPHNwZWNpZmllcj4tY2VsbHMg
+d2hlcmUgdGhleQp3YW50IHRvIHN1cHBvcnQgcmVtYXBwaW5nIHBoYW5kbGUgbGlzdHMgdGhyb3Vn
+aCBuZXh1cyBub2Rlcy4gVGhpcwppcyBzaW1pbGFyIHRvIGludGVycnVwdCByZW1hcHBpbmcsIGJ1
+dCBzbGlnaHRseSBkaWZmZXJlbnQgYmVjYXVzZQp3ZSBkb24ndCBjb25zaWRlciB1bml0IGFkZHJl
+c3NlcyB3aGVuIGRvaW5nIG1hcHBpbmdzLiBUaGlzIGlzCm1vc3RseSBhIGNvcHkvcGFzdGUgb2Yg
+dGhlIGludGVycnVwdCBzcGVjaWZpY2F0aW9uLCB3aXRoIHRoZSB1bml0CmFkZHJlc3MgcGFydHMg
+cmVtb3ZlZCBhbmQgZ2VuZXJhbGl6ZWQgdG8gYW55IHNwZWNpZmllci4gVGhlcmUncwphbHNvIHRo
+ZSBhZGRpdGlvbiBvZiBhIHBhc3MgdGhyb3VnaCBtZWNoYW5pc20gdG8gbWFrZSB0aGluZ3MgbW9y
+ZQpjb21wYWN0IGlmIGRlc2lyZWQgaW4gdGhlIG1hcHBpbmcgdGFibGUuCgpTaWduZWQtb2ZmLWJ5
+OiBTdGVwaGVuIEJveWQgPHN0ZXBoZW4uYm95ZEBsaW5hcm8ub3JnPgotLS0KCkkgc3RpbGwgbmVl
+ZCB0byB3cml0ZSB0aGUgYmx1cmIgYWJvdXQgd2hhdCB0aGlzIGlzIGFsbCBhYm91dCwgYnV0Ckkg
+d2FudGVkIHRvIHNlbmQgdGhpcyBvdXQgbm93IHRvIGdldCBlYXJseSBmZWVkYmFjay4gU29tZSBz
+dGFydGluZwpwb2ludHM6CgogMSkgUmVwbGFjZSBjaGlsZC9wYXJlbnQgd2l0aCBpbmNvbWluZy9v
+dXRnb2luZyBldmVyeXdoZXJlPwogCiAyKSBNYWtlIGEgcHJldHR5IHBpY3R1cmUgdG8gZGVzY3Jp
+YmUgcmVtYXBwaW5nIHBoYW5kbGUrc3BlY2lmaWVycwogICAgc2ltaWxhciB0byB0aGUgaW50ZXJy
+dXB0IGhpZXJhcmNoeSBkaWFncmFtPwoKIDMpIENvbWUgdXAgd2l0aCBzb21lIGJldHRlciBuYW1l
+IHRoYW4gPHNwZWNpZmllcj4/IEtlcm5lbC1kb2MgdXNlcyA8bGlzdD4KICAgIGJ1dCBJJ20gbm90
+IHN1cmUgdGhhdCdzIGFueSBiZXR0ZXIuCgogc291cmNlL2RldmljZXRyZWUtYmFzaWNzLnJzdCB8
+IDIwOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUg
+Y2hhbmdlZCwgMjA4IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9zb3VyY2UvZGV2aWNldHJl
+ZS1iYXNpY3MucnN0IGIvc291cmNlL2RldmljZXRyZWUtYmFzaWNzLnJzdAppbmRleCAwMjY5NmJh
+YzE1YzcuLmIwNTcxMTQ1ZWU0MCAxMDA2NDQKLS0tIGEvc291cmNlL2RldmljZXRyZWUtYmFzaWNz
+LnJzdAorKysgYi9zb3VyY2UvZGV2aWNldHJlZS1iYXNpY3MucnN0CkBAIC0xMjgwLDMgKzEyODAs
+MjExIEBAIHBlcmZvcm1lZDoKICogIFRoYXQgcmVzdWx0IGlzIGxvb2tlZCB1cCBpbiB0aGUgKmlu
+dGVycnVwdC1tYXAqIHRhYmxlLCB3aGljaCBtYXBzIHRvCiAgICB0aGUgcGFyZW50IGludGVycnVw
+dCBzcGVjaWZpZXIgYGA8NCAxPmBgLgogCisuLiBfc2VjdC1uZXh1czoKKworTmV4dXMgTm9kZXMg
+YW5kIFNwZWNpZmllciBNYXBwaW5nCistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+KworVE9ETzogV3JpdGUgYmx1cmIgaGVyZSBhYm91dCBuZXh1cyBub2RlcyBhbmQgcmVtYXBwaW5n
+IHRoZW0KKworTmV4dXMgTm9kZSBQcm9wZXJ0aWVzCit+fn5+fn5+fn5+fn5+fn5+fn5+fn4KKwor
+QSBuZXh1cyBub2RlIHNoYWxsIGhhdmUgYSAqIzxzcGVjaWZpZXI+LWNlbGxzKiBwcm9wZXJ0eSwg
+d2hlcmUgPHNwZWNpZmllcj4gaXMKK3NvbWUgc3BlY2lmaWVyIHNwYWNlIGxpa2UgJ2dwaW8nLCAn
+Y2xvY2snLCAncmVzZXQnLCBldGMuCisKKzxzcGVjaWZpZXI+LW1hcAorXl5eXl5eXl5eXl5eXl5e
+CisKK1Byb3BlcnR5OiBgYDxzcGVjaWZpZXI+LW1hcGBgCisKK1ZhbHVlIHR5cGU6IGBgPHByb3At
+ZW5jb2RlZC1hcnJheT5gYCBlbmNvZGVkIGFzIGFuIGFyYml0cmFyeSBudW1iZXIgb2YKK3NwZWNp
+ZmllciBtYXBwaW5nIGVudHJpZXMuCisKK0Rlc2NyaXB0aW9uOgorCisgICBBICo8c3BlY2lmaWVy
+Pi1tYXAqIGlzIGEgcHJvcGVydHkgaW4gYSBuZXh1cyBub2RlIHRoYXQgYnJpZGdlcyBvbmUKKyAg
+IHNwZWNpZmllciBkb21haW4gd2l0aCBhIHNldCBvZiBwYXJlbnQgc3BlY2lmaWVyIGRvbWFpbnMg
+YW5kIGRlc2NyaWJlcworICAgaG93IHNwZWNpZmllcnMgaW4gdGhlIGNoaWxkIGRvbWFpbiBhcmUg
+bWFwcGVkIHRvIHRoZWlyIHJlc3BlY3RpdmUgcGFyZW50CisgICBkb21haW5zLgorCisgICBUaGUg
+bWFwIGlzIGEgdGFibGUgd2hlcmUgZWFjaCByb3cgaXMgYSBtYXBwaW5nIGVudHJ5CisgICBjb25z
+aXN0aW5nIG9mIHRocmVlIGNvbXBvbmVudHM6ICpjaGlsZCBzcGVjaWZpZXIqLCAqc3BlY2lmaWVy
+IHBhcmVudCosIGFuZAorICAgKnBhcmVudCBzcGVjaWZpZXIqLgorCisgICBjaGlsZCBzcGVjaWZp
+ZXIKKyAgICAgICBUaGUgc3BlY2lmaWVyIG9mIHRoZSBjaGlsZCBub2RlIGJlaW5nIG1hcHBlZC4g
+VGhlIG51bWJlcgorICAgICAgIG9mIDMyLWJpdCBjZWxscyByZXF1aXJlZCB0byBzcGVjaWZ5IHRo
+aXMgY29tcG9uZW50IGlzIGRlc2NyaWJlZCBieQorICAgICAgIHRoZSAqIzxzcGVjaWZpZXI+LWNl
+bGxzKiBwcm9wZXJ0eSBvZiB0aGlzIG5vZGXigJR0aGUgbmV4dXMgbm9kZQorICAgICAgIGNvbnRh
+aW5pbmcgdGhlICo8c3BlY2lmaWVyPi1tYXAqIHByb3BlcnR5LgorCisgICBzcGVjaWZpZXIgcGFy
+ZW50CisgICAgICAgQSBzaW5nbGUgKjxwaGFuZGxlPiogdmFsdWUgdGhhdCBwb2ludHMgdG8gdGhl
+IHNwZWNpZmllciBwYXJlbnQgdG8KKyAgICAgICB3aGljaCB0aGUgY2hpbGQgZG9tYWluIGlzIGJl
+aW5nIG1hcHBlZC4KKworICAgcGFyZW50IHNwZWNpZmllcgorICAgICAgIFRoZSBzcGVjaWZpZXIg
+aW4gdGhlIHBhcmVudCBkb21haW4uIFRoZSBudW1iZXIgb2YgMzItYml0CisgICAgICAgY2VsbHMg
+cmVxdWlyZWQgdG8gc3BlY2lmeSB0aGlzIGNvbXBvbmVudCBpcyBkZXNjcmliZWQgYnkgdGhlCisg
+ICAgICAgKiM8c3BlY2lmaWVyPi1jZWxscyogcHJvcGVydHkgb2YgdGhlIHNwZWNpZmllciBwYXJl
+bnQgbm9kZS4KKworICAgTG9va3VwcyBhcmUgcGVyZm9ybWVkIG9uIHRoZSBtYXBwaW5nIHRhYmxl
+IGJ5IG1hdGNoaW5nIGEgc3BlY2lmaWVyIGFnYWluc3QKKyAgIHRoZSBjaGlsZCBzcGVjaWZpZXIg
+aW4gdGhlIG1hcC4gQmVjYXVzZSBzb21lIGZpZWxkcyBpbiB0aGUgc3BlY2lmaWVyIG1heQorICAg
+bm90IGJlIHJlbGV2YW50IG9yIG5lZWQgdG8gYmUgbW9kaWZpZWQsIGEgbWFzayBpcyBhcHBsaWVk
+IGJlZm9yZSB0aGUgbG9va3VwCisgICBpcyBkb25lLiBUaGlzIG1hc2sgaXMgZGVmaW5lZCBpbiB0
+aGUgKjxzcGVjaWZpZXI+LW1hcC1tYXNrKiBwcm9wZXJ0eSAoc2VlCisgICBzZWN0aW9uIDpyZWY6
+YHNlY3Qtc3BlY2lmaWVyLW1hcC1tYXNrYCkuCisKKyAgIFNpbWlsYXJseSwgd2hlbiB0aGUgc3Bl
+Y2lmaWVyIGlzIG1hcHBlZCBzb21lIGZpZWxkcyBpbiB0aGUgdW5pdCBzcGVjaWZpZXIKKyAgIG1h
+eSBuZWVkIHRvIGJlIGtlcHQgdW5tb2RpZmllZCBhbmQgcGFzc2VkIHRocm91Z2ggZnJvbSB0aGUg
+Y2hpbGQgbm9kZSB0byB0aGUKKyAgIHBhcmVudCBub2RlLiBJbiB0aGlzIGNhc2UsIGEgKjxzcGVj
+aWZpZXI+LW1hcC1wYXNzLXRocnUqIHByb3BlcnR5IChzZWUKKyAgIHNlY3Rpb24gOnJlZjpgc2Vj
+dC1zcGVjaWZpZXItbWFwLXBhc3MtdGhydWApIG1heSBiZSBzcGVjaWZpZWQgdG8gYXBwbHkKKyAg
+IGEgbWFzayB0byB0aGUgaW5jb21pbmcgc3BlY2lmaWVyIGFuZCBjb3B5IGFueSBiaXRzIHRoYXQg
+bWF0Y2ggdG8gdGhlIG91dGdvaW5nCisgICB1bml0IHNwZWNpZmllci4KKworLi4gX3NlY3Qtc3Bl
+Y2lmaWVyLW1hcC1tYXNrOgorCis8c3BlY2lmaWVyPi1tYXAtbWFzaworXl5eXl5eXl5eXl5eXl5e
+Xl5eXl4KKworUHJvcGVydHk6IGBgPHNwZWNpZmllcj4tbWFwLW1hc2tgYAorCitWYWx1ZSB0eXBl
+OiBgYDxwcm9wLWVuY29kZWQtYXJyYXk+YGAgZW5jb2RlZCBhcyBhIGJpdCBtYXNrCisKK0Rlc2Ny
+aXB0aW9uOgorCisgICBBICo8c3BlY2lmaWVyPi1tYXAtbWFzayogcHJvcGVydHkgbWF5IGJlIHNw
+ZWNpZmllZCBmb3IgYSBuZXh1cyBub2RlLgorICAgVGhpcyBwcm9wZXJ0eSBzcGVjaWZpZXMgYSBt
+YXNrIHRoYXQgaXMgYXBwbGllZCB0byB0aGUgaW5jb21pbmcgdW5pdAorICAgc3BlY2lmaWVyIGJl
+aW5nIGxvb2tlZCB1cCBpbiB0aGUgdGFibGUgc3BlY2lmaWVkIGluIHRoZSAqPHNwZWNpZmllcj4t
+bWFwKgorICAgcHJvcGVydHkuIElmIHRoaXMgcHJvcGVydHkgaXMgbm90IHNwZWNpZmllZCwgdGhl
+IG1hc2sgaXMgYXNzdW1lZCB0byBiZQorICAgYSBtYXNrIHdpdGggYWxsIGJpdHMgc2V0LgorCisu
+LiBfc2VjdC1zcGVjaWZpZXItbWFwLXBhc3MtdGhydToKKworPHNwZWNpZmllcj4tbWFwLXBhc3Mt
+dGhydQorXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXgorCitQcm9wZXJ0eTogYGA8c3BlY2lmaWVy
+Pi1tYXAtcGFzcy10aHJ1YGAKKworVmFsdWUgdHlwZTogYGA8cHJvcC1lbmNvZGVkLWFycmF5PmBg
+IGVuY29kZWQgYXMgYSBiaXQgbWFzaworCitEZXNjcmlwdGlvbjoKKworICAgQSAqPHNwZWNpZmll
+cj4tbWFwLXBhc3MtdGhydSogcHJvcGVydHkgbWF5IGJlIHNwZWNpZmllZCBmb3IgYSBuZXh1cyBu
+b2RlLgorICAgVGhpcyBwcm9wZXJ0eSBzcGVjaWZpZXMgYSBtYXNrIHRoYXQgaXMgYXBwbGllZCB0
+byB0aGUgaW5jb21pbmcgdW5pdAorICAgc3BlY2lmaWVyIGJlaW5nIGxvb2tlZCB1cCBpbiB0aGUg
+dGFibGUgc3BlY2lmaWVkIGluIHRoZSAqPHNwZWNpZmllcj4tbWFwKgorICAgcHJvcGVydHkuIEFu
+eSBtYXRjaGluZyBiaXRzIGluIHRoZSBpbmNvbWluZyB1bml0IHNwZWNpZmllciBhcmUgY29waWVk
+IG92ZXIKKyAgIHRvIHRoZSBvdXRnb2luZyBzcGVjaWZpZXIuIElmIHRoaXMgcHJvcGVydHkgaXMg
+bm90IHNwZWNpZmllZCwgdGhlIG1hc2sgaXMKKyAgIGFzc3VtZWQgdG8gYmUgYSBtYXNrIHdpdGgg
+bm8gYml0cyBzZXQuCisKKyM8c3BlY2lmaWVyPi1jZWxscworXl5eXl5eXl5eXl5eXl5eXl5eCisK
+K1Byb3BlcnR5OiBgYCM8c3BlY2lmaWVyPi1jZWxsc2BgCisKK1ZhbHVlIHR5cGU6IGBgPHUzMj5g
+YAorCitEZXNjcmlwdGlvbjoKKworICAgVGhlICojPHNwZWNpZmllcj4tY2VsbHMqIHByb3BlcnR5
+IGRlZmluZXMgdGhlIG51bWJlciBvZiBjZWxscyByZXF1aXJlZCB0bworICAgZW5jb2RlIGEgc3Bl
+Y2lmaWVyIGZvciBhIGRvbWFpbi4KKworU3BlY2lmaWVyIE1hcHBpbmcgRXhhbXBsZQorfn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fgorCitUaGUgZm9sbG93aW5nIHNob3dzIHRoZSByZXByZXNlbnRh
+dGlvbiBvZiBhIGZyYWdtZW50IG9mIGEgZGV2aWNldHJlZSB3aXRoCit0d28gR1BJTyBjb250cm9s
+bGVycyBhbmQgYSBzYW1wbGUgc3BlY2lmaWVyIG1hcCBmb3IgZGVzY3JpYmluZyB0aGUKK0dQSU8g
+cm91dGluZyBvZiBhIGZldyBncGlvcyBvbiBib3RoIG9mIHRoZSBjb250cm9sbGVycyB0aHJvdWdo
+IGEgY29ubmVjdG9yCitvbiBhIGJvYXJkIHRvIGEgZGV2aWNlLiBUaGUgZXhwYW5zaW9uIGRldmlj
+ZSBub2RlIGlzIG9uZSBvbmUgc2lkZSBvZiB0aGUKK2Nvbm5lY3RvciBub2RlIGFuZCB0aGUgU29D
+IHdpdGggdGhlIHR3byBHUElPIGNvbnRyb2xsZXJzIGlzIG9uIHRoZSBvdGhlcgorc2lkZSBvZiB0
+aGUgY29ubmVjdG9yLgorCisuLiBfZXhhbXBsZS1zcGVjaWZpZXItbWFwcGluZzoKKworLi4gY29k
+ZS1ibG9jazo6IGR0cworCisgICAgICAgIHNvYyB7CisgICAgICAgICAgICAgICAgc29jX2dwaW8x
+OiBncGlvLWNvbnRyb2xsZXIxIHsKKyAgICAgICAgICAgICAgICAgICAgICAgICNncGlvLWNlbGxz
+ID0gPDI+OworICAgICAgICAgICAgICAgIH07CisKKyAgICAgICAgICAgICAgICBzb2NfZ3BpbzI6
+IGdwaW8tY29udHJvbGxlcjIgeworICAgICAgICAgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMg
+PSA8Mj47CisgICAgICAgICAgICAgICAgfTsKKyAgICAgICAgfTsKKworICAgICAgICBjb25uZWN0
+b3I6IGNvbm5lY3RvciB7CisgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47CisgICAg
+ICAgICAgICAgICAgZ3Bpby1tYXAgPSA8MCAwICZzb2NfZ3BpbzEgMSAwPiwKKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDwxIDAgJnNvY19ncGlvMiA0IDA+LAorICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgPDIgMCAmc29jX2dwaW8xIDMgMD4sCisgICAgICAgICAgICAgICAgICAgICAgICAg
+ICA8MyAwICZzb2NfZ3BpbzIgMiAwPjsKKyAgICAgICAgICAgICAgICBncGlvLW1hcC1tYXNrID0g
+PDB4ZiAweDA+OworICAgICAgICAgICAgICAgIGdwaW8tbWFwLXBhc3MtdGhydSA9IDwweDAgMHgx
+PjsKKyAgICAgICAgfTsKKworICAgICAgICBleHBhbnNpb25fZGV2aWNlIHsKKyAgICAgICAgICAg
+ICAgICByZXNldC1ncGlvcyA9IDwmY29ubmVjdG9yIDIgR1BJT19BQ1RJVkVfTE9XPjsKKyAgICAg
+ICAgfTsKKworCitFYWNoIHJvdyBpbiB0aGUgZ3Bpby1tYXAgdGFibGUgY29uc2lzdHMgb2YgdGhy
+ZWUgcGFydHM6IGEgY2hpbGQgdW5pdAorc3BlY2lmaWVyLCB3aGljaCBpcyBtYXBwZWQgdG8gYSAq
+Z3Bpby1jb250cm9sbGVyKgorbm9kZSB3aXRoIGEgcGFyZW50IHNwZWNpZmllci4KKworKiBGb3Ig
+ZXhhbXBsZSwgdGhlIGZpcnN0IHJvdyBvZiB0aGUgc3BlY2lmaWVyLW1hcCB0YWJsZSBzcGVjaWZp
+ZXMgdGhlCisgIG1hcHBpbmcgZm9yIEdQSU8gMCBvZiB0aGUgY29ubmVjdG9yLiBUaGUgY29tcG9u
+ZW50cyBvZiB0aGF0IHJvdyBhcmUgc2hvd24KKyAgaGVyZQorCisgIHwgY2hpbGQgc3BlY2lmaWVy
+OiBgYDAgMGBgCisgIHwgc3BlY2lmaWVyIHBhcmVudDogYGAmc29jX2dwaW8xYGAKKyAgfCBwYXJl
+bnQgc3BlY2lmaWVyOiBgYDEgMGBgCisKKyAgKiBUaGUgY2hpbGQgc3BlY2lmaWVyIGlzIGBgPDAg
+MD5gYCwgd2hpY2ggc3BlY2lmaWVzIEdQSU8gMCBpbiB0aGUgY29ubmVjdG9yCisgICAgd2l0aCBh
+ICpmbGFncyogZmllbGQgb2YgYGAwYGAuIFRoaXMgdGFrZXMgdHdvIDMyLWJpdCBjZWxscyBhcyBz
+cGVjaWZpZWQKKyAgICBieSB0aGUgKiNncGlvLWNlbGxzKiBwcm9wZXJ0eSBvZiB0aGUgY29ubmVj
+dG9yIG5vZGUsIHdoaWNoIGlzIHRoZQorICAgIGNoaWxkIHNwZWNpZmllciBkb21pYW4uCisKKyAg
+KiBUaGUgc3BlY2lmaWVyIHBhcmVudCBpcyBzcGVjaWZpZWQgYnkgYSBwaGFuZGxlIHdoaWNoIHBv
+aW50cyB0byB0aGUKKyAgICBzcGVjaWZpZXIgcGFyZW50IG9mIHRoZSBjb25uZWN0b3IsIHRoZSBm
+aXJzdCBHUElPIGNvbnRyb2xsZXIgaW4gdGhlIFNvQy4KKworICAqIFRoZSBwYXJlbnQgc3BlY2lm
+aWVyIGlzIGBgPDEgMD5gYC4gVGhlIG51bWJlciBvZiBjZWxscyB0bworICAgIHJlcHJlc2VudCB0
+aGUgZ3BpbyBzcGVjaWZpZXIgKHR3byBjZWxscykgaXMgZGV0ZXJtaW5lZCBieSB0aGUKKyAgICAq
+I2dwaW8tY2VsbHMqIHByb3BlcnR5IG9uIHRoZSBzcGVjaWZpZXIgcGFyZW50LCB0aGUgc29jX2dw
+aW8xCisgICAgbm9kZS4KKworICAgICogVGhlIHZhbHVlIGBgPDEgMD5gYCBpcyBhIHZhbHVlIHNw
+ZWNpZmllZCBieSB0aGUgZGV2aWNlIGJpbmRpbmcgZm9yCisgICAgICB0aGUgR1BJTyBjb250cm9s
+bGVyLiBUaGUgdmFsdWUgYGA8MT5gYCBzcGVjaWZpZXMgdGhlCisgICAgICBHUElPIHBpbiBudW1i
+ZXIgb24gdGhlIEdQSU8gY29udHJvbGxlciB0byB3aGljaCBHUElPIDAgb24gdGhlIGNvbm5lY3Rv
+cgorICAgICAgaXMgd2lyZWQuIFRoZSB2YWx1ZSBgYDwwPmBgIHNwZWNpZmllcyB0aGUgZmxhZ3Mg
+KGFjdGl2ZSBsb3csCisgICAgICBhY3RpdmUgaGlnaCwgZXRjLikuCisKK0luIHRoaXMgZXhhbXBs
+ZSwgdGhlICpncGlvLW1hcC1tYXNrKiBwcm9wZXJ0eSBoYXMgYSB2YWx1ZSBvZiBgYDwweGYgMD5g
+YC4KK1RoaXMgbWFzayBpcyBhcHBsaWVkIHRvIGEgY2hpbGQgdW5pdCBzcGVjaWZpZXIgYmVmb3Jl
+IHBlcmZvcm1pbmcgYSBsb29rdXAgaW4KK3RoZSAqZ3Bpby1tYXAqIHRhYmxlLiBTaW1pbGFybHks
+IHRoZSAqZ3Bpby1tYXAtcGFzcy10aHJ1KiBwcm9wZXJ0eSBoYXMgYSB2YWx1ZQorb2YgYGA8MHgw
+IDB4MT5gYC4gVGhpcyBtYXNrIGlzIGFwcGxpZWQgdG8gYSBjaGlsZCB1bml0IHNwZWNpZmllciB3
+aGVuIG1hcHBpbmcKK2l0IHRvIHRoZSBwYXJlbnQgdW5pdCBzcGVjaWZpZXIuIEFueSBiaXRzIHNl
+dCBpbiB0aGUgbWFzayBhcmUgY2xlYXJlZCBvdXQgb2YKK3RoZSBwYXJlbnQgdW5pdCBzcGVjaWZp
+ZXIgYW5kIGNvcGllZCBvdmVyIGZyb20gdGhlIGNoaWxkIHVuaXQgc3BlY2lmaWVyCit0byB0aGUg
+cGFyZW50IHVuaXQgc3BlY2lmaWVyLgorCitUbyBwZXJmb3JtIGEgbG9va3VwIG9mIHRoZSBjb25u
+ZWN0b3IncyBzcGVjaWZpZXIgc291cmNlIG51bWJlciBmb3IgR1BJTyAyCitmcm9tIHRoZSBleHBh
+bnNpb24gZGV2aWNlJ3MgcmVzZXQtZ3Bpb3MgcHJvcGVydHksIHRoZSBmb2xsb3dpbmcgc3RlcHMg
+d291bGQgYmUKK3BlcmZvcm1lZDoKKworKiAgVGhlIGNoaWxkIHNwZWNpZmllciBmb3JtcyB0aGUg
+dmFsdWUKKyAgIGBgPDIgR1BJT19BQ1RJVkVfTE9XPmBgLgorCisgICAqICBUaGUgc3BlY2lmaWVy
+IGlzIGVuY29kaW5nIEdQSU8gMiB3aXRoIGFjdGl2ZSBsb3cgZmxhZ3MgcGVyIHRoZSBHUElPCisg
+ICAgICBiaW5kaW5nLgorCisqICBUaGUgKmdwaW8tbWFwLW1hc2sqIHZhbHVlIGBgPDB4ZiAweDA+
+YGAgaXMgYXBwbGllZCwgZ2l2aW5nIGEKKyAgIHJlc3VsdCBvZiBgYDwweDIgMD5gYC4KKworKiAg
+VGhhdCByZXN1bHQgaXMgbG9va2VkIHVwIGluIHRoZSAqZ3Bpby1tYXAqIHRhYmxlLCB3aGljaCBt
+YXBzIHRvCisgICB0aGUgcGFyZW50IHNwZWNpZmllciBgYDwzIDA+YGAgYW5kICZzb2NfZ3BpbzEg
+KnBoYW5kbGUqLgorCisqICBUaGF0ICpncGlvLW1hcC1wYXNzLXRocnUqIHZhbHVlIGBgPDB4MCAw
+eDE+YGAgaXMgYXBwbGllZCB0byBjaGlsZCBzcGVjaWZpZXIsCisgICBmb3JtaW5nIGBgPDAgR1BJ
+T19BQ1RJVkVfTE9XPmBgIHdoaWNoIGlzIHRoZW4gT1JlZCB3aXRoIHRoZSBwYXJlbnQKKyAgIHNw
+ZWNpZmllciBgYDwzIDA+YGAgQU5EZWQgd2l0aCB0aGUgaW52ZXJzZSBvZiB0aGUgcGFzcy10aHJ1
+IG1hc2sKKyAgIGBgPDB4ZmZmZmZmZmYgMHhmZmZmZmZlPmBgIHJlc3VsdGluZyBpbiBgYDwzIEdQ
+SU9fQUNUSVZFX0xPVz5gYC4KKworKiAgVGhhdCBzcGVjaWZpZXIgaXMgY29tYmluZWQgd2l0aCB0
+aGUgbWFwcGVkICpwaGFuZGxlKiAmc29jX2dwaW8xIHJlc3VsdGluZworICAgaW4gYGA8JnNvY19n
+cGlvMSAzIEdQSU9fQUNUSVZFX0xPVz5gYC4KLS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
