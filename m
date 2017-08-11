@@ -1,89 +1,72 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: Hook into mux framework to toggle usb
- switch
-Date: Fri, 11 Aug 2017 15:26:10 -0700
-Message-ID: <150249037091.15411.10074988823155268663@sboyd-linaro>
-References: <20170714214005.14967-1-stephen.boyd@linaro.org>
- <20170714214005.14967-3-stephen.boyd@linaro.org>
- <7080030c-c9c2-657d-aad4-aef636438cb1@axentia.se>
- <150215709134.18242.599725161375995991@sboyd-linaro>
- <c5c411fe-2f5a-88cc-73e8-28ab61f5de04@axentia.se>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Sat, 12 Aug 2017 08:19:08 +0900
+Message-ID: <CAK7LNASHO63yAJWicNL_+sSMxs3yqOt_R7z_xg+kU_iD=Aum9Q@mail.gmail.com>
+References: <1501758371-25316-1-git-send-email-yamada.masahiro@socionext.com>
+ <CACRpkdZWxjwDnVy5f2rLAWs=+T=5SnwyU8dz1FW1eg8dk8JN_Q@mail.gmail.com>
+ <CAK7LNAT4FvsX2-hYrKYmrftEZZb_RZOrfZoKWvR8hopt9jT8-Q@mail.gmail.com> <CACRpkdZ26q09s-L2wVy+Vv5rV0Enjith0AJ_sJCAH3kvzvjn1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c5c411fe-2f5a-88cc-73e8-28ab61f5de04@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <Peter.Chen@nxp.com>, Peter Rosin <peda@axentia.se>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.infradead.org, Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, Andy Gross <andy.gross@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ26q09s-L2wVy+Vv5rV0Enjith0AJ_sJCAH3kvzvjn1Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Rosin (2017-08-08 05:46:30)
-> On 2017-08-08 03:51, Stephen Boyd wrote:
-> =
-
-> >                      It looked like we paired the start/stop ops with
-> > each other so that the mux is properly managed across these ops.
-> =
-
-> Yes, it *looks* ok...
-> =
-
-> >                                                                  My
-> > testing hasn't shown a problem, but maybe there's some corner case
-> > you're thinking of? I'll double check the code.
-> =
-
-> ...but since I do not know the usb code, I can't tell. What I worry about
-> is the usb core calling udc_id_switch_for_host or udc_id_switch_for_device
-> more than once without any call to the other in between. Maybe that is a
-> guarantee that the usb core makes? Or maybe it isn't? If e.g. there is a
-> third mode (or if one is added in the future), then the calls to
-> mux_control_select and mux_control_deselect would not be paired correctly.
-> Ok, sure, a third mode probably doesn't exist and will probably not be
-> added, but but but...
-> =
-
-> Also, what happens if udc_id_switch_for_device fails? Is it certain that
-> it will be called again before udc_id_switch_for_host is called, or is
-> the failure simply logged? If the latter, you might have a call to
-> mux_control_deselect without a preceding (and successful) call to
-> mux_control_select. That's fatal.
-
-The only thing that could fail right now is the mux selection, so we
-wouldn't get into some sort of situation where that's locked in and
-unchangeable. We do rollback the role if it fails to switch, so we also
-wouldn't go into a half-way state of being in one role but not actually
-switching all the way over to it.
-
-> =
-
-> I have similar worries for host_start/host_stop, but for that case
-> host_stop is not allowed to fail, and it seems like a safe bet that
-> host_stop will only be called if host_start succeeds. So, I'm not as
-> worried there.
-> =
-
-> In other words, the question is if the usb core is designed to allow
-> this kind of "raw" resource administration in udc_id_switch_for_host and
-> udc_id_switch_for_device, or if you need to keep a local record of the
-> state so that you do not do double resource acquisition or attempt to
-> free resources you don't have?
-> =
-
-> I think I would feel better if the muxing for the device mode could
-> be done in a start/stop pair of function just like the host mode is
-> doing. Again, I don't know the usb code and don't know if such hooks
-> exist or not?
-> =
+2017-08-08 0:37 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Mon, Aug 7, 2017 at 3:50 PM, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>
+>> Adding "interrupts" property in DT causes
+>> of_pupulate_default_populate() to assign virtual IRQ numbers
+>> before driver probing.  So it does not work well with IRQ domain hierarchy.
+>
+> I think I heard some noise about this the week before.
+>
+>> For pinctrl/stm32/pinctrl-stm32.c,
+>> I do not see "interrupts", so it just straight maps the irq numbers.
+>
+> I think OMAP and DaVinci does someting similar too. This is from a recent
+> DaVinci patch from Keerthy:
+>
+> +Example for 66AK2G:
+> +
+> +gpio0: gpio@2603000 {
+> +       compatible = "ti,k2g-gpio", "ti,keystone-gpio";
+> +       reg = <0x02603000 0x100>;
+> +       gpio-controller;
+> +       #gpio-cells = <2>;
+> +       interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
+> +       interrupt-controller;
+> +       #interrupt-cells = <2>;
+> +       ti,ngpio = <144>;
+> +       ti,davinci-gpio-unbanked = <0>;
+> +       clocks = <&k2g_clks 0x001b 0x0>;
+> +       clock-names = "gpio";
+> +};
+>
+>
+> That looks fairly similar.
+>
+> Yours,
+> Linus Walleij
+> --
 
 
-The host_start/host_stop functions are assigned to the same struct
-ci_role_driver ops that udc_idc_switch_for_{device,host} are for the
-gadget role. Really, these things are called from the same place by the
-chipidea driver so not much is different between the two files I modify
-to make the mux calls. Furthermore, we don't want to do this if we have
-HNP or "true" OTG support so I've put it behind the ci_otg_is_fsm_mode()
-check to make sure we don't do any muxing stuff based on fsm state
-changes. It doesn't really make any sense here anyway because this
-device I have doesn't support OTG, just role switching.
+I will send v2 for this driver.
+
+Thanks.
+
+
+-- 
+Best Regards
+Masahiro Yamada
