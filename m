@@ -1,35 +1,75 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/2] reset: uniphier: remove sLD3 SoC support
-Date: Fri, 11 Aug 2017 09:43:12 +0200
-Message-ID: <1502437392.2310.6.camel@pengutronix.de>
-References: <1501987442-2583-1-git-send-email-yamada.masahiro@socionext.com>
-         <1501987442-2583-2-git-send-email-yamada.masahiro@socionext.com>
-         <20170810203059.abbmh4zhrk36shxb@rob-hp-laptop>
+From: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm: boot: dts: artpec6: Remove unnecessary
+ interrupt-parent property from sub-nodes
+Date: Fri, 11 Aug 2017 13:26:05 +0530
+Message-ID: <8475266d-de55-0760-7ae4-9fcafead36e4@techveda.org>
+References: <1498565735-8208-1-git-send-email-surenderp@techveda.org>
+ <d582c742-4bf9-c658-d105-572d180222a4@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810203059.abbmh4zhrk36shxb@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d582c742-4bf9-c658-d105-572d180222a4-VrBV9hrLPhE@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, jespern-VrBV9hrLPhE@public.gmane.org, larper-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-08-10 at 15:30 -0500, Rob Herring wrote:
-> On Sun, Aug 06, 2017 at 11:44:01AM +0900, Masahiro Yamada wrote:
-> > This SoC is too old.  It is difficult to maintain any longer.
-> > 
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> > 
-> >  .../devicetree/bindings/reset/uniphier-reset.txt   |  2 -
-> >  drivers/reset/reset-uniphier.c                     | 48 ++++++++
-> > --------------
-> >  2 files changed, 16 insertions(+), 34 deletions(-)
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+On Tuesday 27 June 2017 05:57 PM, Niklas Cassel wrote:
+> Acked-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
 
-Added to the patch, thank you.
+Hi Nik, This patch has been Acknowledged but is not getting added / 
+applied to the
+respective git source tree. Please let me know if there is any problem.
 
-regards
-Philipp
+Thanks
+Surender
+>
+> On 06/27/2017 02:15 PM, surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org wrote:
+>> From: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+>>
+>> "interrupt-parent" property is declared in root node, so it is global
+>> to all nodes. This property is re-declared in few sub-nodes. To avoid
+>> duplication this property is removed from following sub-nodes:
+>> pmu, amba@0, amba@0/ethernet.
+>>
+>> Signed-off-by: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/artpec6.dtsi | 3 ---
+>>   1 file changed, 3 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
+>> index 767cbe8..2ed1177 100644
+>> --- a/arch/arm/boot/dts/artpec6.dtsi
+>> +++ b/arch/arm/boot/dts/artpec6.dtsi
+>> @@ -151,7 +151,6 @@
+>>   		interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+>>   			<GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>>   		interrupt-affinity = <&cpu0>, <&cpu1>;
+>> -		interrupt-parent = <&intc>;
+>>   	};
+>>   
+>>   	pcie: pcie@f8050000 {
+>> @@ -185,7 +184,6 @@
+>>   		compatible = "simple-bus";
+>>   		#address-cells = <0x1>;
+>>   		#size-cells = <0x1>;
+>> -		interrupt-parent = <&intc>;
+>>   		ranges;
+>>   		dma-ranges = <0x80000000 0x00000000 0x40000000>;
+>>   		dma-coherent;
+>> @@ -195,7 +193,6 @@
+>>   			clocks = <&eth_phy_ref_clk>,
+>>   				<&clkctrl ARTPEC6_CLK_ETH_ACLK>;
+>>   			compatible = "snps,dwc-qos-ethernet-4.10";
+>> -			interrupt-parent = <&intc>;
+>>   			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+>>   			reg = <0xf8010000 0x4000>;
+>>   
+>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
