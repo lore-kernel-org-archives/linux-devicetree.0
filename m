@@ -1,83 +1,39 @@
-From: "rocky.hao" <rocky.hao@rock-chips.com>
-Subject: Re: [PATCH v2 3/5] arm64: dts: rockchip: add tsadc node for rk3328
- SoC
-Date: Fri, 11 Aug 2017 17:45:00 +0800
-Message-ID: <903bc8ea-a597-80b9-a2bf-551c1b6288fb@rock-chips.com>
-References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com>
- <1501833976-1100-4-git-send-email-rocky.hao@rock-chips.com>
- <1ea7dab5-95c9-9d5f-5d4e-4c5a7f2a6254@rock-chips.com>
+From: <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/3] dts: usb3: Add configure-gfladj property to USB3 nod
+Date: Fri, 11 Aug 2017 17:29:54 +0800
+Message-ID: <1502443796-5255-1-git-send-email-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1ea7dab5-95c9-9d5f-5d4e-4c5a7f2a6254@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>, rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, cl@rock-chips.com, william.wu@rock-chips.com, jay.xu@rock-chips.com, xxx@rock-chips.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, yinbo.zhu-3arQi8VN3Tc@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: open list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, moderated list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bart Van Assche <bart.vanassche-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org>, Doug Ledford <dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
 
+Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-在 2017/8/11 14:38, Caesar Wang 写道:
-> 在 2017年08月04日 16:06, Rocky Hao 写道:
->> add tsadc needed main information for rk3328 SoC.
->> 50000Hz is the max clock rate supported by tsadc module.
->>
->> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
->> ---
->> Change in v2:
->> - remove gerrit Change-Id
->>
->>   arch/arm64/boot/dts/rockchip/rk3328.dtsi | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi 
->> b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
->> index db4b2708084d..186fb93fdffd 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
->> @@ -308,6 +308,26 @@
->>           interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
->>       };
->> +    tsadc: tsadc@ff250000 {
->> +        compatible = "rockchip,rk3328-tsadc";
->> +        reg = <0x0 0xff250000 0x0 0x100>;
->> +        interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH 0>;
->> +        rockchip,grf = <&grf>;
->> +        clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
->> +        clock-names = "tsadc", "apb_pclk";
->> +        assigned-clocks = <&cru SCLK_TSADC>;
->> +        assigned-clock-rates = <50000>;
->> +        resets = <&cru SRST_TSADC>;
->> +        reset-names = "tsadc-apb";
->> +        pinctrl-names = "init", "default", "sleep";
->> +        pinctrl-0 = <&otp_gpio>;
->> +        pinctrl-1 = <&otp_out>;
->> +        pinctrl-2 = <&otp_gpio>;
->> +        #thermal-sensor-cells = <1>;
-> 
-> Only one sensor, so maybe the value should be 0.
-Caesar, #thermal-sensor-cells means parameter counts used to match the 
-proper sensor registered. Both 0 and 1 work well.
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index ffbf3cf..f525297 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -731,6 +731,8 @@
+ 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
++			configure-gfladj;
++			dma-coherent;
+ 			snps,dis_rxdet_inp3_quirk;
+ 		};
+ 
+-- 
+2.1.0.27.g96db324
 
-Case 0, i.e. #thermal-sensor-cells = <0>, it uses the default channel 
-number 0 to match tsadc channal.
-Case 1, i.e. #thermal-sensor-cells = <1>, it uses the setting 
-"thermal-sensors = <&tsadc 0>;" to match tsadc channal.
-
-Case 1 provides more readable info than case 0. By my understanding, 
-using the default value such as case 0, is not a good coding style.
-
-> 
->> +        rockchip,hw-tshut-temp = <100000>;
->> +        status = "disabled";
->> +    };
->> +
->>       saradc: adc@ff280000 {
->>           compatible = "rockchip,rk3328-saradc", 
->> "rockchip,rk3399-saradc";
->>           reg = <0x0 0xff280000 0x0 0x100>;
-> 
-> 
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
