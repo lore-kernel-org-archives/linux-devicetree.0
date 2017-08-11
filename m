@@ -1,638 +1,381 @@
-From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: Altera ASMI Parallel II IP Core
-Date: Fri, 11 Aug 2017 19:20:31 +0200
-Message-ID: <e3c3f714-e8fd-a605-eb5a-c1b8a92ce0df@wedev4u.fr>
-References: <1502043844-3626-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1502043844-3626-3-git-send-email-matthew.gerlach@linux.intel.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/8] iommu/mediatek: Add mt2712 IOMMU support
+Date: Fri, 11 Aug 2017 18:24:51 +0100
+Message-ID: <e084edd4-23bb-d44f-83c6-c6d3182a7655@arm.com>
+References: <1502445377-26936-1-git-send-email-yong.wu@mediatek.com>
+ <1502445377-26936-3-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502043844-3626-3-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1502445377-26936-3-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthew,
-
-Le 06/08/2017 à 20:24, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org a écrit :
-> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On 11/08/17 10:56, Yong Wu wrote:
+> The M4U IP blocks in mt2712 is MTK's generation2 M4U which use the
+> Short-descriptor like mt8173, and most of the HW registers are the
+> same.
 > 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> The difference is that there are 2 M4U HWs in mt2712 while there's
+> only one in mt8173. The purpose of 2 M4U HWs is for balance the
+> bandwidth.
+
+Heh, I never imagined that theoretical argument I made against global
+data in the original driver would become reality so soon :D
+
+> Normally if there are 2 M4U HWs, there should be 2 iommu domains,
+> each M4U has a iommu domain.
+> 
+> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  MAINTAINERS                         |   7 +
->  drivers/mtd/spi-nor/Kconfig         |   6 +
->  drivers/mtd/spi-nor/Makefile        |   3 +-
->  drivers/mtd/spi-nor/altera-asmip2.c | 474 ++++++++++++++++++++++++++++++++++++
->  include/linux/mtd/altera-asmip2.h   |  24 ++
->  5 files changed, 513 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/mtd/spi-nor/altera-asmip2.c
->  create mode 100644 include/linux/mtd/altera-asmip2.h
+> This patch also include a minor issue:
+> suspend while there is no iommu client. it will hang because
+> there is no iommu domain at that time.
+> ---
+>  drivers/iommu/mtk_iommu.c | 48 ++++++++++++++++++++++++++++++++---------------
+>  drivers/iommu/mtk_iommu.h |  7 +++++++
+>  drivers/memory/mtk-smi.c  | 40 ++++++++++++++++++++++++++++++++++++---
+>  3 files changed, 77 insertions(+), 18 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 672b5d5..9583c1a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -644,6 +644,13 @@ ALPS PS/2 TOUCHPAD DRIVER
->  R:	Pali Rohár <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->  F:	drivers/input/mouse/alps.*
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 91c6d36..da6cedb 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -54,7 +54,9 @@
 >  
-> +ALTERA ASMI Parallel II Driver
-> +M:      Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> +L:      linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> +S:      Maintained
-> +F:      drivers/mtd/spi-nor/altera-asmip2.c
-> +F:      inclulde/linux/mtd/altera-asmip2.h
-> +
->  ALTERA MAILBOX DRIVER
->  M:	Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->  L:	nios2-dev-g9ZBwUv/Ih/yUk5EbOjzuce+I+R0W71w@public.gmane.org (moderated for non-subscribers)
-> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-> index 69c638d..eb2c522 100644
-> --- a/drivers/mtd/spi-nor/Kconfig
-> +++ b/drivers/mtd/spi-nor/Kconfig
-> @@ -129,4 +129,10 @@ config SPI_STM32_QUADSPI
->  	  This enables support for the STM32 Quad SPI controller.
->  	  We only connect the NOR to this controller.
+>  #define REG_MMU_CTRL_REG			0x110
+>  #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
+> +/* The TF-protect-select is bit[5:4] in mt2712 while it's bit[6:5] in mt8173.*/
+>  #define F_MMU_TF_PROTECT_SEL(prot)		(((prot) & 0x3) << 5)
+> +#define F_MMU_TF_PROT_SEL(prot)			(((prot) & 0x3) << 4)
+
+In my opinion PROTECT vs. PROT here is too confusing for its own good...
+
+>  #define REG_MMU_IVRP_PADDR			0x114
+>  #define F_MMU_IVRP_PA_SET(pa, ext)		(((pa) >> 1) | ((!!(ext)) << 31))
+> @@ -301,10 +303,6 @@ static int mtk_iommu_attach_device(struct iommu_domain *domain,
+>  			data->m4u_dom = NULL;
+>  			return ret;
+>  		}
+> -	} else if (data->m4u_dom != dom) {
+> -		/* All the client devices should be in the same m4u domain */
+> -		dev_err(dev, "try to attach into the error iommu domain\n");
+> -		return -EPERM;
+>  	}
 >  
-> +config SPI_ALTERA_ASMIP2
-> +	tristate "Altera ASMI Parallel II IP"
-> +	depends on OF && HAS_IOMEM
-> +	help
-> +	  Enable support for Altera ASMI Parallel II.
-> +
->  endif # MTD_SPI_NOR
-> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-> index c5f171d..1c79324 100644
-> --- a/drivers/mtd/spi-nor/Makefile
-> +++ b/drivers/mtd/spi-nor/Makefile
-> @@ -1,4 +1,5 @@
->  obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
-> +obj-$(CONFIG_SPI_ALTERA_ASMIP2)	+= altera-asmip2.o
->  obj-$(CONFIG_SPI_ASPEED_SMC)	+= aspeed-smc.o
->  obj-$(CONFIG_SPI_ATMEL_QUADSPI)	+= atmel-quadspi.o
->  obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
-> @@ -9,4 +10,4 @@ obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
->  obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
->  obj-$(CONFIG_SPI_INTEL_SPI_PCI)	+= intel-spi-pci.o
->  obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)	+= intel-spi-platform.o
-> -obj-$(CONFIG_SPI_STM32_QUADSPI)	+= stm32-quadspi.o
-> \ No newline at end of file
-> +obj-$(CONFIG_SPI_STM32_QUADSPI)	+= stm32-quadspi.o
-> diff --git a/drivers/mtd/spi-nor/altera-asmip2.c b/drivers/mtd/spi-nor/altera-asmip2.c
-> new file mode 100644
-> index 0000000..2095f2e
-> --- /dev/null
-> +++ b/drivers/mtd/spi-nor/altera-asmip2.c
-> @@ -0,0 +1,474 @@
-> +/*
-> + * Copyright (C) 2017 Intel Corporation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/mtd/altera-asmip2.h>
-> +#include <linux/mtd/mtd.h>
-> +#include <linux/mtd/spi-nor.h>
-> +#include <linux/of_device.h>
-> +
-> +#define QSPI_ACTION_REG 0
-> +#define QSPI_ACTION_RST BIT(0)
-> +#define QSPI_ACTION_EN BIT(1)
-> +#define QSPI_ACTION_SC BIT(2)
-> +#define QSPI_ACTION_CHIP_SEL_SFT 4
-> +#define QSPI_ACTION_DUMMY_SFT 8
-> +#define QSPI_ACTION_READ_BACK_SFT 16
-> +
-> +#define QSPI_FIFO_CNT_REG 4
-> +#define QSPI_FIFO_DEPTH 0x200
-> +#define QSPI_FIFO_CNT_MSK 0x3ff
-> +#define QSPI_FIFO_CNT_RX_SFT 0
-> +#define QSPI_FIFO_CNT_TX_SFT 12
-> +
-> +#define QSPI_DATA_REG 0x8
-> +
-> +#define QSPI_POLL_TIMEOUT 10000000
-> +#define QSPI_POLL_INTERVAL 5
-> +
-> +struct altera_asmip2 {
-> +	void __iomem *csr_base;
-> +	u32 num_flashes;
-> +	struct device *dev;
-> +	struct altera_asmip2_flash *flash[ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP];
-> +	struct mutex bus_mutex;
-> +};
-> +
-> +struct altera_asmip2_flash {
-> +	struct spi_nor nor;
-> +	struct altera_asmip2 *q;
-> +	u32 bank;
-> +};
-> +
-> +static int altera_asmip2_write_reg(struct spi_nor *nor, u8 opcode, u8 *val,
-> +				    int len)
-> +{
-> +	struct altera_asmip2_flash *flash = nor->priv;
-> +	struct altera_asmip2 *q = flash->q;
-> +	u32 reg;
-> +	int ret;
-> +	int i;
-> +
-> +	if ((len + 1) > QSPI_FIFO_DEPTH) {
-> +		dev_err(q->dev, "%s bad len %d > %d\n",
-> +			__func__, len + 1, QSPI_FIFO_DEPTH);
-> +		return -EINVAL;
-> +	}
-> +
-> +	writel(opcode, q->csr_base + QSPI_DATA_REG);
-> +
-> +	for (i = 0; i < len; i++) {
-> +		writel((u32)val[i], q->csr_base + QSPI_DATA_REG);
-> +	}
-> +
-> +	reg = QSPI_ACTION_EN | QSPI_ACTION_SC;
-> +
-> +	writel(reg, q->csr_base + QSPI_ACTION_REG);
-> +
-> +	ret = readl_poll_timeout(q->csr_base + QSPI_FIFO_CNT_REG, reg,
-> +				 (((reg >> QSPI_FIFO_CNT_TX_SFT) &
-> +				 QSPI_FIFO_CNT_MSK) == 0), QSPI_POLL_INTERVAL,
-> +				 QSPI_POLL_TIMEOUT);
-> +	if (ret)
-> +		dev_err(q->dev, "%s timed out\n", __func__);
-> +
-> +	reg = QSPI_ACTION_EN;
-> +
-> +	writel(reg, q->csr_base + QSPI_ACTION_REG);
-> +
-> +	return ret;
-> +}
-> +
-> +static int altera_asmip2_read_reg(struct spi_nor *nor, u8 opcode, u8 *val,
-> +				   int len)
-> +{
-> +	struct altera_asmip2_flash *flash = nor->priv;
-> +	struct altera_asmip2 *q = flash->q;
-> +	u32 reg;
-> +	int ret;
-> +	int i;
-> +
-> +	if (len > QSPI_FIFO_DEPTH) {
-> +		dev_err(q->dev, "%s bad len %d > %d\n",
-> +			__func__, len, QSPI_FIFO_DEPTH);
-> +		return -EINVAL;
-> +	}
-> +
-> +	writel(opcode, q->csr_base + QSPI_DATA_REG);
-> +
-> +	reg = QSPI_ACTION_EN | QSPI_ACTION_SC |
-> +		(len << QSPI_ACTION_READ_BACK_SFT);
-> +
-> +	writel(reg, q->csr_base + QSPI_ACTION_REG);
-> +
-> +	ret = readl_poll_timeout(q->csr_base + QSPI_FIFO_CNT_REG, reg,
-> +				 ((reg & QSPI_FIFO_CNT_MSK) == len),
-> +				 QSPI_POLL_INTERVAL, QSPI_POLL_TIMEOUT);
-> +
-> +	if (!ret)
-> +		for (i = 0; i < len; i++) {
-> +			reg = readl(q->csr_base + QSPI_DATA_REG);
-> +			val[i] = (u8)(reg & 0xff);
-> +		}
-> +	else
-> +		dev_err(q->dev, "%s timeout\n", __func__);
-> +
-> +	writel(QSPI_ACTION_EN, q->csr_base + QSPI_ACTION_REG);
-> +
-> +	return ret;
-> +}
-> +
-> +static ssize_t altera_asmip2_read(struct spi_nor *nor, loff_t from, size_t len,
-> +				   u_char *buf)
-> +{
-> +	struct altera_asmip2_flash *flash = nor->priv;
-> +	struct altera_asmip2 *q = flash->q;
-> +	size_t bytes_to_read, i;
-> +	u32 reg;
-> +	int ret;
-> +
-> +	bytes_to_read = min_t(size_t, len, QSPI_FIFO_DEPTH);
-> +
-> +	writel(nor->read_opcode, q->csr_base + QSPI_DATA_REG);
-> +
-> +	writel((from & 0xff000000) >> 24, q->csr_base + QSPI_DATA_REG);
-> +	writel((from & 0x00ff0000) >> 16, q->csr_base + QSPI_DATA_REG);
-> +	writel((from & 0x0000ff00) >> 8, q->csr_base + QSPI_DATA_REG);
-> +	writel((from & 0x000000ff), q->csr_base + QSPI_DATA_REG);
-
-Here it looks like you assume the address width is 32 bits. This is not
-always the case, the address width is often 24 bits (almost always for
-memory < 128Mib). Please check nor->addr_width to know the correct
-number of address bytes to be used with the nor->read_opcode command.
-
-> +
-> +	reg = QSPI_ACTION_EN | QSPI_ACTION_SC |
-> +		(10 << QSPI_ACTION_DUMMY_SFT) |
-
-Here DUMMY_SFT suggests that you provide the number of dummy cycles to
-be inserted between the address cycles and the data cycles.
-If so, please fill this field based on nor->read_dummy: this is a number
-of dummy CLOCK cycles. If you need to convert it into the number of byte
-cycles you will have to take into account the number of I/O lines used
-to transmit the address (+ dummy) clocks cycles:
-
-spi_nor_get_protocol_addr_nbits(nor->read_proto)
-
-This gives the 'y' in SPI x-y-z protocol. Should be 1, 2 or 4.
-
-Also could you tell us which SPI memory did you use to test your driver?
-10 is really strange as a number of dummy bytes or clock cycles
-especially since this driver seems to support only Read (03h / 13h) and
-Fast Read (0Bh / 0Ch) operations (see hwcaps below).
-
-Read doesn't use any dummy clock cycles whereas Fast Read uses 8 dummy
-clock cycles for all SPI NOR memories I know.
-
-> +		(bytes_to_read << QSPI_ACTION_READ_BACK_SFT);
-> +
-> +	writel(reg, q->csr_base + QSPI_ACTION_REG);
-> +
-> +	ret = readl_poll_timeout(q->csr_base + QSPI_FIFO_CNT_REG, reg,
-> +				 ((reg & QSPI_FIFO_CNT_MSK) ==
-> +				 bytes_to_read), QSPI_POLL_INTERVAL,
-> +				 QSPI_POLL_TIMEOUT);
-> +	if (ret) {
-> +		dev_err(q->dev, "%s timed out\n", __func__);
-> +		bytes_to_read = 0;
-> +	} else
-> +		for (i = 0; i < bytes_to_read; i++) {
-> +			reg = readl(q->csr_base + QSPI_DATA_REG);
-> +			*buf++ = (u8)(reg & 0xff);
-> +		}
-> +
-> +	writel(QSPI_ACTION_EN, q->csr_base + QSPI_ACTION_REG);
-> +
-> +	return bytes_to_read;
-> +}
-> +
-> +static ssize_t altera_asmip2_write(struct spi_nor *nor, loff_t to,
-> +				    size_t len, const u_char *buf)
-> +{
-> +	struct altera_asmip2_flash *flash = nor->priv;
-> +	struct altera_asmip2 *q = flash->q;
-> +	size_t bytes_to_write, i;
-> +	u32 reg;
-> +	int ret;
-> +
-> +	bytes_to_write = min_t(size_t, len, (QSPI_FIFO_DEPTH - 5));
-> +
-
-not 5 but (1 + nor->addr_width)
-
-
-> +	writel(nor->program_opcode, q->csr_base + QSPI_DATA_REG);
-> +
-> +	writel((to & 0xff000000) >> 24, q->csr_base + QSPI_DATA_REG);
-> +	writel((to & 0x00ff0000) >> 16, q->csr_base + QSPI_DATA_REG);
-> +	writel((to & 0x0000ff00) >> 8, q->csr_base + QSPI_DATA_REG);
-> +	writel((to & 0x000000ff), q->csr_base + QSPI_DATA_REG);
-
-Same as for altera_asmip2_read()
-> +
-> +	for (i = 0; i < bytes_to_write; i++) {
-> +		reg = (u32)*buf++;
-> +		writel(reg, q->csr_base + QSPI_DATA_REG);
-> +	}
-> +
-> +	reg = QSPI_ACTION_EN | QSPI_ACTION_SC;
-> +
-> +	writel(reg, q->csr_base + QSPI_ACTION_REG);
-> +
-> +	ret = readl_poll_timeout(q->csr_base + QSPI_FIFO_CNT_REG, reg,
-> +				 (((reg >> QSPI_FIFO_CNT_TX_SFT) &
-> +				 QSPI_FIFO_CNT_MSK) == 0), QSPI_POLL_INTERVAL,
-> +				 QSPI_POLL_TIMEOUT);
-> +
-> +	if (ret) {
-> +		dev_err(q->dev,
-> +			"%s timed out waiting for fifo to clear\n",
-> +			__func__);
-> +		bytes_to_write = 0;
-> +	}
-> +
-> +	writel(QSPI_ACTION_EN, q->csr_base + QSPI_ACTION_REG);
-> +
-> +	return bytes_to_write;
-> +
-> +}
-> +
-> +static int altera_asmip2_prep(struct spi_nor *nor, enum spi_nor_ops ops)
-> +{
-> +	struct altera_asmip2_flash *flash = nor->priv;
-> +	struct altera_asmip2 *q = flash->q;
-> +
-> +	mutex_lock(&q->bus_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static void altera_asmip2_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
-> +{
-> +	struct altera_asmip2_flash *flash = nor->priv;
-> +	struct altera_asmip2 *q = flash->q;
-> +
-> +	mutex_unlock(&q->bus_mutex);
-> +}
-> +
-> +static int altera_asmip2_setup_banks(struct device *dev,
-> +				      u32 bank, struct device_node *np)
-> +{
-> +	const struct spi_nor_hwcaps hwcaps = {
-> +		.mask = SNOR_HWCAPS_READ |
-> +			SNOR_HWCAPS_READ_FAST |
-> +			SNOR_HWCAPS_PP,
-> +	};
-> +	struct altera_asmip2 *q = dev_get_drvdata(dev);
-> +	struct altera_asmip2_flash *flash;
-> +	struct spi_nor *nor;
-> +	int ret = 0;
-> +	char modalias[40] = {0};
-> +
-> +	if (bank > q->num_flashes - 1)
-> +		return -EINVAL;
-> +
-> +	flash = devm_kzalloc(q->dev, sizeof(*flash), GFP_KERNEL);
-> +	if (!flash)
-> +		return -ENOMEM;
-> +
-> +	q->flash[bank] = flash;
-> +	flash->q = q;
-> +	flash->bank = bank;
-> +
-> +	nor = &flash->nor;
-> +	nor->dev = dev;
-> +	nor->priv = flash;
-> +	nor->mtd.priv = nor;
-> +	spi_nor_set_flash_node(nor, np);
-> +
-> +	/* spi nor framework*/
-> +	nor->read_reg = altera_asmip2_read_reg;
-> +	nor->write_reg = altera_asmip2_write_reg;
-> +	nor->read = altera_asmip2_read;
-> +	nor->write = altera_asmip2_write;
-> +	nor->prepare = altera_asmip2_prep;
-> +	nor->unprepare = altera_asmip2_unprep;
-> +
-> +	/* scanning flash and checking dev id */
-> +#ifdef CONFIG_OF
-> +	if (np && (of_modalias_node(np, modalias, sizeof(modalias)) < 0))
-> +		return -EINVAL;
-> +#endif
-> +
-> +	ret = spi_nor_scan(nor, modalias, &hwcaps);
-
-modalias is for legacy non-jedec SPI NOR memory support. Drop it and
-pass NULL as the 2nd argument of spi_nor_scan() if possible. Unless you
-really plan to use some old non-jedec SPI NOR memory?
-
-All but m25p80.c driver pass NULL as the 2nd argument of spi_nor_scan().
-
-Best regards,
-
-Cyrille
-
-> +	if (ret) {
-> +		dev_err(nor->dev, "flash not found\n");
-> +		return ret;
-> +	}
-> +
-> +	ret =  mtd_device_register(&nor->mtd, NULL, 0);
-> +
-> +	return ret;
-> +}
-> +
-> +static int altera_asmip2_create(struct device *dev, void __iomem *csr_base)
-> +{
-> +	struct altera_asmip2 *q;
-> +	u32 reg;
-> +
-> +	q = devm_kzalloc(dev, sizeof(*q), GFP_KERNEL);
-> +	if (!q)
-> +		return -ENOMEM;
-> +
-> +	q->dev = dev;
-> +	q->csr_base = csr_base;
-> +
-> +	mutex_init(&q->bus_mutex);
-> +
-> +	dev_set_drvdata(dev, q);
-> +
-> +	reg = readl(q->csr_base + QSPI_ACTION_REG);
-> +	if (!(reg & QSPI_ACTION_RST)) {
-> +		writel((reg | QSPI_ACTION_RST), q->csr_base + QSPI_ACTION_REG);
-> +		dev_info(dev, "%s asserting reset\n", __func__);
-> +		udelay(10);
-> +	}
-> +
-> +	writel((reg & ~QSPI_ACTION_RST), q->csr_base + QSPI_ACTION_REG);
-> +	udelay(10);
-> +
-> +	return 0;
-> +}
-> +
-> +static int altera_qspi_add_bank(struct device *dev,
-> +			 u32 bank, struct device_node *np)
-> +{
-> +	struct altera_asmip2 *q = dev_get_drvdata(dev);
-> +
-> +	if (q->num_flashes >= ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP)
-> +		return -ENOMEM;
-> +
-> +	q->num_flashes++;
-> +
-> +	return altera_asmip2_setup_banks(dev, bank, np);
-> +}
-> +
-> +static int altera_asmip2_remove_banks(struct device *dev)
-> +{
-> +	struct altera_asmip2 *q = dev_get_drvdata(dev);
-> +	struct altera_asmip2_flash *flash;
-> +	int i;
-> +	int ret = 0;
-> +
-> +	if (!q)
-> +		return -EINVAL;
-> +
-> +	/* clean up for all nor flash */
-> +	for (i = 0; i < q->num_flashes; i++) {
-> +		flash = q->flash[i];
-> +		if (!flash)
-> +			continue;
-> +
-> +		/* clean up mtd stuff */
-> +		ret = mtd_device_unregister(&flash->nor.mtd);
-> +		if (ret) {
-> +			dev_err(dev, "error removing mtd\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __probe_with_data(struct platform_device *pdev,
-> +			     struct altera_asmip2_plat_data *qdata)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	int ret, i;
-> +
-> +	ret = altera_asmip2_create(dev, qdata->csr_base);
-> +
-> +	if (ret) {
-> +		dev_err(dev, "failed to create qspi device %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	for (i = 0; i < qdata->num_chip_sel; i++) {
-> +		ret = altera_qspi_add_bank(dev, i, NULL);
-> +		if (ret) {
-> +			dev_err(dev, "failed to add qspi bank %d\n", ret);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int altera_asmip2_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device *dev = &pdev->dev;
-> +	struct altera_asmip2_plat_data *qdata;
-> +	struct resource *res;
-> +	void __iomem *csr_base;
-> +	u32 bank;
-> +	int ret;
-> +	struct device_node *pp;
-> +
-> +	qdata = dev_get_platdata(dev);
-> +
-> +	if (qdata)
-> +		return __probe_with_data(pdev, qdata);
-> +
-> +	if (!np) {
-> +		dev_err(dev, "no device tree found %p\n", pdev);
-> +		return -ENODEV;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	csr_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(csr_base)) {
-> +		dev_err(dev, "%s: ERROR: failed to map csr base\n", __func__);
-> +		return PTR_ERR(csr_base);
-> +	}
-> +
-> +	ret = altera_asmip2_create(dev, csr_base);
-> +
-> +	if (ret) {
-> +		dev_err(dev, "failed to create qspi device\n");
-> +		return ret;
-> +	}
-> +
-> +	for_each_available_child_of_node(np, pp) {
-> +		of_property_read_u32(pp, "reg", &bank);
-> +		if (bank >= ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP) {
-> +			dev_err(dev, "bad reg value %u >= %u\n", bank,
-> +				ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP);
-> +			goto error;
-> +		}
-> +
-> +		if (altera_qspi_add_bank(dev, bank, pp)) {
-> +			dev_err(dev, "failed to add bank %u\n", bank);
-> +			goto error;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +error:
-> +	altera_asmip2_remove_banks(dev);
-> +	return -EIO;
-> +}
-> +
-> +static int altera_asmip2_remove(struct platform_device *pdev)
-> +{
-> +	if (!pdev) {
-> +		dev_err(&pdev->dev, "%s NULL\n", __func__);
-> +		return -EINVAL;
+>  	mtk_iommu_config(data, dev, true);
+> @@ -464,8 +462,12 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  		return ret;
+>  	}
+>  
+> -	regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
+> -		F_MMU_TF_PROTECT_SEL(2);
+> +	if (data->m4u_type == M4U_MT8173) {
+> +		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
+> +			F_MMU_TF_PROTECT_SEL(2);
 > +	} else {
-> +		return altera_asmip2_remove_banks(&pdev->dev);
+> +		regval = F_MMU_TF_PROT_SEL(2);
+
+...and it would be a bit more obvious to just use
+F_MMU_TF_PROTECT_SEL(2) >> 1 here (with the comment from above).
+Alternatively, the really bullet-proof option would be something like:
+
+#define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
+	((data)->m4u_type == MT2172 ? 4 : 5)
+#define F_MMU_TF_PROTECT_SEL(prot, data) \
+	((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
+
+> +	}
+>  	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
+>  
+>  	regval = F_L2_MULIT_HIT_EN |
+> @@ -487,9 +489,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  
+>  	writel_relaxed(F_MMU_IVRP_PA_SET(data->protect_base, data->enable_4GB),
+>  		       data->base + REG_MMU_IVRP_PADDR);
+> -
+>  	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
+> -	writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
+> +
+> +	/* It's MISC control register whose default value is ok except mt8173.*/
+> +	if (data->m4u_type == M4U_MT8173)
+> +		writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
+>  
+>  	if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
+>  			     dev_name(data->dev), (void *)data)) {
+> @@ -521,6 +525,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  	if (!data)
+>  		return -ENOMEM;
+>  	data->dev = dev;
+> +	data->m4u_type = (enum mtk_iommu_type)of_device_get_match_data(dev);
+>  
+>  	/* Protect memory. HW will access here while translation fault.*/
+>  	protect = devm_kzalloc(dev, MTK_PROTECT_PA_ALIGN * 2, GFP_KERNEL);
+> @@ -554,6 +559,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  	for (i = 0; i < larb_nr; i++) {
+>  		struct device_node *larbnode;
+>  		struct platform_device *plarbdev;
+> +		unsigned int id;
+
+Strictly, this should be u32...
+
+>  
+>  		larbnode = of_parse_phandle(dev->of_node, "mediatek,larbs", i);
+>  		if (!larbnode)
+> @@ -562,6 +568,10 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  		if (!of_device_is_available(larbnode))
+>  			continue;
+>  
+> +		ret = of_property_read_u32(larbnode, "mediatek,larb-id", &id);
+> +		if (ret)/* The id is consecutive if there is no this property */
+> +			id = i;
+
+...but wouldn't it make more sense for the SMI driver to handle this?
+Admittedly it looks like only this driver knows the default IDs thanks
+to the ordering of the phandle args, but the SMI driver could at least
+initialise larb->larbid to some sentinel value which could be detected
+and replaced with i here.
+
+> +
+>  		plarbdev = of_find_device_by_node(larbnode);
+>  		if (!plarbdev) {
+>  			plarbdev = of_platform_device_create(
+> @@ -572,7 +582,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  				return -EPROBE_DEFER;
+>  			}
+>  		}
+> -		data->smi_imu.larb_imu[i].dev = &plarbdev->dev;
+> +		data->smi_imu.larb_imu[id].dev = &plarbdev->dev;
+
+Changing the way the larb_imu array is indexed also seems to create a
+worrying inconsistency with mtk_iommu_v1.
+
+>  		component_match_add_release(dev, &match, release_of,
+>  					    compare_of, larbnode);
+> @@ -640,8 +650,6 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>  	struct mtk_iommu_suspend_reg *reg = &data->reg;
+>  	void __iomem *base = data->base;
+>  
+> -	writel_relaxed(data->m4u_dom->cfg.arm_v7s_cfg.ttbr[0],
+> -		       base + REG_MMU_PT_BASE_ADDR);
+>  	writel_relaxed(reg->standard_axi_mode,
+>  		       base + REG_MMU_STANDARD_AXI_MODE);
+>  	writel_relaxed(reg->dcm_dis, base + REG_MMU_DCM_DIS);
+> @@ -650,15 +658,19 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>  	writel_relaxed(reg->int_main_control, base + REG_MMU_INT_MAIN_CONTROL);
+>  	writel_relaxed(F_MMU_IVRP_PA_SET(data->protect_base, data->enable_4GB),
+>  		       base + REG_MMU_IVRP_PADDR);
+> +	if (data->m4u_dom)
+> +		writel(data->m4u_dom->cfg.arm_v7s_cfg.ttbr[0],
+> +		       base + REG_MMU_PT_BASE_ADDR);
+>  	return 0;
+>  }
+>  
+> -const struct dev_pm_ops mtk_iommu_pm_ops = {
+> +static const struct dev_pm_ops mtk_iommu_pm_ops = {
+>  	SET_SYSTEM_SLEEP_PM_OPS(mtk_iommu_suspend, mtk_iommu_resume)
+>  };
+>  
+>  static const struct of_device_id mtk_iommu_of_ids[] = {
+> -	{ .compatible = "mediatek,mt8173-m4u", },
+> +	{ .compatible = "mediatek,mt2712-m4u", .data = (void *)M4U_MT2712},
+> +	{ .compatible = "mediatek,mt8173-m4u", .data = (void *)M4U_MT8173},
+>  	{}
+>  };
+>  
+> @@ -667,16 +679,20 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>  	.remove	= mtk_iommu_remove,
+>  	.driver	= {
+>  		.name = "mtk-iommu",
+> -		.of_match_table = mtk_iommu_of_ids,
+> +		.of_match_table = of_match_ptr(mtk_iommu_of_ids),
+>  		.pm = &mtk_iommu_pm_ops,
+>  	}
+>  };
+>  
+>  static int mtk_iommu_init_fn(struct device_node *np)
+>  {
+> +	static bool init_done;
+>  	int ret;
+>  	struct platform_device *pdev;
+>  
+> +	if (init_done)
+> +		return 0;
+> +
+
+Actually, you can simply get rid of the whole init_fn now - the
+IOMMU_OF_DECLARE() table only remains as a way to identify built-in
+drivers for the probe-deferral decision. Hopefully the dodgy-looking
+forced creation of plarbdev in probe could go away as well.
+
+>  	pdev = of_platform_device_create(np, NULL, platform_bus_type.dev_root);
+>  	if (!pdev)
+>  		return -ENOMEM;
+> @@ -686,8 +702,10 @@ static int mtk_iommu_init_fn(struct device_node *np)
+>  		pr_err("%s: Failed to register driver\n", __func__);
+>  		return ret;
+>  	}
+> +	init_done = true;
+>  
+>  	return 0;
+>  }
+>  
+> -IOMMU_OF_DECLARE(mtkm4u, "mediatek,mt8173-m4u", mtk_iommu_init_fn);
+> +IOMMU_OF_DECLARE(mt8173m4u, "mediatek,mt8173-m4u", mtk_iommu_init_fn);
+> +IOMMU_OF_DECLARE(mt2712m4u, "mediatek,mt2712-m4u", mtk_iommu_init_fn);
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index c06cc91..cd729a3 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -34,6 +34,12 @@ struct mtk_iommu_suspend_reg {
+>  	u32				int_main_control;
+>  };
+>  
+> +enum mtk_iommu_type {
+> +	M4U_MT2701,
+> +	M4U_MT2712,
+> +	M4U_MT8173,
+> +};
+> +
+>  struct mtk_iommu_domain;
+>  
+>  struct mtk_iommu_data {
+> @@ -50,6 +56,7 @@ struct mtk_iommu_data {
+>  	bool				tlb_flush_active;
+>  
+>  	struct iommu_device		iommu;
+> +	enum mtk_iommu_type		m4u_type;
+>  };
+>  
+>  static inline int compare_of(struct device *dev, void *data)
+> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> index 13f8c45..ec06d2b 100644
+> --- a/drivers/memory/mtk-smi.c
+> +++ b/drivers/memory/mtk-smi.c
+> @@ -23,7 +23,10 @@
+>  #include <soc/mediatek/smi.h>
+>  #include <dt-bindings/memory/mt2701-larb-port.h>
+>  
+> +/* mt8173 */
+>  #define SMI_LARB_MMU_EN		0xf00
+> +
+> +/* mt2701 */
+>  #define REG_SMI_SECUR_CON_BASE		0x5c0
+>  
+>  /* every register control 8 port, register offset 0x4 */
+> @@ -41,6 +44,10 @@
+>  /* mt2701 domain should be set to 3 */
+>  #define SMI_SECUR_CON_VAL_DOMAIN(id)	(0x3 << ((((id) & 0x7) << 2) + 1))
+>  
+> +/* mt2712 */
+> +#define SMI_LARB_NONSEC_CON(id)	(0x380 + (id * 4))
+> +#define F_MMU_EN		BIT(0)
+> +
+>  struct mtk_smi_larb_gen {
+>  	bool need_larbid;
+>  	int port_in_larb[MTK_LARB_NR_MAX + 1];
+> @@ -149,7 +156,7 @@ void mtk_smi_larb_put(struct device *larbdev)
+>  	struct mtk_smi_iommu *smi_iommu = data;
+>  	unsigned int         i;
+>  
+> -	for (i = 0; i < smi_iommu->larb_nr; i++) {
+> +	for (i = 0; i < MTK_LARB_NR_MAX; i++) {
+
+This initially looked suspicious, but I guess it's related to the
+earlier change to indexing. As a result we seem to have a bit of a
+redundant mess where some things are using larb->larbid and others are
+relying on inferring it from the index in larb_imu.
+
+I'm not sure whether it would end up better to use larbid consistently
+everywhere, or to convert everything to make make larb_imu officially a
+sparse array indexed by ID (and thus remove smi_iommu->larb_nr and
+larb->larbid), but a weird mix of both is not a great idea.
+
+>  		if (dev == smi_iommu->larb_imu[i].dev) {
+>  			/* The 'mmu' may be updated in iommu-attach/detach. */
+>  			larb->mmu = &smi_iommu->larb_imu[i].mmu;
+> @@ -159,13 +166,28 @@ void mtk_smi_larb_put(struct device *larbdev)
+>  	return -ENODEV;
+>  }
+>  
+> -static void mtk_smi_larb_config_port(struct device *dev)
+> +static void mtk_smi_larb_config_port_mt8173(struct device *dev)
+>  {
+>  	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
+>  
+>  	writel(*larb->mmu, larb->base + SMI_LARB_MMU_EN);
+>  }
+>  
+> +static void mtk_smi_larb_config_port_mt2712(struct device *dev)
+> +{
+> +	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
+> +	u32 reg;
+> +	int i;
+> +
+> +	for (i = 0; i < 32; i++) {
+> +		if (*larb->mmu & BIT(i)) {
+
+Seeing this immediately make me think of:
+
+	unsigned long enable = *larb->mmu;
+
+	for_each_set_bit(i, &enable, 32) {
+		...
+	}
+
+but maybe that's overkill :/
+
+Robin.
+
+> +			reg = readl_relaxed(larb->base +
+> +					    SMI_LARB_NONSEC_CON(i));
+> +			reg |= F_MMU_EN;
+> +			writel(reg, larb->base + SMI_LARB_NONSEC_CON(i));
+> +		}
 > +	}
 > +}
-> +
-> +static const struct of_device_id altera_asmip2_id_table[] = {
-> +
-> +	{ .compatible = "altr,asmi_parallel2",},
-> +	{}
+>  
+>  static void mtk_smi_larb_config_port_gen1(struct device *dev)
+>  {
+> @@ -211,7 +233,11 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
+>  
+>  static const struct mtk_smi_larb_gen mtk_smi_larb_mt8173 = {
+>  	/* mt8173 do not need the port in larb */
+> -	.config_port = mtk_smi_larb_config_port,
+> +	.config_port = mtk_smi_larb_config_port_mt8173,
 > +};
-> +MODULE_DEVICE_TABLE(of, altera_asmip2_id_table);
 > +
-> +static struct platform_driver altera_asmip2_driver = {
-> +	.driver = {
-> +		.name = ALTERA_ASMIP2_DRV_NAME,
-> +		.of_match_table = altera_asmip2_id_table,
+> +static const struct mtk_smi_larb_gen mtk_smi_larb_mt2712 = {
+> +	.config_port = mtk_smi_larb_config_port_mt2712,
+>  };
+>  
+>  static const struct mtk_smi_larb_gen mtk_smi_larb_mt2701 = {
+> @@ -232,6 +258,10 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
+>  		.compatible = "mediatek,mt2701-smi-larb",
+>  		.data = &mtk_smi_larb_mt2701
+>  	},
+> +	{
+> +		.compatible = "mediatek,mt2712-smi-larb",
+> +		.data = &mtk_smi_larb_mt2712
 > +	},
-> +	.probe = altera_asmip2_probe,
-> +	.remove = altera_asmip2_remove,
-> +};
-> +module_platform_driver(altera_asmip2_driver);
-> +
-> +MODULE_AUTHOR("Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
-> +MODULE_DESCRIPTION("Altera ASMI Parallel II");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:" ALTERA_ASMIP2_DRV_NAME);
-> diff --git a/include/linux/mtd/altera-asmip2.h b/include/linux/mtd/altera-asmip2.h
-> new file mode 100644
-> index 0000000..580c43c
-> --- /dev/null
-> +++ b/include/linux/mtd/altera-asmip2.h
-> @@ -0,0 +1,24 @@
-> +/*
-> + *
-> + * Copyright 2017 Intel Corporation, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +#ifndef __ALTERA_QUADSPI_H
-> +#define __ALTERA_QUADSPI_H
-> +
-> +#include <linux/device.h>
-> +
-> +#define ALTERA_ASMIP2_DRV_NAME "altr-asmip2"
-> +#define ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP 3
-> +#define ALTERA_ASMIP2_RESOURCE_SIZE 0x10
-> +
-> +struct altera_asmip2_plat_data {
-> +	void __iomem *csr_base;
-> +	u32 num_chip_sel;
-> +};
-> +
-> +#endif
+>  	{}
+>  };
+>  
+> @@ -318,6 +348,10 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
+>  		.compatible = "mediatek,mt2701-smi-common",
+>  		.data = (void *)MTK_SMI_GEN1
+>  	},
+> +	{
+> +		.compatible = "mediatek,mt2712-smi-common",
+> +		.data = (void *)MTK_SMI_GEN2
+> +	},
+>  	{}
+>  };
+>  
 > 
 
 --
