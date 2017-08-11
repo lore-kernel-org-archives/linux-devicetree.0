@@ -1,7 +1,7 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 3/3] drivers: tee: rework optee_driver_{init,exit} to use platform device
-Date: Fri, 11 Aug 2017 14:30:37 +0100
-Message-ID: <1502458237-1683-4-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH 1/3] firmware: of: populate /firmware/ node during init
+Date: Fri, 11 Aug 2017 14:30:35 +0100
+Message-ID: <1502458237-1683-2-git-send-email-sudeep.holla@arm.com>
 References: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
@@ -10,162 +10,77 @@ To: linux-kernel@vger.kernel.org
 Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that firmware_of_init takes care of populating all the devices
-under the /firmware/ node, this patch reworks/removes custom
-optee_driver_{init,exit} in favour of module_platform_driver.
+Since "/firmware" does not have its own "compatible" property as it's
+just collection of nodes representing firmware interface, it's sub-nodes
+are not populated during system initialization.
 
-Cc: Jens Wiklander <jens.wiklander@linaro.org>
+Currently different firmware drivers search the /firmware/ node and
+populate the sub-node devices selectively. Instead we can populate
+the /firmware/ node during init to avoid more drivers continuing to
+populate the devices selectively.
+
+This patch adds initcall to achieve the same.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/tee/optee/core.c | 74 ++++++++++++++++--------------------------------
- 1 file changed, 25 insertions(+), 49 deletions(-)
+ drivers/firmware/Makefile |  1 +
+ drivers/firmware/of.c     | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 drivers/firmware/of.c
 
-diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-index 58169e519422..6c368508e835 100644
---- a/drivers/tee/optee/core.c
-+++ b/drivers/tee/optee/core.c
-@@ -445,8 +445,9 @@ static optee_invoke_fn *get_invoke_func(struct device_node *np)
- 	return ERR_PTR(-EINVAL);
- }
- 
--static struct optee *optee_probe(struct device_node *np)
-+static int optee_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	optee_invoke_fn *invoke_fn;
- 	struct tee_shm_pool *pool;
- 	struct optee *optee = NULL;
-@@ -457,21 +458,21 @@ static struct optee *optee_probe(struct device_node *np)
- 
- 	invoke_fn = get_invoke_func(np);
- 	if (IS_ERR(invoke_fn))
--		return (void *)invoke_fn;
-+		return PTR_ERR(invoke_fn);
- 
- 	if (!optee_msg_api_uid_is_optee_api(invoke_fn)) {
- 		pr_warn("api uid mismatch\n");
--		return ERR_PTR(-EINVAL);
-+		return -EINVAL;
- 	}
- 
- 	if (!optee_msg_api_revision_is_compatible(invoke_fn)) {
- 		pr_warn("api revision mismatch\n");
--		return ERR_PTR(-EINVAL);
-+		return -EINVAL;
- 	}
- 
- 	if (!optee_msg_exchange_capabilities(invoke_fn, &sec_caps)) {
- 		pr_warn("capabilities mismatch\n");
--		return ERR_PTR(-EINVAL);
-+		return -EINVAL;
- 	}
- 
- 	/*
-@@ -479,11 +480,11 @@ static struct optee *optee_probe(struct device_node *np)
- 	 * doesn't have any reserved memory we can use we can't continue.
- 	 */
- 	if (!(sec_caps & OPTEE_SMC_SEC_CAP_HAVE_RESERVED_SHM))
--		return ERR_PTR(-EINVAL);
-+		return -EINVAL;
- 
- 	pool = optee_config_shm_memremap(invoke_fn, &memremaped_shm);
- 	if (IS_ERR(pool))
--		return (void *)pool;
-+		return PTR_ERR(pool);
- 
- 	optee = kzalloc(sizeof(*optee), GFP_KERNEL);
- 	if (!optee) {
-@@ -523,9 +524,10 @@ static struct optee *optee_probe(struct device_node *np)
- 	optee->pool = pool;
- 
- 	optee_enable_shm_cache(optee);
-+	platform_set_drvdata(pdev, optee);
- 
- 	pr_info("initialized driver\n");
--	return optee;
-+	return 0;
- err:
- 	if (optee) {
- 		/*
-@@ -541,11 +543,12 @@ static struct optee *optee_probe(struct device_node *np)
- 		tee_shm_pool_free(pool);
- 	if (memremaped_shm)
- 		memunmap(memremaped_shm);
--	return ERR_PTR(rc);
-+	return rc;
- }
- 
--static void optee_remove(struct optee *optee)
-+static int optee_remove(struct platform_device *pdev)
- {
-+	struct optee *optee = platform_get_drvdata(pdev);
- 	/*
- 	 * Ask OP-TEE to free all cached shared memory objects to decrease
- 	 * reference counters and also avoid wild pointers in secure world
-@@ -568,52 +571,25 @@ static void optee_remove(struct optee *optee)
- 	mutex_destroy(&optee->call_queue.mutex);
- 
- 	kfree(optee);
-+	return 0;
- }
- 
- static const struct of_device_id optee_match[] = {
- 	{ .compatible = "linaro,optee-tz" },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, optee_match);
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index 91d3ff62c653..d9a6fce43613 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
+ obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
+ obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
+ obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
++obj-$(CONFIG_OF)		+= of.o
+ obj-$(CONFIG_QCOM_SCM)		+= qcom_scm.o
+ obj-$(CONFIG_QCOM_SCM_64)	+= qcom_scm-64.o
+ obj-$(CONFIG_QCOM_SCM_32)	+= qcom_scm-32.o
+diff --git a/drivers/firmware/of.c b/drivers/firmware/of.c
+new file mode 100644
+index 000000000000..149b9660fb44
+--- /dev/null
++++ b/drivers/firmware/of.c
+@@ -0,0 +1,34 @@
++/*
++ * Populates the nodes under /firmware/ device tree node
++ *
++ * Copyright (C) 2017 ARM Ltd.
++ *
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License.  See the file "COPYING" in the main directory of this archive
++ * for more details.
++ *
++ * Released under the GPLv2 only.
++ * SPDX-License-Identifier: GPL-2.0
++ */
 +
-+static struct platform_driver optee_platdrv = {
-+	.driver = {
-+		.name = "optee",
-+		.of_match_table = of_match_ptr(optee_match),
-+	},
-+	.probe = optee_probe,
-+	.remove	= optee_remove,
-+};
- 
--static struct optee *optee_svc;
--
--static int __init optee_driver_init(void)
--{
--	struct device_node *fw_np;
--	struct device_node *np;
--	struct optee *optee;
--
--	/* Node is supposed to be below /firmware */
--	fw_np = of_find_node_by_name(NULL, "firmware");
--	if (!fw_np)
--		return -ENODEV;
--
--	np = of_find_matching_node(fw_np, optee_match);
--	of_node_put(fw_np);
--	if (!np)
--		return -ENODEV;
--
--	optee = optee_probe(np);
--	of_node_put(np);
--
--	if (IS_ERR(optee))
--		return PTR_ERR(optee);
--
--	optee_svc = optee;
--
--	return 0;
--}
--module_init(optee_driver_init);
--
--static void __exit optee_driver_exit(void)
--{
--	struct optee *optee = optee_svc;
--
--	optee_svc = NULL;
--	if (optee)
--		optee_remove(optee);
--}
--module_exit(optee_driver_exit);
-+module_platform_driver(optee_platdrv);
- 
- MODULE_AUTHOR("Linaro");
- MODULE_DESCRIPTION("OP-TEE driver");
++#include <linux/init.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++
++static int __init firmware_of_init(void)
++{
++	struct device_node *fw_np;
++	int ret;
++
++	fw_np = of_find_node_by_name(NULL, "firmware");
++
++	if (!fw_np)
++		return 0;
++
++	ret = of_platform_populate(fw_np, NULL, NULL, NULL);
++
++	of_node_put(fw_np);
++
++	return ret;
++}
++arch_initcall_sync(firmware_of_init);
 -- 
 2.7.4
