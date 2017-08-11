@@ -1,151 +1,256 @@
-Return-Path: <SRS0=tBDe=7N=votarytech.com=github.raspberrypi@kernel.org>
-Date: Fri, 11 Aug 2017 11:30:58 +0000 (UTC)
-From: VOTARY GITHUB <github.raspberrypi@votarytech.com>
-Reply-To: VOTARY GITHUB <github.raspberrypi@votarytech.com>
-Message-ID: <534636301.409284.1502451058701@mail.yahoo.com>
-Subject: [PATCH] arm64: bcm2837 dts: enable bcm2708 frambuffer driver for
- the  raspberry pi-3
+Return-Path: <SRS0=N70N=7N=rock-chips.com=wxt@kernel.org>
+Subject: Re: [PATCH v2 2/5] thermal: rockchip: Support the RK3328 SOC in
+ thermal driver
+References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com>
+ <1501833976-1100-3-git-send-email-rocky.hao@rock-chips.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Message-ID: <04068b8a-e5e1-ab73-8b7a-4b4f7137e491@rock-chips.com>
+Date: Fri, 11 Aug 2017 14:32:13 +0800
 MIME-Version: 1.0
+In-Reply-To: <1501833976-1100-3-git-send-email-rocky.hao@rock-chips.com>
 Content-Type: multipart/alternative;
-	boundary="----=_Part_409283_1275492672.1502451058700"
-References: <534636301.409284.1502451058701.ref@mail.yahoo.com>
-To: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "lee@kernel.org" <lee@kernel.org>, "eric@anholt.net" <eric@anholt.net>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "github.raspberrypi@votarytech.com" <github.raspberrypi@votarytech.com>, "ijc@hellion.org.uk" <ijc@hellion.org.uk>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+ boundary="------------F5EED96DE44B81665F5F602C"
+Content-Language: en-US
+To: Rocky Hao <rocky.hao@rock-chips.com>, rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, cl@rock-chips.com, william.wu@rock-chips.com, jay.xu@rock-chips.com, xxx@rock-chips.com, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
 List-ID: <devicetree@vger.kernel.org>
 
-------=_Part_409283_1275492672.1502451058700
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This is a multi-part message in MIME format.
+--------------F5EED96DE44B81665F5F602C
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 
->From 3200cb6fd787390df1bccf1bb1f7a67ca04136fd Mon Sep 17 00:00:00 2001
-From: VT-Github-Raspberrypi <github.raspberrypi@votarytech.com>
-Date: Tue, 8 Aug 2017 16:57:15 +0530
-Subject: [PATCH] arm64: bcm2837 dts: enable bcm2708 frambuffer driver for t=
-he
-=C2=A0raspberry pi-3
+�� 2017��08��04�� 16:06, Rocky Hao д��:
+> RK3328 SOC has one Temperature Sensor for CPU.
+>
+> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
 
-This fb drivers to make rendering full boot up logs on the screen.
+Reviewed-by: Caesar Wang <wxt@rock-chips.com>
 
-Fixed: https://github.com/raspberrypi/linux/issues/2156
+> ---
+> Change in v2:
+> - remove gerrit Change-Id
+>
+>   drivers/thermal/rockchip_thermal.c | 65 ++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 65 insertions(+)
+>
+> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+> index 4c7796512453..206035139110 100644
+> --- a/drivers/thermal/rockchip_thermal.c
+> +++ b/drivers/thermal/rockchip_thermal.c
+> @@ -320,6 +320,44 @@ struct tsadc_table {
+>   	{0, 125000},
+>   };
+>   
+> +static const struct tsadc_table rk3328_code_table[] = {
+> +	{0, -40000},
+> +	{296, -40000},
+> +	{304, -35000},
+> +	{313, -30000},
+> +	{331, -20000},
+> +	{340, -15000},
+> +	{349, -10000},
+> +	{359, -5000},
+> +	{368, 0},
+> +	{378, 5000},
+> +	{388, 10000},
+> +	{398, 15000},
+> +	{408, 20000},
+> +	{418, 25000},
+> +	{429, 30000},
+> +	{440, 35000},
+> +	{451, 40000},
+> +	{462, 45000},
+> +	{473, 50000},
+> +	{485, 55000},
+> +	{496, 60000},
+> +	{508, 65000},
+> +	{521, 70000},
+> +	{533, 75000},
+> +	{546, 80000},
+> +	{559, 85000},
+> +	{572, 90000},
+> +	{586, 95000},
+> +	{600, 100000},
+> +	{614, 105000},
+> +	{629, 110000},
+> +	{644, 115000},
+> +	{659, 120000},
+> +	{675, 125000},
+> +	{TSADCV2_DATA_MASK, 125000},
+> +};
+> +
+>   static const struct tsadc_table rk3368_code_table[] = {
+>   	{0, -40000},
+>   	{106, -40000},
+> @@ -790,6 +828,29 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>   	},
+>   };
+>   
+> +static const struct rockchip_tsadc_chip rk3328_tsadc_data = {
+> +	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
+> +	.chn_num = 1, /* one channels for tsadc */
+> +
+> +	.tshut_mode = TSHUT_MODE_CRU, /* default TSHUT via CRU */
+> +	.tshut_temp = 95000,
+> +
+> +	.initialize = rk_tsadcv2_initialize,
+> +	.irq_ack = rk_tsadcv3_irq_ack,
+> +	.control = rk_tsadcv3_control,
+> +	.get_temp = rk_tsadcv2_get_temp,
+> +	.set_alarm_temp = rk_tsadcv2_alarm_temp,
+> +	.set_tshut_temp = rk_tsadcv2_tshut_temp,
+> +	.set_tshut_mode = rk_tsadcv2_tshut_mode,
+> +
+> +	.table = {
+> +		.id = rk3328_code_table,
+> +		.length = ARRAY_SIZE(rk3328_code_table),
+> +		.data_mask = TSADCV2_DATA_MASK,
+> +		.mode = ADC_INCREMENT,
+> +	},
+> +};
+> +
+>   static const struct rockchip_tsadc_chip rk3366_tsadc_data = {
+>   	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
+>   	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
+> @@ -875,6 +936,10 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>   		.data = (void *)&rk3288_tsadc_data,
+>   	},
+>   	{
+> +		.compatible = "rockchip,rk3328-tsadc",
+> +		.data = (void *)&rk3328_tsadc_data,
+> +	},
+> +	{
+>   		.compatible = "rockchip,rk3366-tsadc",
+>   		.data = (void *)&rk3366_tsadc_data,
+>   	},
 
-Signed-off-by: VT-Github-Raspberrypi <github.raspberrypi@votarytech.com>
+
+--------------F5EED96DE44B81665F5F602C
+Content-Type: text/html; charset=gbk
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <div class="moz-cite-prefix">�� 2017��08��04�� 16:06, Rocky Hao д��:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:1501833976-1100-3-git-send-email-rocky.hao@rock-chips.com">
+      <pre wrap="">RK3328 SOC has one Temperature Sensor for CPU.
+
+Signed-off-by: Rocky Hao <a class="moz-txt-link-rfc2396E" href="mailto:rocky.hao@rock-chips.com">&lt;rocky.hao@rock-chips.com&gt;</a></pre>
+    </blockquote>
+    <br>
+    Reviewed-by: Caesar Wang <a class="moz-txt-link-rfc2396E"
+      href="mailto:wxt@rock-chips.com">&lt;wxt@rock-chips.com&gt;</a><br>
+    <br>
+    <blockquote type="cite"
+      cite="mid:1501833976-1100-3-git-send-email-rocky.hao@rock-chips.com">
+      <pre wrap="">
 ---
-=C2=A0arch/arm/boot/dts/bcm2835-rpi.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 7 +++++++
-=C2=A0arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts | 5 +++++
-=C2=A02 files changed, 12 insertions(+)
+Change in v2:
+- remove gerrit Change-Id
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835=
--rpi.dtsi
-index a7b5ce1..344bd20 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -27,6 +27,13 @@
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0firmware =3D=
- <&firmware>;
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0#power-domai=
-n-cells =3D <1>;
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0};
-+
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0fb: fb {
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0compatible =3D "b=
-rcm,bcm2708-fb";
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0firmware =3D <&fi=
-rmware>;
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0status =3D "disab=
-led";
-+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0};
-+
-=C2=A0=C2=A0=C2=A0 =C2=A0};
-=C2=A0};
-=C2=A0
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/=
-boot/dts/broadcom/bcm2837-rpi-3-b.dts
-index 19449d9..d02d9bc 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-@@ -22,6 +22,11 @@
-=C2=A0&uart1 {
-=C2=A0=C2=A0=C2=A0 =C2=A0status =3D "okay";
-=C2=A0};
-+
-+&fb {
-+=C2=A0=C2=A0 =C2=A0status =3D "okay";
+ drivers/thermal/rockchip_thermal.c | 65 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+index 4c7796512453..206035139110 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -320,6 +320,44 @@ struct tsadc_table {
+ 	{0, 125000},
+ };
+ 
++static const struct tsadc_table rk3328_code_table[] = {
++	{0, -40000},
++	{296, -40000},
++	{304, -35000},
++	{313, -30000},
++	{331, -20000},
++	{340, -15000},
++	{349, -10000},
++	{359, -5000},
++	{368, 0},
++	{378, 5000},
++	{388, 10000},
++	{398, 15000},
++	{408, 20000},
++	{418, 25000},
++	{429, 30000},
++	{440, 35000},
++	{451, 40000},
++	{462, 45000},
++	{473, 50000},
++	{485, 55000},
++	{496, 60000},
++	{508, 65000},
++	{521, 70000},
++	{533, 75000},
++	{546, 80000},
++	{559, 85000},
++	{572, 90000},
++	{586, 95000},
++	{600, 100000},
++	{614, 105000},
++	{629, 110000},
++	{644, 115000},
++	{659, 120000},
++	{675, 125000},
++	{TSADCV2_DATA_MASK, 125000},
 +};
 +
-=C2=A0&sdhost {
-=C2=A0=C2=A0=C2=A0 =C2=A0pinctrl-names =3D "default";
-=C2=A0=C2=A0=C2=A0 =C2=A0pinctrl-0 =3D <&sdhost_gpio48>;
---=20
-2.7.4
+ static const struct tsadc_table rk3368_code_table[] = {
+ 	{0, -40000},
+ 	{106, -40000},
+@@ -790,6 +828,29 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+ 	},
+ };
+ 
++static const struct rockchip_tsadc_chip rk3328_tsadc_data = {
++	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
++	.chn_num = 1, /* one channels for tsadc */
++
++	.tshut_mode = TSHUT_MODE_CRU, /* default TSHUT via CRU */
++	.tshut_temp = 95000,
++
++	.initialize = rk_tsadcv2_initialize,
++	.irq_ack = rk_tsadcv3_irq_ack,
++	.control = rk_tsadcv3_control,
++	.get_temp = rk_tsadcv2_get_temp,
++	.set_alarm_temp = rk_tsadcv2_alarm_temp,
++	.set_tshut_temp = rk_tsadcv2_tshut_temp,
++	.set_tshut_mode = rk_tsadcv2_tshut_mode,
++
++	.table = {
++		.id = rk3328_code_table,
++		.length = ARRAY_SIZE(rk3328_code_table),
++		.data_mask = TSADCV2_DATA_MASK,
++		.mode = ADC_INCREMENT,
++	},
++};
++
+ static const struct rockchip_tsadc_chip rk3366_tsadc_data = {
+ 	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
+ 	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
+@@ -875,6 +936,10 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+ 		.data = (void *)&amp;rk3288_tsadc_data,
+ 	},
+ 	{
++		.compatible = "rockchip,rk3328-tsadc",
++		.data = (void *)&amp;rk3328_tsadc_data,
++	},
++	{
+ 		.compatible = "rockchip,rk3366-tsadc",
+ 		.data = (void *)&amp;rk3366_tsadc_data,
+ 	},
+</pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
 
-------=_Part_409283_1275492672.1502451058700
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<html><head></head><body><div style=3D"color:#000; background-color:#fff; f=
-ont-family:=E6=A8=99=E6=A5=B7=E9=AB=94, dfkai-sb;font-size:16px"><div id=3D=
-"yui_3_16_0_ym19_1_1502450758561_11915">From 3200cb6fd787390df1bccf1bb1f7a6=
-7ca04136fd Mon Sep 17 00:00:00 2001<br id=3D"yui_3_16_0_ym19_1_150245075856=
-1_15043">From: VT-Github-Raspberrypi &lt;github.raspberrypi@votarytech.com&=
-gt;<br id=3D"yui_3_16_0_ym19_1_1502450758561_15044">Date: Tue, 8 Aug 2017 1=
-6:57:15 +0530<br id=3D"yui_3_16_0_ym19_1_1502450758561_15045">Subject: [PAT=
-CH] arm64: bcm2837 dts: enable bcm2708 frambuffer driver for the<br id=3D"y=
-ui_3_16_0_ym19_1_1502450758561_15046">&nbsp;raspberry pi-3<br id=3D"yui_3_1=
-6_0_ym19_1_1502450758561_15047"><br id=3D"yui_3_16_0_ym19_1_1502450758561_1=
-5048">This fb drivers to make rendering full boot up logs on the screen.<br=
- id=3D"yui_3_16_0_ym19_1_1502450758561_15049"><br id=3D"yui_3_16_0_ym19_1_1=
-502450758561_15050">Fixed: https://github.com/raspberrypi/linux/issues/2156=
-<br id=3D"yui_3_16_0_ym19_1_1502450758561_15051"><br id=3D"yui_3_16_0_ym19_=
-1_1502450758561_15052">Signed-off-by: VT-Github-Raspberrypi &lt;github.rasp=
-berrypi@votarytech.com&gt;<br id=3D"yui_3_16_0_ym19_1_1502450758561_15053">=
----<br id=3D"yui_3_16_0_ym19_1_1502450758561_15054">&nbsp;arch/arm/boot/dts=
-/bcm2835-rpi.dtsi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp; | 7 +++++++<br id=3D"yui_3_16_0_ym19_1_150245075=
-8561_15055">&nbsp;arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts | 5 ++++=
-+<br id=3D"yui_3_16_0_ym19_1_1502450758561_15056">&nbsp;2 files changed, 12=
- insertions(+)<br id=3D"yui_3_16_0_ym19_1_1502450758561_15057"><br id=3D"yu=
-i_3_16_0_ym19_1_1502450758561_15058">diff --git a/arch/arm/boot/dts/bcm2835=
--rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi<br id=3D"yui_3_16_0_ym19_1_1=
-502450758561_15059">index a7b5ce1..344bd20 100644<br id=3D"yui_3_16_0_ym19_=
-1_1502450758561_15060">--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi<br id=3D"yu=
-i_3_16_0_ym19_1_1502450758561_15061">+++ b/arch/arm/boot/dts/bcm2835-rpi.dt=
-si<br id=3D"yui_3_16_0_ym19_1_1502450758561_15062">@@ -27,6 +27,13 @@<br id=
-=3D"yui_3_16_0_ym19_1_1502450758561_15063">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&=
-nbsp; &nbsp;&nbsp;&nbsp; &nbsp;firmware =3D &lt;&amp;firmware&gt;;<br id=3D=
-"yui_3_16_0_ym19_1_1502450758561_15064">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbs=
-p; &nbsp;&nbsp;&nbsp; &nbsp;#power-domain-cells =3D &lt;1&gt;;<br id=3D"yui=
-_3_16_0_ym19_1_1502450758561_15065">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &=
-nbsp;};<br id=3D"yui_3_16_0_ym19_1_1502450758561_15066">+<br id=3D"yui_3_16=
-_0_ym19_1_1502450758561_15067">+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;fb: f=
-b {<br id=3D"yui_3_16_0_ym19_1_1502450758561_15068">+&nbsp;&nbsp; &nbsp;&nb=
-sp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;compatible =3D "brcm,bcm2708-fb";<br id=
-=3D"yui_3_16_0_ym19_1_1502450758561_15069">+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;=
- &nbsp;&nbsp;&nbsp; &nbsp;firmware =3D &lt;&amp;firmware&gt;;<br id=3D"yui_=
-3_16_0_ym19_1_1502450758561_15070">+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&=
-nbsp;&nbsp; &nbsp;status =3D "disabled";<br id=3D"yui_3_16_0_ym19_1_1502450=
-758561_15071">+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;};<br id=3D"yui_3_16_0=
-_ym19_1_1502450758561_15072">+<br id=3D"yui_3_16_0_ym19_1_1502450758561_150=
-73">&nbsp;&nbsp;&nbsp; &nbsp;};<br id=3D"yui_3_16_0_ym19_1_1502450758561_15=
-074">&nbsp;};<br id=3D"yui_3_16_0_ym19_1_1502450758561_15075">&nbsp;<br id=
-=3D"yui_3_16_0_ym19_1_1502450758561_15076">diff --git a/arch/arm64/boot/dts=
-/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-=
-b.dts<br id=3D"yui_3_16_0_ym19_1_1502450758561_15077">index 19449d9..d02d9b=
-c 100644<br id=3D"yui_3_16_0_ym19_1_1502450758561_15078">--- a/arch/arm64/b=
-oot/dts/broadcom/bcm2837-rpi-3-b.dts<br id=3D"yui_3_16_0_ym19_1_15024507585=
-61_15079">+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts<br id=3D"y=
-ui_3_16_0_ym19_1_1502450758561_15080">@@ -22,6 +22,11 @@<br id=3D"yui_3_16_=
-0_ym19_1_1502450758561_15081">&nbsp;&amp;uart1 {<br id=3D"yui_3_16_0_ym19_1=
-_1502450758561_15082">&nbsp;&nbsp;&nbsp; &nbsp;status =3D "okay";<br id=3D"=
-yui_3_16_0_ym19_1_1502450758561_15083">&nbsp;};<br id=3D"yui_3_16_0_ym19_1_=
-1502450758561_15084">+<br id=3D"yui_3_16_0_ym19_1_1502450758561_15085">+&am=
-p;fb {<br id=3D"yui_3_16_0_ym19_1_1502450758561_15086">+&nbsp;&nbsp; &nbsp;=
-status =3D "okay";<br id=3D"yui_3_16_0_ym19_1_1502450758561_15087">+};<br i=
-d=3D"yui_3_16_0_ym19_1_1502450758561_15088">+<br id=3D"yui_3_16_0_ym19_1_15=
-02450758561_15089">&nbsp;&amp;sdhost {<br id=3D"yui_3_16_0_ym19_1_150245075=
-8561_15090">&nbsp;&nbsp;&nbsp; &nbsp;pinctrl-names =3D "default";<br id=3D"=
-yui_3_16_0_ym19_1_1502450758561_15091">&nbsp;&nbsp;&nbsp; &nbsp;pinctrl-0 =
-=3D &lt;&amp;sdhost_gpio48&gt;;<br id=3D"yui_3_16_0_ym19_1_1502450758561_15=
-092">-- <br id=3D"yui_3_16_0_ym19_1_1502450758561_15093">2.7.4<br id=3D"yui=
-_3_16_0_ym19_1_1502450758561_15095"></div></div></body></html>
-------=_Part_409283_1275492672.1502451058700--
+--------------F5EED96DE44B81665F5F602C--
