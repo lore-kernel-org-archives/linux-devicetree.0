@@ -1,44 +1,54 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: watchdog: mediatek: add support for
- MediaTek MT7623 and MT7622 SoC
-Date: Fri, 11 Aug 2017 10:36:31 +0800
-Message-ID: <1502418991.19230.1.camel@mtkswgap22>
-References: <b0058a0a9f948f17edf3c1a476665c715922ebc3.1501830388.git.sean.wang@mediatek.com>
-         <20170810174343.7pejhh7wxkcaf3zj@rob-hp-laptop>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: sun8i: sunxi-h3-h5: add phy-is-integrated
+ property to internal PHY
+Date: Fri, 11 Aug 2017 10:42:51 +0800
+Message-ID: <CAGb2v64dBZgN6-8kHnnN1qiEXHnbXw_FM9WxGHPU0h-tZDbspA@mail.gmail.com>
+References: <20170810085129.20463-1-clabbe.montjoie@gmail.com> <20170810085129.20463-3-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170810174343.7pejhh7wxkcaf3zj@rob-hp-laptop>
+In-Reply-To: <20170810085129.20463-3-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-08-10 at 12:43 -0500, Rob Herring wrote:
-> On Fri, Aug 04, 2017 at 03:14:07PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > This updates dt-binding documentation for MediaTek MT7622 and
-> > MT7623 SoC. For the both SoCs supported all rely on the fallback
-> > binding of the case with "mediatek,mt6589-wdt".
-> > 
-> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hi,
 
-Hi, Rob
+On Thu, Aug 10, 2017 at 4:51 PM, Corentin Labbe
+<clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch add the new phy-is-integrated property to the internal PHY
+> node.
+>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> index 4b599b5d26f6..54fc24e4c569 100644
+> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> @@ -425,6 +425,7 @@
+>                                         reg = <1>;
+>                                         clocks = <&ccu CLK_BUS_EPHY>;
+>                                         resets = <&ccu RST_BUS_EPHY>;
+> +                                       phy-is-integrated;
 
-thanks a lot
+You also need to "delete" this property at the board level for
+any board that has the external PHY at address <1>. Otherwise
+they will stop working. This is due to the internal and external
+PHYs having the same path and node name in the device tree, so
+they are effectively the same node.
 
-can the patch go through your tree?
+ChenYu
 
-	Sean
-
-
+>                                 };
+>                         };
+>                 };
+> --
+> 2.13.0
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
