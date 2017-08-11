@@ -1,45 +1,76 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] firmware: of: populate /firmware/ node during init
-Date: Fri, 11 Aug 2017 16:22:35 +0100
-Message-ID: <9e247a72-67d6-2f85-90bd-1a5fb6852c0e@arm.com>
-References: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
- <1502458237-1683-2-git-send-email-sudeep.holla@arm.com>
- <CABGGisx7d+SQ7Sbyyu2hoNeuCFHZt1erjMg3zd5mHsqUF-Zk-Q@mail.gmail.com>
- <7a3b73d0-988c-1d2a-43cc-4d30b4eac0f1@arm.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v3 3/4] leds: pca955x: add GPIO support
+Date: Fri, 11 Aug 2017 17:11:14 +0200
+Message-ID: <9330f31a-110c-8398-8cd1-764f8dd358e9@kaod.org>
+References: <1502199760-763-1-git-send-email-clg@kaod.org>
+ <1502199760-763-4-git-send-email-clg@kaod.org> <20170811134757.GA22561@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7a3b73d0-988c-1d2a-43cc-4d30b4eac0f1-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170811134757.GA22561@amd>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-
-On 11/08/17 16:16, Sudeep Holla wrote:
+On 08/11/2017 03:47 PM, Pavel Machek wrote:
+> Hi!
 > 
+>> The PCA955x family of chips are I2C LED blinkers whose pins not used
+>> to control LEDs can be used as general purpose I/Os (GPIOs).
+>>
+>> The following adds such a support by defining different operation
+>> modes for the pins (See bindings documentation for more details). The
+>> pca955x driver is then extended with a gpio_chip when some of pins are
+>> operating as GPIOs. The default operating mode is to behave as a LED.
+>>
+>> The GPIO support is conditioned by CONFIG_LEDS_PCA955X_GPIO.
+>>
+>> Signed-off-by: Cédric Le Goater <clg@kaod.org>
 > 
-> On 11/08/17 15:15, Rob Herring wrote:
-
-[...]
-
->  "tlm,trusted-foundations" appears
->> to be needed early for bringing up cores, so it probably can't change.
+> For the series,
 > 
-> That was my intially understand too when I looked at the way probe was
-> handled, but then I see it's module_init, so I went ahead with this change.
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 > 
+> with minor comments below.
+> 
+>> @@ -125,6 +130,7 @@ struct pca955x_led {
+>>  	struct led_classdev	led_cdev;
+>>  	int			led_num;	/* 0 .. 15 potentially */
+>>  	char			name[32];
+>> +	u32			type;
+> 
+> u32 is highly non-standard here. enum pca955x_led_type?
+>
+> 
+>> +/*
+>> + * Read the INPUT register, which contains the state of LEDs.
+>> + */
+>> +static u8 pca955x_read_input(struct i2c_client *client, int n)
+>> +{
+>> +	return (u8)i2c_smbus_read_byte_data(client, n);
+>> +}
+> 
+> Is the cast needed? Should you attempt to handle errors?
 
-Scratch this, I was referring "linaro,optee-tz" and not
-"tlm,trusted-foundations"
+ah. this is a left over. I can fix in a resend.
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +#ifndef _DT_BINDINGS_LEDS_PCA955X_H
+>> +#define _DT_BINDINGS_LEDS_PCA955X_H
+>> +
+>> +#define PCA955X_TYPE_NONE         0
+>> +#define PCA955X_TYPE_LED          1
+>> +#define PCA955X_TYPE_GPIO         2
+> 
+> And make these into the new enum pca955x_led_type?
+
+These are used in the device tree bindings, so we should keep the u32
+I think.
+
+Thanks,
+
+C.
