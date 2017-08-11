@@ -1,145 +1,26 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/3] firmware: of: populate /firmware/ node during init
-Date: Fri, 11 Aug 2017 16:16:14 +0100
-Message-ID: <7a3b73d0-988c-1d2a-43cc-4d30b4eac0f1@arm.com>
-References: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
- <1502458237-1683-2-git-send-email-sudeep.holla@arm.com>
- <CABGGisx7d+SQ7Sbyyu2hoNeuCFHZt1erjMg3zd5mHsqUF-Zk-Q@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 3/5] arm64: dts: rockchip: add tsadc node for rk3328 SoC
+Date: Fri, 11 Aug 2017 17:18:40 +0200
+Message-ID: <1528258.s0pWTDbHAV@phil>
+References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com> <1501833976-1100-4-git-send-email-rocky.hao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABGGisx7d+SQ7Sbyyu2hoNeuCFHZt1erjMg3zd5mHsqUF-Zk-Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1501833976-1100-4-git-send-email-rocky.hao@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rocky Hao <rocky.hao@rock-chips.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/08/17 15:15, Rob Herring wrote:
-> +Bjorn
+Am Freitag, 4. August 2017, 16:06:14 CEST schrieb Rocky Hao:
+> add tsadc needed main information for rk3328 SoC.
+> 50000Hz is the max clock rate supported by tsadc module.
 > 
-> On Fri, Aug 11, 2017 at 8:30 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> Since "/firmware" does not have its own "compatible" property as it's
->> just collection of nodes representing firmware interface, it's sub-nodes
->> are not populated during system initialization.
->>
->> Currently different firmware drivers search the /firmware/ node and
->> populate the sub-node devices selectively. Instead we can populate
->> the /firmware/ node during init to avoid more drivers continuing to
->> populate the devices selectively.
->>
->> This patch adds initcall to achieve the same.
->>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Rob Herring <robh@kernel.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  drivers/firmware/Makefile |  1 +
->>  drivers/firmware/of.c     | 34 ++++++++++++++++++++++++++++++++++
->>  2 files changed, 35 insertions(+)
->>  create mode 100644 drivers/firmware/of.c
->>
->> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
->> index 91d3ff62c653..d9a6fce43613 100644
->> --- a/drivers/firmware/Makefile
->> +++ b/drivers/firmware/Makefile
->> @@ -17,6 +17,7 @@ obj-$(CONFIG_ISCSI_IBFT)      += iscsi_ibft.o
->>  obj-$(CONFIG_FIRMWARE_MEMMAP)  += memmap.o
->>  obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
->>  obj-$(CONFIG_FW_CFG_SYSFS)     += qemu_fw_cfg.o
->> +obj-$(CONFIG_OF)               += of.o
->>  obj-$(CONFIG_QCOM_SCM)         += qcom_scm.o
->>  obj-$(CONFIG_QCOM_SCM_64)      += qcom_scm-64.o
->>  obj-$(CONFIG_QCOM_SCM_32)      += qcom_scm-32.o
->> diff --git a/drivers/firmware/of.c b/drivers/firmware/of.c
->> new file mode 100644
->> index 000000000000..149b9660fb44
->> --- /dev/null
->> +++ b/drivers/firmware/of.c
->> @@ -0,0 +1,34 @@
->> +/*
->> + * Populates the nodes under /firmware/ device tree node
->> + *
->> + * Copyright (C) 2017 ARM Ltd.
->> + *
->> + * This file is subject to the terms and conditions of the GNU General Public
->> + * License.  See the file "COPYING" in the main directory of this archive
->> + * for more details.
->> + *
->> + * Released under the GPLv2 only.
-> 
-> Why do you have both the above 2 paragraphs and an SPDX tag? I'd drop
-> the above (unless your lawyers told you otherwise).
-> 
+> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
 
-I thought so initially but then just copied from existing file
-(drivers/base/arch_topology.c in this case)
+applied for 4.14 with some property reordering
 
->> + * SPDX-License-Identifier: GPL-2.0
->> + */
->> +
->> +#include <linux/init.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +
->> +static int __init firmware_of_init(void)
-> 
-> I'd prefer this is added to of_platform_default_populate_init() and
-> handled like /reserved-memory.
-> 
 
-Yes that was my other option, wanted to check in the cover letter but
-forgot.
-
-> But be aware that Bjorn is reworking this function[1].
-> 
-
-OK, thanks for the pointers.
-
->> +{
->> +       struct device_node *fw_np;
->> +       int ret;
->> +
->> +       fw_np = of_find_node_by_name(NULL, "firmware");
-> 
-> This matches any node named firmware. I see a few instances like RPi
-> that are not /firmware (though RPi we can move probably).
-> of_find_node_by_path would be safer.
-> 
-
-OK
-
->> +
->> +       if (!fw_np)
->> +               return 0;
->> +
->> +       ret = of_platform_populate(fw_np, NULL, NULL, NULL);
->> +
->> +       of_node_put(fw_np);
->> +
->> +       return ret;
->> +}
->> +arch_initcall_sync(firmware_of_init);
-> 
-> You perhaps missed a few instances. "amlogic,meson-gxbb-sm" looks like
-> it could be converted to a driver.
-
-Indeed, was looking for the term "firmware" only :(, will add.
-
- "tlm,trusted-foundations" appears
-> to be needed early for bringing up cores, so it probably can't change.
-
-That was my intially understand too when I looked at the way probe was
-handled, but then I see it's module_init, so I went ahead with this change.
-
-> They don't have to be converted as part of this series though.
-> 
-
-OK
-
--- 
-Regards,
-Sudeep
+Thanks
+Heiko
