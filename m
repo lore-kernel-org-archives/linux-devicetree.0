@@ -1,75 +1,61 @@
-From: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] arm: boot: dts: artpec6: Remove unnecessary
- interrupt-parent property from sub-nodes
-Date: Fri, 11 Aug 2017 13:26:05 +0530
-Message-ID: <8475266d-de55-0760-7ae4-9fcafead36e4@techveda.org>
-References: <1498565735-8208-1-git-send-email-surenderp@techveda.org>
- <d582c742-4bf9-c658-d105-572d180222a4@axis.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v2 0/5] thermal: rockchip: add tsadc support in thermal
+ driver and IPA thermal control for rk3328 in dts
+Date: Fri, 11 Aug 2017 16:01:28 +0800
+Message-ID: <1502438488.2597.0.camel@intel.com>
+References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com>
+         <1502427095.2598.21.camel@intel.com> <3025917.NAhhjSz36M@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d582c742-4bf9-c658-d105-572d180222a4-VrBV9hrLPhE@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, jespern-VrBV9hrLPhE@public.gmane.org, larper-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3025917.NAhhjSz36M@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rocky Hao <rocky.hao@rock-chips.com>, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 June 2017 05:57 PM, Niklas Cassel wrote:
-> Acked-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+On Fri, 2017-08-11 at 08:27 +0200, Heiko Stuebner wrote:
+> Hi,
+> 
+> Am Freitag, 11. August 2017, 12:51:35 CEST schrieb Zhang Rui:
+> > 
+> > On Fri, 2017-08-04 at 16:06 +0800, Rocky Hao wrote:
+> > > 
+> > > This series patches add the tsadc support in thermal driver and
+> > > in
+> > > devicetree for rk3328.
+> > > Also add thermal control with Intelligent Power Allocation (IPA)
+> > > policy by default.  Please
+> > > refer to https://developer.arm.com/open-source/intelligent-power-
+> > > allo
+> > > cation for more information
+> > > about IPA.
+> > > 
+> > > Rocky Hao (5):
+> > >   dt-bindings: rockchip-thermal: Support the RK3328 SoC
+> > > compatible
+> > >   thermal: rockchip: Support the RK3328 SOC in thermal driver
+> > >   arm64: dts: rockchip: add tsadc node for rk3328 SoC
+> > >   arm64: dts: rockchip: add thermal nodes for rk3328 SoC
+> > >   arm64: dts: rockchip: Enable tsadc module on RK3328 eavluation
+> > > board
+> > > 
+> > I can take this patch set if we have ACK for patch 3, 4 and 5.
+> I would prefer if you would just apply patches 1+2 alone and I'd take
+> the devicetree patches through my tree.
+> 
+> Having devicetree stuff mingle in a lot of trees produces unnecessary
+> conflicts, so the general best practice is having code + binding.txt
+> going through the driver tree and devicetree stuff through the
+> platform
+> tree.
+> 
+OKay, I will take patch 1 and 2 and queue them for next merge window.
 
-Hi Nik, This patch has been Acknowledged but is not getting added / 
-applied to the
-respective git source tree. Please let me know if there is any problem.
-
-Thanks
-Surender
->
-> On 06/27/2017 02:15 PM, surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org wrote:
->> From: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
->>
->> "interrupt-parent" property is declared in root node, so it is global
->> to all nodes. This property is re-declared in few sub-nodes. To avoid
->> duplication this property is removed from following sub-nodes:
->> pmu, amba@0, amba@0/ethernet.
->>
->> Signed-off-by: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/artpec6.dtsi | 3 ---
->>   1 file changed, 3 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
->> index 767cbe8..2ed1177 100644
->> --- a/arch/arm/boot/dts/artpec6.dtsi
->> +++ b/arch/arm/boot/dts/artpec6.dtsi
->> @@ -151,7 +151,6 @@
->>   		interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
->>   			<GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
->>   		interrupt-affinity = <&cpu0>, <&cpu1>;
->> -		interrupt-parent = <&intc>;
->>   	};
->>   
->>   	pcie: pcie@f8050000 {
->> @@ -185,7 +184,6 @@
->>   		compatible = "simple-bus";
->>   		#address-cells = <0x1>;
->>   		#size-cells = <0x1>;
->> -		interrupt-parent = <&intc>;
->>   		ranges;
->>   		dma-ranges = <0x80000000 0x00000000 0x40000000>;
->>   		dma-coherent;
->> @@ -195,7 +193,6 @@
->>   			clocks = <&eth_phy_ref_clk>,
->>   				<&clkctrl ARTPEC6_CLK_ETH_ACLK>;
->>   			compatible = "snps,dwc-qos-ethernet-4.10";
->> -			interrupt-parent = <&intc>;
->>   			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
->>   			reg = <0xf8010000 0x4000>;
->>   
->>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks,
+rui
+> 
+> Thanks
+> Heiko
+> 
