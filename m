@@ -1,97 +1,64 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v3 2/2] memory: ti-emif-sram: introduce relocatable
- suspend/resume handlers
-Date: Fri, 11 Aug 2017 10:42:34 -0500
-Message-ID: <42672b14-8242-0a5b-f343-8e0fa38ffaaf@ti.com>
-References: <20170724212454.27574-1-d-gerlach@ti.com>
- <20170724212454.27574-3-d-gerlach@ti.com>
- <9b856bf5-f404-5cfc-6f1e-5ae527c6e0b1@oracle.com>
- <cfb8007b-7f3a-1787-bb9d-9486f547f23f@oracle.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/3] firmware: of: populate /firmware/ node during init
+Date: Fri, 11 Aug 2017 17:54:16 +0200
+Message-ID: <CAK8P3a3=8D5Mz54TYbfyrPC7yyKY-m7=H1OfS9JVKTdC0h-tHw@mail.gmail.com>
+References: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
+ <1502458237-1683-2-git-send-email-sudeep.holla@arm.com> <CAK8P3a1p8xS4u5EQ9auqgcmhXaybhDdsa6ah3G-7TeEf+ko9kA@mail.gmail.com>
+ <CABGGisyQKfre_qMqnngOiKbqUaHF0KWKtZyYPJ47iPwgL5t6xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cfb8007b-7f3a-1787-bb9d-9486f547f23f@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Keerthy J <j-keerthy@ti.com>, Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABGGisyQKfre_qMqnngOiKbqUaHF0KWKtZyYPJ47iPwgL5t6xw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Russell/Johan,
-On 08/01/2017 01:08 PM, Santosh Shilimkar wrote:
-> On 7/26/2017 9:54 AM, Santosh Shilimkar wrote:
+On Fri, Aug 11, 2017 at 5:05 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Aug 11, 2017 at 9:37 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> On Fri, Aug 11, 2017 at 3:30 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> Since "/firmware" does not have its own "compatible" property as it's
+>>> just collection of nodes representing firmware interface, it's sub-nodes
+>>> are not populated during system initialization.
+>>>
+>>> Currently different firmware drivers search the /firmware/ node and
+>>> populate the sub-node devices selectively. Instead we can populate
+>>> the /firmware/ node during init to avoid more drivers continuing to
+>>> populate the devices selectively.
+>>>
+>>> This patch adds initcall to achieve the same.
 >>
->> On 7/24/2017 2:24 PM, Dave Gerlach wrote:
->>> Certain SoCs like Texas Instruments AM335x and AM437x require parts
->>> of the EMIF PM code to run late in the suspend sequence from SRAM,
->>> such as saving and restoring the EMIF context and placing the memory
->>> into self-refresh.
->>>
->>> One requirement for these SoCs to suspend and enter its lowest power
->>> mode, called DeepSleep0, is that the PER power domain must be shut off.
->>> Because the EMIF (DDR Controller) resides within this power domain, it
->>> will lose context during a suspend operation, so we must save it so we
->>> can restore once we resume. However, we cannot execute this code from
->>> external memory, as it is not available at this point, so the code must
->>> be executed late in the suspend path from SRAM.
->>>
->>> This patch introduces a ti-emif-sram driver that includes several
->>> functions written in ARM ASM that are relocatable so the PM SRAM
->>> code can use them. It also allocates a region of writable SRAM to
->>> be used by the code running in the executable region of SRAM to save
->>> and restore the EMIF context. It can export a table containing the
->>> absolute addresses of the available PM functions so that other SRAM
->>> code can branch to them. This code is required for suspend/resume on
->>> AM335x and AM437x to work.
->>>
->>> In addition to this, to be able to share data structures between C and
->>> the ti-emif-sram-pm assembly code, we can automatically generate all of
->>> the C struct member offsets and sizes as macros by making use of the ARM
->>> asm-offsets file. In the same header that we define our data structures
->>> in we also define all the macros in an inline function and by adding a
->>> call to this in the asm_offsets file all macros are properly generated
->>> and available to the assembly code without cluttering up the asm-offsets
->>> file.
->>>
->>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->>> ---
-> [...]
-> 
->>>
->>>   arch/arm/kernel/asm-offsets.c    |   4 +
->>>   drivers/memory/Kconfig           |  10 ++
->>>   drivers/memory/Makefile          |   4 +
->>>   drivers/memory/emif.h            |  17 ++
->>>   drivers/memory/ti-emif-pm.c      | 339 
->>> +++++++++++++++++++++++++++++++++++++++
->>>   drivers/memory/ti-emif-sram-pm.S | 334 
->>> ++++++++++++++++++++++++++++++++++++++
->>>   include/linux/ti-emif-sram.h     | 147 +++++++++++++++++
->>>   7 files changed, 855 insertions(+)
->>>   create mode 100644 drivers/memory/ti-emif-pm.c
->>>   create mode 100644 drivers/memory/ti-emif-sram-pm.S
->>>   create mode 100644 include/linux/ti-emif-sram.h
->>>
->> I will need RMKs blessing since he reviewed the ASM code.
+>> Hmm, I'm a bit skeptical whether representing anything under /firmware
+>> as a platform device is a good idea. Having a more structured way to
+>> probe those seems like a good idea, but maybe a different subsystem
+>> would be more appropriate.
 >>
->> Also need work out how to line this up. Typically I use to get
->> driver/memory patches via Greg's driver-core but this is more
->> PM code than memory driver and very SOC specific.
->>
->> Hi Arnd/Olof,
->> Will you be ok to pull this via arm-soc ? There is also follow
->> up platform PM code and DTS series which will make use of this.
->>
-> Looks like I missed to copy Olof. Let me know guys if you are
-> ok to pull this into your driver-soc given the dependencies.
+>> I do realize that a 'platform_device' has become a rather generic abstraction
+>> for almost anything, but at some point we might want to draw the line
+>> of what is a platform_device.
+>
+> I guess the question how are they different? Most of what's under
+> drivers/firmware/ are platform drivers. I think they are mostly either
+> smc calls or mailbox interfaces. Would there be any advantage to
+> creating an smc bus or mailbox bus?
 
-Any additional comments here? I believe I have addressed everything from v2 so
-hopefully this is acceptable now.
+I guess one difference I see is between things that are purely software
+based (smc, efi runtime, rtas,  ...) and those that talk to some
+hardware other than the CPU running some firmware.
 
-Regards,
-Dave
+The first category seems like a good fit for /firmware in DT and
+for /sys/firmware in sysfs, while the second category would be
+represented elsewhere in both DT and sysfs.
 
-> 
-> Regards
-> Santosh
-> 
+drivers/base/firmware.c currently is extremely rudimentary but this
+is where /sys/firmware objects hook into. How about extending
+this with a firmware_device that gets populated from /firmware
+in DT? Not using platform_device obviously means we lose
+all of the automatic probing of reg/interrupts/... resources, but
+then again that is sort of the idea of firmware-only nodes.
+
+      Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
