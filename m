@@ -1,86 +1,51 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v4 01/20] mtd: nand: qcom: fix read failure without complete bootchain
-Date: Fri, 11 Aug 2017 17:09:16 +0530
-Message-ID: <1502451575-15712-2-git-send-email-absahu@codeaurora.org>
+Subject: [PATCH v4 03/20] mtd: nand: qcom: add bam property for QPIC NAND controller
+Date: Fri, 11 Aug 2017 17:09:18 +0530
+Message-ID: <1502451575-15712-4-git-send-email-absahu@codeaurora.org>
 References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: boris.brezillon@free-electrons.com
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>, stable@vger.kernel.org
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The NAND page read fails without complete boot chain since
-NAND_DEV_CMD_VLD value is not proper. The default power on reset
-value for this register is
+The current driver only supports EBI2 NAND controller which uses
+ADM DMA. The latest QCOM SoC uses QPIC NAND controller with BAM
+DMA. NAND registers and programming sequence are same for EBI2
+and QPIC NAND so the same driver can support QPIC NAND also by
+adding the BAM DMA support. This patch adds the is_bam in NAND
+property which will be checked for determining the DMA engine type.
 
-    0xe - ERASE_START_VALID | WRITE_START_VALID | READ_STOP_VALID
-
-The READ_START_VALID should be enabled for sending PAGE_READ
-command. READ_STOP_VALID should be cleared since normal NAND
-page read does not require READ_STOP command.
-
-Fixes: c76b78d8ec05a ("mtd: nand: Qualcomm NAND controller driver")
-Cc: stable@vger.kernel.org
 Reviewed-by: Archit Taneja <architt@codeaurora.org>
 Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/mtd/nand/qcom_nandc.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/mtd/nand/qcom_nandc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-index 0e727d7..e5cb8f1 100644
+index 79f7de8..2d44eeb 100644
 --- a/drivers/mtd/nand/qcom_nandc.c
 +++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -109,7 +109,11 @@
- #define	READ_ADDR			0
+@@ -328,9 +328,11 @@ struct qcom_nand_host {
+  * This data type corresponds to the NAND controller properties which varies
+  * among different NAND controllers.
+  * @ecc_modes - ecc mode for NAND
++ * @is_bam - whether NAND controller is using BAM
+  */
+ struct qcom_nandc_props {
+ 	u32 ecc_modes;
++	bool is_bam;
+ };
  
- /* NAND_DEV_CMD_VLD bits */
--#define	READ_START_VLD			0
-+#define	READ_START_VLD			BIT(0)
-+#define	READ_STOP_VLD			BIT(1)
-+#define	WRITE_START_VLD			BIT(2)
-+#define	ERASE_START_VLD			BIT(3)
-+#define	SEQ_READ_START_VLD		BIT(4)
+ static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
+@@ -2251,6 +2253,7 @@ static int qcom_nandc_remove(struct platform_device *pdev)
  
- /* NAND_EBI2_ECC_BUF_CFG bits */
- #define	NUM_STEPS			0
-@@ -148,6 +152,10 @@
- #define	FETCH_ID			0xb
- #define	RESET_DEVICE			0xd
+ static const struct qcom_nandc_props ipq806x_nandc_props = {
+ 	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
++	.is_bam = false,
+ };
  
-+/* Default Value for NAND_DEV_CMD_VLD */
-+#define NAND_DEV_CMD_VLD_VAL		(READ_START_VLD | WRITE_START_VLD | \
-+					 ERASE_START_VLD | SEQ_READ_START_VLD)
-+
  /*
-  * the NAND controller performs reads/writes with ECC in 516 byte chunks.
-  * the driver calls the chunks 'step' or 'codeword' interchangeably
-@@ -695,8 +703,7 @@ static int nandc_param(struct qcom_nand_host *host)
- 
- 	/* configure CMD1 and VLD for ONFI param probing */
- 	nandc_set_reg(nandc, NAND_DEV_CMD_VLD,
--		      (nandc->vld & ~(1 << READ_START_VLD))
--		      | 0 << READ_START_VLD);
-+		      (nandc->vld & ~READ_START_VLD));
- 	nandc_set_reg(nandc, NAND_DEV_CMD1,
- 		      (nandc->cmd1 & ~(0xFF << READ_ADDR))
- 		      | NAND_CMD_PARAM << READ_ADDR);
-@@ -1995,13 +2002,14 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
- {
- 	/* kill onenand */
- 	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
-+	nandc_write(nandc, NAND_DEV_CMD_VLD, NAND_DEV_CMD_VLD_VAL);
- 
- 	/* enable ADM DMA */
- 	nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
- 
- 	/* save the original values of these registers */
- 	nandc->cmd1 = nandc_read(nandc, NAND_DEV_CMD1);
--	nandc->vld = nandc_read(nandc, NAND_DEV_CMD_VLD);
-+	nandc->vld = NAND_DEV_CMD_VLD_VAL;
- 
- 	return 0;
- }
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
