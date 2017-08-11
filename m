@@ -1,95 +1,26 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190
- battery charger
-Date: Thu, 10 Aug 2017 21:50:38 -0500
-Message-ID: <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
-References: <20170807195420.20767-1-liam@networkimprov.net>
- <20170807195420.20767-3-liam@networkimprov.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: sunxi-ccu: Add compatibles for sun5i
+ CCU driver
+Date: Thu, 10 Aug 2017 21:51:34 -0500
+Message-ID: <20170811025134.ee4v2tbol2pjcd4i@rob-hp-laptop>
+References: <20170808012540.16691-1-net147@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170807195420.20767-3-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+In-Reply-To: <20170808012540.16691-1-net147@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jonathan Liu <net147@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 07, 2017 at 12:54:17PM -0700, Liam Breck wrote:
-> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+On Tue, Aug 08, 2017 at 11:25:40AM +1000, Jonathan Liu wrote:
+> The bindings were not updated when the sun5i CCU driver was added in
+> commit 5e73761786d6 ("clk: sunxi-ng: Add sun5i CCU driver").
 > 
-> Document monitored-battery and ti,system-minimum-microvolt properties.
-> 
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+> Signed-off-by: Jonathan Liu <net147@gmail.com>
 > ---
->  .../devicetree/bindings/power/supply/bq24190.txt   | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq24190.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> new file mode 100644
-> index 00000000..82a1c842
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> @@ -0,0 +1,49 @@
-> +TI BQ24190 Li-Ion Battery Charger
-> +
-> +Required properties:
-> +- compatible: contains one of the following:
-> +    * "ti,bq24190"
-> +    * "ti,bq24192i"
-> +- reg: integer, I2C address of the charger.
-> +- interrupts[-extended]: configuration for charger INT pin.
-> +
-> +Optional properties:
-> +- monitored-battery: phandle of battery characteristics devicetree node
-> +    The charger uses the following battery properties:
-> +    + precharge-current-microamp: maximum charge current during precharge
-> +      phase (typically 20% of battery capacity).
-> +    + charge-term-current-microamp: a charge cycle terminates when the
-> +      battery voltage is above recharge threshold, and the current is below
-> +      this setting (typically 10% of battery capacity).
-> +    See Documentation/devicetree/bindings/power/supply/battery.txt
-> +- ti,system-minimum-microvolt: when power is connected and the battery is below
-> +    minimum system voltage, the system will be regulated above this setting.
-> +
-> +Other features:
-> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current on USB SDP port.
+>  Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Why doesn't the charger driver control this?
-
-> +
-> +Example:
-> +
-> +	bat: battery {
-> +		compatible = "simple-battery";
-> +		precharge-current-microamp = <256000>;
-> +		charge-term-current-microamp = <128000>;
-> +		// etc.
-> +	};
-> +
-> +	bq24190: charger@6a {
-> +		compatible = "ti,bq24190";
-> +		reg = <0x6a>;
-> +		interrupts-extended = <&gpiochip 10 IRQ_TYPE_EDGE_FALLING>;
-> +		monitored-battery = <&bat>;
-> +		ti,system-minimum-microvolt = <3200000>;
-> +	};
-> +
-> +	&twl_gpio {
-> +		otg {
-> +			gpio-hog;
-> +			gpios = <6 0>;
-> +			output-high;
-> +			line-name = "otg-gpio";
-> +		};
-> +	};
-> -- 
-> 2.13.2
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
