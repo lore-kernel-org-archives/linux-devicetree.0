@@ -1,128 +1,67 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH 2/2] of: Restrict DMA configuration
-Date: Fri, 11 Aug 2017 17:29:57 +0100
-Message-ID: <82633e62b64e28dc18bc466319065b92faf2414f.1502468875.git.robin.murphy@arm.com>
-References: <0819179085df6c41c70e83a2c5c138b95c0386b3.1502468875.git.robin.murphy@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0819179085df6c41c70e83a2c5c138b95c0386b3.1502468875.git.robin.murphy@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de, m.szyprowski@samsung.com, stefan.wahren@i2se.com, afaerber@suse.de, hverkuil@xs4all.nl, johan@kernel.org
+From: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [V5 2/2] dt-bindings: phy: Add bindings for ralink-usb PHY
+Date: Fri, 11 Aug 2017 17:31:10 +0100
+Message-ID: <1502469070-13157-2-git-send-email-harvey.hunt@imgtec.com>
+References: <1502469070-13157-1-git-send-email-harvey.hunt@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502469070-13157-1-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Cc: james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Moving DMA configuration to happen later at driver probe time had the
-unnoticed side-effect that we now perform DMA configuration for *every*
-device represented in DT, rather than only those explicitly created by
-the of_platform and PCI code.
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 
-As Christoph points out, this is not really the best thing to do. Whilst
-there may well be other DMA-capable buses that can benefit from having
-their children automatically configured after the bridge has probed,
-there are also plenty of others like USB, MDIO, etc. that definitely do
-not support DMA and should not be indiscriminately processed.
+Add a binding for the USB phy on Mediatek/Ralink SoCs.
 
-The good news is that DT already gives us the ammunition to do the right
-thing - anything lacking a "dma-ranges" property should be considered
-not to have a mapping of DMA address space from its children to its
-parent, thus anything for which of_dma_get_range() does not succeed does
-not need DMA configuration.
-
-The bad news is that strictly enforcing that would likely break just
-about every FDT platform out there, since most authors have either not
-considered the property at all or have mistakenly assumed that omitting
-"dma-ranges" is equivalent to including the empty property. Thus we have
-little choice but to special-case platform, AMBA and PCI devices so they
-continue to receive configuration unconditionally as before. At least
-anything new will have to get it right in future...
-
-Fixes: 09515ef5ddad ("of/acpi: Configure dma operations at probe time for platform/amba/pci bus devices")
-Reported-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 ---
- drivers/of/device.c | 48 ++++++++++++++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 16 deletions(-)
+Changes in V5:
+* None
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index e0a28ea341fe..04c4c952dc57 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -9,6 +9,9 @@
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
- #include <linux/slab.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/amba/bus.h>
- 
- #include <asm/errno.h>
- #include "of_private.h"
-@@ -84,31 +87,28 @@ int of_device_add(struct platform_device *ofdev)
-  */
- int of_dma_configure(struct device *dev, struct device_node *np)
- {
--	u64 dma_addr, paddr, size;
-+	u64 dma_addr, paddr, size = 0;
- 	int ret;
- 	bool coherent;
- 	unsigned long offset;
- 	const struct iommu_ops *iommu;
- 	u64 mask;
- 
--	/*
--	 * Set default coherent_dma_mask to 32 bit.  Drivers are expected to
--	 * setup the correct supported mask.
--	 */
--	if (!dev->coherent_dma_mask)
--		dev->coherent_dma_mask = DMA_BIT_MASK(32);
--
--	/*
--	 * Set it to coherent_dma_mask by default if the architecture
--	 * code has not set it.
--	 */
--	if (!dev->dma_mask)
--		dev->dma_mask = &dev->coherent_dma_mask;
--
- 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
- 	if (ret < 0) {
-+		/*
-+		 * For legacy reasons, we have to assume some devices need
-+		 * DMA configuration regardless of whether "dma-ranges" is
-+		 * correctly specified or not.
-+		 */
-+		if (!dev_is_pci(dev) &&
-+#ifdef CONFIG_ARM_AMBA
-+		    dev->bus != &amba_bustype &&
-+#endif
-+		    dev->bus != &platform_bus_type)
-+			return ret == -ENODEV ? 0 : ret;
+Changes in V4:
+* None
+
+Changes in V3:
+* Split out from first patch
+
+ .../devicetree/bindings/phy/ralink-usb-phy.txt          | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt b/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
+new file mode 100644
+index 0000000..5b27cad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
+@@ -0,0 +1,17 @@
++Mediatek/Ralink USB PHY
 +
- 		dma_addr = offset = 0;
--		size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
- 	} else {
- 		offset = PFN_DOWN(paddr - dma_addr);
- 
-@@ -129,6 +129,22 @@ int of_dma_configure(struct device *dev, struct device_node *np)
- 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
- 	}
- 
-+	/*
-+	 * Set default coherent_dma_mask to 32 bit.  Drivers are expected to
-+	 * setup the correct supported mask.
-+	 */
-+	if (!dev->coherent_dma_mask)
-+		dev->coherent_dma_mask = DMA_BIT_MASK(32);
-+	/*
-+	 * Set it to coherent_dma_mask by default if the architecture
-+	 * code has not set it.
-+	 */
-+	if (!dev->dma_mask)
-+		dev->dma_mask = &dev->coherent_dma_mask;
++Required properties:
++ - compatible: ralink,rt3352-usbphy or mediatek,mt7620-usbphy
++ - #phy-cells: should be 0
++ - resets: the two reset controllers for host and device
++ - reset-names: the names of the 2 reset controllers
 +
-+	if (!size)
-+		size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
++Example:
 +
- 	dev->dma_pfn_offset = offset;
- 
- 	/*
++usbphy: phy {
++	compatible = "mediatek,mt7620-usbphy";
++	#phy-cells = <0>;
++
++	resets = <&rstctrl 22 &rstctrl 25>;
++	reset-names = "host", "device";
++};
 -- 
-2.13.4.dirty
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
