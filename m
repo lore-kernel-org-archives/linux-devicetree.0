@@ -1,260 +1,88 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] ARC: reset: introduce AXS10x reset driver
-Date: Fri, 11 Aug 2017 15:46:12 +0200
-Message-ID: <1502459172.2310.16.camel@pengutronix.de>
-References: <20170810164112.9894-1-Eugeniy.Paltsev@synopsys.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 3/4] leds: pca955x: add GPIO support
+Date: Fri, 11 Aug 2017 15:47:57 +0200
+Message-ID: <20170811134757.GA22561@amd>
+References: <1502199760-763-1-git-send-email-clg@kaod.org>
+ <1502199760-763-4-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810164112.9894-1-Eugeniy.Paltsev@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502199760-763-4-git-send-email-clg@kaod.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
+Cc: linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eugeniy,
 
-On Thu, 2017-08-10 at 19:41 +0300, Eugeniy Paltsev wrote:
-> ARC AXS10x boards support custom IP-block which allows to control
-> reset signals of selected peripherals. For example DW GMAC, etc...
-> This block is controlled via memory-mapped register (AKA CREG) which
-> represents up-to 32 reset lines.
-> 
-> As of today only the following lines are used:
->  - DW GMAC - line 5
-> 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Could you check if the reset-simple driver that I posted today would
-work for you?
+Hi!
 
-> ---
->  .../bindings/reset/snps,axs10x-reset.txt           |  34 +++++++
->  MAINTAINERS                                        |   6 ++
->  drivers/reset/Kconfig                              |   6 ++
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/reset-axs10x.c                       | 109 +++++++++++++++++++++
->  5 files changed, 156 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
->  create mode 100644 drivers/reset/reset-axs10x.c
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt b/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
-> new file mode 100644
-> index 0000000..32eed7a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
-> @@ -0,0 +1,34 @@
-> +Binding for the AXS10x reset controller
-> +
-> +This binding describes the ARC AXS10x boards custom IP-block which allows
-> +to control reset signals of selected peripherals. For example DW GMAC, etc...
-> +This block is controlled via memory-mapped register (AKA CREG) which
-> +represents up-to 32 reset lines.
-> +
-> +As of today only the following lines are used:
-> + - DW GMAC - line 5
-> +
-> +This binding uses the common reset binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/reset/reset.txt
-> +
-> +Required properties:
-> +- compatible: should be "snps,axs10x-reset".
-> +- reg: should always contain pair address - length: for creg reset
-> +  bits register.
-> +- #reset-cells: from common reset binding; Should always be set to 1.
-> +
-> +Example:
-> > > +	reset: reset@11220 {
+> The PCA955x family of chips are I2C LED blinkers whose pins not used
+> to control LEDs can be used as general purpose I/Os (GPIOs).
+>=20
+> The following adds such a support by defining different operation
+> modes for the pins (See bindings documentation for more details). The
+> pca955x driver is then extended with a gpio_chip when some of pins are
+> operating as GPIOs. The default operating mode is to behave as a LED.
+>=20
+> The GPIO support is conditioned by CONFIG_LEDS_PCA955X_GPIO.
+>=20
+> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
 
-The node name should be reset-controller for consistency with the other
-bindings. Other than that, the binding description looks good to me.
+For the series,
 
-> +		compatible = "snps,axs10x-reset";
-> +		#reset-cells = <1>;
-> +		reg = <0x11220 0x4>;
-+	};
-> +
-> +Specifying reset lines connected to IP modules:
-> +	ethernet@.... {
-> +		....
-> +		resets = <&reset 5>;
-> +		....
-> +	};
-> +
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 93dfb9d..f14e804 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12711,6 +12711,12 @@ F:	arch/arc/plat-axs10x
->  F:	arch/arc/boot/dts/ax*
->  F:	Documentation/devicetree/bindings/arc/axs10*
->  
-> +SYNOPSYS AXS10x RESET CONTROLLER DRIVER
-> +M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> +S:	Supported
-> +F:	drivers/reset/reset-axs10x.c
-> +F:	Documentation/devicetree/bindings/reset/snps,axs10x-
-> reset.txt
-> +
->  SYNOPSYS DESIGNWARE DMAC DRIVER
->  M:	Viresh Kumar <vireshk@kernel.org>
->  M:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 52d5251..65d13f4 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -28,6 +28,12 @@ config RESET_ATH79
->  	  This enables the ATH79 reset controller driver that
-> supports the
->  	  AR71xx SoC reset controller.
->  
-> +config RESET_AXS10X
-> +	bool "AXS10x Reset Driver" if COMPILE_TEST
-> +	default ARC_PLAT_AXS10X
-> +	help
-> +	  This enables the reset controller driver for AXS10x.
-> +
->  config RESET_BERLIN
->  	bool "Berlin Reset Driver" if COMPILE_TEST
->  	default ARCH_BERLIN
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index b62783f..45000a5 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_STI) += sti/
->  obj-$(CONFIG_ARCH_TEGRA) += tegra/
->  obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
->  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
-> +obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
->  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
->  obj-$(CONFIG_RESET_HSDK_V1) += reset-hsdk-v1.o
->  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-> diff --git a/drivers/reset/reset-axs10x.c b/drivers/reset/reset-
-> axs10x.c
-> new file mode 100644
-> index 0000000..17a4cb4
-> --- /dev/null
-> +++ b/drivers/reset/reset-axs10x.c
-> @@ -0,0 +1,109 @@
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+with minor comments below.
+
+> @@ -125,6 +130,7 @@ struct pca955x_led {
+>  	struct led_classdev	led_cdev;
+>  	int			led_num;	/* 0 .. 15 potentially */
+>  	char			name[32];
+> +	u32			type;
+
+u32 is highly non-standard here. enum pca955x_led_type?
+
 > +/*
-> + * Copyright (C) 2017 Synopsys.
-> + *
-> + * Synopsys AXS10x reset driver.
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
+> + * Read the INPUT register, which contains the state of LEDs.
 > + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#define to_axs10x_rst(p)	container_of((p), struct axs10x_rst,
-> rcdev)
-> +
-> +#define AXS10X_MAX_RESETS	32
-> +
-> +struct axs10x_rst {
-> +	void __iomem			*regs_rst;
-> +	spinlock_t			lock;
-> +	struct reset_controller_dev	rcdev;
-> +};
-> +
-> +static int axs10x_reset_assert(struct reset_controller_dev *rcdev,
-> +			      unsigned long id)
+> +static u8 pca955x_read_input(struct i2c_client *client, int n)
 > +{
-> +	struct axs10x_rst *rst = to_axs10x_rst(rcdev);
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&rst->lock, flags);
-> +	reg = readl(rst->regs_rst);
-> +	reg |= BIT(id);
-> +	writel(reg, rst->regs_rst);
-> +	spin_unlock_irqrestore(&rst->lock, flags);
-> +
-> +	return 0;
+> +	return (u8)i2c_smbus_read_byte_data(client, n);
 > +}
-> +
-> +static int axs10x_reset_deassert(struct reset_controller_dev *rcdev,
-> +			      unsigned long id)
-> +{
-> +	struct axs10x_rst *rst = to_axs10x_rst(rcdev);
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&rst->lock, flags);
-> +	reg = readl(rst->regs_rst);
-> +	reg &= ~BIT(id);
-> +	writel(reg, rst->regs_rst);
-> +	spin_unlock_irqrestore(&rst->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct reset_control_ops axs10x_reset_ops = {
-> +	.assert		= axs10x_reset_assert,
-> +	.deassert	= axs10x_reset_deassert,
-> +};
-> +
-> +static int axs10x_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct axs10x_rst *rst;
-> +	struct resource *mem;
-> +
-> +	rst = devm_kzalloc(&pdev->dev, sizeof(*rst), GFP_KERNEL);
-> +	if (!rst)
-> +		return -ENOMEM;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	rst->regs_rst = devm_ioremap_resource(&pdev->dev, mem);
-> +	if (IS_ERR(rst->regs_rst))
-> +		return PTR_ERR(rst->regs_rst);
-> +
-> +	spin_lock_init(&rst->lock);
-> +
-> +	rst->rcdev.owner = THIS_MODULE;
-> +	rst->rcdev.ops = &axs10x_reset_ops;
-> +	rst->rcdev.of_node = pdev->dev.of_node;
-> +	rst->rcdev.nr_resets = AXS10X_MAX_RESETS;
-> +	rst->rcdev.of_reset_n_cells = 1;
 
-If of_xlate is not set, of_reset_n_cells will be set to 1 by the core
-anyway. No need to do it here.
+Is the cast needed? Should you attempt to handle errors?
 
+> +#ifndef _DT_BINDINGS_LEDS_PCA955X_H
+> +#define _DT_BINDINGS_LEDS_PCA955X_H
 > +
-> +	return reset_controller_register(&rst->rcdev);
+> +#define PCA955X_TYPE_NONE         0
+> +#define PCA955X_TYPE_LED          1
+> +#define PCA955X_TYPE_GPIO         2
 
-This should be devm_reset_controller_register.
+And make these into the new enum pca955x_led_type?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> +}
-> +
-> +static const struct of_device_id axs10x_reset_dt_match[] = {
-> +	{ .compatible = "snps,axs10x-reset" },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver axs10x_reset_driver = {
-> +	.probe	= axs10x_reset_probe,
-> +	.driver	= {
-> +		.name = "axs10x-reset",
-> +		.of_match_table = axs10x_reset_dt_match,
-> +	},
-> +};
-> +builtin_platform_driver(axs10x_reset_driver);
-> +
-> +MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
-> +MODULE_DESCRIPTION("Synopsys AXS10x reset driver");
-> +MODULE_LICENSE("GPL v2");
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-regards
-Philipp
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmNtY0ACgkQMOfwapXb+vLqVwCeLE1mLVdGwF5nUZ5/YcHZ4MXf
+rr8AnAmbsYH1WDclTWXw6dXddHlLyDYH
+=1Dbv
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
