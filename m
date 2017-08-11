@@ -1,195 +1,38 @@
-From: <yinbo.zhu@nxp.com>
-Subject: [PATCH 2/3] usb: dwc3 : Add support for USB snooping
-Date: Fri, 11 Aug 2017 17:59:56 +0800
-Message-ID: <1502445596-33716-1-git-send-email-yinbo.zhu@nxp.com>
+From: <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 3/3] core-arm: add a member about dma_map_ops in dev_archdata struct
+Date: Fri, 11 Aug 2017 18:00:33 +0800
+Message-ID: <1502445633-33772-1-git-send-email-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-devel@gforge.freescale.net, yinbo.zhu@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Felipe Balbi <balbi@kernel.org>
-Cc: open list <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, moderated list <linux-arm-kernel@lists.infradead.org>, open list <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Stefano Stabellini <sstabellini@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Bart Van Assche <bart.vanassche@sandisk.com>, Doug Ledford <dledford@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rajesh Bhagat <rajesh.bhagat@freescale.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, yinbo.zhu-3arQi8VN3Tc@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: open list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, moderated list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bart Van Assche <bart.vanassche-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org>, Doug Ledford <dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajesh Bhagat <rajesh.bhagat@freescale.com>
+From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
 
-Add support for USB3 snooping by asserting bits
-in register DWC3_GSBUSCFG0 for data and descriptor
-
-Signed-off-by: Nikhil Badola <nikhil.badola@freescale.com>
-Signed-off-by: Rajesh Bhagat <rajesh.bhagat@freescale.com>
-Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
+Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
 ---
- drivers/usb/dwc3/core.c | 71 ++++++++++++++++++++++++++++++++++++-------------
- drivers/usb/dwc3/core.h |  3 +++
- drivers/usb/dwc3/host.c |  8 +++++-
- 3 files changed, 63 insertions(+), 19 deletions(-)
+ arch/arm/include/asm/device.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 02a534a..b51b0d8 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -90,6 +90,7 @@ static int dwc3_get_dr_mode(struct dwc3 *dwc)
+diff --git a/arch/arm/include/asm/device.h b/arch/arm/include/asm/device.h
+index 220ba20..c93d3df 100644
+--- a/arch/arm/include/asm/device.h
++++ b/arch/arm/include/asm/device.h
+@@ -7,6 +7,7 @@
+ #define ASMARM_DEVICE_H
  
- 		if (IS_ENABLED(CONFIG_USB_DWC3_HOST))
- 			mode = USB_DR_MODE_HOST;
-+
- 		else if (IS_ENABLED(CONFIG_USB_DWC3_GADGET))
- 			mode = USB_DR_MODE_PERIPHERAL;
- 	}
-@@ -305,14 +306,27 @@ static void dwc3_free_event_buffers(struct dwc3 *dwc)
-  */
- static int dwc3_alloc_event_buffers(struct dwc3 *dwc, unsigned length)
- {
--	struct dwc3_event_buffer *evt;
-+	int                     num;
-+	int                     i;
-+
-+	num = DWC3_NUM_INT(dwc->hwparams.hwparams1);
-+	dwc->num_event_buffers = num;
-+
-+	dwc->ev_buffs = devm_kzalloc(dwc->dev, sizeof(*dwc->ev_buffs) * num,
-+			GFP_KERNEL);
-+	if (!dwc->ev_buffs)
-+		return -ENOMEM;
- 
--	evt = dwc3_alloc_one_event_buffer(dwc, length);
--	if (IS_ERR(evt)) {
--		dev_err(dwc->dev, "can't allocate event buffer\n");
--		return PTR_ERR(evt);
-+	for (i = 0; i < num; i++) {
-+		struct dwc3_event_buffer        *evt;
-+
-+		evt = dwc3_alloc_one_event_buffer(dwc, length);
-+		if (IS_ERR(evt)) {
-+			dev_err(dwc->dev, "can't allocate event buffer\n");
-+			return PTR_ERR(evt);
-+		}
-+		dwc->ev_buffs[i] = evt;
- 	}
--	dwc->ev_buf = evt;
- 
- 	return 0;
- }
-@@ -325,17 +339,25 @@ static int dwc3_alloc_event_buffers(struct dwc3 *dwc, unsigned length)
-  */
- static int dwc3_event_buffers_setup(struct dwc3 *dwc)
- {
--	struct dwc3_event_buffer	*evt;
--
--	evt = dwc->ev_buf;
--	evt->lpos = 0;
--	dwc3_writel(dwc->regs, DWC3_GEVNTADRLO(0),
--			lower_32_bits(evt->dma));
--	dwc3_writel(dwc->regs, DWC3_GEVNTADRHI(0),
--			upper_32_bits(evt->dma));
--	dwc3_writel(dwc->regs, DWC3_GEVNTSIZ(0),
--			DWC3_GEVNTSIZ_SIZE(evt->length));
--	dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), 0);
-+	struct dwc3_event_buffer        *evt;
-+	int                             n;
-+
-+	for (n = 0; n < dwc->num_event_buffers; n++) {
-+		evt = dwc->ev_buffs[n];
-+		dev_dbg(dwc->dev, "Event buf %p dma %08llx length %d\n",
-+				evt->buf, (unsigned long long) evt->dma,
-+				evt->length);
-+
-+		evt->lpos = 0;
-+
-+		dwc3_writel(dwc->regs, DWC3_GEVNTADRLO(n),
-+				lower_32_bits(evt->dma));
-+		dwc3_writel(dwc->regs, DWC3_GEVNTADRHI(n),
-+				upper_32_bits(evt->dma));
-+		dwc3_writel(dwc->regs, DWC3_GEVNTSIZ(n),
-+				DWC3_GEVNTSIZ_SIZE(evt->length));
-+		dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(n), 0);
-+	}
- 
- 	return 0;
- }
-@@ -1181,6 +1203,7 @@ static void dwc3_check_params(struct dwc3 *dwc)
- static int dwc3_probe(struct platform_device *pdev)
- {
- 	struct device		*dev = &pdev->dev;
-+	struct device_node      *node = dev->of_node;
- 	struct resource		*res;
- 	struct dwc3		*dwc;
- 
-@@ -1188,7 +1211,6 @@ static int dwc3_probe(struct platform_device *pdev)
- 
- 	void __iomem		*regs;
- 
--	struct device_node      *node = dev->of_node;
- 	dwc = devm_kzalloc(dev, sizeof(*dwc), GFP_KERNEL);
- 	if (!dwc)
- 		return -ENOMEM;
-@@ -1260,6 +1282,19 @@ static int dwc3_probe(struct platform_device *pdev)
- 		goto err2;
- 	}
- 
-+	/* Change burst beat and outstanding pipelined transfers requests */
-+	dwc3_writel(dwc->regs, DWC3_GSBUSCFG0,
-+		(dwc3_readl(dwc->regs, DWC3_GSBUSCFG0) & ~0xff) | 0xf);
-+	dwc3_writel(dwc->regs, DWC3_GSBUSCFG1,
-+		dwc3_readl(dwc->regs, DWC3_GSBUSCFG1) | 0xf00);
-+
-+	/* Enable Snooping */
-+	if (node && of_dma_is_coherent(node)) {
-+		dwc3_writel(dwc->regs, DWC3_GSBUSCFG0,
-+		dwc3_readl(dwc->regs, DWC3_GSBUSCFG0) | 0x22220000);
-+		dev_dbg(dev, "enabled snooping for usb\n");
-+	}
-+
- 	ret = dwc3_get_dr_mode(dwc);
- 	if (ret)
- 		goto err3;
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index b83388f..e075665 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -29,6 +29,7 @@
- #include <linux/debugfs.h>
- #include <linux/wait.h>
- #include <linux/workqueue.h>
-+#include <linux/of_address.h>
- 
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
-@@ -913,6 +914,7 @@ struct dwc3 {
- 	struct platform_device	*xhci;
- 	struct resource		xhci_resources[DWC3_XHCI_RESOURCES_NUM];
- 
-+	struct dwc3_event_buffer **ev_buffs;
- 	struct dwc3_event_buffer *ev_buf;
- 	struct dwc3_ep		*eps[DWC3_ENDPOINTS_NUM];
- 
-@@ -946,6 +948,7 @@ struct dwc3 {
- 	u32			incrx_type[2];
- 	u32			irq_gadget;
- 	u32			nr_scratch;
-+	u32			num_event_buffers;
- 	u32			u1u2;
- 	u32			maximum_speed;
- 
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index 3e85616..0f2b86c 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -93,8 +93,14 @@ int dwc3_host_init(struct dwc3 *dwc)
- 		dma_set_coherent_mask(&xhci->dev, dwc->dev->coherent_dma_mask);
- 
- 	xhci->dev.parent = dwc->dev;
--
- 	xhci->dev.dma_mask = dwc->dev->dma_mask;
-+	xhci->dev.dma_parms     = dwc->dev->dma_parms;
-+
-+	/* set DMA operations */
-+	if (dwc->dev->of_node && of_dma_is_coherent(dwc->dev->of_node)) {
-+		xhci->dev.archdata.dma_ops = dwc->dev->archdata.dma_ops;
-+		dev_dbg(dwc->dev, "set dma_ops for usb\n");
-+	}
- 
- 	dwc->xhci = xhci;
- 
+ struct dev_archdata {
++const struct dma_map_ops        *dma_ops;
+ #ifdef CONFIG_DMABOUNCE
+ 	struct dmabounce_device_info *dmabounce;
+ #endif
 -- 
 2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
