@@ -1,246 +1,251 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 7/8] memory: mtk-smi: Rearrange some function position
- alphabetically
-Date: Fri, 11 Aug 2017 19:09:17 +0100
-Message-ID: <34e9e7ec-ff9b-caf9-09ac-a0d9e9d85fa5@arm.com>
-References: <1502445377-26936-1-git-send-email-yong.wu@mediatek.com>
- <1502445377-26936-8-git-send-email-yong.wu@mediatek.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] hwmon: (pmbus): Add POWER system power supply
+ driver
+Date: Fri, 11 Aug 2017 11:27:08 -0700
+Message-ID: <20170811182708.GA21828@roeck-us.net>
+References: <1502403586-20549-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1502403586-20549-3-git-send-email-eajames@linux.vnet.ibm.com>
+ <20170811011807.GB10601@roeck-us.net>
+ <73e48b5c-f284-0109-1ad0-cb3b46f98e0c@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502445377-26936-8-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <73e48b5c-f284-0109-1ad0-cb3b46f98e0c-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/17 10:56, Yong Wu wrote:
-> Only adjust some code position in Soc numerical order, from mt2701,
-> mt2712 to mt8173.
+On Fri, Aug 11, 2017 at 09:30:59AM -0500, Eddie James wrote:
 > 
-> Besides, 3 minor changes:
-> 1) fix a coding style issue:
->     CHECK: Alignment should match open parenthesis
->     +               writel(reg_val,
->     +                       common->smi_ao_base
-> 2) change from readl to readl_relaxed in gen1_config_port.
-> 3) change the type "larbid" from "int" to "unsigned int" to meet
->    the requirement of of_property_read_u32.
-
-If moving existing code around is really necessary, do it as a
-preliminary patch *before* any material changes (and arguably separate
-even from the whitespace and comment updates) - those diffs are usually
-hard to review as-is, so being able to check you get binary-identical
-object files before and after is reassuring. A "cleanup" patch shouldn't
-need to touch code added in the same series, and it certainly shouldn't
-have significant things like the readl_relaxed() change hidden in it.
-
-Robin.
-
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/memory/mtk-smi.c | 105 +++++++++++++++++++++++------------------------
->  1 file changed, 52 insertions(+), 53 deletions(-)
 > 
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> index ec06d2b..ce27bdf 100644
-> --- a/drivers/memory/mtk-smi.c
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -23,9 +23,6 @@
->  #include <soc/mediatek/smi.h>
->  #include <dt-bindings/memory/mt2701-larb-port.h>
->  
-> -/* mt8173 */
-> -#define SMI_LARB_MMU_EN		0xf00
-> -
->  /* mt2701 */
->  #define REG_SMI_SECUR_CON_BASE		0x5c0
->  
-> @@ -48,16 +45,19 @@
->  #define SMI_LARB_NONSEC_CON(id)	(0x380 + (id * 4))
->  #define F_MMU_EN		BIT(0)
->  
-> +/* mt8173 */
-> +#define SMI_LARB_MMU_EN		0xf00
-> +
->  struct mtk_smi_larb_gen {
-> -	bool need_larbid;
-> -	int port_in_larb[MTK_LARB_NR_MAX + 1];
-> -	void (*config_port)(struct device *);
-> +	bool	need_larbid;
-> +	int	port_in_larb[MTK_LARB_NR_MAX + 1];/* Only needed by smi gen1 */
-> +	void	(*config_port)(struct device *);
->  };
->  
->  struct mtk_smi {
->  	struct device			*dev;
->  	struct clk			*clk_apb, *clk_smi;
-> -	struct clk			*clk_async; /*only needed by mt2701*/
-> +	struct clk			*clk_async; /*only needed by smi gen1*/
->  	void __iomem			*smi_ao_base;
->  };
->  
-> @@ -66,7 +66,7 @@ struct mtk_smi_larb { /* larb: local arbiter */
->  	void __iomem			*base;
->  	struct device			*smi_common_dev;
->  	const struct mtk_smi_larb_gen	*larb_gen;
-> -	int				larbid;
-> +	unsigned int			larbid;
->  	u32				*mmu;
->  };
->  
-> @@ -166,28 +166,16 @@ void mtk_smi_larb_put(struct device *larbdev)
->  	return -ENODEV;
->  }
->  
-> -static void mtk_smi_larb_config_port_mt8173(struct device *dev)
-> +static void
-> +mtk_smi_larb_unbind(struct device *dev, struct device *master, void *data)
->  {
-> -	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
-> -
-> -	writel(*larb->mmu, larb->base + SMI_LARB_MMU_EN);
-> +	/* Do nothing as the iommu is always enabled. */
->  }
->  
-> -static void mtk_smi_larb_config_port_mt2712(struct device *dev)
-> -{
-> -	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
-> -	u32 reg;
-> -	int i;
-> -
-> -	for (i = 0; i < 32; i++) {
-> -		if (*larb->mmu & BIT(i)) {
-> -			reg = readl_relaxed(larb->base +
-> -					    SMI_LARB_NONSEC_CON(i));
-> -			reg |= F_MMU_EN;
-> -			writel(reg, larb->base + SMI_LARB_NONSEC_CON(i));
-> -		}
-> -	}
-> -}
-> +static const struct component_ops mtk_smi_larb_component_ops = {
-> +	.bind = mtk_smi_larb_bind,
-> +	.unbind = mtk_smi_larb_unbind,
-> +};
->  
->  static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  {
-> @@ -209,36 +197,39 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  			/* do not need to enable m4u for this port */
->  			continue;
->  		}
-> -		reg_val = readl(common->smi_ao_base
-> +		reg_val = readl_relaxed(common->smi_ao_base
->  			+ REG_SMI_SECUR_CON_ADDR(m4u_port_id));
->  		reg_val &= SMI_SECUR_CON_VAL_MSK(m4u_port_id);
->  		reg_val |= sec_con_val;
->  		reg_val |= SMI_SECUR_CON_VAL_DOMAIN(m4u_port_id);
->  		writel(reg_val,
-> -			common->smi_ao_base
-> -			+ REG_SMI_SECUR_CON_ADDR(m4u_port_id));
-> +		       common->smi_ao_base +
-> +		       REG_SMI_SECUR_CON_ADDR(m4u_port_id));
->  	}
->  }
->  
-> -static void
-> -mtk_smi_larb_unbind(struct device *dev, struct device *master, void *data)
-> +static void mtk_smi_larb_config_port_mt2712(struct device *dev)
->  {
-> -	/* Do nothing as the iommu is always enabled. */
-> -}
-> +	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
-> +	u32 reg;
-> +	int i;
->  
-> -static const struct component_ops mtk_smi_larb_component_ops = {
-> -	.bind = mtk_smi_larb_bind,
-> -	.unbind = mtk_smi_larb_unbind,
-> -};
-> +	for (i = 0; i < 32; i++) {
-> +		if (*larb->mmu & BIT(i)) {
-> +			reg = readl_relaxed(larb->base +
-> +					    SMI_LARB_NONSEC_CON(i));
-> +			reg |= F_MMU_EN;
-> +			writel(reg, larb->base + SMI_LARB_NONSEC_CON(i));
-> +		}
-> +	}
-> +}
->  
-> -static const struct mtk_smi_larb_gen mtk_smi_larb_mt8173 = {
-> -	/* mt8173 do not need the port in larb */
-> -	.config_port = mtk_smi_larb_config_port_mt8173,
-> -};
-> +static void mtk_smi_larb_config_port_mt8173(struct device *dev)
-> +{
-> +	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
->  
-> -static const struct mtk_smi_larb_gen mtk_smi_larb_mt2712 = {
-> -	.config_port = mtk_smi_larb_config_port_mt2712,
-> -};
-> +	writel(*larb->mmu, larb->base + SMI_LARB_MMU_EN);
-> +}
->  
->  static const struct mtk_smi_larb_gen mtk_smi_larb_mt2701 = {
->  	.need_larbid = true,
-> @@ -249,12 +240,16 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  	.config_port = mtk_smi_larb_config_port_gen1,
->  };
->  
-> +static const struct mtk_smi_larb_gen mtk_smi_larb_mt2712 = {
-> +	.config_port = mtk_smi_larb_config_port_mt2712,
-> +};
-> +
-> +static const struct mtk_smi_larb_gen mtk_smi_larb_mt8173 = {
-> +	.config_port = mtk_smi_larb_config_port_mt8173,
-> +};
-> +
->  static const struct of_device_id mtk_smi_larb_of_ids[] = {
->  	{
-> -		.compatible = "mediatek,mt8173-smi-larb",
-> -		.data = &mtk_smi_larb_mt8173
-> -	},
-> -	{
->  		.compatible = "mediatek,mt2701-smi-larb",
->  		.data = &mtk_smi_larb_mt2701
->  	},
-> @@ -262,6 +257,10 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  		.compatible = "mediatek,mt2712-smi-larb",
->  		.data = &mtk_smi_larb_mt2712
->  	},
-> +	{
-> +		.compatible = "mediatek,mt8173-smi-larb",
-> +		.data = &mtk_smi_larb_mt8173
-> +	},
->  	{}
->  };
->  
-> @@ -341,10 +340,6 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id mtk_smi_common_of_ids[] = {
->  	{
-> -		.compatible = "mediatek,mt8173-smi-common",
-> -		.data = (void *)MTK_SMI_GEN2
-> -	},
-> -	{
->  		.compatible = "mediatek,mt2701-smi-common",
->  		.data = (void *)MTK_SMI_GEN1
->  	},
-> @@ -352,6 +347,10 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
->  		.compatible = "mediatek,mt2712-smi-common",
->  		.data = (void *)MTK_SMI_GEN2
->  	},
-> +	{
-> +		.compatible = "mediatek,mt8173-smi-common",
-> +		.data = (void *)MTK_SMI_GEN2
-> +	},
->  	{}
->  };
->  
+> On 08/10/2017 08:18 PM, Guenter Roeck wrote:
+> >On Thu, Aug 10, 2017 at 05:19:45PM -0500, Eddie James wrote:
+> >>From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> >>
+> >>Add the driver to monitor POWER system power supplies with hwmon over
+> >>pmbus.
+> >>
+> >>Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> >>---
+> >>  drivers/hwmon/pmbus/Kconfig   |  10 +++
+> >>  drivers/hwmon/pmbus/Makefile  |   1 +
+> >>  drivers/hwmon/pmbus/powerps.c | 144 ++++++++++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 155 insertions(+)
+> >>  create mode 100644 drivers/hwmon/pmbus/powerps.c
+> >>
+> >>diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> >>index 68d717a..8925c1a 100644
+> >>--- a/drivers/hwmon/pmbus/Kconfig
+> >>+++ b/drivers/hwmon/pmbus/Kconfig
+> >>@@ -125,6 +125,16 @@ config SENSORS_MAX8688
+> >>  	  This driver can also be built as a module. If so, the module will
+> >>  	  be called max8688.
+> >>+config SENSORS_POWERPS
+> >>+	tristate "IBM POWER System Power Supply"
+> >>+	default n
+> >>+	help
+> >>+	  If you say yes here you get hardware monitoring support for the IBM
+> >>+	  POWER system power supply.
+> >>+
+> >>+	  This driver can also be built as a module. If so, the module will
+> >>+	  be called powerps.
+> >>+
+> >>  config SENSORS_TPS40422
+> >>  	tristate "TI TPS40422"
+> >>  	default n
+> >>diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+> >>index 75bb7ca..3303af5 100644
+> >>--- a/drivers/hwmon/pmbus/Makefile
+> >>+++ b/drivers/hwmon/pmbus/Makefile
+> >>@@ -13,6 +13,7 @@ obj-$(CONFIG_SENSORS_MAX16064)	+= max16064.o
+> >>  obj-$(CONFIG_SENSORS_MAX20751)	+= max20751.o
+> >>  obj-$(CONFIG_SENSORS_MAX34440)	+= max34440.o
+> >>  obj-$(CONFIG_SENSORS_MAX8688)	+= max8688.o
+> >>+obj-$(CONFIG_SENSORS_POWERPS)	+= powerps.o
+> >>  obj-$(CONFIG_SENSORS_TPS40422)	+= tps40422.o
+> >>  obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
+> >>  obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
+> >>diff --git a/drivers/hwmon/pmbus/powerps.c b/drivers/hwmon/pmbus/powerps.c
+> >>new file mode 100644
+> >>index 0000000..21d28f2
+> >>--- /dev/null
+> >>+++ b/drivers/hwmon/pmbus/powerps.c
+> >>@@ -0,0 +1,144 @@
+> >>+/*
+> >>+ * Copyright 2017 IBM Corp.
+> >>+ *
+> >>+ * This program is free software; you can redistribute it and/or modify
+> >>+ * it under the terms of the GNU General Public License as published by
+> >>+ * the Free Software Foundation; either version 2 of the License, or
+> >>+ * (at your option) any later version.
+> >>+ */
+> >>+
+> >>+#include <linux/device.h>
+> >>+#include <linux/i2c.h>
+> >>+#include <linux/jiffies.h>
+> >>+#include <linux/module.h>
+> >>+
+> >>+#include "pmbus.h"
+> >>+
+> >>+/* STATUS_MFR_SPECIFIC bits */
+> >>+#define POWERPS_MFR_FAN_FAULT			BIT(0)
+> >>+#define POWERPS_MFR_THERMAL_FAULT		BIT(1)
+> >>+#define POWERPS_MFR_OV_FAULT			BIT(2)
+> >>+#define POWERPS_MFR_UV_FAULT			BIT(3)
+> >>+#define POWERPS_MFR_PS_KILL			BIT(4)
+> >>+#define POWERPS_MFR_OC_FAULT			BIT(5)
+> >>+#define POWERPS_MFR_VAUX_FAULT			BIT(6)
+> >>+#define POWERPS_MFR_CURRENT_SHARE_WARNING	BIT(7)
+> >>+
+> >>+static int powerps_read_byte_data(struct i2c_client *client, int page, int reg)
+> >>+{
+> >>+	int rc, mfr;
+> >>+
+> >>+	switch (reg) {
+> >>+	case PMBUS_STATUS_VOUT:
+> >>+	case PMBUS_STATUS_IOUT:
+> >>+	case PMBUS_STATUS_TEMPERATURE:
+> >>+	case PMBUS_STATUS_FAN_12:
+> >>+		rc = pmbus_read_byte_data(client, page, reg);
+> >>+		if (rc < 0)
+> >>+			return rc;
+> >>+
+> >>+		mfr = pmbus_read_byte_data(client, page,
+> >>+					   PMBUS_STATUS_MFR_SPECIFIC);
+> >>+		if (mfr < 0)
+> >>+			return rc;
+> >			return mfr; ?
 > 
+> Well I returned rc because we read the status register without error, so
+> just return the status register contents without the additional mfr bits.
+> It's not very clear... I better add a comment.
+> 
+Ah, yes, that makes sense. Agreed, please add a comment.
 
+> >
+> >>+
+> >>+		/* Add MFR_SPECIFIC bits to the standard pmbus status regs. */
+> >>+		if (reg == PMBUS_STATUS_FAN_12) {
+> >>+			if (mfr & POWERPS_MFR_FAN_FAULT)
+> >>+				rc |= PB_FAN_FAN1_FAULT;
+> >>+		} else if (reg == PMBUS_STATUS_TEMPERATURE) {
+> >>+			if (mfr & POWERPS_MFR_THERMAL_FAULT)
+> >>+				rc |= PB_TEMP_OT_FAULT;
+> >>+		} else if (reg == PMBUS_STATUS_VOUT) {
+> >>+			if (mfr &
+> >>+			    (POWERPS_MFR_OV_FAULT | POWERPS_MFR_VAUX_FAULT))
+> >Wondering - this suggests that there is a VAUX. Would it make sense
+> >to map it to PMBUS_VIRT_READ_VMON ?
+> 
+> There is no VAUX for this device. The power supply spec calls it "12Vaux
+> Fault" but I don't know why.
+> 
+power supply designers having some fun ;-)
+
+Guenter
+
+> Thanks for the quick review!
+> Eddie
+> 
+> >
+> >>+				rc |= PB_VOLTAGE_OV_FAULT;
+> >>+			if (mfr & POWERPS_MFR_UV_FAULT)
+> >>+				rc |= PB_VOLTAGE_UV_FAULT;
+> >>+		} else if (reg == PMBUS_STATUS_IOUT) {
+> >>+			if (mfr & POWERPS_MFR_OC_FAULT)
+> >>+				rc |= PB_IOUT_OC_FAULT;
+> >>+			if (mfr & POWERPS_MFR_CURRENT_SHARE_WARNING)
+> >>+				rc |= PB_CURRENT_SHARE_FAULT;
+> >>+		}
+> >>+		break;
+> >>+	default:
+> >>+		rc = -ENODATA;
+> >>+		break;
+> >>+	}
+> >>+
+> >>+	return rc;
+> >>+}
+> >>+
+> >>+static int powerps_read_word_data(struct i2c_client *client, int page, int reg)
+> >>+{
+> >>+	int rc, mfr;
+> >>+
+> >>+	switch (reg) {
+> >>+	case PMBUS_STATUS_WORD:
+> >>+		rc = pmbus_read_word_data(client, page, reg);
+> >>+		if (rc < 0)
+> >>+			return rc;
+> >>+
+> >>+		mfr = pmbus_read_byte_data(client, page,
+> >>+					   PMBUS_STATUS_MFR_SPECIFIC);
+> >>+		if (mfr < 0)
+> >>+			return rc;
+> >			return mfr; ?
+> >
+> >>+
+> >>+		if (mfr & POWERPS_MFR_PS_KILL)
+> >>+			rc |= PB_STATUS_OFF;
+> >>+		break;
+> >>+	default:
+> >>+		rc = -ENODATA;
+> >>+		break;
+> >>+	}
+> >>+
+> >>+	return rc;
+> >>+}
+> >>+
+> >>+static struct pmbus_driver_info powerps_info = {
+> >>+	.pages = 1,
+> >>+	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+> >>+		PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
+> >>+		PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_VOUT |
+> >>+		PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_STATUS_INPUT |
+> >>+		PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_STATUS_FAN12,
+> >>+	.read_byte_data = powerps_read_byte_data,
+> >>+	.read_word_data = powerps_read_word_data,
+> >>+	.debugfs = true,
+> >>+};
+> >>+
+> >>+static int powerps_probe(struct i2c_client *client,
+> >>+			 const struct i2c_device_id *id)
+> >>+{
+> >>+	return pmbus_do_probe(client, id, &powerps_info);
+> >>+}
+> >>+
+> >>+static const struct i2c_device_id powerps_id[] = {
+> >>+	{ "power_ps", 1 },
+> >>+	{}
+> >>+};
+> >>+MODULE_DEVICE_TABLE(i2c, powerps_id);
+> >>+
+> >>+/* IBM provides many compatible power supplies; use a generic name. */
+> >>+static const struct of_device_id powerps_of_match[] = {
+> >>+	{ .compatible = "ibm,power-ps" },
+> >>+	{}
+> >>+};
+> >>+MODULE_DEVICE_TABLE(of, powerps_of_match);
+> >>+
+> >>+static struct i2c_driver powerps_driver = {
+> >>+	.driver = {
+> >>+		.name = "powerps",
+> >>+		.of_match_table = powerps_of_match,
+> >>+	},
+> >>+	.probe = powerps_probe,
+> >>+	.remove = pmbus_do_remove,
+> >>+	.id_table = powerps_id,
+> >>+};
+> >>+
+> >>+module_i2c_driver(powerps_driver);
+> >>+
+> >>+MODULE_AUTHOR("Eddie James");
+> >>+MODULE_DESCRIPTION("PMBus driver for POWER system power supplies");
+> >>+MODULE_LICENSE("GPL");
+> >>-- 
+> >>1.8.3.1
+> >>
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
