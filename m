@@ -1,52 +1,128 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 1/9] devicetree: bindings: Add sata port phy config
- parameters in ahci-ceva
-Date: Fri, 11 Aug 2017 14:36:37 +0200
-Message-ID: <b9f44a24-f78b-fd42-f89b-13c04dca04ed@xilinx.com>
-References: <cover.1501852693.git.michal.simek@xilinx.com>
- <b7692739885fe200a4ea5a4e3828349a406e2247.1501852693.git.michal.simek@xilinx.com>
- <20170810190720.yqeu4qzztylu5slb@rob-hp-laptop>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 1/2] drm/bridge/sii8620: add external connector handle
+Date: Fri, 11 Aug 2017 14:49:35 +0200
+Message-ID: <9232b812-7aef-c614-b122-612e19743df4@samsung.com>
+References: <1502371530-32260-1-git-send-email-m.purski@samsung.com>
+ <6478480.TjcUCueU5y@avalon> <5ce6bd99-c50e-84c2-f21f-eb611cac94c2@samsung.com>
+ <CGME20170811094031epcas5p4ca089af7dba2f3fafed757c1fb40c798@epcas5p4.samsung.com>
+ <2097016.rlxulirhWA@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810190720.yqeu4qzztylu5slb@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, Alexander Graf <agraf@suse.de>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <2097016.rlxulirhWA@avalon>
+Content-language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Maciej Purski <m.purski@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, a.hajda@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10.8.2017 21:07, Rob Herring wrote:
-> On Fri, Aug 04, 2017 at 03:18:10PM +0200, Michal Simek wrote:
->> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
->>
->> This patch adds device tree bindings for sata port phy parameters
->> in the ahci-ceva.txt file.
->>
->> Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->>  .../devicetree/bindings/ata/ahci-ceva.txt          | 39 ++++++++++++++++++++++
->>  1 file changed, 39 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/ata/ahci-ceva.txt b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
->> index 7ca8b976c13a..f97546f61444 100644
->> --- a/Documentation/devicetree/bindings/ata/ahci-ceva.txt
->> +++ b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
->> @@ -5,6 +5,36 @@ Required properties:
->>    - compatible: Compatibility string. Must be 'ceva,ahci-1v84'.
->>    - clocks: Input clock specifier. Refer to common clock bindings.
->>    - interrupts: Interrupt specifier. Refer to interrupt binding.
->> +  - ceva,p0-cominit-params: OOB timing value for COMINIT parameter for port 0.
->> +  - ceva,p1-cominit-params: OOB timing value for COMINIT parameter for port 1.
->> +			The fields for the above parameter must be as shown below:
->> +			ceva,phy-cominit-params = /bits/ 8 <CIBGMN CIBGMX CIBGN CINMP>;
-> 
-> phy? Should be pN?
+Hi Laurent,
 
-pN will be in v2.
+On 2017-08-11 11:40, Laurent Pinchart wrote:
+> Hi Marek,
+>
+> On Friday 11 Aug 2017 08:39:31 Marek Szyprowski wrote:
+>> On 2017-08-10 15:39, Laurent Pinchart wrote:
+>>> On Thursday 10 Aug 2017 15:25:29 Maciej Purski wrote:
+>>>> The driver should be switched on if an external connector is plugged and
+>>>> switched off if it is unplugged. Extcon is optional. If it is not found,
+>>>> the driver stays in "always-on" mode.
+>>>>
+>>>> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+>>>> ---
+>>>>
+>>>>    .../bindings/display/bridge/sil-sii8620.txt        |  4 ++
+>>>>    drivers/gpu/drm/bridge/sil-sii8620.c               | 83 ++++++++++++++-
+>>>>    2 files changed, 85 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+>>>> b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt index
+>>>> 9409d9c..1f230bf 100644
+>>>> --- a/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+>>>> +++ b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+>>>> @@ -10,6 +10,9 @@ Required properties:
+>>>>    	- clocks, clock-names: specification and name of "xtal" clock
+>>>>    	- video interfaces: Device node can contain video interface port
+>>>>    			    node for HDMI encoder according to [1].
+>>>>
+>>>> +Optional properties:
+>>>> +	- extcon: phandle to external connector for MHL cable changes
+>>>> +		  detection
+>>> The sii8620 DT node should model its connection to the MHL connector using
+>>> OF graph, connecting a port to the MHL connector DT node through
+>>> endpoints. I believe the extcon property should then be added to the MHL
+>>> connector DT node, not the bridge.
+>> I don't get this. Generic extcon bindings doesn't define connector DT
+>> node, so I don't see how could we use endpoint DT approach here. Could you
+>> give the example?
+> Sure, here you are.
+>
+> &hsi2c_7 {
+> 	...
+>
+>          sii8620@39 {
+>                  reg = <0x39>;
+>                  compatible = "sil,sii8620";
+>                  cvcc10-supply = <&ldo36_reg>;
+>                  iovcc18-supply = <&ldo34_reg>;
+>                  interrupt-parent = <&gpf0>;
+>                  interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
+>                  reset-gpios = <&gpv7 0 GPIO_ACTIVE_LOW>;
+>                  clocks = <&pmu_system_controller 0>;
+>                  clock-names = "xtal";
+>
+> 		ports {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+>
+> 	                port@0 {
+> 				reg = <0>;
+>          	                mhl_to_hdmi: endpoint {
+>                  	                remote-endpoint = <&hdmi_to_mhl>;
+> 	                        };
+>          	        };
+> 	                port@1 {
+> 				reg = <1>;
+>          	                mhl_bridge_out: endpoint {
+>                  	                remote-endpoint = <&mhl_connector_in>;
+> 	                        };
+>          	        };
+> 		};
+>          };
+> };
+>
+> / {
+> 	mhl-connector {
+> 		compatible = "mhl-connector";
+> 		extcon = <&muic>;
+>
+> 	        port {
+>          	        mhl_connector_in: endpoint {
+>                  	        remote-endpoint = <&mhl_bridge_out>;
+> 	                };
+>          	};
+> 	};
+> };
+>
+> Note that there's currently no DT binding for MHL connectors. One needs to be
+> developed, the HDMI connector DT binding can be used as a source of
+> inspiration.
 
-Thanks,
-Michal
+Ah, I see. I wasn't aware that display subsystem has bindings even for 
+the connectors.
+Other types of connectors already used together with extcon in device 
+tree (like usb
+and chargers) don't have dedicated bindings.
+
+Do we need to add hdmi-connectors to all existing boards that have HDMI 
+module?
+
+>>>>    [1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+>>>>
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
