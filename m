@@ -1,106 +1,89 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: keystone-k2g: Add I2C nodes
-Date: Fri, 11 Aug 2017 17:18:26 -0500
-Message-ID: <69c0a96c-6bf8-984a-d029-d46bdf678284@ti.com>
-References: <20170802221753.13786-1-fcooper@ti.com>
- <20170802221753.13786-5-fcooper@ti.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v2 2/3] usb: chipidea: Hook into mux framework to toggle usb
+ switch
+Date: Fri, 11 Aug 2017 15:26:10 -0700
+Message-ID: <150249037091.15411.10074988823155268663@sboyd-linaro>
+References: <20170714214005.14967-1-stephen.boyd@linaro.org>
+ <20170714214005.14967-3-stephen.boyd@linaro.org>
+ <7080030c-c9c2-657d-aad4-aef636438cb1@axentia.se>
+ <150215709134.18242.599725161375995991@sboyd-linaro>
+ <c5c411fe-2f5a-88cc-73e8-28ab61f5de04@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170802221753.13786-5-fcooper@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, wsa@the-dreams.de, robh+dt@kernel.org, linux@armlinux.org.uk, nsekhar@ti.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Santosh Shilimkar <ssantosh@kernel.org>, Vitaly Andrianov <vitalya@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c5c411fe-2f5a-88cc-73e8-28ab61f5de04@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <Peter.Chen@nxp.com>, Peter Rosin <peda@axentia.se>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.infradead.org, Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, Andy Gross <andy.gross@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Peter Rosin (2017-08-08 05:46:30)
+> On 2017-08-08 03:51, Stephen Boyd wrote:
+> =
+
+> >                      It looked like we paired the start/stop ops with
+> > each other so that the mux is properly managed across these ops.
+> =
+
+> Yes, it *looks* ok...
+> =
+
+> >                                                                  My
+> > testing hasn't shown a problem, but maybe there's some corner case
+> > you're thinking of? I'll double check the code.
+> =
+
+> ...but since I do not know the usb code, I can't tell. What I worry about
+> is the usb core calling udc_id_switch_for_host or udc_id_switch_for_device
+> more than once without any call to the other in between. Maybe that is a
+> guarantee that the usb core makes? Or maybe it isn't? If e.g. there is a
+> third mode (or if one is added in the future), then the calls to
+> mux_control_select and mux_control_deselect would not be paired correctly.
+> Ok, sure, a third mode probably doesn't exist and will probably not be
+> added, but but but...
+> =
+
+> Also, what happens if udc_id_switch_for_device fails? Is it certain that
+> it will be called again before udc_id_switch_for_host is called, or is
+> the failure simply logged? If the latter, you might have a call to
+> mux_control_deselect without a preceding (and successful) call to
+> mux_control_select. That's fatal.
+
+The only thing that could fail right now is the mux selection, so we
+wouldn't get into some sort of situation where that's locked in and
+unchangeable. We do rollback the role if it fails to switch, so we also
+wouldn't go into a half-way state of being in one role but not actually
+switching all the way over to it.
+
+> =
+
+> I have similar worries for host_start/host_stop, but for that case
+> host_stop is not allowed to fail, and it seems like a safe bet that
+> host_stop will only be called if host_start succeeds. So, I'm not as
+> worried there.
+> =
+
+> In other words, the question is if the usb core is designed to allow
+> this kind of "raw" resource administration in udc_id_switch_for_host and
+> udc_id_switch_for_device, or if you need to keep a local record of the
+> state so that you do not do double resource acquisition or attempt to
+> free resources you don't have?
+> =
+
+> I think I would feel better if the muxing for the device mode could
+> be done in a start/stop pair of function just like the host mode is
+> doing. Again, I don't know the usb code and don't know if such hooks
+> exist or not?
+> =
 
 
-On 08/02/2017 05:17 PM, Franklin S Cooper Jr wrote:
-> From: Vitaly Andrianov <vitalya@ti.com>
-> 
-> Add nodes for the various I2C instances.
-> 
-> Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
-> [d-gerlach@ti.com: Add power domain and clock properties]
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> [fcooper@ti.com: Update subject and commit message]
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-
-It might be better to send this patch separately as it will
-go to the different tree.
-
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-
-> ---
->   arch/arm/boot/dts/keystone-k2g.dtsi | 36 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 36 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-> index bf4d1fa..5c0acf37 100644
-> --- a/arch/arm/boot/dts/keystone-k2g.dtsi
-> +++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-> @@ -27,6 +27,9 @@
->   
->   	aliases {
->   		serial0 = &uart0;
-> +		i2c0 = &i2c0;
-> +		i2c1 = &i2c1;
-> +		i2c2 = &i2c2;
->   	};
->   
->   	cpus {
-> @@ -113,6 +116,39 @@
->   			status = "disabled";
->   		};
->   
-> +		i2c0: i2c@2530000 {
-> +			compatible = "ti,keystone-i2c";
-> +			reg = <0x02530000 0x400>;
-> +			clocks = <&k2g_clks 0x003a 0>;
-> +			power-domains = <&k2g_pds 0x003a>;
-> +			interrupts = <GIC_SPI 88 IRQ_TYPE_EDGE_RISING>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c1: i2c@2530400 {
-> +			compatible = "ti,keystone-i2c";
-> +			reg = <0x02530400 0x400>;
-> +			clocks = <&k2g_clks 0x003b 0>;
-> +			power-domains = <&k2g_pds 0x003b>;
-> +			interrupts = <GIC_SPI 89 IRQ_TYPE_EDGE_RISING>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c2: i2c@2530800 {
-> +			compatible = "ti,keystone-i2c";
-> +			reg = <0x02530800 0x400>;
-> +			clocks = <&k2g_clks 0x003c 0>;
-> +			power-domains = <&k2g_pds 0x003c>;
-> +			interrupts = <GIC_SPI 90 IRQ_TYPE_EDGE_RISING>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->   		kirq0: keystone_irq@026202a0 {
->   			compatible = "ti,keystone-irq";
->   			interrupts = <GIC_SPI 1 IRQ_TYPE_EDGE_RISING>;
-> 
-
--- 
-regards,
--grygorii
+The host_start/host_stop functions are assigned to the same struct
+ci_role_driver ops that udc_idc_switch_for_{device,host} are for the
+gadget role. Really, these things are called from the same place by the
+chipidea driver so not much is different between the two files I modify
+to make the mux calls. Furthermore, we don't want to do this if we have
+HNP or "true" OTG support so I've put it behind the ci_otg_is_fsm_mode()
+check to make sure we don't do any muxing stuff based on fsm state
+changes. It doesn't really make any sense here anyway because this
+device I have doesn't support OTG, just role switching.
