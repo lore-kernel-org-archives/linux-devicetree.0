@@ -1,68 +1,64 @@
-From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 18/20] dt-bindings: qcom_nandc: IPQ8074 QPIC NAND
- documentation
-Date: Fri, 11 Aug 2017 14:32:05 +0530
-Message-ID: <fa0864288be56f747b63396f46deb482@codeaurora.org>
-References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
- <1501949998-29859-19-git-send-email-absahu@codeaurora.org>
- <20170810203009.sree54ddecbnymep@rob-hp-laptop>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] serio: PS2 gpio bit banging driver for the serio bus
+Date: Fri, 11 Aug 2017 11:16:20 +0200
+Message-ID: <CACRpkda=bYacXmv8SoQu3wPoZW9v+j8myZnme=QpofD=Y-gYTg@mail.gmail.com>
+References: <20170731222452.22887-1-danilokrummrich@dk-develop.de>
+ <CACRpkdYz_+soss4Rb9zMiP4eZZtXqjW_Xy7hH=wm1x2m_R9R3A@mail.gmail.com>
+ <20170807182207.348762301bf3d7f8509b1bf7@dk-develop.de> <8e5e73575b3a70e0e60931698687471d@dk-develop.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170810203009.sree54ddecbnymep@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8e5e73575b3a70e0e60931698687471d@dk-develop.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Danilo Krummrich <danilokrummrich@dk-develop.de>, Russell King <linux@armlinux.org.uk>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-11 02:00, Rob Herring wrote:
-> On Sat, Aug 05, 2017 at 09:49:56PM +0530, Abhishek Sahu wrote:
->> Qualcom IPQ8074 SoC uses QPIC NAND controller version 1.5.0
->> which uses BAM DMA Engine.
->> 
->> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->> 
->> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt 
->> b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> index d93b952..8dfa543 100644
->> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> @@ -6,6 +6,8 @@ Required properties:
->>  			    SoC and it uses ADM DMA
->>      * "qcom,ipq4019-nand" - for QPIC NAND controller v1.4.0 being 
->> used in
->>                              IPQ4019 SoC and it uses BAM DMA
->> +    * "qcom,ipq8074-nand" - for QPIC NAND controller v1.5.0 being 
->> used in
->> +                            IPQ8074 SoC and it uses BAM DMA
->> 
->>  - reg:			MMIO address range
->>  - clocks:		must contain core clock and always on clock
->> @@ -97,7 +99,7 @@ nand-controller@1ac00000 {
->>  };
->> 
->>  nand-controller@79b0000 {
->> -	compatible = "qcom,ipq4019-nand";
->> +	compatible = "qcom,ipq4019-nand", "qcom,ipq8074-nand";
-> 
-> The order here should be reversed as 8074 is the newer one. And if 4019
-> is the fallback compatible, that needs to be documented above.
-> 
+On Thu, Aug 10, 2017 at 4:38 PM, Danilo Krummrich
+<danilokrummrich@dk-develop.de> wrote:
+> On 2017-08-07 18:22, Danilo Krummrich wrote:
+>>>
+>>> > +static int ps2_gpio_write(struct serio *serio, unsigned char val)
+>>> > +{
+>>> > +       struct ps2_gpio_data *drvdata = serio->port_data;
+>>> > +
+>>> > +       drvdata->mode = PS2_MODE_TX;
+>>> > +       drvdata->tx_byte = val;
+>>> > +       /* Make sure ISR running on other CPU notice changes. */
+>>> > +       barrier();
+>>>
+>>> This seems overengineered, is this really needed?
+>>>
+>>> If we have races like this, the error is likely elsewhere, and should be
+>>> fixed in the GPIO driver MMIO access or so.
+>>>
+>> Yes, seems it can be removed. I didn't saw any explicit barriers in the
+>> GPIO
+>> driver (I'm testing on bcm2835), but it seems MMIO operations on SMP archs
+>> does contain barriers. Not sure if all do. If some do not this barrier
+>> might
+>> be needed to ensure ISR on other CPU notice the correct mode and byte to
+>> send.
+>>
+> I couldn't find any guarantee that the mode and tx_byte change is implicitly
+> covered by a barrier in this case. E.g. the bcm2835 driver does not make
+> sure stores are completed before the particular interrupt is enabled, except by
+> the fact that writel on ARM contains a wmb(). But this is nothing to rely on.
+> (Please tell me if I miss something.)
 
-  Thanks Rob for review.
+writel() should be guaranteeing that the values hit the hardware, wmb() is
+spelled out "write memory barrier" I don't see what you're after here.
 
-  This is not fallback compatible. I checked the other device tree
-  binding examples and it seems, we don't have to add every
-  similar compatible string in example. I will remove the
-  qcom,ipq8074-nand from example which is causing confusion.
+If you think writel() doesn't do its job on some platform, then fix writel()
+on that platform.
 
-> Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We can't randomly sprinkle things like this all over the kernel it makes
+no sense.
+
+> Therefore I would like to keep this barrier and replace it with smp_wmb() if
+> you are fine with that.
+
+I do not think this is proper.
+
+Yours,
+Linus Walleij
