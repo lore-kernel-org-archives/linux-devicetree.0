@@ -1,49 +1,63 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 13/13] ARM: dts: rockchip: add accelerometer bma250e dt node for rv1108 evb
-Date: Fri, 11 Aug 2017 11:49:18 +0800
-Message-ID: <1502423358-31375-1-git-send-email-andy.yan@rock-chips.com>
-References: <1502422578-30611-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502422578-30611-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: ata: add DT bindings for MediaTek
+ SATA controller
+Date: Fri, 11 Aug 2017 11:57:36 +0800
+Message-ID: <1502423856.32524.17.camel@mtkswgap22>
+References: <cover.1502098458.git.ryder.lee@mediatek.com>
+         <a7ceb4ed8cc3542169ae8d2d995bdd4707f504e1.1502098458.git.ryder.lee@mediatek.com>
+         <20170810205149.lkphpv7krhdaa23y@rob-hp-laptop>
+         <1502418356.18608.10.camel@mtkswgap22>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1502418356.18608.10.camel@mtkswgap22>
+Sender: linux-ide-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Long Cheng <long.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Add dt node of bosch accelerometer bma250e on rv1108 evb.
+Hi Rob,
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+Sorry for the noise letter.
 
-Changes in v3: None
-Changes in v2: None
+On Fri, 2017-08-11 at 10:25 +0800, Ryder Lee wrote:
+> > > +Required properties:
+> > > + - compatible	   : Must be "mediatek,ahci".
+> > 
+> > SoC specific compatible strings please.
+> 
+> Okay.
 
- arch/arm/boot/dts/rv1108-evb.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+I took a look at ./ahci-platform.txt. Could we just add a generic
+compatible string as below:
 
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index a1bd95e..6690083 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -110,6 +110,13 @@
- 	i2c-scl-falling-time-ns = <16>;
- 	clock-frequency = <400000>;
- 
-+	bma250: accelerometer@19 {
-+		compatible = "bosch,bma250e";
-+		reg = <0x19>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PB3 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
- 	rk805: pmic@18 {
- 		compatible = "rockchip,rk805";
- 		reg = <0x18>;
--- 
-2.7.4
+compatible: Must be "mediatek,soc-model-ahci", "mediatek,mtk-ahci"
+
+In doing so, we can avoid having an endless list of compatibles for
+those MTK SoCs with the same IP block.
+
+> > > +
+> > > +Optional properties:
+> > > + - power-domains   : A phandle and power domain specifier pair to the power
+> > > +		     domain which is responsible for collapsing and restoring
+> > > +		     power to the peripheral.
+> > > + - resets	   : Must contain an entry for each entry in reset-names.
+> > > +		     See ../reset/reset.txt for details.
+> > > + - reset-names	   : Associated names must be: "axi", "sw", "reg".
+> > > + - mediatek,phy-mode : A phandle to the system controller, used to enable
+> > > +		       SATA function.
+> > > +
+> > > +Example:
+> > > +
+> > > +	sata: sata@1a200000 {
+> > > +		compatible = "mediatek,ahci";
+
+MT7622 should be:
+               compatible = "mediatek,mt7622-ahci",
+                            "mediatek,mtk-ahci";
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ryder
+
+
