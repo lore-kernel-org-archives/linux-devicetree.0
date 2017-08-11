@@ -1,73 +1,36 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D
- Remote Processor Controller driver
-Date: Thu, 10 Aug 2017 21:59:25 -0500
-Message-ID: <20170811025925.dwkggu4tuyjj67va@rob-hp-laptop>
-References: <20170808080030.2581-1-o.rempel@pengutronix.de>
- <20170808080030.2581-2-o.rempel@pengutronix.de>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [RESEND PATCH 1/2] dt-bindings: gpio: aspeed: Remove reference to
+ clock name
+Date: Fri, 11 Aug 2017 12:29:41 +0930
+Message-ID: <CACPK8XdyYsuRq60HDxkZ_+fn3cm3FW5qBwdurv_E9z27ea5h=w@mail.gmail.com>
+References: <20170808061634.11857-1-andrew@aj.id.au> <20170808061634.11857-2-andrew@aj.id.au>
+ <20170811025657.bw7kngklmnz7vpf3@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170808080030.2581-2-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170811025657.bw7kngklmnz7vpf3@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ryan Chen <ryan_chen@aspeedtech.com>, linux-gpio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 08, 2017 at 10:00:29AM +0200, Oleksij Rempel wrote:
-> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-> new file mode 100644
-> index 000000000000..faf30ef3d6cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-> @@ -0,0 +1,33 @@
-> +NXP iMX6SX/iMX7D Co-Processor Bindings
-> +----------------------------------------
-> +
-> +This binding provides support for ARM Cortex M4 Co-processor found on some
-> +NXP iMX SoCs.
-> +
-> +Required properties:
-> +- compatible		Should be one of:
-> +				"fsl,imx7d-rproc"
-> +				"fsl,imx6sx-rproc"
+On Fri, Aug 11, 2017 at 12:26 PM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Aug 08, 2017 at 03:46:33PM +0930, Andrew Jeffery wrote:
+>> HPLL was in fact not the clock we need. Remove prescription of which
+>> clock to avoid further error. Please refer to your datasheet and double
+>> check like I should have.
+>>
+>> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+>> ---
+>>  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-rproc is a Linuxism. Name it after what the M4 is called.
+Acked-by: Joel Stanley <joel@jms.id.au>
 
-> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-> +- syscon		Phandle to syscon block which provide access to
-> +			System Reset Controller
-> +
-> +Optional properties:
-> +- memory-region		list of phandels to the reserved memory regions.
-> +			(See: ../reserved-memory/reserved-memory.txt)
-> +
-> +Example:
-> +	m4_reserved_sysmem1: rproc@80000000 {
-> +		reg = <0x80000000 0x80000>;
-> +	};
-> +
-> +	m4_reserved_sysmem2: rproc@81000000 {
-> +		reg = <0x81000000 0x80000>;
-> +	};
-> +
-> +	imx7d-rproc {
-> +		compatible	= "fsl,imx7d-rproc";
-> +		memory-region	= <&m4_reserved_sysmem1>, <&m4_reserved_sysmem2>;
-> +		syscon		= <&src>;
-> +		clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
-> +	};
-> -- 
-> 2.11.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks Andrew!
+
+Cheers,
+
+Joel
