@@ -1,35 +1,50 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v4 18/20] dt-bindings: qcom_nandc: IPQ8074 QPIC NAND documentation
-Date: Fri, 11 Aug 2017 17:09:33 +0530
-Message-ID: <1502451575-15712-19-git-send-email-absahu@codeaurora.org>
+Subject: [PATCH v4 19/20] mtd: nand: qcom: support for IPQ4019 QPIC NAND controller
+Date: Fri, 11 Aug 2017 17:09:34 +0530
+Message-ID: <1502451575-15712-20-git-send-email-absahu@codeaurora.org>
 References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: boris.brezillon@free-electrons.com, robh+dt@kernel.org
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>, mark.rutland@arm.com
+To: boris.brezillon@free-electrons.com
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Qualcom IPQ8074 SoC uses QPIC NAND controller version 1.5.0
-which uses BAM DMA Engine.
+Add the compatible string for IPQ4019 QPIC NAND controller
+version 1.4.0 which uses BAM DMA.
 
 Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mtd/nand/qcom_nandc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-index d93b952..73d336be 100644
---- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-+++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-@@ -6,6 +6,8 @@ Required properties:
- 			    SoC and it uses ADM DMA
-     * "qcom,ipq4019-nand" - for QPIC NAND controller v1.4.0 being used in
-                             IPQ4019 SoC and it uses BAM DMA
-+    * "qcom,ipq8074-nand" - for QPIC NAND controller v1.5.0 being used in
-+                            IPQ8074 SoC and it uses BAM DMA
+diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
+index f2cb696..03e671e 100644
+--- a/drivers/mtd/nand/qcom_nandc.c
++++ b/drivers/mtd/nand/qcom_nandc.c
+@@ -2857,6 +2857,12 @@ static int qcom_nandc_remove(struct platform_device *pdev)
+ 	.flash_dev_offset = 0x0,
+ };
  
- - reg:			MMIO address range
- - clocks:		must contain core clock and always on clock
++static const struct qcom_nandc_props ipq4019_nandc_props = {
++	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
++	.is_bam = true,
++	.flash_dev_offset = 0x0,
++};
++
+ /*
+  * data will hold a struct pointer containing more differences once we support
+  * more controller variants
+@@ -2866,6 +2872,10 @@ static int qcom_nandc_remove(struct platform_device *pdev)
+ 		.compatible = "qcom,ipq806x-nand",
+ 		.data = &ipq806x_nandc_props,
+ 	},
++	{
++		.compatible = "qcom,ipq4019-nand",
++		.data = &ipq4019_nandc_props,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, qcom_nandc_of_match);
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
