@@ -1,149 +1,78 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] arm64: dts: rockchip: add thermal nodes for rk3328 SoC
-Date: Fri, 11 Aug 2017 11:48:34 +0200
-Message-ID: <1597866.JTNQsbvSkT@phil>
-References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com> <b9f85901-2fb5-d4ed-503c-1c4684d821e7@rock-chips.com> <f0c7ab33-1b7b-8b9d-fd20-aa84001014cc@rock-chips.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/8] MT2712 IOMMU SUPPORT
+Date: Fri, 11 Aug 2017 17:56:09 +0800
+Message-ID: <1502445377-26936-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f0c7ab33-1b7b-8b9d-fd20-aa84001014cc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "rocky.hao" <rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rocky,
+This patchset mainly adds support for M4U of mt2712.
 
-Am Freitag, 11. August 2017, 17:46:55 CEST schrieb rocky.hao:
-> Hi Caesar,
-> Thanks for your comments.
+The M4U in mt2712 is MTK's generation2 M4U which use the
+Short-descriptor like mt8173. The main difference is that there are 2
+M4Us and 2 smi-commons in mt2712, while there is only 1 M4U and 1
+smi-common in mt8173. The purpose is for balance the bandwidth.
 
-just to add, there is no need to resend, I can drop the comments
-here myself when applying :-)
+The mt2712 M4U-SMI HW diagram is as below:
 
+                            EMI
+                             |
+              -------------------------------
+              |                             |
+             M4U0                          M4U1
+              |                             |
+         smi-common0                   smi-common1
+              |                             |
+  -------------------------       --------------------
+  |     |     |     |     |       |         |        |
+  |     |     |     |     |       |         |        |
+larb0 larb1 larb2 larb3 larb6    larb4    larb5     larb7
+disp0 vdec  cam   venc   jpg  mdp1/disp1 mdp2/disp2  mdp3->larb names
 
-Heiko
+This patchset is based on v4.13-rc1, Also it base on Robin's[1],
+Honghui[2],Arvind[3]. Currently it don't contain the dtsi part
+as the ccf/power-domain has not been ready.
 
-> Best Regards,
-> Rocky
-> 
-> 在 2017/8/11 14:44, Caesar Wang 写道:
-> > 在 2017年08月04日 16:06, Rocky Hao 写道:
-> >> add thermal zone and dynamic CPU power coefficients for rk3328
-> >>
-> >> Signed-off-by: Rocky Hao <rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> ---
-> >> Change in v2:
-> >> - remove gerrit Change-Id
-> >>
-> >>   arch/arm64/boot/dts/rockchip/rk3328.dtsi | 43 
-> >> ++++++++++++++++++++++++++++++++
-> >>   1 file changed, 43 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi 
-> >> b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> >> index 186fb93fdffd..68829f808320 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> >> @@ -47,6 +47,7 @@
-> >>   #include <dt-bindings/pinctrl/rockchip.h>
-> >>   #include <dt-bindings/power/rk3328-power.h>
-> >>   #include <dt-bindings/soc/rockchip,boot-mode.h>
-> >> +#include <dt-bindings/thermal/thermal.h>
-> >>   / {
-> >>       compatible = "rockchip,rk3328";
-> >> @@ -74,6 +75,8 @@
-> >>               compatible = "arm,cortex-a53", "arm,armv8";
-> >>               reg = <0x0 0x0>;
-> >>               clocks = <&cru ARMCLK>;
-> >> +            #cooling-cells = <2>; /* min followed by max */
-> >> +            dynamic-power-coefficient = <120>;
-> >>               enable-method = "psci";
-> >>               next-level-cache = <&l2>;
-> >>           };
-> >> @@ -83,6 +86,7 @@
-> >>               compatible = "arm,cortex-a53", "arm,armv8";
-> >>               reg = <0x0 0x1>;
-> >>               clocks = <&cru ARMCLK>;
-> >> +            dynamic-power-coefficient = <120>;
-> >>               enable-method = "psci";
-> >>               next-level-cache = <&l2>;
-> >>           };
-> >> @@ -92,6 +96,7 @@
-> >>               compatible = "arm,cortex-a53", "arm,armv8";
-> >>               reg = <0x0 0x2>;
-> >>               clocks = <&cru ARMCLK>;
-> >> +            dynamic-power-coefficient = <120>;
-> >>               enable-method = "psci";
-> >>               next-level-cache = <&l2>;
-> >>           };
-> >> @@ -101,6 +106,7 @@
-> >>               compatible = "arm,cortex-a53", "arm,armv8";
-> >>               reg = <0x0 0x3>;
-> >>               clocks = <&cru ARMCLK>;
-> >> +            dynamic-power-coefficient = <120>;
-> >>               enable-method = "psci";
-> >>               next-level-cache = <&l2>;
-> >>           };
-> >> @@ -308,6 +314,43 @@
-> >>           interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> >>       };
-> >> +    thermal-zones {
-> >> +        soc_thermal: soc-thermal {
-> >> +            polling-delay-passive = <20>; /* milliseconds */
-> >> +            polling-delay = <1000>; /* milliseconds */
-> >> +            sustainable-power = <1000>; /* milliwatts */
-> >> +
-> >> +            thermal-sensors = <&tsadc 0>;
-> >> +
-> >> +            trips {
-> >> +                threshold: trip-point0 {
-> >> +                    temperature = <70000>; /* millicelsius */
-> >> +                    hysteresis = <2000>; /* millicelsius */
-> >> +                    type = "passive";
-> >> +                };
-> >> +                target: trip-point1 {
-> >> +                    temperature = <85000>; /* millicelsius */
-> >> +                    hysteresis = <2000>; /* millicelsius */
-> >> +                    type = "passive";
-> >> +                };
-> >> +                soc_crit: soc-crit {
-> >> +                    temperature = <95000>; /* millicelsius */
-> >> +                    hysteresis = <2000>; /* millicelsius */
-> > 
-> > The document had already described, maybe we should remove the 
-> > millicelsius/milliseconds/milliwatts here.
-> It is ok for me.
-> >> +                    type = "critical";
-> >> +                };
-> >> +            };
-> >> +
-> >> +            cooling-maps {
-> >> +                map0 {
-> >> +                    trip = <&target>;
-> >> +                    cooling-device = <&cpu0 THERMAL_NO_LIMIT 
-> >> THERMAL_NO_LIMIT>;
-> >> +                    contribution = <4096>;
-> >> +                };
-> >> +            };
-> >> +        };
-> >> +
-> >> +    };
-> >> +
-> >>       tsadc: tsadc@ff250000 {
-> >>           compatible = "rockchip,rk3328-tsadc";
-> >>           reg = <0x0 0xff250000 0x0 0x100>;
-> > 
-> > 
-> > 
-> > 
-> 
-> 
-> 
+The patch 1/2 adds the support of MT2712 IOMMU support,
+the patch 3/4 improve the m4u flow for mt2712,
+the last patch 5/6/7/8 mainly fix bug or improve code.
 
+[1]:https://patchwork.kernel.org/patch/9828671/
+[2]:https://patchwork.kernel.org/patch/9880223/
+[3]:https://patchwork.kernel.org/patch/9892759/
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yong Wu (8):
+  dt-bindings: mediatek: Add binding for mt2712 IOMMU and SMI
+  iommu/mediatek: Add mt2712 IOMMU support
+  iommu/mediatek: Merge 2 M4U HWs into one iommu domain
+  iommu/mediatek: Move pgtable allocation into domain_alloc
+  iommu/mediatek: Disable iommu clock when system suspend
+  iommu/mediatek: Enlarge the validate PA range for 4GB mode
+  memory: mtk-smi: Rearrange some function position alphabetically
+  memory: mtk-smi: Degrade SMI init to module_init
+
+ .../devicetree/bindings/iommu/mediatek,iommu.txt   |   6 +-
+ .../memory-controllers/mediatek,smi-common.txt     |   6 +-
+ .../memory-controllers/mediatek,smi-larb.txt       |   5 +-
+ drivers/iommu/mtk_iommu.c                          | 184 ++++++++++++++-------
+ drivers/iommu/mtk_iommu.h                          |   9 +
+ drivers/memory/mtk-smi.c                           | 108 +++++++-----
+ include/dt-bindings/memory/mt2712-larb-port.h      |  91 ++++++++++
+ 7 files changed, 305 insertions(+), 104 deletions(-)
+ create mode 100644 include/dt-bindings/memory/mt2712-larb-port.h
+
+-- 
+1.9.1
