@@ -1,384 +1,155 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/8] iommu/mediatek: Add mt2712 IOMMU support
-Date: Fri, 11 Aug 2017 18:24:51 +0100
-Message-ID: <e084edd4-23bb-d44f-83c6-c6d3182a7655@arm.com>
-References: <1502445377-26936-1-git-send-email-yong.wu@mediatek.com>
- <1502445377-26936-3-git-send-email-yong.wu@mediatek.com>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] arm64: allwinner: a64: Add initial
+ NanoPi A64 support
+Date: Fri, 11 Aug 2017 23:12:12 +0530
+Message-ID: <CAD6G_RT4TyViJDmbtMaFtqdpMK3c04XvraEB7ACS3_4N6hvY6g@mail.gmail.com>
+References: <1502454711-8389-1-git-send-email-jteki@openedev.com>
+Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502445377-26936-3-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCV4FV5N34IRB5WYW7GAKGQETMDYMXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1502454711-8389-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/17 10:56, Yong Wu wrote:
-> The M4U IP blocks in mt2712 is MTK's generation2 M4U which use the
-> Short-descriptor like mt8173, and most of the HW registers are the
-> same.
-> 
-> The difference is that there are 2 M4U HWs in mt2712 while there's
-> only one in mt8173. The purpose of 2 M4U HWs is for balance the
-> bandwidth.
-
-Heh, I never imagined that theoretical argument I made against global
-data in the original driver would become reality so soon :D
-
-> Normally if there are 2 M4U HWs, there should be 2 iommu domains,
-> each M4U has a iommu domain.
-> 
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Fri, Aug 11, 2017 at 6:01 PM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>
+> NanoPi A64 is a new board of high performance with low cost
+> designed by FriendlyElec., using the Allwinner A64 SOC.
+>
+> Nanopi A64 features
+> - Allwinner A64, 64-bit Quad-core Cortex-A53@648MHz to 1.152GHz, DVFS
+> - 1GB DDR3 RAM
+> - MicroSD
+> - Gigabit Ethernet (RTL8211E)
+> - Wi-Fi 802.11b/g/n
+> - IR receiver
+> - Audio In/Out
+> - Video In/Out
+> - Serial Debug Port
+> - microUSB 5V 2A DC power-supply
+>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > ---
-> This patch also include a minor issue:
-> suspend while there is no iommu client. it will hang because
-> there is no iommu domain at that time.
-> ---
->  drivers/iommu/mtk_iommu.c | 48 ++++++++++++++++++++++++++++++++---------------
->  drivers/iommu/mtk_iommu.h |  7 +++++++
->  drivers/memory/mtk-smi.c  | 40 ++++++++++++++++++++++++++++++++++++---
->  3 files changed, 77 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 91c6d36..da6cedb 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -54,7 +54,9 @@
->  
->  #define REG_MMU_CTRL_REG			0x110
->  #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
-> +/* The TF-protect-select is bit[5:4] in mt2712 while it's bit[6:5] in mt8173.*/
->  #define F_MMU_TF_PROTECT_SEL(prot)		(((prot) & 0x3) << 5)
-> +#define F_MMU_TF_PROT_SEL(prot)			(((prot) & 0x3) << 4)
-
-In my opinion PROTECT vs. PROT here is too confusing for its own good...
-
->  #define REG_MMU_IVRP_PADDR			0x114
->  #define F_MMU_IVRP_PA_SET(pa, ext)		(((pa) >> 1) | ((!!(ext)) << 31))
-> @@ -301,10 +303,6 @@ static int mtk_iommu_attach_device(struct iommu_domain *domain,
->  			data->m4u_dom = NULL;
->  			return ret;
->  		}
-> -	} else if (data->m4u_dom != dom) {
-> -		/* All the client devices should be in the same m4u domain */
-> -		dev_err(dev, "try to attach into the error iommu domain\n");
-> -		return -EPERM;
->  	}
->  
->  	mtk_iommu_config(data, dev, true);
-> @@ -464,8 +462,12 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
->  		return ret;
->  	}
->  
-> -	regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
-> -		F_MMU_TF_PROTECT_SEL(2);
-> +	if (data->m4u_type == M4U_MT8173) {
-> +		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
-> +			F_MMU_TF_PROTECT_SEL(2);
-> +	} else {
-> +		regval = F_MMU_TF_PROT_SEL(2);
-
-...and it would be a bit more obvious to just use
-F_MMU_TF_PROTECT_SEL(2) >> 1 here (with the comment from above).
-Alternatively, the really bullet-proof option would be something like:
-
-#define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
-	((data)->m4u_type == MT2172 ? 4 : 5)
-#define F_MMU_TF_PROTECT_SEL(prot, data) \
-	((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
-
-> +	}
->  	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
->  
->  	regval = F_L2_MULIT_HIT_EN |
-> @@ -487,9 +489,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
->  
->  	writel_relaxed(F_MMU_IVRP_PA_SET(data->protect_base, data->enable_4GB),
->  		       data->base + REG_MMU_IVRP_PADDR);
-> -
->  	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
-> -	writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
+> Changes for v4:
+> - Rebased and droped wi-fi related nodes, since it require
+>   other changes to taken care.
+> Changes for v3:
+> - Fix to use mmc1 for SDIO instead of mmc2
+> - Replace buswidth by 4 instead of 8 mmc1
+> - Drop cap-mmc-hw-reset for mmc1
+> Changes for v2:
+> - Added ohci0, ehci0, ohic1, ehci1, usbphy.
+> - Tested on A64
+>
+>  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+>  .../boot/dts/allwinner/sun50i-a64-nanopi-a64.dts   | 114 +++++++++++++++++++++
+>  2 files changed, 115 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> index 108f12c..c997b5c 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -1,4 +1,5 @@
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+> new file mode 100644
+> index 0000000..e4c121a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+> @@ -0,0 +1,114 @@
+> +/*
+> + * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 > +
-> +	/* It's MISC control register whose default value is ok except mt8173.*/
-> +	if (data->m4u_type == M4U_MT8173)
-> +		writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
->  
->  	if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
->  			     dev_name(data->dev), (void *)data)) {
-> @@ -521,6 +525,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->  	if (!data)
->  		return -ENOMEM;
->  	data->dev = dev;
-> +	data->m4u_type = (enum mtk_iommu_type)of_device_get_match_data(dev);
->  
->  	/* Protect memory. HW will access here while translation fault.*/
->  	protect = devm_kzalloc(dev, MTK_PROTECT_PA_ALIGN * 2, GFP_KERNEL);
-> @@ -554,6 +559,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->  	for (i = 0; i < larb_nr; i++) {
->  		struct device_node *larbnode;
->  		struct platform_device *plarbdev;
-> +		unsigned int id;
-
-Strictly, this should be u32...
-
->  
->  		larbnode = of_parse_phandle(dev->of_node, "mediatek,larbs", i);
->  		if (!larbnode)
-> @@ -562,6 +568,10 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->  		if (!of_device_is_available(larbnode))
->  			continue;
->  
-> +		ret = of_property_read_u32(larbnode, "mediatek,larb-id", &id);
-> +		if (ret)/* The id is consecutive if there is no this property */
-> +			id = i;
-
-...but wouldn't it make more sense for the SMI driver to handle this?
-Admittedly it looks like only this driver knows the default IDs thanks
-to the ordering of the phandle args, but the SMI driver could at least
-initialise larb->larbid to some sentinel value which could be detected
-and replaced with i here.
-
+> +/dts-v1/;
 > +
->  		plarbdev = of_find_device_by_node(larbnode);
->  		if (!plarbdev) {
->  			plarbdev = of_platform_device_create(
-> @@ -572,7 +582,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->  				return -EPROBE_DEFER;
->  			}
->  		}
-> -		data->smi_imu.larb_imu[i].dev = &plarbdev->dev;
-> +		data->smi_imu.larb_imu[id].dev = &plarbdev->dev;
-
-Changing the way the larb_imu array is indexed also seems to create a
-worrying inconsistency with mtk_iommu_v1.
-
->  		component_match_add_release(dev, &match, release_of,
->  					    compare_of, larbnode);
-> @@ -640,8 +650,6 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  	struct mtk_iommu_suspend_reg *reg = &data->reg;
->  	void __iomem *base = data->base;
->  
-> -	writel_relaxed(data->m4u_dom->cfg.arm_v7s_cfg.ttbr[0],
-> -		       base + REG_MMU_PT_BASE_ADDR);
->  	writel_relaxed(reg->standard_axi_mode,
->  		       base + REG_MMU_STANDARD_AXI_MODE);
->  	writel_relaxed(reg->dcm_dis, base + REG_MMU_DCM_DIS);
-> @@ -650,15 +658,19 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  	writel_relaxed(reg->int_main_control, base + REG_MMU_INT_MAIN_CONTROL);
->  	writel_relaxed(F_MMU_IVRP_PA_SET(data->protect_base, data->enable_4GB),
->  		       base + REG_MMU_IVRP_PADDR);
-> +	if (data->m4u_dom)
-> +		writel(data->m4u_dom->cfg.arm_v7s_cfg.ttbr[0],
-> +		       base + REG_MMU_PT_BASE_ADDR);
->  	return 0;
->  }
->  
-> -const struct dev_pm_ops mtk_iommu_pm_ops = {
-> +static const struct dev_pm_ops mtk_iommu_pm_ops = {
->  	SET_SYSTEM_SLEEP_PM_OPS(mtk_iommu_suspend, mtk_iommu_resume)
->  };
->  
->  static const struct of_device_id mtk_iommu_of_ids[] = {
-> -	{ .compatible = "mediatek,mt8173-m4u", },
-> +	{ .compatible = "mediatek,mt2712-m4u", .data = (void *)M4U_MT2712},
-> +	{ .compatible = "mediatek,mt8173-m4u", .data = (void *)M4U_MT8173},
->  	{}
->  };
->  
-> @@ -667,16 +679,20 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->  	.remove	= mtk_iommu_remove,
->  	.driver	= {
->  		.name = "mtk-iommu",
-> -		.of_match_table = mtk_iommu_of_ids,
-> +		.of_match_table = of_match_ptr(mtk_iommu_of_ids),
->  		.pm = &mtk_iommu_pm_ops,
->  	}
->  };
->  
->  static int mtk_iommu_init_fn(struct device_node *np)
->  {
-> +	static bool init_done;
->  	int ret;
->  	struct platform_device *pdev;
->  
-> +	if (init_done)
-> +		return 0;
+> +#include "sun50i-a64.dtsi"
 > +
-
-Actually, you can simply get rid of the whole init_fn now - the
-IOMMU_OF_DECLARE() table only remains as a way to identify built-in
-drivers for the probe-deferral decision. Hopefully the dodgy-looking
-forced creation of plarbdev in probe could go away as well.
-
->  	pdev = of_platform_device_create(np, NULL, platform_bus_type.dev_root);
->  	if (!pdev)
->  		return -ENOMEM;
-> @@ -686,8 +702,10 @@ static int mtk_iommu_init_fn(struct device_node *np)
->  		pr_err("%s: Failed to register driver\n", __func__);
->  		return ret;
->  	}
-> +	init_done = true;
->  
->  	return 0;
->  }
->  
-> -IOMMU_OF_DECLARE(mtkm4u, "mediatek,mt8173-m4u", mtk_iommu_init_fn);
-> +IOMMU_OF_DECLARE(mt8173m4u, "mediatek,mt8173-m4u", mtk_iommu_init_fn);
-> +IOMMU_OF_DECLARE(mt2712m4u, "mediatek,mt2712-m4u", mtk_iommu_init_fn);
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index c06cc91..cd729a3 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -34,6 +34,12 @@ struct mtk_iommu_suspend_reg {
->  	u32				int_main_control;
->  };
->  
-> +enum mtk_iommu_type {
-> +	M4U_MT2701,
-> +	M4U_MT2712,
-> +	M4U_MT8173,
-> +};
+> +#include <dt-bindings/gpio/gpio.h>
 > +
->  struct mtk_iommu_domain;
->  
->  struct mtk_iommu_data {
-> @@ -50,6 +56,7 @@ struct mtk_iommu_data {
->  	bool				tlb_flush_active;
->  
->  	struct iommu_device		iommu;
-> +	enum mtk_iommu_type		m4u_type;
->  };
->  
->  static inline int compare_of(struct device *dev, void *data)
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> index 13f8c45..ec06d2b 100644
-> --- a/drivers/memory/mtk-smi.c
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -23,7 +23,10 @@
->  #include <soc/mediatek/smi.h>
->  #include <dt-bindings/memory/mt2701-larb-port.h>
->  
-> +/* mt8173 */
->  #define SMI_LARB_MMU_EN		0xf00
+> +/ {
+> +       model = "FriendlyARM NanoPi A64";
+> +       compatible = "friendlyarm,nanopi-a64", "allwinner,sun50i-a64";
 > +
-> +/* mt2701 */
->  #define REG_SMI_SECUR_CON_BASE		0x5c0
->  
->  /* every register control 8 port, register offset 0x4 */
-> @@ -41,6 +44,10 @@
->  /* mt2701 domain should be set to 3 */
->  #define SMI_SECUR_CON_VAL_DOMAIN(id)	(0x3 << ((((id) & 0x7) << 2) + 1))
->  
-> +/* mt2712 */
-> +#define SMI_LARB_NONSEC_CON(id)	(0x380 + (id * 4))
-> +#define F_MMU_EN		BIT(0)
+> +       aliases {
+> +               serial0 = &uart0;
+> +       };
 > +
->  struct mtk_smi_larb_gen {
->  	bool need_larbid;
->  	int port_in_larb[MTK_LARB_NR_MAX + 1];
-> @@ -149,7 +156,7 @@ void mtk_smi_larb_put(struct device *larbdev)
->  	struct mtk_smi_iommu *smi_iommu = data;
->  	unsigned int         i;
->  
-> -	for (i = 0; i < smi_iommu->larb_nr; i++) {
-> +	for (i = 0; i < MTK_LARB_NR_MAX; i++) {
-
-This initially looked suspicious, but I guess it's related to the
-earlier change to indexing. As a result we seem to have a bit of a
-redundant mess where some things are using larb->larbid and others are
-relying on inferring it from the index in larb_imu.
-
-I'm not sure whether it would end up better to use larbid consistently
-everywhere, or to convert everything to make make larb_imu officially a
-sparse array indexed by ID (and thus remove smi_iommu->larb_nr and
-larb->larbid), but a weird mix of both is not a great idea.
-
->  		if (dev == smi_iommu->larb_imu[i].dev) {
->  			/* The 'mmu' may be updated in iommu-attach/detach. */
->  			larb->mmu = &smi_iommu->larb_imu[i].mmu;
-> @@ -159,13 +166,28 @@ void mtk_smi_larb_put(struct device *larbdev)
->  	return -ENODEV;
->  }
->  
-> -static void mtk_smi_larb_config_port(struct device *dev)
-> +static void mtk_smi_larb_config_port_mt8173(struct device *dev)
->  {
->  	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
->  
->  	writel(*larb->mmu, larb->base + SMI_LARB_MMU_EN);
->  }
->  
-> +static void mtk_smi_larb_config_port_mt2712(struct device *dev)
-> +{
-> +	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
-> +	u32 reg;
-> +	int i;
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
 > +
-> +	for (i = 0; i < 32; i++) {
-> +		if (*larb->mmu & BIT(i)) {
+> +       reg_vcc3v3: vcc3v3 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vcc3v3";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +       };
 
-Seeing this immediately make me think of:
+Able to build the RSB with CONFIG_SUNXI_RSB and CONFIG_MFD_AXP20X_RSB
+and when I replace the above regulator with axp308 dcdc1 for mmc the
+SD card is not detecting and the same issue with pine64 as well.
 
-	unsigned long enable = *larb->mmu;
+[    0.315257] sunxi-rsb 1f03400.rsb: RSB running at 3000000 Hz
+[    0.315680] axp20x-rsb sunxi-rsb-3a3: AXP20x variant AXP803 found
+[    0.317782] axp20x-rsb sunxi-rsb-3a3: AXP20X driver loaded
 
-	for_each_set_bit(i, &enable, 32) {
-		...
-	}
-
-but maybe that's overkill :/
-
-Robin.
-
-> +			reg = readl_relaxed(larb->base +
-> +					    SMI_LARB_NONSEC_CON(i));
-> +			reg |= F_MMU_EN;
-> +			writel(reg, larb->base + SMI_LARB_NONSEC_CON(i));
-> +		}
-> +	}
-> +}
->  
->  static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  {
-> @@ -211,7 +233,11 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  
->  static const struct mtk_smi_larb_gen mtk_smi_larb_mt8173 = {
->  	/* mt8173 do not need the port in larb */
-> -	.config_port = mtk_smi_larb_config_port,
-> +	.config_port = mtk_smi_larb_config_port_mt8173,
-> +};
-> +
-> +static const struct mtk_smi_larb_gen mtk_smi_larb_mt2712 = {
-> +	.config_port = mtk_smi_larb_config_port_mt2712,
->  };
->  
->  static const struct mtk_smi_larb_gen mtk_smi_larb_mt2701 = {
-> @@ -232,6 +258,10 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
->  		.compatible = "mediatek,mt2701-smi-larb",
->  		.data = &mtk_smi_larb_mt2701
->  	},
-> +	{
-> +		.compatible = "mediatek,mt2712-smi-larb",
-> +		.data = &mtk_smi_larb_mt2712
-> +	},
->  	{}
->  };
->  
-> @@ -318,6 +348,10 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
->  		.compatible = "mediatek,mt2701-smi-common",
->  		.data = (void *)MTK_SMI_GEN1
->  	},
-> +	{
-> +		.compatible = "mediatek,mt2712-smi-common",
-> +		.data = (void *)MTK_SMI_GEN2
-> +	},
->  	{}
->  };
->  
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks!
+-- 
+Jagan Teki
+Free Software Engineer | www.openedev.com
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
