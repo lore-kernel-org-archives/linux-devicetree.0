@@ -1,51 +1,121 @@
 From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH v2 3/9] regulator: mt6380: Add support for MT6380
-Date: Fri, 11 Aug 2017 11:11:15 +0800
-Message-ID: <1502421075.19230.23.camel@mtkswgap22>
+Date: Fri, 11 Aug 2017 11:12:23 +0800
+Message-ID: <1502421143.19230.24.camel@mtkswgap22>
 References: <cover.1500368529.git.sean.wang@mediatek.com>
          <0cd2be9a7058bb51fbbc7cc96101cba44fc081f6.1500368529.git.sean.wang@mediatek.com>
-         <20170718133136.xodadxf2crkcuhze@sirena.org.uk>
+         <1502270559.6566.14.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170718133136.xodadxf2crkcuhze-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1502270559.6566.14.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-07-18 at 14:31 +0100, Mark Brown wrote:
-> On Tue, Jul 18, 2017 at 05:49:23PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+On Wed, 2017-08-09 at 17:22 +0800, Yingjoe Chen wrote:
+> On Tue, 2017-07-18 at 17:49 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > The MT6380 is a regulator found those boards with MediaTek MT7622 SoC
+> > It is connected as a slave to the SoC using MediaTek PMIC wrapper which
+> > is the common interface connecting with Mediatek made various PMICs.
+> > 
+> > Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/regulator/Kconfig                  |   9 +
+> >  drivers/regulator/Makefile                 |   1 +
+> >  drivers/regulator/mt6380-regulator.c       | 359 +++++++++++++++++++++++++++++
+> >  include/linux/regulator/mt6380-regulator.h |  32 +++
+> >  4 files changed, 401 insertions(+)
+> >  create mode 100644 drivers/regulator/mt6380-regulator.c
+> >  create mode 100644 include/linux/regulator/mt6380-regulator.h
+> > 
+> > diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> > index 48db87d..c46ef9c 100644
+> > --- a/drivers/regulator/Kconfig
+> > +++ b/drivers/regulator/Kconfig
+> > @@ -541,6 +541,15 @@ config REGULATOR_MT6323
+> >  	  This driver supports the control of different power rails of device
+> >  	  through regulator interface.
+> >  
+> > +config REGULATOR_MT6380
+> > +	tristate "MediaTek MT6380 PMIC"
+> > +	depends on MTK_PMIC_WRAP
+> > +	help
+> > +	  Say y here to select this option to enable the power regulator of
+> > +	  MediaTek MT6380 PMIC.
+> > +	  This driver supports the control of different power rails of device
+> > +	  through regulator interface.
+> > +
+> >  config REGULATOR_MT6397
+> >  	tristate "MediaTek MT6397 PMIC"
+> >  	depends on MFD_MT6397
+> > diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> > index dc3503f..5148583 100644
+> > --- a/drivers/regulator/Makefile
+> > +++ b/drivers/regulator/Makefile
+> > @@ -70,6 +70,7 @@ obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
+> >  obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
+> >  obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
+> >  obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
+> > +obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
+> >  obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
+> >  obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+> >  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+> > diff --git a/drivers/regulator/mt6380-regulator.c b/drivers/regulator/mt6380-regulator.c
+> > new file mode 100644
+> > index 0000000..5fca36f
+> > --- /dev/null
+> > +++ b/drivers/regulator/mt6380-regulator.c
 > 
-> > +	if (!info->modeset_mask) {
-> > +		dev_err(&rdev->dev, "regulator %s doesn't support set_mode\n",
-> > +			info->desc.name);
-> > +		return -EINVAL;
-> > +	}
+> <...>
 > 
-> This is mostly fine but the mode operations all have this code - if the
-> regulator doesn't have modesetting facilities it just shouldn't have
-> the ops so the core can handle things in a standard fashion.  It'd mean
-> defining a separate set of operations for those regulators but that's
-> fine.
+> > +static struct regulator_ops mt6380_volt_range_ops = {
+> > +	.list_voltage = regulator_list_voltage_linear_range,
+> > +	.map_voltage = regulator_map_voltage_linear_range,
+> > +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+> > +	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+> > +	.set_voltage_time_sel = regulator_set_voltage_time_sel,
+> > +	.enable = regulator_enable_regmap,
+> > +	.disable = regulator_disable_regmap,
+> > +	.is_enabled = regulator_is_enabled_regmap,
+> > +	.set_mode = mt6380_regulator_set_mode,
+> > +	.get_mode = mt6380_regulator_get_mode,
+> > +};
+> > +
+> > +static struct regulator_ops mt6380_volt_table_ops = {
+> > +	.list_voltage = regulator_list_voltage_table,
+> > +	.map_voltage = regulator_map_voltage_iterate,
+> > +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+> > +	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+> > +	.set_voltage_time_sel = regulator_set_voltage_time_sel,
+> > +	.enable = regulator_enable_regmap,
+> > +	.disable = regulator_disable_regmap,
+> > +	.is_enabled = regulator_is_enabled_regmap,
+> > +	.set_mode = mt6380_regulator_set_mode,
+> > +	.get_mode = mt6380_regulator_get_mode,
+> > +};
+> > +
+> > +static struct regulator_ops mt6380_volt_fixed_ops = {
+> 
+> this should be const.
+> 
+> Joe.C
 
+Hi, Joe.C
 
-Hi, Mark
-
-it is really bad for those calls with certain regulator always returning
--EINVAL, that doesn't make sense.
-
-we'll follow your suggestion and add them into the next version.
-
-thanks for your help!
+nice catch. also will be included in the next version
 
 	Sean
 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
+> 
+> 
 
 
 --
