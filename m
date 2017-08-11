@@ -1,7 +1,7 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v4 05/20] mtd: nand: qcom: DMA mapping support for register read buffer
-Date: Fri, 11 Aug 2017 17:09:20 +0530
-Message-ID: <1502451575-15712-6-git-send-email-absahu@codeaurora.org>
+Subject: [PATCH v4 07/20] mtd: nand: qcom: add BAM DMA descriptor handling
+Date: Fri, 11 Aug 2017 17:09:22 +0530
+Message-ID: <1502451575-15712-8-git-send-email-absahu@codeaurora.org>
 References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,139 +13,248 @@ To: boris.brezillon@free-electrons.com
 Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The EBI2 NAND controller directly remaps register read buffer with
-dma_map_sg and DMA address of this buffer will be passed to DMA
-API’s. While, on QPIC NAND controller, which uses BAM DMA, we read
-the controller registers by preparing a BAM command descriptor. This
-command descriptor requires the
+1. prepare_bam_async_desc is the function which will call
+   all the DMA API’s. It will fetch the outstanding scatter gather
+   list for passed channel and will do the DMA descriptor formation.
+   The DMA flag is dependent upon the type of channel.
 
-  - controller register address
-  - the DMA address in which we want to store the value read
-    back from the controller register.
+2. For ADM DMA, the descriptor is being formed for every DMA
+   request so its sgl count will be always 1 while in BAM DMA, the
+   clubbing of descriptor is being done to increase throughput.
 
-This command descriptor will be remapped with dma_map_sg
-and its DMA address will be passed to DMA API’s. Therefore,
-it's required that we also map our register read buffer for
-DMA (using dma_map_single). We use the returned DMA address
-for preparing entries in our command descriptor.
+3. ADM DMA uses only one channel while in BAM DMA, data descriptors
+   will be submitted to tx channel (for write) or rx channel
+   (for read) and all the registers read/write descriptors in
+   command channel.
 
-This patch adds the DMA mapping support for register read
-buffer. This buffer will be DMA mapped during allocation
-time. Before starting of any operation, this buffer will
-be synced for device operation and after operation
-completion, it will be synced again for CPU.
-
+Reviewed-by: Archit Taneja <architt@codeaurora.org>
 Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/mtd/nand/qcom_nandc.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/mtd/nand/qcom_nandc.c | 148 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 136 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-index 59b764a..590fc1d 100644
+index 4f8306e..f52a692 100644
 --- a/drivers/mtd/nand/qcom_nandc.c
 +++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -234,6 +234,7 @@ struct nandc_regs {
-  *				by upper layers directly
-  * @buf_size/count/start:	markers for chip->read_buf/write_buf functions
-  * @reg_read_buf:		local buffer for reading back registers via DMA
-+ * @reg_read_dma:		contains dma address for register read buffer
-  * @reg_read_pos:		marker for data read in reg_read_buf
-  *
-  * @regs:			a contiguous chunk of memory for DMA register
-@@ -279,6 +280,7 @@ struct qcom_nand_controller {
- 	int		buf_start;
+@@ -203,11 +203,27 @@ struct bam_transaction {
+ 	u32 rx_sgl_start;
+ };
  
- 	__le32 *reg_read_buf;
-+	dma_addr_t reg_read_dma;
- 	int reg_read_pos;
++/*
++ * This data type corresponds to the nand dma descriptor
++ * @list - list for desc_info
++ * @dir - DMA transfer direction
++ * @adm_sgl - sgl which will be used for single sgl dma descriptor. Only used by
++ *	      ADM
++ * @bam_sgl - sgl which will be used for dma descriptor. Only used by BAM
++ * @sgl_cnt - number of SGL in bam_sgl. Only used by BAM
++ * @dma_desc - low level DMA engine descriptor
++ */
+ struct desc_info {
+ 	struct list_head node;
  
- 	struct nandc_regs *regs;
-@@ -371,6 +373,24 @@ static inline void nandc_write(struct qcom_nand_controller *nandc, int offset,
- 	iowrite32(val, nandc->base + offset);
+ 	enum dma_data_direction dir;
+-	struct scatterlist sgl;
++	union {
++		struct scatterlist adm_sgl;
++		struct {
++			struct scatterlist *bam_sgl;
++			int sgl_cnt;
++		};
++	};
+ 	struct dma_async_tx_descriptor *dma_desc;
+ };
+ 
+@@ -568,9 +584,78 @@ static void update_rw_regs(struct qcom_nand_host *host, int num_cw, bool read)
+ 	nandc_set_reg(nandc, NAND_EXEC_CMD, 1);
  }
  
-+static inline void nandc_read_buffer_sync(struct qcom_nand_controller *nandc,
-+					  bool is_cpu)
+-static int prep_dma_desc(struct qcom_nand_controller *nandc, bool read,
+-			 int reg_off, const void *vaddr, int size,
+-			 bool flow_control)
++/*
++ * Maps the scatter gather list for DMA transfer and forms the DMA descriptor
++ * for BAM. This descriptor will be added in the NAND DMA descriptor queue
++ * which will be submitted to DMA engine.
++ */
++static int prepare_bam_async_desc(struct qcom_nand_controller *nandc,
++				  struct dma_chan *chan,
++				  unsigned long flags)
 +{
-+	if (!nandc->props->is_bam)
-+		return;
++	struct desc_info *desc;
++	struct scatterlist *sgl;
++	unsigned int sgl_cnt;
++	int ret;
++	struct bam_transaction *bam_txn = nandc->bam_txn;
++	enum dma_transfer_direction dir_eng;
++	struct dma_async_tx_descriptor *dma_desc;
 +
-+	if (is_cpu)
-+		dma_sync_single_for_cpu(nandc->dev, nandc->reg_read_dma,
-+					MAX_REG_RD *
-+					sizeof(*nandc->reg_read_buf),
-+					DMA_FROM_DEVICE);
-+	else
-+		dma_sync_single_for_device(nandc->dev, nandc->reg_read_dma,
-+					   MAX_REG_RD *
-+					   sizeof(*nandc->reg_read_buf),
-+					   DMA_FROM_DEVICE);
++	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
++	if (!desc)
++		return -ENOMEM;
++
++	if (chan == nandc->cmd_chan) {
++		sgl = &bam_txn->cmd_sgl[bam_txn->cmd_sgl_start];
++		sgl_cnt = bam_txn->cmd_sgl_pos - bam_txn->cmd_sgl_start;
++		bam_txn->cmd_sgl_start = bam_txn->cmd_sgl_pos;
++		dir_eng = DMA_MEM_TO_DEV;
++		desc->dir = DMA_TO_DEVICE;
++	} else if (chan == nandc->tx_chan) {
++		sgl = &bam_txn->data_sgl[bam_txn->tx_sgl_start];
++		sgl_cnt = bam_txn->tx_sgl_pos - bam_txn->tx_sgl_start;
++		bam_txn->tx_sgl_start = bam_txn->tx_sgl_pos;
++		dir_eng = DMA_MEM_TO_DEV;
++		desc->dir = DMA_TO_DEVICE;
++	} else {
++		sgl = &bam_txn->data_sgl[bam_txn->rx_sgl_start];
++		sgl_cnt = bam_txn->rx_sgl_pos - bam_txn->rx_sgl_start;
++		bam_txn->rx_sgl_start = bam_txn->rx_sgl_pos;
++		dir_eng = DMA_DEV_TO_MEM;
++		desc->dir = DMA_FROM_DEVICE;
++	}
++
++	sg_mark_end(sgl + sgl_cnt - 1);
++	ret = dma_map_sg(nandc->dev, sgl, sgl_cnt, desc->dir);
++	if (ret == 0) {
++		dev_err(nandc->dev, "failure in mapping desc\n");
++		kfree(desc);
++		return -ENOMEM;
++	}
++
++	desc->sgl_cnt = sgl_cnt;
++	desc->bam_sgl = sgl;
++
++	dma_desc = dmaengine_prep_slave_sg(chan, sgl, sgl_cnt, dir_eng,
++					   flags);
++
++	if (!dma_desc) {
++		dev_err(nandc->dev, "failure in prep desc\n");
++		dma_unmap_sg(nandc->dev, sgl, sgl_cnt, desc->dir);
++		kfree(desc);
++		return -EINVAL;
++	}
++
++	desc->dma_desc = dma_desc;
++
++	list_add_tail(&desc->node, &nandc->desc_list);
++
++	return 0;
 +}
 +
- static __le32 *offset_to_nandc_reg(struct nandc_regs *regs, int offset)
++static int prep_adm_dma_desc(struct qcom_nand_controller *nandc, bool read,
++			     int reg_off, const void *vaddr, int size,
++			     bool flow_control)
  {
- 	switch (offset) {
-@@ -854,6 +874,7 @@ static void free_descs(struct qcom_nand_controller *nandc)
- static void clear_read_regs(struct qcom_nand_controller *nandc)
- {
- 	nandc->reg_read_pos = 0;
-+	nandc_read_buffer_sync(nandc, false);
- }
- 
- static void pre_command(struct qcom_nand_host *host, int command)
-@@ -883,6 +904,7 @@ static void parse_erase_write_errors(struct qcom_nand_host *host, int command)
- 	int i;
- 
- 	num_cw = command == NAND_CMD_PAGEPROG ? ecc->steps : 1;
-+	nandc_read_buffer_sync(nandc, true);
- 
- 	for (i = 0; i < num_cw; i++) {
- 		u32 flash_status = le32_to_cpu(nandc->reg_read_buf[i]);
-@@ -904,6 +926,7 @@ static void post_command(struct qcom_nand_host *host, int command)
- 
- 	switch (command) {
- 	case NAND_CMD_READID:
-+		nandc_read_buffer_sync(nandc, true);
- 		memcpy(nandc->data_buffer, nandc->reg_read_buf,
- 		       nandc->buf_count);
- 		break;
-@@ -1067,6 +1090,7 @@ static int parse_read_errors(struct qcom_nand_host *host, u8 *data_buf,
- 	int i;
- 
- 	buf = (struct read_stats *)nandc->reg_read_buf;
-+	nandc_read_buffer_sync(nandc, true);
- 
- 	for (i = 0; i < ecc->steps; i++, buf++) {
- 		u32 flash, buffer, erased_cw;
-@@ -2003,6 +2027,16 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
+ 	struct desc_info *desc;
+ 	struct dma_async_tx_descriptor *dma_desc;
+@@ -583,7 +668,7 @@ static int prep_dma_desc(struct qcom_nand_controller *nandc, bool read,
+ 	if (!desc)
  		return -ENOMEM;
  
- 	if (nandc->props->is_bam) {
-+		nandc->reg_read_dma =
-+			dma_map_single(nandc->dev, nandc->reg_read_buf,
-+				       MAX_REG_RD *
-+				       sizeof(*nandc->reg_read_buf),
-+				       DMA_FROM_DEVICE);
-+		if (dma_mapping_error(nandc->dev, nandc->reg_read_dma)) {
-+			dev_err(nandc->dev, "failed to DMA MAP reg buffer\n");
-+			return -EIO;
+-	sgl = &desc->sgl;
++	sgl = &desc->adm_sgl;
+ 
+ 	sg_init_one(sgl, vaddr, size);
+ 
+@@ -659,7 +744,7 @@ static int read_reg_dma(struct qcom_nand_controller *nandc, int first,
+ 	vaddr = nandc->reg_read_buf + nandc->reg_read_pos;
+ 	nandc->reg_read_pos += num_regs;
+ 
+-	return prep_dma_desc(nandc, true, first, vaddr, size, flow_control);
++	return prep_adm_dma_desc(nandc, true, first, vaddr, size, flow_control);
+ }
+ 
+ /*
+@@ -690,7 +775,8 @@ static int write_reg_dma(struct qcom_nand_controller *nandc, int first,
+ 
+ 	size = num_regs * sizeof(u32);
+ 
+-	return prep_dma_desc(nandc, false, first, vaddr, size, flow_control);
++	return prep_adm_dma_desc(nandc, false, first, vaddr, size,
++				 flow_control);
+ }
+ 
+ /*
+@@ -704,7 +790,7 @@ static int write_reg_dma(struct qcom_nand_controller *nandc, int first,
+ static int read_data_dma(struct qcom_nand_controller *nandc, int reg_off,
+ 			 const u8 *vaddr, int size)
+ {
+-	return prep_dma_desc(nandc, true, reg_off, vaddr, size, false);
++	return prep_adm_dma_desc(nandc, true, reg_off, vaddr, size, false);
+ }
+ 
+ /*
+@@ -718,7 +804,7 @@ static int read_data_dma(struct qcom_nand_controller *nandc, int reg_off,
+ static int write_data_dma(struct qcom_nand_controller *nandc, int reg_off,
+ 			  const u8 *vaddr, int size)
+ {
+-	return prep_dma_desc(nandc, false, reg_off, vaddr, size, false);
++	return prep_adm_dma_desc(nandc, false, reg_off, vaddr, size, false);
+ }
+ 
+ /*
+@@ -917,12 +1003,43 @@ static int submit_descs(struct qcom_nand_controller *nandc)
+ {
+ 	struct desc_info *desc;
+ 	dma_cookie_t cookie = 0;
++	struct bam_transaction *bam_txn = nandc->bam_txn;
++	int r;
++
++	if (nandc->props->is_bam) {
++		if (bam_txn->rx_sgl_pos > bam_txn->rx_sgl_start) {
++			r = prepare_bam_async_desc(nandc, nandc->rx_chan, 0);
++			if (r)
++				return r;
 +		}
 +
- 		nandc->tx_chan = dma_request_slave_channel(nandc->dev, "tx");
- 		if (!nandc->tx_chan) {
- 			dev_err(nandc->dev, "failed to request tx channel\n");
-@@ -2040,6 +2074,12 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
- static void qcom_nandc_unalloc(struct qcom_nand_controller *nandc)
- {
- 	if (nandc->props->is_bam) {
-+		if (!dma_mapping_error(nandc->dev, nandc->reg_read_dma))
-+			dma_unmap_single(nandc->dev, nandc->reg_read_dma,
-+					 MAX_REG_RD *
-+					 sizeof(*nandc->reg_read_buf),
-+					 DMA_FROM_DEVICE);
++		if (bam_txn->tx_sgl_pos > bam_txn->tx_sgl_start) {
++			r = prepare_bam_async_desc(nandc, nandc->tx_chan,
++						   DMA_PREP_INTERRUPT);
++			if (r)
++				return r;
++		}
 +
- 		if (nandc->tx_chan)
- 			dma_release_channel(nandc->tx_chan);
++		if (bam_txn->cmd_sgl_pos > bam_txn->cmd_sgl_start) {
++			r = prepare_bam_async_desc(nandc, nandc->cmd_chan, 0);
++			if (r)
++				return r;
++		}
++	}
  
+ 	list_for_each_entry(desc, &nandc->desc_list, node)
+ 		cookie = dmaengine_submit(desc->dma_desc);
+ 
+-	if (dma_sync_wait(nandc->chan, cookie) != DMA_COMPLETE)
+-		return -ETIMEDOUT;
++	if (nandc->props->is_bam) {
++		dma_async_issue_pending(nandc->tx_chan);
++		dma_async_issue_pending(nandc->rx_chan);
++
++		if (dma_sync_wait(nandc->cmd_chan, cookie) != DMA_COMPLETE)
++			return -ETIMEDOUT;
++	} else {
++		if (dma_sync_wait(nandc->chan, cookie) != DMA_COMPLETE)
++			return -ETIMEDOUT;
++	}
+ 
+ 	return 0;
+ }
+@@ -933,7 +1050,14 @@ static void free_descs(struct qcom_nand_controller *nandc)
+ 
+ 	list_for_each_entry_safe(desc, n, &nandc->desc_list, node) {
+ 		list_del(&desc->node);
+-		dma_unmap_sg(nandc->dev, &desc->sgl, 1, desc->dir);
++
++		if (nandc->props->is_bam)
++			dma_unmap_sg(nandc->dev, desc->bam_sgl,
++				     desc->sgl_cnt, desc->dir);
++		else
++			dma_unmap_sg(nandc->dev, &desc->adm_sgl, 1,
++				     desc->dir);
++
+ 		kfree(desc);
+ 	}
+ }
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
