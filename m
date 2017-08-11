@@ -1,128 +1,54 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH 2/5] thermal: rockchip: Support the RK3328 SOC in
- thermal driver
-Date: Fri, 11 Aug 2017 11:02:53 +0800
-Message-ID: <1502420573.2598.7.camel@intel.com>
-References: <1500973788-14627-1-git-send-email-rocky.hao@rock-chips.com>
-         <1500973788-14627-3-git-send-email-rocky.hao@rock-chips.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 3/9] regulator: mt6380: Add support for MT6380
+Date: Fri, 11 Aug 2017 11:11:15 +0800
+Message-ID: <1502421075.19230.23.camel@mtkswgap22>
+References: <cover.1500368529.git.sean.wang@mediatek.com>
+         <0cd2be9a7058bb51fbbc7cc96101cba44fc081f6.1500368529.git.sean.wang@mediatek.com>
+         <20170718133136.xodadxf2crkcuhze@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500973788-14627-3-git-send-email-rocky.hao@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rocky Hao <rocky.hao@rock-chips.com>, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170718133136.xodadxf2crkcuhze-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-07-25 at 17:09 +0800, Rocky Hao wrote:
-> RK3328 SOC has one Temperature Sensor for CPU.
+On Tue, 2017-07-18 at 14:31 +0100, Mark Brown wrote:
+> On Tue, Jul 18, 2017 at 05:49:23PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
 > 
-> Change-Id: I176c76bae1801d815a513986cfefcb55272c69a8
-> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
-
-Caesar,
-
-what do you think of this patch?
-
-thanks,
-rui
-
-> ---
->  drivers/thermal/rockchip_thermal.c | 65
-> ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
+> > +	if (!info->modeset_mask) {
+> > +		dev_err(&rdev->dev, "regulator %s doesn't support set_mode\n",
+> > +			info->desc.name);
+> > +		return -EINVAL;
+> > +	}
 > 
-> diff --git a/drivers/thermal/rockchip_thermal.c
-> b/drivers/thermal/rockchip_thermal.c
-> index 4c7796512453..206035139110 100644
-> --- a/drivers/thermal/rockchip_thermal.c
-> +++ b/drivers/thermal/rockchip_thermal.c
-> @@ -320,6 +320,44 @@ struct tsadc_table {
->  	{0, 125000},
->  };
->  
-> +static const struct tsadc_table rk3328_code_table[] = {
-> +	{0, -40000},
-> +	{296, -40000},
-> +	{304, -35000},
-> +	{313, -30000},
-> +	{331, -20000},
-> +	{340, -15000},
-> +	{349, -10000},
-> +	{359, -5000},
-> +	{368, 0},
-> +	{378, 5000},
-> +	{388, 10000},
-> +	{398, 15000},
-> +	{408, 20000},
-> +	{418, 25000},
-> +	{429, 30000},
-> +	{440, 35000},
-> +	{451, 40000},
-> +	{462, 45000},
-> +	{473, 50000},
-> +	{485, 55000},
-> +	{496, 60000},
-> +	{508, 65000},
-> +	{521, 70000},
-> +	{533, 75000},
-> +	{546, 80000},
-> +	{559, 85000},
-> +	{572, 90000},
-> +	{586, 95000},
-> +	{600, 100000},
-> +	{614, 105000},
-> +	{629, 110000},
-> +	{644, 115000},
-> +	{659, 120000},
-> +	{675, 125000},
-> +	{TSADCV2_DATA_MASK, 125000},
-> +};
-> +
->  static const struct tsadc_table rk3368_code_table[] = {
->  	{0, -40000},
->  	{106, -40000},
-> @@ -790,6 +828,29 @@ static void rk_tsadcv2_tshut_mode(int chn, void
-> __iomem *regs,
->  	},
->  };
->  
-> +static const struct rockchip_tsadc_chip rk3328_tsadc_data = {
-> +	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
-> +	.chn_num = 1, /* one channels for tsadc */
-> +
-> +	.tshut_mode = TSHUT_MODE_CRU, /* default TSHUT via CRU */
-> +	.tshut_temp = 95000,
-> +
-> +	.initialize = rk_tsadcv2_initialize,
-> +	.irq_ack = rk_tsadcv3_irq_ack,
-> +	.control = rk_tsadcv3_control,
-> +	.get_temp = rk_tsadcv2_get_temp,
-> +	.set_alarm_temp = rk_tsadcv2_alarm_temp,
-> +	.set_tshut_temp = rk_tsadcv2_tshut_temp,
-> +	.set_tshut_mode = rk_tsadcv2_tshut_mode,
-> +
-> +	.table = {
-> +		.id = rk3328_code_table,
-> +		.length = ARRAY_SIZE(rk3328_code_table),
-> +		.data_mask = TSADCV2_DATA_MASK,
-> +		.mode = ADC_INCREMENT,
-> +	},
-> +};
-> +
->  static const struct rockchip_tsadc_chip rk3366_tsadc_data = {
->  	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
->  	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
-> @@ -875,6 +936,10 @@ static void rk_tsadcv2_tshut_mode(int chn, void
-> __iomem *regs,
->  		.data = (void *)&rk3288_tsadc_data,
->  	},
->  	{
-> +		.compatible = "rockchip,rk3328-tsadc",
-> +		.data = (void *)&rk3328_tsadc_data,
-> +	},
-> +	{
->  		.compatible = "rockchip,rk3366-tsadc",
->  		.data = (void *)&rk3366_tsadc_data,
->  	},
+> This is mostly fine but the mode operations all have this code - if the
+> regulator doesn't have modesetting facilities it just shouldn't have
+> the ops so the core can handle things in a standard fashion.  It'd mean
+> defining a separate set of operations for those regulators but that's
+> fine.
+
+
+Hi, Mark
+
+it is really bad for those calls with certain regulator always returning
+-EINVAL, that doesn't make sense.
+
+we'll follow your suggestion and add them into the next version.
+
+thanks for your help!
+
+	Sean
+
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
