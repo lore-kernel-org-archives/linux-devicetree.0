@@ -1,62 +1,55 @@
-From: Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>
-Subject: [RESEND] arm64: dts: ls1088a: Added dcfg node in ls1088a dtsi
-Date: Fri, 11 Aug 2017 14:49:36 +0530
-Message-ID: <1502443177-15479-1-git-send-email-Ashish.Kumar@nxp.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+Subject: Re: [RESEND PATCH 2/4] dt-bindings: add "reduced-width" property
+ for Armada XP SDRAM controller
+Date: Fri, 11 Aug 2017 11:34:27 +0200
+Message-ID: <1502444067.1333.7.camel@pengutronix.de>
+References: <20170807014641.4003-1-chris.packham@alliedtelesis.co.nz>
+         <20170807014641.4003-3-chris.packham@alliedtelesis.co.nz>
+         <20170810203801.jz5hl5onqci275ef@rob-hp-laptop>
+         <4935472b6a44447fa764fa811a645b9f@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: leoyang.li-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>, Amrita Kumari <amrita.kumari-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4935472b6a44447fa764fa811a645b9f@svr-chch-ex1.atlnz.lc>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, Rob Herring <robh@kernel.org>
+Cc: "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "bp@alien8.de" <bp@alien8.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add debug configuration node(DCFG) in dtsi, helps guts driver to
-print the following information in kernel boot log
+On Thu, 2017-08-10 at 21:17 +0000, Chris Packham wrote:
+> On 11/08/17 08:38, Rob Herring wrote:
+> > On Mon, Aug 07, 2017 at 01:46:39PM +1200, Chris Packham wrote:
+[...]  
+> > > +Optional properties:
+> > > + - marvell,reduced-width: some SoCs that use this SDRAM controller have
+> > > +   a reduced pin count. On such systems "full" width is 32-bits and
+> > > +   "half" width is 16-bits. Set this property to indicate that the SoC
+> > > +   used is such a system.
+> > 
+> > Maybe you should just state what the width is.
+> 
+> Specifying a number like 64/32/16 is done in for some other properties I 
+> dismissed that because what this is about how we interpret a 
+> pin-strapping option. I guess "max-width = <64>;" and "max-width = 
+> <32>"; would achieve the same.
+> 
+> > Or your compatible string should just be specific enough to know the
+> > width.
+> 
+> I decided against a new compatible sting that because the IP block 
+> really is the Armada-XP one and the existing compatible string is used 
+> in other places (using multiple compatible strings would solve that).
+> 
+> I'm not too fussed which of the 3 options are used. Is there any 
+> particular preference?
 
-[    0.526649] Machine: LS1088A RDB Board
-[    0.530430] SoC family: QorIQ LS1088A
-[    0.534115] SoC ID: svr:0x87030010, Revision: 1.0
+I'd prefer a specific compatible string, as it would avoid adding even
+more properties if further difference turn up.
 
-Signed-off-by: Amrita Kumari <amrita.kumari-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |    6 ++++++
- drivers/soc/fsl/guts.c                         |    1 +
- 2 files changed, 7 insertions(+), 0 deletions(-)
+Rob, I seem to remember that some drivers match the top-level
+compatible against a list of SoC variants to detect SoC-dependent
+features in a generic IP block. Is that something you'd prefer instead?
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index c144d06..b5f2372 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -156,6 +156,12 @@
- 			clocks = <&sysclk>;
- 		};
- 
-+		dcfg: dcfg@1e00000 {
-+			compatible = "fsl,ls1088a-dcfg", "syscon";
-+			reg = <0x0 0x1e00000 0x0 0x10000>;
-+			little-endian;
-+		};
-+
- 		tmu: tmu@1f80000 {
- 			compatible = "fsl,qoriq-tmu";
- 			reg = <0x0 0x1f80000 0x0 0x10000>;
-diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
-index 6af7a11..d89a6a8 100644
---- a/drivers/soc/fsl/guts.c
-+++ b/drivers/soc/fsl/guts.c
-@@ -213,6 +213,7 @@ static int fsl_guts_remove(struct platform_device *dev)
- 	{ .compatible = "fsl,ls1021a-dcfg", },
- 	{ .compatible = "fsl,ls1043a-dcfg", },
- 	{ .compatible = "fsl,ls2080a-dcfg", },
-+	{ .compatible = "fsl,ls1088a-dcfg", },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
--- 
-1.7.6.GIT
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Jan
