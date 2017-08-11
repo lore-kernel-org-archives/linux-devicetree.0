@@ -1,32 +1,260 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 0/3] firmware: of: populate /firmware/ node during init
-Date: Fri, 11 Aug 2017 14:30:34 +0100
-Message-ID: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] ARC: reset: introduce AXS10x reset driver
+Date: Fri, 11 Aug 2017 15:46:12 +0200
+Message-ID: <1502459172.2310.16.camel@pengutronix.de>
+References: <20170810164112.9894-1-Eugeniy.Paltsev@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170810164112.9894-1-Eugeniy.Paltsev@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Arnd,
+Hi Eugeniy,
 
-Recently Rob pointed to place SCMI device node under /firmware/ node
-and when I did that, I observed I had to populate the node first to
-get scmi node populated. Some research showed qcom_scm and optee drivers
-handle it in their own ways. This small series is to make it generic
-so that all the users of /firmware/ node need not repeat the same.
+On Thu, 2017-08-10 at 19:41 +0300, Eugeniy Paltsev wrote:
+> ARC AXS10x boards support custom IP-block which allows to control
+> reset signals of selected peripherals. For example DW GMAC, etc...
+> This block is controlled via memory-mapped register (AKA CREG) which
+> represents up-to 32 reset lines.
+> 
+> As of today only the following lines are used:
+>  - DW GMAC - line 5
+> 
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-Sudeep Holla (3):
-  firmware: of: populate /firmware/ node during init
-  firmware: qcom_scm: drop redandant of_platform_populate
-  drivers: tee: rework optee_driver_{init,exit} to use platform device
+Could you check if the reset-simple driver that I posted today would
+work for you?
 
- drivers/firmware/Makefile   |  1 +
- drivers/firmware/of.c       | 34 +++++++++++++++++++++
- drivers/firmware/qcom_scm.c | 24 ---------------
- drivers/tee/optee/core.c    | 74 +++++++++++++++------------------------------
- 4 files changed, 60 insertions(+), 73 deletions(-)
- create mode 100644 drivers/firmware/of.c
+> ---
+>  .../bindings/reset/snps,axs10x-reset.txt           |  34 +++++++
+>  MAINTAINERS                                        |   6 ++
+>  drivers/reset/Kconfig                              |   6 ++
+>  drivers/reset/Makefile                             |   1 +
+>  drivers/reset/reset-axs10x.c                       | 109 +++++++++++++++++++++
+>  5 files changed, 156 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
+>  create mode 100644 drivers/reset/reset-axs10x.c
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt b/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
+> new file mode 100644
+> index 0000000..32eed7a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
+> @@ -0,0 +1,34 @@
+> +Binding for the AXS10x reset controller
+> +
+> +This binding describes the ARC AXS10x boards custom IP-block which allows
+> +to control reset signals of selected peripherals. For example DW GMAC, etc...
+> +This block is controlled via memory-mapped register (AKA CREG) which
+> +represents up-to 32 reset lines.
+> +
+> +As of today only the following lines are used:
+> + - DW GMAC - line 5
+> +
+> +This binding uses the common reset binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/reset/reset.txt
+> +
+> +Required properties:
+> +- compatible: should be "snps,axs10x-reset".
+> +- reg: should always contain pair address - length: for creg reset
+> +  bits register.
+> +- #reset-cells: from common reset binding; Should always be set to 1.
+> +
+> +Example:
+> > > +	reset: reset@11220 {
 
--- 
-2.7.4
+The node name should be reset-controller for consistency with the other
+bindings. Other than that, the binding description looks good to me.
+
+> +		compatible = "snps,axs10x-reset";
+> +		#reset-cells = <1>;
+> +		reg = <0x11220 0x4>;
++	};
+> +
+> +Specifying reset lines connected to IP modules:
+> +	ethernet@.... {
+> +		....
+> +		resets = <&reset 5>;
+> +		....
+> +	};
+> +
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 93dfb9d..f14e804 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12711,6 +12711,12 @@ F:	arch/arc/plat-axs10x
+>  F:	arch/arc/boot/dts/ax*
+>  F:	Documentation/devicetree/bindings/arc/axs10*
+>  
+> +SYNOPSYS AXS10x RESET CONTROLLER DRIVER
+> +M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> +S:	Supported
+> +F:	drivers/reset/reset-axs10x.c
+> +F:	Documentation/devicetree/bindings/reset/snps,axs10x-
+> reset.txt
+> +
+>  SYNOPSYS DESIGNWARE DMAC DRIVER
+>  M:	Viresh Kumar <vireshk@kernel.org>
+>  M:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 52d5251..65d13f4 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -28,6 +28,12 @@ config RESET_ATH79
+>  	  This enables the ATH79 reset controller driver that
+> supports the
+>  	  AR71xx SoC reset controller.
+>  
+> +config RESET_AXS10X
+> +	bool "AXS10x Reset Driver" if COMPILE_TEST
+> +	default ARC_PLAT_AXS10X
+> +	help
+> +	  This enables the reset controller driver for AXS10x.
+> +
+>  config RESET_BERLIN
+>  	bool "Berlin Reset Driver" if COMPILE_TEST
+>  	default ARCH_BERLIN
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index b62783f..45000a5 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_STI) += sti/
+>  obj-$(CONFIG_ARCH_TEGRA) += tegra/
+>  obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+>  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+> +obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+>  obj-$(CONFIG_RESET_HSDK_V1) += reset-hsdk-v1.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+> diff --git a/drivers/reset/reset-axs10x.c b/drivers/reset/reset-
+> axs10x.c
+> new file mode 100644
+> index 0000000..17a4cb4
+> --- /dev/null
+> +++ b/drivers/reset/reset-axs10x.c
+> @@ -0,0 +1,109 @@
+> +/*
+> + * Copyright (C) 2017 Synopsys.
+> + *
+> + * Synopsys AXS10x reset driver.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +
+> +#define to_axs10x_rst(p)	container_of((p), struct axs10x_rst,
+> rcdev)
+> +
+> +#define AXS10X_MAX_RESETS	32
+> +
+> +struct axs10x_rst {
+> +	void __iomem			*regs_rst;
+> +	spinlock_t			lock;
+> +	struct reset_controller_dev	rcdev;
+> +};
+> +
+> +static int axs10x_reset_assert(struct reset_controller_dev *rcdev,
+> +			      unsigned long id)
+> +{
+> +	struct axs10x_rst *rst = to_axs10x_rst(rcdev);
+> +	unsigned long flags;
+> +	u32 reg;
+> +
+> +	spin_lock_irqsave(&rst->lock, flags);
+> +	reg = readl(rst->regs_rst);
+> +	reg |= BIT(id);
+> +	writel(reg, rst->regs_rst);
+> +	spin_unlock_irqrestore(&rst->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int axs10x_reset_deassert(struct reset_controller_dev *rcdev,
+> +			      unsigned long id)
+> +{
+> +	struct axs10x_rst *rst = to_axs10x_rst(rcdev);
+> +	unsigned long flags;
+> +	u32 reg;
+> +
+> +	spin_lock_irqsave(&rst->lock, flags);
+> +	reg = readl(rst->regs_rst);
+> +	reg &= ~BIT(id);
+> +	writel(reg, rst->regs_rst);
+> +	spin_unlock_irqrestore(&rst->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct reset_control_ops axs10x_reset_ops = {
+> +	.assert		= axs10x_reset_assert,
+> +	.deassert	= axs10x_reset_deassert,
+> +};
+> +
+> +static int axs10x_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct axs10x_rst *rst;
+> +	struct resource *mem;
+> +
+> +	rst = devm_kzalloc(&pdev->dev, sizeof(*rst), GFP_KERNEL);
+> +	if (!rst)
+> +		return -ENOMEM;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	rst->regs_rst = devm_ioremap_resource(&pdev->dev, mem);
+> +	if (IS_ERR(rst->regs_rst))
+> +		return PTR_ERR(rst->regs_rst);
+> +
+> +	spin_lock_init(&rst->lock);
+> +
+> +	rst->rcdev.owner = THIS_MODULE;
+> +	rst->rcdev.ops = &axs10x_reset_ops;
+> +	rst->rcdev.of_node = pdev->dev.of_node;
+> +	rst->rcdev.nr_resets = AXS10X_MAX_RESETS;
+> +	rst->rcdev.of_reset_n_cells = 1;
+
+If of_xlate is not set, of_reset_n_cells will be set to 1 by the core
+anyway. No need to do it here.
+
+> +
+> +	return reset_controller_register(&rst->rcdev);
+
+This should be devm_reset_controller_register.
+
+> +}
+> +
+> +static const struct of_device_id axs10x_reset_dt_match[] = {
+> +	{ .compatible = "snps,axs10x-reset" },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver axs10x_reset_driver = {
+> +	.probe	= axs10x_reset_probe,
+> +	.driver	= {
+> +		.name = "axs10x-reset",
+> +		.of_match_table = axs10x_reset_dt_match,
+> +	},
+> +};
+> +builtin_platform_driver(axs10x_reset_driver);
+> +
+> +MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
+> +MODULE_DESCRIPTION("Synopsys AXS10x reset driver");
+> +MODULE_LICENSE("GPL v2");
+
+regards
+Philipp
