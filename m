@@ -1,106 +1,127 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 02/18] dt-bindings: arm: add support for ARM System
- Control and Management Interface(SCMI) protocol
-Date: Fri, 11 Aug 2017 10:36:13 +0100
-Message-ID: <f41b7ae8-affe-e782-7a4b-bbb3a5146247@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-3-git-send-email-sudeep.holla@arm.com>
- <20170810192838.prslgnjvxv3xvyes@rob-hp-laptop>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH  0/3] Add SMP support
+Date: Fri, 11 Aug 2017 09:37:45 +0000
+Message-ID: <KL1PR06MB1702CEF4633BD237ABDB3BDDB8890@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1502189793-59679-1-git-send-email-biju.das@bp.renesas.com>
+ <20170809083554.GI2705@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810192838.prslgnjvxv3xvyes@rob-hp-laptop>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
 
-On 10/08/17 20:28, Rob Herring wrote:
-> On Fri, Aug 04, 2017 at 03:31:28PM +0100, Sudeep Holla wrote:
->> This patch adds devicetree binding for System Control and Management
->> Interface (SCMI) Message Protocol used between the Application Cores(AP)
->> and the System Control Processor(SCP). The MHU peripheral provides a
->> mechanism for inter-processor communication between SCP's M3 processor
->> and AP.
->>
->> SCP offers control and management of the core/cluster power states,
->> various power domain DVFS including the core/cluster, certain system
->> clocks configuration, thermal sensors and many others.
->>
->> SCMI protocol is developed as better replacement to the existing SCPI
->> which is not flexible and easily extensible.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  Documentation/devicetree/bindings/arm/arm,scmi.txt | 174 +++++++++++++++++++++
->>  1 file changed, 174 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
->> new file mode 100644
->> index 000000000000..33c16be58e72
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
->> @@ -0,0 +1,174 @@
->> +System Control and Management Interface (SCMI) Message Protocol
->> +----------------------------------------------------------
->> +
->> +The SCMI is intended to allow agents such as OSPM to manage various functions
->> +that are provided by the hardware platform it is running on, including power
->> +and performance functions.
->> +
->> +This binding is intended to define the interface the firmware implementing
->> +the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
->> +and Management Interface Platform Design Document")[0] provide for OSPM in
->> +the device tree.
->> +
->> +Required properties:
-> 
-> Please define this is a subnode of /firmware node.
-> 
+> -----Original Message-----
+> From: Biju Das
+> Sent: 10 August 2017 12:19
+> To: 'Simon Horman' <horms@verge.net.au>
+> Cc: 'Rob Herring' <robh+dt@kernel.org>; 'Mark Rutland'
+> <mark.rutland@arm.com>; 'Magnus Damm' <magnus.damm@gmail.com>;
+> 'Russell King' <linux@armlinux.org.uk>; Chris Paterson
+> <Chris.Paterson2@renesas.com>; 'devicetree@vger.kernel.org'
+> <devicetree@vger.kernel.org>; 'linux-renesas-soc@vger.kernel.org' <linux-
+> renesas-soc@vger.kernel.org>; 'linux-arm-kernel@lists.infradead.org' <lin=
+ux-
+> arm-kernel@lists.infradead.org>
+> Subject: RE: [PATCH 0/3] Add SMP support
+>
+>
+>
+> > -----Original Message-----
+> > From: Biju Das
+> > Sent: 10 August 2017 10:17
+> > To: 'Simon Horman' <horms@verge.net.au>
+> > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> Russell
+> > King <linux@armlinux.org.uk>; Chris Paterson
+> > <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org;
+> > linux-renesas- soc@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org
+> > Subject: RE: [PATCH 0/3] Add SMP support
+> >
+> >
+> > > -----Original Message-----
+> > > From: Simon Horman [mailto:horms@verge.net.au]
+> > > Sent: 09 August 2017 09:36
+> > > To: Biju Das <biju.das@bp.renesas.com>
+> > > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> > Russell
+> > > King <linux@armlinux.org.uk>; Chris Paterson
+> > > <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org;
+> > > linux-renesas- soc@vger.kernel.org;
+> > > linux-arm-kernel@lists.infradead.org
+> > > Subject: Re: [PATCH 0/3] Add SMP support
+> > >
+> > > On Tue, Aug 08, 2017 at 11:56:30AM +0100, Biju Das wrote:
+> > > > This series aims to add SMP support for r8a7743 SoC.
+> > > >
+> > > > This series has been tested against Linux-next tag 20170727 and
+> > > > renesas-dev branch.
+> > >
+> > > It seems that these patches are targeted at the renesas tree.
+> > > The best practice in that case is to base patches on the latest devel=
+ branch.
+> > > Please consider doing so in future.
+> > >
+> > > The patches themselves seem good to me, however, I would like to
+> > > enquire about testing. In particular, have you tested CPU hotplug
+> > > and suspend to RAM with these patches (and without in the case of the
+> latter)?
+> >
+> > I have tested CPU hotplug with this patch and it works ok.
+> >
+> > Currently iWave platform doesn't support STR I guess. But we should
+> > check the changes on other M2 platforms to prove that things don't brea=
+k.
 
-Thanks for pointing that out, I wasn't aware of that.
+I have tested STR on iWave RZ-G1M platform as well. I  used ttySC0 as wake =
+up
+Source(echo enabled > /sys/class/tty/ttySC0/power/wakeup)
 
-Ideally, should we move PSCI and SCPI also under that ?
+It works fine with and without the patch .
 
-Also should we contain all firmware bindings under
-Documentation/devicetree/bindings/arm/firmware/ ?
+It is tested against renesas-developer branch tag 20170809-v4.13-rc4.
 
-[..]
+> I have tested STR on RZ-G1M SK(r8a7743) platform using gpio-key as wake u=
+p
+> source.
+> It works fine with and without the patch . It is tested against renesas-d=
+eveloper
+> branch.
+>
+> Also I have tested STR on R-Car M2 board.it works fine with gpio-key as w=
+ake
+> up source.
+>
+> > [>]
+> > > I am cautious about any regressions that may creep in when going
+> > > from UP to SMP.
+> >
+> > > >
+> > > > Biju Das (3):
+> > > >   dt-bindings: apmu: Document r8a7743 support
+> > > >   ARM: dts: r8a7743: Add APMU node and second CPU core
+> > > >   ARM: dts: r8a7743: Add OPP table for frequency scaling
+> > > >
+> > > >  .../devicetree/bindings/power/renesas,apmu.txt     |  3 ++-
+> > > >  arch/arm/boot/dts/r8a7743.dtsi                     | 25
+> > ++++++++++++++++++++++
+> > > >  2 files changed, 27 insertions(+), 1 deletion(-)
+> > > >
+> > > > --
+> > > > 1.9.1
+> > > >
 
->> +PM domain consumers
->> +===================
-> 
-> How consumers work is already defined elsewhere.
-> 
 
-Agreed, will drop it.
 
-[..]
-
->> +
->> +scmi_protocol: scmi@2e000000 {
-> 
-> The unit address is not valid.
-> 
-
-Ah, copy paste, will drop. Need to fix in scpi bindings too.
-
->> +	compatible = "arm,scmi";
->> +	method = "mailbox-doorbell";
-> 
-> Is this not implied by the mboxes property? 
-> 
-
-Indeed, remnants from v1. I removed in the definition but left in the
-example.
-
--- 
-Regards,
-Sudeep
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
