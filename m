@@ -1,80 +1,38 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] of_mdio: merge branch tails in of_phy_register_fixed_link()
-Date: Sun, 13 Aug 2017 00:03:06 +0300
-Message-ID: <20170812210321.520045884@cogentembedded.com>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] leds: Convert to using %pOF instead of full_name
+Date: Sun, 13 Aug 2017 00:32:27 +0200
+Message-ID: <958ac012-c676-3bf7-88ea-c555404628fd@gmail.com>
+References: <20170718214339.7774-31-robh@kernel.org>
+ <20170808080950.GC12854@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline; filename=of_mdio-merge-branch-tails-in-of_phy_register_fixed_link.patch
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170808080950.GC12854@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Looks  like gcc isn't always able to figure  out that 3 *if* branches in
-of_phy_register_fixed_link() calling fixed_phy_register() at their ends
-are similar enough and thus can be merged. The "manual" merge saves 40
-bytes of the object code (AArch64 gcc 4.8.5), and still saves 12 bytes
-even  if gcc was able to merge the branch tails (ARM gcc 4.8.5)...
+On 08/08/2017 10:09 AM, Pavel Machek wrote:
+> On Tue 2017-07-18 16:43:11, Rob Herring wrote:
+>> Now that we have a custom printf format specifier, convert users of
+>> full_name to use %pOF instead. This is preparation to remove storing
+>> of the full path string for each node.
+>>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+>> Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> 
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Applied, thanks.
 
----
-The patch is against DaveM's 'net-next' repo.
-
- drivers/of/of_mdio.c |   23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
-
-Index: net-next/drivers/of/of_mdio.c
-===================================================================
---- net-next.orig/drivers/of/of_mdio.c
-+++ net-next/drivers/of/of_mdio.c
-@@ -422,16 +422,13 @@ int of_phy_register_fixed_link(struct de
- 	struct fixed_phy_status status = {};
- 	struct device_node *fixed_link_node;
- 	u32 fixed_link_prop[5];
--	struct phy_device *phy;
- 	const char *managed;
--	int link_gpio;
-+	int link_gpio = -1;
- 
--	if (of_property_read_string(np, "managed", &managed) == 0) {
--		if (strcmp(managed, "in-band-status") == 0) {
--			/* status is zeroed, namely its .link member */
--			phy = fixed_phy_register(PHY_POLL, &status, -1, np);
--			return PTR_ERR_OR_ZERO(phy);
--		}
-+	if (of_property_read_string(np, "managed", &managed) == 0 &&
-+	    strcmp(managed, "in-band-status") == 0) {
-+		/* status is zeroed, namely its .link member */
-+		goto register_phy;
- 	}
- 
- 	/* New binding */
-@@ -454,8 +451,7 @@ int of_phy_register_fixed_link(struct de
- 		if (link_gpio == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
- 
--		phy = fixed_phy_register(PHY_POLL, &status, link_gpio, np);
--		return PTR_ERR_OR_ZERO(phy);
-+		goto register_phy;
- 	}
- 
- 	/* Old binding */
-@@ -466,11 +462,14 @@ int of_phy_register_fixed_link(struct de
- 		status.speed  = fixed_link_prop[2];
- 		status.pause  = fixed_link_prop[3];
- 		status.asym_pause = fixed_link_prop[4];
--		phy = fixed_phy_register(PHY_POLL, &status, -1, np);
--		return PTR_ERR_OR_ZERO(phy);
-+		goto register_phy;
- 	}
- 
- 	return -ENODEV;
-+
-+register_phy:
-+	return PTR_ERR_OR_ZERO(fixed_phy_register(PHY_POLL, &status, link_gpio,
-+						  np));
- }
- EXPORT_SYMBOL(of_phy_register_fixed_link);
- 
+-- 
+Best regards,
+Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
