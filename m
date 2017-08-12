@@ -1,63 +1,59 @@
 From: icenowy@aosc.io
-Subject: Re: [PATCH v6 1/6] clk: sunxi-ng: div: Add support for fixed
- post-divider
-Date: Sat, 12 Aug 2017 11:07:42 +0800
-Message-ID: <d3ca32de91e857a8933fd570600cda17@aosc.io>
-References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
- <946794e97ae2c36cd67c272099e8236a589efc28.1500043741.git-series.plaes@plaes.org>
- <20170717085235.i7pwwql5dgmnf6kk@flea>
+Subject: Re: [PATCH v3 08/10] clk: sunxi-ng: support R40 SoC
+Date: Sat, 12 Aug 2017 12:04:14 +0800
+Message-ID: <7e211ba8fd8ae0296f678294d09fcf0d@aosc.io>
+References: <20170527102308.1988-1-icenowy@aosc.io>
+ <20170527102308.1988-9-icenowy@aosc.io>
+ <20170529073428.f5os7g5e666v4xnp@wens.csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170717085235.i7pwwql5dgmnf6kk@flea>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Priit Laes <plaes@plaes.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170529073428.f5os7g5e666v4xnp@wens.csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-在 2017-07-17 16:52，Maxime Ripard 写道：
-> On Fri, Jul 14, 2017 at 05:49:23PM +0300, Priit Laes wrote:
->> SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
->> 6 is fixed post-divider.
+在 2017-05-29 15:34，Chen-Yu Tsai 写道：
+> Hi,
+> 
+> On Sat, May 27, 2017 at 06:23:06PM +0800, Icenowy Zheng wrote:
+>> Allwinner R40 SoC have a clock controller module in the style of the
+>> SoCs beyond sun6i, however, it's more rich and complex.
 >> 
->> Signed-off-by: Priit Laes <plaes@plaes.org>
+>> Add support for it.
+>> 
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 >> ---
->>  drivers/clk/sunxi-ng/ccu_div.c | 15 +++++++++++++--
->>  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
->>  2 files changed, 15 insertions(+), 3 deletions(-)
+>> Changes in v3:
+>> - Rebased on current linux-next.
+>> Changes in v2:
+>> - Fixes according to the SoC's user manual.
 >> 
->> diff --git a/drivers/clk/sunxi-ng/ccu_div.c 
->> b/drivers/clk/sunxi-ng/ccu_div.c
->> index c0e5c10..744502a 100644
->> --- a/drivers/clk/sunxi-ng/ccu_div.c
->> +++ b/drivers/clk/sunxi-ng/ccu_div.c
->> @@ -21,6 +21,9 @@ static unsigned long ccu_div_round_rate(struct 
->> ccu_mux_internal *mux,
->>  {
->>  	struct ccu_div *cd = data;
+>>  drivers/clk/sunxi-ng/Kconfig              |   10 +
+>>  drivers/clk/sunxi-ng/Makefile             |    1 +
+>>  drivers/clk/sunxi-ng/ccu-sun8i-r40.c      | 1153 
+>> +++++++++++++++++++++++++++++
+>>  drivers/clk/sunxi-ng/ccu-sun8i-r40.h      |   68 ++
+>>  include/dt-bindings/clock/sun8i-r40-ccu.h |  191 +++++
+>>  include/dt-bindings/reset/sun8i-r40-ccu.h |  129 ++++
+>>  6 files changed, 1552 insertions(+)
+>>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r40.c
+>>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r40.h
+>>  create mode 100644 include/dt-bindings/clock/sun8i-r40-ccu.h
+>>  create mode 100644 include/dt-bindings/reset/sun8i-r40-ccu.h
 >> 
->> +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
->> +		rate *= cd->fixed_post_div;
->> +
->>  	return divider_round_rate_parent(&cd->common.hw, parent,
->>  					 rate, parent_rate,
->>  					 cd->div.table, cd->div.width,
+> ...
+>> +static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_ddr1_clk, "pll-ddr1",
+>> +				   "osc24M", 0x04c,
+>> +				   8, 7,	/* N */
 > 
-> 
-> You still haven't addressed the biggest issue with this patch, see:
-> https://patchwork.kernel.org/patch/9825565/
+> N has minimum and maximum limits.
 
-I think he has already did the changes suggested in the review.
+These constraints are never implemented in old SoCs.
 
-(P.S. during developing R40 CCU driver I found that pll-periph0-sata
-also needs this patch, so I'm rechecking it)
-
-> 
-> Maxime
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>> --
+>> 2.12.2
+>> 
