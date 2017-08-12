@@ -1,59 +1,72 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/6] dt-bindings: ti,edma: Add 66AK2G specific information
-Date: Sat, 12 Aug 2017 11:13:24 +0530
-Message-ID: <9a2a0a3d-cc6a-d672-ed38-bef406635d3c@ti.com>
-References: <20170801044119.16201-1-lokeshvutla@ti.com>
- <20170801044119.16201-2-lokeshvutla@ti.com>
- <20170810000034.vvcdvdez3og6lhux@rob-hp-laptop>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 3/4] leds: pca955x: add GPIO support
+Date: Sat, 12 Aug 2017 10:42:13 +0200
+Message-ID: <20170812084213.GA20383@amd>
+References: <1502199760-763-1-git-send-email-clg@kaod.org>
+ <1502199760-763-4-git-send-email-clg@kaod.org>
+ <20170811134757.GA22561@amd>
+ <9330f31a-110c-8398-8cd1-764f8dd358e9@kaod.org>
+ <20170811153742.GA31267@amd>
+ <b585f234-6ad6-e63f-f4ec-f7d1efaf83ca@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170810000034.vvcdvdez3og6lhux@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b585f234-6ad6-e63f-f4ec-f7d1efaf83ca@kaod.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
+Cc: linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
 
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thursday 10 August 2017 05:30 AM, Rob Herring wrote:
-> On Tue, Aug 01, 2017 at 10:11:14AM +0530, Lokesh Vutla wrote:
->> Update ti,edma binding documentation to reflect 66AK2G specific
->> properties.
->>
->> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/dma/ti-edma.txt | 95 +++++++++++++++++++++--
->>  1 file changed, 90 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
->> index 18090e7226b4..05fe2931d025 100644
->> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
->> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
->> @@ -9,7 +9,12 @@ execute the actual DMA tansfer.
->>  eDMA3 Channel Controller
->>  
->>  Required properties:
->> -- compatible:	"ti,edma3-tpcc" for the channel controller(s)
->> +--------------------
->> +- compatible:	Should be:
->> +		- "ti,edma3-tpcc" for the channel controller(s) on OMAP,
->> +		  AM33xx and AM43xx SoCs.
->> +		- "ti,k2g-edma3-tpcc", "ti,edma3-tpcc" for the
-> 
-> If power-domains is mandatory, I don't think the fallback is 
-> appropriate. Or do you expect it to work if the driver ignores the power 
-> domain?
+Hi!
 
-power-domains is required for pm_runtime_*() apis to work on 66AK2G.
-Driver doesn't handle this property separately. Driver still works with
-"ti,edma3-tpcc" compatible.
+> >>>> +static u8 pca955x_read_input(struct i2c_client *client, int n)
+> >>>> +{
+> >>>> +	return (u8)i2c_smbus_read_byte_data(client, n);
+> >>>> +}
+> >>>
+> >>> Is the cast needed? Should you attempt to handle errors?
+> >>
+> >> ah. this is a left over. I can fix in a resend.
+> >=20
+> > No need to resend just for this.
+> >=20
+> > Should you WARN_ON() if the read_byte_data returns < 0 or something?
+> >=20
+> > https://linuxtv.org/downloads/v4l-dvb-internals/device-drivers/API-i2c-=
+smbus-read-byte-data.html
+>=20
+> I don't think so as this is just to read the gpio value.=20
+>=20
+> I suppose that the i2c layer will output some errors before=20
+> if it catches some invalid state.
 
-Thanks and regards,
-Lokesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Normally its driver's job to output errors. (Same for write).
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmOv2UACgkQMOfwapXb+vIjygCfQtXb+LNcFvkf2dr/Ff6OfAv7
+fw0AoIpfinpkgvpeuftrJQt+duapRowm
+=IwHr
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
