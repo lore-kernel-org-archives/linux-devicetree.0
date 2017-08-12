@@ -1,60 +1,118 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: sh_mobile: Document r8a7743/5
- support
-Date: Sat, 12 Aug 2017 16:46:58 +0200
-Message-ID: <20170812144658.6agnj7jmy6hshhc2@ninjato>
-References: <1502196349-29245-1-git-send-email-biju.das@bp.renesas.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190
+ battery charger
+Date: Sat, 12 Aug 2017 12:42:33 -0400
+Message-ID: <20170812164233.won7fairxmrnblps@earth>
+References: <20170807195420.20767-1-liam@networkimprov.net>
+ <20170807195420.20767-3-liam@networkimprov.net>
+ <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
+ <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3pzgxkuao2rikslm"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mzy63zdorlqqpm6u"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1502196349-29245-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Liam Breck <liam@networkimprov.net>
+Cc: Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
 
---3pzgxkuao2rikslm
+--mzy63zdorlqqpm6u
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 08, 2017 at 01:45:49PM +0100, Biju Das wrote:
-> Document i2c Device Tree support for RZ/G1[ME]
-> (also known as r8a774[35]) SoCs. They are compatible with
-> R-Car Gen2 SoC family. No driver change is required as the
-> initialisation sequence is currently the same as for the
-> R-Car Gen2 fallback binding.
+Hi,
+
+On Fri, Aug 11, 2017 at 02:57:10PM -0700, Liam Breck wrote:
+> On Thu, Aug 10, 2017 at 7:50 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Mon, Aug 07, 2017 at 12:54:17PM -0700, Liam Breck wrote:
+> >> From: Liam Breck <kernel@networkimprov.net>
+> >>
+> >> Document monitored-battery and ti,system-minimum-microvolt properties.
+> >>
+> >> Cc: Rob Herring <robh@kernel.org>
+> >> Cc: devicetree@vger.kernel.org
+> >> Signed-off-by: Liam Breck <kernel@networkimprov.net>
+> >> ---
+> >>  .../devicetree/bindings/power/supply/bq24190.txt   | 49 +++++++++++++=
++++++++++
+> >>  1 file changed, 49 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2=
+4190.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.tx=
+t b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+> >> new file mode 100644
+> >> index 00000000..82a1c842
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+> >> @@ -0,0 +1,49 @@
+> >> +TI BQ24190 Li-Ion Battery Charger
+> >> +
+> >> +Required properties:
+> >> +- compatible: contains one of the following:
+> >> +    * "ti,bq24190"
+> >> +    * "ti,bq24192i"
+> >> +- reg: integer, I2C address of the charger.
+> >> +- interrupts[-extended]: configuration for charger INT pin.
+> >> +
+> >> +Optional properties:
+> >> +- monitored-battery: phandle of battery characteristics devicetree no=
+de
+> >> +    The charger uses the following battery properties:
+> >> +    + precharge-current-microamp: maximum charge current during prech=
+arge
+> >> +      phase (typically 20% of battery capacity).
+> >> +    + charge-term-current-microamp: a charge cycle terminates when the
+> >> +      battery voltage is above recharge threshold, and the current is=
+ below
+> >> +      this setting (typically 10% of battery capacity).
+> >> +    See Documentation/devicetree/bindings/power/supply/battery.txt
+> >> +- ti,system-minimum-microvolt: when power is connected and the batter=
+y is below
+> >> +    minimum system voltage, the system will be regulated above this s=
+etting.
+> >> +
+> >> +Other features:
+> >> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current=
+ on USB SDP port.
+> >
+> > Why doesn't the charger driver control this?
 >=20
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> This pin/gpio has to be high when USB is plugged in to make the
+> charger chip negotiate 500mA from a SDP port. It should generally be
+> configured that way even if the driver is not loaded, as the chip does
+> not require a driver to function. Some boards may do that with a
+> pull-up. Also the user may want to change this via sysfs and not have
+> the driver "fix" it.
 
-Applied to for-next, thanks!
+drivers/power/supply/qcom_smbb.c exposes the otg feature as
+regulator. I think in this case it could be exposed as
+gpio-regulator.
 
+-- Sebastian
 
---3pzgxkuao2rikslm
+--mzy63zdorlqqpm6u
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmPFOEACgkQFA3kzBSg
-KbYojg//R6/Xh6kX5zmu8zj9htAGFtptClS4C2HBTKnMOj+FqdG2s9EWx97KBCY6
-+cv+jG95h5IvExB15ejZZYJIe1DXflTNzk7VzlFFXH1XdNBBXqk13lO+wXWvdDw8
-puPnW2gjKdVFmM+W7j6bDNS/FO2HskaS7xEgxmDIV0V6t4+uC1Jo9AvbIKKNS0HF
-rVHz582XB959KfssP4UO2/5yP965rRKszzSE4RghKIB4QCjJFl7a2KWKVXtzEHKz
-ER3T5pyp/wqfHp2uX+8GKz4fbGdHLyDOyhC5KJ8+ZKtHKCCZkpCX/sDf8wJoxxod
-eaB12gB4zvlxxYSdke6FjB3kI0ItDCme4ThZXPT1NAn4muD94G+l2wcbtrqN8fFM
-S+DRzy+ahxymY64+CDvIOTsCmZrJIvXokMhI/KspGymAoV6ql/lOvSEOoBpivnc8
-1fSTPMJyJ0BR/QxjQhZ4aLPNC19Weh1+U0tgGJVLvHIinPi7cibixW9Pssg6VASP
-eFEyGo86vH9KnQh+OUsJnW0N9XYiyZo95p+fLyUB53nmvh+t7TXd7zqDVZjveV90
-wN/rP/OZPPl2cnRbQV/pZK9qgojzKHInQ9SXesVHf/gDtEvGEG3+6J4tOV5OoLEK
-ziICO9Qse3vySpZl5joT1PrFZr4tBXl/zh+/Io1u5KgBNlp7qb4=
-=5Nn5
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmPL/kACgkQ2O7X88g7
++pqlRg//asd+LipI7z9TEAL1zhk9i1kBv3UXw3hWoGyYkK8v11GAAKFaFpWQ5MxT
+ke4zCBt78HA6KC4/W2+C93kzWdFIfl3y2b3BVVs4Hl23IVzF/GMBwBOwh0FeqEhp
+zxmCykusR7hCKqHYHOQX5t6pz18U0RN79EF074P5yLBMwB11VHQeougTMEtoEFI7
+PQOlXHgsnJau11y91ppzSbQDXtekNcdIAJ5UflNvuL5iKnDYQ63oQ3MlwrxP9DfO
+SSHvVOTGw91fAMhCBYRWkuJMzDktaC0M0RPLi2aD91YZ11CLIk6woxo0JhUC22ba
+RVKTgHAiM4cn8JuTlmIFYfWGBFyIiVQq3jpI01ooTNyP/lYLPpo1SynAuMrowvA3
+98R7veLzXqpbPZsqnzJ0Q7158ZhHqtUsCaL43I2SG7uRq/m6HRlK6pJmhBsuvVQr
+RYZoN1UJFDzTNt9YKg7OcRLtIBzh4W13xdsTp5JmLDRyqdziTvsGgHcoBNSn2oJR
+ABqNBJaCNv2BdhoJDNZc0I0yPn17slbvseBBL+eG/5QDacWqvOw9/cjTETphXDTM
++vx+9TLHLE/aS8uEw/VYrcnIm1Bbx2okgcXKaIGo4padA2vqk81mV4Li4tSx15dh
+uA6pmSjZRIWaNoTvBRUZMO3lgOM+Txmt+C7CdqzQRjyE4f+QsCI=
+=8zgQ
 -----END PGP SIGNATURE-----
 
---3pzgxkuao2rikslm--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--mzy63zdorlqqpm6u--
