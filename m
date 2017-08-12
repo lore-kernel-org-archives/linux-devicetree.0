@@ -1,45 +1,59 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] arm64: defconfig: Enable CONFIG_REGULATOR_AXP20X
-Date: Sat, 12 Aug 2017 11:10:43 +0530
-Message-ID: <1502516443-4740-3-git-send-email-jteki@openedev.com>
-References: <1502516443-4740-1-git-send-email-jteki@openedev.com>
-Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/6] dt-bindings: ti,edma: Add 66AK2G specific information
+Date: Sat, 12 Aug 2017 11:13:24 +0530
+Message-ID: <9a2a0a3d-cc6a-d672-ed38-bef406635d3c@ti.com>
+References: <20170801044119.16201-1-lokeshvutla@ti.com>
+ <20170801044119.16201-2-lokeshvutla@ti.com>
+ <20170810000034.vvcdvdez3og6lhux@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRBAVKXLGAKGQEE4S3OAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1502516443-4740-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170810000034.vvcdvdez3og6lhux@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-X-POWERS AXP20X PMIC Regulators is need for sunxi a64
-so make it default in defconfig.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Thursday 10 August 2017 05:30 AM, Rob Herring wrote:
+> On Tue, Aug 01, 2017 at 10:11:14AM +0530, Lokesh Vutla wrote:
+>> Update ti,edma binding documentation to reflect 66AK2G specific
+>> properties.
+>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/dma/ti-edma.txt | 95 +++++++++++++++++++++--
+>>  1 file changed, 90 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> index 18090e7226b4..05fe2931d025 100644
+>> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> @@ -9,7 +9,12 @@ execute the actual DMA tansfer.
+>>  eDMA3 Channel Controller
+>>  
+>>  Required properties:
+>> -- compatible:	"ti,edma3-tpcc" for the channel controller(s)
+>> +--------------------
+>> +- compatible:	Should be:
+>> +		- "ti,edma3-tpcc" for the channel controller(s) on OMAP,
+>> +		  AM33xx and AM43xx SoCs.
+>> +		- "ti,k2g-edma3-tpcc", "ti,edma3-tpcc" for the
+> 
+> If power-domains is mandatory, I don't think the fallback is 
+> appropriate. Or do you expect it to work if the driver ignores the power 
+> domain?
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a11fce7..d8f23c5 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -323,6 +323,7 @@ CONFIG_MFD_MAX77620=y
- CONFIG_MFD_SPMI_PMIC=y
- CONFIG_MFD_RK808=y
- CONFIG_MFD_SEC_CORE=y
-+CONFIG_REGULATOR_AXP20X=y
- CONFIG_REGULATOR_FAN53555=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_GPIO=y
--- 
-2.7.4
+power-domains is required for pm_runtime_*() apis to work on 66AK2G.
+Driver doesn't handle this property separately. Driver still works with
+"ti,edma3-tpcc" compatible.
+
+Thanks and regards,
+Lokesh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
