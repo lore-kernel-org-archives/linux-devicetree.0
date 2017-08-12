@@ -1,78 +1,80 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] leds: core: Introduce generic pattern interface
-Date: Sat, 12 Aug 2017 21:22:15 +0200
-Message-ID: <20170812192215.GB23619@amd>
-References: <20170714224520.467-1-bjorn.andersson@linaro.org>
- <20170714224520.467-2-bjorn.andersson@linaro.org>
- <20170706031801.GB12954@xo-6d-61-c0.localdomain>
- <beb9b4c3-4922-1ebb-5017-a4b791cdb4d7@gmail.com>
- <20170716211456.GV1618@tuxbook>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] of_mdio: merge branch tails in of_phy_register_fixed_link()
+Date: Sun, 13 Aug 2017 00:03:06 +0300
+Message-ID: <20170812210321.520045884@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5/uDoXvLw7AC5HRs"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170716211456.GV1618@tuxbook>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline; filename=of_mdio-merge-branch-tails-in-of_phy_register_fixed_link.patch
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
+Looks  like gcc isn't always able to figure  out that 3 *if* branches in
+of_phy_register_fixed_link() calling fixed_phy_register() at their ends
+are similar enough and thus can be merged. The "manual" merge saves 40
+bytes of the object code (AArch64 gcc 4.8.5), and still saves 12 bytes
+even  if gcc was able to merge the branch tails (ARM gcc 4.8.5)...
 
---5/uDoXvLw7AC5HRs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Hi!
+---
+The patch is against DaveM's 'net-next' repo.
 
-> > Hmm, they are only [brightness duration] tuples, and no definition of
-> > R, G and B LED device is covered here, so how it can be useful for RGB
-> > LEDs?
-> >=20
->=20
-> The typical Qualcomm PMIC sports 4-8 LPG channels. The output of these
-> channels can be configured to some extent, but in theory any combination
-> of the 8 could be hooked up to the three channels of a RGB LED.
->=20
-> So looking at the LPG hw block, there's no such thing as RGB.
+ drivers/of/of_mdio.c |   23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-Well, there are certainly RGB leds. And we need kernel to know about
-them, so user can (for example) ask for white color.
-
-> Further more, per the 96boards specification we're expected to have
-> different triggers on the different "colors" of the TRILED.
-
-So the specs is stupid. We may end up allowing that, but lets not
-introduce a bad design just because of that.
-
-[You may get that functionality by lying in the dts and claiming it is
-three LEDs, not one RGB LED.]
-
-You want to be able to set a color of RGB LED... which is not as easy
-as it looks.
-
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---5/uDoXvLw7AC5HRs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlmPVWcACgkQMOfwapXb+vJEDgCgiiqcqBgpIMFFB/ZU8+0/D/RI
-eRoAoIyeMwcgdAIhPhx1y3Zmg18GpW0r
-=OykU
------END PGP SIGNATURE-----
-
---5/uDoXvLw7AC5HRs--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: net-next/drivers/of/of_mdio.c
+===================================================================
+--- net-next.orig/drivers/of/of_mdio.c
++++ net-next/drivers/of/of_mdio.c
+@@ -422,16 +422,13 @@ int of_phy_register_fixed_link(struct de
+ 	struct fixed_phy_status status = {};
+ 	struct device_node *fixed_link_node;
+ 	u32 fixed_link_prop[5];
+-	struct phy_device *phy;
+ 	const char *managed;
+-	int link_gpio;
++	int link_gpio = -1;
+ 
+-	if (of_property_read_string(np, "managed", &managed) == 0) {
+-		if (strcmp(managed, "in-band-status") == 0) {
+-			/* status is zeroed, namely its .link member */
+-			phy = fixed_phy_register(PHY_POLL, &status, -1, np);
+-			return PTR_ERR_OR_ZERO(phy);
+-		}
++	if (of_property_read_string(np, "managed", &managed) == 0 &&
++	    strcmp(managed, "in-band-status") == 0) {
++		/* status is zeroed, namely its .link member */
++		goto register_phy;
+ 	}
+ 
+ 	/* New binding */
+@@ -454,8 +451,7 @@ int of_phy_register_fixed_link(struct de
+ 		if (link_gpio == -EPROBE_DEFER)
+ 			return -EPROBE_DEFER;
+ 
+-		phy = fixed_phy_register(PHY_POLL, &status, link_gpio, np);
+-		return PTR_ERR_OR_ZERO(phy);
++		goto register_phy;
+ 	}
+ 
+ 	/* Old binding */
+@@ -466,11 +462,14 @@ int of_phy_register_fixed_link(struct de
+ 		status.speed  = fixed_link_prop[2];
+ 		status.pause  = fixed_link_prop[3];
+ 		status.asym_pause = fixed_link_prop[4];
+-		phy = fixed_phy_register(PHY_POLL, &status, -1, np);
+-		return PTR_ERR_OR_ZERO(phy);
++		goto register_phy;
+ 	}
+ 
+ 	return -ENODEV;
++
++register_phy:
++	return PTR_ERR_OR_ZERO(fixed_phy_register(PHY_POLL, &status, link_gpio,
++						  np));
+ }
+ EXPORT_SYMBOL(of_phy_register_fixed_link);
+ 
