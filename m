@@ -1,87 +1,43 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 4/4] drm: adv7511/33: add HDMI CEC support
-Date: Sat, 12 Aug 2017 12:54:29 +0200
-Message-ID: <0af0bb9b-51b0-661d-c37b-e4f577207d8c@xs4all.nl>
-References: <20170730130743.19681-1-hverkuil@xs4all.nl>
- <20170730130743.19681-5-hverkuil@xs4all.nl>
- <811a3e0c-d938-744e-2d1d-46be76b708aa@codeaurora.org>
- <2d2e2a68-8b55-580d-b109-f639aa9fcd00@xs4all.nl>
+From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Subject: Re: [PATCH v2 19/23] dt-bindings: adc: add description for rv1108
+ saradc
+Date: Sat, 12 Aug 2017 12:13:12 +0100
+Message-ID: <20170812121312.14b31f02@archlinux>
+References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
+        <1501663953-12768-1-git-send-email-andy.yan@rock-chips.com>
+        <20170810161800.m63tavdrawwkqejv@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <2d2e2a68-8b55-580d-b109-f639aa9fcd00@xs4all.nl>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>, linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Hans Verkuil <hans.verkuil@cisco.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170810161800.m63tavdrawwkqejv@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/08/17 11:53, Hans Verkuil wrote:
-> On 10/08/17 10:49, Archit Taneja wrote:
->>
->>
->> On 07/30/2017 06:37 PM, Hans Verkuil wrote:
->>> From: Hans Verkuil <hans.verkuil@cisco.com>
->>>
->>> Add support for HDMI CEC to the drm adv7511/adv7533 drivers.
->>>
->>> The CEC registers that we need to use are identical for both drivers,
->>> but they appear at different offsets in the register map.
->>
->> Thanks for the patch. Some minor comments below.
->>
->>>
->>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
->>> ---
->>>   drivers/gpu/drm/bridge/adv7511/Kconfig       |   8 +
->>>   drivers/gpu/drm/bridge/adv7511/Makefile      |   1 +
->>>   drivers/gpu/drm/bridge/adv7511/adv7511.h     |  45 +++-
->>>   drivers/gpu/drm/bridge/adv7511/adv7511_cec.c | 314 +++++++++++++++++++++++++++
->>>   drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 152 +++++++++++--
->>>   drivers/gpu/drm/bridge/adv7511/adv7533.c     |  30 +--
->>>   6 files changed, 500 insertions(+), 50 deletions(-)
->>>   create mode 100644 drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
->>>
+On Thu, 10 Aug 2017 11:18:00 -0500
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-<snip>
-
->>>   +static bool adv7533_cec_register_volatile(struct device *dev, unsigned int reg)
->>> +{
->>> +    switch (reg) {
->>> +    case ADV7511_REG_CEC_RX_FRAME_HDR + ADV7533_REG_CEC_OFFSET:
->>> +    case ADV7511_REG_CEC_RX_FRAME_DATA0 + ADV7533_REG_CEC_OFFSET...
->>> +        ADV7511_REG_CEC_RX_FRAME_DATA0 + ADV7533_REG_CEC_OFFSET + 14:
->>> +    case ADV7511_REG_CEC_RX_FRAME_LEN + ADV7533_REG_CEC_OFFSET:
->>> +    case ADV7511_REG_CEC_RX_BUFFERS + ADV7533_REG_CEC_OFFSET:
->>> +    case ADV7511_REG_CEC_TX_LOW_DRV_CNT + ADV7533_REG_CEC_OFFSET:
->>> +        return true;
->>> +    }
->>> +
->>> +    return false;
->>> +}
->>> +
->>> +static const struct regmap_config adv7533_cec_regmap_config = {
->>> +    .reg_bits = 8,
->>> +    .val_bits = 8,
->>> +
->>> +    .max_register = 0xff,
->>> +    .cache_type = REGCACHE_RBTREE,
->>> +    .volatile_reg = adv7533_cec_register_volatile,
->>> +};
->>> +
->>> +static bool adv7511_cec_register_volatile(struct device *dev, unsigned int reg)
->>> +{
->>
->> Maybe we could combine the two register_volatile() funcs and the remap_config structs
->> for adv7511 and adv7533 by passing (reg + offset) to switch?
+> On Wed, Aug 02, 2017 at 04:52:33PM +0800, Andy Yan wrote:
+> > Add device tree bindings document for saradc on
+> > rockchip rv1108 soc.
+> > 
+> > Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > ---
+> > 
+> > Changes in v2: None
+> > 
+> >  Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt | 1 +
+> >  1 file changed, 1 insertion(+)  
 > 
-> How? How would I know in the volatile function whether it is an adv7511 or adv7533?
-> Is there an easy way to go from the struct device to a struct adv7511?
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Applied to the togreg branch of iio.git
 
-Never mind, I figured it out.
+Thanks,
 
-Implemented.
-
-Regards,
-
-	Hans
+Jonathan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
