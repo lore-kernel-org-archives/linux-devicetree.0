@@ -1,73 +1,92 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 06/11] watchdog: ftwdt010: Extend DT bindings to derivatives
-Date: Sat, 12 Aug 2017 20:43:13 +0200
-Message-ID: <20170812184318.10144-7-linus.walleij@linaro.org>
-References: <20170812184318.10144-1-linus.walleij@linaro.org>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190 battery charger
+Date: Sat, 12 Aug 2017 12:00:13 -0700
+Message-ID: <CAKvHMgR+GxSqhy+iwdYmku2600HzoF__oXV7_w72ZJg-aK7O-Q@mail.gmail.com>
+References: <20170807195420.20767-1-liam@networkimprov.net>
+ <20170807195420.20767-3-liam@networkimprov.net> <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
+ <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com> <20170812164233.won7fairxmrnblps@earth>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170812184318.10144-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170812164233.won7fairxmrnblps@earth>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This extends the device tree bindings for the Faraday FTWDT010
-block to cover:
-- The "moxa,moxart-watchdog" compatible version
-- The "aspeed,ast2400-wdt" and "aspeed,ast2500-wdt" versions
-- clocks (PCLK non-optional, the Gemini also have this now)
-- reset line (optional, exist on the Gemini)
-- configuration to use the external clock (faraday,use-extclk)
+Hi Sebastian,
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/watchdog/faraday,ftwdt010.txt    | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
-index 9ecdb502e605..016e353bb069 100644
---- a/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
-+++ b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
-@@ -1,17 +1,27 @@
- Faraday Technology FTWDT010 watchdog
- 
- This is an IP part from Faraday Technology found in the Gemini
--SoCs and others.
-+and MOXA ART SoCs and others.
- 
- Required properties:
- - compatible : must be one of
-   "faraday,ftwdt010"
-   "cortina,gemini-watchdog", "faraday,ftwdt010"
-+  "moxa,moxart-watchdog", "faraday,ftwdt010"
-+  "aspeed,ast2400-wdt", "faraday,ftwdt010"
-+  "aspeed,ast2500-wdt", "faraday,ftwdt010"
- - reg : shall contain base register location and length
--- interrupts : shall contain the interrupt for the watchdog
-+- clocks : the clock driving the IP block (PCLK) and optionally
-+  an external clock (EXTCLK)
-+- clock-names : should be "PCLK" for the IP block clock and
-+  "EXTCLK" for the external clock if present
- 
- Optional properties:
-+- interrupts : the bark interrupt for the watchdog
-+- resets : reset line for the IP block
- - timeout-sec : the default watchdog timeout in seconds.
-+- faraday,use-extclk : if set, the "EXTCLK" provided in the clocks
-+  property will be used to clock the watchdog
- 
- Example:
- 
-@@ -19,4 +29,6 @@ watchdog@41000000 {
- 	compatible = "faraday,ftwdt010";
- 	reg = <0x41000000 0x1000>;
- 	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&pclk>;
-+	clock-names = "PCLK";
- };
--- 
-2.13.4
+On Sat, Aug 12, 2017 at 9:42 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Hi,
+>
+> On Fri, Aug 11, 2017 at 02:57:10PM -0700, Liam Breck wrote:
+>> On Thu, Aug 10, 2017 at 7:50 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> > On Mon, Aug 07, 2017 at 12:54:17PM -0700, Liam Breck wrote:
+>> >> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>> >>
+>> >> Document monitored-battery and ti,system-minimum-microvolt properties.
+>> >>
+>> >> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> >> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>> >> ---
+>> >>  .../devicetree/bindings/power/supply/bq24190.txt   | 49 ++++++++++++++++++++++
+>> >>  1 file changed, 49 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq24190.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+>> >> new file mode 100644
+>> >> index 00000000..82a1c842
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+>> >> @@ -0,0 +1,49 @@
+>> >> +TI BQ24190 Li-Ion Battery Charger
+>> >> +
+>> >> +Required properties:
+>> >> +- compatible: contains one of the following:
+>> >> +    * "ti,bq24190"
+>> >> +    * "ti,bq24192i"
+>> >> +- reg: integer, I2C address of the charger.
+>> >> +- interrupts[-extended]: configuration for charger INT pin.
+>> >> +
+>> >> +Optional properties:
+>> >> +- monitored-battery: phandle of battery characteristics devicetree node
+>> >> +    The charger uses the following battery properties:
+>> >> +    + precharge-current-microamp: maximum charge current during precharge
+>> >> +      phase (typically 20% of battery capacity).
+>> >> +    + charge-term-current-microamp: a charge cycle terminates when the
+>> >> +      battery voltage is above recharge threshold, and the current is below
+>> >> +      this setting (typically 10% of battery capacity).
+>> >> +    See Documentation/devicetree/bindings/power/supply/battery.txt
+>> >> +- ti,system-minimum-microvolt: when power is connected and the battery is below
+>> >> +    minimum system voltage, the system will be regulated above this setting.
+>> >> +
+>> >> +Other features:
+>> >> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current on USB SDP port.
+>> >
+>> > Why doesn't the charger driver control this?
+>>
+>> This pin/gpio has to be high when USB is plugged in to make the
+>> charger chip negotiate 500mA from a SDP port. It should generally be
+>> configured that way even if the driver is not loaded, as the chip does
+>> not require a driver to function. Some boards may do that with a
+>> pull-up. Also the user may want to change this via sysfs and not have
+>> the driver "fix" it.
+>
+> drivers/power/supply/qcom_smbb.c exposes the otg feature as
+> regulator. I think in this case it could be exposed as
+> gpio-regulator.
 
+Hans is doing that here:
+https://patchwork.kernel.org/patch/9883717/
+
+The datasheet labels one pin "OTG" but that's misleading; it really
+enables negotiation of 500mA input current, but does not turn on OTG
+mode. If this pin is low, it only prevents the driver from starting
+OTG mode via I2C msg.
+
+Tony & Matt & I discussed this at some length off-list.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
