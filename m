@@ -1,12 +1,14 @@
 From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/3] bus: kconfig: Enable SUNXI RSB for arm64
-Date: Sat, 12 Aug 2017 11:10:41 +0530
-Message-ID: <1502516443-4740-1-git-send-email-jteki@openedev.com>
+Subject: [PATCH 2/3] arm64: defconfig: Enable CONFIG_MFD_AXP20X_RSB
+Date: Sat, 12 Aug 2017 11:10:42 +0530
+Message-ID: <1502516443-4740-2-git-send-email-jteki@openedev.com>
+References: <1502516443-4740-1-git-send-email-jteki@openedev.com>
 Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRB4NJXLGAKGQEHYZ4S2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCV4FV5N34IRB6NJXLGAKGQEWWR7ZCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1502516443-4740-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,26 +21,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Sunxi arm64 doesn't have separate configs for
-h5 and a64 so enable SUNXI_RSB bus for ARM64.
+X-Powers AXP series PMICs with RSB is need for sunxi a64
+so make it default in defconfig.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/bus/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 2408ea3..ae3d8f3 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -132,7 +132,7 @@ config SIMPLE_PM_BUS
- 
- config SUNXI_RSB
- 	tristate "Allwinner sunXi Reduced Serial Bus Driver"
--	  default MACH_SUN8I || MACH_SUN9I
-+	  default MACH_SUN8I || MACH_SUN9I || ARM64
- 	  depends on ARCH_SUNXI
- 	  select REGMAP
- 	  help
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 33d2d62..a11fce7 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -313,6 +313,7 @@ CONFIG_MESON_GXBB_WATCHDOG=m
+ CONFIG_MESON_WATCHDOG=m
+ CONFIG_RENESAS_WDT=y
+ CONFIG_BCM2835_WDT=y
++CONFIG_MFD_AXP20X_RSB=y
+ CONFIG_MFD_CROS_EC=y
+ CONFIG_MFD_CROS_EC_I2C=y
+ CONFIG_MFD_CROS_EC_SPI=y
 -- 
 2.7.4
