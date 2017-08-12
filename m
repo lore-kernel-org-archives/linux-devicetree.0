@@ -1,60 +1,46 @@
 From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] PCI: mediatek: add msi support for mt2712 and mt7622
-Date: Sat, 12 Aug 2017 08:57:21 +0800
-Message-ID: <1502499441.31707.6.camel@mtkswgap22>
-References: <1502454469-29230-1-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH v3 0/2] Add support for MediaTek AHCI SATA
+Date: Sat, 12 Aug 2017 09:31:02 +0800
+Message-ID: <cover.1502501342.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502454469-29230-1-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Long Cheng <long.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Honghui,
+Hi,
 
-On Fri, 2017-08-11 at 20:27 +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-...
-> +static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
-> +{
-> +	u32 val;
-> +
-> +	val = lower_32_bits((u64)(port->base + PCIE_MSI_VECTOR));
-> +	writel(val, port->base + PCIE_IMSI_ADDR);
-> +
-> +	val = readl(port->base + PCIE_INT_MASK);
-> +	val &= ~MSI_MASK;
-> +	writel(val, port->base + PCIE_INT_MASK);
-> +}
-> +
->  static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
->  			     irq_hw_number_t hwirq)
->  {
-> @@ -460,6 +574,18 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
->  		return PTR_ERR(port->irq_domain);
->  	}
->  
-> +	/* Setup MSI */
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		port->msi_domain = irq_domain_add_linear(node, MTK_MSI_IRQS_NUM,
-> +							 &msi_domain_ops,
-> +							 &mtk_pcie_msi_chip);
-> +		if (!port->msi_domain) {
-> +			dev_err(dev, "Failed to get a MSI IRQ domain\n");
-> +			return PTR_ERR(port->msi_domain);
+This patch series add support for AHCI compatible SATA controller, and it is
+compliant with the ahci 1.3 and sata 3.0 specification. This driver is slightly
+different than ahci_platform.c (e.g., reset control, subsystem setting).
 
-Just return -ENOMEM. PTR_ERR(NULL) will cause a static checker warning.
+changes since v3:
+- update binding text: fix a typo and modify compatible strings.
 
-> +		}
-> +		mtk_pcie_enable_msi(port);
-> +	}
-> +
->  	return 0;
->  }
+changes since v2:
+- according to Commit a53e35db70d1 ("reset: Ensure drivers are explicit when requesting reset lines").
+  replace devm_reset_control_get_optional() by devm_reset_control_get_optional_exclusive().
 
-Ryder
+changes since v1:
+- update binding text: add missing "specifier pairs" descriptions.
+- fix kbuild test warning: fix the error handling.
+
+Ryder Lee (2):
+  ata: mediatek: add support for MediaTek SATA controller
+  dt-bindings: ata: add DT bindings for MediaTek SATA controller
+
+ Documentation/devicetree/bindings/ata/ahci-mtk.txt |  51 ++++++
+ drivers/ata/Kconfig                                |  10 ++
+ drivers/ata/Makefile                               |   1 +
+ drivers/ata/ahci_mtk.c                             | 196 +++++++++++++++++++++
+ 4 files changed, 258 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/ahci-mtk.txt
+ create mode 100644 drivers/ata/ahci_mtk.c
+
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
