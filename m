@@ -1,52 +1,88 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 4/8] ARM: dra762: Enable SMP for dra762
-Date: Sat, 12 Aug 2017 09:36:01 +0530
-Message-ID: <20170812040605.21259-5-lokeshvutla@ti.com>
-References: <20170812040605.21259-1-lokeshvutla@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v6 1/6] clk: sunxi-ng: div: Add support
+ for fixed post-divider
+Date: Sat, 12 Aug 2017 12:13:38 +0800
+Message-ID: <CAGb2v675Y3AAa747-3VqsPN64YOk11v5Gm3_yq5ZeJ=YPz596g@mail.gmail.com>
+References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
+ <946794e97ae2c36cd67c272099e8236a589efc28.1500043741.git-series.plaes@plaes.org>
+ <20170717085235.i7pwwql5dgmnf6kk@flea> <d3ca32de91e857a8933fd570600cda17@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170812040605.21259-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Praneeth Bajjuri <praneeth-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <d3ca32de91e857a8933fd570600cda17@aosc.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Priit Laes <plaes@plaes.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jonathan Liu <net147@gmail.com>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-smp specific routines are called based on soc_is_*() api in omap-smc.c.
-Add soc_is_dra76x() to the condition so that smp specific routines are
-called for dra76 SoC.
+On Sat, Aug 12, 2017 at 11:07 AM,  <icenowy@aosc.io> wrote:
+> 在 2017-07-17 16:52，Maxime Ripard 写道：
+>>
+>> On Fri, Jul 14, 2017 at 05:49:23PM +0300, Priit Laes wrote:
+>>>
+>>> SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
+>>> 6 is fixed post-divider.
+>>>
+>>> Signed-off-by: Priit Laes <plaes@plaes.org>
+>>> ---
+>>>  drivers/clk/sunxi-ng/ccu_div.c | 15 +++++++++++++--
+>>>  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
+>>>  2 files changed, 15 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/clk/sunxi-ng/ccu_div.c
+>>> b/drivers/clk/sunxi-ng/ccu_div.c
+>>> index c0e5c10..744502a 100644
+>>> --- a/drivers/clk/sunxi-ng/ccu_div.c
+>>> +++ b/drivers/clk/sunxi-ng/ccu_div.c
+>>> @@ -21,6 +21,9 @@ static unsigned long ccu_div_round_rate(struct
+>>> ccu_mux_internal *mux,
+>>>  {
+>>>         struct ccu_div *cd = data;
+>>>
+>>> +       if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+>>> +               rate *= cd->fixed_post_div;
+>>> +
+>>>         return divider_round_rate_parent(&cd->common.hw, parent,
+>>>                                          rate, parent_rate,
+>>>                                          cd->div.table, cd->div.width,
+>>
+>>
+>>
+>> You still haven't addressed the biggest issue with this patch, see:
+>> https://patchwork.kernel.org/patch/9825565/
+>
+>
+> I think he has already did the changes suggested in the review.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
----
- arch/arm/mach-omap2/omap-smp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Nope. Only half of it is fixed. First you "unapply" the post-divider,
+i.e. multiply the rate by the divider. Then you pass it to
+divider_round_rate_parent. You still have to reapply the divider
+to the result. This last part is missing. This means the clock
+rate returned by ccu_div_round_rate is going to be off.
 
-diff --git a/arch/arm/mach-omap2/omap-smp.c b/arch/arm/mach-omap2/omap-smp.c
-index 33e4953c61a8..69df3620eca5 100644
---- a/arch/arm/mach-omap2/omap-smp.c
-+++ b/arch/arm/mach-omap2/omap-smp.c
-@@ -342,7 +342,7 @@ static void __init omap4_smp_prepare_cpus(unsigned int max_cpus)
- 		c = &omap443x_cfg;
- 	else if (soc_is_omap446x())
- 		c = &omap446x_cfg;
--	else if (soc_is_dra74x() || soc_is_omap54xx())
-+	else if (soc_is_dra74x() || soc_is_omap54xx() || soc_is_dra76x())
- 		c = &omap5_cfg;
- 
- 	if (!c) {
-@@ -355,7 +355,7 @@ static void __init omap4_smp_prepare_cpus(unsigned int max_cpus)
- 	cfg.startup_addr = c->startup_addr;
- 	cfg.wakeupgen_base = omap_get_wakeupgen_base();
- 
--	if (soc_is_dra74x() || soc_is_omap54xx()) {
-+	if (soc_is_dra74x() || soc_is_omap54xx() || soc_is_dra76x()) {
- 		if ((__boot_cpu_mode & MODE_MASK) == HYP_MODE)
- 			cfg.startup_addr = omap5_secondary_hyp_startup;
- 		omap5_erratum_workaround_801819();
--- 
-2.13.0
+Instead the return statement should be
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    return divider_round_rate_parent(...) / cd->fixed_post_div
+
+ChenYu
+
+>
+> (P.S. during developing R40 CCU driver I found that pll-periph0-sata
+> also needs this patch, so I'm rechecking it)
+>
+>>
+>> Maxime
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
+> --
+> You received this message because you are subscribed to the Google Groups
+> "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an
+> email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
