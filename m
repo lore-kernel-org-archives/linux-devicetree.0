@@ -1,118 +1,286 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190
- battery charger
-Date: Sat, 12 Aug 2017 12:42:33 -0400
-Message-ID: <20170812164233.won7fairxmrnblps@earth>
-References: <20170807195420.20767-1-liam@networkimprov.net>
- <20170807195420.20767-3-liam@networkimprov.net>
- <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
- <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] arm64: allwinner: a64: Add A64-OLinuXino
+ initial support
+Date: Sat, 12 Aug 2017 23:24:01 +0530
+Message-ID: <1502560442-17715-1-git-send-email-jteki@openedev.com>
+Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mzy63zdorlqqpm6u"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCV4FV5N34IRBSEBXXGAKGQERSM4VWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Support - OLIMEX Ltd <support-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
---mzy63zdorlqqpm6u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OLimex A64-OLinuXino is an open-source hardware board
+using the Allwinner A64 SOC.
 
-Hi,
+OLimex A64-OLinuXino has
+- A64 Quad-core Cortex-A53 64bit
+- 1GB or 2GB RAM DDR3L @ 672Mhz
+- microSD slot and 4/8/16GB eMMC
+- Debug TTL UART
+- HDMI
+- LCD
+- IR receiver
+- 5V DC power supply
 
-On Fri, Aug 11, 2017 at 02:57:10PM -0700, Liam Breck wrote:
-> On Thu, Aug 10, 2017 at 7:50 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Mon, Aug 07, 2017 at 12:54:17PM -0700, Liam Breck wrote:
-> >> From: Liam Breck <kernel@networkimprov.net>
-> >>
-> >> Document monitored-battery and ti,system-minimum-microvolt properties.
-> >>
-> >> Cc: Rob Herring <robh@kernel.org>
-> >> Cc: devicetree@vger.kernel.org
-> >> Signed-off-by: Liam Breck <kernel@networkimprov.net>
-> >> ---
-> >>  .../devicetree/bindings/power/supply/bq24190.txt   | 49 +++++++++++++=
-+++++++++
-> >>  1 file changed, 49 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2=
-4190.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.tx=
-t b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> >> new file mode 100644
-> >> index 00000000..82a1c842
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> >> @@ -0,0 +1,49 @@
-> >> +TI BQ24190 Li-Ion Battery Charger
-> >> +
-> >> +Required properties:
-> >> +- compatible: contains one of the following:
-> >> +    * "ti,bq24190"
-> >> +    * "ti,bq24192i"
-> >> +- reg: integer, I2C address of the charger.
-> >> +- interrupts[-extended]: configuration for charger INT pin.
-> >> +
-> >> +Optional properties:
-> >> +- monitored-battery: phandle of battery characteristics devicetree no=
-de
-> >> +    The charger uses the following battery properties:
-> >> +    + precharge-current-microamp: maximum charge current during prech=
-arge
-> >> +      phase (typically 20% of battery capacity).
-> >> +    + charge-term-current-microamp: a charge cycle terminates when the
-> >> +      battery voltage is above recharge threshold, and the current is=
- below
-> >> +      this setting (typically 10% of battery capacity).
-> >> +    See Documentation/devicetree/bindings/power/supply/battery.txt
-> >> +- ti,system-minimum-microvolt: when power is connected and the batter=
-y is below
-> >> +    minimum system voltage, the system will be regulated above this s=
-etting.
-> >> +
-> >> +Other features:
-> >> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current=
- on USB SDP port.
-> >
-> > Why doesn't the charger driver control this?
->=20
-> This pin/gpio has to be high when USB is plugged in to make the
-> charger chip negotiate 500mA from a SDP port. It should generally be
-> configured that way even if the driver is not loaded, as the chip does
-> not require a driver to function. Some boards may do that with a
-> pull-up. Also the user may want to change this via sysfs and not have
-> the driver "fix" it.
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v2:
+- Tested on board
+- Added AXP803 regulator 
 
-drivers/power/supply/qcom_smbb.c exposes the otg feature as
-regulator. I think in this case it could be exposed as
-gpio-regulator.
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../boot/dts/allwinner/sun50i-a64-olinuxino.dts    | 221 +++++++++++++++++++++
+ 2 files changed, 222 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
 
--- Sebastian
-
---mzy63zdorlqqpm6u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmPL/kACgkQ2O7X88g7
-+pqlRg//asd+LipI7z9TEAL1zhk9i1kBv3UXw3hWoGyYkK8v11GAAKFaFpWQ5MxT
-ke4zCBt78HA6KC4/W2+C93kzWdFIfl3y2b3BVVs4Hl23IVzF/GMBwBOwh0FeqEhp
-zxmCykusR7hCKqHYHOQX5t6pz18U0RN79EF074P5yLBMwB11VHQeougTMEtoEFI7
-PQOlXHgsnJau11y91ppzSbQDXtekNcdIAJ5UflNvuL5iKnDYQ63oQ3MlwrxP9DfO
-SSHvVOTGw91fAMhCBYRWkuJMzDktaC0M0RPLi2aD91YZ11CLIk6woxo0JhUC22ba
-RVKTgHAiM4cn8JuTlmIFYfWGBFyIiVQq3jpI01ooTNyP/lYLPpo1SynAuMrowvA3
-98R7veLzXqpbPZsqnzJ0Q7158ZhHqtUsCaL43I2SG7uRq/m6HRlK6pJmhBsuvVQr
-RYZoN1UJFDzTNt9YKg7OcRLtIBzh4W13xdsTp5JmLDRyqdziTvsGgHcoBNSn2oJR
-ABqNBJaCNv2BdhoJDNZc0I0yPn17slbvseBBL+eG/5QDacWqvOw9/cjTETphXDTM
-+vx+9TLHLE/aS8uEw/VYrcnIm1Bbx2okgcXKaIGo4padA2vqk81mV4Li4tSx15dh
-uA6pmSjZRIWaNoTvBRUZMO3lgOM+Txmt+C7CdqzQRjyE4f+QsCI=
-=8zgQ
------END PGP SIGNATURE-----
-
---mzy63zdorlqqpm6u--
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index c997b5c..19c3fbd 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -1,5 +1,6 @@
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-olinuxino.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+new file mode 100644
+index 0000000..0b9e742
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+@@ -0,0 +1,221 @@
++/*
++ * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "sun50i-a64.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Olimex A64-Olinuxino";
++	compatible = "olimex,a64-olinuxino", "allwinner,sun50i-a64";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	reg_vcc1v8: vcc1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++};
++
++&i2c1_pins {
++	bias-pull-up;
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins>;
++	vmmc-supply = <&reg_dcdc1>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	disable-wp;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&r_rsb {
++	status = "okay";
++
++	axp803: pmic@3a3 {
++		compatible = "x-powers,axp803";
++		reg = <0x3a3>;
++		interrupt-parent = <&r_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++#include "axp803.dtsi"
++
++&reg_aldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vcc-pe";
++};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pl";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-pll-avcc";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-3v3";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1100000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vddfb-cpux";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1100000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vddfb-cpuxx";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-ddr3";
++};
++
++&reg_dcdc6 {
++	regulator-always-on;
++	regulator-min-microvolt = <1100000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vdd-sys";
++};
++
++&reg_dldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-hdmi";
++};
++
++&reg_dldo2 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-mipi";
++};
++
++&reg_dldo3 {
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vcc-avdd-csi";
++};
++
++&reg_dldo4 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifiio";
++};
++
++&reg_eldo1 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "cpvdd";
++};
++
++&reg_eldo2 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-dvdd-csi";
++};
++
++&reg_fldo1 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "vcc-1v2-hsic";
++};
++
++/*
++ * The A64 chip cannot work without this regulator off, although
++ * it seems to be only driving the AR100 core.
++ * Maybe we don't still know well about CPUs domain.
++ */
++&reg_fldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1100000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vdd-cpus";
++};
++
++&reg_rtc_ldo {
++	regulator-name = "vcc-rtc";
++};
+-- 
+2.7.4
