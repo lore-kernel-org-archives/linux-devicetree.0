@@ -1,54 +1,59 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH v3 09/13] dt-bindings: adc: add description for rv1108
- saradc
-Date: Sat, 12 Aug 2017 13:39:13 +0100
-Message-ID: <20170812133913.5311a274@archlinux>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 02/13] i2c: rk3x: add support for rv1108
+Date: Sat, 12 Aug 2017 16:01:16 +0200
+Message-ID: <20170812140116.pjcswhe5mylns7x4@ninjato>
 References: <1502422578-30611-1-git-send-email-andy.yan@rock-chips.com>
-        <1502423180-31154-1-git-send-email-andy.yan@rock-chips.com>
+ <1502422753-30725-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502423180-31154-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hkcpjsr7mbybzghj"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502422753-30725-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: heiko@sntech.de, robh+dt@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Aug 2017 11:46:20 +0800
-Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
 
-> Add device tree bindings document for saradc on
-> rockchip rv1108 soc.
-> 
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-I've already applied.  This please drop it from the next version of the
-series.
+--hkcpjsr7mbybzghj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Jonathan
-> ---
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> index e0a9b9d..c2c50b5 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> @@ -6,6 +6,7 @@ Required properties:
->     - "rockchip,rk3066-tsadc": for rk3036
->     - "rockchip,rk3328-saradc", "rockchip,rk3399-saradc": for rk3328
->     - "rockchip,rk3399-saradc": for rk3399
-> +   - "rockchip,rv1108-saradc", "rockchip,rk3399-saradc": for rv1108
->  
->  - reg: physical base address of the controller and length of memory mapped
->         region.
+Hi,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static const struct rk3x_i2c_soc_data rv1108_soc_data = {
+> +	.grf_offset = -1,
+> +	.calc_timings = rk3x_i2c_v1_calc_timings,
+> +};
+> +
+
+I don't care super much, but why don't you reuse rk3399_soc_data()?
+Or even use the rk3399 compatible as fallback value?
+
+Kind regards,
+
+   Wolfram
+
+
+--hkcpjsr7mbybzghj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmPCiwACgkQFA3kzBSg
+KbYFvA/+NolCjQUN4gqJJw17QDcxgLbJUSIn5nFxRraSjaUCEDnOgzAQW0gYVhkY
+vSGMmU9dPOGvLgGyRFukqtRuYJd8aLFSGUqtsOLzd0c6LQn2vAxCgxbya8T1U20L
+JPZWNg3R0ejVHW0boDG8UkSW2XLyrY3e5+uIAEk28EiCnZeHO9Z+05vTInCzX0W/
+05Rq6ED1qcZc3LxQdNIovyK81bmt/7Odpy0NE6piGpM5miO4byxwrm4k6ywGQVyz
+r2fqyQAt95rT6Fj9xhIBCVqF1G+rCpcG5n9PJ3HoRsNZsiUvIUI9aTsKiZJdV8aX
+7AgcIz3BMMhzuC+p1Hr8YwgK4QzsWfl7VXLo1oiw6ZseJiySJntY/VJvU3N4lK1p
+1/zg5ed16tQlRiKv9SykWJ7wngQUd23Qmi9/nGFhGSDWV+BRyX9cTJzyMheaK8vb
+qETzO8ZpkNzyg0VtxQImDlQ9zlsXUbwMfiRa57/oeoeayCIWwGLGRRH190VAt+i1
+kiQF8jRmcL+RxVWZrL4qz+8i67DpTgNduQIaTrfoqBG3OUe3A9HSQIT7psUbLEaX
+RreBQJj7GLwItTQPoLrguKDZgbFKvurME4+i6p0IF36nUd0BRUEj5gzBaZJGN49q
+FheEy6j8igINMWsJSlER3wJqveKU4X6yFzTgV2N5Af+D1KQBemI=
+=4Z8K
+-----END PGP SIGNATURE-----
+
+--hkcpjsr7mbybzghj--
