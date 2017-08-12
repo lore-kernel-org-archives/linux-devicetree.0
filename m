@@ -1,42 +1,86 @@
-From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add DSP DT nodes on Keystone 66AK2G platforms
-Date: Sat, 12 Aug 2017 10:59:33 -0700
-Message-ID: <b4413170-ed35-cf6c-22e2-ce633b8b561c@oracle.com>
-References: <20170810235245.30316-1-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/11] watchdog: gemini/ftwdt010: rename DT bindings
+Date: Sat, 12 Aug 2017 20:43:08 +0200
+Message-ID: <20170812184318.10144-2-linus.walleij@linaro.org>
+References: <20170812184318.10144-1-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170810235245.30316-1-s-anna-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170812184318.10144-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The device tree bindings are in two copies and also should be
+consolidated into a single Faraday Technology FTWDT010
+binding since we uncovered that this IP part is a standard
+IP from Faraday.
 
-On 8/10/17 4:52 PM, Suman Anna wrote:
-> Hi Santosh,
-> 
-> The following series adds the DT nodes for the DSP device present
-> on the Keystone2 66AK2G SoC and enables them on the currently
-> supported platforms.
-> 
-> The DTS nodes for the other Keystone2 family of SoCs were posted
-> previously [1] and already in your staging branches for 4.14.
-> This series adds the equivalent patches for 66AK2G SoCs. K2G uses
-> slightly different properties compared to other K2 SoCs. The
-> binding update for K2G is in-flight [2] and already acked by Rob.
-> So, I am not sure if you need to wait for that patch to show up
-> on mainline to avoid checkpatch warnings on these patches due to
-> the undocumented compatible on your tree.
-> 
-> Validation done on K2G EVM and K2G ICE boards using ramdisk boot.
-> Supported features are the same as the other Keystone 2 platforms.
-> Patches are based on your current -next branch [3], so should apply
-> fine on your 4.14 keystone_dts branch.
-> 
-Applied !!
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/watchdog/cortina,gemini-watchdog.txt       | 17 -----------------
+ ...{cortina,gemin-watchdog.txt => faraday,ftwdt010.txt} | 11 ++++++++---
+ 2 files changed, 8 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
+ rename Documentation/devicetree/bindings/watchdog/{cortina,gemin-watchdog.txt => faraday,ftwdt010.txt} (55%)
+
+diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt b/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
+deleted file mode 100644
+index bc4b865d178b..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-Cortina Systems Gemini SoC Watchdog
+-
+-Required properties:
+-- compatible : must be "cortina,gemini-watchdog"
+-- reg : shall contain base register location and length
+-- interrupts : shall contain the interrupt for the watchdog
+-
+-Optional properties:
+-- timeout-sec : the default watchdog timeout in seconds.
+-
+-Example:
+-
+-watchdog@41000000 {
+-	compatible = "cortina,gemini-watchdog";
+-	reg = <0x41000000 0x1000>;
+-	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+similarity index 55%
+rename from Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
+rename to Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+index bc4b865d178b..9ecdb502e605 100644
+--- a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
++++ b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+@@ -1,7 +1,12 @@
+-Cortina Systems Gemini SoC Watchdog
++Faraday Technology FTWDT010 watchdog
++
++This is an IP part from Faraday Technology found in the Gemini
++SoCs and others.
+ 
+ Required properties:
+-- compatible : must be "cortina,gemini-watchdog"
++- compatible : must be one of
++  "faraday,ftwdt010"
++  "cortina,gemini-watchdog", "faraday,ftwdt010"
+ - reg : shall contain base register location and length
+ - interrupts : shall contain the interrupt for the watchdog
+ 
+@@ -11,7 +16,7 @@ Optional properties:
+ Example:
+ 
+ watchdog@41000000 {
+-	compatible = "cortina,gemini-watchdog";
++	compatible = "faraday,ftwdt010";
+ 	reg = <0x41000000 0x1000>;
+ 	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+ };
+-- 
+2.13.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
