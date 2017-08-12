@@ -1,48 +1,63 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: [PATCH v2 1/2] dt-bindings: i2c: Add MediaTek MT7622 i2c binding
-Date: Sat, 12 Aug 2017 10:57:51 +0800
-Message-ID: <1502506672-7620-2-git-send-email-jun.gao@mediatek.com>
-References: <1502506672-7620-1-git-send-email-jun.gao@mediatek.com>
+From: icenowy@aosc.io
+Subject: Re: [PATCH v6 1/6] clk: sunxi-ng: div: Add support for fixed
+ post-divider
+Date: Sat, 12 Aug 2017 11:07:42 +0800
+Message-ID: <d3ca32de91e857a8933fd570600cda17@aosc.io>
+References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
+ <946794e97ae2c36cd67c272099e8236a589efc28.1500043741.git-series.plaes@plaes.org>
+ <20170717085235.i7pwwql5dgmnf6kk@flea>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502506672-7620-1-git-send-email-jun.gao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Jun Gao <jun.gao@mediatek.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170717085235.i7pwwql5dgmnf6kk@flea>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Priit Laes <plaes@plaes.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jun Gao <jun.gao@mediatek.com>
+在 2017-07-17 16:52，Maxime Ripard 写道：
+> On Fri, Jul 14, 2017 at 05:49:23PM +0300, Priit Laes wrote:
+>> SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
+>> 6 is fixed post-divider.
+>> 
+>> Signed-off-by: Priit Laes <plaes@plaes.org>
+>> ---
+>>  drivers/clk/sunxi-ng/ccu_div.c | 15 +++++++++++++--
+>>  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
+>>  2 files changed, 15 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/clk/sunxi-ng/ccu_div.c 
+>> b/drivers/clk/sunxi-ng/ccu_div.c
+>> index c0e5c10..744502a 100644
+>> --- a/drivers/clk/sunxi-ng/ccu_div.c
+>> +++ b/drivers/clk/sunxi-ng/ccu_div.c
+>> @@ -21,6 +21,9 @@ static unsigned long ccu_div_round_rate(struct 
+>> ccu_mux_internal *mux,
+>>  {
+>>  	struct ccu_div *cd = data;
+>> 
+>> +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+>> +		rate *= cd->fixed_post_div;
+>> +
+>>  	return divider_round_rate_parent(&cd->common.hw, parent,
+>>  					 rate, parent_rate,
+>>  					 cd->div.table, cd->div.width,
+> 
+> 
+> You still haven't addressed the biggest issue with this patch, see:
+> https://patchwork.kernel.org/patch/9825565/
 
-Add MT7622 i2c binding to binding file and change the compatible
-information formats of all SoCs to the same.
+I think he has already did the changes suggested in the review.
 
-Signed-off-by: Jun Gao <jun.gao@mediatek.com>
----
- Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+(P.S. during developing R40 CCU driver I found that pll-periph0-sata
+also needs this patch, so I'm rechecking it)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-index bd5a7be..71fc0b3 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-@@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
- 
- Required properties:
-   - compatible: value should be either of the following.
--      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek mt2701
--      "mediatek,mt6577-i2c": for i2c compatible with mt6577.
--      "mediatek,mt6589-i2c": for i2c compatible with mt6589.
--      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
--      "mediatek,mt8173-i2c": for i2c compatible with mt8173.
-+      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
-+      "mediatek,mt6577-i2c": for Mediatek MT6577
-+      "mediatek,mt6589-i2c": for Mediatek MT6589
-+      "mediatek,mt7622-i2c": for Mediatek MT7622
-+      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-+      "mediatek,mt8173-i2c": for Mediatek MT8173
-   - reg: physical base address of the controller and dma base, length of memory
-     mapped region.
-   - interrupts: interrupt number to the cpu.
--- 
-1.8.1.1
+> 
+> Maxime
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
