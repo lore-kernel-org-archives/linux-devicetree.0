@@ -1,12 +1,12 @@
 From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/3] arm64: defconfig: Enable CONFIG_MFD_AXP20X_RSB
-Date: Sat, 12 Aug 2017 11:10:42 +0530
-Message-ID: <1502516443-4740-2-git-send-email-jteki@openedev.com>
+Subject: [PATCH 3/3] arm64: defconfig: Enable CONFIG_REGULATOR_AXP20X
+Date: Sat, 12 Aug 2017 11:10:43 +0530
+Message-ID: <1502516443-4740-3-git-send-email-jteki@openedev.com>
 References: <1502516443-4740-1-git-send-email-jteki@openedev.com>
 Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRB6NJXLGAKGQEWWR7ZCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCV4FV5N34IRBAVKXLGAKGQEE4S3OAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1502516443-4740-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,7 +21,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-X-Powers AXP series PMICs with RSB is need for sunxi a64
+X-POWERS AXP20X PMIC Regulators is need for sunxi a64
 so make it default in defconfig.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
@@ -30,16 +30,16 @@ Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.o
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 33d2d62..a11fce7 100644
+index a11fce7..d8f23c5 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -313,6 +313,7 @@ CONFIG_MESON_GXBB_WATCHDOG=m
- CONFIG_MESON_WATCHDOG=m
- CONFIG_RENESAS_WDT=y
- CONFIG_BCM2835_WDT=y
-+CONFIG_MFD_AXP20X_RSB=y
- CONFIG_MFD_CROS_EC=y
- CONFIG_MFD_CROS_EC_I2C=y
- CONFIG_MFD_CROS_EC_SPI=y
+@@ -323,6 +323,7 @@ CONFIG_MFD_MAX77620=y
+ CONFIG_MFD_SPMI_PMIC=y
+ CONFIG_MFD_RK808=y
+ CONFIG_MFD_SEC_CORE=y
++CONFIG_REGULATOR_AXP20X=y
+ CONFIG_REGULATOR_FAN53555=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_GPIO=y
 -- 
 2.7.4
