@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2 1/2] dt-bindings: pwm-bcm2835: Increase pwm-cells
-Date: Sat, 12 Aug 2017 12:19:43 +0200
-Message-ID: <1502533184-15765-2-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V2 2/2] pwm: bcm2835: Support for polarity setting via DT
+Date: Sat, 12 Aug 2017 12:19:44 +0200
+Message-ID: <1502533184-15765-3-git-send-email-stefan.wahren@i2se.com>
 References: <1502533184-15765-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <linux-pwm-owner@vger.kernel.org>
 In-Reply-To: <1502533184-15765-1-git-send-email-stefan.wahren@i2se.com>
@@ -10,36 +10,27 @@ To: Thierry Reding <thierry.reding@gmail.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-We need to increase the pwm-cells for the optional flags parameter,
-before we can implement support for polarity setting via DT.
+This adds support for the third (optional) pwm cell to specify the
+polarity, which is needed by display backlights for example.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Eric Anholt <eric@anholt.net>
 ---
- Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-bcm2835.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-index cf573e8..8cf87d1 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-@@ -6,7 +6,7 @@ Required properties:
- - clocks: This clock defines the base clock frequency of the PWM hardware
-   system, the period and the duty_cycle of the PWM signal is a multiple of
-   the base period.
--- #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
-+- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
-   the cells format.
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index c5dbf16..db001cb 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -167,6 +167,8 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &bcm2835_pwm_ops;
+ 	pc->chip.npwm = 2;
++	pc->chip.of_xlate = of_pwm_xlate_with_flags;
++	pc->chip.of_pwm_n_cells = 3;
  
- Examples:
-@@ -15,7 +15,7 @@ pwm@2020c000 {
- 	compatible = "brcm,bcm2835-pwm";
- 	reg = <0x2020c000 0x28>;
- 	clocks = <&clk_pwm>;
--	#pwm-cells = <2>;
-+	#pwm-cells = <3>;
- };
+ 	platform_set_drvdata(pdev, pc);
  
- clocks {
 -- 
 2.7.4
