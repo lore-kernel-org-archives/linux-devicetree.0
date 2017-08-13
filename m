@@ -1,49 +1,99 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] thermal: add brcmstb AVS TMON driver
-Date: Sat, 12 Aug 2017 21:57:44 -0700
-Message-ID: <F4FCB786-8A5F-49DA-B101-9493EC6D4C4C@gmail.com>
-References: <20170809220257.4234-1-code@mmayer.net> <1502429756.2470.9.camel@intel.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 00/20] Add QCOM QPIC NAND support
+Date: Sun, 13 Aug 2017 09:47:32 +0200
+Message-ID: <20170813094732.12cadbfc@bbrezillon>
+References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502429756.2470.9.camel-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1502451575-15712-1-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On August 10, 2017 10:35:56 PM PDT, Zhang Rui <rui=2Ezhang@intel=2Ecom> wro=
-te:
->On Wed, 2017-08-09 at 15:02 -0700, Markus Mayer wrote:
->> From: Markus Mayer <mmayer@broadcom=2Ecom>
->>=20
->> This series adds the brcmstb AVS TMON driver=2E
->>=20
->> The driver was originally written by Brian Norris=2E
->>=20
->> This series is also available at
->> https://github=2Ecom/mmayer/linux/tree/brcmstb-thermal-4=2E13-v4=2E
->>=20
->> v1 of this series can be found at https://lkml=2Eorg/lkml/2017/6/5/921
->> v2 of this series can be found at https://lkml=2Eorg/lkml/2017/7/21/585
->> v3 of this series can be found at https://lkml=2Eorg/lkml/2017/7/31/710
->>=20
->> Changes since v3:
->> - Rebased on v4=2E13-rc3 to resolve conflicts in the MAINTAINERS file
->>=20
->thanks, will apply this if we have ACK for patch 3 and 4=2E
+Le Fri, 11 Aug 2017 17:09:15 +0530,
+Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> a écrit :
 
-You can take patches 1-2 through your tree and I can take patches 3-4 thou=
-ght the Broadcom ARM/ARM64 pull requests if that works for you, or FWIW:
+> * v4:
+> 
+> 1. Added Acked-by from Rob for DT documentation patches
+> 2. Removed ipq8074 compatible string from ipq4019 DT example.
+> 2. Used the BIT macro for NAND_CMD_VLD bits and consistent names
+>    as suggested by Boris in v3.
+> 
+> * v3:
+> 
+> 1. Removed the patches already applied to linux-next and
+>    rebased the remaining patches on [1]
+> 2. Reordered the patches and put the BAM DMA changes [2]
+>    dependent patches and compatible string patches in last
+> 3. Removed the register offsets array and used the dev_cmd offsets
+> 4. Changed some macro names to small letters for better code readability
+> 5. Changed the compatible string to SoC specific
+> 6. Did minor code changes for adding comment, error handling, structure names
+> 7. Combined raw write (patch#18) and passing flag parameter (patch#22) patch
+>    into one
+> 8. Made separate patch for compatible string and NAND properties
+> 9. Made separate patch for BAM command descriptor and data descriptors handling
+> 10. Changed commit message for some of the patches
+> 11. Addressed review comments given in v2
+> 12. Added Reviewed-by of Archit for some of the patches from v2
+> 13. All the MTD tests are working fine for IPQ8064 AP148, IPQ4019 DK04 and
+>     IPQ8074 HK01 boards for v3 patches
+> 
+> [1] http://git.infradead.org/l2-mtd.git/shortlog/refs/heads/nand/next
+> [2] http://www.spinics.net/lists/dmaengine/msg13662.html
+> 
+> * v2:
+> 
+> 1. Addressed the review comments given in v1
+> 2. Removed the DMA coherent buffer for register read and used
+>    streaming DMA API’s
+> 3. Reorganized the NAND read and write functions
+> 4. Separated patch for driver and documentation changes
+> 5. Changed the compatible string for EBI2
+> 
+> * v1:
+> 
+> http://www.spinics.net/lists/devicetree/msg183706.html
+> 
+> Abhishek Sahu (20):
+>   mtd: nand: qcom: fix read failure without complete bootchain
+>   mtd: nand: qcom: support for NAND controller properties
+>   mtd: nand: qcom: add bam property for QPIC NAND controller
+>   mtd: nand: qcom: add and initialize QPIC DMA resources
 
-Acked-by: Florian Fainelli <f=2Efainelli@gmail=2Ecom>
+Applied patches 1 to 4. Still waiting a bit to let Archit review the
+remaining ones.
 
-Thanks!
+Regards,
 
---=20
-Florian
+Boris
+
+>   mtd: nand: qcom: DMA mapping support for register read buffer
+>   mtd: nand: qcom: allocate BAM transaction
+>   mtd: nand: qcom: add BAM DMA descriptor handling
+>   mtd: nand: qcom: support for passing flags in transfer functions
+>   mtd: nand: qcom: support for read location registers
+>   mtd: nand: qcom: erased codeword detection configuration
+>   mtd: nand: qcom: enable BAM or ADM mode
+>   mtd: nand: qcom: QPIC data descriptors handling
+>   mtd: nand: qcom: support for different DEV_CMD register offsets
+>   mtd: nand: qcom: add command elements in BAM transaction
+>   mtd: nand: qcom: support for command descriptor formation
+>   dt-bindings: qcom_nandc: fix the ipq806x device tree example
+>   dt-bindings: qcom_nandc: IPQ4019 QPIC NAND documentation
+>   dt-bindings: qcom_nandc: IPQ8074 QPIC NAND documentation
+>   mtd: nand: qcom: support for IPQ4019 QPIC NAND controller
+>   mtd: nand: qcom: support for IPQ8074 QPIC NAND controller
+> 
+>  .../devicetree/bindings/mtd/qcom_nandc.txt         |  63 +-
+>  drivers/mtd/nand/qcom_nandc.c                      | 866 ++++++++++++++++++---
+>  2 files changed, 814 insertions(+), 115 deletions(-)
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
