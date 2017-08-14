@@ -1,147 +1,70 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 3/3] Documentation: hwmon: Document the IBM CFF power
- supply
-Date: Mon, 14 Aug 2017 14:26:20 -0500
-Message-ID: <0d016c77-4e3e-b9df-b131-604ab6f15e4c@linux.vnet.ibm.com>
-References: <1502724390-17411-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1502724390-17411-4-git-send-email-eajames@linux.vnet.ibm.com>
- <20170814185308.GA11090@roeck-us.net>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c compatible for MediaTek
+ MT7622
+Date: Mon, 14 Aug 2017 21:47:13 +0200
+Message-ID: <20170814194713.c6ojqcbi2iluayau@ninjato>
+References: <1502506672-7620-1-git-send-email-jun.gao@mediatek.com>
+ <1502506672-7620-3-git-send-email-jun.gao@mediatek.com>
+ <20170812144411.zqgbncsemzaolldv@ninjato>
+ <1502674616.930.74.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170814185308.GA11090@roeck-us.net>
-Content-Language: en-US
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: robh+dt@kernel.org, jdelvare@suse.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, "Edward A. James" <eajames@us.ibm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pglexgzmdx5j52xk"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502674616.930.74.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jun Gao <jun.gao@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
+--pglexgzmdx5j52xk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 08/14/2017 01:53 PM, Guenter Roeck wrote:
-> On Mon, Aug 14, 2017 at 10:26:30AM -0500, Eddie James wrote:
->> From: "Edward A. James" <eajames@us.ibm.com>
->>
->> Signed-off-by: Edward A. James <eajames@us.ibm.com>
->> ---
->>   Documentation/hwmon/ibm-cffps | 54 +++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 54 insertions(+)
->>   create mode 100644 Documentation/hwmon/ibm-cffps
->>
->> diff --git a/Documentation/hwmon/ibm-cffps b/Documentation/hwmon/ibm-cffps
->> new file mode 100644
->> index 0000000..e091ff2
->> --- /dev/null
->> +++ b/Documentation/hwmon/ibm-cffps
->> @@ -0,0 +1,54 @@
->> +Kernel driver ibm-cffps
->> +=======================
->> +
->> +Supported chips:
->> +  * IBM Common Form Factor power supply
->> +
->> +Author: Eddie James <eajames@us.ibm.com>
->> +
->> +Description
->> +-----------
->> +
->> +This driver supports IBM Common Form Factor (CFF) power supplies. This driver
->> +is a client to the core PMBus driver.
->> +
->> +Usage Notes
->> +-----------
->> +
->> +This driver does not auto-detect devices. You will have to instantiate the
->> +devices explicitly. Please see Documentation/i2c/instantiating-devices for
->> +details.
->> +
->> +Sysfs entries
->> +-------------
->> +
->> +The following attributes are supported:
->> +
->> +curr1_alarm		Output current over-current fault.
->> +curr1_input		Measured output current in mA.
->> +curr1_label		"iout1"
->> +
->> +fan1_alarm		Fan 1 warning.
->> +fan1_fault		Fan 1 fault.
->> +fan1_input		Fan 1 speed in RPM.
->> +fan2_alarm		Fan 2 warning.
->> +fan2_fault		Fan 2 fault.
->> +fan2_input		Fan 2 speed in RPM.
->> +
->> +in1_alarm		Input voltage under-voltage fault.
-> Just noticed. Are you sure you mean 'fault' here and below ?
-> 'alarm' attributes normally report an over- or under- condition,
-> but not a fault. Faults should be reported with 'fault' attributes.
-> In PMBus lingo (which doesn't distinguish a real 'fault' from
-> a critical over- or under- condition), the "FAULT" condition
-> usually maps with the 'crit_alarm' or 'lcrit_alarm' attributes.
-> Also, under-voltages would normally be reported as min_alarm
-> or clrit_alarm, not in_alarm.
+On Mon, Aug 14, 2017 at 09:36:56AM +0800, Jun Gao wrote:
+> On Sat, 2017-08-12 at 16:44 +0200, Wolfram Sang wrote:
+> > > +static const struct i2c_adapter_quirks mt7622_i2c_quirks =3D {
+> > > +	.max_num_msgs =3D 255,
+> > > +	.max_write_len =3D 65535,
+> > > +	.max_read_len =3D 65535,
+> > > +	.max_comb_1st_msg_len =3D 65535,
+> > > +	.max_comb_2nd_msg_len =3D 65535,
+> > > +};
+> >=20
+> > That looks like no quirks? Then just leave the quirks pointer below
+> > empty.
+> >=20
+> Compare to MT8173 i2c controller, MT7622 limits message numbers to 255.
 
-Thanks, I better change this doc to "alarm." The spec reports all these 
-as "faults" but many of them are merely over-temp or over-voltage, etc, 
-and should be "alarm" to be consistent with PMBus.
+I see. But you can safely drop all the length settings. The i2c core has
+this comment in quirk handling:
 
-The problem with this power supply is that it doesn't report any 
-"limits." So unless I set up my read_byte function to return some 
-limits, we can't get any lower or upper limits and therefore won't get 
-the crit_alarm, lcrit_alarm, etc. Do you think I should "fake" the 
-limits in the driver?
+/* Check if val is exceeding the quirk IFF quirk is non 0 */
 
->
->> +in1_input		Measured input voltage in mV.
->> +in1_label		"vin"
->> +in2_alarm		Output voltage over-voltage fault.
->> +in2_input		Measured output voltage in mV.
->> +in2_label		"vout1"
->> +
->> +power1_alarm		Input fault.
-> Another example; this maps to PMBUS_PIN_OP_WARN_LIMIT which is an
-> input power alarm, not an indication of a fault condition.
+IFF means "if and only if".
 
-Hm, with my latest changes to look at the higher byte of STATUS_WORD, it 
-looks like we now have the same name for both the pin generic alarm 
-attribute and the pin_limit_attr... So in this device's case, it would 
-map to PB_STATUS_INPUT bit of STATUS_WORD. Didn't think about that... 
-any suggestions? Can't really change the name of the limit one without 
-breaking people's code...
 
->
->> +power1_input		Measured input power in uW.
->> +power1_label		"pin"
->> +
->> +temp1_alarm		PSU inlet ambient temperature over-temperature fault.
->> +temp1_input		Measured PSU inlet ambient temp in millidegrees C.
->> +temp2_alarm		Secondary rectifier temp over-temperature fault.
-> Interestingly, PMBus does not distinguish between a critical temperature
-> alarm and an actual "fault". Makes me wonder if the IBM PS reports
-> CFFPS_MFR_THERMAL_FAULT if there is an actual fault (chip or sensor failure),
-> or if it has the same meaning as PB_TEMP_OT_FAULT, ie an excessively high
-> temperature.
+--pglexgzmdx5j52xk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Will change these to "alarm" in the doc too.
+-----BEGIN PGP SIGNATURE-----
 
->
-> If it is a real fault (a detected sensor failure), we should possibly
-> consider adding a respective "virtual" temperature status flag. The same
-> is true for other status bits reported in the manufacturer status
-> register if any of those reflect a "real" fault, ie a chip failure.
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmR/kEACgkQFA3kzBSg
+Kbbj5Q//fQDCE7Au3G8Agh/MrXOjv7xt2g8VnVxGTBz6hRC3wkRjVFhEL1VdhRaa
+jtAfNw5WImXlMAgCK48eWnP3kUi+KEEoFXF/eyevwLX6yhviZEvFHZNtPlH6EjZx
+k+RfmC51eYiC4/T+ebynW7xZJH4oeMwx8kqXkWyTMzC87RNn8l0TnGcSErwoXzRh
+ddAwKI/2yBn9WyxJW0Ab8nu7/NFZQi6MS00UgSUeN3+/jia5FwHOKHWTgcfiG6Sy
+0FkKGG4/+/A09Y1lNIU0fIowflX4T6onTwxs4EgUoF6uMS1q94zKcZZpuMeN7m6L
+WjAk1CpyloV0EuqBUt2NxVNhhaEzgDu29JNuTegTBmfJVPrmzlH54dEfRccurL2G
+v3xQgxOmRWYPiPq3gHm31NHXp8svL7J6nHtz8aRJGL1MIHA47icRbVXFiTibE5Wg
+I4nhYCR1+4Q/m4pYtPGz+7PPc722hguIogHrS05IFeb0tIvuZN+X+2eTjLbqjg4e
+tzIMIkAO52y5TYUsIjI9LViQJrZ8ARA0ftzW+DbbhWf8q615YmIzZLGUBO8HIRjQ
+JykHVgsthDGAOTrxXP1fl7M0qJqRiI98kylmxaeLJkbLLr9/brW9+RGrd6FmppIF
+WkDuGHnQjexTP9ayRLyJpDhb1oziXwtyMZ3lCqob5n4UgDWTIuY=
+=I9R4
+-----END PGP SIGNATURE-----
 
-Yea, that would probably be helpful. The CFFPS_MFR_THERMAL_FAULT bit is 
-a fault (so the spec says), but I'm not sure what is triggering it.
-
-Thanks,
-Eddie
-
->
->> +temp2_input		Measured secondary rectifier temp in millidegrees C.
->> +temp3_alarm		ORing FET temperature over-temperature fault.
->> +temp3_input		Measured ORing FET temperature in millidegrees C.
->> -- 
->> 1.8.3.1
->>
-
+--pglexgzmdx5j52xk--
