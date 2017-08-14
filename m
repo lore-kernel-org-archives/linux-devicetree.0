@@ -1,77 +1,51 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
-Date: Mon, 14 Aug 2017 17:20:19 +0200
-Message-ID: <CAMuHMdWHMLi-yiVmzQCYRHSnJpuokBREo6QFF2z-zaviZVxFNA@mail.gmail.com>
-References: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw@mail.gmail.com> <TY1PR06MB070269842CD923E4DE4FE6EDB78C0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/8] spi: rockchip: add compatible string for rv1108
+ spi
+Date: Mon, 14 Aug 2017 16:20:14 +0100
+Message-ID: <20170814152014.unj5iij474ito27s@sirena.org.uk>
+References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com>
+ <1502699662-8181-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <TY1PR06MB070269842CD923E4DE4FE6EDB78C0-/PRLmSCtZ14u2TXDOttQZW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y4zwyzjwqy6jtq3i"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1502699662-8181-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
 
-On Mon, Aug 14, 2017 at 5:15 PM, Chris Paterson
-<Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
->> From: geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
->> On Behalf Of Geert Uytterhoeven
->> Sent: 14 August 2017 15:22
->>
->> On Mon, Aug 14, 2017 at 1:19 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
->> > Add support for r8a7743/5 SoC.Renesas RZ/G1[ME] (R8A7743/5) SDHI is
->> > identical to the R-Car Gen2 family.
->> >
->> > Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> > ---
->> > This patch is compiled and tested against mmc/next.
->> >
->> >  drivers/mmc/host/renesas_sdhi_sys_dmac.c | 2 ++
->> >  1 file changed, 2 insertions(+)
->> >
->> > diff --git a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
->> > b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
->> > index 718cb8a..f709f7f 100644
->> > --- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
->> > +++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
->> > @@ -95,6 +95,8 @@
->> >         { .compatible = "renesas,sdhi-r7s72100", .data = &of_rz_compatible, },
->> >         { .compatible = "renesas,sdhi-r8a7778", .data =
->> &of_rcar_gen1_compatible, },
->> >         { .compatible = "renesas,sdhi-r8a7779", .data =
->> > &of_rcar_gen1_compatible, },
->> > +       { .compatible = "renesas,sdhi-r8a7743", .data =
->> &of_rcar_gen2_compatible, },
->> > +       { .compatible = "renesas,sdhi-r8a7745", .data =
->> > + &of_rcar_gen2_compatible, },
->> >         { .compatible = "renesas,sdhi-r8a7790", .data =
->> &of_rcar_gen2_compatible, },
->> >         { .compatible = "renesas,sdhi-r8a7791", .data =
->> &of_rcar_gen2_compatible, },
->> >         { .compatible = "renesas,sdhi-r8a7792", .data =
->> > &of_rcar_gen2_compatible, },
->>
->> I guess we want generic R-Car Gen2/3 compatible values here, too?
->
-> Yes, but I assume that should be a separate patch submitted instead of this one?
+--y4zwyzjwqy6jtq3i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Indeed. That would avoid having to add the SoC-specific compatible values
-to the driver for all RZ/G1 variants.
+On Mon, Aug 14, 2017 at 04:34:22PM +0800, Andy Yan wrote:
 
-Gr{oetje,eeting}s,
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
 
-                        Geert
+That's hopefully not true, v1 didn't build due to a syntax error...
 
+--y4zwyzjwqy6jtq3i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmRv60ACgkQJNaLcl1U
+h9D9kQf/QIDYBHVxBxEIdXVByJebswaMPWlFhnIL2NJedv6TiU5GLCNnOaIc7UDM
+mNkM5tzPE2EGWIhP7T1lAsykz2OFpDAY8+FjIzjdohklEBo7Js3/7RhfwBOSHfYr
+zE7h3yCt5oJnlIpKIhBy01TrgNdPNFgaHgufML+kmvPatr5uDAR72qQGcnL2+vco
+uGtczbBnLckG345tzgADYKpldpPTKrOgF20K4lPe3YHbzm65who5FkKDDsSbC1zB
+z6NatjNKEASBSWzGz91U0M2E3FcmfqRjSWHAY334k0NrEgxPoSqn3BUSNeIVn2J2
+HyqH4MhRT3B0uoUYzzgNvz/hGbLYlg==
+=YmuQ
+-----END PGP SIGNATURE-----
+
+--y4zwyzjwqy6jtq3i--
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
