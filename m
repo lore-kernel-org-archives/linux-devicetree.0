@@ -1,28 +1,45 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v2] arm64: dts: ls1088a: add cpu idle support
-Date: Mon, 14 Aug 2017 09:15:11 +0800
-Message-ID: <20170814011510.GE31819@dragon>
-References: <1502070879-14106-1-git-send-email-andy.tang@nxp.com>
+Subject: Re: [PATCH 00/10] Add support for Ixora V1.1 and Apalis Evaluation
+ Board
+Date: Mon, 14 Aug 2017 09:30:15 +0800
+Message-ID: <20170814013014.GF31819@dragon>
+References: <cover.1502087184.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1502070879-14106-1-git-send-email-andy.tang-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <cover.1502087184.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andy.tang-3arQi8VN3Tc@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 07, 2017 at 09:54:38AM +0800, andy.tang-3arQi8VN3Tc@public.gmane.org wrote:
-> From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+On Mon, Aug 07, 2017 at 12:52:32PM +0530, Sanchayan Maity wrote:
+> Hello,
 > 
-> ls1088a supports another cpu idle state which is ph20 which saves
-> more power when cpu is idle.
-> It was implemented through psci firmware.
+> This patch series adds support for Toradex Ixora V1.1 and Apalis
+> Evaluation Board along with some cleanups.
 > 
-> Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+> Patch series has been generated on top of shawn's for-next branch.
+> 
+> Regards,
+> Sanchayan.
+> 
+> Marcel Ziswiler (6):
+>   ARM: dts: imx6q-apalis-ixora: combine aliases
+>   ARM: dts: imx6qdl-apalis: imx6q-apalis-ixora: get rid of tegra legacy gen1_i2c comment
+>   ARM: dts: imx6qdl-apalis: reword cam i2c comment
+>   ARM: dts: imx6q-apalis-ixora: get rid of obsolete fusion comment
+>   ARM: dts: imx6q-apalis-ixora: add camera i2c bus definition
+>   ARM: dts: imx6qdl-apalis: imx6q-apalis-ixora: use i2c from dwc hdmi
+> 
+> Sanchayan Maity (4):
+>   ARM: dts: imx6q-apalis-ixora: fix usdhc2 pinctrl property
+>   ARM: dts: imx6qdl-apalis: split usdhc1 pinctrl to support 4- and 8-bit
+>   ARM: dts: imx6: add support for Toradex Ixora V1.1 carrier board
+>   ARM: dts: imx6q-apalis-eval: add support for Apalis Evaluation Board
 
-Applied both, thanks.
+Applied all, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
