@@ -1,49 +1,54 @@
-From: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH 3/3] arm64: dts: apq8096-db820c: always enable regulator LS expansion
-Date: Mon, 14 Aug 2017 13:34:19 +0200
-Message-ID: <20170814113420.30866-3-srinivas.kandagatla@linaro.org>
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH 2/3] arm64: dts: apq8096-db820c: Enable on board 3 pcie root complex
+Date: Mon, 14 Aug 2017 13:34:18 +0200
+Message-ID: <20170814113420.30866-2-srinivas.kandagatla@linaro.org>
 References: <20170814113420.30866-1-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170814113420.30866-1-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170814113420.30866-1-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
+Cc: linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-1.8v regulator on LS expansion should be left as always to comply
-with 96boards spec.
+This patch adds enables 3 instances of root complexes which are
+exposed on DB820c board. 3 Instances are terminted as below
+PCIE0 => QCA6174
+PCIE1 => MINI PCIE CARD
+PCIE2 => GBE ETHERNET
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 18c61693529e..0c10bbe55317 100644
+index 789f3e87321e..18c61693529e 100644
 --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
 +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -189,9 +189,15 @@
- 					regulator-min-microvolt = <1300000>;
- 					regulator-max-microvolt = <1300000>;
- 				};
+@@ -138,6 +138,22 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&usb2_vbus_det_gpio>;
+ 		};
 +
-+				/**
-+				 * 1.8v required on LS expansion
-+				 * for mezzanine boards
-+				 */
- 				s4 {
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
- 				};
- 				s5 {
- 					regulator-min-microvolt = <2150000>;
++		agnoc@0 {
++			qcom,pcie@00600000 {
++				perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++			};
++
++			qcom,pcie@00608000 {
++				status = "okay";
++				perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
++			};
++
++			qcom,pcie@00610000 {
++				status = "okay";
++				perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
++			};
++		};
+ 	};
+ 
+ 
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
