@@ -1,55 +1,67 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 1/2] ARM: dts: iwg20d-q7: Add RTC support
-Date: Mon, 14 Aug 2017 14:26:08 +0000
-Message-ID: <KL1PR06MB1702571F2F9B75205A11280AB88C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1502197465-61546-1-git-send-email-biju.das@bp.renesas.com>
- <1502197465-61546-2-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdUU5fb6G7Wc9ZzfFhLxcUuZFakPdVGh3q_cfUzxZ1AarA@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] leds: add LED driver for CR0014114 board
+Date: Mon, 14 Aug 2017 09:28:06 -0500
+Message-ID: <CAL_JsqJw18uCCLAd+rraiDr3meLvDkpOwLwqLLB5E5psHho2Jw@mail.gmail.com>
+References: <20170814115355.9437-1-oleg@kaa.org.ua>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUU5fb6G7Wc9ZzfFhLxcUuZFakPdVGh3q_cfUzxZ1AarA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170814115355.9437-1-oleg-CGGh1czddphUq1AO9QMCaQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Oleh Kravchenko <oleg-CGGh1czddphUq1AO9QMCaQ@public.gmane.org>
+Cc: Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZ2VlcnQudXl0dGVyaG9l
-dmVuQGdtYWlsLmNvbSBbbWFpbHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dDQo+IE9u
-IEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogMTQgQXVndXN0IDIwMTcgMTU6
-MTINCj4gVG86IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gQ2M6IFJvYiBI
-ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFu
-ZEBhcm0uY29tPjsgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBNYWdudXMNCj4g
-RGFtbSA8bWFnbnVzLmRhbW1AZ21haWwuY29tPjsgUnVzc2VsbCBLaW5nIDxsaW51eEBhcm1saW51
-eC5vcmcudWs+Ow0KPiBDaHJpcyBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29t
-PjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IExpbnV4LVJlbmVzYXMgPGxpbnV4LXJl
-bmVzYXMtc29jQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIEFSTTogZHRzOiBpd2cyMGQt
-cTc6IEFkZCBSVEMgc3VwcG9ydA0KPg0KPiBPbiBUdWUsIEF1ZyA4LCAyMDE3IGF0IDM6MDQgUE0s
-IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gRGVmaW5lIHRo
-ZSBpV2F2ZSBSYWluYm9XLUcyMEQtUXNldmVuIGJvYXJkIGRlcGVuZGVudCBwYXJ0IG9mIHRoZSBS
-VEMNCj4gPiBkZXZpY2Ugbm9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxi
-aWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4NCj4gPiBAQCAtNTQsMyArNTksMTYgQEANCj4gPiAg
-ICAgICAgICAgICAgICAgbWljcmVsLGxlZC1tb2RlID0gPDE+Ow0KPiA+ICAgICAgICAgfTsNCj4g
-PiAgfTsNCj4gPiArDQo+ID4gKyZpMmMyIHsNCj4gPiArICAgICAgIHBpbmN0cmwtMCA9IDwmaTJj
-Ml9waW5zPjsNCj4gPiArICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4gKw0K
-PiA+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ICsgICAgICAgY2xvY2stZnJlcXVlbmN5
-ID0gPDQwMDAwMD47DQo+ID4gKw0KPiA+ICsgICAgICAgcnRjQDY4IHsNCj4gPiArICAgICAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJicTMyMDAwIjsNCj4NCj4gInRpLGJxMzIwMDAiDQoNClRoYW5r
-cy4gSSB3aWxsIGNoYW5nZSB0aGlzLg0KDQo+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDY4
-PjsNCj4gPiArICAgICAgIH07DQo+ID4gK307DQo+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0K
-PiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJo
-b2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4
-LQ0KPiBtNjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5p
-Y2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtp
-bmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxp
-a2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2
-YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3cs
-IE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVL
-LiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4
-NjcwOS4NCg==
+Please CC DT list for bindings and make bindings a separate patch.
+
+On Mon, Aug 14, 2017 at 6:53 AM, Oleh Kravchenko <oleg-CGGh1czddphUq1AO9QMCaQ@public.gmane.org> wrote:
+> This patch adds a LED class driver for the RGB LEDs found on
+> the Crane Merchandising System CR0014114 LEDs board.
+>
+> Driver creates LED devices with name written using the following
+> pattern "LABEL-{N}:{red,green,blue}:".
+>
+> Signed-off-by: Oleh Kravchenko <oleg-CGGh1czddphUq1AO9QMCaQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/leds/leds-cr0014114.txt    |  23 ++
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  drivers/leds/Kconfig                               |  12 +
+>  drivers/leds/Makefile                              |   1 +
+>  drivers/leds/leds-cr0014114.c                      | 352 +++++++++++++++++++++
+>  5 files changed, 389 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+>  create mode 100644 drivers/leds/leds-cr0014114.c
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+> new file mode 100644
+> index 000000000000..6a399cb65388
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+> @@ -0,0 +1,23 @@
+> +Crane Merchandising System SPI LED board CR0014114
+> +==================================================
+> +
+> +Required properties:
+> +- compatible: "cms,cr0014114"
+> +
+> +Optional properties:
+> +- label: prefix for LED names. If omitted the label is taken from the node name.
+
+label generally is the full name, not a prefix. It kind of defeats the
+point of label if the name is the same. You might as well move this
+into the driver.
+
+> +- leds-per-board: RGB leds per board, minimal value is 6
+> +- num-boards: number of LED boards on SPI bus, usually 1
+
+>From the driver, looks like you just need the total led count?
+
+It also appears that the driver knows the color arrangement. Perhaps
+you should have child nodes for each LED as the LED binding defines.
+reg can have 2 cells if you need to define board# and led#. And label
+can be the full label name if you keep label in the DT.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
