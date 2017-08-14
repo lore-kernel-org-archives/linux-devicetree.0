@@ -1,46 +1,33 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 00/10] Add support for Ixora V1.1 and Apalis Evaluation
- Board
-Date: Mon, 14 Aug 2017 09:30:15 +0800
-Message-ID: <20170814013014.GF31819@dragon>
-References: <cover.1502087184.git.maitysanchayan@gmail.com>
+From: Jun Gao <jun.gao@mediatek.com>
+Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c compatible for MediaTek
+ MT7622
+Date: Mon, 14 Aug 2017 09:36:56 +0800
+Message-ID: <1502674616.930.74.camel@mhfsdcap03>
+References: <1502506672-7620-1-git-send-email-jun.gao@mediatek.com>
+         <1502506672-7620-3-git-send-email-jun.gao@mediatek.com>
+         <20170812144411.zqgbncsemzaolldv@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1502087184.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170812144411.zqgbncsemzaolldv@ninjato>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 07, 2017 at 12:52:32PM +0530, Sanchayan Maity wrote:
-> Hello,
+On Sat, 2017-08-12 at 16:44 +0200, Wolfram Sang wrote:
+> > +static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
+> > +	.max_num_msgs = 255,
+> > +	.max_write_len = 65535,
+> > +	.max_read_len = 65535,
+> > +	.max_comb_1st_msg_len = 65535,
+> > +	.max_comb_2nd_msg_len = 65535,
+> > +};
 > 
-> This patch series adds support for Toradex Ixora V1.1 and Apalis
-> Evaluation Board along with some cleanups.
+> That looks like no quirks? Then just leave the quirks pointer below
+> empty.
 > 
-> Patch series has been generated on top of shawn's for-next branch.
-> 
-> Regards,
-> Sanchayan.
-> 
-> Marcel Ziswiler (6):
->   ARM: dts: imx6q-apalis-ixora: combine aliases
->   ARM: dts: imx6qdl-apalis: imx6q-apalis-ixora: get rid of tegra legacy gen1_i2c comment
->   ARM: dts: imx6qdl-apalis: reword cam i2c comment
->   ARM: dts: imx6q-apalis-ixora: get rid of obsolete fusion comment
->   ARM: dts: imx6q-apalis-ixora: add camera i2c bus definition
->   ARM: dts: imx6qdl-apalis: imx6q-apalis-ixora: use i2c from dwc hdmi
-> 
-> Sanchayan Maity (4):
->   ARM: dts: imx6q-apalis-ixora: fix usdhc2 pinctrl property
->   ARM: dts: imx6qdl-apalis: split usdhc1 pinctrl to support 4- and 8-bit
->   ARM: dts: imx6: add support for Toradex Ixora V1.1 carrier board
->   ARM: dts: imx6q-apalis-eval: add support for Apalis Evaluation Board
+Compare to MT8173 i2c controller, MT7622 limits message numbers to 255.
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jun
