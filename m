@@ -1,39 +1,34 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH v3 0/7] Add rk3328 pwm support
-Date: Mon, 14 Aug 2017 10:46:54 +0800
-Message-ID: <7e5a11c1-5f1d-9dff-435f-2624d95e16a3@rock-chips.com>
-References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] of_mdio: merge branch tails in
+ of_phy_register_fixed_link()
+Date: Sun, 13 Aug 2017 20:09:08 -0700 (PDT)
+Message-ID: <20170813.200908.1426365653542179792.davem@davemloft.net>
+References: <20170812210321.520045884@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, heiko@sntech.de, boris.brezillon@free-electrons.com, robh+dt@kernel.org
-Cc: catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170812210321.520045884@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris && thierry,
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Date: Sun, 13 Aug 2017 00:03:06 +0300
 
-Do you have any other suggestion for the patches?
+> Looks  like gcc isn't always able to figure  out that 3 *if* branches in
+> of_phy_register_fixed_link() calling fixed_phy_register() at their ends
+> are similar enough and thus can be merged. The "manual" merge saves 40
+> bytes of the object code (AArch64 gcc 4.8.5), and still saves 12 bytes
+> even  if gcc was able to merge the branch tails (ARM gcc 4.8.5)...
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-ÔÚ 2017/8/8 23:38, David Wu Ð´µÀ:
-> There are two features of rk3328 pwm module.
->   - PWM APB and function clocks are different.
->   - Add pwm atomic hardware update
-> 
-> David Wu (7):
->    pwm: rockchip: Add APB and function both clocks support
->    pwm: rockchip: Remove the judge from return value of pwm_config
->    pwm: rockchip: Use pwm_apply instead of the pwm_enable
->    pwm: rockchip: Move the configuration of polarity from
->      rockchip_pwm_set_enable() to rockchip_pwm_config()
->    pwm: rockchip: Use same pwm ops for each IP
->    pwm: rockchip: Add rk3328 pwm support
->    arm64: dts: rockchip: Add pwm nodes for rk3328
-> 
->   .../devicetree/bindings/pwm/pwm-rockchip.txt       |   8 +-
->   arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  45 ++++
->   drivers/pwm/pwm-rockchip.c                         | 281 +++++++++++----------
->   3 files changed, 199 insertions(+), 135 deletions(-)
-> 
+Applied, but if two instances of the "same" compiler just with
+different targets changes the optimization, it could be because of a
+tradeoff which is specific to parameters expressed in that target's
+backend.
+
+So in the future we should probably back away from trying to "help"
+the compiler in this way.
