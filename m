@@ -1,60 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt: xilinx: zynqmp: Add bindings for PM firmware
-Date: Mon, 14 Aug 2017 09:03:29 -0500
-Message-ID: <CABGGiszb1kr8ggo8Jv9jsvStK5DxpseuBy7z=_OK8pLN==h25Q@mail.gmail.com>
-References: <cover.1501854302.git.michal.simek@xilinx.com> <8c27b7eec6cc00d37dfe9b3998212ce9c9c27a31.1501854302.git.michal.simek@xilinx.com>
- <20170810191056.ur5b3zdrcgmb6sim@rob-hp-laptop> <4e5d9f8c-9e87-bdcd-388a-aab3c32415e8@xilinx.com>
- <20170811135453.GU12347@toto> <5d2e3a5e-6060-ff13-a065-c4b6be37e4c9@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v2] ARC: HSDK: Add reset controller node to manage ethernet reset
+Date: Mon, 14 Aug 2017 17:09:53 +0300
+Message-ID: <20170814140953.7729-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d2e3a5e-6060-ff13-a065-c4b6be37e4c9@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "Edgar E. Iglesias" <edgar.iglesias@xilinx.com>, Rob Herring <robh@kernel.org>, Edgar Iglesias <edgari@xilinx.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, monstr@monstr.eu, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 8:47 AM, Michal Simek <michal.simek@xilinx.com> wrote:
-> On 11.8.2017 15:54, Edgar E. Iglesias wrote:
->> On Fri, Aug 11, 2017 at 02:58:03PM +0200, Michal Simek wrote:
->>> Hi Rob, +Edgar,
->>>
->>> On 10.8.2017 21:10, Rob Herring wrote:
->>>> On Fri, Aug 04, 2017 at 03:45:30PM +0200, Michal Simek wrote:
->>>>> From: Soren Brinkmann <soren.brinkmann@xilinx.com>
->>>>>
->>>>> Document the DT bindings for the Zynq UltraScale+ PM Firmware.
+DW ethernet controller on HSDK hangs sometimes after SW reset, so
+add reset node to make possible to reset DW ethernet controller HW.
 
-[...]
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+Changes v1 -> v2:
+  * Enable HSDK reset driver in hsdk_defconfig
 
->>>>> + - method:        The method of calling the PM-API firmware layer.
->>>>> +          Permitted values are:
->>>>> +           - "smc" : To be used in configurations without a hypervisor
->>>>> +           - "hvc" : To be used when hypervisor is present
->>>>
->>>> Do you really use both?
->>>>
->>>
->>> SMCs definitely yes.
->>>
->>> Interface was designed in that way and I don't know if people are using
->>> it or not.
->>>
->>> Not sure if Xen is blocking SMCs. I know we have discussed it but not
->>> sure if this is enabled by default or only for certain configurations.
->>> Also not sure if xen contains handler for hvc.
->>> Edgar: Do you know?
->>
->> We have patches for Xen that implement a power-management mediator.
->> That implementation handles PM calls over both SMC and HVC insns.
->> Patches are on the Xen mailing list.
->>
->> Other hypervisors may work differently.
->>
->> I think we should support both but I don't have a strong opinion on it.
->
-> Rob: Are you ok with having it there?
+ arch/arc/boot/dts/hsdk.dts      | 9 +++++++++
+ arch/arc/configs/hsdk_defconfig | 1 +
+ 2 files changed, 10 insertions(+)
 
-Yes.
-
-Rob
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index e096879..84052db 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -12,6 +12,7 @@
+ /dts-v1/;
+ 
+ #include <dt-bindings/net/ti-dp83867.h>
++#include <dt-bindings/reset/snps,hsdk-v1-reset.h>
+ 
+ / {
+ 	model = "snps,hsdk";
+@@ -102,6 +103,12 @@
+ 
+ 		ranges = <0x00000000 0xf0000000 0x10000000>;
+ 
++		cgu_rst: reset {
++			compatible = "snps,hsdk-v1.0-reset";
++			#reset-cells = <1>;
++			reg = <0x8A0 0x4>, <0xFF0 0x4>;
++		};
++
+ 		serial: serial@5000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x5000 0x100>;
+@@ -141,6 +148,8 @@
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
++			resets = <&cgu_rst HSDK_V1_ETH_RESET>;
++			reset-names = "stmmaceth";
+ 
+ 			mdio {
+ 				#address-cells = <1>;
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index f4190bc..f7fd8c4 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -61,6 +61,7 @@ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_DW=y
+ # CONFIG_IOMMU_SUPPORT is not set
++CONFIG_RESET_HSDK_V1=y
+ CONFIG_EXT3_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
+-- 
+2.9.3
