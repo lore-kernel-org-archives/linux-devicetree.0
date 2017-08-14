@@ -1,48 +1,64 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v3 09/10] arm64: dts: hi3660: add bindings for DMA
-Date: Mon, 14 Aug 2017 17:50:48 +0800
-Message-ID: <20170814095049.27701-10-guodong.xu@linaro.org>
-References: <20170814095049.27701-1-guodong.xu@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170814095049.27701-1-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wang Ruyi <wangruyi@huawei.com>, Guodong Xu <guodong.xu@linaro.org>
+From: Jun Gao <jun.gao@mediatek.com>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek MT7622 i2c binding
+Date: Mon, 14 Aug 2017 18:05:39 +0800
+Message-ID: <1502705139.930.78.camel@mhfsdcap03>
+References: <1502264631-12572-1-git-send-email-jun.gao@mediatek.com>
+         <1502264631-12572-2-git-send-email-jun.gao@mediatek.com>
+         <3384d424-827a-0a4b-d1d6-7d361d8c8391@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <3384d424-827a-0a4b-d1d6-7d361d8c8391@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wang Ruyi <wangruyi@huawei.com>
+On Mon, 2017-08-14 at 11:36 +0200, Matthias Brugger wrote:
+> 
+> On 08/09/2017 09:43 AM, Jun Gao wrote:
+> > From: Jun Gao <jun.gao@mediatek.com>
+> > 
+> > Add MT7622 i2c binding to binding file. Compare to MT8173 i2c
+> > controller, MT7622 limit message size to 255, and not support
+> > 4GB DMA mode.
+> > 
+> > Signed-off-by: Jun Gao <jun.gao@mediatek.com>
+> > ---
+> >   Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
+> >   1 file changed, 6 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> > index bd5a7be..ff9ac61 100644
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> > @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
+> >   
+> >   Required properties:
+> >     - compatible: value should be either of the following.
+> > -      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek mt2701
+> > -      "mediatek,mt6577-i2c": for i2c compatible with mt6577.
+> > -      "mediatek,mt6589-i2c": for i2c compatible with mt6589.
+> > -      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
+> > -      "mediatek,mt8173-i2c": for i2c compatible with mt8173.
+> > +	"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
+> > +	"mediatek,mt6577-i2c": for Mediatek MT6577
+> > +	"mediatek,mt6589-i2c": for Mediatek MT6589
+> > +	"mediatek,mt7622-i2c": for Mediatek MT7622
+> > +	"mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
+> > +	"mediatek,mt8173-i2c": for Mediatek MT8173
+> >     - reg: physical base address of the controller and dma base, length of memory
+> >       mapped region.
+> >     - interrupts: interrupt number to the cpu.
+> > 
+> 
+> In the next series, could you please make sure not to change the indentation.
+> 
+> Thanks a lot,
+> Matthias
 
-Add bindings for DMA.
+Please review [PATCH v2 1/2], I will not change the indentation any
+more. Thanks!
 
-Signed-off-by: Wang Ruyi <wangruyi@huawei.com>
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 41841f7..545d435 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -436,6 +436,19 @@
- 			status = "disabled";
- 		};
- 
-+		dma0: dma@fdf30000 {
-+			compatible = "hisilicon,k3-dma-1.0";
-+			reg = <0x0 0xfdf30000 0x0 0x1000>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			dma-requests = <32>;
-+			dma-min-chan = <1>;
-+			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_CLK_GATE_DMAC>;
-+			dma-no-cci;
-+			dma-type = "hi3660_dma";
-+		};
-+
- 		rtc0: rtc@fff04000 {
- 			compatible = "arm,pl031", "arm,primecell";
- 			reg = <0x0 0Xfff04000 0x0 0x1000>;
--- 
-2.10.2
+Jun
