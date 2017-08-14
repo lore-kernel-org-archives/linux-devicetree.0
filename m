@@ -1,60 +1,36 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH  2/3] ARM: dts: iwg20m: Enable SDHI0 controller
-Date: Mon, 14 Aug 2017 12:49:48 +0100
-Message-ID: <1502711389-16040-3-git-send-email-biju.das@bp.renesas.com>
-References: <1502711389-16040-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1502711389-16040-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH  0/3] Add SDHI Support
+Date: Mon, 14 Aug 2017 12:49:46 +0100
+Message-ID: <1502711389-16040-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the SDHI0 controller on iWave RZG1M Qseven SOM.
+This series aims to add SDHI support for r8a7743 SoC.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7743-iwg20m.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+This series has been compiled and tested against renesas-dev tag
+renesas-devel-20170814-v4.13-rc5.
 
-diff --git a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-index ff79938..4119737 100644
---- a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-+++ b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-@@ -9,6 +9,7 @@
-  */
- 
- #include "r8a7743.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	compatible = "iwave,g20m", "renesas,r8a7743";
-@@ -42,6 +43,12 @@
- 		groups = "mmc_data8_b", "mmc_ctrl";
- 		function = "mmc";
- 	};
-+
-+	sdhi0_pins: sd0 {
-+		groups = "sdhi0_data4", "sdhi0_ctrl";
-+		function = "sdhi0";
-+		power-source = <3300>;
-+	};
- };
- 
- &mmcif0 {
-@@ -53,3 +60,13 @@
- 	non-removable;
- 	status = "okay";
- };
-+
-+&sdhi0 {
-+	pinctrl-0 = <&sdhi0_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&reg_3p3v>;
-+	vqmmc-supply = <&reg_3p3v>;
-+	cd-gpios = <&gpio7 11 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
+There is no compile time dependencies.It has run time dependency on
+[PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support.
+https://patchwork.kernel.org/patch/9898611/ 
+
+Biju Das (3):
+  ARM: dts: r8a7743: Add SDHI controllers
+  ARM: dts: iwg20m: Enable SDHI0 controller
+  ARM: dts: iwg20d-q7: Add SDHI1 support
+
+ arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 48 +++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7743-iwg20m.dtsi   | 17 ++++++++++++
+ arch/arm/boot/dts/r8a7743.dtsi          | 42 +++++++++++++++++++++++++++++
+ 3 files changed, 107 insertions(+)
+
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
