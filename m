@@ -1,51 +1,39 @@
-From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv6 3/3] ARM:drm ivip Intel FPGA Video and Image
- Processing Suite
-Date: Mon, 14 Aug 2017 02:27:15 +0000
-Message-ID: <1502677633.2192.0.camel@intel.com>
-References: <1502434187-6407-1-git-send-email-hean.loong.ong@intel.com>
-         <1502434187-6407-4-git-send-email-hean.loong.ong@intel.com>
-         <b3505a39-9fa9-c993-15cb-d643a34f58a9@infradead.org>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH v3 0/7] Add rk3328 pwm support
+Date: Mon, 14 Aug 2017 10:46:54 +0800
+Message-ID: <7e5a11c1-5f1d-9dff-435f-2624d95e16a3@rock-chips.com>
+References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b3505a39-9fa9-c993-15cb-d643a34f58a9-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Content-Language: en-US
-Content-ID: <83B7B187613CF242AD94712792FA720E-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, heiko@sntech.de, boris.brezillon@free-electrons.com, robh+dt@kernel.org
+Cc: catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE3LTA4LTExIGF0IDA4OjIxIC0wNzAwLCBSYW5keSBEdW5sYXAgd3JvdGU6DQo+
-IE9uIDA4LzEwLzIwMTcgMTE6NDkgUE0sIEhlYW4tTG9vbmcsIE9uZyB3cm90ZToNCj4gPiANCj4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2l2aXAvS2NvbmZpZw0KPiA+IGIvZHJpdmVy
-cy9ncHUvZHJtL2l2aXAvS2NvbmZpZw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5k
-ZXggMDAwMDAwMC4uMzk4YzlhYg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vaXZpcC9LY29uZmlnDQo+ID4gQEAgLTAsMCArMSwxNCBAQA0KPiA+ICtjb25maWcg
-RFJNX0lWSVANCj4gPiArwqDCoMKgwqDCoMKgwqDCoHRyaXN0YXRlICJJbnRlbCBGR1BBIFZpZGVv
-IGFuZCBJbWFnZSBQcm9jZXNzaW5nIg0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgZGVwZW5kcyBvbiBE
-Uk0gJiYgT0YNCj4gPiArwqDCoMKgwqDCoMKgwqDCoHNlbGVjdCBEUk1fR0VNX0NNQV9IRUxQRVIN
-Cj4gPiArwqDCoMKgwqDCoMKgwqDCoHNlbGVjdCBEUk1fS01TX0hFTFBFUg0KPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgc2VsZWN0IERSTV9LTVNfRkJfSEVMUEVSDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqBz
-ZWxlY3QgRFJNX0tNU19DTUFfSEVMUEVSDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqBoZWxwDQo+ID4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENob29zZSB0aGlzIG9wdGlvbiBpZiB5b3UgaGF2ZSBh
-IEludGVsIEZQR0EgQXJyaWEgMTANCj4gPiBzeXN0ZW0NCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqBhbg0KPiANCj4gPiANCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-YW5kIGFib3ZlIHdpdGggYW4gSW50ZWwgRGlzcGxheSBQb3J0IElQLiBUaGlzIGRvZXMgbm90DQo+
-ID4gc3VwcG9ydA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBsZWdhY3kgSW50ZWwgRlBH
-QSBDeWNsb25lIFYgZGlzcGxheSBwb3J0LiBDdXJyZW50bHkNCj4gPiBvbmx5IHNpbmdsZQ0KPiA+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBmcmFtZSBidWZmZXIgaXMgc3VwcG9ydGVkLiBOb3Rl
-IHRoYXQgQUNQSSBhbmQgWF84Ng0KPiA+IGFyY2hpdGVjdHVyZQ0KPiA+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBpcyBub3Qgc3VwcG9ydGVkIGZvciBBcnJpYTEwLklmIE0gaXMgc2VsZWN0ZWQg
-dGhlDQo+ID4gbW9kdWxlIHdpbGwgYmUNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQXJyaWExMC4gSWYgTSBp
-cw0KPiANCj4gPiANCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2FsbGVkIGl2aXAuDQo+
-IEFsbCBvZiB0aGUgaGVscCB0ZXh0IHNob3VsZCBiZSBpbmRlbnRlZCB3aXRoIG9uZSB0YWIgKyAy
-IHNwYWNlcw0KPiBhY2NvcmRpbmcgdG8gY29kaW5nLXN0eWxlLnJzdC4NCj4gDQo+IA0KTm90ZWQu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Boris && thierry,
+
+Do you have any other suggestion for the patches?
+
+ÔÚ 2017/8/8 23:38, David Wu Ð´µÀ:
+> There are two features of rk3328 pwm module.
+>   - PWM APB and function clocks are different.
+>   - Add pwm atomic hardware update
+> 
+> David Wu (7):
+>    pwm: rockchip: Add APB and function both clocks support
+>    pwm: rockchip: Remove the judge from return value of pwm_config
+>    pwm: rockchip: Use pwm_apply instead of the pwm_enable
+>    pwm: rockchip: Move the configuration of polarity from
+>      rockchip_pwm_set_enable() to rockchip_pwm_config()
+>    pwm: rockchip: Use same pwm ops for each IP
+>    pwm: rockchip: Add rk3328 pwm support
+>    arm64: dts: rockchip: Add pwm nodes for rk3328
+> 
+>   .../devicetree/bindings/pwm/pwm-rockchip.txt       |   8 +-
+>   arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  45 ++++
+>   drivers/pwm/pwm-rockchip.c                         | 281 +++++++++++----------
+>   3 files changed, 199 insertions(+), 135 deletions(-)
+> 
