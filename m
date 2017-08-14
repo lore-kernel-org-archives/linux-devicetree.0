@@ -1,72 +1,66 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 1/5] iio: srf08: add device tree binding for srf02 and
- srf10
-Date: Mon, 14 Aug 2017 14:37:26 +0200
-Message-ID: <20170814123725.GA2238@katana>
-References: <20170814085941.GA9759@arbeit>
- <20170814091106.rvdvebcxfbpggmjd@ninjato>
- <20170814103918.GB3062@imap.1und1.de>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v2 1/3] PCI: mediatek: Fix return value in case of error
+Date: Mon, 14 Aug 2017 21:04:26 +0800
+Message-ID: <1502715868-17651-2-git-send-email-honghui.zhang@mediatek.com>
+References: <1502715868-17651-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170814103918.GB3062@imap.1und1.de>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1502715868-17651-1-git-send-email-honghui.zhang@mediatek.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
---n8g4imXOkfNTN/H1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In commit ae02a6dda285 ("PCI: mediatek: Add controller support for MT2712
+and MT7622"), the function 'mtk_pcie_init_irq_domain', the pattern used to
+check and return error is:
 
-On Mon, Aug 14, 2017 at 12:39:18PM +0200, Andreas Klinger wrote:
-> Wolfram Sang <wsa@the-dreams.de> schrieb am Mon, 14. Aug 11:11:
-> > On Mon, Aug 14, 2017 at 10:59:41AM +0200, Andreas Klinger wrote:
-> > > add trivial device tree binding "devantech,srf02" and "devantech,srf1=
-0"
-> > >=20
-> > > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> > > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
-> >=20
-> > Again: This file has moved since v4.12-rc1. Please rebase to v4.12 or
-> > even v4.13-rc5.
-> >=20
->=20
-> Then i split the patch series up in two parts:
-> - patch with only device tree binding against >=3D v4.12
-> - everything else as patch series against git tree of IIO
->=20
-> Ok?
+  if (!var) {
+    dev_err(...);
+    return PTR_ERR(var);
+  }
 
-Wooha, the master branch of iio.git is at v4.11? I see. So, this is the
-culprit, sorry! @Jonathan: is that the branch people should develop on,
-or is it your testing branch?
+The return value in such case is always 0, change it to return -ENODEV
+instead. And if error was returned from this function, the error should
+be returned to upper layer instead of -ENODEV.
 
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+---
+ drivers/pci/host/pcie-mediatek.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---n8g4imXOkfNTN/H1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmRmYEACgkQFA3kzBSg
-KbbOig//ROG3M78W1k49GH0hBYMuRUC5RzWKXJkMdgvpUyWLlP1yEJl5CSZpfxf2
-TdO3ekU8I69fUxSaX76lr4Z3QIyoFsPzw5ccbtorZY53fb/QyisLWkTqr/xEzzpq
-2Wc8Uk+kqy7rZIsrrwlWS8egGxIm6RA5hcPXt9/vJz1CcGCxqVHKcThHq4Q22aiC
-IIWX05Cij1Fav/O9xPYwiC988dknR3rDtol1LMDNFKqtAOzdmAL2hwveL6Na7RJe
-TaQjG6MbnlLWJ00UrqsRyueHGXgXIEm+9b1fG0kmTtUrpu76PvOgfm4PwrmItm3R
-5aBm0CBboQp7GlX/PMxZ8ltK9CDgEpEW9wci1XArzxbtXc4Haiyyynlk9CMM0ocS
-LaY9knOwn/PheRoYyI7UMj2avYxy4gsLf84NqsTQzpPqwetuaC38Mp3nS+4g0IM+
-/ZgYnfx6rlIlKsvo7nRWoVPFbsDMSYbAsGP+dn4WXhEK+dOAqIq8iv0FFwJTZHQ9
-YeVqavuNoQVBtNxltiC+vvN5Nb+CRDhSyCBz2VxlQHcVh8lczmpK8VUgrPzW8Eql
-+THyWGv4CTlUpm6uXkyzrm8tQYUyYkosFY7Gfpksl7FQiVsyMb959VjMlIhxkyMR
-3TNEctggObTl1CGA6m63GOuTbAd40OjRY/9N07f8/9W7I6olv/s=
-=XR9y
------END PGP SIGNATURE-----
-
---n8g4imXOkfNTN/H1--
+diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+index 44e7885..946c056 100644
+--- a/drivers/pci/host/pcie-mediatek.c
++++ b/drivers/pci/host/pcie-mediatek.c
+@@ -450,14 +450,14 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
+ 	pcie_intc_node = of_get_next_child(node, NULL);
+ 	if (!pcie_intc_node) {
+ 		dev_err(dev, "no PCIe Intc node found\n");
+-		return PTR_ERR(pcie_intc_node);
++		return -ENODEV;
+ 	}
+ 
+ 	port->irq_domain = irq_domain_add_linear(pcie_intc_node, INTX_NUM,
+ 						 &intx_domain_ops, port);
+ 	if (!port->irq_domain) {
+ 		dev_err(dev, "failed to get INTx IRQ domain\n");
+-		return PTR_ERR(port->irq_domain);
++		return -ENODEV;
+ 	}
+ 
+ 	return 0;
+@@ -502,7 +502,7 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+ 	err = mtk_pcie_init_irq_domain(port, node);
+ 	if (err) {
+ 		dev_err(dev, "failed to init PCIe legacy IRQ domain\n");
+-		return -ENODEV;
++		return err;
+ 	}
+ 
+ 	return 0;
+-- 
+2.6.4
