@@ -1,119 +1,76 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] arm: dts: mt7623: Add SD-card and EMMC to
- bananapi-r2
-Date: Mon, 14 Aug 2017 17:18:34 +0200
-Message-ID: <f55920be-ff16-9f6f-a3b3-4e4bddda7b12@gmail.com>
-References: <1c83eae1944992f7c5a9af946e03bc2c4e62c874.1501819056.git.sean.wang@mediatek.com>
- <1501841664.17551.2.camel@mtkswgap22>
- <9fd98b55-8c71-f697-3a41-bb8b70b7dcf1@gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Mon, 14 Aug 2017 17:20:19 +0200
+Message-ID: <CAMuHMdWHMLi-yiVmzQCYRHSnJpuokBREo6QFF2z-zaviZVxFNA@mail.gmail.com>
+References: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw@mail.gmail.com> <TY1PR06MB070269842CD923E4DE4FE6EDB78C0@TY1PR06MB0702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9fd98b55-8c71-f697-3a41-bb8b70b7dcf1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <TY1PR06MB070269842CD923E4DE4FE6EDB78C0-/PRLmSCtZ14u2TXDOttQZW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris,
 
+On Mon, Aug 14, 2017 at 5:15 PM, Chris Paterson
+<Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+>> From: geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+>> On Behalf Of Geert Uytterhoeven
+>> Sent: 14 August 2017 15:22
+>>
+>> On Mon, Aug 14, 2017 at 1:19 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+>> > Add support for r8a7743/5 SoC.Renesas RZ/G1[ME] (R8A7743/5) SDHI is
+>> > identical to the R-Car Gen2 family.
+>> >
+>> > Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+>> > ---
+>> > This patch is compiled and tested against mmc/next.
+>> >
+>> >  drivers/mmc/host/renesas_sdhi_sys_dmac.c | 2 ++
+>> >  1 file changed, 2 insertions(+)
+>> >
+>> > diff --git a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
+>> > b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
+>> > index 718cb8a..f709f7f 100644
+>> > --- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
+>> > +++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
+>> > @@ -95,6 +95,8 @@
+>> >         { .compatible = "renesas,sdhi-r7s72100", .data = &of_rz_compatible, },
+>> >         { .compatible = "renesas,sdhi-r8a7778", .data =
+>> &of_rcar_gen1_compatible, },
+>> >         { .compatible = "renesas,sdhi-r8a7779", .data =
+>> > &of_rcar_gen1_compatible, },
+>> > +       { .compatible = "renesas,sdhi-r8a7743", .data =
+>> &of_rcar_gen2_compatible, },
+>> > +       { .compatible = "renesas,sdhi-r8a7745", .data =
+>> > + &of_rcar_gen2_compatible, },
+>> >         { .compatible = "renesas,sdhi-r8a7790", .data =
+>> &of_rcar_gen2_compatible, },
+>> >         { .compatible = "renesas,sdhi-r8a7791", .data =
+>> &of_rcar_gen2_compatible, },
+>> >         { .compatible = "renesas,sdhi-r8a7792", .data =
+>> > &of_rcar_gen2_compatible, },
+>>
+>> I guess we want generic R-Car Gen2/3 compatible values here, too?
+>
+> Yes, but I assume that should be a separate patch submitted instead of this one?
 
-On 08/04/2017 02:19 PM, Matthias Brugger wrote:
-> 
-> 
-> On 08/04/2017 12:14 PM, Sean Wang wrote:
->> On Fri, 2017-08-04 at 11:59 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
->>> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>>
->>> The bananapi-r2 board has an SD-card controller and built-in
->>> EMMC storage so enables those devices in the devicetree. Also
->>> cleanup nodes in alphabetical order in the patch.
->>>
->>
->> Hi, Matthias
->>
->> could your help remove those words "Also cleanup nodes in alphabetical
->> order in the patch." when merging, i was forgetting to do it.
->>
->> or prefer wanting me to resend it again?
-> 
-> Yes I can do that. No need to resend.
-> 
+Indeed. That would avoid having to add the SoC-specific compatible values
+to the driver for all RZ/G1 variants.
 
-Both patches pushed to v4.13-next/dts32 now
+Gr{oetje,eeting}s,
 
-Thanks a lot,
-Matthias
+                        Geert
 
-> Regards,
-> Matthias
-> 
->>
->>     Sean
->>
->>> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> ---
->>>   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 37 +++++++++++++++++++++++++++
->>>   1 file changed, 37 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts 
->>> b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
->>> index 9f3e6dd..444ed93 100644
->>> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
->>> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
->>> @@ -179,6 +179,32 @@
->>>       status = "okay";
->>>   };
->>> +&mmc0 {
->>> +    pinctrl-names = "default", "state_uhs";
->>> +    pinctrl-0 = <&mmc0_pins_default>;
->>> +    pinctrl-1 = <&mmc0_pins_uhs>;
->>> +    status = "okay";
->>> +    bus-width = <8>;
->>> +    max-frequency = <50000000>;
->>> +    cap-mmc-highspeed;
->>> +    vmmc-supply = <&mt6323_vemc3v3_reg>;
->>> +    vqmmc-supply = <&mt6323_vio18_reg>;
->>> +    non-removable;
->>> +};
->>> +
->>> +&mmc1 {
->>> +    pinctrl-names = "default", "state_uhs";
->>> +    pinctrl-0 = <&mmc1_pins_default>;
->>> +    pinctrl-1 = <&mmc1_pins_uhs>;
->>> +    status = "okay";
->>> +    bus-width = <4>;
->>> +    max-frequency = <50000000>;
->>> +    cap-sd-highspeed;
->>> +    cd-gpios = <&pio 261 0>;
->>> +    vmmc-supply = <&mt6323_vmch_reg>;
->>> +    vqmmc-supply = <&mt6323_vio18_reg>;
->>> +};
->>> +
->>>   &pio {
->>>       cir_pins_a:cir@0 {
->>>           pins_cir {
->>> @@ -314,6 +340,17 @@
->>>               bias-pull-down;
->>>               drive-strength = <MTK_DRIVE_4mA>;
->>>           };
->>> +
->>> +        pins_wp {
->>> +            pinmux = <MT7623_PIN_29_EINT7_FUNC_MSDC1_WP>;
->>> +            input-enable;
->>> +            bias-pull-up;
->>> +        };
->>> +
->>> +        pins_insert {
->>> +            pinmux = <MT7623_PIN_261_MSDC1_INS_FUNC_GPIO261>;
->>> +            bias-pull-up;
->>> +        };
->>>       };
->>>       mmc1_pins_uhs: mmc1 {
->>
->>
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
