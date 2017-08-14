@@ -1,59 +1,66 @@
-From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
-Date: Mon, 14 Aug 2017 15:15:17 +0000
-Message-ID: <TY1PR06MB070269842CD923E4DE4FE6EDB78C0@TY1PR06MB0702.apcprd06.prod.outlook.com>
-References: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 0/2] Add basic support for Mediatek MT2712 SoC
+Date: Mon, 14 Aug 2017 17:15:37 +0200
+Message-ID: <d40ece12-5148-af2a-fb83-00c56230e175@gmail.com>
+References: <1501847977-4023-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501847977-4023-1-git-send-email-yt.shen@mediatek.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mars Cheng <mars.cheng@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-DQo+IEZyb206IGdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb20gW21haWx0bzpnZWVydC51eXR0
-ZXJob2V2ZW5AZ21haWwuY29tXQ0KPiBPbiBCZWhhbGYgT2YgR2VlcnQgVXl0dGVyaG9ldmVuDQo+
-IFNlbnQ6IDE0IEF1Z3VzdCAyMDE3IDE1OjIyDQo+IA0KPiBPbiBNb24sIEF1ZyAxNCwgMjAxNyBh
-dCAxOjE5IFBNLCBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+
-IEFkZCBzdXBwb3J0IGZvciByOGE3NzQzLzUgU29DLlJlbmVzYXMgUlovRzFbTUVdIChSOEE3NzQz
-LzUpIFNESEkgaXMNCj4gPiBpZGVudGljYWwgdG8gdGhlIFItQ2FyIEdlbjIgZmFtaWx5Lg0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0K
-PiA+IC0tLQ0KPiA+IFRoaXMgcGF0Y2ggaXMgY29tcGlsZWQgYW5kIHRlc3RlZCBhZ2FpbnN0IG1t
-Yy9uZXh0Lg0KPiA+DQo+ID4gIGRyaXZlcnMvbW1jL2hvc3QvcmVuZXNhc19zZGhpX3N5c19kbWFj
-LmMgfCAyICsrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L3JlbmVzYXNfc2RoaV9zeXNfZG1hYy5jDQo+
-ID4gYi9kcml2ZXJzL21tYy9ob3N0L3JlbmVzYXNfc2RoaV9zeXNfZG1hYy5jDQo+ID4gaW5kZXgg
-NzE4Y2I4YS4uZjcwOWY3ZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21tYy9ob3N0L3JlbmVz
-YXNfc2RoaV9zeXNfZG1hYy5jDQo+ID4gKysrIGIvZHJpdmVycy9tbWMvaG9zdC9yZW5lc2FzX3Nk
-aGlfc3lzX2RtYWMuYw0KPiA+IEBAIC05NSw2ICs5NSw4IEBADQo+ID4gICAgICAgICB7IC5jb21w
-YXRpYmxlID0gInJlbmVzYXMsc2RoaS1yN3M3MjEwMCIsIC5kYXRhID0gJm9mX3J6X2NvbXBhdGli
-bGUsIH0sDQo+ID4gICAgICAgICB7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yOGE3Nzc4
-IiwgLmRhdGEgPQ0KPiAmb2ZfcmNhcl9nZW4xX2NvbXBhdGlibGUsIH0sDQo+ID4gICAgICAgICB7
-IC5jb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yOGE3Nzc5IiwgLmRhdGEgPQ0KPiA+ICZvZl9y
-Y2FyX2dlbjFfY29tcGF0aWJsZSwgfSwNCj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVu
-ZXNhcyxzZGhpLXI4YTc3NDMiLCAuZGF0YSA9DQo+ICZvZl9yY2FyX2dlbjJfY29tcGF0aWJsZSwg
-fSwNCj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxzZGhpLXI4YTc3NDUiLCAu
-ZGF0YSA9DQo+ID4gKyAmb2ZfcmNhcl9nZW4yX2NvbXBhdGlibGUsIH0sDQo+ID4gICAgICAgICB7
-IC5jb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yOGE3NzkwIiwgLmRhdGEgPQ0KPiAmb2ZfcmNh
-cl9nZW4yX2NvbXBhdGlibGUsIH0sDQo+ID4gICAgICAgICB7IC5jb21wYXRpYmxlID0gInJlbmVz
-YXMsc2RoaS1yOGE3NzkxIiwgLmRhdGEgPQ0KPiAmb2ZfcmNhcl9nZW4yX2NvbXBhdGlibGUsIH0s
-DQo+ID4gICAgICAgICB7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yOGE3NzkyIiwgLmRh
-dGEgPQ0KPiA+ICZvZl9yY2FyX2dlbjJfY29tcGF0aWJsZSwgfSwNCj4gDQo+IEkgZ3Vlc3Mgd2Ug
-d2FudCBnZW5lcmljIFItQ2FyIEdlbjIvMyBjb21wYXRpYmxlIHZhbHVlcyBoZXJlLCB0b28/DQoN
-ClllcywgYnV0IEkgYXNzdW1lIHRoYXQgc2hvdWxkIGJlIGEgc2VwYXJhdGUgcGF0Y2ggc3VibWl0
-dGVkIGluc3RlYWQgb2YgdGhpcyBvbmU/DQoNCktpbmQgcmVnYXJkcywgQ2hyaXMNCg0KDQo+IA0K
-PiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0
-DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4
-IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPiANCj4gSW4gcGVyc29u
-YWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBo
-YWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkg
-InByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+On 08/04/2017 01:59 PM, YT Shen wrote:
+> MT2712 is a SoC based on 64bit ARMv8 architecture.
+> MT2712 share many HW IP with MT8173.  This patchset was tested on MT2712 evaluation board, and boot to shell ok.
+> 
+> This series contains document bindings, device tree including interrupt and uart.
+> 
+
+pushed to v4.13-next/dts64
+
+Thanks
+
+> Changes compared to v5:
+> - remove the soc node
+> 
+> Changes compared to v4:
+> - rebase to 4.13-rc1
+> - use two clocks (baud_clk & sys_clk) instead of one uart_clk to the correct bindings
+> 
+> Changes compared to v3:
+> - use two uart clocks refer to the bindings
+> 
+> Changes compared to v2:
+> - remove alias from serial1 to serial5
+> - remove initrd-start and initrd-end
+> - change GIC_CPU_MASK_SIMPLE(6) to GIC_CPU_MASK_RAW(0x13)
+> - change gic-400 reg range
+> 
+> Changes compared to v1:
+> - change subject prefix for bindings
+> - change device tree license to SPDX tag.
+> - change bootargs parameter to DT usage.
+> - change intpol-controller to interrupt-controller
+> 
+> YT Shen (2):
+>    dt-bindings: arm: Add bindings for Mediatek MT2712 SoC Platform
+>    arm64: dts: Add Mediatek SoC MT2712 and evaluation board dts and
+>      Makefile
+> 
+>   Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
+>   .../interrupt-controller/mediatek,sysirq.txt       |   1 +
+>   .../devicetree/bindings/serial/mtk-uart.txt        |   1 +
+>   arch/arm64/boot/dts/mediatek/Makefile              |   1 +
+>   arch/arm64/boot/dts/mediatek/mt2712-evb.dts        |  32 ++++
+>   arch/arm64/boot/dts/mediatek/mt2712e.dtsi          | 171 +++++++++++++++++++++
+>   6 files changed, 210 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> 
