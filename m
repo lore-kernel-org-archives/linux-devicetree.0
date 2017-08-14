@@ -1,72 +1,48 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v2] arm64: dts: hisi: add PCIe host controller node for hip07 SoC
-Date: Mon, 14 Aug 2017 17:23:48 +0800
-Message-ID: <1502702628-146770-1-git-send-email-wangzhou1@hisilicon.com>
+From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Subject: [PATCH v2 0/5] iio: srf08: add support for similar devices and
+ triggered buffers
+Date: Mon, 14 Aug 2017 10:59:00 +0200
+Message-ID: <20170814085900.GA9722@arbeit>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add one PCIe host controller node for HiSilicon Hip07 SoC and enable it in
-D05 board.
+This patch series adds support for:
+- triggered buffer
+- ultrasonic devices srf02 and srf10
 
-Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- arch/arm64/boot/dts/hisilicon/hip07-d05.dts |  4 ++++
- arch/arm64/boot/dts/hisilicon/hip07.dtsi    | 22 ++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
+Thanks to Jonathan for his review which lined out improvements throughout
+the patches.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07-d05.dts b/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
-index f5d7f08..fe7c16c 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
-@@ -84,3 +84,7 @@
- &sas1 {
- 	status = "ok";
- };
-+
-+&p0_pcie2_a {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index 283d7b5..2c01a21 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1534,5 +1534,27 @@
- 				     <637 1>,<638 1>,<639 1>;
- 			status = "disabled";
- 		};
-+
-+		p0_pcie2_a: pcie@a00a0000 {
-+			compatible = "hisilicon,hip07-pcie-ecam";
-+			reg = <0 0xaf800000 0 0x800000>,
-+			      <0 0xa00a0000 0 0x10000>;
-+			bus-range = <0xf8 0xff>;
-+			msi-map = <0xf800 &p0_its_dsa_a 0xf800 0x800>;
-+			msi-map-mask = <0xffff>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			dma-coherent;
-+			ranges = <0x02000000 0 0xa8000000 0 0xa8000000 0 0x77f0000
-+				  0x01000000 0 0 0 0xaf7f0000 0 0x10000>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0xf800 0 0 7>;
-+			interrupt-map = <0x0 0 0 1 &mbigen_pcie2_a 671 4
-+					 0x0 0 0 2 &mbigen_pcie2_a 671 4
-+					 0x0 0 0 3 &mbigen_pcie2_a 671 4
-+					 0x0 0 0 4 &mbigen_pcie2_a 671 4>;
-+			status = "disabled";
-+		};
- 	};
- };
+I'm not sure, if the cc of [PATCH v2 1/5] is correct now.
+
+Changes in v2:
+- removed unnecessary patch "[PATCH 6/7] iio: srf08: add buffered to device
+  mode"
+- incorporated patch "[PATCH 7/7] iio: srf08: change text in Kconfig" where
+  suitable
+- changed order of patches to improve logical flow of changes
+- improved distinction of sensor types
+
+Andreas Klinger (5):
+  iio: srf08: add device tree binding for srf02 and srf10
+  iio: srf08: add device tree table
+  iio: srf08: add triggered buffer support
+  iio: srf08: add sensor type srf10
+  iio: srf08: add support for srf02 in i2c mode
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   2 +
+ drivers/iio/proximity/Kconfig                      |   8 +-
+ drivers/iio/proximity/srf08.c                      | 191 ++++++++++++++++++---
+ 3 files changed, 169 insertions(+), 32 deletions(-)
+
 -- 
-1.9.1
+2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
