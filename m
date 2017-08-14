@@ -1,66 +1,42 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [RESEND PATCH 2/3] arm64: dts: apq8096-db820c: Enable on board 3 pcie
- root complex
-Date: Mon, 14 Aug 2017 13:37:56 +0200
-Message-ID: <20170814113757.31010-2-srinivas.kandagatla@linaro.org>
-References: <20170814113757.31010-1-srinivas.kandagatla@linaro.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 1/2] ata: mediatek: add support for MediaTek SATA
+ controller
+Date: Mon, 14 Aug 2017 13:41:13 +0200
+Message-ID: <b02142f2-c4be-73b2-3165-288ac10b0db3@gmail.com>
+References: <cover.1502501342.git.ryder.lee@mediatek.com>
+ <cf04d6bf9cf27911023b962ccd8639f063d32739.1502501342.git.ryder.lee@mediatek.com>
+ <20170813183854.GA1438922@devbig577.frc2.facebook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170814113757.31010-1-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170813183854.GA1438922@devbig577.frc2.facebook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Cc: devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Long Cheng <long.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-This patch adds enables 3 instances of root complexes which are
-exposed on DB820c board. 3 Instances are terminted as below
-PCIE0 => QCA6174
-PCIE1 => MINI PCIE CARD
-PCIE2 => GBE ETHERNET
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On 08/13/2017 08:38 PM, Tejun Heo wrote:
+> On Sat, Aug 12, 2017 at 09:31:03AM +0800, Ryder Lee wrote:
+>> This adds support the AHCI-compliant Serial ATA controller present
+>> on MediaTek SoCs.
+>>
+>> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> Looks good to me.
+> 
+>   Acked-by: Tejun Heo <tj@kernel.org>
+> 
+> If others are okay with it, please let me know how the patches should
+> be routed.  I can push both through libata, both can be routed through
+> dt tree, or we can handle them separately.
+> 
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 789f3e87321e..18c61693529e 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -138,6 +138,22 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&usb2_vbus_det_gpio>;
- 		};
-+
-+		agnoc@0 {
-+			qcom,pcie@00600000 {
-+				perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-+			};
-+
-+			qcom,pcie@00608000 {
-+				status = "okay";
-+				perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
-+			};
-+
-+			qcom,pcie@00610000 {
-+				status = "okay";
-+				perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
-+			};
-+		};
- 	};
- 
- 
--- 
-2.11.0
+Please take the device tree bindings through your tree as well.
+You might want to wait for a Ack from a device tree maintainer though.
+
+Thanks,
+Matthias
