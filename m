@@ -1,93 +1,48 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v2] arm64: allwinner: a64: Add A64-OLinuXino
- initial support
-Date: Mon, 14 Aug 2017 15:56:27 +0800
-Message-ID: <CAGb2v64KJOuS=XfWu=tHyyYbTVjLJKVoTL2cQDyLby=CmnmLWw@mail.gmail.com>
-References: <1502560442-17715-1-git-send-email-jteki@openedev.com>
- <CAGb2v66Scd69iBNxhvYbkqjt7K_5m+S4nYG633O3wYAW_3CyLQ@mail.gmail.com> <CAD6G_RRMHMrm1wPGJCxQgmOuwhEqVK_zTZF1Fsv9az4tZ1uvBg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD6G_RRMHMrm1wPGJCxQgmOuwhEqVK_zTZF1Fsv9az4tZ1uvBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Support - OLIMEX Ltd <support-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v4 0/8] Support more devices on rockchip rv1108
+Date: Mon, 14 Aug 2017 16:31:17 +0800
+Message-ID: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: devicetree@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, broonie@kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 3:34 PM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Aug 14, 2017 at 12:38 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->> Hi,
->>
->> On Sun, Aug 13, 2017 at 1:54 AM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>>
->>> OLimex A64-OLinuXino is an open-source hardware board
->>> using the Allwinner A64 SOC.
->>>
->>> OLimex A64-OLinuXino has
->>> - A64 Quad-core Cortex-A53 64bit
->>> - 1GB or 2GB RAM DDR3L @ 672Mhz
->>> - microSD slot and 4/8/16GB eMMC
->>> - Debug TTL UART
->>> - HDMI
->>> - LCD
->>> - IR receiver
->>> - 5V DC power supply
->>
->> Have you tried out Ethernet?
->
-> Not, tested yet. Will send separate patch.
 
-OK.
+This series try to support i2c/spi/pwm/saradc/pmic/watchdog
+on rockchip rv1108 soc.
 
-[...]
+The clk tree, pinctrl, i2c, watchdog and saradc dt-bindings has
+been applied. So there are not included in this version.
 
->>> +
->>> +&reg_aldo2 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <3300000>;
->>> +       regulator-max-microvolt = <3300000>;
->>
->> Schematic says 1.8V?
->
-> I saw ALD02 VCC-PL=3.3v on schematic.
+Changes in v4:
+- remove unnecessary property io-channel-ranges of saradc
+- order i2c devices by i2c address.
 
-Ah. I see they changed it in a rev. B. Lets use 3.3V then.
+Changes in v3:
+- make the compatible string be: "rockchip,rv1108-pwm", "rockchip,rk3288-pwm"
+  for rv1108
 
->>
->>> +       regulator-name = "vcc-pl";
->>> +};
->>> +
->>> +&reg_aldo3 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <3000000>;
->>> +       regulator-max-microvolt = <3000000>;
->>> +       regulator-name = "vcc-pll-avcc";
->>> +};
->>> +
->>> +&reg_dcdc1 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <3300000>;
->>> +       regulator-max-microvolt = <3300000>;
->>> +       regulator-name = "vcc-3v3";
->>> +};
->>> +
->>> +&reg_dcdc2 {
->>> +       regulator-always-on;
->>> +       regulator-min-microvolt = <1100000>;
->>> +       regulator-max-microvolt = <1100000>;
->>
->> The SoC has a wider range than a fixed voltage for the CPUs.
->
-> So, max 1.1v can't enough CPUs? thought similar behavior with pine64?
+Changes in v2:
+- add compatible string "rockchip,rv1108-pwm"
+- add compatible string "rockchip,rv1108-saradc"
 
-The recommended operating conditions says 1.04 ~ 1.3 V for CPUx,
-while the typical voltage is 1.1V. The regulator constraints should
-match the datasheet, especially for power rails that are involved in
-DVFS.
+Andy Yan (8):
+  spi: rockchip: add compatible string for rv1108 spi
+  ARM: dts: rockchip: add spi dt node for rv1108
+  dt-bindings: pwm: add description for rv1108 pwm
+  ARM: dts: rockchip: add pwm dt node for rv1108
+  ARM: dts: rockchip: add saradc support for rv1108
+  ARM: dts: rockchip: add pwm backlight for rv1108 evb
+  ARM: dts: rockchip: add pmic rk805 dt node for rv1108 evb
+  ARM: dts: rockchip: add accelerometer bma250e dt node for rv1108 evb
 
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/pwm/pwm-rockchip.txt       |   3 +-
+ .../devicetree/bindings/spi/spi-rockchip.txt       |   1 +
+ arch/arm/boot/dts/rv1108-evb.dts                   | 158 +++++++++++++++++++
+ arch/arm/boot/dts/rv1108.dtsi                      | 167 +++++++++++++++++++++
+ drivers/spi/spi-rockchip.c                         |   1 +
+ 5 files changed, 329 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
