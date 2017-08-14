@@ -1,72 +1,34 @@
-From: honghui.zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] PCI: mediatek: add msi support for mt2712 and mt7622
-Date: Mon, 14 Aug 2017 09:12:35 +0800
-Message-ID: <1502673155.7754.1.camel@mhfsdcap03>
-References: <1502454469-29230-1-git-send-email-honghui.zhang@mediatek.com>
- <1502499441.31707.6.camel@mtkswgap22>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] ARM: dts: imx6q-bx50v3: Enable i2c recovery
+ mechanism
+Date: Mon, 14 Aug 2017 09:46:35 +0800
+Message-ID: <20170814014634.GH31819@dragon>
+References: <cover.1502360101.git.jose.alarcon@ge.com>
+ <622b0df0cfc7ed6fe3510ea8a2ef07fb7073bee5.1502360101.git.jose.alarcon@ge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1502499441.31707.6.camel@mtkswgap22>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <622b0df0cfc7ed6fe3510ea8a2ef07fb7073bee5.1502360101.git.jose.alarcon-JJi787mZWgc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, nandor.han-JJi787mZWgc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-08-12 at 08:57 +0800, Ryder Lee wrote:
-> Hi Honghui,
-> 
-> On Fri, 2017-08-11 at 20:27 +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> ...
-> > +static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
-> > +{
-> > +	u32 val;
-> > +
-> > +	val = lower_32_bits((u64)(port->base + PCIE_MSI_VECTOR));
-> > +	writel(val, port->base + PCIE_IMSI_ADDR);
-> > +
-> > +	val = readl(port->base + PCIE_INT_MASK);
-> > +	val &= ~MSI_MASK;
-> > +	writel(val, port->base + PCIE_INT_MASK);
-> > +}
-> > +
-> >  static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-> >  			     irq_hw_number_t hwirq)
-> >  {
-> > @@ -460,6 +574,18 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
-> >  		return PTR_ERR(port->irq_domain);
-> >  	}
-> >  
-> > +	/* Setup MSI */
-> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > +		port->msi_domain = irq_domain_add_linear(node, MTK_MSI_IRQS_NUM,
-> > +							 &msi_domain_ops,
-> > +							 &mtk_pcie_msi_chip);
-> > +		if (!port->msi_domain) {
-> > +			dev_err(dev, "Failed to get a MSI IRQ domain\n");
-> > +			return PTR_ERR(port->msi_domain);
-> 
-> Just return -ENOMEM. PTR_ERR(NULL) will cause a static checker warning.
+On Thu, Aug 10, 2017 at 01:42:29PM +0300, Jose Alarcon wrote:
+> This commit enables i2c recovery, supported by the i2c core subsystem.
+> It defines the required GPIOs for SDA and SLC lines.
 
-I will fix this in the next version.
+s/SLC/SCL
 
-Thanks.
-> 
-> > +		}
-> > +		mtk_pcie_enable_msi(port);
-> > +	}
-> > +
-> >  	return 0;
-> >  }
-> 
-> Ryder
-> 
+I fixed it up and applied the patch.
+
+Shawn
+
+> Signed-off-by: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
+> Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
