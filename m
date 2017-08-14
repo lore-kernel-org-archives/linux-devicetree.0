@@ -1,81 +1,64 @@
-From: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: am57xx-beagle-x15: Add support for rev C
-Date: Mon, 14 Aug 2017 12:58:20 -0500
-Message-ID: <20170814175820.12065-1-robertcnelson@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 16/18] hwmon: add support for sensors exported via ARM
+ SCMI
+Date: Mon, 14 Aug 2017 11:04:47 -0700
+Message-ID: <20170814180447.GA9577@roeck-us.net>
+References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
+ <1501857104-11279-17-git-send-email-sudeep.holla@arm.com>
+ <20170804193231.GA18153@roeck-us.net>
+ <20e0a388-79a1-a7f1-57b4-fa5993eed9bf@arm.com>
+ <c695dc09-fc28-518f-f287-bf74e0a2f87e@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <c695dc09-fc28-518f-f287-bf74e0a2f87e-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Latest update to the BeagleBoard-X15 platform (revision C). This board contains
-a silicon update (Rev 2.0), which includes a fix for the 2nd ethernet phy when
-running at 1000 Mbps speeds.
+On Mon, Aug 14, 2017 at 04:09:18PM +0100, Sudeep Holla wrote:
+> Hi Guenter,
+> 
+> On 07/08/17 13:25, Sudeep Holla wrote:
+> > 
+> > 
+> > On 04/08/17 20:32, Guenter Roeck wrote:
+> >> On Fri, Aug 04, 2017 at 03:31:42PM +0100, Sudeep Holla wrote:
+> > 
+> > [...]
+> > 
+> >>> +	platform_set_drvdata(pdev, scmi_sensors);
+> >>> +
+> >>> +	hwdev = devm_hwmon_device_register_with_groups(dev, "scmi_sensors",
+> >>> +						       scmi_sensors,
+> >>> +						       scmi_sensors->groups);
+> >>
+> >> Can you rework this to use devm_hwmon_device_register_with_info(),
+> >> and if possible let it handle the thermal registration ? 
+> >>
+> > 
+> > Thanks for the pointers. I will check on the possibility and use it if
+> > possible.
+> > 
+> 
+> I had a look at devm_hwmon_device_register_with_info. It mostly deals
+> with constant structures where all the attributes are known at the boot
+> time. In case of SCMI, the firmware presents all the sensors and all the
+> information(type, scale, name/label, ...etc). Unless I create those
+> structures dynamically and typecast as const during probe, I can't get
+> it working. Are you OK with that ? If so, I can try making those changes.
+> 
 
-This board can be indentified by the [C.00] after [BBRDX15_] in the at24 eeprom:
-[BBRDX15_C.001731PX150249]
+Yes, please.
 
-Rev C is now in full production and boards are available for end users.
+What operations exactly fail, though ? The idea was that the structures
+are not modified by the infrastructure code, not that they must be constant
+in the driver. Maybe some of the structure definitions are simply wrong. 
 
-https://beagleboard.org/x15
-https://github.com/beagleboard/beagleboard-x15/
-
-Signed-off-by: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-CC: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-CC: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-CC: Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
-CC: Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                   |  1 +
- arch/arm/boot/dts/am57xx-beagle-x15-revc.dts | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
- create mode 100644 arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c293e841eea3..d3a4fe7eb6f7 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -651,6 +651,7 @@ dtb-$(CONFIG_SOC_OMAP5) += \
- dtb-$(CONFIG_SOC_DRA7XX) += \
- 	am57xx-beagle-x15.dtb \
- 	am57xx-beagle-x15-revb1.dtb \
-+	am57xx-beagle-x15-revc.dtb \
- 	am57xx-cl-som-am57x.dtb \
- 	am57xx-sbc-am57x.dtb \
- 	am572x-idk.dtb \
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-new file mode 100644
-index 000000000000..742eeb96b8aa
---- /dev/null
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-@@ -0,0 +1,24 @@
-+/*
-+ * Copyright (C) 2014-2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include "am57xx-beagle-x15-common.dtsi"
-+
-+/ {
-+	model = "TI AM5728 BeagleBoard-X15 rev C";
-+};
-+
-+&tpd12s015 {
-+	gpios = <&gpio7 10 GPIO_ACTIVE_HIGH>,	/* gpio7_10, CT CP HPD */
-+		<&gpio2 30 GPIO_ACTIVE_HIGH>,	/* gpio2_30, LS OE */
-+		<&gpio7 12 GPIO_ACTIVE_HIGH>;	/* gpio7_12/sp1_cs2, HPD */
-+};
-+
-+&mmc1 {
-+	vmmc-supply = <&vdd_3v3>;
-+	vqmmc-supply = <&ldo1_reg>;
-+};
--- 
-2.14.1
-
+Thanks,
+Guenter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
