@@ -1,29 +1,67 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] ARM: dts: rockchip: add spi dt node for rv1108
-Date: Mon, 14 Aug 2017 22:24:45 +0200
-Message-ID: <1527188.k2FcdWIYvn@phil>
-References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com> <1502699755-8248-1-git-send-email-andy.yan@rock-chips.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 0/4] leds: pca955x: add GPIO support
+Date: Mon, 14 Aug 2017 22:28:21 +0200
+Message-ID: <7540672f-7944-9346-3d0d-491b6659e3a0@gmail.com>
+References: <1502199760-763-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502699755-8248-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1502199760-763-1-git-send-email-clg@kaod.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>, linux-leds@vger.kernel.org
+Cc: Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 14. August 2017, 16:35:55 CEST schrieb Andy Yan:
-> Add SPI device tree node for rv1108.
+Hi Cedric,
+
+Thanks for the updated set.
+
+Applied.
+
+Best regards,
+Jacek Anaszewski
+
+On 08/08/2017 03:42 PM, Cédric Le Goater wrote:
+> Hello !
 > 
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-applied for 4.14
-
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The PCA955x family of chips are I2C LED blinkers whose pins not used
+> to control LEDs can be used as general purpose I/Os (GPIOs).
+> 
+> The following adds support for device tree and Open Firmware to be
+> able do define different operation modes for each pin. See bindings
+> documentation for more details. The pca955x driver is then extended
+> with a gpio_chip when pins are operating in GPIO mode.
+> 
+> The driver follows the scheme of the leds-pca9532 driver which behaves
+> quite similarly.
+>  
+> Thanks,
+> 
+> C.
+> 
+> Changes since v2:
+> 
+>  - removed 'if (pdata)' tests
+> 
+> Changes since v1:
+> 
+>  - split the patchset in two : DT support and GPIO support
+>  - introduced the use of devm_led_classdev_register()
+>  - replaced the 'compatible' property with 'type' 
+>  - removed the 'gpio-base' property
+> 
+> Cédric Le Goater (4):
+>   leds: pca955x: add device tree support
+>   leds: pca955x: use devm_led_classdev_register
+>   leds: pca955x: add GPIO support
+>   dt-bindings leds: add pca955x
+> 
+>  .../devicetree/bindings/leds/leds-pca955x.txt      |  88 +++++++
+>  drivers/leds/Kconfig                               |  11 +
+>  drivers/leds/leds-pca955x.c                        | 254 +++++++++++++++++----
+>  include/dt-bindings/leds/leds-pca955x.h            |  16 ++
+>  4 files changed, 323 insertions(+), 46 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pca955x.txt
+>  create mode 100644 include/dt-bindings/leds/leds-pca955x.h
+> 
