@@ -1,73 +1,99 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt: xilinx: zynqmp: Add bindings for PM firmware
-Date: Mon, 14 Aug 2017 16:35:34 +0200
-Message-ID: <dd6173f6-7ae2-913a-321d-ec1e492af629@xilinx.com>
-References: <cover.1501854302.git.michal.simek@xilinx.com>
- <8c27b7eec6cc00d37dfe9b3998212ce9c9c27a31.1501854302.git.michal.simek@xilinx.com>
- <20170810191056.ur5b3zdrcgmb6sim@rob-hp-laptop>
- <4e5d9f8c-9e87-bdcd-388a-aab3c32415e8@xilinx.com>
- <20170811135453.GU12347@toto>
- <5d2e3a5e-6060-ff13-a065-c4b6be37e4c9@xilinx.com>
- <CABGGiszb1kr8ggo8Jv9jsvStK5DxpseuBy7z=_OK8pLN==h25Q@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 01/11] watchdog: gemini/ftwdt010: rename DT bindings
+Date: Mon, 14 Aug 2017 07:55:03 -0700
+Message-ID: <20170814145503.GF14491@roeck-us.net>
+References: <20170812184318.10144-1-linus.walleij@linaro.org>
+ <20170812184318.10144-2-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABGGiszb1kr8ggo8Jv9jsvStK5DxpseuBy7z=_OK8pLN==h25Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170812184318.10144-2-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "Edgar E. Iglesias" <edgar.iglesias-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Edgar Iglesias <edgari-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14.8.2017 16:03, Rob Herring wrote:
-> On Mon, Aug 14, 2017 at 8:47 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->> On 11.8.2017 15:54, Edgar E. Iglesias wrote:
->>> On Fri, Aug 11, 2017 at 02:58:03PM +0200, Michal Simek wrote:
->>>> Hi Rob, +Edgar,
->>>>
->>>> On 10.8.2017 21:10, Rob Herring wrote:
->>>>> On Fri, Aug 04, 2017 at 03:45:30PM +0200, Michal Simek wrote:
->>>>>> From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>>>>
->>>>>> Document the DT bindings for the Zynq UltraScale+ PM Firmware.
+On Sat, Aug 12, 2017 at 08:43:08PM +0200, Linus Walleij wrote:
+> The device tree bindings are in two copies and also should be
+> consolidated into a single Faraday Technology FTWDT010
+> binding since we uncovered that this IP part is a standard
+> IP from Faraday.
 > 
-> [...]
-> 
->>>>>> + - method:        The method of calling the PM-API firmware layer.
->>>>>> +          Permitted values are:
->>>>>> +           - "smc" : To be used in configurations without a hypervisor
->>>>>> +           - "hvc" : To be used when hypervisor is present
->>>>>
->>>>> Do you really use both?
->>>>>
->>>>
->>>> SMCs definitely yes.
->>>>
->>>> Interface was designed in that way and I don't know if people are using
->>>> it or not.
->>>>
->>>> Not sure if Xen is blocking SMCs. I know we have discussed it but not
->>>> sure if this is enabled by default or only for certain configurations.
->>>> Also not sure if xen contains handler for hvc.
->>>> Edgar: Do you know?
->>>
->>> We have patches for Xen that implement a power-management mediator.
->>> That implementation handles PM calls over both SMC and HVC insns.
->>> Patches are on the Xen mailing list.
->>>
->>> Other hypervisors may work differently.
->>>
->>> I think we should support both but I don't have a strong opinion on it.
->>
->> Rob: Are you ok with having it there?
-> 
-> Yes.
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Ok. Let me send v2 then.
+Will need Ack from Rob.
 
-Thanks,
-Michal
+
+> ---
+>  .../bindings/watchdog/cortina,gemini-watchdog.txt       | 17 -----------------
+>  ...{cortina,gemin-watchdog.txt => faraday,ftwdt010.txt} | 11 ++++++++---
+>  2 files changed, 8 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
+>  rename Documentation/devicetree/bindings/watchdog/{cortina,gemin-watchdog.txt => faraday,ftwdt010.txt} (55%)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt b/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
+> deleted file mode 100644
+> index bc4b865d178b..000000000000
+> --- a/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
+> +++ /dev/null
+> @@ -1,17 +0,0 @@
+> -Cortina Systems Gemini SoC Watchdog
+> -
+> -Required properties:
+> -- compatible : must be "cortina,gemini-watchdog"
+> -- reg : shall contain base register location and length
+> -- interrupts : shall contain the interrupt for the watchdog
+> -
+> -Optional properties:
+> -- timeout-sec : the default watchdog timeout in seconds.
+> -
+> -Example:
+> -
+> -watchdog@41000000 {
+> -	compatible = "cortina,gemini-watchdog";
+> -	reg = <0x41000000 0x1000>;
+> -	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+> similarity index 55%
+> rename from Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
+> rename to Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+> index bc4b865d178b..9ecdb502e605 100644
+> --- a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+> @@ -1,7 +1,12 @@
+> -Cortina Systems Gemini SoC Watchdog
+> +Faraday Technology FTWDT010 watchdog
+> +
+> +This is an IP part from Faraday Technology found in the Gemini
+> +SoCs and others.
+>  
+>  Required properties:
+> -- compatible : must be "cortina,gemini-watchdog"
+> +- compatible : must be one of
+> +  "faraday,ftwdt010"
+> +  "cortina,gemini-watchdog", "faraday,ftwdt010"
+>  - reg : shall contain base register location and length
+>  - interrupts : shall contain the interrupt for the watchdog
+>  
+> @@ -11,7 +16,7 @@ Optional properties:
+>  Example:
+>  
+>  watchdog@41000000 {
+> -	compatible = "cortina,gemini-watchdog";
+> +	compatible = "faraday,ftwdt010";
+>  	reg = <0x41000000 0x1000>;
+>  	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+>  };
+> -- 
+> 2.13.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
