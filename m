@@ -1,59 +1,26 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek MT7622 i2c binding
-Date: Mon, 14 Aug 2017 11:36:05 +0200
-Message-ID: <3384d424-827a-0a4b-d1d6-7d361d8c8391@gmail.com>
-References: <1502264631-12572-1-git-send-email-jun.gao@mediatek.com>
- <1502264631-12572-2-git-send-email-jun.gao@mediatek.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH 1/4] dt-bindings: add binding for Allwinner
+ A64 SRAM controller and SRAM C
+Date: Mon, 14 Aug 2017 17:37:40 +0800
+Message-ID: <CAGb2v66p1rjTONyPJ0yHCUOnR82HZtiuhXa5phrsNe+bKf9+tA@mail.gmail.com>
+References: <20170809085627.32687-1-icenowy@aosc.io> <20170809085627.32687-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502264631-12572-2-git-send-email-jun.gao@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <20170809085627.32687-2-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jun Gao <jun.gao@mediatek.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 9, 2017 at 4:56 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+> The display engine on Allwinner A64 wants to claim the SRAM C section.
+>
+> Add a SRAM controller compatible for A64, and a SRAM section compatible
+> for its SRAM C.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 
+Looks good to me. Will wait for device tree maintainers to have a say.
 
-On 08/09/2017 09:43 AM, Jun Gao wrote:
-> From: Jun Gao <jun.gao@mediatek.com>
-> 
-> Add MT7622 i2c binding to binding file. Compare to MT8173 i2c
-> controller, MT7622 limit message size to 255, and not support
-> 4GB DMA mode.
-> 
-> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
-> ---
->   Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
->   1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> index bd5a7be..ff9ac61 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
->   
->   Required properties:
->     - compatible: value should be either of the following.
-> -      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek mt2701
-> -      "mediatek,mt6577-i2c": for i2c compatible with mt6577.
-> -      "mediatek,mt6589-i2c": for i2c compatible with mt6589.
-> -      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
-> -      "mediatek,mt8173-i2c": for i2c compatible with mt8173.
-> +	"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
-> +	"mediatek,mt6577-i2c": for Mediatek MT6577
-> +	"mediatek,mt6589-i2c": for Mediatek MT6589
-> +	"mediatek,mt7622-i2c": for Mediatek MT7622
-> +	"mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-> +	"mediatek,mt8173-i2c": for Mediatek MT8173
->     - reg: physical base address of the controller and dma base, length of memory
->       mapped region.
->     - interrupts: interrupt number to the cpu.
-> 
-
-In the next series, could you please make sure not to change the indentation.
-
-Thanks a lot,
-Matthias
+ChenYu
