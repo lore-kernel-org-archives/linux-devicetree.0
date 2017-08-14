@@ -1,48 +1,43 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
-Date: Mon, 14 Aug 2017 16:15:44 +0200
-Message-ID: <CAMuHMdXX0BRvWOc4iosiYNWuA4tP2BpLF5kndNrDL4FeKctgkA@mail.gmail.com>
-References: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
- <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com> <20170810080121.GE16647@verge.net.au>
- <20170810112411.GA4380@katana> <TY1PR06MB0702EA22AFE7D8145BF623A6B7880@TY1PR06MB0702.apcprd06.prod.outlook.com>
+Subject: Re: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Mon, 14 Aug 2017 16:22:14 +0200
+Message-ID: <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw@mail.gmail.com>
+References: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <TY1PR06MB0702EA22AFE7D8145BF623A6B7880@TY1PR06MB0702.apcprd06.prod.outlook.com>
+In-Reply-To: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Paterson <Chris.Paterson2@renesas.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux MMC List <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 3:49 PM, Chris Paterson
-<Chris.Paterson2@renesas.com> wrote:
->> From: Wolfram Sang [mailto:wsa@the-dreams.de]
->> Sent: 10 August 2017 12:24
->>
->>
->> > > >+                i2c6: i2c@e60b0000 {
->> > >
->> > >    I'd use iic0 as the label.
-
-Sergei: I assume you meant "iic3"? ;-)
-
->> >
->> > I have no preference here other than that we try to be consistent in
->> > DT for different R-Car SoCs. Wolfram, do you have an opinion on this?
->>
->> Back then, for M2-W, I decided to go with the schematics/datasheets.
->> And those mentioned i2c6 rather than iic0. For that reason, the comment
+On Mon, Aug 14, 2017 at 1:19 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Add support for r8a7743/5 SoC.Renesas RZ/G1[ME] (R8A7743/5) SDHI
+> is identical to the R-Car Gen2 family.
 >
-> The M2 schematics still use i2c6, and for consistency I'd vote to use the same with RZ/G1M.
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> This patch is compiled and tested against mmc/next.
 >
->>
->> "/* The memory map in the User's Manual maps the cores to bus numbers */"
->>
->> exists in r8a7791.dtsi. Dunno the manual of this SoC here.
+>  drivers/mmc/host/renesas_sdhi_sys_dmac.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> The manual for r8a7743 uses the same terminology as the r8a7791 manuals.
+> diff --git a/drivers/mmc/host/renesas_sdhi_sys_dmac.c b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
+> index 718cb8a..f709f7f 100644
+> --- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
+> +++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
+> @@ -95,6 +95,8 @@
+>         { .compatible = "renesas,sdhi-r7s72100", .data = &of_rz_compatible, },
+>         { .compatible = "renesas,sdhi-r8a7778", .data = &of_rcar_gen1_compatible, },
+>         { .compatible = "renesas,sdhi-r8a7779", .data = &of_rcar_gen1_compatible, },
+> +       { .compatible = "renesas,sdhi-r8a7743", .data = &of_rcar_gen2_compatible, },
+> +       { .compatible = "renesas,sdhi-r8a7745", .data = &of_rcar_gen2_compatible, },
+>         { .compatible = "renesas,sdhi-r8a7790", .data = &of_rcar_gen2_compatible, },
+>         { .compatible = "renesas,sdhi-r8a7791", .data = &of_rcar_gen2_compatible, },
+>         { .compatible = "renesas,sdhi-r8a7792", .data = &of_rcar_gen2_compatible, },
 
-The pinctrl section does, indeed.
+I guess we want generic R-Car Gen2/3 compatible values here, too?
 
 Gr{oetje,eeting}s,
 
