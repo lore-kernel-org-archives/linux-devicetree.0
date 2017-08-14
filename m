@@ -1,103 +1,72 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v4 00/20] Add QCOM QPIC NAND support
-Date: Mon, 14 Aug 2017 17:58:44 +0530
-Message-ID: <b481688445c734b6b4e9fef7176dfc9e@codeaurora.org>
-References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
- <20170813094732.12cadbfc@bbrezillon>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 1/5] iio: srf08: add device tree binding for srf02 and
+ srf10
+Date: Mon, 14 Aug 2017 14:37:26 +0200
+Message-ID: <20170814123725.GA2238@katana>
+References: <20170814085941.GA9759@arbeit>
+ <20170814091106.rvdvebcxfbpggmjd@ninjato>
+ <20170814103918.GB3062@imap.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170813094732.12cadbfc@bbrezillon>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170814103918.GB3062@imap.1und1.de>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-13 13:17, Boris Brezillon wrote:
-> Le Fri, 11 Aug 2017 17:09:15 +0530,
-> Abhishek Sahu <absahu@codeaurora.org> a écrit :
-> 
->> * v4:
->> 
->> 1. Added Acked-by from Rob for DT documentation patches
->> 2. Removed ipq8074 compatible string from ipq4019 DT example.
->> 2. Used the BIT macro for NAND_CMD_VLD bits and consistent names
->>    as suggested by Boris in v3.
->> 
->> * v3:
->> 
->> 1. Removed the patches already applied to linux-next and
->>    rebased the remaining patches on [1]
->> 2. Reordered the patches and put the BAM DMA changes [2]
->>    dependent patches and compatible string patches in last
->> 3. Removed the register offsets array and used the dev_cmd offsets
->> 4. Changed some macro names to small letters for better code 
->> readability
->> 5. Changed the compatible string to SoC specific
->> 6. Did minor code changes for adding comment, error handling, 
->> structure names
->> 7. Combined raw write (patch#18) and passing flag parameter (patch#22) 
->> patch
->>    into one
->> 8. Made separate patch for compatible string and NAND properties
->> 9. Made separate patch for BAM command descriptor and data descriptors 
->> handling
->> 10. Changed commit message for some of the patches
->> 11. Addressed review comments given in v2
->> 12. Added Reviewed-by of Archit for some of the patches from v2
->> 13. All the MTD tests are working fine for IPQ8064 AP148, IPQ4019 DK04 
->> and
->>     IPQ8074 HK01 boards for v3 patches
->> 
->> [1] http://git.infradead.org/l2-mtd.git/shortlog/refs/heads/nand/next
->> [2] http://www.spinics.net/lists/dmaengine/msg13662.html
->> 
->> * v2:
->> 
->> 1. Addressed the review comments given in v1
->> 2. Removed the DMA coherent buffer for register read and used
->>    streaming DMA API’s
->> 3. Reorganized the NAND read and write functions
->> 4. Separated patch for driver and documentation changes
->> 5. Changed the compatible string for EBI2
->> 
->> * v1:
->> 
->> http://www.spinics.net/lists/devicetree/msg183706.html
->> 
->> Abhishek Sahu (20):
->>   mtd: nand: qcom: fix read failure without complete bootchain
->>   mtd: nand: qcom: support for NAND controller properties
->>   mtd: nand: qcom: add bam property for QPIC NAND controller
->>   mtd: nand: qcom: add and initialize QPIC DMA resources
-> 
-> Applied patches 1 to 4. Still waiting a bit to let Archit review the
-> remaining ones.
 
-  Thanks Boris.
-  Sure. That would be better if Archit reviews the remaining patches.
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>   mtd: nand: qcom: DMA mapping support for register read buffer
->>   mtd: nand: qcom: allocate BAM transaction
->>   mtd: nand: qcom: add BAM DMA descriptor handling
->>   mtd: nand: qcom: support for passing flags in transfer functions
->>   mtd: nand: qcom: support for read location registers
->>   mtd: nand: qcom: erased codeword detection configuration
->>   mtd: nand: qcom: enable BAM or ADM mode
->>   mtd: nand: qcom: QPIC data descriptors handling
->>   mtd: nand: qcom: support for different DEV_CMD register offsets
->>   mtd: nand: qcom: add command elements in BAM transaction
->>   mtd: nand: qcom: support for command descriptor formation
->>   dt-bindings: qcom_nandc: fix the ipq806x device tree example
->>   dt-bindings: qcom_nandc: IPQ4019 QPIC NAND documentation
->>   dt-bindings: qcom_nandc: IPQ8074 QPIC NAND documentation
->>   mtd: nand: qcom: support for IPQ4019 QPIC NAND controller
->>   mtd: nand: qcom: support for IPQ8074 QPIC NAND controller
->> 
->>  .../devicetree/bindings/mtd/qcom_nandc.txt         |  63 +-
->>  drivers/mtd/nand/qcom_nandc.c                      | 866 
->> ++++++++++++++++++---
->>  2 files changed, 814 insertions(+), 115 deletions(-)
->> 
+On Mon, Aug 14, 2017 at 12:39:18PM +0200, Andreas Klinger wrote:
+> Wolfram Sang <wsa@the-dreams.de> schrieb am Mon, 14. Aug 11:11:
+> > On Mon, Aug 14, 2017 at 10:59:41AM +0200, Andreas Klinger wrote:
+> > > add trivial device tree binding "devantech,srf02" and "devantech,srf1=
+0"
+> > >=20
+> > > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> > > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
+> >=20
+> > Again: This file has moved since v4.12-rc1. Please rebase to v4.12 or
+> > even v4.13-rc5.
+> >=20
+>=20
+> Then i split the patch series up in two parts:
+> - patch with only device tree binding against >=3D v4.12
+> - everything else as patch series against git tree of IIO
+>=20
+> Ok?
+
+Wooha, the master branch of iio.git is at v4.11? I see. So, this is the
+culprit, sorry! @Jonathan: is that the branch people should develop on,
+or is it your testing branch?
+
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmRmYEACgkQFA3kzBSg
+KbbOig//ROG3M78W1k49GH0hBYMuRUC5RzWKXJkMdgvpUyWLlP1yEJl5CSZpfxf2
+TdO3ekU8I69fUxSaX76lr4Z3QIyoFsPzw5ccbtorZY53fb/QyisLWkTqr/xEzzpq
+2Wc8Uk+kqy7rZIsrrwlWS8egGxIm6RA5hcPXt9/vJz1CcGCxqVHKcThHq4Q22aiC
+IIWX05Cij1Fav/O9xPYwiC988dknR3rDtol1LMDNFKqtAOzdmAL2hwveL6Na7RJe
+TaQjG6MbnlLWJ00UrqsRyueHGXgXIEm+9b1fG0kmTtUrpu76PvOgfm4PwrmItm3R
+5aBm0CBboQp7GlX/PMxZ8ltK9CDgEpEW9wci1XArzxbtXc4Haiyyynlk9CMM0ocS
+LaY9knOwn/PheRoYyI7UMj2avYxy4gsLf84NqsTQzpPqwetuaC38Mp3nS+4g0IM+
+/ZgYnfx6rlIlKsvo7nRWoVPFbsDMSYbAsGP+dn4WXhEK+dOAqIq8iv0FFwJTZHQ9
+YeVqavuNoQVBtNxltiC+vvN5Nb+CRDhSyCBz2VxlQHcVh8lczmpK8VUgrPzW8Eql
++THyWGv4CTlUpm6uXkyzrm8tQYUyYkosFY7Gfpksl7FQiVsyMb959VjMlIhxkyMR
+3TNEctggObTl1CGA6m63GOuTbAd40OjRY/9N07f8/9W7I6olv/s=
+=XR9y
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
