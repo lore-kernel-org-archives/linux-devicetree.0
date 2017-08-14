@@ -1,121 +1,115 @@
-From: Divagar Mohandass <divagar.mohandass@intel.com>
-Subject: [PATCH v2 3/3] eeprom: at24: enable runtime pm support
-Date: Tue, 15 Aug 2017 00:11:59 +0530
-Message-ID: <1502736119-32084-4-git-send-email-divagar.mohandass@intel.com>
-References: <1502736119-32084-1-git-send-email-divagar.mohandass@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502736119-32084-1-git-send-email-divagar.mohandass@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
-Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, rajmohan.mani@intel.com, Divagar Mohandass <divagar.mohandass@intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 3/3] Documentation: hwmon: Document the IBM CFF power
+ supply
+Date: Mon, 14 Aug 2017 11:53:08 -0700
+Message-ID: <20170814185308.GA11090@roeck-us.net>
+References: <1502724390-17411-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1502724390-17411-4-git-send-email-eajames@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502724390-17411-4-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: robh+dt@kernel.org, jdelvare@suse.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently the device is kept in D0, there is an opportunity
-to save power by enabling runtime pm.
+On Mon, Aug 14, 2017 at 10:26:30AM -0500, Eddie James wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
+> 
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> ---
+>  Documentation/hwmon/ibm-cffps | 54 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/hwmon/ibm-cffps
+> 
+> diff --git a/Documentation/hwmon/ibm-cffps b/Documentation/hwmon/ibm-cffps
+> new file mode 100644
+> index 0000000..e091ff2
+> --- /dev/null
+> +++ b/Documentation/hwmon/ibm-cffps
+> @@ -0,0 +1,54 @@
+> +Kernel driver ibm-cffps
+> +=======================
+> +
+> +Supported chips:
+> +  * IBM Common Form Factor power supply
+> +
+> +Author: Eddie James <eajames@us.ibm.com>
+> +
+> +Description
+> +-----------
+> +
+> +This driver supports IBM Common Form Factor (CFF) power supplies. This driver
+> +is a client to the core PMBus driver.
+> +
+> +Usage Notes
+> +-----------
+> +
+> +This driver does not auto-detect devices. You will have to instantiate the
+> +devices explicitly. Please see Documentation/i2c/instantiating-devices for
+> +details.
+> +
+> +Sysfs entries
+> +-------------
+> +
+> +The following attributes are supported:
+> +
+> +curr1_alarm		Output current over-current fault.
+> +curr1_input		Measured output current in mA.
+> +curr1_label		"iout1"
+> +
+> +fan1_alarm		Fan 1 warning.
+> +fan1_fault		Fan 1 fault.
+> +fan1_input		Fan 1 speed in RPM.
+> +fan2_alarm		Fan 2 warning.
+> +fan2_fault		Fan 2 fault.
+> +fan2_input		Fan 2 speed in RPM.
+> +
+> +in1_alarm		Input voltage under-voltage fault.
 
-Device can be daisy chained from PMIC and we can't rely on I2C core
-for auto resume/suspend. Driver will decide when to resume/suspend.
+Just noticed. Are you sure you mean 'fault' here and below ?
+'alarm' attributes normally report an over- or under- condition,
+but not a fault. Faults should be reported with 'fault' attributes.
+In PMBus lingo (which doesn't distinguish a real 'fault' from
+a critical over- or under- condition), the "FAULT" condition
+usually maps with the 'crit_alarm' or 'lcrit_alarm' attributes.
+Also, under-voltages would normally be reported as min_alarm
+or clrit_alarm, not in_alarm.
 
-Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
----
- drivers/misc/eeprom/at24.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+> +in1_input		Measured input voltage in mV.
+> +in1_label		"vin"
+> +in2_alarm		Output voltage over-voltage fault.
+> +in2_input		Measured output voltage in mV.
+> +in2_label		"vout1"
+> +
+> +power1_alarm		Input fault.
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 2199c42..0d26681 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -24,6 +24,7 @@
- #include <linux/i2c.h>
- #include <linux/nvmem-provider.h>
- #include <linux/platform_data/at24.h>
-+#include <linux/pm_runtime.h>
- 
- /*
-  * I2C EEPROMs from most vendors are inexpensive and mostly interchangeable.
-@@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct at24_data *at24, const char *buf,
- static int at24_read(void *priv, unsigned int off, void *val, size_t count)
- {
- 	struct at24_data *at24 = priv;
-+	struct i2c_client *client;
- 	char *buf = val;
-+	int ret;
- 
- 	if (unlikely(!count))
- 		return count;
- 
-+	client = at24_translate_offset(at24, &off);
-+
-+	ret = pm_runtime_get_sync(&client->dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&client->dev);
-+		return ret;
-+	}
-+
- 	/*
- 	 * Read data from chip, protecting against concurrent updates
- 	 * from this host, but not from other I2C masters.
-@@ -527,17 +538,29 @@ static int at24_read(void *priv, unsigned int off, void *val, size_t count)
- 
- 	mutex_unlock(&at24->lock);
- 
-+	pm_runtime_put(&client->dev);
-+
- 	return 0;
- }
- 
- static int at24_write(void *priv, unsigned int off, void *val, size_t count)
- {
- 	struct at24_data *at24 = priv;
-+	struct i2c_client *client;
- 	char *buf = val;
-+	int ret;
- 
- 	if (unlikely(!count))
- 		return -EINVAL;
- 
-+	client = at24_translate_offset(at24, &off);
-+
-+	ret = pm_runtime_get_sync(&client->dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&client->dev);
-+		return ret;
-+	}
-+
- 	/*
- 	 * Write data to chip, protecting against concurrent updates
- 	 * from this host, but not from other I2C masters.
-@@ -559,6 +582,8 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
- 
- 	mutex_unlock(&at24->lock);
- 
-+	pm_runtime_put(&client->dev);
-+
- 	return 0;
- }
- 
-@@ -743,6 +768,13 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	i2c_set_clientdata(client, at24);
- 
-+	/* enable runtime pm */
-+	err = pm_runtime_set_active(&client->dev);
-+	if (err < 0)
-+		goto err_clients;
-+
-+	pm_runtime_enable(&client->dev);
-+
- 	/*
- 	 * Perform a one-byte test read to verify that the
- 	 * chip is functional.
-@@ -810,6 +842,8 @@ static int at24_remove(struct i2c_client *client)
- 	for (i = 1; i < at24->num_addresses; i++)
- 		i2c_unregister_device(at24->client[i]);
- 
-+	pm_runtime_disable(&client->dev);
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+Another example; this maps to PMBUS_PIN_OP_WARN_LIMIT which is an
+input power alarm, not an indication of a fault condition.
+
+> +power1_input		Measured input power in uW.
+> +power1_label		"pin"
+> +
+> +temp1_alarm		PSU inlet ambient temperature over-temperature fault.
+> +temp1_input		Measured PSU inlet ambient temp in millidegrees C.
+> +temp2_alarm		Secondary rectifier temp over-temperature fault.
+
+Interestingly, PMBus does not distinguish between a critical temperature
+alarm and an actual "fault". Makes me wonder if the IBM PS reports
+CFFPS_MFR_THERMAL_FAULT if there is an actual fault (chip or sensor failure),
+or if it has the same meaning as PB_TEMP_OT_FAULT, ie an excessively high
+temperature.
+
+If it is a real fault (a detected sensor failure), we should possibly
+consider adding a respective "virtual" temperature status flag. The same
+is true for other status bits reported in the manufacturer status
+register if any of those reflect a "real" fault, ie a chip failure.
+
+> +temp2_input		Measured secondary rectifier temp in millidegrees C.
+> +temp3_alarm		ORing FET temperature over-temperature fault.
+> +temp3_input		Measured ORing FET temperature in millidegrees C.
+> -- 
+> 1.8.3.1
+> 
