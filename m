@@ -1,67 +1,73 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] leds: add LED driver for CR0014114 board
-Date: Mon, 14 Aug 2017 09:28:06 -0500
-Message-ID: <CAL_JsqJw18uCCLAd+rraiDr3meLvDkpOwLwqLLB5E5psHho2Jw@mail.gmail.com>
-References: <20170814115355.9437-1-oleg@kaa.org.ua>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt: xilinx: zynqmp: Add bindings for PM firmware
+Date: Mon, 14 Aug 2017 16:35:34 +0200
+Message-ID: <dd6173f6-7ae2-913a-321d-ec1e492af629@xilinx.com>
+References: <cover.1501854302.git.michal.simek@xilinx.com>
+ <8c27b7eec6cc00d37dfe9b3998212ce9c9c27a31.1501854302.git.michal.simek@xilinx.com>
+ <20170810191056.ur5b3zdrcgmb6sim@rob-hp-laptop>
+ <4e5d9f8c-9e87-bdcd-388a-aab3c32415e8@xilinx.com>
+ <20170811135453.GU12347@toto>
+ <5d2e3a5e-6060-ff13-a065-c4b6be37e4c9@xilinx.com>
+ <CABGGiszb1kr8ggo8Jv9jsvStK5DxpseuBy7z=_OK8pLN==h25Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170814115355.9437-1-oleg-CGGh1czddphUq1AO9QMCaQ@public.gmane.org>
+In-Reply-To: <CABGGiszb1kr8ggo8Jv9jsvStK5DxpseuBy7z=_OK8pLN==h25Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleh Kravchenko <oleg-CGGh1czddphUq1AO9QMCaQ@public.gmane.org>
-Cc: Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "Edgar E. Iglesias" <edgar.iglesias-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Edgar Iglesias <edgari-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Please CC DT list for bindings and make bindings a separate patch.
+On 14.8.2017 16:03, Rob Herring wrote:
+> On Mon, Aug 14, 2017 at 8:47 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 11.8.2017 15:54, Edgar E. Iglesias wrote:
+>>> On Fri, Aug 11, 2017 at 02:58:03PM +0200, Michal Simek wrote:
+>>>> Hi Rob, +Edgar,
+>>>>
+>>>> On 10.8.2017 21:10, Rob Herring wrote:
+>>>>> On Fri, Aug 04, 2017 at 03:45:30PM +0200, Michal Simek wrote:
+>>>>>> From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>>>>>
+>>>>>> Document the DT bindings for the Zynq UltraScale+ PM Firmware.
+> 
+> [...]
+> 
+>>>>>> + - method:        The method of calling the PM-API firmware layer.
+>>>>>> +          Permitted values are:
+>>>>>> +           - "smc" : To be used in configurations without a hypervisor
+>>>>>> +           - "hvc" : To be used when hypervisor is present
+>>>>>
+>>>>> Do you really use both?
+>>>>>
+>>>>
+>>>> SMCs definitely yes.
+>>>>
+>>>> Interface was designed in that way and I don't know if people are using
+>>>> it or not.
+>>>>
+>>>> Not sure if Xen is blocking SMCs. I know we have discussed it but not
+>>>> sure if this is enabled by default or only for certain configurations.
+>>>> Also not sure if xen contains handler for hvc.
+>>>> Edgar: Do you know?
+>>>
+>>> We have patches for Xen that implement a power-management mediator.
+>>> That implementation handles PM calls over both SMC and HVC insns.
+>>> Patches are on the Xen mailing list.
+>>>
+>>> Other hypervisors may work differently.
+>>>
+>>> I think we should support both but I don't have a strong opinion on it.
+>>
+>> Rob: Are you ok with having it there?
+> 
+> Yes.
 
-On Mon, Aug 14, 2017 at 6:53 AM, Oleh Kravchenko <oleg-CGGh1czddphUq1AO9QMCaQ@public.gmane.org> wrote:
-> This patch adds a LED class driver for the RGB LEDs found on
-> the Crane Merchandising System CR0014114 LEDs board.
->
-> Driver creates LED devices with name written using the following
-> pattern "LABEL-{N}:{red,green,blue}:".
->
-> Signed-off-by: Oleh Kravchenko <oleg-CGGh1czddphUq1AO9QMCaQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/leds/leds-cr0014114.txt    |  23 ++
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  drivers/leds/Kconfig                               |  12 +
->  drivers/leds/Makefile                              |   1 +
->  drivers/leds/leds-cr0014114.c                      | 352 +++++++++++++++++++++
->  5 files changed, 389 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-cr0014114.txt
->  create mode 100644 drivers/leds/leds-cr0014114.c
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
-> new file mode 100644
-> index 000000000000..6a399cb65388
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
-> @@ -0,0 +1,23 @@
-> +Crane Merchandising System SPI LED board CR0014114
-> +==================================================
-> +
-> +Required properties:
-> +- compatible: "cms,cr0014114"
-> +
-> +Optional properties:
-> +- label: prefix for LED names. If omitted the label is taken from the node name.
+Ok. Let me send v2 then.
 
-label generally is the full name, not a prefix. It kind of defeats the
-point of label if the name is the same. You might as well move this
-into the driver.
-
-> +- leds-per-board: RGB leds per board, minimal value is 6
-> +- num-boards: number of LED boards on SPI bus, usually 1
-
->From the driver, looks like you just need the total led count?
-
-It also appears that the driver knows the color arrangement. Perhaps
-you should have child nodes for each LED as the LED binding defines.
-reg can have 2 cells if you need to define board# and led#. And label
-can be the full label name if you keep label in the DT.
-
-Rob
+Thanks,
+Michal
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
