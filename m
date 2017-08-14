@@ -1,43 +1,48 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] ARM: dts: iwg20d-q7: Add RTC support
-Date: Mon, 14 Aug 2017 16:11:33 +0200
-Message-ID: <CAMuHMdUU5fb6G7Wc9ZzfFhLxcUuZFakPdVGh3q_cfUzxZ1AarA@mail.gmail.com>
-References: <1502197465-61546-1-git-send-email-biju.das@bp.renesas.com> <1502197465-61546-2-git-send-email-biju.das@bp.renesas.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
+Date: Mon, 14 Aug 2017 16:15:44 +0200
+Message-ID: <CAMuHMdXX0BRvWOc4iosiYNWuA4tP2BpLF5kndNrDL4FeKctgkA@mail.gmail.com>
+References: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
+ <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com> <20170810080121.GE16647@verge.net.au>
+ <20170810112411.GA4380@katana> <TY1PR06MB0702EA22AFE7D8145BF623A6B7880@TY1PR06MB0702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1502197465-61546-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <TY1PR06MB0702EA22AFE7D8145BF623A6B7880@TY1PR06MB0702.apcprd06.prod.outlook.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 8, 2017 at 3:04 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> Define the iWave RainboW-G20D-Qseven board dependent part of the
-> RTC device node.
+On Thu, Aug 10, 2017 at 3:49 PM, Chris Paterson
+<Chris.Paterson2@renesas.com> wrote:
+>> From: Wolfram Sang [mailto:wsa@the-dreams.de]
+>> Sent: 10 August 2017 12:24
+>>
+>>
+>> > > >+                i2c6: i2c@e60b0000 {
+>> > >
+>> > >    I'd use iic0 as the label.
+
+Sergei: I assume you meant "iic3"? ;-)
+
+>> >
+>> > I have no preference here other than that we try to be consistent in
+>> > DT for different R-Car SoCs. Wolfram, do you have an opinion on this?
+>>
+>> Back then, for M2-W, I decided to go with the schematics/datasheets.
+>> And those mentioned i2c6 rather than iic0. For that reason, the comment
 >
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> The M2 schematics still use i2c6, and for consistency I'd vote to use the same with RZ/G1M.
+>
+>>
+>> "/* The memory map in the User's Manual maps the cores to bus numbers */"
+>>
+>> exists in r8a7791.dtsi. Dunno the manual of this SoC here.
+>
+> The manual for r8a7743 uses the same terminology as the r8a7791 manuals.
 
-> @@ -54,3 +59,16 @@
->                 micrel,led-mode = <1>;
->         };
->  };
-> +
-> +&i2c2 {
-> +       pinctrl-0 = <&i2c2_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       status = "okay";
-> +       clock-frequency = <400000>;
-> +
-> +       rtc@68 {
-> +               compatible = "bq32000";
-
-"ti,bq32000"
-
-> +               reg = <0x68>;
-> +       };
-> +};
+The pinctrl section does, indeed.
 
 Gr{oetje,eeting}s,
 
