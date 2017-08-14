@@ -1,62 +1,72 @@
-From: "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Subject: Re: [PATCH 0/5] qcom-ufs: phy/hcd: Refactor phy initialization code
-Date: Mon, 14 Aug 2017 10:47:34 +0530
-Message-ID: <1595aa1a-d88d-0208-9c44-d7ef42570264@codeaurora.org>
-References: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
- <c29e3a7c-62cc-f25a-4e0b-231c69e01afa@ti.com>
- <b69ecef93852cf5a7bf342550de16f19@codeaurora.org>
- <d49316e0-8ccc-21b3-e952-ddb0a941f3b3@ti.com>
- <CAFp+6iF7m5vgGZcrOTXcxtPinVYUn0iPq1vAjXT909zfHu+wVQ@mail.gmail.com>
- <yq1y3qr2cog.fsf@oracle.com>
- <CAFp+6iGXR6Qk3xvWuWTu17LDrh5dOzJrZmn57zG30UjZrFm-Rg@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH  2/2] ARM: dts: r8a7743: Add I2C DT support
+Date: Mon, 14 Aug 2017 07:37:17 +0200
+Message-ID: <20170814053717.GD5654@verge.net.au>
+References: <1502191449-16118-1-git-send-email-biju.das@bp.renesas.com>
+ <20170809085238.GJ2705@verge.net.au>
+ <KL1PR06MB17020664F5636F87F9F97597B88B0@KL1PR06MB1702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iGXR6Qk3xvWuWTu17LDrh5dOzJrZmn57zG30UjZrFm-Rg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-scsi-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Subhash Jadavani <subhashj@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, jejb@linux.vnet.ibm.com, Vinayak Holikatti <vinholikatti@gmail.com>, linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <KL1PR06MB17020664F5636F87F9F97597B88B0-k6wCOA2IOKSx7cDWSRonpW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Vivek,
+On Wed, Aug 09, 2017 at 09:23:05AM +0000, Biju Das wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
+> > Sent: 09 August 2017 09:53
+> > To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
+> > <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>; Magnus
+> > Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>;
+> > Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Subject: Re: [PATCH 2/2] ARM: dts: r8a7743: Add I2C DT support
+> >
+> > On Tue, Aug 08, 2017 at 12:24:09PM +0100, Biju Das wrote:
+> > > Add the I2C[0-5] devices to the r8a7743 device tree.
+> > >
+> > > Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > > ---
+> > > This patch has been tested against Linux-next tag 20170727 and renesas-dev
+> > branch.
+> > > This patch depends on
+> > > https://www.mail-archive.com/linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1700
+> > > 8.html
+> >
+> > As per the patch at the link above it seems that these patches are targeted at
+> > the renesas tree.  The best practice in that case is to base patches on the latest
+> > devel branch. Please consider doing so in future.
+> >
+> > I would also slightly prefer if dependencies were referenced by name, in this
+> > case:
+> >
+> > *  [PATCH 2/3] ARM: dts: r8a7743: Add APMU node and second CPU core
+> >
+> > or
+> >
+> > * [PATCH  0/3] Add SMP support
+> >
+> > Also including a link is fine by me.
+> >
+> >
+> > It would also be useful if you described the dependency as a conflict (merge-
+> > time), compile-time or run-time.
+> 
+> 
+> Thanks Simon. I will take care this next time.
+> 
+> > As for the patch itself, it looks good to me.
 
-On 8/11/2017 12:42 PM, Vivek Gautam wrote:
-> On Fri, Aug 11, 2017 at 5:33 AM, Martin K. Petersen
-> <martin.petersen@oracle.com> wrote:
->>
->> Vivek,
->>
->>> Can you kindly review this patch series (for UFS controller changes)
->>> and consider giving your Ack so that Kishon can pull in the series
->>> through phy tree.
->>
->> SCSI piece looks OK.
-> 
-> Thank you Martin for your review.
->>
->> Would still like Subhash to review the rest.
-> 
-> Subhash is on vacation with limited access to emails. I will ask
-> his team to take a look.
-> 
-Looks good to me.
-> regards
-> Vivek
-> 
->>
->> --
->> Martin K. Petersen      Oracle Linux Engineering
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
-
--- 
-Asutosh Das (asd)
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+As I believe the dependencies are apply-time and seemed easy to resolve
+I have applied this patch for v4.14.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
