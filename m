@@ -1,99 +1,85 @@
 From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 4/5] ARC: AXS103: DTS: Set cpu frequency explicitly via dts
-Date: Mon, 14 Aug 2017 19:12:12 +0300
-Message-ID: <20170814161213.17522-5-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 3/5] ARC: AXS103: DTS: Add core pll node to manage cpu
+ frequency
+Date: Mon, 14 Aug 2017 19:12:11 +0300
+Message-ID: <20170814161213.17522-4-Eugeniy.Paltsev@synopsys.com>
 References: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
 To: linux-snps-arc@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Set cpu frequency explicitly via "cpu-freq" param in cpu 0 node
-in device tree.
-
-We add "cpu-freq" only to cpu 0 as all cpus are clocking from same
-clock source (same pll in our case).
-
-We override cpus node in skeleton as we don't need this change for
-nsim.
+Add core pll node (core_clk) to manage cpu frequency.
+core_clk represents pll itself.
+input_clk represents clock signal source (basically xtal) which
+comes to pll input.
 
 Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- arch/arc/boot/dts/axc003.dtsi     | 13 +++++++++++++
- arch/arc/boot/dts/axc003_idu.dtsi | 35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ arch/arc/boot/dts/axc003.dtsi     | 11 +++++++++--
+ arch/arc/boot/dts/axc003_idu.dtsi | 11 +++++++++--
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arc/boot/dts/axc003.dtsi b/arch/arc/boot/dts/axc003.dtsi
-index dca7e39..7c7411c 100644
+index cc9239e..dca7e39 100644
 --- a/arch/arc/boot/dts/axc003.dtsi
 +++ b/arch/arc/boot/dts/axc003.dtsi
-@@ -17,6 +17,19 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
+@@ -24,10 +24,17 @@
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <0>;
-+			cpu-freq = <100000000>;
-+			clocks = <&core_clk>;
+ 		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
+ 
+-		core_clk: core_clk {
++		input_clk: input-clk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <90000000>;
++			clock-frequency = <33333333>;
 +		};
-+	};
 +
- 	cpu_card {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
++		core_clk: core-clk@80 {
++			compatible = "snps,axs10x-arc-pll-clock";
++			reg = <0x80 0x10>, <0x100 0x10>;
++			#clock-cells = <0>;
++			clocks = <&input_clk>;
+ 		};
+ 
+ 		core_intc: archs-intc@cpu {
 diff --git a/arch/arc/boot/dts/axc003_idu.dtsi b/arch/arc/boot/dts/axc003_idu.dtsi
-index 5b56bef..44bc01e 100644
+index 4ebb2170..5b56bef 100644
 --- a/arch/arc/boot/dts/axc003_idu.dtsi
 +++ b/arch/arc/boot/dts/axc003_idu.dtsi
-@@ -17,6 +17,41 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
+@@ -24,10 +24,17 @@
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
+ 		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
+ 
+-		core_clk: core_clk {
++		input_clk: input-clk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <100000000>;
++			clock-frequency = <33333333>;
++		};
 +
-+		/*
-+		 * "cpu-freq" was added only to cpu 0 as all cpus are clocking
-+		 * from same clock source (same pll (core_clk) in our case).
-+		 */
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <0>;
-+			cpu-freq = <100000000>;
-+			clocks = <&core_clk>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <1>;
-+			clocks = <&core_clk>;
-+		};
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <2>;
-+			clocks = <&core_clk>;
-+		};
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <3>;
-+			clocks = <&core_clk>;
-+		};
-+	};
-+
- 	cpu_card {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
++		core_clk: core-clk@80 {
++			compatible = "snps,axs10x-arc-pll-clock";
++			reg = <0x80 0x10>, <0x100 0x10>;
++			#clock-cells = <0>;
++			clocks = <&input_clk>;
+ 		};
+ 
+ 		core_intc: archs-intc@cpu {
 -- 
 2.9.3
