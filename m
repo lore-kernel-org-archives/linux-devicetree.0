@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [RFCv3 usb-next 1/3] dt-bindings: usb: add the documentation for USB root-hub
-Date: Tue, 15 Aug 2017 00:45:40 +0200
-Message-ID: <20170814224542.18257-2-martin.blumenstingl@googlemail.com>
+Subject: [RFCv3 usb-next 3/3] usb: host: xhci: plat: integrate the platform-roothub
+Date: Tue, 15 Aug 2017 00:45:42 +0200
+Message-ID: <20170814224542.18257-4-martin.blumenstingl@googlemail.com>
 References: <20170814224542.18257-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170814224542.18257-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -10,68 +10,150 @@ To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsb
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A USB root-hub may have several PHYs which need to be configured before
-the root-hub starts working.
-This adds the documentation for such a USB root-hub.
+This enables the platform-roothub for the xhci-plat driver. This allows
+specifying a PHY for each port via devicetree. All PHYs will then be
+enabled/disabled by the platform-roothub driver.
+
+One example where this is required is the Amlogic GXL and GXM SoCs:
+They are using a dwc3 USB controller with up to three ports enabled on
+the internal roothub. Using only the top-level "phy" properties does not
+work here since one can only specify one "usb2-phy" and one "usb3-phy",
+while actually at least two "usb2-phy" have to be specified.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- .../devicetree/bindings/usb/usb-roothub.txt        | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |  7 +++++
+ drivers/usb/host/Kconfig                           |  1 +
+ drivers/usb/host/xhci-plat.c                       | 35 ++++++++++++++++++++--
+ drivers/usb/host/xhci.h                            |  2 ++
+ 4 files changed, 43 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-roothub.txt b/Documentation/devicetree/bindings/usb/usb-roothub.txt
-new file mode 100644
-index 000000000000..fc0797d7cee9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb-roothub.txt
-@@ -0,0 +1,46 @@
-+Generic USB root-hub Properties
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 2d80b60eeabe..31b4f681e9ca 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -29,6 +29,13 @@ Optional properties:
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+ 
++sub-nodes:
++- optionally there can be a node for the root-hub, see usb-roothub.txt in the
++  current directory
++- one or more nodes with reg 1-31 for each port to which a device is connected.
++  See usb-device.txt in the current directory for more information.
 +
-+similar to the USB device bindings (documented in usb-device.txt from the
-+current directory) this provides support for configuring the root-hub.
 +
-+Required properties:
-+- compatible: should be at least one of "usb1d6b,3", "usb1d6b,2"
-+- reg: must be 0.
-+- address-cells: must be 1
-+- size-cells: must be 0
-+
-+Required sub-nodes:
-+a sub-node per actual USB port is required. each sub-node supports the
-+following properties:
-+  Required properties:
-+    - reg: the port number on the root-hub (mandatory)
-+  Optional properties:
-+    - phys: optional, from the *Generic PHY* bindings (mandatory needed
-+      when phy-names is given)
-+    - phy-names: optional, from the *Generic PHY* bindings; supported names
-+      are "usb2-phy" or "usb3-phy"
-+
-+Example:
-+	&usb1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		roothub@0 {
-+			compatible = "usb1d6b,3", "usb1d6b,2";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			port@1 {
-+				reg = <1>;
-+				phys = <&usb2_phy1>, <&usb3_phy1>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				phys = <&usb2_phy2>, <&usb3_phy2>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
+ Example:
+ 	usb@f0931000 {
+ 		compatible = "generic-xhci";
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index b8b05c786b2a..3bdc49e89c0f 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -36,6 +36,7 @@ config USB_XHCI_PCI
+ config USB_XHCI_PLATFORM
+ 	tristate "Generic xHCI driver for a platform device"
+ 	select USB_XHCI_RCAR if ARCH_RENESAS
++	select USB_PLATFORM_ROOTHUB
+ 	---help---
+ 	  Adds an xHCI host driver for a generic platform device, which
+ 	  provides a memory space and an irq.
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index c04144b25a67..daf5bbcc310a 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -21,6 +21,7 @@
+ #include <linux/slab.h>
+ #include <linux/acpi.h>
+ 
++#include "platform-roothub.h"
+ #include "xhci.h"
+ #include "xhci-plat.h"
+ #include "xhci-mvebu.h"
+@@ -285,9 +286,19 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 			goto put_usb3_hcd;
+ 	}
+ 
++	xhci->platform_roothub = platform_roothub_init(sysdev);
++	if (IS_ERR(xhci->platform_roothub)) {
++		ret = PTR_ERR(xhci->platform_roothub);
++		goto disable_usb_phy;
 +	}
++
++	ret = platform_roothub_power_on(xhci->platform_roothub);
++	if (ret)
++		goto exit_plat_roothub;
++
+ 	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (ret)
+-		goto disable_usb_phy;
++		goto disable_plat_roothub;
+ 
+ 	if (HCC_MAX_PSA(xhci->hcc_params) >= 4)
+ 		xhci->shared_hcd->can_do_streams = 1;
+@@ -311,6 +322,12 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ dealloc_usb2_hcd:
+ 	usb_remove_hcd(hcd);
+ 
++disable_plat_roothub:
++	platform_roothub_power_off(xhci->platform_roothub);
++
++exit_plat_roothub:
++	platform_roothub_exit(xhci->platform_roothub);
++
+ disable_usb_phy:
+ 	usb_phy_shutdown(hcd->usb_phy);
+ 
+@@ -342,6 +359,9 @@ static int xhci_plat_remove(struct platform_device *dev)
+ 	usb_remove_hcd(xhci->shared_hcd);
+ 	usb_phy_shutdown(hcd->usb_phy);
+ 
++	platform_roothub_power_off(xhci->platform_roothub);
++	platform_roothub_exit(xhci->platform_roothub);
++
+ 	usb_remove_hcd(hcd);
+ 	usb_put_hcd(xhci->shared_hcd);
+ 
+@@ -374,7 +394,14 @@ static int __maybe_unused xhci_plat_suspend(struct device *dev)
+ 	if (!device_may_wakeup(dev) && !IS_ERR(xhci->clk))
+ 		clk_disable_unprepare(xhci->clk);
+ 
+-	return ret;
++	if (ret)
++		return ret;
++
++	ret = platform_roothub_power_off(xhci->platform_roothub);
++	if (ret)
++		return ret;
++
++	return 0;
+ }
+ 
+ static int __maybe_unused xhci_plat_resume(struct device *dev)
+@@ -386,6 +413,10 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
+ 	if (!device_may_wakeup(dev) && !IS_ERR(xhci->clk))
+ 		clk_prepare_enable(xhci->clk);
+ 
++	ret = platform_roothub_power_on(xhci->platform_roothub);
++	if (ret)
++		return ret;
++
+ 	ret = xhci_priv_resume_quirk(hcd);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index e3e935291ed6..76118e254a54 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1725,6 +1725,8 @@ struct xhci_hcd {
+ 	int		msix_count;
+ 	/* optional clock */
+ 	struct clk		*clk;
++	/* optional platform root-hub */
++	struct platform_roothub	*platform_roothub;
+ 	/* data structures */
+ 	struct xhci_device_context_array *dcbaa;
+ 	struct xhci_ring	*cmd_ring;
 -- 
 2.14.1
 
