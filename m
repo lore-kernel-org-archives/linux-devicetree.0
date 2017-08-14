@@ -1,51 +1,56 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
-Date: Mon, 14 Aug 2017 16:22:14 +0200
-Message-ID: <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw@mail.gmail.com>
-References: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 1/2] ARM: dts: iwg20d-q7: Add RTC support
+Date: Mon, 14 Aug 2017 14:26:08 +0000
+Message-ID: <KL1PR06MB1702571F2F9B75205A11280AB88C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1502197465-61546-1-git-send-email-biju.das@bp.renesas.com>
+ <1502197465-61546-2-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdUU5fb6G7Wc9ZzfFhLxcUuZFakPdVGh3q_cfUzxZ1AarA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux MMC List <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUU5fb6G7Wc9ZzfFhLxcUuZFakPdVGh3q_cfUzxZ1AarA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 1:19 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> Add support for r8a7743/5 SoC.Renesas RZ/G1[ME] (R8A7743/5) SDHI
-> is identical to the R-Car Gen2 family.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> ---
-> This patch is compiled and tested against mmc/next.
->
->  drivers/mmc/host/renesas_sdhi_sys_dmac.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/mmc/host/renesas_sdhi_sys_dmac.c b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-> index 718cb8a..f709f7f 100644
-> --- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-> +++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-> @@ -95,6 +95,8 @@
->         { .compatible = "renesas,sdhi-r7s72100", .data = &of_rz_compatible, },
->         { .compatible = "renesas,sdhi-r8a7778", .data = &of_rcar_gen1_compatible, },
->         { .compatible = "renesas,sdhi-r8a7779", .data = &of_rcar_gen1_compatible, },
-> +       { .compatible = "renesas,sdhi-r8a7743", .data = &of_rcar_gen2_compatible, },
-> +       { .compatible = "renesas,sdhi-r8a7745", .data = &of_rcar_gen2_compatible, },
->         { .compatible = "renesas,sdhi-r8a7790", .data = &of_rcar_gen2_compatible, },
->         { .compatible = "renesas,sdhi-r8a7791", .data = &of_rcar_gen2_compatible, },
->         { .compatible = "renesas,sdhi-r8a7792", .data = &of_rcar_gen2_compatible, },
-
-I guess we want generic R-Car Gen2/3 compatible values here, too?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZ2VlcnQudXl0dGVyaG9l
+dmVuQGdtYWlsLmNvbSBbbWFpbHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dDQo+IE9u
+IEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogMTQgQXVndXN0IDIwMTcgMTU6
+MTINCj4gVG86IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gQ2M6IFJvYiBI
+ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFu
+ZEBhcm0uY29tPjsgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBNYWdudXMNCj4g
+RGFtbSA8bWFnbnVzLmRhbW1AZ21haWwuY29tPjsgUnVzc2VsbCBLaW5nIDxsaW51eEBhcm1saW51
+eC5vcmcudWs+Ow0KPiBDaHJpcyBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29t
+PjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IExpbnV4LVJlbmVzYXMgPGxpbnV4LXJl
+bmVzYXMtc29jQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIEFSTTogZHRzOiBpd2cyMGQt
+cTc6IEFkZCBSVEMgc3VwcG9ydA0KPg0KPiBPbiBUdWUsIEF1ZyA4LCAyMDE3IGF0IDM6MDQgUE0s
+IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gRGVmaW5lIHRo
+ZSBpV2F2ZSBSYWluYm9XLUcyMEQtUXNldmVuIGJvYXJkIGRlcGVuZGVudCBwYXJ0IG9mIHRoZSBS
+VEMNCj4gPiBkZXZpY2Ugbm9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxi
+aWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4NCj4gPiBAQCAtNTQsMyArNTksMTYgQEANCj4gPiAg
+ICAgICAgICAgICAgICAgbWljcmVsLGxlZC1tb2RlID0gPDE+Ow0KPiA+ICAgICAgICAgfTsNCj4g
+PiAgfTsNCj4gPiArDQo+ID4gKyZpMmMyIHsNCj4gPiArICAgICAgIHBpbmN0cmwtMCA9IDwmaTJj
+Ml9waW5zPjsNCj4gPiArICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4gKw0K
+PiA+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ICsgICAgICAgY2xvY2stZnJlcXVlbmN5
+ID0gPDQwMDAwMD47DQo+ID4gKw0KPiA+ICsgICAgICAgcnRjQDY4IHsNCj4gPiArICAgICAgICAg
+ICAgICAgY29tcGF0aWJsZSA9ICJicTMyMDAwIjsNCj4NCj4gInRpLGJxMzIwMDAiDQoNClRoYW5r
+cy4gSSB3aWxsIGNoYW5nZSB0aGlzLg0KDQo+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDY4
+PjsNCj4gPiArICAgICAgIH07DQo+ID4gK307DQo+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0K
+PiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJo
+b2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4
+LQ0KPiBtNjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5p
+Y2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtp
+bmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxp
+a2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2
+YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3cs
+IE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVL
+LiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4
+NjcwOS4NCg==
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
