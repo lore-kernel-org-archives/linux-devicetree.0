@@ -1,57 +1,58 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 16/18] hwmon: add support for sensors exported via ARM
- SCMI
-Date: Mon, 14 Aug 2017 16:09:18 +0100
-Message-ID: <c695dc09-fc28-518f-f287-bf74e0a2f87e@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-17-git-send-email-sudeep.holla@arm.com>
- <20170804193231.GA18153@roeck-us.net>
- <20e0a388-79a1-a7f1-57b4-fa5993eed9bf@arm.com>
+From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Mon, 14 Aug 2017 15:15:17 +0000
+Message-ID: <TY1PR06MB070269842CD923E4DE4FE6EDB78C0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+References: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20e0a388-79a1-a7f1-57b4-fa5993eed9bf-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
-
-On 07/08/17 13:25, Sudeep Holla wrote:
-> 
-> 
-> On 04/08/17 20:32, Guenter Roeck wrote:
->> On Fri, Aug 04, 2017 at 03:31:42PM +0100, Sudeep Holla wrote:
-> 
-> [...]
-> 
->>> +	platform_set_drvdata(pdev, scmi_sensors);
->>> +
->>> +	hwdev = devm_hwmon_device_register_with_groups(dev, "scmi_sensors",
->>> +						       scmi_sensors,
->>> +						       scmi_sensors->groups);
->>
->> Can you rework this to use devm_hwmon_device_register_with_info(),
->> and if possible let it handle the thermal registration ? 
->>
-> 
-> Thanks for the pointers. I will check on the possibility and use it if
-> possible.
-> 
-
-I had a look at devm_hwmon_device_register_with_info. It mostly deals
-with constant structures where all the attributes are known at the boot
-time. In case of SCMI, the firmware presents all the sensors and all the
-information(type, scale, name/label, ...etc). Unless I create those
-structures dynamically and typecast as const during probe, I can't get
-it working. Are you OK with that ? If so, I can try making those changes.
-
--- 
-Regards,
-Sudeep
+DQo+IEZyb206IGdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb20gW21haWx0bzpnZWVydC51eXR0
+ZXJob2V2ZW5AZ21haWwuY29tXQ0KPiBPbiBCZWhhbGYgT2YgR2VlcnQgVXl0dGVyaG9ldmVuDQo+
+IFNlbnQ6IDE0IEF1Z3VzdCAyMDE3IDE1OjIyDQo+IA0KPiBPbiBNb24sIEF1ZyAxNCwgMjAxNyBh
+dCAxOjE5IFBNLCBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+
+IEFkZCBzdXBwb3J0IGZvciByOGE3NzQzLzUgU29DLlJlbmVzYXMgUlovRzFbTUVdIChSOEE3NzQz
+LzUpIFNESEkgaXMNCj4gPiBpZGVudGljYWwgdG8gdGhlIFItQ2FyIEdlbjIgZmFtaWx5Lg0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0K
+PiA+IC0tLQ0KPiA+IFRoaXMgcGF0Y2ggaXMgY29tcGlsZWQgYW5kIHRlc3RlZCBhZ2FpbnN0IG1t
+Yy9uZXh0Lg0KPiA+DQo+ID4gIGRyaXZlcnMvbW1jL2hvc3QvcmVuZXNhc19zZGhpX3N5c19kbWFj
+LmMgfCAyICsrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gPg0KPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L3JlbmVzYXNfc2RoaV9zeXNfZG1hYy5jDQo+
+ID4gYi9kcml2ZXJzL21tYy9ob3N0L3JlbmVzYXNfc2RoaV9zeXNfZG1hYy5jDQo+ID4gaW5kZXgg
+NzE4Y2I4YS4uZjcwOWY3ZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21tYy9ob3N0L3JlbmVz
+YXNfc2RoaV9zeXNfZG1hYy5jDQo+ID4gKysrIGIvZHJpdmVycy9tbWMvaG9zdC9yZW5lc2FzX3Nk
+aGlfc3lzX2RtYWMuYw0KPiA+IEBAIC05NSw2ICs5NSw4IEBADQo+ID4gICAgICAgICB7IC5jb21w
+YXRpYmxlID0gInJlbmVzYXMsc2RoaS1yN3M3MjEwMCIsIC5kYXRhID0gJm9mX3J6X2NvbXBhdGli
+bGUsIH0sDQo+ID4gICAgICAgICB7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yOGE3Nzc4
+IiwgLmRhdGEgPQ0KPiAmb2ZfcmNhcl9nZW4xX2NvbXBhdGlibGUsIH0sDQo+ID4gICAgICAgICB7
+IC5jb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yOGE3Nzc5IiwgLmRhdGEgPQ0KPiA+ICZvZl9y
+Y2FyX2dlbjFfY29tcGF0aWJsZSwgfSwNCj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVu
+ZXNhcyxzZGhpLXI4YTc3NDMiLCAuZGF0YSA9DQo+ICZvZl9yY2FyX2dlbjJfY29tcGF0aWJsZSwg
+fSwNCj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxzZGhpLXI4YTc3NDUiLCAu
+ZGF0YSA9DQo+ID4gKyAmb2ZfcmNhcl9nZW4yX2NvbXBhdGlibGUsIH0sDQo+ID4gICAgICAgICB7
+IC5jb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yOGE3NzkwIiwgLmRhdGEgPQ0KPiAmb2ZfcmNh
+cl9nZW4yX2NvbXBhdGlibGUsIH0sDQo+ID4gICAgICAgICB7IC5jb21wYXRpYmxlID0gInJlbmVz
+YXMsc2RoaS1yOGE3NzkxIiwgLmRhdGEgPQ0KPiAmb2ZfcmNhcl9nZW4yX2NvbXBhdGlibGUsIH0s
+DQo+ID4gICAgICAgICB7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1yOGE3NzkyIiwgLmRh
+dGEgPQ0KPiA+ICZvZl9yY2FyX2dlbjJfY29tcGF0aWJsZSwgfSwNCj4gDQo+IEkgZ3Vlc3Mgd2Ug
+d2FudCBnZW5lcmljIFItQ2FyIEdlbjIvMyBjb21wYXRpYmxlIHZhbHVlcyBoZXJlLCB0b28/DQoN
+ClllcywgYnV0IEkgYXNzdW1lIHRoYXQgc2hvdWxkIGJlIGEgc2VwYXJhdGUgcGF0Y2ggc3VibWl0
+dGVkIGluc3RlYWQgb2YgdGhpcyBvbmU/DQoNCktpbmQgcmVnYXJkcywgQ2hyaXMNCg0KDQo+IA0K
+PiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0
+DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4
+IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPiANCj4gSW4gcGVyc29u
+YWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBo
+YWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkg
+InByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
