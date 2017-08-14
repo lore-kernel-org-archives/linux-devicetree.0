@@ -1,88 +1,310 @@
-From: Sandy Huang <hjc@rock-chips.com>
-Subject: Re: [PATCH 1/3] dt-bindings: display: Add Document for Rockchip Soc
- LVDS
-Date: Mon, 14 Aug 2017 12:04:38 +0800
-Message-ID: <7ebfa933-57ca-658a-84ef-6e47b0009209@rock-chips.com>
-References: <1502272846-63941-1-git-send-email-hjc@rock-chips.com>
- <1502272851-63997-1-git-send-email-hjc@rock-chips.com>
- <1502465911.2310.18.camel@pengutronix.de>
+From: Vivek Unune <npcomplete13-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for Linksys EA9500
+Date: Mon, 14 Aug 2017 00:44:53 -0400
+Message-ID: <CAChtp745Ho-=DQCTgFawA_c40Syupn9geGr5SBZjQaz6NvJgxQ@mail.gmail.com>
+References: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com>
+ <20170315185214.GF21021@lunn.ch> <CAChtp75xk3LN1-DPVvaHT5qEvrdoFFvXEk-daVCcJ=4rYu_vmw@mail.gmail.com>
+ <7f5ddeba-6f79-9de5-2c67-a77e6bec0ef9@broadcom.com> <CAChtp75mzHkSg4rVh602vaMotqs6NtaPOD4383Gef8tVPO37FQ@mail.gmail.com>
+ <2e4ed52f-4134-9b6a-18c9-7c1f28cd7038@broadcom.com> <CAChtp76sbKjxq03ipSDJN69XeJRU-0aRTeJ75+gCXZfo4D5r0A@mail.gmail.com>
+ <03ba6198-a2cc-da9f-7d7d-f626d53d5717@gmail.com> <CAChtp77nD-dUCytja6PM3fAqXLCVshHqN-hV6pp6ues0PQcaOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1502465911.2310.18.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAChtp77nD-dUCytja6PM3fAqXLCVshHqN-hV6pp6ues0PQcaOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgrlnKggMjAxNy84LzExIDIzOjM4LCBQaGlsaXBwIFphYmVsIOWGmemBkzoKPiBPbiBXZWQsIDIw
-MTctMDgtMDkgYXQgMTg6MDAgKzA4MDAsIFNhbmR5IEh1YW5nIHdyb3RlOgo+PiBUaGlzIHBhdGNo
-IGFkZCBEb2N1bWVudCBmb3IgUm9ja2NoaXAgU29jIFJLMzI4OCBMVkRTLAo+PiBUaGlzIGJhc2Vk
-IG9uIHRoZSBwYXRjaGVzIGZyb20gTWFyayB5YW8gYW5kIEhlaWtvIFN0dWVibmVyLgo+Pgo+Pj4g
-U2lnbmVkLW9mZi1ieTogU2FuZHkgSHVhbmcgPGhqY0Byb2NrLWNoaXBzLmNvbT4KPj4+IFNpZ25l
-ZC1vZmYtYnk6IE1hcmsgeWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KPj4+IFNpZ25lZC1v
-ZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4+IC0tLQo+PiAgIC4uLi9i
-aW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0ICAgIHwgMTA0ICsrKysr
-KysrKysrKysrKysrKysrKwo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxMDQgaW5zZXJ0aW9ucygrKQo+
-PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAt
-bHZkcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2Nr
-Y2hpcC9yb2NrY2hpcC1sdmRzLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAw
-MDAwMDAwLi5iZjkzNGJhCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQKPj4g
-QEAgLTAsMCArMSwxMDQgQEAKPj4gK1JvY2tjaGlwIFJLMzI4OCBMVkRTIGludGVyZmFjZQo+PiAr
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVy
-dGllczoKPj4gKy0gY29tcGF0aWJsZTogbWF0Y2hpbmcgdGhlIHNvYyB0eXBlLCBvbmUgb2YKPj4+
-ICsJLSAicm9ja2NoaXAscmszMjg4LWx2ZHMiOwo+PiArCj4+ICstIHJlZzogcGh5c2ljYWwgYmFz
-ZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVyIGFuZCBsZW5ndGgKPj4+ICsJb2YgbWVtb3J5IG1h
-cHBlZCByZWdpb24uCj4+ICstIGNsb2NrczogbXVzdCBpbmNsdWRlIGNsb2NrIHNwZWNpZmllcnMg
-Y29ycmVzcG9uZGluZyB0byBlbnRyaWVzIGluIHRoZQo+Pj4gKwljbG9jay1uYW1lcyBwcm9wZXJ0
-eS4KPj4gKy0gY2xvY2stbmFtZXM6IG11c3QgY29udGFpbiAicGNsa19sdmRzIgo+PiArCj4+ICst
-IGF2ZGQxdjAtc3VwcGx5OiByZWd1bGF0b3IgcGhhbmRsZSBmb3IgMS4wViBhbmFsb2cgcG93ZXIK
-Pj4gKy0gYXZkZDF2OC1zdXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAxLjhWIGFuYWxvZyBw
-b3dlcgo+PiArLSBhdmRkM3YzLXN1cHBseTogcmVndWxhdG9yIHBoYW5kbGUgZm9yIDMuM1YgYW5h
-bG9nIHBvd2VyCj4+ICsKPj4gKy0gcm9ja2NoaXAsZ3JmOiBwaGFuZGxlIHRvIHRoZSBnZW5lcmFs
-IHJlZ2lzdGVyIGZpbGVzIHN5c2Nvbgo+PiArCj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzCj4+ICst
-IHBpbmN0cmwtbmFtZXM6IG11c3QgY29udGFpbiBhICJsY2RjIiBlbnRyeS4KPj4gKy0gcGluY3Ry
-bC0wOiBwaW4gY29udHJvbCBncm91cCB0byBiZSB1c2VkIGZvciB0aGlzIGNvbnRyb2xsZXIuCj4+
-ICsKPj4gK1JlcXVpcmVkIG5vZGVzOgo+PiArCj4+ICtUaGUgbHZkcyBoYXMgdHdvIHZpZGVvIHBv
-cnRzIGFzIGRlc2NyaWJlZCBieQo+Pj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuCj4+ICtUaGVpciBjb25uZWN0aW9ucyBhcmUg
-bW9kZWxlZCB1c2luZyB0aGUgT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCj4+PiArCURv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4+ICsKPj4gKy0gdmlk
-ZW8gcG9ydCAwIGZvciB0aGUgVk9QIGlucHV0cwo+PiArLSB2aWRlbyBwb3J0IDEgZm9yIGVpdGhl
-ciBhIHBhbmVsIG9yIHN1YnNlcXVlbnQgZW5jb2Rlcgo+PiArCj4+ICt0aGUgbHZkcyBwYW5lbCBk
-ZXNjcmliZWQgYnkKPj4+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAo+PiArCj4+ICstIHJvY2tjaGlwLGRhdGEtbWFwcGlu
-Zzogc2hvdWxkIGJlICJ2ZXNhIiBvciAiamVpZGEiLAo+Pj4gKwlUaGlzIGRlc2NyaWJlcyBob3cg
-dGhlIGNvbG9yIGJpdHMgYXJlIGxhaWQgb3V0IGluIHRoZQo+Pj4gKwlzZXJpYWxpemVkIExWRFMg
-c2lnbmFsLgo+PiArLSByb2NrY2hpcCxkYXRhLXdpZHRoIDogc2hvdWxkIGJlIDwxOD4gb3IgPDI0
-PjsKPiAKPiBUaGlzIGNhbiBhbHJlYWR5IGJlIGRlc2NyaWJlZCBieSB0aGUgcGFuZWwgaXRzZWxm
-LCB2aWEgdGhlIGJ1c19mb3JtYXQKPiBwcm9wZXJ0eSBpbiB0aGUgcGFuZWxfZGVzYyBmb3IgcGFu
-ZWwtc2ltcGxlLCBvciB2aWEgdGhlIGV4aXN0aW5nIHBhbmVsCj4gZGV2aWNlIHRyZWUgcHJvcGVy
-dHkgImRhdGEtbWFwcGluZyIgaW4gcGFuZWwtbHZkcywgd2hpY2ggY2FuIGJlIHNldCB0bwo+ICJq
-ZWlkYS0xOCIsICJqZWlkYS0yNCIsIG9yICJ2ZXNhLTI0Ii4KPiAKPiBUaGUgTFZEUyBkcml2ZXIg
-Y2FuIHRoZW4gcmVhZCB0aGUgcGFuZWwgYnVzIGluZm9ybWF0aW9uIGZyb20gdGhlCj4gcGFuZWwn
-cyBjb25uZWN0b3ItPmRpc3BsYXlfaW5mby5idXNfZm9ybWF0cy4KPiAKQmVjYXVzZSB0aGUgbHZk
-cyBtYXliZSBjb25uZWN0ZWQgdG8gcGFuZWwgb3Igc29tZSBjb3ZlciBjaGlwIGp1c3QgbGlrZSAK
-cmdiMmN2YnMgZXRjLiAsIGluIHRoaXMgY2FzZSwgd2Ugbm8gbmVlZCB0byBlbmFibGUgcGFuZWws
-IHNvIHdlIGhhdmUgdG8gCmdldCB0aGlzIHByb3RlcnR5IGF0IGhlcmUuCgo+IFNvIGlmIHRoZXNl
-IHByb3BlcnRpZXMgYXJlIG5lY2Vzc2FyeSBhdCBhbGwsIHRoZXkgYXQgbGVhc3Qgc2hvdWxkIGJl
-Cj4gb3B0aW9uYWwgKG92ZXJyaWRlcykuCj4Kb2ssIGkgd2lsbCBzZXQgZGF0YS1tYXBwaW5nIHRv
-IG9wdGlvbi4KPiByZWdhcmRzCj4gUGhpbGlwcAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCj4gTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Cj4g
-TGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAKPiAKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Florian,
+
+On Thu, Jun 29, 2017 at 5:04 PM, Vivek Unune <npcomplete13-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Florian,
+>
+>>> I have managed to use DSA driver and was able detect both internal and
+>>> external switches. However, I only get packets flowing only through the
+>>> internal switch. I have used the ip & bridge commands to setup the vlan
+>>> 101 & 102 for lan and wan respectively.
+>>>
+>>> VLAN101 = lan1 lan2 lan3 lan4 lan5 lan6 lan7 lan8 eth0.101
+>>
+>> That looks reasonable although keep in mind that the IMP/CPU interfaces
+>> of the switch are configured with VLAN tags (see commit [1]), so you may
+>> need to make sure that port 0 of the internal switch is not accidentally
+>> configured back to untagged since that would cause problem when
+>> terminating the VLAN tag on the SW side.
+>>
+>> So here are a few things that you want to check:
+>>
+>> - read the MIB counters from the "extswitch" interface and see if
+>> packets flow through in both directions with no errors
+>
+> lan4 is on internal switch, lan1 on external. I cannot ping router from lan1
+>
+> Inter-    |   Receive                |  Transmit
+>  face     |bytes    packets errs drop|bytes    packets errs drop
+> br-lan:      168590    1726    0    0   190542     753    0    0
+> extswitch:        0       0    0    0   101012    1221    0    0
+>   lan1:           0       0    0    0     5382     111    0    0
+>   lan4:           0       0    0    0  1306680   13909    0    0
+>   eth0:     3276924    5539    0    0  1106135    5084    0    0
+> eth0.101:    169338    1732    0    0   190256     750    0    0
+> eth0.102:   2959522    3274    0    0   587248    1094    0    0
+>     lo:       39390     502    0    0    39390     502    0    0
+> br-wan:     2956822    3254    0    0   587248    1094    0    0
+>
+
+Please ignore above mib counters. I noticed that I see lot of RxFCSErrors
+and RxSymbolErrors for extswitch. The count for both counters always
+remain same.
+
+root@LEDE:/# ethtool -S extswitch
+NIC statistics:
+     tx_packets: 212
+     tx_bytes: 19179
+     rx_packets: 0
+     rx_bytes: 0
+     TxOctets: 14403
+     TxDropPkts: 0
+     TxBroadcastPkts: 24
+     TxMulticastPkts: 122
+     TxUnicastPkts: 0
+     TxCollisions: 0
+     TxSingleCollision: 0
+     TxMultipleCollision: 0
+     TxDeferredTransmit: 0
+     TxLateCollision: 0
+     TxExcessiveCollision: 0
+     TxPausePkts: 0
+     RxOctets: 3593
+     RxUndersizePkts: 0
+     RxPausePkts: 0
+     Pkts64Octets: 0
+     Pkts65to127Octets: 36
+     Pkts128to255Octets: 1
+     Pkts256to511Octets: 0
+     Pkts512to1023Octets: 0
+     Pkts1024to1522Octets: 0
+     RxOversizePkts: 0
+     RxJabbers: 0
+     RxAlignmentErrors: 0
+     RxFCSErrors: 37
+     RxGoodOctets: 0
+     RxDropPkts: 0
+     RxUnicastPkts: 0
+     RxMulticastPkts: 0
+     RxBroadcastPkts: 0
+     RxSAChanges: 0
+     RxFragments: 0
+     RxJumboPkts: 0
+     RxSymbolErrors: 37
+     RxDiscarded: 0
+     p08_TxOctets: 47537
+     p08_TxDropPkts: 0
+     p08_TxBroadcastPkts: 163
+     p08_TxMulticastPkts: 319
+     p08_TxUnicastPkts: 0
+     p08_TxCollisions: 0
+     p08_TxSingleCollision: 0
+     p08_TxMultipleCollision: 0
+     p08_TxDeferredTransmit: 0
+     p08_TxLateCollision: 0
+     p08_TxExcessiveCollision: 0
+     p08_TxPausePkts: 0
+     p08_RxOctets: 14403
+     p08_RxUndersizePkts: 0
+     p08_RxPausePkts: 0
+     p08_Pkts64Octets: 25
+     p08_Pkts65to127Octets: 102
+     p08_Pkts128to255Octets: 17
+     p08_Pkts256to511Octets: 2
+     p08_Pkts512to1023Octets: 0
+     p08_Pkts1024to1522Octets: 0
+     p08_RxOversizePkts: 0
+     p08_RxJabbers: 0
+     p08_RxAlignmentErrors: 0
+     p08_RxFCSErrors: 0
+     p08_RxGoodOctets: 14403
+     p08_RxDropPkts: 0
+     p08_RxUnicastPkts: 0
+     p08_RxMulticastPkts: 122
+     p08_RxBroadcastPkts: 24
+     p08_RxSAChanges: 40
+     p08_RxFragments: 0
+     p08_RxJumboPkts: 0
+     p08_RxSymbolErrors: 0
+     p08_RxDiscarded: 146
+
+
+>>
+>> - check the "extswitch" VLAN configuration on both the internal switch
+>> side (port 0) and on the external switch side ("cpu", port 8, not visible)
+>
+> #bridge vlan show
+> port    vlan ids
+> extswitch       None
+> extswitch
+> lan7     101 PVID Egress Untagged
+> lan7     101 PVID Egress Untagged
+> lan4     101 PVID Egress Untagged
+> lan4     101 PVID Egress Untagged
+> lan8     101 PVID Egress Untagged
+> lan8     101 PVID Egress Untagged
+> wan      102 PVID Egress Untagged
+> wan      102 PVID Egress Untagged
+> lan1     101 PVID Egress Untagged
+> lan1     101 PVID Egress Untagged
+> lan5     101 PVID Egress Untagged
+> lan5     101 PVID Egress Untagged
+> lan2     101 PVID Egress Untagged
+> lan2     101 PVID Egress Untagged
+> lan6     101 PVID Egress Untagged
+> lan6     101 PVID Egress Untagged
+> lan3     101 PVID Egress Untagged
+> lan3     101 PVID Egress Untagged
+> br-lan  None
+> eth0.101         101 PVID Egress Untagged
+> eth0.101
+> br-wan  None
+> eth0.102         102 PVID Egress Untagged
+> eth0.102
+>
+>>
+>> - see if you can get traffic end-to-end from eth0 all the way through
+>> one of the external switch port. If that's the case, that means that the
+>> configuration of internal switch port 0, internal switch CPU port, and
+>> external switch external port is working and operational
+>>
+>> [1]:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e47112d9d6009bf6b7438cedc0270316d6b0370d
+>>
+>>> VLAN102 = wan eth0.102
+>>>
+>>> Reading configs from the factory firmware, I'm sure that sw0port0 and> sw1port8 are connected. Excerpt from the same:
+>>>
+>>> port_numbers=0 2 4 2 1 3 1 3
+>>> port_switch_id=1 1 1 0 1 1 0 0
+>>> port_names=port0 port1 port2 port3 port4 port5 port6 port7
+>>
+>> Is 0 the identifier for the external or internal switch? If 0 is
+>> internal switch identifier and 1 is the external switch identifier, your
+>> mapping looks correct to me with one exception below:
+>
+> 0 is internal here.
+>
+>>
+>>> cpu_port_number=5 7 8
+>>> cpu_port_switch_id=0 0 0
+>>> hidden_port_numbers=0 8
+>>> hidden_port_switch_id=0 1
+>>>
+>>> Below is my updated device tree.
+>>>
+>>> Thanks,
+>>>
+>>> Vivek
+>>>
+>>> &srab {
+>>>     compatible = "brcm,bcm53012-srab", "brcm,bcm5301x-srab";
+>>>     status = "okay";
+>>>     dsa,member = <0 0>;
+>>>
+>>>     ports {
+>>>         #address-cells = <1>;
+>>>         #size-cells = <0>;
+>>>
+>>>         port@1 {
+>>>             reg = <1>;
+>>>             label = "lan7";
+>>>         };
+>>>
+>>>         port@2 {
+>>>             reg = <2>;
+>>>             label = "lan4";
+>>>         };
+>>>
+>>>         port@3 {
+>>>             reg = <3>;
+>>>             label = "lan8";
+>>>         };
+>>>
+>>>         port@4 {
+>>>             reg = <4>;
+>>>             label = "wan";
+>>>         };
+>>>
+>>>         port@5 {
+>>>             reg = <5>;
+>>>             ethernet = <&gmac0>;
+>>>             label = "cpu";
+>>>
+>>>             fixed-link {
+>>>
+>>>                 speed = <1000>;
+>>>                 full-duplex;
+>>>             };
+>>>         };
+>>
+>> I think this is meant to be port 8 here based on the hidden_port_number
+>> value. This actually matters for VLAN configuration because B53 is not
+>> (unfortunately, to be fixed) consistently using dst->cpu_port (whatever
+>> is configured in Device Tree) vs. dev->cpu_port (hardcoded to 8 for this
+>> class of switch).
+>
+> When I connect to port 8 I receive no packets on internal switch.
+
+I'm able to now use sw0port8 <-> eth2 (i.e use cpu port 8 to connect to gmac2).
+For this I had to modify net/dsa/b53/b53_common.c (see below). This is how
+it is setup in net/phy/b53/b53_common.c. Also need to set
+cpu_port = B53_CPU_PORT for 53012 sw instead of B53_CPU_PORT_25
+
+@@ -357,9 +357,11 @@ static void b53_enable_vlan(struct b53_d
+  b53_read8(dev, B53_VLAN_PAGE, B53_VLAN_CTRL5, &vc5);
+  }
+
+- mgmt &= ~SM_SW_FWD_MODE;
+
+  if (enable) {
++
++ mgmt |= SM_SW_FWD_MODE;
++
+  vc0 |= VC0_VLAN_EN | VC0_VID_CHK_EN | VC0_VID_HASH_VID;
+  vc1 |= VC1_RX_MCST_UNTAG_EN | VC1_RX_MCST_FWD_EN;
+  vc4 &= ~VC4_ING_VID_CHECK_MASK;
+
+>
+>>
+>> PS: on that front, we will have to rework that when we bring multiple
+>> CPU port support in DSA/B53/bcm_sf2 and so for now what we could do is
+>> just check that the configured CPU port in Device Tree is a valid CPU
+>> port for that switch (typically 5, 7 or 8), and if not, just issue a
+>> warning.
+>>
+>>>
+>>>         sw0port0: port@0 {
+>>>             reg = <0>;
+>>>             label = "extswitch";
+>>>
+>>>             fixed-link {
+>>>                 speed = <1000>;
+>>>                 full-duplex;
+>>>             };
+>>
+>> There might be some additional configuration needed here for this port,
+>> because by default, the port will most likely try to use its built-in
+>> PHY and maybe that's what they did, they wired the built-in PHY directly
+>> to the IMP port of the external switch.
+>
+> Do you know what that configuration might be?
+
+Given that I see RxFCSErrors and RxSymbolErrors errors wrt extswitch.
+configuration definitely needs tweaking. I tried setting the phy-mode to
+rgmii and rgmii-txid but no go.
+
+Thanks,
+
+Vivek
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
