@@ -1,119 +1,110 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v6 0/6] SMP and CPU hotplug support for Meson8/Meson8b
-Date: Mon, 14 Aug 2017 23:58:54 +0200
-Message-ID: <20170814215900.1032-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v6 6/6] ARM: dts: meson8b: add support for booting the secondary CPU cores
+Date: Mon, 14 Aug 2017 23:59:00 +0200
+Message-ID: <20170814215900.1032-7-martin.blumenstingl@googlemail.com>
+References: <20170814215900.1032-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170814215900.1032-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for booting the secondary CPU cores (and
-taking them offline again) on Amlogic Meson8 and Meson8b SoCs.
-It is based on an earlier version from Carlo Caione - this helped me
-a lot to get a better understanding of how SMP/CPU hotplug works
-(compared to the code found in Amlogic's GPL kernel sources from
-year 2015).
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 
+Booting the secondary CPU cores involves the following nodes/devices:
+- SCU (Snoop-Control-Unit, for which we already have a DT node)
+- a reset line for each CPU core, provided by the reset-controller
+  which is built into the clock-controller
+- the PMU (power management unit) which controls the power of the CPU
+  cores
+- a range in the SRAM specifically reserved for booting secondary CPU
+  cores
+- the "enable-method" which activates booting the secondary CPU cores
 
-Changes since v5 from [5]:
-- dropped dependency on another patch series (for the clock
-  controller's embedded reset controller, which is needed to boot
-  the secondary CPUs) from the cover-letter as that series is now
-  merged
-- fix incorrect documentation of scu_cpu_power_enable (thanks to
-  Russell King for spotting these). removed the paragraph about
-  preemption, cache coherency and interrupts as we're powering on
-  a CPU core (the text was copied from the original scu_power_mode
-  but simply not adjusted). also changed "Set the executing CPUs"
-  to "Set the given (logical) CPU's" as we're not modifying the
-  current CPU. this affects only patch #2
-- extended the commit message of patch #3 with a short sentence
-  about why SCU_CPU_STATUS_MASK was introduced
+This adds all required nodes and properties to boot the secondary CPU
+cores.
 
-Changes since v4 from [4]:
-- use __pa_symbol(secondary_startup) instead of
-  virt_to_phys(secondary_startup) as suggested by Florian Fainelli
-  (affects patch #4)
-- (cover-letter) removed dependency on my other patch
-  "ARM: dts: meson: add a node which describes the SRAM" [2] as that
-  was merged into Kevin's Amlogic repo today
-- dropped patch #5 ("clk: meson: meson8b: export the CPU soft reset
-  lines") again because the reset controller series exposes the
-  preprocessor macros now directly, see [1]
-- refreshed the .dts patches so they now include the new header for
-  the reset line preprocessor macros
+Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ arch/arm/boot/dts/meson8b.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Changes since v3 from [3]:
-- added Rob's ACK to patch #1
-- replaced a msleep(10) with usleep_range(10000, 15000) in patch #4
-- removed all "pen" code from patch #4 as that code was not needed
-  at all (it was left-over while trying to fix Meson8 secondary CPU
-  boot - which turned out to have nothing to do with this "pen" code)
-- removed all memory barrier operations as they were added based on
-  the code in the Amlogic GPL kernel tree (while trying to fix the
-  Meson8 secondary CPU boot - just like the "pen" code). Everything
-  still works fine with these on my Meson8m2 and Meson8b boards.
-- added PATCH #5 as we now have to export the reset identifiers
-  (just like we do it with the clock identifiers / preprocessor
-  macros) - this is the result of a change in the reset controller
-  patch in version 2, see [1]
-- use the reset line preprocessor macros (from patch #5) in patches
-  #6 and #7
-
-Changes since v2 from [0]:
-- added support for Meson8 (which requires a slightly different
-  enable-method)
-- implemented CPU hotplug support which allows taking a CPU core
-  offline for both, Meson8 and Meson8b
-- add a function to smp_scu.c which allows enabling a CPU core from
-  a different CPU (previously only the power mode for the current CPU
-  could be changed). Without this the CPU cores on Meson8 won't come
-  up (Amlogic's vendor GPL kernel sources also enable power through
-  SCU as very first step for Meson8b as well)
-- add a function to smp_scu.c to get the power status of a CPU core
-  (which is needed because the code in .cpu_kill needs to wait until
-  the core is actually powered off)
-- dropped patch "ARM: DTS: meson8b: Extend L2 cache controller node"
-  as it is already applied (for both, Meson8 and Meson8b)
-- dropped the patches which implement the reset controller which is
-  built into the clock-controller, these are a separate series: [1]
-- moved the enable-method property to each CPU node
-
-
-[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390355.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004456.html
-[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004282.html
-[3] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004297.html
-[4] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004354.html
-[5] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004460.html
-
-Carlo Caione (2):
-  dt-bindings: Amlogic: Add Meson8 and Meson8b SMP related documentation
-  ARM: dts: meson8b: add support for booting the secondary CPU cores
-
-Martin Blumenstingl (4):
-  ARM: smp_scu: add a helper for powering on a specific CPU
-  ARM: smp_scu: allow the platform code to read the SCU CPU status
-  ARM: meson: Add SMP bringup code for Meson8 and Meson8b
-  ARM: dts: meson8: add support for booting the secondary CPU cores
-
- .../devicetree/bindings/arm/amlogic/pmu.txt        |  18 +
- .../devicetree/bindings/arm/amlogic/smp-sram.txt   |  32 ++
- Documentation/devicetree/bindings/arm/cpus.txt     |   2 +
- arch/arm/Makefile                                  |   1 +
- arch/arm/boot/dts/meson8.dtsi                      |  21 +
- arch/arm/boot/dts/meson8b.dtsi                     |  21 +
- arch/arm/include/asm/smp_scu.h                     |  12 +
- arch/arm/kernel/smp_scu.c                          |  43 +-
- arch/arm/mach-meson/Kconfig                        |   1 +
- arch/arm/mach-meson/Makefile                       |   1 +
- arch/arm/mach-meson/platsmp.c                      | 440 +++++++++++++++++++++
- 11 files changed, 586 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
- create mode 100644 arch/arm/mach-meson/platsmp.c
-
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index bc278da7df0d..aaebfcce9073 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -47,6 +47,7 @@
+ #include <dt-bindings/clock/meson8b-clkc.h>
+ #include <dt-bindings/gpio/meson8b-gpio.h>
+ #include <dt-bindings/reset/amlogic,meson8b-reset.h>
++#include <dt-bindings/reset/amlogic,meson8b-clkc-reset.h>
+ #include "meson.dtsi"
+ 
+ / {
+@@ -59,6 +60,8 @@
+ 			compatible = "arm,cortex-a5";
+ 			next-level-cache = <&L2>;
+ 			reg = <0x200>;
++			enable-method = "amlogic,meson8b-smp";
++			resets = <&clkc CLKC_RESET_CPU0_SOFT_RESET>;
+ 		};
+ 
+ 		cpu@201 {
+@@ -66,6 +69,8 @@
+ 			compatible = "arm,cortex-a5";
+ 			next-level-cache = <&L2>;
+ 			reg = <0x201>;
++			enable-method = "amlogic,meson8b-smp";
++			resets = <&clkc CLKC_RESET_CPU1_SOFT_RESET>;
+ 		};
+ 
+ 		cpu@202 {
+@@ -73,6 +78,8 @@
+ 			compatible = "arm,cortex-a5";
+ 			next-level-cache = <&L2>;
+ 			reg = <0x202>;
++			enable-method = "amlogic,meson8b-smp";
++			resets = <&clkc CLKC_RESET_CPU2_SOFT_RESET>;
+ 		};
+ 
+ 		cpu@203 {
+@@ -80,6 +87,8 @@
+ 			compatible = "arm,cortex-a5";
+ 			next-level-cache = <&L2>;
+ 			reg = <0x203>;
++			enable-method = "amlogic,meson8b-smp";
++			resets = <&clkc CLKC_RESET_CPU3_SOFT_RESET>;
+ 		};
+ 	};
+ 
+@@ -90,6 +99,11 @@
+ }; /* end of / */
+ 
+ &aobus {
++	pmu: pmu@e0 {
++		compatible = "amlogic,meson8b-pmu", "syscon";
++		reg = <0xe0 0x18>;
++	};
++
+ 	pinctrl_aobus: pinctrl@84 {
+ 		compatible = "amlogic,meson8b-aobus-pinctrl";
+ 		reg = <0x84 0xc>;
+@@ -157,6 +171,13 @@
+ 	};
+ };
+ 
++&ahb_sram {
++	smp-sram@1ff80 {
++		compatible = "amlogic,meson8b-smp-sram";
++		reg = <0x1ff80 0x8>;
++	};
++};
++
+ &ethmac {
+ 	clocks = <&clkc CLKID_ETH>;
+ 	clock-names = "stmmaceth";
 -- 
 2.14.1
 
