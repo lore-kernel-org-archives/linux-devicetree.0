@@ -1,72 +1,155 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 00/06] clocksource: sh_cmt: DT binding rework V4
-Date: Mon, 14 Aug 2017 22:07:21 +0200
-Message-ID: <CAMuHMdXd5Ukb=RMsnpMirOTD-XDrvt8dYckjaKRA61xvVLSbvw@mail.gmail.com>
-References: <20160314142342.17180.21352.sendpatchset@little-apple>
- <20161124105843.GA26737@verge.net.au> <20170711115646.GL4517@verge.net.au>
- <CAMuHMdX=+HZwOK097HBJ0vWGDpcLQ1dYWSNtb62DSecmvTVz=A@mail.gmail.com> <af57e696-be8d-f44b-0325-8950d2ae87d2@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: Restrict DMA configuration
+Date: Mon, 14 Aug 2017 15:08:08 -0500
+Message-ID: <CAL_JsqKW7nhkCDu4eEDCgdC87b0MLH1UFO8LvaH22BcJMBsY7w@mail.gmail.com>
+References: <0819179085df6c41c70e83a2c5c138b95c0386b3.1502468875.git.robin.murphy@arm.com>
+ <82633e62b64e28dc18bc466319065b92faf2414f.1502468875.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <af57e696-be8d-f44b-0325-8950d2ae87d2-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <82633e62b64e28dc18bc466319065b92faf2414f.1502468875.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel, Magnus,
++linuxppc-dev
 
-On Thu, Aug 10, 2017 at 12:56 PM, Daniel Lezcano
-<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 10/08/2017 11:01, Geert Uytterhoeven wrote:
->> On Tue, Jul 11, 2017 at 1:56 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
->>> On Thu, Nov 24, 2016 at 11:58:43AM +0100, Simon Horman wrote:
->>>> On Mon, Mar 14, 2016 at 11:23:42PM +0900, Magnus Damm wrote:
->>>>> clocksource: sh_cmt: DT binding rework V4
->>>>>
->>>>> [PATCH v4 01/06] devicetree: bindings: Remove sh7372 CMT binding
->>>>> [PATCH v4 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
->>>>> [PATCH v4 03/06] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
->>>>> [PATCH v4 04/06] devicetree: bindings: Deprecate property, update example
->>>>> [PATCH v4 05/06] devicetree: bindings: Remove unused 32-bit CMT bindings
->>>>> [PATCH v4 06/06] devicetree: bindings: Remove deprecated properties
->>>>>
->>>>> Here is the latest and hopefully final take on updating the CMT DT
->>>>> bindings for R-Car Gen2. In total there are 6 patches that have acks
->>>>> and are ready to be picked up and merged. Other earlier posted changes
->>>>> such as driver modification and SoC DTS bits depend on this series.
->>>>
->>>> I am wondering what the state of this work is.
->>>> I see only one minor review comment for this series.
->>>> It would be great to see it merged.
->>>
->>> Ping
->>
->> Recently, at +1800m, I realized that if we want to continue this work, we
->> better do it soon, so it can be included in the big R-Car Gen2 flag day
->> requiring APMU, CPG/MSSR, ICRAM, RST, and SYSC being described in DT.
+On Fri, Aug 11, 2017 at 11:29 AM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> Moving DMA configuration to happen later at driver probe time had the
+> unnoticed side-effect that we now perform DMA configuration for *every*
+> device represented in DT, rather than only those explicitly created by
+> the of_platform and PCI code.
 >
-> Applied.
+> As Christoph points out, this is not really the best thing to do. Whilst
+> there may well be other DMA-capable buses that can benefit from having
+> their children automatically configured after the bridge has probed,
+> there are also plenty of others like USB, MDIO, etc. that definitely do
+> not support DMA and should not be indiscriminately processed.
+>
+> The good news is that DT already gives us the ammunition to do the right
+> thing - anything lacking a "dma-ranges" property should be considered
+> not to have a mapping of DMA address space from its children to its
+> parent, thus anything for which of_dma_get_range() does not succeed does
+> not need DMA configuration.
+>
+> The bad news is that strictly enforcing that would likely break just
+> about every FDT platform out there, since most authors have either not
+> considered the property at all or have mistakenly assumed that omitting
+> "dma-ranges" is equivalent to including the empty property. Thus we have
+> little choice but to special-case platform, AMBA and PCI devices so they
+> continue to receive configuration unconditionally as before. At least
+> anything new will have to get it right in future...
 
-Thank you.
+By "anything new", you mean new buses, not new platforms, right?
+What's a platform bus device today could be a different kernel bus
+type tomorrow with no DT change. So this isn't really enforceable.
 
-Of course, before we can convert existing DT source files to the new bindings,
-we need support for the new bindings in the sh_cmt driver.
+I don't completely agree that omitting dma-ranges is wrong and that
+new DTs have to have dma-ranges simply because there is much precedent
+of DTs with dma-ranges omitted (just go look at PPC). If a bus has no
+bus to cpu address translation nor size restrictions, then no
+dma-ranges should be allowed. Of course, DT standards can and do
+evolve and we could decide to be stricter here, but that hasn't
+happened. If it does, then we need to make that clear in the spec and
+enforce it.
 
-Magnus: what is the status of that? Where can we find the latest code?
+Rob
 
-Thanks again!
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> Fixes: 09515ef5ddad ("of/acpi: Configure dma operations at probe time for platform/amba/pci bus devices")
+> Reported-by: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/of/device.c | 48 ++++++++++++++++++++++++++++++++----------------
+>  1 file changed, 32 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index e0a28ea341fe..04c4c952dc57 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -9,6 +9,9 @@
+>  #include <linux/module.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/slab.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/amba/bus.h>
+>
+>  #include <asm/errno.h>
+>  #include "of_private.h"
+> @@ -84,31 +87,28 @@ int of_device_add(struct platform_device *ofdev)
+>   */
+>  int of_dma_configure(struct device *dev, struct device_node *np)
+>  {
+> -       u64 dma_addr, paddr, size;
+> +       u64 dma_addr, paddr, size = 0;
+>         int ret;
+>         bool coherent;
+>         unsigned long offset;
+>         const struct iommu_ops *iommu;
+>         u64 mask;
+>
+> -       /*
+> -        * Set default coherent_dma_mask to 32 bit.  Drivers are expected to
+> -        * setup the correct supported mask.
+> -        */
+> -       if (!dev->coherent_dma_mask)
+> -               dev->coherent_dma_mask = DMA_BIT_MASK(32);
+> -
+> -       /*
+> -        * Set it to coherent_dma_mask by default if the architecture
+> -        * code has not set it.
+> -        */
+> -       if (!dev->dma_mask)
+> -               dev->dma_mask = &dev->coherent_dma_mask;
+> -
+>         ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+>         if (ret < 0) {
+> +               /*
+> +                * For legacy reasons, we have to assume some devices need
+> +                * DMA configuration regardless of whether "dma-ranges" is
+> +                * correctly specified or not.
+> +                */
+> +               if (!dev_is_pci(dev) &&
+> +#ifdef CONFIG_ARM_AMBA
+> +                   dev->bus != &amba_bustype &&
+> +#endif
+> +                   dev->bus != &platform_bus_type)
+> +                       return ret == -ENODEV ? 0 : ret;
+> +
+>                 dma_addr = offset = 0;
+> -               size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+>         } else {
+>                 offset = PFN_DOWN(paddr - dma_addr);
+>
+> @@ -129,6 +129,22 @@ int of_dma_configure(struct device *dev, struct device_node *np)
+>                 dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+>         }
+>
+> +       /*
+> +        * Set default coherent_dma_mask to 32 bit.  Drivers are expected to
+> +        * setup the correct supported mask.
+> +        */
+> +       if (!dev->coherent_dma_mask)
+> +               dev->coherent_dma_mask = DMA_BIT_MASK(32);
+> +       /*
+> +        * Set it to coherent_dma_mask by default if the architecture
+> +        * code has not set it.
+> +        */
+> +       if (!dev->dma_mask)
+> +               dev->dma_mask = &dev->coherent_dma_mask;
+> +
+> +       if (!size)
+> +               size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+> +
+>         dev->dma_pfn_offset = offset;
+>
+>         /*
+> --
+> 2.13.4.dirty
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
