@@ -1,51 +1,48 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v3 10/10] arm64: dts: hi3660: enable watchdog
-Date: Mon, 14 Aug 2017 17:50:49 +0800
-Message-ID: <20170814095049.27701-11-guodong.xu@linaro.org>
+Subject: [PATCH v3 09/10] arm64: dts: hi3660: add bindings for DMA
+Date: Mon, 14 Aug 2017 17:50:48 +0800
+Message-ID: <20170814095049.27701-10-guodong.xu@linaro.org>
 References: <20170814095049.27701-1-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170814095049.27701-1-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Leo Yan <leo.yan@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Zhong Kaihua <zhongkaihua@huawei.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wang Ruyi <wangruyi@huawei.com>, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Wang Ruyi <wangruyi@huawei.com>
 
-This patch is to add watchdog binding for Hi3660 on Hikey960 board.
+Add bindings for DMA.
 
-Cc: Guodong Xu <guodong.xu@linaro.org>
-Cc: Zhong Kaihua <zhongkaihua@huawei.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Wang Ruyi <wangruyi@huawei.com>
+Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 545d435..b7a90d6 100644
+index 41841f7..545d435 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -962,5 +962,21 @@
- 				     &sdio_cfg_func>;
+@@ -436,6 +436,19 @@
  			status = "disabled";
  		};
-+
-+		watchdog0: watchdog@e8a06000 {
-+			compatible = "arm,sp805-wdt", "arm,primecell";
-+			reg = <0x0 0xe8a06000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_OSC32K>;
-+			clock-names = "apb_pclk";
+ 
++		dma0: dma@fdf30000 {
++			compatible = "hisilicon,k3-dma-1.0";
++			reg = <0x0 0xfdf30000 0x0 0x1000>;
++			#dma-cells = <1>;
++			dma-channels = <16>;
++			dma-requests = <32>;
++			dma-min-chan = <1>;
++			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3660_CLK_GATE_DMAC>;
++			dma-no-cci;
++			dma-type = "hi3660_dma";
 +		};
 +
-+		watchdog1: watchdog@e8a07000 {
-+			compatible = "arm,sp805-wdt", "arm,primecell";
-+			reg = <0x0 0xe8a07000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_OSC32K>;
-+			clock-names = "apb_pclk";
-+		};
- 	};
- };
+ 		rtc0: rtc@fff04000 {
+ 			compatible = "arm,pl031", "arm,primecell";
+ 			reg = <0x0 0Xfff04000 0x0 0x1000>;
 -- 
 2.10.2
