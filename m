@@ -1,70 +1,51 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v2] ARC: HSDK: Add reset controller node to manage ethernet reset
-Date: Mon, 14 Aug 2017 17:09:53 +0300
-Message-ID: <20170814140953.7729-1-Eugeniy.Paltsev@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-snps-arc@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] ARM: dts: iwg20d-q7: Add RTC support
+Date: Mon, 14 Aug 2017 16:11:33 +0200
+Message-ID: <CAMuHMdUU5fb6G7Wc9ZzfFhLxcUuZFakPdVGh3q_cfUzxZ1AarA@mail.gmail.com>
+References: <1502197465-61546-1-git-send-email-biju.das@bp.renesas.com> <1502197465-61546-2-git-send-email-biju.das@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1502197465-61546-2-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DW ethernet controller on HSDK hangs sometimes after SW reset, so
-add reset node to make possible to reset DW ethernet controller HW.
+On Tue, Aug 8, 2017 at 3:04 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Define the iWave RainboW-G20D-Qseven board dependent part of the
+> RTC device node.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
-Changes v1 -> v2:
-  * Enable HSDK reset driver in hsdk_defconfig
+> @@ -54,3 +59,16 @@
+>                 micrel,led-mode = <1>;
+>         };
+>  };
+> +
+> +&i2c2 {
+> +       pinctrl-0 = <&i2c2_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +       clock-frequency = <400000>;
+> +
+> +       rtc@68 {
+> +               compatible = "bq32000";
 
- arch/arc/boot/dts/hsdk.dts      | 9 +++++++++
- arch/arc/configs/hsdk_defconfig | 1 +
- 2 files changed, 10 insertions(+)
+"ti,bq32000"
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index e096879..84052db 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -12,6 +12,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/net/ti-dp83867.h>
-+#include <dt-bindings/reset/snps,hsdk-v1-reset.h>
- 
- / {
- 	model = "snps,hsdk";
-@@ -102,6 +103,12 @@
- 
- 		ranges = <0x00000000 0xf0000000 0x10000000>;
- 
-+		cgu_rst: reset {
-+			compatible = "snps,hsdk-v1.0-reset";
-+			#reset-cells = <1>;
-+			reg = <0x8A0 0x4>, <0xFF0 0x4>;
-+		};
-+
- 		serial: serial@5000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x5000 0x100>;
-@@ -141,6 +148,8 @@
- 			clocks = <&gmacclk>;
- 			clock-names = "stmmaceth";
- 			phy-handle = <&phy0>;
-+			resets = <&cgu_rst HSDK_V1_ETH_RESET>;
-+			reset-names = "stmmaceth";
- 
- 			mdio {
- 				#address-cells = <1>;
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-index f4190bc..f7fd8c4 100644
---- a/arch/arc/configs/hsdk_defconfig
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -61,6 +61,7 @@ CONFIG_MMC_SDHCI=y
- CONFIG_MMC_SDHCI_PLTFM=y
- CONFIG_MMC_DW=y
- # CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_RESET_HSDK_V1=y
- CONFIG_EXT3_FS=y
- CONFIG_VFAT_FS=y
- CONFIG_TMPFS=y
--- 
-2.9.3
+> +               reg = <0x68>;
+> +       };
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
