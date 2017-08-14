@@ -1,44 +1,52 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: realtek: Clean up RTD1295 UART reg property
-Date: Mon, 14 Aug 2017 19:45:08 +0200
-Message-ID: <0c16bc3f-8e5d-3c35-a017-09000abd6e96@suse.de>
-References: <20170730111737.22888-1-afaerber@suse.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2] dt-bindings: watchdog: mediatek: add support for
+ MediaTek MT7623 and MT7622 SoC
+Date: Mon, 14 Aug 2017 10:51:55 -0700
+Message-ID: <20170814175155.GC7764@roeck-us.net>
+References: <2d18c98edcef994a19e342bea5209ddd0cbd6c25.1502728495.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170730111737.22888-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?6JKL5Li955C0?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2d18c98edcef994a19e342bea5209ddd0cbd6c25.1502728495.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: wim@iguana.be, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 30.07.2017 um 13:17 schrieb Andreas Färber:
-> The downstream RTD1195 and apparently RTD1295 trees have a modified 8250
-> serial driver that acknowledges its interrupts using the second reg area,
-> which is an irq mux.
+On Tue, Aug 15, 2017 at 12:41:38AM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> Drop these unused second reg entries for the UART nodes.
+> This updates dt-binding documentation for MediaTek MT7622 and
+> MT7623 SoC. For the both SoCs supported all rely on the fallback
+> binding of the case with "mediatek,mt6589-wdt".
 > 
-> Fixes: 72a7786c0a0d ("ARM64: dts: Add Realtek RTD1295 and Zidoo X9S")
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->  arch/arm64/boot/dts/realtek/rtd1295.dtsi | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-
-Applied to v4.14/dt64:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-realtek.git/log/?h=v4.14/dt64
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> index 6a00939..096bbfb 100644
+> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> @@ -4,6 +4,8 @@ Required properties:
+>  
+>  - compatible should contain:
+>  	* "mediatek,mt2701-wdt" for MT2701 compatible watchdog timers
+> +	* "mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
+> +	* "mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
+>  	* "mediatek,mt6589-wdt" for all compatible watchdog timers (MT2701,
+>  		MT6589)
+>  
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
