@@ -1,51 +1,66 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/8] spi: rockchip: add compatible string for rv1108
- spi
-Date: Mon, 14 Aug 2017 16:20:14 +0100
-Message-ID: <20170814152014.unj5iij474ito27s@sirena.org.uk>
-References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com>
- <1502699662-8181-1-git-send-email-andy.yan@rock-chips.com>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Mon, 14 Aug 2017 15:23:50 +0000
+Message-ID: <TY1PR06MB0702B9EC39D190BC811CBD99B78C0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+References: <1502709581-26546-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVDqgbwKzxFoxajLLFHZC80NT5vrDLnpb9sFj+DL-1zDw@mail.gmail.com>
+ <TY1PR06MB070269842CD923E4DE4FE6EDB78C0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+ <CAMuHMdWHMLi-yiVmzQCYRHSnJpuokBREo6QFF2z-zaviZVxFNA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y4zwyzjwqy6jtq3i"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1502699662-8181-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWHMLi-yiVmzQCYRHSnJpuokBREo6QFF2z-zaviZVxFNA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Ulf Hansson <ulf.hansson@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux MMC List <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---y4zwyzjwqy6jtq3i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Aug 14, 2017 at 04:34:22PM +0800, Andy Yan wrote:
-
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-
-That's hopefully not true, v1 didn't build due to a syntax error...
-
---y4zwyzjwqy6jtq3i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmRv60ACgkQJNaLcl1U
-h9D9kQf/QIDYBHVxBxEIdXVByJebswaMPWlFhnIL2NJedv6TiU5GLCNnOaIc7UDM
-mNkM5tzPE2EGWIhP7T1lAsykz2OFpDAY8+FjIzjdohklEBo7Js3/7RhfwBOSHfYr
-zE7h3yCt5oJnlIpKIhBy01TrgNdPNFgaHgufML+kmvPatr5uDAR72qQGcnL2+vco
-uGtczbBnLckG345tzgADYKpldpPTKrOgF20K4lPe3YHbzm65who5FkKDDsSbC1zB
-z6NatjNKEASBSWzGz91U0M2E3FcmfqRjSWHAY334k0NrEgxPoSqn3BUSNeIVn2J2
-HyqH4MhRT3B0uoUYzzgNvz/hGbLYlg==
-=YmuQ
------END PGP SIGNATURE-----
-
---y4zwyzjwqy6jtq3i--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gR2VlcnQsDQoNCj4gRnJvbTogZ2VlcnQudXl0dGVyaG9ldmVuQGdtYWlsLmNvbSBbbWFp
+bHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dDQo+IE9uIEJlaGFsZiBPZiBHZWVydCBV
+eXR0ZXJob2V2ZW4NCj4gDQo+IEhpIENocmlzLA0KPiANCj4gT24gTW9uLCBBdWcgMTQsIDIwMTcg
+YXQgNToxNSBQTSwgQ2hyaXMgUGF0ZXJzb24NCj4gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNv
+bT4gd3JvdGU6DQo+ID4+IEZyb206IGdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb20NCj4gPj4g
+W21haWx0bzpnZWVydC51eXR0ZXJob2V2ZW5AZ21haWwuY29tXQ0KPiA+PiBPbiBCZWhhbGYgT2Yg
+R2VlcnQgVXl0dGVyaG9ldmVuDQo+ID4+IFNlbnQ6IDE0IEF1Z3VzdCAyMDE3IDE1OjIyDQo+ID4+
+DQo+ID4+IE9uIE1vbiwgQXVnIDE0LCAyMDE3IGF0IDE6MTkgUE0sIEJpanUgRGFzIDxiaWp1LmRh
+c0BicC5yZW5lc2FzLmNvbT4NCj4gd3JvdGU6DQo+ID4+ID4gQWRkIHN1cHBvcnQgZm9yIHI4YTc3
+NDMvNSBTb0MuUmVuZXNhcyBSWi9HMVtNRV0gKFI4QTc3NDMvNSkgU0RISSBpcw0KPiA+PiA+IGlk
+ZW50aWNhbCB0byB0aGUgUi1DYXIgR2VuMiBmYW1pbHkuDQo+ID4+ID4NCj4gPj4gPiBTaWduZWQt
+b2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+ID4+ID4gLS0tDQo+
+ID4+ID4gVGhpcyBwYXRjaCBpcyBjb21waWxlZCBhbmQgdGVzdGVkIGFnYWluc3QgbW1jL25leHQu
+DQo+ID4+ID4NCj4gPj4gPiAgZHJpdmVycy9tbWMvaG9zdC9yZW5lc2FzX3NkaGlfc3lzX2RtYWMu
+YyB8IDIgKysNCj4gPj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPiA+PiA+
+DQo+ID4+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3QvcmVuZXNhc19zZGhpX3N5c19k
+bWFjLmMNCj4gPj4gPiBiL2RyaXZlcnMvbW1jL2hvc3QvcmVuZXNhc19zZGhpX3N5c19kbWFjLmMN
+Cj4gPj4gPiBpbmRleCA3MThjYjhhLi5mNzA5ZjdmIDEwMDY0NA0KPiA+PiA+IC0tLSBhL2RyaXZl
+cnMvbW1jL2hvc3QvcmVuZXNhc19zZGhpX3N5c19kbWFjLmMNCj4gPj4gPiArKysgYi9kcml2ZXJz
+L21tYy9ob3N0L3JlbmVzYXNfc2RoaV9zeXNfZG1hYy5jDQo+ID4+ID4gQEAgLTk1LDYgKzk1LDgg
+QEANCj4gPj4gPiAgICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxzZGhpLXI3czcyMTAw
+IiwgLmRhdGEgPSAmb2ZfcnpfY29tcGF0aWJsZSwNCj4gfSwNCj4gPj4gPiAgICAgICAgIHsgLmNv
+bXBhdGlibGUgPSAicmVuZXNhcyxzZGhpLXI4YTc3NzgiLCAuZGF0YSA9DQo+ID4+ICZvZl9yY2Fy
+X2dlbjFfY29tcGF0aWJsZSwgfSwNCj4gPj4gPiAgICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVu
+ZXNhcyxzZGhpLXI4YTc3NzkiLCAuZGF0YSA9DQo+ID4+ID4gJm9mX3JjYXJfZ2VuMV9jb21wYXRp
+YmxlLCB9LA0KPiA+PiA+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLHNkaGktcjhh
+Nzc0MyIsIC5kYXRhID0NCj4gPj4gJm9mX3JjYXJfZ2VuMl9jb21wYXRpYmxlLCB9LA0KPiA+PiA+
+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLHNkaGktcjhhNzc0NSIsIC5kYXRhID0N
+Cj4gPj4gPiArICZvZl9yY2FyX2dlbjJfY29tcGF0aWJsZSwgfSwNCj4gPj4gPiAgICAgICAgIHsg
+LmNvbXBhdGlibGUgPSAicmVuZXNhcyxzZGhpLXI4YTc3OTAiLCAuZGF0YSA9DQo+ID4+ICZvZl9y
+Y2FyX2dlbjJfY29tcGF0aWJsZSwgfSwNCj4gPj4gPiAgICAgICAgIHsgLmNvbXBhdGlibGUgPSAi
+cmVuZXNhcyxzZGhpLXI4YTc3OTEiLCAuZGF0YSA9DQo+ID4+ICZvZl9yY2FyX2dlbjJfY29tcGF0
+aWJsZSwgfSwNCj4gPj4gPiAgICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxzZGhpLXI4
+YTc3OTIiLCAuZGF0YSA9DQo+ID4+ID4gJm9mX3JjYXJfZ2VuMl9jb21wYXRpYmxlLCB9LA0KPiA+
+Pg0KPiA+PiBJIGd1ZXNzIHdlIHdhbnQgZ2VuZXJpYyBSLUNhciBHZW4yLzMgY29tcGF0aWJsZSB2
+YWx1ZXMgaGVyZSwgdG9vPw0KPiA+DQo+ID4gWWVzLCBidXQgSSBhc3N1bWUgdGhhdCBzaG91bGQg
+YmUgYSBzZXBhcmF0ZSBwYXRjaCBzdWJtaXR0ZWQgaW5zdGVhZCBvZiB0aGlzDQo+IG9uZT8NCj4g
+DQo+IEluZGVlZC4gVGhhdCB3b3VsZCBhdm9pZCBoYXZpbmcgdG8gYWRkIHRoZSBTb0Mtc3BlY2lm
+aWMgY29tcGF0aWJsZSB2YWx1ZXMgdG8NCj4gdGhlIGRyaXZlciBmb3IgYWxsIFJaL0cxIHZhcmlh
+bnRzLg0KDQpPa2F5LiBJJ2xsIHNlbmQgYSBuZXcgcGF0Y2guDQoNCktpbmQgcmVnYXJkcywgQ2hy
+aXMNCg0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAg
+ICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90
+cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC0NCj4gbTY4ay5vcmcNCj4gDQo+
+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwg
+bXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJ
+IGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
