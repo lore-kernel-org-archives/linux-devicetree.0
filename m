@@ -1,7 +1,7 @@
 From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 1/5] ARC: set and print cpu frequency at boot time
-Date: Mon, 14 Aug 2017 19:12:09 +0300
-Message-ID: <20170814161213.17522-2-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 2/5] ARC: AXS103: Get rid of platform specific cpu clock configuration
+Date: Mon, 14 Aug 2017 19:12:10 +0300
+Message-ID: <20170814161213.17522-3-Eugeniy.Paltsev@synopsys.com>
 References: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
@@ -10,79 +10,125 @@ To: linux-snps-arc@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Print cpu frequency at boot time. In case we have pre-defined
-cpu frequency value in device tree try to set it.
+We set AXS103 cpu frequency in arch/arc/plat-axs10x/axs10x.c
+via direct writing to pll registers for historical reasons.
+So get rid of AXS103 platform specific cpu clock configuration as
+we have driver for AXS103 core pll (AXS103 pll driver is already
+in linux-next. It is selected automatically when
+CONFIG_ARC_PLAT_AXS10X is set)
 
 Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- arch/arc/kernel/setup.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ arch/arc/plat-axs10x/axs10x.c | 88 ++-----------------------------------------
+ 1 file changed, 4 insertions(+), 84 deletions(-)
 
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 877cec8..b5fcc5d 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -464,12 +464,61 @@ void __init setup_arch(char **cmdline_p)
- 	arc_unwind_init();
- }
+diff --git a/arch/arc/plat-axs10x/axs10x.c b/arch/arc/plat-axs10x/axs10x.c
+index 38ff349..98d07b7 100644
+--- a/arch/arc/plat-axs10x/axs10x.c
++++ b/arch/arc/plat-axs10x/axs10x.c
+@@ -335,61 +335,12 @@ union pll_reg {
+ 	unsigned int val;
+ };
  
-+static int __init set_cpu_freq(int cpu_id)
-+{
-+	struct device_node *cpunode;
-+	u32 cpu_freq_required;
-+	struct clk *clk;
-+	int ret;
-+
-+	cpunode = of_get_cpu_node(cpu_id, NULL);
-+	if (cpunode == NULL) {
-+		pr_err("Can't find CPU %d node.\n", cpu_id);
-+		return -ENOENT;
-+	}
-+
-+	clk = of_clk_get(cpunode, 0);
-+	if (IS_ERR(clk)) {
-+		pr_err("CPU %d missing clk.\n", cpu_id);
-+		return PTR_ERR(clk);
-+	}
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret) {
-+		pr_err("Couldn't enable CPU %d clk.\n", cpu_id);
-+		return ret;
-+	}
-+
-+	/*
-+	 * In case we have pre-defined cpu frequency value in device tree
-+	 * try to set it. Otherwise just print current cpu frequency.
-+	 */
-+	if (of_property_read_u32(cpunode, "cpu-freq", &cpu_freq_required)) {
-+		pr_info("CPU %d has no cpu-freq param. Frequency is %lu Hz.\n",
-+			cpu_id, clk_get_rate(clk));
-+		return 0;
-+	}
-+
-+	if (clk_set_rate(clk, cpu_freq_required))
-+		pr_err("CPU %d frequency set failed. Probably fixed-clock is used for cpu.\n",
-+		       cpu_id);
-+
-+	pr_info("CPU %d frequency is %lu Hz.\n", cpu_id, clk_get_rate(clk));
-+
-+	return 0;
-+}
-+
- /*
-  * Called from start_kernel() - boot CPU only
-  */
- void __init time_init(void)
+-static unsigned int __init axs103_get_freq(void)
+-{
+-	union pll_reg idiv, fbdiv, odiv;
+-	unsigned int f = 33333333;
+-
+-	idiv.val = ioread32((void __iomem *)AXC003_CGU + 0x80 + 0);
+-	fbdiv.val = ioread32((void __iomem *)AXC003_CGU + 0x80 + 4);
+-	odiv.val = ioread32((void __iomem *)AXC003_CGU + 0x80 + 8);
+-
+-	if (idiv.bypass != 1)
+-		f = f / (idiv.low + idiv.high);
+-
+-	if (fbdiv.bypass != 1)
+-		f = f * (fbdiv.low + fbdiv.high);
+-
+-	if (odiv.bypass != 1)
+-		f = f / (odiv.low + odiv.high);
+-
+-	f = (f + 500000) / 1000000; /* Rounding */
+-	return f;
+-}
+-
+-static inline unsigned int __init encode_div(unsigned int id, int upd)
+-{
+-	union pll_reg div;
+-
+-	div.val = 0;
+-
+-	div.noupd = !upd;
+-	div.bypass = id == 1 ? 1 : 0;
+-	div.edge = (id%2 == 0) ? 0 : 1;  /* 0 = rising */
+-	div.low = (id%2 == 0) ? id >> 1 : (id >> 1)+1;
+-	div.high = id >> 1;
+-
+-	return div.val;
+-}
+-
+-noinline static void __init
+-axs103_set_freq(unsigned int id, unsigned int fd, unsigned int od)
+-{
+-	write_cgu_reg(encode_div(id, 0),
+-		      (void __iomem *)AXC003_CGU + 0x80 + 0,
+-		      (void __iomem *)AXC003_CGU + 0x110);
+-
+-	write_cgu_reg(encode_div(fd, 0),
+-		      (void __iomem *)AXC003_CGU + 0x80 + 4,
+-		      (void __iomem *)AXC003_CGU + 0x110);
+-
+-	write_cgu_reg(encode_div(od, 1),
+-		      (void __iomem *)AXC003_CGU + 0x80 + 8,
+-		      (void __iomem *)AXC003_CGU + 0x110);
+-}
+-
+ static void __init axs103_early_init(void)
  {
- 	of_clk_init(NULL);
 +	/*
-+	 * As for now we have common clock for all cpu cores, so set
-+	 * frequency only for master cpu.
++	 * TODO: use cpu node "cpu-freq" param instead of platform-specific
++	 * "/cpu_card/core_clk" as it works only if we use fixed-clock for cpu.
 +	 */
-+	set_cpu_freq(0);
- 	timer_probe();
- }
+ 	int offset = fdt_path_offset(initial_boot_params, "/cpu_card/core_clk");
+ 	const struct fdt_property *prop = fdt_get_property(initial_boot_params,
+ 							   offset,
+@@ -412,37 +363,6 @@ static void __init axs103_early_init(void)
+ 		freq = 50;
+ #endif
  
+-	switch (freq) {
+-	case 33:
+-		axs103_set_freq(1, 1, 1);
+-		break;
+-	case 50:
+-		axs103_set_freq(1, 30, 20);
+-		break;
+-	case 75:
+-		axs103_set_freq(2, 45, 10);
+-		break;
+-	case 90:
+-		axs103_set_freq(2, 54, 10);
+-		break;
+-	case 100:
+-		axs103_set_freq(1, 30, 10);
+-		break;
+-	case 125:
+-		axs103_set_freq(2, 45,  6);
+-		break;
+-	default:
+-		/*
+-		 * In this case, core_frequency derived from
+-		 * DT "clock-frequency" might not match with board value.
+-		 * Hence update it to match the board value.
+-		 */
+-		freq = axs103_get_freq();
+-		break;
+-	}
+-
+-	pr_info("Freq is %dMHz\n", freq);
+-
+ 	/* Patching .dtb in-place with new core clock value */
+ 	if (freq != orig ) {
+ 		freq = cpu_to_be32(freq * 1000000);
 -- 
 2.9.3
