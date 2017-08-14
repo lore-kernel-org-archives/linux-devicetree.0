@@ -1,72 +1,59 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH v2] arm64: allwinner: a64: Add A64-OLinuXino
- initial support
-Date: Mon, 14 Aug 2017 17:13:52 +0800
-Message-ID: <CAGb2v663ANZJfhL1OCVVF24fvZtrCS9x7WY=EWEEZpfDmxQkTA@mail.gmail.com>
-References: <1502560442-17715-1-git-send-email-jteki@openedev.com>
- <CAGb2v66Scd69iBNxhvYbkqjt7K_5m+S4nYG633O3wYAW_3CyLQ@mail.gmail.com>
- <CAD6G_RRMHMrm1wPGJCxQgmOuwhEqVK_zTZF1Fsv9az4tZ1uvBg@mail.gmail.com>
- <CAGb2v64KJOuS=XfWu=tHyyYbTVjLJKVoTL2cQDyLby=CmnmLWw@mail.gmail.com> <CAD6G_RTi4MJ74yWsv3Zdg68mdSHBzszfkLmpz=rGdRVfOOQ2vA@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek MT7622 i2c binding
+Date: Mon, 14 Aug 2017 11:36:05 +0200
+Message-ID: <3384d424-827a-0a4b-d1d6-7d361d8c8391@gmail.com>
+References: <1502264631-12572-1-git-send-email-jun.gao@mediatek.com>
+ <1502264631-12572-2-git-send-email-jun.gao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD6G_RTi4MJ74yWsv3Zdg68mdSHBzszfkLmpz=rGdRVfOOQ2vA@mail.gmail.com>
+In-Reply-To: <1502264631-12572-2-git-send-email-jun.gao@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagannadh.teki@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Support - OLIMEX Ltd <support@olimex.com>, Jagan Teki <jagan@amarulasolutions.com>
+To: Jun Gao <jun.gao@mediatek.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 5:09 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
-> On Mon, Aug 14, 2017 at 1:26 PM, Chen-Yu Tsai <wens@csie.org> wrote:
->> On Mon, Aug 14, 2017 at 3:34 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
->>> On Mon, Aug 14, 2017 at 12:38 PM, Chen-Yu Tsai <wens@csie.org> wrote:
->>>> Hi,
->>>>
->>>> On Sun, Aug 13, 2017 at 1:54 AM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
 
-[...]
 
->>>>> +&reg_dcdc1 {
->>>>> +       regulator-always-on;
->>>>> +       regulator-min-microvolt = <3300000>;
->>>>> +       regulator-max-microvolt = <3300000>;
->>>>> +       regulator-name = "vcc-3v3";
->>>>> +};
->>>>> +
->>>>> +&reg_dcdc2 {
->>>>> +       regulator-always-on;
->>>>> +       regulator-min-microvolt = <1100000>;
->>>>> +       regulator-max-microvolt = <1100000>;
->>>>
->>>> The SoC has a wider range than a fixed voltage for the CPUs.
->>>
->>> So, max 1.1v can't enough CPUs? thought similar behavior with pine64?
->>
->> The recommended operating conditions says 1.04 ~ 1.3 V for CPUx,
->> while the typical voltage is 1.1V. The regulator constraints should
->> match the datasheet, especially for power rails that are involved in
->> DVFS.
->
-> power rails from datasheet[1] shows 0.5v ~ 1.3v am I not looking
-> updated details?
+On 08/09/2017 09:43 AM, Jun Gao wrote:
+> From: Jun Gao <jun.gao@mediatek.com>
+> 
+> Add MT7622 i2c binding to binding file. Compare to MT8173 i2c
+> controller, MT7622 limit message size to 255, and not support
+> 4GB DMA mode.
+> 
+> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
+> ---
+>   Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
+>   1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> index bd5a7be..ff9ac61 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
+>   
+>   Required properties:
+>     - compatible: value should be either of the following.
+> -      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek mt2701
+> -      "mediatek,mt6577-i2c": for i2c compatible with mt6577.
+> -      "mediatek,mt6589-i2c": for i2c compatible with mt6589.
+> -      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
+> -      "mediatek,mt8173-i2c": for i2c compatible with mt8173.
+> +	"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
+> +	"mediatek,mt6577-i2c": for Mediatek MT6577
+> +	"mediatek,mt6589-i2c": for Mediatek MT6589
+> +	"mediatek,mt7622-i2c": for Mediatek MT7622
+> +	"mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
+> +	"mediatek,mt8173-i2c": for Mediatek MT8173
+>     - reg: physical base address of the controller and dma base, length of memory
+>       mapped region.
+>     - interrupts: interrupt number to the cpu.
+> 
 
-The constraints are there to prevent users from setting a voltage
-too high or too low for the connected devices.
+In the next series, could you please make sure not to change the indentation.
 
-You should be looking at the recommended operating conditions
-for the A64. The regulator constraints should match the constraints
-of the consumer, not the provider. If there are multiple consumers,
-it must match the narrowest range supported by _all_ consumers, i.e.
-the intersection of all consumer's operating ranges.
-
-ChenYu
-
->
-> [1] http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
->
-> thanks!
-> --
-> Jagan Teki
-> Free Software Engineer | www.openedev.com
-> U-Boot, Linux | Upstream Maintainer
-> Hyderabad, India.
+Thanks a lot,
+Matthias
