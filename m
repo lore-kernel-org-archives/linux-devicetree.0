@@ -1,58 +1,72 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 10/13] ARM: dts: rockchip: add saradc support for
- rv1108
-Date: Mon, 14 Aug 2017 09:42:23 +0800
-Message-ID: <f920f312-3de2-74cd-d762-ac0d0c9729c8@rock-chips.com>
-References: <1502422578-30611-1-git-send-email-andy.yan@rock-chips.com>
- <1502423211-31216-1-git-send-email-andy.yan@rock-chips.com>
- <2309743.33rDFhBfGp@phil>
+From: honghui.zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] PCI: mediatek: add msi support for mt2712 and mt7622
+Date: Mon, 14 Aug 2017 09:12:35 +0800
+Message-ID: <1502673155.7754.1.camel@mhfsdcap03>
+References: <1502454469-29230-1-git-send-email-honghui.zhang@mediatek.com>
+ <1502499441.31707.6.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2309743.33rDFhBfGp@phil>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1502499441.31707.6.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko:
+On Sat, 2017-08-12 at 08:57 +0800, Ryder Lee wrote:
+> Hi Honghui,
+> 
+> On Fri, 2017-08-11 at 20:27 +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> ...
+> > +static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
+> > +{
+> > +	u32 val;
+> > +
+> > +	val = lower_32_bits((u64)(port->base + PCIE_MSI_VECTOR));
+> > +	writel(val, port->base + PCIE_IMSI_ADDR);
+> > +
+> > +	val = readl(port->base + PCIE_INT_MASK);
+> > +	val &= ~MSI_MASK;
+> > +	writel(val, port->base + PCIE_INT_MASK);
+> > +}
+> > +
+> >  static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> >  			     irq_hw_number_t hwirq)
+> >  {
+> > @@ -460,6 +574,18 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
+> >  		return PTR_ERR(port->irq_domain);
+> >  	}
+> >  
+> > +	/* Setup MSI */
+> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> > +		port->msi_domain = irq_domain_add_linear(node, MTK_MSI_IRQS_NUM,
+> > +							 &msi_domain_ops,
+> > +							 &mtk_pcie_msi_chip);
+> > +		if (!port->msi_domain) {
+> > +			dev_err(dev, "Failed to get a MSI IRQ domain\n");
+> > +			return PTR_ERR(port->msi_domain);
+> 
+> Just return -ENOMEM. PTR_ERR(NULL) will cause a static checker warning.
 
+I will fix this in the next version.
 
-On 2017年08月13日 20:13, Heiko Stuebner wrote:
-> Hi Andy,
->
-> Am Freitag, 11. August 2017, 11:46:51 CEST schrieb Andy Yan:
->> Add saradc device tree node for rv1108 soc
->>
->> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> +	adc: adc@1038c000 {
->> +		compatible = "rockchip,rv1108-saradc", "rockchip,rk3399-saradc";
->> +		reg = <0x1038c000 0x100>;
->> +		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
->> +		#io-channel-cells = <1>;
->> +		io-channel-ranges;
-> What do you need the io-channel-ranges for?
-> I.e. according to the documenation it is meant for when the adc is also
-> a "bus node" and has children that should inherit channels from it.
->
-> In all saradc uses so far we only have separate nodes referencing the
-> adc controller (like adc-keys etc), so this does not look like it is needed?
-
-     Sorry, I just copied it from the downstream dts. After checked with 
-David, he suggested that we could remove it.
->
->
-> Heiko
->
->
->
->
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+> 
+> > +		}
+> > +		mtk_pcie_enable_msi(port);
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> 
+> Ryder
+> 
