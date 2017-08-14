@@ -1,35 +1,29 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3 1/2] ata: mediatek: add support for MediaTek SATA
- controller
-Date: Sun, 13 Aug 2017 11:38:54 -0700
-Message-ID: <20170813183854.GA1438922@devbig577.frc2.facebook.com>
-References: <cover.1502501342.git.ryder.lee@mediatek.com>
- <cf04d6bf9cf27911023b962ccd8639f063d32739.1502501342.git.ryder.lee@mediatek.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 v2] arm64: dts: ls1088a: add cpu idle support
+Date: Mon, 14 Aug 2017 09:15:11 +0800
+Message-ID: <20170814011510.GE31819@dragon>
+References: <1502070879-14106-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cf04d6bf9cf27911023b962ccd8639f063d32739.1502501342.git.ryder.lee@mediatek.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Long Cheng <long.cheng@mediatek.com>
+In-Reply-To: <1502070879-14106-1-git-send-email-andy.tang-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy.tang-3arQi8VN3Tc@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 12, 2017 at 09:31:03AM +0800, Ryder Lee wrote:
-> This adds support the AHCI-compliant Serial ATA controller present
-> on MediaTek SoCs.
+On Mon, Aug 07, 2017 at 09:54:38AM +0800, andy.tang-3arQi8VN3Tc@public.gmane.org wrote:
+> From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ls1088a supports another cpu idle state which is ph20 which saves
+> more power when cpu is idle.
+> It was implemented through psci firmware.
+> 
+> Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
 
-Looks good to me.
-
- Acked-by: Tejun Heo <tj@kernel.org>
-
-If others are okay with it, please let me know how the patches should
-be routed.  I can push both through libata, both can be routed through
-dt tree, or we can handle them separately.
-
-Thanks.
-
--- 
-tejun
+Applied both, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
