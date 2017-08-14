@@ -1,75 +1,152 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: ARM: new DT warnings
-Date: Mon, 14 Aug 2017 17:33:25 -0500
-Message-ID: <20170814223325.bnqbl2dbrv3uapap@rob-hp-laptop>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 3/3] Documentation: hwmon: Document the IBM CFF power
+ supply
+Date: Mon, 14 Aug 2017 15:37:17 -0700
+Message-ID: <20170814223717.GA21561@roeck-us.net>
+References: <1502724390-17411-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1502724390-17411-4-git-send-email-eajames@linux.vnet.ibm.com>
+ <20170814185308.GA11090@roeck-us.net>
+ <0d016c77-4e3e-b9df-b131-604ab6f15e4c@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-linux-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <0d016c77-4e3e-b9df-b131-604ab6f15e4c@linux.vnet.ibm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: robh+dt@kernel.org, jdelvare@suse.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-I'm working on some new dtc checks that check common binding phandle
-lookups and cell sizes.
+On Mon, Aug 14, 2017 at 02:26:20PM -0500, Eddie James wrote:
+> 
+> 
+> On 08/14/2017 01:53 PM, Guenter Roeck wrote:
+> >On Mon, Aug 14, 2017 at 10:26:30AM -0500, Eddie James wrote:
+> >>From: "Edward A. James" <eajames@us.ibm.com>
+> >>
+> >>Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> >>---
+> >>  Documentation/hwmon/ibm-cffps | 54 +++++++++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 54 insertions(+)
+> >>  create mode 100644 Documentation/hwmon/ibm-cffps
+> >>
+> >>diff --git a/Documentation/hwmon/ibm-cffps b/Documentation/hwmon/ibm-cffps
+> >>new file mode 100644
+> >>index 0000000..e091ff2
+> >>--- /dev/null
+> >>+++ b/Documentation/hwmon/ibm-cffps
+> >>@@ -0,0 +1,54 @@
+> >>+Kernel driver ibm-cffps
+> >>+=======================
+> >>+
+> >>+Supported chips:
+> >>+  * IBM Common Form Factor power supply
+> >>+
+> >>+Author: Eddie James <eajames@us.ibm.com>
+> >>+
+> >>+Description
+> >>+-----------
+> >>+
+> >>+This driver supports IBM Common Form Factor (CFF) power supplies. This driver
+> >>+is a client to the core PMBus driver.
+> >>+
+> >>+Usage Notes
+> >>+-----------
+> >>+
+> >>+This driver does not auto-detect devices. You will have to instantiate the
+> >>+devices explicitly. Please see Documentation/i2c/instantiating-devices for
+> >>+details.
+> >>+
+> >>+Sysfs entries
+> >>+-------------
+> >>+
+> >>+The following attributes are supported:
+> >>+
+> >>+curr1_alarm		Output current over-current fault.
+> >>+curr1_input		Measured output current in mA.
+> >>+curr1_label		"iout1"
+> >>+
+> >>+fan1_alarm		Fan 1 warning.
+> >>+fan1_fault		Fan 1 fault.
+> >>+fan1_input		Fan 1 speed in RPM.
+> >>+fan2_alarm		Fan 2 warning.
+> >>+fan2_fault		Fan 2 fault.
+> >>+fan2_input		Fan 2 speed in RPM.
+> >>+
+> >>+in1_alarm		Input voltage under-voltage fault.
+> >Just noticed. Are you sure you mean 'fault' here and below ?
+> >'alarm' attributes normally report an over- or under- condition,
+> >but not a fault. Faults should be reported with 'fault' attributes.
+> >In PMBus lingo (which doesn't distinguish a real 'fault' from
+> >a critical over- or under- condition), the "FAULT" condition
+> >usually maps with the 'crit_alarm' or 'lcrit_alarm' attributes.
+> >Also, under-voltages would normally be reported as min_alarm
+> >or clrit_alarm, not in_alarm.
+> 
+> Thanks, I better change this doc to "alarm." The spec reports all these as
+> "faults" but many of them are merely over-temp or over-voltage, etc, and
+> should be "alarm" to be consistent with PMBus.
+> 
+> The problem with this power supply is that it doesn't report any "limits."
+> So unless I set up my read_byte function to return some limits, we can't get
+> any lower or upper limits and therefore won't get the crit_alarm,
+> lcrit_alarm, etc. Do you think I should "fake" the limits in the driver?
+> 
+Good question. Are the limits documented ? If yes, that would make sense.
+I am quite sure that limits are word registers, though.
 
-These are the new warnings produced. I haven't checked them all, but I
-believe these are all actual errors from the ones I checked. This is a
-trimmed list removing duplicates that get repeated for each board.
+Guenter
 
-arch/arm/boot/dts/am335x-baltos-ir2110.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /ocp/usb@47400000/usb-phy@47401300 for /ocp/usb@47400000/usb@47401000
-arch/arm/boot/dts/am335x-baltos-ir2110.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /ocp/usb@47400000/usb-phy@47401b00 for /ocp/usb@47400000/usb@47401800
-arch/arm/boot/dts/am437x-cm-t43.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /ocp@44000000/mcasp@48038000
-arch/arm/boot/dts/am437x-cm-t43.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /ocp@44000000/mcasp@4803C000
-arch/arm/boot/dts/am437x-cm-t43.dtb: Warning (provider_cells_property): Missing #mbox-cells in provider /ocp@44000000/mailbox@480C8000/wkup_m3 for /ocp@44000000/l4_wkup@44c00000/scm@210000/wkup_m3_ipc@1324
-arch/arm/boot/dts/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
-arch/arm/boot/dts/at91-sama5d2_xplained.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/flexcom@fc018000/i2c@600:dmas
-arch/arm/boot/dts/at91-sama5d3_xplained.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/i2c@f801c000:dmas
-arch/arm/boot/dts/at91-tse850-3.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/serial@ffffee00:dmas
-arch/arm/boot/dts/bcm2835-rpi-a.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /phy for /soc/usb@7e980000
-arch/arm/boot/dts/dm8148-evm.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /ocp/l4ls@48000000/control@140000/usb-phy@1b00 for /ocp/usb@47400000/usb@47401800
-arch/arm/boot/dts/exynos5410-odroidxu.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/system-controller@10040000
-arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dtb: Warning (gpio_cells_property): cd-gpios property size (8) too small for cell size 2 in /soc/aips@53f00000/esdhc@53fb4000
-arch/arm/boot/dts/imx50-evk.dtb: Warning (provider_cells_property): Missing #dma-cells in provider /soc/aips@60000000/sdma@63fb0000 for /soc/aips@50000000/spba@50000000/ssi@50014000
-arch/arm/boot/dts/imx50-evk.dtb: Warning (provider_cells_property): Missing #dma-cells in provider /soc/aips@60000000/sdma@63fb0000 for /soc/aips@60000000/ssi@63fcc000
-arch/arm/boot/dts/imx53-tx53-x03x.dtb: Warning (interrupts_property): interrupts size is (4), expected multiple of 8 in /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
-arch/arm/boot/dts/imx6ul-pico-hobbit.dtb: Warning (interrupts_property): interrupts size is (12), expected multiple of 8 in /soc/aips-bus@02000000/ethernet@020b4000/mdio/ethernet-phy@1
-arch/arm/boot/dts/lpc3250-ea3250.dtb: Warning (gpio_cells_property): power-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-arch/arm/boot/dts/omap3-cm-t3517.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /hsusb1_phy for /ocp@68000000/usbhshost@48064000/ehci@48064800
-arch/arm/boot/dts/omap4-droid4-xt894.dtb: Warning (interrupts_property): interrupts size is (4), expected multiple of 12 in /ocp/elm@48078000
-arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dtb: Warning (interrupts_property): Missing interrupt-parent for /paxi/dmac@40000
-arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dtb: Warning (interrupts_property): Missing interrupt-parent for /paxi/dmac@50000
-arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dtb: Warning (interrupts_property): Missing interrupt-parent for /paxi/gem@30000
-arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dtb: Warning (interrupts_property): Missing interrupt-parent for /rwid-axi/axi2pico@c0000000
-arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /soc/dsi-phy@4700200 for /soc/mdss_dsi@4700000
-arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /soc/hdmi-phy@4a00400 for /soc/hdmi-tx@4a00000
-arch/arm/boot/dts/s5pv210-aquila.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
-arch/arm/boot/dts/sama5d31ek.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/serial@f0020000:dmas
-arch/arm/boot/dts/sama5d31ek.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/spi@f0004000:dmas
-arch/arm/boot/dts/spear320-hmi.dtb: Warning (gpio_cells_property): Missing phandles in /ahb/apb/i2c@d0180000/stmpe811@41:irq-over-gpio
-arch/arm/boot/dts/spear600-evb.dtb: Warning (interrupts_property): Missing interrupt-parent for /ahb/apb/rtc@fc900000
-arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning (interrupts_property): Missing interrupt-parent for /amba/clcd@10120000
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (gpio_cells_property): hdmi,hpd-gpio property size (8) too small for cell size 2 in /soc/sti-display-subsystem/sti-hdmi@8d04000
-arch/arm/boot/dts/tango4-vantage-1172.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/interrupt-controller@6e000
-arch/arm/boot/dts/tango4-vantage-1172.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/interrupt-controller@6e000
-arch/arm/boot/dts/tango4-vantage-1172.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/interrupt-controller@6e000
-arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu
-arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /phy for /soc/usb@7e980000
-arch/arm64/boot/dts/mediatek/mt8173-evb.dtb: Warning (provider_cells_property): Missing #cooling-cells in provider /cpus/cpu@0 for /thermal-zones/cpu_thermal/cooling-maps/map@0
-arch/arm64/boot/dts/mediatek/mt8173-evb.dtb: Warning (provider_cells_property): Missing #cooling-cells in provider /cpus/cpu@100 for /thermal-zones/cpu_thermal/cooling-maps/map@1
-arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dtb: Warning (provider_cells_property): Missing #power-domain-cells in provider /bpmp for /gpu@17000000
-
-The updated dtc is here[1]. Adding "DTC=path/to/dtc" will use external
-dtc in the kernel build.
-
-Once the changes are in dtc upstream, I plan to sync kernel's copy. For
-these, I don't plan to turn off by default (i.e. w/o W=1).
-
-Thanks,
-Rob
-
-[1] https://github.com/robherring/dtc.git checks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >
+> >>+in1_input		Measured input voltage in mV.
+> >>+in1_label		"vin"
+> >>+in2_alarm		Output voltage over-voltage fault.
+> >>+in2_input		Measured output voltage in mV.
+> >>+in2_label		"vout1"
+> >>+
+> >>+power1_alarm		Input fault.
+> >Another example; this maps to PMBUS_PIN_OP_WARN_LIMIT which is an
+> >input power alarm, not an indication of a fault condition.
+> 
+> Hm, with my latest changes to look at the higher byte of STATUS_WORD, it
+> looks like we now have the same name for both the pin generic alarm
+> attribute and the pin_limit_attr... So in this device's case, it would map
+> to PB_STATUS_INPUT bit of STATUS_WORD. Didn't think about that... any
+> suggestions? Can't really change the name of the limit one without breaking
+> people's code...
+> 
+> >
+> >>+power1_input		Measured input power in uW.
+> >>+power1_label		"pin"
+> >>+
+> >>+temp1_alarm		PSU inlet ambient temperature over-temperature fault.
+> >>+temp1_input		Measured PSU inlet ambient temp in millidegrees C.
+> >>+temp2_alarm		Secondary rectifier temp over-temperature fault.
+> >Interestingly, PMBus does not distinguish between a critical temperature
+> >alarm and an actual "fault". Makes me wonder if the IBM PS reports
+> >CFFPS_MFR_THERMAL_FAULT if there is an actual fault (chip or sensor failure),
+> >or if it has the same meaning as PB_TEMP_OT_FAULT, ie an excessively high
+> >temperature.
+> 
+> Will change these to "alarm" in the doc too.
+> 
+> >
+> >If it is a real fault (a detected sensor failure), we should possibly
+> >consider adding a respective "virtual" temperature status flag. The same
+> >is true for other status bits reported in the manufacturer status
+> >register if any of those reflect a "real" fault, ie a chip failure.
+> 
+> Yea, that would probably be helpful. The CFFPS_MFR_THERMAL_FAULT bit is a
+> fault (so the spec says), but I'm not sure what is triggering it.
+> 
+> Thanks,
+> Eddie
+> 
+> >
+> >>+temp2_input		Measured secondary rectifier temp in millidegrees C.
+> >>+temp3_alarm		ORing FET temperature over-temperature fault.
+> >>+temp3_input		Measured ORing FET temperature in millidegrees C.
+> >>-- 
+> >>1.8.3.1
+> >>
+> 
