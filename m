@@ -1,211 +1,101 @@
-From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Subject: [PATCH v2 5/5] iio: srf08: add support for srf02 in i2c mode
-Date: Mon, 14 Aug 2017 11:02:09 +0200
-Message-ID: <20170814090209.GA9929@arbeit>
+From: Jagan Teki <jagannadh.teki@gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2] arm64: allwinner: a64: Add A64-OLinuXino
+ initial support
+Date: Mon, 14 Aug 2017 14:39:28 +0530
+Message-ID: <CAD6G_RTi4MJ74yWsv3Zdg68mdSHBzszfkLmpz=rGdRVfOOQ2vA@mail.gmail.com>
+References: <1502560442-17715-1-git-send-email-jteki@openedev.com>
+ <CAGb2v66Scd69iBNxhvYbkqjt7K_5m+S4nYG633O3wYAW_3CyLQ@mail.gmail.com>
+ <CAD6G_RRMHMrm1wPGJCxQgmOuwhEqVK_zTZF1Fsv9az4tZ1uvBg@mail.gmail.com> <CAGb2v64KJOuS=XfWu=tHyyYbTVjLJKVoTL2cQDyLby=CmnmLWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v64KJOuS=XfWu=tHyyYbTVjLJKVoTL2cQDyLby=CmnmLWw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Support - OLIMEX Ltd <support@olimex.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-srf02 added with support for i2c interface
+On Mon, Aug 14, 2017 at 1:26 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> On Mon, Aug 14, 2017 at 3:34 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
+>> On Mon, Aug 14, 2017 at 12:38 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+>>> Hi,
+>>>
+>>> On Sun, Aug 13, 2017 at 1:54 AM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
+>>>> From: Jagan Teki <jagan@amarulasolutions.com>
+>>>>
+>>>> OLimex A64-OLinuXino is an open-source hardware board
+>>>> using the Allwinner A64 SOC.
+>>>>
+>>>> OLimex A64-OLinuXino has
+>>>> - A64 Quad-core Cortex-A53 64bit
+>>>> - 1GB or 2GB RAM DDR3L @ 672Mhz
+>>>> - microSD slot and 4/8/16GB eMMC
+>>>> - Debug TTL UART
+>>>> - HDMI
+>>>> - LCD
+>>>> - IR receiver
+>>>> - 5V DC power supply
+>>>
+>>> Have you tried out Ethernet?
+>>
+>> Not, tested yet. Will send separate patch.
+>
+> OK.
+>
+> [...]
+>
+>>>> +
+>>>> +&reg_aldo2 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <3300000>;
+>>>> +       regulator-max-microvolt = <3300000>;
+>>>
+>>> Schematic says 1.8V?
+>>
+>> I saw ALD02 VCC-PL=3.3v on schematic.
+>
+> Ah. I see they changed it in a rev. B. Lets use 3.3V then.
+>
+>>>
+>>>> +       regulator-name = "vcc-pl";
+>>>> +};
+>>>> +
+>>>> +&reg_aldo3 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <3000000>;
+>>>> +       regulator-max-microvolt = <3000000>;
+>>>> +       regulator-name = "vcc-pll-avcc";
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc1 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <3300000>;
+>>>> +       regulator-max-microvolt = <3300000>;
+>>>> +       regulator-name = "vcc-3v3";
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc2 {
+>>>> +       regulator-always-on;
+>>>> +       regulator-min-microvolt = <1100000>;
+>>>> +       regulator-max-microvolt = <1100000>;
+>>>
+>>> The SoC has a wider range than a fixed voltage for the CPUs.
+>>
+>> So, max 1.1v can't enough CPUs? thought similar behavior with pine64?
+>
+> The recommended operating conditions says 1.04 ~ 1.3 V for CPUx,
+> while the typical voltage is 1.1V. The regulator constraints should
+> match the datasheet, especially for power rails that are involved in
+> DVFS.
 
-Attributes for setting max range or sensitivity are omitted for the case of
-srf02 type sensor, because they are not supported by the hardware.
+power rails from datasheet[1] shows 0.5v ~ 1.3v am I not looking
+updated details?
 
-Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
----
- drivers/iio/proximity/Kconfig |  8 ++---
- drivers/iio/proximity/srf08.c | 77 ++++++++++++++++++++++++++++++++-----------
- 2 files changed, 62 insertions(+), 23 deletions(-)
+[1] http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
 
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index df33ccc0d035..ae070950f920 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -57,12 +57,12 @@ config SX9500
- 	  module will be called sx9500.
- 
- config SRF08
--	tristate "Devantech SRF08/SRF10 ultrasonic ranger sensor"
-+	tristate "Devantech SRF02/SRF08/SRF10 ultrasonic ranger sensor"
- 	depends on I2C
- 	help
--	  Say Y here to build a driver for Devantech SRF08/SRF10 ultrasonic
--	  ranger sensor. This driver can be used to measure the distance
--	  of objects.
-+	  Say Y here to build a driver for Devantech SRF02/SRF08/SRF10
-+	  ultrasonic ranger sensors with i2c interface.
-+	  This driver can be used to measure the distance of objects.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called srf08.
-diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
-index 52573b013313..6ccf8f9fd703 100644
---- a/drivers/iio/proximity/srf08.c
-+++ b/drivers/iio/proximity/srf08.c
-@@ -1,15 +1,17 @@
- /*
-- * srf08.c - Support for Devantech SRF08 ultrasonic ranger
-+ * srf08.c - Support for Devantech SRF02/SRF08/SRF10 ultrasonic ranger
-+ *           with I2C-Interface
-  *
-- * Copyright (c) 2016 Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-+ * Copyright (c) 2016, 2017 Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-  *
-  * This file is subject to the terms and conditions of version 2 of
-- * the GNU General Public License.  See the file COPYING in the main
-+ * the GNU General Public License. See the file COPYING in the main
-  * directory of this archive for more details.
-  *
-  * For details about the device see:
-  * http://www.robot-electronics.co.uk/htm/srf08tech.html
-  * http://www.robot-electronics.co.uk/htm/srf10tech.htm
-+ * http://www.robot-electronics.co.uk/htm/srf02tech.htm
-  */
- 
- #include <linux/err.h>
-@@ -34,11 +36,10 @@
- 
- #define SRF08_CMD_RANGING_CM	0x51	/* Ranging Mode - Result in cm */
- 
--#define SRF08_DEFAULT_RANGE	6020	/* default value of Range in mm */
--
- #define SRF08_MAX_SENSITIVITY	32	/* number of Gain Register values */
- 
- enum srf08_sensor_type {
-+	SRF02,
- 	SRF08,
- 	SRF10,
- 	SRF_MAX_TYPE
-@@ -75,6 +76,8 @@ struct srf08_data {
-  * is called "Sensitivity" here.
-  */
- static const int srf08_sensitivity[SRF_MAX_TYPE][SRF08_MAX_SENSITIVITY] = {
-+	[SRF02] = {
-+	},
- 	[SRF08] = {
- 	 94,  97, 100, 103, 107, 110, 114, 118,
- 	123, 128, 133, 139, 145, 152, 159, 168,
-@@ -93,6 +96,11 @@ static const int srf08_default_sensitivity[SRF_MAX_TYPE] = {
- 	[SRF10] = 700,
- };
- 
-+static const int srf08_default_range[SRF_MAX_TYPE] = {
-+	[SRF08] = 6020,
-+	[SRF10] = 6020,
-+};
-+
- static int srf08_read_ranging(struct srf08_data *data)
- {
- 	struct i2c_client *client = data->client;
-@@ -409,6 +417,15 @@ static const struct iio_info srf08_info = {
- 	.driver_module = THIS_MODULE,
- };
- 
-+/*
-+ * srf02 don't have an adjustable range or sensitivity,
-+ * so we don't need attributes at all
-+ */
-+static const struct iio_info srf02_info = {
-+	.read_raw = srf08_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
- static int srf08_probe(struct i2c_client *client,
- 					 const struct i2c_device_id *id)
- {
-@@ -434,7 +451,13 @@ static int srf08_probe(struct i2c_client *client,
- 	indio_dev->name = id->name;
- 	indio_dev->dev.parent = &client->dev;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
--	indio_dev->info = &srf08_info;
-+
-+	/* srf02 is not using sensitivity nor max_range */
-+	if (id->driver_data == SRF02)
-+		indio_dev->info = &srf02_info;
-+	else
-+		indio_dev->info = &srf08_info;
-+
- 	indio_dev->channels = srf08_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(srf08_channels);
- 
-@@ -447,24 +470,39 @@ static int srf08_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
--	/*
--	 * set default values of device here
--	 * these register values cannot be read from the hardware
--	 * therefore set driver specific default values
--	 */
--	ret = srf08_write_range_mm(data, SRF08_DEFAULT_RANGE);
--	if (ret < 0)
--		return ret;
-+	if (srf08_default_range[id->driver_data]) {
-+		/*
-+		 * set default range of device here
-+		 * these register values cannot be read from the hardware
-+		 * therefore set driver specific default values
-+		 *
-+		 * srf02 don't have a default value so it'll be omitted
-+		 */
-+		ret = srf08_write_range_mm(data,
-+					srf08_default_range[id->driver_data]);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
--	ret = srf08_write_sensitivity(data,
--			srf08_default_sensitivity[id->driver_data]);
--	if (ret < 0)
--		return ret;
-+	if (srf08_default_sensitivity[id->driver_data]) {
-+		/*
-+		 * set default sensitivity of device here
-+		 * these register values cannot be read from the hardware
-+		 * therefore set driver specific default values
-+		 *
-+		 * srf02 don't have a default value so it'll be omitted
-+		 */
-+		ret = srf08_write_sensitivity(data,
-+				srf08_default_sensitivity[id->driver_data]);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
- 	return devm_iio_device_register(&client->dev, indio_dev);
- }
- 
- static const struct of_device_id of_srf08_match[] = {
-+	{ .compatible = "devantech,srf02", (void *)SRF02},
- 	{ .compatible = "devantech,srf08", (void *)SRF08},
- 	{ .compatible = "devantech,srf10", (void *)SRF10},
- 	{},
-@@ -473,6 +511,7 @@ static const struct of_device_id of_srf08_match[] = {
- MODULE_DEVICE_TABLE(of, of_srf08_match);
- 
- static const struct i2c_device_id srf08_id[] = {
-+	{ "srf02", SRF02 },
- 	{ "srf08", SRF08 },
- 	{ "srf10", SRF10 },
- 	{ }
-@@ -490,5 +529,5 @@ static struct i2c_driver srf08_driver = {
- module_i2c_driver(srf08_driver);
- 
- MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
--MODULE_DESCRIPTION("Devantech SRF08/SRF10 ultrasonic ranger driver");
-+MODULE_DESCRIPTION("Devantech SRF02/SRF08/SRF10 i2c ultrasonic ranger driver");
- MODULE_LICENSE("GPL");
+thanks!
 -- 
-2.1.4
-
-
--- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jagan Teki
+Free Software Engineer | www.openedev.com
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
