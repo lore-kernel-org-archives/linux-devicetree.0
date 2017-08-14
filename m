@@ -1,56 +1,72 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] iio: srf08: add device tree binding for srf02 and
- srf10
-Date: Mon, 14 Aug 2017 11:11:06 +0200
-Message-ID: <20170814091106.rvdvebcxfbpggmjd@ninjato>
-References: <20170814085941.GA9759@arbeit>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH v2] arm64: allwinner: a64: Add A64-OLinuXino
+ initial support
+Date: Mon, 14 Aug 2017 17:13:52 +0800
+Message-ID: <CAGb2v663ANZJfhL1OCVVF24fvZtrCS9x7WY=EWEEZpfDmxQkTA@mail.gmail.com>
+References: <1502560442-17715-1-git-send-email-jteki@openedev.com>
+ <CAGb2v66Scd69iBNxhvYbkqjt7K_5m+S4nYG633O3wYAW_3CyLQ@mail.gmail.com>
+ <CAD6G_RRMHMrm1wPGJCxQgmOuwhEqVK_zTZF1Fsv9az4tZ1uvBg@mail.gmail.com>
+ <CAGb2v64KJOuS=XfWu=tHyyYbTVjLJKVoTL2cQDyLby=CmnmLWw@mail.gmail.com> <CAD6G_RTi4MJ74yWsv3Zdg68mdSHBzszfkLmpz=rGdRVfOOQ2vA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vehecvtbu6jzjx6a"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170814085941.GA9759@arbeit>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD6G_RTi4MJ74yWsv3Zdg68mdSHBzszfkLmpz=rGdRVfOOQ2vA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagannadh.teki@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Support - OLIMEX Ltd <support@olimex.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Aug 14, 2017 at 5:09 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
+> On Mon, Aug 14, 2017 at 1:26 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+>> On Mon, Aug 14, 2017 at 3:34 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
+>>> On Mon, Aug 14, 2017 at 12:38 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+>>>> Hi,
+>>>>
+>>>> On Sun, Aug 13, 2017 at 1:54 AM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
 
---vehecvtbu6jzjx6a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Mon, Aug 14, 2017 at 10:59:41AM +0200, Andreas Klinger wrote:
-> add trivial device tree binding "devantech,srf02" and "devantech,srf10"
->=20
-> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
+>>>>> +&reg_dcdc1 {
+>>>>> +       regulator-always-on;
+>>>>> +       regulator-min-microvolt = <3300000>;
+>>>>> +       regulator-max-microvolt = <3300000>;
+>>>>> +       regulator-name = "vcc-3v3";
+>>>>> +};
+>>>>> +
+>>>>> +&reg_dcdc2 {
+>>>>> +       regulator-always-on;
+>>>>> +       regulator-min-microvolt = <1100000>;
+>>>>> +       regulator-max-microvolt = <1100000>;
+>>>>
+>>>> The SoC has a wider range than a fixed voltage for the CPUs.
+>>>
+>>> So, max 1.1v can't enough CPUs? thought similar behavior with pine64?
+>>
+>> The recommended operating conditions says 1.04 ~ 1.3 V for CPUx,
+>> while the typical voltage is 1.1V. The regulator constraints should
+>> match the datasheet, especially for power rails that are involved in
+>> DVFS.
+>
+> power rails from datasheet[1] shows 0.5v ~ 1.3v am I not looking
+> updated details?
 
-Again: This file has moved since v4.12-rc1. Please rebase to v4.12 or
-even v4.13-rc5.
+The constraints are there to prevent users from setting a voltage
+too high or too low for the connected devices.
 
+You should be looking at the recommended operating conditions
+for the A64. The regulator constraints should match the constraints
+of the consumer, not the provider. If there are multiple consumers,
+it must match the narrowest range supported by _all_ consumers, i.e.
+the intersection of all consumer's operating ranges.
 
---vehecvtbu6jzjx6a
-Content-Type: application/pgp-signature; name="signature.asc"
+ChenYu
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmRaSoACgkQFA3kzBSg
-KbakJw/+LZTTTkS3sKtt4Eg5vrbPueM65Bm6Au85zqVi1xl6Ews8SLQ+Anzul7Ho
-JmgrhgaunBiCBsCxeUuUkwghJe31fD8WaGaB2+KT4mHfew5PwAYxU7k28vU6pZOv
-erGi2+xlOSimtlieRfB668ghV3EGA9bR5WS/3gtoCCqBjL3aMT+9u9bFUSyPKq5a
-+AD6Glbv6oCuaeOd9xH4eblwaS/wAfEFujGZZOgEwRbGaW/OYRl7fCJS9/Dl/K1Z
-gUPrbpwA4E0ST3o4y1zAq0wojtte+VolvnW0jpuwmvdNS396tbkLyBKeIkoUK3S+
-m+NDvQhNVraAYe/NjW5k1X8cPkpVvu5iJvb0VbwugsVdaFoy3udW+RzGzhpEz/8D
-iQ9BrIolrPGgsxMVEJNRlJlCqusH2ueY60Yow8SvTFcSh9CUu1eydz+geh2PRQWY
-bTe9mz5m91lZdFoIBmtbHlYjwGkNaMEGB9uOiOropCU6fiWmeY2jXg60lAl/5IZP
-2MKKOq1RBm+Ekb5ZGhPRgu501kMW/7rTVkxeyg0lSktaKNI7n4MUpDyXBcKX95S4
-5BZyt3zuoF4KSr5zLm7cGi9RnnIudeLYCVQ+KgHfhX+gD6WtfTzUTd4fs3JzG6qD
-wGTq8yr1So2/XOLAcojHWNxg2hUEQWG9lIlOgslbsdgScL/o/sA=
-=jOc0
------END PGP SIGNATURE-----
-
---vehecvtbu6jzjx6a--
+>
+> [1] http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
+>
+> thanks!
+> --
+> Jagan Teki
+> Free Software Engineer | www.openedev.com
+> U-Boot, Linux | Upstream Maintainer
+> Hyderabad, India.
