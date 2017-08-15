@@ -1,47 +1,72 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 2/9] dt-bindings: regulator: Add document for MediaTek
- MT6380 regulator
-Date: Tue, 15 Aug 2017 12:50:38 +0100
-Message-ID: <20170815115038.65wos2ega2akxet4@sirena.org.uk>
-References: <cover.1502779753.git.sean.wang@mediatek.com>
- <0325c83fa4eeb1dc9e887548c1ad5ae8ab912c91.1502779753.git.sean.wang@mediatek.com>
+Subject: Re: [PATCH] ASoC: mediatek: Correct the interrupt
+	property
+Date: Tue, 15 Aug 2017 12:53:09 +0100
+Message-ID: <20170815115309.glj52jx3kpq4jxq3@sirena.org.uk>
+References: <43a7fb98e7252d0b7b73cdabf1eedd0bf896d68c.1502784169.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="37rvr2ujaiqft7jc"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0325c83fa4eeb1dc9e887548c1ad5ae8ab912c91.1502779753.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.com, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============3177391050010024541=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <43a7fb98e7252d0b7b73cdabf1eedd0bf896d68c.1502784169.git.ryder.lee@mediatek.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Garlic Tseng <garlic.tseng@mediatek.com>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---37rvr2ujaiqft7jc
+--===============3177391050010024541==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gzdig5tpx7iqh6fk"
+Content-Disposition: inline
+
+
+--gzdig5tpx7iqh6fk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 15, 2017 at 05:09:14PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
->=20
-> add dt-binding document for MediaTek MT6380 PMIC
+On Tue, Aug 15, 2017 at 04:07:02PM +0800, Ryder Lee wrote:
 
-Please use subject lines reflecting the style for the subsystem.
+> This patch update interrupt property since we only use ASYS IRQ
+> in the driver, and this may confuse people.
 
---37rvr2ujaiqft7jc
+> -		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
+> -			     <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+
+What harm does having the extra information in the bindings do?  If it's
+possible there might be a use for the extra interrupt it seems better to
+have people describe it.
+
+--gzdig5tpx7iqh6fk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmS4A4ACgkQJNaLcl1U
-h9ChKwf/eQkXGgrh2fRb+qJT6BsggteGou1T7VjrnBkK3HWUN9wY0Tnb1fa+DjwR
-eVMFZ9W+3+F+T17NEv+30EoHaKiXPJ8R6m0CiHjjSqTr3oRb1+QLqJl9sNsHpPTT
-GVIw7/0YAsp13ujSNcBdjrvVmR1Uyzdb4b1EbMf6ubJN6eGMpa6fIZdtvBxM3t/N
-fD0tmiQX4XUdi4phkWcwD64S+FUVNyYByKMyHAwRoXv/8HjIbBey7DdwkBZ3Qfp6
-D8zdvuzewYGbQdtWAii1IR363X+AEN8LJ3lmB1El3PrYeXyRQqiIQJjEF9/jJOeX
-eGBNo4/oEOaamsQVaZC3G/gtZfPgkQ==
-=V1HG
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmS4KQACgkQJNaLcl1U
+h9D93wf+L7m9x7+OQo1mJABVGKFZXqqKwWJifYg/pQX6ZZ0AdYWINzfxk9TynL6j
+PmTmduO9PDR3EOf6Kf34Bk8MEcuN2VwQt+EyIh+ETh71IIM9MBxdwY238cOl6stZ
+QkEFINtxibMbB3OY2c2+J3GO4VeOeZ81Ti50mpG9aiyjtydSKVNNGjnRZ/+pGdU0
+UDh4YWRYCDa4FEW69i7s0bdp2kUW4kX2eWMgwjKDprqplnxMLSB+++la10QcOqNS
+Fwk6PDUjC9Ei3EqLCZsFCjQ1Bo96rIW4a7TNC8CZPy1mBqr8VPiEwyK3A6CoHAxO
+i+5qWyGUcRwrn0uK3yanApM3dvkkjw==
+=qQPk
 -----END PGP SIGNATURE-----
 
---37rvr2ujaiqft7jc--
+--gzdig5tpx7iqh6fk--
+
+--===============3177391050010024541==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3177391050010024541==--
