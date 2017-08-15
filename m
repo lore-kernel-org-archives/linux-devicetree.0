@@ -1,51 +1,50 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ASoC: mediatek: Correct the interrupt property
-Date: Tue, 15 Aug 2017 16:07:02 +0800
-Message-ID: <43a7fb98e7252d0b7b73cdabf1eedd0bf896d68c.1502784169.git.ryder.lee@mediatek.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v5 0/6] drivers/i2c: Add FSI-attached I2C master algorithm
+Date: Tue, 15 Aug 2017 17:40:38 +0930
+Message-ID: <CACPK8XexFdz63t4y5uO1GzoWrx=wnkqBxbYKGtuFq0JupeLNHQ@mail.gmail.com>
+References: <1501089198-10356-1-git-send-email-eajames@linux.vnet.ibm.com> <f324da3b-7c9e-3dc1-0cdc-91576c7a50b8@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <f324da3b-7c9e-3dc1-0cdc-91576c7a50b8@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Eddie James <eajames@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Christopher Bostic <cbostic@linux.vnet.ibm.com>, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch update interrupt property since we only use ASYS IRQ
-in the driver, and this may confuse people.
+On Tue, Aug 15, 2017 at 4:06 PM, Peter Rosin <peda@axentia.se> wrote:
+> On 2017-07-26 19:13, Eddie James wrote:
+>> From: "Edward A. James" <eajames@us.ibm.com>
+>>
+>> This series adds an algorithm for an I2C master physically located on an FSI
+>> slave device. The I2C master has multiple ports, each of which may be connected
+>> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
+>>
+>> Due to the multi-port nature of the I2C master, the driver instantiates a new
+>> I2C adapter for each port connected to a slave. The connected ports should be
+>> defined in the device tree under the I2C master device.
+>
+> Hmmm, AFAIU fsi is a bus, and on this bus you have some "client" device that
+> happens to be an i2c master, and this is a driver for that "client". Is it
+> totally inconceivable to have some other client device in the future that is
+> implementing an i2c master differently, but still using the fsi bus?
+>
+> With that in mind, is it wise to pick the driver name from the bus that the
+> device is connected to, and nothing else without further qualification?
+>
+> I don't see any "i2c-usb" driver, but I think there are a couple of i2c master
+> drivers that communicate via usb.
 
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-CC: Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+You make a fair point. When I did a prototype of this driver I called
+it i2c-cfam, as it is part of the CFAM hardware unit inside of the
+Power8/Power9 processors.
 
-diff --git a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-index 9800a56..9d7b6dc 100644
---- a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-+++ b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-@@ -3,7 +3,7 @@ Mediatek AFE PCM controller for mt2701
- Required properties:
- - compatible = "mediatek,mt2701-audio";
- - reg: register location and size
--- interrupts: Should contain AFE interrupt
-+- interrupts: Should contain ASYS interrupt
- - power-domains: should define the power domain
- - clock-names: should have these clock names:
- 		"infra_sys_audio_clk",
-@@ -57,8 +57,7 @@ Example:
- 		compatible = "mediatek,mt2701-audio";
- 		reg = <0 0x11220000 0 0x2000>,
- 		      <0 0x112A0000 0 0x20000>;
--		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
- 		clocks = <&infracfg CLK_INFRA_AUDIO>,
- 			 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
--- 
-1.9.1
+The documentation does call it FSI_I2CM, so that's an argument for the
+current name.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not sure how accurate that name is. Chris, Eddie, do you have any
+other suggestions?
+
+Cheers,
+
+Joel
