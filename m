@@ -1,48 +1,91 @@
-From: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
-Subject: RE: [PATCH] of_mdio: merge branch tails in
- of_phy_register_fixed_link()
-Date: Tue, 15 Aug 2017 11:18:50 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6DD0055AAA@AcuExch.aculab.com>
-References: <20170812210321.520045884@cogentembedded.com>
- <20170813.200908.1426365653542179792.davem@davemloft.net>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] usb: chipidea: Hook into mux framework to toggle
+ usb switch
+Date: Tue, 15 Aug 2017 13:36:42 +0200
+Message-ID: <8bbd90f2-a80f-1bf7-e5a8-400cebf6dc89@axentia.se>
+References: <20170714214005.14967-1-stephen.boyd@linaro.org>
+ <20170714214005.14967-3-stephen.boyd@linaro.org>
+ <7080030c-c9c2-657d-aad4-aef636438cb1@axentia.se>
+ <150215709134.18242.599725161375995991@sboyd-linaro>
+ <c5c411fe-2f5a-88cc-73e8-28ab61f5de04@axentia.se>
+ <150249037091.15411.10074988823155268663@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170813.200908.1426365653542179792.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <150249037091.15411.10074988823155268663@sboyd-linaro>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'David Miller' <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-1bcDf/t0825pWr+L1FloEB2eb7JE58TQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Miller
-> Sent: 14 August 2017 04:09
-> From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Date: Sun, 13 Aug 2017 00:03:06 +0300
+On 2017-08-12 00:26, Stephen Boyd wrote:
+> Quoting Peter Rosin (2017-08-08 05:46:30)
+>> On 2017-08-08 03:51, Stephen Boyd wrote:
+>>
+>>>                      It looked like we paired the start/stop ops with
+>>> each other so that the mux is properly managed across these ops.
+>>
+>> Yes, it *looks* ok...
+>>
+>>>                                                                  My
+>>> testing hasn't shown a problem, but maybe there's some corner case
+>>> you're thinking of? I'll double check the code.
+>>
+>> ...but since I do not know the usb code, I can't tell. What I worry about
+>> is the usb core calling udc_id_switch_for_host or udc_id_switch_for_device
+>> more than once without any call to the other in between. Maybe that is a
+>> guarantee that the usb core makes? Or maybe it isn't? If e.g. there is a
+>> third mode (or if one is added in the future), then the calls to
+>> mux_control_select and mux_control_deselect would not be paired correctly.
+>> Ok, sure, a third mode probably doesn't exist and will probably not be
+>> added, but but but...
+>>
+>> Also, what happens if udc_id_switch_for_device fails? Is it certain that
+>> it will be called again before udc_id_switch_for_host is called, or is
+>> the failure simply logged? If the latter, you might have a call to
+>> mux_control_deselect without a preceding (and successful) call to
+>> mux_control_select. That's fatal.
 > 
-> > Looks  like gcc isn't always able to figure  out that 3 *if* branches in
-> > of_phy_register_fixed_link() calling fixed_phy_register() at their ends
-> > are similar enough and thus can be merged. The "manual" merge saves 40
-> > bytes of the object code (AArch64 gcc 4.8.5), and still saves 12 bytes
-> > even  if gcc was able to merge the branch tails (ARM gcc 4.8.5)...
-> >
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> The only thing that could fail right now is the mux selection, so we
+> wouldn't get into some sort of situation where that's locked in and
+> unchangeable. We do rollback the role if it fails to switch, so we also
+> wouldn't go into a half-way state of being in one role but not actually
+> switching all the way over to it.
+
+What do you roll back to if the initial setting of the role fails?
+Hopefully that causes a probe failure?
+
+Cheers,
+Peter
+
+>> I have similar worries for host_start/host_stop, but for that case
+>> host_stop is not allowed to fail, and it seems like a safe bet that
+>> host_stop will only be called if host_start succeeds. So, I'm not as
+>> worried there.
+>>
+>> In other words, the question is if the usb core is designed to allow
+>> this kind of "raw" resource administration in udc_id_switch_for_host and
+>> udc_id_switch_for_device, or if you need to keep a local record of the
+>> state so that you do not do double resource acquisition or attempt to
+>> free resources you don't have?
+>>
+>> I think I would feel better if the muxing for the device mode could
+>> be done in a start/stop pair of function just like the host mode is
+>> doing. Again, I don't know the usb code and don't know if such hooks
+>> exist or not?
+>>
 > 
-> Applied, but if two instances of the "same" compiler just with
-> different targets changes the optimization, it could be because of a
-> tradeoff which is specific to parameters expressed in that target's
-> backend.
-> 
-> So in the future we should probably back away from trying to "help"
-> the compiler in this way.
-
-Probably a trade off between code size and execution speed.
-I've had 'fun' trying to stop gcc merging tail code paths
-in order to avoid the cost of the branch instruction.
-
-	David
-
+> The host_start/host_stop functions are assigned to the same struct
+> ci_role_driver ops that udc_idc_switch_for_{device,host} are for the
+> gadget role. Really, these things are called from the same place by the
+> chipidea driver so not much is different between the two files I modify
+> to make the mux calls. Furthermore, we don't want to do this if we have
+> HNP or "true" OTG support so I've put it behind the ci_otg_is_fsm_mode()
+> check to make sure we don't do any muxing stuff based on fsm state
+> changes. It doesn't really make any sense here anyway because this
+> device I have doesn't support OTG, just role switching.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
