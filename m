@@ -1,117 +1,138 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 7/9] soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
-Date: Tue, 15 Aug 2017 17:09:19 +0800
-Message-ID: <398d87c6ae2b414016fc0c0a9c6bada3ce746118.1502779753.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v3 5/9] soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
+Date: Tue, 15 Aug 2017 17:09:17 +0800
+Message-ID: <236a04acb383fc655549bc345a16a2d015e5727d.1502779753.git.sean.wang@mediatek.com>
 References: <cover.1502779753.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1502779753.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1502779753.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Add MediaTek MT6380 regulator becoming one of PMIC wrapper slave
-and also add extra new regmap_config of 32-bit mode for MT6380
-since old regmap_config of 16-bit mode can't be fit into the need.
+Some regulators such as MediaTek MT6380 also has to be written in
+32-bit mode. So the patch adds pwrap_write32, rename old pwrap_write
+into pwrap_write16 and one additional function pointer is introduced
+for increasing flexibility allowing the determination which mode is
+used by the pwrap slave detection through device tree.
 
-Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
+Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-pmic-wrap.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 63 +++++++++++++++++++++++++++---------
+ 1 file changed, 47 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index 1f8b69a..047e3d9 100644
+index 7cd581b..9d1f4c6 100644
 --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
 +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -501,6 +501,7 @@ struct pmic_wrapper;
- struct pwrap_slv_type {
- 	const u32 *dew_regs;
- 	enum pmic_type type;
-+	const struct regmap_config *regmap;
- 	/* pwrap operations are highly associated with the PMIC types,
- 	 * so the pointers added increases flexibility allowing determination
+@@ -506,6 +506,7 @@ struct pwrap_slv_type {
  	 * which type is used by the detection through device tree.
-@@ -1109,7 +1110,7 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
- 	return IRQ_HANDLED;
+ 	 */
+ 	int (*pwrap_read)(struct pmic_wrapper *wrp, u32 adr, u32 *rdata);
++	int (*pwrap_write)(struct pmic_wrapper *wrp, u32 adr, u32 wdata);
+ };
+ 
+ struct pmic_wrapper {
+@@ -600,22 +601,6 @@ static int pwrap_wait_for_state(struct pmic_wrapper *wrp,
+ 	} while (1);
  }
  
--static const struct regmap_config pwrap_regmap_config = {
-+static const struct regmap_config pwrap_regmap_config16 = {
- 	.reg_bits = 16,
- 	.val_bits = 16,
- 	.reg_stride = 2,
-@@ -1118,9 +1119,19 @@ static const struct regmap_config pwrap_regmap_config = {
- 	.max_register = 0xffff,
- };
+-static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
+-{
+-	int ret;
+-
+-	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
+-	if (ret) {
+-		pwrap_leave_fsm_vldclr(wrp);
+-		return ret;
+-	}
+-
+-	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
+-			PWRAP_WACS2_CMD);
+-
+-	return 0;
+-}
+-
+ static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
+ {
+ 	int ret;
+@@ -672,6 +657,49 @@ static int pwrap_read(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
+ 	return wrp->slave->pwrap_read(wrp, adr, rdata);
+ }
  
-+static const struct regmap_config pwrap_regmap_config32 = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.reg_read = pwrap_regmap_read,
-+	.reg_write = pwrap_regmap_write,
-+	.max_register = 0xffff,
-+};
++static int pwrap_write16(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
++{
++	int ret;
 +
- static const struct pwrap_slv_type pmic_mt6323 = {
++	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
++	if (ret) {
++		pwrap_leave_fsm_vldclr(wrp);
++		return ret;
++	}
++
++	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
++		     PWRAP_WACS2_CMD);
++
++	return 0;
++}
++
++static int pwrap_write32(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
++{
++	int ret, msb, rdata;
++
++	for (msb = 0; msb < 2; msb++) {
++		ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
++		if (ret) {
++			pwrap_leave_fsm_vldclr(wrp);
++			return ret;
++		}
++
++		pwrap_writel(wrp, (1 << 31) | (msb << 30) | (adr << 16) |
++			     ((wdata >> (msb * 16)) & 0xffff),
++			     PWRAP_WACS2_CMD);
++
++		if (!msb)
++			pwrap_read(wrp, adr, &rdata);
++	}
++
++	return 0;
++}
++
++static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
++{
++	return wrp->slave->pwrap_write(wrp, adr, wdata);
++}
++
+ static int pwrap_regmap_read(void *context, u32 adr, u32 *rdata)
+ {
+ 	return pwrap_read(context, adr, rdata);
+@@ -1080,18 +1108,21 @@ static const struct pwrap_slv_type pmic_mt6323 = {
  	.dew_regs = mt6323_regs,
  	.type = PMIC_MT6323,
-+	.regmap = &pwrap_regmap_config16,
  	.pwrap_read = pwrap_read16,
- 	.pwrap_write = pwrap_write16,
++	.pwrap_write = pwrap_write16,
  };
-@@ -1128,6 +1139,7 @@ static const struct pwrap_slv_type pmic_mt6323 = {
+ 
  static const struct pwrap_slv_type pmic_mt6380 = {
  	.dew_regs = NULL,
  	.type = PMIC_MT6380,
-+	.regmap = &pwrap_regmap_config32,
  	.pwrap_read = pwrap_read32,
- 	.pwrap_write = pwrap_write32,
++	.pwrap_write = pwrap_write32,
  };
-@@ -1135,6 +1147,7 @@ static const struct pwrap_slv_type pmic_mt6380 = {
+ 
  static const struct pwrap_slv_type pmic_mt6397 = {
  	.dew_regs = mt6397_regs,
  	.type = PMIC_MT6397,
-+	.regmap = &pwrap_regmap_config16,
  	.pwrap_read = pwrap_read16,
- 	.pwrap_write = pwrap_write16,
++	.pwrap_write = pwrap_write16,
  };
-@@ -1144,9 +1157,15 @@ static const struct of_device_id of_slave_match_tbl[] = {
- 		.compatible = "mediatek,mt6323",
- 		.data = &pmic_mt6323,
- 	}, {
-+		/* The MT6380 slave device is directly pointed to the regulator
-+		 * device which is different from the cases MT6323 and MT6397
-+		 * where they're one kind of MFDs.
-+		 */
-+		.compatible = "mediatek,mt6380-regulator",
-+		.data = &pmic_mt6380,
-+	}, {
- 		.compatible = "mediatek,mt6397",
- 		.data = &pmic_mt6397,
--	}, {
- 		/* sentinel */
- 	}
- };
-@@ -1325,7 +1344,7 @@ static int pwrap_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_out2;
  
--	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, &pwrap_regmap_config);
-+	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, wrp->slave->regmap);
- 	if (IS_ERR(wrp->regmap)) {
- 		ret = PTR_ERR(wrp->regmap);
- 		goto err_out2;
+ static const struct of_device_id of_slave_match_tbl[] = {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
