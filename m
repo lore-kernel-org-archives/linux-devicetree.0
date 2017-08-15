@@ -1,79 +1,32 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
- slave
-Date: Tue, 15 Aug 2017 15:06:11 +0200
-Message-ID: <43820E05-9D40-4470-AE6C-B7B6C705E0A5@holtmann.org>
-References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
- <1502102366-2760-2-git-send-email-loic.poulain@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502102366-2760-2-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bluez mailing list <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jun Gao <jun.gao@mediatek.com>
+Subject: [PATCH v3 0/2] Add i2c dt-binding and compatible for Mediatek MT7622 SoC
+Date: Tue, 15 Aug 2017 21:08:13 +0800
+Message-ID: <1502802495-5064-1-git-send-email-jun.gao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patch series based on v4.13-rc1, include MT7622 i2c dt-binding
+and compatible.
 
-> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
-> This allows to automatically insert the bcm43438 to the bluetooth
-> subsystem instead of relying on userspace helpers (hciattach).
-> 
-> Overwrite bootargs to use 8250 aux uart (ttyS0) as console instead
-> of pl011/ttyAMA0.
-> 
-> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> v2: dt-bindings as separate patch
->     rebase on upcoming pi3 dts changes
-> v3: changes in bcm serdev drivers:
->     name refactoring and additional comments
->     Add generic host_set_baudrate method
->     Use agnostic device_property_read
-> 
-> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
-> 1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> index 20725ca..5abc1df 100644
-> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> @@ -8,6 +8,11 @@
-> 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-> 	model = "Raspberry Pi 3 Model B";
-> 
-> +	chosen {
-> +		/* 8250 auxiliar UART instead of pl011 */
-> +		bootargs = "earlyprintk console=ttyS0,115200";
-> +	};
-> +
-> 	memory {
-> 		reg = <0 0x40000000>;
-> 	};
-> @@ -24,6 +29,11 @@
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
-> 	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "brcm,bcm43438-bt";
-> +		max-speed = <921600>;
-> +	};
-> };
+changes since v2:
+- Remove all the length settings from mt7622_i2c_quirks
 
-I know that hci_ll.c DT entry also uses max-speed for the naming. Is this something common we should be doing? Essentially it is not really max-speed. It is the operational speed that we are configuring. There is no down negotiation ongoing. Does it make sense to use oper-speed instead?
+changes since v1:
+- Modify commit message
+- Revise dt-binding documentation
 
-Are we otherwise fine with compatible string naming?
+Jun Gao (2):
+  dt-bindings: i2c: Add MediaTek MT7622 i2c binding
+  i2c: mediatek: Add i2c compatible for MediaTek MT7622
 
-Loic, the hciattach examples list 3000000 as operational speed. Any reason why we should limit it?
-
-Regards
-
-Marcel
+ Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
+ drivers/i2c/busses/i2c-mt65xx.c                   | 14 ++++++++++++++
+ 2 files changed, 20 insertions(+), 5 deletions(-)
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.1
