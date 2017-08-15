@@ -1,44 +1,67 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH] dt-bindings: mmc: sh_mmcif: Document r8a7745 DT bindings
-Date: Tue, 15 Aug 2017 17:53:27 +0100
-Message-ID: <1502816007-30186-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/9] ASoC: cygnus: Update bindings for
+	audio clock changes
+Date: Tue, 15 Aug 2017 18:14:24 +0100
+Message-ID: <20170815171424.whcy4mftex6sgzgj@sirena.org.uk>
+References: <1502748417-26417-1-git-send-email-lori.hikichi@broadcom.com>
+ <1502748417-26417-3-git-send-email-lori.hikichi@broadcom.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0657323401445315278=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1502748417-26417-3-git-send-email-lori.hikichi@broadcom.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lori Hikichi <lori.hikichi@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-index 703e18c..5ff1e12 100644
---- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-+++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-@@ -12,6 +12,7 @@ Required properties:
- 	- "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
- 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
- 	- "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
-+	- "renesas,mmcif-r8a7745" for the MMCIF found in r8a7745 SoCs
- 	- "renesas,mmcif-r8a7778" for the MMCIF found in r8a7778 SoCs
- 	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
- 	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
-@@ -22,7 +23,7 @@ Required properties:
- - interrupts: Some SoCs have only 1 shared interrupt, while others have either
-   2 or 3 individual interrupts (error, int, card detect). Below is the number
-   of interrupts for each SoC:
--    1: r8a73a4, r8a7743, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
-+    1: r8a73a4, r8a7743, r8a7745, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
-     2: r8a7740, sh73a0
-     3: r7s72100
- 
--- 
-2.7.4
+--===============0657323401445315278==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="66mfxpv5mjvo5zls"
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--66mfxpv5mjvo5zls
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Aug 14, 2017 at 03:06:50PM -0700, Lori Hikichi wrote:
+> Allow each audio port to select which clock (if any) it wants to use.
+
+Why is this in DT for the port and not either using standard clock
+bindings to configure the clock tree or allowing the machine driver to
+pick?
+
+--66mfxpv5mjvo5zls
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmTK+8ACgkQJNaLcl1U
+h9BdDQf/XoW2PfmCiGhijMR5GDKi7Wu5sOxP1t5FlXac9JAVPMsrizz71HR3m+5K
+4OvSczZs94VPMjw77lNMgaS1MrCUkoXU8rnhD1CaO/UGuIx2oaJVtvOvPy/TZh0g
+mCYqgQKO/dv3Iam+zNrH89cuS9NeekGtM7yle4/6Ab7wj3TnX09G1rRaOVEZj4UU
+Rl9d87kSNzmK3j4QmdMccMkJBED+I14PxqlIjZ9/jSOcUz9aMvO8HAFcFhNTA/Vn
+Bqdt27Gs7kbN7OpE/BK5PFMIbubyM4ruwfMJxhtT4WLnk/L2yDyKvDwANY8yYaaj
+I5hgYg9fn0oR2RWVH42l12vLSSmm4g==
+=YcJp
+-----END PGP SIGNATURE-----
+
+--66mfxpv5mjvo5zls--
+
+--===============0657323401445315278==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0657323401445315278==--
