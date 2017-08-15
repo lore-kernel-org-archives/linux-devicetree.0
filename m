@@ -1,122 +1,82 @@
 From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 0/3 v8] hsdk: initial port for HSDK board
-Date: Tue, 15 Aug 2017 21:13:52 +0300
-Message-ID: <20170815181355.29937-1-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 1/3] ARC: Set IO-coherency aperture base to LINUX_LINK_BASE
+Date: Tue, 15 Aug 2017 21:13:53 +0300
+Message-ID: <20170815181355.29937-2-Eugeniy.Paltsev@synopsys.com>
+References: <20170815181355.29937-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170815181355.29937-1-Eugeniy.Paltsev@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-snps-arc@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-This series introduces some required preparations and initial
-port of ARC HS Development Kit board with some basic features such
-as serial port, USB, SD/MMC and Ethernet.
+Most of the time we indeed use the one and only LINUX_LINK_BASE
+set to 0x8000_0000. But there might be good reasons to move
+the kernel to another location like 0x9z etc.
 
-Essentially we run Linux kernel on all 4 cores (i.e. utilize SMP) and
-heavily use IO Coherency for speeding-up DMA-aware peripherals.
+And we want IOC aperture to cover entire area used by the kernel,
+so let's make its base matching link base and add required asserts:
+checking IOC aperture base address and size to be supported by IOC.
 
-Note as opposed to other ARC boards we link Linux kernel to
-0x9000_0000 intentionally because cores 1 and 3 configured with DCCM
-situated at our more usual link base 0x8000_0000.
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/mm/cache.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-Note that two patches of this series ("ARC: Decouple linux kernel memory
-address and link address" and "ARC: Set IO-coherency aperture base to 
-LINUX_LINK_BASE") are prerequisites for HDSK support as its hardware
-configuration differs quite a bit from what we used to have on other
-ARC boards.
-
-Alexey Brodkin (1):
-  ARC: hsdk: initial port for HSDK board
-
-Eugeniy Paltsev (2):
-  ARC: Set IO-coherency aperture base to LINUX_LINK_BASE
-  ARC: Decouple linux kernel memory address and link address
-
-Changes v8 -> v9:
- * Revert removing of ARC_PLAT_HSDK (now it is called ARC_SOC_HSDK)
-   as it breaks uniprocessor configuation build.
- * Enable INPUT_EVDEV in hsdk_defconfig as it is required for 
-   user-space apps to work with keyboard/mice
-
-Changes v7 -> v8:
- * DTS: move cpu_intc, idu_intc, arcpct, timer, gfrc nodes to root
-   level and out of the cpus node.
- * DTS: add vendor-specific compatible for ohci and ehci nodes.
- * DTS: style fixes
-
-Changes v6 -> v7:
- * DTS: get rid of skeleton.dts, move cpus nodes to hsdk.dts
- * DTS: style fixes
- * Enable loadable modules, module unloading and NFS client as defaults
- * Get rid of ARC_PLAT_HSDK board config option
-
-Changes v5 -> v6:
- * Add support of USB-to-HDMI adapter
- * Revert removing of resetting CREG_PAE bits.
-   PAE remapping for DMA clients does not work due to an RTL bug, so
-   CREG_PAE register must be programmed to all zeroes, otherwise it
-   will cause problems with DMA to/from peripherals even if PAE40 is
-   not used.
-
-Changes v4 -> v5:
- * Move DCCM outside of 0x8000_0000 adress at kernel boot time.
- * Decouple linux kernel memory address and link address.
- * Remove hardcoding of IO-coherency aperture base.
- * Remove resetting CREG_PAE bits as default value is suitable for us.
-
-Changes v3 -> v4:
- * Removed senseless "ranges" property from "memory" node in .dts
- * Refined early-boot code:
-    - ICCM relocation should be done on each and every core that sports ICCM
-      so we leave it in init_per_cpu(). Even though init_per_cpu() gets called
-      on the master core pretty late still it is way much earlier than that
-      moment when it might affect us - as it only huts us when addresses in
-      0x7z-0x7fff_ffff range are used, i.e. virtual addresses that we don't
-      use during init. This also makes code much cleaner compared to
-      additional check in case of master etc.
-
-Changes v2 -> v3:
- * Added Rob to Cc-list for DT binding approval
- * Removed mention of prerequsite patch from commit message
- * Removed hsdk_early_init() as hsdk_init_per_cpu() is executed on
-   all cores anyways including master
- * Cleaned-up board's .dts a little bit
- * Removed CONFIG_DP83867_PHY from defconfig as it was only used on
-   FPGA prototype, on real board we use MICREL PHY which is still selected
-
-Changes v1 -> v2:
- * Update copyright year from 2016 to more up to date 2017
- * Merge early UART clock with AXS10x as in both cases that's 33.3 MHz
- * Bump memory to 1Gb, we don't use more for now because it requires
-   trickier IOC setup and usage
- * Update early platform init code:
-    - Added missing fixup_pae_regs() to per-cpu init
-    - Mark most of functions as "static __init"
-    - Use writel_relaxed() for setting CREG_PAE, CREG_PAE_UPDATE is still
-      written with stronger writel() since we don't want reordering to happen,
-      otherwise value written to CREG_PAE won't be applied
-
- Documentation/devicetree/bindings/arc/hsdk.txt |   7 ++
- arch/arc/Kconfig                               |   6 +
- arch/arc/Makefile                              |   1 +
- arch/arc/boot/dts/hsdk.dts                     | 150 +++++++++++++++++++++++++
- arch/arc/boot/dts/include/dt-bindings          |   1 +
- arch/arc/configs/hsdk_defconfig                |  72 ++++++++++++
- arch/arc/include/asm/page.h                    |   2 +-
- arch/arc/kernel/devtree.c                      |   5 +-
- arch/arc/mm/cache.c                            |  33 ++++--
- arch/arc/mm/init.c                             |   6 +-
- arch/arc/plat-hsdk/Kconfig                     |  12 ++
- arch/arc/plat-hsdk/Makefile                    |   9 ++
- arch/arc/plat-hsdk/platform.c                  |  77 +++++++++++++
- 13 files changed, 366 insertions(+), 15 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arc/hsdk.txt
- create mode 100644 arch/arc/boot/dts/hsdk.dts
- create mode 120000 arch/arc/boot/dts/include/dt-bindings
- create mode 100644 arch/arc/configs/hsdk_defconfig
- create mode 100644 arch/arc/plat-hsdk/Kconfig
- create mode 100644 arch/arc/plat-hsdk/Makefile
- create mode 100644 arch/arc/plat-hsdk/platform.c
-
+diff --git a/arch/arc/mm/cache.c b/arch/arc/mm/cache.c
+index a867575..383ff77 100644
+--- a/arch/arc/mm/cache.c
++++ b/arch/arc/mm/cache.c
+@@ -1083,7 +1083,8 @@ SYSCALL_DEFINE3(cacheflush, uint32_t, start, uint32_t, sz, uint32_t, flags)
+  */
+ noinline void __init arc_ioc_setup(void)
+ {
+-	unsigned int ap_sz;
++	unsigned int ap_base;
++	long ap_size;
+ 
+ 	/* Flush + invalidate + disable L1 dcache */
+ 	__dc_disable();
+@@ -1092,18 +1093,32 @@ noinline void __init arc_ioc_setup(void)
+ 	if (read_aux_reg(ARC_REG_SLC_BCR))
+ 		slc_entire_op(OP_FLUSH_N_INV);
+ 
+-	/* IOC Aperture start: TDB: handle non default CONFIG_LINUX_LINK_BASE */
+-	write_aux_reg(ARC_REG_IO_COH_AP0_BASE, 0x80000);
+-
+ 	/*
+-	 * IOC Aperture size:
+-	 *   decoded as 2 ^ (SIZE + 2) KB: so setting 0x11 implies 512M
+-	 * TBD: fix for PGU + 1GB of low mem
++	 * IOC Aperture size is equal to memory size.
++	 * TBD: fix for PGU + 1GiB of low mem
+ 	 * TBD: fix for PAE
+ 	 */
+-	ap_sz = order_base_2(arc_get_mem_sz()/1024) - 2;
+-	write_aux_reg(ARC_REG_IO_COH_AP0_SIZE, ap_sz);
++	ap_size = arc_get_mem_sz();
++
++	if (!is_power_of_2(ap_size) || ap_size < 4096)
++		panic("IOC Aperture size must be power of 2 larger than 4KiB");
++
++	/*
++	 * IOC Aperture size decoded as 2 ^ (SIZE + 2) KiB,
++	 * so setting 0x11 implies 512MiB, 0x12 implies 1G...
++	 */
++	write_aux_reg(ARC_REG_IO_COH_AP0_SIZE, order_base_2(ap_size / 1024) - 2);
++
++	/*
++	 * For now we assume IOC aperture to cover all the memory used by the
++	 * kernel.
++	 */
++	ap_base = CONFIG_LINUX_LINK_BASE;
++
++	if (ap_base % ap_size != 0)
++		panic("IOC Aperture start must be aligned to the size of the aperture");
+ 
++	write_aux_reg(ARC_REG_IO_COH_AP0_BASE, ap_base >> 12);
+ 	write_aux_reg(ARC_REG_IO_COH_PARTIAL, 1);
+ 	write_aux_reg(ARC_REG_IO_COH_ENABLE, 1);
+ 
 -- 
 2.9.3
