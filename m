@@ -1,53 +1,88 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: dts: cygnus: Fix incorrect UART2 register base
-Date: Tue, 15 Aug 2017 11:18:37 -0700
-Message-ID: <8760don18i.fsf@eliezer.anholt.net>
-References: <1502817964-8221-1-git-send-email-scott.branden@broadcom.com> <1502817964-8221-2-git-send-email-scott.branden@broadcom.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial slave
+Date: Tue, 15 Aug 2017 14:12:19 -0500
+Message-ID: <CAL_Jsq+WJDxghCwBzo2SyShEp56k_RWtN=6NHQyVAfC=QQibPA@mail.gmail.com>
+References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
+ <1502102366-2760-2-git-send-email-loic.poulain@gmail.com> <43820E05-9D40-4470-AE6C-B7B6C705E0A5@holtmann.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502817964-8221-2-git-send-email-scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <43820E05-9D40-4470-AE6C-B7B6C705E0A5-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Cc: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bluez mailing list <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
-
-> From: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Tue, Aug 15, 2017 at 8:06 AM, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> wrote:
+> Hi Rob,
 >
-> Fix incorrect Cygnus UART2 register base.
+>> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
+>> This allows to automatically insert the bcm43438 to the bluetooth
+>> subsystem instead of relying on userspace helpers (hciattach).
+>>
+>> Overwrite bootargs to use 8250 aux uart (ttyS0) as console instead
+>> of pl011/ttyAMA0.
+>>
+>> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>> v2: dt-bindings as separate patch
+>>     rebase on upcoming pi3 dts changes
+>> v3: changes in bcm serdev drivers:
+>>     name refactoring and additional comments
+>>     Add generic host_set_baudrate method
+>>     Use agnostic device_property_read
+>>
+>> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
+>> 1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> index 20725ca..5abc1df 100644
+>> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> @@ -8,6 +8,11 @@
+>>       compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+>>       model = "Raspberry Pi 3 Model B";
+>>
+>> +     chosen {
+>> +             /* 8250 auxiliar UART instead of pl011 */
+>> +             bootargs = "earlyprintk console=ttyS0,115200";
+>> +     };
+>> +
+>>       memory {
+>>               reg = <0 0x40000000>;
+>>       };
+>> @@ -24,6 +29,11 @@
+>>       pinctrl-names = "default";
+>>       pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
+>>       status = "okay";
+>> +
+>> +     bluetooth {
+>> +             compatible = "brcm,bcm43438-bt";
+>> +             max-speed = <921600>;
+>> +     };
+>> };
 >
-> Fixes: 0f0b21a83ad2 ("ARM: dts: Move all Cygnus peripherals into axi bus")
-> Signed-off-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> I know that hci_ll.c DT entry also uses max-speed for the naming. Is this something common we should be doing? Essentially it is not really max-speed. It is the operational speed that we are configuring. There is no down negotiation ongoing. Does it make sense to use oper-speed instead?
 
-Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+max-speed is correct to use. By default, a driver should know the max
+speed of a device (implied by the compatible). The DT property is only
+for when there is some host or board limitation as this case seems to
+be.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> Are we otherwise fine with compatible string naming?
 
------BEGIN PGP SIGNATURE-----
+Yes.
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlmTOv0ACgkQtdYpNtH8
-nugqOxAAs8N7waU421cyjjWx3AJ7MqY/biATwSHDKb4uqlsIqu78jQ8VaZqSr/01
-+WbPtKg82NTgBo4WQAiq+/oLf36Qe0hacs3HIHbNYTtISJi8s1yBntkHRiVVcZIN
-okjBSKjn7lZv3Y4iPsiAqlSlljliQKxFWhlSn582q7v9QHxP0xYRIv+9EaPq8Dw3
-HcAvEkGfL37fSqF9xlrKSZZkSIgFP0Lvi0n0CGrei1U3idEXbRu7+t5xl5aSvqBm
-owsRN3m8HXyl5hknYhe8XYtZJcgS/Gp23Zwciuibs54iGeWaxaTMXTFqxpxw5WKd
-y5o6dJ25PIxuadhw/D5jORPTeCU87fKhGObAvxQyDIZOHMjdEStZ1rs4QfmfFngM
-TBTR4T4OeYi/fx9sg1bPguvKMjSGMlxwlzwLBgJcxgZ9j5vwiVZhVQwjPaoevCL/
-Fk7u48D5y4EqT5WHv0YYrHsR1AJR7u6jItcQHcK6C/h5HD0oVo/xenLctOiWSeQK
-Y1ju6sxGGZ08++J9irsTLaydxXh6gjfhZwhBMw/wH30biDP6laTR7CZdb//otsqB
-2pJqUvmia3V1rrs0fGbhshDKU/J2da35tNCg4J/iFSv7h9MYU1cKJ0dX0nD4hCI5
-LRvTTK8fw35yS7YZQeNOyHk1f2j/ik8pXO75p+Qiqo6HRjoAvCQ=
-=mjVS
------END PGP SIGNATURE-----
---=-=-=--
+Rob
+
+>
+> Loic, the hciattach examples list 3000000 as operational speed. Any reason why we should limit it?
+>
+> Regards
+>
+> Marcel
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
