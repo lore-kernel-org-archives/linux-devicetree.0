@@ -1,78 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: mediatek: Correct the interrupt
-	property
-Date: Tue, 15 Aug 2017 14:56:10 +0100
-Message-ID: <20170815135610.353otptxulcv547a@sirena.org.uk>
-References: <43a7fb98e7252d0b7b73cdabf1eedd0bf896d68c.1502784169.git.ryder.lee@mediatek.com>
- <20170815115309.glj52jx3kpq4jxq3@sirena.org.uk>
- <1502805100.25910.8.camel@mtkswgap22>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v9 00/12] rk808: Add RK805 support
+Date: Tue, 15 Aug 2017 16:14:52 +0200
+Message-ID: <4371065.5c7F4tU4zv@diego>
+References: <1502273060-12201-1-git-send-email-chenjh@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8614200842029176883=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1502805100.25910.8.camel@mtkswgap22>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Garlic Tseng <garlic.tseng@mediatek.com>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1502273060-12201-1-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Joseph,
 
---===============8614200842029176883==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rjgewxksvknb56nm"
-Content-Disposition: inline
+Am Mittwoch, 9. August 2017, 18:04:08 CEST schrieb Joseph Chen:
+> change in v9:
+> PATCH V9 1/12: (1) fix spelling issue: s/Chip/chip/
+> 	       (2) apply tag: Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> PATCH V9 2/12: apply tag: Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> PATCH V9 3/12: None
+> PATCH V9 4/12: apply tag: Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> PATCH V9 5/12: None
+> PATCH V9 6/12: None
+> PATCH V9 7/12: apply tag: Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> PATCH V9 8/12: apply tag: Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> PATCH V9 9/12: None (Actually, something directly updated by Dmitry Torokhov 
+> and applied on PATCH V7. Link: https://git.kernel.org/pub/scm/linux/kernel/
+> git/dtor/input.git/log/?h=next
+> PATCH V9 10/12: apply tag: Acked-for-MFD-by: Lee Jones<lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> PATCH V9 11/12: apply tag: Acked-for-MFD-by: Lee Jones<lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> 
 
+you might want to check your recipient list, because in at least the cover-
+letter and the first patches, I did not see Lee's email address included.
 
---rjgewxksvknb56nm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So he may very well not even see that there are patches waiting.
 
-On Tue, Aug 15, 2017 at 09:51:40PM +0800, Ryder Lee wrote:
-> On Tue, 2017-08-15 at 12:53 +0100, Mark Brown wrote:
-
-> > What harm does having the extra information in the bindings do?  If it's
-> > possible there might be a use for the extra interrupt it seems better to
-> > have people describe it.
-
-> Yes you're right. The current driver get IRQ number by index "0" but
-> actually it should be "1" (GIC 132). Perhaps we can switch to use the
-> platform_get_irq_byname() and add interrupt-name in DT so that binding
-> can be agnostic of the IRQ order.=20
-
-Yes, that's generally good - it also means that if future revisions of
-the IP have different sets of interrupts the binding can adapt
-gracefully.
-
---rjgewxksvknb56nm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmS/XkACgkQJNaLcl1U
-h9DndQf/c87WbDQgINERlFlcHwzAF9tNyDj4nhlmW/udRkwIaL+AOiQUH6+EIEQ8
-XZocnfUdhZf6VG5bDizTll6B5ti7T0jN3oaQDU3B1UFVrTnuVhAc3SM96Bob+6lG
-kR0eHvfzBKq5lxIsh3rqWTahIKJ5tglF20mJ25GwXJnM/Gfz+U39opdrQcUDEi82
-0B1TXUCutFAg4hD82MskWmwuCJs5LvCPaV8N9wx0L15i7tulyTNW2D8n/U/qRYZp
-1qpdMT1nTZ9xKQPZ0Q/b16UWabCE91vWl7smnrEqhZyesmn+ALK1DnnIi3coQdG1
-d1A/rSERw/EIU/CTcxngAfsRi0evAA==
-=CJq1
------END PGP SIGNATURE-----
-
---rjgewxksvknb56nm--
-
---===============8614200842029176883==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+So please check the recipients and if necessary resend with Lee included?
 
 
---===============8614200842029176883==--
+Heiko
