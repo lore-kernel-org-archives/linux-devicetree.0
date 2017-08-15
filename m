@@ -1,70 +1,180 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/8] MIPS: BCM63XX: add and use clkdev lookup support
-Date: Tue, 15 Aug 2017 09:20:00 -0700
-Message-ID: <b180fcb8-0282-3bad-aad0-4f1faaea73b0@gmail.com>
-References: <20170802093429.12572-1-jonas.gorski@gmail.com>
+From: Harvey Hunt <harvey.hunt@imgtec.com>
+Subject: [PATCH] MIPS: dts: ralink: Add Mediatek MT7628A SoC
+Date: Tue, 15 Aug 2017 17:28:50 +0100
+Message-ID: <1502814530-40604-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170802093429.12572-1-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, ralf@linux-mips.org
+Cc: Harvey Hunt <harvey.hunt@imgtec.com>, John Crispin <john@phrozen.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The MT7628A is the successor to the MT7620 and pin compatible with the
+MT7688A, although the latter supports only a 1T1R antenna rather than
+a 2T2R antenna.
 
+This commit adds support for the following features:
 
-On 08/02/2017 02:34 AM, Jonas Gorski wrote:
-> This patchset adds and uses clckdev lookup support to name input clocks
-> in various drivers more closely to their functions, or simplify their
-> usage.
-> 
-> Since most of these patches touch arch/mips, it probably makes most
-> sense to go through the MIPS tree.
-> 
-> The HSSPI driver was already updated previously to support a "pll"
-> input with ff18e1ef04e2 ("spi/bcm63xx-hsspi: allow providing clock rate
-> through a second clock"), so there is no need to touch it.
-> 
-> This patch series is part of an effort to modernize BCM63XX and clean up
-> its drivers to eventually make them usable with BMIPS and device tree.
+- UART
+- USB PHY
+- EHCI
+- Interrupt controller
+- System controller
+- Memory controller
+- Reset controller
 
-For this entire series:
+Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+Cc: John Crispin <john@phrozen.org>
+Cc: linux-mips@linux-mips.org 
+Cc: devicetree@vger.kernel.org 
+Cc: linux-kernel@vger.kernel.org 
+Cc: linux-mediatek@lists.infradead.org 
+---
+ Documentation/devicetree/bindings/mips/ralink.txt |   1 +
+ arch/mips/boot/dts/ralink/mt7628a.dtsi            | 125 ++++++++++++++++++++++
+ 2 files changed, 126 insertions(+)
+ create mode 100644 arch/mips/boot/dts/ralink/mt7628a.dtsi
 
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Thanks!
-
-> 
-> Jonas Gorski (8):
->   MIPS: BCM63XX: add clkdev lookup support
->   MIPS: BCM63XX: provide periph clock as refclk for uart
->   tty/bcm63xx_uart: use refclk for the expected clock name
->   tty/bcm63xx_uart: allow naming clock in device tree
->   MIPS: BCM63XX: provide enet clocks as "enet" to the ethernet devices
->   bcm63xx_enet: just use "enet" as the clock name
->   MIPS: BCM63XX: move the HSSPI PLL HZ into its own clock
->   MIPS: BMIPS: name the refclk clock for uart
-> 
->  .../bindings/serial/brcm,bcm6345-uart.txt          |   6 +
->  arch/mips/Kconfig                                  |   1 +
->  arch/mips/bcm63xx/clk.c                            | 181 ++++++++++++++++-----
->  arch/mips/boot/dts/brcm/bcm3368.dtsi               |   2 +
->  arch/mips/boot/dts/brcm/bcm63268.dtsi              |   2 +
->  arch/mips/boot/dts/brcm/bcm6328.dtsi               |   2 +
->  arch/mips/boot/dts/brcm/bcm6358.dtsi               |   2 +
->  arch/mips/boot/dts/brcm/bcm6362.dtsi               |   2 +
->  arch/mips/boot/dts/brcm/bcm6368.dtsi               |   2 +
->  drivers/net/ethernet/broadcom/bcm63xx_enet.c       |   5 +-
->  drivers/tty/serial/bcm63xx_uart.c                  |   6 +-
->  11 files changed, 168 insertions(+), 43 deletions(-)
-> 
-
+diff --git a/Documentation/devicetree/bindings/mips/ralink.txt b/Documentation/devicetree/bindings/mips/ralink.txt
+index b35a8d0..a16e8d7 100644
+--- a/Documentation/devicetree/bindings/mips/ralink.txt
++++ b/Documentation/devicetree/bindings/mips/ralink.txt
+@@ -15,3 +15,4 @@ value must be one of the following values:
+   ralink,rt5350-soc
+   ralink,mt7620a-soc
+   ralink,mt7620n-soc
++  ralink,mt7628a-soc
+diff --git a/arch/mips/boot/dts/ralink/mt7628a.dtsi b/arch/mips/boot/dts/ralink/mt7628a.dtsi
+new file mode 100644
+index 0000000..8461fe9
+--- /dev/null
++++ b/arch/mips/boot/dts/ralink/mt7628a.dtsi
+@@ -0,0 +1,125 @@
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "ralink,mt7628a-soc";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "mti,mips24KEc";
++			device_type = "cpu";
++			reg = <0>;
++		};
++	};
++
++	resetctrl: resetctrl {
++		compatible = "ralink,rt2880-reset";
++		#reset-cells = <1>;
++	};
++
++	cpuintc: cpuintc {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
++
++	palmbus@10000000 {
++		compatible = "palmbus";
++		reg = <0x10000000 0x200000>;
++		ranges = <0x0 0x10000000 0x1FFFFF>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		sysc@0 {
++			compatible = "ralink,mt7620a-sysc";
++			reg = <0x0 0x100>;
++		};
++
++		intc: intc@200 {
++			compatible = "ralink,rt2880-intc";
++			reg = <0x200 0x100>;
++
++			interrupt-controller;
++			#interrupt-cells = <1>;
++
++			resets = <&resetctrl 9>;
++			reset-names = "intc";
++
++			interrupt-parent = <&cpuintc>;
++			interrupts = <2>;
++
++			ralink,intc-registers = <0x9c 0xa0
++						 0x6c 0xa4
++						 0x80 0x78>;
++		};
++
++		memc@300 {
++			compatible = "ralink,mt7620a-memc";
++			reg = <0x300 0x100>;
++		};
++
++		uartlite@c00 {
++			compatible = "ns16550a";
++			reg = <0xc00 0x100>;
++
++			resets = <&resetctrl 12>;
++			reset-names = "uart0";
++
++			interrupt-parent = <&intc>;
++			interrupts = <20>;
++
++			reg-shift = <2>;
++		};
++
++		uart1@d00 {
++			compatible = "ns16550a";
++			reg = <0xd00 0x100>;
++
++			resets = <&resetctrl 19>;
++			reset-names = "uart1";
++
++			interrupt-parent = <&intc>;
++			interrupts = <21>;
++
++			reg-shift = <2>;
++		};
++
++		uart2@e00 {
++			compatible = "ns16550a";
++			reg = <0xe00 0x100>;
++
++			resets = <&resetctrl 20>;
++			reset-names = "uart2";
++
++			interrupt-parent = <&intc>;
++			interrupts = <22>;
++
++			reg-shift = <2>;
++		};
++	};
++
++	usbphy: uphy@10120000 {
++		compatible = "mediatek,mt7628-usbphy";
++		reg = <0x10120000 0x1000>;
++
++		#phy-cells = <0>;
++
++		resets = <&resetctrl 22 &resetctrl 25>;
++		reset-names = "host", "device";
++	};
++
++	ehci@101c0000 {
++		compatible = "generic-ehci";
++		reg = <0x101c0000 0x1000>;
++
++		phys = <&usbphy>;
++		phy-names = "usb";
++
++		interrupt-parent = <&intc>;
++		interrupts = <18>;
++	};
++};
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
