@@ -1,27 +1,34 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 4/4] arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
-Date: Tue, 15 Aug 2017 10:24:03 -0700
-Message-ID: <d768e36b-714d-fc39-392e-b1b17b20cc10@gmail.com>
-References: <20170809220257.4234-1-code@mmayer.net>
- <20170809220257.4234-5-code@mmayer.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170809220257.4234-5-code@mmayer.net>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Markus Mayer <code@mmayer.net>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH 0/6] ARM: dts: cygnus dts updates
+Date: Tue, 15 Aug 2017 10:25:57 -0700
+Message-ID: <1502817964-8221-1-git-send-email-scott.branden@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch series is a collection of patches for the Cygnus SoC dts files.
 
+Jason Uy (1):
+  ARM: dts: cygnus: Enable Performance Monitoring Unit
 
-On 08/09/2017 03:02 PM, Markus Mayer wrote:
-> From: Markus Mayer <mmayer@broadcom.com>
-> 
-> Turn on CONFIG_BRCMSTB_THERMAL as module.
+Jonathan Richardson (1):
+  ARM: dts: cygnus: Add additional peripherals to dtsi
 
-Applied to defconfig-arm64/next, thanks!
+Raveendra Padasalagi (1):
+  ARM: dts: cygnus: Add generic-ehci/ohci nodes
+
+Ray Jui (1):
+  ARM: dts: cygnus: Fix incorrect UART2 register base
+
+Scott Branden (2):
+  ARM: dts: cygnus: place v3d in proper address ordered location
+  ARM: dts: cygnus: add serial0 alias for uart3 on bcm91130_entphn
+
+ arch/arm/boot/dts/bcm-cygnus.dtsi      | 149 +++++++++++++++++++++++++++++----
+ arch/arm/boot/dts/bcm911360_entphn.dts |   7 +-
+ 2 files changed, 140 insertions(+), 16 deletions(-)
+
 -- 
-Florian
+2.5.0
