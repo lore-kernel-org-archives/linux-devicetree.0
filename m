@@ -1,72 +1,76 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: mediatek: Correct the interrupt
-	property
-Date: Tue, 15 Aug 2017 12:53:09 +0100
-Message-ID: <20170815115309.glj52jx3kpq4jxq3@sirena.org.uk>
-References: <43a7fb98e7252d0b7b73cdabf1eedd0bf896d68c.1502784169.git.ryder.lee@mediatek.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 07/10] cpufreq: dt: Add support for some new Allwinner SoCs
+Date: Tue, 15 Aug 2017 14:25:58 +0200
+Message-ID: <4537884.Ku45nQGoFt@aspire.rjw.lan>
+References: <20170723102749.17323-1-icenowy@aosc.io> <2436327.OLdY8skjMP@aspire.rjw.lan> <CAGb2v640an6X75PTbNTnMqhnEREekX97uJZ4sFsfqTAgcDinQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3177391050010024541=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <43a7fb98e7252d0b7b73cdabf1eedd0bf896d68c.1502784169.git.ryder.lee@mediatek.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Garlic Tseng <garlic.tseng@mediatek.com>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v640an6X75PTbNTnMqhnEREekX97uJZ4sFsfqTAgcDinQg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday, August 15, 2017 7:42:19 AM CEST Chen-Yu Tsai wrote:
+> On Mon, Jul 24, 2017 at 7:46 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > On Monday, July 24, 2017 02:23:49 PM Viresh Kumar wrote:
+> >> On 23-07-17, 18:27, Icenowy Zheng wrote:
+> >> > Some new Allwinner SoCs get supported in the kernel after the
+> >> > compatibles are added to cpufreq-dt-platdev driver.
+> >> >
+> >> > Add their compatible strings in the cpufreq-dt-platdev driver.
+> >> >
+> >> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> >> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> >> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> >> > ---
+> >> >  drivers/cpufreq/cpufreq-dt-platdev.c | 6 ++++++
+> >> >  1 file changed, 6 insertions(+)
+> >> >
+> >> > diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> >> > index 2eb40d46d357..c3851453e84a 100644
+> >> > --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> >> > +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> >> > @@ -24,7 +24,11 @@ static const struct of_device_id machines[] __initconst = {
+> >> >     { .compatible = "allwinner,sun8i-a23", },
+> >> >     { .compatible = "allwinner,sun8i-a33", },
+> >> >     { .compatible = "allwinner,sun8i-a83t", },
+> >> > +   { .compatible = "allwinner,sun8i-h2-plus", },
+> >> >     { .compatible = "allwinner,sun8i-h3", },
+> >> > +   { .compatible = "allwinner,sun8i-v3s", },
+> >> > +   { .compatible = "allwinner,sun50i-a64", },
+> >> > +   { .compatible = "allwinner,sun50i-h5", },
+> >> >
+> >> >     { .compatible = "apm,xgene-shadowcat", },
+> >> >
+> >> > @@ -43,6 +47,8 @@ static const struct of_device_id machines[] __initconst = {
+> >> >     { .compatible = "marvell,pxa250", },
+> >> >     { .compatible = "marvell,pxa270", },
+> >> >
+> >> > +   { .compatible = "nextthing,gr8", },
+> >> > +
+> >> >     { .compatible = "samsung,exynos3250", },
+> >> >     { .compatible = "samsung,exynos4210", },
+> >> >     { .compatible = "samsung,exynos4212", },
+> >>
+> >> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> >>
+> >>
+> >
+> > OK
+> >
+> > I'm assuming this will go in via arm-soc along with the rest of the series.
+> 
+> The rest of the series, except for the clk patches I've already taken,
+> doesn't seem to be going anywhere just yet. Is there a cpufreq or pm tree
+> this can be merged through?
 
---===============3177391050010024541==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gzdig5tpx7iqh6fk"
-Content-Disposition: inline
+You mean this particular patch or the whole series?
 
+If the former, then yes, there is.
 
---gzdig5tpx7iqh6fk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks,
+Rafael
 
-On Tue, Aug 15, 2017 at 04:07:02PM +0800, Ryder Lee wrote:
-
-> This patch update interrupt property since we only use ASYS IRQ
-> in the driver, and this may confuse people.
-
-> -		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-> -			     <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-
-What harm does having the extra information in the bindings do?  If it's
-possible there might be a use for the extra interrupt it seems better to
-have people describe it.
-
---gzdig5tpx7iqh6fk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmS4KQACgkQJNaLcl1U
-h9D93wf+L7m9x7+OQo1mJABVGKFZXqqKwWJifYg/pQX6ZZ0AdYWINzfxk9TynL6j
-PmTmduO9PDR3EOf6Kf34Bk8MEcuN2VwQt+EyIh+ETh71IIM9MBxdwY238cOl6stZ
-QkEFINtxibMbB3OY2c2+J3GO4VeOeZ81Ti50mpG9aiyjtydSKVNNGjnRZ/+pGdU0
-UDh4YWRYCDa4FEW69i7s0bdp2kUW4kX2eWMgwjKDprqplnxMLSB+++la10QcOqNS
-Fwk6PDUjC9Ei3EqLCZsFCjQ1Bo96rIW4a7TNC8CZPy1mBqr8VPiEwyK3A6CoHAxO
-i+5qWyGUcRwrn0uK3yanApM3dvkkjw==
-=qQPk
------END PGP SIGNATURE-----
-
---gzdig5tpx7iqh6fk--
-
---===============3177391050010024541==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3177391050010024541==--
