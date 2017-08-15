@@ -1,47 +1,91 @@
-From: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 0/3] Add support Rockchip Soc LVDS
-Date: Tue, 15 Aug 2017 11:49:14 +0800
-Message-ID: <1502768955-176510-1-git-send-email-hjc@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Sandy Huang <hjc@rock-chips.com>
+Subject: [PATCH v5 1/3] dt-bindings: display: Add Document for Rockchip Soc
+ LVDS
+Date: Tue, 15 Aug 2017 11:49:19 +0800
+Message-ID: <1502768961-176569-1-git-send-email-hjc@rock-chips.com>
+References: <1502768955-176510-1-git-send-email-hjc@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1502768955-176510-1-git-send-email-hjc@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[0]: https://github.com/RockchipOpensourceCommunity/popmetal-kernel-3.14
-  ]: http://lists.infradead.org/pipermail/linux-rockchip/2015-April/002830.html
-
-Changes:
-- Update rockchip_lvds_encoder_helper_funcs to atomic API
-- Add bridge function for RGB/LVDS convert to other output type
-- Fix some unreasonable define
-- Adapter to the latest rockchip DRM driver framework
-- Add pinctrl for RGB output type
-- Reseved some define for rockchip next Soc
-
-Sandy Huang (3):
-  dt-bindings: display: Add Document for Rockchip Soc LVDS
-  ARM: dts: Add LVDS info for rk3288
-  drm/rockchip: Add support for Rockchip Soc LVDS
-
- .../bindings/display/rockchip/rockchip-lvds.txt    | 105 ++++
- arch/arm/boot/dts/rk3288.dtsi                      |  52 ++
- drivers/gpu/drm/rockchip/Kconfig                   |   9 +
- drivers/gpu/drm/rockchip/Makefile                  |   1 +
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
- drivers/gpu/drm/rockchip/rockchip_lvds.c           | 599 +++++++++++++++++++++
- drivers/gpu/drm/rockchip/rockchip_lvds.h           | 109 ++++
- 8 files changed, 878 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
- create mode 100644 drivers/gpu/drm/rockchip/rockchip_lvds.c
- create mode 100644 drivers/gpu/drm/rockchip/rockchip_lvds.h
-
--- 
-2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaCBhZGQgRG9jdW1lbnQgZm9yIFJvY2tjaGlwIFNvYyBSSzMyODggTFZEUywKVGhp
+cyBiYXNlZCBvbiB0aGUgcGF0Y2hlcyBmcm9tIE1hcmsgeWFvIGFuZCBIZWlrbyBTdHVlYm5lci4K
+ClNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1v
+ZmYtYnk6IE1hcmsgeWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KU2lnbmVkLW9mZi1ieTog
+SGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KLS0tCkNoYW5nZXMgYWNjb3JkaW5nIHRv
+IE1hcmsgWWFvIHJldmlld3MuCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2No
+aXAtbHZkcy50eHQgICAgfCAxMDUgKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgMTA1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dAoKZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tj
+aGlwL3JvY2tjaGlwLWx2ZHMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggMDAwMDAwMC4uYzE1MzQxMQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0CkBA
+IC0wLDAgKzEsMTA1IEBACitSb2NrY2hpcCBSSzMyODggTFZEUyBpbnRlcmZhY2UKKz09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09CisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBh
+dGlibGU6IG1hdGNoaW5nIHRoZSBzb2MgdHlwZSwgb25lIG9mCisJLSAicm9ja2NoaXAscmszMjg4
+LWx2ZHMiOworCistIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVy
+IGFuZCBsZW5ndGgKKwlvZiBtZW1vcnkgbWFwcGVkIHJlZ2lvbi4KKy0gY2xvY2tzOiBtdXN0IGlu
+Y2x1ZGUgY2xvY2sgc3BlY2lmaWVycyBjb3JyZXNwb25kaW5nIHRvIGVudHJpZXMgaW4gdGhlCisJ
+Y2xvY2stbmFtZXMgcHJvcGVydHkuCistIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4gInBjbGtf
+bHZkcyIKKworLSBhdmRkMXYwLXN1cHBseTogcmVndWxhdG9yIHBoYW5kbGUgZm9yIDEuMFYgYW5h
+bG9nIHBvd2VyCistIGF2ZGQxdjgtc3VwcGx5OiByZWd1bGF0b3IgcGhhbmRsZSBmb3IgMS44ViBh
+bmFsb2cgcG93ZXIKKy0gYXZkZDN2My1zdXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAzLjNW
+IGFuYWxvZyBwb3dlcgorCistIHJvY2tjaGlwLGdyZjogcGhhbmRsZSB0byB0aGUgZ2VuZXJhbCBy
+ZWdpc3RlciBmaWxlcyBzeXNjb24KKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gcGluY3RybC1u
+YW1lczogbXVzdCBjb250YWluIGEgImxjZGMiIGVudHJ5LgorLSBwaW5jdHJsLTA6IHBpbiBjb250
+cm9sIGdyb3VwIHRvIGJlIHVzZWQgZm9yIHRoaXMgY29udHJvbGxlci4KKworUmVxdWlyZWQgbm9k
+ZXM6CisKK1RoZSBsdmRzIGhhcyB0d28gdmlkZW8gcG9ydHMgYXMgZGVzY3JpYmVkIGJ5CisJRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0
+LgorVGhlaXIgY29ubmVjdGlvbnMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBoIGJpbmRp
+bmdzIHNwZWNpZmllZCBpbgorCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFw
+aC50eHQuCisKKy0gdmlkZW8gcG9ydCAwIGZvciB0aGUgVk9QIGlucHV0cworLSB2aWRlbyBwb3J0
+IDEgZm9yIGVpdGhlciBhIHBhbmVsIG9yIHN1YnNlcXVlbnQgZW5jb2RlcgorCit0aGUgbHZkcyBw
+YW5lbCBkZXNjcmliZWQgYnkKKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0CisKK1BhbmVsIHJlcXVpcmVkIHByb3BlcnRpZXM6
+CistIHJvY2tjaGlwLGRhdGEtd2lkdGggOiBzaG91bGQgYmUgPDE4PiBvciA8MjQ+OworLSByb2Nr
+Y2hpcCxvdXRwdXQ6IHNob3VsZCBiZSAicmdiIiwgImx2ZHMiIG9yICJkdWFsbHZkcyIsCisJVGhp
+cyBkZXNjcmliZXMgdGhlIG91dHB1dCBmYWNlLgorLSBwb3J0cyBmb3IgcmVtb3RlIExWRFMgb3V0
+cHV0CisKK1BhbmVsIG9wdGlvbmFsIHByb3BlcnRpZXM6CistIHJvY2tjaGlwLGRhdGEtbWFwcGlu
+Zzogc2hvdWxkIGJlICJ2ZXNhIiBvciAiamVpZGEiLAorCVRoaXMgZGVzY3JpYmVzIGhvdyB0aGUg
+Y29sb3IgYml0cyBhcmUgbGFpZCBvdXQgaW4gdGhlCisJc2VyaWFsaXplZCBMVkRTIHNpZ25hbC4K
+K0V4YW1wbGU6CisKK2x2ZHNfcGFuZWw6IGx2ZHMtcGFuZWwgeworCXN0YXR1cyA9ICJva2F5IjsK
+Kwljb21wYXRpYmxlID0gInNpbXBsZS1wYW5lbCI7CisJZW5hYmxlLWdwaW9zID0gPCZncGlvNyAy
+MSBHUElPX0FDVElWRV9ISUdIPjsKKwlyb2NrY2hpcCxkYXRhLW1hcHBpbmcgPSAiamVpZGEiOwor
+CXJvY2tjaGlwLGRhdGEtd2lkdGggPSA8MjQ+OworCXJvY2tjaGlwLG91dHB1dCA9ICJyZ2IiOwor
+CisJcG9ydHMgeworCQlwYW5lbF9pbl9sdmRzOiBlbmRwb2ludCB7CisJCQlyZW1vdGUtZW5kcG9p
+bnQgPSA8Jmx2ZHNfb3V0X3BhbmVsPjsKKwkJfTsKKwl9OworfTsKKworRm9yIFJvY2tjaGlwIFJL
+MzI4ODoKKworCWx2ZHM6IGx2ZHNAZmY5NmMwMDAgeworCQljb21wYXRpYmxlID0gInJvY2tjaGlw
+LHJrMzI4OC1sdmRzIjsKKwkJcm9ja2NoaXAsZ3JmID0gPCZncmY+OworCQlyZWcgPSA8MHhmZjk2
+YzAwMCAweDQwMDA+OworCQljbG9ja3MgPSA8JmNydSBQQ0xLX0xWRFNfUEhZPjsKKwkJY2xvY2st
+bmFtZXMgPSAicGNsa19sdmRzIjsKKwkJcGluY3RybC1uYW1lcyA9ICJsY2RjIjsKKwkJcGluY3Ry
+bC0wID0gPCZsY2RjX2N0bD47CisJCWF2ZGQxdjAtc3VwcGx5ID0gPCZ2ZGQxMF9sY2Q+OworCQlh
+dmRkMXY4LXN1cHBseSA9IDwmdmNjMThfbGNkPjsKKwkJYXZkZDN2My1zdXBwbHkgPSA8JnZjY2Ff
+MzM+OworCQlyb2NrY2hpcCxkYXRhLW1hcHBpbmcgPSAiamVpZGEiOworCQlyb2NrY2hpcCxkYXRh
+LXdpZHRoID0gPDI0PjsKKwkJcm9ja2NoaXAsb3V0cHV0ID0gInJnYiI7CisJCXBvcnRzIHsKKwkJ
+CSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCWx2ZHNf
+aW46IHBvcnRAMCB7CisJCQkJcmVnID0gPDA+OworCisJCQkJbHZkc19pbl92b3BiOiBlbmRwb2lu
+dEAwIHsKKwkJCQkJcmVnID0gPDA+OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGJfb3V0
+X2x2ZHM+OworCQkJCX07CisJCQkJbHZkc19pbl92b3BsOiBlbmRwb2ludEAxIHsKKwkJCQkJcmVn
+ID0gPDE+OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGxfb3V0X2x2ZHM+OworCQkJCX07
+CisJCQl9OworCisJCQlsdmRzX291dDogcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisKKwkJCQls
+dmRzX291dF9wYW5lbDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVs
+X2luPjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OwotLSAKMi43LjQKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
