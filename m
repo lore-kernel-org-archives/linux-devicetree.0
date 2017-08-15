@@ -1,81 +1,98 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/4] dt-bindings: mt8173-mtu3: add generic compatible
- and rename file
-Date: Tue, 15 Aug 2017 10:22:23 +0800
-Message-ID: <1502763743.25536.128.camel@mhfsdcap03>
-References: <8f0cb0047b2aa195d818ad686cbbceabb3ad91a0.1502170518.git.chunfeng.yun@mediatek.com>
-         <121eaec8845c62383701d4fdfe9649335937f025.1502170518.git.chunfeng.yun@mediatek.com>
-         <20170811025410.65jvjmji4gfnmm6l@rob-hp-laptop>
-         <1502434819.25536.125.camel@mhfsdcap03>
-         <3623aff5-ec37-3209-f6d7-9eaf17096afa@gmail.com>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am57xx-beagle-x15: Add support for rev C
+Date: Tue, 15 Aug 2017 08:41:51 +0530
+Message-ID: <bf2a5868-4c0b-58a1-350e-cba7dcfb5166@ti.com>
+References: <20170814175820.12065-1-robertcnelson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3623aff5-ec37-3209-f6d7-9eaf17096afa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170814175820.12065-1-robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-08-14 at 13:23 +0200, Matthias Brugger wrote:
-> 
-> On 08/11/2017 09:00 AM, Chunfeng Yun wrote:
-> > On Thu, 2017-08-10 at 21:54 -0500, Rob Herring wrote:
-> >> On Tue, Aug 08, 2017 at 01:42:51PM +0800, Chunfeng Yun wrote:
-> >>> The mt8173-mtu3.txt actually holds the bindings for all mediatek
-> >>> SoCs with usb3 DRD IP, so add a generic compatible and change the
-> >>> name to mtu3.txt.
-> >>>
-> >>> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> ---
-> >>>   .../bindings/usb/{mt8173-mtu3.txt => mtu3.txt}     |    6 ++++--
-> >>>   1 file changed, 4 insertions(+), 2 deletions(-)
-> >>>   rename Documentation/devicetree/bindings/usb/{mt8173-mtu3.txt => mtu3.txt} (95%)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mtu3.txt
-> >>> similarity index 95%
-> >>> rename from Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-> >>> rename to Documentation/devicetree/bindings/usb/mtu3.txt
-> >>> index 1d7c3bc..832741d 100644
-> >>> --- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-> >>> +++ b/Documentation/devicetree/bindings/usb/mtu3.txt
-> >>
-> >> mediatek,mtu3.txt
-> > Ok
-> >>
-> >>> @@ -1,7 +1,9 @@
-> >>>   The device node for Mediatek USB3.0 DRD controller
-> >>>   
-> >>>   Required properties:
-> >>> - - compatible : should be "mediatek,mt8173-mtu3"
-> >>> + - compatible : should be one of
-> >>> +	"mediatek,mt8173-mtu3" (deprecated, use "mediatek,mtu3" instead),
-> >>
-> >> NAK. You can add generic compatibles, but you need SoC specific ones in
-> >> addition.
-> > It's for backward compatibility
-> > 
-> 
-> I think backwards compatibility should be in the driver but not in the binding 
-> description. Apart from that device tree files will need to provide a SoC 
-> specific binding apart from the generic one, for example:
-> 
-> "mediatek,mt8173-mtu3", "mediatek,mtu3": for mt8173
-> "mediatek,mt7623-mtu3", "mediatek,mtu3": for mt6723
-> 
-> This is needed to cover possible bugs/features that can be found in the future 
-> for a specific SoC. The driver can match just against the generic binding and 
-> will only implement a match against the SoC specific one if a bug/feature is 
-> present.
-> 
-> Makes sense?
-Got it, thanks a lot
-> 
-> Regards,
-> Matthias
 
 
+On Monday 14 August 2017 11:28 PM, Robert Nelson wrote:
+> Latest update to the BeagleBoard-X15 platform (revision C). This board contains
+> a silicon update (Rev 2.0), which includes a fix for the 2nd ethernet phy when
+> running at 1000 Mbps speeds.
+> 
+> This board can be indentified by the [C.00] after [BBRDX15_] in the at24 eeprom:
+> [BBRDX15_C.001731PX150249]
+> 
+> Rev C is now in full production and boards are available for end users.
+> 
+> https://beagleboard.org/x15
+> https://github.com/beagleboard/beagleboard-x15/
+> 
+> Signed-off-by: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> CC: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> CC: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> CC: Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+> CC: Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                   |  1 +
+>  arch/arm/boot/dts/am57xx-beagle-x15-revc.dts | 24 ++++++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index c293e841eea3..d3a4fe7eb6f7 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -651,6 +651,7 @@ dtb-$(CONFIG_SOC_OMAP5) += \
+>  dtb-$(CONFIG_SOC_DRA7XX) += \
+>  	am57xx-beagle-x15.dtb \
+>  	am57xx-beagle-x15-revb1.dtb \
+> +	am57xx-beagle-x15-revc.dtb \
+>  	am57xx-cl-som-am57x.dtb \
+>  	am57xx-sbc-am57x.dtb \
+>  	am572x-idk.dtb \
+> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+> new file mode 100644
+> index 000000000000..742eeb96b8aa
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+> @@ -0,0 +1,24 @@
+> +/*
+> + * Copyright (C) 2014-2016 Texas Instruments Incorporated - http://www.ti.com/
+						^^2017 :)
+
+Rest of the patch looks good to me.
+
+Reviewed-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+
+Thanks and regards,
+Lokesh
+
+
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "am57xx-beagle-x15-common.dtsi"
+> +
+> +/ {
+> +	model = "TI AM5728 BeagleBoard-X15 rev C";
+> +};
+> +
+> +&tpd12s015 {
+> +	gpios = <&gpio7 10 GPIO_ACTIVE_HIGH>,	/* gpio7_10, CT CP HPD */
+> +		<&gpio2 30 GPIO_ACTIVE_HIGH>,	/* gpio2_30, LS OE */
+> +		<&gpio7 12 GPIO_ACTIVE_HIGH>;	/* gpio7_12/sp1_cs2, HPD */
+> +};
+> +
+> +&mmc1 {
+> +	vmmc-supply = <&vdd_3v3>;
+> +	vqmmc-supply = <&ldo1_reg>;
+> +};
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
