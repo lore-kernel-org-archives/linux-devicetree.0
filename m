@@ -1,156 +1,38 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 3/3] Documentation: hwmon: Document the IBM CFF power
- supply
-Date: Tue, 15 Aug 2017 15:36:55 -0500
-Message-ID: <93f288f8-56b1-5a44-bc3b-5efedbfba171@linux.vnet.ibm.com>
-References: <1502724390-17411-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1502724390-17411-4-git-send-email-eajames@linux.vnet.ibm.com>
- <20170814185308.GA11090@roeck-us.net>
- <0d016c77-4e3e-b9df-b131-604ab6f15e4c@linux.vnet.ibm.com>
- <20170814223717.GA21561@roeck-us.net>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] OF phandle nexus support + GPIO nexus
+Date: Tue, 15 Aug 2017 15:36:59 -0500
+Message-ID: <CAL_JsqLTzL1AkyfQxuTzz06ywXkCE6JZaFzV60ENDuL7TzY0BA@mail.gmail.com>
+References: <20170811154236.12891-1-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170814223717.GA21561@roeck-us.net>
-Content-Language: en-US
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: robh+dt@kernel.org, jdelvare@suse.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, "Edward A. James" <eajames@us.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170811154236.12891-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/14/2017 05:37 PM, Guenter Roeck wrote:
-> On Mon, Aug 14, 2017 at 02:26:20PM -0500, Eddie James wrote:
->>
->> On 08/14/2017 01:53 PM, Guenter Roeck wrote:
->>> On Mon, Aug 14, 2017 at 10:26:30AM -0500, Eddie James wrote:
->>>> From: "Edward A. James" <eajames@us.ibm.com>
->>>>
->>>> Signed-off-by: Edward A. James <eajames@us.ibm.com>
->>>> ---
->>>>   Documentation/hwmon/ibm-cffps | 54 +++++++++++++++++++++++++++++++++++++++++++
->>>>   1 file changed, 54 insertions(+)
->>>>   create mode 100644 Documentation/hwmon/ibm-cffps
->>>>
->>>> diff --git a/Documentation/hwmon/ibm-cffps b/Documentation/hwmon/ibm-cffps
->>>> new file mode 100644
->>>> index 0000000..e091ff2
->>>> --- /dev/null
->>>> +++ b/Documentation/hwmon/ibm-cffps
->>>> @@ -0,0 +1,54 @@
->>>> +Kernel driver ibm-cffps
->>>> +=======================
->>>> +
->>>> +Supported chips:
->>>> +  * IBM Common Form Factor power supply
->>>> +
->>>> +Author: Eddie James <eajames@us.ibm.com>
->>>> +
->>>> +Description
->>>> +-----------
->>>> +
->>>> +This driver supports IBM Common Form Factor (CFF) power supplies. This driver
->>>> +is a client to the core PMBus driver.
->>>> +
->>>> +Usage Notes
->>>> +-----------
->>>> +
->>>> +This driver does not auto-detect devices. You will have to instantiate the
->>>> +devices explicitly. Please see Documentation/i2c/instantiating-devices for
->>>> +details.
->>>> +
->>>> +Sysfs entries
->>>> +-------------
->>>> +
->>>> +The following attributes are supported:
->>>> +
->>>> +curr1_alarm		Output current over-current fault.
->>>> +curr1_input		Measured output current in mA.
->>>> +curr1_label		"iout1"
->>>> +
->>>> +fan1_alarm		Fan 1 warning.
->>>> +fan1_fault		Fan 1 fault.
->>>> +fan1_input		Fan 1 speed in RPM.
->>>> +fan2_alarm		Fan 2 warning.
->>>> +fan2_fault		Fan 2 fault.
->>>> +fan2_input		Fan 2 speed in RPM.
->>>> +
->>>> +in1_alarm		Input voltage under-voltage fault.
->>> Just noticed. Are you sure you mean 'fault' here and below ?
->>> 'alarm' attributes normally report an over- or under- condition,
->>> but not a fault. Faults should be reported with 'fault' attributes.
->>> In PMBus lingo (which doesn't distinguish a real 'fault' from
->>> a critical over- or under- condition), the "FAULT" condition
->>> usually maps with the 'crit_alarm' or 'lcrit_alarm' attributes.
->>> Also, under-voltages would normally be reported as min_alarm
->>> or clrit_alarm, not in_alarm.
->> Thanks, I better change this doc to "alarm." The spec reports all these as
->> "faults" but many of them are merely over-temp or over-voltage, etc, and
->> should be "alarm" to be consistent with PMBus.
->>
->> The problem with this power supply is that it doesn't report any "limits."
->> So unless I set up my read_byte function to return some limits, we can't get
->> any lower or upper limits and therefore won't get the crit_alarm,
->> lcrit_alarm, etc. Do you think I should "fake" the limits in the driver?
->>
-> Good question. Are the limits documented ? If yes, that would make sense.
-> I am quite sure that limits are word registers, though.
-
-No, no documentation on any limits... I'll leave it as is, as it it's 
-meeting our requirements for now. I'll just change "fault" to "alarm" in 
-the doc here.
-
-Thanks,
-Eddie
-
+On Fri, Aug 11, 2017 at 10:42 AM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> This is a continutation of my phandle remapping/nexus node series
+> from a while ago. I finally got around to writing the documentation
+> in the spec for this, but it's really rough around the edges and
+> could use some review/suggestions to get it into shape. Please
+> review!
 >
-> Guenter
->
->>>> +in1_input		Measured input voltage in mV.
->>>> +in1_label		"vin"
->>>> +in2_alarm		Output voltage over-voltage fault.
->>>> +in2_input		Measured output voltage in mV.
->>>> +in2_label		"vout1"
->>>> +
->>>> +power1_alarm		Input fault.
->>> Another example; this maps to PMBUS_PIN_OP_WARN_LIMIT which is an
->>> input power alarm, not an indication of a fault condition.
->> Hm, with my latest changes to look at the higher byte of STATUS_WORD, it
->> looks like we now have the same name for both the pin generic alarm
->> attribute and the pin_limit_attr... So in this device's case, it would map
->> to PB_STATUS_INPUT bit of STATUS_WORD. Didn't think about that... any
->> suggestions? Can't really change the name of the limit one without breaking
->> people's code...
->>
->>>> +power1_input		Measured input power in uW.
->>>> +power1_label		"pin"
->>>> +
->>>> +temp1_alarm		PSU inlet ambient temperature over-temperature fault.
->>>> +temp1_input		Measured PSU inlet ambient temp in millidegrees C.
->>>> +temp2_alarm		Secondary rectifier temp over-temperature fault.
->>> Interestingly, PMBus does not distinguish between a critical temperature
->>> alarm and an actual "fault". Makes me wonder if the IBM PS reports
->>> CFFPS_MFR_THERMAL_FAULT if there is an actual fault (chip or sensor failure),
->>> or if it has the same meaning as PB_TEMP_OT_FAULT, ie an excessively high
->>> temperature.
->> Will change these to "alarm" in the doc too.
->>
->>> If it is a real fault (a detected sensor failure), we should possibly
->>> consider adding a respective "virtual" temperature status flag. The same
->>> is true for other status bits reported in the manufacturer status
->>> register if any of those reflect a "real" fault, ie a chip failure.
->> Yea, that would probably be helpful. The CFFPS_MFR_THERMAL_FAULT bit is a
->> fault (so the spec says), but I'm not sure what is triggering it.
->>
->> Thanks,
->> Eddie
->>
->>>> +temp2_input		Measured secondary rectifier temp in millidegrees C.
->>>> +temp3_alarm		ORing FET temperature over-temperature fault.
->>>> +temp3_input		Measured ORing FET temperature in millidegrees C.
->>>> -- 
->>>> 1.8.3.1
->>>>
+> This is one small chunk of work related to DT overlays for expansion
+> boards. It would be good to have a way to expose #<list>-cells types of
+> providers through a connector in a standard way. So we introduce a way
+> to make "nexus" nodes for these types of properties to remap the consumer
+> number space to the other side of the connector's number space. It's
+> basically a copy of the interrupt nexus implementation, but without
+> the address space matching design and interrupt-parent walking.
 
+This generally looks good to me. I'm inclined to merge the kernel
+parts now and sort the spec addition out afterwards. With no users
+yet, we can still tweak things if needed.
+
+I would like to see more comments on this though. Perhaps "OF phandle
+nexus" is too obscure. Maybe "Add DT overlay connector bindings" would
+trick some people in looking at it...
+
+Rob
