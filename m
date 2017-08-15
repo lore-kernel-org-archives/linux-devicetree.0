@@ -1,88 +1,75 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 07/10] cpufreq: dt: Add support for some new
- Allwinner SoCs
-Date: Tue, 15 Aug 2017 20:39:41 +0800
-Message-ID: <CAGb2v67zenaLQaK+df_oN1BebH_7LhTOtSr6dGyaLPN-k3fZow@mail.gmail.com>
-References: <20170723102749.17323-1-icenowy@aosc.io> <2436327.OLdY8skjMP@aspire.rjw.lan>
- <CAGb2v640an6X75PTbNTnMqhnEREekX97uJZ4sFsfqTAgcDinQg@mail.gmail.com> <4537884.Ku45nQGoFt@aspire.rjw.lan>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [V6 2/2] dt-bindings: phy: Add bindings for ralink-usb PHY
+Date: Tue, 15 Aug 2017 13:47:03 +0100
+Message-ID: <1502801223-20833-2-git-send-email-harvey.hunt@imgtec.com>
+References: <1502801223-20833-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJOXZPGAKGQEKFDDLSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <4537884.Ku45nQGoFt-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502801223-20833-1-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Cc: james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 15, 2017 at 8:25 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
-> On Tuesday, August 15, 2017 7:42:19 AM CEST Chen-Yu Tsai wrote:
->> On Mon, Jul 24, 2017 at 7:46 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
->> > On Monday, July 24, 2017 02:23:49 PM Viresh Kumar wrote:
->> >> On 23-07-17, 18:27, Icenowy Zheng wrote:
->> >> > Some new Allwinner SoCs get supported in the kernel after the
->> >> > compatibles are added to cpufreq-dt-platdev driver.
->> >> >
->> >> > Add their compatible strings in the cpufreq-dt-platdev driver.
->> >> >
->> >> > Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
->> >> > Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> >> > ---
->> >> >  drivers/cpufreq/cpufreq-dt-platdev.c | 6 ++++++
->> >> >  1 file changed, 6 insertions(+)
->> >> >
->> >> > diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
->> >> > index 2eb40d46d357..c3851453e84a 100644
->> >> > --- a/drivers/cpufreq/cpufreq-dt-platdev.c
->> >> > +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
->> >> > @@ -24,7 +24,11 @@ static const struct of_device_id machines[] __initconst = {
->> >> >     { .compatible = "allwinner,sun8i-a23", },
->> >> >     { .compatible = "allwinner,sun8i-a33", },
->> >> >     { .compatible = "allwinner,sun8i-a83t", },
->> >> > +   { .compatible = "allwinner,sun8i-h2-plus", },
->> >> >     { .compatible = "allwinner,sun8i-h3", },
->> >> > +   { .compatible = "allwinner,sun8i-v3s", },
->> >> > +   { .compatible = "allwinner,sun50i-a64", },
->> >> > +   { .compatible = "allwinner,sun50i-h5", },
->> >> >
->> >> >     { .compatible = "apm,xgene-shadowcat", },
->> >> >
->> >> > @@ -43,6 +47,8 @@ static const struct of_device_id machines[] __initconst = {
->> >> >     { .compatible = "marvell,pxa250", },
->> >> >     { .compatible = "marvell,pxa270", },
->> >> >
->> >> > +   { .compatible = "nextthing,gr8", },
->> >> > +
->> >> >     { .compatible = "samsung,exynos3250", },
->> >> >     { .compatible = "samsung,exynos4210", },
->> >> >     { .compatible = "samsung,exynos4212", },
->> >>
->> >> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >>
->> >>
->> >
->> > OK
->> >
->> > I'm assuming this will go in via arm-soc along with the rest of the series.
->>
->> The rest of the series, except for the clk patches I've already taken,
->> doesn't seem to be going anywhere just yet. Is there a cpufreq or pm tree
->> this can be merged through?
->
-> You mean this particular patch or the whole series?
->
-> If the former, then yes, there is.
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 
-Just this patch. As I mentioned the rest of the series still needs some
-work, and likely won't make it in this cycle. If you could take this
-through the tree it would normally go through, avoiding any conflicts,
-that'd be great.
+Add a binding for the USB phy on Mediatek/Ralink SoCs.
 
-ChenYu
+Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+---
+Changes in V6:
+* Add MT7628 binding
+* Add optional reg property
+
+Changes in V5:
+* None
+
+Changes in V4:
+* None
+
+Changes in V3:
+* Split out from first patch
+
+ .../devicetree/bindings/phy/ralink-usb-phy.txt      | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt b/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
+new file mode 100644
+index 0000000..80cd24d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
+@@ -0,0 +1,21 @@
++Mediatek/Ralink USB PHY
++
++Required properties:
++ - compatible: "ralink,rt3352-usbphy"
++	       "mediatek,mt7620-usbphy"
++	       "mediatek,mt7628-usbphy"
++ - reg: required for "mediatek,mt7628-usbphy"
++ - #phy-cells: should be 0
++ - resets: the two reset controllers for host and device
++ - reset-names: the names of the 2 reset controllers
++
++Example:
++
++usbphy: phy {
++	compatible = "mediatek,mt7628-usbphy";
++	reg = <0x10120000 0x1000>;
++	#phy-cells = <0>;
++
++	resets = <&rstctrl 22 &rstctrl 25>;
++	reset-names = "host", "device";
++};
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
