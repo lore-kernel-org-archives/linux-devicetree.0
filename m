@@ -1,180 +1,65 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: [PATCH] MIPS: dts: ralink: Add Mediatek MT7628A SoC
-Date: Tue, 15 Aug 2017 17:28:50 +0100
-Message-ID: <1502814530-40604-1-git-send-email-harvey.hunt@imgtec.com>
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: Re: [PATCH v5 0/6] drivers/i2c: Add FSI-attached I2C master algorithm
+Date: Tue, 15 Aug 2017 11:28:50 -0500
+Message-ID: <59175354-07ba-2bbb-962e-ac1de36dfa4a@linux.vnet.ibm.com>
+References: <1501089198-10356-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <f324da3b-7c9e-3dc1-0cdc-91576c7a50b8@axentia.se>
+ <CACPK8XexFdz63t4y5uO1GzoWrx=wnkqBxbYKGtuFq0JupeLNHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACPK8XexFdz63t4y5uO1GzoWrx=wnkqBxbYKGtuFq0JupeLNHQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, ralf@linux-mips.org
-Cc: Harvey Hunt <harvey.hunt@imgtec.com>, John Crispin <john@phrozen.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>, Peter Rosin <peda@axentia.se>
+Cc: Eddie James <eajames@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The MT7628A is the successor to the MT7620 and pin compatible with the
-MT7688A, although the latter supports only a 1T1R antenna rather than
-a 2T2R antenna.
 
-This commit adds support for the following features:
 
-- UART
-- USB PHY
-- EHCI
-- Interrupt controller
-- System controller
-- Memory controller
-- Reset controller
+On 8/15/17 3:10 AM, Joel Stanley wrote:
+> On Tue, Aug 15, 2017 at 4:06 PM, Peter Rosin <peda@axentia.se> wrote:
+>> On 2017-07-26 19:13, Eddie James wrote:
+>>> From: "Edward A. James" <eajames@us.ibm.com>
+>>>
+>>> This series adds an algorithm for an I2C master physically located on an FSI
+>>> slave device. The I2C master has multiple ports, each of which may be connected
+>>> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
+>>>
+>>> Due to the multi-port nature of the I2C master, the driver instantiates a new
+>>> I2C adapter for each port connected to a slave. The connected ports should be
+>>> defined in the device tree under the I2C master device.
+>> Hmmm, AFAIU fsi is a bus, and on this bus you have some "client" device that
+>> happens to be an i2c master, and this is a driver for that "client". Is it
+>> totally inconceivable to have some other client device in the future that is
+>> implementing an i2c master differently, but still using the fsi bus?
+>>
+>> With that in mind, is it wise to pick the driver name from the bus that the
+>> device is connected to, and nothing else without further qualification?
+>>
+>> I don't see any "i2c-usb" driver, but I think there are a couple of i2c master
+>> drivers that communicate via usb.
+> You make a fair point. When I did a prototype of this driver I called
+> it i2c-cfam, as it is part of the CFAM hardware unit inside of the
+> Power8/Power9 processors.
+>
+> The documentation does call it FSI_I2CM, so that's an argument for the
+> current name.
+>
+> I'm not sure how accurate that name is. Chris, Eddie, do you have any
+> other suggestions?
+The I2C engine up to now has been always accessed via the FSI bus so 
+historically I assume that's why its labelled as FSI_I2CM in the p8/p9 
+specs.  There isn't any reason this I2C device couldn't be implemented 
+in some other topology independent of FSI / CFAMs.  In other words there 
+are no FSI details internal to this I2C engine, an argument for removing 
+the 'FSI' tag.
 
-Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
-Cc: John Crispin <john@phrozen.org>
-Cc: linux-mips@linux-mips.org 
-Cc: devicetree@vger.kernel.org 
-Cc: linux-kernel@vger.kernel.org 
-Cc: linux-mediatek@lists.infradead.org 
----
- Documentation/devicetree/bindings/mips/ralink.txt |   1 +
- arch/mips/boot/dts/ralink/mt7628a.dtsi            | 125 ++++++++++++++++++++++
- 2 files changed, 126 insertions(+)
- create mode 100644 arch/mips/boot/dts/ralink/mt7628a.dtsi
+Thanks,
+Chris
 
-diff --git a/Documentation/devicetree/bindings/mips/ralink.txt b/Documentation/devicetree/bindings/mips/ralink.txt
-index b35a8d0..a16e8d7 100644
---- a/Documentation/devicetree/bindings/mips/ralink.txt
-+++ b/Documentation/devicetree/bindings/mips/ralink.txt
-@@ -15,3 +15,4 @@ value must be one of the following values:
-   ralink,rt5350-soc
-   ralink,mt7620a-soc
-   ralink,mt7620n-soc
-+  ralink,mt7628a-soc
-diff --git a/arch/mips/boot/dts/ralink/mt7628a.dtsi b/arch/mips/boot/dts/ralink/mt7628a.dtsi
-new file mode 100644
-index 0000000..8461fe9
---- /dev/null
-+++ b/arch/mips/boot/dts/ralink/mt7628a.dtsi
-@@ -0,0 +1,125 @@
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ralink,mt7628a-soc";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "mti,mips24KEc";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+	};
-+
-+	resetctrl: resetctrl {
-+		compatible = "ralink,rt2880-reset";
-+		#reset-cells = <1>;
-+	};
-+
-+	cpuintc: cpuintc {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
-+
-+	palmbus@10000000 {
-+		compatible = "palmbus";
-+		reg = <0x10000000 0x200000>;
-+		ranges = <0x0 0x10000000 0x1FFFFF>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		sysc@0 {
-+			compatible = "ralink,mt7620a-sysc";
-+			reg = <0x0 0x100>;
-+		};
-+
-+		intc: intc@200 {
-+			compatible = "ralink,rt2880-intc";
-+			reg = <0x200 0x100>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			resets = <&resetctrl 9>;
-+			reset-names = "intc";
-+
-+			interrupt-parent = <&cpuintc>;
-+			interrupts = <2>;
-+
-+			ralink,intc-registers = <0x9c 0xa0
-+						 0x6c 0xa4
-+						 0x80 0x78>;
-+		};
-+
-+		memc@300 {
-+			compatible = "ralink,mt7620a-memc";
-+			reg = <0x300 0x100>;
-+		};
-+
-+		uartlite@c00 {
-+			compatible = "ns16550a";
-+			reg = <0xc00 0x100>;
-+
-+			resets = <&resetctrl 12>;
-+			reset-names = "uart0";
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <20>;
-+
-+			reg-shift = <2>;
-+		};
-+
-+		uart1@d00 {
-+			compatible = "ns16550a";
-+			reg = <0xd00 0x100>;
-+
-+			resets = <&resetctrl 19>;
-+			reset-names = "uart1";
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <21>;
-+
-+			reg-shift = <2>;
-+		};
-+
-+		uart2@e00 {
-+			compatible = "ns16550a";
-+			reg = <0xe00 0x100>;
-+
-+			resets = <&resetctrl 20>;
-+			reset-names = "uart2";
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <22>;
-+
-+			reg-shift = <2>;
-+		};
-+	};
-+
-+	usbphy: uphy@10120000 {
-+		compatible = "mediatek,mt7628-usbphy";
-+		reg = <0x10120000 0x1000>;
-+
-+		#phy-cells = <0>;
-+
-+		resets = <&resetctrl 22 &resetctrl 25>;
-+		reset-names = "host", "device";
-+	};
-+
-+	ehci@101c0000 {
-+		compatible = "generic-ehci";
-+		reg = <0x101c0000 0x1000>;
-+
-+		phys = <&usbphy>;
-+		phy-names = "usb";
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <18>;
-+	};
-+};
--- 
-2.7.4
+>
+> Cheers,
+>
+> Joel
+>
