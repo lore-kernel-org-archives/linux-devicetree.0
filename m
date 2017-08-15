@@ -1,90 +1,114 @@
-From: Sandy Huang <hjc@rock-chips.com>
-Subject: [PATCH v4 1/3] dt-bindings: display: Add Document for Rockchip Soc
- LVDS
-Date: Tue, 15 Aug 2017 08:56:02 +0800
-Message-ID: <1502758565-113814-1-git-send-email-hjc@rock-chips.com>
-References: <1502758557-113744-1-git-send-email-hjc@rock-chips.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v5, 2/2] drivers/watchdog: ASPEED reference dev tree properties
+ for config
+Date: Mon, 14 Aug 2017 19:17:38 -0700
+Message-ID: <20170815021738.GA1787@roeck-us.net>
+References: <20170717192539.7950-3-cbostic@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1502758557-113744-1-git-send-email-hjc@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170717192539.7950-3-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Cc: wim@iguana.be, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgRG9jdW1lbnQgZm9yIFJvY2tjaGlwIFNvYyBSSzMyODggTFZEUywKVGhp
-cyBiYXNlZCBvbiB0aGUgcGF0Y2hlcyBmcm9tIE1hcmsgeWFvIGFuZCBIZWlrbyBTdHVlYm5lci4K
-ClNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1v
-ZmYtYnk6IE1hcmsgeWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KU2lnbmVkLW9mZi1ieTog
-SGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxh
-eS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dCAgICB8IDEwNiArKysrKysrKysrKysrKysrKysr
-KysKIDEgZmlsZSBjaGFuZ2VkLCAxMDYgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tj
-aGlwLWx2ZHMudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dApuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5lODIwN2RjCi0tLSAvZGV2L251bGwKKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9j
-a2NoaXAtbHZkcy50eHQKQEAgLTAsMCArMSwxMDYgQEAKK1JvY2tjaGlwIFJLMzI4OCBMVkRTIGlu
-dGVyZmFjZQorPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KKworUmVxdWlyZWQgcHJv
-cGVydGllczoKKy0gY29tcGF0aWJsZTogbWF0Y2hpbmcgdGhlIHNvYyB0eXBlLCBvbmUgb2YKKwkt
-ICJyb2NrY2hpcCxyazMyODgtbHZkcyI7CisKKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mg
-b2YgdGhlIGNvbnRyb2xsZXIgYW5kIGxlbmd0aAorCW9mIG1lbW9yeSBtYXBwZWQgcmVnaW9uLgor
-LSBjbG9ja3M6IG11c3QgaW5jbHVkZSBjbG9jayBzcGVjaWZpZXJzIGNvcnJlc3BvbmRpbmcgdG8g
-ZW50cmllcyBpbiB0aGUKKwljbG9jay1uYW1lcyBwcm9wZXJ0eS4KKy0gY2xvY2stbmFtZXM6IG11
-c3QgY29udGFpbiAicGNsa19sdmRzIgorCistIGF2ZGQxdjAtc3VwcGx5OiByZWd1bGF0b3IgcGhh
-bmRsZSBmb3IgMS4wViBhbmFsb2cgcG93ZXIKKy0gYXZkZDF2OC1zdXBwbHk6IHJlZ3VsYXRvciBw
-aGFuZGxlIGZvciAxLjhWIGFuYWxvZyBwb3dlcgorLSBhdmRkM3YzLXN1cHBseTogcmVndWxhdG9y
-IHBoYW5kbGUgZm9yIDMuM1YgYW5hbG9nIHBvd2VyCisKKy0gcm9ja2NoaXAsZ3JmOiBwaGFuZGxl
-IHRvIHRoZSBnZW5lcmFsIHJlZ2lzdGVyIGZpbGVzIHN5c2NvbgorCitPcHRpb25hbCBwcm9wZXJ0
-aWVzOgorLSBwaW5jdHJsLW5hbWVzOiBtdXN0IGNvbnRhaW4gYSAibGNkYyIgZW50cnkuCistIHBp
-bmN0cmwtMDogcGluIGNvbnRyb2wgZ3JvdXAgdG8gYmUgdXNlZCBmb3IgdGhpcyBjb250cm9sbGVy
-LgorCitSZXF1aXJlZCBub2RlczoKKworVGhlIGx2ZHMgaGFzIHR3byB2aWRlbyBwb3J0cyBhcyBk
-ZXNjcmliZWQgYnkKKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlk
-ZW8taW50ZXJmYWNlcy50eHQuCitUaGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxlZCB1c2luZyB0
-aGUgT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCisJRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KKworLSB2aWRlbyBwb3J0IDAgZm9yIHRoZSBWT1AgaW5w
-dXRzCistIHZpZGVvIHBvcnQgMSBmb3IgZWl0aGVyIGEgcGFuZWwgb3Igc3Vic2VxdWVudCBlbmNv
-ZGVyCisKK3RoZSBsdmRzIHBhbmVsIGRlc2NyaWJlZCBieQorCURvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKKworUGFuZWwgcmVx
-dWlyZWQgcHJvcGVydGllczoKKy0gcm9ja2NoaXAsZGF0YS13aWR0aCA6IHNob3VsZCBiZSA8MTg+
-IG9yIDwyND47CistIHJvY2tjaGlwLG91dHB1dDogc2hvdWxkIGJlICJyZ2IiLCAibHZkcyIgb3Ig
-ImR1YWxsdmRzIiwKKwlUaGlzIGRlc2NyaWJlcyB0aGUgb3V0cHV0IGZhY2UuCistIHBvcnRzIGZv
-ciByZW1vdGUgTFZEUyBvdXRwdXQKKworUGFuZWwgb3B0aW9uYWwgcHJvcGVydGllczoKKy0gcm9j
-a2NoaXAsZGF0YS1tYXBwaW5nOiBzaG91bGQgYmUgInZlc2EiIG9yICJqZWlkYSIsCisJVGhpcyBk
-ZXNjcmliZXMgaG93IHRoZSBjb2xvciBiaXRzIGFyZSBsYWlkIG91dCBpbiB0aGUKKwlzZXJpYWxp
-emVkIExWRFMgc2lnbmFsLgorRXhhbXBsZToKKworbHZkc19wYW5lbDogbHZkcy1wYW5lbCB7CisJ
-c3RhdHVzID0gIm9rYXkiOworCWNvbXBhdGlibGUgPSAic2ltcGxlLXBhbmVsIjsKKwllbmFibGUt
-Z3Bpb3MgPSA8JmdwaW83IDIxIEdQSU9fQUNUSVZFX0hJR0g+OworCXJvY2tjaGlwLGRhdGEtbWFw
-cGluZyA9ICJqZWlkYSI7CisJcm9ja2NoaXAsZGF0YS13aWR0aCA9IDwyND47CisJcm9ja2NoaXAs
-b3V0cHV0ID0gInJnYiI7CisKKwlwb3J0cyB7CisJCXBhbmVsX2luX2x2ZHM6IGVuZHBvaW50IHsK
-KwkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkc19vdXRfcGFuZWw+OworCQl9OworCX07Cit9Owor
-CisKK0ZvciBSb2NrY2hpcCBSSzMyODg6CisKKwlsdmRzOiBsdmRzQGZmOTZjMDAwIHsKKwkJY29t
-cGF0aWJsZSA9ICJyb2NrY2hpcCxyazMyODgtbHZkcyI7CisJCXJvY2tjaGlwLGdyZiA9IDwmZ3Jm
-PjsKKwkJcmVnID0gPDB4ZmY5NmMwMDAgMHg0MDAwPjsKKwkJY2xvY2tzID0gPCZjcnUgUENMS19M
-VkRTX1BIWT47CisJCWNsb2NrLW5hbWVzID0gInBjbGtfbHZkcyI7CisJCXBpbmN0cmwtbmFtZXMg
-PSAibGNkYyI7CisJCXBpbmN0cmwtMCA9IDwmbGNkY19jdGw+OworCQlhdmRkMXYwLXN1cHBseSA9
-IDwmdmRkMTBfbGNkPjsKKwkJYXZkZDF2OC1zdXBwbHkgPSA8JnZjYzE4X2xjZD47CisJCWF2ZGQz
-djMtc3VwcGx5ID0gPCZ2Y2NhXzMzPjsKKwkJcm9ja2NoaXAsZGF0YS1tYXBwaW5nID0gImplaWRh
-IjsKKwkJcm9ja2NoaXAsZGF0YS13aWR0aCA9IDwyND47CisJCXJvY2tjaGlwLG91dHB1dCA9ICJy
-Z2IiOworCQlwb3J0cyB7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxz
-ID0gPDA+OworCisJCQlsdmRzX2luOiBwb3J0QDAgeworCQkJCXJlZyA9IDwwPjsKKworCQkJCWx2
-ZHNfaW5fdm9wYjogZW5kcG9pbnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZ2b3BiX291dF9sdmRzPjsKKwkJCQl9OworCQkJCWx2ZHNfaW5fdm9wbDogZW5k
-cG9pbnRAMSB7CisJCQkJCXJlZyA9IDwxPjsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2b3Bs
-X291dF9sdmRzPjsKKwkJCQl9OworCQkJfTsKKworCQkJbHZkc19vdXQ6IHBvcnRAMSB7CisJCQkJ
-cmVnID0gPDE+OworCisJCQkJbHZkc19vdXRfcGFuZWw6IGVuZHBvaW50IHsKKwkJCQkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZwYW5lbF9pbj47CisJCQkJfTsKKwkJCX07CisJCX07CisJfTsKLS0gCjIu
-Ny40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Jul 17, 2017 at 02:25:39PM -0500, Christopher Bostic wrote:
+> Reference the system device tree when configuring the watchdog
+> engines. If property 'aspeed,reset_type' is present then set
+> reset behavior based on the specified value.  This can be one of
+> three different mutually exclusive values
+>   * cpu - Reset CPU only on watchdog timeout
+>   * soc - Reset System on Chip
+>   * system - Full system reset
+> 
+> No reset can also be specified by indicating:
+>   * none - No reset, assumes another watchdog is responsible for
+>            this.
+> 
+> Add optional property 'aspeed,external-signal'. If present then
+> configure to generate external signal on watchdog timeout.
+> 
+> Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+> v5 - Add explicit check for property type "none". Return error
+>      if property type is not a known value.
+>    - Default reset type when no property present changed to
+>      match original code: SOC + SYSTEM reset
+> v4 - Change the three reset type parameters to a new property
+>      'aspeed,reset_type' and check assignment for one of four
+>      different values, cpu, soc, system, none
+> v3 - Invert the logic for system reset dev tree property to
+>      preserve backwards compatibility. If not specified the
+>      default is to configure for system reset
+>    - Add check for 'aspeed,no-soc-reset' property and only if
+>      not present is SOC reset to be configured.  This preserves
+>      backwards compatibility.
+> v2 - Change of_get_property() to of_property_read_bool()
+>    - Remove redundant check for NULL struct device_node pointer
+>    - Optional property names now start with prefix 'aspeed,'
+> ---
+>  drivers/watchdog/aspeed_wdt.c | 29 ++++++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+> index 1c65258..c707ab6 100644
+> --- a/drivers/watchdog/aspeed_wdt.c
+> +++ b/drivers/watchdog/aspeed_wdt.c
+> @@ -36,6 +36,7 @@ struct aspeed_wdt {
+>  #define WDT_CTRL		0x0C
+>  #define   WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
+>  #define   WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
+> +#define   WDT_CTRL_RESET_MODE_ARM_CPU	(0x10 << 5)
+>  #define   WDT_CTRL_1MHZ_CLK		BIT(4)
+>  #define   WDT_CTRL_WDT_EXT		BIT(3)
+>  #define   WDT_CTRL_WDT_INTR		BIT(2)
+> @@ -140,6 +141,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>  {
+>  	struct aspeed_wdt *wdt;
+>  	struct resource *res;
+> +	struct device_node *np;
+> +	const char *reset_type;
+>  	int ret;
+>  
+>  	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> @@ -164,14 +167,30 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>  	wdt->wdd.timeout = WDT_DEFAULT_TIMEOUT;
+>  	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
+>  
+> +	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
+> +
+>  	/*
+>  	 * Control reset on a per-device basis to ensure the
+> -	 * host is not affected by a BMC reboot, so only reset
+> -	 * the SOC and not the full chip
+> +	 * host is not affected by a BMC reboot
+>  	 */
+> -	wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
+> -		WDT_CTRL_1MHZ_CLK |
+> -		WDT_CTRL_RESET_SYSTEM;
+> +	np = pdev->dev.of_node;
+> +	ret = of_property_read_string(np, "aspeed,reset-type", &reset_type);
+> +	if (ret) {
+> +		wdt->ctrl |= WDT_CTRL_RESET_MODE_SOC | WDT_CTRL_RESET_SYSTEM;
+> +	} else {
+> +		if (!strcmp(reset_type, "cpu"))
+> +			wdt->ctrl |= WDT_CTRL_RESET_MODE_ARM_CPU;
+> +		else if (!strcmp(reset_type, "soc"))
+> +			wdt->ctrl |= WDT_CTRL_RESET_MODE_SOC;
+> +		else if (!strcmp(reset_type, "system"))
+> +			wdt->ctrl |= WDT_CTRL_RESET_SYSTEM;
+> +		else if (strcmp(reset_type, "none"))
+> +			return -EINVAL;
+> +	}
+> +	if (of_property_read_bool(np, "aspeed,external-signal"))
+> +		wdt->ctrl |= WDT_CTRL_WDT_EXT;
+> +
+> +	writel(wdt->ctrl, wdt->base + WDT_CTRL);
+>  
+>  	if (readl(wdt->base + WDT_CTRL) & WDT_CTRL_ENABLE)  {
+>  		aspeed_wdt_start(&wdt->wdd);
