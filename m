@@ -1,89 +1,28 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial slave
-Date: Tue, 15 Aug 2017 14:12:19 -0500
-Message-ID: <CAL_Jsq+WJDxghCwBzo2SyShEp56k_RWtN=6NHQyVAfC=QQibPA@mail.gmail.com>
-References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
- <1502102366-2760-2-git-send-email-loic.poulain@gmail.com> <43820E05-9D40-4470-AE6C-B7B6C705E0A5@holtmann.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add eeprom "size" property
+Date: Tue, 15 Aug 2017 14:13:37 -0500
+Message-ID: <CAL_JsqLwUOY87ZuJGzeRa_vbUvBbFTfBgob4y2zG0ffnfSGbRQ@mail.gmail.com>
+References: <1502736119-32084-1-git-send-email-divagar.mohandass@intel.com> <1502736119-32084-2-git-send-email-divagar.mohandass@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <43820E05-9D40-4470-AE6C-B7B6C705E0A5-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Cc: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bluez mailing list <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502736119-32084-2-git-send-email-divagar.mohandass@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Divagar Mohandass <divagar.mohandass@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajmohan Mani <rajmohan.mani@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 15, 2017 at 8:06 AM, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> wrote:
-> Hi Rob,
+On Mon, Aug 14, 2017 at 1:41 PM, Divagar Mohandass
+<divagar.mohandass@intel.com> wrote:
+> This adds eeprom "size" as optional property for i2c eeproms.
 >
->> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
->> This allows to automatically insert the bcm43438 to the bluetooth
->> subsystem instead of relying on userspace helpers (hciattach).
->>
->> Overwrite bootargs to use 8250 aux uart (ttyS0) as console instead
->> of pl011/ttyAMA0.
->>
->> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> v2: dt-bindings as separate patch
->>     rebase on upcoming pi3 dts changes
->> v3: changes in bcm serdev drivers:
->>     name refactoring and additional comments
->>     Add generic host_set_baudrate method
->>     Use agnostic device_property_read
->>
->> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
->> 1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> index 20725ca..5abc1df 100644
->> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> @@ -8,6 +8,11 @@
->>       compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
->>       model = "Raspberry Pi 3 Model B";
->>
->> +     chosen {
->> +             /* 8250 auxiliar UART instead of pl011 */
->> +             bootargs = "earlyprintk console=ttyS0,115200";
->> +     };
->> +
->>       memory {
->>               reg = <0 0x40000000>;
->>       };
->> @@ -24,6 +29,11 @@
->>       pinctrl-names = "default";
->>       pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
->>       status = "okay";
->> +
->> +     bluetooth {
->> +             compatible = "brcm,bcm43438-bt";
->> +             max-speed = <921600>;
->> +     };
->> };
+> "size" should be mentioned in byte and it should refer
+> to the eeprom size. This will be read by the driver and
+> used to calculating the number of bytes in read/write calls.
 >
-> I know that hci_ll.c DT entry also uses max-speed for the naming. Is this something common we should be doing? Essentially it is not really max-speed. It is the operational speed that we are configuring. There is no down negotiation ongoing. Does it make sense to use oper-speed instead?
+> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
+> ---
+>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-max-speed is correct to use. By default, a driver should know the max
-speed of a device (implied by the compatible). The DT property is only
-for when there is some host or board limitation as this case seems to
-be.
-
-> Are we otherwise fine with compatible string naming?
-
-Yes.
-
-Rob
-
->
-> Loic, the hciattach examples list 3000000 as operational speed. Any reason why we should limit it?
->
-> Regards
->
-> Marcel
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
