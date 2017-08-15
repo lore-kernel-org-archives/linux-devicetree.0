@@ -1,14 +1,11 @@
 From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 6/9] soc: mediatek: pwrap: update pwrap_init without slave
- programming
-Date: Tue, 15 Aug 2017 17:09:18 +0800
-Message-ID: <23b1e9fa5d4d8932b36e08d2a6713d4f33c055d9.1502779753.git.sean.wang@mediatek.com>
-References: <cover.1502779753.git.sean.wang@mediatek.com>
+Subject: [PATCH v3 0/9] Add PMIC support to MediaTek MT7622 SoC
+Date: Tue, 15 Aug 2017 17:09:12 +0800
+Message-ID: <cover.1502779753.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1502779753.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
  <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
@@ -24,167 +21,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-pwrap initialization is highly associated with the base SoC, so
-update here for allowing pwrap_init without slave program which would be
-used to those PMICs without extra encryption on bus such as MT6380.
+Changes since v2:
+- for patch 1/2, enhance the document as the suggestions from v2.
+- for patch 3, constify the table with struct regulator_ops, also fix that
+regulator doesn't have modesetting facilities it just shouldn't have the ops
+and finally fix copy+paste mistake in warranty disclaimer.
+- for patch 7/8, sort the things added for MT7622/MT6380 alphabetically.
 
-Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/soc/mediatek/mtk-pmic-wrap.c | 91 +++++++++++++++++++++---------------
- 1 file changed, 54 insertions(+), 37 deletions(-)
+Chenglin Xu (2):
+  regulator: mt6380: Add support for MT6380
+  soc: mediatek: pwrap: add support for MT7622 SoC
 
-diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index 9d1f4c6..1f8b69a 100644
---- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-+++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -531,6 +531,7 @@ struct pmic_wrapper_type {
- 	u32 spi_w;
- 	u32 wdt_src;
- 	int has_bridge:1;
-+	int slv_program:1;
- 	int (*init_reg_clock)(struct pmic_wrapper *wrp);
- 	int (*init_soc_specific)(struct pmic_wrapper *wrp);
- };
-@@ -999,9 +1000,12 @@ static int pwrap_init(struct pmic_wrapper *wrp)
- 	}
- 
- 	/* Reset SPI slave */
--	ret = pwrap_reset_spislave(wrp);
--	if (ret)
--		return ret;
-+
-+	if (wrp->master->slv_program) {
-+		ret = pwrap_reset_spislave(wrp);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	pwrap_writel(wrp, 1, PWRAP_WRAP_EN);
- 
-@@ -1013,45 +1017,52 @@ static int pwrap_init(struct pmic_wrapper *wrp)
- 	if (ret)
- 		return ret;
- 
--	/* Setup serial input delay */
--	ret = pwrap_init_sidly(wrp);
--	if (ret)
--		return ret;
-+	if (wrp->master->slv_program) {
-+		/* Setup serial input delay */
-+		ret = pwrap_init_sidly(wrp);
-+		if (ret)
-+			return ret;
- 
--	/* Enable dual IO mode */
--	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_DIO_EN], 1);
-+		/* Enable dual IO mode */
-+		pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_DIO_EN], 1);
- 
--	/* Check IDLE & INIT_DONE in advance */
--	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle_and_sync_idle);
--	if (ret) {
--		dev_err(wrp->dev, "%s fail, ret=%d\n", __func__, ret);
--		return ret;
--	}
-+		/* Check IDLE & INIT_DONE in advance */
-+		ret = pwrap_wait_for_state(wrp,
-+					   pwrap_is_fsm_idle_and_sync_idle);
-+		if (ret) {
-+			dev_err(wrp->dev, "%s fail, ret=%d\n", __func__, ret);
-+			return ret;
-+		}
- 
--	pwrap_writel(wrp, 1, PWRAP_DIO_EN);
-+		pwrap_writel(wrp, 1, PWRAP_DIO_EN);
- 
--	/* Read Test */
--	pwrap_read(wrp, wrp->slave->dew_regs[PWRAP_DEW_READ_TEST], &rdata);
--	if (rdata != PWRAP_DEW_READ_TEST_VAL) {
--		dev_err(wrp->dev, "Read test failed after switch to DIO mode: 0x%04x != 0x%04x\n",
-+		/* Read Test */
-+		pwrap_read(wrp,
-+			   wrp->slave->dew_regs[PWRAP_DEW_READ_TEST], &rdata);
-+		if (rdata != PWRAP_DEW_READ_TEST_VAL) {
-+			dev_err(wrp->dev,
-+				"Read failed on DIO mode: 0x%04x!=0x%04x\n",
- 				PWRAP_DEW_READ_TEST_VAL, rdata);
--		return -EFAULT;
--	}
--
--	/* Enable encryption */
--	ret = pwrap_init_cipher(wrp);
--	if (ret)
--		return ret;
-+			return -EFAULT;
-+		}
- 
--	/* Signature checking - using CRC */
--	if (pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_EN], 0x1))
--		return -EFAULT;
-+		/* Enable encryption */
-+		ret = pwrap_init_cipher(wrp);
-+		if (ret)
-+			return ret;
- 
--	pwrap_writel(wrp, 0x1, PWRAP_CRC_EN);
--	pwrap_writel(wrp, 0x0, PWRAP_SIG_MODE);
--	pwrap_writel(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_VAL],
--		     PWRAP_SIG_ADR);
--	pwrap_writel(wrp, wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
-+		/* Signature checking - using CRC */
-+		if (pwrap_write(wrp,
-+				wrp->slave->dew_regs[PWRAP_DEW_CRC_EN], 0x1))
-+			return -EFAULT;
-+
-+		pwrap_writel(wrp, 0x1, PWRAP_CRC_EN);
-+		pwrap_writel(wrp, 0x0, PWRAP_SIG_MODE);
-+		pwrap_writel(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_VAL],
-+			     PWRAP_SIG_ADR);
-+		pwrap_writel(wrp,
-+			     wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
-+	}
- 
- 	if (wrp->master->type == PWRAP_MT8135)
- 		pwrap_writel(wrp, 0x7, PWRAP_RRARB_EN);
-@@ -1059,8 +1070,11 @@ static int pwrap_init(struct pmic_wrapper *wrp)
- 	pwrap_writel(wrp, 0x1, PWRAP_WACS0_EN);
- 	pwrap_writel(wrp, 0x1, PWRAP_WACS1_EN);
- 	pwrap_writel(wrp, 0x1, PWRAP_WACS2_EN);
--	pwrap_writel(wrp, 0x5, PWRAP_STAUPD_PRD);
--	pwrap_writel(wrp, 0xff, PWRAP_STAUPD_GRPEN);
-+
-+	if (wrp->master->slv_program) {
-+		pwrap_writel(wrp, 0x5, PWRAP_STAUPD_PRD);
-+		pwrap_writel(wrp, 0xff, PWRAP_STAUPD_GRPEN);
-+	}
- 
- 	if (wrp->master->init_soc_specific) {
- 		ret = wrp->master->init_soc_specific(wrp);
-@@ -1146,6 +1160,7 @@ static const struct pmic_wrapper_type pwrap_mt2701 = {
- 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE_NEW,
- 	.wdt_src = PWRAP_WDT_SRC_MASK_ALL,
- 	.has_bridge = 0,
-+	.slv_program = 1,
- 	.init_reg_clock = pwrap_mt2701_init_reg_clock,
- 	.init_soc_specific = pwrap_mt2701_init_soc_specific,
- };
-@@ -1158,6 +1173,7 @@ static const struct pmic_wrapper_type pwrap_mt8135 = {
- 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
- 	.wdt_src = PWRAP_WDT_SRC_MASK_ALL,
- 	.has_bridge = 1,
-+	.slv_program = 1,
- 	.init_reg_clock = pwrap_mt8135_init_reg_clock,
- 	.init_soc_specific = pwrap_mt8135_init_soc_specific,
- };
-@@ -1170,6 +1186,7 @@ static const struct pmic_wrapper_type pwrap_mt8173 = {
- 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
- 	.wdt_src = PWRAP_WDT_SRC_MASK_NO_STAUPD,
- 	.has_bridge = 0,
-+	.slv_program = 1,
- 	.init_reg_clock = pwrap_mt8173_init_reg_clock,
- 	.init_soc_specific = pwrap_mt8173_init_soc_specific,
- };
+Sean Wang (7):
+  dt-bindings: arm: mediatek: add MT7622 string to the PMIC wrapper doc
+  dt-bindings: regulator: Add document for MediaTek MT6380 regulator
+  soc: mediatek: pwrap: add pwrap_read32 for reading in 32-bit mode
+  soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
+  soc: mediatek: pwrap: update pwrap_init without slave programming
+  soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
+  soc: mediatek: pwrap: fixup warnings from coding style
+
+ .../bindings/regulator/mt6380-regulator.txt        |  89 +++++
+ .../devicetree/bindings/soc/mediatek/pwrap.txt     |   1 +
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/mt6380-regulator.c               | 352 +++++++++++++++++
+ drivers/soc/mediatek/mtk-pmic-wrap.c               | 417 ++++++++++++++++++---
+ include/linux/regulator/mt6380-regulator.h         |  32 ++
+ 7 files changed, 845 insertions(+), 56 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
+ create mode 100644 drivers/regulator/mt6380-regulator.c
+ create mode 100644 include/linux/regulator/mt6380-regulator.h
+
 -- 
 2.7.4
