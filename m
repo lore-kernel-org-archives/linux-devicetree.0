@@ -1,74 +1,49 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 4/7] mmc: sdhci: Add quirk to indicate broken
- POWER_CONTROL
-Date: Tue, 15 Aug 2017 10:41:37 +0300
-Message-ID: <45762ded-3c42-fefc-e6bb-2542d75c9c67@intel.com>
-References: <20170807160142.12134-1-kishon@ti.com>
- <20170807160142.12134-5-kishon@ti.com>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ASoC: mediatek: Correct the interrupt property
+Date: Tue, 15 Aug 2017 16:07:02 +0800
+Message-ID: <43a7fb98e7252d0b7b73cdabf1eedd0bf896d68c.1502784169.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170807160142.12134-5-kishon-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/17 19:01, Kishon Vijay Abraham I wrote:
-> TI's implementation of sdhci controller used in DRA7 SoC's uses
-> POWER_CONTROL register for configuring IO voltage and not
-> for core voltage (vdd) which is it's intended use. Add a quirk
-> to indicate broken POWER_CONTROL register.
+This patch update interrupt property since we only use ASYS IRQ
+in the driver, and this may confuse people.
 
-A quirk isn't needed for this.  Use the ->set_power() callback instead.
+Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+CC: Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/mmc/host/sdhci.c | 6 ++++++
->  drivers/mmc/host/sdhci.h | 2 ++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index d5050ec42481..a7465a56e6b5 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1419,6 +1419,9 @@ static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
->  
->  	mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
->  
-> +	if (host->quirks2 & SDHCI_QUIRK2_BROKEN_POWER_CONTROL)
-> +		return;
-> +
->  	if (mode != MMC_POWER_OFF)
->  		sdhci_writeb(host, SDHCI_POWER_ON, SDHCI_POWER_CONTROL);
->  	else
-> @@ -1430,6 +1433,9 @@ void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
->  {
->  	u8 pwr = 0;
->  
-> +	if (host->quirks2 & SDHCI_QUIRK2_BROKEN_POWER_CONTROL)
-> +		return;
-> +
->  	if (mode != MMC_POWER_OFF) {
->  		switch (1 << vdd) {
->  		case MMC_VDD_165_195:
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 39c7a2723906..ba94cca7c892 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -439,6 +439,8 @@ struct sdhci_host {
->  #define SDHCI_QUIRK2_NO_CRC_STRIPPING			(1<<16)
->  /* Controller has bad caps bits, but really supports DMA */
->  #define SDHCI_QUIRK2_FORCE_ADMA				(1<<17)
-> +/* Controller uses POWER_CONTROL for managing IO voltage and not core voltage */
-> +#define SDHCI_QUIRK2_BROKEN_POWER_CONTROL		(1<<18)
->  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> 
+diff --git a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
+index 9800a56..9d7b6dc 100644
+--- a/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
++++ b/Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
+@@ -3,7 +3,7 @@ Mediatek AFE PCM controller for mt2701
+ Required properties:
+ - compatible = "mediatek,mt2701-audio";
+ - reg: register location and size
+-- interrupts: Should contain AFE interrupt
++- interrupts: Should contain ASYS interrupt
+ - power-domains: should define the power domain
+ - clock-names: should have these clock names:
+ 		"infra_sys_audio_clk",
+@@ -57,8 +57,7 @@ Example:
+ 		compatible = "mediatek,mt2701-audio";
+ 		reg = <0 0x11220000 0 0x2000>,
+ 		      <0 0x112A0000 0 0x20000>;
+-		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
+-			     <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+ 		clocks = <&infracfg CLK_INFRA_AUDIO>,
+ 			 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
