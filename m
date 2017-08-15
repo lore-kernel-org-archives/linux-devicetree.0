@@ -1,86 +1,122 @@
-From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] drivers/i2c: Add FSI-attached I2C master algorithm
-Date: Tue, 15 Aug 2017 12:53:52 -0500
-Message-ID: <7802dc48-6850-b7e3-5dbf-ee333cdf0c83@linux.vnet.ibm.com>
-References: <1501089198-10356-1-git-send-email-eajames@linux.vnet.ibm.com>
- <f324da3b-7c9e-3dc1-0cdc-91576c7a50b8@axentia.se>
- <CACPK8XexFdz63t4y5uO1GzoWrx=wnkqBxbYKGtuFq0JupeLNHQ@mail.gmail.com>
- <59175354-07ba-2bbb-962e-ac1de36dfa4a@linux.vnet.ibm.com>
- <538605fe-f109-b84c-cc21-f1b9824ad5d0@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <538605fe-f109-b84c-cc21-f1b9824ad5d0-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 0/3 v8] hsdk: initial port for HSDK board
+Date: Tue, 15 Aug 2017 21:13:52 +0300
+Message-ID: <20170815181355.29937-1-Eugeniy.Paltsev@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
+This series introduces some required preparations and initial
+port of ARC HS Development Kit board with some basic features such
+as serial port, USB, SD/MMC and Ethernet.
 
+Essentially we run Linux kernel on all 4 cores (i.e. utilize SMP) and
+heavily use IO Coherency for speeding-up DMA-aware peripherals.
 
-On 08/15/2017 12:35 PM, Peter Rosin wrote:
-> On 2017-08-15 18:28, Christopher Bostic wrote:
->> On 8/15/17 3:10 AM, Joel Stanley wrote:
->>> On Tue, Aug 15, 2017 at 4:06 PM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
->>>> On 2017-07-26 19:13, Eddie James wrote:
->>>>> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
->>>>>
->>>>> This series adds an algorithm for an I2C master physically located on an FSI
->>>>> slave device. The I2C master has multiple ports, each of which may be connected
->>>>> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
->>>>>
->>>>> Due to the multi-port nature of the I2C master, the driver instantiates a new
->>>>> I2C adapter for each port connected to a slave. The connected ports should be
->>>>> defined in the device tree under the I2C master device.
->>>> Hmmm, AFAIU fsi is a bus, and on this bus you have some "client" device that
->>>> happens to be an i2c master, and this is a driver for that "client". Is it
->>>> totally inconceivable to have some other client device in the future that is
->>>> implementing an i2c master differently, but still using the fsi bus?
->>>>
->>>> With that in mind, is it wise to pick the driver name from the bus that the
->>>> device is connected to, and nothing else without further qualification?
->>>>
->>>> I don't see any "i2c-usb" driver, but I think there are a couple of i2c master
->>>> drivers that communicate via usb.
->>> You make a fair point. When I did a prototype of this driver I called
->>> it i2c-cfam, as it is part of the CFAM hardware unit inside of the
->>> Power8/Power9 processors.
->>>
->>> The documentation does call it FSI_I2CM, so that's an argument for the
->>> current name.
->>>
->>> I'm not sure how accurate that name is. Chris, Eddie, do you have any
->>> other suggestions?
->> The I2C engine up to now has been always accessed via the FSI bus so
->> historically I assume that's why its labelled as FSI_I2CM in the p8/p9
->> specs.  There isn't any reason this I2C device couldn't be implemented
->> in some other topology independent of FSI / CFAMs.  In other words there
->> are no FSI details internal to this I2C engine, an argument for removing
->> the 'FSI' tag.
-> Note that I wasn't primarily concerned with this i2c engine growing some other
-> non-fsi interface (like many devices have both i2c and spi interface versions).
-> I was more concerned with some future and totally different i2c engine that
-> naturally sports a totally different register map but still uses the fsi bus.
->
-> But you have a point. If this i2c engine evolves and ends up supporting some
-> other interface, then that too would be cause to regret the i2c-fsi name.
+Note as opposed to other ARC boards we link Linux kernel to
+0x9000_0000 intentionally because cores 1 and 3 configured with DCCM
+situated at our more usual link base 0x8000_0000.
 
-i2c-cfam would work, though it would also be possible for another type 
-of i2c engine to exist on a CFAM... it has been done in the past.
+Note that two patches of this series ("ARC: Decouple linux kernel memory
+address and link address" and "ARC: Set IO-coherency aperture base to 
+LINUX_LINK_BASE") are prerequisites for HDSK support as its hardware
+configuration differs quite a bit from what we used to have on other
+ARC boards.
 
-Historically, this driver was called "iic-boe" for "Boeblingen". I'm not 
-suggesting it's a good name for this driver, but it is unique...
+Alexey Brodkin (1):
+  ARC: hsdk: initial port for HSDK board
 
-Edduie
+Eugeniy Paltsev (2):
+  ARC: Set IO-coherency aperture base to LINUX_LINK_BASE
+  ARC: Decouple linux kernel memory address and link address
 
->
-> Cheers,
-> peda
->
+Changes v8 -> v9:
+ * Revert removing of ARC_PLAT_HSDK (now it is called ARC_SOC_HSDK)
+   as it breaks uniprocessor configuation build.
+ * Enable INPUT_EVDEV in hsdk_defconfig as it is required for 
+   user-space apps to work with keyboard/mice
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes v7 -> v8:
+ * DTS: move cpu_intc, idu_intc, arcpct, timer, gfrc nodes to root
+   level and out of the cpus node.
+ * DTS: add vendor-specific compatible for ohci and ehci nodes.
+ * DTS: style fixes
+
+Changes v6 -> v7:
+ * DTS: get rid of skeleton.dts, move cpus nodes to hsdk.dts
+ * DTS: style fixes
+ * Enable loadable modules, module unloading and NFS client as defaults
+ * Get rid of ARC_PLAT_HSDK board config option
+
+Changes v5 -> v6:
+ * Add support of USB-to-HDMI adapter
+ * Revert removing of resetting CREG_PAE bits.
+   PAE remapping for DMA clients does not work due to an RTL bug, so
+   CREG_PAE register must be programmed to all zeroes, otherwise it
+   will cause problems with DMA to/from peripherals even if PAE40 is
+   not used.
+
+Changes v4 -> v5:
+ * Move DCCM outside of 0x8000_0000 adress at kernel boot time.
+ * Decouple linux kernel memory address and link address.
+ * Remove hardcoding of IO-coherency aperture base.
+ * Remove resetting CREG_PAE bits as default value is suitable for us.
+
+Changes v3 -> v4:
+ * Removed senseless "ranges" property from "memory" node in .dts
+ * Refined early-boot code:
+    - ICCM relocation should be done on each and every core that sports ICCM
+      so we leave it in init_per_cpu(). Even though init_per_cpu() gets called
+      on the master core pretty late still it is way much earlier than that
+      moment when it might affect us - as it only huts us when addresses in
+      0x7z-0x7fff_ffff range are used, i.e. virtual addresses that we don't
+      use during init. This also makes code much cleaner compared to
+      additional check in case of master etc.
+
+Changes v2 -> v3:
+ * Added Rob to Cc-list for DT binding approval
+ * Removed mention of prerequsite patch from commit message
+ * Removed hsdk_early_init() as hsdk_init_per_cpu() is executed on
+   all cores anyways including master
+ * Cleaned-up board's .dts a little bit
+ * Removed CONFIG_DP83867_PHY from defconfig as it was only used on
+   FPGA prototype, on real board we use MICREL PHY which is still selected
+
+Changes v1 -> v2:
+ * Update copyright year from 2016 to more up to date 2017
+ * Merge early UART clock with AXS10x as in both cases that's 33.3 MHz
+ * Bump memory to 1Gb, we don't use more for now because it requires
+   trickier IOC setup and usage
+ * Update early platform init code:
+    - Added missing fixup_pae_regs() to per-cpu init
+    - Mark most of functions as "static __init"
+    - Use writel_relaxed() for setting CREG_PAE, CREG_PAE_UPDATE is still
+      written with stronger writel() since we don't want reordering to happen,
+      otherwise value written to CREG_PAE won't be applied
+
+ Documentation/devicetree/bindings/arc/hsdk.txt |   7 ++
+ arch/arc/Kconfig                               |   6 +
+ arch/arc/Makefile                              |   1 +
+ arch/arc/boot/dts/hsdk.dts                     | 150 +++++++++++++++++++++++++
+ arch/arc/boot/dts/include/dt-bindings          |   1 +
+ arch/arc/configs/hsdk_defconfig                |  72 ++++++++++++
+ arch/arc/include/asm/page.h                    |   2 +-
+ arch/arc/kernel/devtree.c                      |   5 +-
+ arch/arc/mm/cache.c                            |  33 ++++--
+ arch/arc/mm/init.c                             |   6 +-
+ arch/arc/plat-hsdk/Kconfig                     |  12 ++
+ arch/arc/plat-hsdk/Makefile                    |   9 ++
+ arch/arc/plat-hsdk/platform.c                  |  77 +++++++++++++
+ 13 files changed, 366 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arc/hsdk.txt
+ create mode 100644 arch/arc/boot/dts/hsdk.dts
+ create mode 120000 arch/arc/boot/dts/include/dt-bindings
+ create mode 100644 arch/arc/configs/hsdk_defconfig
+ create mode 100644 arch/arc/plat-hsdk/Kconfig
+ create mode 100644 arch/arc/plat-hsdk/Makefile
+ create mode 100644 arch/arc/plat-hsdk/platform.c
+
+-- 
+2.9.3
