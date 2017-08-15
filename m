@@ -1,92 +1,78 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: Hook into mux framework to toggle
- usb switch
-Date: Tue, 15 Aug 2017 13:36:42 +0200
-Message-ID: <8bbd90f2-a80f-1bf7-e5a8-400cebf6dc89@axentia.se>
-References: <20170714214005.14967-1-stephen.boyd@linaro.org>
- <20170714214005.14967-3-stephen.boyd@linaro.org>
- <7080030c-c9c2-657d-aad4-aef636438cb1@axentia.se>
- <150215709134.18242.599725161375995991@sboyd-linaro>
- <c5c411fe-2f5a-88cc-73e8-28ab61f5de04@axentia.se>
- <150249037091.15411.10074988823155268663@sboyd-linaro>
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+Subject: Re: [PATCH v2] leds: add LED driver for CR0014114 board
+Date: Tue, 15 Aug 2017 14:37:47 +0300
+Message-ID: <cf002775-c825-6825-aa05-d455c110110d@kaa.org.ua>
+References: <20170814115355.9437-1-oleg@kaa.org.ua>
+ <CAL_JsqJw18uCCLAd+rraiDr3meLvDkpOwLwqLLB5E5psHho2Jw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <150249037091.15411.10074988823155268663@sboyd-linaro>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-1bcDf/t0825pWr+L1FloEB2eb7JE58TQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJw18uCCLAd+rraiDr3meLvDkpOwLwqLLB5E5psHho2Jw@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-12 00:26, Stephen Boyd wrote:
-> Quoting Peter Rosin (2017-08-08 05:46:30)
->> On 2017-08-08 03:51, Stephen Boyd wrote:
->>
->>>                      It looked like we paired the start/stop ops with
->>> each other so that the mux is properly managed across these ops.
->>
->> Yes, it *looks* ok...
->>
->>>                                                                  My
->>> testing hasn't shown a problem, but maybe there's some corner case
->>> you're thinking of? I'll double check the code.
->>
->> ...but since I do not know the usb code, I can't tell. What I worry about
->> is the usb core calling udc_id_switch_for_host or udc_id_switch_for_device
->> more than once without any call to the other in between. Maybe that is a
->> guarantee that the usb core makes? Or maybe it isn't? If e.g. there is a
->> third mode (or if one is added in the future), then the calls to
->> mux_control_select and mux_control_deselect would not be paired correctly.
->> Ok, sure, a third mode probably doesn't exist and will probably not be
->> added, but but but...
->>
->> Also, what happens if udc_id_switch_for_device fails? Is it certain that
->> it will be called again before udc_id_switch_for_host is called, or is
->> the failure simply logged? If the latter, you might have a call to
->> mux_control_deselect without a preceding (and successful) call to
->> mux_control_select. That's fatal.
-> 
-> The only thing that could fail right now is the mux selection, so we
-> wouldn't get into some sort of situation where that's locked in and
-> unchangeable. We do rollback the role if it fails to switch, so we also
-> wouldn't go into a half-way state of being in one role but not actually
-> switching all the way over to it.
+Hello Rob.
 
-What do you roll back to if the initial setting of the role fails?
-Hopefully that causes a probe failure?
+Thank you for review.
 
-Cheers,
-Peter
+On 14.08.17 17:28, Rob Herring wrote:
+> Please CC DT list for bindings and make bindings a separate patch.
 
->> I have similar worries for host_start/host_stop, but for that case
->> host_stop is not allowed to fail, and it seems like a safe bet that
->> host_stop will only be called if host_start succeeds. So, I'm not as
->> worried there.
+I will do.
+
+> On Mon, Aug 14, 2017 at 6:53 AM, Oleh Kravchenko <oleg@kaa.org.ua> wrote:
+>> This patch adds a LED class driver for the RGB LEDs found on
+>> the Crane Merchandising System CR0014114 LEDs board.
 >>
->> In other words, the question is if the usb core is designed to allow
->> this kind of "raw" resource administration in udc_id_switch_for_host and
->> udc_id_switch_for_device, or if you need to keep a local record of the
->> state so that you do not do double resource acquisition or attempt to
->> free resources you don't have?
+>> Driver creates LED devices with name written using the following
+>> pattern "LABEL-{N}:{red,green,blue}:".
 >>
->> I think I would feel better if the muxing for the device mode could
->> be done in a start/stop pair of function just like the host mode is
->> doing. Again, I don't know the usb code and don't know if such hooks
->> exist or not?
+>> Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
+>> ---
+>>  .../devicetree/bindings/leds/leds-cr0014114.txt    |  23 ++
+>>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>>  drivers/leds/Kconfig                               |  12 +
+>>  drivers/leds/Makefile                              |   1 +
+>>  drivers/leds/leds-cr0014114.c                      | 352 +++++++++++++++++++++
+>>  5 files changed, 389 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+>>  create mode 100644 drivers/leds/leds-cr0014114.c
 >>
-> 
-> The host_start/host_stop functions are assigned to the same struct
-> ci_role_driver ops that udc_idc_switch_for_{device,host} are for the
-> gadget role. Really, these things are called from the same place by the
-> chipidea driver so not much is different between the two files I modify
-> to make the mux calls. Furthermore, we don't want to do this if we have
-> HNP or "true" OTG support so I've put it behind the ci_otg_is_fsm_mode()
-> check to make sure we don't do any muxing stuff based on fsm state
-> changes. It doesn't really make any sense here anyway because this
-> device I have doesn't support OTG, just role switching.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+>> new file mode 100644
+>> index 000000000000..6a399cb65388
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+>> @@ -0,0 +1,23 @@
+>> +Crane Merchandising System SPI LED board CR0014114
+>> +==================================================
+>> +
+>> +Required properties:
+>> +- compatible: "cms,cr0014114"
+>> +
+>> +Optional properties:
+>> +- label: prefix for LED names. If omitted the label is taken from the node name.
+> label generally is the full name, not a prefix. It kind of defeats the
+> point of label if the name is the same. You might as well move this
+> into the driver.
+>
+>> +- leds-per-board: RGB leds per board, minimal value is 6
+>> +- num-boards: number of LED boards on SPI bus, usually 1
+> From the driver, looks like you just need the total led count?
+>
+> It also appears that the driver knows the color arrangement. Perhaps
+> you should have child nodes for each LED as the LED binding defines.
+> reg can have 2 cells if you need to define board# and led#. And label
+> can be the full label name if you keep label in the DT.
+
+Thanks, it's will be better.
+
+> Rob
+
+-- 
+Best regards,
+Oleh Kravchenko
