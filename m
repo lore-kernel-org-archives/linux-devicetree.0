@@ -1,151 +1,52 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: Add document for MediaTek MT6380 regulator" to the regulator tree
-Date: Tue, 15 Aug 2017 16:10:56 +0100
-Message-ID: <E1dhdUe-0007bp-Vs@debutante>
-References: <0325c83fa4eeb1dc9e887548c1ad5ae8ab912c91.1502779753.git.sean.wang@mediatek.com>
+Subject: Re: [PATCH v3 2/9] dt-bindings: regulator: Add document for MediaTek
+ MT6380 regulator
+Date: Tue, 15 Aug 2017 16:10:46 +0100
+Message-ID: <20170815151046.nybcnjfmnmtfyqtq@sirena.org.uk>
+References: <cover.1502779753.git.sean.wang@mediatek.com>
+ <0325c83fa4eeb1dc9e887548c1ad5ae8ab912c91.1502779753.git.sean.wang@mediatek.com>
+ <20170815115038.65wos2ega2akxet4@sirena.org.uk>
+ <1502809595.19230.38.camel@mtkswgap22>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k5eyfflfsdze5uqm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0325c83fa4eeb1dc9e887548c1ad5ae8ab912c91.1502779753.git.sean.wang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <1502809595.19230.38.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sean Wang <sean.wang@mediatek.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.combroonie@kernel.org, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.comchenglin.xu@mediatek.com, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.com, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   regulator: Add document for MediaTek MT6380 regulator
+--k5eyfflfsdze5uqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been applied to the regulator tree at
+On Tue, Aug 15, 2017 at 11:06:35PM +0800, Sean Wang wrote:
+> On Tue, 2017-08-15 at 12:50 +0100, Mark Brown wrote:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+> > Please use subject lines reflecting the style for the subsystem.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> do you mean should i use "dt-bindings: regulator: mediatek" similarly as
+> the prefix instead of the one i currently use ? If so , i will improve
+> this in the next version.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+No, drop the dt-bindings bit.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+--k5eyfflfsdze5uqm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Mark
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmTDvYACgkQJNaLcl1U
+h9BiTwf+ILqFkTcgf6qn6OuNgviH/ur+MVQu/KXMR2Y+4KYF1oOY8dh+t4aznA8j
+uLLtAAI7aQFLndMt/ftQPF38Q9MwcQTt19Pj/9QXyM2rni6xXsTJFV8kBSiEl8mG
+fdEA3zIpKsXFLy4sWgclcrPaklnyqWBts0UKt5e3rgWb43hky9+BWHazJmgdlWyj
+rQzt7QR1E5+EN8y4bOlFHJ2L+VdgdQ67LbbdoSjfkn6ftt7nEXdK/cgDaXLJwyDT
+er9PlFqEhlVDAu6O6MnVRnKAKAO8+e/Smhn1HHtIc/BEUib80a80/IZsByYCgfs3
+dZt0mZ8MjrwvlRXGaBoele36tO1veA==
+=i5VE
+-----END PGP SIGNATURE-----
 
->From d57287b4fbf6bdb0386c839f2faa2ae4f6bad550 Mon Sep 17 00:00:00 2001
-From: Sean Wang <sean.wang@mediatek.com>
-Date: Tue, 15 Aug 2017 17:09:14 +0800
-Subject: [PATCH] regulator: Add document for MediaTek MT6380 regulator
-
-add dt-binding document for MediaTek MT6380 PMIC
-
-Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/regulator/mt6380-regulator.txt        | 89 ++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-
-diff --git a/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-new file mode 100644
-index 000000000000..0058441f16d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-@@ -0,0 +1,89 @@
-+MediaTek MT6380 Regulator
-+
-+All voltage regulators provided by the MT6380 PMIC are described as the
-+subnodes of the MT6380 regulators node. Each regulator is named according
-+to its regulator type, buck-<name> and ldo-<name>. The definition for each
-+of these nodes is defined using the standard binding for regulators at
-+Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+The valid names for regulators are:
-+BUCK:
-+  buck-core1, buck-vcore, buck-vrf
-+LDO:
-+  ldo-vm ,ldo-va , ldo-vphy, ldo-vddr, ldo-vt
-+
-+Example:
-+
-+	regulators {
-+		compatible = "mediatek,mt6380-regulator";
-+
-+		mt6380_vcpu_reg: buck-vcore1 {
-+			regulator-name = "vcore1";
-+			regulator-min-microvolt = < 600000>;
-+			regulator-max-microvolt = <1393750>;
-+			regulator-ramp-delay = <6250>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_vcore_reg: buck-vcore {
-+			regulator-name = "vcore";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1393750>;
-+			regulator-ramp-delay = <6250>;
-+		};
-+
-+		mt6380_vrf_reg: buck-vrf {
-+			regulator-name = "vrf";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1575000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_vm_reg: ldo-vm {
-+			regulator-name = "vm";
-+			regulator-min-microvolt = <1050000>;
-+			regulator-max-microvolt = <1400000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_va_reg: ldo-va {
-+			regulator-name = "va";
-+			regulator-min-microvolt = <2200000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_vphy_reg: ldo-vphy {
-+			regulator-name = "vphy";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_vddr_reg: ldo-vddr {
-+			regulator-name = "vddr";
-+			regulator-min-microvolt = <1240000>;
-+			regulator-max-microvolt = <1840000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_vt_reg: ldo-vt {
-+			regulator-name = "vt";
-+			regulator-min-microvolt = <2200000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+	};
--- 
-2.13.3
+--k5eyfflfsdze5uqm--
