@@ -1,102 +1,58 @@
 From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [v5, 1/2] drivers/watchdog: Add optional ASPEED device tree
+Subject: Re: [1/2] dt-bindings: watchdog: aspeed: External reset signal
  properties
-Date: Mon, 14 Aug 2017 19:18:47 -0700
-Message-ID: <20170815021847.GB1819@roeck-us.net>
-References: <20170717192539.7950-2-cbostic@linux.vnet.ibm.com>
+Date: Mon, 14 Aug 2017 19:20:57 -0700
+Message-ID: <20170815022057.GA2172@roeck-us.net>
+References: <20170802044529.30032-2-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170717192539.7950-2-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <20170802044529.30032-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 02:25:38PM -0500, Christopher Bostic wrote:
-> Describe device tree optional properties:
+On Wed, Aug 02, 2017 at 02:15:28PM +0930, Andrew Jeffery wrote:
+> For the AST2500 and compatible watchdog controllers the external reset
+> signal can be configured for push-pull or open-drain drive types, and in
+> the case of push-pull driving, active low or high.
 > 
->   * aspeed,reset-type = "cpu|soc|system|none"
->      One of three different, mutually exclusive, values
-> 
-> 	"cpu" : ARM CPU reset on signal
-> 	"soc" : 'System on chip' reset
-> 	"system" : Full system reset
-> 
->      The value can also be set to "none" which indicates that no
->      reset of any kind is to be done via this watchdog.  This assumes
->      another watchdog on the chip is to take care of resets.
-> 
->   * aspeed,external-signal - Generate external signal (WDT1 and WDT2 only)
->   * aspeed,alt-boot - Boot from alternate block on signal
-> 
-> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
 > ---
-> v5 - Removed aspeed,interrupt property - no plans at this point to
->      need this functionality in the driver.
-> v4 - Add aspeed-reset-type and assign one of four values,
->      cpu, soc, system, none.
-> v3 - Invert soc and sys reset to 'no' to preserve backwards
->      compatibility.  SOC and SYS reset will be set by default
->      without any optional parameters set
-> v2 - Add 'aspeed,' prefix to all optional properties
->    - Add arm-reset, soc-reset, interrupt, alt-boot properties
-> ---
->  .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
 > diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> index c5e74d7..2b34ce9 100644
+> index 2b34ce9b60b9..c5077a1f5cb3 100644
 > --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
 > +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> @@ -8,9 +8,41 @@ Required properties:
->   - reg: physical base address of the controller and length of memory mapped
->     region
+> @@ -33,10 +33,18 @@ Optional properties:
+>          - none: No reset is performed on timeout. Assumes another watchdog
+>                  engine is responsible for this.
 >  
-> +Optional properties:
-> +
-> + - aspeed,reset-type = "cpu|soc|system|none"
-> +
-> +   Reset behavior - Whenever a timeout occurs the watchdog can be programmed
-> +   to generate one of three different, mutually exclusive, types of resets.
-> +
-> +   Type "none" can be specified to indicate that no resets are to be done.
-> +   This is useful in situations where another watchdog engine on chip is
-> +   to perform the reset.
-> +
-> +   If 'aspeed,reset-type=' is not specfied the default is to enable system
-> +   reset.
-> +
-> +   Reset types:
-> +
-> +        - cpu: Reset CPU on watchdog timeout
-> +
-> +        - soc: Reset 'System on Chip' on watchdog timeout
-> +
-> +        - system: Reset system on watchdog timeout
-> +
-> +        - none: No reset is performed on timeout. Assumes another watchdog
-> +                engine is responsible for this.
-> +
-> + - aspeed,external-signal: If property is present then signal is sent to
-> +			external reset counter (only WDT1 and WDT2). If not
-> +			specified no external signal is sent.
 > + - aspeed,alt-boot:    If property is present then boot from alternate block.
+>   - aspeed,external-signal: If property is present then signal is sent to
+>  			external reset counter (only WDT1 and WDT2). If not
+>  			specified no external signal is sent.
+> - - aspeed,alt-boot:    If property is present then boot from alternate block.
+> + - aspeed,ext-pulse-duration: External signal pulse duration in microseconds
 > +
+> +Optional properties for AST2500-compatible watchdogs:
+> + - aspeed,ext-push-pull: If aspeed,external-signal is present, set the pin's
+> +			 drive type to push-pull. The default is open-drain.
+> + - aspeed,ext-active-high: If aspeed,external-signal is present and and the pin
+> +			   is configured as push-pull, then set the pulse
+> +			   polarity to active-high. The default is active-low.
+>  
 >  Example:
 >  
->  	wdt1: watchdog@1e785000 {
->  		compatible = "aspeed,ast2400-wdt";
->  		reg = <0x1e785000 0x1c>;
-> +		aspeed,reset-type = "system";
-> +		aspeed,external-signal;
->  	};
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
