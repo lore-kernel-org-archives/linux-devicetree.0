@@ -1,10 +1,10 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: add fixes with MT6311 dt-bindings shouldn't reference driver" to the regulator tree
-Date: Tue, 15 Aug 2017 18:15:45 +0100
-Message-ID: <E1dhfRR-0003m9-ET@debutante>
-References: <8b3da7d4b5aefa34b5c330bae4582c2b44df8a72.1502790160.git.sean.wang@mediatek.com>
+Subject: Applied "regulator: add fixes with MT6397 dt-bindings shouldn't reference driver" to the regulator tree
+Date: Tue, 15 Aug 2017 18:15:39 +0100
+Message-ID: <E1dhfRL-0003ju-Bv@debutante>
+References: <fa0e11110ad8dcae5a833593f0266af0dc44910e.1502790160.git.sean.wang@mediatek.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8b3da7d4b5aefa34b5c330bae4582c2b44df8a72.1502790160.git.sean.wang@mediatek.com>
+In-Reply-To: <fa0e11110ad8dcae5a833593f0266af0dc44910e.1502790160.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sean Wang <sean.wang@mediatek.com>
 Cc: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.combroonie@kernel.org, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
@@ -12,7 +12,7 @@ List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: add fixes with MT6311 dt-bindings shouldn't reference driver
+   regulator: add fixes with MT6397 dt-bindings shouldn't reference driver
 
 has been applied to the regulator tree at
 
@@ -37,10 +37,10 @@ to this mail.
 Thanks,
 Mark
 
->From 9a843ed483f49044461020601d6f98a336523075 Mon Sep 17 00:00:00 2001
+>From 723310d46e6d40ced439ac52da18dd4d7b72c105 Mon Sep 17 00:00:00 2001
 From: Sean Wang <sean.wang@mediatek.com>
-Date: Tue, 15 Aug 2017 17:46:26 +0800
-Subject: [PATCH] regulator: add fixes with MT6311 dt-bindings shouldn't
+Date: Tue, 15 Aug 2017 17:46:28 +0800
+Subject: [PATCH] regulator: add fixes with MT6397 dt-bindings shouldn't
  reference driver
 
 DT bindings shouldn't reference drivers and they should be OS-agnostic.
@@ -48,18 +48,18 @@ DT bindings shouldn't reference drivers and they should be OS-agnostic.
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/regulator/mt6311-regulator.txt | 2 +-
+ Documentation/devicetree/bindings/regulator/mt6397-regulator.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/mt6311-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6311-regulator.txt
-index 02649d8b3f5a..84d544d8c1b1 100644
---- a/Documentation/devicetree/bindings/regulator/mt6311-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/mt6311-regulator.txt
+diff --git a/Documentation/devicetree/bindings/regulator/mt6397-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
+index a42b1d6e9863..01141fb00875 100644
+--- a/Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
 @@ -1,4 +1,4 @@
--Mediatek MT6311 Regulator Driver
-+Mediatek MT6311 Regulator
+-Mediatek MT6397 Regulator Driver
++Mediatek MT6397 Regulator
  
  Required properties:
- - compatible: "mediatek,mt6311-regulator"
+ - compatible: "mediatek,mt6397-regulator"
 -- 
 2.13.3
