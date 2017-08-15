@@ -1,94 +1,48 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [patch v3 1/3] drivers: jtag: Add JTAG core driver
-Date: Tue, 15 Aug 2017 13:16:06 +0200
-Message-ID: <CAK8P3a3DutrfhGrd9MnDFbzhfvnZXSyrV2RbTgrFGgpbAs=H0w@mail.gmail.com>
-References: <1502791207-26951-1-git-send-email-oleksandrs@mellanox.com> <1502791207-26951-2-git-send-email-oleksandrs@mellanox.com>
+From: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
+Subject: RE: [PATCH] of_mdio: merge branch tails in
+ of_phy_register_fixed_link()
+Date: Tue, 15 Aug 2017 11:18:50 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6DD0055AAA@AcuExch.aculab.com>
+References: <20170812210321.520045884@cogentembedded.com>
+ <20170813.200908.1426365653542179792.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502791207-26951-2-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170813.200908.1426365653542179792.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: 'David Miller' <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 15, 2017 at 12:00 PM, Oleksandr Shamray
-<oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org> wrote:
+From: David Miller
+> Sent: 14 August 2017 04:09
+> From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Date: Sun, 13 Aug 2017 00:03:06 +0300
+> 
+> > Looks  like gcc isn't always able to figure  out that 3 *if* branches in
+> > of_phy_register_fixed_link() calling fixed_phy_register() at their ends
+> > are similar enough and thus can be merged. The "manual" merge saves 40
+> > bytes of the object code (AArch64 gcc 4.8.5), and still saves 12 bytes
+> > even  if gcc was able to merge the branch tails (ARM gcc 4.8.5)...
+> >
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> Applied, but if two instances of the "same" compiler just with
+> different targets changes the optimization, it could be because of a
+> tradeoff which is specific to parameters expressed in that target's
+> backend.
+> 
+> So in the future we should probably back away from trying to "help"
+> the compiler in this way.
 
-> +       case JTAG_IOCXFER:
-> +               if (copy_from_user(&xfer, varg, sizeof(struct jtag_xfer)))
-> +                       return -EFAULT;
-> +
-> +               if (xfer.length >= JTAG_MAX_XFER_DATA_LEN)
-> +                       return -EFAULT;
-> +
-> +               user_tdio_data = xfer.tdio;
-> +               xfer.tdio = jtag_copy_from_user((void __user *)user_tdio_data,
-> +                                               xfer.length);
-> +               if (!xfer.tdio)
-> +                       return -ENOMEM;
+Probably a trade off between code size and execution speed.
+I've had 'fun' trying to stop gcc merging tail code paths
+in order to avoid the cost of the branch instruction.
 
-This is not safe for 32-bit processes on 64-bit kernels, since the
-structure layout differs for the pointer member. It's better to always
-use either rework the structure to avoid the pointer, or to use a
-__u64 member to store it, and then use u64_to_user_ptr()
-to convert it in the kernel.
+	David
 
-> +       case JTAG_GIOCSTATUS:
-> +               if (jtag->ops->status_get)
-> +                       err = jtag->ops->status_get(jtag,
-> +                                               (enum jtag_endstate *)&value);
-
-This pointer cast is also not safe, as an enum might have a different
-size than the 'value' variable that is not an enum. I think you need to
-change the argument type for the callback, or maybe use another
-intermediate.
-
-> +static int jtag_open(struct inode *inode, struct file *file)
-> +{
-> +       struct jtag *jtag = container_of(inode->i_cdev, struct jtag, cdev);
-> +
-> +       spin_lock(&jtag->lock);
-> +
-> +       if (jtag->is_open) {
-> +               dev_info(NULL, "jtag already opened\n");
-> +               spin_unlock(&jtag->lock);
-> +               return -EBUSY;
-> +       }
-> +
-> +       jtag->is_open = true;
-> +       file->private_data = jtag;
-> +       spin_unlock(&jtag->lock);
-> +       return 0;
-> +}
-
-Does the 'is_open' flag protect you from something that doesn't
-also happen after a 'dup()' call on the file descriptor?
-
-> + * @mode: access mode
-> + * @type: transfer type
-> + * @direction: xfer direction
-> + * @length: xfer bits len
-> + * @tdio : xfer data array
-> + * @endir: xfer end state
-> + *
-> + * Structure represents interface to Aspeed JTAG device for jtag sdr xfer
-> + * execution.
-> + */
-> +struct jtag_xfer {
-> +       __u8    mode;
-> +       __u8    type;
-> +       __u8    direction;
-> +       __u32   length;
-> +       __u8    *tdio;
-> +       __u8    endstate;
-> +};
-
-As mentioned above, the pointer in here makes it incompatible. Also,
-you should reorder the members to avoid the implied padding.
-Moving the 'endstate' before 'length' is sufficient.
-
-        Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
