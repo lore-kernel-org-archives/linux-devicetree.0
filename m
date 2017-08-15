@@ -1,68 +1,40 @@
-From: Wenyou Yang <wenyou.yang@microchip.com>
-Subject: [PATCH] ARM: dts: at91: sama5d2_xplained: Add charger node
-Date: Tue, 15 Aug 2017 14:24:20 +0800
-Message-ID: <20170815062420.21644-1-wenyou.yang@microchip.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v5 0/6] drivers/i2c: Add FSI-attached I2C master algorithm
+Date: Tue, 15 Aug 2017 08:36:59 +0200
+Message-ID: <f324da3b-7c9e-3dc1-0cdc-91576c7a50b8@axentia.se>
+References: <1501089198-10356-1-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wenyou Yang <wenyou.yang@atmel.com>, Wenyou Yang <wenyou.yang@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1501089198-10356-1-git-send-email-eajames@linux.vnet.ibm.com>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, cbostic@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Wenyou Yang <wenyou.yang@atmel.com>
+On 2017-07-26 19:13, Eddie James wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
+> 
+> This series adds an algorithm for an I2C master physically located on an FSI
+> slave device. The I2C master has multiple ports, each of which may be connected
+> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
+> 
+> Due to the multi-port nature of the I2C master, the driver instantiates a new
+> I2C adapter for each port connected to a slave. The connected ports should be
+> defined in the device tree under the I2C master device.
 
-Add the charger device node as a sub-device of act8945a mfd, move
-the charger's properties in the node, and replace the
-"active-semi,irq_gpios" with the "interrupts" property to denote
-the act8945a charger's irq.
+Hmmm, AFAIU fsi is a bus, and on this bus you have some "client" device that
+happens to be an i2c master, and this is a driver for that "client". Is it
+totally inconceivable to have some other client device in the future that is
+implementing an i2c master differently, but still using the fsi bus?
 
-Signed-off-by: Wenyou Yang <wenyou.yang@microchip.com>
----
+With that in mind, is it wise to pick the driver name from the bus that the
+device is connected to, and nothing else without further qualification?
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+I don't see any "i2c-usb" driver, but I think there are a couple of i2c master
+drivers that communicate via usb.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 2e2c3d1a1fa2..2a0f5f41260f 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -160,14 +160,6 @@
- 					compatible = "active-semi,act8945a";
- 					reg = <0x5b>;
- 					active-semi,vsel-high;
--					active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
--					active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
--					active-semi,irq_gpios = <&pioA 45 GPIO_ACTIVE_LOW>;
--					active-semi,input-voltage-threshold-microvolt = <6600>;
--					active-semi,precondition-timeout = <40>;
--					active-semi,total-timeout = <3>;
--					pinctrl-names = "default";
--					pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
- 					status = "okay";
- 
- 					regulators {
-@@ -220,6 +212,21 @@
- 							regulator-always-on;
- 						};
- 					};
-+
-+					charger {
-+						compatible = "active-semi,act8945a-charger";
-+						pinctrl-names = "default";
-+						pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
-+						interrupt-parent = <&pioA>;
-+						interrupts = <45 GPIO_ACTIVE_LOW>;
-+
-+						active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
-+						active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
-+						active-semi,input-voltage-threshold-microvolt = <6600>;
-+						active-semi,precondition-timeout = <40>;
-+						active-semi,total-timeout = <3>;
-+						status = "okay";
-+					};
- 				};
- 			};
- 
--- 
-2.13.0
+Cheers,
+Peter
