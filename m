@@ -1,56 +1,75 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: hi6220: add acpu_sctrl
-Date: Tue, 15 Aug 2017 14:32:43 +0100
-Message-ID: <5992F7FB.9080709@hisilicon.com>
-References: <1492478242-16146-1-git-send-email-zhangfei.gao@linaro.org>
- <1492478242-16146-2-git-send-email-zhangfei.gao@linaro.org>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v3 00/10] arm64: dts: hi3660: add more device nodes
+Date: Tue, 15 Aug 2017 14:36:05 +0100
+Message-ID: <5992F8C5.1030109@hisilicon.com>
+References: <20170814095049.27701-1-guodong.xu@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492478242-16146-2-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170814095049.27701-1-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhangfei,
+Hi Guodong,
 
-On 2017/4/18 2:17, Zhangfei Gao wrote:
-> Add acpu_sctrl clock node
+On 2017/8/14 10:50, Guodong Xu wrote:
+> This patchset adds more device nodes for hi3660 and hikey960, including:
+>  - cpu idle states
+>  - L2 cache
+>  - PMU
+>  - OP-TEE
+>  - reboot
+>  - pstore
+>  - DMA
+>  - watchdog
 > 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Patch 7 fixes an issue in mmc nodes, by adding 'reset'
+> Patch 8 change bluetooth uart max-speed to 3Mbps
 > 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index 470461d..710cc34 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -262,6 +262,12 @@
->  			#clock-cells = <1>;
->  		};
->  
-> +		acpu_sctrl: acpu_sctrl@f7032000 {
-> +			compatible = "hisilicon,hi6220-acpu-sctrl", "syscon";
-> +			reg = <0x0 0xf6504000 0x0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
->  		medianoc_ade: medianoc_ade@f4520000 {
->  			compatible = "syscon";
->  			reg = <0x0 0xf4520000 0x0 0x4000>;
+> HiKey960 is one of 96boards. For details information about it, please
+> refer to [1].
+> 
+> ===
+> Major changes in v3:
+>  - update commit message of patch 1, as suggested by Daniel Lezcano
+>  - add patch 10 for watchdog bindings
+> 
+> Major changes in v2:
+>  - add patch 8 to change bluetooth uart max-speed to 3Mbps
+>  - add patch 9 for DMA node.
+> 
+> [1] https://github.com/96boards/documentation/tree/master/ConsumerEdition/HiKey960
+> 
+> Guodong Xu (4):
+>   arm64: dts: hikey960: Add support for syscon-reboot-mode
+>   arm64: dts: hikey960: Add pstore support
+>   arm64: dts: hi3660: Reset the mmc hosts
+>   arm64: dts: hikey960: change bluetooth uart max-speed to 3mbps
+> 
+> Leo Yan (3):
+>   arm64: dts: hi3660: enable idle states
+>   arm64: dts: hi3660: add L2 cache topology
+>   arm64: dts: hi3660: enable watchdog
+> 
+> Victor Chong (1):
+>   arm64: dts: hikey960: Add optee node
+> 
+> Wang Ruyi (1):
+>   arm64: dts: hi3660: add bindings for DMA
+> 
+> YiPing Xu (1):
+>   arm64: dts: hi3660: add pmu dt node for hi3660
+> 
+>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  37 +++++-
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 130 ++++++++++++++++++++++
+>  2 files changed, 166 insertions(+), 1 deletion(-)
 > 
 
 Thanks!
-Applied to the hisilicon dt tree since the driver part is in the mainline now.
+Series applied to the hisilicon dt tree.
 
 Best Regards,
 Wei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
