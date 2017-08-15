@@ -1,75 +1,40 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v3 00/10] arm64: dts: hi3660: add more device nodes
-Date: Tue, 15 Aug 2017 14:36:05 +0100
-Message-ID: <5992F8C5.1030109@hisilicon.com>
-References: <20170814095049.27701-1-guodong.xu@linaro.org>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ASoC: mediatek: Correct the interrupt property
+Date: Tue, 15 Aug 2017 21:51:40 +0800
+Message-ID: <1502805100.25910.8.camel@mtkswgap22>
+References: <43a7fb98e7252d0b7b73cdabf1eedd0bf896d68c.1502784169.git.ryder.lee@mediatek.com>
+         <20170815115309.glj52jx3kpq4jxq3@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170814095049.27701-1-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170815115309.glj52jx3kpq4jxq3-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guodong,
+On Tue, 2017-08-15 at 12:53 +0100, Mark Brown wrote:
+> On Tue, Aug 15, 2017 at 04:07:02PM +0800, Ryder Lee wrote:
+> 
+> > This patch update interrupt property since we only use ASYS IRQ
+> > in the driver, and this may confuse people.
+> 
+> > -		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
+> > -			     <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> 
+> What harm does having the extra information in the bindings do?  If it's
+> possible there might be a use for the extra interrupt it seems better to
+> have people describe it.
 
-On 2017/8/14 10:50, Guodong Xu wrote:
-> This patchset adds more device nodes for hi3660 and hikey960, including:
->  - cpu idle states
->  - L2 cache
->  - PMU
->  - OP-TEE
->  - reboot
->  - pstore
->  - DMA
->  - watchdog
-> 
-> Patch 7 fixes an issue in mmc nodes, by adding 'reset'
-> Patch 8 change bluetooth uart max-speed to 3Mbps
-> 
-> HiKey960 is one of 96boards. For details information about it, please
-> refer to [1].
-> 
-> ===
-> Major changes in v3:
->  - update commit message of patch 1, as suggested by Daniel Lezcano
->  - add patch 10 for watchdog bindings
-> 
-> Major changes in v2:
->  - add patch 8 to change bluetooth uart max-speed to 3Mbps
->  - add patch 9 for DMA node.
-> 
-> [1] https://github.com/96boards/documentation/tree/master/ConsumerEdition/HiKey960
-> 
-> Guodong Xu (4):
->   arm64: dts: hikey960: Add support for syscon-reboot-mode
->   arm64: dts: hikey960: Add pstore support
->   arm64: dts: hi3660: Reset the mmc hosts
->   arm64: dts: hikey960: change bluetooth uart max-speed to 3mbps
-> 
-> Leo Yan (3):
->   arm64: dts: hi3660: enable idle states
->   arm64: dts: hi3660: add L2 cache topology
->   arm64: dts: hi3660: enable watchdog
-> 
-> Victor Chong (1):
->   arm64: dts: hikey960: Add optee node
-> 
-> Wang Ruyi (1):
->   arm64: dts: hi3660: add bindings for DMA
-> 
-> YiPing Xu (1):
->   arm64: dts: hi3660: add pmu dt node for hi3660
-> 
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  37 +++++-
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 130 ++++++++++++++++++++++
->  2 files changed, 166 insertions(+), 1 deletion(-)
-> 
+Yes you're right. The current driver get IRQ number by index "0" but
+actually it should be "1" (GIC 132). Perhaps we can switch to use the
+platform_get_irq_byname() and add interrupt-name in DT so that binding
+can be agnostic of the IRQ order. 
 
-Thanks!
-Series applied to the hisilicon dt tree.
 
-Best Regards,
-Wei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
