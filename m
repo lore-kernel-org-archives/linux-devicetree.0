@@ -1,38 +1,50 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] OF phandle nexus support + GPIO nexus
-Date: Tue, 15 Aug 2017 15:36:59 -0500
-Message-ID: <CAL_JsqLTzL1AkyfQxuTzz06ywXkCE6JZaFzV60ENDuL7TzY0BA@mail.gmail.com>
-References: <20170811154236.12891-1-stephen.boyd@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170811154236.12891-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/3] hwmon: (pmbus): Add IBM Common Form Factor (CFF) power supply driver
+Date: Tue, 15 Aug 2017 15:52:32 -0500
+Message-ID: <1502830355-502-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: jdelvare-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 11, 2017 at 10:42 AM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This is a continutation of my phandle remapping/nexus node series
-> from a while ago. I finally got around to writing the documentation
-> in the spec for this, but it's really rough around the edges and
-> could use some review/suggestions to get it into shape. Please
-> review!
->
-> This is one small chunk of work related to DT overlays for expansion
-> boards. It would be good to have a way to expose #<list>-cells types of
-> providers through a connector in a standard way. So we introduce a way
-> to make "nexus" nodes for these types of properties to remap the consumer
-> number space to the other side of the connector's number space. It's
-> basically a copy of the interrupt nexus implementation, but without
-> the address space matching design and interrupt-parent walking.
+From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 
-This generally looks good to me. I'm inclined to merge the kernel
-parts now and sort the spec addition out afterwards. With no users
-yet, we can still tweak things if needed.
+This series adds a hwmon pmbus driver for a POWER System power supply. The
+core monitoring functionality is provided by pmbus.
 
-I would like to see more comments on this though. Perhaps "OF phandle
-nexus" is too obscure. Maybe "Add DT overlay connector bindings" would
-trick some people in looking at it...
+Changes since v3:
+ * Change "fault" to "alarm" in the documentation.
 
-Rob
+Changes since v2:
+ * Renamed the driver again...
+ * Remove debugfs bool from pmbus_driver_info.
+ * Add comment for returning rc when reading STATUS_MFR_SPECIFIC fails.
+
+Since v1:
+ * Renamed the driver.
+ * Removed non-hwmon attributes.
+ * Simplified word and byte data reads.
+
+Edward A. James (3):
+  dt-bindings: i2c: Document the IBM CCF power supply version 1
+  hwmon: (pmbus): Add IBM Common Form Factor (CFF) power supply driver
+  Documentation: hwmon: Document the IBM CFF power supply
+
+ .../devicetree/bindings/i2c/ibm,cffps1.txt         |  21 +++
+ Documentation/hwmon/ibm-cffps                      |  54 ++++++++
+ drivers/hwmon/pmbus/Kconfig                        |  10 ++
+ drivers/hwmon/pmbus/Makefile                       |   1 +
+ drivers/hwmon/pmbus/ibm-cffps.c                    | 151 +++++++++++++++++++++
+ 5 files changed, 237 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/ibm,cffps1.txt
+ create mode 100644 Documentation/hwmon/ibm-cffps
+ create mode 100644 drivers/hwmon/pmbus/ibm-cffps.c
+
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
