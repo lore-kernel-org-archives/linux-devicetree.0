@@ -1,165 +1,49 @@
 From: Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH 4/6] ARM: dts: cygnus: Add additional peripherals to dtsi
-Date: Tue, 15 Aug 2017 10:26:01 -0700
-Message-ID: <1502817964-8221-5-git-send-email-scott.branden@broadcom.com>
+Subject: [PATCH 6/6] ARM: dts: cygnus: Add generic-ehci/ohci nodes
+Date: Tue, 15 Aug 2017 10:26:03 -0700
+Message-ID: <1502817964-8221-7-git-send-email-scott.branden@broadcom.com>
 References: <1502817964-8221-1-git-send-email-scott.branden@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1502817964-8221-1-git-send-email-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathan.richardson@broadcom.com>, Scott Branden <scott.branden@broadcom.com>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Richardson <jonathan.richardson@broadcom.com>
+From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
 
-Add nodes for peripherals in Cygnus dtsi: sdhci, keypad, spi, dma,
-pinmux configs.
+Add dt nodes for generic-ehci/ohci host controller.
 
-Signed-off-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
 Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi | 102 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ arch/arm/boot/dts/bcm-cygnus.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index bc08987..306b04c 100644
+index 306b04c..7c957ea 100644
 --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
 +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -124,6 +124,21 @@
- 			compatible = "brcm,cygnus-pinmux";
- 			reg = <0x0301d0c8 0x30>,
- 			      <0x0301d24c 0x2c>;
-+
-+			spi_0: spi_0 {
-+				function = "spi0";
-+				groups = "spi0_grp";
-+			};
-+
-+			spi_1: spi_1 {
-+				function = "spi1";
-+				groups = "spi1_grp";
-+			};
-+
-+			spi_2: spi_2 {
-+				function = "spi2";
-+				groups = "spi2_grp";
-+			};
+@@ -459,6 +459,20 @@
+ 			brcm,nand-has-wp;
  		};
  
- 		mailbox: mailbox@03024024 {
-@@ -305,6 +320,23 @@
- 			};
- 		};
- 
-+		dma0: dma@18018000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0x18018000 0x1000>;
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&apb_clk>;
-+			clock-names = "apb_pclk";
-+			#dma-cells = <1>;
-+		};
-+
- 		uart0: serial@18020000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x18020000 0x100>;
-@@ -349,6 +381,52 @@
- 			status = "disabled";
- 		};
- 
-+		spi0: spi@18028000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x18028000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-0 = <&spi_0>;
-+			clocks = <&axi81_clk>;
-+			clock-names = "apb_pclk";
++		ehci0: usb@18048000 {
++			compatible = "generic-ehci";
++			reg = <0x18048000 0x100>;
++			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
 +			status = "disabled";
 +		};
 +
-+		spi1: spi@18029000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x18029000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-0 = <&spi_1>;
-+			clocks = <&axi81_clk>;
-+			clock-names = "apb_pclk";
++		ohci0: usb@18048800 {
++			compatible = "generic-ohci";
++			reg = <0x18048800 0x100>;
++			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
 +			status = "disabled";
 +		};
 +
-+		spi2: spi@1802a000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0x1802a000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-0 = <&spi_2>;
-+			clocks = <&axi81_clk>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		sdhci0: sdhci@18041000 {
-+			compatible = "brcm,sdhci-iproc-cygnus";
-+			reg = <0x18041000 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&lcpll0 BCM_CYGNUS_LCPLL0_SDIO_CLK>;
-+			bus-width = <4>;
-+			sdhci,auto-cmd12;
-+			status = "disabled";
-+		};
-+
- 		eth0: ethernet@18042000 {
- 			compatible = "brcm,amac";
- 			reg = <0x18042000 0x1000>,
-@@ -358,6 +436,16 @@
- 			status = "disabled";
- 		};
- 
-+		sdhci1: sdhci@18043000 {
-+			compatible = "brcm,sdhci-iproc-cygnus";
-+			reg = <0x18043000 0x100>;
-+			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&lcpll0 BCM_CYGNUS_LCPLL0_SDIO_CLK>;
-+			bus-width = <4>;
-+			sdhci,auto-cmd12;
-+			status = "disabled";
-+		};
-+
- 		nand: nand@18046000 {
- 			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
- 			reg = <0x18046000 0x600>, <0xf8105408 0x600>,
-@@ -472,5 +560,19 @@
- 			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		keypad: keypad@180ac000 {
-+			compatible = "brcm,bcm-keypad";
-+			reg = <0x180ac000 0x14c>;
-+			interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&asiu_clks BCM_CYGNUS_ASIU_KEYPAD_CLK>;
-+			clock-names = "peri_clk";
-+			clock-frequency = <31250>;
-+			pull-up-enabled;
-+			col-debounce-filter-period = <0>;
-+			status-debounce-filter-period = <0>;
-+			row-output-enabled;
-+			status = "disabled";
-+		};
- 	};
- };
+ 		v3d: v3d@180a2000 {
+ 			compatible = "brcm,cygnus-v3d";
+ 			reg = <0x180a2000 0x1000>;
 -- 
 2.5.0
