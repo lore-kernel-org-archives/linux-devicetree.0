@@ -1,41 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7745: add PFC support
-Date: Tue, 15 Aug 2017 13:39:56 +0300
-Message-ID: <b3bcd091-4f96-c37a-54ec-c8ee5b0fd916@cogentembedded.com>
-References: <20170415202036.987901107@cogentembedded.com>
- <CAMuHMdUPda7Mjo_P8p1V5a20XOAYM6GFf8Jqf0KLUuO7zAODeA@mail.gmail.com>
- <TY1PR06MB07025D9CE628A3D4CED37AA9B78D0@TY1PR06MB0702.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <TY1PR06MB07025D9CE628A3D4CED37AA9B78D0@TY1PR06MB0702.apcprd06.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Paterson <Chris.Paterson2@renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v5 0/3] Introduce USB charger support in USB phy
+Date: Tue, 15 Aug 2017 19:07:52 +0800
+Message-ID: <cover.1502794826.git.baolin.wang@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: balbi@kernel.org, gregkh@linuxfoundation.org, sre@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: jun.li@nxp.com, peter.chen@freescale.com, broonie@kernel.org, john.stultz@linaro.org, neilb@suse.com, patches@opensource.wolfsonmicro.com, baolin.wang@linaro.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, device-mainlining@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/15/2017 11:47 AM, Chris Paterson wrote:
+Currently the Linux kernel does not provide any standard integration of this
+feature that integrates the USB subsystem with the system power regulation
+provided by PMICs meaning that either vendors must add this in their kernels
+or USB gadget devices based on Linux (such as mobile phones) may not behave
+as they should. Thus provide a standard USB charger support in USB phy core
+for doing this in kernel.
 
->>> Define the generic R8A7745 part of the PFC device node.
->>>
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> It looks like the dependencies for this patch are met now [1].
-> 
-> Are you happy to accept this patch? (and presumably the others in the series for the sk-rzg1e board).
-> 
-> We plan to add GPIO support for r8a7745, but need this patch in place first.
-> 
-> 
-> [1] https://patchwork.kernel.org/patch/9705249/
+Now introduce one user with wm831x_power to support and test the usb charger.
+In future we will also cnvert below power drivers:
+drivers/power/supply/axp288_charger.c
+drivers/power/supply/bq24190_charger.c
+drivers/power/supply/charger-manager.c
+drivers/power/supply/qcom_smbb.c
 
-    Actually, R8A774x PFC support has hit the Linus' tree in the meanwhile.
-Simon, please merge the .dts patches.
+Changes since v4:
+ - Change the phandle name from 'usb-phy' to 'phys' for wm831x_power driver.
+Changes since v3:
+ - Bail out errors when failed to find usb phy for wm831x_power driver.
+Changes since v2:
+ - Add DT binding documentation for wm831x_power driver.
+ - Change 'usb-phy' as one optional property for wm831x_power driver.
+Changes since v1:
+ - Fix building errors.
 
-> Kind regards, Chris
+Baolin Wang (3):
+  include: uapi: usb: Introduce USB charger type and state definition
+  usb: phy: Add USB charger support
+  power: wm831x_power: Support USB charger current limit management
 
-MBR, Sergei
+ Documentation/devicetree/bindings/mfd/wm831x.txt |    1 +
+ drivers/power/supply/wm831x_power.c              |   72 ++++++
+ drivers/usb/phy/phy.c                            |  272 ++++++++++++++++++++++
+ include/linux/usb/phy.h                          |   49 ++++
+ include/uapi/linux/usb/charger.h                 |   31 +++
+ 5 files changed, 425 insertions(+)
+ create mode 100644 include/uapi/linux/usb/charger.h
+
+-- 
+1.7.9.5
