@@ -1,78 +1,47 @@
-From: Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: Re: [PATCH v2] leds: add LED driver for CR0014114 board
-Date: Tue, 15 Aug 2017 14:37:47 +0300
-Message-ID: <cf002775-c825-6825-aa05-d455c110110d@kaa.org.ua>
-References: <20170814115355.9437-1-oleg@kaa.org.ua>
- <CAL_JsqJw18uCCLAd+rraiDr3meLvDkpOwLwqLLB5E5psHho2Jw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/9] dt-bindings: regulator: Add document for MediaTek
+ MT6380 regulator
+Date: Tue, 15 Aug 2017 12:50:38 +0100
+Message-ID: <20170815115038.65wos2ega2akxet4@sirena.org.uk>
+References: <cover.1502779753.git.sean.wang@mediatek.com>
+ <0325c83fa4eeb1dc9e887548c1ad5ae8ab912c91.1502779753.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJw18uCCLAd+rraiDr3meLvDkpOwLwqLLB5E5psHho2Jw@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="37rvr2ujaiqft7jc"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0325c83fa4eeb1dc9e887548c1ad5ae8ab912c91.1502779753.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.com, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob.
 
-Thank you for review.
+--37rvr2ujaiqft7jc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 14.08.17 17:28, Rob Herring wrote:
-> Please CC DT list for bindings and make bindings a separate patch.
+On Tue, Aug 15, 2017 at 05:09:14PM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+>=20
+> add dt-binding document for MediaTek MT6380 PMIC
 
-I will do.
+Please use subject lines reflecting the style for the subsystem.
 
-> On Mon, Aug 14, 2017 at 6:53 AM, Oleh Kravchenko <oleg@kaa.org.ua> wrote:
->> This patch adds a LED class driver for the RGB LEDs found on
->> the Crane Merchandising System CR0014114 LEDs board.
->>
->> Driver creates LED devices with name written using the following
->> pattern "LABEL-{N}:{red,green,blue}:".
->>
->> Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
->> ---
->>  .../devicetree/bindings/leds/leds-cr0014114.txt    |  23 ++
->>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->>  drivers/leds/Kconfig                               |  12 +
->>  drivers/leds/Makefile                              |   1 +
->>  drivers/leds/leds-cr0014114.c                      | 352 +++++++++++++++++++++
->>  5 files changed, 389 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-cr0014114.txt
->>  create mode 100644 drivers/leds/leds-cr0014114.c
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
->> new file mode 100644
->> index 000000000000..6a399cb65388
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
->> @@ -0,0 +1,23 @@
->> +Crane Merchandising System SPI LED board CR0014114
->> +==================================================
->> +
->> +Required properties:
->> +- compatible: "cms,cr0014114"
->> +
->> +Optional properties:
->> +- label: prefix for LED names. If omitted the label is taken from the node name.
-> label generally is the full name, not a prefix. It kind of defeats the
-> point of label if the name is the same. You might as well move this
-> into the driver.
->
->> +- leds-per-board: RGB leds per board, minimal value is 6
->> +- num-boards: number of LED boards on SPI bus, usually 1
-> From the driver, looks like you just need the total led count?
->
-> It also appears that the driver knows the color arrangement. Perhaps
-> you should have child nodes for each LED as the LED binding defines.
-> reg can have 2 cells if you need to define board# and led#. And label
-> can be the full label name if you keep label in the DT.
+--37rvr2ujaiqft7jc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks, it's will be better.
+-----BEGIN PGP SIGNATURE-----
 
-> Rob
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmS4A4ACgkQJNaLcl1U
+h9ChKwf/eQkXGgrh2fRb+qJT6BsggteGou1T7VjrnBkK3HWUN9wY0Tnb1fa+DjwR
+eVMFZ9W+3+F+T17NEv+30EoHaKiXPJ8R6m0CiHjjSqTr3oRb1+QLqJl9sNsHpPTT
+GVIw7/0YAsp13ujSNcBdjrvVmR1Uyzdb4b1EbMf6ubJN6eGMpa6fIZdtvBxM3t/N
+fD0tmiQX4XUdi4phkWcwD64S+FUVNyYByKMyHAwRoXv/8HjIbBey7DdwkBZ3Qfp6
+D8zdvuzewYGbQdtWAii1IR363X+AEN8LJ3lmB1El3PrYeXyRQqiIQJjEF9/jJOeX
+eGBNo4/oEOaamsQVaZC3G/gtZfPgkQ==
+=V1HG
+-----END PGP SIGNATURE-----
 
--- 
-Best regards,
-Oleh Kravchenko
+--37rvr2ujaiqft7jc--
