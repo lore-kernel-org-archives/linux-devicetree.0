@@ -1,30 +1,27 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V3 2/2] pinctrl: qcom: spmi-gpio: Add dtest route for
- digital input
-Date: Tue, 15 Aug 2017 11:18:11 +0200
-Message-ID: <CACRpkdbtSB4MSeq1rBzRmFQUprMUN0OdPVtfpD+Z_p4-jp9uUQ@mail.gmail.com>
-References: <20170815003918.8332-1-fenglinw@codeaurora.org> <20170815003918.8332-3-fenglinw@codeaurora.org>
+Subject: Re: [RESEND PATCH 1/2] dt-bindings: gpio: aspeed: Remove reference to
+ clock name
+Date: Tue, 15 Aug 2017 11:25:31 +0200
+Message-ID: <CACRpkdbzU2=-ny962gZ+-3+Gdme3ohewfaqozkfk6q1Wy1dHKg@mail.gmail.com>
+References: <20170808061634.11857-1-andrew@aj.id.au> <20170808061634.11857-2-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170815003918.8332-3-fenglinw@codeaurora.org>
+In-Reply-To: <20170808061634.11857-2-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: fenglinw@codeaurora.org
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, aghayal@codeaurora.org, wruan@codeaurora.org, kgunda@codeaurora.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 15, 2017 at 2:38 AM,  <fenglinw@codeaurora.org> wrote:
+On Tue, Aug 8, 2017 at 8:16 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-> From: Fenglin Wu <fenglinw@codeaurora.org>
+> HPLL was in fact not the clock we need. Remove prescription of which
+> clock to avoid further error. Please refer to your datasheet and double
+> check like I should have.
 >
-> Add property "qcom,dtest-buffer" to specify which dtest rail to feed
-> when the pin is configured as a digital input.
->
-> Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Patch applied.
+Patch applied with the ACKs.
 
 Yours,
 Linus Walleij
