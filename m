@@ -1,51 +1,88 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v9 00/12] rk808: Add RK805 support
-Date: Tue, 15 Aug 2017 16:14:52 +0200
-Message-ID: <4371065.5c7F4tU4zv@diego>
-References: <1502273060-12201-1-git-send-email-chenjh@rock-chips.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: Restrict DMA configuration
+Date: Tue, 15 Aug 2017 09:19:50 -0500
+Message-ID: <CAL_Jsq+pDHbrpLDYUVu22tk4OtR9Di4vxZUozwWJDu2ebYSBdg@mail.gmail.com>
+References: <0819179085df6c41c70e83a2c5c138b95c0386b3.1502468875.git.robin.murphy@arm.com>
+ <82633e62b64e28dc18bc466319065b92faf2414f.1502468875.git.robin.murphy@arm.com>
+ <CAL_JsqKW7nhkCDu4eEDCgdC87b0MLH1UFO8LvaH22BcJMBsY7w@mail.gmail.com> <6819c6ae-e898-3293-d8b0-7a80108d7628@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1502273060-12201-1-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6819c6ae-e898-3293-d8b0-7a80108d7628-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joseph,
+On Tue, Aug 15, 2017 at 5:18 AM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 14/08/17 21:08, Rob Herring wrote:
+>> +linuxppc-dev
+>>
+>> On Fri, Aug 11, 2017 at 11:29 AM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> Moving DMA configuration to happen later at driver probe time had the
+>>> unnoticed side-effect that we now perform DMA configuration for *every*
+>>> device represented in DT, rather than only those explicitly created by
+>>> the of_platform and PCI code.
+>>>
+>>> As Christoph points out, this is not really the best thing to do. Whilst
+>>> there may well be other DMA-capable buses that can benefit from having
+>>> their children automatically configured after the bridge has probed,
+>>> there are also plenty of others like USB, MDIO, etc. that definitely do
+>>> not support DMA and should not be indiscriminately processed.
+>>>
+>>> The good news is that DT already gives us the ammunition to do the right
+>>> thing - anything lacking a "dma-ranges" property should be considered
+>>> not to have a mapping of DMA address space from its children to its
+>>> parent, thus anything for which of_dma_get_range() does not succeed does
+>>> not need DMA configuration.
+>>>
+>>> The bad news is that strictly enforcing that would likely break just
+>>> about every FDT platform out there, since most authors have either not
+>>> considered the property at all or have mistakenly assumed that omitting
+>>> "dma-ranges" is equivalent to including the empty property. Thus we have
+>>> little choice but to special-case platform, AMBA and PCI devices so they
+>>> continue to receive configuration unconditionally as before. At least
+>>> anything new will have to get it right in future...
+>>
+>> By "anything new", you mean new buses, not new platforms, right?
+>> What's a platform bus device today could be a different kernel bus
+>> type tomorrow with no DT change. So this isn't really enforceable.
+>
+> Indeed, it would be virtually impossible to do anything on a
+> per-platform basis, but I think per-bus is a workable compromise - if
+> someone changes their hypothetical bus driver in a way that would affect
+> deployed DTs that can't be updated, at worst they can still add their
+> new bus type to the special case list at the same time.
+>
+>> I don't completely agree that omitting dma-ranges is wrong and that
+>> new DTs have to have dma-ranges simply because there is much precedent
+>> of DTs with dma-ranges omitted (just go look at PPC). If a bus has no
+>> bus to cpu address translation nor size restrictions, then no
+>> dma-ranges should be allowed.
+>
+> Sure, I agree that that genie is never going back in the bottle, but
+> people seem to manage to get empty "ranges" right to differentiate
+> between memory-mapped vs. non-memory-mapped buses, so it would be nice
+> to encourage getting the other direction right as well.
 
-Am Mittwoch, 9. August 2017, 18:04:08 CEST schrieb Joseph Chen:
-> change in v9:
-> PATCH V9 1/12: (1) fix spelling issue: s/Chip/chip/
-> 	       (2) apply tag: Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> PATCH V9 2/12: apply tag: Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> PATCH V9 3/12: None
-> PATCH V9 4/12: apply tag: Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> PATCH V9 5/12: None
-> PATCH V9 6/12: None
-> PATCH V9 7/12: apply tag: Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> PATCH V9 8/12: apply tag: Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> PATCH V9 9/12: None (Actually, something directly updated by Dmitry Torokhov 
-> and applied on PATCH V7. Link: https://git.kernel.org/pub/scm/linux/kernel/
-> git/dtor/input.git/log/?h=next
-> PATCH V9 10/12: apply tag: Acked-for-MFD-by: Lee Jones<lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> PATCH V9 11/12: apply tag: Acked-for-MFD-by: Lee Jones<lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> 
+Well, they get ranges right because they don't get an address
+otherwise. The problem on dma-ranges is the bus we describe is the
+slave side, not the master side. So a given bus may have a mixture of
+DMA capable devices and non-DMA capable devices. If we're still
+setting DMA masks on all the devices, what have we gained? Maybe we
+could get stricter on PCI buses at least.
 
-you might want to check your recipient list, because in at least the cover-
-letter and the first patches, I did not see Lee's email address included.
+> For the immediate issue at hand, I guess the alternative plan of attack
+> would be to stick a flag in struct bus_type for the bus drivers
+> themselves to opt into generic DMA configuration. That at least keeps
+> everything within the kernel (and come to think of it probably works
+> neatly for modular bus types as well).
 
-So he may very well not even see that there are patches waiting.
+I'm fine with the change as is, it's really just the commit text I'm
+commenting on.
 
-So please check the recipients and if necessary resend with Lee included?
-
-
-Heiko
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
