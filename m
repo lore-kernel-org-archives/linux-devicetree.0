@@ -1,91 +1,107 @@
 From: Sandy Huang <hjc@rock-chips.com>
-Subject: [PATCH v5 1/3] dt-bindings: display: Add Document for Rockchip Soc
- LVDS
-Date: Tue, 15 Aug 2017 11:49:19 +0800
-Message-ID: <1502768961-176569-1-git-send-email-hjc@rock-chips.com>
+Subject: [PATCH v5 2/3] ARM: dts: Add LVDS info for rk3288
+Date: Tue, 15 Aug 2017 11:49:24 +0800
+Message-ID: <1502768964-176628-1-git-send-email-hjc@rock-chips.com>
 References: <1502768955-176510-1-git-send-email-hjc@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1502768955-176510-1-git-send-email-hjc@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Sandy Huang <hjc@rock-chips.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgRG9jdW1lbnQgZm9yIFJvY2tjaGlwIFNvYyBSSzMyODggTFZEUywKVGhp
-cyBiYXNlZCBvbiB0aGUgcGF0Y2hlcyBmcm9tIE1hcmsgeWFvIGFuZCBIZWlrbyBTdHVlYm5lci4K
-ClNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1v
-ZmYtYnk6IE1hcmsgeWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KU2lnbmVkLW9mZi1ieTog
-SGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KLS0tCkNoYW5nZXMgYWNjb3JkaW5nIHRv
-IE1hcmsgWWFvIHJldmlld3MuCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2No
-aXAtbHZkcy50eHQgICAgfCAxMDUgKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
-ZCwgMTA1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dAoKZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tj
-aGlwL3JvY2tjaGlwLWx2ZHMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
-aW5kZXggMDAwMDAwMC4uYzE1MzQxMQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0CkBA
-IC0wLDAgKzEsMTA1IEBACitSb2NrY2hpcCBSSzMyODggTFZEUyBpbnRlcmZhY2UKKz09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09CisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBh
-dGlibGU6IG1hdGNoaW5nIHRoZSBzb2MgdHlwZSwgb25lIG9mCisJLSAicm9ja2NoaXAscmszMjg4
-LWx2ZHMiOworCistIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVy
-IGFuZCBsZW5ndGgKKwlvZiBtZW1vcnkgbWFwcGVkIHJlZ2lvbi4KKy0gY2xvY2tzOiBtdXN0IGlu
-Y2x1ZGUgY2xvY2sgc3BlY2lmaWVycyBjb3JyZXNwb25kaW5nIHRvIGVudHJpZXMgaW4gdGhlCisJ
-Y2xvY2stbmFtZXMgcHJvcGVydHkuCistIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4gInBjbGtf
-bHZkcyIKKworLSBhdmRkMXYwLXN1cHBseTogcmVndWxhdG9yIHBoYW5kbGUgZm9yIDEuMFYgYW5h
-bG9nIHBvd2VyCistIGF2ZGQxdjgtc3VwcGx5OiByZWd1bGF0b3IgcGhhbmRsZSBmb3IgMS44ViBh
-bmFsb2cgcG93ZXIKKy0gYXZkZDN2My1zdXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAzLjNW
-IGFuYWxvZyBwb3dlcgorCistIHJvY2tjaGlwLGdyZjogcGhhbmRsZSB0byB0aGUgZ2VuZXJhbCBy
-ZWdpc3RlciBmaWxlcyBzeXNjb24KKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gcGluY3RybC1u
-YW1lczogbXVzdCBjb250YWluIGEgImxjZGMiIGVudHJ5LgorLSBwaW5jdHJsLTA6IHBpbiBjb250
-cm9sIGdyb3VwIHRvIGJlIHVzZWQgZm9yIHRoaXMgY29udHJvbGxlci4KKworUmVxdWlyZWQgbm9k
-ZXM6CisKK1RoZSBsdmRzIGhhcyB0d28gdmlkZW8gcG9ydHMgYXMgZGVzY3JpYmVkIGJ5CisJRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0
-LgorVGhlaXIgY29ubmVjdGlvbnMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBoIGJpbmRp
-bmdzIHNwZWNpZmllZCBpbgorCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFw
-aC50eHQuCisKKy0gdmlkZW8gcG9ydCAwIGZvciB0aGUgVk9QIGlucHV0cworLSB2aWRlbyBwb3J0
-IDEgZm9yIGVpdGhlciBhIHBhbmVsIG9yIHN1YnNlcXVlbnQgZW5jb2RlcgorCit0aGUgbHZkcyBw
-YW5lbCBkZXNjcmliZWQgYnkKKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0CisKK1BhbmVsIHJlcXVpcmVkIHByb3BlcnRpZXM6
-CistIHJvY2tjaGlwLGRhdGEtd2lkdGggOiBzaG91bGQgYmUgPDE4PiBvciA8MjQ+OworLSByb2Nr
-Y2hpcCxvdXRwdXQ6IHNob3VsZCBiZSAicmdiIiwgImx2ZHMiIG9yICJkdWFsbHZkcyIsCisJVGhp
-cyBkZXNjcmliZXMgdGhlIG91dHB1dCBmYWNlLgorLSBwb3J0cyBmb3IgcmVtb3RlIExWRFMgb3V0
-cHV0CisKK1BhbmVsIG9wdGlvbmFsIHByb3BlcnRpZXM6CistIHJvY2tjaGlwLGRhdGEtbWFwcGlu
-Zzogc2hvdWxkIGJlICJ2ZXNhIiBvciAiamVpZGEiLAorCVRoaXMgZGVzY3JpYmVzIGhvdyB0aGUg
-Y29sb3IgYml0cyBhcmUgbGFpZCBvdXQgaW4gdGhlCisJc2VyaWFsaXplZCBMVkRTIHNpZ25hbC4K
-K0V4YW1wbGU6CisKK2x2ZHNfcGFuZWw6IGx2ZHMtcGFuZWwgeworCXN0YXR1cyA9ICJva2F5IjsK
-Kwljb21wYXRpYmxlID0gInNpbXBsZS1wYW5lbCI7CisJZW5hYmxlLWdwaW9zID0gPCZncGlvNyAy
-MSBHUElPX0FDVElWRV9ISUdIPjsKKwlyb2NrY2hpcCxkYXRhLW1hcHBpbmcgPSAiamVpZGEiOwor
-CXJvY2tjaGlwLGRhdGEtd2lkdGggPSA8MjQ+OworCXJvY2tjaGlwLG91dHB1dCA9ICJyZ2IiOwor
-CisJcG9ydHMgeworCQlwYW5lbF9pbl9sdmRzOiBlbmRwb2ludCB7CisJCQlyZW1vdGUtZW5kcG9p
-bnQgPSA8Jmx2ZHNfb3V0X3BhbmVsPjsKKwkJfTsKKwl9OworfTsKKworRm9yIFJvY2tjaGlwIFJL
-MzI4ODoKKworCWx2ZHM6IGx2ZHNAZmY5NmMwMDAgeworCQljb21wYXRpYmxlID0gInJvY2tjaGlw
-LHJrMzI4OC1sdmRzIjsKKwkJcm9ja2NoaXAsZ3JmID0gPCZncmY+OworCQlyZWcgPSA8MHhmZjk2
-YzAwMCAweDQwMDA+OworCQljbG9ja3MgPSA8JmNydSBQQ0xLX0xWRFNfUEhZPjsKKwkJY2xvY2st
-bmFtZXMgPSAicGNsa19sdmRzIjsKKwkJcGluY3RybC1uYW1lcyA9ICJsY2RjIjsKKwkJcGluY3Ry
-bC0wID0gPCZsY2RjX2N0bD47CisJCWF2ZGQxdjAtc3VwcGx5ID0gPCZ2ZGQxMF9sY2Q+OworCQlh
-dmRkMXY4LXN1cHBseSA9IDwmdmNjMThfbGNkPjsKKwkJYXZkZDN2My1zdXBwbHkgPSA8JnZjY2Ff
-MzM+OworCQlyb2NrY2hpcCxkYXRhLW1hcHBpbmcgPSAiamVpZGEiOworCQlyb2NrY2hpcCxkYXRh
-LXdpZHRoID0gPDI0PjsKKwkJcm9ja2NoaXAsb3V0cHV0ID0gInJnYiI7CisJCXBvcnRzIHsKKwkJ
-CSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCWx2ZHNf
-aW46IHBvcnRAMCB7CisJCQkJcmVnID0gPDA+OworCisJCQkJbHZkc19pbl92b3BiOiBlbmRwb2lu
-dEAwIHsKKwkJCQkJcmVnID0gPDA+OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGJfb3V0
-X2x2ZHM+OworCQkJCX07CisJCQkJbHZkc19pbl92b3BsOiBlbmRwb2ludEAxIHsKKwkJCQkJcmVn
-ID0gPDE+OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGxfb3V0X2x2ZHM+OworCQkJCX07
-CisJCQl9OworCisJCQlsdmRzX291dDogcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisKKwkJCQls
-dmRzX291dF9wYW5lbDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVs
-X2luPjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OwotLSAKMi43LjQKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+add LVDS info in rk3288.dtsi for LVDS driver
+This based on the patches from Mark yao and Heiko Stuebner.
+
+Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+Signed-off-by: Mark yao <mark.yao@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 52 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 2484f11..c2e33b8 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -983,6 +983,11 @@
+ 				reg = <2>;
+ 				remote-endpoint = <&mipi_in_vopb>;
+ 			};
++
++			vopb_out_lvds: endpoint@3 {
++				reg = <3>;
++				remote-endpoint = <&lvds_in_vopb>;
++			};
+ 		};
+ 	};
+ 
+@@ -1026,6 +1031,11 @@
+ 				reg = <2>;
+ 				remote-endpoint = <&mipi_in_vopl>;
+ 			};
++
++			vopl_out_lvds: endpoint@3 {
++				reg = <3>;
++				remote-endpoint = <&lvds_in_vopl>;
++			};
+ 		};
+ 	};
+ 
+@@ -1099,6 +1109,39 @@
+ 		};
+ 	};
+ 
++	lvds: lvds@ff96c000 {
++		compatible = "rockchip,rk3288-lvds";
++		reg = <0xff96c000 0x4000>;
++		clocks = <&cru PCLK_LVDS_PHY>;
++		clock-names = "pclk_lvds";
++		pinctrl-names = "lcdc";
++		pinctrl-0 = <&lcdc_ctl>;
++		power-domains = <&power RK3288_PD_VIO>;
++		rockchip,grf = <&grf>;
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			lvds_in: port@0 {
++				reg = <0>;
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				lvds_in_vopb: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vopb_out_lvds>;
++				};
++				lvds_in_vopl: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&vopl_out_lvds>;
++				};
++			};
++		};
++	};
++
+ 	hdmi: hdmi@ff980000 {
+ 		compatible = "rockchip,rk3288-dw-hdmi";
+ 		reg = <0xff980000 0x20000>;
+@@ -1823,5 +1866,14 @@
+ 				rockchip,pins = <RK_GPIO6 11 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 		};
++
++		lcdc {
++			lcdc_ctl: lcdc-ctl {
++				rockchip,pins = <1 24 RK_FUNC_1 &pcfg_pull_none>,
++						<1 25 RK_FUNC_1 &pcfg_pull_none>,
++						<1 26 RK_FUNC_1 &pcfg_pull_none>,
++						<1 27 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
+ 	};
+ };
+-- 
+2.7.4
