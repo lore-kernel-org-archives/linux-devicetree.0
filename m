@@ -1,73 +1,77 @@
-From: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [V6 2/2] dt-bindings: phy: Add bindings for ralink-usb PHY
-Date: Tue, 15 Aug 2017 13:47:03 +0100
-Message-ID: <1502801223-20833-2-git-send-email-harvey.hunt@imgtec.com>
-References: <1502801223-20833-1-git-send-email-harvey.hunt@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
+ slave
+Date: Tue, 15 Aug 2017 15:06:11 +0200
+Message-ID: <43820E05-9D40-4470-AE6C-B7B6C705E0A5@holtmann.org>
+References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
+ <1502102366-2760-2-git-send-email-loic.poulain@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502801223-20833-1-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1502102366-2760-2-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
-Cc: james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bluez mailing list <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Hi Rob,
 
-Add a binding for the USB phy on Mediatek/Ralink SoCs.
+> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
+> This allows to automatically insert the bcm43438 to the bluetooth
+> subsystem instead of relying on userspace helpers (hciattach).
+> 
+> Overwrite bootargs to use 8250 aux uart (ttyS0) as console instead
+> of pl011/ttyAMA0.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> v2: dt-bindings as separate patch
+>     rebase on upcoming pi3 dts changes
+> v3: changes in bcm serdev drivers:
+>     name refactoring and additional comments
+>     Add generic host_set_baudrate method
+>     Use agnostic device_property_read
+> 
+> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
+> 1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> index 20725ca..5abc1df 100644
+> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> @@ -8,6 +8,11 @@
+> 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+> 	model = "Raspberry Pi 3 Model B";
+> 
+> +	chosen {
+> +		/* 8250 auxiliar UART instead of pl011 */
+> +		bootargs = "earlyprintk console=ttyS0,115200";
+> +	};
+> +
+> 	memory {
+> 		reg = <0 0x40000000>;
+> 	};
+> @@ -24,6 +29,11 @@
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
+> 	status = "okay";
+> +
+> +	bluetooth {
+> +		compatible = "brcm,bcm43438-bt";
+> +		max-speed = <921600>;
+> +	};
+> };
 
-Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
----
-Changes in V6:
-* Add MT7628 binding
-* Add optional reg property
+I know that hci_ll.c DT entry also uses max-speed for the naming. Is this something common we should be doing? Essentially it is not really max-speed. It is the operational speed that we are configuring. There is no down negotiation ongoing. Does it make sense to use oper-speed instead?
 
-Changes in V5:
-* None
+Are we otherwise fine with compatible string naming?
 
-Changes in V4:
-* None
+Loic, the hciattach examples list 3000000 as operational speed. Any reason why we should limit it?
 
-Changes in V3:
-* Split out from first patch
+Regards
 
- .../devicetree/bindings/phy/ralink-usb-phy.txt      | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt b/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
-new file mode 100644
-index 0000000..80cd24d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
-@@ -0,0 +1,21 @@
-+Mediatek/Ralink USB PHY
-+
-+Required properties:
-+ - compatible: "ralink,rt3352-usbphy"
-+	       "mediatek,mt7620-usbphy"
-+	       "mediatek,mt7628-usbphy"
-+ - reg: required for "mediatek,mt7628-usbphy"
-+ - #phy-cells: should be 0
-+ - resets: the two reset controllers for host and device
-+ - reset-names: the names of the 2 reset controllers
-+
-+Example:
-+
-+usbphy: phy {
-+	compatible = "mediatek,mt7628-usbphy";
-+	reg = <0x10120000 0x1000>;
-+	#phy-cells = <0>;
-+
-+	resets = <&rstctrl 22 &rstctrl 25>;
-+	reset-names = "host", "device";
-+};
--- 
-2.7.4
+Marcel
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
