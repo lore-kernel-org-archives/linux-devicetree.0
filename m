@@ -1,41 +1,110 @@
 From: Sandy Huang <hjc@rock-chips.com>
-Subject: [PATCH v4 0/3] Add support Rockchip Soc LVDS
-Date: Tue, 15 Aug 2017 08:55:56 +0800
-Message-ID: <1502758557-113744-1-git-send-email-hjc@rock-chips.com>
+Subject: [PATCH v4 2/3] ARM: dts: Add LVDS info for rk3288
+Date: Tue, 15 Aug 2017 08:56:08 +0800
+Message-ID: <1502758568-113893-1-git-send-email-hjc@rock-chips.com>
+References: <1502758557-113744-1-git-send-email-hjc@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502758557-113744-1-git-send-email-hjc@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@armlinux.org.uk>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Sandy Huang <hjc@rock-chips.com>
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Sandy Huang <hjc@rock-chips.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[0]: https://github.com/RockchipOpensourceCommunity/popmetal-kernel-3.14
-[1]: http://lists.infradead.org/pipermail/linux-rockchip/2015-April/002830.html
+add LVDS info in rk3288.dtsi for LVDS driver
+This based on the patches from Mark yao and Heiko Stuebner.
 
-Changes:
-- Update rockchip_lvds_encoder_helper_funcs to atomic API
-- Add bridge function for RGB/LVDS convert to other output type
-- Fix some unreasonable define
-- Adapter to the latest rockchip DRM driver framework
-- Add pinctrl for RGB output type
-- Reseved some define for rockchip next Soc
+Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+Signed-off-by: Mark yao <mark.yao@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
 
-Sandy Huang (3):
-  dt-bindings: display: Add Document for Rockchip Soc LVDS
-  ARM: dts: Add LVDS info for rk3288
-  drm/rockchip: Add support for Rockchip Soc LVDS
+add ADD_ROCKCHIP_SUB_DRIVER(rockchip_lvds_driver, CONFIG_ROCKCHIP_LVDS);
 
- .../bindings/display/rockchip/rockchip-lvds.txt    | 106 ++++
- arch/arm/boot/dts/rk3288.dtsi                      |  52 ++
- drivers/gpu/drm/rockchip/Kconfig                   |   9 +
- drivers/gpu/drm/rockchip/Makefile                  |   1 +
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
- drivers/gpu/drm/rockchip/rockchip_lvds.c           | 652 +++++++++++++++++++++
- drivers/gpu/drm/rockchip/rockchip_lvds.h           | 109 ++++
- 8 files changed, 932 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
- create mode 100644 drivers/gpu/drm/rockchip/rockchip_lvds.c
- create mode 100644 drivers/gpu/drm/rockchip/rockchip_lvds.h
+ arch/arm/boot/dts/rk3288.dtsi | 52 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 2484f11..c2e33b8 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -983,6 +983,11 @@
+ 				reg = <2>;
+ 				remote-endpoint = <&mipi_in_vopb>;
+ 			};
++
++			vopb_out_lvds: endpoint@3 {
++				reg = <3>;
++				remote-endpoint = <&lvds_in_vopb>;
++			};
+ 		};
+ 	};
+ 
+@@ -1026,6 +1031,11 @@
+ 				reg = <2>;
+ 				remote-endpoint = <&mipi_in_vopl>;
+ 			};
++
++			vopl_out_lvds: endpoint@3 {
++				reg = <3>;
++				remote-endpoint = <&lvds_in_vopl>;
++			};
+ 		};
+ 	};
+ 
+@@ -1099,6 +1109,39 @@
+ 		};
+ 	};
+ 
++	lvds: lvds@ff96c000 {
++		compatible = "rockchip,rk3288-lvds";
++		reg = <0xff96c000 0x4000>;
++		clocks = <&cru PCLK_LVDS_PHY>;
++		clock-names = "pclk_lvds";
++		pinctrl-names = "lcdc";
++		pinctrl-0 = <&lcdc_ctl>;
++		power-domains = <&power RK3288_PD_VIO>;
++		rockchip,grf = <&grf>;
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			lvds_in: port@0 {
++				reg = <0>;
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				lvds_in_vopb: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vopb_out_lvds>;
++				};
++				lvds_in_vopl: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&vopl_out_lvds>;
++				};
++			};
++		};
++	};
++
+ 	hdmi: hdmi@ff980000 {
+ 		compatible = "rockchip,rk3288-dw-hdmi";
+ 		reg = <0xff980000 0x20000>;
+@@ -1823,5 +1866,14 @@
+ 				rockchip,pins = <RK_GPIO6 11 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 		};
++
++		lcdc {
++			lcdc_ctl: lcdc-ctl {
++				rockchip,pins = <1 24 RK_FUNC_1 &pcfg_pull_none>,
++						<1 25 RK_FUNC_1 &pcfg_pull_none>,
++						<1 26 RK_FUNC_1 &pcfg_pull_none>,
++						<1 27 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
+ 	};
+ };
 -- 
 2.7.4
