@@ -1,35 +1,47 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] iio: srf08: add support for similar devices and
- triggered buffers
-Date: Wed, 16 Aug 2017 22:14:33 +0200
-Message-ID: <823ea9d0-0410-2d6d-813b-686582656d68@axentia.se>
-References: <20170816193257.GA24393@arbeit>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] ARM: Convert to using %pOF instead of full_name
+Date: Wed, 16 Aug 2017 22:27:44 +0200
+Message-ID: <CAK8P3a0UfQ6fThn61Dch1TKPvKkF+7RtDwbv+xhSoWPHNC60hg@mail.gmail.com>
+References: <20170721192835.25555-1-robh@kernel.org> <CAL_JsqJQ7yUhtJca1hupd5zSqo5RTj5k5zc_Ueex1nzbOnjXdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170816193257.GA24393@arbeit>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJQ7yUhtJca1hupd5zSqo5RTj5k5zc_Ueex1nzbOnjXdw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>"linux-arm-kernel@lists.infradead.org" <linux>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-16 21:32, Andreas Klinger wrote:
-> This patch series adds support for:
-> - triggered buffer
-> - ultrasonic devices srf02 and srf10
-> 
-> Thanks for the review of Peter and Wolfram.
-> 
-> @Wolfram: please let me know, if you want a separate patch for [PATCH 1/5]
+On Thu, Aug 10, 2017 at 12:06 AM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Jul 21, 2017 at 2:28 PM, Rob Herring <robh@kernel.org> wrote:
+>> Now that we have a custom printf format specifier, convert users of
+>> full_name to use %pOF instead. This is preparation to remove storing
+>> of the full path string for each node.
+>>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> Acked-by: Heiko Stuebner <heiko@sntech.de>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>>
+>>  arch/arm/kernel/cpuidle.c            | 4 ++--
+>>  arch/arm/kernel/devtree.c            | 5 ++---
+>>  arch/arm/kernel/topology.c           | 3 +--
+>>  arch/arm/mach-exynos/suspend.c       | 7 +++----
+>>  arch/arm/mach-imx/gpc.c              | 4 ++--
+>>  arch/arm/mach-mvebu/kirkwood.c       | 3 +--
+>>  arch/arm/mach-omap2/omap-wakeupgen.c | 4 ++--
+>>  arch/arm/mach-omap2/omap_hwmod.c     | 4 ++--
+>>  arch/arm/mach-rockchip/platsmp.c     | 4 ++--
+>>  arch/arm/mach-shmobile/pm-rmobile.c  | 7 +++----
+>>  10 files changed, 20 insertions(+), 25 deletions(-)
+>
+> Arnd, Olof,
+>
+> Can you please apply this one.
 
-I think what you should do is rebase to something fresher, such as the
-togreg branch in the iio repo. As you have discovered, master branch is
-lagging behind in that repo.
+Applied to next/cleanup now, with the Acks. I think that should be the last
+patch of this series that you wanted me to apply. Can you double-check
+and maybe re-submit any patches I may have missed?
 
-And I think Jonathan would like that as well, but perhaps it doesn't
-make a difference for him?
-
-Cheers,
-peda
+        Arnd
