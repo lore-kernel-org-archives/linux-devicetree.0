@@ -1,213 +1,245 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v4 09/20] mtd: nand: qcom: support for read location
- registers
-Date: Wed, 16 Aug 2017 13:04:51 +0530
-Message-ID: <f08ada1166fe5446ea0f6d679eb3cdae@codeaurora.org>
-References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
- <1502451575-15712-10-git-send-email-absahu@codeaurora.org>
- <0ab9136e-bd50-54b0-116d-d52e7fc59756@codeaurora.org>
+From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Subject: Re: [patch net-next 0/3] net/sched: Improve getting objects by indexes
+Date: Wed, 16 Aug 2017 09:49:07 +0200
+Message-ID: <144b87a3-bbe4-a194-ed83-e54840d7c7c2@amd.com>
+References: <1502849538-14284-1-git-send-email-chrism@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <0ab9136e-bd50-54b0-116d-d52e7fc59756@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: boris.brezillon@free-electrons.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1502849538-14284-1-git-send-email-chrism-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Chris Mi <chrism-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lucho-OnYtXJJ0/fesTnJN9+BGXg@public.gmane.org, sergey.senozhatsky.work-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, markb-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, tom.leiming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefanr-MtYdepGKPcBMYopoZt5u/LNAH6kLmebB@public.gmane.org, zhi.a.wang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bfields-uC3wQj2KruNg9hUCZPvPmw@public.gmane.org, linux-sctp-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, jinpu.wang-EIkl63zCoXaH+58JC4qpiA@public.gmane.org, pshelar-LZ6Gd1LRuIk@public.gmane.org, sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, AlexBin.Xie-5C7GfCeVMHo@public.gmane.org, david1.zhou-5C7GfCeVMHo@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maximlevitsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudarsana.kalluru-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-atm-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, dtwlin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michel.daenzer-5C7GfCeVMHo@public.gmane.org, dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, longman-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, niranjana.vishwanathapura-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, philipp.reisner-63ez5xqkn6DQT0dZR+AlfA@public.gmane.org, shli-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, pmladek-IBi9RG/b67k@public.gmane.org, dick.kennedy-dY08KVG/lbpWk0Htik3J/w@public.gmane.orglinu
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-16 10:04, Archit Taneja wrote:
-> On 08/11/2017 05:09 PM, Abhishek Sahu wrote:
->> In EBI2, all codeword data will be read in FLASH_BUF_ACC buffer
->> and ADM will copy the data from source (FLASH_BUF_ACC) to
->> destination (memory for data read).
->> 
->> In QPIC, there is no FLASH_BUF_ACC and all the codeword data will
->> held in QPIC BAM FIFO buffers. It provides multiple READ_LOCATION
->> registers which will be used for copying the data from FIFO to
->> memory. The READ_LOCATION register will be used to read a
->> specific amount of data from a specific offset within the flash
->> buffer. It supports sequential offset requests. Each request is
->> composed of the following fields:
->> 
->> a. Offset within the flash buffer from which data should be
->>     read
->> b. Amount of data to be read
->> c. Flag bit specifying the last read request from the flash
->>     buffer. Following the last read request the NANDc refers to the
->>     buffer as empty.
->> 
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->> ---
->>   drivers/mtd/nand/qcom_nandc.c | 64 
->> +++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 64 insertions(+)
->> 
->> diff --git a/drivers/mtd/nand/qcom_nandc.c 
->> b/drivers/mtd/nand/qcom_nandc.c
->> index d9c8a6b..b452cfb 100644
->> --- a/drivers/mtd/nand/qcom_nandc.c
->> +++ b/drivers/mtd/nand/qcom_nandc.c
->> @@ -53,6 +53,8 @@
->>   #define	NAND_VERSION			0xf08
->>   #define	NAND_READ_LOCATION_0		0xf20
->>   #define	NAND_READ_LOCATION_1		0xf24
->> +#define	NAND_READ_LOCATION_2		0xf28
->> +#define	NAND_READ_LOCATION_3		0xf2c
->>     /* dummy register offsets, used by write_reg_dma */
->>   #define	NAND_DEV_CMD1_RESTORE		0xdead
->> @@ -135,6 +137,11 @@
->>   #define	ERASED_PAGE			(PAGE_ALL_ERASED | PAGE_ERASED)
->>   #define	ERASED_CW			(CODEWORD_ALL_ERASED | CODEWORD_ERASED)
->>   +/* NAND_READ_LOCATION_n bits */
->> +#define READ_LOCATION_OFFSET		0
->> +#define READ_LOCATION_SIZE		16
->> +#define READ_LOCATION_LAST		31
->> +
->>   /* Version Mask */
->>   #define	NAND_VERSION_MAJOR_MASK		0xf0000000
->>   #define	NAND_VERSION_MAJOR_SHIFT	28
->> @@ -177,6 +184,12 @@
->>   #define	ECC_BCH_4BIT	BIT(2)
->>   #define	ECC_BCH_8BIT	BIT(3)
->>   +#define nandc_set_readl(nandc, reg, offset, size, is_last)	\
-> 
-> Minor nit, readl makes one think it's 'read long'. If it isn't too
-> much effort, could you s/nandc_set_readl/nandc_set_read_loc ?
-> 
+Am 16.08.2017 um 04:12 schrieb Chris Mi:
+> Using current TC code, it is very slow to insert a lot of rules.
+>
+> In order to improve the rules update rate in TC,
+> we introduced the following two changes:
+>          1) changed cls_flower to use IDR to manage the filters.
+>          2) changed all act_xxx modules to use IDR instead of
+>             a small hash table
+>
+> But IDR has a limitation that it uses int. TC handle uses u32.
+> To make sure there is no regression, we also changed IDR to use
+> unsigned long. All clients of IDR are changed to use new IDR API.
 
-  Thanks Archit.
-  Yes that would be better. I will change the name.
+WOW, wait a second. The idr change is touching a lot of drivers and to 
+be honest doesn't looks correct at all.
 
->> +nandc_set_reg(nandc, NAND_READ_LOCATION_##reg,			\
->> +	      ((offset) << READ_LOCATION_OFFSET) |		\
->> +	      ((size) << READ_LOCATION_SIZE) |			\
->> +	      ((is_last) << READ_LOCATION_LAST))
->> +
->>   #define QPIC_PER_CW_CMD_SGL		32
->>   #define QPIC_PER_CW_DATA_SGL		8
->>   @@ -260,6 +273,11 @@ struct nandc_regs {
->>   	__le32 orig_vld;
->>     	__le32 ecc_buf_cfg;
->> +	__le32 read_location0;
->> +	__le32 read_location1;
->> +	__le32 read_location2;
->> +	__le32 read_location3;
->> +
->>   };
->>     /*
->> @@ -516,6 +534,14 @@ static __le32 *offset_to_nandc_reg(struct 
->> nandc_regs *regs, int offset)
->>   		return &regs->orig_vld;
->>   	case NAND_EBI2_ECC_BUF_CFG:
->>   		return &regs->ecc_buf_cfg;
->> +	case NAND_READ_LOCATION_0:
->> +		return &regs->read_location0;
->> +	case NAND_READ_LOCATION_1:
->> +		return &regs->read_location1;
->> +	case NAND_READ_LOCATION_2:
->> +		return &regs->read_location2;
->> +	case NAND_READ_LOCATION_3:
->> +		return &regs->read_location3;
->>   	default:
->>   		return NULL;
->>   	}
->> @@ -590,6 +616,10 @@ static void update_rw_regs(struct qcom_nand_host 
->> *host, int num_cw, bool read)
->>   	nandc_set_reg(nandc, NAND_FLASH_STATUS, host->clrflashstatus);
->>   	nandc_set_reg(nandc, NAND_READ_STATUS, host->clrreadstatus);
->>   	nandc_set_reg(nandc, NAND_EXEC_CMD, 1);
->> +
->> +	if (read)
->> +		nandc_set_readl(nandc, 0, 0, host->use_ecc ?
->> +				host->cw_data : host->cw_size, 1);
->>   }
->>     /*
->> @@ -835,6 +865,10 @@ static void config_nand_page_read(struct 
->> qcom_nand_controller *nandc)
->>    */
->>   static void config_nand_cw_read(struct qcom_nand_controller *nandc)
->>   {
->> +	if (nandc->props->is_bam)
->> +		write_reg_dma(nandc, NAND_READ_LOCATION_0, 4,
->> +			      NAND_BAM_NEXT_SGL);
->> +
->>   	write_reg_dma(nandc, NAND_FLASH_CMD, 1, NAND_BAM_NEXT_SGL);
->>   	write_reg_dma(nandc, NAND_EXEC_CMD, 1, NAND_BAM_NEXT_SGL);
->>   @@ -923,6 +957,7 @@ static int nandc_param(struct qcom_nand_host 
->> *host)
->>     	nandc_set_reg(nandc, NAND_DEV_CMD1_RESTORE, nandc->cmd1);
->>   	nandc_set_reg(nandc, NAND_DEV_CMD_VLD_RESTORE, nandc->vld);
->> +	nandc_set_readl(nandc, 0, 0, 512, 1);
->>     	write_reg_dma(nandc, NAND_DEV_CMD_VLD, 1, 0);
->>   	write_reg_dma(nandc, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
->> @@ -1398,6 +1433,19 @@ static int read_page_ecc(struct qcom_nand_host 
->> *host, u8 *data_buf,
->>   			oob_size = host->ecc_bytes_hw + host->spare_bytes;
->>   		}
->>   +		if (nandc->props->is_bam) {
->> +			if (data_buf && oob_buf) {
->> +				nandc_set_readl(nandc, 0, 0, data_size, 0);
->> +				nandc_set_readl(nandc, 1, data_size,
->> +						oob_size, 1);
->> +			} else if (data_buf) {
->> +				nandc_set_readl(nandc, 0, 0, data_size, 1);
->> +			} else {
->> +				nandc_set_readl(nandc, 0, data_size,
->> +						oob_size, 1);
->> +			}
->> +		}
->> +
->>   		config_nand_cw_read(nandc);
->>     		if (data_buf)
->> @@ -1457,6 +1505,7 @@ static int copy_last_cw(struct qcom_nand_host 
->> *host, int page)
->>     	set_address(host, host->cw_size * (ecc->steps - 1), page);
->>   	update_rw_regs(host, 1, true);
->> +	nandc_set_readl(nandc, 0, 0, size, 1);
-> 
-> The READ_LOC reg should already be set up in update_rw_regs, right? If
-> so, we could
-> drop this line.
+Just look at the first chunk of your modification:
+> @@ -998,8 +999,9 @@ int bsg_register_queue(struct request_queue *q, struct device *parent,
+>   
+>   	mutex_lock(&bsg_mutex);
+>   
+> -	ret = idr_alloc(&bsg_minor_idr, bcd, 0, BSG_MAX_DEVS, GFP_KERNEL);
+> -	if (ret < 0) {
+> +	ret = idr_alloc(&bsg_minor_idr, bcd, &idr_index, 0, BSG_MAX_DEVS,
+> +			GFP_KERNEL);
+> +	if (ret) {
+>   		if (ret == -ENOSPC) {
+>   			printk(KERN_ERR "bsg: too many bsg devices\n");
+>   			ret = -EINVAL;
+The condition "if (ret)" will now always be true after the first 
+allocation and so we always run into the error handling after that.
 
-  Yes. this line is redundant. I will remove the same.
+I've never read the bsg code before, but that's certainly not correct. 
+And that incorrect pattern repeats over and over again in this code.
 
-> 
-> With that,
-> 
-> Reviewed-by: Archit Taneja <architt@codeaurora.org>
-> 
-> Thanks,
-> Archit
-> 
->>     	config_nand_single_cw_page_read(nandc);
->>   @@ -1502,6 +1551,7 @@ static int qcom_nandc_read_page_raw(struct 
->> mtd_info *mtd,
->>   	u8 *data_buf, *oob_buf;
->>   	struct nand_ecc_ctrl *ecc = &chip->ecc;
->>   	int i, ret;
->> +	int read_loc;
->>     	data_buf = buf;
->>   	oob_buf = chip->oob_poi;
->> @@ -1527,6 +1577,20 @@ static int qcom_nandc_read_page_raw(struct 
->> mtd_info *mtd,
->>   			oob_size2 = host->ecc_bytes_hw + host->spare_bytes;
->>   		}
->>   +		if (nandc->props->is_bam) {
->> +			read_loc = 0;
->> +			nandc_set_readl(nandc, 0, read_loc, data_size1, 0);
->> +			read_loc += data_size1;
->> +
->> +			nandc_set_readl(nandc, 1, read_loc, oob_size1, 0);
->> +			read_loc += oob_size1;
->> +
->> +			nandc_set_readl(nandc, 2, read_loc, data_size2, 0);
->> +			read_loc += data_size2;
->> +
->> +			nandc_set_readl(nandc, 3, read_loc, oob_size2, 1);
->> +		}
->> +
->>   		config_nand_cw_read(nandc);
->>     		read_data_dma(nandc, reg_off, data_buf, data_size1, 0);
->> 
+Apart from that why the heck do you want to allocate more than 1<<31 
+handles?
+
+Regards,
+Christian.
+
+>
+> Chris Mi (3):
+>    idr: Use unsigned long instead of int
+>    net/sched: Change cls_flower to use IDR
+>    net/sched: Change act_api and act_xxx modules to use IDR
+>
+>   block/bsg.c                                     |   8 +-
+>   block/genhd.c                                   |  12 +-
+>   drivers/atm/nicstar.c                           |  11 +-
+>   drivers/block/drbd/drbd_main.c                  |  31 +--
+>   drivers/block/drbd/drbd_nl.c                    |  22 ++-
+>   drivers/block/drbd/drbd_proc.c                  |   3 +-
+>   drivers/block/drbd/drbd_receiver.c              |  15 +-
+>   drivers/block/drbd/drbd_state.c                 |  34 ++--
+>   drivers/block/drbd/drbd_worker.c                |   6 +-
+>   drivers/block/loop.c                            |  17 +-
+>   drivers/block/nbd.c                             |  20 +-
+>   drivers/block/zram/zram_drv.c                   |   9 +-
+>   drivers/char/tpm/tpm-chip.c                     |  10 +-
+>   drivers/char/tpm/tpm.h                          |   2 +-
+>   drivers/dca/dca-sysfs.c                         |   9 +-
+>   drivers/firewire/core-cdev.c                    |  18 +-
+>   drivers/firewire/core-device.c                  |  15 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c     |   8 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c         |   9 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c         |   6 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c         |   2 +-
+>   drivers/gpu/drm/drm_auth.c                      |   9 +-
+>   drivers/gpu/drm/drm_connector.c                 |  10 +-
+>   drivers/gpu/drm/drm_context.c                   |  20 +-
+>   drivers/gpu/drm/drm_dp_aux_dev.c                |  11 +-
+>   drivers/gpu/drm/drm_drv.c                       |   6 +-
+>   drivers/gpu/drm/drm_gem.c                       |  19 +-
+>   drivers/gpu/drm/drm_info.c                      |   2 +-
+>   drivers/gpu/drm/drm_mode_object.c               |  11 +-
+>   drivers/gpu/drm/drm_syncobj.c                   |  18 +-
+>   drivers/gpu/drm/exynos/exynos_drm_ipp.c         |  25 ++-
+>   drivers/gpu/drm/i915/gvt/display.c              |   2 +-
+>   drivers/gpu/drm/i915/gvt/kvmgt.c                |   2 +-
+>   drivers/gpu/drm/i915/gvt/vgpu.c                 |   9 +-
+>   drivers/gpu/drm/i915/i915_debugfs.c             |   6 +-
+>   drivers/gpu/drm/i915/i915_gem_context.c         |   9 +-
+>   drivers/gpu/drm/qxl/qxl_cmd.c                   |   8 +-
+>   drivers/gpu/drm/qxl/qxl_release.c               |  14 +-
+>   drivers/gpu/drm/sis/sis_mm.c                    |   8 +-
+>   drivers/gpu/drm/tegra/drm.c                     |  10 +-
+>   drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c    |   3 +-
+>   drivers/gpu/drm/vgem/vgem_fence.c               |  12 +-
+>   drivers/gpu/drm/via/via_mm.c                    |   8 +-
+>   drivers/gpu/drm/virtio/virtgpu_kms.c            |   5 +-
+>   drivers/gpu/drm/virtio/virtgpu_vq.c             |   5 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_resource.c        |   9 +-
+>   drivers/i2c/i2c-core-base.c                     |  19 +-
+>   drivers/infiniband/core/cm.c                    |   8 +-
+>   drivers/infiniband/core/cma.c                   |  12 +-
+>   drivers/infiniband/core/rdma_core.c             |   9 +-
+>   drivers/infiniband/core/sa_query.c              |  23 +--
+>   drivers/infiniband/core/ucm.c                   |   7 +-
+>   drivers/infiniband/core/ucma.c                  |  14 +-
+>   drivers/infiniband/hw/cxgb3/iwch.c              |   4 +-
+>   drivers/infiniband/hw/cxgb3/iwch.h              |   4 +-
+>   drivers/infiniband/hw/cxgb4/device.c            |  18 +-
+>   drivers/infiniband/hw/cxgb4/iw_cxgb4.h          |   4 +-
+>   drivers/infiniband/hw/hfi1/init.c               |   9 +-
+>   drivers/infiniband/hw/hfi1/vnic_main.c          |   6 +-
+>   drivers/infiniband/hw/mlx4/cm.c                 |  13 +-
+>   drivers/infiniband/hw/ocrdma/ocrdma_main.c      |   7 +-
+>   drivers/infiniband/hw/qib/qib_init.c            |   9 +-
+>   drivers/infiniband/ulp/opa_vnic/opa_vnic_vema.c |  10 +-
+>   drivers/iommu/intel-svm.c                       |   9 +-
+>   drivers/md/dm.c                                 |  13 +-
+>   drivers/memstick/core/memstick.c                |  10 +-
+>   drivers/memstick/core/ms_block.c                |   9 +-
+>   drivers/memstick/core/mspro_block.c             |  12 +-
+>   drivers/mfd/rtsx_pcr.c                          |   9 +-
+>   drivers/misc/c2port/core.c                      |   7 +-
+>   drivers/misc/cxl/context.c                      |   8 +-
+>   drivers/misc/cxl/main.c                         |  15 +-
+>   drivers/misc/mei/main.c                         |   8 +-
+>   drivers/misc/mic/scif/scif_api.c                |  11 +-
+>   drivers/misc/mic/scif/scif_ports.c              |  18 +-
+>   drivers/misc/tifm_core.c                        |   9 +-
+>   drivers/mtd/mtdcore.c                           |   9 +-
+>   drivers/mtd/mtdcore.h                           |   2 +-
+>   drivers/mtd/ubi/block.c                         |   7 +-
+>   drivers/net/ppp/ppp_generic.c                   |  27 +--
+>   drivers/net/tap.c                               |  10 +-
+>   drivers/net/wireless/ath/ath10k/htt.h           |   3 +-
+>   drivers/net/wireless/ath/ath10k/htt_tx.c        |  22 ++-
+>   drivers/net/wireless/ath/ath10k/mac.c           |   2 +-
+>   drivers/net/wireless/marvell/mwifiex/main.c     |  13 +-
+>   drivers/net/wireless/marvell/mwifiex/wmm.c      |   2 +-
+>   drivers/of/overlay.c                            |  15 +-
+>   drivers/of/unittest.c                           |  25 ++-
+>   drivers/power/supply/bq2415x_charger.c          |  16 +-
+>   drivers/power/supply/bq27xxx_battery_i2c.c      |  15 +-
+>   drivers/power/supply/ds2782_battery.c           |   9 +-
+>   drivers/powercap/powercap_sys.c                 |   8 +-
+>   drivers/pps/pps.c                               |  10 +-
+>   drivers/rapidio/rio_cm.c                        |  17 +-
+>   drivers/remoteproc/remoteproc_core.c            |   8 +-
+>   drivers/rpmsg/virtio_rpmsg_bus.c                |   8 +-
+>   drivers/scsi/bfa/bfad_im.c                      |   8 +-
+>   drivers/scsi/ch.c                               |   8 +-
+>   drivers/scsi/lpfc/lpfc_crtn.h                   |   2 +-
+>   drivers/scsi/lpfc/lpfc_init.c                   |  11 +-
+>   drivers/scsi/lpfc/lpfc_vport.c                  |   8 +-
+>   drivers/scsi/sg.c                               |  10 +-
+>   drivers/scsi/st.c                               |   8 +-
+>   drivers/staging/greybus/uart.c                  |  22 +--
+>   drivers/staging/unisys/visorhba/visorhba_main.c |   7 +-
+>   drivers/target/iscsi/iscsi_target.c             |   7 +-
+>   drivers/target/iscsi/iscsi_target_login.c       |   9 +-
+>   drivers/target/target_core_device.c             |   9 +-
+>   drivers/target/target_core_user.c               |  13 +-
+>   drivers/tee/tee_shm.c                           |   8 +-
+>   drivers/uio/uio.c                               |   9 +-
+>   drivers/usb/class/cdc-acm.c                     |  24 +--
+>   drivers/usb/core/devices.c                      |   2 +-
+>   drivers/usb/core/hcd.c                          |   7 +-
+>   drivers/usb/mon/mon_main.c                      |   3 +-
+>   drivers/usb/serial/usb-serial.c                 |  11 +-
+>   drivers/vfio/vfio.c                             |  15 +-
+>   fs/dlm/lock.c                                   |   9 +-
+>   fs/dlm/lockspace.c                              |   6 +-
+>   fs/dlm/recover.c                                |  10 +-
+>   fs/nfs/nfs4client.c                             |   9 +-
+>   fs/nfsd/nfs4state.c                             |   8 +-
+>   fs/notify/inotify/inotify_fsnotify.c            |   4 +-
+>   fs/notify/inotify/inotify_user.c                |   9 +-
+>   fs/ocfs2/cluster/tcp.c                          |  10 +-
+>   include/linux/idr.h                             |  26 +--
+>   include/linux/of.h                              |   4 +-
+>   include/linux/radix-tree.h                      |   2 +-
+>   include/net/9p/9p.h                             |   2 +-
+>   include/net/act_api.h                           |  76 +++-----
+>   ipc/msg.c                                       |   2 +-
+>   ipc/sem.c                                       |   2 +-
+>   ipc/shm.c                                       |   4 +-
+>   ipc/util.c                                      |  17 +-
+>   kernel/bpf/syscall.c                            |  20 +-
+>   kernel/cgroup/cgroup.c                          |  57 +++---
+>   kernel/events/core.c                            |  10 +-
+>   kernel/workqueue.c                              |  15 +-
+>   lib/idr.c                                       |  38 ++--
+>   lib/radix-tree.c                                |   5 +-
+>   mm/memcontrol.c                                 |  11 +-
+>   net/9p/client.c                                 |  17 +-
+>   net/9p/util.c                                   |  14 +-
+>   net/core/net_namespace.c                        |  23 ++-
+>   net/mac80211/cfg.c                              |  23 +--
+>   net/mac80211/iface.c                            |   3 +-
+>   net/mac80211/main.c                             |   2 +-
+>   net/mac80211/tx.c                               |   7 +-
+>   net/mac80211/util.c                             |   3 +-
+>   net/netlink/genetlink.c                         |  18 +-
+>   net/qrtr/qrtr.c                                 |  21 +-
+>   net/rxrpc/conn_client.c                         |  15 +-
+>   net/sched/act_api.c                             | 249 +++++++++++-------------
+>   net/sched/act_bpf.c                             |  17 +-
+>   net/sched/act_connmark.c                        |  16 +-
+>   net/sched/act_csum.c                            |  16 +-
+>   net/sched/act_gact.c                            |  16 +-
+>   net/sched/act_ife.c                             |  20 +-
+>   net/sched/act_ipt.c                             |  26 ++-
+>   net/sched/act_mirred.c                          |  19 +-
+>   net/sched/act_nat.c                             |  16 +-
+>   net/sched/act_pedit.c                           |  18 +-
+>   net/sched/act_police.c                          |  18 +-
+>   net/sched/act_sample.c                          |  17 +-
+>   net/sched/act_simple.c                          |  20 +-
+>   net/sched/act_skbedit.c                         |  18 +-
+>   net/sched/act_skbmod.c                          |  18 +-
+>   net/sched/act_tunnel_key.c                      |  20 +-
+>   net/sched/act_vlan.c                            |  22 +--
+>   net/sched/cls_flower.c                          |  55 +++---
+>   net/sctp/associola.c                            |   8 +-
+>   net/tipc/server.c                               |   7 +-
+>   172 files changed, 1256 insertions(+), 1113 deletions(-)
+>
