@@ -1,62 +1,212 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: i2c: Add MediaTek MT7622 i2c binding
-Date: Wed, 16 Aug 2017 10:20:23 +0800
-Message-ID: <1502850023.19230.42.camel@mtkswgap22>
-References: <1502802495-5064-1-git-send-email-jun.gao@mediatek.com>
-         <1502802495-5064-2-git-send-email-jun.gao@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502802495-5064-2-git-send-email-jun.gao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jun Gao <jun.gao@mediatek.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Chris Mi <chrism@mellanox.com>
+Subject: [patch net-next 0/3] net/sched: Improve getting objects by indexes
+Date: Tue, 15 Aug 2017 22:12:15 -0400
+Message-ID: <1502849538-14284-1-git-send-email-chrism__41117.9242576056$1502850822$gmane$org@mellanox.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: netdev@vger.kernel.org
+Cc: lucho@ionkov.net, sergey.senozhatsky.work@gmail.com, snitzer@redhat.com, wsa@the-dreams.de, markb@mellanox.com, tom.leiming@gmail.com, stefanr@s5r6.in-berlin.de, zhi.a.wang@intel.com, nsekhar@ti.com, dri-devel@lists.freedesktop.org, bfields@fieldses.org, linux-sctp@vger.kernel.org, paulus@samba.org, jinpu.wang@profitbricks.com, pshelar@ovn.org, sumit.semwal@linaro.org, AlexBin.Xie@amd.com, david1.zhou@amd.com, linux-samsung-soc@vger.kernel.org, maximlevitsky@gmail.com, sudarsana.kalluru@qlogic.com, marek.vasut@gmail.com, linux-atm-general@lists.sourceforge.net, dtwlin@gmail.com, michel.daenzer@amd.com, dledford@redhat.com, tpmdd-devel@lists.sourceforge.net, stern@rowland.harvard.edu, longman@redhat.com, niranjana.vishwanathapura@intel.com, philipp.reisner@linbit.com, shli@kernel.org, linux@roeck-us.net, ohad@wizery.com, pmladek@suse.com, dick.kennedy@broadcom.comlinux-
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-15 at 21:08 +0800, Jun Gao wrote:
-> From: Jun Gao <jun.gao@mediatek.com>
-> 
-> Add MT7622 i2c binding to binding file and change the compatible
-> information formats of all SoCs to the same.
-> 
-> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> index bd5a7be..71fc0b3 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> @@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
->  
->  Required properties:
->    - compatible: value should be either of the following.
-> -      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek mt2701
-> -      "mediatek,mt6577-i2c": for i2c compatible with mt6577.
-> -      "mediatek,mt6589-i2c": for i2c compatible with mt6589.
-> -      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
-> -      "mediatek,mt8173-i2c": for i2c compatible with mt8173.
-> +      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
-> +      "mediatek,mt6577-i2c": for Mediatek MT6577
-> +      "mediatek,mt6589-i2c": for Mediatek MT6589
-> +      "mediatek,mt7622-i2c": for Mediatek MT7622
-> +      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-> +      "mediatek,mt8173-i2c": for Mediatek MT8173
->    - reg: physical base address of the controller and dma base, length of memory
->      mapped region.
->    - interrupts: interrupt number to the cpu.
+Using current TC code, it is very slow to insert a lot of rules.
 
-Hi, Jun
+In order to improve the rules update rate in TC,
+we introduced the following two changes:
+        1) changed cls_flower to use IDR to manage the filters.
+        2) changed all act_xxx modules to use IDR instead of
+           a small hash table
 
-the patch for new soc support and clean-ups should better be in separate
-patch following previous Matthias suggestion. 
+But IDR has a limitation that it uses int. TC handle uses u32.
+To make sure there is no regression, we also changed IDR to use
+unsigned long. All clients of IDR are changed to use new IDR API.
 
-http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009740.html
+Chris Mi (3):
+  idr: Use unsigned long instead of int
+  net/sched: Change cls_flower to use IDR
+  net/sched: Change act_api and act_xxx modules to use IDR
 
+ block/bsg.c                                     |   8 +-
+ block/genhd.c                                   |  12 +-
+ drivers/atm/nicstar.c                           |  11 +-
+ drivers/block/drbd/drbd_main.c                  |  31 +--
+ drivers/block/drbd/drbd_nl.c                    |  22 ++-
+ drivers/block/drbd/drbd_proc.c                  |   3 +-
+ drivers/block/drbd/drbd_receiver.c              |  15 +-
+ drivers/block/drbd/drbd_state.c                 |  34 ++--
+ drivers/block/drbd/drbd_worker.c                |   6 +-
+ drivers/block/loop.c                            |  17 +-
+ drivers/block/nbd.c                             |  20 +-
+ drivers/block/zram/zram_drv.c                   |   9 +-
+ drivers/char/tpm/tpm-chip.c                     |  10 +-
+ drivers/char/tpm/tpm.h                          |   2 +-
+ drivers/dca/dca-sysfs.c                         |   9 +-
+ drivers/firewire/core-cdev.c                    |  18 +-
+ drivers/firewire/core-device.c                  |  15 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c     |   8 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c         |   9 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c         |   6 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c         |   2 +-
+ drivers/gpu/drm/drm_auth.c                      |   9 +-
+ drivers/gpu/drm/drm_connector.c                 |  10 +-
+ drivers/gpu/drm/drm_context.c                   |  20 +-
+ drivers/gpu/drm/drm_dp_aux_dev.c                |  11 +-
+ drivers/gpu/drm/drm_drv.c                       |   6 +-
+ drivers/gpu/drm/drm_gem.c                       |  19 +-
+ drivers/gpu/drm/drm_info.c                      |   2 +-
+ drivers/gpu/drm/drm_mode_object.c               |  11 +-
+ drivers/gpu/drm/drm_syncobj.c                   |  18 +-
+ drivers/gpu/drm/exynos/exynos_drm_ipp.c         |  25 ++-
+ drivers/gpu/drm/i915/gvt/display.c              |   2 +-
+ drivers/gpu/drm/i915/gvt/kvmgt.c                |   2 +-
+ drivers/gpu/drm/i915/gvt/vgpu.c                 |   9 +-
+ drivers/gpu/drm/i915/i915_debugfs.c             |   6 +-
+ drivers/gpu/drm/i915/i915_gem_context.c         |   9 +-
+ drivers/gpu/drm/qxl/qxl_cmd.c                   |   8 +-
+ drivers/gpu/drm/qxl/qxl_release.c               |  14 +-
+ drivers/gpu/drm/sis/sis_mm.c                    |   8 +-
+ drivers/gpu/drm/tegra/drm.c                     |  10 +-
+ drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c    |   3 +-
+ drivers/gpu/drm/vgem/vgem_fence.c               |  12 +-
+ drivers/gpu/drm/via/via_mm.c                    |   8 +-
+ drivers/gpu/drm/virtio/virtgpu_kms.c            |   5 +-
+ drivers/gpu/drm/virtio/virtgpu_vq.c             |   5 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_resource.c        |   9 +-
+ drivers/i2c/i2c-core-base.c                     |  19 +-
+ drivers/infiniband/core/cm.c                    |   8 +-
+ drivers/infiniband/core/cma.c                   |  12 +-
+ drivers/infiniband/core/rdma_core.c             |   9 +-
+ drivers/infiniband/core/sa_query.c              |  23 +--
+ drivers/infiniband/core/ucm.c                   |   7 +-
+ drivers/infiniband/core/ucma.c                  |  14 +-
+ drivers/infiniband/hw/cxgb3/iwch.c              |   4 +-
+ drivers/infiniband/hw/cxgb3/iwch.h              |   4 +-
+ drivers/infiniband/hw/cxgb4/device.c            |  18 +-
+ drivers/infiniband/hw/cxgb4/iw_cxgb4.h          |   4 +-
+ drivers/infiniband/hw/hfi1/init.c               |   9 +-
+ drivers/infiniband/hw/hfi1/vnic_main.c          |   6 +-
+ drivers/infiniband/hw/mlx4/cm.c                 |  13 +-
+ drivers/infiniband/hw/ocrdma/ocrdma_main.c      |   7 +-
+ drivers/infiniband/hw/qib/qib_init.c            |   9 +-
+ drivers/infiniband/ulp/opa_vnic/opa_vnic_vema.c |  10 +-
+ drivers/iommu/intel-svm.c                       |   9 +-
+ drivers/md/dm.c                                 |  13 +-
+ drivers/memstick/core/memstick.c                |  10 +-
+ drivers/memstick/core/ms_block.c                |   9 +-
+ drivers/memstick/core/mspro_block.c             |  12 +-
+ drivers/mfd/rtsx_pcr.c                          |   9 +-
+ drivers/misc/c2port/core.c                      |   7 +-
+ drivers/misc/cxl/context.c                      |   8 +-
+ drivers/misc/cxl/main.c                         |  15 +-
+ drivers/misc/mei/main.c                         |   8 +-
+ drivers/misc/mic/scif/scif_api.c                |  11 +-
+ drivers/misc/mic/scif/scif_ports.c              |  18 +-
+ drivers/misc/tifm_core.c                        |   9 +-
+ drivers/mtd/mtdcore.c                           |   9 +-
+ drivers/mtd/mtdcore.h                           |   2 +-
+ drivers/mtd/ubi/block.c                         |   7 +-
+ drivers/net/ppp/ppp_generic.c                   |  27 +--
+ drivers/net/tap.c                               |  10 +-
+ drivers/net/wireless/ath/ath10k/htt.h           |   3 +-
+ drivers/net/wireless/ath/ath10k/htt_tx.c        |  22 ++-
+ drivers/net/wireless/ath/ath10k/mac.c           |   2 +-
+ drivers/net/wireless/marvell/mwifiex/main.c     |  13 +-
+ drivers/net/wireless/marvell/mwifiex/wmm.c      |   2 +-
+ drivers/of/overlay.c                            |  15 +-
+ drivers/of/unittest.c                           |  25 ++-
+ drivers/power/supply/bq2415x_charger.c          |  16 +-
+ drivers/power/supply/bq27xxx_battery_i2c.c      |  15 +-
+ drivers/power/supply/ds2782_battery.c           |   9 +-
+ drivers/powercap/powercap_sys.c                 |   8 +-
+ drivers/pps/pps.c                               |  10 +-
+ drivers/rapidio/rio_cm.c                        |  17 +-
+ drivers/remoteproc/remoteproc_core.c            |   8 +-
+ drivers/rpmsg/virtio_rpmsg_bus.c                |   8 +-
+ drivers/scsi/bfa/bfad_im.c                      |   8 +-
+ drivers/scsi/ch.c                               |   8 +-
+ drivers/scsi/lpfc/lpfc_crtn.h                   |   2 +-
+ drivers/scsi/lpfc/lpfc_init.c                   |  11 +-
+ drivers/scsi/lpfc/lpfc_vport.c                  |   8 +-
+ drivers/scsi/sg.c                               |  10 +-
+ drivers/scsi/st.c                               |   8 +-
+ drivers/staging/greybus/uart.c                  |  22 +--
+ drivers/staging/unisys/visorhba/visorhba_main.c |   7 +-
+ drivers/target/iscsi/iscsi_target.c             |   7 +-
+ drivers/target/iscsi/iscsi_target_login.c       |   9 +-
+ drivers/target/target_core_device.c             |   9 +-
+ drivers/target/target_core_user.c               |  13 +-
+ drivers/tee/tee_shm.c                           |   8 +-
+ drivers/uio/uio.c                               |   9 +-
+ drivers/usb/class/cdc-acm.c                     |  24 +--
+ drivers/usb/core/devices.c                      |   2 +-
+ drivers/usb/core/hcd.c                          |   7 +-
+ drivers/usb/mon/mon_main.c                      |   3 +-
+ drivers/usb/serial/usb-serial.c                 |  11 +-
+ drivers/vfio/vfio.c                             |  15 +-
+ fs/dlm/lock.c                                   |   9 +-
+ fs/dlm/lockspace.c                              |   6 +-
+ fs/dlm/recover.c                                |  10 +-
+ fs/nfs/nfs4client.c                             |   9 +-
+ fs/nfsd/nfs4state.c                             |   8 +-
+ fs/notify/inotify/inotify_fsnotify.c            |   4 +-
+ fs/notify/inotify/inotify_user.c                |   9 +-
+ fs/ocfs2/cluster/tcp.c                          |  10 +-
+ include/linux/idr.h                             |  26 +--
+ include/linux/of.h                              |   4 +-
+ include/linux/radix-tree.h                      |   2 +-
+ include/net/9p/9p.h                             |   2 +-
+ include/net/act_api.h                           |  76 +++-----
+ ipc/msg.c                                       |   2 +-
+ ipc/sem.c                                       |   2 +-
+ ipc/shm.c                                       |   4 +-
+ ipc/util.c                                      |  17 +-
+ kernel/bpf/syscall.c                            |  20 +-
+ kernel/cgroup/cgroup.c                          |  57 +++---
+ kernel/events/core.c                            |  10 +-
+ kernel/workqueue.c                              |  15 +-
+ lib/idr.c                                       |  38 ++--
+ lib/radix-tree.c                                |   5 +-
+ mm/memcontrol.c                                 |  11 +-
+ net/9p/client.c                                 |  17 +-
+ net/9p/util.c                                   |  14 +-
+ net/core/net_namespace.c                        |  23 ++-
+ net/mac80211/cfg.c                              |  23 +--
+ net/mac80211/iface.c                            |   3 +-
+ net/mac80211/main.c                             |   2 +-
+ net/mac80211/tx.c                               |   7 +-
+ net/mac80211/util.c                             |   3 +-
+ net/netlink/genetlink.c                         |  18 +-
+ net/qrtr/qrtr.c                                 |  21 +-
+ net/rxrpc/conn_client.c                         |  15 +-
+ net/sched/act_api.c                             | 249 +++++++++++-------------
+ net/sched/act_bpf.c                             |  17 +-
+ net/sched/act_connmark.c                        |  16 +-
+ net/sched/act_csum.c                            |  16 +-
+ net/sched/act_gact.c                            |  16 +-
+ net/sched/act_ife.c                             |  20 +-
+ net/sched/act_ipt.c                             |  26 ++-
+ net/sched/act_mirred.c                          |  19 +-
+ net/sched/act_nat.c                             |  16 +-
+ net/sched/act_pedit.c                           |  18 +-
+ net/sched/act_police.c                          |  18 +-
+ net/sched/act_sample.c                          |  17 +-
+ net/sched/act_simple.c                          |  20 +-
+ net/sched/act_skbedit.c                         |  18 +-
+ net/sched/act_skbmod.c                          |  18 +-
+ net/sched/act_tunnel_key.c                      |  20 +-
+ net/sched/act_vlan.c                            |  22 +--
+ net/sched/cls_flower.c                          |  55 +++---
+ net/sctp/associola.c                            |   8 +-
+ net/tipc/server.c                               |   7 +-
+ 172 files changed, 1256 insertions(+), 1113 deletions(-)
 
-And also spelling for Mediatek should be corrected using MediaTek.
-
-
-	Sean
+-- 
+1.8.3.1
