@@ -1,48 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7745: add PFC support
-Date: Wed, 16 Aug 2017 14:00:37 +0300
-Message-ID: <521e62cc-46d4-b067-59b2-cc085fd88e84@cogentembedded.com>
-References: <20170415202036.987901107@cogentembedded.com>
- <CAMuHMdUPda7Mjo_P8p1V5a20XOAYM6GFf8Jqf0KLUuO7zAODeA@mail.gmail.com>
- <TY1PR06MB07025D9CE628A3D4CED37AA9B78D0@TY1PR06MB0702.apcprd06.prod.outlook.com>
- <b3bcd091-4f96-c37a-54ec-c8ee5b0fd916@cogentembedded.com>
- <20170815160049.GC26748@verge.net.au>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 5/8] pinctrl: sh-pfc: r8a77995: Add EthernetAVB pins,
+ groups and functions
+Date: Wed, 16 Aug 2017 13:06:22 +0200
+Message-ID: <CAMuHMdWQD9Gnt0hCHf8nwdq0etWQW=zSuXqFe7qrxmQ7SAEVjw@mail.gmail.com>
+References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1502281187-24068-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170815160049.GC26748@verge.net.au>
-Content-Language: en-MW
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502281187-24068-6-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Takeshi Kihara <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2017 07:00 PM, Simon Horman wrote:
+Hi Shimoda-san, Kihara-san,
 
->>>>> Define the generic R8A7745 part of the PFC device node.
->>>>>
->>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>>
->>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>
->>> It looks like the dependencies for this patch are met now [1].
->>>
->>> Are you happy to accept this patch? (and presumably the others in the series for the sk-rzg1e board).
->>>
->>> We plan to add GPIO support for r8a7745, but need this patch in place first.
->>>
->>>
->>> [1] https://patchwork.kernel.org/patch/9705249/
->>
->>     Actually, R8A774x PFC support has hit the Linus' tree in the meanwhile.
->> Simon, please merge the .dts patches.
->>
->>> Kind regards, Chris
-> 
-> Thanks, I have applied the series for v4.14.
+On Wed, Aug 9, 2017 at 2:19 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> From: Takeshi Kihara <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-    Are you going to finally push the devel branch? I'm not seeing changes 
-since the Monday tags.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-MBR, Sergei
+But before I apply this, please see my question below...
+
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+
+> +static const char * const avb0_groups[] = {
+> +       "avb0_td",
+> +       "avb0_rd",
+> +       "avb0_tx_ctl",
+> +       "avb0_rx_ctl",
+> +       "avb0_txc",
+> +       "avb0_rxc",
+> +       "avb0_txcrefclk",
+> +       "avb0_link",
+> +       "avb0_magic",
+> +       "avb0_phy_int",
+> +       "avb0_mdc",
+> +       "avb0_mdio",
+> +       "avb0_avtp_pps_a",
+> +       "avb0_avtp_match_a",
+> +       "avb0_avtp_capture_a",
+> +       "avb0_avtp_pps_b",
+> +       "avb0_avtp_match_b",
+> +       "avb0_avtp_capture_b",
+> +};
+
+Is there any specific reason this uses a different split than the
+EtherAVB groups
+in pinctrl drivers for other SoCs?
+
+Note that I do understand that the different prefix ("avb0" vs. "avb")
+was used to
+match the R-Car D3 datasheet, which is thus OK.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
