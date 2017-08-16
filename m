@@ -1,73 +1,35 @@
-From: Liam Breck <liam@networkimprov.net>
-Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190 battery charger
-Date: Wed, 16 Aug 2017 13:11:39 -0700
-Message-ID: <CAKvHMgTvVMsvmyi0o89m1SfS9A4U1GbNuU05Tkt6C0ARR9NyWw@mail.gmail.com>
-References: <20170807195420.20767-1-liam@networkimprov.net>
- <20170807195420.20767-3-liam@networkimprov.net> <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
- <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
- <20170812164233.won7fairxmrnblps@earth> <CAKvHMgR+GxSqhy+iwdYmku2600HzoF__oXV7_w72ZJg-aK7O-Q@mail.gmail.com>
- <20170816154701.GR3930@atomide.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] iio: srf08: add support for similar devices and
+ triggered buffers
+Date: Wed, 16 Aug 2017 22:14:33 +0200
+Message-ID: <823ea9d0-0410-2d6d-813b-686582656d68@axentia.se>
+References: <20170816193257.GA24393@arbeit>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170816154701.GR3930@atomide.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170816193257.GA24393@arbeit>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 16, 2017 at 8:47 AM, Tony Lindgren <tony@atomide.com> wrote:
-> * Liam Breck <liam@networkimprov.net> [170812 12:00]:
->> On Sat, Aug 12, 2017 at 9:42 AM, Sebastian Reichel <sre@kernel.org> wrote:
->> > On Fri, Aug 11, 2017 at 02:57:10PM -0700, Liam Breck wrote:
->> >> >> +Other features:
->> >> >> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current on USB SDP port.
->> >> >
->> >> > Why doesn't the charger driver control this?
->> >>
->> >> This pin/gpio has to be high when USB is plugged in to make the
->> >> charger chip negotiate 500mA from a SDP port. It should generally be
->> >> configured that way even if the driver is not loaded, as the chip does
->> >> not require a driver to function. Some boards may do that with a
->> >> pull-up. Also the user may want to change this via sysfs and not have
->> >> the driver "fix" it.
->> >
->> > drivers/power/supply/qcom_smbb.c exposes the otg feature as
->> > regulator. I think in this case it could be exposed as
->> > gpio-regulator.
->>
->> Hans is doing that here:
->> https://patchwork.kernel.org/patch/9883717/
->>
->> The datasheet labels one pin "OTG" but that's misleading; it really
->> enables negotiation of 500mA input current, but does not turn on OTG
->> mode. If this pin is low, it only prevents the driver from starting
->> OTG mode via I2C msg.
->
-> Yeah so before the device has enumerated this pin keeps the
-> max current at 100mA as required by the USB spec. This pin
-> should be only toggled after enumerating in bootloader or
-> by the kernel driver. I tink the USB PHY driver can also
-> be wired to control this line.
->
-> Probably best to set it up as just a GPIO that the bq24190
-> driver controls optionally.
->
-> Then later on we should have some Linux generic way for
-> USB gadget subsystem to tell the charger that we have
-> enumerated, and then bq24190 driver can toggle this GPIO
-> to enable higher charge rates.
+On 2017-08-16 21:32, Andreas Klinger wrote:
+> This patch series adds support for:
+> - triggered buffer
+> - ultrasonic devices srf02 and srf10
+> 
+> Thanks for the review of Peter and Wolfram.
+> 
+> @Wolfram: please let me know, if you want a separate patch for [PATCH 1/5]
 
-I discovered a few months ago that setting this pin high after USB
-connect has NO effect on iinlim. It has to be high at connect to
-auto-negotiate 500mA. There is no point in making the driver control
-this pin; we already tried that.
+I think what you should do is rebase to something fresher, such as the
+togreg branch in the iio repo. As you have discovered, master branch is
+lagging behind in that repo.
 
-Here we are just documenting how the DT can enable this pin via gpio-hog.
+And I think Jonathan would like that as well, but perhaps it doesn't
+make a difference for him?
 
-I believe the only way to defer 500mA negotiation is to leave this pin
-off and set iinlim via I2C msg to chip. We can do that in a gadget
-script via sysfs input_current_limit. Hans does not have to enable
-this pin to start OTG-host on his x86 device, perhaps because it is
-wired high there. Our script can set the linked gpio high if nec for
-OTG-host.
+Cheers,
+peda
