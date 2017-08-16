@@ -1,65 +1,53 @@
-From: Tom Rini <trini@konsulko.com>
-Subject: [PATCH] ARM: dts: TI: Enable __symbols__ in dtb files for some platforms
-Date: Wed, 16 Aug 2017 17:59:11 -0400
-Message-ID: <1502920751-11121-1-git-send-email-trini@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sekhar Nori <nsekhar@ti.com>, Jason Kridner <jkridner@beagleboard.org>, Drew Fustini <drew@beagleboard.org>, Robert Nelson <robertcnelson@gmail.com>, Lokesh Vutla <lokeshvutla@ti.com>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 3/3] dt-bindings: i2c: i2c-davinci: Update binding for 66AK2Gx pwr dm property
+Date: Wed, 16 Aug 2017 17:17:15 -0500
+Message-ID: <20170816221715.15027-4-fcooper@ti.com>
+References: <20170816221715.15027-1-fcooper@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170816221715.15027-1-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org
+Cc: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Build the dtb file for these platfroms with __symbol__ information
-included.  This will reduce the size of the dtb (and resident memory
-usage) in exchange for allowing more types of overlays to be applied to
-the dtb file prior to passing it to Linux and additional functionality
-within the kernel when OF_OVERLAY is enabled.
+Add pm-domains property which is required for 66AK2Gx. Also document 66AK2G
+unique clocks property usage.
 
-Cc: Jason Kridner <jkridner@beagleboard.org>
-Cc: Drew Fustini <drew@beagleboard.org>
-Cc: Robert Nelson <robertcnelson@gmail.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Tom Rini <trini@konsulko.com>
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-This patch takes the path that Rob encouraged in my previous patch of
-enabling __symbols__ in some platforms now (that can use it) and see if
-a critical mass evolves that pushes towards -@ being default for all
-dtbs.  I would suggest that the dra76 series be respun to include a hunk
-like this at least as well, and if there's another Beagle X15 patch,
-that too.  Russell, per some of our conversations, something like would
-also be needed as part of using overlays to solve some of the problems
-with Hummingboard, etc.
----
- arch/arm/boot/dts/Makefile | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/i2c/i2c-davinci.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4b17f35dc9a7..6f98422ca00e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1063,3 +1063,17 @@ dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dts
- 
- always		:= $(dtb-y)
- clean-files	:= *.dtb
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+index 5b123e0..64e6e65 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+@@ -6,6 +6,18 @@ davinci/keystone i2c interface contains.
+ Required properties:
+ - compatible: "ti,davinci-i2c" or "ti,keystone-i2c";
+ - reg : Offset and length of the register set for the device
++- clocks: I2C functional clock phandle.
++	  For 66AK2G this property should be set per binding,
++	  Documentation/devicetree/bindings/clock/ti,sci-clk.txt
 +
-+# enable creation of __symbols__ node
-+DTC_FLAGS_am335x-bone += -@
-+DTC_FLAGS_am335x-boneblack += -@
-+DTC_FLAGS_am335x-boneblack-wireless += -@
-+DTC_FLAGS_am335x-boneblue += -@
-+DTC_FLAGS_am335x-bonegreen += -@
-+DTC_FLAGS_am335x-bonegreen-wireless += -@
-+DTC_FLAGS_am57xx-beagle-x15 += -@
-+DTC_FLAGS_am57xx-beagle-x15-revb1 += -@
-+DTC_FLAGS_dra7-evm += -@
-+DTC_FLAGS_dra72-evm += -@
-+DTC_FLAGS_dra72-evm-revc += -@
-+DTC_FLAGS_dra71-evm += -@
++SoC-specific Required Properties:
++
++The following are mandatory properties for Keystone 2 66AK2G SoCs only:
++
++- power-domains:	Should contain a phandle to a PM domain provider node
++			and an args specifier containing the I2C device id
++			value. This property is as per the binding,
++			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+ 
+ Recommended properties :
+ - interrupts : standard interrupt property.
 -- 
-1.9.1
+2.9.4.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
