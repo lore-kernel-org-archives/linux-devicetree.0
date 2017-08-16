@@ -1,117 +1,54 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 1/3] dt: bindings: Document DT bindings for Analog
- devices as3645a
-Date: Wed, 16 Aug 2017 23:57:06 +0300
-Message-ID: <20170816205706.rcg3lz6hg2wgjphw@valkosipuli.retiisi.org.uk>
-References: <20170816125440.27534-1-sakari.ailus@linux.intel.com>
- <20170816125514.27634-1-sakari.ailus@linux.intel.com>
- <8b966328-138a-5777-f8b5-692e692567e8@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: stm32: use right compatible for stm32f469
+Date: Wed, 16 Aug 2017 23:00:12 +0200
+Message-ID: <CAK8P3a17b3viT=TduBXzV5LCpNO5-=vopq6u_nX7syHzyGsvAw@mail.gmail.com>
+References: <1501172847-31323-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8b966328-138a-5777-f8b5-692e692567e8@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501172847-31323-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+On Thu, Jul 27, 2017 at 6:27 PM, Alexandre Torgue
+<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+> Currently, same stm32f429-pinctrl driver is used for stm32f429 and
+> stm32f469. As pin map is different between those 2 MCUs,
+> a stm32f469-pinctrl driver has been recently added.
+> This patch
+>  -allows to use stm32f469-pinctrl driver for stm32f469 boards
+>  -reworks stm32 devicetree files to fit with stm32f429 / stm32f469
+>
+> In the same time it fixes an issue when only MACH_STM32F469 flag is
+> selected in menuconfig.
+>
+> Fixes: d28bcd53fa90 ("ARM: stm32: Introduce MACH_STM32F469 flag")
+> Reported-by: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> ---
+>
+> Hi Arnd, Kevin and Olof,
+>
+> I send this series in 4.13-rcx cycle to fix d28bcd53fa90
+> ("ARM: stm32: Introduce MACH_STM32F469 flag").
+> This patch could look "huge" to fix the issue but I prefer to send
+> a clean patch now that send a quick fix first and a DT rework in 4.14
+> cycle.
+> Let me know, if tou disagree with that.
 
-Thanks for the review.
+Unfortunately I did not have this one on my radar for the 4.13 fixes,
+as the subject looked rather innocent. My feeling is that we could have
+done it earlier, but by now it's a bit late, and I'd rather have a quick
+fix to merge for 4.13.
 
-On Wed, Aug 16, 2017 at 10:27:27PM +0200, Jacek Anaszewski wrote:
-> Hi Sakari,
-> 
-> Thanks for the patch. One issue below.
-> 
-> On 08/16/2017 02:55 PM, Sakari Ailus wrote:
-> > From: Sakari Ailus <sakari.ailus@iki.fi>
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  .../devicetree/bindings/leds/ams,as3645a.txt       | 56 ++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> > new file mode 100644
-> > index 000000000000..00066e3f9036
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> > @@ -0,0 +1,56 @@
-> > +Analog devices AS3645A device tree bindings
-> > +
-> > +The AS3645A flash LED controller can drive two LEDs, one high current
-> > +flash LED and one indicator LED. The high current flash LED can be
-> > +used in torch mode as well.
-> > +
-> > +Ranges below noted as [a, b] are closed ranges between a and b, i.e. a
-> > +and b are included in the range.
-> > +
-> > +
-> > +Required properties
-> > +===================
-> > +
-> > +compatible	: Must be "ams,as3645a".
-> > +reg		: The I2C address of the device. Typically 0x30.
-> > +
-> > +
-> > +Required properties of the "flash" child node
-> > +=============================================
-> > +
-> > +flash-timeout-us: Flash timeout in microseconds. The value must be in
-> > +		  the range [100000, 850000] and divisible by 50000.
-> > +flash-max-microamp: Maximum flash current in microamperes. Has to be
-> > +		    in the range between [200000, 500000] and
-> > +		    divisible by 20000.
-> > +led-max-microamp: Maximum torch (assist) current in microamperes. The
-> > +		  value must be in the range between [20000, 160000] and
-> > +		  divisible by 20000.
-> > +ams,input-max-microamp: Maximum flash controller input current. The
-> > +			value must be in the range [1250000, 2000000]
-> > +			and divisible by 50000.
-> > +
-> > +
-> > +Required properties of the "indicator" child node
-> > +=================================================
-> > +
-> > +led-max-microamp: Maximum indicator current. The allowed values are
-> > +		  2500, 5000, 7500 and 10000.
-> 
-> Most LED bindings mention also optional label property in the form:
-> 
-> - label : See Documentation/devicetree/bindings/leds/common.txt
-> 
-> > +
-> > +Example
-> > +=======
-> > +
-> > +	as3645a: flash@30 {
-> > +		reg = <0x30>;
-> > +		compatible = "ams,as3645a";
-> > +		flash {
-> 
-> 			label = "as3645a:flash";
-> 
-> > +			flash-timeout-us = <150000>;
-> > +			flash-max-microamp = <320000>;
-> > +			led-max-microamp = <60000>;
-> > +			ams,input-max-microamp = <1750000>;
-> > +		};
-> > +		indicator {
-> 
-> 			label = "as3645a:indicator";
-> 
-> > +			led-max-microamp = <10000>;
-> > +		};
-> > +	};
-> > 
+Doing this without merge conflicts unfortunately means that you have
+to send two pull requests, with the 4.14 one based on the quick fix
+for 4.13.
 
-I'll make the above fixes for v2 (and add flash child node label property).
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+        Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
