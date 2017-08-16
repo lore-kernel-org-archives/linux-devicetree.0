@@ -1,37 +1,61 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 8/8] pinctrl: sh-pfc: r8a77995: Add voltage switch
- operations for MMC
-Date: Wed, 16 Aug 2017 13:22:55 +0200
-Message-ID: <CAMuHMdXFdNuXKFFxoOipUUGHhQhS6Px32W_eoy-fCRym-XXMow@mail.gmail.com>
-References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1502281187-24068-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1502281187-24068-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [RESEND PATCH v2 0/2] Unified fwnode endpoint parser
+Date: Wed, 16 Aug 2017 14:22:58 +0300
+Message-ID: <20170816112300.19514-1-sakari.ailus@linux.intel.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 9, 2017 at 2:19 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Hi folks,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+(Resending, got Niklas's e-mail wrong.)
 
-i.e. will queue in sh-pfc-for-v4.14.
+We have a large influx of new, unmerged, drivers that are now parsing
+fwnode endpoints and each one of them is doing this a little bit
+differently. The needs are still exactly the same for the graph data
+structure is device independent. This is still a non-trivial task and the
+majority of the driver implementations are buggy, just buggy in different
+ways.
 
-Gr{oetje,eeting}s,
+Facilitate parsing endpoints by adding a convenience function for parsing
+the endpoints, and make the omap3isp driver use it as an example.
 
-                        Geert
+I plan to include the first patch to a pull request soonish, the second
+could go in with the first user.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Open question: should we designate an error code to silently skip endpoints
+from driver's parse_endpoint() callback? Would that be useful? An error
+code not relevant for parsing endpoints in general (such as EISDIR) could
+be chosen, otherwise we're hampering with error codes that can be returned
+in general.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+since v1:
+
+- The first patch has been merged (it was a bugfix).
+
+- In anticipation that the parsing can take place over several iterations,
+  take the existing number of async sub-devices into account when
+  re-allocating an array of async sub-devices.
+
+- Rework the first patch to better anticipate parsing single endpoint at a
+  time by a driver.
+
+- Add a second patch that adds a function for parsing endpoints one at a
+  time based on port and endpoint numbers.
+
+Sakari Ailus (2):
+  v4l: fwnode: Support generic parsing of graph endpoints in a device
+  v4l: fwnode: Support generic parsing of graph endpoints in a single
+    port
+
+ drivers/media/platform/omap3isp/isp.c | 116 +++++++---------------
+ drivers/media/platform/omap3isp/isp.h |   3 -
+ drivers/media/v4l2-core/v4l2-fwnode.c | 176 ++++++++++++++++++++++++++++++++++
+ include/media/v4l2-async.h            |   4 +-
+ include/media/v4l2-fwnode.h           |  16 ++++
+ 5 files changed, 231 insertions(+), 84 deletions(-)
+
+-- 
+2.11.0
