@@ -1,65 +1,48 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 2/5] arm64: dts: realtek: Add RTD1295 reset controller nodes
-Date: Wed, 16 Aug 2017 02:38:44 +0200
-Message-ID: <20170816003847.6208-3-afaerber@suse.de>
+Subject: [PATCH 5/5] arm64: dts: realtek: Adopt RTD1295 reset constants
+Date: Wed, 16 Aug 2017 02:38:47 +0200
+Message-ID: <20170816003847.6208-6-afaerber@suse.de>
 References: <20170816003847.6208-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170816003847.6208-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for the Realtek RTD1295 reset controllers.
-
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- arch/arm64/boot/dts/realtek/rtd1295.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-index 43da91fce2b1..9f1dcd1fa8b3 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-@@ -87,6 +87,36 @@
- 		/* Exclude up to 2 GiB of RAM */
- 		ranges = <0x80000000 0x80000000 0x80000000>;
- 
-+		reset1: reset-controller@98000000 {
-+			compatible = "realtek,rtd1295-reset";
-+			reg = <0x98000000 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
-+		reset2: reset-controller@98000004 {
-+			compatible = "realtek,rtd1295-reset";
-+			reg = <0x98000004 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
-+		reset3: reset-controller@98000008 {
-+			compatible = "realtek,rtd1295-reset";
-+			reg = <0x98000008 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
-+		reset4: reset-controller@98000050 {
-+			compatible = "realtek,rtd1295-reset";
-+			reg = <0x98000050 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
-+		iso_reset: reset-controller@98007088 {
-+			compatible = "realtek,rtd1295-reset";
-+			reg = <0x98007088 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
- 		uart0: serial@98007800 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x98007800 0x400>;
--- 
-2.12.3
+UmVwbGFjZSByZXNldCBjb250cm9sbGVyIGluZGljZXMgd2l0aCBjb25zdGFudHMuCgpTaWduZWQt
+b2ZmLWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQogYXJjaC9hcm02
+NC9ib290L2R0cy9yZWFsdGVrL3J0ZDEyOTUuZHRzaSB8IDcgKysrKy0tLQogMSBmaWxlIGNoYW5n
+ZWQsIDQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTI5NS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9y
+ZWFsdGVrL3J0ZDEyOTUuZHRzaQppbmRleCBlNzc3MjAwZDg0YjkuLjJkMmQ4NGI1NzNlMyAxMDA2
+NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDEyOTUuZHRzaQorKysgYi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTI5NS5kdHNpCkBAIC03LDYgKzcsNyBAQAog
+ICovCiAKICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2lj
+Lmg+CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcmVzZXQvcmVhbHRlayxydGQxMjk1Lmg+CiAKIC8g
+ewogCWNvbXBhdGlibGUgPSAicmVhbHRlayxydGQxMjk1IjsKQEAgLTEyMyw3ICsxMjQsNyBAQAog
+CQkJcmVnLXNoaWZ0ID0gPDI+OwogCQkJcmVnLWlvLXdpZHRoID0gPDQ+OwogCQkJY2xvY2stZnJl
+cXVlbmN5ID0gPDI3MDAwMDAwPjsKLQkJCXJlc2V0cyA9IDwmaXNvX3Jlc2V0IDg+OworCQkJcmVz
+ZXRzID0gPCZpc29fcmVzZXQgUlREMTI5NV9JU09fUlNUTl9VUjA+OwogCQkJc3RhdHVzID0gImRp
+c2FibGVkIjsKIAkJfTsKIApAQCAtMTMzLDcgKzEzNCw3IEBACiAJCQlyZWctc2hpZnQgPSA8Mj47
+CiAJCQlyZWctaW8td2lkdGggPSA8ND47CiAJCQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAwMDAw
+PjsKLQkJCXJlc2V0cyA9IDwmcmVzZXQyIDI4PjsKKwkJCXJlc2V0cyA9IDwmcmVzZXQyIFJURDEy
+OTVfUlNUTl9VUjE+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJfTsKIApAQCAtMTQzLDcg
+KzE0NCw3IEBACiAJCQlyZWctc2hpZnQgPSA8Mj47CiAJCQlyZWctaW8td2lkdGggPSA8ND47CiAJ
+CQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAwMDAwPjsKLQkJCXJlc2V0cyA9IDwmcmVzZXQyIDI3
+PjsKKwkJCXJlc2V0cyA9IDwmcmVzZXQyIFJURDEyOTVfUlNUTl9VUjI+OwogCQkJc3RhdHVzID0g
+ImRpc2FibGVkIjsKIAkJfTsKIAotLSAKMi4xMi4zCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
