@@ -1,105 +1,37 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v2 2/2] v4l: fwnode: Support generic parsing of graph endpoints in a single port
-Date: Wed, 16 Aug 2017 14:20:19 +0300
-Message-ID: <20170816112019.9250-3-sakari.ailus@linux.intel.com>
-References: <20170816112019.9250-1-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170816112019.9250-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTQD6PfKP4TzA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 8/8] pinctrl: sh-pfc: r8a77995: Add voltage switch
+ operations for MMC
+Date: Wed, 16 Aug 2017 13:22:55 +0200
+Message-ID: <CAMuHMdXFdNuXKFFxoOipUUGHhQhS6Px32W_eoy-fCRym-XXMow@mail.gmail.com>
+References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1502281187-24068-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1502281187-24068-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the preferred way to parse the endpoints.
+On Wed, Aug 9, 2017 at 2:19 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 51 +++++++++++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           |  7 +++++
- 2 files changed, 58 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index cb0fc4b4e3bf..961bcdf22d9a 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -508,6 +508,57 @@ int v4l2_fwnode_endpoints_parse(
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoints_parse);
- 
-+/**
-+ * v4l2_fwnode_endpoint_parse - Parse V4L2 fwnode endpoints in a port node
-+ * @dev: local struct device
-+ * @notifier: async notifier related to @dev
-+ * @port: port number
-+ * @endpoint: endpoint number
-+ * @asd_struct_size: size of the driver's async sub-device struct, including
-+ *		     sizeof(struct v4l2_async_subdev)
-+ * @parse_single: driver's callback function called on each V4L2 fwnode endpoint
-+ *
-+ * Parse all V4L2 fwnode endpoints related to a given port. This is
-+ * the preferred interface over v4l2_fwnode_endpoints_parse() and
-+ * should be used by new drivers.
-+ */
-+int v4l2_fwnode_endpoint_parse_port(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	unsigned int port, unsigned int endpoint, size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct v4l2_fwnode_endpoint *vep,
-+			    struct v4l2_async_subdev *asd))
-+{
-+	struct fwnode_handle *fwnode;
-+	struct v4l2_async_subdev *asd;
-+	int ret;
-+
-+	fwnode = fwnode_graph_get_remote_node(dev_fwnode(dev), port, endpoint);
-+	if (!fwnode)
-+		return -ENOENT;
-+
-+	asd = devm_kzalloc(dev, asd_struct_size, GFP_KERNEL);
-+	if (!asd)
-+		return -ENOMEM;
-+
-+	ret = notifier_realloc(dev, notifier, notifier->num_subdevs + 1);
-+	if (ret)
-+		goto out_free;
-+
-+	ret = __v4l2_fwnode_endpoint_parse(dev, notifier, fwnode, asd,
-+					   parse_single);
-+	if (ret)
-+		goto out_free;
-+
-+	return 0;
-+
-+out_free:
-+	devm_kfree(dev, asd);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_parse_port);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index c75a768d4ef7..5adf28e7b070 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -131,4 +131,11 @@ int v4l2_fwnode_endpoints_parse(
- 			    struct v4l2_fwnode_endpoint *vep,
- 			    struct v4l2_async_subdev *asd));
- 
-+int v4l2_fwnode_endpoint_parse_port(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	unsigned int port, unsigned int endpoint, size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct v4l2_fwnode_endpoint *vep,
-+			    struct v4l2_async_subdev *asd));
-+
- #endif /* _V4L2_FWNODE_H */
--- 
-2.11.0
+i.e. will queue in sh-pfc-for-v4.14.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
