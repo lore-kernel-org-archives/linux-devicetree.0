@@ -1,68 +1,51 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: i2c: Document the IBM CCF power
- supply version 1
-Date: Wed, 16 Aug 2017 06:42:43 -0700
-Message-ID: <6d0edce7-5e96-b6d4-8503-cf0f27f72d51@roeck-us.net>
-References: <1502830355-502-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1502830355-502-2-git-send-email-eajames@linux.vnet.ibm.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 00/10] ARM: dts: Add iodelay data for MMC
+Date: Wed, 16 Aug 2017 19:14:58 +0530
+Message-ID: <20170816134508.8887-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502830355-502-2-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: jdelvare-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: kishon@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2017 01:52 PM, Eddie James wrote:
-> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> 
-> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> ---
->   .../devicetree/bindings/i2c/ibm,cffps1.txt          | 21 +++++++++++++++++++++
+This series only adds data and it won't be used until
+the next series which adds UHS support to omap_hsmmc/sdhci driver.
 
-Sorry, just noticed. Sorry for the piecemeal review :-(.
-The i2c directory is used for i2c controllers, not for other i2c devices.
-Please move to hwmon (and drop i2c from the subject).
+Changes from v1:
+*) Add missing Signed-off-by in a couple of patches
+*) Fixed Author of "Move common MMC/SD properties to common file" patch.
 
-Thanks,
-Guenter
+Kishon Vijay Abraham I (7):
+  ARM: dts: dra7-evm: Add pinmux configuration for MMC
+  ARM: dts: am57xx-beagle-x15: Add pinmux configuration for MMC
+  ARM: dts: am571x-idk: Add pinmux configuration for MMC
+  ARM: dts: am572x-idk: Add pinmux configuration for MMC
+  ARM: dts: dra72-evm: Add pinmux configuration for MMC
+  ARM: dts: dra72-evm-revc: Add pinmux configuration for MMC
+  ARM: dts: dra71-evm: Add pinmux configuration for MMC
 
->   1 file changed, 21 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/i2c/ibm,cffps1.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/ibm,cffps1.txt b/Documentation/devicetree/bindings/i2c/ibm,cffps1.txt
-> new file mode 100644
-> index 0000000..f68a0a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/ibm,cffps1.txt
-> @@ -0,0 +1,21 @@
-> +Device-tree bindings for IBM Common Form Factor Power Supply Version 1
-> +----------------------------------------------------------------------
-> +
-> +Required properties:
-> + - compatible = "ibm,cffps1";
-> + - reg = < I2C bus address >;		: Address of the power supply on the
-> +					  I2C bus.
-> +
-> +Example:
-> +
-> +    i2c-bus@100 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        #interrupt-cells = <1>;
-> +        < more properties >
-> +
-> +        power-supply@68 {
-> +            compatible = "ibm,cffps1";
-> +            reg = <0x68>;
-> +        };
-> +    };
-> 
+Sekhar Nori (3):
+  ARM: dts: dra72x: Create a common file with MMC/SD IOdelay data
+  ARM: dts: dra74x: Create a common file with MMC/SD IOdelay data
+  ARM: dts: am57xx-idk: Move common MMC/SD properties to common file
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/boot/dts/am571x-idk.dts                |  26 +-
+ arch/arm/boot/dts/am572x-idk.dts                |  27 +-
+ arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi |  29 +-
+ arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts   |  15 +
+ arch/arm/boot/dts/am57xx-beagle-x15.dts         |  11 +
+ arch/arm/boot/dts/am57xx-idk-common.dtsi        |   8 +
+ arch/arm/boot/dts/dra7-evm.dts                  |  22 +-
+ arch/arm/boot/dts/dra71-evm.dts                 |  14 +
+ arch/arm/boot/dts/dra72-evm-revc.dts            |  14 +
+ arch/arm/boot/dts/dra72-evm.dts                 |  14 +
+ arch/arm/boot/dts/dra72x-mmc-iodelay.dtsi       | 350 +++++++++++++
+ arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi       | 647 ++++++++++++++++++++++++
+ 12 files changed, 1130 insertions(+), 47 deletions(-)
+ create mode 100644 arch/arm/boot/dts/dra72x-mmc-iodelay.dtsi
+ create mode 100644 arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
+
+-- 
+2.11.0
