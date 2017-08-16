@@ -1,105 +1,34 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [RESEND PATCH v2 2/2] v4l: fwnode: Support generic parsing of graph endpoints in a single port
-Date: Wed, 16 Aug 2017 14:23:00 +0300
-Message-ID: <20170816112300.19514-3-sakari.ailus@linux.intel.com>
-References: <20170816112300.19514-1-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170816112300.19514-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH ] gpio: rcar: Add r8a7745 (RZ/G1E) support
+Date: Wed, 16 Aug 2017 12:12:16 +0100
+Message-ID: <1502881936-39357-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the preferred way to parse the endpoints.
+Renesas RZ/G1E (R8A7745) SoC GPIO blocks are identical to the R-Car Gen2
+family. Add support for its GPIO controllers.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 51 +++++++++++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           |  7 +++++
- 2 files changed, 58 insertions(+)
+This patch is tested against linux-next tag next-20170816 as well as gpio-devel.
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index cb0fc4b4e3bf..961bcdf22d9a 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -508,6 +508,57 @@ int v4l2_fwnode_endpoints_parse(
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoints_parse);
+ Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+index 48634b0..51c86f6 100644
+--- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -4,6 +4,7 @@ Required Properties:
  
-+/**
-+ * v4l2_fwnode_endpoint_parse - Parse V4L2 fwnode endpoints in a port node
-+ * @dev: local struct device
-+ * @notifier: async notifier related to @dev
-+ * @port: port number
-+ * @endpoint: endpoint number
-+ * @asd_struct_size: size of the driver's async sub-device struct, including
-+ *		     sizeof(struct v4l2_async_subdev)
-+ * @parse_single: driver's callback function called on each V4L2 fwnode endpoint
-+ *
-+ * Parse all V4L2 fwnode endpoints related to a given port. This is
-+ * the preferred interface over v4l2_fwnode_endpoints_parse() and
-+ * should be used by new drivers.
-+ */
-+int v4l2_fwnode_endpoint_parse_port(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	unsigned int port, unsigned int endpoint, size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct v4l2_fwnode_endpoint *vep,
-+			    struct v4l2_async_subdev *asd))
-+{
-+	struct fwnode_handle *fwnode;
-+	struct v4l2_async_subdev *asd;
-+	int ret;
-+
-+	fwnode = fwnode_graph_get_remote_node(dev_fwnode(dev), port, endpoint);
-+	if (!fwnode)
-+		return -ENOENT;
-+
-+	asd = devm_kzalloc(dev, asd_struct_size, GFP_KERNEL);
-+	if (!asd)
-+		return -ENOMEM;
-+
-+	ret = notifier_realloc(dev, notifier, notifier->num_subdevs + 1);
-+	if (ret)
-+		goto out_free;
-+
-+	ret = __v4l2_fwnode_endpoint_parse(dev, notifier, fwnode, asd,
-+					   parse_single);
-+	if (ret)
-+		goto out_free;
-+
-+	return 0;
-+
-+out_free:
-+	devm_kfree(dev, asd);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_parse_port);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index c75a768d4ef7..5adf28e7b070 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -131,4 +131,11 @@ int v4l2_fwnode_endpoints_parse(
- 			    struct v4l2_fwnode_endpoint *vep,
- 			    struct v4l2_async_subdev *asd));
- 
-+int v4l2_fwnode_endpoint_parse_port(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	unsigned int port, unsigned int endpoint, size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct v4l2_fwnode_endpoint *vep,
-+			    struct v4l2_async_subdev *asd));
-+
- #endif /* _V4L2_FWNODE_H */
+   - compatible: should contain one or more of the following:
+     - "renesas,gpio-r8a7743": for R8A7743 (RZ/G1M) compatible GPIO controller.
++    - "renesas,gpio-r8a7745": for R8A7745 (RZ/G1E) compatible GPIO controller.
+     - "renesas,gpio-r8a7778": for R8A7778 (R-Mobile M1) compatible GPIO controller.
+     - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
+     - "renesas,gpio-r8a7790": for R8A7790 (R-Car H2) compatible GPIO controller.
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
