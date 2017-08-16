@@ -1,90 +1,101 @@
-From: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: RE: [patch v3 1/3] drivers: jtag: Add JTAG core driver
-Date: Wed, 16 Aug 2017 14:24:16 +0000
-Message-ID: <AM4PR0501MB2194CBCC82F7EB67FE73304AB1820@AM4PR0501MB2194.eurprd05.prod.outlook.com>
-References: <1502791207-26951-1-git-send-email-oleksandrs@mellanox.com>
- <1502791207-26951-2-git-send-email-oleksandrs@mellanox.com>
- <CAK8P3a3DutrfhGrd9MnDFbzhfvnZXSyrV2RbTgrFGgpbAs=H0w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
+ slave
+Date: Wed, 16 Aug 2017 16:52:18 +0200
+Message-ID: <0C198B33-8CB6-4D6A-B89F-35D3CD771135@holtmann.org>
+References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
+ <1502102366-2760-2-git-send-email-loic.poulain@gmail.com>
+ <CAL_JsqKxA2pgtjmG-cxy5XPWuRWUiia-weRZDSh4++Vn=QZmqA@mail.gmail.com>
+ <8186E2A3-D0AC-498F-8229-78862D363F78@holtmann.org>
+ <392e6d51-33d6-1585-6582-1397a0c64852@gmail.com>
+ <161632C7-EBBF-47F5-86DC-453E10395B54@holtmann.org>
+ <e001e055-10a5-facd-a8e1-57c1bdb78172@gmail.com>
+ <FCD47ED6-F01F-4921-97A3-BBC1D0263747@holtmann.org>
+ <CALeDE9MeMHtCD8esCcznHjS+z6o7Ezh9dP1OZq=77DuYNS2=2A@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a3DutrfhGrd9MnDFbzhfvnZXSyrV2RbTgrFGgpbAs=H0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CALeDE9MeMHtCD8esCcznHjS+z6o7Ezh9dP1OZq=77DuYNS2=2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, =?utf-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org" <mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org>, "vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org" <vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org>, system-sw-low-level <system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBhcm5kYmVyZ21hbm5AZ21haWwu
-Y29tIFttYWlsdG86YXJuZGJlcmdtYW5uQGdtYWlsLmNvbV0gT24NCj4gQmVoYWxmIE9mIEFybmQg
-QmVyZ21hbm4NCj4gU2VudDogVHVlc2RheSwgQXVndXN0IDE1LCAyMDE3IDI6MTYgUE0NCj4gVG86
-IE9sZWtzYW5kciBTaGFtcmF5IDxvbGVrc2FuZHJzQG1lbGxhbm94LmNvbT4NCj4gQ2M6IGdyZWdr
-aCA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0
-IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEFSTSA8bGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IE9wZW5CTUMgTWFpbGxpc3QgPG9wZW5ibWNAbGlzdHMub3psYWJzLm9yZz47DQo+IEpvZWwg
-U3RhbmxleSA8am9lbEBqbXMuaWQuYXU+OyBKacWZw60gUMOtcmtvIDxqaXJpQHJlc251bGxpLnVz
-PjsgVG9iaWFzIEtsYXVzZXINCj4gPHRrbGF1c2VyQGRpc3RhbnouY2g+OyBsaW51eC1zZXJpYWxA
-dmdlci5rZXJuZWwub3JnOyBtZWNAc2hvdXQubmV0Ow0KPiB2YWRpbXBAbWFlbGxhbm94LmNvbTsg
-c3lzdGVtLXN3LWxvdy1sZXZlbCA8c3lzdGVtLXN3LWxvdy0NCj4gbGV2ZWxAbWVsbGFub3guY29t
-PjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IG9wZW5vY2QtZGV2ZWwtDQo+IG93
-bmVyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgSmlyaSBQaXJrbyA8amlyaUBtZWxsYW5veC5jb20+
-DQo+IFN1YmplY3Q6IFJlOiBbcGF0Y2ggdjMgMS8zXSBkcml2ZXJzOiBqdGFnOiBBZGQgSlRBRyBj
-b3JlIGRyaXZlcg0KPiANCj4gT24gVHVlLCBBdWcgMTUsIDIwMTcgYXQgMTI6MDAgUE0sIE9sZWtz
-YW5kciBTaGFtcmF5DQo+IDxvbGVrc2FuZHJzQG1lbGxhbm94LmNvbT4gd3JvdGU6DQo+IA0KPiA+
-ICsgICAgICAgY2FzZSBKVEFHX0lPQ1hGRVI6DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChjb3B5
-X2Zyb21fdXNlcigmeGZlciwgdmFyZywgc2l6ZW9mKHN0cnVjdCBqdGFnX3hmZXIpKSkNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVGQVVMVDsNCj4gPiArDQo+ID4gKyAgICAg
-ICAgICAgICAgIGlmICh4ZmVyLmxlbmd0aCA+PSBKVEFHX01BWF9YRkVSX0RBVEFfTEVOKQ0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRUZBVUxUOw0KPiA+ICsNCj4gPiArICAg
-ICAgICAgICAgICAgdXNlcl90ZGlvX2RhdGEgPSB4ZmVyLnRkaW87DQo+ID4gKyAgICAgICAgICAg
-ICAgIHhmZXIudGRpbyA9IGp0YWdfY29weV9mcm9tX3VzZXIoKHZvaWQgX191c2VyICopdXNlcl90
-ZGlvX2RhdGEsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgeGZlci5sZW5ndGgpOw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoIXhmZXIudGRpbykN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gDQo+IFRoaXMg
-aXMgbm90IHNhZmUgZm9yIDMyLWJpdCBwcm9jZXNzZXMgb24gNjQtYml0IGtlcm5lbHMsIHNpbmNl
-IHRoZSBzdHJ1Y3R1cmUgbGF5b3V0DQo+IGRpZmZlcnMgZm9yIHRoZSBwb2ludGVyIG1lbWJlci4g
-SXQncyBiZXR0ZXIgdG8gYWx3YXlzIHVzZSBlaXRoZXIgcmV3b3JrIHRoZQ0KPiBzdHJ1Y3R1cmUg
-dG8gYXZvaWQgdGhlIHBvaW50ZXIsIG9yIHRvIHVzZSBhDQo+IF9fdTY0IG1lbWJlciB0byBzdG9y
-ZSBpdCwgYW5kIHRoZW4gdXNlIHU2NF90b191c2VyX3B0cigpIHRvIGNvbnZlcnQgaXQgaW4gdGhl
-DQo+IGtlcm5lbC4NCg0KVGhhbmtzLCAgSSB0aGluayB1c2luZyBfX3U2NCBpbnN0ZWFkIG9mICBw
-b2ludGVyIHdpbGwgYmUgYSBnb29kIHNvbHV0aW9uLg0KDQo+IA0KPiA+ICsgICAgICAgY2FzZSBK
-VEFHX0dJT0NTVEFUVVM6DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChqdGFnLT5vcHMtPnN0YXR1
-c19nZXQpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZXJyID0ganRhZy0+b3BzLT5zdGF0
-dXNfZ2V0KGp0YWcsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgKGVudW0ganRhZ19lbmRzdGF0ZQ0KPiA+ICsgKikmdmFsdWUpOw0KPiANCj4gVGhp
-cyBwb2ludGVyIGNhc3QgaXMgYWxzbyBub3Qgc2FmZSwgYXMgYW4gZW51bSBtaWdodCBoYXZlIGEg
-ZGlmZmVyZW50IHNpemUgdGhhbg0KPiB0aGUgJ3ZhbHVlJyB2YXJpYWJsZSB0aGF0IGlzIG5vdCBh
-biBlbnVtLiBJIHRoaW5rIHlvdSBuZWVkIHRvIGNoYW5nZSB0aGUNCj4gYXJndW1lbnQgdHlwZSBm
-b3IgdGhlIGNhbGxiYWNrLCBvciBtYXliZSB1c2UgYW5vdGhlciBpbnRlcm1lZGlhdGUuDQo+IA0K
-PiA+ICtzdGF0aWMgaW50IGp0YWdfb3BlbihzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmls
-ZSAqZmlsZSkgew0KPiA+ICsgICAgICAgc3RydWN0IGp0YWcgKmp0YWcgPSBjb250YWluZXJfb2Yo
-aW5vZGUtPmlfY2Rldiwgc3RydWN0IGp0YWcsDQo+ID4gK2NkZXYpOw0KPiA+ICsNCj4gPiArICAg
-ICAgIHNwaW5fbG9jaygmanRhZy0+bG9jayk7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKGp0YWct
-PmlzX29wZW4pIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2luZm8oTlVMTCwgImp0YWcgYWxy
-ZWFkeSBvcGVuZWRcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICBzcGluX3VubG9jaygmanRhZy0+
-bG9jayk7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUJVU1k7DQo+ID4gKyAgICAgICB9
-DQo+ID4gKw0KPiA+ICsgICAgICAganRhZy0+aXNfb3BlbiA9IHRydWU7DQo+ID4gKyAgICAgICBm
-aWxlLT5wcml2YXRlX2RhdGEgPSBqdGFnOw0KPiA+ICsgICAgICAgc3Bpbl91bmxvY2soJmp0YWct
-PmxvY2spOw0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gDQo+IERvZXMgdGhlICdp
-c19vcGVuJyBmbGFnIHByb3RlY3QgeW91IGZyb20gc29tZXRoaW5nIHRoYXQgZG9lc24ndCBhbHNv
-IGhhcHBlbg0KPiBhZnRlciBhICdkdXAoKScgY2FsbCBvbiB0aGUgZmlsZSBkZXNjcmlwdG9yPw0K
-DQppc19vcGVuIGZsYWcgcHJvdGVjdHMgZnJvbSB0aGUgb3BlbmluZyBmaWxlIG1vcmUgdGhhbiBv
-bmUgdGltZS4NCg0KPiANCj4gPiArICogQG1vZGU6IGFjY2VzcyBtb2RlDQo+ID4gKyAqIEB0eXBl
-OiB0cmFuc2ZlciB0eXBlDQo+ID4gKyAqIEBkaXJlY3Rpb246IHhmZXIgZGlyZWN0aW9uDQo+ID4g
-KyAqIEBsZW5ndGg6IHhmZXIgYml0cyBsZW4NCj4gPiArICogQHRkaW8gOiB4ZmVyIGRhdGEgYXJy
-YXkNCj4gPiArICogQGVuZGlyOiB4ZmVyIGVuZCBzdGF0ZQ0KPiA+ICsgKg0KPiA+ICsgKiBTdHJ1
-Y3R1cmUgcmVwcmVzZW50cyBpbnRlcmZhY2UgdG8gQXNwZWVkIEpUQUcgZGV2aWNlIGZvciBqdGFn
-IHNkcg0KPiA+ICt4ZmVyDQo+ID4gKyAqIGV4ZWN1dGlvbi4NCj4gPiArICovDQo+ID4gK3N0cnVj
-dCBqdGFnX3hmZXIgew0KPiA+ICsgICAgICAgX191OCAgICBtb2RlOw0KPiA+ICsgICAgICAgX191
-OCAgICB0eXBlOw0KPiA+ICsgICAgICAgX191OCAgICBkaXJlY3Rpb247DQo+ID4gKyAgICAgICBf
-X3UzMiAgIGxlbmd0aDsNCj4gPiArICAgICAgIF9fdTggICAgKnRkaW87DQo+ID4gKyAgICAgICBf
-X3U4ICAgIGVuZHN0YXRlOw0KPiA+ICt9Ow0KPiANCj4gQXMgbWVudGlvbmVkIGFib3ZlLCB0aGUg
-cG9pbnRlciBpbiBoZXJlIG1ha2VzIGl0IGluY29tcGF0aWJsZS4gQWxzbywgeW91DQo+IHNob3Vs
-ZCByZW9yZGVyIHRoZSBtZW1iZXJzIHRvIGF2b2lkIHRoZSBpbXBsaWVkIHBhZGRpbmcuDQo+IE1v
-dmluZyB0aGUgJ2VuZHN0YXRlJyBiZWZvcmUgJ2xlbmd0aCcgaXMgc3VmZmljaWVudC4NCj4gDQoN
-ClRoYW5rLiBJIHdpbGwgZG8gaXQuDQoNCj4gICAgICAgICBBcm5kDQo=
+Hi Peter,
+
+>>> I built kernel, modules and dtb from a bluetooth-next tree (4.12 and 4.13-rc3).
+>>> Using 32-bit multi_v7_defconfig + some additional confs to enable miniuart (BCM2835AUX...) for console.
+>>> I push this on a raspbian image.
+>>> 
+>>> my boot/config.txt is very simple (no overlay):
+>>> 
+>>> kernel=zImage
+>>> device_tree=bcm2837-rpi-3-b.dtb
+>>> # hack for miniuart serial clock
+>>> core_freq=250
+>>> dtparam=audio=on
+>> 
+>> so the Fedora 26 kernel that is based on 4.12 is missing uart0 configuration in DT. Adding it to bcm2837-rpi-3-b.dts will allow for btattach to actually work.
+> 
+> I'm the Fedora maintainer for the Raspberry Pi (and a lot of ARM on
+> Fedora in general).
+> 
+>> &uart0 {
+>>        pinctrl-names = "default";
+>>        pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
+>>        status = "okay”;
+>> };
+>> 
+>> It kinda works, but not all of it. This command confuses me.
+> 
+> With the upstream kernel, some DT bits headed upstream (ie the Fedora
+> kernel) plus these patches I get to the "kinda works" too in that it
+> sees a BT adapter but doesn't give it a mac address.
+
+we need to blacklist the AA:AA:.. address in the hci_bcm.c driver. Once you load the firmware, then it has a proper address. I need to confirm this with a second rPI3, but it seems loading the firmware is actually important for this card.
+
+>> < HCI Command: Broadcom Write UART Clock Setting (0x3f|0x0045) plen 1
+>>        01                                               .
+>>> HCI Event: Command Complete (0x0e) plen 4
+>>      Broadcom Write UART Clock Setting (0x3f|0x0045) ncmd 1
+>>        Status: Unknown HCI Command (0x01)
+>> 
+>> And I am seeing fun stuff like failed frame assembly.
+>> 
+>> [  888.687594] Bluetooth: hci0: BCM: chip id 94
+>> [  888.687821] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0182
+>> [  892.059023] Bluetooth: hci0: Frame reassembly failed (-84)
+>> [  892.316936] Bluetooth: hci0: BCM: failed to write clock (-56)
+>> [  892.429478] Bluetooth: hci0: BCM (001.002.009) build 0182
+>> 
+>> Actually not providing the firmware makes the controller work. It however is stuck ad AA:AA:.. default address. Providing the firmware turns the address active. However then it never completes.
+> 
+> I've tried on and off to get the BT working, there seems to lots of
+> options and bits needed including some patches to the bluez [1] stuff
+> but between not quite upstream kernel bits and numerous distros all
+> doing it slightly differently I've never got it to work well.
+> 
+> The yocto [1] bits seem fairly representative of some the patches
+> flying around "to get it working" although I'm not sure how many of
+> these are actually required and how many are superfluous with this
+> patch set. There seems to be a firmware required that's not
+> distributed with linux-firmware which would also be nice to resolve.
+
+Non of these Yocto patches are actually needed. The culprit is the .oper_speed setting to be 4Mbps. Once you reduce that to 921600 thing will start to work smoothly. I sent a patch that takes the .oper_speed out completely and only applies it for the ACPI based devices where we know that it works.
+
+With my patch and the right DT entries for uart0 it actually works with “btattach -B /dev/ttyAMA0 -P bcm”. It will load the firmware, configure it and head towards the right path.
+
+Obviously btattach is only an interim step here. Loic’s patches for serdev integration and changing the DT to expose uart0 as serial-slave for Bluetooth is the right approach. Once Loic’s resends the patches we can get them into bluetooth-next and start merging these towards upstream. After that, Bluetooth should work just out of the box like with any USB dongle.
+
+And the Yocto patches should be abandoned. If using H:5 (aka 3-Wire) instead of H:4 is possible, we could consider it, but as long as the UART wiring doesn’t cause any bit errors, it is not worth it.
+
+That said, I do see a "Bluetooth: hci0: Frame reassembly failed (-84)” error. I need to figure out where that is. Frankly we really need to hexdump the packet when this happens.
+
+Regards
+
+Marcel
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
