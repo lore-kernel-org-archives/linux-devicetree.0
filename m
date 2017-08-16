@@ -1,45 +1,95 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
-Date: Wed, 16 Aug 2017 23:03:55 +0200
-Message-ID: <CAMuHMdXB0aU6mdaTw02Fz-9Mr+Ums4_SLmtDgi8b2gE75SsMVg@mail.gmail.com>
-References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
- <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
- <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
- <20170731231509.77d1fba4@bbrezillon> <CAK8P3a0p=m-8U7TN8usG8HO-QNu_S7rSfykNzu4gm+MOaM2Kzg@mail.gmail.com>
- <20170801142936.5df48702@bbrezillon> <CAK8P3a0SH4kWcvXK+_iPt9LWuNnpjr+omp+ZpyTLjT=H602n+w@mail.gmail.com>
- <20170801153414.6ce34ee8@bbrezillon> <20170801141218.GA1450@katana>
- <20170801164826.423183ff@bbrezillon> <20170801150108.GC1450@katana>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190
+ battery charger
+Date: Wed, 16 Aug 2017 14:06:45 -0700
+Message-ID: <20170816210644.GX3930@atomide.com>
+References: <20170807195420.20767-1-liam@networkimprov.net>
+ <20170807195420.20767-3-liam@networkimprov.net>
+ <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
+ <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
+ <20170812164233.won7fairxmrnblps@earth>
+ <CAKvHMgR+GxSqhy+iwdYmku2600HzoF__oXV7_w72ZJg-aK7O-Q@mail.gmail.com>
+ <20170816154701.GR3930@atomide.com>
+ <CAKvHMgTvVMsvmyi0o89m1SfS9A4U1GbNuU05Tkt6C0ARR9NyWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170801150108.GC1450@katana>
+Content-Disposition: inline
+In-Reply-To: <CAKvHMgTvVMsvmyi0o89m1SfS9A4U1GbNuU05Tkt6C0ARR9NyWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Przemyslaw Sroka <psroka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Arkadiusz Golec <agolec-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Bartosz Folta <bfolta-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Damian Kos <dkos-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alicja Jurasik-Urbaniak <alicja-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Jan Kotas <jank-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll@ar>
+To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 1, 2017 at 5:01 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->> I'm perfectly fine with the I3C / I2C framework separation. The only
->> minor problem I had with that was the inaccuracy of the
->> sysfs/device-model representation: we don't have one i2c and one i3c
->> bus, we just have one i3c bus with a mix of i2c and i3c devices.
->
-> I understand that. What if I2C had the same seperation between the "bus"
-> and the "master"?
+* Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> [170816 13:11]:
+> On Wed, Aug 16, 2017 at 8:47 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > * Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> [170812 12:00]:
+> >> On Sat, Aug 12, 2017 at 9:42 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >> > On Fri, Aug 11, 2017 at 02:57:10PM -0700, Liam Breck wrote:
+> >> >> >> +Other features:
+> >> >> >> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current on USB SDP port.
+> >> >> >
+> >> >> > Why doesn't the charger driver control this?
+> >> >>
+> >> >> This pin/gpio has to be high when USB is plugged in to make the
+> >> >> charger chip negotiate 500mA from a SDP port. It should generally be
+> >> >> configured that way even if the driver is not loaded, as the chip does
+> >> >> not require a driver to function. Some boards may do that with a
+> >> >> pull-up. Also the user may want to change this via sysfs and not have
+> >> >> the driver "fix" it.
+> >> >
+> >> > drivers/power/supply/qcom_smbb.c exposes the otg feature as
+> >> > regulator. I think in this case it could be exposed as
+> >> > gpio-regulator.
+> >>
+> >> Hans is doing that here:
+> >> https://patchwork.kernel.org/patch/9883717/
+> >>
+> >> The datasheet labels one pin "OTG" but that's misleading; it really
+> >> enables negotiation of 500mA input current, but does not turn on OTG
+> >> mode. If this pin is low, it only prevents the driver from starting
+> >> OTG mode via I2C msg.
+> >
+> > Yeah so before the device has enumerated this pin keeps the
+> > max current at 100mA as required by the USB spec. This pin
+> > should be only toggled after enumerating in bootloader or
+> > by the kernel driver. I tink the USB PHY driver can also
+> > be wired to control this line.
+> >
+> > Probably best to set it up as just a GPIO that the bq24190
+> > driver controls optionally.
+> >
+> > Then later on we should have some Linux generic way for
+> > USB gadget subsystem to tell the charger that we have
+> > enumerated, and then bq24190 driver can toggle this GPIO
+> > to enable higher charge rates.
+> 
+> I discovered a few months ago that setting this pin high after USB
+> connect has NO effect on iinlim. It has to be high at connect to
+> auto-negotiate 500mA. There is no point in making the driver control
+> this pin; we already tried that.
+> 
+> Here we are just documenting how the DT can enable this pin via gpio-hog.
 
-There can be multiple masters on an i2c bus.  But not on an i3c bus, due
-to SCL being push/pull.
+Or in bootloader. Yeah this is mostly for completely empty
+battery to start charging at 100mA until bootloader can start
+and enable higher rates.
 
-Gr{oetje,eeting}s,
+> I believe the only way to defer 500mA negotiation is to leave this pin
+> off and set iinlim via I2C msg to chip. We can do that in a gadget
+> script via sysfs input_current_limit. Hans does not have to enable
+> this pin to start OTG-host on his x86 device, perhaps because it is
+> wired high there. Our script can set the linked gpio high if nec for
+> OTG-host.
 
-                        Geert
+Yeah once something is running?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+If the kernel does not need to do anything about it, how about
+just leave it out of the binding docs then?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
