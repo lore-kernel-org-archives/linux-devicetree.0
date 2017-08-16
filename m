@@ -1,221 +1,198 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 09/20] mtd: nand: qcom: support for read location
- registers
-Date: Wed, 16 Aug 2017 10:04:56 +0530
-Message-ID: <0ab9136e-bd50-54b0-116d-d52e7fc59756@codeaurora.org>
-References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
- <1502451575-15712-10-git-send-email-absahu@codeaurora.org>
+From: <Yasunari.Takiguchi@sony.com>
+Subject: [PATCH v3 06/14] [media] cxd2880: Add integration layer for the driver
+Date: Wed, 16 Aug 2017 13:38:43 +0900
+Message-ID: <20170816043843.21444-1-Yasunari.Takiguchi@sony.com>
+References: <20170816041714.20551-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502451575-15712-10-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170816041714.20551-1-Yasunari.Takiguchi@sony.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Cc: tbird20d@gmail.com, frowand.list@gmail.com, Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>, Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>, Hideki Nozawa <Hideki.Nozawa@sony.com>, Kota Yonezawa <Kota.Yonezawa@sony.com>, Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>, Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
 
+These functions monitor the driver and watch for task completion.
+This is part of the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
 
-On 08/11/2017 05:09 PM, Abhishek Sahu wrote:
-> In EBI2, all codeword data will be read in FLASH_BUF_ACC buffer
-> and ADM will copy the data from source (FLASH_BUF_ACC) to
-> destination (memory for data read).
-> 
-> In QPIC, there is no FLASH_BUF_ACC and all the codeword data will
-> held in QPIC BAM FIFO buffers. It provides multiple READ_LOCATION
-> registers which will be used for copying the data from FIFO to
-> memory. The READ_LOCATION register will be used to read a
-> specific amount of data from a specific offset within the flash
-> buffer. It supports sequential offset requests. Each request is
-> composed of the following fields:
-> 
-> a. Offset within the flash buffer from which data should be
->     read
-> b. Amount of data to be read
-> c. Flag bit specifying the last read request from the flash
->     buffer. Following the last read request the NANDc refers to the
->     buffer as empty.
-> 
-> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->   drivers/mtd/nand/qcom_nandc.c | 64 +++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 64 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index d9c8a6b..b452cfb 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -53,6 +53,8 @@
->   #define	NAND_VERSION			0xf08
->   #define	NAND_READ_LOCATION_0		0xf20
->   #define	NAND_READ_LOCATION_1		0xf24
-> +#define	NAND_READ_LOCATION_2		0xf28
-> +#define	NAND_READ_LOCATION_3		0xf2c
->   
->   /* dummy register offsets, used by write_reg_dma */
->   #define	NAND_DEV_CMD1_RESTORE		0xdead
-> @@ -135,6 +137,11 @@
->   #define	ERASED_PAGE			(PAGE_ALL_ERASED | PAGE_ERASED)
->   #define	ERASED_CW			(CODEWORD_ALL_ERASED | CODEWORD_ERASED)
->   
-> +/* NAND_READ_LOCATION_n bits */
-> +#define READ_LOCATION_OFFSET		0
-> +#define READ_LOCATION_SIZE		16
-> +#define READ_LOCATION_LAST		31
-> +
->   /* Version Mask */
->   #define	NAND_VERSION_MAJOR_MASK		0xf0000000
->   #define	NAND_VERSION_MAJOR_SHIFT	28
-> @@ -177,6 +184,12 @@
->   #define	ECC_BCH_4BIT	BIT(2)
->   #define	ECC_BCH_8BIT	BIT(3)
->   
-> +#define nandc_set_readl(nandc, reg, offset, size, is_last)	\
+[Change list]
+Changes in V3
+   drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+      -changed cxd2880_atomic_read to atomic_read
+      -changed cxd2880_atomic_set to atomic_set
+      -modified return code
+      -modified coding style of if() 
+   drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
+      -modified return code
 
-Minor nit, readl makes one think it's 'read long'. If it isn't too
-much effort, could you s/nandc_set_readl/nandc_set_read_loc ?
+Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
+Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
+Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
+Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
+Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+---
+ .../media/dvb-frontends/cxd2880/cxd2880_integ.c    | 98 ++++++++++++++++++++++
+ .../media/dvb-frontends/cxd2880/cxd2880_integ.h    | 44 ++++++++++
+ 2 files changed, 142 insertions(+)
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
 
-> +nandc_set_reg(nandc, NAND_READ_LOCATION_##reg,			\
-> +	      ((offset) << READ_LOCATION_OFFSET) |		\
-> +	      ((size) << READ_LOCATION_SIZE) |			\
-> +	      ((is_last) << READ_LOCATION_LAST))
-> +
->   #define QPIC_PER_CW_CMD_SGL		32
->   #define QPIC_PER_CW_DATA_SGL		8
->   
-> @@ -260,6 +273,11 @@ struct nandc_regs {
->   	__le32 orig_vld;
->   
->   	__le32 ecc_buf_cfg;
-> +	__le32 read_location0;
-> +	__le32 read_location1;
-> +	__le32 read_location2;
-> +	__le32 read_location3;
-> +
->   };
->   
->   /*
-> @@ -516,6 +534,14 @@ static __le32 *offset_to_nandc_reg(struct nandc_regs *regs, int offset)
->   		return &regs->orig_vld;
->   	case NAND_EBI2_ECC_BUF_CFG:
->   		return &regs->ecc_buf_cfg;
-> +	case NAND_READ_LOCATION_0:
-> +		return &regs->read_location0;
-> +	case NAND_READ_LOCATION_1:
-> +		return &regs->read_location1;
-> +	case NAND_READ_LOCATION_2:
-> +		return &regs->read_location2;
-> +	case NAND_READ_LOCATION_3:
-> +		return &regs->read_location3;
->   	default:
->   		return NULL;
->   	}
-> @@ -590,6 +616,10 @@ static void update_rw_regs(struct qcom_nand_host *host, int num_cw, bool read)
->   	nandc_set_reg(nandc, NAND_FLASH_STATUS, host->clrflashstatus);
->   	nandc_set_reg(nandc, NAND_READ_STATUS, host->clrreadstatus);
->   	nandc_set_reg(nandc, NAND_EXEC_CMD, 1);
-> +
-> +	if (read)
-> +		nandc_set_readl(nandc, 0, 0, host->use_ecc ?
-> +				host->cw_data : host->cw_size, 1);
->   }
->   
->   /*
-> @@ -835,6 +865,10 @@ static void config_nand_page_read(struct qcom_nand_controller *nandc)
->    */
->   static void config_nand_cw_read(struct qcom_nand_controller *nandc)
->   {
-> +	if (nandc->props->is_bam)
-> +		write_reg_dma(nandc, NAND_READ_LOCATION_0, 4,
-> +			      NAND_BAM_NEXT_SGL);
-> +
->   	write_reg_dma(nandc, NAND_FLASH_CMD, 1, NAND_BAM_NEXT_SGL);
->   	write_reg_dma(nandc, NAND_EXEC_CMD, 1, NAND_BAM_NEXT_SGL);
->   
-> @@ -923,6 +957,7 @@ static int nandc_param(struct qcom_nand_host *host)
->   
->   	nandc_set_reg(nandc, NAND_DEV_CMD1_RESTORE, nandc->cmd1);
->   	nandc_set_reg(nandc, NAND_DEV_CMD_VLD_RESTORE, nandc->vld);
-> +	nandc_set_readl(nandc, 0, 0, 512, 1);
->   
->   	write_reg_dma(nandc, NAND_DEV_CMD_VLD, 1, 0);
->   	write_reg_dma(nandc, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
-> @@ -1398,6 +1433,19 @@ static int read_page_ecc(struct qcom_nand_host *host, u8 *data_buf,
->   			oob_size = host->ecc_bytes_hw + host->spare_bytes;
->   		}
->   
-> +		if (nandc->props->is_bam) {
-> +			if (data_buf && oob_buf) {
-> +				nandc_set_readl(nandc, 0, 0, data_size, 0);
-> +				nandc_set_readl(nandc, 1, data_size,
-> +						oob_size, 1);
-> +			} else if (data_buf) {
-> +				nandc_set_readl(nandc, 0, 0, data_size, 1);
-> +			} else {
-> +				nandc_set_readl(nandc, 0, data_size,
-> +						oob_size, 1);
-> +			}
-> +		}
-> +
->   		config_nand_cw_read(nandc);
->   
->   		if (data_buf)
-> @@ -1457,6 +1505,7 @@ static int copy_last_cw(struct qcom_nand_host *host, int page)
->   
->   	set_address(host, host->cw_size * (ecc->steps - 1), page);
->   	update_rw_regs(host, 1, true);
-> +	nandc_set_readl(nandc, 0, 0, size, 1);
-
-The READ_LOC reg should already be set up in update_rw_regs, right? If so, we could
-drop this line.
-
-With that,
-
-Reviewed-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
-Thanks,
-Archit
-
->   
->   	config_nand_single_cw_page_read(nandc);
->   
-> @@ -1502,6 +1551,7 @@ static int qcom_nandc_read_page_raw(struct mtd_info *mtd,
->   	u8 *data_buf, *oob_buf;
->   	struct nand_ecc_ctrl *ecc = &chip->ecc;
->   	int i, ret;
-> +	int read_loc;
->   
->   	data_buf = buf;
->   	oob_buf = chip->oob_poi;
-> @@ -1527,6 +1577,20 @@ static int qcom_nandc_read_page_raw(struct mtd_info *mtd,
->   			oob_size2 = host->ecc_bytes_hw + host->spare_bytes;
->   		}
->   
-> +		if (nandc->props->is_bam) {
-> +			read_loc = 0;
-> +			nandc_set_readl(nandc, 0, read_loc, data_size1, 0);
-> +			read_loc += data_size1;
-> +
-> +			nandc_set_readl(nandc, 1, read_loc, oob_size1, 0);
-> +			read_loc += oob_size1;
-> +
-> +			nandc_set_readl(nandc, 2, read_loc, data_size2, 0);
-> +			read_loc += data_size2;
-> +
-> +			nandc_set_readl(nandc, 3, read_loc, oob_size2, 1);
-> +		}
-> +
->   		config_nand_cw_read(nandc);
->   
->   		read_data_dma(nandc, reg_off, data_buf, data_size1, 0);
-> 
-
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+new file mode 100644
+index 000000000000..d4516df49210
+--- /dev/null
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+@@ -0,0 +1,98 @@
++/*
++ * cxd2880_integ.c
++ * Sony CXD2880 DVB-T2/T tuner + demodulator driver
++ * integration layer common functions
++ *
++ * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; version 2 of the License.
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
++ * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
++ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
++ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "cxd2880_tnrdmd.h"
++#include "cxd2880_tnrdmd_mon.h"
++#include "cxd2880_integ.h"
++
++int cxd2880_integ_init(struct cxd2880_tnrdmd *tnr_dmd)
++{
++	int ret = 0;
++	struct cxd2880_stopwatch timer;
++	unsigned int elapsed_time = 0;
++	u8 cpu_task_completed = 0;
++
++	if (!tnr_dmd)
++		return -EINVAL;
++
++	ret = cxd2880_tnrdmd_init1(tnr_dmd);
++	if (ret)
++		return ret;
++
++	ret = cxd2880_stopwatch_start(&timer);
++	if (ret)
++		return ret;
++
++	while (1) {
++		ret = cxd2880_stopwatch_elapsed(&timer, &elapsed_time);
++		if (ret)
++			return ret;
++
++		ret =
++		    cxd2880_tnrdmd_check_internal_cpu_status(tnr_dmd,
++						     &cpu_task_completed);
++		if (ret)
++			return ret;
++
++		if (cpu_task_completed)
++			break;
++
++		if (elapsed_time > CXD2880_TNRDMD_WAIT_INIT_TIMEOUT)
++			return -ETIME;
++		ret =
++		    cxd2880_stopwatch_sleep(&timer,
++					    CXD2880_TNRDMD_WAIT_INIT_INTVL);
++		if (ret)
++			return ret;
++	}
++
++	ret = cxd2880_tnrdmd_init2(tnr_dmd);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++int cxd2880_integ_cancel(struct cxd2880_tnrdmd *tnr_dmd)
++{
++	if (!tnr_dmd)
++		return -EINVAL;
++
++	atomic_set(&tnr_dmd->cancel, 1);
++
++	return 0;
++}
++
++int cxd2880_integ_check_cancellation(struct cxd2880_tnrdmd *tnr_dmd)
++{
++	if (!tnr_dmd)
++		return -EINVAL;
++
++	if (atomic_read(&tnr_dmd->cancel) != 0)
++		return -ECANCELED;
++
++	return 0;
++}
+diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
+new file mode 100644
+index 000000000000..2b4fe5c3743b
+--- /dev/null
++++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
+@@ -0,0 +1,44 @@
++/*
++ * cxd2880_integ.h
++ * Sony CXD2880 DVB-T2/T tuner + demodulator driver
++ * integration layer common interface
++ *
++ * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; version 2 of the License.
++ *
++ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
++ * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
++ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
++ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef CXD2880_INTEG_H
++#define CXD2880_INTEG_H
++
++#include "cxd2880_tnrdmd.h"
++
++#define CXD2880_TNRDMD_WAIT_INIT_TIMEOUT	500
++#define CXD2880_TNRDMD_WAIT_INIT_INTVL	10
++
++#define CXD2880_TNRDMD_WAIT_AGC_STABLE		100
++
++int cxd2880_integ_init(struct cxd2880_tnrdmd *tnr_dmd);
++
++int cxd2880_integ_cancel(struct cxd2880_tnrdmd *tnr_dmd);
++
++int cxd2880_integ_check_cancellation(struct cxd2880_tnrdmd
++				     *tnr_dmd);
++
++#endif
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.0
