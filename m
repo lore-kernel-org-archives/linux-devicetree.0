@@ -1,31 +1,50 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/5] dt-bindings: iio: accel: add LIS2DW12 sensor device binding
-Date: Wed, 16 Aug 2017 21:13:16 +0200
-Message-ID: <20170816191316.11469-6-lorenzo.bianconi@st.com>
-References: <20170816191316.11469-1-lorenzo.bianconi@st.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170816191316.11469-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v3 0/5] iio: srf08: add support for similar devices and
+ triggered buffers
+Date: Wed, 16 Aug 2017 21:32:57 +0200
+Message-ID: <20170816193257.GA24393@arbeit>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-i2c-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org
+Cc: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
- 1 file changed, 1 insertion(+)
+This patch series adds support for:
+- triggered buffer
+- ultrasonic devices srf02 and srf10
 
-diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-index 9ec6f5ce54fc..be64357808d0 100644
---- a/Documentation/devicetree/bindings/iio/st-sensors.txt
-+++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-@@ -46,6 +46,7 @@ Accelerometers:
- - st,h3lis331dl-accel
- - st,lng2dm-accel
- - st,lis3l02dq
-+- st,lis2dw12
- 
- Gyroscopes:
- - st,l3g4200d-gyro
+Thanks for the review of Peter and Wolfram.
+
+@Wolfram: please let me know, if you want a separate patch for [PATCH 1/5]
+
+Changes in v3:
+- introduce struct chip_info for device specific features
+- remove locking error in srf08_trigger_handler()
+
+Changes in v2:
+- removed unnecessary patch "[PATCH 6/7] iio: srf08: add buffered to device mode"
+- incorporated patch "[PATCH 7/7] iio: srf08: change text in Kconfig" where suitable
+- changed order of patches to improve logical flow of changes
+- improved distinction of sensor types
+
+
+Andreas Klinger (5):
+  iio: srf08: add device tree binding for srf02 and srf10
+  iio: srf08: add device tree table
+  iio: srf08: add triggered buffer support
+  iio: srf08: add sensor type srf10
+  iio: srf08: add support for srf02 in i2c mode
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   2 +
+ drivers/iio/proximity/Kconfig                      |   8 +-
+ drivers/iio/proximity/srf08.c                      | 227 ++++++++++++++++++---
+ 3 files changed, 203 insertions(+), 34 deletions(-)
+
 -- 
-2.14.0
+2.1.4
+
+
+-- 
