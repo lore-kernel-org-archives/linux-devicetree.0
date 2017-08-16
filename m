@@ -1,53 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: stm32: use right compatible for stm32f469
-Date: Wed, 16 Aug 2017 23:00:12 +0200
-Message-ID: <CAK8P3a17b3viT=TduBXzV5LCpNO5-=vopq6u_nX7syHzyGsvAw@mail.gmail.com>
-References: <1501172847-31323-1-git-send-email-alexandre.torgue@st.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
+Date: Wed, 16 Aug 2017 23:03:55 +0200
+Message-ID: <CAMuHMdXB0aU6mdaTw02Fz-9Mr+Ums4_SLmtDgi8b2gE75SsMVg@mail.gmail.com>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
+ <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
+ <20170731231509.77d1fba4@bbrezillon> <CAK8P3a0p=m-8U7TN8usG8HO-QNu_S7rSfykNzu4gm+MOaM2Kzg@mail.gmail.com>
+ <20170801142936.5df48702@bbrezillon> <CAK8P3a0SH4kWcvXK+_iPt9LWuNnpjr+omp+ZpyTLjT=H602n+w@mail.gmail.com>
+ <20170801153414.6ce34ee8@bbrezillon> <20170801141218.GA1450@katana>
+ <20170801164826.423183ff@bbrezillon> <20170801150108.GC1450@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501172847-31323-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170801150108.GC1450@katana>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Przemyslaw Sroka <psroka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Arkadiusz Golec <agolec-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Bartosz Folta <bfolta-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Damian Kos <dkos-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alicja Jurasik-Urbaniak <alicja-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Jan Kotas <jank-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll@ar>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 27, 2017 at 6:27 PM, Alexandre Torgue
-<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
-> Currently, same stm32f429-pinctrl driver is used for stm32f429 and
-> stm32f469. As pin map is different between those 2 MCUs,
-> a stm32f469-pinctrl driver has been recently added.
-> This patch
->  -allows to use stm32f469-pinctrl driver for stm32f469 boards
->  -reworks stm32 devicetree files to fit with stm32f429 / stm32f469
+On Tue, Aug 1, 2017 at 5:01 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>> I'm perfectly fine with the I3C / I2C framework separation. The only
+>> minor problem I had with that was the inaccuracy of the
+>> sysfs/device-model representation: we don't have one i2c and one i3c
+>> bus, we just have one i3c bus with a mix of i2c and i3c devices.
 >
-> In the same time it fixes an issue when only MACH_STM32F469 flag is
-> selected in menuconfig.
->
-> Fixes: d28bcd53fa90 ("ARM: stm32: Introduce MACH_STM32F469 flag")
-> Reported-by: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> ---
->
-> Hi Arnd, Kevin and Olof,
->
-> I send this series in 4.13-rcx cycle to fix d28bcd53fa90
-> ("ARM: stm32: Introduce MACH_STM32F469 flag").
-> This patch could look "huge" to fix the issue but I prefer to send
-> a clean patch now that send a quick fix first and a DT rework in 4.14
-> cycle.
-> Let me know, if tou disagree with that.
+> I understand that. What if I2C had the same seperation between the "bus"
+> and the "master"?
 
-Unfortunately I did not have this one on my radar for the 4.13 fixes,
-as the subject looked rather innocent. My feeling is that we could have
-done it earlier, but by now it's a bit late, and I'd rather have a quick
-fix to merge for 4.13.
+There can be multiple masters on an i2c bus.  But not on an i3c bus, due
+to SCL being push/pull.
 
-Doing this without merge conflicts unfortunately means that you have
-to send two pull requests, with the 4.14 one based on the quick fix
-for 4.13.
+Gr{oetje,eeting}s,
 
-        Arnd
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
