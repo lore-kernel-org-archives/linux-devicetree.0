@@ -1,54 +1,37 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v3 2/5] iio: srf08: add device tree table
-Date: Wed, 16 Aug 2017 21:33:47 +0200
-Message-ID: <20170816193347.GA24416@arbeit>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] soc: Convert to using %pOF instead of full_name
+Date: Wed, 16 Aug 2017 21:33:56 +0200
+Message-ID: <CAK8P3a3eEV8KWb-cCovRH0LQQ+88yJ7R9se1sjd06K_TyPzKjQ@mail.gmail.com>
+References: <20170718214339.7774-49-robh@kernel.org> <CAL_JsqLYz9ACd-YAtU0gEHkY8A++cCeBTW9jvUyc5OheEq4scQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <CAL_JsqLYz9ACd-YAtU0gEHkY8A++cCeBTW9jvUyc5OheEq4scQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Scott Wood <oss@buserror.net>, Qiang Zhao <qiang.zhao@nxp.com>, Matthias Brugger <matthias.bgg@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, linux-samsung-soc@
 List-Id: devicetree@vger.kernel.org
 
-Added MODULE_DEVICE_TABLE for device tree bindings.
+On Thu, Aug 10, 2017 at 12:09 AM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Jul 18, 2017 at 4:43 PM, Rob Herring <robh@kernel.org> wrote:
+>> Now that we have a custom printf format specifier, convert users of
+>> full_name to use %pOF instead. This is preparation to remove storing
+>> of the full path string for each node.
+>>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> Cc: Scott Wood <oss@buserror.net>
+>> Cc: Qiang Zhao <qiang.zhao@nxp.com>
+>> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+>> Cc: Simon Horman <horms@verge.net.au>
+>> Cc: Magnus Damm <magnus.damm@gmail.com>
+>> Cc: Kukjin Kim <kgene@kernel.org>
+>> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+>> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
 
-It used to work without it by using the i2c_device_id table, but adding the
-table makes everything clear and documented.
+> Arnd, Olof,
+>
+> Can you please apply this one.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- drivers/iio/proximity/srf08.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Applied to next/drivers with the various Acks, thanks!
 
-diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
-index 49316cbf7c60..3f19536f215f 100644
---- a/drivers/iio/proximity/srf08.c
-+++ b/drivers/iio/proximity/srf08.c
-@@ -378,6 +378,13 @@ static int srf08_probe(struct i2c_client *client,
- 	return devm_iio_device_register(&client->dev, indio_dev);
- }
- 
-+static const struct of_device_id of_srf08_match[] = {
-+	{ .compatible = "devantech,srf08", 0},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_srf08_match);
-+
- static const struct i2c_device_id srf08_id[] = {
- 	{ "srf08", 0 },
- 	{ }
-@@ -387,6 +394,7 @@ MODULE_DEVICE_TABLE(i2c, srf08_id);
- static struct i2c_driver srf08_driver = {
- 	.driver = {
- 		.name	= "srf08",
-+		.of_match_table	= of_srf08_match,
- 	},
- 	.probe = srf08_probe,
- 	.id_table = srf08_id,
--- 
-2.1.4
-
-
--- 
+      Arnd
