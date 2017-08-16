@@ -1,77 +1,57 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] i2c: mediatek: Add i2c compatible for MediaTek
- MT7622
-Date: Wed, 16 Aug 2017 11:08:54 +0800
-Message-ID: <1502852934.19230.45.camel@mtkswgap22>
-References: <1502802495-5064-1-git-send-email-jun.gao@mediatek.com>
-         <1502802495-5064-3-git-send-email-jun.gao@mediatek.com>
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rk3399: init vop clock rates
+Date: Wed, 16 Aug 2017 11:15:11 +0800
+Message-ID: <5993B8BF.9020100@rock-chips.com>
+References: <1502851869-1736-1-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502802495-5064-3-git-send-email-jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1502851869-1736-1-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-15 at 21:08 +0800, Jun Gao wrote:
-> From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Add i2c compatible for MT7622. Compare to MT8173 i2c controller,
-> MT7622 limits message numbers to 255, and does not support 4GB
-> DMA mode.
-> 
-> Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-you seemed missing a Reviewed-by tag from Joe.C
-
-http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009975.html
-
-
+On 2017年08月16日 10:51, Kever Yang wrote:
+> We need to init vop aclk and hclk incase the U-Boot does not do
+> the initialize.
+>
+> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  drivers/i2c/busses/i2c-mt65xx.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> index 9bedf0b..09d288c 100644
-> --- a/drivers/i2c/busses/i2c-mt65xx.c
-> +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> @@ -172,6 +172,10 @@ struct mtk_i2c {
->  	.max_comb_2nd_msg_len = 31,
->  };
->  
-> +static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
-> +	.max_num_msgs = 255,
-> +};
-> +
->  static const struct mtk_i2c_compatible mt6577_compat = {
->  	.quirks = &mt6577_i2c_quirks,
->  	.pmic_i2c = 0,
-> @@ -190,6 +194,15 @@ struct mtk_i2c {
->  	.support_33bits = 0,
->  };
->  
-> +static const struct mtk_i2c_compatible mt7622_compat = {
-> +	.quirks = &mt7622_i2c_quirks,
-> +	.pmic_i2c = 0,
-> +	.dcm = 1,
-> +	.auto_restart = 1,
-> +	.aux_len_reg = 1,
-> +	.support_33bits = 0,
-> +};
-> +
->  static const struct mtk_i2c_compatible mt8173_compat = {
->  	.pmic_i2c = 0,
->  	.dcm = 1,
-> @@ -201,6 +214,7 @@ struct mtk_i2c {
->  static const struct of_device_id mtk_i2c_of_match[] = {
->  	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
->  	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
-> +	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
->  	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
->  	{}
->  };
+
+Looks good for me:
+     Reviewed-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 0b3acc9..a592c24 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -1480,6 +1480,8 @@
+>   		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
+>   		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
+>   		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+> +		assigned-clocks = <&cru ACLK_VOP1>, <&cru HCLK_VOP1>;
+> +		assigned-clock-rates = <400000000>, <100000000>;
+>   		iommus = <&vopl_mmu>;
+>   		power-domains = <&power RK3399_PD_VOPL>;
+>   		resets = <&cru SRST_A_VOP1>, <&cru SRST_H_VOP1>, <&cru SRST_D_VOP1>;
+> @@ -1525,6 +1527,8 @@
+>   		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>;
+>   		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+>   		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+> +		assigned-clocks = <&cru ACLK_VOP0>, <&cru HCLK_VOP0>;
+> +		assigned-clock-rates = <400000000>, <100000000>;
+>   		iommus = <&vopb_mmu>;
+>   		power-domains = <&power RK3399_PD_VOPB>;
+>   		resets = <&cru SRST_A_VOP0>, <&cru SRST_H_VOP0>, <&cru SRST_D_VOP0>;
+
+
+-- 
+Ｍark Yao
 
 
 --
