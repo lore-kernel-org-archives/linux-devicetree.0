@@ -1,401 +1,182 @@
 From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/5] iio: st_sensors: decouple irq1 configuration parameters from the irq2 ones
-Date: Wed, 16 Aug 2017 21:13:12 +0200
-Message-ID: <20170816191316.11469-2-lorenzo.bianconi@st.com>
+Subject: [PATCH 4/5] iio: accel: add support to LIS2DW12
+Date: Wed, 16 Aug 2017 21:13:15 +0200
+Message-ID: <20170816191316.11469-5-lorenzo.bianconi@st.com>
 References: <20170816191316.11469-1-lorenzo.bianconi@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170816191316.11469-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Separate data-ready configuration parameters for INT1 and INT2 pins in
-st_sensor_data_ready_irq data structure. That change will be use to
-properly support LIS2DW12 accel sensor.
+add support to STMicroelectronics LIS2DW12 accelerometer in
+st_accel framework
 
+http://www.st.com/resource/en/datasheet/lis2dw12.pdf
 Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/iio/accel/st_accel_core.c               | 66 ++++++++++++++++---------
- drivers/iio/common/st_sensors/st_sensors_core.c | 28 ++++++-----
- drivers/iio/gyro/st_gyro_core.c                 | 18 ++++---
- drivers/iio/magnetometer/st_magn_core.c         |  6 ++-
- drivers/iio/pressure/st_pressure_core.c         | 35 ++++++++-----
- include/linux/iio/common/st_sensors.h           | 16 +++---
- 6 files changed, 110 insertions(+), 59 deletions(-)
+ drivers/iio/accel/st_accel.h      |  2 +
+ drivers/iio/accel/st_accel_core.c | 79 +++++++++++++++++++++++++++++++++++++++
+ drivers/iio/accel/st_accel_i2c.c  |  5 +++
+ drivers/iio/accel/st_accel_spi.c  |  5 +++
+ 4 files changed, 91 insertions(+)
 
-diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-index 752856b3a849..9fac5a41bacd 100644
---- a/drivers/iio/accel/st_accel_core.c
-+++ b/drivers/iio/accel/st_accel_core.c
-@@ -159,9 +159,10 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int1 = 0x10,
--			.mask_int2 = 0x00,
-+			.int1 = {
-+				.addr = 0x22,
-+				.mask = 0x10,
-+			},
- 			.addr_ihl = 0x25,
- 			.mask_ihl = 0x02,
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
-@@ -229,9 +230,14 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int1 = 0x02,
--			.mask_int2 = 0x10,
-+			.int1 = {
-+				.addr = 0x22,
-+				.mask = 0x02,
-+			},
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = 0x10,
-+			},
- 			.addr_ihl = 0x22,
- 			.mask_ihl = 0x80,
- 			.addr_od = 0x22,
-@@ -313,9 +319,10 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask = 0x08,
- 		},
- 		.drdy_irq = {
--			.addr = 0x23,
--			.mask_int1 = 0x80,
--			.mask_int2 = 0x00,
-+			.int1 = {
-+				.addr = 0x23,
-+				.mask = 0x80,
-+			},
- 			.addr_ihl = 0x23,
- 			.mask_ihl = 0x40,
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
-@@ -387,8 +394,10 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask = 0x01,
- 		},
- 		.drdy_irq = {
--			.addr = 0x21,
--			.mask_int1 = 0x04,
-+			.int1 = {
-+				.addr = 0x21,
-+				.mask = 0x04,
-+			},
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
- 		.sim = {
-@@ -444,9 +453,14 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			},
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int1 = 0x04,
--			.mask_int2 = 0x20,
-+			.int1 = {
-+				.addr = 0x22,
-+				.mask = 0x04,
-+			},
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = 0x20,
-+			},
- 			.addr_ihl = 0x22,
- 			.mask_ihl = 0x80,
- 			.addr_od = 0x22,
-@@ -513,9 +527,14 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int1 = 0x02,
--			.mask_int2 = 0x10,
-+			.int1 = {
-+				.addr = 0x22,
-+				.mask = 0x02,
-+			},
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = 0x10,
-+			},
- 			.addr_ihl = 0x22,
- 			.mask_ihl = 0x80,
- 		},
-@@ -567,8 +586,10 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 		.bdu = {
- 		},
- 		.drdy_irq = {
--			.addr = 0x21,
--			.mask_int1 = 0x04,
-+			.int1 = {
-+				.addr = 0x21,
-+				.mask = 0x04,
-+			},
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
- 		.sim = {
-@@ -635,9 +656,10 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			},
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int1 = 0x10,
--			.mask_int2 = 0x00,
-+			.int1 = {
-+				.addr = 0x22,
-+				.mask = 0x10,
-+			},
- 			.addr_ihl = 0x25,
- 			.mask_ihl = 0x02,
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
-diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c b/drivers/iio/common/st_sensors/st_sensors_core.c
-index d99bb1460fe2..a26217b0604f 100644
---- a/drivers/iio/common/st_sensors/st_sensors_core.c
-+++ b/drivers/iio/common/st_sensors/st_sensors_core.c
-@@ -283,7 +283,8 @@ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
- 	struct st_sensor_data *sdata = iio_priv(indio_dev);
+diff --git a/drivers/iio/accel/st_accel.h b/drivers/iio/accel/st_accel.h
+index 0fe521609a3a..2ed0f60418c0 100644
+--- a/drivers/iio/accel/st_accel.h
++++ b/drivers/iio/accel/st_accel.h
+@@ -32,6 +32,7 @@ enum st_accel_type {
+ 	H3LIS331DL,
+ 	LIS331DL,
+ 	LIS3LV02DL,
++	LIS2DW12,
+ 	ST_ACCEL_MAX,
+ };
  
- 	/* Sensor does not support interrupts */
--	if (sdata->sensor_settings->drdy_irq.addr == 0) {
-+	if (!sdata->sensor_settings->drdy_irq.int1.addr &&
-+	    !sdata->sensor_settings->drdy_irq.int2.addr) {
- 		if (pdata->drdy_int_pin)
- 			dev_info(&indio_dev->dev,
- 				 "DRDY on pin INT%d specified, but sensor "
-@@ -294,7 +295,7 @@ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
- 
- 	switch (pdata->drdy_int_pin) {
- 	case 1:
--		if (sdata->sensor_settings->drdy_irq.mask_int1 == 0) {
-+		if (!sdata->sensor_settings->drdy_irq.int1.mask) {
- 			dev_err(&indio_dev->dev,
- 					"DRDY on INT1 not available.\n");
- 			return -EINVAL;
-@@ -302,7 +303,7 @@ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
- 		sdata->drdy_int_pin = 1;
- 		break;
- 	case 2:
--		if (sdata->sensor_settings->drdy_irq.mask_int2 == 0) {
-+		if (!sdata->sensor_settings->drdy_irq.int2.mask) {
- 			dev_err(&indio_dev->dev,
- 					"DRDY on INT2 not available.\n");
- 			return -EINVAL;
-@@ -460,10 +461,11 @@ EXPORT_SYMBOL(st_sensors_init_sensor);
- int st_sensors_set_dataready_irq(struct iio_dev *indio_dev, bool enable)
- {
- 	int err;
--	u8 drdy_mask;
-+	u8 drdy_addr, drdy_mask;
- 	struct st_sensor_data *sdata = iio_priv(indio_dev);
- 
--	if (!sdata->sensor_settings->drdy_irq.addr)
-+	if (!sdata->sensor_settings->drdy_irq.int1.addr &&
-+	    !sdata->sensor_settings->drdy_irq.int2.addr)
- 		return 0;
- 
- 	/* Enable/Disable the interrupt generator 1. */
-@@ -476,18 +478,20 @@ int st_sensors_set_dataready_irq(struct iio_dev *indio_dev, bool enable)
- 			goto st_accel_set_dataready_irq_error;
- 	}
- 
--	if (sdata->drdy_int_pin == 1)
--		drdy_mask = sdata->sensor_settings->drdy_irq.mask_int1;
--	else
--		drdy_mask = sdata->sensor_settings->drdy_irq.mask_int2;
-+	if (sdata->drdy_int_pin == 1) {
-+		drdy_addr = sdata->sensor_settings->drdy_irq.int1.addr;
-+		drdy_mask = sdata->sensor_settings->drdy_irq.int1.mask;
-+	} else {
-+		drdy_addr = sdata->sensor_settings->drdy_irq.int2.addr;
-+		drdy_mask = sdata->sensor_settings->drdy_irq.int2.mask;
-+	}
- 
- 	/* Flag to the poll function that the hardware trigger is in use */
- 	sdata->hw_irq_trigger = enable;
- 
- 	/* Enable/Disable the interrupt generator for data ready. */
--	err = st_sensors_write_data_with_mask(indio_dev,
--					sdata->sensor_settings->drdy_irq.addr,
--					drdy_mask, (int)enable);
-+	err = st_sensors_write_data_with_mask(indio_dev, drdy_addr,
-+					      drdy_mask, (int)enable);
- 
- st_accel_set_dataready_irq_error:
- 	return err;
-diff --git a/drivers/iio/gyro/st_gyro_core.c b/drivers/iio/gyro/st_gyro_core.c
-index e366422e8512..764306378b20 100644
---- a/drivers/iio/gyro/st_gyro_core.c
-+++ b/drivers/iio/gyro/st_gyro_core.c
-@@ -111,8 +111,10 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int2 = 0x08,
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = 0x08,
-+			},
- 			/*
- 			 * The sensor has IHL (active low) and open
- 			 * drain settings, but only for INT1 and not
-@@ -181,8 +183,10 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int2 = 0x08,
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = 0x08,
-+			},
- 			/*
- 			 * The sensor has IHL (active low) and open
- 			 * drain settings, but only for INT1 and not
-@@ -246,8 +250,10 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask = 0x80,
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int2 = 0x08,
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = 0x08,
-+			},
- 			/*
- 			 * The sensor has IHL (active low) and open
- 			 * drain settings, but only for INT1 and not
-diff --git a/drivers/iio/magnetometer/st_magn_core.c b/drivers/iio/magnetometer/st_magn_core.c
-index e68368b5b2a3..2c465cbe3b0a 100644
---- a/drivers/iio/magnetometer/st_magn_core.c
-+++ b/drivers/iio/magnetometer/st_magn_core.c
-@@ -355,8 +355,10 @@ static const struct st_sensor_settings st_magn_sensors_settings[] = {
- 			.mask = 0x10,
- 		},
- 		.drdy_irq = {
--			.addr = 0x62,
--			.mask_int1 = 0x01,
-+			.int1 = {
-+				.addr = 0x62,
-+				.mask = 0x01,
-+			},
- 			.addr_stat_drdy = 0x67,
- 		},
- 		.multi_read_bit = false,
-diff --git a/drivers/iio/pressure/st_pressure_core.c b/drivers/iio/pressure/st_pressure_core.c
-index c84eea73b3ae..97971d432021 100644
---- a/drivers/iio/pressure/st_pressure_core.c
-+++ b/drivers/iio/pressure/st_pressure_core.c
-@@ -280,9 +280,14 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
- 			.mask = 0x04,
- 		},
- 		.drdy_irq = {
--			.addr = 0x22,
--			.mask_int1 = 0x04,
--			.mask_int2 = 0x20,
-+			.int1 = {
-+				.addr = 0x22,
-+				.mask = 0x04,
-+			},
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = 0x20,
-+			},
- 			.addr_ihl = 0x22,
- 			.mask_ihl = 0x80,
- 			.addr_od = 0x22,
-@@ -336,7 +341,12 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
- 			.mask = 0x04,
- 		},
- 		.drdy_irq = {
--			.addr = 0,
-+			.int1 = {
-+				.addr = 0x00,
-+			},
-+			.int2 = {
-+				.addr = 0x00,
-+			},
- 		},
- 		.multi_read_bit = true,
- 		.bootime = 2,
-@@ -388,9 +398,10 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
- 			.mask = 0x04,
- 		},
- 		.drdy_irq = {
--			.addr = 0x23,
--			.mask_int1 = 0x01,
--			.mask_int2 = 0x00,
-+			.int1 = {
-+				.addr = 0x23,
-+				.mask = 0x01,
-+			},
- 			.addr_ihl = 0x22,
- 			.mask_ihl = 0x80,
- 			.addr_od = 0x22,
-@@ -447,9 +458,10 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
- 			.mask = 0x02,
- 		},
- 		.drdy_irq = {
--			.addr = 0x12,
--			.mask_int1 = 0x04,
--			.mask_int2 = 0x00,
-+			.int1 = {
-+				.addr = 0x12,
-+				.mask = 0x04,
-+			},
- 			.addr_ihl = 0x12,
- 			.mask_ihl = 0x80,
- 			.addr_od = 0x12,
-@@ -605,7 +617,8 @@ int st_press_common_probe(struct iio_dev *indio_dev)
- 	press_data->odr = press_data->sensor_settings->odr.odr_avl[0].hz;
- 
- 	/* Some devices don't support a data ready pin. */
--	if (!pdata && press_data->sensor_settings->drdy_irq.addr)
-+	if (!pdata && (press_data->sensor_settings->drdy_irq.int1.addr ||
-+		       press_data->sensor_settings->drdy_irq.int2.addr))
- 		pdata =	(struct st_sensors_platform_data *)&default_press_pdata;
- 
- 	err = st_sensors_init_sensor(indio_dev, press_data->dev->platform_data);
-diff --git a/include/linux/iio/common/st_sensors.h b/include/linux/iio/common/st_sensors.h
-index 7b0fa8b5c120..ac3aa89518ca 100644
---- a/include/linux/iio/common/st_sensors.h
-+++ b/include/linux/iio/common/st_sensors.h
-@@ -132,9 +132,8 @@ struct st_sensor_das {
+@@ -52,6 +53,7 @@ enum st_accel_type {
+ #define LIS2DH12_ACCEL_DEV_NAME		"lis2dh12_accel"
+ #define LIS3L02DQ_ACCEL_DEV_NAME	"lis3l02dq"
+ #define LNG2DM_ACCEL_DEV_NAME		"lng2dm"
++#define LIS2DW12_ACCEL_DEV_NAME		"lis2dw12"
  
  /**
-  * struct st_sensor_data_ready_irq - ST sensor device data-ready interrupt
-- * @addr: address of the register.
-- * @mask_int1: mask to enable/disable IRQ on INT1 pin.
-- * @mask_int2: mask to enable/disable IRQ on INT2 pin.
-+ * struct int1 - data-ready configuration register for INT1 pin.
-+ * struct int2 - data-ready configuration register for INT2 pin.
-  * @addr_ihl: address to enable/disable active low on the INT lines.
-  * @mask_ihl: mask to enable/disable active low on the INT lines.
-  * @addr_od: address to enable/disable Open Drain on the INT lines.
-@@ -145,9 +144,14 @@ struct st_sensor_das {
-  * @en_mask: mask to write the on/off value for enable.
-  */
- struct st_sensor_data_ready_irq {
--	u8 addr;
--	u8 mask_int1;
--	u8 mask_int2;
-+	struct {
-+		u8 addr;
-+		u8 mask;
-+	} int1;
-+	struct {
-+		u8 addr;
-+		u8 mask;
-+	} int2;
- 	u8 addr_ihl;
- 	u8 mask_ihl;
- 	u8 addr_od;
+ * struct st_sensors_platform_data - default accel platform data
+diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+index 4d9190625630..42ada20daca0 100644
+--- a/drivers/iio/accel/st_accel_core.c
++++ b/drivers/iio/accel/st_accel_core.c
+@@ -692,6 +692,85 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
+ 		.multi_read_bit = true,
+ 		.bootime = 2,
+ 	},
++	{
++		.wai = 0x44,
++		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
++		.sensors_supported = {
++			[0] = LIS2DW12_ACCEL_DEV_NAME,
++		},
++		.ch = (struct iio_chan_spec *)st_accel_12bit_channels,
++		.odr = {
++			.addr = 0x20,
++			.mask = 0xf0,
++			.odr_avl = {
++				{ .hz = 1, .value = 0x01, },
++				{ .hz = 12, .value = 0x02, },
++				{ .hz = 25, .value = 0x03, },
++				{ .hz = 50, .value = 0x04, },
++				{ .hz = 100, .value = 0x05, },
++				{ .hz = 200, .value = 0x06, },
++			},
++		},
++		.pw = {
++			.addr = 0x20,
++			.mask = 0xf0,
++			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
++		},
++		.fs = {
++			.addr = 0x25,
++			.mask = 0x30,
++			.fs_avl = {
++				[0] = {
++					.num = ST_ACCEL_FS_AVL_2G,
++					.value = 0x00,
++					.gain = IIO_G_TO_M_S_2(976),
++				},
++				[1] = {
++					.num = ST_ACCEL_FS_AVL_4G,
++					.value = 0x01,
++					.gain = IIO_G_TO_M_S_2(1952),
++				},
++				[2] = {
++					.num = ST_ACCEL_FS_AVL_8G,
++					.value = 0x02,
++					.gain = IIO_G_TO_M_S_2(3904),
++				},
++				[3] = {
++					.num = ST_ACCEL_FS_AVL_16G,
++					.value = 0x03,
++					.gain = IIO_G_TO_M_S_2(7808),
++				},
++			},
++		},
++		.bdu = {
++			.addr = 0x21,
++			.mask = 0x08,
++		},
++		.drdy_irq = {
++			.int1 = {
++				.addr = 0x23,
++				.mask = 0x01,
++			},
++			.int2 = {
++				.addr = 0x24,
++				.mask = 0x01,
++			},
++			.addr_ihl = 0x22,
++			.mask_ihl = 0x08,
++			.addr_od = 0x22,
++			.mask_od = 0x20,
++			.stat_drdy = {
++				.addr = ST_SENSORS_DEFAULT_STAT_ADDR,
++				.mask = 0x01,
++			},
++		},
++		.sim = {
++			.addr = 0x21,
++			.value = BIT(0),
++		},
++		.multi_read_bit = false,
++		.bootime = 2,
++	},
+ };
+ 
+ static int st_accel_read_raw(struct iio_dev *indio_dev,
+diff --git a/drivers/iio/accel/st_accel_i2c.c b/drivers/iio/accel/st_accel_i2c.c
+index 18cafb9f2468..363429b5686c 100644
+--- a/drivers/iio/accel/st_accel_i2c.c
++++ b/drivers/iio/accel/st_accel_i2c.c
+@@ -94,6 +94,10 @@ static const struct of_device_id st_accel_of_match[] = {
+ 		.compatible = "st,lng2dm-accel",
+ 		.data = LNG2DM_ACCEL_DEV_NAME,
+ 	},
++	{
++		.compatible = "st,lis2dw12",
++		.data = LIS2DW12_ACCEL_DEV_NAME,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, st_accel_of_match);
+@@ -129,6 +133,7 @@ static const struct i2c_device_id st_accel_id_table[] = {
+ 	{ H3LIS331DL_ACCEL_DEV_NAME, H3LIS331DL },
+ 	{ LIS331DL_ACCEL_DEV_NAME, LIS331DL },
+ 	{ LIS3LV02DL_ACCEL_DEV_NAME, LIS3LV02DL },
++	{ LIS2DW12_ACCEL_DEV_NAME, LIS2DW12 },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(i2c, st_accel_id_table);
+diff --git a/drivers/iio/accel/st_accel_spi.c b/drivers/iio/accel/st_accel_spi.c
+index 915fa49085f7..7692da49e59f 100644
+--- a/drivers/iio/accel/st_accel_spi.c
++++ b/drivers/iio/accel/st_accel_spi.c
+@@ -82,6 +82,10 @@ static const struct of_device_id st_accel_of_match[] = {
+ 		.compatible = "st,lis331dl-accel",
+ 		.data = LIS331DL_ACCEL_DEV_NAME,
+ 	},
++	{
++		.compatible = "st,lis2dw12",
++		.data = LIS2DW12_ACCEL_DEV_NAME,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, st_accel_of_match);
+@@ -133,6 +137,7 @@ static const struct spi_device_id st_accel_id_table[] = {
+ 	{ H3LIS331DL_ACCEL_DEV_NAME },
+ 	{ LIS331DL_ACCEL_DEV_NAME },
+ 	{ LIS3LV02DL_ACCEL_DEV_NAME },
++	{ LIS2DW12_ACCEL_DEV_NAME },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(spi, st_accel_id_table);
 -- 
 2.14.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
