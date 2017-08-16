@@ -1,57 +1,117 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 0/5] iio: srf08: add support for similar devices and
- triggered buffers
-Date: Wed, 16 Aug 2017 22:34:04 +0200
-Message-ID: <20170816203404.ff55ct4wgnipgkog@ninjato>
-References: <20170816193257.GA24393@arbeit>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 1/3] dt: bindings: Document DT bindings for Analog
+ devices as3645a
+Date: Wed, 16 Aug 2017 23:57:06 +0300
+Message-ID: <20170816205706.rcg3lz6hg2wgjphw@valkosipuli.retiisi.org.uk>
+References: <20170816125440.27534-1-sakari.ailus@linux.intel.com>
+ <20170816125514.27634-1-sakari.ailus@linux.intel.com>
+ <8b966328-138a-5777-f8b5-692e692567e8@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jw2usm76pwcqkyta"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170816193257.GA24393@arbeit>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <8b966328-138a-5777-f8b5-692e692567e8@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jacek,
 
---jw2usm76pwcqkyta
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for the review.
 
+On Wed, Aug 16, 2017 at 10:27:27PM +0200, Jacek Anaszewski wrote:
+> Hi Sakari,
+> 
+> Thanks for the patch. One issue below.
+> 
+> On 08/16/2017 02:55 PM, Sakari Ailus wrote:
+> > From: Sakari Ailus <sakari.ailus@iki.fi>
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  .../devicetree/bindings/leds/ams,as3645a.txt       | 56 ++++++++++++++++++++++
+> >  1 file changed, 56 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> > new file mode 100644
+> > index 000000000000..00066e3f9036
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> > @@ -0,0 +1,56 @@
+> > +Analog devices AS3645A device tree bindings
+> > +
+> > +The AS3645A flash LED controller can drive two LEDs, one high current
+> > +flash LED and one indicator LED. The high current flash LED can be
+> > +used in torch mode as well.
+> > +
+> > +Ranges below noted as [a, b] are closed ranges between a and b, i.e. a
+> > +and b are included in the range.
+> > +
+> > +
+> > +Required properties
+> > +===================
+> > +
+> > +compatible	: Must be "ams,as3645a".
+> > +reg		: The I2C address of the device. Typically 0x30.
+> > +
+> > +
+> > +Required properties of the "flash" child node
+> > +=============================================
+> > +
+> > +flash-timeout-us: Flash timeout in microseconds. The value must be in
+> > +		  the range [100000, 850000] and divisible by 50000.
+> > +flash-max-microamp: Maximum flash current in microamperes. Has to be
+> > +		    in the range between [200000, 500000] and
+> > +		    divisible by 20000.
+> > +led-max-microamp: Maximum torch (assist) current in microamperes. The
+> > +		  value must be in the range between [20000, 160000] and
+> > +		  divisible by 20000.
+> > +ams,input-max-microamp: Maximum flash controller input current. The
+> > +			value must be in the range [1250000, 2000000]
+> > +			and divisible by 50000.
+> > +
+> > +
+> > +Required properties of the "indicator" child node
+> > +=================================================
+> > +
+> > +led-max-microamp: Maximum indicator current. The allowed values are
+> > +		  2500, 5000, 7500 and 10000.
+> 
+> Most LED bindings mention also optional label property in the form:
+> 
+> - label : See Documentation/devicetree/bindings/leds/common.txt
+> 
+> > +
+> > +Example
+> > +=======
+> > +
+> > +	as3645a: flash@30 {
+> > +		reg = <0x30>;
+> > +		compatible = "ams,as3645a";
+> > +		flash {
+> 
+> 			label = "as3645a:flash";
+> 
+> > +			flash-timeout-us = <150000>;
+> > +			flash-max-microamp = <320000>;
+> > +			led-max-microamp = <60000>;
+> > +			ams,input-max-microamp = <1750000>;
+> > +		};
+> > +		indicator {
+> 
+> 			label = "as3645a:indicator";
+> 
+> > +			led-max-microamp = <10000>;
+> > +		};
+> > +	};
+> > 
 
-> @Wolfram: please let me know, if you want a separate patch for [PATCH 1/5]
+I'll make the above fixes for v2 (and add flash child node label property).
 
-I moved that file out of the i2c directory because I don't want to
-maintain it. I even wanted to delete it but Rob thought there is value
-in keeping it. So, it got moved. If this series had been rebased,
-get_maintainer.pl would have pointed you to the right people. I dunno
-the IIO workflow very well, and Jonathan didn't answer yet, but this
-base is too old IMO. Jonathan?
+-- 
+Regards,
 
-By the way, is it just me, or are the individual patches not in the same
-thread as the cover-letter?
-
-
---jw2usm76pwcqkyta
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmUrDEACgkQFA3kzBSg
-KbbL8g/+N+WagM1uStfTnAeW6L+ZGtcs5WW23jN5j27DRdX+fMnpMgwkfWnX/Aue
-fd15oLaXl41L/W33Wf0JRDlPfjEl8WoTGmR+C49KzGk9tbW6s7Sjy2THGduJSOJD
-4oo+XRfQeKBQJKp/XTiJTvCt+c/JfVcm7dxkun0Widb+xNAhJQy6a46JdpMY8MVB
-EGdQ7AzJdzMoOLxfIKmoG5oMTy5FMikBzMnqqB5EgBZtxRgQFkBWod7Ik07YL2QF
-6kie1QFBc+xPHmtBKthliHM3p/0qSBPbs7rIaKelLTqn1nGyq4G1fMP/jIBUXvlx
-Pg0vRapC5ATuPxdjTS/27ckjonKrJhn2JW4794ZHFzmXV37fy5ZYo+BJjfPejjRq
-0ZC4TnigTWcaAwdEtIYiwHJVlhJSHyxcquDSSmQtd68d+a0M5/PgEUYNcAhjxqQq
-5wp6p2PFW8BChIzbbGvz1D1yO3XqSTnWc7x0rYzg/m06a7Q8H7WAR/dGWqfNdVCL
-1sb8FOQcyXpdwixwZpi2n3BH6t4/0V4p2EoIpWVGkmWQJkB7moowZNB2/2lrFQNU
-FNZcssH2S99sjXFAhhalS/UIFQ1yD3Ww73ZbnhvvfRmpQAPOLpbLKcfYMU2jL6yv
-ICrk/mnVuac4y8c5CXdekJ+4nFJwkncVfbpSHQws16UbVCTf82Q=
-=adjE
------END PGP SIGNATURE-----
-
---jw2usm76pwcqkyta--
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
