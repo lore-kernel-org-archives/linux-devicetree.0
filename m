@@ -1,55 +1,65 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v2 2/2] dt-bindings: usb: keystone-usb: Update bindings pm and clocks properties
-Date: Wed, 16 Aug 2017 16:54:08 -0500
-Message-ID: <20170816215408.13076-3-fcooper@ti.com>
-References: <20170816215408.13076-1-fcooper@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Tom Rini <trini@konsulko.com>
+Subject: [PATCH] ARM: dts: TI: Enable __symbols__ in dtb files for some platforms
+Date: Wed, 16 Aug 2017 17:59:11 -0400
+Message-ID: <1502920751-11121-1-git-send-email-trini@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170816215408.13076-1-fcooper@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, rogerq@ti.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+To: devicetree@vger.kernel.org
+Cc: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sekhar Nori <nsekhar@ti.com>, Jason Kridner <jkridner@beagleboard.org>, Drew Fustini <drew@beagleboard.org>, Robert Nelson <robertcnelson@gmail.com>, Lokesh Vutla <lokeshvutla@ti.com>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update various properties to properly indicate their requirement depending
-on the SoC.
+Build the dtb file for these platfroms with __symbol__ information
+included.  This will reduce the size of the dtb (and resident memory
+usage) in exchange for allowing more types of overlays to be applied to
+the dtb file prior to passing it to Linux and additional functionality
+within the kernel when OF_OVERLAY is enabled.
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: Jason Kridner <jkridner@beagleboard.org>
+Cc: Drew Fustini <drew@beagleboard.org>
+Cc: Robert Nelson <robertcnelson@gmail.com>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Tom Rini <trini@konsulko.com>
 ---
-Version 2:
-Clarify clock requirements in binding document
+This patch takes the path that Rob encouraged in my previous patch of
+enabling __symbols__ in some platforms now (that can use it) and see if
+a critical mass evolves that pushes towards -@ being default for all
+dtbs.  I would suggest that the dra76 series be respun to include a hunk
+like this at least as well, and if there's another Beagle X15 patch,
+that too.  Russell, per some of our conversations, something like would
+also be needed as part of using overlays to solve some of the problems
+with Hummingboard, etc.
+---
+ arch/arm/boot/dts/Makefile | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
- Documentation/devicetree/bindings/usb/keystone-usb.txt | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
-index 60527d3..2d1bef1 100644
---- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/keystone-usb.txt
-@@ -12,8 +12,21 @@ Required properties:
-    MPU.
-  - ranges: allows valid 1:1 translation between child's address space and
-    parent's address space.
-- - clocks: Clock IDs array as required by the controller.
-- - clock-names: names of clocks correseponding to IDs in the clock property.
-+
-+SoC-specific Required Properties:
-+The following are mandatory properties for Keystone 2 66AK2HK, 66AK2L and 66AK2E
-+SoCs only:
-+
-+- clocks:		Clock ID for USB functional clock.
-+- clock-names:		Must be "usb".
-+
-+
-+The following are mandatory properties for Keystone 2 66AK2G SoCs only:
-+
-+- power-domains:	Should contain a phandle to a PM domain provider node
-+			and an args specifier containing the USB device id
-+			value. This property is as per the binding,
-+			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4b17f35dc9a7..6f98422ca00e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1063,3 +1063,17 @@ dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dts
  
- Sub-nodes:
- The dwc3 core should be added as subnode to Keystone DWC3 glue.
+ always		:= $(dtb-y)
+ clean-files	:= *.dtb
++
++# enable creation of __symbols__ node
++DTC_FLAGS_am335x-bone += -@
++DTC_FLAGS_am335x-boneblack += -@
++DTC_FLAGS_am335x-boneblack-wireless += -@
++DTC_FLAGS_am335x-boneblue += -@
++DTC_FLAGS_am335x-bonegreen += -@
++DTC_FLAGS_am335x-bonegreen-wireless += -@
++DTC_FLAGS_am57xx-beagle-x15 += -@
++DTC_FLAGS_am57xx-beagle-x15-revb1 += -@
++DTC_FLAGS_dra7-evm += -@
++DTC_FLAGS_dra72-evm += -@
++DTC_FLAGS_dra72-evm-revc += -@
++DTC_FLAGS_dra71-evm += -@
 -- 
-2.9.4.dirty
+1.9.1
