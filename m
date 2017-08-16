@@ -1,246 +1,61 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Subject: Re: [patch net-next 0/3] net/sched: Improve getting objects by indexes
-Date: Wed, 16 Aug 2017 09:49:07 +0200
-Message-ID: <144b87a3-bbe4-a194-ed83-e54840d7c7c2__461.581516037946$1502870349$gmane$org@amd.com>
-References: <1502849538-14284-1-git-send-email-chrism@mellanox.com>
+From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
+Subject: Re: [PATCH v3 14/14] [media] cxd2880 : Update MAINTAINERS file for
+ CXD2880 driver
+Date: Wed, 16 Aug 2017 17:02:05 +0900
+Message-ID: <47f57a12-65fc-beb7-a330-eb38690ccdfc@sony.com>
+References: <20170816041714.20551-1-Yasunari.Takiguchi@sony.com>
+ <20170816044733.21869-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1502849538-14284-1-git-send-email-chrism@mellanox.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Chris Mi <chrism@mellanox.com>, netdev@vger.kernel.org
-Cc: lucho@ionkov.net, sergey.senozhatsky.work@gmail.com, snitzer@redhat.com, wsa@the-dreams.de, markb@mellanox.com, tom.leiming@gmail.com, stefanr@s5r6.in-berlin.de, zhi.a.wang@intel.com, nsekhar@ti.com, dri-devel@lists.freedesktop.org, bfields@fieldses.org, linux-sctp@vger.kernel.org, paulus@samba.org, jinpu.wang@profitbricks.com, pshelar@ovn.org, sumit.semwal@linaro.org, AlexBin.Xie@amd.com, david1.zhou@amd.com, linux-samsung-soc@vger.kernel.org, maximlevitsky@gmail.com, sudarsana.kalluru@qlogic.com, marek.vasut@gmail.com, linux-atm-general@lists.sourceforge.net, dtwlin@gmail.com, michel.daenzer@amd.com, dledford@redhat.com, tpmdd-devel@lists.sourceforge.net, stern@rowland.harvard.edu, longman@redhat.com, niranjana.vishwanathapura@intel.com, philipp.reisner@linbit.com, shli@kernel.org, linux@roeck-us.net, ohad@wizery.com, pmladek@suse.com, dick.kennedy@broadcom.comlinux-
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170816044733.21869-1-Yasunari.Takiguchi@sony.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@s-opensource.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Cc: tbird20d@gmail.com, frowand.list@gmail.com, Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>, Hideki Nozawa <Hideki.Nozawa@sony.com>, Kota Yonezawa <Kota.Yonezawa@sony.com>, Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>, Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>, yasunari.takiguchi@sony.com
 List-Id: devicetree@vger.kernel.org
 
-Am 16.08.2017 um 04:12 schrieb Chris Mi:
-> Using current TC code, it is very slow to insert a lot of rules.
->
-> In order to improve the rules update rate in TC,
-> we introduced the following two changes:
->          1) changed cls_flower to use IDR to manage the filters.
->          2) changed all act_xxx modules to use IDR instead of
->             a small hash table
->
-> But IDR has a limitation that it uses int. TC handle uses u32.
-> To make sure there is no regression, we also changed IDR to use
-> unsigned long. All clients of IDR are changed to use new IDR API.
+From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
 
-WOW, wait a second. The idr change is touching a lot of drivers and to 
-be honest doesn't looks correct at all.
+I add an e-mail address and re-send this mail again.
 
-Just look at the first chunk of your modification:
-> @@ -998,8 +999,9 @@ int bsg_register_queue(struct request_queue *q, struct device *parent,
->   
->   	mutex_lock(&bsg_mutex);
->   
-> -	ret = idr_alloc(&bsg_minor_idr, bcd, 0, BSG_MAX_DEVS, GFP_KERNEL);
-> -	if (ret < 0) {
-> +	ret = idr_alloc(&bsg_minor_idr, bcd, &idr_index, 0, BSG_MAX_DEVS,
-> +			GFP_KERNEL);
-> +	if (ret) {
->   		if (ret == -ENOSPC) {
->   			printk(KERN_ERR "bsg: too many bsg devices\n");
->   			ret = -EINVAL;
-The condition "if (ret)" will now always be true after the first 
-allocation and so we always run into the error handling after that.
+This is MAINTAINERS file update about the driver for
+the Sony CXD2880 DVB-T2/T tuner + demodulator.
 
-I've never read the bsg code before, but that's certainly not correct. 
-And that incorrect pattern repeats over and over again in this code.
+[Change list]
+Changes in V3
+   MAINTAINERS
+      -no change
 
-Apart from that why the heck do you want to allocate more than 1<<31 
-handles?
+Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
+Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
+Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
+Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
+Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Regards,
-Christian.
-
->
-> Chris Mi (3):
->    idr: Use unsigned long instead of int
->    net/sched: Change cls_flower to use IDR
->    net/sched: Change act_api and act_xxx modules to use IDR
->
->   block/bsg.c                                     |   8 +-
->   block/genhd.c                                   |  12 +-
->   drivers/atm/nicstar.c                           |  11 +-
->   drivers/block/drbd/drbd_main.c                  |  31 +--
->   drivers/block/drbd/drbd_nl.c                    |  22 ++-
->   drivers/block/drbd/drbd_proc.c                  |   3 +-
->   drivers/block/drbd/drbd_receiver.c              |  15 +-
->   drivers/block/drbd/drbd_state.c                 |  34 ++--
->   drivers/block/drbd/drbd_worker.c                |   6 +-
->   drivers/block/loop.c                            |  17 +-
->   drivers/block/nbd.c                             |  20 +-
->   drivers/block/zram/zram_drv.c                   |   9 +-
->   drivers/char/tpm/tpm-chip.c                     |  10 +-
->   drivers/char/tpm/tpm.h                          |   2 +-
->   drivers/dca/dca-sysfs.c                         |   9 +-
->   drivers/firewire/core-cdev.c                    |  18 +-
->   drivers/firewire/core-device.c                  |  15 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c     |   8 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c         |   9 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c         |   6 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c         |   2 +-
->   drivers/gpu/drm/drm_auth.c                      |   9 +-
->   drivers/gpu/drm/drm_connector.c                 |  10 +-
->   drivers/gpu/drm/drm_context.c                   |  20 +-
->   drivers/gpu/drm/drm_dp_aux_dev.c                |  11 +-
->   drivers/gpu/drm/drm_drv.c                       |   6 +-
->   drivers/gpu/drm/drm_gem.c                       |  19 +-
->   drivers/gpu/drm/drm_info.c                      |   2 +-
->   drivers/gpu/drm/drm_mode_object.c               |  11 +-
->   drivers/gpu/drm/drm_syncobj.c                   |  18 +-
->   drivers/gpu/drm/exynos/exynos_drm_ipp.c         |  25 ++-
->   drivers/gpu/drm/i915/gvt/display.c              |   2 +-
->   drivers/gpu/drm/i915/gvt/kvmgt.c                |   2 +-
->   drivers/gpu/drm/i915/gvt/vgpu.c                 |   9 +-
->   drivers/gpu/drm/i915/i915_debugfs.c             |   6 +-
->   drivers/gpu/drm/i915/i915_gem_context.c         |   9 +-
->   drivers/gpu/drm/qxl/qxl_cmd.c                   |   8 +-
->   drivers/gpu/drm/qxl/qxl_release.c               |  14 +-
->   drivers/gpu/drm/sis/sis_mm.c                    |   8 +-
->   drivers/gpu/drm/tegra/drm.c                     |  10 +-
->   drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c    |   3 +-
->   drivers/gpu/drm/vgem/vgem_fence.c               |  12 +-
->   drivers/gpu/drm/via/via_mm.c                    |   8 +-
->   drivers/gpu/drm/virtio/virtgpu_kms.c            |   5 +-
->   drivers/gpu/drm/virtio/virtgpu_vq.c             |   5 +-
->   drivers/gpu/drm/vmwgfx/vmwgfx_resource.c        |   9 +-
->   drivers/i2c/i2c-core-base.c                     |  19 +-
->   drivers/infiniband/core/cm.c                    |   8 +-
->   drivers/infiniband/core/cma.c                   |  12 +-
->   drivers/infiniband/core/rdma_core.c             |   9 +-
->   drivers/infiniband/core/sa_query.c              |  23 +--
->   drivers/infiniband/core/ucm.c                   |   7 +-
->   drivers/infiniband/core/ucma.c                  |  14 +-
->   drivers/infiniband/hw/cxgb3/iwch.c              |   4 +-
->   drivers/infiniband/hw/cxgb3/iwch.h              |   4 +-
->   drivers/infiniband/hw/cxgb4/device.c            |  18 +-
->   drivers/infiniband/hw/cxgb4/iw_cxgb4.h          |   4 +-
->   drivers/infiniband/hw/hfi1/init.c               |   9 +-
->   drivers/infiniband/hw/hfi1/vnic_main.c          |   6 +-
->   drivers/infiniband/hw/mlx4/cm.c                 |  13 +-
->   drivers/infiniband/hw/ocrdma/ocrdma_main.c      |   7 +-
->   drivers/infiniband/hw/qib/qib_init.c            |   9 +-
->   drivers/infiniband/ulp/opa_vnic/opa_vnic_vema.c |  10 +-
->   drivers/iommu/intel-svm.c                       |   9 +-
->   drivers/md/dm.c                                 |  13 +-
->   drivers/memstick/core/memstick.c                |  10 +-
->   drivers/memstick/core/ms_block.c                |   9 +-
->   drivers/memstick/core/mspro_block.c             |  12 +-
->   drivers/mfd/rtsx_pcr.c                          |   9 +-
->   drivers/misc/c2port/core.c                      |   7 +-
->   drivers/misc/cxl/context.c                      |   8 +-
->   drivers/misc/cxl/main.c                         |  15 +-
->   drivers/misc/mei/main.c                         |   8 +-
->   drivers/misc/mic/scif/scif_api.c                |  11 +-
->   drivers/misc/mic/scif/scif_ports.c              |  18 +-
->   drivers/misc/tifm_core.c                        |   9 +-
->   drivers/mtd/mtdcore.c                           |   9 +-
->   drivers/mtd/mtdcore.h                           |   2 +-
->   drivers/mtd/ubi/block.c                         |   7 +-
->   drivers/net/ppp/ppp_generic.c                   |  27 +--
->   drivers/net/tap.c                               |  10 +-
->   drivers/net/wireless/ath/ath10k/htt.h           |   3 +-
->   drivers/net/wireless/ath/ath10k/htt_tx.c        |  22 ++-
->   drivers/net/wireless/ath/ath10k/mac.c           |   2 +-
->   drivers/net/wireless/marvell/mwifiex/main.c     |  13 +-
->   drivers/net/wireless/marvell/mwifiex/wmm.c      |   2 +-
->   drivers/of/overlay.c                            |  15 +-
->   drivers/of/unittest.c                           |  25 ++-
->   drivers/power/supply/bq2415x_charger.c          |  16 +-
->   drivers/power/supply/bq27xxx_battery_i2c.c      |  15 +-
->   drivers/power/supply/ds2782_battery.c           |   9 +-
->   drivers/powercap/powercap_sys.c                 |   8 +-
->   drivers/pps/pps.c                               |  10 +-
->   drivers/rapidio/rio_cm.c                        |  17 +-
->   drivers/remoteproc/remoteproc_core.c            |   8 +-
->   drivers/rpmsg/virtio_rpmsg_bus.c                |   8 +-
->   drivers/scsi/bfa/bfad_im.c                      |   8 +-
->   drivers/scsi/ch.c                               |   8 +-
->   drivers/scsi/lpfc/lpfc_crtn.h                   |   2 +-
->   drivers/scsi/lpfc/lpfc_init.c                   |  11 +-
->   drivers/scsi/lpfc/lpfc_vport.c                  |   8 +-
->   drivers/scsi/sg.c                               |  10 +-
->   drivers/scsi/st.c                               |   8 +-
->   drivers/staging/greybus/uart.c                  |  22 +--
->   drivers/staging/unisys/visorhba/visorhba_main.c |   7 +-
->   drivers/target/iscsi/iscsi_target.c             |   7 +-
->   drivers/target/iscsi/iscsi_target_login.c       |   9 +-
->   drivers/target/target_core_device.c             |   9 +-
->   drivers/target/target_core_user.c               |  13 +-
->   drivers/tee/tee_shm.c                           |   8 +-
->   drivers/uio/uio.c                               |   9 +-
->   drivers/usb/class/cdc-acm.c                     |  24 +--
->   drivers/usb/core/devices.c                      |   2 +-
->   drivers/usb/core/hcd.c                          |   7 +-
->   drivers/usb/mon/mon_main.c                      |   3 +-
->   drivers/usb/serial/usb-serial.c                 |  11 +-
->   drivers/vfio/vfio.c                             |  15 +-
->   fs/dlm/lock.c                                   |   9 +-
->   fs/dlm/lockspace.c                              |   6 +-
->   fs/dlm/recover.c                                |  10 +-
->   fs/nfs/nfs4client.c                             |   9 +-
->   fs/nfsd/nfs4state.c                             |   8 +-
->   fs/notify/inotify/inotify_fsnotify.c            |   4 +-
->   fs/notify/inotify/inotify_user.c                |   9 +-
->   fs/ocfs2/cluster/tcp.c                          |  10 +-
->   include/linux/idr.h                             |  26 +--
->   include/linux/of.h                              |   4 +-
->   include/linux/radix-tree.h                      |   2 +-
->   include/net/9p/9p.h                             |   2 +-
->   include/net/act_api.h                           |  76 +++-----
->   ipc/msg.c                                       |   2 +-
->   ipc/sem.c                                       |   2 +-
->   ipc/shm.c                                       |   4 +-
->   ipc/util.c                                      |  17 +-
->   kernel/bpf/syscall.c                            |  20 +-
->   kernel/cgroup/cgroup.c                          |  57 +++---
->   kernel/events/core.c                            |  10 +-
->   kernel/workqueue.c                              |  15 +-
->   lib/idr.c                                       |  38 ++--
->   lib/radix-tree.c                                |   5 +-
->   mm/memcontrol.c                                 |  11 +-
->   net/9p/client.c                                 |  17 +-
->   net/9p/util.c                                   |  14 +-
->   net/core/net_namespace.c                        |  23 ++-
->   net/mac80211/cfg.c                              |  23 +--
->   net/mac80211/iface.c                            |   3 +-
->   net/mac80211/main.c                             |   2 +-
->   net/mac80211/tx.c                               |   7 +-
->   net/mac80211/util.c                             |   3 +-
->   net/netlink/genetlink.c                         |  18 +-
->   net/qrtr/qrtr.c                                 |  21 +-
->   net/rxrpc/conn_client.c                         |  15 +-
->   net/sched/act_api.c                             | 249 +++++++++++-------------
->   net/sched/act_bpf.c                             |  17 +-
->   net/sched/act_connmark.c                        |  16 +-
->   net/sched/act_csum.c                            |  16 +-
->   net/sched/act_gact.c                            |  16 +-
->   net/sched/act_ife.c                             |  20 +-
->   net/sched/act_ipt.c                             |  26 ++-
->   net/sched/act_mirred.c                          |  19 +-
->   net/sched/act_nat.c                             |  16 +-
->   net/sched/act_pedit.c                           |  18 +-
->   net/sched/act_police.c                          |  18 +-
->   net/sched/act_sample.c                          |  17 +-
->   net/sched/act_simple.c                          |  20 +-
->   net/sched/act_skbedit.c                         |  18 +-
->   net/sched/act_skbmod.c                          |  18 +-
->   net/sched/act_tunnel_key.c                      |  20 +-
->   net/sched/act_vlan.c                            |  22 +--
->   net/sched/cls_flower.c                          |  55 +++---
->   net/sctp/associola.c                            |   8 +-
->   net/tipc/server.c                               |   7 +-
->   172 files changed, 1256 insertions(+), 1113 deletions(-)
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6f7721d1634c..12a80c33c194 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8302,6 +8302,15 @@ T:	git git://linuxtv.org/media_tree.git
+ S:	Supported
+ F:	drivers/media/dvb-frontends/cxd2841er*
+ 
++MEDIA DRIVERS FOR CXD2880
++M:	Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
++L:	linux-media@vger.kernel.org
++W:	http://linuxtv.org/
++T:	git git://linuxtv.org/media_tree.git
++S:	Supported
++F:	drivers/media/dvb-frontends/cxd2880/*
++F:	drivers/media/spi/cxd2880*
++
+ MEDIA DRIVERS FOR FREESCALE IMX
+ M:	Steve Longerbeam <slongerbeam@gmail.com>
+ M:	Philipp Zabel <p.zabel@pengutronix.de>
+-- 
+2.13.0
