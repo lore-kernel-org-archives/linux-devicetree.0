@@ -1,60 +1,60 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RFC PATCH 2/3] dt-bindings: PCI: rockchip: Add support for pcie
- wake irq
-Date: Wed, 16 Aug 2017 16:35:24 +0800
-Message-ID: <35487e90-74f2-3a66-70d3-d0780b0b6e26@rock-chips.com>
-References: <20170816075224.31734-1-jeffy.chen@rock-chips.com>
- <20170816075224.31734-3-jeffy.chen@rock-chips.com>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v2] arm64: dts: hi6220: add acpu_sctrl
+Date: Wed, 16 Aug 2017 09:41:22 +0100
+Message-ID: <59940532.7010700@hisilicon.com>
+References: <1502868395-11481-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170816075224.31734-3-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1502868395-11481-1-git-send-email-zhangfei.gao@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Li Pengcheng <lipengcheng8@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jeffy
+Hi Zhangfei,
 
-On 2017/8/16 15:52, Jeffy Chen wrote:
-> Add an optional interrupt for PCIE_WAKE pin.
+On 2017/8/16 8:26, Zhangfei Gao wrote:
+> Add acpu_sctrl clock node
 > 
-> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Signed-off-by: Li Pengcheng <lipengcheng8@huawei.com>
 > ---
+> Update name to acpu_sctrl@f6504000
 > 
->   Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> index 1453a734c2f5..6ef9903567db 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -22,10 +22,13 @@ Required properties:
->   - phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
->   - phy-names:  MUST be "pcie-phy".
->   - interrupts: Three interrupt entries must be specified.
-> -- interrupt-names: Must include the following names
-> -	- "sys"
-> -	- "legacy"
-> -	- "client"
-> +- interrupt-names: Include the following names
-> +	Required:
-> +		- "sys"
-> +		- "legacy"
-> +		- "client"
-> +	Optional:
-> +		- "wake"
-
-It would be better to introduce interrupts-extended and show a example
-here. :)
-
->   - resets: Must contain seven entries for each entry in reset-names.
->   	   See ../reset/reset.txt for details.
->   - reset-names: Must include the following names
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index eacbe0d..f8012d5 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -262,6 +262,12 @@
+>  			#clock-cells = <1>;
+>  		};
+>  
+> +		acpu_sctrl: acpu_sctrl@f6504000 {
+> +			compatible = "hisilicon,hi6220-acpu-sctrl", "syscon";
+> +			reg = <0x0 0xf6504000 0x0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+>  		medianoc_ade: medianoc_ade@f4520000 {
+>  			compatible = "syscon";
+>  			reg = <0x0 0xf4520000 0x0 0x4000>;
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+Dropped the v1 and applied v2 to the hisilicon dt tree.
+
+Best Regards,
+Wei
