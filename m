@@ -1,15 +1,14 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v4 05/20] mtd: nand: qcom: DMA mapping support for
- register read buffer
-Date: Wed, 16 Aug 2017 09:05:10 +0530
-Message-ID: <d7a6e4e1-9e95-a83e-f07c-22c062c40ddb@codeaurora.org>
+Subject: Re: [PATCH v4 06/20] mtd: nand: qcom: allocate BAM transaction
+Date: Wed, 16 Aug 2017 09:10:16 +0530
+Message-ID: <f4bbb4cf-91b5-bb61-920e-a94db99f5a93@codeaurora.org>
 References: <1502451575-15712-1-git-send-email-absahu@codeaurora.org>
- <1502451575-15712-6-git-send-email-absahu@codeaurora.org>
+ <1502451575-15712-7-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1502451575-15712-6-git-send-email-absahu@codeaurora.org>
+In-Reply-To: <1502451575-15712-7-git-send-email-absahu@codeaurora.org>
 Content-Language: en-US
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Abhishek Sahu <absahu@codeaurora.org>, boris.brezillon@free-electrons.com
@@ -19,146 +18,186 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 08/11/2017 05:09 PM, Abhishek Sahu wrote:
-> The EBI2 NAND controller directly remaps register read buffer with
-> dma_map_sg and DMA address of this buffer will be passed to DMA
-> API’s. While, on QPIC NAND controller, which uses BAM DMA, we read
-> the controller registers by preparing a BAM command descriptor. This
-> command descriptor requires the
+> - The BAM transaction is the core data structure which will be used
+>    for all the data transfers in QPIC NAND. Since the core framework
+>    in nand_base.c is serializing all the NAND requests so allocating
+>    BAM transaction before every transfer will be overhead. The memory
+>    for it be allocated during probe time and before every transfer,
+>    it will be cleared.
 > 
->    - controller register address
->    - the DMA address in which we want to store the value read
->      back from the controller register.
+> - The BAM transaction contains the array of
+>    command and data scatter gather list and indexes. For
+>    every transfer, all the resource will be taken from BAM
+>    transaction.
 > 
-> This command descriptor will be remapped with dma_map_sg
-> and its DMA address will be passed to DMA API’s. Therefore,
-> it's required that we also map our register read buffer for
-> DMA (using dma_map_single). We use the returned DMA address
-> for preparing entries in our command descriptor.
-> 
-> This patch adds the DMA mapping support for register read
-> buffer. This buffer will be DMA mapped during allocation
-> time. Before starting of any operation, this buffer will
-> be synced for device operation and after operation
-> completion, it will be synced again for CPU.
-> 
+> - The size of the buffer used for BAM transactions
+>    is calculated based on the NAND device with the maximum page size,
+>    among all the devices connected to the
+>    controller.
 
 Reviewed-by: Archit Taneja <architt@codeaurora.org>
 
 Thanks,
 Archit
 
+> 
 > Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 > ---
->   drivers/mtd/nand/qcom_nandc.c | 40 ++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 40 insertions(+)
+>   drivers/mtd/nand/qcom_nandc.c | 94 +++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 94 insertions(+)
 > 
 > diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index 59b764a..590fc1d 100644
+> index 590fc1d..4f8306e 100644
 > --- a/drivers/mtd/nand/qcom_nandc.c
 > +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -234,6 +234,7 @@ struct nandc_regs {
->    *				by upper layers directly
->    * @buf_size/count/start:	markers for chip->read_buf/write_buf functions
->    * @reg_read_buf:		local buffer for reading back registers via DMA
-> + * @reg_read_dma:		contains dma address for register read buffer
->    * @reg_read_pos:		marker for data read in reg_read_buf
->    *
->    * @regs:			a contiguous chunk of memory for DMA register
-> @@ -279,6 +280,7 @@ struct qcom_nand_controller {
+> @@ -177,6 +177,32 @@
+>   #define	ECC_BCH_4BIT	BIT(2)
+>   #define	ECC_BCH_8BIT	BIT(3)
+>   
+> +#define QPIC_PER_CW_CMD_SGL		32
+> +#define QPIC_PER_CW_DATA_SGL		8
+> +
+> +/*
+> + * This data type corresponds to the BAM transaction which will be used for all
+> + * NAND transfers.
+> + * @cmd_sgl - sgl for NAND BAM command pipe
+> + * @data_sgl - sgl for NAND BAM consumer/producer pipe
+> + * @cmd_sgl_pos - current index in command sgl.
+> + * @cmd_sgl_start - start index in command sgl.
+> + * @tx_sgl_pos - current index in data sgl for tx.
+> + * @tx_sgl_start - start index in data sgl for tx.
+> + * @rx_sgl_pos - current index in data sgl for rx.
+> + * @rx_sgl_start - start index in data sgl for rx.
+> + */
+> +struct bam_transaction {
+> +	struct scatterlist *cmd_sgl;
+> +	struct scatterlist *data_sgl;
+> +	u32 cmd_sgl_pos;
+> +	u32 cmd_sgl_start;
+> +	u32 tx_sgl_pos;
+> +	u32 tx_sgl_start;
+> +	u32 rx_sgl_pos;
+> +	u32 rx_sgl_start;
+> +};
+> +
+>   struct desc_info {
+>   	struct list_head node;
+>   
+> @@ -243,6 +269,8 @@ struct nandc_regs {
+>    * @cmd1/vld:			some fixed controller register values
+>    * @props:			properties of current NAND controller,
+>    *				initialized via DT match data
+> + * @max_cwperpage:		maximum QPIC codewords required. calculated
+> + *				from all connected NAND devices pagesize
+>    */
+>   struct qcom_nand_controller {
+>   	struct nand_hw_control controller;
+> @@ -273,11 +301,13 @@ struct qcom_nand_controller {
+>   	};
+>   
+>   	struct list_head desc_list;
+> +	struct bam_transaction *bam_txn;
+>   
+>   	u8		*data_buffer;
+>   	int		buf_size;
+>   	int		buf_count;
 >   	int		buf_start;
+> +	unsigned int	max_cwperpage;
 >   
 >   	__le32 *reg_read_buf;
-> +	dma_addr_t reg_read_dma;
->   	int reg_read_pos;
+>   	dma_addr_t reg_read_dma;
+> @@ -350,6 +380,44 @@ struct qcom_nandc_props {
+>   	bool is_bam;
+>   };
 >   
->   	struct nandc_regs *regs;
-> @@ -371,6 +373,24 @@ static inline void nandc_write(struct qcom_nand_controller *nandc, int offset,
->   	iowrite32(val, nandc->base + offset);
->   }
->   
-> +static inline void nandc_read_buffer_sync(struct qcom_nand_controller *nandc,
-> +					  bool is_cpu)
+> +/* Frees the BAM transaction memory */
+> +static void free_bam_transaction(struct qcom_nand_controller *nandc)
 > +{
-> +	if (!nandc->props->is_bam)
-> +		return;
+> +	struct bam_transaction *bam_txn = nandc->bam_txn;
 > +
-> +	if (is_cpu)
-> +		dma_sync_single_for_cpu(nandc->dev, nandc->reg_read_dma,
-> +					MAX_REG_RD *
-> +					sizeof(*nandc->reg_read_buf),
-> +					DMA_FROM_DEVICE);
-> +	else
-> +		dma_sync_single_for_device(nandc->dev, nandc->reg_read_dma,
-> +					   MAX_REG_RD *
-> +					   sizeof(*nandc->reg_read_buf),
-> +					   DMA_FROM_DEVICE);
+> +	devm_kfree(nandc->dev, bam_txn);
 > +}
 > +
->   static __le32 *offset_to_nandc_reg(struct nandc_regs *regs, int offset)
+> +/* Allocates and Initializes the BAM transaction */
+> +static struct bam_transaction *
+> +alloc_bam_transaction(struct qcom_nand_controller *nandc)
+> +{
+> +	struct bam_transaction *bam_txn;
+> +	size_t bam_txn_size;
+> +	unsigned int num_cw = nandc->max_cwperpage;
+> +	void *bam_txn_buf;
+> +
+> +	bam_txn_size =
+> +		sizeof(*bam_txn) + num_cw *
+> +		((sizeof(*bam_txn->cmd_sgl) * QPIC_PER_CW_CMD_SGL) +
+> +		(sizeof(*bam_txn->data_sgl) * QPIC_PER_CW_DATA_SGL));
+> +
+> +	bam_txn_buf = devm_kzalloc(nandc->dev, bam_txn_size, GFP_KERNEL);
+> +	if (!bam_txn_buf)
+> +		return NULL;
+> +
+> +	bam_txn = bam_txn_buf;
+> +	bam_txn_buf += sizeof(*bam_txn);
+> +
+> +	bam_txn->cmd_sgl = bam_txn_buf;
+> +	bam_txn_buf +=
+> +		sizeof(*bam_txn->cmd_sgl) * QPIC_PER_CW_CMD_SGL * num_cw;
+> +
+> +	bam_txn->data_sgl = bam_txn_buf;
+> +
+> +	return bam_txn;
+> +}
+> +
+>   static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
 >   {
->   	switch (offset) {
-> @@ -854,6 +874,7 @@ static void free_descs(struct qcom_nand_controller *nandc)
->   static void clear_read_regs(struct qcom_nand_controller *nandc)
->   {
->   	nandc->reg_read_pos = 0;
-> +	nandc_read_buffer_sync(nandc, false);
->   }
+>   	return container_of(chip, struct qcom_nand_host, chip);
+> @@ -1920,6 +1988,8 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
+>   	mtd_set_ooblayout(mtd, &qcom_nand_ooblayout_ops);
 >   
->   static void pre_command(struct qcom_nand_host *host, int command)
-> @@ -883,6 +904,7 @@ static void parse_erase_write_errors(struct qcom_nand_host *host, int command)
->   	int i;
+>   	cwperpage = mtd->writesize / ecc->size;
+> +	nandc->max_cwperpage = max_t(unsigned int, nandc->max_cwperpage,
+> +				     cwperpage);
 >   
->   	num_cw = command == NAND_CMD_PAGEPROG ? ecc->steps : 1;
-> +	nandc_read_buffer_sync(nandc, true);
->   
->   	for (i = 0; i < num_cw; i++) {
->   		u32 flash_status = le32_to_cpu(nandc->reg_read_buf[i]);
-> @@ -904,6 +926,7 @@ static void post_command(struct qcom_nand_host *host, int command)
->   
->   	switch (command) {
->   	case NAND_CMD_READID:
-> +		nandc_read_buffer_sync(nandc, true);
->   		memcpy(nandc->data_buffer, nandc->reg_read_buf,
->   		       nandc->buf_count);
->   		break;
-> @@ -1067,6 +1090,7 @@ static int parse_read_errors(struct qcom_nand_host *host, u8 *data_buf,
->   	int i;
->   
->   	buf = (struct read_stats *)nandc->reg_read_buf;
-> +	nandc_read_buffer_sync(nandc, true);
->   
->   	for (i = 0; i < ecc->steps; i++, buf++) {
->   		u32 flash, buffer, erased_cw;
-> @@ -2003,6 +2027,16 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
->   		return -ENOMEM;
->   
->   	if (nandc->props->is_bam) {
-> +		nandc->reg_read_dma =
-> +			dma_map_single(nandc->dev, nandc->reg_read_buf,
-> +				       MAX_REG_RD *
-> +				       sizeof(*nandc->reg_read_buf),
-> +				       DMA_FROM_DEVICE);
-> +		if (dma_mapping_error(nandc->dev, nandc->reg_read_dma)) {
-> +			dev_err(nandc->dev, "failed to DMA MAP reg buffer\n");
-> +			return -EIO;
+>   	/*
+>   	 * DATA_UD_BYTES varies based on whether the read/write command protects
+> @@ -2054,6 +2124,20 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
+>   			dev_err(nandc->dev, "failed to request cmd channel\n");
+>   			return -ENODEV;
+>   		}
+> +
+> +		/*
+> +		 * Initially allocate BAM transaction to read ONFI param page.
+> +		 * After detecting all the devices, this BAM transaction will
+> +		 * be freed and the next BAM tranasction will be allocated with
+> +		 * maximum codeword size
+> +		 */
+> +		nandc->max_cwperpage = 1;
+> +		nandc->bam_txn = alloc_bam_transaction(nandc);
+> +		if (!nandc->bam_txn) {
+> +			dev_err(nandc->dev,
+> +				"failed to allocate bam transaction\n");
+> +			return -ENOMEM;
 > +		}
-> +
->   		nandc->tx_chan = dma_request_slave_channel(nandc->dev, "tx");
->   		if (!nandc->tx_chan) {
->   			dev_err(nandc->dev, "failed to request tx channel\n");
-> @@ -2040,6 +2074,12 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
->   static void qcom_nandc_unalloc(struct qcom_nand_controller *nandc)
->   {
->   	if (nandc->props->is_bam) {
-> +		if (!dma_mapping_error(nandc->dev, nandc->reg_read_dma))
-> +			dma_unmap_single(nandc->dev, nandc->reg_read_dma,
-> +					 MAX_REG_RD *
-> +					 sizeof(*nandc->reg_read_buf),
-> +					 DMA_FROM_DEVICE);
-> +
->   		if (nandc->tx_chan)
->   			dma_release_channel(nandc->tx_chan);
+>   	} else {
+>   		nandc->chan = dma_request_slave_channel(nandc->dev, "rxtx");
+>   		if (!nandc->chan) {
+> @@ -2211,6 +2295,16 @@ static int qcom_probe_nand_devices(struct qcom_nand_controller *nandc)
+>   	if (list_empty(&nandc->host_list))
+>   		return -ENODEV;
 >   
+> +	if (nandc->props->is_bam) {
+> +		free_bam_transaction(nandc);
+> +		nandc->bam_txn = alloc_bam_transaction(nandc);
+> +		if (!nandc->bam_txn) {
+> +			dev_err(nandc->dev,
+> +				"failed to allocate bam transaction\n");
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+>   	list_for_each_entry_safe(host, tmp, &nandc->host_list, node) {
+>   		ret = qcom_nand_mtd_register(nandc, host, child);
+>   		if (ret) {
 > 
 
 -- 
