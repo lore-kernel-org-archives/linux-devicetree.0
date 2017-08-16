@@ -1,49 +1,76 @@
 From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v2 1/5] mtd: spi-nor: cadence-quadspi: Add TI 66AK2G SoC
- specific compatible
-Date: Wed, 16 Aug 2017 10:20:49 +0530
-Message-ID: <20170816045053.15492-2-vigneshr@ti.com>
+Subject: [PATCH v2 4/5] mtd: spi-nor: cadence-quadspi: Add support to enable loop-back clock circuit
+Date: Wed, 16 Aug 2017 10:20:52 +0530
+Message-ID: <20170816045053.15492-5-vigneshr@ti.com>
 References: <20170816045053.15492-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170816045053.15492-1-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Update binding documentation to add a new compatible for TI 66AK2G SoC,
-to handle TI SoC specific quirks in the driver.
+Cadence QSPI IP has a adapted loop-back circuit which can be enabled by
+setting BYPASS field to 0 in READCAPTURE register. It enables use of
+QSPI return clock to latch the data rather than the internal QSPI
+reference clock. For high speed operations, adapted loop-back circuit
+using QSPI return clock helps to increase data valid window.
+
+Based on DT parameter cdns,rclk-en enable adapted loop-back circuit
+for boards which do have QSPI return clock provided.
+This patch also modifies cqspi_readdata_capture() function's bypass
+parameter to bool to match how its used in the function.
 
 Signed-off-by: Vignesh R <vigneshr@ti.com>
 ---
- Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-index f248056da24c..7dbe3bd9ac56 100644
---- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-@@ -1,7 +1,9 @@
- * Cadence Quad SPI controller
+v2:
+Split doc update to separate patch
+
+ drivers/mtd/spi-nor/cadence-quadspi.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+index bb0cb02a6938..c11ced529ddd 100644
+--- a/drivers/mtd/spi-nor/cadence-quadspi.c
++++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+@@ -78,6 +78,7 @@ struct cqspi_st {
+ 	bool			is_decoded_cs;
+ 	u32			fifo_depth;
+ 	u32			fifo_width;
++	bool			rclk_en;
+ 	u32			trigger_address;
+ 	u32			wr_delay;
+ 	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
+@@ -788,7 +789,7 @@ static void cqspi_config_baudrate_div(struct cqspi_st *cqspi)
+ }
  
- Required properties:
--- compatible : Should be "cdns,qspi-nor".
-+- compatible : should be one of the following:
-+	Generic default - "cdns,qspi-nor".
-+	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
- - reg : Contains two entries, each of which is a tuple consisting of a
- 	physical address and length. The first entry is the address and
- 	length of the controller register set. The second entry is the
+ static void cqspi_readdata_capture(struct cqspi_st *cqspi,
+-				   const unsigned int bypass,
++				   const bool bypass,
+ 				   const unsigned int delay)
+ {
+ 	void __iomem *reg_base = cqspi->iobase;
+@@ -852,7 +853,8 @@ static void cqspi_configure(struct spi_nor *nor)
+ 		cqspi->sclk = sclk;
+ 		cqspi_config_baudrate_div(cqspi);
+ 		cqspi_delay(nor);
+-		cqspi_readdata_capture(cqspi, 1, f_pdata->read_delay);
++		cqspi_readdata_capture(cqspi, !cqspi->rclk_en,
++				       f_pdata->read_delay);
+ 	}
+ 
+ 	if (switch_cs || switch_ck)
+@@ -1049,6 +1051,8 @@ static int cqspi_of_get_pdata(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
++	cqspi->rclk_en = of_property_read_bool(np, "cdns,rclk-en");
++
+ 	return 0;
+ }
+ 
 -- 
 2.14.1
