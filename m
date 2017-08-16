@@ -1,33 +1,73 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77995: add pfc device node
-Date: Wed, 16 Aug 2017 14:24:57 +0200
-Message-ID: <CAMuHMdWTXb0QJaTWh2irT31eGjEHHEqpA--6EcoYUgAFFPfRDg@mail.gmail.com>
-References: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv2 0/3] arm64 xilinx zynqmp firmware interface
+Date: Wed, 16 Aug 2017 14:24:55 +0200
+Message-ID: <cover.1502886277.git.michal.simek@xilinx.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: edgar.iglesias-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kevin Brodsky <kevin.brodsky-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 9, 2017 at 2:20 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Hi,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+xilinx is using this interface for very long time and we can't merge our
+driver changes to Linux because of missing communication layer with
+firmware. This interface was developed before scpi and scmi was
+available. In connection to power management scpi and scmi are missing
+pieces which we already use. There is a separate discussion how to
+extend scmi to support all our use cases.
+This simply patch is not adding any power management features but only
+adding minimum functionality which are needed for drivers.
 
-Gr{oetje,eeting}s,
+Edgar's comment on having HVC:
+"We have patches for Xen that implement a power-management mediator.
+That implementation handles PM calls over both SMC and HVC insns.
+Patches are on the Xen mailing list.
 
-                        Geert
+Other hypervisors may work differently.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+I think we should support both but I don't have a strong opinion on
+it."
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Michal
+
+Changes in v2:
+- Move to bindings/firmware and also add it to firmware node
+  Reported-by Rob
+- Add zynqmp firmware node to firmware node
+- Change commit message
+- Make zynqmp_pm_ret_code, invoke_pm_fn static
+  Reported by Arnd
+- Remove pm_api_version function - no need for interface
+- Move driver to drivers/firmware/
+  Reported by Arnd and Rob
+
+Michal Simek (1):
+  soc: xilinx: zynqmp: Add firmware interface
+
+Soren Brinkmann (2):
+  dt: xilinx: zynqmp: Add bindings for PM firmware
+  arm64: zynqmp: dt: Add PM firmware node
+
+ .../bindings/firmware/xlnx,zynqmp-pm.txt           |  22 ++
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   9 +
+ drivers/firmware/Kconfig                           |   1 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/xilinx/Kconfig                    |   6 +
+ drivers/firmware/xilinx/Makefile                   |   1 +
+ drivers/firmware/xilinx/zynqmp/firmware.c          | 382 +++++++++++++++++++++
+ include/linux/firmware/xilinx/zynqmp/firmware.h    | 232 +++++++++++++
+ 8 files changed, 654 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/xlnx,zynqmp-pm.txt
+ create mode 100644 drivers/firmware/xilinx/Kconfig
+ create mode 100644 drivers/firmware/xilinx/Makefile
+ create mode 100644 drivers/firmware/xilinx/zynqmp/firmware.c
+ create mode 100644 include/linux/firmware/xilinx/zynqmp/firmware.h
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
