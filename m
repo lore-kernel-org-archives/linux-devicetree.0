@@ -1,159 +1,102 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v3 2/4] dmaengine: Add STM32 MDMA driver
-Date: Wed, 16 Aug 2017 22:17:09 +0530
-Message-ID: <20170816164709.GR3053@localhost>
-References: <1501062502-18778-1-git-send-email-pierre-yves.mordret@st.com>
- <1501062502-18778-3-git-send-email-pierre-yves.mordret@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1501062502-18778-3-git-send-email-pierre-yves.mordret@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: am57xx-beagle-x15: Add support for rev C
+Date: Wed, 16 Aug 2017 11:50:53 -0500
+Message-ID: <20170816165053.19450-1-robertcnelson@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 11:48:20AM +0200, Pierre-Yves MORDRET wrote:
+Latest update to the BeagleBoard-X15 platform (revision C). This board contains
+a silicon update (Rev 2.0), which includes a fix for the 2nd ethernet phy when
+running at 1000 Mbps speeds.
 
-> +/* MDMA Channel x transfer configuration register */
-> +#define STM32_MDMA_CTCR(x)		(0x50 + 0x40 * (x))
-> +#define STM32_MDMA_CTCR_BWM		BIT(31)
-> +#define STM32_MDMA_CTCR_SWRM		BIT(30)
-> +#define STM32_MDMA_CTCR_TRGM_MSK	GENMASK(29, 28)
-> +#define STM32_MDMA_CTCR_TRGM(n)		(((n) & 0x3) << 28)
-> +#define STM32_MDMA_CTCR_TRGM_GET(n)	(((n) & STM32_MDMA_CTCR_TRGM_MSK) >> 28)
+This board can be indentified by the [C.00] after [BBRDX15_] in the at24 eeprom:
+[BBRDX15_C.001731PX150249]
 
-OK this seems oft repeated here.
+Rev C is now in full production and boards are available for end users.
 
-So you are trying to extract the bit values and set the bit value, so why
-not this do generically...
+https://beagleboard.org/x15
+https://github.com/beagleboard/beagleboard-x15/
 
-#define STM32_MDMA_SHIFT(n)		(ffs(n) - 1))
-#define STM32_MDMA_SET(n, mask)		((n) << STM32_MDMA_SHIFT(mask))
-#define STM32_MDMA_GET(n, mask)		(((n) && mask) >> STM32_MDMA_SHIFT(mask))
+Signed-off-by: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+CC: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+CC: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+CC: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+CC: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+CC: Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+CC: Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+---
+v2: Rework based on Kishon's [PATCH v2 00/10] ARM: dts: Add iodelay data for MMC
+---
+---
+ arch/arm/boot/dts/Makefile                   |  1 +
+ arch/arm/boot/dts/am57xx-beagle-x15-revc.dts | 39 ++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
 
-Basically, u extract the shift using the mask value and ffs helping out, so
-no need to define these and reduce chances of coding errors...
-
-> +static int stm32_mdma_get_width(struct stm32_mdma_chan *chan,
-> +				enum dma_slave_buswidth width)
-> +{
-> +	switch (width) {
-> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
-> +		return ffs(width) - 1;
-> +	default:
-> +		dev_err(chan2dev(chan), "Dma bus width not supported\n");
-
-please log the width here, helps in debug...
-
-> +static u32 stm32_mdma_get_best_burst(u32 buf_len, u32 tlen, u32 max_burst,
-> +				     enum dma_slave_buswidth width)
-> +{
-> +	u32 best_burst = max_burst;
-> +	u32 burst_len = best_burst * width;
-> +
-> +	while ((burst_len > 0) && (tlen % burst_len)) {
-> +		best_burst = best_burst >> 1;
-> +		burst_len = best_burst * width;
-> +	}
-> +
-> +	return (best_burst > 0) ? best_burst : 1;
-
-when would best_burst <= 0? DO we really need this check
-
-
-> +static struct dma_async_tx_descriptor *
-> +stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
-> +			   size_t buf_len, size_t period_len,
-> +			   enum dma_transfer_direction direction,
-> +			   unsigned long flags)
-> +{
-> +	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
-> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
-> +	struct dma_slave_config *dma_config = &chan->dma_config;
-> +	struct stm32_mdma_desc *desc;
-> +	dma_addr_t src_addr, dst_addr;
-> +	u32 ccr, ctcr, ctbr, count;
-> +	int i, ret;
-> +
-> +	if (!buf_len || !period_len || period_len > STM32_MDMA_MAX_BLOCK_LEN) {
-> +		dev_err(chan2dev(chan), "Invalid buffer/period len\n");
-> +		return NULL;
-> +	}
-> +
-> +	if (buf_len % period_len) {
-> +		dev_err(chan2dev(chan), "buf_len not multiple of period_len\n");
-> +		return NULL;
-> +	}
-> +
-> +	/*
-> +	 * We allow to take more number of requests till DMA is
-> +	 * not started. The driver will loop over all requests.
-> +	 * Once DMA is started then new requests can be queued only after
-> +	 * terminating the DMA.
-> +	 */
-> +	if (chan->busy) {
-> +		dev_err(chan2dev(chan), "Request not allowed when dma busy\n");
-> +		return NULL;
-> +	}
-
-is that a HW restriction? Once a txn is completed can't we submit
-subsequent txn..? Can you explain this part please.
-
-> +	if (len <= STM32_MDMA_MAX_BLOCK_LEN) {
-> +		cbndtr |= STM32_MDMA_CBNDTR_BNDT(len);
-> +		if (len <= STM32_MDMA_MAX_BUF_LEN) {
-> +			/* Setup a buffer transfer */
-> +			tlen = len;
-> +			ccr |= STM32_MDMA_CCR_TCIE | STM32_MDMA_CCR_CTCIE;
-> +			ctcr |= STM32_MDMA_CTCR_TRGM(STM32_MDMA_BUFFER);
-> +			ctcr |= STM32_MDMA_CTCR_TLEN((tlen - 1));
-> +		} else {
-> +			/* Setup a block transfer */
-> +			tlen = STM32_MDMA_MAX_BUF_LEN;
-> +			ccr |= STM32_MDMA_CCR_BTIE | STM32_MDMA_CCR_CTCIE;
-> +			ctcr |= STM32_MDMA_CTCR_TRGM(STM32_MDMA_BLOCK);
-> +			ctcr |= STM32_MDMA_CTCR_TLEN(tlen - 1);
-> +		}
-> +
-> +		/* Set best burst size */
-> +		max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-
-that maynot be best.. we should have wider and longer burst for best
-throughput..
-
-> +	ret = device_property_read_u32(&pdev->dev, "dma-requests",
-> +				       &nr_requests);
-> +	if (ret) {
-> +		nr_requests = STM32_MDMA_MAX_REQUESTS;
-> +		dev_warn(&pdev->dev, "MDMA defaulting on %i request lines\n",
-> +			 nr_requests);
-> +	}
-> +
-> +	count = of_property_count_u32_elems(of_node, "st,ahb-addr-masks");
-
-We dont have device_property_xxx for this?
-
-> +	if (count < 0)
-> +		count = 0;
-> +
-> +	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
-> +			      GFP_KERNEL);
-> +	if (!dmadev)
-> +		return -ENOMEM;
-> +
-> +	dmadev->nr_channels = nr_channels;
-> +	dmadev->nr_requests = nr_requests;
-> +	of_property_read_u32_array(of_node, "st,ahb-addr-masks",
-> +				   dmadev->ahb_addr_masks,
-> +				   count);
-
-i know we have an device api for array reads :)
-and I think that helps in former case..
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 570e107bf702..d51c0def01de 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -656,6 +656,7 @@ dtb-$(CONFIG_SOC_OMAP5) += \
+ dtb-$(CONFIG_SOC_DRA7XX) += \
+ 	am57xx-beagle-x15.dtb \
+ 	am57xx-beagle-x15-revb1.dtb \
++	am57xx-beagle-x15-revc.dtb \
+ 	am57xx-cl-som-am57x.dtb \
+ 	am57xx-sbc-am57x.dtb \
+ 	am572x-idk.dtb \
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+new file mode 100644
+index 000000000000..17c41da3b55f
+--- /dev/null
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+@@ -0,0 +1,39 @@
++/*
++ * Copyright (C) 2014-2017 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "am57xx-beagle-x15-common.dtsi"
++
++/ {
++	model = "TI AM5728 BeagleBoard-X15 rev C";
++};
++
++&tpd12s015 {
++	gpios = <&gpio7 10 GPIO_ACTIVE_HIGH>,	/* gpio7_10, CT CP HPD */
++		<&gpio2 30 GPIO_ACTIVE_HIGH>,	/* gpio2_30, LS OE */
++		<&gpio7 12 GPIO_ACTIVE_HIGH>;	/* gpio7_12/sp1_cs2, HPD */
++};
++
++&mmc1 {
++	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
++	pinctrl-0 = <&mmc1_pins_default>;
++	pinctrl-1 = <&mmc1_pins_hs>;
++	pinctrl-2 = <&mmc1_pins_sdr12>;
++	pinctrl-3 = <&mmc1_pins_sdr25>;
++	pinctrl-4 = <&mmc1_pins_sdr50>;
++	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev20_conf>;
++	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
++	vmmc-supply = <&vdd_3v3>;
++	vqmmc-supply = <&ldo1_reg>;
++};
++
++&mmc2 {
++	pinctrl-names = "default", "hs", "ddr_1_8v";
++	pinctrl-0 = <&mmc2_pins_default>;
++	pinctrl-1 = <&mmc2_pins_hs>;
++	pinctrl-2 = <&mmc2_pins_ddr_rev20>;
++};
 -- 
-~Vinod
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
