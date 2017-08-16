@@ -1,145 +1,68 @@
-From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 3/5] iio: srf08: add triggered buffer support
-Date: Wed, 16 Aug 2017 15:30:50 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1708161527390.27224@vps.pmeerw.net>
-References: <20170814090055.GA9897@arbeit>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: i2c: Document the IBM CCF power
+ supply version 1
+Date: Wed, 16 Aug 2017 06:42:43 -0700
+Message-ID: <6d0edce7-5e96-b6d4-8503-cf0f27f72d51@roeck-us.net>
+References: <1502830355-502-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1502830355-502-2-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170814090055.GA9897@arbeit>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, linux-iio@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502830355-502-2-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: jdelvare-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-> Add support for triggered buffers.
-
-comments below
- 
-> Data format is quite simple:
->   distance     16 Bit
->   alignment    48 Bit
->   timestamp    64 Bit
+On 08/15/2017 01:52 PM, Eddie James wrote:
+> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/iio/proximity/srf08.c | 59 ++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 56 insertions(+), 3 deletions(-)
+>   .../devicetree/bindings/i2c/ibm,cffps1.txt          | 21 +++++++++++++++++++++
+
+Sorry, just noticed. Sorry for the piecemeal review :-(.
+The i2c directory is used for i2c controllers, not for other i2c devices.
+Please move to hwmon (and drop i2c from the subject).
+
+Thanks,
+Guenter
+
+>   1 file changed, 21 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/i2c/ibm,cffps1.txt
 > 
-> diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
-> index 3f19536f215f..8018bb90b7b2 100644
-> --- a/drivers/iio/proximity/srf08.c
-> +++ b/drivers/iio/proximity/srf08.c
-> @@ -18,6 +18,9 @@
->  #include <linux/bitops.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
->  
->  /* registers of SRF08 device */
->  #define SRF08_WRITE_COMMAND	0x00	/* Command Register */
-> @@ -35,9 +38,22 @@
->  
->  struct srf08_data {
->  	struct i2c_client	*client;
-> -	int			sensitivity;		/* Gain */
-> -	int			range_mm;		/* max. Range in mm */
+> diff --git a/Documentation/devicetree/bindings/i2c/ibm,cffps1.txt b/Documentation/devicetree/bindings/i2c/ibm,cffps1.txt
+> new file mode 100644
+> index 0000000..f68a0a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/ibm,cffps1.txt
+> @@ -0,0 +1,21 @@
+> +Device-tree bindings for IBM Common Form Factor Power Supply Version 1
+> +----------------------------------------------------------------------
 > +
-> +	/*
-> +	 * Gain in the datasheet is called sensitivity here to distinct it
-> +	 * from the gain used with amplifiers of adc's
-> +	 */
-> +	int			sensitivity;
+> +Required properties:
+> + - compatible = "ibm,cffps1";
+> + - reg = < I2C bus address >;		: Address of the power supply on the
+> +					  I2C bus.
 > +
-> +	/* max. Range in mm */
-> +	int			range_mm;
->  	struct mutex		lock;
+> +Example:
 > +
-> +	/*
-> +	 * triggered buffer
-> +	 * 1x16-bit channel + 3x16 padding + 4x16 timestamp
-> +	 */
-> +	s16			buffer[8];
->  };
->  
->  /*
-> @@ -110,6 +126,28 @@ static int srf08_read_ranging(struct srf08_data *data)
->  	return ret;
->  }
->  
-> +static irqreturn_t srf08_trigger_handler(int irq, void *p)
-> +{
-> +	struct iio_poll_func *pf = p;
-> +	struct iio_dev *indio_dev = pf->indio_dev;
-> +	struct srf08_data *data = iio_priv(indio_dev);
-> +	s16 sensor_data;
+> +    i2c-bus@100 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        #interrupt-cells = <1>;
+> +        < more properties >
 > +
-> +	sensor_data = srf08_read_ranging(data);
-> +	if (sensor_data < 0)
-> +		goto err;
-> +
-> +	mutex_lock(&data->lock);
-> +	data->buffer[0] = sensor_data;
-> +	mutex_unlock(&data->lock);
-
-what is this lock protecting? this is still racy...
-data->buffer could still be overwritten here, between unlock()
-and iio_push_...()
-
-> +
-> +	iio_push_to_buffers_with_timestamp(indio_dev,
-> +						data->buffer, pf->timestamp);
-> +err:
-> +	iio_trigger_notify_done(indio_dev->trig);
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static int srf08_read_raw(struct iio_dev *indio_dev,
->  			    struct iio_chan_spec const *channel, int *val,
->  			    int *val2, long mask)
-> @@ -323,7 +361,15 @@ static const struct iio_chan_spec srf08_channels[] = {
->  		.info_mask_separate =
->  				BIT(IIO_CHAN_INFO_RAW) |
->  				BIT(IIO_CHAN_INFO_SCALE),
-> +		.scan_index = 0,
-> +		.scan_type = {
-> +			.sign = 's',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.endianness = IIO_CPU,
-> +		},
->  	},
-> +	IIO_CHAN_SOFT_TIMESTAMP(1),
->  };
->  
->  static const struct iio_info srf08_info = {
-> @@ -362,6 +408,13 @@ static int srf08_probe(struct i2c_client *client,
->  
->  	mutex_init(&data->lock);
->  
-> +	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
-> +			iio_pollfunc_store_time, srf08_trigger_handler, NULL);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "setup of iio triggered buffer failed\n");
-> +		return ret;
-> +	}
-> +
->  	/*
->  	 * set default values of device here
->  	 * these register values cannot be read from the hardware
-> @@ -402,5 +455,5 @@ static struct i2c_driver srf08_driver = {
->  module_i2c_driver(srf08_driver);
->  
->  MODULE_AUTHOR("Andreas Klinger <ak@it-klinger.de>");
-> -MODULE_DESCRIPTION("Devantech SRF08 ultrasonic ranger driver");
-> +MODULE_DESCRIPTION("Devantech SRF08/SRF10 ultrasonic ranger driver");
->  MODULE_LICENSE("GPL");
+> +        power-supply@68 {
+> +            compatible = "ibm,cffps1";
+> +            reg = <0x68>;
+> +        };
+> +    };
 > 
 
--- 
-
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
