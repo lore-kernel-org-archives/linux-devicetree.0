@@ -1,7 +1,7 @@
 From: <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Subject: [PATCH v3 12/14]  [media] cxd2880: Add all Makefile files for the driver
-Date: Wed, 16 Aug 2017 13:44:24 +0900
-Message-ID: <20170816044424.21731-1-Yasunari.Takiguchi@sony.com>
+Subject: [PATCH v3 13/14] [media] cxd2880: Add all Kconfig files for the driver
+Date: Wed, 16 Aug 2017 13:45:32 +0900
+Message-ID: <20170816044532.21779-1-Yasunari.Takiguchi@sony.com>
 References: <20170816041714.20551-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,16 +14,16 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
 
-This is the Makefile files of driver
-for the Sony CXD2880 DVB-T2/T tuner + demodulator.
+This is the Kconfig files of driver for
+the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
 
 [Change list]
 Changes in V3
-   drivers/media/dvb-frontends/Makefile
+   drivers/media/dvb-frontends/Kconfig
       -no change
-   drivers/media/dvb-frontends/cxd2880/Makefile
-      -removed cxd2880_math.o \ 
-   drivers/media/spi/Makefile
+   drivers/media/dvb-frontends/cxd2880/Kconfig
+      -no change
+   drivers/media/spi/Kconfig
       -no change
 
 Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
@@ -33,59 +33,60 @@ Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
 Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
 Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
 ---
- drivers/media/dvb-frontends/Makefile         |  1 +
- drivers/media/dvb-frontends/cxd2880/Makefile | 20 ++++++++++++++++++++
- drivers/media/spi/Makefile                   |  5 +++++
- 3 files changed, 26 insertions(+)
- create mode 100644 drivers/media/dvb-frontends/cxd2880/Makefile
+ drivers/media/dvb-frontends/Kconfig         |  2 ++
+ drivers/media/dvb-frontends/cxd2880/Kconfig |  6 ++++++
+ drivers/media/spi/Kconfig                   | 14 ++++++++++++++
+ 3 files changed, 22 insertions(+)
+ create mode 100644 drivers/media/dvb-frontends/cxd2880/Kconfig
 
-diff --git a/drivers/media/dvb-frontends/Makefile b/drivers/media/dvb-frontends/Makefile
-index 3fccaf34ef52..d298c7954699 100644
---- a/drivers/media/dvb-frontends/Makefile
-+++ b/drivers/media/dvb-frontends/Makefile
-@@ -126,3 +126,4 @@ obj-$(CONFIG_DVB_HORUS3A) += horus3a.o
- obj-$(CONFIG_DVB_ASCOT2E) += ascot2e.o
- obj-$(CONFIG_DVB_HELENE) += helene.o
- obj-$(CONFIG_DVB_ZD1301_DEMOD) += zd1301_demod.o
-+obj-$(CONFIG_DVB_CXD2880) += cxd2880/
-diff --git a/drivers/media/dvb-frontends/cxd2880/Makefile b/drivers/media/dvb-frontends/cxd2880/Makefile
+diff --git a/drivers/media/dvb-frontends/Kconfig b/drivers/media/dvb-frontends/Kconfig
+index 3a260b82b3e8..6831f4a49c18 100644
+--- a/drivers/media/dvb-frontends/Kconfig
++++ b/drivers/media/dvb-frontends/Kconfig
+@@ -519,6 +519,8 @@ config DVB_GP8PSK_FE
+ 	depends on DVB_CORE
+ 	default DVB_USB_GP8PSK
+ 
++source "drivers/media/dvb-frontends/cxd2880/Kconfig"
++
+ comment "DVB-C (cable) frontends"
+ 	depends on DVB_CORE
+ 
+diff --git a/drivers/media/dvb-frontends/cxd2880/Kconfig b/drivers/media/dvb-frontends/cxd2880/Kconfig
 new file mode 100644
-index 000000000000..ee7758b28a05
+index 000000000000..36b8b6f7c4f7
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/Makefile
-@@ -0,0 +1,20 @@
-+cxd2880-objs := cxd2880_common.o \
-+		cxd2880_devio_spi.o \
-+		cxd2880_integ.o \
-+		cxd2880_integ_dvbt2.o \
-+		cxd2880_integ_dvbt.o \
-+		cxd2880_io.o \
-+		cxd2880_spi_device.o \
-+		cxd2880_stopwatch_port.o \
-+		cxd2880_tnrdmd.o \
-+		cxd2880_tnrdmd_dvbt2.o \
-+		cxd2880_tnrdmd_dvbt2_mon.o \
-+		cxd2880_tnrdmd_dvbt.o \
-+		cxd2880_tnrdmd_dvbt_mon.o\
-+		cxd2880_tnrdmd_mon.o\
-+		cxd2880_top.o
-+
-+obj-$(CONFIG_DVB_CXD2880) += cxd2880.o
-+
-+ccflags-y += -Idrivers/media/dvb-core
-+ccflags-y += -Idrivers/media/dvb-frontends
-diff --git a/drivers/media/spi/Makefile b/drivers/media/spi/Makefile
-index ea64013d16cc..40e0f88d9f6c 100644
---- a/drivers/media/spi/Makefile
-+++ b/drivers/media/spi/Makefile
-@@ -1 +1,6 @@
- obj-$(CONFIG_VIDEO_GS1662) += gs1662.o
-+obj-$(CONFIG_CXD2880_SPI_DRV) += cxd2880-spi.o
-+
-+ccflags-y += -Idrivers/media/dvb-core
-+ccflags-y += -Idrivers/media/dvb-frontends
-+ccflags-y += -Idrivers/media/dvb-frontends/cxd2880
++++ b/drivers/media/dvb-frontends/cxd2880/Kconfig
+@@ -0,0 +1,6 @@
++config DVB_CXD2880
++	tristate "Sony CXD2880 DVB-T2/T tuner + demodulator"
++	depends on DVB_CORE && SPI
++	default m if !MEDIA_SUBDRV_AUTOSELECT
++	help
++	  Say Y when you want to support this frontend.
 \ No newline at end of file
+diff --git a/drivers/media/spi/Kconfig b/drivers/media/spi/Kconfig
+index a21f5a39a440..b07ac86fc53c 100644
+--- a/drivers/media/spi/Kconfig
++++ b/drivers/media/spi/Kconfig
+@@ -12,3 +12,17 @@ config VIDEO_GS1662
+ endmenu
+ 
+ endif
++
++if SPI
++menu "Media SPI Adapters"
++
++config CXD2880_SPI_DRV
++	tristate "Sony CXD2880 SPI support"
++	depends on DVB_CORE && SPI
++	default m if !MEDIA_SUBDRV_AUTOSELECT
++	help
++	  Choose if you would like to have SPI interface support for Sony CXD2880.
++
++endmenu
++
++endif
 -- 
 2.13.0
 
