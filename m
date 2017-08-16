@@ -1,77 +1,65 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 4/4] dt-bindings: mt8173-xhci: add generic compatible and rename file
-Date: Wed, 16 Aug 2017 14:08:13 +0800
-Message-ID: <1926a457a86a1d90b923482179bf76dd1c74f3c1.1502854628.git.chunfeng.yun@mediatek.com>
-References: <670f9ce1ecaec5859006b6f02b45cfc72c3cca2c.1502854628.git.chunfeng.yun@mediatek.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] dt-bindings: document the CEC GPIO bindings
+Date: Wed, 16 Aug 2017 09:20:37 +0200
+Message-ID: <c24529d5-fd9e-444a-2bc7-71d54ca950f8@xs4all.nl>
+References: <20170810083359.36800-1-hverkuil@xs4all.nl>
+ <20170810083359.36800-2-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <670f9ce1ecaec5859006b6f02b45cfc72c3cca2c.1502854628.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170810083359.36800-2-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The mt8173-xhci.txt actually holds the bindings for all mediatek
-SoCs with xHCI controller, so add a generic compatible and change
-the name to mediatek,mtk-xhci.txt to reflect that.
+On 08/10/2017 10:33 AM, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> 
+> Document the bindings for the cec-gpio module for hardware where the
+> CEC pin is connected to a GPIO pin.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- .../usb/{mt8173-xhci.txt => mediatek,mtk-xhci.txt} |   14 +++++++++++---
- .../devicetree/bindings/usb/mediatek,mtu3.txt      |    2 +-
- 2 files changed, 12 insertions(+), 4 deletions(-)
- rename Documentation/devicetree/bindings/usb/{mt8173-xhci.txt => mediatek,mtk-xhci.txt} (85%)
+No need to review this, there will be a v3 that will add a second optional
+HPD gpio.
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-similarity index 85%
-rename from Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-rename to Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-index 0acfc8a..ff21135 100644
---- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-@@ -11,7 +11,11 @@ into two parts.
- ------------------------------------------------------------------------
- 
- Required properties:
-- - compatible : should contain "mediatek,mt8173-xhci"
-+ - compatible : should be "mediatek,soc-model-xhci", "mediatek,mtk-xhci",
-+	soc-model is the name of SoC, such as mt8173, mt2712 etc, when using
-+	"mediatek,mtk-xhci" compatible string, you need SoC specific ones in
-+	addition, one of:
-+	- "mediatek,mt8173-xhci"
-  - reg : specifies physical base address and size of the registers
-  - reg-names: should be "mac" for xHCI MAC and "ippc" for IP port control
-  - interrupts : interrupt used by the controller
-@@ -68,10 +72,14 @@ usb30: usb@11270000 {
- 
- In the case, xhci is added as subnode to mtu3. An example and the DT binding
- details of mtu3 can be found in:
--Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-+Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
- 
- Required properties:
-- - compatible : should contain "mediatek,mt8173-xhci"
-+ - compatible : should be "mediatek,soc-model-xhci", "mediatek,mtk-xhci",
-+	soc-model is the name of SoC, such as mt8173, mt2712 etc, when using
-+	"mediatek,mtk-xhci" compatible string, you need SoC specific ones in
-+	addition, one of:
-+	- "mediatek,mt8173-xhci"
-  - reg : specifies physical base address and size of the registers
-  - reg-names: should be "mac" for xHCI MAC
-  - interrupts : interrupt used by the host controller
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 545251e..722a029 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -48,7 +48,7 @@ Optional properties:
- Sub-nodes:
- The xhci should be added as subnode to mtu3 as shown in the following example
- if host mode is enabled. The DT binding details of xhci can be found in:
--Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-+Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
- 
- Example:
- ssusb: usb@11271000 {
--- 
-1.7.9.5
+Regards,
+
+	Hans
+
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/media/cec-gpio.txt | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
+> new file mode 100644
+> index 000000000000..e34a175468e2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
+> @@ -0,0 +1,16 @@
+> +* HDMI CEC GPIO-based hardware
+> +
+> +Use these bindings for HDMI CEC hardware where the CEC pin is hooked up
+> +to a pull-up GPIO pin.
+> +
+> +Required properties:
+> +  - compatible: value must be "cec-gpio"
+> +  - gpio: gpio that the CEC line is connected to
+> +
+> +Example for the Raspberry Pi 3 where the CEC line is connected to
+> +pin 7 aka BCM4 aka GPCLK0 on the GPIO pin header:
+> +
+> +cec-gpio {
+> +       compatible = "cec-gpio";
+> +       gpio = <&gpio 4 GPIO_ACTIVE_HIGH>;
+> +};
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
