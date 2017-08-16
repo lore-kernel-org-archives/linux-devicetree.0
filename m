@@ -1,47 +1,103 @@
-From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] arm64: dts: rk3399: init vop clock rates
-Date: Wed, 16 Aug 2017 10:51:09 +0800
-Message-ID: <1502851869-1736-1-git-send-email-kever.yang@rock-chips.com>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: hi6220: add acpu_sctrl
+Date: Wed, 16 Aug 2017 11:01:15 +0800
+Message-ID: <CAFGCpxw0fNa5srmWuEZKTBN15LHeG4M-xPSiwuPnhwB-DQ2irA@mail.gmail.com>
+References: <1492478242-16146-1-git-send-email-zhangfei.gao@linaro.org>
+ <1492478242-16146-2-git-send-email-zhangfei.gao@linaro.org>
+ <5992F7FB.9080709@hisilicon.com> <20170815150138.GL22218@golem.pkh.me>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170815150138.GL22218-Bl/+WD2hOLMHaudFD6lisA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: =?UTF-8?B?Q2zDqW1lbnQgQsWTc2No?= <u@pkh.me>
+Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We need to init vop aclk and hclk incase the U-Boot does not do
-the initialize.
+On Tue, Aug 15, 2017 at 11:01 PM, Cl=C3=A9ment B=C5=93sch <u@pkh.me> wrote:
+> On Tue, Aug 15, 2017 at 02:32:43PM +0100, Wei Xu wrote:
+>> Hi Zhangfei,
+>>
+>> On 2017/4/18 2:17, Zhangfei Gao wrote:
+>> > Add acpu_sctrl clock node
+>> >
+>> > Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > Signed-off-by: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> > ---
+>> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 6 ++++++
+>> >  1 file changed, 6 insertions(+)
+>> >
+>> > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/bo=
+ot/dts/hisilicon/hi6220.dtsi
+>> > index 470461d..710cc34 100644
+>> > --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> > @@ -262,6 +262,12 @@
+>> >                     #clock-cells =3D <1>;
+>> >             };
+>> >
+>> > +           acpu_sctrl: acpu_sctrl@f7032000 {
+>
+> I think the unit address is incorrect here (this value has been copied
+> from the pm controller while it should match the 1st one the reg).
+>
+>> > +                   compatible =3D "hisilicon,hi6220-acpu-sctrl", "sys=
+con";
+>> > +                   reg =3D <0x0 0xf6504000 0x0 0x1000>;
+>> > +                   #clock-cells =3D <1>;
+>> > +           };
+>> > +
+>> >             medianoc_ade: medianoc_ade@f4520000 {
+>> >                     compatible =3D "syscon";
+>> >                     reg =3D <0x0 0xf4520000 0x0 0x4000>;
+>> >
+>
+> Also I'm sorry I'm going to ask stupid questions:
+>
+> - why 's' in "sctrl" while all the other node controllers declared around
+>   seems to use "ctrl"?
+>
+> - is it possible to have access to the specs where those addresses can be
+>   found? The only public doc I could find is the "Hi6220V100 Multi-Mode
+>   Application Processor" one where this information doesn't seem present.
+>
 
-Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+That's the only public doc. But if you need, welcome to discuss with
+me off-line about referencing kernels for hikey.
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+> - is there any work pending adding the pmu counters node (interrupt
+>   GCI_SPI 99) ? AFAIK the ACPU controller added here can be used to enabl=
+e
+>   the counters.
+>
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 0b3acc9..a592c24 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1480,6 +1480,8 @@
- 		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
- 		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		assigned-clocks = <&cru ACLK_VOP1>, <&cru HCLK_VOP1>;
-+		assigned-clock-rates = <400000000>, <100000000>;
- 		iommus = <&vopl_mmu>;
- 		power-domains = <&power RK3399_PD_VOPL>;
- 		resets = <&cru SRST_A_VOP1>, <&cru SRST_H_VOP1>, <&cru SRST_D_VOP1>;
-@@ -1525,6 +1527,8 @@
- 		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>;
- 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		assigned-clocks = <&cru ACLK_VOP0>, <&cru HCLK_VOP0>;
-+		assigned-clock-rates = <400000000>, <100000000>;
- 		iommus = <&vopb_mmu>;
- 		power-domains = <&power RK3399_PD_VOPB>;
- 		resets = <&cru SRST_A_VOP0>, <&cru SRST_H_VOP0>, <&cru SRST_D_VOP0>;
--- 
-1.9.1
+For hikey PMU, please have a look of this patchset:
+ - https://github.com/96boards/linux/pull/86/commits
+Discussion is here:
+ - https://discuss.96boards.org/t/performance-monitoring-unit-pmu/293/4
 
+Due to its implementation is not compatible with upstream, this
+patchset was not upstreamed. If you are interested, welcome to adding
+them LKML.
+
+Appreciate your effort.
+
+-Guodong
+
+>>
+>> Thanks!
+>> Applied to the hisilicon dt tree since the driver part is in the mainlin=
+e now.
+>>
+>
+> Is this refering to https://github.com/hisilicon/linux-hisi/commits/next/=
+dt64 ?
+>
+> [...]
+>
+> --
+> Cl=C3=A9ment B.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
