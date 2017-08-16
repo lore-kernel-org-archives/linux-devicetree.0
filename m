@@ -1,63 +1,175 @@
-From: Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: [patch net-next 0/3] net/sched: Improve getting objects by indexes
-Date: Wed, 16 Aug 2017 10:19:53 +0100
-Message-ID: <150287519355.15499.3124883464555211520@mail.alporthouse.com>
-References: <1502849538-14284-1-git-send-email-chrism@mellanox.com>
- <144b87a3-bbe4-a194-ed83-e54840d7c7c2@amd.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
-In-Reply-To: <144b87a3-bbe4-a194-ed83-e54840d7c7c2@amd.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
-List-Post: <mailto:ath10k@lists.infradead.org>
-List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
-Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
-Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
-To: =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, Chris Mi <chrism@mellanox.com>, netdev@vger.kernel.org
-Cc: lucho@ionkov.net, sergey.senozhatsky.work@gmail.com, snitzer@redhat.com, wsa@the-dreams.de, markb@mellanox.com, tom.leiming@gmail.com, stefanr@s5r6.in-berlin.de, zhi.a.wang@intel.com, nsekhar@ti.com, dri-devel@lists.freedesktop.org, bfields@fieldses.org, linux-sctp@vger.kernel.org, paulus@samba.org, jinpu.wang@profitbricks.com, pshelar@ovn.org, sumit.semwal@linaro.org, AlexBin.Xie@amd.com, david1.zhou@amd.com, linux-samsung-soc@vger.kernel.org, maximlevitsky@gmail.com, sudarsana.kalluru@qlogic.com, marek.vasut@gmail.com, linux-atm-general@lists.sourceforge.net, dtwlin@gmail.com, michel.daenzer@amd.com, dledford@redhat.com, tpmdd-devel@lists.sourceforge.net, stern@rowland.harvard.edu, longman@redhat.com, niranjana.vishwanathapura@intel.com, philipp.reisner@linbit.com, shli@kernel.org, linux@roeck-us.net, ohad@wizery.com, pmladek@suse.com, dick.kennedy@broadcom.comlinux-
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH] devicetree: Enable generation of __symbols__ in all dtb files
+Date: Wed, 16 Aug 2017 12:37:44 +0300
+Message-ID: <5B16CB62-98C0-48C6-B50F-F06AA31CC20B@konsulko.com>
+References: <1502831736-28282-1-git-send-email-trini@konsulko.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502831736-28282-1-git-send-email-trini@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tom Rini <trini@konsulko.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <mmarek@suse.com>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBDaHJpc3RpYW4gS8O2bmlnICgyMDE3LTA4LTE2IDA4OjQ5OjA3KQo+IEFtIDE2LjA4
-LjIwMTcgdW0gMDQ6MTIgc2NocmllYiBDaHJpcyBNaToKPiA+IFVzaW5nIGN1cnJlbnQgVEMgY29k
-ZSwgaXQgaXMgdmVyeSBzbG93IHRvIGluc2VydCBhIGxvdCBvZiBydWxlcy4KPiA+Cj4gPiBJbiBv
-cmRlciB0byBpbXByb3ZlIHRoZSBydWxlcyB1cGRhdGUgcmF0ZSBpbiBUQywKPiA+IHdlIGludHJv
-ZHVjZWQgdGhlIGZvbGxvd2luZyB0d28gY2hhbmdlczoKPiA+ICAgICAgICAgIDEpIGNoYW5nZWQg
-Y2xzX2Zsb3dlciB0byB1c2UgSURSIHRvIG1hbmFnZSB0aGUgZmlsdGVycy4KPiA+ICAgICAgICAg
-IDIpIGNoYW5nZWQgYWxsIGFjdF94eHggbW9kdWxlcyB0byB1c2UgSURSIGluc3RlYWQgb2YKPiA+
-ICAgICAgICAgICAgIGEgc21hbGwgaGFzaCB0YWJsZQo+ID4KPiA+IEJ1dCBJRFIgaGFzIGEgbGlt
-aXRhdGlvbiB0aGF0IGl0IHVzZXMgaW50LiBUQyBoYW5kbGUgdXNlcyB1MzIuCj4gPiBUbyBtYWtl
-IHN1cmUgdGhlcmUgaXMgbm8gcmVncmVzc2lvbiwgd2UgYWxzbyBjaGFuZ2VkIElEUiB0byB1c2UK
-PiA+IHVuc2lnbmVkIGxvbmcuIEFsbCBjbGllbnRzIG9mIElEUiBhcmUgY2hhbmdlZCB0byB1c2Ug
-bmV3IElEUiBBUEkuCj4gCj4gV09XLCB3YWl0IGEgc2Vjb25kLiBUaGUgaWRyIGNoYW5nZSBpcyB0
-b3VjaGluZyBhIGxvdCBvZiBkcml2ZXJzIGFuZCB0byAKPiBiZSBob25lc3QgZG9lc24ndCBsb29r
-cyBjb3JyZWN0IGF0IGFsbC4KPiAKPiBKdXN0IGxvb2sgYXQgdGhlIGZpcnN0IGNodW5rIG9mIHlv
-dXIgbW9kaWZpY2F0aW9uOgo+ID4gQEAgLTk5OCw4ICs5OTksOSBAQCBpbnQgYnNnX3JlZ2lzdGVy
-X3F1ZXVlKHN0cnVjdCByZXF1ZXN0X3F1ZXVlICpxLCBzdHJ1Y3QgZGV2aWNlICpwYXJlbnQsCj4g
-PiAgIAo+ID4gICAgICAgbXV0ZXhfbG9jaygmYnNnX211dGV4KTsKPiA+ICAgCj4gPiAtICAgICBy
-ZXQgPSBpZHJfYWxsb2MoJmJzZ19taW5vcl9pZHIsIGJjZCwgMCwgQlNHX01BWF9ERVZTLCBHRlBf
-S0VSTkVMKTsKPiA+IC0gICAgIGlmIChyZXQgPCAwKSB7Cj4gPiArICAgICByZXQgPSBpZHJfYWxs
-b2MoJmJzZ19taW5vcl9pZHIsIGJjZCwgJmlkcl9pbmRleCwgMCwgQlNHX01BWF9ERVZTLAo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgIEdGUF9LRVJORUwpOwo+ID4gKyAgICAgaWYgKHJldCkgewo+
-ID4gICAgICAgICAgICAgICBpZiAocmV0ID09IC1FTk9TUEMpIHsKPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICBwcmludGsoS0VSTl9FUlIgImJzZzogdG9vIG1hbnkgYnNnIGRldmljZXNcbiIpOwo+
-ID4gICAgICAgICAgICAgICAgICAgICAgIHJldCA9IC1FSU5WQUw7Cj4gVGhlIGNvbmRpdGlvbiAi
-aWYgKHJldCkiIHdpbGwgbm93IGFsd2F5cyBiZSB0cnVlIGFmdGVyIHRoZSBmaXJzdCAKPiBhbGxv
-Y2F0aW9uIGFuZCBzbyB3ZSBhbHdheXMgcnVuIGludG8gdGhlIGVycm9yIGhhbmRsaW5nIGFmdGVy
-IHRoYXQuCgpyZXQgaXMgbm93IHB1cmVseSB0aGUgZXJyb3IgY29kZSwgc28gaXQgZG9lc24ndCBs
-b29rIHRoYXQgc3VzcGljaW91cy4KCj4gSSd2ZSBuZXZlciByZWFkIHRoZSBic2cgY29kZSBiZWZv
-cmUsIGJ1dCB0aGF0J3MgY2VydGFpbmx5IG5vdCBjb3JyZWN0LiAKPiBBbmQgdGhhdCBpbmNvcnJl
-Y3QgcGF0dGVybiByZXBlYXRzIG92ZXIgYW5kIG92ZXIgYWdhaW4gaW4gdGhpcyBjb2RlLgo+IAo+
-IEFwYXJ0IGZyb20gdGhhdCB3aHkgdGhlIGhlY2sgZG8geW91IHdhbnQgdG8gYWxsb2NhdGUgbW9y
-ZSB0aGFuIDE8PDMxIAo+IGhhbmRsZXM/CgpBbmQgbW9yZSB0byB0aGUgcG9pbnQsIGFyYml0cmFy
-aWx5IGNoYW5naW5nIHRoZSBtYXhpbXVtIHRvIFVMT05HX01BWAp3aGVyZSB0aGUgQUJJIG9ubHkg
-c3VwcG9ydHMgVTMyX01BWCBpcyBkYW5nZXJvdXMuIFVubGVzcyB5b3UgZG8gdGhlCmFuYWx5c2lz
-IG90aGVyd2lzZSwgeW91IGhhdmUgdG8gcmVwbGFjZSBhbGwgdGhlIGVuZD0wIHdpdGggZW5kPUlO
-VF9NQVgKdG8gbWFpbnRhaW4gZXhpc3RpbmcgYmVoYXZpb3VyLgotQ2hyaXMKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmF0aDEwayBtYWlsaW5nIGxpc3QK
-YXRoMTBrQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9hdGgxMGsK
+Hi Tom,
+
+Sorry for taking a little bit of time to reply to this (vacation time).
+
+> On Aug 16, 2017, at 00:15 , Tom Rini <trini@konsulko.com> wrote:
+>=20
+> With support for stacked overlays being part of libfdt it is now
+> possible and likely that overlays which require __symbols__ will be
+> applied to the dtb files generated by the kernel.  This is done by
+> passing -@ to dtc.  This does increase the filesize (and resident =
+memory
+> usage) based on the number of __symbol__ entries added to match the
+> contents of the dts.
+>=20
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <mmarek@suse.com>
+> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> CC: linux-kbuild@vger.kernel.org
+> Signed-off-by: Tom Rini <trini@konsulko.com>
+> ---
+> In order for a dtb file to be useful with all types of overlays, it
+> needs to be generated with the -@ flag passed to dtc so that =
+__symbols__
+> are generated.  This however is not free, and increases the resulting
+> dtb file by up to approximately 50% today.  In the current worst case
+> this is moving from 88KiB to 133KiB.  In talking with Frank about =
+this,
+> he outlined 3 possible ways (with the 4th option of something else
+> entirely).
+>=20
+> 1. Make passing -@ to dtc be dependent upon some CONFIG symbol.
+> 2. In the kernel, if the kernel does not have overlay support, discard
+> the __symbols__ information that we've been passed.
+> 3. Have the bootloader pass in, or not, __symbols__ information.
+>=20
+> This patch is an attempt to implement something between the 3rd option
+> and a different, 4th option.  Frank was thinking that we might =
+introduce
+> a new symbol to control generation of __symbol__ information for =
+option
+> 1.  I think this gets the usage backwards and will lead to confusion
+> among users and developers.
+>=20
+> My proposal is that we do not want __symbols__ existence to be =
+dependent
+> on some part of the kernel configuration for a number of reasons.
+> First, this is out of step with the rest of how dtbs are created today
+> and more importantly, thought about.  Today, all dtb content is
+> independent of CONFIG options.  If you build a dtb from a given kernel
+> tree, everyone will agree on the result.  This is part of the =
+"contract"
+> on passing old kernels and new dtb files even.
+>=20
+> Second, I think this is out of step with how a lot of overlay usage =
+will
+> occur.  My thinking is that with maximally useful overlays being
+> available in mainline, lots of use-cases that we have today that =
+result
+> in a number of DTS files being included can become just overlays.  =
+This
+> is true in terms of not only evaluation kits but also when these =
+systems
+> are turned into custom hardware.  This is even more true for SoM based
+> systems where a physical widget would be a SoM + carrier overlay +
+> custom parts overlay.  These cases are going to be resolved with
+> overlays being applied outside of the kernel.
+>=20
+
+FWIW here are some thoughts of mine on this subject.
+
+First, the whole business with the __symbols__ (& the fixup nodes) is =
+meant
+to be used as a method to pass along symbol information, inband with the =
+DTB
+in such a way as it would require absolutely no changes to booloaders =
+and
+the kernel unflattening methods with the downside of the increased =
+memory
+consumption.
+
+That said, there=E2=80=99s no reason to keep the __symbols__ node as =
+part of the
+in kernel device tree structure after loading. In fact operations would =
+be
+much easier if that would be the case. That would go hand in hand with =
+the
+a previously posted patch that turns phandle lookups into hash/idr =
+lookups.
+
+I would think that whether overlays would be supported could be a board =
+level
+option, but I would hate for overlay support to be dependent on a kernel =
+config
+option. Yes, this is contradictory, I know :(. The problem is that if =
+you don=E2=80=99t
+have symbols generated at compile time of the kernel DTB you=E2=80=99re =
+SOL loading an
+overlay later. I was thinking of a patch that would allow =E2=80=98patchin=
+g in=E2=80=99 the
+symbols of an kernel at runtime, when that would be required (using a =
+kernel
+module containing that symbol information).
+
+Finally Tom is absolutely correct; the way that system design for =
+EVM+SoM is
+done leads naturally to thinking in =E2=80=98overlay=E2=80=99 terms. So =
+instead of the all
+the different DTBs for different variants of boards we could have the =
+.DTSIs
+compiled as overlays and then the final DTB reconstructed at boot time =
+(whether
+by the bootloader or the kernel).
+
+Regards
+
+=E2=80=94 Pantelis
+
+
+> Signed-off-by: Tom Rini <trini@konsulko.com>
+> ---
+> drivers/of/unittest-data/Makefile | 5 -----
+> scripts/Makefile.lib              | 3 +++
+> 2 files changed, 3 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/of/unittest-data/Makefile =
+b/drivers/of/unittest-data/Makefile
+> index 6e00a9c69e58..70731cfe8900 100644
+> --- a/drivers/of/unittest-data/Makefile
+> +++ b/drivers/of/unittest-data/Makefile
+> @@ -11,8 +11,3 @@ targets +=3D overlay_base.dtb overlay_base.dtb.S
+> .PRECIOUS: \
+> 	$(obj)/%.dtb.S \
+> 	$(obj)/%.dtb
+> -
+> -# enable creation of __symbols__ node
+> -DTC_FLAGS_overlay :=3D -@
+> -DTC_FLAGS_overlay_bad_phandle :=3D -@
+> -DTC_FLAGS_overlay_base :=3D -@
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 58c05e5d9870..a1f4a6b29d75 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -293,6 +293,9 @@ DTC_FLAGS +=3D -Wnode_name_chars_strict \
+> 	-Wproperty_name_chars_strict
+> endif
+>=20
+> +# enable creation of __symbols__ node
+> +DTC_FLAGS +=3D -@
+> +
+> DTC_FLAGS +=3D $(DTC_FLAGS_$(basetarget))
+>=20
+> # Generate an assembly file to wrap the output of the device tree =
+compiler
+> --=20
+> 1.9.1
+>=20
