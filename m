@@ -1,72 +1,73 @@
-From: Lori Hikichi <lori.hikichi@broadcom.com>
-Subject: Re: [PATCH 2/9] ASoC: cygnus: Update bindings for audio clock changes
-Date: Wed, 16 Aug 2017 12:39:42 -0700
-Message-ID: <8c2fc92d-5ea8-8163-a588-0a4cba55e0f8@broadcom.com>
-References: <1502748417-26417-1-git-send-email-lori.hikichi@broadcom.com>
- <1502748417-26417-3-git-send-email-lori.hikichi@broadcom.com>
- <20170815171424.whcy4mftex6sgzgj@sirena.org.uk>
- <d7e7144b-26c7-b96a-663d-03744bb60c36@broadcom.com>
- <20170816105954.ve434zeeqinweo5a@sirena.org.uk>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190 battery charger
+Date: Wed, 16 Aug 2017 13:11:39 -0700
+Message-ID: <CAKvHMgTvVMsvmyi0o89m1SfS9A4U1GbNuU05Tkt6C0ARR9NyWw@mail.gmail.com>
+References: <20170807195420.20767-1-liam@networkimprov.net>
+ <20170807195420.20767-3-liam@networkimprov.net> <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
+ <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
+ <20170812164233.won7fairxmrnblps@earth> <CAKvHMgR+GxSqhy+iwdYmku2600HzoF__oXV7_w72ZJg-aK7O-Q@mail.gmail.com>
+ <20170816154701.GR3930@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170816105954.ve434zeeqinweo5a@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170816154701.GR3930@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-
-On 8/16/2017 3:59 AM, Mark Brown wrote:
-> On Tue, Aug 15, 2017 at 12:29:44PM -0700, Lori Hikichi wrote:
+On Wed, Aug 16, 2017 at 8:47 AM, Tony Lindgren <tony@atomide.com> wrote:
+> * Liam Breck <liam@networkimprov.net> [170812 12:00]:
+>> On Sat, Aug 12, 2017 at 9:42 AM, Sebastian Reichel <sre@kernel.org> wrote:
+>> > On Fri, Aug 11, 2017 at 02:57:10PM -0700, Liam Breck wrote:
+>> >> >> +Other features:
+>> >> >> +- Use gpio-hog to set the OTG pin high to enable 500mA charge current on USB SDP port.
+>> >> >
+>> >> > Why doesn't the charger driver control this?
+>> >>
+>> >> This pin/gpio has to be high when USB is plugged in to make the
+>> >> charger chip negotiate 500mA from a SDP port. It should generally be
+>> >> configured that way even if the driver is not loaded, as the chip does
+>> >> not require a driver to function. Some boards may do that with a
+>> >> pull-up. Also the user may want to change this via sysfs and not have
+>> >> the driver "fix" it.
+>> >
+>> > drivers/power/supply/qcom_smbb.c exposes the otg feature as
+>> > regulator. I think in this case it could be exposed as
+>> > gpio-regulator.
+>>
+>> Hans is doing that here:
+>> https://patchwork.kernel.org/patch/9883717/
+>>
+>> The datasheet labels one pin "OTG" but that's misleading; it really
+>> enables negotiation of 500mA input current, but does not turn on OTG
+>> mode. If this pin is low, it only prevents the driver from starting
+>> OTG mode via I2C msg.
 >
->> I have put the mux assignment in DT because the assignment is a
->> static property and did not need run time programmability from the
->> machine driver.
-> Why is this a static property, what prevents something wanting to change
-> things at runtime?  You might be running with simpler setups now but
-> perhaps you'll run into a more complex use case later?
-The short answer is I have analyzed the possible use cases for Cygnus'
-audio block, and nothing should need to change the assignments at
-runtime.  The longer explanation follows.
+> Yeah so before the device has enumerated this pin keeps the
+> max current at 100mA as required by the USB spec. This pin
+> should be only toggled after enumerating in bootloader or
+> by the kernel driver. I tink the USB PHY driver can also
+> be wired to control this line.
+>
+> Probably best to set it up as just a GPIO that the bq24190
+> driver controls optionally.
+>
+> Then later on we should have some Linux generic way for
+> USB gadget subsystem to tell the charger that we have
+> enumerated, and then bq24190 driver can toggle this GPIO
+> to enable higher charge rates.
 
-The clocking configuration is this. There is one pll with its output run
-through 3 post dividers. The audio ports can select one of these
-outputs.  There are only 5 possible consumers of these 3 clocks.
-The 3 i2s/tdm ports, 1 spdif port, and an exceptional case of another
-"non-audio" IP block. For the i2s/tdm ports this clock is the MCLK.
+I discovered a few months ago that setting this pin high after USB
+connect has NO effect on iinlim. It has to be high at connect to
+auto-negotiate 500mA. There is no point in making the driver control
+this pin; we already tried that.
 
-By far the most common usage case for Cygnus is a configuration which
-uses only the three i2s/tdm ports. In this case each port is assigned
-a clock.  Each clock has the same capabilities so there would never be
-a reason change the static mapping.
+Here we are just documenting how the DT can enable this pin via gpio-hog.
 
-Now for the case when the "non-audio block" uses one of these clocks.
-In this situation we will only need one i2s port because this
-configuration of the chip is not audio intensive.  When the system
-is designed we know if this non-audio block will be in use, it is not
-a runtime configurable thing. Again, a static mapping is fine.
-
-The only situation which could get more complex is with SPDIF.
-First off, the SPDIF port is not actively used in any current
-configuration and I do not think there are any plans for it to be used.
-But, we are talking about possible future configurations.  The only
-limitation the current static scheme would introduce is if SPDIF is
-active along with all 3 i2s ports. Additionally, all 3 of the i2s ports
-would need to be in master mode (slave mode would free up a clock for
-SPDIF). In this case, two of the clock consumers would need to share a
-clock. In this situation I envisioned that both consumers would agree on
-a fixed rate and work within those limitation.  For example, the ports
-would choose 24.576 MHz as their mclk and be limited to the the frame
-rates that could be derived from that clock. 
-
-At the time it did not seem necessary to make addition driver changes to
-support a use case that will very likely never arise. As it turns out,
-we are working on a new version of this audio block.  The clocking
-configuration for this new version is more complex and I am already in
-the process of creating clock bindings for all this this. I am hopeful
-that the driver for this new version will be applicable to Cygnus.
-
-Lori.
+I believe the only way to defer 500mA negotiation is to leave this pin
+off and set iinlim via I2C msg to chip. We can do that in a gadget
+script via sysfs input_current_limit. Hans does not have to enable
+this pin to start OTG-host on his x86 device, perhaps because it is
+wired high there. Our script can set the linked gpio high if nec for
+OTG-host.
