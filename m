@@ -1,72 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/9] ASoC: cygnus: Update bindings for
-	audio clock changes
-Date: Wed, 16 Aug 2017 11:59:54 +0100
-Message-ID: <20170816105954.ve434zeeqinweo5a@sirena.org.uk>
-References: <1502748417-26417-1-git-send-email-lori.hikichi@broadcom.com>
- <1502748417-26417-3-git-send-email-lori.hikichi@broadcom.com>
- <20170815171424.whcy4mftex6sgzgj@sirena.org.uk>
- <d7e7144b-26c7-b96a-663d-03744bb60c36@broadcom.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/3] ARM: dts: r8a7745: add PFC support
+Date: Wed, 16 Aug 2017 14:00:37 +0300
+Message-ID: <521e62cc-46d4-b067-59b2-cc085fd88e84@cogentembedded.com>
+References: <20170415202036.987901107@cogentembedded.com>
+ <CAMuHMdUPda7Mjo_P8p1V5a20XOAYM6GFf8Jqf0KLUuO7zAODeA@mail.gmail.com>
+ <TY1PR06MB07025D9CE628A3D4CED37AA9B78D0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+ <b3bcd091-4f96-c37a-54ec-c8ee5b0fd916@cogentembedded.com>
+ <20170815160049.GC26748@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4049168930419354795=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <d7e7144b-26c7-b96a-663d-03744bb60c36@broadcom.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lori Hikichi <lori.hikichi@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170815160049.GC26748@verge.net.au>
+Content-Language: en-MW
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/15/2017 07:00 PM, Simon Horman wrote:
 
---===============4049168930419354795==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hu3g6i46vczsjiqa"
-Content-Disposition: inline
+>>>>> Define the generic R8A7745 part of the PFC device node.
+>>>>>
+>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>>
+>>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>
+>>> It looks like the dependencies for this patch are met now [1].
+>>>
+>>> Are you happy to accept this patch? (and presumably the others in the series for the sk-rzg1e board).
+>>>
+>>> We plan to add GPIO support for r8a7745, but need this patch in place first.
+>>>
+>>>
+>>> [1] https://patchwork.kernel.org/patch/9705249/
+>>
+>>     Actually, R8A774x PFC support has hit the Linus' tree in the meanwhile.
+>> Simon, please merge the .dts patches.
+>>
+>>> Kind regards, Chris
+> 
+> Thanks, I have applied the series for v4.14.
 
+    Are you going to finally push the devel branch? I'm not seeing changes 
+since the Monday tags.
 
---hu3g6i46vczsjiqa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Aug 15, 2017 at 12:29:44PM -0700, Lori Hikichi wrote:
-
-> I have put the mux assignment in DT because the assignment is a
-> static property and did not need run time programmability from the
-> machine driver.
-
-Why is this a static property, what prevents something wanting to change
-things at runtime?  You might be running with simpler setups now but
-perhaps you'll run into a more complex use case later?
-
---hu3g6i46vczsjiqa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmUJaoACgkQJNaLcl1U
-h9DBVQf/QYakhCkjI6NH7WGhvsWA5pimykDByuAWlb1OYQtKrfLZOI8PypKA3Qxv
-3l94ooRw/VJyaQ+EN8mGfAJHhKRkSOKyBbTaPZgYG1xfO++2q+bOgUF4rmI2tvgZ
-MohWccAMean5OUpvIHRjWGdmjRYPh04HhMQB8sa1lKqVy8NTSkSPxOCUnOFV7PSz
-oX2L9haenpow4IuaUXZuWGpG/dqmHt+GAjF2/2IwEsClKvFL1DhclVoP6NMLQQcq
-irKN9eAkWaJ/4hDczz+/rDDdEkBf07lSxJKaJCk5vqL8bPmqN5Zx1XMl14wM/N7Z
-EZRJPW36rJLHv/xsmKsc0PL2aXB/IA==
-=o7VN
------END PGP SIGNATURE-----
-
---hu3g6i46vczsjiqa--
-
---===============4049168930419354795==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4049168930419354795==--
+MBR, Sergei
