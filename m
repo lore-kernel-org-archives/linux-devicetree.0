@@ -1,46 +1,38 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND v9 09/12] Input: Add power key driver for
- Rockchip RK805 PMIC
-Date: Wed, 16 Aug 2017 11:34:12 -0700
-Message-ID: <20170816183412.GC25491@dtor-ws>
-References: <1502848628-27757-1-git-send-email-chenjh@rock-chips.com>
- <1502848894-29511-1-git-send-email-chenjh@rock-chips.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <rtc-linux+bncBDP6N55ZUYDRBKFA2LGAKGQEVUZRILY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1502848894-29511-1-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/5] Add support to LIS2DW12 accel sensor
+Date: Wed, 16 Aug 2017 21:13:11 +0200
+Message-ID: <20170816191316.11469-1-lorenzo.bianconi@st.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 16, 2017 at 10:01:34AM +0800, Joseph Chen wrote:
-> This driver provides a input driver for the power
-> key on the Rockchip RK805 PMIC.
-> 
-> Signed-off-by: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Modify management of drdy line and status register in order to support
+LIS2DW12 device
+This patchset is based on 'Add support to LIS2MDL magnetometer sensor'
+patchset
 
-This driver is in my tree already, no need to resend it again.
+Lorenzo Bianconi (5):
+  iio: st_sensors: decouple irq1 configuration parameters from the irq2
+    ones
+  iio: st_sensors: do not always write enable_axis register
+  iio: st_sensors: add register mask for status register
+  iio: accel: add support to LIS2DW12
+  dt-bindings: iio: accel: add LIS2DW12 sensor device binding
 
-Thanks.
+ .../devicetree/bindings/iio/st-sensors.txt         |   1 +
+ drivers/iio/accel/st_accel.h                       |   2 +
+ drivers/iio/accel/st_accel_core.c                  | 180 +++++++++++++++++----
+ drivers/iio/accel/st_accel_i2c.c                   |   5 +
+ drivers/iio/accel/st_accel_spi.c                   |   5 +
+ drivers/iio/common/st_sensors/st_sensors_core.c    |  33 ++--
+ drivers/iio/common/st_sensors/st_sensors_trigger.c |  16 +-
+ drivers/iio/gyro/st_gyro_core.c                    |  33 ++--
+ drivers/iio/magnetometer/st_magn_core.c            |  11 +-
+ drivers/iio/pressure/st_pressure_core.c            |  50 ++++--
+ include/linux/iio/common/st_sensors.h              |  23 ++-
+ 11 files changed, 271 insertions(+), 88 deletions(-)
 
 -- 
-Dmitry
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+2.14.0
