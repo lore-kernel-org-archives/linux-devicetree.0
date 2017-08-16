@@ -1,84 +1,78 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: hi6220: add acpu_sctrl
-Date: Wed, 16 Aug 2017 11:02:41 +0800
-Message-ID: <a3efeae1-834b-55f5-f5b5-cbe588b6fa8b@linaro.org>
-References: <1492478242-16146-1-git-send-email-zhangfei.gao@linaro.org>
- <1492478242-16146-2-git-send-email-zhangfei.gao@linaro.org>
- <5992F7FB.9080709@hisilicon.com> <20170815150138.GL22218@golem.pkh.me>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c: mediatek: Add i2c compatible for MediaTek
+ MT7622
+Date: Wed, 16 Aug 2017 11:08:54 +0800
+Message-ID: <1502852934.19230.45.camel@mtkswgap22>
+References: <1502802495-5064-1-git-send-email-jun.gao@mediatek.com>
+         <1502802495-5064-3-git-send-email-jun.gao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170815150138.GL22218-Bl/+WD2hOLMHaudFD6lisA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1502802495-5064-3-git-send-email-jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?Q2zDqW1lbnQgQsWTc2No?= <u@pkh.me>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2017-08-15 at 21:08 +0800, Jun Gao wrote:
+> From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Add i2c compatible for MT7622. Compare to MT8173 i2c controller,
+> MT7622 limits message numbers to 255, and does not support 4GB
+> DMA mode.
+> 
+> Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+you seemed missing a Reviewed-by tag from Joe.C
+
+http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009975.html
 
 
-On 2017年08月15日 23:01, Clément Bœsch wrote:
-> On Tue, Aug 15, 2017 at 02:32:43PM +0100, Wei Xu wrote:
->> Hi Zhangfei,
->>
->> On 2017/4/18 2:17, Zhangfei Gao wrote:
->>> Add acpu_sctrl clock node
->>>
->>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 6 ++++++
->>>   1 file changed, 6 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->>> index 470461d..710cc34 100644
->>> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->>> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->>> @@ -262,6 +262,12 @@
->>>   			#clock-cells = <1>;
->>>   		};
->>>   
->>> +		acpu_sctrl: acpu_sctrl@f7032000 {
-> I think the unit address is incorrect here (this value has been copied
-> from the pm controller while it should match the 1st one the reg).
-oops,
-Yes, you are right, will update.
->>> +			compatible = "hisilicon,hi6220-acpu-sctrl", "syscon";
->>> +			reg = <0x0 0xf6504000 0x0 0x1000>;
->>> +			#clock-cells = <1>;
->>> +		};
->>> +
->>>   		medianoc_ade: medianoc_ade@f4520000 {
->>>   			compatible = "syscon";
->>>   			reg = <0x0 0xf4520000 0x0 0x4000>;
->>>
-> Also I'm sorry I'm going to ask stupid questions:
->
-> - why 's' in "sctrl" while all the other node controllers declared around
->    seems to use "ctrl"?
-Just from hisilicon convention, sctrl means system control.
-acpu_ctrl seems better, more match spec.
-However clk part using this name already been merged, so will keep use this.
->
-> - is it possible to have access to the specs where those addresses can be
->    found? The only public doc I could find is the "Hi6220V100 Multi-Mode
->    Application Processor" one where this information doesn't seem present.
-https://github.com/96boards/documentation/tree/master/ConsumerEdition/HiKey/HardwareDocs
-Looks only this part.
->
-> - is there any work pending adding the pmu counters node (interrupt
->    GCI_SPI 99) ? AFAIK the ACPU controller added here can be used to enable
->    the counters.
-This patch is part of enabling core-sight, not touching pmu.
->> Thanks!
->> Applied to the hisilicon dt tree since the driver part is in the mainline now.
->>
-> Is this refering to https://github.com/hisilicon/linux-hisi/commits/next/dt64 ?
-Yes.
->
-> [...]
->
+> ---
+>  drivers/i2c/busses/i2c-mt65xx.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> index 9bedf0b..09d288c 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -172,6 +172,10 @@ struct mtk_i2c {
+>  	.max_comb_2nd_msg_len = 31,
+>  };
+>  
+> +static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
+> +	.max_num_msgs = 255,
+> +};
+> +
+>  static const struct mtk_i2c_compatible mt6577_compat = {
+>  	.quirks = &mt6577_i2c_quirks,
+>  	.pmic_i2c = 0,
+> @@ -190,6 +194,15 @@ struct mtk_i2c {
+>  	.support_33bits = 0,
+>  };
+>  
+> +static const struct mtk_i2c_compatible mt7622_compat = {
+> +	.quirks = &mt7622_i2c_quirks,
+> +	.pmic_i2c = 0,
+> +	.dcm = 1,
+> +	.auto_restart = 1,
+> +	.aux_len_reg = 1,
+> +	.support_33bits = 0,
+> +};
+> +
+>  static const struct mtk_i2c_compatible mt8173_compat = {
+>  	.pmic_i2c = 0,
+>  	.dcm = 1,
+> @@ -201,6 +214,7 @@ struct mtk_i2c {
+>  static const struct of_device_id mtk_i2c_of_match[] = {
+>  	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
+>  	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
+> +	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
+>  	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
+>  	{}
+>  };
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
