@@ -1,92 +1,707 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv2 0/3] arm64 xilinx zynqmp firmware interface
-Date: Thu, 17 Aug 2017 10:42:54 +0200
-Message-ID: <0560c79f-e461-6010-0628-e99ce0a1f8c6@xilinx.com>
-References: <cover.1502886277.git.michal.simek@xilinx.com>
- <43deeed7-32c8-7914-5f44-862ebbe14a3b@arm.com>
- <89e5469b-650e-64c7-1754-797b35bac523@xilinx.com>
- <a1970cb5-1cf1-d38a-3de3-c782c23fc8ac@arm.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v7] media: platform: Renesas IMR driver
+Date: Thu, 17 Aug 2017 10:44:04 +0200
+Message-ID: <c99e8291-32dd-f5e2-0b45-f10f8a21e3ef@xs4all.nl>
+References: <20170804180402.795437602@cogentembedded.com>
+ <8f99ccfa-620c-a85e-eba8-1d4fba7f42b2@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a1970cb5-1cf1-d38a-3de3-c782c23fc8ac-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <8f99ccfa-620c-a85e-eba8-1d4fba7f42b2@xs4all.nl>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: edgar.iglesias-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kevin Brodsky <kevin.brodsky-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.8.2017 09:52, Marc Zyngier wrote:
-> On 17/08/17 07:10, Michal Simek wrote:
->> On 16.8.2017 17:39, Marc Zyngier wrote:
->>> On 16/08/17 13:24, Michal Simek wrote:
->>>> Hi,
->>>>
->>>> xilinx is using this interface for very long time and we can't merge our
->>>> driver changes to Linux because of missing communication layer with
->>>> firmware. This interface was developed before scpi and scmi was
->>>> available. In connection to power management scpi and scmi are missing
->>>> pieces which we already use. There is a separate discussion how to
->>>> extend scmi to support all our use cases.
->>>
->>> So maybe we should wait and see where this discussion is going before we
->>> merge yet another firmware interface?
->>
->> It will take a lot of time when this discussion ends and I can't see any
->> benefit to hold all
+On 08/17/17 09:59, Hans Verkuil wrote:
+> Hi Sergei,
 > 
-> Well, so far, the benefit of this series is exactly nil, as the code it
-> brings is *unused*. It is impossible to review in isolation.
+> A quick review. I'm concentrating on the mesh ioctl, since that's what sets this
+> driver apart.
 > 
-
-Ok. I will add others drivers to this series that's not a problem.
-
-> In the meantime, you can continue finding out how *not* to have to merge
-> this code, and instead focus on using the infrastructure we already
-> have, or at least influence the infrastructure that is being designed.
-> It will be much better than dumping yet another slab of "I'm so
-> different" code that is going to ultimately bitrot.
-
-I am happy to look the better proposed way. SCPI is ancient and SCMI is
-replacement and not merged yet. We already had a call with arm and
-Sudeep was on it too where outcome from that was that we can't use that
-because it doesn't support what we need to support now.
-
-This code is compatible with current ARM SMC calling convention which
-allocate range for vendors.
-
-0xC2000000-0xC200FFFF SMC64: SiP Service Calls
-
-Provides interfaces to SoC implementation-specific services on this
-platform, for example secure platform initialization, configuration
-, and some power control services.
-
+> On 08/04/2017 08:03 PM, Sergei Shtylyov wrote:
 > 
->>
->>
->>>> This simply patch is not adding any power management features but only
->>>> adding minimum functionality which are needed for drivers.
->>>
->>> I don't get it. 600 lines of firmware interface that isn't used by
->>> anything? Or is it? Needed by which driver?
->>
->> I can send that drivers for review. pinctrl, fpga manager, nvmem driver,
->> clock, serdes phy and reset drivers.
->> But this driver need to come first because they depend on this.
-> My take is: no users, no use.
+> <snip>
 > 
-> And if you need to hack all these drivers to hook into your specific
-> firmware interface, I feel that you're doing it wrong. We have common
-> APIs for device drivers. If these APIs are not good enough, we extend
-> them. But designing drivers for a given firmware interface?
+>> Index: media_tree/Documentation/media/v4l-drivers/rcar_imr.rst
+>> ===================================================================
+>> --- /dev/null
+>> +++ media_tree/Documentation/media/v4l-drivers/rcar_imr.rst
+>> @@ -0,0 +1,372 @@
+>> +Renesas R-Car Image Renderer (IMR) Driver
+>> +=========================================
+>> +
+>> +This file documents some driver-specific aspects of the IMR driver, such as
+>> +the driver-specific ioctl.
+> 
+> Just drop the part ', such as...'.
+> 
+> Can you add a high-level description of the functionality here? Similar to what
+> you did in the bindings document.
+> 
+>> +
+>> +The ioctl reference
+>> +~~~~~~~~~~~~~~~~~~~
+>> +
+>> +See ``include/uapi/linux/rcar_imr.h`` for the data structures used.
+>> +
+>> +VIDIOC_IMR_MESH - Set mapping data
+>> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> +
+>> +Argument: ``struct imr_map_desc``
+>> +
+>> +**Description**:
+>> +
+>> +This ioctl sets up the mesh through which the input frames will be transformed
+>> +into the output frames. The mesh can be strictly rectangular (when
+>> +``IMR_MAP_MESH`` bit is set in ``imr_map_desc::type``) or arbitrary (when that
+>> +bit is not set).
+> 
+> Wouldn't something like 'IMR_MAP_RECTANGULAR' be much more descriptive than _MESH?
+> There is nothing in the name _MESH to indicate that this switches the data to
+> rectangles.
+> 
+>> +
+>> +A rectangular mesh consists of the imr_mesh structure followed by M*N vertex
+>> +objects (where M is ``imr_mesh::rows`` and N is ``imr_mesh::columns``).
+>> +In case either ``IMR_MAP_AUTOSG`` or ``IMR_MAP_AUTODG`` (not both) bits are
+>> +set in ``imr_map_desc::type``, ``imr_mesh::{x|y}0`` specify the coordinates
+>> +of the top left corner of the auto-generated mesh and ``imr_mesh::d{x|y}``
+>> +specify the mesh's X/Y steps.
+> 
+> So if the auto bits are set, then there are no vertex objects? Since it's auto
+> generated by the hardware?
+> 
+> I believe we discussed in the past whether 'type' should be split in a 'type'
+> and 'flags' field.
+> 
+>> +
+>> +An arbitrary mesh consists of the imr_vbo structure followed by N triangle
+>> +objects (where N is ``imr_vbo::num``), consisting of 3 vertex objects each.
+>> +Setting ``IMR_MAP_AUTODG`` and ``IMR_MAP_AUTOSG`` bits in
+>> +``imr_map_desc::type``) isn't allowed for this type of mesh.
+>> +
+>> +The vertex object has a complex structure depending on some of the bits in
+>> +``imr_map_desc::type``:
+>> +
+>> +============  ============  ==============  ==============  ===========================
+>> +IMR_MAP_CLCE  IMR_MAP_LUCE  IMR_MAP_AUTODG  IMR_MAP_AUTOSG  Vertex structure variant
+> 
+> You should explain the meaning of these bits in this section. I.e., what does
+> CLCE or AUTODG stand for?
+> 
+>> +============  ============  ==============  ==============  ===========================
+>> +\                                                           ``imr_full_coord``
+>> +\                                           X               ``imr_dst_coord``
+>> +\                           X                               ``imr_src_coord``
+>> +\             X                                             ``imr_full_coord_any_correct``
+>> +\             X                             X               ``imr_auto_coord_any_correct``
+>> +\             X             X                               ``imr_auto_coord_any_crrect``
+> 
+> crrect -> correct
+> 
+>> +X                                                           ``imr_full_coord_any_correct``
+>> +X                                           X               ``imr_auto_coord_any_correct``
+>> +X                           X                               ``imr_auto_coord_any_correct``
+>> +X             X                                             ``imr_full_coord_both_correct``
+>> +X             X                             X               ``imr_auto_coord_both_correct``
+>> +X             X             X                               ``imr_auto_coord_both_correct``
+>> +============  ============  ==============  ==============  ===========================
+>> +
+>> +The luma correction is calculated according to the following formula (where
+>> +``Y`` is the luma value after texture mapping, ``Y'`` is the luma value after
+>> +luma correction, ``lscal`` and ``lofst`` are the luma correction scale and
+>> +offset taken from ``struct imr_luma_correct``, ``YLDPO`` is a luma correction
+>> +scale decimal point position specified by ``IMR_MAP_YLDPO(n)``): ::
+>> +
+>> +	Y' = ((Y * lscal) >> YLDPO) + lofst
+>> +
+>> +The chroma correction is calculated according to the following formula (where
+>> +``U/V`` are the chroma values after texture mapping, ``U'/V'`` are the chroma
+>> +values after chroma correction, ``ubscl/vrscl`` and ``ubofs/vrofs`` are the
+>> +U/V value chroma correction scales and offsets taken from
+>> +``struct imr_chroma_correct``, ``UBDPO/VRDPO`` are the chroma correction scale
+>> +decimal point positions specified by ``IMR_MAP_{UBDPO|VRDPO}(n)``): ::
+>> +
+>> +	U' = ((U + ubofs) * ubscl) >> UBDPO
+>> +	V' = ((V + vrofs) * vrscl) >> VRDPO
+>> +
+>> +**Return value**:
+>> +
+>> +On success 0 is returned. On error -1 is returned and ``errno`` is set
+>> +appropriately.
+>> +
+>> +**Example code**:
+>> +
+>> +Below is an example code for constructing the meshes: ``imr_map_create()``
+>> +constructs an arbitraty mesh, ``imr_map_mesh_src()`` function constructs
+> 
+> arbitrary
+> 
+>> +a rectangular mesh with the auto-generated destination coordinates.
+>> +
+>> +.. code-block:: C
+>> +
+>> + #include <malloc.h>
+>> + #include <math.h>
+>> + #include <linux/rcar_imr.h>
+>> +
+>> + /* IMR device data */
+>> + struct imr_device {
+>> + 	/* V4L2 file decriptor */
+> 
+> descriptor
+> 
+>> + 	int			vfd;
+>> +
+>> + 	/* input/output buffers dimensions */
+>> + 	int			w, h, W, H;
+>> + };
+>> +
+>> + #define IMR_SRC_SUBSAMPLE	5
+>> + #define IMR_DST_SUBSAMPLE	2
+>> + #define IMR_COORD_THRESHOLD	(128 * 128 * (1 << 2 * IMR_DST_SUBSAMPLE))
+>> +
+>> + /* find the longest side (index) */
+>> + static void find_longest_side(int n, __s16 xy0, __s16 xy1, int *max, int *side)
+>> + {
+>> + 	int t = xy1 - xy0;
+>> +
+>> + 	t *= t;
+>> + 	if (*max < t) {
+>> + 		*max  = t;
+>> + 		*side = n;
+>> + 	}
+>> + }
+>> +
+>> + /* recursively split a triangle until it can be passed to IMR */
+>> + static int split_triangle(struct imr_full_coord *coord,
+>> + 			   __s16 *xy0, __s16 *xy1, __s16 *xy2,
+>> + 			   __u16 *uv0, __u16 *uv1, __u16 *uv2, int avail)
+>> + {
+>> + 	int	max = 0, k = 0;
+>> +
+>> + 	/* we need to have at least one available triangle */
+>> + 	if (avail < 1)
+>> + 		return 0;
+>> +
+>> + 	find_longest_side(0, xy0[0], xy1[0], &max, &k);
+>> + 	find_longest_side(0, xy0[1], xy1[1], &max, &k);
+>> + 	find_longest_side(1, xy1[0], xy2[0], &max, &k);
+>> + 	find_longest_side(1, xy1[1], xy2[1], &max, &k);
+>> + 	find_longest_side(2, xy2[0], xy0[0], &max, &k);
+>> + 	find_longest_side(2, xy2[1], xy0[1], &max, &k);
+>> +
+>> + 	/* if value exceeds the threshold, do splitting */
+>> + 	if (max >= IMR_COORD_THRESHOLD) {
+>> + 		__s16	XY[2];
+>> + 		__u16	UV[2];
+>> + 		int	n;
+>> +
+>> + 		switch (k) {
+>> + 		case 0:
+>> + 			/* split triangle along edge 0 - 1 */
+>> + 			XY[0] = (xy0[0] + xy1[0]) / 2;
+>> + 			XY[1] = (xy0[1] + xy1[1]) / 2;
+>> + 			UV[0] = (uv0[0] + uv1[0]) / 2;
+>> + 			UV[1] = (uv0[1] + uv1[1]) / 2;
+>> + 			n = split_triangle(coord, xy0, XY, xy2, uv0, UV, uv2,
+>> + 					   avail);
+>> + 			n += split_triangle(coord + 3 * n, XY, xy1, xy2,
+>> + 					    UV, uv1, uv2, avail - n);
+>> + 			break;
+>> + 		case 1:
+>> + 			/* split triangle along edge 1 - 2 */
+>> + 			XY[0] = (xy1[0] + xy2[0]) / 2;
+>> + 			XY[1] = (xy1[1] + xy2[1]) / 2;
+>> + 			UV[0] = (uv1[0] + uv2[0]) / 2;
+>> + 			UV[1] = (uv1[1] + uv2[1]) / 2;
+>> + 			n = split_triangle(coord, xy1, XY, xy0, uv1, UV, uv0,
+>> + 					   avail);
+>> + 			n += split_triangle(coord + 3 * n, XY, xy2, xy0,
+>> + 					    UV, uv2, uv0, avail - n);
+>> + 			break;
+>> + 		default:
+>> + 			/* split triangle along edge 2 - 0 */
+>> + 			XY[0] = (xy2[0] + xy0[0]) / 2;
+>> + 			XY[1] = (xy2[1] + xy0[1]) / 2;
+>> + 			UV[0] = (uv2[0] + uv0[0]) / 2;
+>> + 			UV[1] = (uv2[1] + uv0[1]) / 2;
+>> + 			n = split_triangle(coord, xy2, XY, xy1, uv2, UV, uv1,
+>> + 					   avail);
+>> + 			n += split_triangle(coord + 3 * n, XY, xy0, xy1,
+>> + 					    UV, uv0, uv1, avail - n);
+>> + 		}
+>> +
+>> + 		/* return number of triangles added */
+>> + 		return n;
+>> + 	} else {
+>> + 		/* no need to split a rectangle; save coordinates */
+>> + 		coord[0].src.u = uv0[0];
+>> + 		coord[0].src.v = uv0[1];
+>> + 		coord[0].dst.x = xy0[0];
+>> + 		coord[0].dst.y = xy0[1];
+>> + 		coord[1].src.u = uv1[0];
+>> + 		coord[1].src.v = uv1[1];
+>> + 		coord[1].dst.x = xy1[0];
+>> + 		coord[1].dst.y = xy1[1];
+>> + 		coord[2].src.u = uv2[0];
+>> + 		coord[2].src.v = uv2[1];
+>> + 		coord[2].dst.x = xy2[0];
+>> + 		coord[2].dst.y = xy2[1];
+>> +
+>> + 		/* single triangle is created */
+>> + 		return 1;
+>> + 	}
+>> + }
+>> +
+>> + /* process single triangle */
+>> + static int process_triangle(struct imr_full_coord *coord, __u16 *uv, __s16 *xy,
+>> + 			     int avail)
+>> + {
+>> + 	/* cull invisible triangle first */
+>> + 	if ((xy[2] - xy[0]) * (xy[5] - xy[3]) >=
+>> + 	    (xy[3] - xy[1]) * (xy[4] - xy[2])) {
+>> + 		return 0;
+>> + 	} else {
+>> + 		/* recursively split triangle into smaller ones */
+>> + 		return split_triangle(coord, xy + 0, xy + 2, xy + 4,
+>> + 				      uv + 0, uv + 2, uv + 4, avail);
+>> + 	}
+>> + }
+>> +
+>> + /* clamp texture coordinates to not exceed input dimensions */
+>> + static void clamp_texture(__u16 *uv, float *UV, int w, int h)
+>> + {
+>> + 	float t;
+>> +
+>> + 	t = UV[0];
+>> + 	if (t < 0)
+>> + 		uv[0] = 0;
+>> + 	t *= w;
+>> + 	if (t > w - 1)
+>> + 		uv[0] = w - 1;
+>> + 	else
+>> + 		uv[0] = round(t);
+>> +
+>> + 	t = UV[1];
+>> + 	if (t < 0)
+>> + 		uv[1] = 0;
+>> + 	t *= h;
+>> + 	if (t > h - 1)
+>> + 		uv[1] = h - 1;
+>> + 	else
+>> + 		uv[1] = round(t);
+>> + }
+>> +
+>> + /* clamp vertex coordinates */
+>> + static int clamp_vertex(__s16 *xy, float *XY, int W, int H)
+>> + {
+>> + 	float x = round(XY[0] * W), y = round(XY[1] * H), z = XY[2];
+>> +
+>> + 	if (z < 0.1)
+>> + 		return 0;
+>> + 	if (x < -(256 << IMR_DST_SUBSAMPLE) || x >= W + (256 << IMR_DST_SUBSAMPLE))
+>> + 		return 0;
+>> + 	if (y < -(256 << IMR_DST_SUBSAMPLE) || y >= H + (256 << IMR_DST_SUBSAMPLE))
+>> + 		return 0;
+>> +
+>> + 	xy[0] = (__s16)x;
+>> + 	xy[1] = (__s16)y;
+>> +
+>> + 	return 1;
+>> + }
+>> +
+>> + /* create arbitrary mesh */
+>> + struct imr_map_desc *imr_map_create(struct imr_device *dev,
+>> + 				     float *uv, float *xy, int n)
+>> + {
+>> + 	struct imr_map_desc	*desc;
+>> + 	struct imr_vbo		*vbo;
+>> + 	struct imr_full_coord	*coord;
+>> + 	int			j, m, w, h, W, H;
+>> +
+>> + 	/* create a configuration structure */
+>> + 	desc = malloc(sizeof(*desc) + sizeof(*vbo) + 3 * n * sizeof(*coord));
+>> + 	if (!desc)
+>> + 		return NULL;
+>> +
+>> + 	/* fill-in VBO coordinates */
+>> + 	vbo = (void *)(desc + 1);
+>> + 	coord = (void *)(vbo + 1);
+>> +
+>> + 	/* calculate source/destination dimensions in subpixel coordinates */
+>> + 	w = dev->w << IMR_SRC_SUBSAMPLE;
+>> + 	h = dev->h << IMR_SRC_SUBSAMPLE;
+>> + 	W = dev->W << IMR_DST_SUBSAMPLE;
+>> + 	H = dev->H << IMR_DST_SUBSAMPLE;
+>> +
+>> + 	/* put at most N triangles into mesh descriptor */
+>> + 	for (j = 0, m = 0; j < n && m < n; j++, xy += 9, uv += 6) {
+>> + 		__u16	UV[6];
+>> + 		__s16	XY[6];
+>> + 		int	k;
+>> +
+>> + 		/* translate model coordinates to fixed-point */
+>> + 		if (!clamp_vertex(XY + 0, xy + 0, W, H))
+>> + 			continue;
+>> + 		if (!clamp_vertex(XY + 2, xy + 3, W, H))
+>> + 			continue;
+>> + 		if (!clamp_vertex(XY + 4, xy + 6, W, H))
+>> + 			continue;
+>> +
+>> + 		/* translate source coordinates */
+>> + 		clamp_texture(UV + 0, uv + 0, w, h);
+>> + 		clamp_texture(UV + 2, uv + 2, w, h);
+>> + 		clamp_texture(UV + 4, uv + 4, w, h);
+>> +
+>> + 		/* process single triangle */
+>> + 		k = process_triangle(coord, UV, XY, n - m);
+>> + 		if (k != 0) {
+>> + 			/* advance vertex coordinates pointer */
+>> + 			coord += 3 * k;
+>> + 			m += k;
+>> + 		}
+>> + 	}
+>> +
+>> + 	/* put number of triangles in VBO */
+>> + 	vbo->num = m;
+>> +
+>> + 	/* fill-in descriptor */
+>> + 	desc->type = IMR_MAP_UVDPOR(IMR_SRC_SUBSAMPLE) |
+>> + 		     (IMR_DST_SUBSAMPLE ? IMR_MAP_DDP : 0);
+>> + 	desc->size = (void *)coord - (void *)vbo;
+>> + 	desc->data = (__u64)vbo;
+>> +
+>> + 	return desc;
+>> + }
+>> +
+>> + /* create rectangular mesh */
+>> + struct imr_map_desc *imr_map_mesh_src(struct imr_device *dev, float *uv,
+>> + 				       int rows, int columns,
+>> +				       float x0, float y0, float dx, float dy)
+>> + {
+>> + 	struct imr_map_desc	*desc;
+>> + 	struct imr_mesh		*mesh;
+>> + 	struct imr_src_coord	*coord;
+>> + 	int			k, w, h, W, H;
+>> +
+>> + 	/* create a configuration structure */
+>> + 	desc = malloc(sizeof(*desc) + sizeof(*mesh) + rows * columns *
+>> +   		      sizeof(*coord));
+>> + 	if (!desc)
+>> + 		return NULL;
+>> +
+>> + 	/* fill-in rectangular mesh coordinates */
+>> + 	mesh = (void *)(desc + 1);
+>> + 	coord = (void *)(mesh + 1);
+>> +
+>> + 	/* calculate source/destination dimensions in subpixel coordinates */
+>> + 	w = dev->w << IMR_SRC_SUBSAMPLE;
+>> + 	h = dev->h << IMR_SRC_SUBSAMPLE;
+>> + 	W = dev->W << IMR_DST_SUBSAMPLE;
+>> + 	H = dev->H << IMR_DST_SUBSAMPLE;
+>> +
+>> + 	/* set mesh parameters */
+>> + 	mesh->rows = rows;
+>> + 	mesh->columns = columns;
+>> + 	mesh->x0 = (__u16)round(x0 * W);
+>> + 	mesh->y0 = (__u16)round(y0 * H);
+>> + 	mesh->dx = (__u16)round(dx * W);
+>> + 	mesh->dy = (__u16)round(dy * H);
+>> +
+>> + 	/* put mesh coordinates */
+>> + 	for (k = 0; k < rows * columns; k++, uv += 2, coord++) {
+>> + 		__u16	UV[2];
+>> +
+>> + 		/* transform point into texture coordinates */
+>> + 		clamp_texture(UV, uv, w, h);
+>> +
+>> + 		/* fill the mesh */
+>> + 		coord->u = UV[0];
+>> + 		coord->v = UV[1];
+>> + 	}
+>> +
+>> + 	/* fill-in descriptor */
+>> + 	desc->type = IMR_MAP_MESH | IMR_MAP_AUTODG |
+>> + 		     IMR_MAP_UVDPOR(IMR_SRC_SUBSAMPLE) |
+>> + 		     (IMR_DST_SUBSAMPLE ? IMR_MAP_DDP : 0);
+>> + 	desc->size = (void *)coord - (void *)mesh;
+>> + 	desc->data = (__u64)mesh;
+>> +
+>> + 	return desc;
+>> + }
+> 
+> <snip>
+> 
+>> Index: media_tree/include/uapi/linux/rcar_imr.h
+>> ===================================================================
+>> --- /dev/null
+>> +++ media_tree/include/uapi/linux/rcar_imr.h
+>> @@ -0,0 +1,182 @@
+>> +/*
+>> + * rcar_imr.h -- R-Car IMR-LX4 Driver UAPI
+>> + *
+>> + * Copyright (C) 2016-2017 Cogent Embedded, Inc. <source@cogentembedded.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +
+>> +#ifndef __RCAR_IMR_H
+>> +#define __RCAR_IMR_H
+>> +
+>> +#include <linux/videodev2.h>
+>> +
+>> +/*******************************************************************************
+>> + * Mapping specification descriptor
+>> + ******************************************************************************/
+>> +
+>> +struct imr_map_desc {
+>> +	/* bitmask of the mapping type (see below) */
+>> +	__u32			type;
+>> +
+>> +	/* total data size */
+>> +	__u32			size;
+>> +
+>> +	/* data user-pointer */
+>> +	__u64			data;
+>> +} __attribute__((packed));
+>> +
+>> +/* regular mesh specification */
+>> +#define IMR_MAP_MESH		(1 << 0)
+>> +
+>> +/* auto-generated source coordinates */
+>> +#define IMR_MAP_AUTOSG		(1 << 1)
+>> +
+>> +/* auto-generated destination coordinates */
+>> +#define IMR_MAP_AUTODG		(1 << 2)
+>> +
+>> +/* luma correction flag */
+>> +#define IMR_MAP_LUCE		(1 << 3)
+>> +
+>> +/* chroma correction flag */
+>> +#define IMR_MAP_CLCE		(1 << 4)
+>> +
+>> +/* vertex clockwise-mode order */
+>> +#define IMR_MAP_TCM		(1 << 5)
+>> +
+>> +/* source coordinate decimal point position */
+>> +#define __IMR_MAP_UVDPOR_SHIFT	8
+>> +#define __IMR_MAP_UVDPOR(v)	(((v) >> __IMR_MAP_UVDPOR_SHIFT) & 0x7)
+>> +#define IMR_MAP_UVDPOR(n)	(((n) & 0x7) << __IMR_MAP_UVDPOR_SHIFT)
+>> +
+>> +/* destination coordinate sub-pixel mode */
+>> +#define IMR_MAP_DDP		(1 << 11)
+>> +
+>> +/* luminance correction scale decimal point position */
+>> +#define __IMR_MAP_YLDPO_SHIFT	12
+>> +#define __IMR_MAP_YLDPO(v)	(((v) >> __IMR_MAP_YLDPO_SHIFT) & 0x7)
+>> +#define IMR_MAP_YLDPO(n)	(((n) & 0x7) << __IMR_MAP_YLDPO_SHIFT)
+>> +
+>> +/* chroma (U) correction scale decimal point position */
+>> +#define __IMR_MAP_UBDPO_SHIFT	15
+>> +#define __IMR_MAP_UBDPO(v)	(((v) >> __IMR_MAP_UBDPO_SHIFT) & 0x7)
+>> +#define IMR_MAP_UBDPO(n)	(((n) & 0x7) << __IMR_MAP_UBDPO_SHIFT)
+>> +
+>> +/* chroma (V) correction scale decimal point position */
+>> +#define __IMR_MAP_VRDPO_SHIFT	18
+>> +#define __IMR_MAP_VRDPO(v)	(((v) >> __IMR_MAP_VRDPO_SHIFT) & 0x7)
+>> +#define IMR_MAP_VRDPO(n)	(((n) & 0x7) << __IMR_MAP_VRDPO_SHIFT)
+> 
+> You need to document all these bits in the documentation. I.e. TCM and DDP
+> are not currently documented.
+> 
+> It helps a lot to understand these defines if the documentation and the
+> comments explain what the abbreviations mean. E.g. what does DDP stand
+> for, or YLDPO? It's an alphabet soup right now.
+> 
+>> +
+>> +/* regular mesh specification */
+>> +struct imr_mesh {
+> 
+> How about imr_rectangles? There is no indication in the struct name that this
+> describes a rectangle.
+> 
+>> +	/* rectangular mesh size */
+>> +	__u16			rows, columns;
+>> +
+>> +	/* auto-generated mesh parameters */
+>> +	__u16			x0, y0, dx, dy;
+>> +} __attribute__((packed));
+>> +
+>> +/* vertex-buffer-object (VBO) descriptor */
+>> +struct imr_vbo {
+>> +	/* number of triangles */
+>> +	__u16			num;
+>> +} __attribute__((packed));
+>> +
+>> +/*******************************************************************************
+>> + * Vertex-related structures
+>> + ******************************************************************************/
+>> +
+>> +/* source coordinates */
+>> +struct imr_src_coord {
+>> +	/* vertical, horizontal */
+>> +	__u16			v, u;
+> 
+> Confusing: why isn't this 'v, h;' given the comment? Or does this refer to
+> chroma (U and V)? And what does 'vertical, horizontal' mean anyway? Vertical
+> what?
+> 
+>> +} __attribute__((packed));
+>> +
+>> +/* destination coordinates */
+>> +struct imr_dst_coord {
+>> +	/* vertical, horizontal */
+> 
+> Confusing comment as well. I assume y and x are simply coordinates of a vertex?
+> Just say so. This comment doesn't mean anything.
+> 
+>> +	__u16			y, x;
+>> +} __attribute__((packed));
+>> +
+>> +/* luma correction parameters */
+>> +struct imr_luma_correct {
+>> +	/* offset */
+>> +	__s8			lofst;
+>> +
+>> +	/* scale */
+>> +	__u8			lscal;
+>> +
+>> +	__u16			reserved;
+> 
+> Why is this reserved? Is that for padding? If so, then add a comment that mentions
+> that.
+> 
+>> +} __attribute__((packed));
+>> +
+>> +/* chroma correction parameters */
+>> +struct imr_chroma_correct {
+>> +	/* V value offset */
+>> +	__s8			vrofs;
+>> +
+>> +	/* V value scale */
+>> +	__u8			vrscl;
+>> +
+>> +	/* U value offset */
+>> +	__s8			ubofs;
+>> +
+>> +	/* V value scale */
+>> +	__u8			ubscl;
+>> +} __attribute__((packed));
+>> +
+>> +/* fully specified source/destination coordinates */
+>> +struct imr_full_coord {
+>> +	struct imr_src_coord	src;
+>> +	struct imr_dst_coord	dst;
+>> +} __attribute__((packed));
+>> +
+>> +/* auto-generated coordinates with luma or chroma correction */
+>> +struct imr_auto_coord_any_correct {
+>> +	union {
+>> +		struct imr_src_coord src;
+>> +		struct imr_dst_coord dst;
+> 
+> Why have separate imr_src_coord and imr_dst_coord structs? Why not just
+> call it imr_coord? I think that is part of the reason of my confusion
+> regarding understanding those structs.
+> 
+> The field name here indicates whether it is a source or destination,
+> the coordinate information is the same for both.
+> 
+>> +	};
+>> +	union {
+>> +		struct imr_luma_correct luma;
+>> +		struct imr_chroma_correct chroma;
+>> +	};
+>> +} __attribute__((packed));
+>> +
+>> +/* auto-generated coordinates with both luma and chroma correction */
+>> +struct imr_auto_coord_both_correct {
+>> +	union {
+>> +		struct imr_src_coord src;
+>> +		struct imr_dst_coord dst;
+>> +	};
+>> +	struct imr_luma_correct luma;
+>> +	struct imr_chroma_correct chroma;
+>> +} __attribute__((packed));
+>> +
+>> +/* fully specified coordinates with luma or chroma correction */
+>> +struct imr_full_coord_any_correct {
+>> +	struct imr_src_coord src;
+>> +	struct imr_dst_coord dst;
+>> +	union {
+>> +		struct imr_luma_correct luma;
+>> +		struct imr_chroma_correct chroma;
+>> +	};
+>> +} __attribute__((packed));
+>> +
+>> +/* fully specified coordinates with both luma and chroma correction */
+>> +struct imr_full_coord_both_correct {
+>> +	struct imr_src_coord src;
+>> +	struct imr_dst_coord dst;
+>> +	struct imr_luma_correct luma;
+>> +	struct imr_chroma_correct chroma;
+>> +} __attribute__((packed));
+>> +
+>> +/*******************************************************************************
+>> + * Private IOCTL codes
+>> + ******************************************************************************/
+>> +
+>> +#define VIDIOC_IMR_MESH _IOW('V', BASE_VIDIOC_PRIVATE + 0, struct imr_map_desc)
+>> +
+>> +#endif /* __RCAR_IMR_H */
+>>
+> 
+> Do you know the typical number of rectangles or triangles that are passed to this
+> function? Is there an upper hardware limit?
+> 
+> I ask, because I wonder whether using a fixed vertex struct like imr_full_coord_both_correct
+> for all variations isn't much simpler. The driver just ignores the fields it doesn't
+> need in that case.
+> 
+> Yes, you get some memory overhead, but the code for both userspace and kernelspace
+> will be much simpler.
 
-Let me send that users of this.
+I just had a brainwave: rather than making these complicated structure variants,
+why not just do this (just thrown together, I didn't look at alignment etc.):
 
-Thanks,
-Michal
+struct imr_map_desc {
+	/* bitmask of the mapping type (see below) */
+	__u32			type;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	/* total data size */
+	__u32			size;
+
+	/* number of vertices */
+	__u32			vertices;
+
+	/* rectangular mesh size (ignored for triangles) */
+	__u16			rows, columns;
+
+	/* auto-generated mesh parameters (ignored if not auto-generated) */
+	__u16			x0, y0, dx, dy;
+
+	/* data user-pointer */
+	__u64			src_coords;
+	__u64			dst_coords;
+	__u64			luma_corr;
+	__u64			chroma_corr;
+} __attribute__((packed));
+
+Just leave the corresponding data pointer 0 when not needed, and otherwise
+these data pointers point to a struct imr_coord, imr_luma_corr or imr_chroma_corr
+arrays. Much simpler and still memory efficient.
+
+BTW, I prefer either _corr or _correction over _correct. 'correct' is confusing
+since it is also a normal english word and it is not obvious that it is an
+abbreviation for 'correction'.
+
+Regards,
+
+	Hans
