@@ -1,671 +1,271 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v7] media: platform: Renesas IMR driver
-Date: Thu, 17 Aug 2017 09:59:59 +0200
-Message-ID: <8f99ccfa-620c-a85e-eba8-1d4fba7f42b2@xs4all.nl>
-References: <20170804180402.795437602@cogentembedded.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH 6/7] mmc: sdhci-omap: Add OMAP SDHCI driver
+Date: Thu, 17 Aug 2017 13:29:18 +0530
+Message-ID: <7822a805-3379-1d08-5a01-f422ab23f863@ti.com>
+References: <20170807160142.12134-1-kishon@ti.com>
+ <20170807160142.12134-7-kishon@ti.com>
+ <a45cf402-26c9-d9d0-1ca0-cbeeddad388c@intel.com>
+ <46568bdf-c11f-e04b-edd4-25d5363ae504@ti.com>
+ <0b109f07-f7f3-1a12-0c65-45d96eb23b13@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170804180402.795437602@cogentembedded.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>, Rob Herring <robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0b109f07-f7f3-1a12-0c65-45d96eb23b13@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
+Cc: nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Adrian,
 
-A quick review. I'm concentrating on the mesh ioctl, since that's what sets this
-driver apart.
+On Thursday 17 August 2017 12:13 PM, Adrian Hunter wrote:
+> On 17/08/17 08:57, Kishon Vijay Abraham I wrote:
+>> Hi Adrian,
+>>
+>> On Tuesday 15 August 2017 01:52 PM, Adrian Hunter wrote:
+>>> On 07/08/17 19:01, Kishon Vijay Abraham I wrote:
+>>>> Create a new sdhci-omap driver to configure the eMMC/SD/SDIO controller
+>>>> in TI's OMAP SoCs making use of the SDHCI core library. For OMAP specific
+>>>> configurations, populate sdhci_ops with OMAP specific callbacks and use
+>>>> SDHCI quirks.
+>>>> Enable only high speed mode for both SD and eMMC here and add other
+>>>> UHS mode support later.
+>>>
+>>> I only have a couple of comments below.
+>>>
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  drivers/mmc/host/Kconfig      |  12 +
+>>>>  drivers/mmc/host/Makefile     |   1 +
+>>>>  drivers/mmc/host/sdhci-omap.c | 593 ++++++++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 606 insertions(+)
+>>>>  create mode 100644 drivers/mmc/host/sdhci-omap.c
+>>>>
+>>>> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+>>>> index 5755b69f2f72..9aa7e5ce43ba 100644
+>>>> --- a/drivers/mmc/host/Kconfig
+>>>> +++ b/drivers/mmc/host/Kconfig
+>>>> @@ -871,3 +871,15 @@ config MMC_SDHCI_XENON
+>>>>  	  This selects Marvell Xenon eMMC/SD/SDIO SDHCI.
+>>>>  	  If you have a controller with this interface, say Y or M here.
+>>>>  	  If unsure, say N.
+>>>> +
+>>>> +config MMC_SDHCI_OMAP
+>>>> +	tristate "TI SDHCI Controller Support"
+>>>> +	depends on MMC_SDHCI_PLTFM
+>>>> +	help
+>>>> +	  This selects the Secure Digital Host Controller Interface (SDHCI)
+>>>> +	  support present in TI's DRA7 SOCs. The controller supports
+>>>> +	  SD/MMC/SDIO devices.
+>>>> +
+>>>> +	  If you have a controller with this interface, say Y or M here.
+>>>> +
+>>>> +	  If unsure, say N.
+>>>> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+>>>> index 4d4547116311..30fb8b0fd0e1 100644
+>>>> --- a/drivers/mmc/host/Makefile
+>>>> +++ b/drivers/mmc/host/Makefile
+>>>> @@ -82,6 +82,7 @@ obj-$(CONFIG_MMC_SDHCI_MSM)		+= sdhci-msm.o
+>>>>  obj-$(CONFIG_MMC_SDHCI_ST)		+= sdhci-st.o
+>>>>  obj-$(CONFIG_MMC_SDHCI_MICROCHIP_PIC32)	+= sdhci-pic32.o
+>>>>  obj-$(CONFIG_MMC_SDHCI_BRCMSTB)		+= sdhci-brcmstb.o
+>>>> +obj-$(CONFIG_MMC_SDHCI_OMAP)		+= sdhci-omap.o
+>>>>  
+>>>>  ifeq ($(CONFIG_CB710_DEBUG),y)
+>>>>  	CFLAGS-cb710-mmc	+= -DDEBUG
+>>>> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+>>>> new file mode 100644
+>>>> index 000000000000..c067c428a0cd
+>>>> --- /dev/null
+>>>> +++ b/drivers/mmc/host/sdhci-omap.c
+>>>> @@ -0,0 +1,593 @@
+>>>> +/*
+>>>> + * SDHCI Controller driver for TI's OMAP SoCs
+>>>> + *
+>>>> + * Copyright (C) 2016-2017 Texas Instruments Incorporated - http://www.ti.com
+>>>> + *
+>>>> + * Authors: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modify
+>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>> + * published by the Free Software Foundation.
+>>>> + */
+>>>> +
+>>>> +#include <linux/delay.h>
+>>>> +#include <linux/mmc/slot-gpio.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/of.h>
+>>>> +#include <linux/of_device.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/pm_runtime.h>
+>>>> +#include <linux/regulator/consumer.h>
+>>>> +
+>>>> +#include "sdhci-pltfm.h"
+>>>> +
+>>>> +#define SDHCI_OMAP_CON		0x12c
+>>>> +#define CON_DW8			BIT(5)
+>>>> +#define CON_DMA_MASTER		BIT(20)
+>>>> +#define CON_INIT		BIT(1)
+>>>> +#define CON_OD			BIT(0)
+>>>> +
+>>>> +#define SDHCI_OMAP_CMD		0x20c
+>>>> +
+>>>> +#define SDHCI_OMAP_HCTL		0x228
+>>>> +#define HCTL_SDBP		BIT(8)
+>>>> +#define HCTL_SDVS_SHIFT		9
+>>>> +#define HCTL_SDVS_MASK		(0x7 << HCTL_SDVS_SHIFT)
+>>>> +#define HCTL_SDVS_33		(0x7 << HCTL_SDVS_SHIFT)
+>>>> +#define HCTL_SDVS_30		(0x6 << HCTL_SDVS_SHIFT)
+>>>> +#define HCTL_SDVS_18		(0x5 << HCTL_SDVS_SHIFT)
+>>>> +
+>>>> +#define SDHCI_OMAP_SYSCTL	0x22c
+>>>> +#define SYSCTL_CEN		BIT(2)
+>>>> +#define SYSCTL_CLKD_SHIFT	6
+>>>> +#define SYSCTL_CLKD_MASK	0x3ff
+>>>> +
+>>>> +#define SDHCI_OMAP_STAT		0x230
+>>>> +
+>>>> +#define SDHCI_OMAP_IE		0x234
+>>>> +#define INT_CC_EN		BIT(0)
+>>>> +
+>>>> +#define SDHCI_OMAP_AC12		0x23c
+>>>> +#define AC12_V1V8_SIGEN		BIT(19)
+>>>> +
+>>>> +#define SDHCI_OMAP_CAPA		0x240
+>>>> +#define CAPA_VS33		BIT(24)
+>>>> +#define CAPA_VS30		BIT(25)
+>>>> +#define CAPA_VS18		BIT(26)
+>>>> +
+>>>> +#define MMC_TIMEOUT		1		/* 1 msec */
+>>>
+>>> This name "MMC_TIMEOUT" is too generic.  SDHCI_OMAP_TIMEOUT would be better.
+>>
+>> okay.
+>>>
+>>>> +
+>>>> +#define SYSCTL_CLKD_MAX		0x3FF
+>>>> +
+>>>> +#define IOV_1V8			1800000		/* 180000 uV */
+>>>> +#define IOV_3V0			3000000		/* 300000 uV */
+>>>> +#define IOV_3V3			3300000		/* 330000 uV */
+>>>> +
+>>>> +struct sdhci_omap_data {
+>>>> +	u32 offset;
+>>>> +};
+>>>> +
+>>>> +struct sdhci_omap_host {
+>>>> +	void __iomem		*base;
+>>>> +	struct device		*dev;
+>>>> +	struct	regulator	*pbias;
+>>>> +	bool			pbias_enabled;
+>>>> +	struct sdhci_host	*host;
+>>>> +	unsigned int		flags;
+>>>> +
+>>>> +#define SDHCI_OMAP_SUPPORTS_DUAL_VOLT	BIT(0)
+>>>> +#define SDHCI_OMAP_NO_1_8_V		BIT(1)
+>>>> +
+>>>> +	u8			power_mode;
+>>>> +	bool			io_3_3v_support;
+>>>> +};
+>>>> +
+>> .
+>> .
+>> <<snip>>
+>> .
+>> .
+>>>> +static int sdhci_omap_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	int ret;
+>>>> +	u32 offset;
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	struct sdhci_host *host;
+>>>> +	struct sdhci_pltfm_host *pltfm_host;
+>>>> +	struct sdhci_omap_host *omap_host;
+>>>> +	struct mmc_host *mmc;
+>>>> +	const struct of_device_id *match;
+>>>> +	struct sdhci_omap_data *data;
+>>>> +
+>>>> +	match = of_match_device(omap_sdhci_match, dev);
+>>>> +	if (!match)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	data = (struct sdhci_omap_data *)match->data;
+>>>> +	if (!data) {
+>>>> +		dev_err(dev, "no sdhci omap data\n");
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>> +
+>>>> +	offset = data->offset;
+>>>> +
+>>>> +	host = sdhci_pltfm_init(pdev, &sdhci_omap_pdata,
+>>>> +				sizeof(*omap_host));
+>>>> +	if (IS_ERR(host)) {
+>>>> +		dev_err(dev, "Failed sdhci_pltfm_init\n");
+>>>> +		return PTR_ERR(host);
+>>>> +	}
+>>>> +
+>>>> +	pltfm_host = sdhci_priv(host);
+>>>> +	omap_host = sdhci_pltfm_priv(pltfm_host);
+>>>> +	omap_host->host = host;
+>>>> +	omap_host->base = host->ioaddr;
+>>>> +	omap_host->dev = dev;
+>>>> +	sdhci_omap_get_of_property(omap_host);
+>>>> +
+>>>> +	host->ioaddr += offset;
+>>>> +
+>>>> +	mmc = host->mmc;
+>>>> +	ret = mmc_of_parse(mmc);
+>>>> +	if (ret)
+>>>> +		goto err_of_parse;
+>>>> +
+>>>> +	pltfm_host->clk = devm_clk_get(dev, "fck");
+>>>> +	if (IS_ERR(pltfm_host->clk)) {
+>>>> +		ret = PTR_ERR(pltfm_host->clk);
+>>>> +		goto err_of_parse;
+>>>> +	}
+>>>> +
+>>>> +	ret = clk_set_rate(pltfm_host->clk, mmc->f_max);
+>>>> +	if (ret) {
+>>>> +		dev_err(dev, "failed to set clock to %d\n", mmc->f_max);
+>>>> +		goto err_of_parse;
+>>>> +	}
+>>>> +
+>>>> +	omap_host->pbias = devm_regulator_get_optional(dev, "pbias");
+>>>> +	if (IS_ERR(omap_host->pbias)) {
+>>>> +		ret = PTR_ERR(omap_host->pbias);
+>>>> +		if (ret != -ENODEV) {
+>>>> +			dev_err(dev, "CONFIG_REGULATOR_PBIAS not enabled??\n");
+>>>> +			return ret;
+>>>> +		}
+>>>> +		dev_dbg(dev, "unable to get pbias regulator %ld\n",
+>>>> +			PTR_ERR(omap_host->pbias));
+>>>> +	} else {
+>>>> +		if (regulator_is_supported_voltage(omap_host->pbias, IOV_3V3,
+>>>> +						   IOV_3V3))
+>>>> +			omap_host->io_3_3v_support = true;
+>>>> +		dev_vdbg(dev, "Max PBIAS support Voltage: %dmv\n",
+>>>> +			 omap_host->io_3_3v_support ? IOV_3V3 : IOV_3V0);
+>>>> +	}
+>>>> +	omap_host->pbias_enabled = false;
+>>>> +
+>>>> +	pm_runtime_enable(dev);
+>>>> +	ret = pm_runtime_get_sync(dev);
+>>>
+>>> What are you trying to do with runtime pm?  There don't seem to be any pm
+>>> callbacks, so does this do anything?
+>>
+>> yeah, pm_runtime_get_sync enables the functional clock and also configures the
+>> SYSCONFIG regiters present in the controller. It gets the details for
+>> configuring those from arch/arm/mach-omap2/omap_hwmod_*
+> 
+> You mean it will do those things when you add the callbacks?  I would prefer
+> you leave out runtime pm until you can add the callbacks as well.
 
-On 08/04/2017 08:03 PM, Sergei Shtylyov wrote:
+No. Generally in callbacks, 'optional' functional clocks are enabled. But main
+functional clock and interface clocks are enabled in pm_runtime_get_sync.
+Without pm_runtime_get_sync, we won't be able to access controller registers.
 
-<snip>
-
-> Index: media_tree/Documentation/media/v4l-drivers/rcar_imr.rst
-> ===================================================================
-> --- /dev/null
-> +++ media_tree/Documentation/media/v4l-drivers/rcar_imr.rst
-> @@ -0,0 +1,372 @@
-> +Renesas R-Car Image Renderer (IMR) Driver
-> +=========================================
-> +
-> +This file documents some driver-specific aspects of the IMR driver, such as
-> +the driver-specific ioctl.
-
-Just drop the part ', such as...'.
-
-Can you add a high-level description of the functionality here? Similar to what
-you did in the bindings document.
-
-> +
-> +The ioctl reference
-> +~~~~~~~~~~~~~~~~~~~
-> +
-> +See ``include/uapi/linux/rcar_imr.h`` for the data structures used.
-> +
-> +VIDIOC_IMR_MESH - Set mapping data
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> +
-> +Argument: ``struct imr_map_desc``
-> +
-> +**Description**:
-> +
-> +This ioctl sets up the mesh through which the input frames will be transformed
-> +into the output frames. The mesh can be strictly rectangular (when
-> +``IMR_MAP_MESH`` bit is set in ``imr_map_desc::type``) or arbitrary (when that
-> +bit is not set).
-
-Wouldn't something like 'IMR_MAP_RECTANGULAR' be much more descriptive than _MESH?
-There is nothing in the name _MESH to indicate that this switches the data to
-rectangles.
-
-> +
-> +A rectangular mesh consists of the imr_mesh structure followed by M*N vertex
-> +objects (where M is ``imr_mesh::rows`` and N is ``imr_mesh::columns``).
-> +In case either ``IMR_MAP_AUTOSG`` or ``IMR_MAP_AUTODG`` (not both) bits are
-> +set in ``imr_map_desc::type``, ``imr_mesh::{x|y}0`` specify the coordinates
-> +of the top left corner of the auto-generated mesh and ``imr_mesh::d{x|y}``
-> +specify the mesh's X/Y steps.
-
-So if the auto bits are set, then there are no vertex objects? Since it's auto
-generated by the hardware?
-
-I believe we discussed in the past whether 'type' should be split in a 'type'
-and 'flags' field.
-
-> +
-> +An arbitrary mesh consists of the imr_vbo structure followed by N triangle
-> +objects (where N is ``imr_vbo::num``), consisting of 3 vertex objects each.
-> +Setting ``IMR_MAP_AUTODG`` and ``IMR_MAP_AUTOSG`` bits in
-> +``imr_map_desc::type``) isn't allowed for this type of mesh.
-> +
-> +The vertex object has a complex structure depending on some of the bits in
-> +``imr_map_desc::type``:
-> +
-> +============  ============  ==============  ==============  ===========================
-> +IMR_MAP_CLCE  IMR_MAP_LUCE  IMR_MAP_AUTODG  IMR_MAP_AUTOSG  Vertex structure variant
-
-You should explain the meaning of these bits in this section. I.e., what does
-CLCE or AUTODG stand for?
-
-> +============  ============  ==============  ==============  ===========================
-> +\                                                           ``imr_full_coord``
-> +\                                           X               ``imr_dst_coord``
-> +\                           X                               ``imr_src_coord``
-> +\             X                                             ``imr_full_coord_any_correct``
-> +\             X                             X               ``imr_auto_coord_any_correct``
-> +\             X             X                               ``imr_auto_coord_any_crrect``
-
-crrect -> correct
-
-> +X                                                           ``imr_full_coord_any_correct``
-> +X                                           X               ``imr_auto_coord_any_correct``
-> +X                           X                               ``imr_auto_coord_any_correct``
-> +X             X                                             ``imr_full_coord_both_correct``
-> +X             X                             X               ``imr_auto_coord_both_correct``
-> +X             X             X                               ``imr_auto_coord_both_correct``
-> +============  ============  ==============  ==============  ===========================
-> +
-> +The luma correction is calculated according to the following formula (where
-> +``Y`` is the luma value after texture mapping, ``Y'`` is the luma value after
-> +luma correction, ``lscal`` and ``lofst`` are the luma correction scale and
-> +offset taken from ``struct imr_luma_correct``, ``YLDPO`` is a luma correction
-> +scale decimal point position specified by ``IMR_MAP_YLDPO(n)``): ::
-> +
-> +	Y' = ((Y * lscal) >> YLDPO) + lofst
-> +
-> +The chroma correction is calculated according to the following formula (where
-> +``U/V`` are the chroma values after texture mapping, ``U'/V'`` are the chroma
-> +values after chroma correction, ``ubscl/vrscl`` and ``ubofs/vrofs`` are the
-> +U/V value chroma correction scales and offsets taken from
-> +``struct imr_chroma_correct``, ``UBDPO/VRDPO`` are the chroma correction scale
-> +decimal point positions specified by ``IMR_MAP_{UBDPO|VRDPO}(n)``): ::
-> +
-> +	U' = ((U + ubofs) * ubscl) >> UBDPO
-> +	V' = ((V + vrofs) * vrscl) >> VRDPO
-> +
-> +**Return value**:
-> +
-> +On success 0 is returned. On error -1 is returned and ``errno`` is set
-> +appropriately.
-> +
-> +**Example code**:
-> +
-> +Below is an example code for constructing the meshes: ``imr_map_create()``
-> +constructs an arbitraty mesh, ``imr_map_mesh_src()`` function constructs
-
-arbitrary
-
-> +a rectangular mesh with the auto-generated destination coordinates.
-> +
-> +.. code-block:: C
-> +
-> + #include <malloc.h>
-> + #include <math.h>
-> + #include <linux/rcar_imr.h>
-> +
-> + /* IMR device data */
-> + struct imr_device {
-> + 	/* V4L2 file decriptor */
-
-descriptor
-
-> + 	int			vfd;
-> +
-> + 	/* input/output buffers dimensions */
-> + 	int			w, h, W, H;
-> + };
-> +
-> + #define IMR_SRC_SUBSAMPLE	5
-> + #define IMR_DST_SUBSAMPLE	2
-> + #define IMR_COORD_THRESHOLD	(128 * 128 * (1 << 2 * IMR_DST_SUBSAMPLE))
-> +
-> + /* find the longest side (index) */
-> + static void find_longest_side(int n, __s16 xy0, __s16 xy1, int *max, int *side)
-> + {
-> + 	int t = xy1 - xy0;
-> +
-> + 	t *= t;
-> + 	if (*max < t) {
-> + 		*max  = t;
-> + 		*side = n;
-> + 	}
-> + }
-> +
-> + /* recursively split a triangle until it can be passed to IMR */
-> + static int split_triangle(struct imr_full_coord *coord,
-> + 			   __s16 *xy0, __s16 *xy1, __s16 *xy2,
-> + 			   __u16 *uv0, __u16 *uv1, __u16 *uv2, int avail)
-> + {
-> + 	int	max = 0, k = 0;
-> +
-> + 	/* we need to have at least one available triangle */
-> + 	if (avail < 1)
-> + 		return 0;
-> +
-> + 	find_longest_side(0, xy0[0], xy1[0], &max, &k);
-> + 	find_longest_side(0, xy0[1], xy1[1], &max, &k);
-> + 	find_longest_side(1, xy1[0], xy2[0], &max, &k);
-> + 	find_longest_side(1, xy1[1], xy2[1], &max, &k);
-> + 	find_longest_side(2, xy2[0], xy0[0], &max, &k);
-> + 	find_longest_side(2, xy2[1], xy0[1], &max, &k);
-> +
-> + 	/* if value exceeds the threshold, do splitting */
-> + 	if (max >= IMR_COORD_THRESHOLD) {
-> + 		__s16	XY[2];
-> + 		__u16	UV[2];
-> + 		int	n;
-> +
-> + 		switch (k) {
-> + 		case 0:
-> + 			/* split triangle along edge 0 - 1 */
-> + 			XY[0] = (xy0[0] + xy1[0]) / 2;
-> + 			XY[1] = (xy0[1] + xy1[1]) / 2;
-> + 			UV[0] = (uv0[0] + uv1[0]) / 2;
-> + 			UV[1] = (uv0[1] + uv1[1]) / 2;
-> + 			n = split_triangle(coord, xy0, XY, xy2, uv0, UV, uv2,
-> + 					   avail);
-> + 			n += split_triangle(coord + 3 * n, XY, xy1, xy2,
-> + 					    UV, uv1, uv2, avail - n);
-> + 			break;
-> + 		case 1:
-> + 			/* split triangle along edge 1 - 2 */
-> + 			XY[0] = (xy1[0] + xy2[0]) / 2;
-> + 			XY[1] = (xy1[1] + xy2[1]) / 2;
-> + 			UV[0] = (uv1[0] + uv2[0]) / 2;
-> + 			UV[1] = (uv1[1] + uv2[1]) / 2;
-> + 			n = split_triangle(coord, xy1, XY, xy0, uv1, UV, uv0,
-> + 					   avail);
-> + 			n += split_triangle(coord + 3 * n, XY, xy2, xy0,
-> + 					    UV, uv2, uv0, avail - n);
-> + 			break;
-> + 		default:
-> + 			/* split triangle along edge 2 - 0 */
-> + 			XY[0] = (xy2[0] + xy0[0]) / 2;
-> + 			XY[1] = (xy2[1] + xy0[1]) / 2;
-> + 			UV[0] = (uv2[0] + uv0[0]) / 2;
-> + 			UV[1] = (uv2[1] + uv0[1]) / 2;
-> + 			n = split_triangle(coord, xy2, XY, xy1, uv2, UV, uv1,
-> + 					   avail);
-> + 			n += split_triangle(coord + 3 * n, XY, xy0, xy1,
-> + 					    UV, uv0, uv1, avail - n);
-> + 		}
-> +
-> + 		/* return number of triangles added */
-> + 		return n;
-> + 	} else {
-> + 		/* no need to split a rectangle; save coordinates */
-> + 		coord[0].src.u = uv0[0];
-> + 		coord[0].src.v = uv0[1];
-> + 		coord[0].dst.x = xy0[0];
-> + 		coord[0].dst.y = xy0[1];
-> + 		coord[1].src.u = uv1[0];
-> + 		coord[1].src.v = uv1[1];
-> + 		coord[1].dst.x = xy1[0];
-> + 		coord[1].dst.y = xy1[1];
-> + 		coord[2].src.u = uv2[0];
-> + 		coord[2].src.v = uv2[1];
-> + 		coord[2].dst.x = xy2[0];
-> + 		coord[2].dst.y = xy2[1];
-> +
-> + 		/* single triangle is created */
-> + 		return 1;
-> + 	}
-> + }
-> +
-> + /* process single triangle */
-> + static int process_triangle(struct imr_full_coord *coord, __u16 *uv, __s16 *xy,
-> + 			     int avail)
-> + {
-> + 	/* cull invisible triangle first */
-> + 	if ((xy[2] - xy[0]) * (xy[5] - xy[3]) >=
-> + 	    (xy[3] - xy[1]) * (xy[4] - xy[2])) {
-> + 		return 0;
-> + 	} else {
-> + 		/* recursively split triangle into smaller ones */
-> + 		return split_triangle(coord, xy + 0, xy + 2, xy + 4,
-> + 				      uv + 0, uv + 2, uv + 4, avail);
-> + 	}
-> + }
-> +
-> + /* clamp texture coordinates to not exceed input dimensions */
-> + static void clamp_texture(__u16 *uv, float *UV, int w, int h)
-> + {
-> + 	float t;
-> +
-> + 	t = UV[0];
-> + 	if (t < 0)
-> + 		uv[0] = 0;
-> + 	t *= w;
-> + 	if (t > w - 1)
-> + 		uv[0] = w - 1;
-> + 	else
-> + 		uv[0] = round(t);
-> +
-> + 	t = UV[1];
-> + 	if (t < 0)
-> + 		uv[1] = 0;
-> + 	t *= h;
-> + 	if (t > h - 1)
-> + 		uv[1] = h - 1;
-> + 	else
-> + 		uv[1] = round(t);
-> + }
-> +
-> + /* clamp vertex coordinates */
-> + static int clamp_vertex(__s16 *xy, float *XY, int W, int H)
-> + {
-> + 	float x = round(XY[0] * W), y = round(XY[1] * H), z = XY[2];
-> +
-> + 	if (z < 0.1)
-> + 		return 0;
-> + 	if (x < -(256 << IMR_DST_SUBSAMPLE) || x >= W + (256 << IMR_DST_SUBSAMPLE))
-> + 		return 0;
-> + 	if (y < -(256 << IMR_DST_SUBSAMPLE) || y >= H + (256 << IMR_DST_SUBSAMPLE))
-> + 		return 0;
-> +
-> + 	xy[0] = (__s16)x;
-> + 	xy[1] = (__s16)y;
-> +
-> + 	return 1;
-> + }
-> +
-> + /* create arbitrary mesh */
-> + struct imr_map_desc *imr_map_create(struct imr_device *dev,
-> + 				     float *uv, float *xy, int n)
-> + {
-> + 	struct imr_map_desc	*desc;
-> + 	struct imr_vbo		*vbo;
-> + 	struct imr_full_coord	*coord;
-> + 	int			j, m, w, h, W, H;
-> +
-> + 	/* create a configuration structure */
-> + 	desc = malloc(sizeof(*desc) + sizeof(*vbo) + 3 * n * sizeof(*coord));
-> + 	if (!desc)
-> + 		return NULL;
-> +
-> + 	/* fill-in VBO coordinates */
-> + 	vbo = (void *)(desc + 1);
-> + 	coord = (void *)(vbo + 1);
-> +
-> + 	/* calculate source/destination dimensions in subpixel coordinates */
-> + 	w = dev->w << IMR_SRC_SUBSAMPLE;
-> + 	h = dev->h << IMR_SRC_SUBSAMPLE;
-> + 	W = dev->W << IMR_DST_SUBSAMPLE;
-> + 	H = dev->H << IMR_DST_SUBSAMPLE;
-> +
-> + 	/* put at most N triangles into mesh descriptor */
-> + 	for (j = 0, m = 0; j < n && m < n; j++, xy += 9, uv += 6) {
-> + 		__u16	UV[6];
-> + 		__s16	XY[6];
-> + 		int	k;
-> +
-> + 		/* translate model coordinates to fixed-point */
-> + 		if (!clamp_vertex(XY + 0, xy + 0, W, H))
-> + 			continue;
-> + 		if (!clamp_vertex(XY + 2, xy + 3, W, H))
-> + 			continue;
-> + 		if (!clamp_vertex(XY + 4, xy + 6, W, H))
-> + 			continue;
-> +
-> + 		/* translate source coordinates */
-> + 		clamp_texture(UV + 0, uv + 0, w, h);
-> + 		clamp_texture(UV + 2, uv + 2, w, h);
-> + 		clamp_texture(UV + 4, uv + 4, w, h);
-> +
-> + 		/* process single triangle */
-> + 		k = process_triangle(coord, UV, XY, n - m);
-> + 		if (k != 0) {
-> + 			/* advance vertex coordinates pointer */
-> + 			coord += 3 * k;
-> + 			m += k;
-> + 		}
-> + 	}
-> +
-> + 	/* put number of triangles in VBO */
-> + 	vbo->num = m;
-> +
-> + 	/* fill-in descriptor */
-> + 	desc->type = IMR_MAP_UVDPOR(IMR_SRC_SUBSAMPLE) |
-> + 		     (IMR_DST_SUBSAMPLE ? IMR_MAP_DDP : 0);
-> + 	desc->size = (void *)coord - (void *)vbo;
-> + 	desc->data = (__u64)vbo;
-> +
-> + 	return desc;
-> + }
-> +
-> + /* create rectangular mesh */
-> + struct imr_map_desc *imr_map_mesh_src(struct imr_device *dev, float *uv,
-> + 				       int rows, int columns,
-> +				       float x0, float y0, float dx, float dy)
-> + {
-> + 	struct imr_map_desc	*desc;
-> + 	struct imr_mesh		*mesh;
-> + 	struct imr_src_coord	*coord;
-> + 	int			k, w, h, W, H;
-> +
-> + 	/* create a configuration structure */
-> + 	desc = malloc(sizeof(*desc) + sizeof(*mesh) + rows * columns *
-> +   		      sizeof(*coord));
-> + 	if (!desc)
-> + 		return NULL;
-> +
-> + 	/* fill-in rectangular mesh coordinates */
-> + 	mesh = (void *)(desc + 1);
-> + 	coord = (void *)(mesh + 1);
-> +
-> + 	/* calculate source/destination dimensions in subpixel coordinates */
-> + 	w = dev->w << IMR_SRC_SUBSAMPLE;
-> + 	h = dev->h << IMR_SRC_SUBSAMPLE;
-> + 	W = dev->W << IMR_DST_SUBSAMPLE;
-> + 	H = dev->H << IMR_DST_SUBSAMPLE;
-> +
-> + 	/* set mesh parameters */
-> + 	mesh->rows = rows;
-> + 	mesh->columns = columns;
-> + 	mesh->x0 = (__u16)round(x0 * W);
-> + 	mesh->y0 = (__u16)round(y0 * H);
-> + 	mesh->dx = (__u16)round(dx * W);
-> + 	mesh->dy = (__u16)round(dy * H);
-> +
-> + 	/* put mesh coordinates */
-> + 	for (k = 0; k < rows * columns; k++, uv += 2, coord++) {
-> + 		__u16	UV[2];
-> +
-> + 		/* transform point into texture coordinates */
-> + 		clamp_texture(UV, uv, w, h);
-> +
-> + 		/* fill the mesh */
-> + 		coord->u = UV[0];
-> + 		coord->v = UV[1];
-> + 	}
-> +
-> + 	/* fill-in descriptor */
-> + 	desc->type = IMR_MAP_MESH | IMR_MAP_AUTODG |
-> + 		     IMR_MAP_UVDPOR(IMR_SRC_SUBSAMPLE) |
-> + 		     (IMR_DST_SUBSAMPLE ? IMR_MAP_DDP : 0);
-> + 	desc->size = (void *)coord - (void *)mesh;
-> + 	desc->data = (__u64)mesh;
-> +
-> + 	return desc;
-> + }
-
-<snip>
-
-> Index: media_tree/include/uapi/linux/rcar_imr.h
-> ===================================================================
-> --- /dev/null
-> +++ media_tree/include/uapi/linux/rcar_imr.h
-> @@ -0,0 +1,182 @@
-> +/*
-> + * rcar_imr.h -- R-Car IMR-LX4 Driver UAPI
-> + *
-> + * Copyright (C) 2016-2017 Cogent Embedded, Inc. <source@cogentembedded.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#ifndef __RCAR_IMR_H
-> +#define __RCAR_IMR_H
-> +
-> +#include <linux/videodev2.h>
-> +
-> +/*******************************************************************************
-> + * Mapping specification descriptor
-> + ******************************************************************************/
-> +
-> +struct imr_map_desc {
-> +	/* bitmask of the mapping type (see below) */
-> +	__u32			type;
-> +
-> +	/* total data size */
-> +	__u32			size;
-> +
-> +	/* data user-pointer */
-> +	__u64			data;
-> +} __attribute__((packed));
-> +
-> +/* regular mesh specification */
-> +#define IMR_MAP_MESH		(1 << 0)
-> +
-> +/* auto-generated source coordinates */
-> +#define IMR_MAP_AUTOSG		(1 << 1)
-> +
-> +/* auto-generated destination coordinates */
-> +#define IMR_MAP_AUTODG		(1 << 2)
-> +
-> +/* luma correction flag */
-> +#define IMR_MAP_LUCE		(1 << 3)
-> +
-> +/* chroma correction flag */
-> +#define IMR_MAP_CLCE		(1 << 4)
-> +
-> +/* vertex clockwise-mode order */
-> +#define IMR_MAP_TCM		(1 << 5)
-> +
-> +/* source coordinate decimal point position */
-> +#define __IMR_MAP_UVDPOR_SHIFT	8
-> +#define __IMR_MAP_UVDPOR(v)	(((v) >> __IMR_MAP_UVDPOR_SHIFT) & 0x7)
-> +#define IMR_MAP_UVDPOR(n)	(((n) & 0x7) << __IMR_MAP_UVDPOR_SHIFT)
-> +
-> +/* destination coordinate sub-pixel mode */
-> +#define IMR_MAP_DDP		(1 << 11)
-> +
-> +/* luminance correction scale decimal point position */
-> +#define __IMR_MAP_YLDPO_SHIFT	12
-> +#define __IMR_MAP_YLDPO(v)	(((v) >> __IMR_MAP_YLDPO_SHIFT) & 0x7)
-> +#define IMR_MAP_YLDPO(n)	(((n) & 0x7) << __IMR_MAP_YLDPO_SHIFT)
-> +
-> +/* chroma (U) correction scale decimal point position */
-> +#define __IMR_MAP_UBDPO_SHIFT	15
-> +#define __IMR_MAP_UBDPO(v)	(((v) >> __IMR_MAP_UBDPO_SHIFT) & 0x7)
-> +#define IMR_MAP_UBDPO(n)	(((n) & 0x7) << __IMR_MAP_UBDPO_SHIFT)
-> +
-> +/* chroma (V) correction scale decimal point position */
-> +#define __IMR_MAP_VRDPO_SHIFT	18
-> +#define __IMR_MAP_VRDPO(v)	(((v) >> __IMR_MAP_VRDPO_SHIFT) & 0x7)
-> +#define IMR_MAP_VRDPO(n)	(((n) & 0x7) << __IMR_MAP_VRDPO_SHIFT)
-
-You need to document all these bits in the documentation. I.e. TCM and DDP
-are not currently documented.
-
-It helps a lot to understand these defines if the documentation and the
-comments explain what the abbreviations mean. E.g. what does DDP stand
-for, or YLDPO? It's an alphabet soup right now.
-
-> +
-> +/* regular mesh specification */
-> +struct imr_mesh {
-
-How about imr_rectangles? There is no indication in the struct name that this
-describes a rectangle.
-
-> +	/* rectangular mesh size */
-> +	__u16			rows, columns;
-> +
-> +	/* auto-generated mesh parameters */
-> +	__u16			x0, y0, dx, dy;
-> +} __attribute__((packed));
-> +
-> +/* vertex-buffer-object (VBO) descriptor */
-> +struct imr_vbo {
-> +	/* number of triangles */
-> +	__u16			num;
-> +} __attribute__((packed));
-> +
-> +/*******************************************************************************
-> + * Vertex-related structures
-> + ******************************************************************************/
-> +
-> +/* source coordinates */
-> +struct imr_src_coord {
-> +	/* vertical, horizontal */
-> +	__u16			v, u;
-
-Confusing: why isn't this 'v, h;' given the comment? Or does this refer to
-chroma (U and V)? And what does 'vertical, horizontal' mean anyway? Vertical
-what?
-
-> +} __attribute__((packed));
-> +
-> +/* destination coordinates */
-> +struct imr_dst_coord {
-> +	/* vertical, horizontal */
-
-Confusing comment as well. I assume y and x are simply coordinates of a vertex?
-Just say so. This comment doesn't mean anything.
-
-> +	__u16			y, x;
-> +} __attribute__((packed));
-> +
-> +/* luma correction parameters */
-> +struct imr_luma_correct {
-> +	/* offset */
-> +	__s8			lofst;
-> +
-> +	/* scale */
-> +	__u8			lscal;
-> +
-> +	__u16			reserved;
-
-Why is this reserved? Is that for padding? If so, then add a comment that mentions
-that.
-
-> +} __attribute__((packed));
-> +
-> +/* chroma correction parameters */
-> +struct imr_chroma_correct {
-> +	/* V value offset */
-> +	__s8			vrofs;
-> +
-> +	/* V value scale */
-> +	__u8			vrscl;
-> +
-> +	/* U value offset */
-> +	__s8			ubofs;
-> +
-> +	/* V value scale */
-> +	__u8			ubscl;
-> +} __attribute__((packed));
-> +
-> +/* fully specified source/destination coordinates */
-> +struct imr_full_coord {
-> +	struct imr_src_coord	src;
-> +	struct imr_dst_coord	dst;
-> +} __attribute__((packed));
-> +
-> +/* auto-generated coordinates with luma or chroma correction */
-> +struct imr_auto_coord_any_correct {
-> +	union {
-> +		struct imr_src_coord src;
-> +		struct imr_dst_coord dst;
-
-Why have separate imr_src_coord and imr_dst_coord structs? Why not just
-call it imr_coord? I think that is part of the reason of my confusion
-regarding understanding those structs.
-
-The field name here indicates whether it is a source or destination,
-the coordinate information is the same for both.
-
-> +	};
-> +	union {
-> +		struct imr_luma_correct luma;
-> +		struct imr_chroma_correct chroma;
-> +	};
-> +} __attribute__((packed));
-> +
-> +/* auto-generated coordinates with both luma and chroma correction */
-> +struct imr_auto_coord_both_correct {
-> +	union {
-> +		struct imr_src_coord src;
-> +		struct imr_dst_coord dst;
-> +	};
-> +	struct imr_luma_correct luma;
-> +	struct imr_chroma_correct chroma;
-> +} __attribute__((packed));
-> +
-> +/* fully specified coordinates with luma or chroma correction */
-> +struct imr_full_coord_any_correct {
-> +	struct imr_src_coord src;
-> +	struct imr_dst_coord dst;
-> +	union {
-> +		struct imr_luma_correct luma;
-> +		struct imr_chroma_correct chroma;
-> +	};
-> +} __attribute__((packed));
-> +
-> +/* fully specified coordinates with both luma and chroma correction */
-> +struct imr_full_coord_both_correct {
-> +	struct imr_src_coord src;
-> +	struct imr_dst_coord dst;
-> +	struct imr_luma_correct luma;
-> +	struct imr_chroma_correct chroma;
-> +} __attribute__((packed));
-> +
-> +/*******************************************************************************
-> + * Private IOCTL codes
-> + ******************************************************************************/
-> +
-> +#define VIDIOC_IMR_MESH _IOW('V', BASE_VIDIOC_PRIVATE + 0, struct imr_map_desc)
-> +
-> +#endif /* __RCAR_IMR_H */
->
-
-Do you know the typical number of rectangles or triangles that are passed to this
-function? Is there an upper hardware limit?
-
-I ask, because I wonder whether using a fixed vertex struct like imr_full_coord_both_correct
-for all variations isn't much simpler. The driver just ignores the fields it doesn't
-need in that case.
-
-Yes, you get some memory overhead, but the code for both userspace and kernelspace
-will be much simpler.
-
-Regards,
-
-	Hans
+Thanks
+Kishon
