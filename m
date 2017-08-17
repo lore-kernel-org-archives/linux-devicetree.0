@@ -1,10 +1,11 @@
 From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v4 0/5]  iio: srf08: add support for similar devices and
- triggered buffers
-Date: Fri, 18 Aug 2017 00:08:29 +0200
-Message-ID: <20170817220829.GA4687@arbeit>
+Subject: [PATCH v4 1/5] iio: srf08: add device tree binding for srf02 and
+ srf10
+Date: Fri, 18 Aug 2017 00:08:51 +0200
+Message-ID: <20170817220851.GA4698@arbeit>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
@@ -12,36 +13,27 @@ To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux
 Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hdegoede@redhat.com, wsa@the-dreams.de, chris.packham@alliedtelesis.co.nz, jelle@vdwaa.nl, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for:
-- triggered buffer
-- ultrasonic devices srf02 and srf10
+add trivial device tree binding "devantech,srf02" and "devantech,srf10"
 
-Changes in v4:
-- rebase to recent git repository with trivial-devices.txt now under
-  devicetree/bindings
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ Documentation/devicetree/bindings/trivial-devices.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v3:
-- introduce struct chip_info for device specific features
-- remove locking error in srf08_trigger_handler()
-
-Changes in v2:
-- removed unnecessary patch "[PATCH 6/7] iio: srf08: add buffered to device mode"
-- incorporated patch "[PATCH 7/7] iio: srf08: change text in Kconfig" where suitable
-- changed order of patches to improve logical flow of changes
-- improved distinction of sensor types
-
-Andreas Klinger (5):
-  iio: srf08: add device tree binding for srf02 and srf10
-  iio: srf08: add device tree table
-  iio: srf08: add triggered buffer support
-  iio: srf08: add sensor type srf10
-  iio: srf08: add support for srf02 in i2c mode
-
- .../devicetree/bindings/trivial-devices.txt        |   2 +
- drivers/iio/proximity/Kconfig                      |   8 +-
- drivers/iio/proximity/srf08.c                      | 227 ++++++++++++++++++---
- 3 files changed, 203 insertions(+), 34 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+index 35f406dd86b6..f1d3317a4834 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/trivial-devices.txt
+@@ -36,7 +36,9 @@ dallas,ds1775		Tiny Digital Thermometer and Thermostat
+ dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
+ dallas,ds4510		CPU Supervisor with Nonvolatile Memory and Programmable I/O
+ dallas,ds75		Digital Thermometer and Thermostat
++devantech,srf02		Devantech SRF02 ultrasonic ranger in I2C mode
+ devantech,srf08		Devantech SRF08 ultrasonic ranger
++devantech,srf10		Devantech SRF10 ultrasonic ranger
+ dlg,da9053		DA9053: flexible system level PMIC with multicore support
+ dlg,da9063		DA9063: system PMIC for quad-core application processors
+ domintech,dmard09	DMARD09: 3-axis Accelerometer
 -- 
 2.1.4
 
