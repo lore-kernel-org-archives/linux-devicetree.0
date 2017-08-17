@@ -1,61 +1,71 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: ASoC: rockchip: Add
- rockchip,codec-names property
-Date: Thu, 17 Aug 2017 10:10:45 -0500
-Message-ID: <20170817140945.ahakyr6vhut5zalf@rob-hp-laptop>
-References: <1502340898-28403-1-git-send-email-jeffy.chen@rock-chips.com>
- <1502340898-28403-4-git-send-email-jeffy.chen@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: can: can-transceiver: Document new
+ binding
+Date: Thu, 17 Aug 2017 10:10:36 -0500
+Message-ID: <20170817151036.jyvg63oyhkne5jsg@rob-hp-laptop>
+References: <20170810005916.27163-1-fcooper@ti.com>
+ <20170810005916.27163-3-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1502340898-28403-4-git-send-email-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170810005916.27163-3-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, sergei.shtylyov@cogentembedded.com, socketcan@hartkopp.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 12:54:58PM +0800, Jeffy Chen wrote:
-> Add a new rockchip,codec-names property, so that the driver can parse
-> the codecs by name.
+On Wed, Aug 09, 2017 at 07:59:14PM -0500, Franklin S Cooper Jr wrote:
+> Add documentation to describe usage of the new can-transceiver binding.
+> This new binding is applicable for any CAN device therefore it exists as
+> its own document.
 > 
-> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
 > ---
+> Version 4 changes:
+> Drop unit address.
+> Switch from using fixed-transceiver to can-transceiver
 > 
-> Changes in v2:
-> Let rockchip,codec-names be a required property.
+>  .../bindings/net/can/can-transceiver.txt           | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
 > 
->  Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-> index eac91db..05351df 100644
-> --- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-> +++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-> @@ -5,6 +5,7 @@ Required properties:
->  - rockchip,cpu: The phandle of the Rockchip I2S controller that's
->    connected to the codecs
->  - rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-> +- rockchip,codec-names: The names of the MAX98357A/RT5514/DA7219 codecs
+> diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.txt b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
+> new file mode 100644
+> index 0000000..2c31dc0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
+> @@ -0,0 +1,24 @@
+> +Generic CAN transceiver Device Tree binding
+> +------------------------------
+> +
+> +CAN transceiver typically limits the max speed in standard CAN and CAN FD
+> +modes. Typically these limitations are static and the transceivers themselves
+> +provide no way to detect this limitation at runtime. For this situation,
+> +the "can-transceiver" node can be used.
+> +
+> +Required Properties:
+> + max-bitrate:	a positive non 0 value that determines the max
+> +		speed that CAN/CAN-FD can run. Any other value
+> +		will be ignored.
+> +
+> +Examples:
+> +
+> +Based on Texas Instrument's TCAN1042HGV CAN Transceiver
+> +
+> +m_can0 {
+> +	....
+> +	can-transceiver@ {
 
-No, just lookup the handle and get the compatible for the codec if you 
-need a name.
+Need to drop the @ too. With that,
 
->  
->  Optional properties:
->  - dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
-> @@ -18,5 +19,6 @@ sound {
->  	compatible = "rockchip,rk3399-gru-sound";
->  	rockchip,cpu = <&i2s0>;
->  	rockchip,codec = <&max98357a &rt5514 &da7219>;
-> +	rockchip,codec-names = "MAX98357A", "RT5514", "DA7219";
->  	dmic-wakeup-delay-ms = <20>;
->  };
+Acked-by: Rob Herring <robh@kernel.org>
+
+
+> +		max-bitrate = <5000000>;
+> +	};
+> +	...
+> +};
 > -- 
-> 2.1.4
+> 2.9.4.dirty
 > 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
