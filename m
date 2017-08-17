@@ -1,30 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: usb: keystone-usb: Update bindings
- pm and clocks properties
-Date: Thu, 17 Aug 2017 17:18:55 -0500
-Message-ID: <20170817221855.7tcgsx4onukbooyu@rob-hp-laptop>
-References: <20170816215408.13076-1-fcooper@ti.com>
- <20170816215408.13076-3-fcooper@ti.com>
+Subject: Re: [PATCH v3 9/9] dt-bindings: ASoC: rockchip: Update description
+ of rockchip,codec
+Date: Thu, 17 Aug 2017 17:20:02 -0500
+Message-ID: <20170817222002.h3ezuvmafbdb2iy4@rob-hp-laptop>
+References: <20170817044417.22069-1-jeffy.chen@rock-chips.com>
+ <20170817044417.22069-10-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170816215408.13076-3-fcooper@ti.com>
+In-Reply-To: <20170817044417.22069-10-jeffy.chen@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: gregkh@linuxfoundation.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, rogerq@ti.com
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de, briannorris@chromium.org, mka@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 16, 2017 at 04:54:08PM -0500, Franklin S Cooper Jr wrote:
-> Update various properties to properly indicate their requirement depending
-> on the SoC.
+On Thu, Aug 17, 2017 at 12:44:17PM +0800, Jeffy Chen wrote:
+> Update description for newly added optional audio codecs.
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 > ---
-> Version 2:
-> Clarify clock requirements in binding document
 > 
->  Documentation/devicetree/bindings/usb/keystone-usb.txt | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
