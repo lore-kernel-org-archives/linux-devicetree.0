@@ -1,50 +1,101 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 0/5] Add clk and scpsys support for MT6755
-Date: Thu, 17 Aug 2017 12:19:51 +0200
-Message-ID: <341316e9-d7ce-85f1-4e54-f872771f530f@gmail.com>
-References: <1502180014-7995-1-git-send-email-mars.cheng@mediatek.com>
- <1502855993.4599.1.camel@mtkswgap22> <1502938079.4027.3.camel@mtksdaap41>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCHv2 0/3] arm64 xilinx zynqmp firmware interface
+Date: Thu, 17 Aug 2017 12:32:25 +0200
+Message-ID: <07473fe2-d159-a016-2f65-735b1231beb8@xilinx.com>
+References: <cover.1502886277.git.michal.simek@xilinx.com>
+ <43deeed7-32c8-7914-5f44-862ebbe14a3b@arm.com>
+ <89e5469b-650e-64c7-1754-797b35bac523@xilinx.com>
+ <a1970cb5-1cf1-d38a-3de3-c782c23fc8ac@arm.com>
+ <0560c79f-e461-6010-0628-e99ce0a1f8c6@xilinx.com>
+ <45e58860-cb8c-75f2-60bf-140aa3704169@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502938079.4027.3.camel@mtksdaap41>
+In-Reply-To: <45e58860-cb8c-75f2-60bf-140aa3704169@arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>
-Cc: devicetree@vger.kernel.org, cc.hwang@mediatek.com, wsd_upstream@mediatek.com, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, wendell.lin@mediatek.com
+To: Sudeep Holla <sudeep.holla@arm.com>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, edgar.iglesias@xilinx.com, Rob Herring <robh@kernel.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Jean Delvare <jdelvare@suse.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Kevin Hilman <khilman@baylibre.com>, Nishanth Menon <nm@ti.com>, Thierry Reding <treding@nvidia.com>, Kevin Brodsky <kevin.brodsky@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Alexander Graf <agraf@suse.de>, Moritz Fischer <mdf@kernel.org>, Mic
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/17/2017 04:47 AM, Yingjoe Chen wrote:
+On 17.8.2017 11:12, Sudeep Holla wrote:
 > 
 > 
-> On Wed, 2017-08-16 at 11:59 +0800, Mars Cheng wrote:
->> Hi Rob, Stephen, Matthias
+> On 17/08/17 09:42, Michal Simek wrote:
+>> On 17.8.2017 09:52, Marc Zyngier wrote:
+>>> On 17/08/17 07:10, Michal Simek wrote:
+>>>> On 16.8.2017 17:39, Marc Zyngier wrote:
+>>>>> On 16/08/17 13:24, Michal Simek wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> xilinx is using this interface for very long time and we can't merge our
+>>>>>> driver changes to Linux because of missing communication layer with
+>>>>>> firmware. This interface was developed before scpi and scmi was
+>>>>>> available. In connection to power management scpi and scmi are missing
+>>>>>> pieces which we already use. There is a separate discussion how to
+>>>>>> extend scmi to support all our use cases.
+>>>>>
+>>>>> So maybe we should wait and see where this discussion is going before we
+>>>>> merge yet another firmware interface?
+>>>>
+>>>> It will take a lot of time when this discussion ends and I can't see any
+>>>> benefit to hold all
+>>>
+>>> Well, so far, the benefit of this series is exactly nil, as the code it
+>>> brings is *unused*. It is impossible to review in isolation.
+>>>
 >>
->> gentle ping.
+>> Ok. I will add others drivers to this series that's not a problem.
 >>
->> Thanks.
+>>> In the meantime, you can continue finding out how *not* to have to merge
+>>> this code, and instead focus on using the infrastructure we already
+>>> have, or at least influence the infrastructure that is being designed.
+>>> It will be much better than dumping yet another slab of "I'm so
+>>> different" code that is going to ultimately bitrot.
 >>
->> On Tue, 2017-08-08 at 16:13 +0800, Mars Cheng wrote:
->>> Mars Cheng (3):
->>>    clk: mediatek: add mt6755 clock ID
->>>    clk: mediatek: add clk support for MT6755
->>>    soc: mediatek: add MT6755 scpsys support
+>> I am happy to look the better proposed way. SCPI is ancient and SCMI is
+>> replacement and not merged yet. We already had a call with arm and
+>> Sudeep was on it too where outcome from that was that we can't use that
+>> because it doesn't support what we need to support now.
+>>
 > 
-> Hi Mars,
-> 
-> Sean reworked the scpsys driver to remove code duplication, see:
-> http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009687.html
-> http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009820.html
-> 
-> I think current driver will have conflict and can't merge as-is, you'll
-> need to rebase to Matthias' for-next branch.
-> 
+> OK, none of the specifics were discussed in the meeting to conclude that
+> SCMI can't be used. My takeaway from the meeting was Xilinx has this
+> interface for long and being deployed in various systems. I would like
+> to get into specifics before discarding SCMI as unusable. What bothers
+> me more is that why was that not raised during the specification review
+> which was quite a long period IMO ? I tend to think Xilinx never
+> bothered to look/review the specification as this f/w interface was
+> already there.
 
-Yes, please rebase, which should be trivial. Other then that the scpsys driver 
-looks good.
+Xilinx is using this interface from Aug 2015. I am not aware about any
+invitation to spec review. And not sure who was there from xilinx.
 
-Regards,
-Matthias
+> 
+> However I still can't see why this was posted once we started pushing
+> out SCMI patches especially given that this f/w interface was there for
+> long and no attempts were made in past to upstream this.
+
+The reason is simple which is upstream our code which depends on this
+communication layer. I don't think there is quick path to move to
+different interface than this one.
+
+> 
+> Also I am not dismissing the series yet, but if I find that SCMI can be
+> used(after getting specifics from this series myself), I will at-least
+> argue against the "SCMI can't be used" argument.
+
+This is not my argument that we can't use SCMI. This is what was my
+understanding from that meeting we had. And definitely there is no quick
+path for us to switch to SCMI and breaks all current existing customers.
+
+And this interface is just in the same position as current SCPI. It
+means you have SCPI already merged and you are adding new one. SCMI
+could be maybe also just SCPIv2.
+And when it is merged you are going to move all targets to this new
+interface. The same is for us but instead of scpi it is this interface
+we use and test.
+
+Thanks,
+Michal
