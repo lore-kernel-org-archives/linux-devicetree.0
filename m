@@ -1,39 +1,132 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] dt-bindings: serial: sh-sci: Add support for r8a77995 (H)SCIF
-Date: Thu, 17 Aug 2017 13:16:28 +0200
-Message-ID: <1502968588-7991-1-git-send-email-geert+renesas@glider.be>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv2 0/3] arm64 xilinx zynqmp firmware interface
+Date: Thu, 17 Aug 2017 12:18:49 +0100
+Message-ID: <8123bd03-2822-d2c3-e07f-cc99238d3cbe@arm.com>
+References: <cover.1502886277.git.michal.simek@xilinx.com>
+ <43deeed7-32c8-7914-5f44-862ebbe14a3b@arm.com>
+ <89e5469b-650e-64c7-1754-797b35bac523@xilinx.com>
+ <a1970cb5-1cf1-d38a-3de3-c782c23fc8ac@arm.com>
+ <0560c79f-e461-6010-0628-e99ce0a1f8c6@xilinx.com>
+ <45e58860-cb8c-75f2-60bf-140aa3704169@arm.com>
+ <07473fe2-d159-a016-2f65-735b1231beb8@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <07473fe2-d159-a016-2f65-735b1231beb8-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, edgar.iglesias-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kevin Brodsky <kevin.brodsky-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document support for the (H)SCIF serial ports in the Renesas R-Car D3
-(r8a77995) SoC.
 
-No driver update is needed.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 2 ++
- 1 file changed, 2 insertions(+)
+On 17/08/17 11:32, Michal Simek wrote:
+> On 17.8.2017 11:12, Sudeep Holla wrote:
+>> 
+>> 
+>> On 17/08/17 09:42, Michal Simek wrote:
+>>> On 17.8.2017 09:52, Marc Zyngier wrote:
+>>>> On 17/08/17 07:10, Michal Simek wrote:
+>>>>> On 16.8.2017 17:39, Marc Zyngier wrote:
+>>>>>> On 16/08/17 13:24, Michal Simek wrote:
+>>>>>>> Hi,
+>>>>>>> 
+>>>>>>> xilinx is using this interface for very long time and we
+>>>>>>> can't merge our driver changes to Linux because of
+>>>>>>> missing communication layer with firmware. This interface
+>>>>>>> was developed before scpi and scmi was available. In
+>>>>>>> connection to power management scpi and scmi are missing 
+>>>>>>> pieces which we already use. There is a separate
+>>>>>>> discussion how to extend scmi to support all our use
+>>>>>>> cases.
+>>>>>> 
+>>>>>> So maybe we should wait and see where this discussion is
+>>>>>> going before we merge yet another firmware interface?
+>>>>> 
+>>>>> It will take a lot of time when this discussion ends and I
+>>>>> can't see any benefit to hold all
+>>>> 
+>>>> Well, so far, the benefit of this series is exactly nil, as the
+>>>> code it brings is *unused*. It is impossible to review in
+>>>> isolation.
+>>>> 
+>>> 
+>>> Ok. I will add others drivers to this series that's not a
+>>> problem.
+>>> 
+>>>> In the meantime, you can continue finding out how *not* to have
+>>>> to merge this code, and instead focus on using the
+>>>> infrastructure we already have, or at least influence the
+>>>> infrastructure that is being designed. It will be much better
+>>>> than dumping yet another slab of "I'm so different" code that
+>>>> is going to ultimately bitrot.
+>>> 
+>>> I am happy to look the better proposed way. SCPI is ancient and
+>>> SCMI is replacement and not merged yet. We already had a call
+>>> with arm and Sudeep was on it too where outcome from that was
+>>> that we can't use that because it doesn't support what we need to
+>>> support now.
+>>> 
+>> 
+>> OK, none of the specifics were discussed in the meeting to conclude
+>> that SCMI can't be used. My takeaway from the meeting was Xilinx
+>> has this interface for long and being deployed in various systems.
+>> I would like to get into specifics before discarding SCMI as
+>> unusable. What bothers me more is that why was that not raised
+>> during the specification review which was quite a long period IMO ?
+>> I tend to think Xilinx never bothered to look/review the
+>> specification as this f/w interface was already there.
+> 
+> Xilinx is using this interface from Aug 2015. I am not aware about
+> any invitation to spec review. And not sure who was there from
+> xilinx.
+> 
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-index 8d27d1a603e7bf75..4fc96946f81d6afc 100644
---- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -41,6 +41,8 @@ Required properties:
-     - "renesas,hscif-r8a7795" for R8A7795 (R-Car H3) HSCIF compatible UART.
-     - "renesas,scif-r8a7796" for R8A7796 (R-Car M3-W) SCIF compatible UART.
-     - "renesas,hscif-r8a7796" for R8A7796 (R-Car M3-W) HSCIF compatible UART.
-+    - "renesas,scif-r8a77995" for R8A77995 (R-Car D3) SCIF compatible UART.
-+    - "renesas,hscif-r8a77995" for R8A77995 (R-Car D3) HSCIF compatible UART.
-     - "renesas,scifa-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFA compatible UART.
-     - "renesas,scifb-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFB compatible UART.
-     - "renesas,rcar-gen1-scif" for R-Car Gen1 SCIF compatible UART,
+Sure, I can understand and that's not a problem but Xilinx was involved.
+
+>> 
+>> However I still can't see why this was posted once we started
+>> pushing out SCMI patches especially given that this f/w interface
+>> was there for long and no attempts were made in past to upstream
+>> this.
+> 
+> The reason is simple which is upstream our code which depends on
+> this communication layer. I don't think there is quick path to move
+> to different interface than this one.
+> 
+
+Do you mean "smc" when you refer communication layer ? If so, that's
+fine. You can use "smc" as transport with SCMI if you want,
+specification doesn't prevent that.
+
+>> 
+>> Also I am not dismissing the series yet, but if I find that SCMI
+>> can be used(after getting specifics from this series myself), I
+>> will at-least argue against the "SCMI can't be used" argument.
+> 
+> This is not my argument that we can't use SCMI. This is what was my 
+> understanding from that meeting we had. And definitely there is no
+> quick path for us to switch to SCMI and breaks all current existing
+> customers.
+> 
+
+I understand the latter and I mentioned the same earlier, but I disagree
+with the former. That meeting was mostly introduction(and informal IMO)
+and didn't involve anything at the technical level.
+
+> And this interface is just in the same position as current SCPI. It 
+> means you have SCPI already merged and you are adding new one. SCMI 
+> could be maybe also just SCPIv2.
+
+Agreed, but it was posted as soon as the specification is out and so is
+the SCMI. I am not arguing it as a point, but just mentioning that this
+post was simply bad timing :)
+
 -- 
-2.7.4
-
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
