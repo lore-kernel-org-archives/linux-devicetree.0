@@ -1,137 +1,45 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
- slave
-Date: Thu, 17 Aug 2017 19:34:26 +0200
-Message-ID: <E1FFE8C1-97C9-4640-A12A-3AE37F9B655F@holtmann.org>
-References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
- <1502102366-2760-2-git-send-email-loic.poulain@gmail.com>
- <CAL_JsqKxA2pgtjmG-cxy5XPWuRWUiia-weRZDSh4++Vn=QZmqA@mail.gmail.com>
- <8186E2A3-D0AC-498F-8229-78862D363F78@holtmann.org>
- <392e6d51-33d6-1585-6582-1397a0c64852@gmail.com>
- <161632C7-EBBF-47F5-86DC-453E10395B54@holtmann.org>
- <e001e055-10a5-facd-a8e1-57c1bdb78172@gmail.com>
- <FCD47ED6-F01F-4921-97A3-BBC1D0263747@holtmann.org>
- <CALeDE9MeMHtCD8esCcznHjS+z6o7Ezh9dP1OZq=77DuYNS2=2A@mail.gmail.com>
- <0C198B33-8CB6-4D6A-B89F-35D3CD771135@holtmann.org>
- <92579650-5eb0-cdf2-405a-7c5be9c54770@gmail.com>
- <8CF7E37E-BF1C-4E32-AF3A-E44BA2E5A2B9@holtmann.org>
- <87shgqgo7b.fsf@eliezer.anholt.net>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87shgqgo7b.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/5] Add support to LIS2DW12 accel sensor
+Date: Thu, 17 Aug 2017 19:37:24 +0200
+Message-ID: <20170817173729.10899-1-lorenzo.bianconi@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+Modify management of drdy line and status register in order to support
+LIS2DW12 device
 
->>>>>> < HCI Command: Broadcom Write UART Clock Setting (0x3f|0x0045) plen 1
->>>>>>       01                                               .
->>>>>>> HCI Event: Command Complete (0x0e) plen 4
->>>>>>     Broadcom Write UART Clock Setting (0x3f|0x0045) ncmd 1
->>>>>>       Status: Unknown HCI Command (0x01)
->>>>>> 
->>>>>> And I am seeing fun stuff like failed frame assembly.
->>>>>> 
->>>>>> [  888.687594] Bluetooth: hci0: BCM: chip id 94
->>>>>> [  888.687821] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0182
->>>>>> [  892.059023] Bluetooth: hci0: Frame reassembly failed (-84)
->>>>>> [  892.316936] Bluetooth: hci0: BCM: failed to write clock (-56)
->>>>>> [  892.429478] Bluetooth: hci0: BCM (001.002.009) build 0182
->>>>>> 
->>>>>> Actually not providing the firmware makes the controller work. It however is stuck ad AA:AA:.. default address. Providing the firmware turns the address active. However then it never completes.
->>>>> I've tried on and off to get the BT working, there seems to lots of
->>>>> options and bits needed including some patches to the bluez [1] stuff
->>>>> but between not quite upstream kernel bits and numerous distros all
->>>>> doing it slightly differently I've never got it to work well.
->>>>> 
->>>>> The yocto [1] bits seem fairly representative of some the patches
->>>>> flying around "to get it working" although I'm not sure how many of
->>>>> these are actually required and how many are superfluous with this
->>>>> patch set. There seems to be a firmware required that's not
->>>>> distributed with linux-firmware which would also be nice to resolve.
->>>> Non of these Yocto patches are actually needed. The culprit is the .oper_speed setting to be 4Mbps. Once you reduce that to 921600 thing will start to work smoothly. I sent a patch that takes the .oper_speed out completely and only applies it for the ACPI based devices where we know that it works.
->>>> 
->>>> With my patch and the right DT entries for uart0 it actually works with “btattach -B /dev/ttyAMA0 -P bcm”. It will load the firmware, configure it and head towards the right path.
->>>> 
->>>> Obviously btattach is only an interim step here. Loic’s patches for serdev integration and changing the DT to expose uart0 as serial-slave for Bluetooth is the right approach. Once Loic’s resends the patches we can get them into bluetooth-next and start merging these towards upstream. After that, Bluetooth should work just out of the box like with any USB dongle.
->>>> 
->>>> And the Yocto patches should be abandoned. If using H:5 (aka 3-Wire) instead of H:4 is possible, we could consider it, but as long as the UART wiring doesn’t cause any bit errors, it is not worth it.
->>>> 
->>>> That said, I do see a "Bluetooth: hci0: Frame reassembly failed (-84)” error. I need to figure out where that is. Frankly we really need to hexdump the packet when this happens.
->>>> 
->>> 
->>> I also meet this Frame reassembly failure, Seems we receive a 0x00 byte from the controller (unknown pkt type).
->> 
->> that means adding something like this will silence it.
->> 
->> +#define BCM_RECV_NULL \
->> +       .type = 0x00, \
->> +       .hlen = 0, \
->> +       .loff = 0, \
->> +       .lsize = 0, \
->> +       .maxlen = 0
->> +
->> +static int bcm_recv_null(struct hci_dev *hdev, struct sk_buff *skb)
->> +{
->> +       kfree_skb(skb);
->> +       return 0;
->> +}
->> +
->> static const struct h4_recv_pkt bcm_recv_pkts[] = {
->>        { H4_RECV_ACL,      .recv = hci_recv_frame },
->>        { H4_RECV_SCO,      .recv = hci_recv_frame },
->>        { H4_RECV_EVENT,    .recv = hci_recv_frame },
->>        { BCM_RECV_LM_DIAG, .recv = hci_recv_diag  },
->> +       { BCM_RECV_NULL,    .recv = bcm_recv_null  },
->> };
->> 
->> It does silence it indeed. Maybe this is some of their markers to
->> ensure that the baud rate change worked. Or it is the indication that
->> the reset completed. Do you happen to know between which commands we
->> receive it?
->> 
->>> Regarding the speed, I'm unable to reach 3Mbps, I selected 921600
->>> because this is the baudrate used by raspbian bt script.
->> 
->> That is the same I experienced. The 921600 works fine, but trying
->> 3Mbps doesn’t. However it seems with hciattach you can crank it up to
->> 3Mpbs somehow. Maybe the delay is just to short for the UART switching
->> in that case.
->> 
->>> Maybe they had some issues at higher speed (empirical value ?),
->>> However 2Mbps seems ok on my side (need to double check/adjust).
->> 
->> We have to make it a DT max-speed param anyway. So I am not that
->> worried.
->> 
->>> In a second step, need to check If we can use hardware flow control,
->>> I heard that pin 16&17 are routed to the bcm RTS/CTS.  Since there is
->>> no DMA usage, it could help.
-> 
-> The BT's CTS/RTS are tied to 3v3/ground.
-> 
->> Eric, any chance you can dig out the recommendation for the Bluetooth
->> controller usage? I would also like to see the recommended PCM
->> settings for this hardware. It bet it is somehow wired up to the sound
->> controller.
-> 
-> BT's PCM is connected to gpio 28-31 on the pi3, which you can pinmux to
-> the i2s controller (pcm_gpio28 pin group).
-> 
-> I'm not clear on what you're asking for, or where I would go to find
-> anything else.  However, for integration stuff on the board, Phil, Dom,
-> and Gordon at RPi are likely to know more.
+Changes since v1:
+- remove drdy_irq parameter from LPS001WP settings since the sensor
+does not support data-ready interrupts
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/bluetooth/btbcm.h
+Lorenzo Bianconi (5):
+  iio: st_sensors: decouple irq1 configuration parameters from the irq2
+    ones
+  iio: st_sensors: do not always write enable_axis register
+  iio: st_sensors: add register mask for status register
+  iio: accel: add support to LIS2DW12
+  dt-bindings: iio: accel: add LIS2DW12 sensor device binding
 
-We have to send Set Sleepmode, Set PCM Int Params and Set PCM Format Params commands via Bluetooth HCI that will configure the sleep behavior and PCM parameters. So even if you route it via GPIO 28-31, you still need to tell the controller what parameters are used there.
+ .../devicetree/bindings/iio/st-sensors.txt         |   1 +
+ drivers/iio/accel/st_accel.h                       |   2 +
+ drivers/iio/accel/st_accel_core.c                  | 180 +++++++++++++++++----
+ drivers/iio/accel/st_accel_i2c.c                   |   5 +
+ drivers/iio/accel/st_accel_spi.c                   |   5 +
+ drivers/iio/common/st_sensors/st_sensors_core.c    |  33 ++--
+ drivers/iio/common/st_sensors/st_sensors_trigger.c |  16 +-
+ drivers/iio/gyro/st_gyro_core.c                    |  33 ++--
+ drivers/iio/magnetometer/st_magn_core.c            |  11 +-
+ drivers/iio/pressure/st_pressure_core.c            |  46 ++++--
+ include/linux/iio/common/st_sensors.h              |  23 ++-
+ 11 files changed, 265 insertions(+), 90 deletions(-)
 
-For the sleep mode parameters we most likely need to have the GPIO Expander working first. However that is something we should set correctly as well to allow the controller to go to sleep.
+-- 
+2.14.0
 
-Regards
-
-Marcel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
