@@ -1,54 +1,133 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7745: add PFC support
-Date: Thu, 17 Aug 2017 09:56:18 +0200
-Message-ID: <20170817075618.GB26170@verge.net.au>
-References: <20170415202036.987901107@cogentembedded.com>
- <CAMuHMdUPda7Mjo_P8p1V5a20XOAYM6GFf8Jqf0KLUuO7zAODeA@mail.gmail.com>
- <TY1PR06MB07025D9CE628A3D4CED37AA9B78D0@TY1PR06MB0702.apcprd06.prod.outlook.com>
- <b3bcd091-4f96-c37a-54ec-c8ee5b0fd916@cogentembedded.com>
- <20170815160049.GC26748@verge.net.au>
- <521e62cc-46d4-b067-59b2-cc085fd88e84@cogentembedded.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2 15/16] dmaengine: bcm-sba-raid: Add debugfs support
+Date: Thu, 17 Aug 2017 13:31:43 +0530
+Message-ID: <20170817080142.GC3053@localhost>
+References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
+ <1501583880-32072-16-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <521e62cc-46d4-b067-59b2-cc085fd88e84-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1501583880-32072-16-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 16, 2017 at 02:00:37PM +0300, Sergei Shtylyov wrote:
-> On 08/15/2017 07:00 PM, Simon Horman wrote:
+On Tue, Aug 01, 2017 at 04:07:59PM +0530, Anup Patel wrote:
+> This patch adds debugfs support to report stats via debugfs
+> which in-turn will help debug hang or error situations.
 > 
-> >>>>>Define the generic R8A7745 part of the PFC device node.
-> >>>>>
-> >>>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> >>>>
-> >>>>Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >>>
-> >>>It looks like the dependencies for this patch are met now [1].
-> >>>
-> >>>Are you happy to accept this patch? (and presumably the others in the series for the sk-rzg1e board).
-> >>>
-> >>>We plan to add GPIO support for r8a7745, but need this patch in place first.
-> >>>
-> >>>
-> >>>[1] https://patchwork.kernel.org/patch/9705249/
-> >>
-> >>    Actually, R8A774x PFC support has hit the Linus' tree in the meanwhile.
-> >>Simon, please merge the .dts patches.
-> >>
-> >>>Kind regards, Chris
-> >
-> >Thanks, I have applied the series for v4.14.
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>  drivers/dma/bcm-sba-raid.c | 82 +++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 81 insertions(+), 1 deletion(-)
 > 
->    Are you going to finally push the devel branch? I'm not seeing changes
-> since the Monday tags.
+> diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
+> index f0a0e80..f9d110c 100644
+> --- a/drivers/dma/bcm-sba-raid.c
+> +++ b/drivers/dma/bcm-sba-raid.c
+> @@ -36,6 +36,7 @@
+>   */
+>  
+>  #include <linux/bitops.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/list.h>
+> @@ -162,6 +163,9 @@ struct sba_device {
+>  	struct list_head reqs_completed_list;
+>  	struct list_head reqs_aborted_list;
+>  	struct list_head reqs_free_list;
+> +	/* DebugFS directory entries */
+> +	struct dentry *root;
+> +	struct dentry *stats;
+>  };
+>  
+>  /* ====== Command helper routines ===== */
+> @@ -486,6 +490,45 @@ static void sba_process_received_request(struct sba_device *sba,
+>  	}
+>  }
+>  
+> +static void sba_write_stats_in_seqfile(struct sba_device *sba,
+> +				       struct seq_file *file)
+> +{
+> +	unsigned long flags;
+> +	struct sba_request *req;
+> +	u32 free_count = 0, alloced_count = 0, pending_count = 0;
+> +	u32 active_count = 0, aborted_count = 0, completed_count = 0;
+> +
+> +	spin_lock_irqsave(&sba->reqs_lock, flags);
+> +
+> +	list_for_each_entry(req, &sba->reqs_free_list, node)
+> +		free_count++;
+> +
+> +	list_for_each_entry(req, &sba->reqs_alloc_list, node)
+> +		alloced_count++;
+> +
+> +	list_for_each_entry(req, &sba->reqs_pending_list, node)
+> +		pending_count++;
+> +
+> +	list_for_each_entry(req, &sba->reqs_active_list, node)
+> +		active_count++;
+> +
+> +	list_for_each_entry(req, &sba->reqs_aborted_list, node)
+> +		aborted_count++;
+> +
+> +	list_for_each_entry(req, &sba->reqs_completed_list, node)
+> +		completed_count++;
+> +
+> +	spin_unlock_irqrestore(&sba->reqs_lock, flags);
+> +
+> +	seq_printf(file, "maximum requests   = %d\n", sba->max_req);
+> +	seq_printf(file, "free requests      = %d\n", free_count);
+> +	seq_printf(file, "alloced requests   = %d\n", alloced_count);
+> +	seq_printf(file, "pending requests   = %d\n", pending_count);
+> +	seq_printf(file, "active requests    = %d\n", active_count);
+> +	seq_printf(file, "aborted requests   = %d\n", aborted_count);
+> +	seq_printf(file, "completed requests = %d\n", completed_count);
+> +}
+> +
+>  /* ====== DMAENGINE callbacks ===== */
+>  
+>  static void sba_free_chan_resources(struct dma_chan *dchan)
+> @@ -1451,6 +1494,19 @@ static void sba_receive_message(struct mbox_client *cl, void *msg)
+>  	sba_process_received_request(sba, req);
+>  }
+>  
+> +/* ====== Debugfs callbacks ====== */
+> +
+> +static int sba_debugfs_stats_show(struct seq_file *file, void *offset)
+> +{
+> +	struct platform_device *pdev = to_platform_device(file->private);
+> +	struct sba_device *sba = platform_get_drvdata(pdev);
+> +
+> +	/* Write stats in file */
+> +	sba_write_stats_in_seqfile(sba, file);
+> +
+> +	return 0;
+> +}
+> +
+>  /* ====== Platform driver routines ===== */
+>  
+>  static int sba_prealloc_channel_resources(struct sba_device *sba)
+> @@ -1721,10 +1777,30 @@ static int sba_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto fail_free_mchans;
+>  
+> +	/* Check availability of debugfs */
+> +	if (!debugfs_initialized())
+> +		goto skip_debugfs;
+> +
+> +	/* Create debugfs root entry */
+> +	sba->root = debugfs_create_dir(dev_name(sba->dev), NULL);
+> +	if (IS_ERR_OR_NULL(sba->root)) {
+> +		ret = PTR_ERR_OR_ZERO(sba->root);
+> +		goto fail_free_resources;
 
-Sorry, about the delay.
-I have (finally) pushed Tuesday's tags.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+why fail, debugfs should be an optional thingy, why would you want to fail here?
+
+-- 
+~Vinod
