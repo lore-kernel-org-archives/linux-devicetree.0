@@ -1,53 +1,160 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
-Date: Thu, 17 Aug 2017 09:48:26 +0200
-Message-ID: <20170817094826.2b9efcb8@bbrezillon>
-References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
-        <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
-        <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
-        <20170731231509.77d1fba4@bbrezillon>
-        <CAK8P3a0p=m-8U7TN8usG8HO-QNu_S7rSfykNzu4gm+MOaM2Kzg@mail.gmail.com>
-        <20170801142936.5df48702@bbrezillon>
-        <CAK8P3a0SH4kWcvXK+_iPt9LWuNnpjr+omp+ZpyTLjT=H602n+w@mail.gmail.com>
-        <20170801153414.6ce34ee8@bbrezillon>
-        <20170801141218.GA1450@katana>
-        <20170801164826.423183ff@bbrezillon>
-        <20170801150108.GC1450@katana>
-        <CAMuHMdXB0aU6mdaTw02Fz-9Mr+Ums4_SLmtDgi8b2gE75SsMVg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXB0aU6mdaTw02Fz-9Mr+Ums4_SLmtDgi8b2gE75SsMVg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Arnd Bergmann <arnd@arndb.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH] ARM: sun8i: a33: add dts for Q8 tablets with different resolution
+Date: Thu, 17 Aug 2017 15:49:26 +0800
+Message-ID: <20170817074926.3410-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le Wed, 16 Aug 2017 23:03:55 +0200,
-Geert Uytterhoeven <geert@linux-m68k.org> a écrit :
+Q8 tablets with Allwinner A33 SoC now come with two kind of LCD, either
+800x480 or 1024x600.
 
-> On Tue, Aug 1, 2017 at 5:01 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> >> I'm perfectly fine with the I3C / I2C framework separation. The only
-> >> minor problem I had with that was the inaccuracy of the
-> >> sysfs/device-model representation: we don't have one i2c and one i3c
-> >> bus, we just have one i3c bus with a mix of i2c and i3c devices.  
-> >
-> > I understand that. What if I2C had the same seperation between the "bus"
-> > and the "master"?  
-> 
-> There can be multiple masters on an i2c bus.  But not on an i3c bus, due
-> to SCL being push/pull.
+In order for sun4i-drm to be able to choose correct LCD configuration,
+two different device trees should be present, one for a resolution.
 
-I guess you mean there can't be a mix of I2C and I3C masters on the same
-bus. Then yes, you're right, you can only connect I2C slaves on an I3C
-bus, but I don't think Wolfram suggested this approach to support this
-case.
+Add stub device trees for two resolutions.
 
-Note that there can be multiple I3C masters on an I3C bus. When a
-'secondary master' wants to become the current master it must ask the
-permission to the 'current master' which can decide to ack or nack the
-request.
-As soon as the previous 'current master' accepted to release the bus it
-should act as a slave and if it needs to reclaim the bus, it should ask
-the new 'current master'.
+As the sun4i-drm driver still has some problems to support the LCDs, the
+real LCD device nodes are not added to the device tree files.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                         |  2 +
+ arch/arm/boot/dts/sun8i-a33-q8-tablet-1024x600.dts | 49 ++++++++++++++++++++++
+ arch/arm/boot/dts/sun8i-a33-q8-tablet-800x480.dts  | 49 ++++++++++++++++++++++
+ 3 files changed, 100 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-a33-q8-tablet-1024x600.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-a33-q8-tablet-800x480.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 570e107bf702..eeb9d9591cf0 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -908,6 +908,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a33-ippo-q8h-v1.2.dtb \
+ 	sun8i-a33-olinuxino.dtb \
+ 	sun8i-a33-q8-tablet.dtb \
++	sun8i-a33-q8-tablet-800x480.dtb \
++	sun8i-a33-q8-tablet-1024x600.dtb \
+ 	sun8i-a33-sinlinx-sina33.dtb \
+ 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tablet-1024x600.dts b/arch/arm/boot/dts/sun8i-a33-q8-tablet-1024x600.dts
+new file mode 100644
+index 000000000000..6f8ebd6c90ee
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-a33-q8-tablet-1024x600.dts
+@@ -0,0 +1,49 @@
++/*
++ * Copyright 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "sun8i-a33-q8-tablet.dts"
++
++/ {
++	model = "Q8 A33 Tablet with 1024x600 LCD";
++	compatible = "allwinner,q8-a33-1024x600", "allwinner,q8-a33",
++		     "allwinner,sun8i-a33";
++};
+diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tablet-800x480.dts b/arch/arm/boot/dts/sun8i-a33-q8-tablet-800x480.dts
+new file mode 100644
+index 000000000000..ad84b94dee53
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-a33-q8-tablet-800x480.dts
+@@ -0,0 +1,49 @@
++/*
++ * Copyright 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "sun8i-a33-q8-tablet.dts"
++
++/ {
++	model = "Q8 A33 Tablet with 800x480 LCD";
++	compatible = "allwinner,q8-a33-800x480", "allwinner,q8-a33",
++		     "allwinner,sun8i-a33";
++};
+-- 
+2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
