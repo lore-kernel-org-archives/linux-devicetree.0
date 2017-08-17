@@ -1,93 +1,85 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v4 1/4] can: dev: Add support for limiting configured
- bitrate
-Date: Thu, 17 Aug 2017 21:09:43 +0300
-Message-ID: <c6f5667d-f5c0-956d-7067-87a4de0d79c7@cogentembedded.com>
-References: <20170810005916.27163-1-fcooper@ti.com>
- <20170810005916.27163-2-fcooper@ti.com>
- <9a6f4fdf-a4f6-283b-0e5a-693cc7d263ef@cogentembedded.com>
- <b1082666-6cdf-374e-2c83-8d520e0996ad@ti.com>
+From: Mikko Perttunen <mperttunen@nvidia.com>
+Subject: [PATCH 0/6] Host1x and VIC support for Tegra186
+Date: Thu, 17 Aug 2017 21:54:07 +0300
+Message-ID: <20170817185413.6324-1-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <b1082666-6cdf-374e-2c83-8d520e0996ad@ti.com>
-Content-Language: en-MW
-Sender: linux-can-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, socketcan@hartkopp.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, dnibade@nvidia.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, amerilainen@nvidia.com, linux-tegra@vger.kernel.org, sgurrappadi@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, digetx@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 08/17/2017 08:54 PM, Franklin S Cooper Jr wrote:
-
->>> Various CAN or CAN-FD IP may be able to run at a faster rate than
->>> what the transceiver the CAN node is connected to. This can lead to
->>> unexpected errors. However, CAN transceivers typically have fixed
->>> limitations and provide no means to discover these limitations at
->>> runtime. Therefore, add support for a can-transceiver node that
->>> can be reused by other CAN peripheral drivers to determine for both
->>> CAN and CAN-FD what the max bitrate that can be used. If the user
->>> tries to configure CAN to pass these maximum bitrates it will throw
->>> an error.
->>>
->>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->>> ---
->>> Version 4 changes:
->>> Used can-transceiver instead of fixed-transceiver.
->>>
->>>    drivers/net/can/dev.c   | 50
->>> +++++++++++++++++++++++++++++++++++++++++++++++++
->>>    include/linux/can/dev.h |  5 +++++
->>>    2 files changed, 55 insertions(+)
->>>
->>> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
->>> index 365a8cc..372108f 100644
->>> --- a/drivers/net/can/dev.c
->>> +++ b/drivers/net/can/dev.c
->> [...]
->>> @@ -814,6 +815,39 @@ int open_candev(struct net_device *dev)
->>>    }
->>>    EXPORT_SYMBOL_GPL(open_candev);
->>>    +#ifdef CONFIG_OF
->>> +/*
->>> + * Common function that can be used to understand the limitation of
->>> + * a transceiver when it provides no means to determine these
->>> limitations
->>> + * at runtime.
->>> + */
->>> +void of_can_transceiver(struct net_device *dev)
->>> +{
->>> +    struct device_node *dn;
->>> +    struct can_priv *priv = netdev_priv(dev);
->>> +    struct device_node *np;
->>> +    unsigned int max_bitrate;
->>> +    int ret;
->>> +
->>> +    np = dev->dev.parent->of_node;
->>
->>     I'd do that as an initializer.
-> 
-> Ok
->>
->>> +
->>> +    dn = of_get_child_by_name(np, "can-transceiver");
->>> +    if (!dn)
->>> +        return;
->>> +
->>> +    max_bitrate = 0;
->>> +    ret = of_property_read_u32(dn, "max-bitrate", &max_bitrate);
->>
->>     I'd initialize max_bitrate to 0 as iff of_property_read_u32() fails,
->> it'll leave the variable unset...>
->>> +
->>> +    if (max_bitrate > 0) {
->>
->>     You risk checking unset variable here.
-> 
-> Four lines up I am already setting max_bitrate to a default value of 0.
-
-    Oops, sorry. Don't know how I missed that. Better done as initializer too 
-though...
-
-MBR, Sergei
+SGkgZXZlcnlvbmUsCgp0aGlzIHNlcmllcyBhZGRzIGJhc2ljIHN1cHBvcnQgZm9yIHRoZSBIb3N0
+MXggY2hhbm5lbCBlbmdpbmUgYW5kIHRoZQpWSUMgMmQgY29tcG9zaXRvciB1bml0IG9uIFRlZ3Jh
+MTg2LiBUaGUgZmlyc3QgdGhyZWUgcGF0Y2hlcyBkbyB0aGUKcmVxdWlyZWQgZGV2aWNlIHRyZWUg
+Y2hhbmdlcywgdGhlIGZvdXJ0aCBwYXRjaCB1cGRhdGVzIHRoZSBkZXZpY2UgdHJlZQpiaW5kaW5n
+IGRvY3VtZW50YXRpb24sIGFuZCB0aGUgdHdvIHJlbWFpbmluZyBwYXRjaGVzIGFkZCB0aGUgYWN0
+dWFsCmltcGxlbWVudGF0aW9uLCBhbG1vc3QgYWxsIG9mIHdoaWNoIGlzIGluIEhvc3QxeCBpdHNl
+bGYuCgpUaGUgVGVncmExODYgSG9zdDF4IGlzIGEgcmVsYXRpdmVseSBsYXJnZSB1cGRhdGUgb3Zl
+ciBwcmV2aW91cwpnZW5lcmF0aW9ucywgd2hpY2ggY2FuIGJlIHNlZW4gaW4gdGhlIGRpZmZzdGF0
+LiBUaGUgYmlnZ2VzdCBjaGFuZ2UgaXMKdGhhdCBIb3N0MXggaXMgbm93IGNvbnRhaW5zIHNlcGFy
+YXRlIGh5cGVydmlzb3IgYW5kIHZtIHJlZ2lzdGVyCmFwZXJ0dXJlcyB0byBzdXBwb3J0IHZpcnR1
+YWxpemF0aW9uIGF0IHRoZSBoYXJkd2FyZSBsZXZlbC4gVGhpcyBkcml2ZXIsCmhvd2V2ZXIsIGN1
+cnJlbnRseSBhc3N1bWVzIHRoYXQgdGhpcyBpbnN0YW5jZSBvZiBMaW51eCBpcyB0aGUgc29sZQpv
+cGVyYXRpbmcgc3lzdGVtIGhhdmluZyBhY2Nlc3MgdG8gdGhlIGhhcmR3YXJlLgoKVGhpcyBjb21i
+aW5lZCB3aXRoIGluY3JlYXNlZCBudW1iZXJzIG9mIHN1cHBvcnRlZCBjaGFubmVscyBhbmQKc3lu
+Y3BvaW50cyBoYXZlIGNhdXNlZCBhIG51bWJlciBvZiByZWdpc3RlciBzcGFjZSBjaGFuZ2VzIHRo
+YXQgYXJlCnJlc3BvbnNpYmxlIGZvciBtb3N0IG9mIHRoZSB1cGRhdGVkIGNvZGUuCgpUaGUgc2Vy
+aWVzIGhhcyBiZWVuIHRlc3RlZCBvbiB0aGUgSmV0c29uIFRYMSAoVDIxMCkgYW5kIFRYMiAoVDE4
+NikKdXNpbmcgdGhlIGhvc3QxeF90ZXN0IHRlc3Qgc3VpdGUgYXZhaWxhYmxlIGF0CgpodHRwOi8v
+Z2l0aHViLmNvbS9jeW5kaXMvaG9zdDF4X3Rlc3QKClRoZSBzZXJpZXMgaXRzZWxmIGlzIGF2YWls
+YWJsZSBhdAoKaHR0cDovL2dpdGh1Yi5jb20vY3luZGlzL2xpbnV4LCBicmFuY2ggaG9zdDF4LXQx
+ODYtMQoKQ2hlZXJzLApNaWtrbwoKTWlra28gUGVydHR1bmVuICg2KToKICBhcm02NDogdGVncmE6
+IEFkZCAjcG93ZXItZG9tYWluLWNlbGxzIGZvciBCUE1QCiAgYXJtNjQ6IHRlZ3JhOiBBZGQgaG9z
+dDF4IG9uIFRlZ3JhMTg2CiAgYXJtNjQ6IHRlZ3JhOiBBZGQgVklDIG9uIFRlZ3JhMTg2CiAgZHQt
+YmluZGluZ3M6IGhvc3QxeDogRml4IGFuZCBhZGQgVGVncmExODYgaW5mb3JtYXRpb24KICBncHU6
+IGhvc3QxeDogQWRkIFRlZ3JhMTg2IHN1cHBvcnQKICBkcm0vdGVncmE6IEFkZCBUZWdyYTE4NiBz
+dXBwb3J0IGZvciBWSUMKCiAuLi4vZGlzcGxheS90ZWdyYS9udmlkaWEsdGVncmEyMC1ob3N0MXgu
+dHh0ICAgICAgICB8ICAgOSArLQogYXJjaC9hcm02NC9ib290L2R0cy9udmlkaWEvdGVncmExODYu
+ZHRzaSAgICAgICAgICAgfCAgMzEgKysrKwogZHJpdmVycy9ncHUvZHJtL3RlZ3JhL2RybS5jICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL3RlZ3JhL3ZpYy5j
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTAgKysKIGRyaXZlcnMvZ3B1L2hvc3QxeC9NYWtl
+ZmlsZSAgICAgICAgICAgICAgICAgICAgICAgIHwgICAzICstCiBkcml2ZXJzL2dwdS9ob3N0MXgv
+ZGV2LmMgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA2MCArKysrKystCiBkcml2ZXJzL2dw
+dS9ob3N0MXgvZGV2LmggICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNCArCiBkcml2ZXJz
+L2dwdS9ob3N0MXgvaHcvY2RtYV9ody5jICAgICAgICAgICAgICAgICAgICB8ICA0OSArKystLS0K
+IGRyaXZlcnMvZ3B1L2hvc3QxeC9ody9kZWJ1Z19ody5jICAgICAgICAgICAgICAgICAgIHwgMTM3
+ICstLS0tLS0tLS0tLS0tLS0KIC4uLi9ncHUvaG9zdDF4L2h3L3tkZWJ1Z19ody5jID0+IGRlYnVn
+X2h3XzF4MDEuY30gIHwgMTYwIC0tLS0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy9ncHUvaG9zdDF4
+L2h3L2RlYnVnX2h3XzF4MDYuYyAgICAgICAgICAgICAgfCAxMzMgKysrKysrKysrKysrKysrCiBk
+cml2ZXJzL2dwdS9ob3N0MXgvaHcvaG9zdDF4MDEuYyAgICAgICAgICAgICAgICAgICB8ICAgMiAr
+CiBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvaG9zdDF4MDIuYyAgICAgICAgICAgICAgICAgICB8ICAg
+MiArCiBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvaG9zdDF4MDQuYyAgICAgICAgICAgICAgICAgICB8
+ICAgMiArCiBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvaG9zdDF4MDUuYyAgICAgICAgICAgICAgICAg
+ICB8ICAgMiArCiBkcml2ZXJzL2dwdS9ob3N0MXgvaHcve2hvc3QxeDAyLmMgPT4gaG9zdDF4MDYu
+Y30gICB8ICAxMiArLQogZHJpdmVycy9ncHUvaG9zdDF4L2h3L3tob3N0MXgwMi5jID0+IGhvc3Qx
+eDA2Lmh9ICAgfCAgMzAgKy0tLQogZHJpdmVycy9ncHUvaG9zdDF4L2h3L2hvc3QxeDA2X2hhcmR3
+YXJlLmggICAgICAgICAgfCAxNDIgKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvaG9zdDF4
+L2h3L2h3X2hvc3QxeDA2X2h5cGVydmlzb3IuaCAgICAgfCAgMzIgKysrKwogZHJpdmVycy9ncHUv
+aG9zdDF4L2h3L2h3X2hvc3QxeDA2X3VjbGFzcy5oICAgICAgICAgfCAxODEgKysrKysrKysrKysr
+KysrKysrKysrCiBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvaHdfaG9zdDF4MDZfdm0uaCAgICAgICAg
+ICAgICB8ICA0NyArKysrKysKIGRyaXZlcnMvZ3B1L2hvc3QxeC9ody9pbnRyX2h3LmMgICAgICAg
+ICAgICAgICAgICAgIHwgIDI5ICsrLS0KIDIyIGZpbGVzIGNoYW5nZWQsIDcxOSBpbnNlcnRpb25z
+KCspLCAzNTkgZGVsZXRpb25zKC0pCiBjb3B5IGRyaXZlcnMvZ3B1L2hvc3QxeC9ody97ZGVidWdf
+aHcuYyA9PiBkZWJ1Z19od18xeDAxLmN9ICg1MyUpCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvaG9zdDF4L2h3L2RlYnVnX2h3XzF4MDYuYwogY29weSBkcml2ZXJzL2dwdS9ob3N0MXgv
+aHcve2hvc3QxeDAyLmMgPT4gaG9zdDF4MDYuY30gKDg0JSkKIGNvcHkgZHJpdmVycy9ncHUvaG9z
+dDF4L2h3L3tob3N0MXgwMi5jID0+IGhvc3QxeDA2Lmh9ICg1MCUpCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvaG9zdDF4L2h3L2hvc3QxeDA2X2hhcmR3YXJlLmgKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvaHdfaG9zdDF4MDZfaHlwZXJ2aXNvci5oCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvaG9zdDF4L2h3L2h3X2hvc3QxeDA2X3VjbGFz
+cy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvaG9zdDF4L2h3L2h3X2hvc3QxeDA2
+X3ZtLmgKCi0tIAoyLjE0LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
