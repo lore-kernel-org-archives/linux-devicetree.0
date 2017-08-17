@@ -1,109 +1,71 @@
 From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v8 0/3] Add support for IPQ8074 PCIe phy and controller
-Date: Thu, 17 Aug 2017 16:50:55 +0530
-Message-ID: <1502968858-28090-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
+Subject: [PATCH v8 2/3] dt-bindings: pci: qcom: Add support for IPQ8074
+Date: Thu, 17 Aug 2017 16:50:57 +0530
+Message-ID: <1502968858-28090-3-git-send-email-varada@codeaurora.org>
+References: <1502968858-28090-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1502968858-28090-1-git-send-email-varada@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-v8:
-  Incorporate Stanimir's feedback for
-	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+Add support for the IPQ8074 PCIe controller.  IPQ8074 supports Gen 1/2, one
+lane, two PCIe root complex with support for MSI and legacy interrupts, and
+it conforms to PCI Express Base 2.1 specification.
 
-v7:
-  Skip PHY patches as they are already included by Kishon
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+---
+ .../devicetree/bindings/pci/qcom,pcie.txt          | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-  Incorporate Stanimir's feedback for the below patches
-	PCI: dwc: qcom: Use block IP version for operations
-	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-
-v6:
-  Added 'Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>' and fixed
-  white space issues as mentioned by Vivek.
-	phy: qcom-qmp: Fix phy pipe clock name
-	dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
-
-v5:
-  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
-        Renamed phy_phy clock as common clock
-
-  phy: qcom-qmp: Fix phy pipe clock name
-        Moved the DT get into the registering function
-
-  phy: qcom-qmp: Add support for IPQ8074
-        Place the IPQ8074 related structs similar to existing SoC.
-        Renamed phy_phy clock as common clock
-v4:
-  phy: qcom-qmp: Fix phy pipe clock name
-	Based on Vivek's comments, return failure only for
-	PCI/USB type of phys.
-	Removed Ack.
-
-  phy: qcom-qmp: Handle unavailable registers
-	Removed this patch.
-	Incorrectly used a block of code that is not applicable
-	to IPQ8074, hence had to avoid an "unavailable" register.
-	Since that is addressed using 'has_phy_com_ctrl' this
-	patch is not needed.
-
-  phy: qcom-qmp: Add support for IPQ8074
-	Set 'has_phy_com_ctrl' to false
-	Remove ipq8074_pciephy_regs_layout
-
-v3:
-  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-	Incoporate Stan's feedback:-
-	 - Add SoC Wrapper and Synopsys Core IP versions
-
-v2:
-  dt-bindings: phy: qmp: Add output-clock-names
-	Added Rob H's Ack
-
-  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
-	Removed example
-	Added IPQ8074 specific details
-
-  phy: qcom-qmp: Fix phy pipe clock name
-	Added Vivek's Ack
-
-  phy: qcom-qmp: Handle unavailable registers
-	No changes
-
-  phy: qcom-qmp: Add support for IPQ8074
-	No changes
-
-  PCI: dwc: qcom: Use block IP version for operations
-	Added new patch to use block IP version instead of v1, v2...
-
-  dt-bindings: pci: qcom: Add support for IPQ8074
-	Removed example
-	Added IPQ8074 specific details
-
-  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-	Incorporated Bjorn's feedback:-
-	 - Removed reset names, helper function to assert/deassert, helper
-	   function to R/M/W register.
-	 - Renamed sys_noc clock as iface clock
-	 - Added deinit if phy power on fails
-
-v1:
-Add definitions required to enable QMP phy support for IPQ8074.
-
-Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
-Gen 1/2, one lane, two PCIe root complex with support for MSI and
-legacy interrupts, and it conforms to PCI Express Base 2.1
-specification.
-
-Varadarajan Narayanan (3):
-  PCI: dwc: qcom: Use block IP version for operations
-  dt-bindings: pci: qcom: Add support for IPQ8074
-  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-
- .../devicetree/bindings/pci/qcom,pcie.txt          |  23 ++
- drivers/pci/dwc/pcie-qcom.c                        | 340 +++++++++++++++++----
- 2 files changed, 299 insertions(+), 64 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index 9d418b7..b3e36ef 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -9,6 +9,7 @@
+ 			- "qcom,pcie-apq8084" for apq8084
+ 			- "qcom,pcie-msm8996" for msm8996 or apq8096
+ 			- "qcom,pcie-ipq4019" for ipq4019
++			- "qcom,pcie-ipq8074" for ipq8074
+ 
+ - reg:
+ 	Usage: required
+@@ -105,6 +106,16 @@
+ 			- "bus_master"	Master AXI clock
+ 			- "bus_slave"	Slave AXI clock
+ 
++- clock-names:
++	Usage: required for ipq8074
++	Value type: <stringlist>
++	Definition: Should contain the following entries
++			- "iface"	PCIe to SysNOC BIU clock
++			- "axi_m"	AXI Master clock
++			- "axi_s"	AXI Slave clock
++			- "ahb"		AHB clock
++			- "aux"		Auxiliary clock
++
+ - resets:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -144,6 +155,18 @@
+ 			- "ahb"			AHB reset
+ 			- "phy_ahb"		PHY AHB reset
+ 
++- reset-names:
++	Usage: required for ipq8074
++	Value type: <stringlist>
++	Definition: Should contain the following entries
++			- "pipe"		PIPE reset
++			- "sleep"		Sleep reset
++			- "sticky"		Core Sticky reset
++			- "axi_m"		AXI Master reset
++			- "axi_s"		AXI Slave reset
++			- "ahb"			AHB Reset
++			- "axi_m_sticky"	AXI Master Sticky reset
++
+ - power-domains:
+ 	Usage: required for apq8084 and msm8996/apq8096
+ 	Value type: <prop-encoded-array>
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
