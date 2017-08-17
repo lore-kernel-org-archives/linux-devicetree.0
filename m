@@ -1,97 +1,103 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: Re: [PATCH v6 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
- controller
-Date: Thu, 17 Aug 2017 14:01:17 +0530
-Message-ID: <20170817083116.GA9649@codeaurora.org>
-References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
- <1501482857-14100-8-git-send-email-varada@codeaurora.org>
- <710f8933-df3a-7666-f5c5-861dd9761dba@mm-sol.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH  0/3] Add SMP support
+Date: Thu, 17 Aug 2017 10:33:37 +0200
+Message-ID: <20170817083337.GG26170@verge.net.au>
+References: <1502189793-59679-1-git-send-email-biju.das@bp.renesas.com>
+ <20170809083554.GI2705@verge.net.au>
+ <KL1PR06MB1702CEF4633BD237ABDB3BDDB8890@KL1PR06MB1702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <710f8933-df3a-7666-f5c5-861dd9761dba@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
+In-Reply-To: <KL1PR06MB1702CEF4633BD237ABDB3BDDB8890@KL1PR06MB1702.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Stanimir,
-
-> Hi,
->
-> Thanks for the patch.
->
-> On 31.07.2017 09:34, Varadarajan Narayanan wrote:
-> >Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
-> >Gen 1/2, one lane, two PCIe root complex with support for MSI and
-> >legacy interrupts, and it conforms to PCI Express Base 2.1
-> >specification.
+On Fri, Aug 11, 2017 at 09:37:45AM +0000, Biju Das wrote:
+> Hello,
+> 
+> 
+> > -----Original Message-----
+> > From: Biju Das
+> > Sent: 10 August 2017 12:19
+> > To: 'Simon Horman' <horms@verge.net.au>
+> > Cc: 'Rob Herring' <robh+dt@kernel.org>; 'Mark Rutland'
+> > <mark.rutland@arm.com>; 'Magnus Damm' <magnus.damm@gmail.com>;
+> > 'Russell King' <linux@armlinux.org.uk>; Chris Paterson
+> > <Chris.Paterson2@renesas.com>; 'devicetree@vger.kernel.org'
+> > <devicetree@vger.kernel.org>; 'linux-renesas-soc@vger.kernel.org' <linux-
+> > renesas-soc@vger.kernel.org>; 'linux-arm-kernel@lists.infradead.org' <linux-
+> > arm-kernel@lists.infradead.org>
+> > Subject: RE: [PATCH 0/3] Add SMP support
 > >
-> >The core init is the similar to the existing SoC, however the
-> >clocks and reset lines differ.
 > >
-> >Signed-off-by: smuthayy <smuthayy@codeaurora.org>
-> >Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> >
+> > > -----Original Message-----
+> > > From: Biju Das
+> > > Sent: 10 August 2017 10:17
+> > > To: 'Simon Horman' <horms@verge.net.au>
+> > > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> > Russell
+> > > King <linux@armlinux.org.uk>; Chris Paterson
+> > > <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org;
+> > > linux-renesas- soc@vger.kernel.org;
+> > > linux-arm-kernel@lists.infradead.org
+> > > Subject: RE: [PATCH 0/3] Add SMP support
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Simon Horman [mailto:horms@verge.net.au]
+> > > > Sent: 09 August 2017 09:36
+> > > > To: Biju Das <biju.das@bp.renesas.com>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > > > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> > > Russell
+> > > > King <linux@armlinux.org.uk>; Chris Paterson
+> > > > <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org;
+> > > > linux-renesas- soc@vger.kernel.org;
+> > > > linux-arm-kernel@lists.infradead.org
+> > > > Subject: Re: [PATCH 0/3] Add SMP support
+> > > >
+> > > > On Tue, Aug 08, 2017 at 11:56:30AM +0100, Biju Das wrote:
+> > > > > This series aims to add SMP support for r8a7743 SoC.
+> > > > >
+> > > > > This series has been tested against Linux-next tag 20170727 and
+> > > > > renesas-dev branch.
+> > > >
+> > > > It seems that these patches are targeted at the renesas tree.
+> > > > The best practice in that case is to base patches on the latest devel branch.
+> > > > Please consider doing so in future.
+> > > >
+> > > > The patches themselves seem good to me, however, I would like to
+> > > > enquire about testing. In particular, have you tested CPU hotplug
+> > > > and suspend to RAM with these patches (and without in the case of the
+> > latter)?
+> > >
+> > > I have tested CPU hotplug with this patch and it works ok.
+> > >
+> > > Currently iWave platform doesn't support STR I guess. But we should
+> > > check the changes on other M2 platforms to prove that things don't break.
+> 
+> I have tested STR on iWave RZ-G1M platform as well. I  used ttySC0 as wake up
+> Source(echo enabled > /sys/class/tty/ttySC0/power/wakeup)
+> 
+> It works fine with and without the patch .
+> 
+> It is tested against renesas-developer branch tag 20170809-v4.13-rc4.
+> 
+> > I have tested STR on RZ-G1M SK(r8a7743) platform using gpio-key as wake up
+> > source.
+> > It works fine with and without the patch . It is tested against renesas-developer
+> > branch.
+> >
+> > Also I have tested STR on R-Car M2 board.it works fine with gpio-key as wake
+> > up source.
+> >
+> > > [>]
+> > > > I am cautious about any regressions that may creep in when going
+> > > > from UP to SMP.
 
-<snip>
-
-> >+static int qcom_pcie_2_3_3_reset(struct qcom_pcie *pcie)
-> >+{
-> >+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-> >+	int i, ret;
-> >+
-> >+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-> >+		ret = reset_control_assert(res->rst[i]);
-> >+		if (ret) {
-> >+			dev_err(pcie->pci->dev,
-> >+				"%s: reset assert failed for %d\n",
-> >+				__func__, i);
-> >+			return ret;
-> >+		}
-> >+	}
-> >+
-> >+	msleep(20);
->
-> Could you explain why we need to wait for 20ms.
->
-> >+
-> >+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-> >+		ret = reset_control_deassert(res->rst[i]);
-> >+		if (ret) {
-> >+			dev_err(pcie->pci->dev,
-> >+				"%s: reset deassert failed for %d\n",
-> >+				__func__, i);
-> >+			return ret;
-> >+		}
-> >+	}
-> >+
-> >+	msleep(20);
->
-> Same comment as above.
-
-<snip>
-
-Sorry about the delay. I tried to contact the hardware folks
-to get more clarity about these delays. However, I haven't
-received any response from them till now. Unfortunately, the
-PCIe link doesn't come up without these delays.
-
-I was able to get the PCIe link with the above delays
-reduced to 2ms. I have posted v7 of these patches addressing
-your other comments and the above delays reduced to 2ms. Can
-you please review and provide your feedback.
-
-If everything else (other than these delays) is ok, can this
-patch be accepted? Meanwhile, I will follow up with the
-hardware folks and based on their response post a patch that
-removes the delay or provides a proper explanation for these
-delays.
-
-Please let me know.
-
-Thanks
-Varada
-
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Thanks for testing, I have applied this series.
