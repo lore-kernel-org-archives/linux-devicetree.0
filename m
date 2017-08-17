@@ -1,49 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 05/12] Documentation: net: phy: Add phy-is-internal
- binding
-Date: Thu, 17 Aug 2017 10:10:25 -0500
-Message-ID: <20170817151025.sdbusesfq7spy4fm@rob-hp-laptop>
-References: <1502280475-736-1-git-send-email-david.wu@rock-chips.com>
- <1502280630-2254-1-git-send-email-david.wu@rock-chips.com>
- <778B0470-8ABD-46AD-A63D-F0CF4911C800@gmail.com>
- <20170810002041.GA10776@lunn.ch>
- <1bff1793-fe46-f263-fbf5-ef65ffbc5dc9@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: ASoC: rockchip: Add
+ rockchip,codec-names property
+Date: Thu, 17 Aug 2017 10:10:45 -0500
+Message-ID: <20170817140945.ahakyr6vhut5zalf@rob-hp-laptop>
+References: <1502340898-28403-1-git-send-email-jeffy.chen@rock-chips.com>
+ <1502340898-28403-4-git-send-email-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1bff1793-fe46-f263-fbf5-ef65ffbc5dc9@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David.Wu" <david.wu@rock-chips.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net, heiko@sntech.de, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1502340898-28403-4-git-send-email-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 06:57:40PM +0800, David.Wu wrote:
-> Hi Andrew, Florian
+On Thu, Aug 10, 2017 at 12:54:58PM +0800, Jeffy Chen wrote:
+> Add a new rockchip,codec-names property, so that the driver can parse
+> the codecs by name.
 > 
-> 在 2017/8/10 8:20, Andrew Lunn 写道:
-> > Hi Florian, David.
-> > 
-> > I'm happy with the property name. But i think the text needs more
-> > description. We deal with Ethernet switches with integrated PHYs. Yet
-> > for us, this property is unneeded.
-> > 
-> > Seeing this property means some bit of software needs to ensure the
-> > internal PHY should be used, when given the choice between an internal
-> > and external PHY. So i would say something like:
-> > 
-> >      If set, indicates that the PHY is integrated into the same
-> >      physical package as the Ethernet MAC. If needed, muxers should be
-> >      configured to ensure the (internal) PHY is used. The absence of this
-> >      property indicates the muxers should be configured so that the
-> >      external PHY is used.
+> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
 > 
-> Are we supposed to replace the words "internal" with "integrated" here?
-> So we have three kinds of PHY, they are intenal, external and integrated
-> PHYs.
+> Changes in v2:
+> Let rockchip,codec-names be a required property.
+> 
+>  Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+> index eac91db..05351df 100644
+> --- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+> +++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>  - rockchip,cpu: The phandle of the Rockchip I2S controller that's
+>    connected to the codecs
+>  - rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
+> +- rockchip,codec-names: The names of the MAX98357A/RT5514/DA7219 codecs
 
-And you can have both a XAUI/serdes phy and the ethernet phy. It should 
-be clear this is for the latter.
+No, just lookup the handle and get the compatible for the codec if you 
+need a name.
 
-Rob
+>  
+>  Optional properties:
+>  - dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
+> @@ -18,5 +19,6 @@ sound {
+>  	compatible = "rockchip,rk3399-gru-sound";
+>  	rockchip,cpu = <&i2s0>;
+>  	rockchip,codec = <&max98357a &rt5514 &da7219>;
+> +	rockchip,codec-names = "MAX98357A", "RT5514", "DA7219";
+>  	dmic-wakeup-delay-ms = <20>;
+>  };
+> -- 
+> 2.1.4
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
