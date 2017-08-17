@@ -1,84 +1,53 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv2 0/3] arm64 xilinx zynqmp firmware interface
-Date: Thu, 17 Aug 2017 10:12:22 +0100
-Message-ID: <45e58860-cb8c-75f2-60bf-140aa3704169@arm.com>
-References: <cover.1502886277.git.michal.simek@xilinx.com>
- <43deeed7-32c8-7914-5f44-862ebbe14a3b@arm.com>
- <89e5469b-650e-64c7-1754-797b35bac523@xilinx.com>
- <a1970cb5-1cf1-d38a-3de3-c782c23fc8ac@arm.com>
- <0560c79f-e461-6010-0628-e99ce0a1f8c6@xilinx.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
+Date: Thu, 17 Aug 2017 11:28:45 +0200
+Message-ID: <20170817112845.6f7ade8b@bbrezillon>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+        <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
+        <CACRpkdZm7rrw3PQa9Q2U8N-FopdQJTfdM4uMM9VaatTRfypE1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0560c79f-e461-6010-0628-e99ce0a1f8c6-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, edgar.iglesias-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kevin Brodsky <kevin.brodsky-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Mor
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZm7rrw3PQa9Q2U8N-FopdQJTfdM4uMM9VaatTRfypE1A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.>
 List-Id: devicetree@vger.kernel.org
 
+Le Thu, 17 Aug 2017 11:03:10 +0200,
+Linus Walleij <linus.walleij@linaro.org> a écrit :
 
-
-On 17/08/17 09:42, Michal Simek wrote:
-> On 17.8.2017 09:52, Marc Zyngier wrote:
->> On 17/08/17 07:10, Michal Simek wrote:
->>> On 16.8.2017 17:39, Marc Zyngier wrote:
->>>> On 16/08/17 13:24, Michal Simek wrote:
->>>>> Hi,
->>>>>
->>>>> xilinx is using this interface for very long time and we can't merge our
->>>>> driver changes to Linux because of missing communication layer with
->>>>> firmware. This interface was developed before scpi and scmi was
->>>>> available. In connection to power management scpi and scmi are missing
->>>>> pieces which we already use. There is a separate discussion how to
->>>>> extend scmi to support all our use cases.
->>>>
->>>> So maybe we should wait and see where this discussion is going before we
->>>> merge yet another firmware interface?
->>>
->>> It will take a lot of time when this discussion ends and I can't see any
->>> benefit to hold all
->>
->> Well, so far, the benefit of this series is exactly nil, as the code it
->> brings is *unused*. It is impossible to review in isolation.
->>
+> On Mon, Jul 31, 2017 at 6:24 PM, Boris Brezillon
+> <boris.brezillon@free-electrons.com> wrote:
 > 
-> Ok. I will add others drivers to this series that's not a problem.
+> > This infrastructure is not complete yet and will be extended over
+> > time.  
 > 
->> In the meantime, you can continue finding out how *not* to have to merge
->> this code, and instead focus on using the infrastructure we already
->> have, or at least influence the infrastructure that is being designed.
->> It will be much better than dumping yet another slab of "I'm so
->> different" code that is going to ultimately bitrot.
+> I noticed the lack of pm_* from the core.
 > 
-> I am happy to look the better proposed way. SCPI is ancient and SCMI is
-> replacement and not merged yet. We already had a call with arm and
-> Sudeep was on it too where outcome from that was that we can't use that
-> because it doesn't support what we need to support now.
+> This will be noticed very quickly since the means the problem seen
+> in e.g. commit 04f59143b571 and the wakeup IRQ business will make it
+> impossible to do power-efficient drivers until that is resolved.
 > 
+> It'd be nice to have it to PM right from the start, and the I2C core has
+> all the right infrastructure in place, so when this stabilize I'd say
+> atleast it'd be *nice* if the PM business was added in the same
+> kernel release that introduce this core infrastructure, even if it will
+> be a separate patch.
+> 
+> I.e. I consider that more of necessary bread and butter and less of
+> nice to have topping on the cake.
+> 
+> What I have seen that leaf vendors doing (i3c) device drivers do
+> otherwise is complain "it is broken" and then they start to hack
+> around it instead of helping out with the core. (I think you're
+> well aware of that phenomenon.)
 
-OK, none of the specifics were discussed in the meeting to conclude that
-SCMI can't be used. My takeaway from the meeting was Xilinx has this
-interface for long and being deployed in various systems. I would like
-to get into specifics before discarding SCMI as unusable. What bothers
-me more is that why was that not raised during the specification review
-which was quite a long period IMO ? I tend to think Xilinx never
-bothered to look/review the specification as this f/w interface was
-already there.
+Noted. I'll try to provide core infrastructure for PM in my v2, but it's
+kind of hard to design something when you don't have real devices. I
+guess I can mimic I2C for now and make it evolve based on users needs.
 
-However I still can't see why this was posted once we started pushing
-out SCMI patches especially given that this f/w interface was there for
-long and no attempts were made in past to upstream this.
-
-Also I am not dismissing the series yet, but if I find that SCMI can be
-used(after getting specifics from this series myself), I will at-least
-argue against the "SCMI can't be used" argument.
-
--- 
 Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Boris
