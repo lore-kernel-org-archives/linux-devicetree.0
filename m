@@ -1,38 +1,230 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v3 9/9] dt-bindings: ASoC: rockchip: Update description of rockchip,codec
-Date: Thu, 17 Aug 2017 12:44:17 +0800
-Message-ID: <20170817044417.22069-10-jeffy.chen@rock-chips.com>
-References: <20170817044417.22069-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170817044417.22069-1-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
-Cc: briannorris@chromium.org, mka@chromium.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH] ARM: sun8i: a83t: Add device tree for Sinovoip Bananapi
+ BPI-M3
+Date: Thu, 17 Aug 2017 13:11:11 +0800
+Message-ID: <0dbfd9d8f83ac53c1538e86c4e02883e@aosc.io>
+References: <20170817034048.11601-1-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170817034048.11601-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update description for newly added optional audio codecs.
+在 2017-08-17 11:40，Chen-Yu Tsai 写道：
+> The BPI-M3 is an Allwinner A83T based SBC in the Bananapi/Bpi family.
+> It is roughly the same form factor as the BPI-M1+, with roughly the
+> same peripherals and connectors:
+> 
+>   - 2GB LPDDR3 DRAM
+>   - 8GB eMMC
+>   - Micro-SD card slot
+>   - HDMI output
+>   - Headset (stereo + mic) jack
+>   - Onboard mic
+>   - Gigabit Ethernet with RTL8211E transceiver
+>   - Ampak AP6212 WiFi + BT
+>   - USB OTG connector
+>   - USB-to-SATA bridge connected through a USB 2.0 hub
+>   - Consumer IR receiver
+>   - MIPI DSI LCD panel connector
+>   - Camera interface (parallel and MIPI CSI) connector
+>   - 3 LEDs (Red, Green, Blue), of which 2 are controllable (GB)
+>   - Raspberry Pi 2 compatible GPIO header
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+> 
+> Note that the file name follows the convention of most of the other
+> bananapi boards, that is the vendor "sinovoip" is not included in
+> the name. This deviates from what is already in U-boot.
+> 
+> This applies on top of my A83t USB patches.
+> 
+> ---
+>  arch/arm/boot/dts/Makefile                   |   1 +
+>  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 148 
+> +++++++++++++++++++++++++++
+>  2 files changed, 149 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e0d77ab79f5f..791fecc0774a 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -903,6 +903,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-a33-q8-tablet.dtb \
+>  	sun8i-a33-sinlinx-sina33.dtb \
+>  	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+> +	sun8i-a83t-bananapi-m3.dtb \
+>  	sun8i-a83t-cubietruck-plus.dtb \
+>  	sun8i-h2-plus-orangepi-zero.dtb \
+>  	sun8i-h3-bananapi-m2-plus.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+> b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+> new file mode 100644
+> index 000000000000..2bafd7e99ef7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+> @@ -0,0 +1,148 @@
+> +/*
+> + * Copyright 2017 Chen-Yu Tsai
+> + *
+> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of 
+> the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-a83t.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "Banana Pi BPI-M3";
+> +	compatible = "sinovoip,bpi-m3", "allwinner,sun8i-a83t";
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
+Should we continue to use sinovoip,bpi-mx-xxx or use bananapi,mx-xxx
+instead?
 
-Changes in v3: None
-Changes in v2: None
-
- Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index f19b6c830a34..f54b4e91e97c 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible: "rockchip,rk3399-gru-sound"
- - rockchip,cpu: The phandle of the Rockchip I2S controller that's
-   connected to the codecs
--- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+- rockchip,codec: The phandle of the audio codecs
- 
- Example:
- 
--- 
-2.11.0
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +};
+> +
+> +&ehci0 {
+> +	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
+> +	status = "okay";
+> +
+> +	/* TODO GL830 USB-to-SATA bridge downstream w/ GPIO power controls */
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+> +	cd-inverted;
+> +	status = "okay";
+> +};
+> +
+> +&mmc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc2_8bit_emmc_pins>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	cap-mmc-hw-reset;
+> +	status = "okay";
+> +};
+> +
+> +&r_rsb {
+> +	status = "okay";
+> +
+> +	axp81x: pmic@3a3 {
+> +		compatible = "x-powers,axp813";
+> +		reg = <0x3a3>;
+> +		interrupt-parent = <&r_intc>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	ac100: codec@e89 {
+> +		compatible = "x-powers,ac100";
+> +		reg = <0xe89>;
+> +
+> +		ac100_codec: codec {
+> +			compatible = "x-powers,ac100-codec";
+> +			interrupt-parent = <&r_pio>;
+> +			interrupts = <0 11 IRQ_TYPE_LEVEL_LOW>; /* PL11 */
+> +			#clock-cells = <0>;
+> +			clock-output-names = "4M_adda";
+> +		};
+> +
+> +		ac100_rtc: rtc {
+> +			compatible = "x-powers,ac100-rtc";
+> +			interrupt-parent = <&r_intc>;
+> +			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&ac100_codec>;
+> +			#clock-cells = <1>;
+> +			clock-output-names = "cko1_rtc",
+> +					     "cko2_rtc",
+> +					     "cko3_rtc";
+> +		};
+> +	};
+> +};
+> +
+> +&reg_usb1_vbus {
+> +	gpio = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> +	status = "okay";
+> +};
+> +
+> +&reg_vcc3v0 {
+> +	status = "disabled";
+> +};
+> +
+> +&reg_vcc5v0 {
+> +	status = "disabled";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pb_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	usb1_vbus-supply = <&reg_usb1_vbus>;
+> +	status = "okay";
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
