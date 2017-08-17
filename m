@@ -1,207 +1,179 @@
-From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 4/4] Bluetooth: hci_bcm: Add serdev support
-Date: Thu, 17 Aug 2017 19:59:51 +0200
-Message-ID: <1502992791-10265-4-git-send-email-loic.poulain@gmail.com>
-References: <1502992791-10265-1-git-send-email-loic.poulain@gmail.com>
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502992791-10265-1-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] can: dev: Add support for limiting configured
+ bitrate
+Date: Thu, 17 Aug 2017 13:05:52 -0500
+Message-ID: <193455e6-524a-4897-cba0-5c37a943827f@ti.com>
+References: <20170810005916.27163-1-fcooper@ti.com>
+ <20170810005916.27163-2-fcooper@ti.com>
+ <4a96c6a8-b8c5-24a1-5e99-44751a0ae987@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4a96c6a8-b8c5-24a1-5e99-44751a0ae987-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add basic support for Broadcom serial slave devices.
-Probe the serial device, retrieve its maximum speed and
-register a new hci uart device.
 
-Tested/compatible with bcm43438 (RPi3).
+Hi,
+On 08/10/2017 10:29 AM, Marc Kleine-Budde wrote:
+> Hello,
+> 
+> sorry for stepping in late....
+> 
+> On 08/10/2017 02:59 AM, Franklin S Cooper Jr wrote:
+>> Various CAN or CAN-FD IP may be able to run at a faster rate than
+>> what the transceiver the CAN node is connected to. This can lead to
+>> unexpected errors. However, CAN transceivers typically have fixed
+>> limitations and provide no means to discover these limitations at
+>> runtime. Therefore, add support for a can-transceiver node that
+>> can be reused by other CAN peripheral drivers to determine for both
+>> CAN and CAN-FD what the max bitrate that can be used. If the user
+>> tries to configure CAN to pass these maximum bitrates it will throw
+>> an error.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+>> ---
+>> Version 4 changes:
+>> Used can-transceiver instead of fixed-transceiver.
+>>
+>>  drivers/net/can/dev.c   | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/can/dev.h |  5 +++++
+>>  2 files changed, 55 insertions(+)
+>>
+>> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+>> index 365a8cc..372108f 100644
+>> --- a/drivers/net/can/dev.c
+>> +++ b/drivers/net/can/dev.c
+>> @@ -27,6 +27,7 @@
+>>  #include <linux/can/skb.h>
+>>  #include <linux/can/netlink.h>
+>>  #include <linux/can/led.h>
+>> +#include <linux/of.h>
+>>  #include <net/rtnetlink.h>
+>>  
+>>  #define MOD_DESC "CAN device driver interface"
+>> @@ -814,6 +815,39 @@ int open_candev(struct net_device *dev)
+>>  }
+>>  EXPORT_SYMBOL_GPL(open_candev);
+>>  
+>> +#ifdef CONFIG_OF
+>> +/*
+>> + * Common function that can be used to understand the limitation of
+>> + * a transceiver when it provides no means to determine these limitations
+>> + * at runtime.
+>> + */
+>> +void of_can_transceiver(struct net_device *dev)
+>> +{
+>> +	struct device_node *dn;
+>> +	struct can_priv *priv = netdev_priv(dev);
+>> +	struct device_node *np;
+>> +	unsigned int max_bitrate;
+>> +	int ret;
+>> +
+>> +	np = dev->dev.parent->of_node;
+>> +
+>> +	dn = of_get_child_by_name(np, "can-transceiver");
+>> +	if (!dn)
+>> +		return;
+>> +
+>> +	max_bitrate = 0;
+>> +	ret = of_property_read_u32(dn, "max-bitrate", &max_bitrate);
+> 
+> IIRC the last argument is only modified in case of no error, so what about:
+> 	ret = of_property_read_u32(dn, "max-bitrate",
+> 			&priv->max_bitrate);
 
-Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- v2: dt-bindings as separate patch
-     rebase on upcoming pi3 dts changes
- v3: changes in bcm serdev drivers:
-     name refactoring and additional comments
-     Add generic host_set_baudrate method
-     Use agnostic device_property_read
- v4: changes in doc and dts:
-     Add additional params to broadcom bt dt-bindings
-     Set the max baudrate to 2000000 instead of 921600
-     use chosen/stdout-path instead of console=
-     remove useless earlyprintk
-     same changes in bcm283x.dtsi
+That works
+> 
+>> +
+>> +	if (max_bitrate > 0) {
+>> +		priv->max_bitrate = max_bitrate;
+>> +		priv->is_bitrate_limited = true;
+> 
+> Do we need is_bitrate_limited...
 
- drivers/bluetooth/hci_bcm.c | 85 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 83 insertions(+), 2 deletions(-)
+No.
+> 
+>> +	} else if (ret != -EINVAL) {
+>> +		netdev_warn(dev, "Invalid value for transceiver max bitrate\n");
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL(of_can_transceiver);
+>> +#endif
+>> +
+>>  /*
+>>   * Common close function for cleanup before the device gets closed.
+>>   *
+>> @@ -913,6 +947,14 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
+>>  					priv->bitrate_const_cnt);
+>>  		if (err)
+>>  			return err;
+>> +
+>> +		if (priv->is_bitrate_limited &&
+>> +		    bt.bitrate > priv->max_bitrate) {
+> 
+> ...can we just use priv->max_bitrate?
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 1eb286a..34882f1 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -27,6 +27,8 @@
- #include <linux/firmware.h>
- #include <linux/module.h>
- #include <linux/acpi.h>
-+#include <linux/of.h>
-+#include <linux/property.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/gpio/consumer.h>
-@@ -34,6 +36,7 @@
- #include <linux/interrupt.h>
- #include <linux/dmi.h>
- #include <linux/pm_runtime.h>
-+#include <linux/serdev.h>
- 
- #include <net/bluetooth/bluetooth.h>
- #include <net/bluetooth/hci_core.h>
-@@ -46,6 +49,7 @@
- 
- #define BCM_AUTOSUSPEND_DELAY	5000 /* default autosleep delay */
- 
-+/* platform device driver resources */
- struct bcm_device {
- 	struct list_head	list;
- 
-@@ -69,6 +73,12 @@ struct bcm_device {
- #endif
- };
- 
-+/* serdev driver resources */
-+struct bcm_serdev {
-+	struct hci_uart hu;
-+};
-+
-+/* generic bcm uart resources */
- struct bcm_data {
- 	struct sk_buff		*rx_skb;
- 	struct sk_buff_head	txq;
-@@ -80,6 +90,14 @@ struct bcm_data {
- static DEFINE_MUTEX(bcm_device_lock);
- static LIST_HEAD(bcm_device_list);
- 
-+static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
-+{
-+	if (hu->serdev)
-+		serdev_device_set_baudrate(hu->serdev, speed);
-+	else
-+		hci_uart_set_baudrate(hu, speed);
-+}
-+
- static int bcm_set_baudrate(struct hci_uart *hu, unsigned int speed)
- {
- 	struct hci_dev *hdev = hu->hdev;
-@@ -290,6 +308,14 @@ static int bcm_open(struct hci_uart *hu)
- 
- 	hu->priv = bcm;
- 
-+	/* If this is a serdev defined device, then only use
-+	 * serdev open primitive and skip the rest.
-+	 */
-+	if (hu->serdev) {
-+		serdev_device_open(hu->serdev);
-+		goto out;
-+	}
-+
- 	if (!hu->tty->dev)
- 		goto out;
- 
-@@ -325,6 +351,12 @@ static int bcm_close(struct hci_uart *hu)
- 
- 	bt_dev_dbg(hu->hdev, "hu %p", hu);
- 
-+	/* If this is a serdev defined device, only use serdev
-+	 * close primitive and then continue as usual.
-+	 */
-+	if (hu->serdev)
-+		serdev_device_close(hu->serdev);
-+
- 	/* Protect bcm->dev against removal of the device or driver */
- 	mutex_lock(&bcm_device_lock);
- 	if (bcm_device_exists(bdev)) {
-@@ -400,7 +432,7 @@ static int bcm_setup(struct hci_uart *hu)
- 		speed = 0;
- 
- 	if (speed)
--		hci_uart_set_baudrate(hu, speed);
-+		host_set_baudrate(hu, speed);
- 
- 	/* Operational speed if any */
- 	if (hu->oper_speed)
-@@ -413,7 +445,7 @@ static int bcm_setup(struct hci_uart *hu)
- 	if (speed) {
- 		err = bcm_set_baudrate(hu, speed);
- 		if (!err)
--			hci_uart_set_baudrate(hu, speed);
-+			host_set_baudrate(hu, speed);
- 	}
- 
- finalize:
-@@ -906,9 +938,57 @@ static int bcm_remove(struct platform_device *pdev)
- 	},
- };
- 
-+static int bcm_serdev_probe(struct serdev_device *serdev)
-+{
-+	struct bcm_serdev *bcmdev;
-+	u32 speed;
-+	int err;
-+
-+	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-+	if (!bcmdev)
-+		return -ENOMEM;
-+
-+	bcmdev->hu.serdev = serdev;
-+	serdev_device_set_drvdata(serdev, bcmdev);
-+
-+	err = device_property_read_u32(&serdev->dev, "max-speed", &speed);
-+	if (!err)
-+		bcmdev->hu.oper_speed = speed;
-+
-+	return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
-+}
-+
-+static void bcm_serdev_remove(struct serdev_device *serdev)
-+{
-+	struct bcm_serdev *bcmdev = serdev_device_get_drvdata(serdev);
-+
-+	hci_uart_unregister_device(&bcmdev->hu);
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id bcm_bluetooth_of_match[] = {
-+	{ .compatible = "brcm,bcm43438-bt" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, bcm_bluetooth_of_match);
-+#endif
-+
-+static struct serdev_device_driver bcm_serdev_driver = {
-+	.probe = bcm_serdev_probe,
-+	.remove = bcm_serdev_remove,
-+	.driver = {
-+		.name = "hci_uart_bcm",
-+		.of_match_table = of_match_ptr(bcm_bluetooth_of_match),
-+	},
-+};
-+
- int __init bcm_init(void)
- {
-+	/* For now, we need to keep both platform device
-+	 * driver (ACPI generated) and serdev driver (DT).
-+	 */
- 	platform_driver_register(&bcm_driver);
-+	serdev_device_driver_register(&bcm_serdev_driver);
- 
- 	return hci_uart_register_proto(&bcm_proto);
- }
-@@ -916,6 +996,7 @@ int __init bcm_init(void)
- int __exit bcm_deinit(void)
- {
- 	platform_driver_unregister(&bcm_driver);
-+	serdev_device_driver_unregister(&bcm_serdev_driver);
- 
- 	return hci_uart_unregister_proto(&bcm_proto);
- }
--- 
-1.9.1
+Yes
+
+Thanks for reviewing and for your feedback.
+> 
+> 	if (priv->max_bitrate && bt.bitrate > priv->max_bitrate)
+> 
+>> +			netdev_err(dev, "arbitration bitrate surpasses transceiver capabilities of %d bps\n",
+>> +				   priv->max_bitrate);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>>  		memcpy(&priv->bittiming, &bt, sizeof(bt));
+>>  
+>>  		if (priv->do_set_bittiming) {
+>> @@ -997,6 +1039,14 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
+>>  					priv->data_bitrate_const_cnt);
+>>  		if (err)
+>>  			return err;
+>> +
+>> +		if (priv->is_bitrate_limited &&
+>> +		    dbt.bitrate > priv->max_bitrate) {
+>> +			netdev_err(dev, "canfd data bitrate surpasses transceiver capabilities of %d bps\n",
+>> +				   priv->max_bitrate);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>>  		memcpy(&priv->data_bittiming, &dbt, sizeof(dbt));
+>>  
+>>  		if (priv->do_set_data_bittiming) {
+>> diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
+>> index 141b05a..5519f59 100644
+>> --- a/include/linux/can/dev.h
+>> +++ b/include/linux/can/dev.h
+>> @@ -47,6 +47,9 @@ struct can_priv {
+>>  	unsigned int data_bitrate_const_cnt;
+>>  	struct can_clock clock;
+>>  
+>> +	unsigned int max_bitrate;
+>> +	bool is_bitrate_limited;
+>> +
+>>  	enum can_state state;
+>>  
+>>  	/* CAN controller features - see include/uapi/linux/can/netlink.h */
+>> @@ -165,6 +168,8 @@ void can_put_echo_skb(struct sk_buff *skb, struct net_device *dev,
+>>  unsigned int can_get_echo_skb(struct net_device *dev, unsigned int idx);
+>>  void can_free_echo_skb(struct net_device *dev, unsigned int idx);
+>>  
+>> +void of_can_transceiver(struct net_device *dev);
+>> +
+>>  struct sk_buff *alloc_can_skb(struct net_device *dev, struct can_frame **cf);
+>>  struct sk_buff *alloc_canfd_skb(struct net_device *dev,
+>>  				struct canfd_frame **cfd);
+>>
+> 
+> Marc
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
