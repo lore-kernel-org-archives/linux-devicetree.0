@@ -1,31 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/4] Documentation: devicetree: add binding for
- Broadcom STB AVS TMON
-Date: Thu, 17 Aug 2017 10:10:31 -0500
-Message-ID: <20170817151031.yh2wlpyvrp2qvhac@rob-hp-laptop>
-References: <20170809220257.4234-1-code@mmayer.net>
- <20170809220257.4234-2-code@mmayer.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFCv3 usb-next 1/3] dt-bindings: usb: add the documentation for
+ USB root-hub
+Date: Thu, 17 Aug 2017 10:13:45 -0500
+Message-ID: <20170817151345.xx34eatfckrkppk7@rob-hp-laptop>
+References: <20170814224542.18257-1-martin.blumenstingl@googlemail.com>
+ <20170814224542.18257-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170809220257.4234-2-code@mmayer.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Markus Mayer <code@mmayer.net>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.o>
+In-Reply-To: <20170814224542.18257-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 09, 2017 at 03:02:54PM -0700, Markus Mayer wrote:
-> From: Brian Norris <computersforpeace@gmail.com>
+On Tue, Aug 15, 2017 at 12:45:40AM +0200, Martin Blumenstingl wrote:
+> A USB root-hub may have several PHYs which need to be configured before
+> the root-hub starts working.
+> This adds the documentation for such a USB root-hub.
 > 
-> Add binding for Broadcom STB thermal.
-> 
-> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  .../devicetree/bindings/thermal/brcm,avs-tmon.txt    | 20 ++++++++++++++++++++
->  MAINTAINERS                                          |  8 ++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+>  .../devicetree/bindings/usb/usb-roothub.txt        | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
