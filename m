@@ -1,50 +1,43 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH  2/2] ARM: shmobile: Enable BQ32000 rtc in
- shmobile_defconfig
-Date: Thu, 17 Aug 2017 11:01:12 +0200
-Message-ID: <20170817090112.GE27693@verge.net.au>
-References: <1502197465-61546-1-git-send-email-biju.das@bp.renesas.com>
- <1502197465-61546-3-git-send-email-biju.das@bp.renesas.com>
- <20170809090421.GN2705@verge.net.au>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
+Date: Thu, 17 Aug 2017 11:03:10 +0200
+Message-ID: <CACRpkdZm7rrw3PQa9Q2U8N-FopdQJTfdM4uMM9VaatTRfypE1A@mail.gmail.com>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170809090421.GN2705@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 09, 2017 at 11:04:21AM +0200, Simon Horman wrote:
-> On Tue, Aug 08, 2017 at 02:04:25PM +0100, Biju Das wrote:
-> > The iWave RZ/G1M Q7 SOM supports RTC (TI BQ32000).
-> > To increase hardware support enable the driver in the
-> > shmobile_defconfig multiplatform configuration.
-> > 
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> 
-> Thanks, applied for v4.14.
+On Mon, Jul 31, 2017 at 6:24 PM, Boris Brezillon
+<boris.brezillon@free-electrons.com> wrote:
 
-Please consider posting a similar patch for multi_v7_defconfig.
+> This infrastructure is not complete yet and will be extended over
+> time.
 
-> > ---
-> >  arch/arm/configs/shmobile_defconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
-> > index 18886c5..7b4fc01 100644
-> > --- a/arch/arm/configs/shmobile_defconfig
-> > +++ b/arch/arm/configs/shmobile_defconfig
-> > @@ -193,6 +193,7 @@ CONFIG_LEDS_CLASS=y
-> >  CONFIG_LEDS_GPIO=y
-> >  CONFIG_RTC_CLASS=y
-> >  CONFIG_RTC_DRV_RS5C372=y
-> > +CONFIG_RTC_DRV_BQ32K=y
-> >  CONFIG_RTC_DRV_S35390A=y
-> >  CONFIG_RTC_DRV_RX8581=y
-> >  CONFIG_RTC_DRV_DA9063=y
-> > -- 
-> > 1.9.1
-> > 
-> 
+I noticed the lack of pm_* from the core.
+
+This will be noticed very quickly since the means the problem seen
+in e.g. commit 04f59143b571 and the wakeup IRQ business will make it
+impossible to do power-efficient drivers until that is resolved.
+
+It'd be nice to have it to PM right from the start, and the I2C core has
+all the right infrastructure in place, so when this stabilize I'd say
+atleast it'd be *nice* if the PM business was added in the same
+kernel release that introduce this core infrastructure, even if it will
+be a separate patch.
+
+I.e. I consider that more of necessary bread and butter and less of
+nice to have topping on the cake.
+
+What I have seen that leaf vendors doing (i3c) device drivers do
+otherwise is complain "it is broken" and then they start to hack
+around it instead of helping out with the core. (I think you're
+well aware of that phenomenon.)
+
+Yours,
+Linus Walleij
