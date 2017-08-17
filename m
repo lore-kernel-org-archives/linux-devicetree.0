@@ -1,71 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] drm/tve200: Add DT bindings
-Date: Thu, 17 Aug 2017 15:46:39 -0500
-Message-ID: <20170817204639.euyygue22s33atak@rob-hp-laptop>
-References: <20170813151132.24736-1-linus.walleij@linaro.org>
- <20170813151132.24736-2-linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 3/8] dt-bindings: pwm: add description for rv1108 pwm
+Date: Thu, 17 Aug 2017 15:47:35 -0500
+Message-ID: <20170817204735.vyifljtv5gxrcku6@rob-hp-laptop>
+References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com>
+ <1502699868-8315-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170813151132.24736-2-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1502699868-8315-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: thierry.reding@gmail.com, heiko@sntech.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBBdWcgMTMsIDIwMTcgYXQgMDU6MTE6MjlQTSArMDIwMCwgTGludXMgV2FsbGVpaiB3
-cm90ZToKPiBUaGlzIGFkZHMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHRoZSBGYXJhZGF5IFRW
-RTIwMCBJUCBibG9jay4KPiBUaGlzIElQIGJsb2NrIGlzIHByZXNlbnQgaW4gdGhlIEdlbWluaSBB
-Uk0gU29DIGFuZCBhbHNvIGluIHNvbWUKPiBHcmFpbiBNZWRpYSBHTXh4eHggU29Dcy4KPiAKPiBD
-YzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxs
-ZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvZmFyYWRheSx0dmUyMDAudHh0IHwgNDEgKysrKysrKysrKysrKysrKysr
-KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZmFyYWRheSx0
-dmUyMDAudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAwLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi45NWQ1ODhmYmIyZjIKPiAtLS0gL2Rldi9udWxsCj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZmFyYWRheSx0
-dmUyMDAudHh0Cj4gQEAgLTAsMCArMSw0MSBAQAo+ICsqIEZhcmFkYXkgVFYgRW5jb2RlciBUVkUy
-MDAKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGU6IG11c3Qg
-YmUgb25lIG9mOgo+ICsJImZhcmFkYXksdHZlMjAwIgo+ICsJImNvcnRpbmEsZ2VtaW5pLXR2YyIs
-ICJmYXJhZGF5LHR2ZTIwMCIKPiArCj4gKy0gcmVnOiBiYXNlIGFkZHJlc3MgYW5kIHNpemUgb2Yg
-dGhlIGNvbnRyb2wgcmVnaXN0ZXJzIGJsb2NrCj4gKwo+ICstIGludGVycnVwdHM6IGNvbnRhaW5z
-IGFuIGludGVycnVwdCBzcGVjaWZpZXIgZm9yIHRoZSBpbnRlcnJ1cHQKPiArCWxpbmUgZnJvbSB0
-aGUgVFZFMjAwCj4gKwo+ICstIGNsb2NrLW5hbWVzOiBzaG91bGQgY29udGFpbiAiUENMSyIgZm9y
-IHRoZSBjbG9jayBsaW5lIGNsb2NraW5nIHRoZQo+ICsJc2lsaWNvbiBhbmQgIlRWRSIgZm9yIHRo
-ZSAyN01IeiBjbG9jayB0byB0aGUgdmlkZW8gZHJpdmVyCj4gKwo+ICstIGNsb2NrczogY29udGFp
-bnMgcGhhbmRsZSBhbmQgY2xvY2sgc3BlY2lmaWVyIHBhaXJzIGZvciB0aGUgZW50cmllcwo+ICsJ
-aW4gdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5LiBTZWUKPiArCURvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiArCj4gK09wdGlvbmFsIHBy
-b3BlcnRpZXM6Cj4gKwo+ICstIHJlc2V0czogY29udGFpbnMgdGhlIHJlc2V0IGxpbmUgcGhhbmRs
-ZSBmb3IgdGhlIGJsb2NrCj4gKwo+ICtSZXF1aXJlZCBzdWItbm9kZXM6Cj4gKwo+ICstIHBvcnQ6
-IGRlc2NyaWJlcyBMQ0QgcGFuZWwgc2lnbmFscywgZm9sbG93aW5nIHRoZSBjb21tb24gYmluZGlu
-Zwo+ICsJZm9yIHZpZGVvIHRyYW5zbWl0dGVyIGludGVyZmFjZXM7IHNlZQo+ICsJRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CgpOZWVk
-IHRvIGV4cGxpY2l0bHkgbGlzdCBwb3J0cyBhbmQgZW5kcG9pbnRzLgoKQWxzbywgbmVlZHMgdG8g
-YmUgaW4gdGhlIGV4YW1wbGUgYXMgaXQgaXMgcmVxdWlyZWQuCgo+ICsKPiArRXhhbXBsZToKPiAr
-Cj4gK3R2Y0A2YTAwMDAwMCB7CgpkaXNwbGF5LWNvbnRyb2xsZXJALi4uCgo+ICsJY29tcGF0aWJs
-ZSA9ICJmYXJhZGF5LHR2ZTIwMCI7Cj4gKwlyZWcgPSA8MHg2YTAwMDAwMCAweDEwMDA+Owo+ICsJ
-aW50ZXJydXB0cyA9IDwxMyBJUlFfVFlQRV9FREdFX1JJU0lORz47Cj4gKwlyZXNldHMgPSA8JnN5
-c2NvbiBHRU1JTklfUkVTRVRfVFZDPjsKPiArCWNsb2NrcyA9IDwmc3lzY29uIEdFTUlOSV9DTEtf
-R0FURV9UVkM+LAo+ICsJCSA8JnN5c2NvbiBHRU1JTklfQ0xLX1RWQz47Cj4gKwljbG9jay1uYW1l
-cyA9ICJQQ0xLIiwgIlRWRSI7Cj4gK307Cj4gLS0gCj4gMi4xMy40Cj4gCj4gLS0KPiBUbyB1bnN1
-YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNl
-dHJlZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVs
-Lm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFq
-b3Jkb21vLWluZm8uaHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On Mon, Aug 14, 2017 at 04:37:48PM +0800, Andy Yan wrote:
+> Add device tree bindings document for pwm on
+> rockchip rv1108 soc.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v4: None
+> Changes in v3:
+> - make the compatible string be: "rockchip,rv1108-pwm", "rockchip,rk3288-pwm"
+>   for rv1108
+> 
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/pwm/pwm-rockchip.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+
+Acked-by: Rob Herring <robh@kernel.org>
