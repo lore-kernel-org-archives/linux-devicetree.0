@@ -1,17 +1,17 @@
 From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 4/7] ARM: dts: stm32: Enable USB HS on stm32746g-eval
-Date: Thu, 17 Aug 2017 13:57:35 +0000
-Message-ID: <b1aaf89c-33b5-d2db-73dd-89ad6c3a80c8@st.com>
+Subject: Re: [PATCH 6/7] ARM: dts: stm32: Add USB FS support for STM32F746 MCU
+Date: Thu, 17 Aug 2017 13:58:34 +0000
+Message-ID: <6623149d-fe9d-a173-52d5-ee558d55ece4@st.com>
 References: <1502962386-6683-1-git-send-email-amelie.delaunay@st.com>
- <1502962386-6683-5-git-send-email-amelie.delaunay@st.com>
- <824d41f2-bea9-c1b6-4c3e-1ae146286d89@cogentembedded.com>
+ <1502962386-6683-7-git-send-email-amelie.delaunay@st.com>
+ <804e0eb3-88a0-2847-9330-0f92d36f9f99@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <824d41f2-bea9-c1b6-4c3e-1ae146286d89@cogentembedded.com>
+In-Reply-To: <804e0eb3-88a0-2847-9330-0f92d36f9f99@cogentembedded.com>
 Content-Language: en-US
-Content-ID: <57998DFA44736B4199FC3E2F735C6D45@st.com>
+Content-ID: <0BFD8DFFF673B54D9778ED92B8478BDF@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,34 +25,30 @@ To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Greg Kroah-Hartman <gr
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On 08/17/2017 12:44 PM, Sergei Shtylyov wrote:
-> Hello!
-> 
+On 08/17/2017 12:47 PM, Sergei Shtylyov wrote:
 > On 8/17/2017 12:33 PM, Amelie Delaunay wrote:
 > 
->> This patch enables USB HS on stm32746g-eval (Host mode).
+>> This patch adds the USB pins and nodes for USB FS core on STM32F746 SoC.
 >>
 >> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 >> ---
->>   arch/arm/boot/dts/stm32746g-eval.dts | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
+>>   arch/arm/boot/dts/stm32f746.dtsi | 31 +++++++++++++++++++++++++++++++
+>>   1 file changed, 31 insertions(+)
 >>
->> diff --git a/arch/arm/boot/dts/stm32746g-eval.dts 
->> b/arch/arm/boot/dts/stm32746g-eval.dts
->> index 69a9579..944501d 100644
->> --- a/arch/arm/boot/dts/stm32746g-eval.dts
->> +++ b/arch/arm/boot/dts/stm32746g-eval.dts
->> @@ -83,6 +83,13 @@
->>               gpios = <&gpioc 13 0>;
->>           };
->>       };
+>> diff --git a/arch/arm/boot/dts/stm32f746.dtsi 
+>> b/arch/arm/boot/dts/stm32f746.dtsi
+>> index fcfe5a6..a9476ea 100644
+>> --- a/arch/arm/boot/dts/stm32f746.dtsi
+>> +++ b/arch/arm/boot/dts/stm32f746.dtsi
+>> @@ -419,6 +419,28 @@
+>>                       slew-rate = <2>;
+>>                   };
+>>               };
 >> +
->> +    usbotg_hs_phy: usbphy {
+>> +            usbotg_fs_pins_a: usbotg_fs@0 {
 > 
->     Name it "usb-phy" please, tpo be m,ore in line with the DT spec.
-OK, will be fixed in v2. Thanks!
+>     Dashes are preferred to underlines in the node names.
+You're right. I'll fix it in v2. Thanks.
 > 
 > [...]
 > 
