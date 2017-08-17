@@ -1,38 +1,97 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH repost 0/2] ARM: shmobile: document iWave's
- iW-RainboW-G22D-SODIMM RZ/G1E SODIMM development platform
-Date: Thu, 17 Aug 2017 10:30:15 +0200
-Message-ID: <20170817083015.GF26170@verge.net.au>
-References: <cover.1502274234.git.fabrizio.castro@bp.renesas.com>
- <20170810081148.GH16647@verge.net.au>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: Re: [PATCH v6 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
+ controller
+Date: Thu, 17 Aug 2017 14:01:17 +0530
+Message-ID: <20170817083116.GA9649@codeaurora.org>
+References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
+ <1501482857-14100-8-git-send-email-varada@codeaurora.org>
+ <710f8933-df3a-7666-f5c5-861dd9761dba@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170810081148.GH16647@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <710f8933-df3a-7666-f5c5-861dd9761dba@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 10:11:48AM +0200, Simon Horman wrote:
-> On Wed, Aug 09, 2017 at 12:27:38PM +0100, Fabrizio Castro wrote:
-> > Hello,
-> > 
-> > This series aims to add the documentation for the device tree bindings
-> > of the iWave iW-RainboW-G22D-SODIMM RZ/G1E SODIMM development kit:
-> > http://www.iwavesystems.com/product/development-platform/sodimm-evaluation-boards/rz-g1e-sodimm-development-kit-28/rz-g1e-sodimm-development-kit.html
-> > 
-> > which consists of a System on Module (iW-RainboW-G22M-SM) and a carrier
-> > card (iW-RainboW-G22D).
-> 
-> Hi Fabrizio,
-> 
-> Thanks for reposting with myself and linux-renesas-soc CCed.
-> 
-> As is the common practice for DT binding updates I will wait to see if Rob
-> or others wish to Ack this change before applying it.  Please ping me, f.e.
-> by a reply-to-all to this email, in one week if there has been no further
-> activity.
+Stanimir,
 
-I have applied these for v4.14.
+> Hi,
+>
+> Thanks for the patch.
+>
+> On 31.07.2017 09:34, Varadarajan Narayanan wrote:
+> >Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
+> >Gen 1/2, one lane, two PCIe root complex with support for MSI and
+> >legacy interrupts, and it conforms to PCI Express Base 2.1
+> >specification.
+> >
+> >The core init is the similar to the existing SoC, however the
+> >clocks and reset lines differ.
+> >
+> >Signed-off-by: smuthayy <smuthayy@codeaurora.org>
+> >Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+
+<snip>
+
+> >+static int qcom_pcie_2_3_3_reset(struct qcom_pcie *pcie)
+> >+{
+> >+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
+> >+	int i, ret;
+> >+
+> >+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
+> >+		ret = reset_control_assert(res->rst[i]);
+> >+		if (ret) {
+> >+			dev_err(pcie->pci->dev,
+> >+				"%s: reset assert failed for %d\n",
+> >+				__func__, i);
+> >+			return ret;
+> >+		}
+> >+	}
+> >+
+> >+	msleep(20);
+>
+> Could you explain why we need to wait for 20ms.
+>
+> >+
+> >+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
+> >+		ret = reset_control_deassert(res->rst[i]);
+> >+		if (ret) {
+> >+			dev_err(pcie->pci->dev,
+> >+				"%s: reset deassert failed for %d\n",
+> >+				__func__, i);
+> >+			return ret;
+> >+		}
+> >+	}
+> >+
+> >+	msleep(20);
+>
+> Same comment as above.
+
+<snip>
+
+Sorry about the delay. I tried to contact the hardware folks
+to get more clarity about these delays. However, I haven't
+received any response from them till now. Unfortunately, the
+PCIe link doesn't come up without these delays.
+
+I was able to get the PCIe link with the above delays
+reduced to 2ms. I have posted v7 of these patches addressing
+your other comments and the above delays reduced to 2ms. Can
+you please review and provide your feedback.
+
+If everything else (other than these delays) is ok, can this
+patch be accepted? Meanwhile, I will follow up with the
+hardware folks and based on their response post a patch that
+removes the delay or provides a proper explanation for these
+delays.
+
+Please let me know.
+
+Thanks
+Varada
+
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
