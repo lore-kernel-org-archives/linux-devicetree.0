@@ -1,33 +1,51 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77995: add pfc device node
-Date: Thu, 17 Aug 2017 10:27:26 +0200
-Message-ID: <20170817082726.GD27693@verge.net.au>
-References: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20170810081318.GI16647@verge.net.au>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [RFC PATCH 6/7] mmc: sdhci-omap: Add OMAP SDHCI driver
+Date: Thu, 17 Aug 2017 11:23:34 +0300
+Message-ID: <158e88c4-da08-6091-96ed-daa8467b6e69@intel.com>
+References: <20170807160142.12134-1-kishon@ti.com>
+ <20170807160142.12134-7-kishon@ti.com>
+ <a45cf402-26c9-d9d0-1ca0-cbeeddad388c@intel.com>
+ <46568bdf-c11f-e04b-edd4-25d5363ae504@ti.com>
+ <0b109f07-f7f3-1a12-0c65-45d96eb23b13@intel.com>
+ <7822a805-3379-1d08-5a01-f422ab23f863@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170810081318.GI16647@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <7822a805-3379-1d08-5a01-f422ab23f863@ti.com>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
+Cc: nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 10:13:19AM +0200, Simon Horman wrote:
-> On Wed, Aug 09, 2017 at 09:20:47PM +0900, Yoshihiro Shimoda wrote:
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> > 
-> >  This patch set is based on the renesas-drivers.git /
-> > topic/r8a77995-integration branch and depends on the following patch
-> >  "pinctrl: sh-pfc: r8a77995: Initial R8A77995 PFC support"
+On 17/08/17 10:59, Kishon Vijay Abraham I wrote:
+> Hi Adrian,
 > 
-> Thanks Shimoda-san,
-> 
-> this patch looks fine to me, however, I am marking it as deferred pending
-> acceptance of the dependency listed above. Please repost or otherwise
-> ping me once Geert has indicated he will accept that patch.
+> On Thursday 17 August 2017 12:13 PM, Adrian Hunter wrote:
+>> On 17/08/17 08:57, Kishon Vijay Abraham I wrote:
+>>> Hi Adrian,
+>>>
+>>> On Tuesday 15 August 2017 01:52 PM, Adrian Hunter wrote:
+>>>> On 07/08/17 19:01, Kishon Vijay Abraham I wrote:
 
-That dependency appears to be satisfied now,
-I have applied this patch.
+<SNIP>
+
+>>>>> +	pm_runtime_enable(dev);
+>>>>> +	ret = pm_runtime_get_sync(dev);
+>>>>
+>>>> What are you trying to do with runtime pm?  There don't seem to be any pm
+>>>> callbacks, so does this do anything?
+>>>
+>>> yeah, pm_runtime_get_sync enables the functional clock and also configures the
+>>> SYSCONFIG regiters present in the controller. It gets the details for
+>>> configuring those from arch/arm/mach-omap2/omap_hwmod_*
+>>
+>> You mean it will do those things when you add the callbacks?  I would prefer
+>> you leave out runtime pm until you can add the callbacks as well.
+> 
+> No. Generally in callbacks, 'optional' functional clocks are enabled. But main
+> functional clock and interface clocks are enabled in pm_runtime_get_sync.
+> Without pm_runtime_get_sync, we won't be able to access controller registers.
+
+So that is done by the pm domain?  Please add comments to the code to explain.
