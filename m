@@ -1,54 +1,64 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [RFC 0/3] arm64: Realtek RTD1295 IRQ mux
-Date: Thu, 17 Aug 2017 12:11:37 +0200
-Message-ID: <20170817101140.32000-1-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [RFC 1/3] dt-bindings: interrupt-controller: Add Realtek RTD1295
+Date: Thu, 17 Aug 2017 12:11:38 +0200
+Message-ID: <20170817101140.32000-2-afaerber@suse.de>
+References: <20170817101140.32000-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Roc He <hepeng@zidoo.tv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170817101140.32000-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpUaGlzIHNlcmllcyBhZGRzIHR3byBJUlEgbXV4ZXMgZm9yIHRoZSBSZWFsdGVrIFJU
-RDEyOTUgU29DLgpCYXNlZCBvbiB0aGUgcmVzZXQgY29udHJvbGxlciBzZXJpZXMuCgpUaGVyZSBi
-ZWluZyBubyBwdWJsaWMgc291cmNlIGNvZGUgZm9yIFJURDEyOTUsIHRoZSBpbXBsZW1lbnRhdGlv
-biBpcyBiYXNlZCBvbgpyZWdpc3RlciBvZmZzZXRzIHNlZW4gaW4gdGhlIERULCBzcGxpdCB1cCBp
-bnRvIHR3byBzZXBhcmF0ZSBub2Rlcy4KCkEgd29ya2Fyb3VuZCBmb3IgaGFuZ2luZyB0aW1lciBp
-bml0aWFsaXphdGlvbiB3YXMgdGFrZW4gZnJvbSBRTkFQJ3MgcnRrMTE5eApHUEwgY29kZSBkdW1w
-IGFuZCBpcyBub3QgeWV0IGZ1bGx5IHVuZGVyc3Rvb2Q7IHRoYXQgY29kZSBhbHNvIGNvbnRhaW5z
-IGEgcXVpcmsKZm9yIGkyYzMgaW4gdGhlIGlzbyBtdXggdGhhdCBpcyBub3QgeWV0IHZlcmlmaWVk
-IHRvIGJlIG5lZWRlZCBvbiBSVEQxMjk1LApmb3IgbGFjayBvZiBpMmMgZHJpdmVyLCBhc3N1bWlu
-ZyBhIGxpbmVhciBpbnRyX3N0YXR1cy9pbnRyX2VuIG1hcHBpbmcgZm9yIG5vdy4KCk15IGNvbnZl
-bnRpb24gaGVyZSBpcyB0byB1c2UgYSBjb21wYXRpYmxlIHN0cmluZyBmb3IgdGhlIG1vZGVsIHRo
-YXQgSSd2ZQp0ZXN0ZWQgKFJURDEyOTUpIGJ1dCBhIGZpbGUgbmFtZSBvZiBydGQxMTl4IHRvIGlu
-ZGljYXRlIGl0cyBSVEQxMTk1IGhlcml0YWdlLgoKTW9yZSBleHBlcmltZW50YWwgcGF0Y2hlcyBh
-dDoKaHR0cHM6Ly9naXRodWIuY29tL2FmYWVyYmVyL2xpbnV4L2NvbW1pdHMvcnRkMTI5NS1uZXh0
-CgpIYXZlIGEgbG90IG9mIGZ1biEKCkNoZWVycywKQW5kcmVhcwoKQ2M6IFRob21hcyBHbGVpeG5l
-ciA8dGdseEBsaW51dHJvbml4LmRlPgpDYzogSmFzb24gQ29vcGVyIDxqYXNvbkBsYWtlZGFlbW9u
-Lm5ldD4KQ2M6IE1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+CkNjOiBSb2MgSGUg
-PGhlcGVuZ0B6aWRvby50dj4KQ2M6IOiSi+S4veeQtCA8amlhbmcubGlxaW5AZ2VuaWF0ZWNoLmNv
-bT4KQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCgpBbmRyZWFzIEbDpHJiZXIgKDMpOgog
-IGR0LWJpbmRpbmdzOiBpbnRlcnJ1cHQtY29udHJvbGxlcjogQWRkIFJlYWx0ZWsgUlREMTI5NQog
-IGFybTY0OiBkdHM6IHJlYWx0ZWs6IEFkZCBpcnEgbXV4IHRvIFJURDEyOTUKICBpcnFjaGlwOiBB
-ZGQgUmVhbHRlayBSVEQxMjk1IG11eCBkcml2ZXIKCiAuLi4vaW50ZXJydXB0LWNvbnRyb2xsZXIv
-cmVhbHRlayxydGQxMTl4LW11eC50eHQgICB8ICAyOCArKysKIGFyY2gvYXJtNjQvYm9vdC9kdHMv
-cmVhbHRlay9ydGQxMjk1LmR0c2kgICAgICAgICAgIHwgIDIyICsrKwogZHJpdmVycy9pcnFjaGlw
-L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9pcnFj
-aGlwL2lycS1ydGQxMTl4LW11eC5jICAgICAgICAgICAgICAgICAgfCAyMDEgKysrKysrKysrKysr
-KysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDI1MiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250
-cm9sbGVyL3JlYWx0ZWsscnRkMTE5eC1tdXgudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9pcnFjaGlwL2lycS1ydGQxMTl4LW11eC5jCgotLSAKMi4xMi4zCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Add binding for Realtek RTD1295 IRQ mux.
+
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ .../interrupt-controller/realtek,rtd119x-mux.txt   | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+new file mode 100644
+index 000000000000..4b43370e3d74
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+@@ -0,0 +1,28 @@
++Realtek RTD119x/129x IRQ Mux Controller
++=======================================
++
++Required properties:
++
++- compatible           :  Should be one of the following:
++                          - "realtek,rtd1295-irq-mux"
++                          - "realtek,rtd1295-iso-irq-mux"
++- reg                  :  Specifies base physical address and size of the registers.
++- interrupts           :  Specifies the interrupt line which is mux'ed.
++- interrupt-controller :  Presence indicates the node as interrupt controller.
++- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
++
++
++Optional properties:
++
++See interrupt.txt for common bindings.
++
++
++Example:
++
++	interrupt-controller@98007000 {
++		compatible = "realtek,rtd1295-iso-irq-mux";
++		reg = <0x98007000 0x100>;
++		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
+-- 
+2.12.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
