@@ -1,34 +1,33 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] arm64: dts: r8a7796: add USB-DMAC and HSUSB device
- nodes
-Date: Thu, 17 Aug 2017 10:25:42 +0200
-Message-ID: <20170817082542.GC27693@verge.net.au>
-References: <1501763357-26075-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20170804110026.GB9178@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77995: add pfc device node
+Date: Thu, 17 Aug 2017 10:27:26 +0200
+Message-ID: <20170817082726.GD27693@verge.net.au>
+References: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20170810081318.GI16647@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170804110026.GB9178@verge.net.au>
+In-Reply-To: <20170810081318.GI16647@verge.net.au>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 04, 2017 at 01:00:27PM +0200, Simon Horman wrote:
-> On Thu, Aug 03, 2017 at 09:29:15PM +0900, Yoshihiro Shimoda wrote:
-> > This patch is based on the renesas.git / renesas-devel-20170731v2-v4.13-rc3 tag.
+On Thu, Aug 10, 2017 at 10:13:19AM +0200, Simon Horman wrote:
+> On Wed, Aug 09, 2017 at 09:20:47PM +0900, Yoshihiro Shimoda wrote:
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
 > > 
-> > For usb-dmac, we should wait for the following patch (even if we don't apply
-> > the patch, the usb-dmac driver can be probed correctly though.)
-> >  https://patchwork.kernel.org/patch/9876639/
-> > 
-> > For hsusb, we need the "arm64: dts: r8a7796: add usb host device nodes" patch
-> > set for using usb2_phy0.
+> >  This patch set is based on the renesas-drivers.git /
+> > topic/r8a77995-integration branch and depends on the following patch
+> >  "pinctrl: sh-pfc: r8a77995: Initial R8A77995 PFC support"
 > 
-> Thanks, I am marking this series as deferred pending acceptance of
-> the dependencies of "arm64: dts: r8a7796: add usb host device nodes".
-> Please repost this series or otherwise ping me once those
-> dependencies are in place.
+> Thanks Shimoda-san,
+> 
+> this patch looks fine to me, however, I am marking it as deferred pending
+> acceptance of the dependency listed above. Please repost or otherwise
+> ping me once Geert has indicated he will accept that patch.
 
-The dependency is now in place and I have applied this series.
+That dependency appears to be satisfied now,
+I have applied this patch.
