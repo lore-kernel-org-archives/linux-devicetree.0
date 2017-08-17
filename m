@@ -1,80 +1,59 @@
-From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
- slave
-Date: Thu, 17 Aug 2017 12:07:56 +0200
-Message-ID: <92579650-5eb0-cdf2-405a-7c5be9c54770@gmail.com>
-References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
- <1502102366-2760-2-git-send-email-loic.poulain@gmail.com>
- <CAL_JsqKxA2pgtjmG-cxy5XPWuRWUiia-weRZDSh4++Vn=QZmqA@mail.gmail.com>
- <8186E2A3-D0AC-498F-8229-78862D363F78@holtmann.org>
- <392e6d51-33d6-1585-6582-1397a0c64852@gmail.com>
- <161632C7-EBBF-47F5-86DC-453E10395B54@holtmann.org>
- <e001e055-10a5-facd-a8e1-57c1bdb78172@gmail.com>
- <FCD47ED6-F01F-4921-97A3-BBC1D0263747@holtmann.org>
- <CALeDE9MeMHtCD8esCcznHjS+z6o7Ezh9dP1OZq=77DuYNS2=2A@mail.gmail.com>
- <0C198B33-8CB6-4D6A-B89F-35D3CD771135@holtmann.org>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [RFC 2/3] arm64: dts: realtek: Add irq mux to RTD1295
+Date: Thu, 17 Aug 2017 12:11:39 +0200
+Message-ID: <20170817101140.32000-3-afaerber@suse.de>
+References: <20170817101140.32000-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0C198B33-8CB6-4D6A-B89F-35D3CD771135-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Content-Language: en-US
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Cc: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170817101140.32000-1-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcel,
-
-
->>> < HCI Command: Broadcom Write UART Clock Setting (0x3f|0x0045) plen 1
->>>         01                                               .
->>>> HCI Event: Command Complete (0x0e) plen 4
->>>       Broadcom Write UART Clock Setting (0x3f|0x0045) ncmd 1
->>>         Status: Unknown HCI Command (0x01)
->>>
->>> And I am seeing fun stuff like failed frame assembly.
->>>
->>> [  888.687594] Bluetooth: hci0: BCM: chip id 94
->>> [  888.687821] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0182
->>> [  892.059023] Bluetooth: hci0: Frame reassembly failed (-84)
->>> [  892.316936] Bluetooth: hci0: BCM: failed to write clock (-56)
->>> [  892.429478] Bluetooth: hci0: BCM (001.002.009) build 0182
->>>
->>> Actually not providing the firmware makes the controller work. It however is stuck ad AA:AA:.. default address. Providing the firmware turns the address active. However then it never completes.
->> I've tried on and off to get the BT working, there seems to lots of
->> options and bits needed including some patches to the bluez [1] stuff
->> but between not quite upstream kernel bits and numerous distros all
->> doing it slightly differently I've never got it to work well.
->>
->> The yocto [1] bits seem fairly representative of some the patches
->> flying around "to get it working" although I'm not sure how many of
->> these are actually required and how many are superfluous with this
->> patch set. There seems to be a firmware required that's not
->> distributed with linux-firmware which would also be nice to resolve.
-> Non of these Yocto patches are actually needed. The culprit is the .oper_speed setting to be 4Mbps. Once you reduce that to 921600 thing will start to work smoothly. I sent a patch that takes the .oper_speed out completely and only applies it for the ACPI based devices where we know that it works.
->
-> With my patch and the right DT entries for uart0 it actually works with “btattach -B /dev/ttyAMA0 -P bcm”. It will load the firmware, configure it and head towards the right path.
->
-> Obviously btattach is only an interim step here. Loic’s patches for serdev integration and changing the DT to expose uart0 as serial-slave for Bluetooth is the right approach. Once Loic’s resends the patches we can get them into bluetooth-next and start merging these towards upstream. After that, Bluetooth should work just out of the box like with any USB dongle.
->
-> And the Yocto patches should be abandoned. If using H:5 (aka 3-Wire) instead of H:4 is possible, we could consider it, but as long as the UART wiring doesn’t cause any bit errors, it is not worth it.
->
-> That said, I do see a "Bluetooth: hci0: Frame reassembly failed (-84)” error. I need to figure out where that is. Frankly we really need to hexdump the packet when this happens.
->
-
-I also meet this Frame reassembly failure, Seems we receive a 0x00 byte 
-from the controller (unknown pkt type).
-
-Regarding the speed, I'm unable to reach 3Mbps, I selected 921600 
-because this is the baudrate used by raspbian bt script.
-
-Maybe they had some issues at higher speed (empirical value ?), However 
-2Mbps seems ok on my side (need to double check/adjust).
-
-In a second step, need to check If we can use hardware flow control, I 
-heard that pin 16&17 are routed to the bcm RTS/CTS.
-Since there is no DMA usage, it could help.
-
-Regards,
-Loic
+VXBkYXRlIFVBUlQgbm9kZXMgd2l0aCBpbnRlcnJ1cHRzLgoKU2lnbmVkLW9mZi1ieTogQW5kcmVh
+cyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPgotLS0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVh
+bHRlay9ydGQxMjk1LmR0c2kgfCAyMiArKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hh
+bmdlZCwgMjIgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+cmVhbHRlay9ydGQxMjk1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTI5
+NS5kdHNpCmluZGV4IDJkMmQ4NGI1NzNlMy4uNzcwNjNlOTg0ZGI5IDEwMDY0NAotLS0gYS9hcmNo
+L2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTI5NS5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvcmVhbHRlay9ydGQxMjk1LmR0c2kKQEAgLTExMiw2ICsxMTIsMTQgQEAKIAkJCSNyZXNl
+dC1jZWxscyA9IDwxPjsKIAkJfTsKIAorCQlpc29faXJxX211eDogaW50ZXJydXB0LWNvbnRyb2xs
+ZXJAOTgwMDcwMDAgeworCQkJY29tcGF0aWJsZSA9ICJyZWFsdGVrLHJ0ZDEyOTUtaXNvLWlycS1t
+dXgiOworCQkJcmVnID0gPDB4OTgwMDcwMDAgMHgxMDA+OworCQkJaW50ZXJydXB0cyA9IDxHSUNf
+U1BJIDQxIElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQkJaW50ZXJydXB0LWNvbnRyb2xsZXI7CisJ
+CQkjaW50ZXJydXB0LWNlbGxzID0gPDE+OworCQl9OworCiAJCWlzb19yZXNldDogcmVzZXQtY29u
+dHJvbGxlckA5ODAwNzA4OCB7CiAJCQljb21wYXRpYmxlID0gInJlYWx0ZWsscnRkMTI5NS1yZXNl
+dCI7CiAJCQlyZWcgPSA8MHg5ODAwNzA4OCAweDQ+OwpAQCAtMTI0LDE2ICsxMzIsMjggQEAKIAkJ
+CXJlZy1zaGlmdCA9IDwyPjsKIAkJCXJlZy1pby13aWR0aCA9IDw0PjsKIAkJCWNsb2NrLWZyZXF1
+ZW5jeSA9IDwyNzAwMDAwMD47CisJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZpc29faXJxX211eD47
+CisJCQlpbnRlcnJ1cHRzID0gPDI+OwogCQkJcmVzZXRzID0gPCZpc29fcmVzZXQgUlREMTI5NV9J
+U09fUlNUTl9VUjA+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJfTsKIAorCQlpcnFfbXV4
+OiBpbnRlcnJ1cHQtY29udHJvbGxlckA5ODAxYjAwMCB7CisJCQljb21wYXRpYmxlID0gInJlYWx0
+ZWsscnRkMTI5NS1pcnEtbXV4IjsKKwkJCXJlZyA9IDwweDk4MDFiMDAwIDB4MTAwPjsKKwkJCWlu
+dGVycnVwdHMgPSA8R0lDX1NQSSA0MCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCWludGVycnVw
+dC1jb250cm9sbGVyOworCQkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKKwkJfTsKKwogCQl1YXJ0
+MTogc2VyaWFsQDk4MDFiMjAwIHsKIAkJCWNvbXBhdGlibGUgPSAic25wcyxkdy1hcGItdWFydCI7
+CiAJCQlyZWcgPSA8MHg5ODAxYjIwMCAweDEwMD47CiAJCQlyZWctc2hpZnQgPSA8Mj47CiAJCQly
+ZWctaW8td2lkdGggPSA8ND47CiAJCQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAwMDAwPjsKKwkJ
+CWludGVycnVwdC1wYXJlbnQgPSA8JmlycV9tdXg+OworCQkJaW50ZXJydXB0cyA9IDwzPiwgPDU+
+OwogCQkJcmVzZXRzID0gPCZyZXNldDIgUlREMTI5NV9SU1ROX1VSMT47CiAJCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOwogCQl9OwpAQCAtMTQ0LDYgKzE2NCw4IEBACiAJCQlyZWctc2hpZnQgPSA8Mj47
+CiAJCQlyZWctaW8td2lkdGggPSA8ND47CiAJCQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAwMDAw
+PjsKKwkJCWludGVycnVwdC1wYXJlbnQgPSA8JmlycV9tdXg+OworCQkJaW50ZXJydXB0cyA9IDw4
+PiwgPDEzPjsKIAkJCXJlc2V0cyA9IDwmcmVzZXQyIFJURDEyOTVfUlNUTl9VUjI+OwogCQkJc3Rh
+dHVzID0gImRpc2FibGVkIjsKIAkJfTsKLS0gCjIuMTIuMwoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
