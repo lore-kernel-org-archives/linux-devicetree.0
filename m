@@ -1,60 +1,44 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH 1/3] dt-bindings: Add bindings for Dongwoon DW9714 voice coil
-Date: Thu, 17 Aug 2017 16:42:54 +0300
-Message-ID: <1502977376-22836-2-git-send-email-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 2/3] dw9714: Add Devicetree support
+Date: Thu, 17 Aug 2017 16:42:55 +0300
+Message-ID: <1502977376-22836-3-git-send-email-sakari.ailus@linux.intel.com>
 References: <1502977376-22836-1-git-send-email-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502977376-22836-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1502977376-22836-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, rajmohan.mani@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Dongwoon DW9714 is a voice coil lens driver.
-
-Also add a vendor prefix for Dongwoon for one did not exist previously.
-
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt | 9 +++++++++
- Documentation/devicetree/bindings/vendor-prefixes.txt           | 1 +
- 2 files changed, 10 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
+ drivers/media/i2c/dw9714.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
-new file mode 100644
-index 0000000..b88dcdd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
-@@ -0,0 +1,9 @@
-+Dongwoon Anatech DW9714 camera voice coil lens driver
+diff --git a/drivers/media/i2c/dw9714.c b/drivers/media/i2c/dw9714.c
+index 6a607d7..bcf64ef 100644
+--- a/drivers/media/i2c/dw9714.c
++++ b/drivers/media/i2c/dw9714.c
+@@ -264,6 +264,12 @@ static const struct i2c_device_id dw9714_id_table[] = {
+ 
+ MODULE_DEVICE_TABLE(i2c, dw9714_id_table);
+ 
++static const struct of_device_id dw9714_of_table[] = {
++	{ .compatible = "dongwoon,dw9714" },
++	{ { 0 } }
++};
++MODULE_DEVICE_TABLE(of, dw9714_of_table);
 +
-+DW9174 is a 10-bit DAC with current sink capability. It is intended
-+for driving voice coil lenses in camera modules.
-+
-+Mandatory properties:
-+
-+- compatible: "dongwoon,dw9714"
-+- reg: I²C slave address
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index daf465be..6b6e683 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -88,6 +88,7 @@ dlg	Dialog Semiconductor
- dlink	D-Link Corporation
- dmo	Data Modul AG
- domintech	Domintech Co., Ltd.
-+dongwoon	Dongwoon Anatech
- dptechnics	DPTechnics
- dragino	Dragino Technology Co., Limited
- ea	Embedded Artists AB
+ static const struct dev_pm_ops dw9714_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(dw9714_vcm_suspend, dw9714_vcm_resume)
+ 	SET_RUNTIME_PM_OPS(dw9714_vcm_suspend, dw9714_vcm_resume, NULL)
+@@ -274,6 +280,7 @@ static struct i2c_driver dw9714_i2c_driver = {
+ 		.name = DW9714_NAME,
+ 		.pm = &dw9714_pm_ops,
+ 		.acpi_match_table = ACPI_PTR(dw9714_acpi_match),
++		.of_match_table = dw9714_of_table,
+ 	},
+ 	.probe = dw9714_probe,
+ 	.remove = dw9714_remove,
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
