@@ -1,108 +1,223 @@
-From: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v5 1/1] usb:host:xhci support option to disable the xHCI
- USB2 HW LPM
-Date: Thu, 17 Aug 2017 10:19:06 +0700
-Message-ID: <CAKrQpSt_JuiXPFxTT7ApYFN+6u5AmreJB4PFAGzMRh12FpcnHA@mail.gmail.com>
-References: <1502166477-23897-1-git-send-email-tqnguyen@apm.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] ARM: sun8i: a83t: Add device tree for Sinovoip
+ Bananapi BPI-M3
+Date: Thu, 17 Aug 2017 11:40:48 +0800
+Message-ID: <20170817034048.11601-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502166477-23897-1-git-send-email-tqnguyen-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBSVA2TGAKGQE62CB4KQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 8, 2017 at 11:27 AM, Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
-> XHCI specification 1.1 does not require xHCI-compliant controllers
-> to always enable hardware USB2 LPM. However, the current xHCI
-> driver always enable it when seeing HLC=1.
-> This patch supports an option for users to control disabling
-> USB2 Hardware LPM via DT/ACPI attribute.
-> This option is needed in case user would like to disable this
-> feature. For example, their xHCI controller has its USB2 HW LPM
-> broken.
->
-> Signed-off-by: Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> Changes since v4:
->  - When HW LPM is optionally disabled, explicitly disable HLE, RWE, ...
->  - Update codes to work with kernel 4.13-rc4
->  - Add Acked-By from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Changes since v3:
->  - Bypass updating LPM parameters when HW LPM is optionally disabled.
-> Changes since v2:
->  - Change code to disable HW LPM as an option for user which
->    is set via ACPI/DT.
-> Changes since v1:
->  - Update DT/ACPI attribute and corresponding codes from HLE to LPM to
->    be consistent with other attribute names.
-> ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
->  drivers/usb/host/xhci-plat.c                       |    3 +++
->  drivers/usb/host/xhci.c                            |    2 +-
->  drivers/usb/host/xhci.h                            |    1 +
->  4 files changed, 6 insertions(+), 1 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index 2d80b60..ae6e484 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -26,6 +26,7 @@ Required properties:
->
->  Optional properties:
->    - clocks: reference to a clock
-> +  - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
->    - usb3-lpm-capable: determines if platform is USB3 LPM capable
->    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
->
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index c04144b..9028fb5 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -267,6 +267,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
->                 goto disable_clk;
->         }
->
-> +       if (device_property_read_bool(sysdev, "usb2-lpm-disable"))
-> +               xhci->quirks |= XHCI_HW_LPM_DISABLE;
-> +
->         if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
->                 xhci->quirks |= XHCI_LPM_SUPPORT;
->
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index b2ff1ff..3a8e75f 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -4087,7 +4087,7 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
->         xhci_dbg(xhci, "%s port %d USB2 hardware LPM\n",
->                         enable ? "enable" : "disable", port_num + 1);
->
-> -       if (enable) {
-> +       if (enable && !(xhci->quirks & XHCI_HW_LPM_DISABLE)) {
->                 /* Host supports BESL timeout instead of HIRD */
->                 if (udev->usb2_hw_lpm_besl_capable) {
->                         /* if device doesn't have a preferred BESL value use a
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index e3e9352..5d89c51 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -1821,6 +1821,7 @@ struct xhci_hcd {
->  #define XHCI_LIMIT_ENDPOINT_INTERVAL_7 (1 << 26)
->  #define XHCI_U2_DISABLE_WAKE   (1 << 27)
->  #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL        (1 << 28)
-> +#define XHCI_HW_LPM_DISABLE    (1 << 29)
->
->         unsigned int            num_active_eps;
->         unsigned int            limit_active_eps;
-> --
-> 1.7.1
->
+The BPI-M3 is an Allwinner A83T based SBC in the Bananapi/Bpi family.
+It is roughly the same form factor as the BPI-M1+, with roughly the
+same peripherals and connectors:
 
-Do you have any comments about this patch? Thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  - 2GB LPDDR3 DRAM
+  - 8GB eMMC
+  - Micro-SD card slot
+  - HDMI output
+  - Headset (stereo + mic) jack
+  - Onboard mic
+  - Gigabit Ethernet with RTL8211E transceiver
+  - Ampak AP6212 WiFi + BT
+  - USB OTG connector
+  - USB-to-SATA bridge connected through a USB 2.0 hub
+  - Consumer IR receiver
+  - MIPI DSI LCD panel connector
+  - Camera interface (parallel and MIPI CSI) connector
+  - 3 LEDs (Red, Green, Blue), of which 2 are controllable (GB)
+  - Raspberry Pi 2 compatible GPIO header
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+
+Note that the file name follows the convention of most of the other
+bananapi boards, that is the vendor "sinovoip" is not included in
+the name. This deviates from what is already in U-boot.
+
+This applies on top of my A83t USB patches.
+
+---
+ arch/arm/boot/dts/Makefile                   |   1 +
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 148 +++++++++++++++++++++++++++
+ 2 files changed, 149 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e0d77ab79f5f..791fecc0774a 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -903,6 +903,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a33-q8-tablet.dtb \
+ 	sun8i-a33-sinlinx-sina33.dtb \
+ 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
++	sun8i-a83t-bananapi-m3.dtb \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-h2-plus-orangepi-zero.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+new file mode 100644
+index 000000000000..2bafd7e99ef7
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+@@ -0,0 +1,148 @@
++/*
++ * Copyright 2017 Chen-Yu Tsai
++ *
++ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun8i-a83t.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Banana Pi BPI-M3";
++	compatible = "sinovoip,bpi-m3", "allwinner,sun8i-a83t";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&ehci0 {
++	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
++	status = "okay";
++
++	/* TODO GL830 USB-to-SATA bridge downstream w/ GPIO power controls */
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_8bit_emmc_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <8>;
++	non-removable;
++	cap-mmc-hw-reset;
++	status = "okay";
++};
++
++&r_rsb {
++	status = "okay";
++
++	axp81x: pmic@3a3 {
++		compatible = "x-powers,axp813";
++		reg = <0x3a3>;
++		interrupt-parent = <&r_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	ac100: codec@e89 {
++		compatible = "x-powers,ac100";
++		reg = <0xe89>;
++
++		ac100_codec: codec {
++			compatible = "x-powers,ac100-codec";
++			interrupt-parent = <&r_pio>;
++			interrupts = <0 11 IRQ_TYPE_LEVEL_LOW>; /* PL11 */
++			#clock-cells = <0>;
++			clock-output-names = "4M_adda";
++		};
++
++		ac100_rtc: rtc {
++			compatible = "x-powers,ac100-rtc";
++			interrupt-parent = <&r_intc>;
++			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&ac100_codec>;
++			#clock-cells = <1>;
++			clock-output-names = "cko1_rtc",
++					     "cko2_rtc",
++					     "cko3_rtc";
++		};
++	};
++};
++
++&reg_usb1_vbus {
++	gpio = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
++	status = "okay";
++};
++
++&reg_vcc3v0 {
++	status = "disabled";
++};
++
++&reg_vcc5v0 {
++	status = "disabled";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pb_pins>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	status = "okay";
++};
+-- 
+2.13.3
