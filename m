@@ -1,61 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 14/16] phy: Add an USB PHY driver for the Lantiq SoCs
- using the RCU module
-Date: Thu, 17 Aug 2017 10:10:16 -0500
-Message-ID: <20170817151016.2ujg6v4n7dstydo2@rob-hp-laptop>
-References: <20170808225247.32266-1-hauke@hauke-m.de>
- <20170808225247.32266-15-hauke@hauke-m.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 06/12] net: stmmac: dwmac-rk: Add internal phy support
+Date: Thu, 17 Aug 2017 10:10:28 -0500
+Message-ID: <20170817151028.ewrgdk7qqd3nqzhe@rob-hp-laptop>
+References: <1502280475-736-1-git-send-email-david.wu@rock-chips.com>
+ <1502280661-2308-1-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170808225247.32266-15-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <1502280661-2308-1-git-send-email-david.wu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: davem@davemloft.net, heiko@sntech.de, andrew@lunn.ch, f.fainelli@gmail.com, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 09, 2017 at 12:52:45AM +0200, Hauke Mehrtens wrote:
-> This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
-> the PHY interfaces for each core. The phy instances can be passed to the
-> dwc2 driver, which already supports the generic phy interface.
+On Wed, Aug 09, 2017 at 08:11:01PM +0800, David Wu wrote:
+> To make internal phy work, need to configure the phy_clock,
+> phy cru_reset and related registers.
 > 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: David Wu <david.wu@rock-chips.com>
 > ---
->  .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  40 ++++
->  arch/mips/lantiq/xway/sysctrl.c                    |  36 +--
->  drivers/phy/Kconfig                                |   1 +
->  drivers/phy/Makefile                               |   2 +-
->  drivers/phy/lantiq/Kconfig                         |   9 +
->  drivers/phy/lantiq/Makefile                        |   1 +
->  drivers/phy/lantiq/phy-lantiq-rcu-usb2.c           | 254 +++++++++++++++++++++
->  7 files changed, 324 insertions(+), 19 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
->  create mode 100644 drivers/phy/lantiq/Kconfig
->  create mode 100644 drivers/phy/lantiq/Makefile
->  create mode 100644 drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+> change in v4:
+>  - PHY is internal or not base on the phy-is-internal property via phy node.
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
-> new file mode 100644
-> index 000000000000..d8d25063dd5d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
-> @@ -0,0 +1,40 @@
-> +Lantiq XWAY SoC RCU USB 1.1/2.0 PHY binding
-> +===========================================
-> +
-> +This binding describes the USB PHY hardware provided by the RCU module on the
-> +Lantiq XWAY SoCs.
-> +
-> +This driver has to be a sub node of the Lantiq RCU block.
+>  .../devicetree/bindings/net/rockchip-dwmac.txt     |  4 +-
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 88 ++++++++++++++++++++++
+>  2 files changed, 91 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> index 8f42755..4f51305 100644
+> --- a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> +++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> @@ -25,7 +25,8 @@ Required properties:
+>   - clock-names: One name for each entry in the clocks property.
+>   - phy-mode: See ethernet.txt file in the same directory.
+>   - pinctrl-names: Names corresponding to the numbered pinctrl states.
+> - - pinctrl-0: pin-control mode. can be <&rgmii_pins> or <&rmii_pins>.
+> + - pinctrl-0: pin-control mode. can be <&rgmii_pins>, <&rmii_pins> or led pins
+> +   for internal phy mode.
+>   - clock_in_out: For RGMII, it must be "input", means main clock(125MHz)
+>     is not sourced from SoC's PLL, but input from PHY; For RMII, "input" means
+>     PHY provides the reference clock(50MHz), "output" means GMAC provides the
+> @@ -40,6 +41,7 @@ Optional properties:
+>   - tx_delay: Delay value for TXD timing. Range value is 0~0x7F, 0x30 as default.
+>   - rx_delay: Delay value for RXD timing. Range value is 0~0x7F, 0x10 as default.
+>   - phy-supply: phandle to a regulator if the PHY needs one
+> + - clocks: <&cru MAC_PHY>: Clock selector for internal macphy
 
-s/driver/node/
+I assume this is required if internal phy is used. 'clocks' is already 
+documented above, so this needs to be documented with it.
 
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
