@@ -1,36 +1,43 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 4/6] ARM: sun8i: orangepi-2: Set phy-is-integrated to the internal phy node
-Date: Thu, 17 Aug 2017 09:51:47 +0200
-Message-ID: <20170817075149.16178-5-clabbe.montjoie@gmail.com>
-References: <20170817075149.16178-1-clabbe.montjoie@gmail.com>
+From: William Wu <william.wu@rock-chips.com>
+Subject: [PATCH v2 2/2] arm64: dts: rockchip: enable usb3 for RK3328 evaluation board
+Date: Thu, 17 Aug 2017 15:54:50 +0800
+Message-ID: <1502956490-23087-3-git-send-email-william.wu@rock-chips.com>
+References: <1502956490-23087-1-git-send-email-william.wu@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170817075149.16178-1-clabbe.montjoie@gmail.com>
+In-Reply-To: <1502956490-23087-1-git-send-email-william.wu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, peppe.cavallaro@st.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
+To: heiko@sntech.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, frank.wang@rock-chips.com, huangtao@rock-chips.com, daniel.meng@rock-chips.com, william.wu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add the new phy-is-integrated property to the internal PHY node.
+Rockchip's RK3328 evaluation board has one USB 3.0 OTG controller,
+we enable it and set it act as static xHCI host controller to
+support USB 3.0 HOST on RK3328 evaluation board.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: William Wu <william.wu@rock-chips.com>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Changes in v2:
+- None
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index 17cdeae19c6f..0801c808c5e5 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -131,6 +131,10 @@
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+index e7db0dc..fedea73 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+@@ -83,3 +83,12 @@
+ &usb_host0_ohci {
  	status = "okay";
  };
- 
-+&int_mii_phy {
-+	phy-is-integrated;
++
++&usbdrd3 {
++	status = "okay";
 +};
 +
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++&usbdrd_dwc3 {
++	dr_mode = "host";
++	status = "okay";
++};
 -- 
-2.13.0
+2.0.0
