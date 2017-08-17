@@ -1,38 +1,31 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/6] ARM: dts: cygnus dts updates
-Date: Thu, 17 Aug 2017 10:14:07 -0700
-Message-ID: <baea0dc3-416d-7630-19fb-70392e73a796@gmail.com>
-References: <1502817964-8221-1-git-send-email-scott.branden@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502817964-8221-1-git-send-email-scott.branden@broadcom.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/2] ARM: dtsi: r8a7745: iwg22m: Add eMMC support
+Date: Thu, 17 Aug 2017 18:31:41 +0100
+Message-ID: <1502991103-2325-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2017 10:25 AM, Scott Branden wrote:
-> This patch series is a collection of patches for the Cygnus SoC dts files.
-> 
-> Jason Uy (1):
->   ARM: dts: cygnus: Enable Performance Monitoring Unit
-> 
-> Jonathan Richardson (1):
->   ARM: dts: cygnus: Add additional peripherals to dtsi
-> 
-> Raveendra Padasalagi (1):
->   ARM: dts: cygnus: Add generic-ehci/ohci nodes
-> 
-> Ray Jui (1):
->   ARM: dts: cygnus: Fix incorrect UART2 register base
-> 
-> Scott Branden (2):
->   ARM: dts: cygnus: place v3d in proper address ordered location
->   ARM: dts: cygnus: add serial0 alias for uart3 on bcm91130_entphn
+This series adds eMMC support to r8a7745 SoC and iW-RainboW-G22M-SM SoM.
 
-Series applied, thanks!
+Testing has been made on top of Renesas's devel branch.
+
+The patches contained in this series depend on the following patches:
+[1/2] ARM: dts: iwg22m: Add iWave RZG1E SODIMM SOM - https://patchwork.kernel.org/patch/9901619/
+[2/2] ARM: dts: iwg22d-sodimm: Add support for iWave G22D-SODIMM board - https://patchwork.kernel.org/patch/9901623/
+dt-bindings: mmc: sh_mmcif: Document r8a7745 DT bindings - https://patchwork.kernel.org/patch/9902199/
+
+Regards,
+
+Fabrizio Castro (2):
+  ARM: dts: r8a7745: Add MMC interface support
+  ARM: dtsi: iwg22m: Add eMMC support
+
+ arch/arm/boot/dts/r8a7745-iwg22m.dtsi | 26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7745.dtsi        | 16 ++++++++++++++++
+ 2 files changed, 42 insertions(+)
+
 -- 
-Florian
+2.7.4
