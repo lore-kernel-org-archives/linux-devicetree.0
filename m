@@ -1,65 +1,262 @@
-From: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
-Subject: Re: [PATCH] serio: PS2 gpio bit banging driver for the serio bus
-Date: Thu, 17 Aug 2017 12:51:33 +0200
-Message-ID: <d9966e58f98ed5820154d9a979ca19f2@dk-develop.de>
-References: <20170731222452.22887-1-danilokrummrich@dk-develop.de>
- <CACRpkdYz_+soss4Rb9zMiP4eZZtXqjW_Xy7hH=wm1x2m_R9R3A@mail.gmail.com>
- <20170807182207.348762301bf3d7f8509b1bf7@dk-develop.de>
- <8e5e73575b3a70e0e60931698687471d@dk-develop.de>
- <CACRpkda=bYacXmv8SoQu3wPoZW9v+j8myZnme=QpofD=Y-gYTg@mail.gmail.com>
- <20170817090908.GP20805@n2100.armlinux.org.uk>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 6/9] soc: mediatek: add bus protection extend API
+Date: Thu, 17 Aug 2017 12:57:44 +0200
+Message-ID: <a179cf17-0380-f47e-645e-92f38b0e1917@gmail.com>
+References: <1502779370-30150-1-git-send-email-weiyi.lu@mediatek.com>
+ <1502779370-30150-7-git-send-email-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170817090908.GP20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+In-Reply-To: <1502779370-30150-7-git-send-email-weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-17 11:09, Russell King - ARM Linux wrote:
-> On Fri, Aug 11, 2017 at 11:16:20AM +0200, Linus Walleij wrote:
->> writel() should be guaranteeing that the values hit the hardware, 
->> wmb() is
->> spelled out "write memory barrier" I don't see what you're after here.
-> 
-> Incorrect.  writel() has a barrier which ensures that data written to
-> memory (eg, dma coherent memory) is visible to the hardware prior to
-> the write hitting the hardware.
-> 
-> There is no barrier to ensure that the write hits the hardware in a
-> timely manner - the write can be buffered by the buses, which will
-> delay it before it hits its destination.
-> 
-> PCI particularly buffers MMIO writes, and the requirement there has
-> always been that if you need the write to hit the hardware in a timely
-> fashion, you must perform a read-back to force the bus to deliver the
-> write (since a read is not allowed to overlap a write.)
-> 
-> The solution is never to use barrier() - barrier() is a _compiler_
-> barrier and does nothing for posted writes on hardware buses.
 
-Thanks for clarification. I thought I just need a wmb() to make sure 
-writel()
-can not be reordered with another store operation. I wasn't aware that 
-writel()
-is defined to guarantee this on every arch.
 
-That having the correct execution order is not enough on some buses 
-because
-of buffering is really something to be aware of, thanks again for 
-pointing
-this out.
+On 08/15/2017 08:42 AM, weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> MT2712 add "set/clear" bus control register to each control register set
+> instead of providing only one "enable" control register, we could avoid
+> the read-modify-write racing by using extend API with such new design.
+> Also there exists the second bus control register set, we could not access
+> this setting via original API rather than the extend API.
+> By improving the mtk-infracfg bus protection implementation to
+> support set/clear bus protection control method and second
+> register set while power on/off scpsys.
+> 
+> Signed-off-by: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>   drivers/soc/mediatek/mtk-infracfg.c   | 90 +++++++++++++++++++++++++++++++++--
+>   drivers/soc/mediatek/mtk-scpsys.c     | 36 ++++++++++++--
+>   include/linux/soc/mediatek/infracfg.h | 14 +++++-
+>   3 files changed, 132 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
+> index dba3055..63898e4 100644
+> --- a/drivers/soc/mediatek/mtk-infracfg.c
+> +++ b/drivers/soc/mediatek/mtk-infracfg.c
+> @@ -17,9 +17,6 @@
+>   #include <linux/soc/mediatek/infracfg.h>
+>   #include <asm/processor.h>
+>   
+> -#define INFRA_TOPAXI_PROTECTEN		0x0220
+> -#define INFRA_TOPAXI_PROTECTSTA1	0x0228
+> -
+>   /**
+>    * mtk_infracfg_set_bus_protection - enable bus protection
+>    * @regmap: The infracfg regmap
+> @@ -89,3 +86,90 @@ int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask)
+>   
+>   	return 0;
+>   }
+> +
+> +/**
+> + * mtk_infracfg_set_bus_protection_ext - enable bus protection
+> + * @regmap: The infracfg regmap
+> + * @mask: The mask containing the protection bits to be enabled.
+> + * @reg_set: The register used to enable protection bits.
+> + * @reg_sta: The register used to check the protection bits are enabled.
+> + * @reg_en: The register used to enable protection bits when there doesn't
+> + *          exist reg_set.
+> + *
+> + * This function enables the bus protection bits for disabled power
+> + * domains so that the system does not hang when some unit accesses the
+> + * bus while in power down.
+> + */
+> +int mtk_infracfg_set_bus_protection_ext(struct regmap *infracfg, u32 mask,
+> +		u32 reg_set, u32 reg_sta, u32 reg_en)
 
-So for the scenario I was concerned about I would expect the irqchip 
-driver
-guarantees the write actually hits the the hardware (if necessary read 
-it
-back) before the function (disable_irq_nosync()) returns, is that 
-correct?
-Though, having the need should be very unlikely.
+There is no need to add a new function. The only differences are:
+1. it passes the register offsets instead of assuming default ones
+2. it checks if reg_set/reg_clr and enables/disable.
+
+We should change the original function instead of adding a new one.
+ From what I see, we are all done if we provide a boolean which tells infracfg 
+if it should use set/clear or update register.
+
+For now we don't have any user of INFRA_TOPAXI_PROTECTSTA3 (same for 
+*PROTECTEN1*). Do you expect one in the near future? If so, we could pass a 
+flags value instead of bool which points that out. It seems there is no need for 
+now to pass the register value.
+
+Regards,
+Matthias
+
+> +{
+> +	unsigned long expired;
+> +	u32 val;
+> +	int ret;
+> +
+> +	if (reg_set)
+> +		regmap_write(infracfg, reg_set, mask);
+> +	else
+> +		regmap_update_bits(infracfg, reg_en, mask, mask);
+> +
+> +	expired = jiffies + HZ;
+> +
+> +	while (1) {
+> +		ret = regmap_read(infracfg, reg_sta, &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if ((val & mask) == mask)
+> +			break;
+> +
+> +		cpu_relax();
+> +		if (time_after(jiffies, expired))
+> +			return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * mtk_infracfg_clear_bus_protection_ext - disable bus protection
+> + * @regmap: The infracfg regmap
+> + * @mask: The mask containing the protection bits to be disabled.
+> + * @reg_clr: The register used to disable protection bits.
+> + * @reg_sta: The register used to check the protection bits are disabled.
+> + * @reg_en: The register used to disable protection bits when there doesn't
+> + *          exist reg_clr.
+> + *
+> + * This function disables the bus protection bits previously enabled with
+> + * mtk_infracfg_set_bus_protection.
+> + */
+> +
+> +int mtk_infracfg_clear_bus_protection_ext(struct regmap *infracfg, u32 mask,
+> +		u32 reg_clr, u32 reg_sta, u32 reg_en)
+> +{
+> +	unsigned long expired;
+> +	int ret;
+> +
+> +	if (reg_clr)
+> +		regmap_write(infracfg, reg_clr, mask);
+> +	else
+> +		regmap_update_bits(infracfg, reg_en, mask, 0);
+> +
+> +	expired = jiffies + HZ;
+> +
+> +	while (1) {
+> +		u32 val;
+> +
+> +		ret = regmap_read(infracfg, reg_sta, &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (!(val & mask))
+> +			break;
+> +
+> +		cpu_relax();
+> +		if (time_after(jiffies, expired))
+> +			return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> index ceb2cc4..b181ef2 100644
+> --- a/drivers/soc/mediatek/mtk-scpsys.c
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> @@ -89,6 +89,13 @@ enum clk_id {
+>   
+>   #define MAX_CLKS	2
+>   
+> +struct bus_prot_ext {
+> +	u32 set_ofs;
+> +	u32 clr_ofs;
+> +	u32 en_ofs;
+> +	u32 sta_ofs;
+> +};
+> +
+>   struct scp_domain_data {
+>   	const char *name;
+>   	u32 sta_mask;
+> @@ -96,6 +103,7 @@ struct scp_domain_data {
+>   	u32 sram_pdn_bits;
+>   	u32 sram_pdn_ack_bits;
+>   	u32 bus_prot_mask;
+> +	struct bus_prot_ext bp_ext;
+>   	enum clk_id clk_id[MAX_CLKS];
+>   	bool active_wakeup;
+>   };
+> @@ -228,8 +236,18 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
+>   	}
+>   
+>   	if (scpd->data->bus_prot_mask) {
+> -		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
+> -				scpd->data->bus_prot_mask);
+> +		if (((scpd->data->bp_ext.set_ofs && scpd->data->bp_ext.clr_ofs)
+> +			|| scpd->data->bp_ext.en_ofs)
+> +			&& scpd->data->bp_ext.sta_ofs)
+> +			ret = mtk_infracfg_clear_bus_protection_ext(
+> +					scp->infracfg,
+> +					scpd->data->bus_prot_mask,
+> +					scpd->data->bp_ext.clr_ofs,
+> +					scpd->data->bp_ext.sta_ofs,
+> +					scpd->data->bp_ext.en_ofs);
+> +		else
+> +			ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
+> +					scpd->data->bus_prot_mask);
+>   		if (ret)
+>   			goto err_pwr_ack;
+>   	}
+> @@ -263,8 +281,18 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+>   	int i;
+>   
+>   	if (scpd->data->bus_prot_mask) {
+> -		ret = mtk_infracfg_set_bus_protection(scp->infracfg,
+> -				scpd->data->bus_prot_mask);
+> +		if (((scpd->data->bp_ext.set_ofs && scpd->data->bp_ext.clr_ofs)
+> +			|| scpd->data->bp_ext.en_ofs)
+> +			&& scpd->data->bp_ext.sta_ofs)
+> +			ret = mtk_infracfg_set_bus_protection_ext(
+> +					scp->infracfg,
+> +					scpd->data->bus_prot_mask,
+> +					scpd->data->bp_ext.set_ofs,
+> +					scpd->data->bp_ext.sta_ofs,
+> +					scpd->data->bp_ext.en_ofs);
+> +		else
+> +			ret = mtk_infracfg_set_bus_protection(scp->infracfg,
+> +					scpd->data->bus_prot_mask);
+>   		if (ret)
+>   			goto out;
+>   	}
+> diff --git a/include/linux/soc/mediatek/infracfg.h b/include/linux/soc/mediatek/infracfg.h
+> index a5714e9..d3fbb45 100644
+> --- a/include/linux/soc/mediatek/infracfg.h
+> +++ b/include/linux/soc/mediatek/infracfg.h
+> @@ -1,6 +1,15 @@
+>   #ifndef __SOC_MEDIATEK_INFRACFG_H
+>   #define __SOC_MEDIATEK_INFRACFG_H
+>   
+> +#define INFRA_TOPAXI_PROTECTEN		0x0220
+> +#define INFRA_TOPAXI_PROTECTSTA1	0x0228
+> +#define INFRA_TOPAXI_PROTECTEN1		0x0250
+> +#define INFRA_TOPAXI_PROTECTSTA3	0x0258
+> +#define INFRA_TOPAXI_PROTECTEN_SET	0x0260
+> +#define INFRA_TOPAXI_PROTECTEN_CLR	0x0264
+> +#define INFRA_TOPAXI_PROTECTEN1_SET	0x0270
+> +#define INFRA_TOPAXI_PROTECTEN1_CLR	0x0274
+> +
+>   #define MT8173_TOP_AXI_PROT_EN_MCI_M2		BIT(0)
+>   #define MT8173_TOP_AXI_PROT_EN_MM_M0		BIT(1)
+>   #define MT8173_TOP_AXI_PROT_EN_MM_M1		BIT(2)
+> @@ -22,5 +31,8 @@
+>   
+>   int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask);
+>   int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask);
+> -
+> +int mtk_infracfg_set_bus_protection_ext(struct regmap *infracfg, u32 mask,
+> +		u32 reg_set, u32 reg_sta, u32 reg_en);
+> +int mtk_infracfg_clear_bus_protection_ext(struct regmap *infracfg, u32 mask,
+> +		u32 reg_clr, u32 reg_sta, u32 reg_en);
+>   #endif /* __SOC_MEDIATEK_INFRACFG_H */
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
