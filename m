@@ -1,28 +1,49 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 1/4] dt-bindings: document the tegra CEC bindings
-Date: Thu, 17 Aug 2017 10:10:48 -0500
-Message-ID: <20170817151048.bgzja2lmz6igudgh@rob-hp-laptop>
-References: <20170810083125.36649-1-hverkuil@xs4all.nl>
- <20170810083125.36649-2-hverkuil@xs4all.nl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 05/12] Documentation: net: phy: Add phy-is-internal
+ binding
+Date: Thu, 17 Aug 2017 10:10:25 -0500
+Message-ID: <20170817151025.sdbusesfq7spy4fm@rob-hp-laptop>
+References: <1502280475-736-1-git-send-email-david.wu@rock-chips.com>
+ <1502280630-2254-1-git-send-email-david.wu@rock-chips.com>
+ <778B0470-8ABD-46AD-A63D-F0CF4911C800@gmail.com>
+ <20170810002041.GA10776@lunn.ch>
+ <1bff1793-fe46-f263-fbf5-ef65ffbc5dc9@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170810083125.36649-2-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+In-Reply-To: <1bff1793-fe46-f263-fbf5-ef65ffbc5dc9@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David.Wu" <david.wu@rock-chips.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net, heiko@sntech.de, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 10:31:22AM +0200, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+On Thu, Aug 10, 2017 at 06:57:40PM +0800, David.Wu wrote:
+> Hi Andrew, Florian
 > 
-> This documents the binding for the Tegra CEC module.
+> 在 2017/8/10 8:20, Andrew Lunn 写道:
+> > Hi Florian, David.
+> > 
+> > I'm happy with the property name. But i think the text needs more
+> > description. We deal with Ethernet switches with integrated PHYs. Yet
+> > for us, this property is unneeded.
+> > 
+> > Seeing this property means some bit of software needs to ensure the
+> > internal PHY should be used, when given the choice between an internal
+> > and external PHY. So i would say something like:
+> > 
+> >      If set, indicates that the PHY is integrated into the same
+> >      physical package as the Ethernet MAC. If needed, muxers should be
+> >      configured to ensure the (internal) PHY is used. The absence of this
+> >      property indicates the muxers should be configured so that the
+> >      external PHY is used.
 > 
-> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/tegra-cec.txt        | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/tegra-cec.txt
+> Are we supposed to replace the words "internal" with "integrated" here?
+> So we have three kinds of PHY, they are intenal, external and integrated
+> PHYs.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+And you can have both a XAUI/serdes phy and the ethernet phy. It should 
+be clear this is for the latter.
+
+Rob
