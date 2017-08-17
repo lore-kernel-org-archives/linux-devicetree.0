@@ -1,59 +1,53 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v3 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D Remote Processor Controller driver
-Date: Thu, 17 Aug 2017 09:15:25 +0200
-Message-ID: <20170817071526.5930-2-o.rempel@pengutronix.de>
-References: <20170817071526.5930-1-o.rempel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170817071526.5930-1-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-remoteproc@vger.kernel.org, linux@rempel-privat.de
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
+ clock selector PHY
+Date: Thu, 17 Aug 2017 09:23:40 +0200
+Message-ID: <CAMuHMdVypfK4n720SyTAkOZJx3gbA6_gaUA0RhXKGhVEB=54ig@mail.gmail.com>
+References: <1500963987-4627-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1500963987-4627-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/remoteproc/imx-rproc.txt   | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+On Tue, Jul 25, 2017 at 8:26 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> R-Car USB 2.0 controller can change the clock source from an oscillator
+> to an external clock via a register. So, this patch adds support
+> the clock source selector as a clock driver.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  This patch is based on the renesas-drivers.git /
+> renesas-drivers-2017-07-18-v4.13-rc1 tag.
+>
+>  Changes from v2:
+>   - Fix the example of device tree doc.
+>   - Replace some 8 spaces to a tab in the device tree doc.
+>   - Add Rob's Acked-by for the doc.
+>   - Drop CLK_IS_BASIC on init.flag.
+>   - Use of_clk_add_hw_provider() instead of of_clk_add_provider().
+>   - Use builtin_platform_driver() instead of syscall_init_sync().
+>   - Use pm_runtime APIs instead of clk APIs for "ehci_ohci" clk.
+>
+>  Changes from v1:
+>   - Change this driver as a clock driver from a generic phy driver.
+>     https://patchwork.kernel.org/patch/9788697/
+>   - Remove "RFC" tag.
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-new file mode 100644
-index 000000000000..fbcefd965dc4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-@@ -0,0 +1,33 @@
-+NXP iMX6SX/iMX7D Co-Processor Bindings
-+----------------------------------------
-+
-+This binding provides support for ARM Cortex M4 Co-processor found on some
-+NXP iMX SoCs.
-+
-+Required properties:
-+- compatible		Should be one of:
-+				"fsl,imx7d-cm4"
-+				"fsl,imx6sx-cm4"
-+- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-+- syscon		Phandle to syscon block which provide access to
-+			System Reset Controller
-+
-+Optional properties:
-+- memory-region		list of phandels to the reserved memory regions.
-+			(See: ../reserved-memory/reserved-memory.txt)
-+
-+Example:
-+	m4_reserved_sysmem1: cm4@80000000 {
-+		reg = <0x80000000 0x80000>;
-+	};
-+
-+	m4_reserved_sysmem2: cm4@81000000 {
-+		reg = <0x81000000 0x80000>;
-+	};
-+
-+	imx7d-cm4 {
-+		compatible	= "fsl,imx7d-cm4";
-+		memory-region	= <&m4_reserved_sysmem1>, <&m4_reserved_sysmem2>;
-+		syscon		= <&src>;
-+		clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
-+	};
--- 
-2.11.0
+Thank you, queued v3 + the fix from Julia in clk-renesas-for-4.14.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
