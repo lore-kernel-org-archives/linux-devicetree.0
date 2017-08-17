@@ -1,71 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: can: can-transceiver: Document new
- binding
-Date: Thu, 17 Aug 2017 10:10:36 -0500
-Message-ID: <20170817151036.jyvg63oyhkne5jsg@rob-hp-laptop>
-References: <20170810005916.27163-1-fcooper@ti.com>
- <20170810005916.27163-3-fcooper@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] Documentation: dt: iio: at91-sama5d2_adc: add
+ optional dma property
+Date: Thu, 17 Aug 2017 10:10:59 -0500
+Message-ID: <20170817151059.ptnzqsrzray26zlr@rob-hp-laptop>
+References: <1502368499-6739-1-git-send-email-eugen.hristev@microchip.com>
+ <1502368499-6739-2-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170810005916.27163-3-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, sergei.shtylyov@cogentembedded.com, socketcan@hartkopp.net
+In-Reply-To: <1502368499-6739-2-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 09, 2017 at 07:59:14PM -0500, Franklin S Cooper Jr wrote:
-> Add documentation to describe usage of the new can-transceiver binding.
-> This new binding is applicable for any CAN device therefore it exists as
-> its own document.
+On Thu, Aug 10, 2017 at 03:34:57PM +0300, Eugen Hristev wrote:
+> Added property for DMA configuration of the device.
+
+"dt-bindings: iio: ..." is preferred for subject.
+
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 > ---
-> Version 4 changes:
-> Drop unit address.
-> Switch from using fixed-transceiver to can-transceiver
+>  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
->  .../bindings/net/can/can-transceiver.txt           | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.txt b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-> new file mode 100644
-> index 0000000..2c31dc0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-> @@ -0,0 +1,24 @@
-> +Generic CAN transceiver Device Tree binding
-> +------------------------------
-> +
-> +CAN transceiver typically limits the max speed in standard CAN and CAN FD
-> +modes. Typically these limitations are static and the transceivers themselves
-> +provide no way to detect this limitation at runtime. For this situation,
-> +the "can-transceiver" node can be used.
-> +
-> +Required Properties:
-> + max-bitrate:	a positive non 0 value that determines the max
-> +		speed that CAN/CAN-FD can run. Any other value
-> +		will be ignored.
-> +
-> +Examples:
-> +
-> +Based on Texas Instrument's TCAN1042HGV CAN Transceiver
-> +
-> +m_can0 {
-> +	....
-> +	can-transceiver@ {
+> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> index 552e7a8..5f94d47 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> @@ -17,6 +17,11 @@ Required properties:
+>    This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
+>    IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
+>  
+> +Optional properties:
+> +  - dmas: Phandle to dma channel for the ADC.
+> +  See ../../dma/dma.txt for details.
+> +  - dma-names: Must be "rx" when dmas property is being used.
 
-Need to drop the @ too. With that,
+*-names is pointless when there's only one.
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-
-> +		max-bitrate = <5000000>;
-> +	};
-> +	...
-> +};
+> +
+>  Example:
+>  
+>  adc: adc@fc030000 {
+> @@ -31,4 +36,6 @@ adc: adc@fc030000 {
+>  	vddana-supply = <&vdd_3v3_lp_reg>;
+>  	vref-supply = <&vdd_3v3_lp_reg>;
+>  	atmel,trigger-edge-type = <IRQ_TYPE_EDGE_BOTH>;
+> +	dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
+> +	dma-names = "rx";
+>  }
 > -- 
-> 2.9.4.dirty
+> 2.7.4
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
