@@ -1,249 +1,160 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 2/3] i2c: davinci: Add PM Runtime Support
-Date: Thu, 17 Aug 2017 18:24:27 +0200
-Message-ID: <20170817162427.izbfsa7xatjxb2aw@ninjato>
-References: <20170816221715.15027-1-fcooper@ti.com>
- <20170816221715.15027-3-fcooper@ti.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial slave
+Date: Thu, 17 Aug 2017 09:21:12 -0700
+Message-ID: <87shgqgo7b.fsf@eliezer.anholt.net>
+References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com> <1502102366-2760-2-git-send-email-loic.poulain@gmail.com> <CAL_JsqKxA2pgtjmG-cxy5XPWuRWUiia-weRZDSh4++Vn=QZmqA@mail.gmail.com> <8186E2A3-D0AC-498F-8229-78862D363F78@holtmann.org> <392e6d51-33d6-1585-6582-1397a0c64852@gmail.com> <161632C7-EBBF-47F5-86DC-453E10395B54@holtmann.org> <e001e055-10a5-facd-a8e1-57c1bdb78172@gmail.com> <FCD47ED6-F01F-4921-97A3-BBC1D0263747@holtmann.org> <CALeDE9MeMHtCD8esCcznHjS+z6o7Ezh9dP1OZq=77DuYNS2=2A@mail.gmail.com> <0C198B33-8CB6-4D6A-B89F-35D3CD771135@holtmann.org> <92579650-5eb0-cdf2-405a-7c5be9c54770@gmail.com> <8CF7E37E-BF1C-4E32-AF3A-E44BA2E5A2B9@holtmann.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v6falnp5xon4yufw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170816221715.15027-3-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: robh+dt@kernel.org, linux@armlinux.org.uk, nsekhar@ti.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com, vigneshr@ti.com, Kevin Hilman <khilman@baylibre.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8CF7E37E-BF1C-4E32-AF3A-E44BA2E5A2B9-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---v6falnp5xon4yufw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-=-=
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 16, 2017 at 05:17:14PM -0500, Franklin S Cooper Jr wrote:
-> 66AK2G has I2C instances that are not apart of the ALWAYS_ON power domain
-> like other Keystone 2 SoCs and OMAPL138. Therefore, pm_runtime
-> is required to insure the power domain used by the specific I2C instance =
-is
-> properly turned on along with its functional clock.
->=20
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> writes:
 
-I'd need a review from the driver maintainers here. Which are Sekhar
-Nori and Kevin Hilman(?) according to MAINTAINERS. Is that still
-correct?
-
-> ---
-> Version 2 changes:
-> Move initial calls to pm runtime autosuspend before pm_runtime_enable
->=20
->  drivers/i2c/busses/i2c-davinci.c | 62 ++++++++++++++++++++++++++++++++++=
-------
->  1 file changed, 54 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-da=
-vinci.c
-> index b8c4353..6b1930d 100644
-> --- a/drivers/i2c/busses/i2c-davinci.c
-> +++ b/drivers/i2c/busses/i2c-davinci.c
-> @@ -36,6 +36,7 @@
->  #include <linux/gpio.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_data/i2c-davinci.h>
-> +#include <linux/pm_runtime.h>
-> =20
->  /* ----- global defines ----------------------------------------------- =
-*/
-> =20
-> @@ -122,6 +123,9 @@
->  /* set the SDA GPIO low */
->  #define DAVINCI_I2C_DCLR_PDCLR1	BIT(1)
-> =20
-> +/* timeout for pm runtime autosuspend */
-> +#define DAVINCI_I2C_PM_TIMEOUT	1000	/* ms */
+> Hi Loic,
+>
+>>>>> < HCI Command: Broadcom Write UART Clock Setting (0x3f|0x0045) plen 1
+>>>>>        01                                               .
+>>>>>> HCI Event: Command Complete (0x0e) plen 4
+>>>>>      Broadcom Write UART Clock Setting (0x3f|0x0045) ncmd 1
+>>>>>        Status: Unknown HCI Command (0x01)
+>>>>>=20
+>>>>> And I am seeing fun stuff like failed frame assembly.
+>>>>>=20
+>>>>> [  888.687594] Bluetooth: hci0: BCM: chip id 94
+>>>>> [  888.687821] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0182
+>>>>> [  892.059023] Bluetooth: hci0: Frame reassembly failed (-84)
+>>>>> [  892.316936] Bluetooth: hci0: BCM: failed to write clock (-56)
+>>>>> [  892.429478] Bluetooth: hci0: BCM (001.002.009) build 0182
+>>>>>=20
+>>>>> Actually not providing the firmware makes the controller work. It how=
+ever is stuck ad AA:AA:.. default address. Providing the firmware turns the=
+ address active. However then it never completes.
+>>>> I've tried on and off to get the BT working, there seems to lots of
+>>>> options and bits needed including some patches to the bluez [1] stuff
+>>>> but between not quite upstream kernel bits and numerous distros all
+>>>> doing it slightly differently I've never got it to work well.
+>>>>=20
+>>>> The yocto [1] bits seem fairly representative of some the patches
+>>>> flying around "to get it working" although I'm not sure how many of
+>>>> these are actually required and how many are superfluous with this
+>>>> patch set. There seems to be a firmware required that's not
+>>>> distributed with linux-firmware which would also be nice to resolve.
+>>> Non of these Yocto patches are actually needed. The culprit is the .ope=
+r_speed setting to be 4Mbps. Once you reduce that to 921600 thing will star=
+t to work smoothly. I sent a patch that takes the .oper_speed out completel=
+y and only applies it for the ACPI based devices where we know that it work=
+s.
+>>>=20
+>>> With my patch and the right DT entries for uart0 it actually works with=
+ =E2=80=9Cbtattach -B /dev/ttyAMA0 -P bcm=E2=80=9D. It will load the firmwa=
+re, configure it and head towards the right path.
+>>>=20
+>>> Obviously btattach is only an interim step here. Loic=E2=80=99s patches=
+ for serdev integration and changing the DT to expose uart0 as serial-slave=
+ for Bluetooth is the right approach. Once Loic=E2=80=99s resends the patch=
+es we can get them into bluetooth-next and start merging these towards upst=
+ream. After that, Bluetooth should work just out of the box like with any U=
+SB dongle.
+>>>=20
+>>> And the Yocto patches should be abandoned. If using H:5 (aka 3-Wire) in=
+stead of H:4 is possible, we could consider it, but as long as the UART wir=
+ing doesn=E2=80=99t cause any bit errors, it is not worth it.
+>>>=20
+>>> That said, I do see a "Bluetooth: hci0: Frame reassembly failed (-84)=
+=E2=80=9D error. I need to figure out where that is. Frankly we really need=
+ to hexdump the packet when this happens.
+>>>=20
+>>=20
+>> I also meet this Frame reassembly failure, Seems we receive a 0x00 byte =
+from the controller (unknown pkt type).
+>
+> that means adding something like this will silence it.
+>
+> +#define BCM_RECV_NULL \
+> +       .type =3D 0x00, \
+> +       .hlen =3D 0, \
+> +       .loff =3D 0, \
+> +       .lsize =3D 0, \
+> +       .maxlen =3D 0
 > +
->  struct davinci_i2c_dev {
->  	struct device           *dev;
->  	void __iomem		*base;
-> @@ -541,10 +545,17 @@ i2c_davinci_xfer(struct i2c_adapter *adap, struct i=
-2c_msg msgs[], int num)
-> =20
->  	dev_dbg(dev->dev, "%s: msgs: %d\n", __func__, num);
-> =20
-> +	ret =3D pm_runtime_get_sync(dev->dev);
-> +	if (ret < 0) {
-> +		dev_err(dev->dev, "Failed to runtime_get device: %d\n", ret);
-> +		pm_runtime_put_noidle(dev->dev);
-> +		return ret;
-> +	}
+> +static int bcm_recv_null(struct hci_dev *hdev, struct sk_buff *skb)
+> +{
+> +       kfree_skb(skb);
+> +       return 0;
+> +}
 > +
->  	ret =3D i2c_davinci_wait_bus_not_busy(dev);
->  	if (ret < 0) {
->  		dev_warn(dev->dev, "timeout waiting for bus ready\n");
-> -		return ret;
-> +		goto out;
->  	}
-> =20
->  	for (i =3D 0; i < num; i++) {
-> @@ -552,14 +563,19 @@ i2c_davinci_xfer(struct i2c_adapter *adap, struct i=
-2c_msg msgs[], int num)
->  		dev_dbg(dev->dev, "%s [%d/%d] ret: %d\n", __func__, i + 1, num,
->  			ret);
->  		if (ret < 0)
-> -			return ret;
-> +			goto out;
->  	}
-> =20
-> +	ret =3D num;
->  #ifdef CONFIG_CPU_FREQ
->  	complete(&dev->xfr_complete);
->  #endif
-> =20
-> -	return num;
-> +out:
-> +	pm_runtime_mark_last_busy(dev->dev);
-> +	pm_runtime_put_autosuspend(dev->dev);
-> +
-> +	return ret;
->  }
-> =20
->  static u32 i2c_davinci_func(struct i2c_adapter *adap)
-> @@ -599,6 +615,9 @@ static irqreturn_t i2c_davinci_isr(int this_irq, void=
- *dev_id)
->  	int count =3D 0;
->  	u16 w;
-> =20
-> +	if (pm_runtime_suspended(dev->dev))
-> +		return IRQ_NONE;
-> +
->  	while ((stat =3D davinci_i2c_read_reg(dev, DAVINCI_I2C_IVR_REG))) {
->  		dev_dbg(dev->dev, "%s: stat=3D0x%x\n", __func__, stat);
->  		if (count++ =3D=3D 100) {
-> @@ -802,7 +821,6 @@ static int davinci_i2c_probe(struct platform_device *=
-pdev)
->  	dev->clk =3D devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(dev->clk))
->  		return PTR_ERR(dev->clk);
-> -	clk_prepare_enable(dev->clk);
-> =20
->  	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	dev->base =3D devm_ioremap_resource(&pdev->dev, mem);
-> @@ -811,6 +829,18 @@ static int davinci_i2c_probe(struct platform_device =
-*pdev)
->  		goto err_unuse_clocks;
->  	}
-> =20
-> +	pm_runtime_set_autosuspend_delay(dev->dev,
-> +					 DAVINCI_I2C_PM_TIMEOUT);
-> +	pm_runtime_use_autosuspend(dev->dev);
-> +
-> +	pm_runtime_enable(dev->dev);
-> +
-> +	r =3D pm_runtime_get_sync(dev->dev);
-> +	if (r < 0) {
-> +		dev_err(dev->dev, "failed to runtime_get device: %d\n", r);
-> +		goto err_unuse_clocks;
-> +	}
-> +
->  	i2c_davinci_init(dev);
-> =20
->  	r =3D devm_request_irq(&pdev->dev, dev->irq, i2c_davinci_isr, 0,
-> @@ -849,10 +879,16 @@ static int davinci_i2c_probe(struct platform_device=
- *pdev)
->  	if (r)
->  		goto err_unuse_clocks;
-> =20
-> +	pm_runtime_mark_last_busy(dev->dev);
-> +	pm_runtime_put_autosuspend(dev->dev);
-> +
->  	return 0;
-> =20
->  err_unuse_clocks:
-> -	clk_disable_unprepare(dev->clk);
-> +	pm_runtime_dont_use_autosuspend(dev->dev);
-> +	pm_runtime_put_sync(dev->dev);
-> +	pm_runtime_disable(dev->dev);
-> +
->  	dev->clk =3D NULL;
->  	return r;
->  }
-> @@ -860,16 +896,26 @@ static int davinci_i2c_probe(struct platform_device=
- *pdev)
->  static int davinci_i2c_remove(struct platform_device *pdev)
->  {
->  	struct davinci_i2c_dev *dev =3D platform_get_drvdata(pdev);
-> +	int ret;
-> =20
->  	i2c_davinci_cpufreq_deregister(dev);
-> =20
->  	i2c_del_adapter(&dev->adapter);
-> =20
-> -	clk_disable_unprepare(dev->clk);
-> +	ret =3D pm_runtime_get_sync(&pdev->dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(&pdev->dev);
-> +		return ret;
-> +	}
-> +
->  	dev->clk =3D NULL;
-> =20
->  	davinci_i2c_write_reg(dev, DAVINCI_I2C_MDR_REG, 0);
-> =20
-> +	pm_runtime_dont_use_autosuspend(dev->dev);
-> +	pm_runtime_put_sync(dev->dev);
-> +	pm_runtime_disable(dev->dev);
-> +
->  	return 0;
->  }
-> =20
-> @@ -880,7 +926,6 @@ static int davinci_i2c_suspend(struct device *dev)
-> =20
->  	/* put I2C into reset */
->  	davinci_i2c_reset_ctrl(i2c_dev, 0);
-> -	clk_disable_unprepare(i2c_dev->clk);
-> =20
->  	return 0;
->  }
-> @@ -889,7 +934,6 @@ static int davinci_i2c_resume(struct device *dev)
->  {
->  	struct davinci_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
-> =20
-> -	clk_prepare_enable(i2c_dev->clk);
->  	/* take I2C out of reset */
->  	davinci_i2c_reset_ctrl(i2c_dev, 1);
-> =20
-> @@ -899,6 +943,8 @@ static int davinci_i2c_resume(struct device *dev)
->  static const struct dev_pm_ops davinci_i2c_pm =3D {
->  	.suspend        =3D davinci_i2c_suspend,
->  	.resume         =3D davinci_i2c_resume,
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				      pm_runtime_force_resume)
+>  static const struct h4_recv_pkt bcm_recv_pkts[] =3D {
+>         { H4_RECV_ACL,      .recv =3D hci_recv_frame },
+>         { H4_RECV_SCO,      .recv =3D hci_recv_frame },
+>         { H4_RECV_EVENT,    .recv =3D hci_recv_frame },
+>         { BCM_RECV_LM_DIAG, .recv =3D hci_recv_diag  },
+> +       { BCM_RECV_NULL,    .recv =3D bcm_recv_null  },
 >  };
-> =20
->  #define davinci_i2c_pm_ops (&davinci_i2c_pm)
-> --=20
-> 2.9.4.dirty
->=20
+>
+> It does silence it indeed. Maybe this is some of their markers to
+> ensure that the baud rate change worked. Or it is the indication that
+> the reset completed. Do you happen to know between which commands we
+> receive it?
+>
+>> Regarding the speed, I'm unable to reach 3Mbps, I selected 921600
+>> because this is the baudrate used by raspbian bt script.
+>
+> That is the same I experienced. The 921600 works fine, but trying
+> 3Mbps doesn=E2=80=99t. However it seems with hciattach you can crank it u=
+p to
+> 3Mpbs somehow. Maybe the delay is just to short for the UART switching
+> in that case.
+>
+>> Maybe they had some issues at higher speed (empirical value ?),
+>> However 2Mbps seems ok on my side (need to double check/adjust).
+>
+> We have to make it a DT max-speed param anyway. So I am not that
+> worried.
+>
+>> In a second step, need to check If we can use hardware flow control,
+>> I heard that pin 16&17 are routed to the bcm RTS/CTS.  Since there is
+>> no DMA usage, it could help.
 
---v6falnp5xon4yufw
+The BT's CTS/RTS are tied to 3v3/ground.
+
+> Eric, any chance you can dig out the recommendation for the Bluetooth
+> controller usage? I would also like to see the recommended PCM
+> settings for this hardware. It bet it is somehow wired up to the sound
+> controller.
+
+BT's PCM is connected to gpio 28-31 on the pi3, which you can pinmux to
+the i2s controller (pcm_gpio28 pin group).
+
+I'm not clear on what you're asking for, or where I would go to find
+anything else.  However, for integration stuff on the board, Phil, Dom,
+and Gordon at RPi are likely to know more.
+
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmVwzsACgkQFA3kzBSg
-Kbb9CQ//Y72v0aNDCIkWIqd7C8WNyDbLzizVFFXHR78MCUnXwXBzzgytbr5ef2EB
-G55VS9j02cRbLRr7O9XpJdNBCcF4+L0y8fh/BbSQit+Ow5RGQ2ZvzWSsNMWj0+UP
-eux+glYSZ5BL4bOlvqLzm6hX23Ko8bXGxGkG03Sy5g9WMuisr9gp1Irw6yD7DaBT
-qWQ5yf2exQty7STHjx2i/VEKhZI+MMrNxVfjca6d4LIyxRn+ljKXIqx4lZhiu6S+
-zbwMo0LgH7OCQej06x1G8MPWiTL/Jl4yk3Y3mmU3qJIcKAyy9vJcLp+BEjpVkWVl
-DZaDG2ZZ5aqHQaolYvkHb/Fh3NN4wiLgS25sErcOBHBaiY+uXIKt3ZC6CzSjLLp9
-8L+cPdqe+c5ykCjiogfUPKFNNAzrsPX3c5z4qkP3cnPVmV6tSIgn9BE3oWhxWNGT
-TSzNYXIX1O8uLZJiVU0pw4RjnBIbYXjdleOYdlzQoMLf0ZLCelwOWHMeK41dva1y
-nby9rA6Impyer8msOjlK0Zs9AfhD2UfsbU2aLGkg1R0sWA9bzhobx6CVrM4Dz1o6
-PjwW+DFMY09/U9qhmjsmx7/8Oj+tkb+/D6jelEEE1yKzlGi5U9AdxWkFTVNCbzyY
-oNg4yHbXTYK1rSpE2IoE7DyjPPPzDRKHPy8B7KbeMkjv1O0r8vQ=
-=q6hc
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlmVwngACgkQtdYpNtH8
+nuhQGRAAjtk49zjZWrOllMR1fZ2M3kK3yw0NalvT1BzsgkTet+TIb6d+bU3rQQfm
+RpVgLnRG5Efq//ghx9zlMhI+q7bh9IoeLflIUWNJE66aCh31nZ6hubwPavKH7mLn
++cmQTLfarh/Ql8kbWfthUGTijpMc9QT3G0n5NKpVMkVVZmasPwR1zttSFgQKNbIi
+EyermY/7UWhARADA2CELUyw8y8iaaVFRZZkKLT7kSArU1ZwUUZKdccZn6mhRskUn
+fIUosh00vXtqJ87SWwZDlPu9ndmBLpHGsFzYJdy1KVyMoUS5iMcggPJsCjDqnYxA
+1yqp5ZDlzXR0NeyiqvtY4G6bQg8xyXn5W/s0B6C7vBgT/720lODyfPVQs+jc+Uql
+8YsR+KYZj7zPzzW3L7EjKzwiLSJiT6p+kxV7lb3WjUB1g7Ai+qXazFceV2YNphE+
+R6R5y/Ht/DHIZLpgLxi1nBxRAfThTo0JkyDBJDO9o5ATwt62uyHxqEwhgUS4N8mc
+nqZlq3sfTJOxoGZlD8qlvJsqHmSXggz3HTsqtXMX59JYtyrB+aTo3Ag+l5b2COwP
+QdofovekmMIcl6/X+JjwZmtXmwAUCIrA6GkgS7D7L+HyAW2v5tyqqAs2PPbUdUEb
+8jBu/mZ8VFsHxmGbXGf70ym1XaBBbRInyOwFaO7IxUf9rG6s/00=
+=yr7F
 -----END PGP SIGNATURE-----
-
---v6falnp5xon4yufw--
+--=-=-=--
