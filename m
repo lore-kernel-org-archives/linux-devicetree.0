@@ -1,98 +1,95 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 11/16] dmaengine: bcm-sba-raid: Peek mbox when we have
- no free requests
-Date: Thu, 17 Aug 2017 12:10:08 +0530
-Message-ID: <20170817064008.GB3053@localhost>
-References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
- <1501583880-32072-12-git-send-email-anup.patel@broadcom.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [RFC PATCH 1/7] mmc: sdhci: Add quirk to indicate no CRC
+ stripping in MMC_RSP_136
+Date: Thu, 17 Aug 2017 09:31:50 +0300
+Message-ID: <f85729ab-09c2-1e88-626b-caca57cef702@intel.com>
+References: <20170807160142.12134-1-kishon@ti.com>
+ <20170807160142.12134-2-kishon@ti.com>
+ <872c7194-3d48-47e5-6396-7189bf841a42@intel.com>
+ <e7592ed0-dda2-6850-098e-7c6bba69df40@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1501583880-32072-12-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <e7592ed0-dda2-6850-098e-7c6bba69df40@ti.com>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
+Cc: nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 01, 2017 at 04:07:55PM +0530, Anup Patel wrote:
-> When setting up RAID array on several NVMe disks we observed that
-> sba_alloc_request() start failing (due to no free requests left)
-> and RAID array setup becomes very slow.
+On 17/08/17 08:20, Kishon Vijay Abraham I wrote:
+> Hi Adrian,
 > 
-> To improve performance, we do mbox channel peek when we have
-> no free requests. This improves performance of RAID array setup
-> because mbox requests that were completed but not processed by
-> mbox completion worker will be processed immediately by mbox
-> channel peek.
+> On Tuesday 15 August 2017 12:57 PM, Adrian Hunter wrote:
+>> On 07/08/17 19:01, Kishon Vijay Abraham I wrote:
+>>> TI's implementation of sdhci controller used in DRA7 SoC's doesn't
+>>> strip CRC in responses with length 136 bits. Add quirk to indicate
+>>> the controller does not strip CRC in MMC_RSP_136. If this quirk is
+>>> set sdhci library shouldn't shift the response present in
+>>> SDHCI_RESPONSE register.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>  drivers/mmc/host/sdhci.c | 27 +++++++++++++++++++--------
+>>>  drivers/mmc/host/sdhci.h |  2 ++
+>>>  2 files changed, 21 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>>> index ecd0d4350e8a..ece3751d2a25 100644
+>>> --- a/drivers/mmc/host/sdhci.c
+>>> +++ b/drivers/mmc/host/sdhci.c
+>>> @@ -1182,14 +1182,25 @@ static void sdhci_finish_command(struct sdhci_host *host)
+>>>  
+>>>  	if (cmd->flags & MMC_RSP_PRESENT) {
+>>>  		if (cmd->flags & MMC_RSP_136) {
+>>> -			/* CRC is stripped so we need to do some shifting. */
+>>> -			for (i = 0;i < 4;i++) {
+>>> -				cmd->resp[i] = sdhci_readl(host,
+>>> -					SDHCI_RESPONSE + (3-i)*4) << 8;
+>>> -				if (i != 3)
+>>> -					cmd->resp[i] |=
+>>> -						sdhci_readb(host,
+>>> -						SDHCI_RESPONSE + (3-i)*4-1);
+>>> +			if (!(host->quirks2 & SDHCI_QUIRK2_NO_CRC_STRIPPING)) {
+>>
+>> This is about the 136-bit response so let's put that in the quirk name.  How about SDHCI_QUIRK2_RSP_136_HAS_CRC
 > 
-> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/dma/bcm-sba-raid.c | 25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
-> index f14ed0a..399250e 100644
-> --- a/drivers/dma/bcm-sba-raid.c
-> +++ b/drivers/dma/bcm-sba-raid.c
-> @@ -200,6 +200,14 @@ static inline u32 __pure sba_cmd_pq_c_mdata(u32 d, u32 b1, u32 b0)
->  
->  /* ====== General helper routines ===== */
->  
-> +static void sba_peek_mchans(struct sba_device *sba)
-> +{
-> +	int mchan_idx;
-> +
-> +	for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
-> +		mbox_client_peek_data(sba->mchans[mchan_idx]);
-> +}
-> +
->  static struct sba_request *sba_alloc_request(struct sba_device *sba)
->  {
->  	unsigned long flags;
-> @@ -211,8 +219,17 @@ static struct sba_request *sba_alloc_request(struct sba_device *sba)
->  	if (req)
->  		list_move_tail(&req->node, &sba->reqs_alloc_list);
->  	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-> -	if (!req)
-> +
-> +	if (!req) {
-> +		/*
-> +		 * We have no more free requests so, we peek
-> +		 * mailbox channels hoping few active requests
-> +		 * would have completed which will create more
-> +		 * room for new requests.
-> +		 */
-> +		sba_peek_mchans(sba);
->  		return NULL;
-> +	}
->  
->  	req->flags = SBA_REQUEST_STATE_ALLOCED;
->  	req->first = req;
-> @@ -560,17 +577,15 @@ static enum dma_status sba_tx_status(struct dma_chan *dchan,
->  				     dma_cookie_t cookie,
->  				     struct dma_tx_state *txstate)
->  {
-> -	int mchan_idx;
->  	enum dma_status ret;
->  	struct sba_device *sba = to_sba_device(dchan);
->  
-> -	for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
-> -		mbox_client_peek_data(sba->mchans[mchan_idx]);
-> -
->  	ret = dma_cookie_status(dchan, cookie, txstate);
->  	if (ret == DMA_COMPLETE)
->  		return ret;
->  
-> +	sba_peek_mchans(sba);
+> Since omap seems to be the only platform that doesn't have CRC, I prefer adding
+> SDHCI_QUIRK2_RSP_136_NO_CRC. That way we can add the quirk only in sdhci-omap
+> instead of all the existing sdhci drivers.
 
-why do you want to do this while checking status..?
+Except that it is the way I described.  All the others strip the CRC and we
+have to shift to pretend it is still there.
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>
+>>> +				/*
+>>> +				 * CRC is stripped so we need to do some
+>>> +				 * shifting.
+>>> +				 */
+>>> +				for (i = 0; i < 4; i++) {
+>>> +					cmd->resp[i] =
+>>> +						sdhci_readl(host, SDHCI_RESPONSE
+>>> +							    + (3 - i) * 4) << 8;
+>>> +					if (i != 3)
+>>> +						cmd->resp[i] |=
+>>> +						sdhci_readb(host, SDHCI_RESPONSE
+>>> +							    + (3 - i) * 4 - 1);
+>>> +				}
+>>> +			} else {
+>>> +				for (i = 0; i < 4; i++)
+>>> +					cmd->resp[i] =
+>>> +					sdhci_readl(host, SDHCI_RESPONSE +
+>>> +						    (3 - i) * 4);
+>>>  			}
+>>
+>> This is all very jammed up against the 80 column margin.  Please make a new patch to separate it into a new function sdhci_read_rsp_136() and then another patch to add the quirk.
+>> i.e. completely untested!
+> 
+> Sure. Thanks for the patch.
+> 
+> Thanks
+> Kishon
+> 
+
