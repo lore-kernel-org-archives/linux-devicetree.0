@@ -1,35 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/8] dt-bindings: pwm: add description for rv1108 pwm
-Date: Thu, 17 Aug 2017 15:47:35 -0500
-Message-ID: <20170817204735.vyifljtv5gxrcku6@rob-hp-laptop>
-References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com>
- <1502699868-8315-1-git-send-email-andy.yan@rock-chips.com>
+Subject: Re: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Thu, 17 Aug 2017 15:48:32 -0500
+Message-ID: <20170817204832.mxqpzojz6ak5lbqx@rob-hp-laptop>
+References: <1502710766-44361-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1502699868-8315-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: thierry.reding@gmail.com, heiko@sntech.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1502710766-44361-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 04:37:48PM +0800, Andy Yan wrote:
-> Add device tree bindings document for pwm on
-> rockchip rv1108 soc.
+On Mon, Aug 14, 2017 at 12:39:26PM +0100, Biju Das wrote:
+> Add support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5) SDHI
+> is identical to the R-Car Gen2 family.
 > 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 > ---
+> This patch is compiled and tested againt linux next tag
+> next-20170811. This patch depend on the driver change
+> [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
+> https://patchwork.kernel.org/patch/9898611/
 > 
-> Changes in v4: None
-> Changes in v3:
-> - make the compatible string be: "rockchip,rv1108-pwm", "rockchip,rk3288-pwm"
->   for rv1108
 > 
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/pwm/pwm-rockchip.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
