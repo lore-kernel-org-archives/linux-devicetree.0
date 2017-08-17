@@ -1,143 +1,33 @@
-From: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
-Subject: Re: [PATCH v7] serio: PS/2 gpio bit banging driver for serio bus
-Date: Thu, 17 Aug 2017 18:13:01 +0200
-Message-ID: <5893a5a264436ec720dbe977fad37105@dk-develop.de>
-References: <20170811131736.1027-1-danilokrummrich@dk-develop.de>
- <20170817154336.rv5uak6jujlgxybi@rob-hp-laptop>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: am57xx-beagle-x15: Add support for rev C
+Date: Thu, 17 Aug 2017 09:22:34 -0700
+Message-ID: <20170817162233.GA6008@atomide.com>
+References: <20170816165053.19450-1-robertcnelson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170817154336.rv5uak6jujlgxybi@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20170816165053.19450-1-robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bob,
+* Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170816 09:51]:
+> Latest update to the BeagleBoard-X15 platform (revision C). This board contains
+> a silicon update (Rev 2.0), which includes a fix for the 2nd ethernet phy when
+> running at 1000 Mbps speeds.
+> 
+> This board can be indentified by the [C.00] after [BBRDX15_] in the at24 eeprom:
+> [BBRDX15_C.001731PX150249]
+> 
+> Rev C is now in full production and boards are available for end users.
 
-thanks for reviewing.
+Thanks applying into omap-for-v4.14/dt-v3.
 
-On 2017-08-17 17:43, Rob Herring wrote:
-> On Fri, Aug 11, 2017 at 03:17:36PM +0200, Danilo Krummrich wrote:
->> This driver provides PS/2 serio bus support by implementing bit 
->> banging
->> with the GPIO API. The GPIO pins, data and clock, can be configured 
->> with
->> a node in the device tree or by generic device properties (GDP).
->> 
->> Writing to a device is supported as well, though it is possible 
->> timings
->> can not be halt as they are tough and difficult to reach with bit 
->> banging.
->> Therefore it can be configured (also in DT and GDP) whether the serio
->> write function should be available for clients.
->> 
->> This driver is for development purposes and not recommended for 
->> productive
->> use. However, this driver can be useful e.g. when no USB port is 
->> available
->> or using old peripherals is desired as PS/2 controller chips getting 
->> rare.
->> 
->> This driver was tested on RPI1 and on Hikey960 and it worked well 
->> together
->> with the atkbd and psmouse driver.
->> 
->> Signed-off-by: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
->> ---
->> v2: Removed one verbose print statement, changed another one to 
->> dev_dbg.
->> v3: - fixed compiler warning on blackfin
->>     - depends on GPIOLIB
->>     - clarify documentation
->> v4: - fixed concurrent calls to ps2_gpio_write (serio->write)
->>     - use gpiod API
->>     - use generic device properties
->>     - request irq separately, do not use gpiod_to_irq
->>     - abort when gpio is connected via slow bus
->>     - Fixed a bug where PS2_CMD_RESEND is always send after tx failed 
->> once.
->>       The makes the write functionallity work better, tough timing is 
->> still
->>       critical.
->>     - disable irq initially until ps2_gpip_open (serio->open) is 
->> called
->> v5: Checked again why timings are that hard to reach while in tx mode 
->> and
->>     discovered that there is an extra clock pulse between stop bit 
->> sent from
->>     host and acknowledgement from device. By just skipping this clock 
->> pulse
->>     tx works fine now, though it still happens sometimes that the 
->> timing can
->>     not be reached of course.
->> v6: - fixed typos
->>     - use of_match_ptr
->> v7: remove unnecessary barriers
->> 
->> Sorry for resending, forgot der version tag in the subject.
->> ---
->>  .../devicetree/bindings/serio/ps2-gpio.txt         |  22 +
-> 
-> It's preferred to split bindings to separate patch.
-> 
-Together with Documentation/gpio/drivers-on-gpio.txt or would you prefer 
-to have
-a separate patch for this as well?
->>  Documentation/gpio/drivers-on-gpio.txt             |   5 +
->>  drivers/input/serio/Kconfig                        |  11 +
->>  drivers/input/serio/Makefile                       |   1 +
->>  drivers/input/serio/ps2-gpio.c                     | 453 
->> +++++++++++++++++++++
->>  5 files changed, 492 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/serio/ps2-gpio.txt
->>  create mode 100644 drivers/input/serio/ps2-gpio.c
->> 
->> diff --git a/Documentation/devicetree/bindings/serio/ps2-gpio.txt 
->> b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
->> new file mode 100644
->> index 000000000000..099dd6d46cb3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
->> @@ -0,0 +1,22 @@
->> +Device-Tree bindings for ps/2 gpio driver
-> 
-> Bindings don't describe drivers.
-> 
-Will fix.
->> +
->> +Required properties:
->> +	- compatible = "ps2-gpio"
->> +	- gpios: data and clock gpio
->> +	- interrupts: Should trigger on the falling edge of the clock line.
->> +
->> +Optional properties:
->> +	- ps2-gpio,write-enable: Indicates whether write function is 
->> provided
-> 
-> ps2-gpio is not a vendor prefix, so drop it.
-> 
-I will do.
->> +	to serio device. Possibly providing the write fn will not work, 
->> because
->> +	of the tough timing requirements.
->> +
->> +Example nodes:
->> +
->> +ps2@0 {
->> +	compatible = "ps2-gpio";
->> +	interrupt-parent = <&gpio>;
->> +	interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
->> +	data-gpios = <&gpio 24 GPIO_ACTIVE_HIGH>;
->> +	clk-gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
->> +	ps2-gpio,write-enable;
->> +};
+Regards,
 
-Thanks,
-Danilo
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
