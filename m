@@ -1,32 +1,31 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] arm64: dts: r8a7796: add usb host device nodes
-Date: Thu, 17 Aug 2017 10:20:28 +0200
-Message-ID: <20170817082028.GA27693@verge.net.au>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: r8a7795: Add USB3.0 host device node
+Date: Thu, 17 Aug 2017 10:24:17 +0200
+Message-ID: <20170817082417.GB27693@verge.net.au>
 References: <1501763324-26028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20170804105919.GA9178@verge.net.au>
+ <1501763324-26028-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170804105919.GA9178@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1501763324-26028-4-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 04, 2017 at 12:59:19PM +0200, Simon Horman wrote:
-> On Thu, Aug 03, 2017 at 09:28:41PM +0900, Yoshihiro Shimoda wrote:
-> > This patch is based on the renesas.git / renesas-devel-20170731v2-v4.13-rc3 tag.
-> > 
-> > For usb2.0 host, we need the following patch:
-> >  https://patchwork.kernel.org/patch/9864583/
-> > 
-> > For usb3.0 host, we need the following patch:
-> >  https://patchwork.kernel.org/patch/9864579/
-> 
-> Thanks, I am marking this series as deferred pending acceptance of the
-> above patches. Please repost this series or otherwise ping me once the
-> dependencies are in place.
+On Thu, Aug 03, 2017 at 09:28:44PM +0900, Yoshihiro Shimoda wrote:
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 
-It looks like Geert has accepted the patches above,
-accordingly I have applied this series.
+I applied this as "arm64: dts: r8a7796: Add USB3.0 host device node"
+Note the '6'.
+
+Also, I know I am guilty of this too, but please consider including a
+body in the changelog for future patches.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
