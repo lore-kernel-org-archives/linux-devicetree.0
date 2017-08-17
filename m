@@ -1,119 +1,71 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] drm/panel: Add DT bindings for Ilitek ILI9322
-Date: Thu, 17 Aug 2017 15:44:30 -0500
-Message-ID: <20170817204424.e2wdkmyp4vyx2qj3@rob-hp-laptop>
-References: <20170813114448.20179-1-linus.walleij@linaro.org>
- <20170813114448.20179-2-linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] drm/tve200: Add DT bindings
+Date: Thu, 17 Aug 2017 15:46:39 -0500
+Message-ID: <20170817204639.euyygue22s33atak@rob-hp-laptop>
+References: <20170813151132.24736-1-linus.walleij@linaro.org>
+ <20170813151132.24736-2-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170813114448.20179-2-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170813151132.24736-2-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 13, 2017 at 01:44:47PM +0200, Linus Walleij wrote:
-> This adds device tree bindings for the Ilitek ILI9322
-> 320x240 TFT panel driver.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/display/panel/ilitek,ili9322.txt      | 120 +++++++++++++++++++++
->  1 file changed, 120 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9322.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.txt b/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.txt
-> new file mode 100644
-> index 000000000000..d619b1ad14a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.txt
-> @@ -0,0 +1,120 @@
-> +Ilitek ILI9322 TFT panel driver with SPI control bus
-> +
-> +This is a driver for 320x240 TFT panels, accepting a variety of input
-> +streams that get adapted and scaled to the panel. The panel output has
-> +960 TFT source driver pins and 240 TFT gate driver pins, VCOM, VCOML and
-> +VCOMH outputs.
-> +
-> +Required properties:
-> +  - compatible: "ilitek,ili9322"
-> +  - reg: address of the panel on the SPI bus
-> +
-> +Optional properties:
-> +  - width-mm: physical panel width [mm]
-> +  - height-mm: physical panel height [mm]
-> +  - vcc-supply: core voltage supply, see regulator/regulator.txt
-> +  - iovcc-supply: voltage supply for the interface input/output signals,
-> +    see regulator/regulator.txt
-> +  - vci-supply: voltage supply for analog parts, see regulator/regulator.txt
-> +  - reset-gpios: a GPIO spec for the reset pin, see gpio/gpio.txt
-> +  - ilitek,vreg1out-microvolt: the output in microvolts for the VREGOUT1
-> +    regulator used to drive the physical display. Valid ranges are 3600 thru
-> +    6000 in 100 microvolt increments. If not specified, hardware defaults will
-> +    be used (4.5V).
-> +  - ilitek,vcom-amplitude-percent: the percentage of VREGOUT1 used for the
-> +    peak-to-peak amplitude of the communcation signals to the physical display.
-> +    Valid ranges are 70 thru 132 percent in increments if two percent. Odd
-> +    percentages will be truncated. If not specified, hardware defaults will be
-> +    used (114%).
-> +  - ilitek,vcom-high-percent: the percentage of VREGOUT1 used for the peak
-> +    voltage on the communications link. Valid ranges are 37 thru 100 percent.
-> +    If not specified, hardware defaults will be used (91%).
-> +  - ilitek,gamma-correction-neg: a set of 8 nybbles describing negative
-> +    gamma correction for voltages V1 thru V8. Valid range 0..15
-> +  - ilitek,gamma-correction-pos: a set of 8 nybbles describing positive
-> +    gamma correction for voltages V1 thru V8. Valid range 0..15
-> +    These adjust what grayscale voltage will be output for input data V1 = 0,
-> +    V2 = 16, V3 = 48, V4 = 96, V5 = 160, V6 = 208, V7 = 240 and V8 = 255.
-> +    The curve is shaped like this:
-> +
-> +    ^
-> +    |                                                        V8
-> +    |                                                   V7
-> +    |                                          V6
-> +    |                               V5
-> +    |                    V4
-> +    |            V3
-> +    |     V2
-> +    | V1
-> +    +----------------------------------------------------------->
-> +      0   16     48      96         160        208      240  255
-> +
-> +    The negative and postive gamma values adjust the V1 thru V8 up/down
-> +    according to the datasheet specifications. This is a property of the
-> +    physical display connected to the display controller and may vary.
-> +    If defined, both arrays must be supplied in full. If the properties
-> +    are not supplied, hardware defaults will be used.
-
-Normally, we the physical panel is described which would imply all these 
-settings. Are there lots of panels with this controller that would 
-justify all these settings?
-
-> +
-> +  - ilitek,entry-mode: the panel can be connected to various input streams
-> +    and four of them can be selected by electronic straps on the display.
-> +    However it is possible to select another mode or override the
-> +    electronic default with this property. Valid values:
-> +    0: 8 bit serial RGB through
-> +    1: 8 bit serial RGB aligned
-> +    2: 8 bit serial RGB dummy 320x240
-> +    3: 8 bit serial RGB dummy 360x240
-> +    4: disabled
-> +    5: 24 bit parallel RGB through
-> +    6: 24 bit parallel RGB aligned
-> +    7: 24 bit YUV 640Y 320CbCr
-> +    8: 24 bit YUV 720Y 360CbCr
-> +    9: disabled
-> +    10: 8 bit ITU-R BT.656 720Y 360CbCr
-> +    11: 8 bit ITU-R BT.656 640Y 320CbCr
-
-To some extent, we have some standard bindings to describe this.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCBBdWcgMTMsIDIwMTcgYXQgMDU6MTE6MjlQTSArMDIwMCwgTGludXMgV2FsbGVpaiB3
+cm90ZToKPiBUaGlzIGFkZHMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHRoZSBGYXJhZGF5IFRW
+RTIwMCBJUCBibG9jay4KPiBUaGlzIElQIGJsb2NrIGlzIHByZXNlbnQgaW4gdGhlIEdlbWluaSBB
+Uk0gU29DIGFuZCBhbHNvIGluIHNvbWUKPiBHcmFpbiBNZWRpYSBHTXh4eHggU29Dcy4KPiAKPiBD
+YzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxs
+ZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvZmFyYWRheSx0dmUyMDAudHh0IHwgNDEgKysrKysrKysrKysrKysrKysr
+KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZmFyYWRheSx0
+dmUyMDAudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAwLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi45NWQ1ODhmYmIyZjIKPiAtLS0gL2Rldi9udWxsCj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZmFyYWRheSx0
+dmUyMDAudHh0Cj4gQEAgLTAsMCArMSw0MSBAQAo+ICsqIEZhcmFkYXkgVFYgRW5jb2RlciBUVkUy
+MDAKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGU6IG11c3Qg
+YmUgb25lIG9mOgo+ICsJImZhcmFkYXksdHZlMjAwIgo+ICsJImNvcnRpbmEsZ2VtaW5pLXR2YyIs
+ICJmYXJhZGF5LHR2ZTIwMCIKPiArCj4gKy0gcmVnOiBiYXNlIGFkZHJlc3MgYW5kIHNpemUgb2Yg
+dGhlIGNvbnRyb2wgcmVnaXN0ZXJzIGJsb2NrCj4gKwo+ICstIGludGVycnVwdHM6IGNvbnRhaW5z
+IGFuIGludGVycnVwdCBzcGVjaWZpZXIgZm9yIHRoZSBpbnRlcnJ1cHQKPiArCWxpbmUgZnJvbSB0
+aGUgVFZFMjAwCj4gKwo+ICstIGNsb2NrLW5hbWVzOiBzaG91bGQgY29udGFpbiAiUENMSyIgZm9y
+IHRoZSBjbG9jayBsaW5lIGNsb2NraW5nIHRoZQo+ICsJc2lsaWNvbiBhbmQgIlRWRSIgZm9yIHRo
+ZSAyN01IeiBjbG9jayB0byB0aGUgdmlkZW8gZHJpdmVyCj4gKwo+ICstIGNsb2NrczogY29udGFp
+bnMgcGhhbmRsZSBhbmQgY2xvY2sgc3BlY2lmaWVyIHBhaXJzIGZvciB0aGUgZW50cmllcwo+ICsJ
+aW4gdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5LiBTZWUKPiArCURvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiArCj4gK09wdGlvbmFsIHBy
+b3BlcnRpZXM6Cj4gKwo+ICstIHJlc2V0czogY29udGFpbnMgdGhlIHJlc2V0IGxpbmUgcGhhbmRs
+ZSBmb3IgdGhlIGJsb2NrCj4gKwo+ICtSZXF1aXJlZCBzdWItbm9kZXM6Cj4gKwo+ICstIHBvcnQ6
+IGRlc2NyaWJlcyBMQ0QgcGFuZWwgc2lnbmFscywgZm9sbG93aW5nIHRoZSBjb21tb24gYmluZGlu
+Zwo+ICsJZm9yIHZpZGVvIHRyYW5zbWl0dGVyIGludGVyZmFjZXM7IHNlZQo+ICsJRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CgpOZWVk
+IHRvIGV4cGxpY2l0bHkgbGlzdCBwb3J0cyBhbmQgZW5kcG9pbnRzLgoKQWxzbywgbmVlZHMgdG8g
+YmUgaW4gdGhlIGV4YW1wbGUgYXMgaXQgaXMgcmVxdWlyZWQuCgo+ICsKPiArRXhhbXBsZToKPiAr
+Cj4gK3R2Y0A2YTAwMDAwMCB7CgpkaXNwbGF5LWNvbnRyb2xsZXJALi4uCgo+ICsJY29tcGF0aWJs
+ZSA9ICJmYXJhZGF5LHR2ZTIwMCI7Cj4gKwlyZWcgPSA8MHg2YTAwMDAwMCAweDEwMDA+Owo+ICsJ
+aW50ZXJydXB0cyA9IDwxMyBJUlFfVFlQRV9FREdFX1JJU0lORz47Cj4gKwlyZXNldHMgPSA8JnN5
+c2NvbiBHRU1JTklfUkVTRVRfVFZDPjsKPiArCWNsb2NrcyA9IDwmc3lzY29uIEdFTUlOSV9DTEtf
+R0FURV9UVkM+LAo+ICsJCSA8JnN5c2NvbiBHRU1JTklfQ0xLX1RWQz47Cj4gKwljbG9jay1uYW1l
+cyA9ICJQQ0xLIiwgIlRWRSI7Cj4gK307Cj4gLS0gCj4gMi4xMy40Cj4gCj4gLS0KPiBUbyB1bnN1
+YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNl
+dHJlZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVs
+Lm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFq
+b3Jkb21vLWluZm8uaHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
