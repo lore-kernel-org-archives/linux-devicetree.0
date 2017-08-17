@@ -1,110 +1,79 @@
-From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] can: dev: Add support for limiting configured
- bitrate
-Date: Thu, 17 Aug 2017 12:54:48 -0500
-Message-ID: <b1082666-6cdf-374e-2c83-8d520e0996ad@ti.com>
-References: <20170810005916.27163-1-fcooper@ti.com>
- <20170810005916.27163-2-fcooper@ti.com>
- <9a6f4fdf-a4f6-283b-0e5a-693cc7d263ef@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 1/4] dt-bindings: net: bluetooth: Add broadcom-bluetooth
+Date: Thu, 17 Aug 2017 19:59:48 +0200
+Message-ID: <1502992791-10265-1-git-send-email-loic.poulain@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9a6f4fdf-a4f6-283b-0e5a-693cc7d263ef-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add binding document for serial bluetooth chips using
+Broadcom protocol.
 
+Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ v2: dt-bindings as separate patch
+     rebase on upcoming pi3 dts changes
+ v3: changes in bcm serdev drivers:
+     name refactoring and additional comments
+     Add generic host_set_baudrate method
+     Use agnostic device_property_read
+ v4: changes in doc and dts:
+     Add additional params to broadcom bt dt-bindings
+     Set the max baudrate to 2000000 instead of 921600
+     use chosen/stdout-path instead of console=
+     remove useless earlyprintk
+     same changes in bcm283x.dtsi
 
-On 08/10/2017 05:05 AM, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 8/10/2017 3:59 AM, Franklin S Cooper Jr wrote:
-> 
->> Various CAN or CAN-FD IP may be able to run at a faster rate than
->> what the transceiver the CAN node is connected to. This can lead to
->> unexpected errors. However, CAN transceivers typically have fixed
->> limitations and provide no means to discover these limitations at
->> runtime. Therefore, add support for a can-transceiver node that
->> can be reused by other CAN peripheral drivers to determine for both
->> CAN and CAN-FD what the max bitrate that can be used. If the user
->> tries to configure CAN to pass these maximum bitrates it will throw
->> an error.
->>
->> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
->> ---
->> Version 4 changes:
->> Used can-transceiver instead of fixed-transceiver.
->>
->>   drivers/net/can/dev.c   | 50
->> +++++++++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/can/dev.h |  5 +++++
->>   2 files changed, 55 insertions(+)
->>
->> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
->> index 365a8cc..372108f 100644
->> --- a/drivers/net/can/dev.c
->> +++ b/drivers/net/can/dev.c
-> [...]
->> @@ -814,6 +815,39 @@ int open_candev(struct net_device *dev)
->>   }
->>   EXPORT_SYMBOL_GPL(open_candev);
->>   +#ifdef CONFIG_OF
->> +/*
->> + * Common function that can be used to understand the limitation of
->> + * a transceiver when it provides no means to determine these
->> limitations
->> + * at runtime.
->> + */
->> +void of_can_transceiver(struct net_device *dev)
->> +{
->> +    struct device_node *dn;
->> +    struct can_priv *priv = netdev_priv(dev);
->> +    struct device_node *np;
->> +    unsigned int max_bitrate;
->> +    int ret;
->> +
->> +    np = dev->dev.parent->of_node;
-> 
->    I'd do that as an initializer.
+ .../devicetree/bindings/net/broadcom-bluetooth.txt | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
 
-Ok
-> 
->> +
->> +    dn = of_get_child_by_name(np, "can-transceiver");
->> +    if (!dn)
->> +        return;
->> +
->> +    max_bitrate = 0;
->> +    ret = of_property_read_u32(dn, "max-bitrate", &max_bitrate);
-> 
->    I'd initialize max_bitrate to 0 as iff of_property_read_u32() fails,
-> it'll leave the variable unset...>
->> +
->> +    if (max_bitrate > 0) {
-> 
->    You risk checking unset variable here.
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+new file mode 100644
+index 0000000..4194ff7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -0,0 +1,35 @@
++Broadcom Bluetooth Chips
++---------------------
++
++This documents the binding structure and common properties for serial
++attached Broadcom devices.
++
++Serial attached Broadcom devices shall be a child node of the host UART
++device the slave device is attached to.
++
++Required properties:
++
++ - compatible: should contain one of the following:
++   * "brcm,bcm43438-bt"
++
++Optional properties:
++
++ - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
++ - shutdown-gpios: GPIO specifier, used to enable the BT module
++ - device-wakeup-gpios: GPIO specifier, used to wakeup the controller
++ - host-wakeup-gpios: GPIO specifier, used to wakeup the host processor
++ - clocks: clock specifier if external clock provided to the controller
++ - clock-names: should be "extclk"
++
++
++Example:
++
++&uart2 {
++       pinctrl-names = "default";
++       pinctrl-0 = <&uart2_pins>;
++
++       bluetooth {
++               compatible = "brcm,bcm43438-bt";
++               max-speed = <921600>;
++       };
++};
+-- 
+1.9.1
 
-Four lines up I am already setting max_bitrate to a default value of 0.
-
-> 
->> +        priv->max_bitrate = max_bitrate;
->> +        priv->is_bitrate_limited = true;
->> +    } else if (ret != -EINVAL) {
->> +        netdev_warn(dev, "Invalid value for transceiver max bitrate\n");
->> +    }
->> +}
->> +EXPORT_SYMBOL(of_can_transceiver);
->> +#endif
->> +
->>   /*
->>    * Common close function for cleanup before the device gets closed.
->>    *
-> [...]
-> 
-> MBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
