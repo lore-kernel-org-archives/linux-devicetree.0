@@ -1,15 +1,20 @@
 From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/4] dt-bindings: net: bluetooth: Add broadcom-bluetooth
-Date: Thu, 17 Aug 2017 19:59:48 +0200
-Message-ID: <1502992791-10265-1-git-send-email-loic.poulain@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v4 3/4] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 serial slave
+Date: Thu, 17 Aug 2017 19:59:50 +0200
+Message-ID: <1502992791-10265-3-git-send-email-loic.poulain@gmail.com>
+References: <1502992791-10265-1-git-send-email-loic.poulain@gmail.com>
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502992791-10265-1-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding document for serial bluetooth chips using
-Broadcom protocol.
+Add BCM43438 (bluetooth) as a slave device of uart0 (pl011/ttyAMA0).
+This allows to automatically insert the bcm43438 to the bluetooth
+subsystem instead of relying on userspace helpers (hciattach).
+
+Overwrite chosen/stdout-path to use 8250 aux uart as console.
 
 Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
@@ -26,55 +31,36 @@ Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.or
      remove useless earlyprintk
      same changes in bcm283x.dtsi
 
- .../devicetree/bindings/net/broadcom-bluetooth.txt | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-new file mode 100644
-index 0000000..4194ff7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -0,0 +1,35 @@
-+Broadcom Bluetooth Chips
-+---------------------
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index 20725ca..e4488cb 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -8,6 +8,11 @@
+ 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+ 	model = "Raspberry Pi 3 Model B";
+ 
++	chosen {
++		/* 8250 auxiliar UART instead of pl011 */
++		stdout-path = "serial1:115200n8";
++	};
 +
-+This documents the binding structure and common properties for serial
-+attached Broadcom devices.
+ 	memory {
+ 		reg = <0 0x40000000>;
+ 	};
+@@ -24,6 +29,11 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
+ 	status = "okay";
 +
-+Serial attached Broadcom devices shall be a child node of the host UART
-+device the slave device is attached to.
-+
-+Required properties:
-+
-+ - compatible: should contain one of the following:
-+   * "brcm,bcm43438-bt"
-+
-+Optional properties:
-+
-+ - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-+ - shutdown-gpios: GPIO specifier, used to enable the BT module
-+ - device-wakeup-gpios: GPIO specifier, used to wakeup the controller
-+ - host-wakeup-gpios: GPIO specifier, used to wakeup the host processor
-+ - clocks: clock specifier if external clock provided to the controller
-+ - clock-names: should be "extclk"
-+
-+
-+Example:
-+
-+&uart2 {
-+       pinctrl-names = "default";
-+       pinctrl-0 = <&uart2_pins>;
-+
-+       bluetooth {
-+               compatible = "brcm,bcm43438-bt";
-+               max-speed = <921600>;
-+       };
-+};
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		max-speed = <2000000>;
++	};
+ };
+ 
+ /* uart1 is mapped to the pin header */
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
