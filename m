@@ -1,53 +1,32 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
- clock selector PHY
-Date: Thu, 17 Aug 2017 09:23:40 +0200
-Message-ID: <CAMuHMdVypfK4n720SyTAkOZJx3gbA6_gaUA0RhXKGhVEB=54ig@mail.gmail.com>
-References: <1500963987-4627-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1500963987-4627-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/2] Add usb3 ctrl node on RK3328 SoCs and enable usb3 host on RK3328 evb
+Date: Thu, 17 Aug 2017 15:35:40 +0800
+Message-ID: <1502955342-21985-1-git-send-email-william.wu@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 25, 2017 at 8:26 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> R-Car USB 2.0 controller can change the clock source from an oscillator
-> to an external clock via a register. So, this patch adds support
-> the clock source selector as a clock driver.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  This patch is based on the renesas-drivers.git /
-> renesas-drivers-2017-07-18-v4.13-rc1 tag.
->
->  Changes from v2:
->   - Fix the example of device tree doc.
->   - Replace some 8 spaces to a tab in the device tree doc.
->   - Add Rob's Acked-by for the doc.
->   - Drop CLK_IS_BASIC on init.flag.
->   - Use of_clk_add_hw_provider() instead of of_clk_add_provider().
->   - Use builtin_platform_driver() instead of syscall_init_sync().
->   - Use pm_runtime APIs instead of clk APIs for "ehci_ohci" clk.
->
->  Changes from v1:
->   - Change this driver as a clock driver from a generic phy driver.
->     https://patchwork.kernel.org/patch/9788697/
->   - Remove "RFC" tag.
+This series add support for usb3 controller on RK3328 SoCs.
+This series don't include usb3 phy patches, and I will try
+to submit usb3 phy patches individually later.
+Tested on RK3328 evaluation board.
 
-Thank you, queued v3 + the fix from Julia in clk-renesas-for-4.14.
+William Wu (2):
+  arm64: dts: rockchip: add usb3 controller node for RK3328 SoCs
+  arm64: dts: rockchip: enable usb3 for RK3328 evaluation board
 
-Gr{oetje,eeting}s,
+ .../devicetree/bindings/usb/rockchip,dwc3.txt      |  4 +++-
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |  9 ++++++++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 27 ++++++++++++++++++++++
+ 3 files changed, 39 insertions(+), 1 deletion(-)
 
-                        Geert
+-- 
+2.0.0
+
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
