@@ -1,73 +1,47 @@
-From: Tom Rini <trini@konsulko.com>
-Subject: [PATCH] dts: Make it easier to enable __symbols__ generation in dtb files
-Date: Wed, 16 Aug 2017 20:35:02 -0400
-Message-ID: <1502930102-8648-1-git-send-email-trini@konsulko.com>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sekhar Nori <nsekhar@ti.com>, Jason Kridner <jkridner@beagleboard.org>, Drew Fustini <drew@beagleboard.org>, Robert Nelson <robertcnelson@gmail.com>, Lokesh Vutla <lokeshvutla@ti.com>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <mmarek@suse.com>, linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 1/1] dt-bindings: mtd: add new compatible strings and
+ improve description
+Date: Thu, 17 Aug 2017 09:51:35 +0800
+Message-ID: <1502934695.1128.11.camel@mhfsdcap03>
+References: <1501834239-25581-1-git-send-email-guochun.mao@mediatek.com>
+         <1501834239-25581-2-git-send-email-guochun.mao@mediatek.com>
+         <20170810182146.glmikeqpqwe66dwt@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170810182146.glmikeqpqwe66dwt@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This introduces the variabe DTC_EXTRA_FLAGS to allow for additional
-flags to be passed to dtc.  While this can have many uses (such as
-easier testing of new warning flags) the use case I wish to spell out
-here is passing of -@ to enable __symbols__ to be included in the
-resulting dtb and thus 'stacked' overlays to be able to be used.
+On Thu, 2017-08-10 at 13:21 -0500, Rob Herring wrote:
+> On Fri, Aug 04, 2017 at 04:10:39PM +0800, Guochun Mao wrote:
+> > Add "mediatek,mt2712-nor" and "mediatek,mt7622-nor"
+> > for nor flash node's compatible strings.
+> > Explicate the fallback compatible.
+> > 
+> > Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/mtd/mtk-quadspi.txt        |   15 +++++++++------
+> >  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-When passing in -@ this will increase the size of the dtb (and resident
-memory usage) in exchange for allowing more types of overlays to be
-applied to the dtb file prior to passing it to Linux and additional
-functionality within the kernel when OF_OVERLAY is enabled and in tools
-outside of the kernel.
+Hi Rob,
+Thank you very much!
 
-Cc: Jason Kridner <jkridner@beagleboard.org>
-Cc: Drew Fustini <drew@beagleboard.org>
-Cc: Robert Nelson <robertcnelson@gmail.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <mmarek@suse.com>
-CC: linux-kbuild@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Tom Rini <trini@konsulko.com>
----
-This would be v3 of my attempt to enable __symbols__ more widely (v2,
-for people not on the CC, enabled it always, but for some boards).
+Hi Matthias, Cyrille,
+Thanks a lot for your efforts in reviewing the patch.
 
-To be clear, this version of the patch is more flexible in that it
-allows for arbitrary flags to be passed to dtc, which can have other
-uses.  But, I'm still spelling out -@ being the motivation behind this
-for clarity.  Both Frank and Rob were uncomfortable with v2, and Frank
-suggested this approach to make it easier for users  / distributions /
-etc to opt-in to this functionality.  For clarity, Frank was suggesting
-(at least at first) perhaps also a tie-in CONFIG option, which I have
-not done here as I feel that's adding extra hurdles to something that
-must already be opt-in.  Given that today many of the immediate uses are
-for "pre-boot" application of overlays (SoM + carrier + add-ons or EVM +
-LCD for example), I believe this is an acceptable trade-off to make
-currently.
----
- scripts/Makefile.lib | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Is there any comment about the patch this version?
+I appreciate your suggestion.
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 58c05e5d9870..04434ffe3370 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -293,7 +293,7 @@ DTC_FLAGS += -Wnode_name_chars_strict \
- 	-Wproperty_name_chars_strict
- endif
- 
--DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
-+DTC_FLAGS += $(DTC_FLAGS_$(basetarget)) $(DTC_EXTRA_FLAGS)
- 
- # Generate an assembly file to wrap the output of the device tree compiler
- quiet_cmd_dt_S_dtb= DTB     $@
--- 
-1.9.1
+BR,
+Guochun
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
