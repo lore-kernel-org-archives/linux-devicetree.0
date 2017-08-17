@@ -1,40 +1,31 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 06/11] Docs: dt: add devicetree binding for describing
- arm64 SDEI firmware
-Date: Thu, 17 Aug 2017 10:09:48 -0500
-Message-ID: <20170817150948.x4ebg54ak7pzfley@rob-hp-laptop>
-References: <20170808164616.25949-1-james.morse@arm.com>
- <20170808164616.25949-7-james.morse@arm.com>
+Subject: Re: [PATCH v9 05/16] watchdog: lantiq: add device tree binding
+ documentation
+Date: Thu, 17 Aug 2017 10:09:54 -0500
+Message-ID: <20170817133936.omz4s3t36fha3bxe@rob-hp-laptop>
+References: <20170808225247.32266-1-hauke@hauke-m.de>
+ <20170808225247.32266-6-hauke@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170808164616.25949-7-james.morse-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170808225247.32266-6-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 08, 2017 at 05:46:11PM +0100, James Morse wrote:
-> The Software Delegated Exception Interface (SDEI) is an ARM standard
-> for registering callbacks from the platform firmware into the OS.
-> This is typically used to implement RAS notifications, or from an
-> IRQ that has been promoted to a firmware-assisted NMI.
+On Wed, Aug 09, 2017 at 12:52:36AM +0200, Hauke Mehrtens wrote:
+> The binding was not documented before, add the documentation now.
 > 
-> Add a new devicetree binding to describe the SDE firmware interface.
-> 
-> Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 > ---
-> Changes since v1:
-> * Added bound IRQ description for binding,
-> * Reference SMC-CC, not 'AAPCS like'
-> * Move sdei node under firmware node (and the file path)
-> 
->  .../devicetree/bindings/arm/firmware/sdei.txt      | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/firmware/sdei.txt
+>  .../devicetree/bindings/watchdog/lantiq-wdt.txt    | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
