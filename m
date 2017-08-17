@@ -1,25 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D
- Remote Processor Controller driver
-Date: Thu, 17 Aug 2017 17:20:57 -0500
-Message-ID: <20170817222057.r7ysd72byn4o7kg3@rob-hp-laptop>
-References: <20170817071526.5930-1-o.rempel@pengutronix.de>
- <20170817071526.5930-2-o.rempel@pengutronix.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] iio: srf08: add device tree binding for srf02 and
+ srf10
+Date: Thu, 17 Aug 2017 17:22:59 -0500
+Message-ID: <20170817222259.lk7goyjsqcognxer@rob-hp-laptop>
+References: <20170817220851.GA4698@arbeit>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170817071526.5930-2-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-remoteproc@vger.kernel.org, linux@rempel-privat.de
+In-Reply-To: <20170817220851.GA4698@arbeit>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org, jelle-oJJ1AqDjjO4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 09:15:25AM +0200, Oleksij Rempel wrote:
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+On Fri, Aug 18, 2017 at 12:08:51AM +0200, Andreas Klinger wrote:
+> add trivial device tree binding "devantech,srf02" and "devantech,srf10"
+> 
+> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
 > ---
->  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+>  Documentation/devicetree/bindings/trivial-devices.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+I applied just this patch.
+
+Rob
