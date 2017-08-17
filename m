@@ -1,27 +1,48 @@
-From: William Wu <william.wu@rock-chips.com>
-Subject: [PATCH v2 0/2] Add usb3 ctrl node on RK3328 SoCs and enable usb3 host on RK3328 evb
-Date: Thu, 17 Aug 2017 15:54:48 +0800
-Message-ID: <1502956490-23087-1-git-send-email-william.wu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, frank.wang@rock-chips.com, huangtao@rock-chips.com, daniel.meng@rock-chips.com, william.wu@rock-chips.com
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 2/6] ARM: sun8i: beelink-x2: Set phy-is-integrated to the
+ internal phy node
+Date: Thu, 17 Aug 2017 09:51:45 +0200
+Message-ID: <20170817075149.16178-3-clabbe.montjoie@gmail.com>
+References: <20170817075149.16178-1-clabbe.montjoie@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170817075149.16178-1-clabbe.montjoie@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, peppe.cavallaro@st.com, alexandre.torgue@st.com
+Cc: devicetree@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series add support for usb3 controller on RK3328 SoCs.
-This series don't include usb3 phy patches, and I will try
-to submit usb3 phy patches individually later.
+This patch add the new phy-is-integrated property to the internal PHY node.
 
-Tested on RK3328 evaluation board.
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-William Wu (2):
-  arm64: dts: rockchip: add usb3 controller node for RK3328 SoCs
-  arm64: dts: rockchip: enable usb3 for RK3328 evaluation board
-
- .../devicetree/bindings/usb/rockchip,dwc3.txt      |  4 +++-
- arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |  9 ++++++++
- arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 27 ++++++++++++++++++++++
- 3 files changed, 39 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+index 546837ccd8af..d0517240d5e3 100644
+--- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+@@ -121,6 +121,10 @@
+ 	status = "okay";
+ };
+ 
++&int_mii_phy {
++	phy-is-integrated;
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
 -- 
-2.0.0
+2.13.0
