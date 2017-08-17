@@ -1,64 +1,50 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [RFC 1/3] dt-bindings: interrupt-controller: Add Realtek RTD1295
-Date: Thu, 17 Aug 2017 12:11:38 +0200
-Message-ID: <20170817101140.32000-2-afaerber@suse.de>
-References: <20170817101140.32000-1-afaerber@suse.de>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 0/5] Add clk and scpsys support for MT6755
+Date: Thu, 17 Aug 2017 12:19:51 +0200
+Message-ID: <341316e9-d7ce-85f1-4e54-f872771f530f@gmail.com>
+References: <1502180014-7995-1-git-send-email-mars.cheng@mediatek.com>
+ <1502855993.4599.1.camel@mtkswgap22> <1502938079.4027.3.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170817101140.32000-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502938079.4027.3.camel@mtksdaap41>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>
+Cc: devicetree@vger.kernel.org, cc.hwang@mediatek.com, wsd_upstream@mediatek.com, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, wendell.lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add binding for Realtek RTD1295 IRQ mux.
 
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
----
- .../interrupt-controller/realtek,rtd119x-mux.txt   | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
-new file mode 100644
-index 000000000000..4b43370e3d74
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
-@@ -0,0 +1,28 @@
-+Realtek RTD119x/129x IRQ Mux Controller
-+=======================================
-+
-+Required properties:
-+
-+- compatible           :  Should be one of the following:
-+                          - "realtek,rtd1295-irq-mux"
-+                          - "realtek,rtd1295-iso-irq-mux"
-+- reg                  :  Specifies base physical address and size of the registers.
-+- interrupts           :  Specifies the interrupt line which is mux'ed.
-+- interrupt-controller :  Presence indicates the node as interrupt controller.
-+- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
-+
-+
-+Optional properties:
-+
-+See interrupt.txt for common bindings.
-+
-+
-+Example:
-+
-+	interrupt-controller@98007000 {
-+		compatible = "realtek,rtd1295-iso-irq-mux";
-+		reg = <0x98007000 0x100>;
-+		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
--- 
-2.12.3
+On 08/17/2017 04:47 AM, Yingjoe Chen wrote:
+> 
+> 
+> On Wed, 2017-08-16 at 11:59 +0800, Mars Cheng wrote:
+>> Hi Rob, Stephen, Matthias
+>>
+>> gentle ping.
+>>
+>> Thanks.
+>>
+>> On Tue, 2017-08-08 at 16:13 +0800, Mars Cheng wrote:
+>>> Mars Cheng (3):
+>>>    clk: mediatek: add mt6755 clock ID
+>>>    clk: mediatek: add clk support for MT6755
+>>>    soc: mediatek: add MT6755 scpsys support
+> 
+> Hi Mars,
+> 
+> Sean reworked the scpsys driver to remove code duplication, see:
+> http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009687.html
+> http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009820.html
+> 
+> I think current driver will have conflict and can't merge as-is, you'll
+> need to rebase to Matthias' for-next branch.
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, please rebase, which should be trivial. Other then that the scpsys driver 
+looks good.
+
+Regards,
+Matthias
