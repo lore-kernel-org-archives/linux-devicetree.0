@@ -1,130 +1,98 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 10/16] dmaengine: bcm-sba-raid: Alloc resources before
- registering DMA device
-Date: Thu, 17 Aug 2017 12:08:12 +0530
-Message-ID: <20170817063812.GA3053@localhost>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 11/16] dmaengine: bcm-sba-raid: Peek mbox when we have
+ no free requests
+Date: Thu, 17 Aug 2017 12:10:08 +0530
+Message-ID: <20170817064008.GB3053@localhost>
 References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
- <1501583880-32072-11-git-send-email-anup.patel@broadcom.com>
+ <1501583880-32072-12-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1501583880-32072-11-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+In-Reply-To: <1501583880-32072-12-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 01, 2017 at 04:07:54PM +0530, Anup Patel wrote:
-> We should allocate DMA channel resources before registering the
-> DMA device in sba_probe() because we can get DMA request soon
-> after registering the DMA device. If DMA channel resources are
-> not allocated before first DMA request then SBA-RAID driver will
-> crash.
+On Tue, Aug 01, 2017 at 04:07:55PM +0530, Anup Patel wrote:
+> When setting up RAID array on several NVMe disks we observed that
+> sba_alloc_request() start failing (due to no free requests left)
+> and RAID array setup becomes very slow.
 > 
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> To improve performance, we do mbox channel peek when we have
+> no free requests. This improves performance of RAID array setup
+> because mbox requests that were completed but not processed by
+> mbox completion worker will be processed immediately by mbox
+> channel peek.
+> 
+> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/dma/bcm-sba-raid.c | 30 +++++++++++++++---------------
->  1 file changed, 15 insertions(+), 15 deletions(-)
+>  drivers/dma/bcm-sba-raid.c | 25 ++++++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
 > 
 > diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
-> index f6616da..f14ed0a 100644
+> index f14ed0a..399250e 100644
 > --- a/drivers/dma/bcm-sba-raid.c
 > +++ b/drivers/dma/bcm-sba-raid.c
-> @@ -1478,13 +1478,13 @@ static int sba_prealloc_channel_resources(struct sba_device *sba)
->  	int i, j, ret = 0;
->  	struct sba_request *req = NULL;
+> @@ -200,6 +200,14 @@ static inline u32 __pure sba_cmd_pq_c_mdata(u32 d, u32 b1, u32 b0)
 >  
-> -	sba->resp_base = dma_alloc_coherent(sba->dma_dev.dev,
-> +	sba->resp_base = dma_alloc_coherent(sba->mbox_dev,
-
-how does this qualify as move before registering, you seem to be using
-different device now
-
->  					    sba->max_resp_pool_size,
->  					    &sba->resp_dma_base, GFP_KERNEL);
->  	if (!sba->resp_base)
->  		return -ENOMEM;
+>  /* ====== General helper routines ===== */
 >  
-> -	sba->cmds_base = dma_alloc_coherent(sba->dma_dev.dev,
-> +	sba->cmds_base = dma_alloc_coherent(sba->mbox_dev,
->  					    sba->max_cmds_pool_size,
->  					    &sba->cmds_dma_base, GFP_KERNEL);
->  	if (!sba->cmds_base) {
-> @@ -1534,11 +1534,11 @@ static int sba_prealloc_channel_resources(struct sba_device *sba)
->  	return 0;
->  
->  fail_free_cmds_pool:
-> -	dma_free_coherent(sba->dma_dev.dev,
-> +	dma_free_coherent(sba->mbox_dev,
->  			  sba->max_cmds_pool_size,
->  			  sba->cmds_base, sba->cmds_dma_base);
->  fail_free_resp_pool:
-> -	dma_free_coherent(sba->dma_dev.dev,
-> +	dma_free_coherent(sba->mbox_dev,
->  			  sba->max_resp_pool_size,
->  			  sba->resp_base, sba->resp_dma_base);
->  	return ret;
-> @@ -1547,9 +1547,9 @@ static int sba_prealloc_channel_resources(struct sba_device *sba)
->  static void sba_freeup_channel_resources(struct sba_device *sba)
->  {
->  	dmaengine_terminate_all(&sba->dma_chan);
-> -	dma_free_coherent(sba->dma_dev.dev, sba->max_cmds_pool_size,
-> +	dma_free_coherent(sba->mbox_dev, sba->max_cmds_pool_size,
->  			  sba->cmds_base, sba->cmds_dma_base);
-> -	dma_free_coherent(sba->dma_dev.dev, sba->max_resp_pool_size,
-> +	dma_free_coherent(sba->mbox_dev, sba->max_resp_pool_size,
->  			  sba->resp_base, sba->resp_dma_base);
->  	sba->resp_base = NULL;
->  	sba->resp_dma_base = 0;
-> @@ -1737,15 +1737,15 @@ static int sba_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> -	/* Register DMA device with linux async framework */
-> -	ret = sba_async_register(sba);
-> +	/* Prealloc channel resource */
-> +	ret = sba_prealloc_channel_resources(sba);
->  	if (ret)
->  		goto fail_free_mchans;
->  
-> -	/* Prealloc channel resource */
-> -	ret = sba_prealloc_channel_resources(sba);
-> +	/* Register DMA device with Linux async framework */
-> +	ret = sba_async_register(sba);
->  	if (ret)
-> -		goto fail_async_dev_unreg;
-> +		goto fail_free_resources;
->  
->  	/* Print device info */
->  	dev_info(sba->dev, "%s using SBAv%d and %d mailbox channels",
-> @@ -1754,8 +1754,8 @@ static int sba_probe(struct platform_device *pdev)
->  
->  	return 0;
->  
-> -fail_async_dev_unreg:
-> -	dma_async_device_unregister(&sba->dma_dev);
-> +fail_free_resources:
-> +	sba_freeup_channel_resources(sba);
->  fail_free_mchans:
->  	for (i = 0; i < sba->mchans_count; i++)
->  		mbox_free_channel(sba->mchans[i]);
-> @@ -1767,10 +1767,10 @@ static int sba_remove(struct platform_device *pdev)
->  	int i;
->  	struct sba_device *sba = platform_get_drvdata(pdev);
->  
-> -	sba_freeup_channel_resources(sba);
-> -
->  	dma_async_device_unregister(&sba->dma_dev);
->  
-> +	sba_freeup_channel_resources(sba);
+> +static void sba_peek_mchans(struct sba_device *sba)
+> +{
+> +	int mchan_idx;
 > +
->  	for (i = 0; i < sba->mchans_count; i++)
->  		mbox_free_channel(sba->mchans[i]);
+> +	for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
+> +		mbox_client_peek_data(sba->mchans[mchan_idx]);
+> +}
+> +
+>  static struct sba_request *sba_alloc_request(struct sba_device *sba)
+>  {
+>  	unsigned long flags;
+> @@ -211,8 +219,17 @@ static struct sba_request *sba_alloc_request(struct sba_device *sba)
+>  	if (req)
+>  		list_move_tail(&req->node, &sba->reqs_alloc_list);
+>  	spin_unlock_irqrestore(&sba->reqs_lock, flags);
+> -	if (!req)
+> +
+> +	if (!req) {
+> +		/*
+> +		 * We have no more free requests so, we peek
+> +		 * mailbox channels hoping few active requests
+> +		 * would have completed which will create more
+> +		 * room for new requests.
+> +		 */
+> +		sba_peek_mchans(sba);
+>  		return NULL;
+> +	}
 >  
-> -- 
-> 2.7.4
-> 
+>  	req->flags = SBA_REQUEST_STATE_ALLOCED;
+>  	req->first = req;
+> @@ -560,17 +577,15 @@ static enum dma_status sba_tx_status(struct dma_chan *dchan,
+>  				     dma_cookie_t cookie,
+>  				     struct dma_tx_state *txstate)
+>  {
+> -	int mchan_idx;
+>  	enum dma_status ret;
+>  	struct sba_device *sba = to_sba_device(dchan);
+>  
+> -	for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
+> -		mbox_client_peek_data(sba->mchans[mchan_idx]);
+> -
+>  	ret = dma_cookie_status(dchan, cookie, txstate);
+>  	if (ret == DMA_COMPLETE)
+>  		return ret;
+>  
+> +	sba_peek_mchans(sba);
+
+why do you want to do this while checking status..?
 
 -- 
 ~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
