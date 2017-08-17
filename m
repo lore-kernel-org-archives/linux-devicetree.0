@@ -1,108 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] drm/bridge/sii8620: add external connector handle
-Date: Thu, 17 Aug 2017 10:11:02 -0500
-Message-ID: <20170817151102.wmjelokfkzd2lk4i@rob-hp-laptop>
-References: <1502371530-32260-1-git-send-email-m.purski@samsung.com>
- <6478480.TjcUCueU5y@avalon>
- <5ce6bd99-c50e-84c2-f21f-eb611cac94c2@samsung.com>
- <CGME20170811094031epcas5p4ca089af7dba2f3fafed757c1fb40c798@epcas5p4.samsung.com>
- <2097016.rlxulirhWA@avalon>
- <9232b812-7aef-c614-b122-612e19743df4@samsung.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: i2c: Document the POWER system power
+ supply device
+Date: Thu, 17 Aug 2017 10:11:16 -0500
+Message-ID: <20170817151116.4vc4jlna4gc7xzb2@rob-hp-laptop>
+References: <1502403586-20549-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1502403586-20549-2-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9232b812-7aef-c614-b122-612e19743df4@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, catalin.marinas@arm.com, will.deacon@arm.com, dri-devel@lists.freedesktop.org, Maciej Purski <m.purski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, krzk@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1502403586-20549-2-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux@roeck-us.net, jdelvare@suse.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, joel@jms.id.au, jk@ozlabs.org, andrew@aj.id.au, mark.rutland@arm.com, devicetree@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBdWcgMTEsIDIwMTcgYXQgMDI6NDk6MzVQTSArMDIwMCwgTWFyZWsgU3p5cHJvd3Nr
-aSB3cm90ZToKPiBIaSBMYXVyZW50LAo+IAo+IE9uIDIwMTctMDgtMTEgMTE6NDAsIExhdXJlbnQg
-UGluY2hhcnQgd3JvdGU6Cj4gPiBIaSBNYXJlaywKPiA+IAo+ID4gT24gRnJpZGF5IDExIEF1ZyAy
-MDE3IDA4OjM5OjMxIE1hcmVrIFN6eXByb3dza2kgd3JvdGU6Cj4gPiA+IE9uIDIwMTctMDgtMTAg
-MTU6MzksIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiA+ID4gT24gVGh1cnNkYXkgMTAgQXVn
-IDIwMTcgMTU6MjU6MjkgTWFjaWVqIFB1cnNraSB3cm90ZToKPiA+ID4gPiA+IFRoZSBkcml2ZXIg
-c2hvdWxkIGJlIHN3aXRjaGVkIG9uIGlmIGFuIGV4dGVybmFsIGNvbm5lY3RvciBpcyBwbHVnZ2Vk
-IGFuZAo+ID4gPiA+ID4gc3dpdGNoZWQgb2ZmIGlmIGl0IGlzIHVucGx1Z2dlZC4gRXh0Y29uIGlz
-IG9wdGlvbmFsLiBJZiBpdCBpcyBub3QgZm91bmQsCj4gPiA+ID4gPiB0aGUgZHJpdmVyIHN0YXlz
-IGluICJhbHdheXMtb24iIG1vZGUuCj4gPiA+ID4gPiAKPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6
-IE1hY2llaiBQdXJza2kgPG0ucHVyc2tpQHNhbXN1bmcuY29tPgo+ID4gPiA+ID4gLS0tCj4gPiA+
-ID4gPiAKPiA+ID4gPiA+ICAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWwtc2lpODYy
-MC50eHQgICAgICAgIHwgIDQgKysKPiA+ID4gPiA+ICAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-c2lsLXNpaTg2MjAuYyAgICAgICAgICAgICAgIHwgODMgKysrKysrKysrKysrKystCj4gPiA+ID4g
-PiAgICAyIGZpbGVzIGNoYW5nZWQsIDg1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4g
-PiA+ID4gPiAKPiA+ID4gPiA+IGRpZmYgLS1naXQKPiA+ID4gPiA+IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpbC1zaWk4NjIwLnR4dAo+ID4gPiA+
-ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2ls
-LXNpaTg2MjAudHh0IGluZGV4Cj4gPiA+ID4gPiA5NDA5ZDljLi4xZjIzMGJmIDEwMDY0NAo+ID4g
-PiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL3NpbC1zaWk4NjIwLnR4dAo+ID4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpbC1zaWk4NjIwLnR4dAo+ID4gPiA+ID4gQEAg
-LTEwLDYgKzEwLDkgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gPiA+ICAgIAktIGNsb2Nr
-cywgY2xvY2stbmFtZXM6IHNwZWNpZmljYXRpb24gYW5kIG5hbWUgb2YgInh0YWwiIGNsb2NrCj4g
-PiA+ID4gPiAgICAJLSB2aWRlbyBpbnRlcmZhY2VzOiBEZXZpY2Ugbm9kZSBjYW4gY29udGFpbiB2
-aWRlbyBpbnRlcmZhY2UgcG9ydAo+ID4gPiA+ID4gICAgCQkJICAgIG5vZGUgZm9yIEhETUkgZW5j
-b2RlciBhY2NvcmRpbmcgdG8gWzFdLgo+ID4gPiA+ID4gCj4gPiA+ID4gPiArT3B0aW9uYWwgcHJv
-cGVydGllczoKPiA+ID4gPiA+ICsJLSBleHRjb246IHBoYW5kbGUgdG8gZXh0ZXJuYWwgY29ubmVj
-dG9yIGZvciBNSEwgY2FibGUgY2hhbmdlcwo+ID4gPiA+ID4gKwkJICBkZXRlY3Rpb24KPiA+ID4g
-PiBUaGUgc2lpODYyMCBEVCBub2RlIHNob3VsZCBtb2RlbCBpdHMgY29ubmVjdGlvbiB0byB0aGUg
-TUhMIGNvbm5lY3RvciB1c2luZwo+ID4gPiA+IE9GIGdyYXBoLCBjb25uZWN0aW5nIGEgcG9ydCB0
-byB0aGUgTUhMIGNvbm5lY3RvciBEVCBub2RlIHRocm91Z2gKPiA+ID4gPiBlbmRwb2ludHMuIEkg
-YmVsaWV2ZSB0aGUgZXh0Y29uIHByb3BlcnR5IHNob3VsZCB0aGVuIGJlIGFkZGVkIHRvIHRoZSBN
-SEwKPiA+ID4gPiBjb25uZWN0b3IgRFQgbm9kZSwgbm90IHRoZSBicmlkZ2UuCj4gPiA+IEkgZG9u
-J3QgZ2V0IHRoaXMuIEdlbmVyaWMgZXh0Y29uIGJpbmRpbmdzIGRvZXNuJ3QgZGVmaW5lIGNvbm5l
-Y3RvciBEVAo+ID4gPiBub2RlLCBzbyBJIGRvbid0IHNlZSBob3cgY291bGQgd2UgdXNlIGVuZHBv
-aW50IERUIGFwcHJvYWNoIGhlcmUuIENvdWxkIHlvdQo+ID4gPiBnaXZlIHRoZSBleGFtcGxlPwo+
-ID4gU3VyZSwgaGVyZSB5b3UgYXJlLgo+ID4gCj4gPiAmaHNpMmNfNyB7Cj4gPiAJLi4uCj4gPiAK
-PiA+ICAgICAgICAgIHNpaTg2MjBAMzkgewo+ID4gICAgICAgICAgICAgICAgICByZWcgPSA8MHgz
-OT47Cj4gPiAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic2lsLHNpaTg2MjAiOwo+ID4g
-ICAgICAgICAgICAgICAgICBjdmNjMTAtc3VwcGx5ID0gPCZsZG8zNl9yZWc+Owo+ID4gICAgICAg
-ICAgICAgICAgICBpb3ZjYzE4LXN1cHBseSA9IDwmbGRvMzRfcmVnPjsKPiA+ICAgICAgICAgICAg
-ICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BmMD47Cj4gPiAgICAgICAgICAgICAgICAgIGlu
-dGVycnVwdHMgPSA8MiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+ICAgICAgICAgICAgICAgICAg
-cmVzZXQtZ3Bpb3MgPSA8JmdwdjcgMCBHUElPX0FDVElWRV9MT1c+Owo+ID4gICAgICAgICAgICAg
-ICAgICBjbG9ja3MgPSA8JnBtdV9zeXN0ZW1fY29udHJvbGxlciAwPjsKPiA+ICAgICAgICAgICAg
-ICAgICAgY2xvY2stbmFtZXMgPSAieHRhbCI7Cj4gPiAKPiA+IAkJcG9ydHMgewo+ID4gCQkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiAJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiA+IAo+ID4gCSAg
-ICAgICAgICAgICAgICBwb3J0QDAgewo+ID4gCQkJCXJlZyA9IDwwPjsKPiA+ICAgICAgICAgIAkg
-ICAgICAgICAgICAgICAgbWhsX3RvX2hkbWk6IGVuZHBvaW50IHsKPiA+ICAgICAgICAgICAgICAg
-ICAgCSAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfdG9fbWhsPjsKPiA+
-IAkgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gICAgICAgICAgCSAgICAgICAgfTsKPiA+
-IAkgICAgICAgICAgICAgICAgcG9ydEAxIHsKPiA+IAkJCQlyZWcgPSA8MT47Cj4gPiAgICAgICAg
-ICAJICAgICAgICAgICAgICAgIG1obF9icmlkZ2Vfb3V0OiBlbmRwb2ludCB7Cj4gPiAgICAgICAg
-ICAgICAgICAgIAkgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZtaGxfY29ubmVj
-dG9yX2luPjsKPiA+IAkgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gICAgICAgICAgCSAg
-ICAgICAgfTsKPiA+IAkJfTsKPiA+ICAgICAgICAgIH07Cj4gPiB9Owo+ID4gCj4gPiAvIHsKPiA+
-IAltaGwtY29ubmVjdG9yIHsKPiA+IAkJY29tcGF0aWJsZSA9ICJtaGwtY29ubmVjdG9yIjsKPiA+
-IAkJZXh0Y29uID0gPCZtdWljPjsKPiA+IAo+ID4gCSAgICAgICAgcG9ydCB7Cj4gPiAgICAgICAg
-ICAJICAgICAgICBtaGxfY29ubmVjdG9yX2luOiBlbmRwb2ludCB7Cj4gPiAgICAgICAgICAgICAg
-ICAgIAkgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmbWhsX2JyaWRnZV9vdXQ+Owo+ID4gCSAg
-ICAgICAgICAgICAgICB9Owo+ID4gICAgICAgICAgCX07Cj4gPiAJfTsKPiA+IH07Cj4gPiAKPiA+
-IE5vdGUgdGhhdCB0aGVyZSdzIGN1cnJlbnRseSBubyBEVCBiaW5kaW5nIGZvciBNSEwgY29ubmVj
-dG9ycy4gT25lIG5lZWRzIHRvIGJlCj4gPiBkZXZlbG9wZWQsIHRoZSBIRE1JIGNvbm5lY3RvciBE
-VCBiaW5kaW5nIGNhbiBiZSB1c2VkIGFzIGEgc291cmNlIG9mCj4gPiBpbnNwaXJhdGlvbi4KPiAK
-PiBBaCwgSSBzZWUuIEkgd2Fzbid0IGF3YXJlIHRoYXQgZGlzcGxheSBzdWJzeXN0ZW0gaGFzIGJp
-bmRpbmdzIGV2ZW4gZm9yIHRoZQo+IGNvbm5lY3RvcnMuCj4gT3RoZXIgdHlwZXMgb2YgY29ubmVj
-dG9ycyBhbHJlYWR5IHVzZWQgdG9nZXRoZXIgd2l0aCBleHRjb24gaW4gZGV2aWNlIHRyZWUKPiAo
-bGlrZSB1c2IKPiBhbmQgY2hhcmdlcnMpIGRvbid0IGhhdmUgZGVkaWNhdGVkIGJpbmRpbmdzLgoK
-SSBOQUsgYW55IGV4dGNvbiBiaW5kaW5nIGFkZGl0aW9ucyBiZWNhdXNlIGl0IGlzIHBvb3JseSBk
-ZXNpZ25lZCwgc28gCmRvbid0IHVzZSBleHRjb24uIEl0IGlzIGZ1bGwgb2YgTGludXhpc21zIGFu
-ZCBuZWVkcyB3b3JrLiBVU0IgCmNvbm5lY3RvcnMgbmVlZCB0byBiZSBkZXNjcmliZWQgbGlrZSB3
-aGF0IHdlIGhhdmUgZm9yIGRpc3BsYXkgcmVsYXRlZCAKY29ubmVjdG9ycyBlc3BlY2lhbGx5IHNp
-bmNlIHRoZXkgYXJlIG1lcmdpbmcuCgo+IAo+IERvIHdlIG5lZWQgdG8gYWRkIGhkbWktY29ubmVj
-dG9ycyB0byBhbGwgZXhpc3RpbmcgYm9hcmRzIHRoYXQgaGF2ZSBIRE1JCj4gbW9kdWxlPwoKSWRl
-YWxseSwgeWVzLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Thu, Aug 10, 2017 at 05:19:44PM -0500, Eddie James wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
+> 
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> ---
+>  .../devicetree/bindings/i2c/ibm,power-ps.txt        | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt b/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
+> new file mode 100644
+> index 0000000..2ea8ea2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
+> @@ -0,0 +1,21 @@
+> +Device-tree bindings for IBM POWER system power supplies
+> +--------------------------------------------------------
+> +
+> +Required properties:
+> + - compatible = "ibm,power-ps";
+> + - reg = < I2C bus address >;		: Address of the power supply on the
+> +					  I2C bus.
+> +
+> +Example:
+> +
+> +    i2c-bus@100 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        #interrupt-cells = <1>;
+> +        < more properties >
+> +
+> +        power_ps@68 {
+
+Don't use '_' in node names. Should be a generic name too if possible. 
+Perhaps "power-supply".
+
+> +            compatible = "ibm,power-ps";
+> +            reg = <0x68>;
+> +        };
+> +    };
+> -- 
+> 1.8.3.1
+> 
