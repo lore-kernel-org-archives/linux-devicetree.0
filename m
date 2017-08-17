@@ -1,32 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH ] gpio: rcar: Add r8a7745 (RZ/G1E) support
-Date: Thu, 17 Aug 2017 17:07:34 -0500
-Message-ID: <20170817220734.2nxog3eljulrtm4e@rob-hp-laptop>
-References: <1502881936-39357-1-git-send-email-biju.das@bp.renesas.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v4 0/5]  iio: srf08: add support for similar devices and
+ triggered buffers
+Date: Fri, 18 Aug 2017 00:08:29 +0200
+Message-ID: <20170817220829.GA4687@arbeit>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1502881936-39357-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hdegoede@redhat.com, wsa@the-dreams.de, chris.packham@alliedtelesis.co.nz, jelle@vdwaa.nl, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 16, 2017 at 12:12:16PM +0100, Biju Das wrote:
-> Renesas RZ/G1E (R8A7745) SoC GPIO blocks are identical to the R-Car Gen2
-> family. Add support for its GPIO controllers.
-> 
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> ---
-> This patch is tested against linux-next tag next-20170816 as well as gpio-devel.
-> 
->  Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
->  1 file changed, 1 insertion(+)
+This patch series adds support for:
+- triggered buffer
+- ultrasonic devices srf02 and srf10
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Changes in v4:
+- rebase to recent git repository with trivial-devices.txt now under
+  devicetree/bindings
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v3:
+- introduce struct chip_info for device specific features
+- remove locking error in srf08_trigger_handler()
+
+Changes in v2:
+- removed unnecessary patch "[PATCH 6/7] iio: srf08: add buffered to device mode"
+- incorporated patch "[PATCH 7/7] iio: srf08: change text in Kconfig" where suitable
+- changed order of patches to improve logical flow of changes
+- improved distinction of sensor types
+
+Andreas Klinger (5):
+  iio: srf08: add device tree binding for srf02 and srf10
+  iio: srf08: add device tree table
+  iio: srf08: add triggered buffer support
+  iio: srf08: add sensor type srf10
+  iio: srf08: add support for srf02 in i2c mode
+
+ .../devicetree/bindings/trivial-devices.txt        |   2 +
+ drivers/iio/proximity/Kconfig                      |   8 +-
+ drivers/iio/proximity/srf08.c                      | 227 ++++++++++++++++++---
+ 3 files changed, 203 insertions(+), 34 deletions(-)
+
+-- 
+2.1.4
+
+
+-- 
+Andreas Klinger
+Grabenreith 27
+84508 Burgkirchen
++49 8623 919966
+ak@it-klinger.de
+www.it-klinger.de
+www.grabenreith.de
