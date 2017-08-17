@@ -1,37 +1,76 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v7] media: platform: Renesas IMR driver
-Date: Thu, 17 Aug 2017 09:05:11 +0200
-Message-ID: <146c6915-b0c1-5cba-ce67-630c1ddc4b19@xs4all.nl>
-References: <20170804180402.795437602@cogentembedded.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 1/2] usb: dwc3: keystone: Add PM_RUNTIME Support to
+ DWC3 Keystone USB driver
+Date: Thu, 17 Aug 2017 10:08:22 +0300
+Message-ID: <6c96175e-3624-0921-8e2f-00378a270b59@ti.com>
+References: <20170816215408.13076-1-fcooper@ti.com>
+ <20170816215408.13076-2-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170804180402.795437602-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170816215408.13076-2-fcooper@ti.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-A few high level comments (I'll look at the patch itself later):
-
-- There is no MAINTAINERS entry, please add one.
-- Don't attach the patch, post it inline (ideally with 'git send-email')
-- Split up the patch into 4 separate patches: bindings, doc changes,
-  driver and MAINTAINERS patch. This will make it easier to review.
-- Please give the v4l2-compliance output in the cover letter of the v8
-  patch series. I can't merge this driver without being certain there
-  are no compliance issues.
-- You also have IMR-LSX3 and IMR-LX3 patches, why not add them to the
-  patch series? I can review the set as a single unit. Up to you, though.
-
-Regards,
-
-	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+77u/ClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgw
+IEhlbHNpbmtpLiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0Rv
+bWljaWxlOiBIZWxzaW5raQoKT24gMTcvMDgvMTcgMDA6NTQsIEZyYW5rbGluIFMgQ29vcGVyIEpy
+IHdyb3RlOgo+IEZvciA2NkFLMkd4IHRoZXJlIGlzIGEgcmVxdWlyZW1lbnQgdG8gdXNlIFBNIFJ1
+bnRpbWUgdG8gcHJvcGVybHkgbWFuYWdlCj4gY2xvY2tzIGFuZCB0aGUgcG93ZXIgZG9tYWlucy4g
+VGhlcmVmb3JlLCBhZGQgUE0gcnVudGltZSBzdXBwb3J0LiBSZW1vdmUKPiBsZWdhY3kgY2xvY2sg
+YXBpJ3MgY2FsbHMgc2luY2Ugb3RoZXIgdXNlcnMgb2YgdGhpcyBkcml2ZXIgd29ya2VkIHdpdGhv
+dXQKPiB0aGVzZSBjbG9jayBhcGlzIGNhbGxzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEZyYW5rbGlu
+IFMgQ29vcGVyIEpyIDxmY29vcGVyQHRpLmNvbT4KCkFja2VkLWJ5OiBSb2dlciBRdWFkcm9zIDxy
+b2dlcnFAdGkuY29tPgoKPiAtLS0KPiAgZHJpdmVycy91c2IvZHdjMy9kd2MzLWtleXN0b25lLmMg
+fCAyMiArKysrKysrKysrLS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRp
+b25zKCspLCAxMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdj
+My9kd2MzLWtleXN0b25lLmMgYi9kcml2ZXJzL3VzYi9kd2MzL2R3YzMta2V5c3RvbmUuYwo+IGlu
+ZGV4IDEyZWUyM2YuLmQyZWQ5NTIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy91c2IvZHdjMy9kd2Mz
+LWtleXN0b25lLmMKPiArKysgYi9kcml2ZXJzL3VzYi9kd2MzL2R3YzMta2V5c3RvbmUuYwo+IEBA
+IC0xNSw3ICsxNSw2IEBACj4gICAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3Jl
+IGRldGFpbHMuCj4gICAqLwo+ICAKPiAtI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+ICAjaW5jbHVk
+ZSA8bGludXgvbW9kdWxlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4KPiAgI2luY2x1
+ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+IEBAIC0yMyw2ICsyMiw3IEBACj4gICNpbmNsdWRlIDxs
+aW51eC9kbWEtbWFwcGluZy5oPgo+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4KPiAgI2luY2x1ZGUg
+PGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+Cj4g
+IAo+ICAvKiBVU0JTUyByZWdpc3RlciBvZmZzZXRzICovCj4gICNkZWZpbmUgVVNCU1NfUkVWSVNJ
+T04JCTB4MDAwMAo+IEBAIC00MSw3ICs0MSw2IEBACj4gIAo+ICBzdHJ1Y3QgZHdjM19rZXlzdG9u
+ZSB7Cj4gIAlzdHJ1Y3QgZGV2aWNlCQkJKmRldjsKPiAtCXN0cnVjdCBjbGsJCQkqY2xrOwo+ICAJ
+dm9pZCBfX2lvbWVtCQkJKnVzYnNzOwo+ICB9Owo+ICAKPiBAQCAtMTA2LDE3ICsxMDUsMTMgQEAg
+c3RhdGljIGludCBrZHdjM19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJ
+aWYgKElTX0VSUihrZHdjLT51c2JzcykpCj4gIAkJcmV0dXJuIFBUUl9FUlIoa2R3Yy0+dXNic3Mp
+Owo+ICAKPiAtCWtkd2MtPmNsayA9IGRldm1fY2xrX2dldChrZHdjLT5kZXYsICJ1c2IiKTsKPiAt
+CWlmIChJU19FUlIoa2R3Yy0+Y2xrKSkgewo+IC0JCWRldl9lcnIoa2R3Yy0+ZGV2LCAidW5hYmxl
+IHRvIGdldCB1c2IgY2xvY2tcbiIpOwo+IC0JCXJldHVybiBQVFJfRVJSKGtkd2MtPmNsayk7Cj4g
+LQl9Cj4gKwlwbV9ydW50aW1lX2VuYWJsZShrZHdjLT5kZXYpOwo+ICAKPiAtCWVycm9yID0gY2xr
+X3ByZXBhcmVfZW5hYmxlKGtkd2MtPmNsayk7Cj4gKwllcnJvciA9IHBtX3J1bnRpbWVfZ2V0X3N5
+bmMoa2R3Yy0+ZGV2KTsKPiAgCWlmIChlcnJvciA8IDApIHsKPiAtCQlkZXZfZXJyKGtkd2MtPmRl
+diwgInVuYWJsZSB0byBlbmFibGUgdXNiIGNsb2NrLCBlcnJvciAlZFxuIiwKPiArCQlkZXZfZXJy
+KGtkd2MtPmRldiwgInBtX3J1bnRpbWVfZ2V0X3N5bmMgZmFpbGVkLCBlcnJvciAlZFxuIiwKPiAg
+CQkJZXJyb3IpOwo+IC0JCXJldHVybiBlcnJvcjsKPiArCQlnb3RvIGVycl9pcnE7Cj4gIAl9Cj4g
+IAo+ICAJaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsKPiBAQCAtMTQ3LDcgKzE0Miw4
+IEBAIHN0YXRpYyBpbnQga2R3YzNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikK
+PiAgZXJyX2NvcmU6Cj4gIAlrZHdjM19kaXNhYmxlX2lycXMoa2R3Yyk7Cj4gIGVycl9pcnE6Cj4g
+LQljbGtfZGlzYWJsZV91bnByZXBhcmUoa2R3Yy0+Y2xrKTsKPiArCXBtX3J1bnRpbWVfcHV0X3N5
+bmMoa2R3Yy0+ZGV2KTsKPiArCXBtX3J1bnRpbWVfZGlzYWJsZShrZHdjLT5kZXYpOwo+ICAKPiAg
+CXJldHVybiBlcnJvcjsKPiAgfQo+IEBAIC0xNjcsNyArMTYzLDkgQEAgc3RhdGljIGludCBrZHdj
+M19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCj4gIAlrZHdjM19kaXNh
+YmxlX2lycXMoa2R3Yyk7Cj4gIAlkZXZpY2VfZm9yX2VhY2hfY2hpbGQoJnBkZXYtPmRldiwgTlVM
+TCwga2R3YzNfcmVtb3ZlX2NvcmUpOwo+IC0JY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGtkd2MtPmNs
+ayk7Cj4gKwlwbV9ydW50aW1lX3B1dF9zeW5jKGtkd2MtPmRldik7Cj4gKwlwbV9ydW50aW1lX2Rp
+c2FibGUoa2R3Yy0+ZGV2KTsKPiArCj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBOVUxM
+KTsKPiAgCj4gIAlyZXR1cm4gMDsKPiAKCi0tIApjaGVlcnMsCi1yb2dlcgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
