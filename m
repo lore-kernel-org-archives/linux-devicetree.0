@@ -1,46 +1,62 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6qdl-nitrogen6_som2: fix PCIe reset
-Date: Thu, 17 Aug 2017 15:50:10 +0200
-Message-ID: <20170817135010.3042-1-gary.bisson@boundarydevices.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH 4/7] ARM: dts: stm32: Enable USB HS on stm32746g-eval
+Date: Thu, 17 Aug 2017 13:57:35 +0000
+Message-ID: <b1aaf89c-33b5-d2db-73dd-89ad6c3a80c8@st.com>
+References: <1502962386-6683-1-git-send-email-amelie.delaunay@st.com>
+ <1502962386-6683-5-git-send-email-amelie.delaunay@st.com>
+ <824d41f2-bea9-c1b6-4c3e-1ae146286d89@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <824d41f2-bea9-c1b6-4c3e-1ae146286d89@cogentembedded.com>
+Content-Language: en-US
+Content-ID: <57998DFA44736B4199FC3E2F735C6D45@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, John Youn <johnyoun@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Previous value was a bad copy of nitrogen6_max device tree.
+Hi!
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 08/17/2017 12:44 PM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 8/17/2017 12:33 PM, Amelie Delaunay wrote:
+> 
+>> This patch enables USB HS on stm32746g-eval (Host mode).
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>> ---
+>>   arch/arm/boot/dts/stm32746g-eval.dts | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/stm32746g-eval.dts 
+>> b/arch/arm/boot/dts/stm32746g-eval.dts
+>> index 69a9579..944501d 100644
+>> --- a/arch/arm/boot/dts/stm32746g-eval.dts
+>> +++ b/arch/arm/boot/dts/stm32746g-eval.dts
+>> @@ -83,6 +83,13 @@
+>>               gpios = <&gpioc 13 0>;
+>>           };
+>>       };
+>> +
+>> +    usbotg_hs_phy: usbphy {
+> 
+>     Name it "usb-phy" please, tpo be m,ore in line with the DT spec.
+OK, will be fixed in v2. Thanks!
+> 
+> [...]
+> 
+> MBR, Sergei
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-index aeaa5a6e4fcf..a24e4f1911ab 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-@@ -507,7 +507,7 @@
- 	pinctrl_pcie: pciegrp {
- 		fsl,pins = <
- 			/* PCIe reset */
--			MX6QDL_PAD_EIM_BCLK__GPIO6_IO31	0x030b0
-+			MX6QDL_PAD_EIM_DA0__GPIO3_IO00	0x030b0
- 			MX6QDL_PAD_EIM_DA4__GPIO3_IO04	0x030b0
- 		>;
- 	};
-@@ -668,7 +668,7 @@
- &pcie {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pcie>;
--	reset-gpio = <&gpio6 31 GPIO_ACTIVE_LOW>;
-+	reset-gpio = <&gpio3 0 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Amelie
