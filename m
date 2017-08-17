@@ -1,30 +1,30 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] iio: srf08: add device tree binding for srf02 and
- srf10
-Date: Thu, 17 Aug 2017 17:17:58 -0500
-Message-ID: <20170817221758.qjxdqgznq4enj6yl@rob-hp-laptop>
-References: <20170816193323.GA24405@arbeit>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: usb: keystone-usb: Update bindings
+ pm and clocks properties
+Date: Thu, 17 Aug 2017 17:18:55 -0500
+Message-ID: <20170817221855.7tcgsx4onukbooyu@rob-hp-laptop>
+References: <20170816215408.13076-1-fcooper@ti.com>
+ <20170816215408.13076-3-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170816193323.GA24405@arbeit>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170816215408.13076-3-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: gregkh@linuxfoundation.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 16, 2017 at 09:33:23PM +0200, Andreas Klinger wrote:
-> add trivial device tree binding "devantech,srf02" and "devantech,srf10"
+On Wed, Aug 16, 2017 at 04:54:08PM -0500, Franklin S Cooper Jr wrote:
+> Update various properties to properly indicate their requirement depending
+> on the SoC.
 > 
-> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
 > ---
->  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> Version 2:
+> Clarify clock requirements in binding document
+> 
+>  Documentation/devicetree/bindings/usb/keystone-usb.txt | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
 
-I thought this was mentioned in the prior versions, but this file has 
-moved. Rebase to 4.13. Please send trivial-devices.txt changes 
-separately to me.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
