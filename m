@@ -1,71 +1,105 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 1/7] mmc: sdhci: Add quirk to indicate no CRC
- stripping in MMC_RSP_136
-Date: Thu, 17 Aug 2017 13:10:14 +0530
-Message-ID: <49848573-1c34-1322-26f5-144b9ec7f171@ti.com>
-References: <20170807160142.12134-1-kishon@ti.com>
- <20170807160142.12134-2-kishon@ti.com>
- <872c7194-3d48-47e5-6396-7189bf841a42@intel.com>
- <e7592ed0-dda2-6850-098e-7c6bba69df40@ti.com>
- <f85729ab-09c2-1e88-626b-caca57cef702@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v7 0/3] Add support for IPQ8074 PCIe phy and controller
+Date: Thu, 17 Aug 2017 13:13:32 +0530
+Message-ID: <1502955815-32254-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f85729ab-09c2-1e88-626b-caca57cef702@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
-Cc: nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+v7:
+  Skip PHY patches as they are already included by Kishon
 
+  Incorporate Stanimir's feedback for the below patches
+	PCI: dwc: qcom: Use block IP version for operations
+	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
 
-On Thursday 17 August 2017 12:01 PM, Adrian Hunter wrote:
-> On 17/08/17 08:20, Kishon Vijay Abraham I wrote:
->> Hi Adrian,
->>
->> On Tuesday 15 August 2017 12:57 PM, Adrian Hunter wrote:
->>> On 07/08/17 19:01, Kishon Vijay Abraham I wrote:
->>>> TI's implementation of sdhci controller used in DRA7 SoC's doesn't
->>>> strip CRC in responses with length 136 bits. Add quirk to indicate
->>>> the controller does not strip CRC in MMC_RSP_136. If this quirk is
->>>> set sdhci library shouldn't shift the response present in
->>>> SDHCI_RESPONSE register.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>  drivers/mmc/host/sdhci.c | 27 +++++++++++++++++++--------
->>>>  drivers/mmc/host/sdhci.h |  2 ++
->>>>  2 files changed, 21 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>>> index ecd0d4350e8a..ece3751d2a25 100644
->>>> --- a/drivers/mmc/host/sdhci.c
->>>> +++ b/drivers/mmc/host/sdhci.c
->>>> @@ -1182,14 +1182,25 @@ static void sdhci_finish_command(struct sdhci_host *host)
->>>>  
->>>>  	if (cmd->flags & MMC_RSP_PRESENT) {
->>>>  		if (cmd->flags & MMC_RSP_136) {
->>>> -			/* CRC is stripped so we need to do some shifting. */
->>>> -			for (i = 0;i < 4;i++) {
->>>> -				cmd->resp[i] = sdhci_readl(host,
->>>> -					SDHCI_RESPONSE + (3-i)*4) << 8;
->>>> -				if (i != 3)
->>>> -					cmd->resp[i] |=
->>>> -						sdhci_readb(host,
->>>> -						SDHCI_RESPONSE + (3-i)*4-1);
->>>> +			if (!(host->quirks2 & SDHCI_QUIRK2_NO_CRC_STRIPPING)) {
->>>
->>> This is about the 136-bit response so let's put that in the quirk name.  How about SDHCI_QUIRK2_RSP_136_HAS_CRC
->>
->> Since omap seems to be the only platform that doesn't have CRC, I prefer adding
->> SDHCI_QUIRK2_RSP_136_NO_CRC. That way we can add the quirk only in sdhci-omap
->> instead of all the existing sdhci drivers.
-> 
-> Except that it is the way I described.  All the others strip the CRC and we
-> have to shift to pretend it is still there.
+v6:
+  Added 'Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>' and fixed
+  white space issues as mentioned by Vivek.
+	phy: qcom-qmp: Fix phy pipe clock name
+	dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
 
-right. I made a totally bogus statement.
+v5:
+  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+        Renamed phy_phy clock as common clock
 
-Thanks
-Kishon
+  phy: qcom-qmp: Fix phy pipe clock name
+        Moved the DT get into the registering function
+
+  phy: qcom-qmp: Add support for IPQ8074
+        Place the IPQ8074 related structs similar to existing SoC.
+        Renamed phy_phy clock as common clock
+v4:
+  phy: qcom-qmp: Fix phy pipe clock name
+	Based on Vivek's comments, return failure only for
+	PCI/USB type of phys.
+	Removed Ack.
+
+  phy: qcom-qmp: Handle unavailable registers
+	Removed this patch.
+	Incorrectly used a block of code that is not applicable
+	to IPQ8074, hence had to avoid an "unavailable" register.
+	Since that is addressed using 'has_phy_com_ctrl' this
+	patch is not needed.
+
+  phy: qcom-qmp: Add support for IPQ8074
+	Set 'has_phy_com_ctrl' to false
+	Remove ipq8074_pciephy_regs_layout
+
+v3:
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+	Incoporate Stan's feedback:-
+	 - Add SoC Wrapper and Synopsys Core IP versions
+
+v2:
+  dt-bindings: phy: qmp: Add output-clock-names
+	Added Rob H's Ack
+
+  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+	Removed example
+	Added IPQ8074 specific details
+
+  phy: qcom-qmp: Fix phy pipe clock name
+	Added Vivek's Ack
+
+  phy: qcom-qmp: Handle unavailable registers
+	No changes
+
+  phy: qcom-qmp: Add support for IPQ8074
+	No changes
+
+  PCI: dwc: qcom: Use block IP version for operations
+	Added new patch to use block IP version instead of v1, v2...
+
+  dt-bindings: pci: qcom: Add support for IPQ8074
+	Removed example
+	Added IPQ8074 specific details
+
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+	Incorporated Bjorn's feedback:-
+	 - Removed reset names, helper function to assert/deassert, helper
+	   function to R/M/W register.
+	 - Renamed sys_noc clock as iface clock
+	 - Added deinit if phy power on fails
+
+v1:
+Add definitions required to enable QMP phy support for IPQ8074.
+
+Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
+Gen 1/2, one lane, two PCIe root complex with support for MSI and
+legacy interrupts, and it conforms to PCI Express Base 2.1
+specification.
+
+Varadarajan Narayanan (3):
+  PCI: dwc: qcom: Use block IP version for operations
+  dt-bindings: pci: qcom: Add support for IPQ8074
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  23 ++
+ drivers/pci/dwc/pcie-qcom.c                        | 365 +++++++++++++++++----
+ 2 files changed, 324 insertions(+), 64 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
