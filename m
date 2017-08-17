@@ -1,101 +1,112 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCHv2 0/3] arm64 xilinx zynqmp firmware interface
-Date: Thu, 17 Aug 2017 12:32:25 +0200
-Message-ID: <07473fe2-d159-a016-2f65-735b1231beb8@xilinx.com>
-References: <cover.1502886277.git.michal.simek@xilinx.com>
- <43deeed7-32c8-7914-5f44-862ebbe14a3b@arm.com>
- <89e5469b-650e-64c7-1754-797b35bac523@xilinx.com>
- <a1970cb5-1cf1-d38a-3de3-c782c23fc8ac@arm.com>
- <0560c79f-e461-6010-0628-e99ce0a1f8c6@xilinx.com>
- <45e58860-cb8c-75f2-60bf-140aa3704169@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <45e58860-cb8c-75f2-60bf-140aa3704169@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, edgar.iglesias@xilinx.com, Rob Herring <robh@kernel.org>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Jean Delvare <jdelvare@suse.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Kevin Hilman <khilman@baylibre.com>, Nishanth Menon <nm@ti.com>, Thierry Reding <treding@nvidia.com>, Kevin Brodsky <kevin.brodsky@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Alexander Graf <agraf@suse.de>, Moritz Fischer <mdf@kernel.org>, Mic
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
+ slave
+Date: Thu, 17 Aug 2017 12:35:37 +0200
+Message-ID: <8CF7E37E-BF1C-4E32-AF3A-E44BA2E5A2B9@holtmann.org>
+References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
+ <1502102366-2760-2-git-send-email-loic.poulain@gmail.com>
+ <CAL_JsqKxA2pgtjmG-cxy5XPWuRWUiia-weRZDSh4++Vn=QZmqA@mail.gmail.com>
+ <8186E2A3-D0AC-498F-8229-78862D363F78@holtmann.org>
+ <392e6d51-33d6-1585-6582-1397a0c64852@gmail.com>
+ <161632C7-EBBF-47F5-86DC-453E10395B54@holtmann.org>
+ <e001e055-10a5-facd-a8e1-57c1bdb78172@gmail.com>
+ <FCD47ED6-F01F-4921-97A3-BBC1D0263747@holtmann.org>
+ <CALeDE9MeMHtCD8esCcznHjS+z6o7Ezh9dP1OZq=77DuYNS2=2A@mail.gmail.com>
+ <0C198B33-8CB6-4D6A-B89F-35D3CD771135@holtmann.org>
+ <92579650-5eb0-cdf2-405a-7c5be9c54770@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <92579650-5eb0-cdf2-405a-7c5be9c54770-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17.8.2017 11:12, Sudeep Holla wrote:
+Hi Loic,
+
+>>>> < HCI Command: Broadcom Write UART Clock Setting (0x3f|0x0045) plen 1
+>>>>        01                                               .
+>>>>> HCI Event: Command Complete (0x0e) plen 4
+>>>>      Broadcom Write UART Clock Setting (0x3f|0x0045) ncmd 1
+>>>>        Status: Unknown HCI Command (0x01)
+>>>> 
+>>>> And I am seeing fun stuff like failed frame assembly.
+>>>> 
+>>>> [  888.687594] Bluetooth: hci0: BCM: chip id 94
+>>>> [  888.687821] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0182
+>>>> [  892.059023] Bluetooth: hci0: Frame reassembly failed (-84)
+>>>> [  892.316936] Bluetooth: hci0: BCM: failed to write clock (-56)
+>>>> [  892.429478] Bluetooth: hci0: BCM (001.002.009) build 0182
+>>>> 
+>>>> Actually not providing the firmware makes the controller work. It however is stuck ad AA:AA:.. default address. Providing the firmware turns the address active. However then it never completes.
+>>> I've tried on and off to get the BT working, there seems to lots of
+>>> options and bits needed including some patches to the bluez [1] stuff
+>>> but between not quite upstream kernel bits and numerous distros all
+>>> doing it slightly differently I've never got it to work well.
+>>> 
+>>> The yocto [1] bits seem fairly representative of some the patches
+>>> flying around "to get it working" although I'm not sure how many of
+>>> these are actually required and how many are superfluous with this
+>>> patch set. There seems to be a firmware required that's not
+>>> distributed with linux-firmware which would also be nice to resolve.
+>> Non of these Yocto patches are actually needed. The culprit is the .oper_speed setting to be 4Mbps. Once you reduce that to 921600 thing will start to work smoothly. I sent a patch that takes the .oper_speed out completely and only applies it for the ACPI based devices where we know that it works.
+>> 
+>> With my patch and the right DT entries for uart0 it actually works with “btattach -B /dev/ttyAMA0 -P bcm”. It will load the firmware, configure it and head towards the right path.
+>> 
+>> Obviously btattach is only an interim step here. Loic’s patches for serdev integration and changing the DT to expose uart0 as serial-slave for Bluetooth is the right approach. Once Loic’s resends the patches we can get them into bluetooth-next and start merging these towards upstream. After that, Bluetooth should work just out of the box like with any USB dongle.
+>> 
+>> And the Yocto patches should be abandoned. If using H:5 (aka 3-Wire) instead of H:4 is possible, we could consider it, but as long as the UART wiring doesn’t cause any bit errors, it is not worth it.
+>> 
+>> That said, I do see a "Bluetooth: hci0: Frame reassembly failed (-84)” error. I need to figure out where that is. Frankly we really need to hexdump the packet when this happens.
+>> 
 > 
-> 
-> On 17/08/17 09:42, Michal Simek wrote:
->> On 17.8.2017 09:52, Marc Zyngier wrote:
->>> On 17/08/17 07:10, Michal Simek wrote:
->>>> On 16.8.2017 17:39, Marc Zyngier wrote:
->>>>> On 16/08/17 13:24, Michal Simek wrote:
->>>>>> Hi,
->>>>>>
->>>>>> xilinx is using this interface for very long time and we can't merge our
->>>>>> driver changes to Linux because of missing communication layer with
->>>>>> firmware. This interface was developed before scpi and scmi was
->>>>>> available. In connection to power management scpi and scmi are missing
->>>>>> pieces which we already use. There is a separate discussion how to
->>>>>> extend scmi to support all our use cases.
->>>>>
->>>>> So maybe we should wait and see where this discussion is going before we
->>>>> merge yet another firmware interface?
->>>>
->>>> It will take a lot of time when this discussion ends and I can't see any
->>>> benefit to hold all
->>>
->>> Well, so far, the benefit of this series is exactly nil, as the code it
->>> brings is *unused*. It is impossible to review in isolation.
->>>
->>
->> Ok. I will add others drivers to this series that's not a problem.
->>
->>> In the meantime, you can continue finding out how *not* to have to merge
->>> this code, and instead focus on using the infrastructure we already
->>> have, or at least influence the infrastructure that is being designed.
->>> It will be much better than dumping yet another slab of "I'm so
->>> different" code that is going to ultimately bitrot.
->>
->> I am happy to look the better proposed way. SCPI is ancient and SCMI is
->> replacement and not merged yet. We already had a call with arm and
->> Sudeep was on it too where outcome from that was that we can't use that
->> because it doesn't support what we need to support now.
->>
-> 
-> OK, none of the specifics were discussed in the meeting to conclude that
-> SCMI can't be used. My takeaway from the meeting was Xilinx has this
-> interface for long and being deployed in various systems. I would like
-> to get into specifics before discarding SCMI as unusable. What bothers
-> me more is that why was that not raised during the specification review
-> which was quite a long period IMO ? I tend to think Xilinx never
-> bothered to look/review the specification as this f/w interface was
-> already there.
+> I also meet this Frame reassembly failure, Seems we receive a 0x00 byte from the controller (unknown pkt type).
 
-Xilinx is using this interface from Aug 2015. I am not aware about any
-invitation to spec review. And not sure who was there from xilinx.
+that means adding something like this will silence it.
 
-> 
-> However I still can't see why this was posted once we started pushing
-> out SCMI patches especially given that this f/w interface was there for
-> long and no attempts were made in past to upstream this.
++#define BCM_RECV_NULL \
++       .type = 0x00, \
++       .hlen = 0, \
++       .loff = 0, \
++       .lsize = 0, \
++       .maxlen = 0
++
++static int bcm_recv_null(struct hci_dev *hdev, struct sk_buff *skb)
++{
++       kfree_skb(skb);
++       return 0;
++}
++
+ static const struct h4_recv_pkt bcm_recv_pkts[] = {
+        { H4_RECV_ACL,      .recv = hci_recv_frame },
+        { H4_RECV_SCO,      .recv = hci_recv_frame },
+        { H4_RECV_EVENT,    .recv = hci_recv_frame },
+        { BCM_RECV_LM_DIAG, .recv = hci_recv_diag  },
++       { BCM_RECV_NULL,    .recv = bcm_recv_null  },
+ };
 
-The reason is simple which is upstream our code which depends on this
-communication layer. I don't think there is quick path to move to
-different interface than this one.
+It does silence it indeed. Maybe this is some of their markers to ensure that the baud rate change worked. Or it is the indication that the reset completed. Do you happen to know between which commands we receive it?
 
-> 
-> Also I am not dismissing the series yet, but if I find that SCMI can be
-> used(after getting specifics from this series myself), I will at-least
-> argue against the "SCMI can't be used" argument.
+> Regarding the speed, I'm unable to reach 3Mbps, I selected 921600 because this is the baudrate used by raspbian bt script.
 
-This is not my argument that we can't use SCMI. This is what was my
-understanding from that meeting we had. And definitely there is no quick
-path for us to switch to SCMI and breaks all current existing customers.
+That is the same I experienced. The 921600 works fine, but trying 3Mbps doesn’t. However it seems with hciattach you can crank it up to 3Mpbs somehow. Maybe the delay is just to short for the UART switching in that case.
 
-And this interface is just in the same position as current SCPI. It
-means you have SCPI already merged and you are adding new one. SCMI
-could be maybe also just SCPIv2.
-And when it is merged you are going to move all targets to this new
-interface. The same is for us but instead of scpi it is this interface
-we use and test.
+> Maybe they had some issues at higher speed (empirical value ?), However 2Mbps seems ok on my side (need to double check/adjust).
 
-Thanks,
-Michal
+We have to make it a DT max-speed param anyway. So I am not that worried.
+
+> In a second step, need to check If we can use hardware flow control, I heard that pin 16&17 are routed to the bcm RTS/CTS.
+> Since there is no DMA usage, it could help.
+
+Eric, any chance you can dig out the recommendation for the Bluetooth controller usage? I would also like to see the recommended PCM settings for this hardware. It bet it is somehow wired up to the sound controller.
+
+Regards
+
+Marcel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
