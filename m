@@ -1,76 +1,74 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 1/2] usb: dwc3: keystone: Add PM_RUNTIME Support to
- DWC3 Keystone USB driver
-Date: Thu, 17 Aug 2017 10:08:22 +0300
-Message-ID: <6c96175e-3624-0921-8e2f-00378a270b59@ti.com>
-References: <20170816215408.13076-1-fcooper@ti.com>
- <20170816215408.13076-2-fcooper@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170816215408.13076-2-fcooper@ti.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3 0/2] provide imx rproc driver
+Date: Thu, 17 Aug 2017 09:15:24 +0200
+Message-ID: <20170817071526.5930-1-o.rempel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-77u/ClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgw
-IEhlbHNpbmtpLiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0Rv
-bWljaWxlOiBIZWxzaW5raQoKT24gMTcvMDgvMTcgMDA6NTQsIEZyYW5rbGluIFMgQ29vcGVyIEpy
-IHdyb3RlOgo+IEZvciA2NkFLMkd4IHRoZXJlIGlzIGEgcmVxdWlyZW1lbnQgdG8gdXNlIFBNIFJ1
-bnRpbWUgdG8gcHJvcGVybHkgbWFuYWdlCj4gY2xvY2tzIGFuZCB0aGUgcG93ZXIgZG9tYWlucy4g
-VGhlcmVmb3JlLCBhZGQgUE0gcnVudGltZSBzdXBwb3J0LiBSZW1vdmUKPiBsZWdhY3kgY2xvY2sg
-YXBpJ3MgY2FsbHMgc2luY2Ugb3RoZXIgdXNlcnMgb2YgdGhpcyBkcml2ZXIgd29ya2VkIHdpdGhv
-dXQKPiB0aGVzZSBjbG9jayBhcGlzIGNhbGxzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEZyYW5rbGlu
-IFMgQ29vcGVyIEpyIDxmY29vcGVyQHRpLmNvbT4KCkFja2VkLWJ5OiBSb2dlciBRdWFkcm9zIDxy
-b2dlcnFAdGkuY29tPgoKPiAtLS0KPiAgZHJpdmVycy91c2IvZHdjMy9kd2MzLWtleXN0b25lLmMg
-fCAyMiArKysrKysrKysrLS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRp
-b25zKCspLCAxMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdj
-My9kd2MzLWtleXN0b25lLmMgYi9kcml2ZXJzL3VzYi9kd2MzL2R3YzMta2V5c3RvbmUuYwo+IGlu
-ZGV4IDEyZWUyM2YuLmQyZWQ5NTIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy91c2IvZHdjMy9kd2Mz
-LWtleXN0b25lLmMKPiArKysgYi9kcml2ZXJzL3VzYi9kd2MzL2R3YzMta2V5c3RvbmUuYwo+IEBA
-IC0xNSw3ICsxNSw2IEBACj4gICAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3Jl
-IGRldGFpbHMuCj4gICAqLwo+ICAKPiAtI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+ICAjaW5jbHVk
-ZSA8bGludXgvbW9kdWxlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4KPiAgI2luY2x1
-ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+IEBAIC0yMyw2ICsyMiw3IEBACj4gICNpbmNsdWRlIDxs
-aW51eC9kbWEtbWFwcGluZy5oPgo+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4KPiAgI2luY2x1ZGUg
-PGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+Cj4g
-IAo+ICAvKiBVU0JTUyByZWdpc3RlciBvZmZzZXRzICovCj4gICNkZWZpbmUgVVNCU1NfUkVWSVNJ
-T04JCTB4MDAwMAo+IEBAIC00MSw3ICs0MSw2IEBACj4gIAo+ICBzdHJ1Y3QgZHdjM19rZXlzdG9u
-ZSB7Cj4gIAlzdHJ1Y3QgZGV2aWNlCQkJKmRldjsKPiAtCXN0cnVjdCBjbGsJCQkqY2xrOwo+ICAJ
-dm9pZCBfX2lvbWVtCQkJKnVzYnNzOwo+ICB9Owo+ICAKPiBAQCAtMTA2LDE3ICsxMDUsMTMgQEAg
-c3RhdGljIGludCBrZHdjM19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJ
-aWYgKElTX0VSUihrZHdjLT51c2JzcykpCj4gIAkJcmV0dXJuIFBUUl9FUlIoa2R3Yy0+dXNic3Mp
-Owo+ICAKPiAtCWtkd2MtPmNsayA9IGRldm1fY2xrX2dldChrZHdjLT5kZXYsICJ1c2IiKTsKPiAt
-CWlmIChJU19FUlIoa2R3Yy0+Y2xrKSkgewo+IC0JCWRldl9lcnIoa2R3Yy0+ZGV2LCAidW5hYmxl
-IHRvIGdldCB1c2IgY2xvY2tcbiIpOwo+IC0JCXJldHVybiBQVFJfRVJSKGtkd2MtPmNsayk7Cj4g
-LQl9Cj4gKwlwbV9ydW50aW1lX2VuYWJsZShrZHdjLT5kZXYpOwo+ICAKPiAtCWVycm9yID0gY2xr
-X3ByZXBhcmVfZW5hYmxlKGtkd2MtPmNsayk7Cj4gKwllcnJvciA9IHBtX3J1bnRpbWVfZ2V0X3N5
-bmMoa2R3Yy0+ZGV2KTsKPiAgCWlmIChlcnJvciA8IDApIHsKPiAtCQlkZXZfZXJyKGtkd2MtPmRl
-diwgInVuYWJsZSB0byBlbmFibGUgdXNiIGNsb2NrLCBlcnJvciAlZFxuIiwKPiArCQlkZXZfZXJy
-KGtkd2MtPmRldiwgInBtX3J1bnRpbWVfZ2V0X3N5bmMgZmFpbGVkLCBlcnJvciAlZFxuIiwKPiAg
-CQkJZXJyb3IpOwo+IC0JCXJldHVybiBlcnJvcjsKPiArCQlnb3RvIGVycl9pcnE7Cj4gIAl9Cj4g
-IAo+ICAJaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsKPiBAQCAtMTQ3LDcgKzE0Miw4
-IEBAIHN0YXRpYyBpbnQga2R3YzNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikK
-PiAgZXJyX2NvcmU6Cj4gIAlrZHdjM19kaXNhYmxlX2lycXMoa2R3Yyk7Cj4gIGVycl9pcnE6Cj4g
-LQljbGtfZGlzYWJsZV91bnByZXBhcmUoa2R3Yy0+Y2xrKTsKPiArCXBtX3J1bnRpbWVfcHV0X3N5
-bmMoa2R3Yy0+ZGV2KTsKPiArCXBtX3J1bnRpbWVfZGlzYWJsZShrZHdjLT5kZXYpOwo+ICAKPiAg
-CXJldHVybiBlcnJvcjsKPiAgfQo+IEBAIC0xNjcsNyArMTYzLDkgQEAgc3RhdGljIGludCBrZHdj
-M19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCj4gIAlrZHdjM19kaXNh
-YmxlX2lycXMoa2R3Yyk7Cj4gIAlkZXZpY2VfZm9yX2VhY2hfY2hpbGQoJnBkZXYtPmRldiwgTlVM
-TCwga2R3YzNfcmVtb3ZlX2NvcmUpOwo+IC0JY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGtkd2MtPmNs
-ayk7Cj4gKwlwbV9ydW50aW1lX3B1dF9zeW5jKGtkd2MtPmRldik7Cj4gKwlwbV9ydW50aW1lX2Rp
-c2FibGUoa2R3Yy0+ZGV2KTsKPiArCj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBOVUxM
-KTsKPiAgCj4gIAlyZXR1cm4gMDsKPiAKCi0tIApjaGVlcnMsCi1yb2dlcgoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+this patch set to provide remoteproc functionality on
+i.MX7D SoC.
+
+For testing I used this simple counter written in ASM:
+======================================
+        .syntax unified
+        .text
+        .thumb
+        .int 0x10020000                 @ Initial SP value
+        .int reset + 1
+
+reset:
+
+        mov     r0, #0x55
+        ldr     r1, =(0x40)
+1:
+        str     r0, [r1]
+        add     r0, 1
+        b       1b
+
+        /* Dummy data, required by remoteproc loader */
+        /* Please FIXME, this part seem to be incorrect */
+        .data
+        .section .resource_table, "aw"
+        .word   1, 0, 0, 0      /* struct resource_table base */
+        .word   0               /* uint32_t offset[1] */
+============================================================
+compiled with:
+${CROSS}as -o imx7m4.o imx7m4.S
+${CROSS}ld -Ttext=0x0 -o imx7m4.elf imx7m4.o
+cp imx7m4.elf /srv/nfs/sid-armhf/lib/firmware/rproc-imx_rproc-fw
+
+Functionality was confirmed with current OpenOCD master.
+OpenOCD cfg file can be found here:
+https://github.com/olerem/openocd/blob/imx7-2017.06.14/tcl/target/imx7.cfg
+
+changes:
+v3:
+ - rename rproc to cm4 (Cortex M4)
+
+v2:
+ - use memory-region instead of reg property
+ - remove memory ranges from documentation
+
+Oleksij Rempel (2):
+  remoteproc: dt: Provide bindings for iMX6SX/7D Remote Processor
+    Controller driver
+  remoteproc: imx_rproc: add a NXP/Freescale imx_rproc driver
+
+ .../devicetree/bindings/remoteproc/imx-rproc.txt   |  33 ++
+ drivers/remoteproc/Kconfig                         |  10 +
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/imx_rproc.c                     | 426 +++++++++++++++++++++
+ 4 files changed, 470 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+ create mode 100644 drivers/remoteproc/imx_rproc.c
+
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
