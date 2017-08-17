@@ -1,33 +1,49 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/4] arm: dts: renesas: add cec clock for Koelsch board
-Date: Thu, 17 Aug 2017 10:13:20 +0200
-Message-ID: <20170817081320.GD26170@verge.net.au>
-References: <20170730130743.19681-1-hverkuil@xs4all.nl>
- <20170730130743.19681-4-hverkuil@xs4all.nl>
- <CAMuHMdXSHz2vKNOfJGM3ByzTankzd66Hj_Q_KewmHSWhSmV1Sg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mmc: sh_mmcif: Document r8a7745 DT bindings
+Date: Thu, 17 Aug 2017 10:14:06 +0200
+Message-ID: <20170817081406.GE26170@verge.net.au>
+References: <1502816007-30186-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXSHz2vKNOfJGM3ByzTankzd66Hj_Q_KewmHSWhSmV1Sg@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Linux Media Mailing List <linux-media@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Archit Taneja <architt@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hans Verkuil <hans.verkuil@cisco.com>
+In-Reply-To: <1502816007-30186-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <chris.paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 05:34:41PM +0200, Geert Uytterhoeven wrote:
-> On Sun, Jul 30, 2017 at 3:07 PM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> > From: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> Probably the one-line summary should be
-> 
->     ARM: dts: koelsch: Add CEC clock  for HDMI transmitter
-> 
-> > The adv7511 on the Koelsch board has a 12 MHz fixed clock
-> > for the CEC block. Specify this in the dts to enable CEC support.
-> >
-> > Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, Aug 15, 2017 at 05:53:27PM +0100, Fabrizio Castro wrote:
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
 
-Thanks, I have applied this patch with the updated one-line summary.
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
+>  Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> index 703e18c..5ff1e12 100644
+> --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>  	- "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
+>  	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+>  	- "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
+> +	- "renesas,mmcif-r8a7745" for the MMCIF found in r8a7745 SoCs
+>  	- "renesas,mmcif-r8a7778" for the MMCIF found in r8a7778 SoCs
+>  	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+>  	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+> @@ -22,7 +23,7 @@ Required properties:
+>  - interrupts: Some SoCs have only 1 shared interrupt, while others have either
+>    2 or 3 individual interrupts (error, int, card detect). Below is the number
+>    of interrupts for each SoC:
+> -    1: r8a73a4, r8a7743, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
+> +    1: r8a73a4, r8a7743, r8a7745, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
+>      2: r8a7740, sh73a0
+>      3: r7s72100
+>  
+> -- 
+> 2.7.4
+> 
