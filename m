@@ -1,66 +1,75 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: iio: at91-sama5d2_adc: add
- optional dma property
-Date: Thu, 17 Aug 2017 10:10:59 -0500
-Message-ID: <20170817151059.ptnzqsrzray26zlr@rob-hp-laptop>
-References: <1502368499-6739-1-git-send-email-eugen.hristev@microchip.com>
- <1502368499-6739-2-git-send-email-eugen.hristev@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: Document the hi3660 thermal sensor
+ bindings
+Date: Thu, 17 Aug 2017 10:10:52 -0500
+Message-ID: <20170817141517.izhteflvfwtoovqv@rob-hp-laptop>
+References: <1498102923-68481-1-git-send-email-kevin.wangtao@hisilicon.com>
+ <1502353935-92924-1-git-send-email-kevin.wangtao@hisilicon.com>
+ <1502353935-92924-2-git-send-email-kevin.wangtao@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1502368499-6739-2-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
+In-Reply-To: <1502353935-92924-2-git-send-email-kevin.wangtao@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tao Wang <kevin.wangtao@hisilicon.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, xuwei5@hisilicon.com, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, leo.yan@linaro.org, kevin.wangtao@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sunzhaosheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 03:34:57PM +0300, Eugen Hristev wrote:
-> Added property for DMA configuration of the device.
-
-"dt-bindings: iio: ..." is preferred for subject.
-
+On Thu, Aug 10, 2017 at 04:32:13PM +0800, Tao Wang wrote:
+> From: Tao Wang <kevin.wangtao@linaro.org>
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> This adds documentation of device tree bindings for the
+> thermal sensor controller of hi3660 SoC.
+> 
+> Signed-off-by: Tao Wang <kevin.wangtao@linaro.org>
 > ---
->  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  .../devicetree/bindings/thermal/hisi-tsensor.txt   | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/hisi-tsensor.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> index 552e7a8..5f94d47 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> @@ -17,6 +17,11 @@ Required properties:
->    This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
->    IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
->  
-> +Optional properties:
-> +  - dmas: Phandle to dma channel for the ADC.
-> +  See ../../dma/dma.txt for details.
-> +  - dma-names: Must be "rx" when dmas property is being used.
-
-*-names is pointless when there's only one.
-
+> diff --git a/Documentation/devicetree/bindings/thermal/hisi-tsensor.txt b/Documentation/devicetree/bindings/thermal/hisi-tsensor.txt
+> new file mode 100644
+> index 0000000..2ab0eb9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/hisi-tsensor.txt
+> @@ -0,0 +1,23 @@
+> +* Temperature Sensor on hisilicon SoC
 > +
->  Example:
->  
->  adc: adc@fc030000 {
-> @@ -31,4 +36,6 @@ adc: adc@fc030000 {
->  	vddana-supply = <&vdd_3v3_lp_reg>;
->  	vref-supply = <&vdd_3v3_lp_reg>;
->  	atmel,trigger-edge-type = <IRQ_TYPE_EDGE_BOTH>;
-> +	dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
-> +	dma-names = "rx";
->  }
+> +** Required properties :
+> +
+> +- compatible: "hisilicon,thermal-tsensor".
+
+Needs an SoC specific compatible.
+
+> +- reg: physical base address of thermal sensor and length of memory mapped
+> +  region.
+> +- offset: reg offset of each sensor.
+
+Should be implied by the compatible.
+
+> +- coefficients:	An array of integers (one signed cell) containing
+> +		coefficients to turn adc value to temperture.
+
+Needs a vendor prefix.
+
+> +- hisi,adc-range: adc value range, minimum value is followed by maximum value.
+> +- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
+> +
+> +Example :
+> +
+> +tsensor: tsensor@FFF3000 {
+> +	compatible = "hisilicon,tsensor";
+> +	reg = <0x0 0xfff30000 0x0 0x1000>;
+> +	offset = <0x1c 0x5c 0x9c>;
+> +	coefficients = <165000 (-40000)>;
+> +	hisi,adc-range = <0x74 0x39A>;
+> +	#thermal-sensor-cells = <1>;
+> +};
 > -- 
-> 2.7.4
+> 2.8.1
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
