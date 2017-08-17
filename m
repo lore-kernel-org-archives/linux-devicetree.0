@@ -1,71 +1,70 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v8 2/3] dt-bindings: pci: qcom: Add support for IPQ8074
-Date: Thu, 17 Aug 2017 16:50:57 +0530
-Message-ID: <1502968858-28090-3-git-send-email-varada@codeaurora.org>
-References: <1502968858-28090-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1502968858-28090-1-git-send-email-varada@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [RFC 2/4] arm64: dts: realtek: Add clock nodes for RTD1295
+Date: Thu, 17 Aug 2017 13:20:23 +0200
+Message-ID: <20170817112026.24062-3-afaerber@suse.de>
+References: <20170817112026.24062-1-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170817112026.24062-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the IPQ8074 PCIe controller.  IPQ8074 supports Gen 1/2, one
-lane, two PCIe root complex with support for MSI and legacy interrupts, and
-it conforms to PCI Express Base 2.1 specification.
+Add 27 MHz oscillator and two clock controller nodes.
 
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- .../devicetree/bindings/pci/qcom,pcie.txt          | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 9d418b7..b3e36ef 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -9,6 +9,7 @@
- 			- "qcom,pcie-apq8084" for apq8084
- 			- "qcom,pcie-msm8996" for msm8996 or apq8096
- 			- "qcom,pcie-ipq4019" for ipq4019
-+			- "qcom,pcie-ipq8074" for ipq8074
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+index 77063e984db9..078a11506876 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+@@ -81,6 +81,13 @@
+ 			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
  
- - reg:
- 	Usage: required
-@@ -105,6 +106,16 @@
- 			- "bus_master"	Master AXI clock
- 			- "bus_slave"	Slave AXI clock
- 
-+- clock-names:
-+	Usage: required for ipq8074
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+			- "iface"	PCIe to SysNOC BIU clock
-+			- "axi_m"	AXI Master clock
-+			- "axi_s"	AXI Slave clock
-+			- "ahb"		AHB clock
-+			- "aux"		Auxiliary clock
++	osc27M: osc {
++		compatible = "fixed-clock";
++		clock-frequency = <27000000>;
++		#clock-cells = <0>;
++		clock-output-names = "osc27M";
++	};
 +
- - resets:
- 	Usage: required
- 	Value type: <prop-encoded-array>
-@@ -144,6 +155,18 @@
- 			- "ahb"			AHB reset
- 			- "phy_ahb"		PHY AHB reset
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -88,6 +95,13 @@
+ 		/* Exclude up to 2 GiB of RAM */
+ 		ranges = <0x80000000 0x80000000 0x80000000>;
  
-+- reset-names:
-+	Usage: required for ipq8074
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+			- "pipe"		PIPE reset
-+			- "sleep"		Sleep reset
-+			- "sticky"		Core Sticky reset
-+			- "axi_m"		AXI Master reset
-+			- "axi_s"		AXI Slave reset
-+			- "ahb"			AHB Reset
-+			- "axi_m_sticky"	AXI Master Sticky reset
++		clkc: clock-controller@98000000 {
++			compatible = "realtek,rtd1295-clk";
++			reg = <0x98000000 0x1000>;
++			clocks = <&osc27M>;
++			#clock-cells = <1>;
++		};
 +
- - power-domains:
- 	Usage: required for apq8084 and msm8996/apq8096
- 	Value type: <prop-encoded-array>
+ 		reset1: reset-controller@98000000 {
+ 			compatible = "realtek,rtd1295-reset";
+ 			reg = <0x98000000 0x4>;
+@@ -112,6 +126,13 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		iso_clkc: clock-controller@98007000 {
++			compatible = "realtek,rtd1295-iso-clk";
++			reg = <0x98007000 0x100>;
++			clocks = <&osc27M>;
++			#clock-cells = <1>;
++		};
++
+ 		iso_irq_mux: interrupt-controller@98007000 {
+ 			compatible = "realtek,rtd1295-iso-irq-mux";
+ 			reg = <0x98007000 0x100>;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.12.3
