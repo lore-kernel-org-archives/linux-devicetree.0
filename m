@@ -1,67 +1,40 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for sun8i-h3-emac
-Date: Sat, 19 Aug 2017 01:05:21 +0800
-Message-ID: <CAGb2v66KcZkiDDHryMmVzm4WroXePPy3V44SLpVdoO3ZEjgC=g@mail.gmail.com>
-References: <20170818122118.4925-1-clabbe.montjoie@gmail.com> <20170818122118.4925-4-clabbe.montjoie@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170818122118.4925-4-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH ] ARM: dts: iwg20d-q7: Add chosen node
+Date: Fri, 18 Aug 2017 17:58:08 +0100
+Message-ID: <1503075488-44304-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 8:21 PM, Corentin Labbe
-<clabbe.montjoie@gmail.com> wrote:
-> In case of a MDIO switch, the registered MDIO node should be
-> the parent of the PHY. Otherwise of_phy_connect will fail.
->
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> index a366b3747eeb..ca3cc99d8960 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> @@ -312,10 +312,12 @@ static int stmmac_dt_phy(struct plat_stmmacenet_data *plat,
->         static const struct of_device_id need_mdio_ids[] = {
->                 { .compatible = "snps,dwc-qos-ethernet-4.10" },
->                 { .compatible = "allwinner,sun8i-a83t-emac" },
-> -               { .compatible = "allwinner,sun8i-h3-emac" },
->                 { .compatible = "allwinner,sun8i-v3s-emac" },
->                 { .compatible = "allwinner,sun50i-a64-emac" },
->         };
-> +       static const struct of_device_id need_mdio_mux_ids[] = {
-> +               { .compatible = "allwinner,sun8i-h3-emac" },
-> +       };
->
->         /* If phy-handle property is passed from DT, use it as the PHY */
->         plat->phy_node = of_parse_phandle(np, "phy-handle", 0);
-> @@ -332,7 +334,13 @@ static int stmmac_dt_phy(struct plat_stmmacenet_data *plat,
->                 mdio = false;
->         }
->
-> -       if (of_match_node(need_mdio_ids, np)) {
-> +       /*
-> +        * In case of a MDIO switch/mux, the registered MDIO node should be
-> +        * the parent of the PHY. Otherwise of_phy_connect will fail.
-> +        */
-> +       if (of_match_node(need_mdio_mux_ids, np)) {
-> +                plat->mdio_node =  of_get_parent(plat->phy_node);
+Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+---
+This patch tested against renesas-dev tag renesas-devel-20170815-v4.13-rc5
 
-Extra space before of_get_parent.
+ arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Also this is going to fail horribly if a fixed link is used.
+diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+index 081af01..305a6a1 100644
+--- a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
++++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+@@ -19,6 +19,11 @@
+ 		serial0 = &scif0;
+ 		ethernet0 = &avb;
+ 	};
++
++	chosen {
++		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
++		stdout-path = "serial0:115200n8";
++	};
+ };
+ 
+ &pfc {
+-- 
+1.9.1
 
-ChenYu
-
-> +       } else if (of_match_node(need_mdio_ids, np)) {
->                 plat->mdio_node = of_get_child_by_name(np, "mdio");
->         } else {
->                 /**
-> --
-> 2.13.0
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
