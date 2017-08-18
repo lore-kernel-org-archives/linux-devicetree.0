@@ -1,11 +1,11 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 2/4] ARM: dts: r8a7791: Stop grouping clocks under a "clocks" subnode
-Date: Fri, 18 Aug 2017 11:16:55 +0200
-Message-ID: <1503047817-29439-3-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 1/4] ARM: dts: r8a7790: Stop grouping clocks under a "clocks" subnode
+Date: Fri, 18 Aug 2017 11:16:54 +0200
+Message-ID: <1503047817-29439-2-git-send-email-geert+renesas@glider.be>
 References: <1503047817-29439-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1503047817-29439-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
@@ -15,15 +15,15 @@ but just put them together with the other on-SoC devices.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7791.dtsi | 137 ++++++++++++++++++++---------------------
+ arch/arm/boot/dts/r8a7790.dtsi | 137 ++++++++++++++++++++---------------------
  1 file changed, 66 insertions(+), 71 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index 5fca397b722bfa66..e984b106dd1acd7b 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1097,77 +1097,72 @@
- 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 5a31dfc0c3163d6c..70040c6c4ceac114 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1061,77 +1061,72 @@
+ 		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
  	};
  
 -	clocks {
@@ -36,6 +36,13 @@ index 5fca397b722bfa66..e984b106dd1acd7b 100644
 -			compatible = "fixed-clock";
 -			#clock-cells = <0>;
 -			/* This value must be overriden by the board. */
+-			clock-frequency = <0>;
+-		};
+-
+-		/* External PCIe clock - can be overridden by the board */
+-		pcie_bus_clk: pcie_bus {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
 -			clock-frequency = <0>;
 -		};
 -
@@ -54,13 +61,6 @@ index 5fca397b722bfa66..e984b106dd1acd7b 100644
 -			clock-frequency = <0>;
 -		};
 -		audio_clk_c: audio_clk_c {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			clock-frequency = <0>;
--		};
--
--		/* External PCIe clock - can be overridden by the board */
--		pcie_bus_clk: pcie_bus {
 -			compatible = "fixed-clock";
 -			#clock-cells = <0>;
 -			clock-frequency = <0>;
@@ -90,7 +90,7 @@ index 5fca397b722bfa66..e984b106dd1acd7b 100644
 -		};
 -
 -		cpg: clock-controller@e6150000 {
--			compatible = "renesas,r8a7791-cpg-mssr";
+-			compatible = "renesas,r8a7790-cpg-mssr";
 -			reg = <0 0xe6150000 0 0x1000>;
 -			clocks = <&extal_clk>, <&usb_extal_clk>;
 -			clock-names = "extal", "usb_extal";
@@ -102,6 +102,13 @@ index 5fca397b722bfa66..e984b106dd1acd7b 100644
 +		compatible = "fixed-clock";
 +		#clock-cells = <0>;
 +		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/* External PCIe clock - can be overridden by the board */
++	pcie_bus_clk: pcie_bus {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
 +		clock-frequency = <0>;
 +	};
 +
@@ -121,13 +128,6 @@ index 5fca397b722bfa66..e984b106dd1acd7b 100644
 +		clock-frequency = <0>;
 +	};
 +	audio_clk_c: audio_clk_c {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External PCIe clock - can be overridden by the board */
-+	pcie_bus_clk: pcie_bus {
 +		compatible = "fixed-clock";
 +		#clock-cells = <0>;
 +		clock-frequency = <0>;
@@ -157,7 +157,7 @@ index 5fca397b722bfa66..e984b106dd1acd7b 100644
 +	};
 +
 +	cpg: clock-controller@e6150000 {
-+		compatible = "renesas,r8a7791-cpg-mssr";
++		compatible = "renesas,r8a7790-cpg-mssr";
 +		reg = <0 0xe6150000 0 0x1000>;
 +		clocks = <&extal_clk>, <&usb_extal_clk>;
 +		clock-names = "extal", "usb_extal";
@@ -165,7 +165,6 @@ index 5fca397b722bfa66..e984b106dd1acd7b 100644
 +		#power-domain-cells = <0>;
  	};
  
- 	rst: reset-controller@e6160000 {
+ 	prr: chipid@ff000044 {
 -- 
 2.7.4
-
