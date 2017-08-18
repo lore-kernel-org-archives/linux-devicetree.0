@@ -1,126 +1,124 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: RE: [PATCH] arm64: dts: ls1088a: Add USB support
-Date: Fri, 18 Aug 2017 07:48:19 +0000
-Message-ID: <VI1PR04MB1262662395B8CD06BAF074CFE9800@VI1PR04MB1262.eurprd04.prod.outlook.com>
-References: <1502938358-23522-1-git-send-email-yinbo.zhu@nxp.com>
- <20170817140232.GE7608@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170817140232.GE7608@dragon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Harninder Rai <harninder.rai@nxp.com>, Andy Tang <andy.tang@nxp.com>, "open list:" <devicetree@vger.kernel.org>, Ashish Kumar <ashish.kumar@nxp.com>, open list <linux-kernel@vger.kernel.org>, Raghav Dogra <raghav.dogra@nxp.com>, "moderated list:" <linux-arm-kernel@lists.infradead.org>
+From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH] arm64: dts: rockchip: Add basic DVFS support for RK3368
+Date: Fri, 18 Aug 2017 09:50:53 +0200
+Message-ID: <20170818075053.8779-1-romain.perier@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds and enable the operating points that have been tested and are
+currently supported by the SoC.
 
+Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
 
------Original Message-----
-From: Shawn Guo [mailto:shawnguo@kernel.org]=20
-Sent: Thursday, August 17, 2017 10:03 PM
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: linux-devel@gforge.freescale.net; Rob Herring <robh+dt@kernel.org>; Mar=
-k Rutland <mark.rutland@arm.com>; Catalin Marinas <catalin.marinas@arm.com>=
-; Will Deacon <will.deacon@arm.com>; Harninder Rai <harninder.rai@nxp.com>;=
- Andy Tang <andy.tang@nxp.com>; open list: <devicetree@vger.kernel.org>; As=
-hish Kumar <ashish.kumar@nxp.com>; open list <linux-kernel@vger.kernel.org>=
-; Raghav Dogra <raghav.dogra@nxp.com>; moderated list: <linux-arm-kernel@li=
-sts.infradead.org>
-Subject: Re: [PATCH] arm64: dts: ls1088a: Add USB support
+Note: RK3288 is using operating-points binding v1, while RK3399 is using
+binding v2. I can send another iteration for switching to binding v2,
+if required.
 
-On Thu, Aug 17, 2017 at 10:52:38AM +0800, yinbo.zhu@nxp.com wrote:
-> From: "yinbo.zhu" <yinbo.zhu@nxp.com>
->=20
-> Fix the issue that usb is not detected on ls1088ardb
->=20
-> Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 18 +++++++++++++++++=
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index 6d5dc0587e59..f2ae3bf9377a 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -113,8 +113,18 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			clocks = <&cru ARMCLKL>;
++			operating-points = <
++				/* KHz    uV */
++				312000 950000
++				408000 950000
++				600000 950000
++				816000 1025000
++				1008000 1125000
++			>;
+ 
+ 			#cooling-cells = <2>; /* min followed by max */
++			clock-latency = <40000>;
+ 		};
+ 
+ 		cpu_l1: cpu@1 {
+@@ -122,6 +132,7 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			clocks = <&cru ARMCLKL>;
+ 		};
+ 
+ 		cpu_l2: cpu@2 {
+@@ -129,6 +140,7 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
++			clocks = <&cru ARMCLKL>;
+ 		};
+ 
+ 		cpu_l3: cpu@3 {
+@@ -136,6 +148,7 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
++			clocks = <&cru ARMCLKL>;
+ 		};
+ 
+ 		cpu_b0: cpu@100 {
+@@ -143,8 +156,18 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			clocks = <&cru ARMCLKB>;
++			operating-points = <
++				/* KHz    uV */
++				312000 950000
++				408000 950000
++				600000 950000
++				816000 975000
++				1008000 1050000
++			>;
+ 
+ 			#cooling-cells = <2>; /* min followed by max */
++			clock-latency = <40000>;
+ 		};
+ 
+ 		cpu_b1: cpu@101 {
+@@ -152,6 +175,7 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
++			clocks = <&cru ARMCLKB>;
+ 		};
+ 
+ 		cpu_b2: cpu@102 {
+@@ -159,6 +183,7 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
++			clocks = <&cru ARMCLKB>;
+ 		};
+ 
+ 		cpu_b3: cpu@103 {
+@@ -166,9 +191,11 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x103>;
+ 			enable-method = "psci";
++			clocks = <&cru ARMCLKB>;
+ 		};
+ 	};
+ 
 +
->  2 files changed, 26 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm=
-64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> index e9276a5..949cd67 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> @@ -145,6 +145,14 @@
->  	status =3D "okay";
->  };
-> =20
-> +&usb0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&usb1 {
-> +	status =3D "okay";
-> +};
-> +
->  &esdhc {
->  	status =3D "okay";
->  };
+ 	amba {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+-- 
+2.11.0
 
-Sort the labelled node alphabetically.
-
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/=
-boot/dts/freescale/fsl-ls1088a.dtsi
-> index 3a3be87..0dbff29 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -458,6 +458,24 @@
->  			status =3D "disabled";
->  		};
-> =20
-> +		usb0: usb3@3100000 {
-> +			compatible =3D "snps,dwc3";
-> +			reg =3D <0x0 0x3100000 0x0 0x10000>;
-> +			interrupts =3D <0 80 0x4>; /* Level high type */
-
-Use IRQ_TYPE_LEVEL_HIGH, so that you can save the comment.
-
-> +			dr_mode =3D "host";
-> +			configure-gfladj;
-
-What is this?  I do not see it in upstream kernel.
-
-> +			snps,dis_rxdet_inp3_quirk;
-
-You probably need a "disabled" status.
-
-Shawn
-
-Hi Shawn,
-
- About your description " You probably need a "disabled" status."
- Your meaning is that remove the property "snps,dis_rxdet_inp3_quirk;", isn=
-'t it?
- In fact, if remove the property , 1088ardb usb will doesn't detect.
-
-Yinbo
-
-> +		};
-> +
-> +		usb1: usb3@3110000 {
-> +			compatible =3D "snps,dwc3";
-> +			reg =3D <0x0 0x3110000 0x0 0x10000>;
-> +			interrupts =3D <0 81 0x4>; /* Level high type */
-> +			dr_mode =3D "host";
-> +			configure-gfladj;
-> +			snps,dis_rxdet_inp3_quirk;
-> +		};
-> +
->  		sata: sata@3200000 {
->  			compatible =3D "fsl,ls1088a-ahci";
->  			reg =3D <0x0 0x3200000 0x0 0x10000>,
-> --=20
-> 2.1.0.27.g96db324
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
