@@ -1,45 +1,63 @@
-From: Klaus Goger <klaus.goger@theobroma-systems.com>
-Subject: [PATCH v2 2/5] dt-bindings: add amc6821, isl1208 trivial bindings
-Date: Fri, 18 Aug 2017 21:34:42 +0200
-Message-ID: <20170818193445.47542-3-klaus.goger@theobroma-systems.com>
-References: <20170818193445.47542-1-klaus.goger@theobroma-systems.com>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [PATCH v5 0/4] can: Support transceiver based bit rate limit
+Date: Fri, 18 Aug 2017 15:21:33 -0500
+Message-ID: <20170818202137.29816-1-fcooper@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170818193445.47542-1-klaus.goger@theobroma-systems.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Paul Kocialkowski <contact@paulk.fr>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Florian Larysch <fl@n621.de>, Jelle van der Waa <jelle@vdwaa.nl>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Jiri Kosina <trivial@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, sergei.shtylyov@cogentembedded.com, socketcan@hartkopp.net
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-TI AMC6821 fan controller and Intersil ISL1208 are trivial
-devices, so add them to the binding list.
+Add a new generic binding that CAN drivers can be used to specify the max
+bit rate supported by a transceiver. This is useful since in some instances
+since the maximum speeds may be limited by the transceiver used. However,
+transceivers may not provide a means to determine this limitation at
+runtime. Therefore, create a new binding that mimics "fixed-link" that
+allows a user to hardcode the max speeds that can be used.
 
-Signed-off-by: Klaus Goger <klaus.goger@theobroma-systems.com>
----
+Also add support for this new binding in the MCAN driver.
 
-Changes in v2: None
+Note this is an optional subnode so even if a driver adds support for
+parsing can-transceiver the user does not have to define it in their
+device tree.
 
- Documentation/devicetree/bindings/trivial-devices.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Version 5 changes:
+Got rid of is_bitrate_limited
+Removed @ symbol from can-transceiver binding
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index 0e6e95394200..ed7c2cf52f6a 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -64,6 +64,7 @@ fsl,sgtl5000		SGTL5000: Ultra Low-Power Audio Codec
- gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire Interface
- infineon,slb9635tt	Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
- infineon,slb9645tt	Infineon SLB9645 I2C TPM (new protocol, max 400khz)
-+isil,isl1208		Intersil ISL1208 Low Power RTC with Battery Backed SRAM
- isil,isl29028		Intersil ISL29028 Ambient Light and Proximity Sensor
- isil,isl29030		Intersil ISL29030 Ambient Light and Proximity Sensor
- maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
-@@ -178,6 +179,7 @@ st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
- taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
- ti,ads7828		8-Channels, 12-bit ADC
- ti,ads7830		8-Channels, 8-bit ADC
-+ti,amc6821		Temperature Monitoring and Fan Control
- ti,tsc2003		I2C Touch-Screen Controller
- ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
- ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+Version 4 changes:
+Switch from fixed-transceiver to can-transceiver
+Drop unit address that snuck back in again.
+Indicate that can-transceiver is a subnode and not a property in
+documentation
+
+Version 3 changes:
+Switch from having two "max bitrates" to one universal bitrate.
+
+Version 2 changes:
+Rename function
+Define proper variable default
+Drop unit address
+Move check to changelink function
+Reword commit message
+Reword documentation
+
+
+Franklin S Cooper Jr (4):
+  can: dev: Add support for limiting configured bitrate
+  dt-bindings: can: can-transceiver: Document new binding
+  dt-bindings: can: m_can: Document new can transceiver binding
+  can: m_can: Add call to of_can_transceiver
+
+ .../bindings/net/can/can-transceiver.txt           | 24 +++++++++++++
+ .../devicetree/bindings/net/can/m_can.txt          |  9 +++++
+ drivers/net/can/dev.c                              | 39 ++++++++++++++++++++++
+ drivers/net/can/m_can/m_can.c                      |  2 ++
+ include/linux/can/dev.h                            |  4 +++
+ 5 files changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
+
 -- 
-2.11.0
+2.9.4.dirty
