@@ -1,90 +1,44 @@
 From: Sandy Huang <hjc@rock-chips.com>
-Subject: [PATCH v6 1/3] dt-bindings: display: Add Document for Rockchip Soc
- LVDS
-Date: Fri, 18 Aug 2017 16:09:49 +0800
-Message-ID: <1503043792-22746-1-git-send-email-hjc@rock-chips.com>
-References: <1503043780-22605-1-git-send-email-hjc@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1503043780-22605-1-git-send-email-hjc@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v6 0/3] Add support Rockchip Soc LVDS
+Date: Fri, 18 Aug 2017 16:09:39 +0800
+Message-ID: <1503043780-22605-1-git-send-email-hjc@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@armlinux.org.uk>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Sandy Huang <hjc@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgRG9jdW1lbnQgZm9yIFJvY2tjaGlwIFNvYyBSSzMyODggTFZEUywKVGhp
-cyBiYXNlZCBvbiB0aGUgcGF0Y2hlcyBmcm9tIE1hcmsgeWFvIGFuZCBIZWlrbyBTdHVlYm5lci4K
-ClNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1v
-ZmYtYnk6IE1hcmsgeWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KU2lnbmVkLW9mZi1ieTog
-SGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KLS0tCkNoYW5nZXM6CiAgICAtIHVzZSBk
-YXRhLW1hcHBpbmcgaW5zdGVhZCBvZiByb2NrY2hpcCxkYXRhLW1hcHBpbmcgYW5kIHJvY2tjaGlw
-LGRhdGEtd2lkdGgKICAgIC0gbW92ZSByb2NrY2hpcCxvdXRwdXQgdG8gbHZkcyBub2RlCgogLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQgICAgfCAxMDAgKysr
-KysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTAwIGluc2VydGlvbnMoKykKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2No
-aXAtbHZkcy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uYTMzODIxYgot
-LS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0CkBAIC0wLDAgKzEsMTAwIEBACitSb2NrY2hp
-cCBSSzMyODggTFZEUyBpbnRlcmZhY2UKKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-CisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IG1hdGNoaW5nIHRoZSBzb2Mg
-dHlwZSwgb25lIG9mCisJLSAicm9ja2NoaXAscmszMjg4LWx2ZHMiOworCistIHJlZzogcGh5c2lj
-YWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVyIGFuZCBsZW5ndGgKKwlvZiBtZW1vcnkg
-bWFwcGVkIHJlZ2lvbi4KKy0gY2xvY2tzOiBtdXN0IGluY2x1ZGUgY2xvY2sgc3BlY2lmaWVycyBj
-b3JyZXNwb25kaW5nIHRvIGVudHJpZXMgaW4gdGhlCisJY2xvY2stbmFtZXMgcHJvcGVydHkuCist
-IGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4gInBjbGtfbHZkcyIKKworLSBhdmRkMXYwLXN1cHBs
-eTogcmVndWxhdG9yIHBoYW5kbGUgZm9yIDEuMFYgYW5hbG9nIHBvd2VyCistIGF2ZGQxdjgtc3Vw
-cGx5OiByZWd1bGF0b3IgcGhhbmRsZSBmb3IgMS44ViBhbmFsb2cgcG93ZXIKKy0gYXZkZDN2My1z
-dXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAzLjNWIGFuYWxvZyBwb3dlcgorCistIHJvY2tj
-aGlwLGdyZjogcGhhbmRsZSB0byB0aGUgZ2VuZXJhbCByZWdpc3RlciBmaWxlcyBzeXNjb24KKy0g
-cm9ja2NoaXAsb3V0cHV0OiAicmdiIiwgImx2ZHMiIG9yICJkdWFsbHZkcyIsIFRoaXMgZGVzY3Jp
-YmVzIHRoZSBvdXRwdXQgZmFjZS4KKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gcGluY3RybC1u
-YW1lczogbXVzdCBjb250YWluIGEgImxjZGMiIGVudHJ5LgorLSBwaW5jdHJsLTA6IHBpbiBjb250
-cm9sIGdyb3VwIHRvIGJlIHVzZWQgZm9yIHRoaXMgY29udHJvbGxlci4KKworUmVxdWlyZWQgbm9k
-ZXM6CisKK1RoZSBsdmRzIGhhcyB0d28gdmlkZW8gcG9ydHMgYXMgZGVzY3JpYmVkIGJ5CisJRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0
-LgorVGhlaXIgY29ubmVjdGlvbnMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBoIGJpbmRp
-bmdzIHNwZWNpZmllZCBpbgorCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFw
-aC50eHQuCisKKy0gdmlkZW8gcG9ydCAwIGZvciB0aGUgVk9QIGlucHV0cworLSB2aWRlbyBwb3J0
-IDEgZm9yIGVpdGhlciBhIHBhbmVsIG9yIHN1YnNlcXVlbnQgZW5jb2RlcgorCit0aGUgbHZkcyBw
-YW5lbCBkZXNjcmliZWQgYnkKKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0CisKK1BhbmVsIHJlcXVpcmVkIHByb3BlcnRpZXM6
-CistIHBvcnRzIGZvciByZW1vdGUgTFZEUyBvdXRwdXQKKworUGFuZWwgb3B0aW9uYWwgcHJvcGVy
-dGllczoKKy0gZGF0YS1tYXBwaW5nOiBzaG91bGQgYmUgInZlc2EtMjQiLCJqZWlkYS0yNCIgb3Ig
-ImplaWRhLTE4Ii4KK1RoaXMgZGVzY3JpYmVzIGRlY3JpYmVkIGJ5OgorCURvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0CisKK0V4YW1w
-bGU6CisKK2x2ZHNfcGFuZWw6IGx2ZHMtcGFuZWwgeworCXN0YXR1cyA9ICJva2F5IjsKKwljb21w
-YXRpYmxlID0gImF1byxiMTAxZWFuMDEiOworCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbzcgMjEgR1BJ
-T19BQ1RJVkVfSElHSD47CisJZGF0YS1tYXBwaW5nID0gImplaWRhLTI0IjsKKworCXBvcnRzIHsK
-KwkJcGFuZWxfaW5fbHZkczogZW5kcG9pbnQgeworCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRz
-X291dF9wYW5lbD47CisJCX07CisJfTsKK307CisKK0ZvciBSb2NrY2hpcCBSSzMyODg6CisKKwls
-dmRzOiBsdmRzQGZmOTZjMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMyODgtbHZk
-cyI7CisJCXJvY2tjaGlwLGdyZiA9IDwmZ3JmPjsKKwkJcmVnID0gPDB4ZmY5NmMwMDAgMHg0MDAw
-PjsKKwkJY2xvY2tzID0gPCZjcnUgUENMS19MVkRTX1BIWT47CisJCWNsb2NrLW5hbWVzID0gInBj
-bGtfbHZkcyI7CisJCXBpbmN0cmwtbmFtZXMgPSAibGNkYyI7CisJCXBpbmN0cmwtMCA9IDwmbGNk
-Y19jdGw+OworCQlhdmRkMXYwLXN1cHBseSA9IDwmdmRkMTBfbGNkPjsKKwkJYXZkZDF2OC1zdXBw
-bHkgPSA8JnZjYzE4X2xjZD47CisJCWF2ZGQzdjMtc3VwcGx5ID0gPCZ2Y2NhXzMzPjsKKwkJcm9j
-a2NoaXAsb3V0cHV0ID0gInJnYiI7CisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+
-OworCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCWx2ZHNfaW46IHBvcnRAMCB7CisJCQkJcmVn
-ID0gPDA+OworCisJCQkJbHZkc19pbl92b3BiOiBlbmRwb2ludEAwIHsKKwkJCQkJcmVnID0gPDA+
-OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGJfb3V0X2x2ZHM+OworCQkJCX07CisJCQkJ
-bHZkc19pbl92b3BsOiBlbmRwb2ludEAxIHsKKwkJCQkJcmVnID0gPDE+OworCQkJCQlyZW1vdGUt
-ZW5kcG9pbnQgPSA8JnZvcGxfb3V0X2x2ZHM+OworCQkJCX07CisJCQl9OworCisJCQlsdmRzX291
-dDogcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisKKwkJCQlsdmRzX291dF9wYW5lbDogZW5kcG9p
-bnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luX2x2ZHM+OworCQkJCX07CisJ
-CQl9OworCQl9OworCX07Ci0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+This patches add support Rockchip RK3288 LVDS support, based on patches from
+Mark yao[0] and Heiko Stuebner[1].
+
+[0]: https://github.com/RockchipOpensourceCommunity/popmetal-kernel-3.14
+[1]: http://lists.infradead.org/pipermail/linux-rockchip/2015-April/002830.html
+
+Changes:
+- Update rockchip_lvds_encoder_helper_funcs to atomic API
+- Add bridge function for RGB/LVDS convert to other output type
+- Fix some unreasonable define
+- Adapter to the latest rockchip DRM driver framework
+- Add pinctrl for RGB output type
+- Reseved some define for rockchip next Soc
+
+Sandy Huang (3):
+  dt-bindings: display: Add Document for Rockchip Soc LVDS
+  ARM: dts: Add LVDS info for rk3288
+  drm/rockchip: Add support for Rockchip Soc LVDS
+
+ .../bindings/display/rockchip/rockchip-lvds.txt    | 100 ++++
+ arch/arm/boot/dts/rk3288.dtsi                      |  52 ++
+ drivers/gpu/drm/rockchip/Kconfig                   |   9 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
+ drivers/gpu/drm/rockchip/rockchip_lvds.c           | 582 +++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_lvds.h           | 114 ++++
+ 8 files changed, 861 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
+ create mode 100644 drivers/gpu/drm/rockchip/rockchip_lvds.c
+ create mode 100644 drivers/gpu/drm/rockchip/rockchip_lvds.h
+
+-- 
+2.7.4
