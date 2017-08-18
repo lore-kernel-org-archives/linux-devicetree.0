@@ -1,25 +1,25 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 6/8] ARM: dts: rockchip: add pwm backlight for rv1108 evb
-Date: Sat, 19 Aug 2017 00:54:14 +0200
-Message-ID: <2156649.qxq5tir7vK@phil>
-References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com> <1502700167-8730-1-git-send-email-andy.yan@rock-chips.com>
+Subject: Re: [PATCH v3 7/7] arm64: dts: rockchip: Add pwm nodes for rk3328
+Date: Sat, 19 Aug 2017 01:06:43 +0200
+Message-ID: <2426743.6zMP1RcfyD@phil>
+References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com> <1502206995-24418-1-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502700167-8730-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1502206995-24418-1-git-send-email-david.wu@rock-chips.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: thierry.reding@gmail.com, boris.brezillon@free-electrons.com, robh+dt@kernel.org, catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 14. August 2017, 16:42:47 CEST schrieb Andy Yan:
-> RV1108 EVB uses pwm0 modulate the backlight, add dt
-> node to enable it.
+Am Dienstag, 8. August 2017, 23:43:15 CEST schrieb David Wu:
+> There are 4 pwm channels built in rk3328 soc, need to configure
+> the both APB clock and bus clock.
 > 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> Signed-off-by: David Wu <david.wu@rock-chips.com>
 
-applied for 4.14 after adapting to the mainline chosen node above it.
+applied for 4.14 with some property movements.
 
 
 Thanks
