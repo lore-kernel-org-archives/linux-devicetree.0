@@ -1,70 +1,44 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v2 0/6] net: stmmac: Detect PHY location with
- phy-is-integrated
-Date: Fri, 18 Aug 2017 11:24:27 +0200
-Message-ID: <20170818092427.GA7425@Red>
-References: <20170817075149.16178-1-clabbe.montjoie@gmail.com>
+From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add basic DVFS support for RK3368
+Date: Fri, 18 Aug 2017 11:40:30 +0200
+Message-ID: <f283f9de-e9ce-e2b9-645f-b5f0566ebccf@collabora.com>
+References: <20170818075053.8779-1-romain.perier@collabora.com>
+ <10444104.mndukromaz@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170817075149.16178-1-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, peppe.cavallaro@st.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <10444104.mndukromaz@phil>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 09:51:43AM +0200, Corentin Labbe wrote:
-> Hello
-> 
-> The current way to find if the phy is internal is to compare DT phy-mode
-> and emac_variant/internal_phy.
-> But it will negate a possible future SoC where an external PHY use the
-> same phy mode than the integrated one.
-> 
-> This patchs series adds a new way to find if the PHY is integrated, via
-> the phy-is-integrated DT property.
-> 
-> Since it exists both integrated and external ethernet-phy@1, they are merged in
-> the final DTB and so share all properties.
-> For avoiding this, the phy-is-integrated is added only to board DT.
-> 
-> The first five patchs should go via the sunxi tree.
-> the last one should go via the net tree.
-> Note that this serie will need backporting the patch
-> "Documentation: net: phy: Add phy-is-integrated binding" which is in net-next
-> 
-> Thanks
-> Regards
-> 
-> Changes since v1:
-> - Dropped phy-is-integrated documentation patch since another same patch was already merged
-> - Moved phy-is-integrated from SoC dtsi to final board DT.
-> 
-> Corentin Labbe (6):
->   ARM: sun8i: orangepipc: Set phy-is-integrated to the internal phy node
->   ARM: sun8i: beelink-x2: Set phy-is-integrated to the internal phy node
->   ARM: sun8i: nanopi-neo: Set phy-is-integrated to the internal phy node
->   ARM: sun8i: orangepi-2: Set phy-is-integrated to the internal phy node
->   ARM: sun8i: orangepi-one: Set phy-is-integrated to the internal phy
->     node
->   net: stmmac: dwmac-sun8i: choose internal PHY via phy-is-integrated
-> 
->  arch/arm/boot/dts/sun8i-h3-beelink-x2.dts         |  4 ++++
->  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts         |  4 ++++
->  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts         |  4 ++++
->  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts       |  4 ++++
->  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts        |  4 ++++
->  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 16 ++++++++--------
->  6 files changed, 28 insertions(+), 8 deletions(-)
-> 
-> -- 
-> 2.13.0
-> 
+Hello,
 
-Hello
 
-Self NACK, the comment from Rob on previous series is pertinent.
-I will send a v3 which use a mdio-mux for solving all problems.
+Le 18/08/2017 à 10:20, Heiko Stuebner a écrit :
+> Am Freitag, 18. August 2017, 09:50:53 CEST schrieb Romain Perier:
+>> This adds and enable the operating points that have been tested and are
+>> currently supported by the SoC.
+>>
+>> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>
+>> Note: RK3288 is using operating-points binding v1, while RK3399 is using
+>> binding v2. I can send another iteration for switching to binding v2,
+>> if required.
+> Yes please use v2 for _new_ operating points :-) .
+>
+> One more thing down below.
 
-Regards
+Ack, will do.
+
+Thanks,
+Romain
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
