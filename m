@@ -1,63 +1,85 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/9] ASoC: rockchip: Remove obsolete dmic-delay
-Date: Fri, 18 Aug 2017 12:52:23 +0100
-Message-ID: <20170818115223.pyfqji5jkplt6isx@sirena.org.uk>
-References: <20170817044417.22069-1-jeffy.chen@rock-chips.com>
- <20170817044417.22069-3-jeffy.chen@rock-chips.com>
- <20170817171152.abf3ngr6nr22jfif@sirena.org.uk>
- <599645E2.4020402@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="m6wid7jysdtjmmci"
+From: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH] spmi: pmic-arb: Enforce the ownership check optionally
+Date: Fri, 18 Aug 2017 17:24:36 +0530
+Message-ID: <1503057279-27318-1-git-send-email-kgunda@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <599645E2.4020402-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Abhijeet Dharmapurikar <adharmap-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The peripheral ownership check is not necessary on single master
+platforms. Hence, enforce the peripheral ownership check optioanlly.
 
---m6wid7jysdtjmmci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+This patch depends on the below patch series. Please take this patch
+along with this series.
 
-On Fri, Aug 18, 2017 at 09:41:54AM +0800, jeffy wrote:
-> On 08/18/2017 01:11 AM, Mark Brown wrote:
-> > On Thu, Aug 17, 2017 at 12:44:10PM +0800, Jeffy Chen wrote:
+[PATCH V2 00/12]: spmi: pmic-arb: Support for HW v5 and other fixes
 
-> > > -Optional properties:
-> > > -- dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
-> > > -  If this option is specified, which means it's required dmic need
-> > > -  delay for DMIC to ready so that rt5514 can avoid recording before
-> > > -  DMIC send valid data
+ Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt | 6 ++++++
+ drivers/spmi/spmi-pmic-arb.c                                  | 7 ++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-> > Why would nobody ever want to use this in future?
+diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+index e16b9b5..da708e8 100644
+--- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
++++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+@@ -42,6 +42,10 @@ Required properties:
+     cell 4: interrupt flags indicating level-sense information, as defined in
+             dt-bindings/interrupt-controller/irq.h
+ 
++Optional properties:
++- qcom,enforce-ownership : A boolean property. If defined the peripheral
++			   ownership check is enforced. Otherwise the ownership
++			   check is ignored.
+ Example:
+ 
+ 	spmi {
+@@ -62,4 +66,6 @@ Example:
+ 
+ 		interrupt-controller;
+ 		#interrupt-cells = <4>;
++
++		qcom,enforce-ownership;
+ 	};
+diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+index ca9bdd3..354c949 100644
+--- a/drivers/spmi/spmi-pmic-arb.c
++++ b/drivers/spmi/spmi-pmic-arb.c
+@@ -167,6 +167,7 @@ struct spmi_pmic_arb {
+ 	u16			*ppid_to_apid;
+ 	u16			last_apid;
+ 	struct apid_data	apid_data[PMIC_ARB_MAX_PERIPHS];
++	bool			enforce_ownership;
+ };
+ 
+ /**
+@@ -707,7 +708,8 @@ static int qpnpint_irq_domain_dt_translate(struct irq_domain *d,
+ 	}
+ 
+ 	apid = rc;
+-	if (pmic_arb->apid_data[apid].irq_ee != pmic_arb->ee) {
++	if (pmic_arb->enforce_ownership &&
++			pmic_arb->apid_data[apid].irq_ee != pmic_arb->ee) {
+ 		dev_err(&pmic_arb->spmic->dev, "failed to xlate sid = %#x, periph = %#x, irq = %u: ee=%u but owner=%u\n",
+ 			intspec[0], intspec[1], intspec[2], pmic_arb->ee,
+ 			pmic_arb->apid_data[apid].irq_ee);
+@@ -1236,6 +1238,9 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	pmic_arb->ee = ee;
++	pmic_arb->enforce_ownership =
++	    of_property_read_bool(pdev->dev.of_node, "qcom,enforce-ownership");
++
+ 	mapping_table = devm_kcalloc(&ctrl->dev, PMIC_ARB_MAX_PERIPHS,
+ 					sizeof(*mapping_table), GFP_KERNEL);
+ 	if (!mapping_table) {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> hmmm, check again, rt5514 fixed this issue in there driver instead in:
-> a5461fd6c8f7 ASoC: rt5514: Add the DMIC initial delay to wait it ready.
-
-> so we don't need this...
-
-You don't need it on your board for new DTs but why is it not possible
-that another board might need it?
-
---m6wid7jysdtjmmci
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmW1PcACgkQJNaLcl1U
-h9Ajwgf9HA9rtrdJwNVlAtEKNVupp1jzWXvXw7UIeADdamflEQ3RP9vYmENUHoLn
-VinUjB0TGRRqb5hQedf/p5N8x1kuytGXrkfucoQqJ8V7YJR8NKiINQI7yTRCYW7X
-OcJOj44puTm/pSlOWaexhC+rGmcDjEKpY0beZI0jHt79r+Ayv1/3FxHuNCHR498l
-KXmDKHgfgI1vSNZeDpV3DisCZvp7/J6WdghOMvqnnvrtmvWWK6+umOWSaHG2PGZE
-iy96mfapluf9MCfvGfCm8zFoxit2mYNcnAweHZSNQuoCe+Nh8rX4A+77SPsMEZUx
-Qn303i4WoIEaXc62qr/4ewAETN+73A==
-=TCfK
------END PGP SIGNATURE-----
-
---m6wid7jysdtjmmci--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
