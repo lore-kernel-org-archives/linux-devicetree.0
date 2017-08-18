@@ -1,135 +1,59 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/1] arm64: dts: Add Variscite DART-SD410
- Evaluation board dts
-Date: Fri, 18 Aug 2017 15:35:05 -0500
-Message-ID: <20170818203505.GB4042@hector.attlocal.net>
-References: <014701d31418$8e419670$aac4c350$@variscite.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] arm64: dts: add RK3399-Q7 (Puma) SoM
+Date: Fri, 18 Aug 2017 23:14:48 +0200
+Message-ID: <2629491.nQPY0c5PWU@phil>
+References: <20170818193445.47542-1-klaus.goger@theobroma-systems.com> <20170818193445.47542-5-klaus.goger@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <014701d31418$8e419670$aac4c350$@variscite.com>
+In-Reply-To: <20170818193445.47542-5-klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leonid Segal <leonid.s-/HTLZasLZWtl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 13, 2017 at 12:42:59PM +0300, Leonid Segal wrote:
-> Add initial device tree support for Variscite DART-SD410 Evalueation board.
-> This board is also known as VAR-SD410CustomBoard.
+Am Freitag, 18. August 2017, 21:34:44 CEST schrieb Klaus Goger:
+> The RK3399-Q7 SoM is a Qseven-compatible (70mm x 70mm, MXM-230
+> connector) system-on-module from Theobroma Systems, featuring the
+> Rockchip RK3399.
 > 
-> Signed-off-by: Leonid Segal <leonid.s-/HTLZasLZWtl57MIdRCFDg@public.gmane.org>
+> It provides the following feature set:
+>  * up to 4GB DDR3
+>  * on-module SPI-NOR flash
+>  * on-module eMMC (with 8-bit 1.8V interface)
+>  * SD card (on a baseboad) via edge connector
+>  * Gigabit Ethernet with on-module Micrel KSZ9031 GbE PHY
+>  * HDMI/eDP/2x MIPI-DSI
+>  * 2x MIPI-CSI
+>  * USB
+>    - 1x USB 3.0 dual-role (direct connection)
+>    - 2x USB 3.0 host + 1x USB 2.0 (on-module USB 3.0 hub)
+>  * on-module STM32 Cortex-M0 companion controller, implementing:
+>    - low-power RTC functionality (ISL1208 emulation)
+>    - fan controller (AMC6821 emulation)
+>    - USB<->CAN bridge controller
+> 
+> Signed-off-by: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 > ---
+> 
+> Changes in v2:
+> ₋ split SoM parts into it's own dtsi
+> - use dashes in phandles
 
-A few comments, mainly about your documentation on the Variscite
-website.  Specifically the schematics.  Please tell your hardware
-people to be consistent in your naming conventions for pins.
+as I was stumbling over this comment and checked the patch for it,
+dashes in node-names, underscores in phandles (phandles are the
+references defined in front of nodes and used later).
 
-MPP_GPIO/PM_GPIO appear to be interchangeable.  And it's usually
-best to split out the PMIC pins from the non-pmic.  That's my 2
-cents at least.
+The patch itself is doing things correctly, so it's only a wording issue here :-)
 
-
->  arch/arm64/boot/dts/qcom/Makefile                  |   1 +
->  .../boot/dts/qcom/apq8016-var-dart-pmic-pins.dtsi  |  53 +++
->  .../boot/dts/qcom/apq8016-var-dart-soc-pins.dtsi   |  88 ++++
->  arch/arm64/boot/dts/qcom/apq8016-var-dart.dts      |  21 +
->  arch/arm64/boot/dts/qcom/apq8016-var-dart.dtsi     | 525
-
-<snip>
-
-> +			pins = "gpio32";
-> +		};
-> +		pinconf {
-> +			pins = "gpio32";
-> +			drive-strength = <2>;
-> +			bias-disable;
-> +		};
-> +	};
-> +
-> +	msm_key_volp_n_default: msm_key_volp_n_default {
-
-Schematics show this to be a Home button.  If so this needs to be
-updated to reflect that.
-
-> +		pinmux {
-> +			function = "gpio";
-> +			pins = "gpio107";
-> +		};
-> +		pinconf {
-> +			pins = "gpio107";
-> +			drive-strength = <8>;
-> +			input-enable;
-> +			bias-pull-up;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-var-dart.dts
-
-<snip>
-
-> +/dts-v1/;
-> +
-> +#include "apq8016-var-dart.dtsi"
-> +
-> +/ {
-> +	model = "Variscite LTD. VAR-DART410";
-> +	compatible = "qcom,apq8016-dart", "qcom,apq8016", "qcom,dart";
-
-qcom isnt making this board.  Please use something like "variscite,dart",
-"qcom,apq8016"
-
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-var-dart.dtsi
-> b/arch/arm64/boot/dts/qcom/apq8016-var-dart.dtsi
-> new file mode 100644
-> index 000000000000..f214d0b101a4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-var-dart.dtsi
-
-<snip>
-> +
-> +		usb@78d9000 {
-> +			extcon = <&usb_id>, <&usb_id>;
-> +			status = "okay";
-> +		};
-> +
-> +		ehci@78d9000 {
-> +			status = "okay";
-
-Can you try removing the echi and using the chipidea instead.  Take a
-look at the current db410c in -next.  Try it out and see if that works
-for you.  If it does, modify your nodes to match up.
-
-> +		};
-> +
-> +		phy@78d9000 {
-> +			v1p8-supply = <&pm8916_l7>;
-> +			v3p3-supply = <&pm8916_l13>;
-> +			vddcx-supply = <&pm8916_s1>;
-> +			extcon = <&usb_id>, <&usb_id>;
-> +			dr_mode = "otg";
-> +			status = "okay";
-> +			switch-gpio = <&pm8916_gpios 4 GPIO_ACTIVE_HIGH>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&usb_sw_sel_pm>;
-
-Same here, I think some things changed here.  Need to update.
-switch-gpio went away.
-
-> +		};
-> +
-> +		lpass@07708000 {
-> +			status = "okay";
-> +		};
-> +
-
-<snip>
+Otherwise looks good, just need Rob looking at the bindings things.
+I'll probably find some properties to move around when applying
+(to conform to sorting expectations)
 
 
-Regards,
+Heiko
 
-Andy Gross
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
