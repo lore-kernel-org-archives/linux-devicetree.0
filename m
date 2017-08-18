@@ -1,65 +1,114 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: ls1088a: Add USB support
-Date: Fri, 18 Aug 2017 16:03:57 +0800
-Message-ID: <20170818080355.GK7608@dragon>
-References: <1502938358-23522-1-git-send-email-yinbo.zhu@nxp.com>
- <20170817140232.GE7608@dragon>
- <VI1PR04MB1262662395B8CD06BAF074CFE9800@VI1PR04MB1262.eurprd04.prod.outlook.com>
+From: Sandy Huang <hjc@rock-chips.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: display: Add Document for Rockchip
+ Soc LVDS
+Date: Fri, 18 Aug 2017 16:08:50 +0800
+Message-ID: <fe1f87b8-a980-b036-6d3c-210ea0c6ed14@rock-chips.com>
+References: <1502768955-176510-1-git-send-email-hjc@rock-chips.com>
+ <1502768961-176569-1-git-send-email-hjc@rock-chips.com>
+ <20170817205622.s7ivkxu7uac5rnwa@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB1262662395B8CD06BAF074CFE9800-mr6QIVyDiCGbtYzA8xQqo89NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, "open list:" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, Raghav Dogra <raghav.dogra-3arQi8VN3Tc@public.gmane.org>, "moderated list:" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170817205622.s7ivkxu7uac5rnwa@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 07:48:19AM +0000, Yinbo Zhu wrote:
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > index 3a3be87..0dbff29 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > @@ -458,6 +458,24 @@
-> >  			status = "disabled";
-> >  		};
-> >  
-> > +		usb0: usb3@3100000 {
-> > +			compatible = "snps,dwc3";
-> > +			reg = <0x0 0x3100000 0x0 0x10000>;
-> > +			interrupts = <0 80 0x4>; /* Level high type */
-> 
-> Use IRQ_TYPE_LEVEL_HIGH, so that you can save the comment.
-> 
-> > +			dr_mode = "host";
-> > +			configure-gfladj;
-> 
-> What is this?  I do not see it in upstream kernel.
-> 
-> > +			snps,dis_rxdet_inp3_quirk;
-> 
-> You probably need a "disabled" status.
-> 
-> Shawn
-> 
-> Hi Shawn,
-> 
->  About your description " You probably need a "disabled" status."
->  Your meaning is that remove the property "snps,dis_rxdet_inp3_quirk;", isn't it?
->  In fact, if remove the property , 1088ardb usb will doesn't detect.
-
-No, that's not what I meant.  I meant the USB device should be disabled
-by default in <soc>.dtsi by having the following line.
-
-	status = "disabled";
-
-And then if your board has the pin-out of this USB device, you have the
-line below to turn on the support.
-
-	status = "okay";
-
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoK5ZyoIDIwMTcvOC8xOCA0OjU2LCBSb2IgSGVycmluZyDlhpnpgZM6Cj4gT24gVHVl
+LCBBdWcgMTUsIDIwMTcgYXQgMTE6NDk6MTlBTSArMDgwMCwgU2FuZHkgSHVhbmcgd3JvdGU6Cj4+
+IFRoaXMgcGF0Y2ggYWRkIERvY3VtZW50IGZvciBSb2NrY2hpcCBTb2MgUkszMjg4IExWRFMsCj4+
+IFRoaXMgYmFzZWQgb24gdGhlIHBhdGNoZXMgZnJvbSBNYXJrIHlhbyBhbmQgSGVpa28gU3R1ZWJu
+ZXIuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+
+Cj4+IFNpZ25lZC1vZmYtYnk6IE1hcmsgeWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KPj4g
+U2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPj4gLS0tCj4+
+IENoYW5nZXMgYWNjb3JkaW5nIHRvIE1hcmsgWWFvIHJldmlld3MuCj4+Cj4+ICAgLi4uL2JpbmRp
+bmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQgICAgfCAxMDUgKysrKysrKysr
+KysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDEwNSBpbnNlcnRpb25zKCspCj4+ICAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRz
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlw
+L3JvY2tjaGlwLWx2ZHMudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAw
+MDAuLmMxNTM0MTEKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dAo+PiBAQCAt
+MCwwICsxLDEwNSBAQAo+PiArUm9ja2NoaXAgUkszMjg4IExWRFMgaW50ZXJmYWNlCj4+ICs9PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
+Ogo+PiArLSBjb21wYXRpYmxlOiBtYXRjaGluZyB0aGUgc29jIHR5cGUsIG9uZSBvZgo+PiArCS0g
+InJvY2tjaGlwLHJrMzI4OC1sdmRzIjsKPj4gKwo+PiArLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRk
+cmVzcyBvZiB0aGUgY29udHJvbGxlciBhbmQgbGVuZ3RoCj4+ICsJb2YgbWVtb3J5IG1hcHBlZCBy
+ZWdpb24uCj4+ICstIGNsb2NrczogbXVzdCBpbmNsdWRlIGNsb2NrIHNwZWNpZmllcnMgY29ycmVz
+cG9uZGluZyB0byBlbnRyaWVzIGluIHRoZQo+PiArCWNsb2NrLW5hbWVzIHByb3BlcnR5Lgo+PiAr
+LSBjbG9jay1uYW1lczogbXVzdCBjb250YWluICJwY2xrX2x2ZHMiCj4+ICsKPj4gKy0gYXZkZDF2
+MC1zdXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAxLjBWIGFuYWxvZyBwb3dlcgo+PiArLSBh
+dmRkMXY4LXN1cHBseTogcmVndWxhdG9yIHBoYW5kbGUgZm9yIDEuOFYgYW5hbG9nIHBvd2VyCj4+
+ICstIGF2ZGQzdjMtc3VwcGx5OiByZWd1bGF0b3IgcGhhbmRsZSBmb3IgMy4zViBhbmFsb2cgcG93
+ZXIKPj4gKwo+PiArLSByb2NrY2hpcCxncmY6IHBoYW5kbGUgdG8gdGhlIGdlbmVyYWwgcmVnaXN0
+ZXIgZmlsZXMgc3lzY29uCj4+ICsKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICstIHBpbmN0
+cmwtbmFtZXM6IG11c3QgY29udGFpbiBhICJsY2RjIiBlbnRyeS4KPj4gKy0gcGluY3RybC0wOiBw
+aW4gY29udHJvbCBncm91cCB0byBiZSB1c2VkIGZvciB0aGlzIGNvbnRyb2xsZXIuCj4+ICsKPj4g
+K1JlcXVpcmVkIG5vZGVzOgo+PiArCj4+ICtUaGUgbHZkcyBoYXMgdHdvIHZpZGVvIHBvcnRzIGFz
+IGRlc2NyaWJlZCBieQo+PiArCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRp
+YS92aWRlby1pbnRlcmZhY2VzLnR4dC4KPj4gK1RoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGVk
+IHVzaW5nIHRoZSBPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4KPj4gKwlEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Lgo+PiArCj4+ICstIHZpZGVvIHBvcnQg
+MCBmb3IgdGhlIFZPUCBpbnB1dHMKPj4gKy0gdmlkZW8gcG9ydCAxIGZvciBlaXRoZXIgYSBwYW5l
+bCBvciBzdWJzZXF1ZW50IGVuY29kZXIKPj4gKwo+PiArdGhlIGx2ZHMgcGFuZWwgZGVzY3JpYmVk
+IGJ5Cj4+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+c2ltcGxlLXBhbmVsLnR4dAo+PiArCj4+ICtQYW5lbCByZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiAr
+LSByb2NrY2hpcCxkYXRhLXdpZHRoIDogc2hvdWxkIGJlIDwxOD4gb3IgPDI0PjsKPj4gKy0gcm9j
+a2NoaXAsb3V0cHV0OiBzaG91bGQgYmUgInJnYiIsICJsdmRzIiBvciAiZHVhbGx2ZHMiLAo+PiAr
+CVRoaXMgZGVzY3JpYmVzIHRoZSBvdXRwdXQgZmFjZS4KPiAKPiBUaGVzZSBlaXRoZXIgYXJlbid0
+IG5lZWRlZCBvciBzaG91bGRuJ3QgYmUgUm9ja2NoaXAgc3BlY2lmaWMuIFByb2JhYmx5Cj4gdGhl
+IGZvcm1lciBiZWNhdXNlIG5vIG9uZSBlbHNlIGhhcyB0aGVtIHNvIGZhci4KPiAKcm9ja2NoaXAs
+ZGF0YS13aWR0aCB3aWxsIGJlIGRlbGV0ZWQgYW5kIHJvY2tjaGlwLG91dHB1dCB3aWxsIG1vdmVk
+IHRvIApsdmRzIGF0IG5leHQgdmVyc2lvbiB2Ni4KCj4+ICstIHBvcnRzIGZvciByZW1vdGUgTFZE
+UyBvdXRwdXQKPj4gKwo+PiArUGFuZWwgb3B0aW9uYWwgcHJvcGVydGllczoKPj4gKy0gcm9ja2No
+aXAsZGF0YS1tYXBwaW5nOiBzaG91bGQgYmUgInZlc2EiIG9yICJqZWlkYSIsCj4+ICsJVGhpcyBk
+ZXNjcmliZXMgaG93IHRoZSBjb2xvciBiaXRzIGFyZSBsYWlkIG91dCBpbiB0aGUKPj4gKwlzZXJp
+YWxpemVkIExWRFMgc2lnbmFsLgo+IAo+IFRoZXJlJ3MgYSBjb21tb24gcHJvcGVydHkgZm9yIHRo
+aXMuCj4gCkkgd2lsbHVzZSBkYXRhLW1hcHBpbmcgaW5zdGVhZCBvZiByb2NrY2hpcCxkYXRhLW1h
+cHBpbmcgYW5kIApyb2NrY2hpcCxkYXRhLXdpZHRoIGF0IG5leHQgdmVyc2lvbi4KCj4+ICtFeGFt
+cGxlOgo+PiArCj4+ICtsdmRzX3BhbmVsOiBsdmRzLXBhbmVsIHsKPj4gKwlzdGF0dXMgPSAib2th
+eSI7Cj4+ICsJY29tcGF0aWJsZSA9ICJzaW1wbGUtcGFuZWwiOwo+IAo+IE5vdCBhIHZhbGlkIGNv
+bXBhdGlibGUuIHNpbXBsZS1wYW5lbCBpcyBtb3JlIGEgZHJpdmVyLCB0aGFuIGEgYmluZGluZy4K
+PiAKVGhpcyB3aWxsIGJlIGZpeGVkIG5leHQgdmVyc2lvbiB2NjsKCj4+ICsJZW5hYmxlLWdwaW9z
+ID0gPCZncGlvNyAyMSBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwlyb2NrY2hpcCxkYXRhLW1hcHBp
+bmcgPSAiamVpZGEiOwo+PiArCXJvY2tjaGlwLGRhdGEtd2lkdGggPSA8MjQ+Owo+PiArCXJvY2tj
+aGlwLG91dHB1dCA9ICJyZ2IiOwo+PiArCj4+ICsJcG9ydHMgewo+PiArCQlwYW5lbF9pbl9sdmRz
+OiBlbmRwb2ludCB7Cj4+ICsJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHNfb3V0X3BhbmVsPjsK
+Pj4gKwkJfTsKPj4gKwl9Owo+PiArfTsKPj4gKwo+PiArRm9yIFJvY2tjaGlwIFJLMzI4ODoKPj4g
+Kwo+PiArCWx2ZHM6IGx2ZHNAZmY5NmMwMDAgewo+PiArCQljb21wYXRpYmxlID0gInJvY2tjaGlw
+LHJrMzI4OC1sdmRzIjsKPj4gKwkJcm9ja2NoaXAsZ3JmID0gPCZncmY+Owo+PiArCQlyZWcgPSA8
+MHhmZjk2YzAwMCAweDQwMDA+Owo+PiArCQljbG9ja3MgPSA8JmNydSBQQ0xLX0xWRFNfUEhZPjsK
+Pj4gKwkJY2xvY2stbmFtZXMgPSAicGNsa19sdmRzIjsKPj4gKwkJcGluY3RybC1uYW1lcyA9ICJs
+Y2RjIjsKPj4gKwkJcGluY3RybC0wID0gPCZsY2RjX2N0bD47Cj4+ICsJCWF2ZGQxdjAtc3VwcGx5
+ID0gPCZ2ZGQxMF9sY2Q+Owo+PiArCQlhdmRkMXY4LXN1cHBseSA9IDwmdmNjMThfbGNkPjsKPj4g
+KwkJYXZkZDN2My1zdXBwbHkgPSA8JnZjY2FfMzM+Owo+PiArCQlyb2NrY2hpcCxkYXRhLW1hcHBp
+bmcgPSAiamVpZGEiOwo+PiArCQlyb2NrY2hpcCxkYXRhLXdpZHRoID0gPDI0PjsKPj4gKwkJcm9j
+a2NoaXAsb3V0cHV0ID0gInJnYiI7Cj4+ICsJCXBvcnRzIHsKPj4gKwkJCSNhZGRyZXNzLWNlbGxz
+ID0gPDE+Owo+PiArCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4+ICsKPj4gKwkJCWx2ZHNfaW46IHBv
+cnRAMCB7Cj4+ICsJCQkJcmVnID0gPDA+Owo+PiArCj4+ICsJCQkJbHZkc19pbl92b3BiOiBlbmRw
+b2ludEAwIHsKPj4gKwkJCQkJcmVnID0gPDA+Owo+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
+JnZvcGJfb3V0X2x2ZHM+Owo+PiArCQkJCX07Cj4+ICsJCQkJbHZkc19pbl92b3BsOiBlbmRwb2lu
+dEAxIHsKPj4gKwkJCQkJcmVnID0gPDE+Owo+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZv
+cGxfb3V0X2x2ZHM+Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCj4+ICsJCQlsdmRzX291dDog
+cG9ydEAxIHsKPj4gKwkJCQlyZWcgPSA8MT47Cj4+ICsKPj4gKwkJCQlsdmRzX291dF9wYW5lbDog
+ZW5kcG9pbnQgewo+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsKPj4gKwkJ
+CQl9Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwl9Owo+PiAtLSAKPj4gMi43LjQKPj4KPj4KPiAK
+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4
+LXJvY2tjaGlwIG1haWxpbmcgbGlzdAo+IExpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5v
+cmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJv
+Y2tjaGlwCj4gCj4gCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
