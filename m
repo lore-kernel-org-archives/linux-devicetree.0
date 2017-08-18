@@ -1,79 +1,86 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] Unified fwnode endpoint parser
-Date: Fri, 18 Aug 2017 17:06:25 +0300
-Message-ID: <20170818140624.6tov4rgzwaxwrvqq@valkosipuli.retiisi.org.uk>
-References: <20170818112317.30933-1-sakari.ailus@linux.intel.com>
+From: Harvey Hunt <Harvey.Hunt@imgtec.com>
+Subject: Re: [PATCH] MIPS: dts: ralink: Add Mediatek MT7628A SoC
+Date: Fri, 18 Aug 2017 15:11:25 +0100
+Message-ID: <73251933-33bf-416d-cf2a-0fad0337a512@imgtec.com>
+References: <1502814530-40604-1-git-send-email-harvey.hunt@imgtec.com>
+ <20170817213426.34shgxwnjowcg4sk@rob-hp-laptop>
+ <97c83648-3710-cb9a-a065-9fbe8dd1b734@imgtec.com>
+ <CAL_Jsq+NZWkvibcL+CFWD8curFDKF2=bBzyCVsRyyiFOFwNBbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170818112317.30933-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+NZWkvibcL+CFWD8curFDKF2=bBzyCVsRyyiFOFwNBbg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, John Crispin <john@phrozen.org>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 02:23:14PM +0300, Sakari Ailus wrote:
-> Hi folks,
-> 
-> We have a large influx of new, unmerged, drivers that are now parsing
-> fwnode endpoints and each one of them is doing this a little bit
-> differently. The needs are still exactly the same for the graph data
-> structure is device independent. This is still a non-trivial task and the
-> majority of the driver implementations are buggy, just buggy in different
-> ways.
-> 
-> Facilitate parsing endpoints by adding a convenience function for parsing
-> the endpoints, and make the omap3isp driver use it as an example.
-> 
-> I plan to include the first patch to a pull request soonish, the second
-> could go in with the first user.
+Hi Rob,
 
-And now that a new patch has been added in front of the set, this means
-that 1 and 2 could IMO go in soonish whereas the third would go in later.
+On 18/08/17 15:04, Rob Herring wrote:
+> On Fri, Aug 18, 2017 at 4:42 AM, Harvey Hunt <Harvey.Hunt@imgtec.com> wrote:
+>> Hi Rob,
+>>
+>> Thanks for the review.
+>>
+>>
+>> On 17/08/17 22:34, Rob Herring wrote:
+>>>
+>>> On Tue, Aug 15, 2017 at 05:28:50PM +0100, Harvey Hunt wrote:
+>>>>
+>>>> The MT7628A is the successor to the MT7620 and pin compatible with the
+>>>> MT7688A, although the latter supports only a 1T1R antenna rather than
+>>>> a 2T2R antenna.
+> 
+> [...]
+> 
+>>>> +               uartlite@c00 {
+>>>
+>>>
+>>> serial@c00
+>>>
+>>> And so on. IOW, use standard, generic node names as defined in the DT
+>>> spec.
+>>
+>>
+>>
+>> The clocks for the UARTs are using the device names "uartlite", "uart1" and
+>> "uart2" (as defined in arch/mips/ralink/mt7620.c).
+> 
+> You can't add clocks to the DT? Looks like mt76x8 at least should be
+> pretty easy with some fixed clocks.
+> 
+> Depending if backwards compatibility (old dtb working on new kernel)
+> is a concern on these platforms, you could just change all the names
+> both in the kernel and dts.
+
+I don't think backwards compatibility will matter - the bootloaders I've 
+come across don't ship DTBs with them and I don't think there are any 
+ralink devices using the upstream MT7620 DT.
+
+John might have some thoughts on backwards compat though.
 
 > 
-> since v2:
+>> Changing the name of the DT nodes causes the serial driver to bail as it
+>> can't find the clock for the device.
+>>
+>> arch/mips/boot/dts/ralink/mt7620a.dtsi is already using the uartlite name,
+>> although it hasn't been documented...
 > 
-> - Rebase on CCP2 support patches.
+> Generally the kernel shouldn't care what the names are (though you can
+> match by name, it's not widely used).
 > 
-> - Prepend a patch cleaning up omap3isp driver a little.
+> In any case, I guess fixing this can be done later.
 > 
-> since v1:
-> 
-> - The first patch has been merged (it was a bugfix).
-> 
-> - In anticipation that the parsing can take place over several iterations,
->   take the existing number of async sub-devices into account when
->   re-allocating an array of async sub-devices.
-> 
-> - Rework the first patch to better anticipate parsing single endpoint at a
->   time by a driver.
-> 
-> - Add a second patch that adds a function for parsing endpoints one at a
->   time based on port and endpoint numbers.
-> 
-> Sakari Ailus (3):
->   omap3isp: Drop redundant isp->subdevs field and ISP_MAX_SUBDEVS
->   v4l: fwnode: Support generic parsing of graph endpoints in a device
->   v4l: fwnode: Support generic parsing of graph endpoints in a single
->     port
-> 
->  drivers/media/platform/omap3isp/isp.c | 116 +++++++---------------
->  drivers/media/platform/omap3isp/isp.h |   3 -
->  drivers/media/v4l2-core/v4l2-fwnode.c | 176 ++++++++++++++++++++++++++++++++++
->  include/media/v4l2-async.h            |   4 +-
->  include/media/v4l2-fwnode.h           |  16 ++++
->  5 files changed, 231 insertions(+), 84 deletions(-)
-> 
-> -- 
-> 2.11.0
+> Rob
 > 
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shall I respin this patch with the earlier nodes (intc etc) renamed and 
+then send a patch later to rename the serial ports in the DT and kernel 
+(assuming there are no backwards compatibility issues)?
+
+Thanks,
+
+Harvey
