@@ -1,93 +1,49 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFCv3 usb-next 2/3] usb: host: add a generic platform USB
- roothub driver
-Date: Fri, 18 Aug 2017 13:47:59 +0800
-Message-ID: <1503035279.17567.5.camel@mhfsdcap03>
-References: <20170814224542.18257-1-martin.blumenstingl@googlemail.com>
-         <20170814224542.18257-3-martin.blumenstingl@googlemail.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH v2 03/16] dmaengine: bcm-sba-raid: Common flags for
+ sba_request state and fence
+Date: Fri, 18 Aug 2017 11:35:51 +0530
+Message-ID: <CAALAos-UJ4QLbtyE0XzPR=HepDH1m4YnLQG=nTwaL47991F7vw@mail.gmail.com>
+References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
+ <1501583880-32072-4-git-send-email-anup.patel@broadcom.com>
+ <20170817034534.GY3053@localhost> <CAALAos8HhiGO3XHDS3ia5G51TmYWGeY9aSzCBDoWKSqr195Meg@mail.gmail.com>
+ <20170818052501.GD3053@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170814224542.18257-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170818052501.GD3053@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-15 at 00:45 +0200, Martin Blumenstingl wrote:
-> Many SoC platforms have separate devices for the USB PHY which are
-> registered through the generic PHY framework. These PHYs have to be
-> enabled to make the USB controller actually work. They also have to be
-> disabled again on shutdown/suspend.
-> 
-> Currently (at least) the following HCI platform drivers are using custom
-> code to obtain all PHYs via devicetree for the roothub/controller and
-> disable/enable them when required:
-> - ehci-platform.c has ehci_platform_power_{on,off}
-> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
-> - ohci-platform.c has ohci_platform_power_{on,off}
-> 
-> These drivers are not using the generic devicetree USB device bindings
-> yet which were only introduced recently (documentation is available in
-> devicetree/bindings/usb/usb-device.txt).
-> With this new driver the usb2-phy and usb3-phy can be specified directly
-> in the child-node of the corresponding port of the roothub via
-> devicetree. This can be extended by not just parsing PHYs (some of the
-> other drivers listed above are for example also parsing a list of clocks
-> as well) when required.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  drivers/usb/host/Kconfig            |   3 +
->  drivers/usb/host/Makefile           |   2 +
->  drivers/usb/host/platform-roothub.c | 180 ++++++++++++++++++++++++++++++++++++
->  drivers/usb/host/platform-roothub.h |  12 +++
->  4 files changed, 197 insertions(+)
->  create mode 100644 drivers/usb/host/platform-roothub.c
->  create mode 100644 drivers/usb/host/platform-roothub.h
-> 
+On Fri, Aug 18, 2017 at 10:55 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Fri, Aug 18, 2017 at 10:26:54AM +0530, Anup Patel wrote:
+>> On Thu, Aug 17, 2017 at 9:15 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+>> > On Tue, Aug 01, 2017 at 04:07:47PM +0530, Anup Patel wrote:
+>> >> This patch merges sba_request state and fence into common
+>> >> sba_request flags. Also, in-future we can extend sba_request
+>> >> flags as required.
+>> >
+>> > and it also changes the flag values to bits, which I have no idea why that
+>> > was done, care to explain that please...
+>>
+>> I thought its better to have separate bit each sba_request state so
+>> that when a sba_request is accidentally in two states then we can
+>> debug better.
+>
+> that is fine, but you need to comminucate the motivation behind such a
+> change!!
 
-Tested-by: Chunfeng Yun<chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Okay, I will add this info to commit description.
 
+>
+>>
+>> I will restore state values.
+>
+> either ways am okay, but if we are not using bits smartly then why to change
 
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index fa5692dec832..b8b05c786b2a 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -805,6 +805,9 @@ config USB_HCD_SSB
->  
->  	  If unsure, say N.
->  
-> +config USB_PLATFORM_ROOTHUB
-> +	bool
-> +
->  config USB_HCD_TEST_MODE
->  	bool "HCD test mode support"
->  	---help---
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index cf2691fffcc0..dc817f82d632 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
->  
->  obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
->  
-> +obj-$(CONFIG_USB_PLATFORM_ROOTHUB)	+= platform-roothub.o
-> +
->  obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
->  obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
->  obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
-> diff --git a/drivers/usb/host/platform-roothub.c b/drivers/usb/host/platform-roothub.c
-> new file mode 100644
-> index 000000000000..70d2d97aa8b2
-> --- /dev/null
-> +++ b/drivers/usb/host/platform-roothub.c
-> @@ -0,0 +1,180 @@
-[...]
+Okay, I will keep new state values as-is and only update commit
+description.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Anup
