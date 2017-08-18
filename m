@@ -1,87 +1,71 @@
-From: Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
-Date: Fri, 18 Aug 2017 20:58:29 +0530
-Message-ID: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, sboyd@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kiran Gunda <kgunda@codeaurora.org>, Abhijeet Dharmapurikar <adharmap@codeaurora.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: shawnguo@kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] pwm: rockchip: Add APB and function both clocks
+ support
+Date: Fri, 18 Aug 2017 17:31:35 +0200
+Message-ID: <20170818153135.GB18307@ulmo>
+References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
+ <1502206715-24174-2-git-send-email-david.wu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1502206715-24174-2-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The peripheral ownership check is not necessary on single master
-platforms. Hence, enforce the peripheral ownership check optionally.
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-Tested-by: Shawn Guo <shawnguo@kernel.org>
----
-v2:
-	Fixed the commit message.
-	Added Shawn's 'Tested-by' tag.
+--KFztAG8eRSV9hGtP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v1:
-	This patch depends on the below patch series. Please take this patch
-	along with this series.
+On Tue, Aug 08, 2017 at 11:38:29PM +0800, David Wu wrote:
+> New PWM module provides two individual clocks for APB clock
+> and function clock.
+>=20
+> Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> changes in v3:
+>  - clk_get with NULL argument again if it was error, when clk_get with "p=
+wm" argument.
+>  - To get clk count, use of_count_phandle_with_args instead of of_propert=
+y_count_strings.
+>=20
+>  .../devicetree/bindings/pwm/pwm-rockchip.txt       |  8 ++-
+>  drivers/pwm/pwm-rockchip.c                         | 58 ++++++++++++++++=
+++----
+>  2 files changed, 56 insertions(+), 10 deletions(-)
 
-	[PATCH V2 00/12]: spmi: pmic-arb: Support for HW v5 and other fixes
+Applied to for-4.14/drivers, thanks.
 
- Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt | 6 ++++++
- drivers/spmi/spmi-pmic-arb.c                                  | 7 ++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+Thierry
 
-diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-index e16b9b5..da708e8 100644
---- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-+++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-@@ -42,6 +42,10 @@ Required properties:
-     cell 4: interrupt flags indicating level-sense information, as defined in
-             dt-bindings/interrupt-controller/irq.h
- 
-+Optional properties:
-+- qcom,enforce-ownership : A boolean property. If defined the peripheral
-+			   ownership check is enforced. Otherwise the ownership
-+			   check is ignored.
- Example:
- 
- 	spmi {
-@@ -62,4 +66,6 @@ Example:
- 
- 		interrupt-controller;
- 		#interrupt-cells = <4>;
-+
-+		qcom,enforce-ownership;
- 	};
-diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
-index ca9bdd3..354c949 100644
---- a/drivers/spmi/spmi-pmic-arb.c
-+++ b/drivers/spmi/spmi-pmic-arb.c
-@@ -167,6 +167,7 @@ struct spmi_pmic_arb {
- 	u16			*ppid_to_apid;
- 	u16			last_apid;
- 	struct apid_data	apid_data[PMIC_ARB_MAX_PERIPHS];
-+	bool			enforce_ownership;
- };
- 
- /**
-@@ -707,7 +708,8 @@ static int qpnpint_irq_domain_dt_translate(struct irq_domain *d,
- 	}
- 
- 	apid = rc;
--	if (pmic_arb->apid_data[apid].irq_ee != pmic_arb->ee) {
-+	if (pmic_arb->enforce_ownership &&
-+			pmic_arb->apid_data[apid].irq_ee != pmic_arb->ee) {
- 		dev_err(&pmic_arb->spmic->dev, "failed to xlate sid = %#x, periph = %#x, irq = %u: ee=%u but owner=%u\n",
- 			intspec[0], intspec[1], intspec[2], pmic_arb->ee,
- 			pmic_arb->apid_data[apid].irq_ee);
-@@ -1236,6 +1238,9 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
- 	}
- 
- 	pmic_arb->ee = ee;
-+	pmic_arb->enforce_ownership =
-+	    of_property_read_bool(pdev->dev.of_node, "qcom,enforce-ownership");
-+
- 	mapping_table = devm_kcalloc(&ctrl->dev, PMIC_ARB_MAX_PERIPHS,
- 					sizeof(*mapping_table), GFP_KERNEL);
- 	if (!mapping_table) {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--KFztAG8eRSV9hGtP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmXCFcACgkQ3SOs138+
+s6EXURAApMbJYPOsD8nohmlo+4mCpFDpw6ON+7GP7LnPUZs/fVYxlWP239kfZ+1A
+LiGVjYaySfA+Z+Njq15PZgPQQp/6SBBAYREJJVhTr0sUh7AIJZHB65IEM3IFFrBS
+B8NHOl9YlqSUCigL9FcaCVo3QjcnvnKygAmgJWjjb2n9lI7DwtaD2AFTMhB7A3WA
+qXc1G0Yam2tIUeHtfzq1J/8gitmMtZbLXNTEkVzA8VdL7cEVNMbcNOlrqB6OLMDK
+cJh7Id3sYPIjZEM63gYsVc797ZcF01kDz0FONifW7KA9LjXwwg2V+sUxlknNiSLc
+dNMKdSHfbSCp5uVv7VHbpFa+b7nhlxAnStKMmj0M/MdswEEpaRKgWmidpMkyRT5P
+bRAx3ZUu54X0kkN2dEVuLLwoPJDJtFteMHid3g9o6INeRv4T9eseDb1YHO8Ad6tJ
+PVEsE7II5h2XdvUsXhL1fIe2v7N8pZvWB753gREzxgFU+7qoiyEHR4Kw4dgqpBkX
+Blw/xY0KxyoClugSt9MnBoR+plK9QwymfOnO9n7wnp3LWYfG3DA/VFhxve3ayqZE
+6B4cAMjs0MSZe65NJn4nq4WTToMKVvRB92H91GttZMebXF1vQhl3FOzxIhDHtik0
+6BdjwIFnHl7yPeE2gyITe5aHivEOL6ReEVoDwZtnDzYdbV6hZCg=
+=jUMz
+-----END PGP SIGNATURE-----
+
+--KFztAG8eRSV9hGtP--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
