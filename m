@@ -1,26 +1,30 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: apm: fix PCI bus dtc warnings
-Date: Fri, 18 Aug 2017 23:18:13 +0200
-Message-ID: <CAK8P3a1=3+jOecVrnE9eSeirsekCwbUOe2AbL9ycFt+=bX+JSA@mail.gmail.com>
-References: <20170726210943.6875-1-robh@kernel.org> <20170726210943.6875-5-robh@kernel.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 4/8] ARM: dts: rockchip: add pwm dt node for rv1108
+Date: Sat, 19 Aug 2017 00:51:20 +0200
+Message-ID: <7232722.hES1xTI2s5@phil>
+References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com> <1502700026-8516-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170726210943.6875-5-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1502700026-8516-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 11:09 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> dtc recently added PCI bus checks. Fix these warnings.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Am Montag, 14. August 2017, 16:40:26 CEST schrieb Andy Yan:
+> Add pwm device tree node for rv1108 soc
+> 
+> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
 
-Applied to next/dt64, thanks!
+applied for 4.14, after properly sorting properties
+and adding a missing newline.
 
-     Arnd
+
+Thanks
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
