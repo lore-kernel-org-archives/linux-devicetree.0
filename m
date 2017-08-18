@@ -1,25 +1,25 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 7/7] arm64: dts: rockchip: Add pwm nodes for rk3328
-Date: Sat, 19 Aug 2017 01:06:43 +0200
-Message-ID: <2426743.6zMP1RcfyD@phil>
-References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com> <1502206995-24418-1-git-send-email-david.wu@rock-chips.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix wrong rt5514 dmic delay property for Gru
+Date: Sat, 19 Aug 2017 01:07:43 +0200
+Message-ID: <2229813.qu8LfHYij4@phil>
+References: <20170818144808.27869-1-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1502206995-24418-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: thierry.reding@gmail.com, boris.brezillon@free-electrons.com, robh+dt@kernel.org, catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170818144808.27869-1-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, briannorris@chromium.org, broonie@kernel.org, dianders@chromium.org, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 8. August 2017, 23:43:15 CEST schrieb David Wu:
-> There are 4 pwm channels built in rk3328 soc, need to configure
-> the both APB clock and bus clock.
+Am Freitag, 18. August 2017, 22:48:08 CEST schrieb Jeffy Chen:
+> According to rt5514 dt-binding, it should be "realtek,dmic-init-delay-ms".
 > 
-> Signed-off-by: David Wu <david.wu@rock-chips.com>
+> Fixes: 48f4d9796d99 (arm64: dts: rockchip: add Gru/Kevin DTS)
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 
-applied for 4.14 with some property movements.
+applied for 4.14
 
 
 Thanks
