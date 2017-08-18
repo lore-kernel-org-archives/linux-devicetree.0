@@ -1,295 +1,126 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v9 3/3] PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-Date: Fri, 18 Aug 2017 12:59:53 +0530
-Message-ID: <1503041393-19593-4-git-send-email-varada@codeaurora.org>
-References: <1503041393-19593-1-git-send-email-varada@codeaurora.org>
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: RE: [PATCH] arm64: dts: ls1088a: Add USB support
+Date: Fri, 18 Aug 2017 07:48:19 +0000
+Message-ID: <VI1PR04MB1262662395B8CD06BAF074CFE9800@VI1PR04MB1262.eurprd04.prod.outlook.com>
+References: <1502938358-23522-1-git-send-email-yinbo.zhu@nxp.com>
+ <20170817140232.GE7608@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503041393-19593-1-git-send-email-varada@codeaurora.org>
+In-Reply-To: <20170817140232.GE7608@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>, smuthayy <smuthayy@codeaurora.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Harninder Rai <harninder.rai@nxp.com>, Andy Tang <andy.tang@nxp.com>, "open list:" <devicetree@vger.kernel.org>, Ashish Kumar <ashish.kumar@nxp.com>, open list <linux-kernel@vger.kernel.org>, Raghav Dogra <raghav.dogra@nxp.com>, "moderated list:" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
-Gen 1/2, one lane, two PCIe root complex with support for MSI and
-legacy interrupts, and it conforms to PCI Express Base 2.1
-specification.
 
-The core init is the similar to the existing SoC, however the
-clocks and reset lines differ.
 
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Signed-off-by: smuthayy <smuthayy@codeaurora.org>
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- drivers/pci/dwc/pcie-qcom.c | 210 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 209 insertions(+), 1 deletion(-)
+-----Original Message-----
+From: Shawn Guo [mailto:shawnguo@kernel.org]=20
+Sent: Thursday, August 17, 2017 10:03 PM
+To: Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc: linux-devel@gforge.freescale.net; Rob Herring <robh+dt@kernel.org>; Mar=
+k Rutland <mark.rutland@arm.com>; Catalin Marinas <catalin.marinas@arm.com>=
+; Will Deacon <will.deacon@arm.com>; Harninder Rai <harninder.rai@nxp.com>;=
+ Andy Tang <andy.tang@nxp.com>; open list: <devicetree@vger.kernel.org>; As=
+hish Kumar <ashish.kumar@nxp.com>; open list <linux-kernel@vger.kernel.org>=
+; Raghav Dogra <raghav.dogra@nxp.com>; moderated list: <linux-arm-kernel@li=
+sts.infradead.org>
+Subject: Re: [PATCH] arm64: dts: ls1088a: Add USB support
 
-diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
-index 4ec5cd9..6f6dbde 100644
---- a/drivers/pci/dwc/pcie-qcom.c
-+++ b/drivers/pci/dwc/pcie-qcom.c
-@@ -37,6 +37,20 @@
- #include "pcie-designware.h"
- 
- #define PCIE20_PARF_SYS_CTRL			0x00
-+#define MST_WAKEUP_EN				BIT(13)
-+#define SLV_WAKEUP_EN				BIT(12)
-+#define MSTR_ACLK_CGC_DIS			BIT(10)
-+#define SLV_ACLK_CGC_DIS			BIT(9)
-+#define CORE_CLK_CGC_DIS			BIT(6)
-+#define AUX_PWR_DET				BIT(4)
-+#define L23_CLK_RMV_DIS				BIT(2)
-+#define L1_CLK_RMV_DIS				BIT(1)
+On Thu, Aug 17, 2017 at 10:52:38AM +0800, yinbo.zhu@nxp.com wrote:
+> From: "yinbo.zhu" <yinbo.zhu@nxp.com>
+>=20
+> Fix the issue that usb is not detected on ls1088ardb
+>=20
+> Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 18 +++++++++++++++++=
 +
-+#define PCIE20_COMMAND_STATUS			0x04
-+#define CMD_BME_VAL				0x4
-+#define PCIE20_DEVICE_CONTROL2_STATUS2		0x98
-+#define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-+
- #define PCIE20_PARF_PHY_CTRL			0x40
- #define PCIE20_PARF_PHY_REFCLK			0x4C
- #define PCIE20_PARF_DBI_BASE_ADDR		0x168
-@@ -58,9 +72,21 @@
- #define CFG_BRIDGE_SB_INIT			BIT(0)
- 
- #define PCIE20_CAP				0x70
-+#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + 0xc)
-+#define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT	(BIT(10) | BIT(11))
-+#define PCIE20_CAP_LINK_1			(PCIE20_CAP + 0x14)
-+#define PCIE_CAP_LINK1_VAL			0x2fd7f
-+
-+#define PCIE20_PARF_Q2A_FLUSH			0x1ac
-+
-+#define PCIE20_MISC_CONTROL_1_REG		0x8bc
-+#define DBI_RO_WR_EN				1
- 
- #define PERST_DELAY_US				1000
- 
-+#define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-+#define SLV_ADDR_SPACE_SZ			0x10000000
-+
- struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
- 	struct clk *core_clk;
-@@ -110,10 +136,20 @@ struct qcom_pcie_resources_2_4_0 {
- 	struct reset_control *phy_ahb_reset;
- };
- 
-+struct qcom_pcie_resources_2_3_3 {
-+	struct clk *iface;
-+	struct clk *axi_m_clk;
-+	struct clk *axi_s_clk;
-+	struct clk *ahb_clk;
-+	struct clk *aux_clk;
-+	struct reset_control *rst[7];
-+};
-+
- union qcom_pcie_resources {
- 	struct qcom_pcie_resources_1_0_0 v1_0_0;
- 	struct qcom_pcie_resources_2_1_0 v2_1_0;
- 	struct qcom_pcie_resources_2_3_2 v2_3_2;
-+	struct qcom_pcie_resources_2_3_3 v2_3_3;
- 	struct qcom_pcie_resources_2_4_0 v2_4_0;
- };
- 
-@@ -895,6 +931,169 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
- 	return ret;
- }
- 
-+static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int i;
-+	const char *rst_names[] = { "axi_m", "axi_s", "pipe",
-+				    "axi_m_sticky", "sticky",
-+				    "ahb", "sleep", };
-+
-+	res->iface = devm_clk_get(dev, "iface");
-+	if (IS_ERR(res->iface))
-+		return PTR_ERR(res->iface);
-+
-+	res->axi_m_clk = devm_clk_get(dev, "axi_m");
-+	if (IS_ERR(res->axi_m_clk))
-+		return PTR_ERR(res->axi_m_clk);
-+
-+	res->axi_s_clk = devm_clk_get(dev, "axi_s");
-+	if (IS_ERR(res->axi_s_clk))
-+		return PTR_ERR(res->axi_s_clk);
-+
-+	res->ahb_clk = devm_clk_get(dev, "ahb");
-+	if (IS_ERR(res->ahb_clk))
-+		return PTR_ERR(res->ahb_clk);
-+
-+	res->aux_clk = devm_clk_get(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	for (i = 0; i < ARRAY_SIZE(rst_names); i++) {
-+		res->rst[i] = devm_reset_control_get(dev, rst_names[i]);
-+		if (IS_ERR(res->rst[i]))
-+			return PTR_ERR(res->rst[i]);
-+	}
-+
-+	return 0;
-+}
-+
-+static void qcom_pcie_deinit_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+
-+	clk_disable_unprepare(res->iface);
-+	clk_disable_unprepare(res->axi_m_clk);
-+	clk_disable_unprepare(res->axi_s_clk);
-+	clk_disable_unprepare(res->ahb_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+}
-+
-+static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int i, ret;
-+	u32 val;
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-+		ret = reset_control_assert(res->rst[i]);
-+		if (ret) {
-+			dev_err(pcie->pci->dev,
-+				"%s: reset assert failed for %d\n",
-+				__func__, i);
-+			return ret;
-+		}
-+	}
-+
-+	usleep_range(2000, 2500);
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-+		ret = reset_control_deassert(res->rst[i]);
-+		if (ret) {
-+			dev_err(pcie->pci->dev,
-+				"%s: reset deassert failed for %d\n",
-+				__func__, i);
-+			return ret;
-+		}
-+	}
-+
-+	/*
-+	 * Don't have a way to see if the reset has completed.
-+	 * Wait for some time.
-+	 */
-+	usleep_range(2000, 2500);
-+
-+	ret = clk_prepare_enable(res->iface);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_iface;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_m_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_axi_m;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_s_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable axi slave clock\n");
-+		goto err_clk_axi_s;
-+	}
-+
-+	ret = clk_prepare_enable(res->ahb_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ahb clock\n");
-+		goto err_clk_ahb;
-+	}
-+
-+	ret = clk_prepare_enable(res->aux_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_clk_aux;
-+	}
-+
-+	writel(SLV_ADDR_SPACE_SZ,
-+		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-+	val &= ~BIT(0);
-+	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
-+		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-+		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
-+		pcie->parf + PCIE20_PARF_SYS_CTRL);
-+	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
-+
-+	writel(CMD_BME_VAL, pci->dbi_base + PCIE20_COMMAND_STATUS);
-+	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
-+	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + PCIE20_CAP_LINK_1);
-+
-+	val = readl(pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
-+	val &= ~PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT;
-+	writel(val, pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
-+
-+	writel(PCIE_CAP_CPL_TIMEOUT_DISABLE, pci->dbi_base +
-+		PCIE20_DEVICE_CONTROL2_STATUS2);
-+
-+	return 0;
-+
-+err_clk_aux:
-+	clk_disable_unprepare(res->ahb_clk);
-+err_clk_ahb:
-+	clk_disable_unprepare(res->axi_s_clk);
-+err_clk_axi_s:
-+	clk_disable_unprepare(res->axi_m_clk);
-+err_clk_axi_m:
-+	clk_disable_unprepare(res->iface);
-+err_clk_iface:
-+	/*
-+	 * Not checking for failure, will anyway return
-+	 * the original failure in 'ret'.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
-+		reset_control_assert(res->rst[i]);
-+
-+	return ret;
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 val = readw(pci->dbi_base + PCIE20_CAP + PCI_EXP_LNKSTA);
-@@ -1003,6 +1202,14 @@ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 2.3.3	Synopsys IP rev.: 4.30a */
-+static const struct qcom_pcie_ops ops_2_3_3 = {
-+	.get_resources = qcom_pcie_get_resources_2_3_3,
-+	.init = qcom_pcie_init_2_3_3,
-+	.deinit = qcom_pcie_deinit_2_3_3,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+};
-+
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- };
-@@ -1093,10 +1300,11 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id qcom_pcie_match[] = {
-+	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
- 	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
- 	{ .compatible = "qcom,pcie-apq8064", .data = &ops_2_1_0 },
--	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
-+	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
- 	{ }
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>  2 files changed, 26 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm=
+64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> index e9276a5..949cd67 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> @@ -145,6 +145,14 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +&usb0 {
+> +	status =3D "okay";
+> +};
+> +
+> +&usb1 {
+> +	status =3D "okay";
+> +};
+> +
+>  &esdhc {
+>  	status =3D "okay";
+>  };
+
+Sort the labelled node alphabetically.
+
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/=
+boot/dts/freescale/fsl-ls1088a.dtsi
+> index 3a3be87..0dbff29 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -458,6 +458,24 @@
+>  			status =3D "disabled";
+>  		};
+> =20
+> +		usb0: usb3@3100000 {
+> +			compatible =3D "snps,dwc3";
+> +			reg =3D <0x0 0x3100000 0x0 0x10000>;
+> +			interrupts =3D <0 80 0x4>; /* Level high type */
+
+Use IRQ_TYPE_LEVEL_HIGH, so that you can save the comment.
+
+> +			dr_mode =3D "host";
+> +			configure-gfladj;
+
+What is this?  I do not see it in upstream kernel.
+
+> +			snps,dis_rxdet_inp3_quirk;
+
+You probably need a "disabled" status.
+
+Shawn
+
+Hi Shawn,
+
+ About your description " You probably need a "disabled" status."
+ Your meaning is that remove the property "snps,dis_rxdet_inp3_quirk;", isn=
+'t it?
+ In fact, if remove the property , 1088ardb usb will doesn't detect.
+
+Yinbo
+
+> +		};
+> +
+> +		usb1: usb3@3110000 {
+> +			compatible =3D "snps,dwc3";
+> +			reg =3D <0x0 0x3110000 0x0 0x10000>;
+> +			interrupts =3D <0 81 0x4>; /* Level high type */
+> +			dr_mode =3D "host";
+> +			configure-gfladj;
+> +			snps,dis_rxdet_inp3_quirk;
+> +		};
+> +
+>  		sata: sata@3200000 {
+>  			compatible =3D "fsl,ls1088a-ahci";
+>  			reg =3D <0x0 0x3200000 0x0 0x10000>,
+> --=20
+> 2.1.0.27.g96db324
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
