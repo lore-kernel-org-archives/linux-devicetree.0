@@ -1,65 +1,42 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v3 1/4] ARM: dts: sunxi: h3/h5: represent the mdio switch used by sun8i-h3-emac
-Date: Fri, 18 Aug 2017 14:21:15 +0200
-Message-ID: <20170818122118.4925-2-clabbe.montjoie@gmail.com>
-References: <20170818122118.4925-1-clabbe.montjoie@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170818122118.4925-1-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, peppe.cavallaro@st.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Add ZTE zx-irdec remote control driver
+Date: Fri, 18 Aug 2017 20:54:20 +0800
+Message-ID: <20170818125418.GM7608@dragon>
+References: <1501420993-21977-1-git-send-email-shawnguo@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1501420993-21977-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Young <sean-hENCXIMQXOg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baoyou Xie <xie.baoyou-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Xin Zhou <zhou.xin8-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Since dwmac-sun8i could use either an integrated PHY or an external PHY
-(which could be at same MDIO address), we need to represent this selection
-by a MDIO switch.
+On Sun, Jul 30, 2017 at 09:23:10PM +0800, Shawn Guo wrote:
+> From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> The series adds dt-bindings and remote control driver for IRDEC block
+> found on ZTE ZX family SoCs.
+> 
+> Changes for v2:
+>  - Add one patch to move generic NEC scancode composing and protocol
+>    type detection code from ir_nec_decode() into an inline shared
+>    function, which can be reused by zx-irdec driver.
+> 
+> Shawn Guo (3):
+>   rc: ir-nec-decoder: move scancode composing code into a shared
+>     function
+>   dt-bindings: add bindings document for zx-irdec
+>   rc: add zx-irdec remote control driver
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+Hi Sean,
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 4b599b5d26f6..74fdfcc9dfd3 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -417,14 +417,32 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 
--			mdio: mdio {
-+			mdio_parent: mdio {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				int_mii_phy: ethernet-phy@1 {
--					compatible = "ethernet-phy-ieee802.3-c22";
-+			};
-+			mdio-mux {
-+				compatible = "allwinner,sun8i-h3-mdio-switch";
-+				mdio-parent-bus = <&mdio_parent>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				internal_mdio: mdio@1 {
- 					reg = <1>;
--					clocks = <&ccu CLK_BUS_EPHY>;
--					resets = <&ccu RST_BUS_EPHY>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					int_mii_phy: ethernet-phy@1 {
-+						compatible = "ethernet-phy-ieee802.3-c22";
-+						reg = <1>;
-+						clocks = <&ccu CLK_BUS_EPHY>;
-+						resets = <&ccu RST_BUS_EPHY>;
-+						phy-is-integrated;
-+					};
-+				};
-+				mdio: mdio@0 {
-+					reg = <0>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
- 				};
- 			};
- 		};
--- 
-2.13.0
+We are getting close to 4.14 merge window.  Can we get this into -next
+for a bit exposure, if you are fine with the patches?
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
