@@ -1,67 +1,150 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/4] drivers: soc: sunxi: fix error
- processing on base address when claiming
-Date: Fri, 18 Aug 2017 14:29:35 +0800
-Message-ID: <CAGb2v67Mxq+y6mEKQ10y+vod5mxT=0Kz8dMPKC46By2-LO3EAg@mail.gmail.com>
-References: <20170809085627.32687-1-icenowy@aosc.io> <20170809085627.32687-3-icenowy@aosc.io>
- <CAGb2v67F6xUOE9sJsBgpOn2kRoG2S-aoWrtTsjON64o2pzeXjA@mail.gmail.com> <94408FC0-D7F8-4050-936E-F350029DAB9F@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 3/5] iio: srf08: add triggered buffer support
+Date: Fri, 18 Aug 2017 07:56:05 +0100
+Message-ID: <20170818075552.225551a2@archlinux>
+References: <20170816193406.GA24427@arbeit>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ4S3LGAKGQEUQMRN6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <94408FC0-D7F8-4050-936E-F350029DAB9F-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170816193406.GA24427@arbeit>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 2:23 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->
->
-> =E4=BA=8E 2017=E5=B9=B48=E6=9C=8818=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-2:21:07, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> =E5=86=99=E5=88=B0:
->>Hi,
->>
->>On Wed, Aug 9, 2017 at 4:56 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->>> When claiming SRAM, if the base is set to an error, it means that the
->>> SRAM controller has been probed, but failed to remap the controller
->>> memory zone. If the base is zero, thus the SRAM controller should be
->>not
->>> probed at all, and it should return -EPROBE_DEFER. However, currently
->>we
->>> returned -EPROBE_DEFER in the former situation, and ignored the
->>latter
->>> situation (which will lead to the kernel to panic).
->>>
->>> Fix the behavior on abnormal base address processing when claiming.
->>
->>Could you describe how you actually ran into this? The failure seems
->>unlikely for a properly written device tree.
->
-> In fact it's possible, as the probe defering used to be broken.
->
-> On the A64 situation, the SRAM is referenced by the DE2 CCU driver, which
-> will be probed very early -- before SRAM is probed, and the problem happe=
-ns.
+On Wed, 16 Aug 2017 21:34:06 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-OK. I see it's because the DE block's address if before almost everything
-else. I was wondering why we never ran into this before.
+> Add support for triggered buffers.
+> 
+> Data format is quite simple:
+>   distance     16 Bit
+>   alignment    48 Bit
+>   timestamp    64 Bit
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 
-Given there are no actual users in the kernel that could trigger this,
-I'll queue this for 4.14 instead.
+One little improvement I noticed inline that an additional unlocked
+reading function would tidy up.
 
-ChenYu
+Thanks,
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Jonathan
+> ---
+>  drivers/iio/proximity/srf08.c | 60 ++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 57 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
+> index 3f19536f215f..de699d67310a 100644
+> --- a/drivers/iio/proximity/srf08.c
+> +++ b/drivers/iio/proximity/srf08.c
+> @@ -18,6 +18,9 @@
+>  #include <linux/bitops.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+>  
+>  /* registers of SRF08 device */
+>  #define SRF08_WRITE_COMMAND	0x00	/* Command Register */
+> @@ -35,9 +38,22 @@
+>  
+>  struct srf08_data {
+>  	struct i2c_client	*client;
+> -	int			sensitivity;		/* Gain */
+> -	int			range_mm;		/* max. Range in mm */
+> +
+> +	/*
+> +	 * Gain in the datasheet is called sensitivity here to distinct it
+> +	 * from the gain used with amplifiers of adc's
+> +	 */
+> +	int			sensitivity;
+> +
+> +	/* max. Range in mm */
+> +	int			range_mm;
+>  	struct mutex		lock;
+> +
+> +	/*
+> +	 * triggered buffer
+> +	 * 1x16-bit channel + 3x16 padding + 4x16 timestamp
+> +	 */
+> +	s16			buffer[8];
+>  };
+>  
+>  /*
+> @@ -110,6 +126,29 @@ static int srf08_read_ranging(struct srf08_data *data)
+>  	return ret;
+>  }
+>  
+> +static irqreturn_t srf08_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct srf08_data *data = iio_priv(indio_dev);
+> +	s16 sensor_data;
+> +
+
+There is a bit of lock bouncing going on here where you take the lock
+inside srf08_read_ranging drop it at the end and immediately
+retake it.  
+
+Introduce an unlocked version of read_ranging and hold the lock over
+the whole cycle.
+> +	sensor_data = srf08_read_ranging(data);
+> +	if (sensor_data < 0)
+> +		goto err;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	data->buffer[0] = sensor_data;
+> +	iio_push_to_buffers_with_timestamp(indio_dev,
+> +						data->buffer, pf->timestamp);
+> +
+> +	mutex_unlock(&data->lock);
+> +err:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int srf08_read_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *channel, int *val,
+>  			    int *val2, long mask)
+> @@ -323,7 +362,15 @@ static const struct iio_chan_spec srf08_channels[] = {
+>  		.info_mask_separate =
+>  				BIT(IIO_CHAN_INFO_RAW) |
+>  				BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = 0,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_CPU,
+> +		},
+>  	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(1),
+>  };
+>  
+>  static const struct iio_info srf08_info = {
+> @@ -362,6 +409,13 @@ static int srf08_probe(struct i2c_client *client,
+>  
+>  	mutex_init(&data->lock);
+>  
+> +	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
+> +			iio_pollfunc_store_time, srf08_trigger_handler, NULL);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "setup of iio triggered buffer failed\n");
+> +		return ret;
+> +	}
+> +
+>  	/*
+>  	 * set default values of device here
+>  	 * these register values cannot be read from the hardware
+> @@ -402,5 +456,5 @@ static struct i2c_driver srf08_driver = {
+>  module_i2c_driver(srf08_driver);
+>  
+>  MODULE_AUTHOR("Andreas Klinger <ak@it-klinger.de>");
+> -MODULE_DESCRIPTION("Devantech SRF08 ultrasonic ranger driver");
+> +MODULE_DESCRIPTION("Devantech SRF08/SRF10 ultrasonic ranger driver");
+>  MODULE_LICENSE("GPL");
