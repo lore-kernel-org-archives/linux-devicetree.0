@@ -1,63 +1,67 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: ls1088a: Add USB support
-Date: Fri, 18 Aug 2017 21:02:25 +0800
-Message-ID: <20170818130224.GN7608@dragon>
-References: <1503044085-5024-1-git-send-email-yinbo.zhu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1503044085-5024-1-git-send-email-yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yinbo.zhu-3arQi8VN3Tc@public.gmane.org
-Cc: linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, "open list:" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
+Subject: [PATCH v4 1/8] Documentation: Add device tree binding for Goldfish RTC driver
+Date: Fri, 18 Aug 2017 15:08:53 +0200
+Message-ID: <1503061833-26563-2-git-send-email-aleksandar.markovic@rt-rk.com>
+References: <1503061833-26563-1-git-send-email-aleksandar.markovic@rt-rk.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503061833-26563-1-git-send-email-aleksandar.markovic@rt-rk.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Aleksandar Markovic <aleksandar.markovic@imgtec.com>, Miodrag Dinic <miodrag.dinic@imgtec.com>, Goran Ferenc <goran.ferenc@imgtec.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Hu <bohu@google.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@imgtec.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hogan <james.hogan@imgtec.com>, Jin Qian <jinqian@google.com>, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Petar Jovanovic <petar.jovanovic@imgtec.com>, Raghu Gandham <raghu.gandham@imgtec.com>, Randy
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 04:14:45PM +0800, yinbo.zhu-3arQi8VN3Tc@public.gmane.org wrote:
-> From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-> 
-> Fix the issue that usb is not detected on ls1088ardb
-> 
-> Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+From: Aleksandar Markovic <aleksandar.markovic@imgtec.com>
 
-You are sending an updated patch.  Please have the version number in
-subject prefix ...
+Add documentation for DT binding of Goldfish RTC driver. The compatible
+string used by OS for binding the driver is "google,goldfish-rtc".
 
-> ---
+Signed-off-by: Miodrag Dinic <miodrag.dinic@imgtec.com>
+Signed-off-by: Goran Ferenc <goran.ferenc@imgtec.com>
+Signed-off-by: Aleksandar Markovic <aleksandar.markovic@imgtec.com>
+---
+ .../devicetree/bindings/rtc/google,goldfish-rtc.txt     | 17 +++++++++++++++++
+ MAINTAINERS                                             |  5 +++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
 
-... and a change history here.  There are a lot of good examples on the
-list.  Please have a check.
-
->  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 20 ++++++++++++++++++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> index 213abb7..6c3c3bc 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> @@ -118,6 +118,14 @@
->  	status = "okay";
->  };
->  
-> +&usb0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb1 {
-> +	status = "okay";
-> +};
-> +
->  &esdhc {
->  	status = "okay";
->  };
-
-I had already put this on previous version - please sort these labelled
-nodes alphabetically.  That said, &usb should go after &sata.
-
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt b/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
+new file mode 100644
+index 0000000..634312d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
+@@ -0,0 +1,17 @@
++Android Goldfish RTC
++
++Android Goldfish RTC device used by Android emulator.
++
++Required properties:
++
++- compatible : should contain "google,goldfish-rtc"
++- reg        : <registers mapping>
++- interrupts : <interrupt mapping>
++
++Example:
++
++	goldfish_timer@9020000 {
++		compatible = "google,goldfish-rtc";
++		reg = <0x9020000 0x1000>;
++		interrupts = <0x3>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 88bea9e..f64c81b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -840,6 +840,11 @@ S:	Supported
+ F:	drivers/android/
+ F:	drivers/staging/android/
+ 
++ANDROID GOLDFISH RTC DRIVER
++M:	Miodrag Dinic <miodrag.dinic@imgtec.com>
++S:	Supported
++F:	Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
++
+ ANDROID ION DRIVER
+ M:	Laura Abbott <labbott@redhat.com>
+ M:	Sumit Semwal <sumit.semwal@linaro.org>
+-- 
+2.7.4
