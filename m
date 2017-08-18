@@ -1,62 +1,120 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/5]  iio: srf08: add support for similar devices and
- triggered buffers
-Date: Fri, 18 Aug 2017 08:19:49 +0100
-Message-ID: <20170818081949.419da8a5@archlinux>
-References: <20170817220829.GA4687@arbeit>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170817220829.GA4687@arbeit>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org, jelle-oJJ1AqDjjO4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v9 0/3] Add support for IPQ8074 PCIe phy and controller
+Date: Fri, 18 Aug 2017 12:59:50 +0530
+Message-ID: <1503041393-19593-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Aug 2017 00:08:29 +0200
-Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org> wrote:
+v9:
+  Incorporate Stanimir's feedback for
+	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
 
-For some reason my laptop hadn't picked up this posting until just now.
-Too many random wifi hotspots I guess.
+  Add Stanimir's Ack for
+	PCI: dwc: qcom: Use block IP version for operations
+	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
 
-Anyhow given the rebase was trivial I'll stick with V3 for everything.
-Wolfram can pickup patch 1 whenever he likes.
+  Add Rob's Ack for
+	dt-bindings: pci: qcom: Add support for IPQ8074
 
-Jonathan
+v8:
+  Incorporate Stanimir's feedback for
+	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
 
-> This patch series adds support for:
-> - triggered buffer
-> - ultrasonic devices srf02 and srf10
-> 
-> Changes in v4:
-> - rebase to recent git repository with trivial-devices.txt now under
->   devicetree/bindings
-> 
-> Changes in v3:
-> - introduce struct chip_info for device specific features
-> - remove locking error in srf08_trigger_handler()
-> 
-> Changes in v2:
-> - removed unnecessary patch "[PATCH 6/7] iio: srf08: add buffered to device mode"
-> - incorporated patch "[PATCH 7/7] iio: srf08: change text in Kconfig" where suitable
-> - changed order of patches to improve logical flow of changes
-> - improved distinction of sensor types
-> 
-> Andreas Klinger (5):
->   iio: srf08: add device tree binding for srf02 and srf10
->   iio: srf08: add device tree table
->   iio: srf08: add triggered buffer support
->   iio: srf08: add sensor type srf10
->   iio: srf08: add support for srf02 in i2c mode
-> 
->  .../devicetree/bindings/trivial-devices.txt        |   2 +
->  drivers/iio/proximity/Kconfig                      |   8 +-
->  drivers/iio/proximity/srf08.c                      | 227 ++++++++++++++++++---
->  3 files changed, 203 insertions(+), 34 deletions(-)
-> 
+v7:
+  Skip PHY patches as they are already included by Kishon
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  Incorporate Stanimir's feedback for the below patches
+	PCI: dwc: qcom: Use block IP version for operations
+	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+
+v6:
+  Added 'Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>' and fixed
+  white space issues as mentioned by Vivek.
+	phy: qcom-qmp: Fix phy pipe clock name
+	dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+
+v5:
+  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+        Renamed phy_phy clock as common clock
+
+  phy: qcom-qmp: Fix phy pipe clock name
+        Moved the DT get into the registering function
+
+  phy: qcom-qmp: Add support for IPQ8074
+        Place the IPQ8074 related structs similar to existing SoC.
+        Renamed phy_phy clock as common clock
+v4:
+  phy: qcom-qmp: Fix phy pipe clock name
+	Based on Vivek's comments, return failure only for
+	PCI/USB type of phys.
+	Removed Ack.
+
+  phy: qcom-qmp: Handle unavailable registers
+	Removed this patch.
+	Incorrectly used a block of code that is not applicable
+	to IPQ8074, hence had to avoid an "unavailable" register.
+	Since that is addressed using 'has_phy_com_ctrl' this
+	patch is not needed.
+
+  phy: qcom-qmp: Add support for IPQ8074
+	Set 'has_phy_com_ctrl' to false
+	Remove ipq8074_pciephy_regs_layout
+
+v3:
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+	Incoporate Stan's feedback:-
+	 - Add SoC Wrapper and Synopsys Core IP versions
+
+v2:
+  dt-bindings: phy: qmp: Add output-clock-names
+	Added Rob H's Ack
+
+  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+	Removed example
+	Added IPQ8074 specific details
+
+  phy: qcom-qmp: Fix phy pipe clock name
+	Added Vivek's Ack
+
+  phy: qcom-qmp: Handle unavailable registers
+	No changes
+
+  phy: qcom-qmp: Add support for IPQ8074
+	No changes
+
+  PCI: dwc: qcom: Use block IP version for operations
+	Added new patch to use block IP version instead of v1, v2...
+
+  dt-bindings: pci: qcom: Add support for IPQ8074
+	Removed example
+	Added IPQ8074 specific details
+
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+	Incorporated Bjorn's feedback:-
+	 - Removed reset names, helper function to assert/deassert, helper
+	   function to R/M/W register.
+	 - Renamed sys_noc clock as iface clock
+	 - Added deinit if phy power on fails
+
+v1:
+Add definitions required to enable QMP phy support for IPQ8074.
+
+Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
+Gen 1/2, one lane, two PCIe root complex with support for MSI and
+legacy interrupts, and it conforms to PCI Express Base 2.1
+specification.
+
+Varadarajan Narayanan (3):
+  PCI: dwc: qcom: Use block IP version for operations
+  dt-bindings: pci: qcom: Add support for IPQ8074
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  23 ++
+ drivers/pci/dwc/pcie-qcom.c                        | 346 +++++++++++++++++----
+ 2 files changed, 302 insertions(+), 67 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
