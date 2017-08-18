@@ -1,102 +1,81 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v2 11/16] dmaengine: bcm-sba-raid: Peek mbox when we have
- no free requests
-Date: Fri, 18 Aug 2017 17:06:46 +0530
-Message-ID: <CAALAos9Wzk3LF9hOn+Wc_7ieyeXgq2M=Zk11rsrr38fZs25g2w@mail.gmail.com>
-References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
- <1501583880-32072-12-git-send-email-anup.patel@broadcom.com> <20170817064008.GB3053@localhost>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv3 2/6] dt-bindings: sound: add motorola,
+	cpcap-audio-codec
+Date: Fri, 18 Aug 2017 12:47:30 +0100
+Message-ID: <20170818114730.57yc2r6d3temrepa@sirena.org.uk>
+References: <20170725151030.26863-1-sebastian.reichel@collabora.co.uk>
+ <20170725151030.26863-3-sebastian.reichel@collabora.co.uk>
+ <20170726114827.pye3jm2b7x2nqo5v@sirena.org.uk>
+ <20170727090141.sxzm6mq5cv4jzucg@earth>
+ <20170810165358.GK8569@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170817064008.GB3053@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: multipart/mixed; boundary="===============2782198961296867222=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170810165358.GK8569@atomide.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 12:10 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Tue, Aug 01, 2017 at 04:07:55PM +0530, Anup Patel wrote:
->> When setting up RAID array on several NVMe disks we observed that
->> sba_alloc_request() start failing (due to no free requests left)
->> and RAID array setup becomes very slow.
->>
->> To improve performance, we do mbox channel peek when we have
->> no free requests. This improves performance of RAID array setup
->> because mbox requests that were completed but not processed by
->> mbox completion worker will be processed immediately by mbox
->> channel peek.
->>
->> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>  drivers/dma/bcm-sba-raid.c | 25 ++++++++++++++++++++-----
->>  1 file changed, 20 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
->> index f14ed0a..399250e 100644
->> --- a/drivers/dma/bcm-sba-raid.c
->> +++ b/drivers/dma/bcm-sba-raid.c
->> @@ -200,6 +200,14 @@ static inline u32 __pure sba_cmd_pq_c_mdata(u32 d, u32 b1, u32 b0)
->>
->>  /* ====== General helper routines ===== */
->>
->> +static void sba_peek_mchans(struct sba_device *sba)
->> +{
->> +     int mchan_idx;
->> +
->> +     for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
->> +             mbox_client_peek_data(sba->mchans[mchan_idx]);
->> +}
->> +
->>  static struct sba_request *sba_alloc_request(struct sba_device *sba)
->>  {
->>       unsigned long flags;
->> @@ -211,8 +219,17 @@ static struct sba_request *sba_alloc_request(struct sba_device *sba)
->>       if (req)
->>               list_move_tail(&req->node, &sba->reqs_alloc_list);
->>       spin_unlock_irqrestore(&sba->reqs_lock, flags);
->> -     if (!req)
->> +
->> +     if (!req) {
->> +             /*
->> +              * We have no more free requests so, we peek
->> +              * mailbox channels hoping few active requests
->> +              * would have completed which will create more
->> +              * room for new requests.
->> +              */
->> +             sba_peek_mchans(sba);
->>               return NULL;
->> +     }
->>
->>       req->flags = SBA_REQUEST_STATE_ALLOCED;
->>       req->first = req;
->> @@ -560,17 +577,15 @@ static enum dma_status sba_tx_status(struct dma_chan *dchan,
->>                                    dma_cookie_t cookie,
->>                                    struct dma_tx_state *txstate)
->>  {
->> -     int mchan_idx;
->>       enum dma_status ret;
->>       struct sba_device *sba = to_sba_device(dchan);
->>
->> -     for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
->> -             mbox_client_peek_data(sba->mchans[mchan_idx]);
->> -
->>       ret = dma_cookie_status(dchan, cookie, txstate);
->>       if (ret == DMA_COMPLETE)
->>               return ret;
->>
->> +     sba_peek_mchans(sba);
->
-> why do you want to do this while checking status..?
 
-The dma_tx_state is only updated via sba_receive_message()
-which in-turn is called by mailbox framework upon completion
-of a request.
+--===============2782198961296867222==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mk63f6qznskjx7fv"
+Content-Disposition: inline
 
-Placing the sba_peek_mchans() here helps polling based
-DMA client by not waiting for IRQ worker to schedule and
-process the completions.
 
-Regards,
-Anup
+--mk63f6qznskjx7fv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Aug 10, 2017 at 09:53:59AM -0700, Tony Lindgren wrote:
+> * Sebastian Reichel <sebastian.reichel@collabora.co.uk> [170727 02:02]:
+
+> > I don't follow you here. Why can't other parts of the chip use the
+> > same supply? Regarding the other point: Handling the audio-codec
+
+They can, they know they're part of the parent chip and should be
+looking for the supply on the chip level.
+
+> > differently than all other sub-modules of cpcap seems much more
+> > problematic to me and the codec is basically the last one
+> > missing:
+
+> Mark, any comments on the above? I'm just wondering if the
+> related dts changes are safe for me to pick.
+
+No, they don't make sense.
+
+--mk63f6qznskjx7fv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmW09EACgkQJNaLcl1U
+h9AKCAf9EWXupYCrST1QW4exCFfksCiJ0trEm2Xx2+o96FUOo3EOZ9AoLL/F4pgS
+z7LgS+zdMIdITKfWfI/+TljgC2+WLsqys1Mjhq5Xyw1ud584QoXq78n0xp6+Zksw
+1NKjfXLhvCtkin6eoCiKuKgMLLvMRnd8gSIS3kOKdqi6uWwEzRdDm0STjZAPQHO3
+zjiZczKhrR/aVpoM6GkCMDumRmLocRWFWgBHGRYXuhfYuiNocmgGqFlLj/zs2NJ4
+5wSgykajv6cLpZnZIaOonivd6p8BP1x6et1mpEpH9UlHI18ipHK9JRIIo0D3/6PC
+CvyjhPEU3k5UpEfvWpuebZqV/jgywA==
+=4Hpm
+-----END PGP SIGNATURE-----
+
+--mk63f6qznskjx7fv--
+
+--===============2782198961296867222==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2782198961296867222==--
