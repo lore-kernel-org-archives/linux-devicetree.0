@@ -1,86 +1,103 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [V7] dt-bindings: phy: Add bindings for ralink-usb PHY
-Date: Fri, 18 Aug 2017 16:13:40 +0530
-Message-ID: <48e661f0-f65f-e12b-d617-d076ddf0d49b@ti.com>
-References: <1502966003-3776-1-git-send-email-harvey.hunt@imgtec.com>
- <1502966003-3776-2-git-send-email-harvey.hunt@imgtec.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 6/6] perf: ARM DynamIQ Shared Unit PMU support
+Date: Fri, 18 Aug 2017 11:49:32 +0100
+Message-ID: <20170818104932.GC31326@leverpostej>
+References: <1502192246-5623-1-git-send-email-suzuki.poulose@arm.com>
+ <1502192246-5623-7-git-send-email-suzuki.poulose@arm.com>
+ <20170816141056.GB11934@leverpostej>
+ <bb4b8a9c-1a4a-4ead-255b-9f0e43dcf73b@arm.com>
+ <20170817155742.GA21203@leverpostej>
+ <e73da217-a3fb-4e49-3bb2-c2d2215f7aa8@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502966003-3776-2-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <e73da217-a3fb-4e49-3bb2-c2d2215f7aa8-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 18, 2017 at 11:43:32AM +0100, Suzuki K Poulose wrote:
+> On 17/08/17 16:57, Mark Rutland wrote:
+> >On Thu, Aug 17, 2017 at 03:52:24PM +0100, Suzuki K Poulose wrote:
+> >>On 16/08/17 15:10, Mark Rutland wrote:
+> >>>On Tue, Aug 08, 2017 at 12:37:26PM +0100, Suzuki K Poulose wrote:
 
+> >>>>+static struct attribute *dsu_pmu_cpumask_attrs[] = {
+> >>>>+	DSU_CPUMASK_ATTR(cpumask, DSU_ACTIVE_CPU_MASK),
+> >>>>+	DSU_CPUMASK_ATTR(supported_cpus, DSU_SUPPORTED_CPU_MASK),
+> >>>>+	NULL,
+> >>>>+};
+> >>>
+> >>>Normally we only expose one mask.
+> >>>
+> >>>Why do we need the supported cpu mask? What is the intended use-case?
+> >>
+> >>Thats just to let the user know the CPUs bound to this PMU instance.
+> >
+> >I guess that can be useful, though the cpumasks we expose today are
+> >confusing as-is, and this is another point of confusion.
+> >
+> >We could drop this for now, and add it when requested, or we should try
+> >to make the naming clearer somehow -- "supported" can be read in a
+> >number of ways.
+> 
+> How about dsu_cpus or connected_cpus ?
 
-On Thursday 17 August 2017 04:03 PM, Harvey Hunt wrote:
-> From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-> 
-> Add a binding for the USB phy on Mediatek/Ralink SoCs.
-> 
-> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-> Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+I think "connected_cpus" or "associated_cpus" might be ok.
 
-merged the series, thanks!
+Thinking a little further, this is something other PMUs might want to
+expose (and perhaps some x86 PMUs already do?), so it would be good to
+align naming-wise. 
 
--Kishon
-> ---
-> Changes in V7:
-> * Add required ralink,sysctl property
+[...]
+
+> >>>>+	/*
+> >>>>+	 * Find one CPU in the DSU to handle the IRQs.
+> >>>>+	 * It is highly unlikely that we would fail
+> >>>>+	 * to find one, given the probing has succeeded.
+> >>>>+	 */
+> >>>>+	cpu = dsu_pmu_get_online_cpu(dsu_pmu);
+> >>>>+	if (cpu >= nr_cpu_ids)
+> >>>>+		return -ENODEV;
+> >>>>+	cpumask_set_cpu(cpu, &dsu_pmu->active_cpu);
+> >>>>+	rc = irq_set_affinity_hint(irq, &dsu_pmu->active_cpu);
+> >>>
+> >>>Is setting the affinity hint strong enough?
+> >>>
+> >>>Can the affinity be changed behind the back of this driver?
+> >>
+> >>Did you mean to use "force"d affinity settings ? If so, modules
+> >>don't have the luxury of doing that.
+> >
+> >Perhaps. We absolutely need to ensure that the driver makes the IRQ
+> >affine to the active CPU, and no other SW will change the affinitiy of
+> >the IRQ.
+> >
+> >Otherwise, the IRQ handler is dangerous, violating locking requirements,
+> >potentially corrupting memory, etc.
+> >
+> >>Hence this one. I think that also brings up the problem where we could
+> >>be reading the counters from a different CPU than we requested. So, I
+> >>think it would be good to keep the CPU check, wherever we could access
+> >>the PMU.
+> >
+> >While I'm happy to have that as a paranoid sanity check, we cannot rely
+> >upon that for correctness. We must ensure that we amange the interupt
+> >affinity correctly.
+> >
+> >If that means we need the forced affinity helpers, we must ensure that
+> >we have access to those.
 > 
-> Changes in V6:
-> * Add MT7628 binding
-> * Add optional reg property
-> 
-> Changes in V5:
-> * None
-> 
-> Changes in V4:
-> * None
-> 
-> Changes in V3:
-> * Split out from first patch
-> 
->  .../devicetree/bindings/phy/ralink-usb-phy.txt     | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt b/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
-> new file mode 100644
-> index 0000000..9d2868a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/ralink-usb-phy.txt
-> @@ -0,0 +1,23 @@
-> +Mediatek/Ralink USB PHY
-> +
-> +Required properties:
-> + - compatible: "ralink,rt3352-usbphy"
-> +	       "mediatek,mt7620-usbphy"
-> +	       "mediatek,mt7628-usbphy"
-> + - reg: required for "mediatek,mt7628-usbphy", unused otherwise
-> + - #phy-cells: should be 0
-> + - ralink,sysctl: a phandle to a ralink syscon register region
-> + - resets: the two reset controllers for host and device
-> + - reset-names: the names of the 2 reset controllers
-> +
-> +Example:
-> +
-> +usbphy: phy {
-> +	compatible = "mediatek,mt7628-usbphy";
-> +	reg = <0x10120000 0x1000>;
-> +	#phy-cells = <0>;
-> +
-> +	ralink,sysctl = <&sysc>;
-> +	resets = <&rstctrl 22 &rstctrl 25>;
-> +	reset-names = "host", "device";
-> +};
-> 
+> As per our offline discussion, I will go ahead with set_affinity_hint and
+> IRQ_NO_BALANCING flag, so that the IRQ affinity is not disturbed by the
+> userspace.
+
+Sounds good.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
