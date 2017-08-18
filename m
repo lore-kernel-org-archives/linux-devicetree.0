@@ -1,97 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] MIPS: dts: ralink: Add Mediatek MT7628A SoC
-Date: Fri, 18 Aug 2017 10:31:29 -0500
-Message-ID: <CAL_Jsq+2e944JTYmU69JBUjD+iQY6ec7YUgk-_KR4Vks2jKnQg@mail.gmail.com>
-References: <1502814530-40604-1-git-send-email-harvey.hunt@imgtec.com>
- <20170817213426.34shgxwnjowcg4sk@rob-hp-laptop> <97c83648-3710-cb9a-a065-9fbe8dd1b734@imgtec.com>
- <CAL_Jsq+NZWkvibcL+CFWD8curFDKF2=bBzyCVsRyyiFOFwNBbg@mail.gmail.com> <73251933-33bf-416d-cf2a-0fad0337a512@imgtec.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 2/7] pwm: rockchip: Remove the judge from return value
+ of pwm_config
+Date: Fri, 18 Aug 2017 17:32:55 +0200
+Message-ID: <20170818153255.GC18307@ulmo>
+References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
+ <1502206715-24174-3-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <73251933-33bf-416d-cf2a-0fad0337a512@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harvey Hunt <Harvey.Hunt@imgtec.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, John Crispin <john@phrozen.org>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502206715-24174-3-git-send-email-david.wu@rock-chips.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: heiko@sntech.de, boris.brezillon@free-electrons.com, robh+dt@kernel.org, catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 9:11 AM, Harvey Hunt <Harvey.Hunt@imgtec.com> wrote:
-> Hi Rob,
->
-> On 18/08/17 15:04, Rob Herring wrote:
->>
->> On Fri, Aug 18, 2017 at 4:42 AM, Harvey Hunt <Harvey.Hunt@imgtec.com>
->> wrote:
->>>
->>> Hi Rob,
->>>
->>> Thanks for the review.
->>>
->>>
->>> On 17/08/17 22:34, Rob Herring wrote:
->>>>
->>>>
->>>> On Tue, Aug 15, 2017 at 05:28:50PM +0100, Harvey Hunt wrote:
->>>>>
->>>>>
->>>>> The MT7628A is the successor to the MT7620 and pin compatible with the
->>>>> MT7688A, although the latter supports only a 1T1R antenna rather than
->>>>> a 2T2R antenna.
->>
->>
->> [...]
->>
->>>>> +               uartlite@c00 {
->>>>
->>>>
->>>>
->>>> serial@c00
->>>>
->>>> And so on. IOW, use standard, generic node names as defined in the DT
->>>> spec.
->>>
->>>
->>>
->>>
->>> The clocks for the UARTs are using the device names "uartlite", "uart1"
->>> and
->>> "uart2" (as defined in arch/mips/ralink/mt7620.c).
->>
->>
->> You can't add clocks to the DT? Looks like mt76x8 at least should be
->> pretty easy with some fixed clocks.
->>
->> Depending if backwards compatibility (old dtb working on new kernel)
->> is a concern on these platforms, you could just change all the names
->> both in the kernel and dts.
->
->
-> I don't think backwards compatibility will matter - the bootloaders I've
-> come across don't ship DTBs with them and I don't think there are any ralink
-> devices using the upstream MT7620 DT.
->
-> John might have some thoughts on backwards compat though.
->
->>
->>> Changing the name of the DT nodes causes the serial driver to bail as it
->>> can't find the clock for the device.
->>>
->>> arch/mips/boot/dts/ralink/mt7620a.dtsi is already using the uartlite
->>> name,
->>> although it hasn't been documented...
->>
->>
->> Generally the kernel shouldn't care what the names are (though you can
->> match by name, it's not widely used).
->>
->> In any case, I guess fixing this can be done later.
->>
->> Rob
->>
->
-> Shall I respin this patch with the earlier nodes (intc etc) renamed and then
-> send a patch later to rename the serial ports in the DT and kernel (assuming
-> there are no backwards compatibility issues)?
 
-Yes, that sounds find.
+--iFRdW5/EC4oqxDHL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Tue, Aug 08, 2017 at 11:38:30PM +0800, David Wu wrote:
+> It seems the rockchip_pwm_config always returns the result 0,
+> so remove the judge.
+>=20
+> Signed-off-by: David Wu <david.wu@rock-chips.com>
+> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> ---
+>  drivers/pwm/pwm-rockchip.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
+
+I don't understand what the "judge" is supposed to be, but I've applied
+this to for-4.14/drivers anyway. Thanks.
+
+Thierry
+
+--iFRdW5/EC4oqxDHL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmXCKcACgkQ3SOs138+
+s6G86xAAglfoLi0BXXtHUNBnnYqktkKYCxP7IiV/Uq2gz4I8WhaKBK248LOetd6T
+bSfhrAsdnSnnIxZ6AYp42G5pwRSjZJCaR4j/v5yTuLtCEa/Y3IJlk83hFP6Qrqwd
+m8oLhAQxiXq11HyGLildTfjqxhHl0UfMJJAO6H1ez7igXBuBCop7/BLmP4KEniWU
+dySFrY8lcLVOUFvdLypN2SPuBV4DdK9dh7mgR5uaB6BF1tFUkALM/Kd8EuSVjh3m
+GT6B1i5vdxa2064+LGWN/sUGh5azSLg6iIUSnrECKbEOFHsL78a5lC4lPeLB8SSv
+FQmn4mGvVQdoGEWRtN4EcCPDlxNp8O83DcL/N+Z0xASLUwZyKAo/QZIPkaWgpcby
+kE0rHafOEqXQcxMVCFEf5gHz7UlD5Q9UHQedabrnpiwBCSiiBoUOJIoVzpt555Cj
+hQRRygj4eMf7iOMwWL1D7C0yBexurxBVx4hZt+nVdivz46PnxcG7/Oj5LfOqhLDP
+Tqeq6romBV4nE3BkUzBguAF+tFSlEm2I2ZdlCVmpJtipscSI9Ql4XqwAvwbi1dz3
+a3OH5IGRpyZrb/jrzPnwsE1SFJt8ZJBRMe4nt3tgg3PkWFvLv0jYRDhBbiJn7AtI
+dROG7KBido1Scptm+7UqP0hDBBcuXxndfX32IsoPWm6zaji7bIM=
+=s4Km
+-----END PGP SIGNATURE-----
+
+--iFRdW5/EC4oqxDHL--
