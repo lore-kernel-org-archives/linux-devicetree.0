@@ -1,71 +1,97 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] pwm: rockchip: Add APB and function both clocks
- support
-Date: Fri, 18 Aug 2017 17:31:35 +0200
-Message-ID: <20170818153135.GB18307@ulmo>
-References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
- <1502206715-24174-2-git-send-email-david.wu@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] MIPS: dts: ralink: Add Mediatek MT7628A SoC
+Date: Fri, 18 Aug 2017 10:31:29 -0500
+Message-ID: <CAL_Jsq+2e944JTYmU69JBUjD+iQY6ec7YUgk-_KR4Vks2jKnQg@mail.gmail.com>
+References: <1502814530-40604-1-git-send-email-harvey.hunt@imgtec.com>
+ <20170817213426.34shgxwnjowcg4sk@rob-hp-laptop> <97c83648-3710-cb9a-a065-9fbe8dd1b734@imgtec.com>
+ <CAL_Jsq+NZWkvibcL+CFWD8curFDKF2=bBzyCVsRyyiFOFwNBbg@mail.gmail.com> <73251933-33bf-416d-cf2a-0fad0337a512@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1502206715-24174-2-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <73251933-33bf-416d-cf2a-0fad0337a512@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harvey Hunt <Harvey.Hunt@imgtec.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, John Crispin <john@phrozen.org>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 18, 2017 at 9:11 AM, Harvey Hunt <Harvey.Hunt@imgtec.com> wrote:
+> Hi Rob,
+>
+> On 18/08/17 15:04, Rob Herring wrote:
+>>
+>> On Fri, Aug 18, 2017 at 4:42 AM, Harvey Hunt <Harvey.Hunt@imgtec.com>
+>> wrote:
+>>>
+>>> Hi Rob,
+>>>
+>>> Thanks for the review.
+>>>
+>>>
+>>> On 17/08/17 22:34, Rob Herring wrote:
+>>>>
+>>>>
+>>>> On Tue, Aug 15, 2017 at 05:28:50PM +0100, Harvey Hunt wrote:
+>>>>>
+>>>>>
+>>>>> The MT7628A is the successor to the MT7620 and pin compatible with the
+>>>>> MT7688A, although the latter supports only a 1T1R antenna rather than
+>>>>> a 2T2R antenna.
+>>
+>>
+>> [...]
+>>
+>>>>> +               uartlite@c00 {
+>>>>
+>>>>
+>>>>
+>>>> serial@c00
+>>>>
+>>>> And so on. IOW, use standard, generic node names as defined in the DT
+>>>> spec.
+>>>
+>>>
+>>>
+>>>
+>>> The clocks for the UARTs are using the device names "uartlite", "uart1"
+>>> and
+>>> "uart2" (as defined in arch/mips/ralink/mt7620.c).
+>>
+>>
+>> You can't add clocks to the DT? Looks like mt76x8 at least should be
+>> pretty easy with some fixed clocks.
+>>
+>> Depending if backwards compatibility (old dtb working on new kernel)
+>> is a concern on these platforms, you could just change all the names
+>> both in the kernel and dts.
+>
+>
+> I don't think backwards compatibility will matter - the bootloaders I've
+> come across don't ship DTBs with them and I don't think there are any ralink
+> devices using the upstream MT7620 DT.
+>
+> John might have some thoughts on backwards compat though.
+>
+>>
+>>> Changing the name of the DT nodes causes the serial driver to bail as it
+>>> can't find the clock for the device.
+>>>
+>>> arch/mips/boot/dts/ralink/mt7620a.dtsi is already using the uartlite
+>>> name,
+>>> although it hasn't been documented...
+>>
+>>
+>> Generally the kernel shouldn't care what the names are (though you can
+>> match by name, it's not widely used).
+>>
+>> In any case, I guess fixing this can be done later.
+>>
+>> Rob
+>>
+>
+> Shall I respin this patch with the earlier nodes (intc etc) renamed and then
+> send a patch later to rename the serial ports in the DT and kernel (assuming
+> there are no backwards compatibility issues)?
 
---KFztAG8eRSV9hGtP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, that sounds find.
 
-On Tue, Aug 08, 2017 at 11:38:29PM +0800, David Wu wrote:
-> New PWM module provides two individual clocks for APB clock
-> and function clock.
->=20
-> Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> changes in v3:
->  - clk_get with NULL argument again if it was error, when clk_get with "p=
-wm" argument.
->  - To get clk count, use of_count_phandle_with_args instead of of_propert=
-y_count_strings.
->=20
->  .../devicetree/bindings/pwm/pwm-rockchip.txt       |  8 ++-
->  drivers/pwm/pwm-rockchip.c                         | 58 ++++++++++++++++=
-++----
->  2 files changed, 56 insertions(+), 10 deletions(-)
-
-Applied to for-4.14/drivers, thanks.
-
-Thierry
-
---KFztAG8eRSV9hGtP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmXCFcACgkQ3SOs138+
-s6EXURAApMbJYPOsD8nohmlo+4mCpFDpw6ON+7GP7LnPUZs/fVYxlWP239kfZ+1A
-LiGVjYaySfA+Z+Njq15PZgPQQp/6SBBAYREJJVhTr0sUh7AIJZHB65IEM3IFFrBS
-B8NHOl9YlqSUCigL9FcaCVo3QjcnvnKygAmgJWjjb2n9lI7DwtaD2AFTMhB7A3WA
-qXc1G0Yam2tIUeHtfzq1J/8gitmMtZbLXNTEkVzA8VdL7cEVNMbcNOlrqB6OLMDK
-cJh7Id3sYPIjZEM63gYsVc797ZcF01kDz0FONifW7KA9LjXwwg2V+sUxlknNiSLc
-dNMKdSHfbSCp5uVv7VHbpFa+b7nhlxAnStKMmj0M/MdswEEpaRKgWmidpMkyRT5P
-bRAx3ZUu54X0kkN2dEVuLLwoPJDJtFteMHid3g9o6INeRv4T9eseDb1YHO8Ad6tJ
-PVEsE7II5h2XdvUsXhL1fIe2v7N8pZvWB753gREzxgFU+7qoiyEHR4Kw4dgqpBkX
-Blw/xY0KxyoClugSt9MnBoR+plK9QwymfOnO9n7wnp3LWYfG3DA/VFhxve3ayqZE
-6B4cAMjs0MSZe65NJn4nq4WTToMKVvRB92H91GttZMebXF1vQhl3FOzxIhDHtik0
-6BdjwIFnHl7yPeE2gyITe5aHivEOL6ReEVoDwZtnDzYdbV6hZCg=
-=jUMz
------END PGP SIGNATURE-----
-
---KFztAG8eRSV9hGtP--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
