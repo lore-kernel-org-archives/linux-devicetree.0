@@ -1,55 +1,47 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 0/5] add some properties for Rockchip usb2-phy and add
- rv1108 SoCs' support
-Date: Fri, 18 Aug 2017 16:27:54 +0530
-Message-ID: <e0777596-cd2e-aef5-56a4-6caa18df3aac@ti.com>
-References: <1502438871-9482-1-git-send-email-frank.wang@rock-chips.com>
+From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v5 1/1] usb:host:xhci support option to disable the xHCI
+ USB2 HW LPM
+Date: Fri, 18 Aug 2017 14:08:23 +0300
+Message-ID: <5996CAA7.2050304@linux.intel.com>
+References: <1502166477-23897-1-git-send-email-tqnguyen@apm.com>
+ <CAKrQpSt_JuiXPFxTT7ApYFN+6u5AmreJB4PFAGzMRh12FpcnHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1502438871-9482-1-git-send-email-frank.wang@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Wang <frank.wang@rock-chips.com>, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
-Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, wmc@rock-chips.com, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com, linux-rockchip@lists.infradead.org, william.wu@rock-chips.com, andy.yan@rock-chips.com, daniel.meng@rock-chips.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKrQpSt_JuiXPFxTT7ApYFN+6u5AmreJB4PFAGzMRh12FpcnHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 17.08.2017 06:19, Thang Q. Nguyen wrote:
+> On Tue, Aug 8, 2017 at 11:27 AM, Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> XHCI specification 1.1 does not require xHCI-compliant controllers
+>> to always enable hardware USB2 LPM. However, the current xHCI
+>> driver always enable it when seeing HLC=1.
+>> This patch supports an option for users to control disabling
+>> USB2 Hardware LPM via DT/ACPI attribute.
+>> This option is needed in case user would like to disable this
+>> feature. For example, their xHCI controller has its USB2 HW LPM
+>> broken.
+>>
+>> Signed-off-by: Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>
+>> Signed-off-by: Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+...
+>>
+>
+> Do you have any comments about this patch? Thanks.
+> --
 
+Looks good,
+will send forward after 4.14-rc1
 
-On Friday 11 August 2017 01:37 PM, Frank Wang wrote:
-> These series of patches add rockchip,usbgrf property and otg_mux interrupt for
-> rockchip usb2-phy. In addition, this change also add rv1108 usb2-phy support.
-
-merged, thanks!
-
--Kishon
-> 
-> Changes from v3:
->  - Updated the 'Acked-by' tag from Rob Herring <robh@kernel.org>.
->  - Matched the SoC specific compatible string instead of companion_grf_quirk.
-> 
-> Changes from v2:
->  - Amend otg-mux interrupt to be auto-detectable and update related dt-bindings.
-> 
-> Changes from v1:
->  - Send the dt-bindings as a separate patch and cc devicetree list.
-> 
-> Frank Wang (5):
->   phy: rockchip-inno-usb2: add support for rockchip,usbgrf property
->   dt-bindings: phy-rockchip-inno-usb2: add rockchip,usbgrf property
->   phy: rockchip-inno-usb2: add support for otg-mux interrupt
->   dt-bindings: phy-rockchip-inno-usb2: add otg-mux interrupt
->   phy: rockchip-inno-usb2: add support of usb2-phy for rv1108 SoCs
-> 
->  .../bindings/phy/phy-rockchip-inno-usb2.txt        |  11 +-
->  drivers/phy/rockchip/phy-rockchip-inno-usb2.c      | 215 ++++++++++++++++-----
->  2 files changed, 174 insertions(+), 52 deletions(-)
-> 
+Thanks
+Mathias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
