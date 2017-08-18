@@ -1,31 +1,26 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/8] ARM: dts: rockchip: add pwm dt node for rv1108
-Date: Sat, 19 Aug 2017 00:51:20 +0200
-Message-ID: <7232722.hES1xTI2s5@phil>
-References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com> <1502700026-8516-1-git-send-email-andy.yan@rock-chips.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 6/8] ARM: dts: rockchip: add pwm backlight for rv1108 evb
+Date: Sat, 19 Aug 2017 00:54:14 +0200
+Message-ID: <2156649.qxq5tir7vK@phil>
+References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com> <1502700167-8730-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502700026-8516-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502700167-8730-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 14. August 2017, 16:40:26 CEST schrieb Andy Yan:
-> Add pwm device tree node for rv1108 soc
+Am Montag, 14. August 2017, 16:42:47 CEST schrieb Andy Yan:
+> RV1108 EVB uses pwm0 modulate the backlight, add dt
+> node to enable it.
 > 
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-applied for 4.14, after properly sorting properties
-and adding a missing newline.
+applied for 4.14 after adapting to the mainline chosen node above it.
 
 
 Thanks
 Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
