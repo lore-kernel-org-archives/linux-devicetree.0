@@ -1,60 +1,93 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 2/7] pwm: rockchip: Remove the judge from return value
- of pwm_config
-Date: Fri, 18 Aug 2017 17:32:55 +0200
-Message-ID: <20170818153255.GC18307@ulmo>
-References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
- <1502206715-24174-3-git-send-email-david.wu@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1502206715-24174-3-git-send-email-david.wu@rock-chips.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: heiko@sntech.de, boris.brezillon@free-electrons.com, robh+dt@kernel.org, catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rocco Folino <rocco.folino@gmail.com>
+Subject: [PATCH] MIPS: ath79: support devicetree selection
+Date: Fri, 18 Aug 2017 17:32:42 +0200
+Message-ID: <b78cb3ef8df8531efdb7b011743ad3f38978015d.1503070362.git.rocco.folino@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ralf@linux-mips.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rocco Folino <rocco.folino@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Allow to choose devicetrees from Kconfig.
 
---iFRdW5/EC4oqxDHL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Rocco Folino <rocco.folino@gmail.com>
+---
+ arch/mips/ath79/Kconfig         | 44 +++++++++++++++++++++++++++++++++++++++++
+ arch/mips/boot/dts/qca/Makefile | 10 +++++-----
+ 2 files changed, 49 insertions(+), 5 deletions(-)
 
-On Tue, Aug 08, 2017 at 11:38:30PM +0800, David Wu wrote:
-> It seems the rockchip_pwm_config always returns the result 0,
-> so remove the judge.
->=20
-> Signed-off-by: David Wu <david.wu@rock-chips.com>
-> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> ---
->  drivers/pwm/pwm-rockchip.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
-
-I don't understand what the "judge" is supposed to be, but I've applied
-this to for-4.14/drivers anyway. Thanks.
-
-Thierry
-
---iFRdW5/EC4oqxDHL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmXCKcACgkQ3SOs138+
-s6G86xAAglfoLi0BXXtHUNBnnYqktkKYCxP7IiV/Uq2gz4I8WhaKBK248LOetd6T
-bSfhrAsdnSnnIxZ6AYp42G5pwRSjZJCaR4j/v5yTuLtCEa/Y3IJlk83hFP6Qrqwd
-m8oLhAQxiXq11HyGLildTfjqxhHl0UfMJJAO6H1ez7igXBuBCop7/BLmP4KEniWU
-dySFrY8lcLVOUFvdLypN2SPuBV4DdK9dh7mgR5uaB6BF1tFUkALM/Kd8EuSVjh3m
-GT6B1i5vdxa2064+LGWN/sUGh5azSLg6iIUSnrECKbEOFHsL78a5lC4lPeLB8SSv
-FQmn4mGvVQdoGEWRtN4EcCPDlxNp8O83DcL/N+Z0xASLUwZyKAo/QZIPkaWgpcby
-kE0rHafOEqXQcxMVCFEf5gHz7UlD5Q9UHQedabrnpiwBCSiiBoUOJIoVzpt555Cj
-hQRRygj4eMf7iOMwWL1D7C0yBexurxBVx4hZt+nVdivz46PnxcG7/Oj5LfOqhLDP
-Tqeq6romBV4nE3BkUzBguAF+tFSlEm2I2ZdlCVmpJtipscSI9Ql4XqwAvwbi1dz3
-a3OH5IGRpyZrb/jrzPnwsE1SFJt8ZJBRMe4nt3tgg3PkWFvLv0jYRDhBbiJn7AtI
-dROG7KBido1Scptm+7UqP0hDBBcuXxndfX32IsoPWm6zaji7bIM=
-=s4Km
------END PGP SIGNATURE-----
-
---iFRdW5/EC4oqxDHL--
+diff --git a/arch/mips/ath79/Kconfig b/arch/mips/ath79/Kconfig
+index dfc60209dc63..b43d116187af 100644
+--- a/arch/mips/ath79/Kconfig
++++ b/arch/mips/ath79/Kconfig
+@@ -1,5 +1,49 @@
+ if ATH79
+ 
++menu "Atheros AR71XX/AR724X/AR913X devicetree selection"
++
++config DTB_ATH_DPT_MODULE
++	bool "DPTechnics DPT-Module"
++	select SOC_933X
++	select BUILTIN_DTB
++	help
++	  Say 'Y' if you want your kernel to support the
++	  DPTechnics DPT-Module board.
++
++config DTB_ATH_DRAGINO_MS14
++	bool "Dragino MS14 (Dragino 2)"
++	select SOC_AR933X
++	select BUILTIN_DTB
++	help
++	  Say 'Y' if you want your kernel to support the
++	  Dragino MS14 board.
++
++config DTB_ATH_OMEGA
++	bool "Onion Omega"
++	select SOC_AR933X
++	select BUILTIN_DTB
++	help
++	  Say 'Y' if you want your kernel to support the
++	  Onion Omega board.
++
++config DTB_ATH_TL_MR3020
++	bool "TP-Link TL-MR3020"
++	select SOC_AR933X
++	select BUILTIN_DTB
++	help
++	  Say 'Y' if you want your kernel to support the
++	  TP-Link TL-MR3020 board.
++
++config DTB_ATH_TL_WR1043ND_V1
++	bool "TP-Link TL-WR1043ND v1"
++	select SOC_AR913X
++	select BUILTIN_DTB
++	help
++	  Say 'Y' if you want your kernel to support the
++	  TP-Link TL-WR1043ND v1 board.
++
++endmenu
++
+ menu "Atheros AR71XX/AR724X/AR913X machine selection"
+ 
+ config ATH79_MACH_AP121
+diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
+index 63a9ddf048c9..acaf448e4516 100644
+--- a/arch/mips/boot/dts/qca/Makefile
++++ b/arch/mips/boot/dts/qca/Makefile
+@@ -1,9 +1,9 @@
+ # All DTBs
+-dtb-$(CONFIG_ATH79)			+= ar9132_tl_wr1043nd_v1.dtb
+-dtb-$(CONFIG_ATH79)			+= ar9331_dpt_module.dtb
+-dtb-$(CONFIG_ATH79)			+= ar9331_dragino_ms14.dtb
+-dtb-$(CONFIG_ATH79)			+= ar9331_omega.dtb
+-dtb-$(CONFIG_ATH79)			+= ar9331_tl_mr3020.dtb
++dtb-$(CONFIG_DTB_ATH_TL_WR1043ND_V1)	+= ar9132_tl_wr1043nd_v1.dtb
++dtb-$(CONFIG_DTB_ATH_DPT_MODULE)	+= ar9331_dpt_module.dtb
++dtb-$(CONFIG_DTB_ATH_DRAGINO_MS14)	+= ar9331_dragino_ms14.dtb
++dtb-$(CONFIG_DTB_ATH_OMEGA)		+= ar9331_omega.dtb
++dtb-$(CONFIG_DTB_ATH_TL_MR3020)		+= ar9331_tl_mr3020.dtb
+ 
+ # Force kbuild to make empty built-in.o if necessary
+ obj-				+= dummy.o
+-- 
+2.13.5
