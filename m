@@ -1,67 +1,60 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 3/8] dt-bindings: pwm: add description for rv1108 pwm
-Date: Fri, 18 Aug 2017 17:46:34 +0200
-Message-ID: <20170818154634.GI18307@ulmo>
-References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com>
- <1502699868-8315-1-git-send-email-andy.yan@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gJNQRAHI5jiYqw2y"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1502699868-8315-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: heiko@sntech.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v6 1/2] dt-bindings: misc: achc: Add device tree binding for GE ACHC
+Date: Fri, 18 Aug 2017 16:53:47 +0100
+Message-ID: <1503071628-11899-2-git-send-email-martyn.welch@collabora.co.uk>
+References: <1503071628-11899-1-git-send-email-martyn.welch@collabora.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1503071628-11899-1-git-send-email-martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add Device Tree binding document for GE Healthcare USB Management
+Controller (ACHC).
 
---gJNQRAHI5jiYqw2y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/misc/ge-achc.txt | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/ge-achc.txt
 
-On Mon, Aug 14, 2017 at 04:37:48PM +0800, Andy Yan wrote:
-> Add device tree bindings document for pwm on
-> rockchip rv1108 soc.
->=20
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->=20
-> ---
->=20
-> Changes in v4: None
-> Changes in v3:
-> - make the compatible string be: "rockchip,rv1108-pwm", "rockchip,rk3288-=
-pwm"
->   for rv1108
->=20
-> Changes in v2: None
->=20
->  Documentation/devicetree/bindings/pwm/pwm-rockchip.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+diff --git a/Documentation/devicetree/bindings/misc/ge-achc.txt b/Documentation/devicetree/bindings/misc/ge-achc.txt
+new file mode 100644
+index 0000000..77df94d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/ge-achc.txt
+@@ -0,0 +1,26 @@
++* GE Healthcare USB Management Controller
++
++A device which handles data aquisition from compatible USB based peripherals.
++SPI is used for device management.
++
++Note: This device does not expose the peripherals as USB devices.
++
++Required properties:
++
++- compatible : Should be "ge,achc"
++
++Required SPI properties:
++
++- reg : Should be address of the device chip select within
++  the controller.
++
++- spi-max-frequency : Maximum SPI clocking speed of device in Hz, should be
++  1MHz for the GE ACHC.
++
++Example:
++
++spidev0: spi@0 {
++	compatible = "ge,achc";
++	reg = <0>;
++	spi-max-frequency = <1000000>;
++};
+-- 
+1.8.3.1
 
-Applied to for-4.14/drivers, thanks.
-
-Thierry
-
---gJNQRAHI5jiYqw2y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmXC9oACgkQ3SOs138+
-s6GPNw/8D96nXEm83w0F7HoBgeYpDE40UdayAsC2bFDsajpa/2O/T+H3YnVhYnIQ
-RhSzo7Tno9gRmUbfyKJNe7WPXJhPHt7XMyoU2mZzTGKXJyOuphwGLSM+8BRrFz5U
-Deu+A7RRj4QPCdnRh9l57Br1ofxQSUGz4kEKxKIYc6PME/+8SDt3Qcb3DvE2BRQY
-SGCv486hqm2mlCkrho/zYb19m6aoa1HTH4HgBdvLKQtUpzog3Pl1b67893WgkmTY
-riTv4uBEcGoLqUYbmLJtnn20b1VZiSeK3IRgBDJD9tgdWg5D6w45594iNgsKhqM9
-lmL/qqlov8QftXUsKl57RFkFozZwb1dNSh2K/otkBuyF3FjTT/rTuZaSNOv4xpZR
-aE1buBByM8Pvd1HiQnNfRUAJS08BiTYc8ykjqKBu3CdNJmoeP0LHFgcDnBIvotLN
-gpBORe1pgMu0HUm6P9IL3CSyIs52Igye+b6g0XbuIeqJzSegPcccUSYz+pe0wvyl
-NGaptlNxDl4RZVGm/X2HxuwaOVKVYNHwoyyrD3nMoa8zuNv9EbSp7V/1imenPpPG
-enwYdqUGK/79oKmpYnP5aPP7ko2ybIumC+1fGnK3cdau0IWTKKV0aC9ODEMvr8Vt
-F+d/28tKcq2mR7VWzJjqluqxoOOVXaARIkformIlP5ZXEHBavfc=
-=Y3fq
------END PGP SIGNATURE-----
-
---gJNQRAHI5jiYqw2y--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
