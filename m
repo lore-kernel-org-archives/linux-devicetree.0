@@ -1,32 +1,209 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v3 2/7] pwm: rockchip: Remove the judge from return value
- of pwm_config
-Date: Fri, 18 Aug 2017 09:28:31 -0700
-Message-ID: <20170818162830.GA115593@google.com>
-References: <1502206715-24174-1-git-send-email-david.wu@rock-chips.com>
- <1502206715-24174-3-git-send-email-david.wu@rock-chips.com>
- <20170818153255.GC18307@ulmo>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 4/4] dt-bindings: net: dwmac-sun8i: update
+ documentation about integrated PHY
+Date: Sat, 19 Aug 2017 00:57:07 +0800
+Message-ID: <CAGb2v67tHYh3hcC58kw_8cGHpMm56Swfy67OUq7vxBqmr6ERfw@mail.gmail.com>
+References: <20170818122118.4925-1-clabbe.montjoie@gmail.com> <20170818122118.4925-5-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170818153255.GC18307@ulmo>
+In-Reply-To: <20170818122118.4925-5-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Wu <david.wu@rock-chips.com>, heiko@sntech.de, boris.brezillon@free-electrons.com, robh+dt@kernel.org, catalin.marinas@arm.com, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 05:32:55PM +0200, Thierry Reding wrote:
-> I don't understand what the "judge" is supposed to be, but I've applied
-> this to for-4.14/drivers anyway. Thanks.
+On Fri, Aug 18, 2017 at 8:21 PM, Corentin Labbe
+<clabbe.montjoie@gmail.com> wrote:
+> This patch add documentation about the MDIO switch used on sun8i-h3-emac
+> for integrated PHY.
+>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  .../devicetree/bindings/net/dwmac-sun8i.txt        | 112 +++++++++++++++++++--
+>  1 file changed, 105 insertions(+), 7 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> index 725f3b187886..631084122532 100644
+> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> @@ -39,7 +39,7 @@ Optional properties for the following compatibles:
+>  - allwinner,leds-active-low: EPHY LEDs are active low
+>
+>  Required child node of emac:
+> -- mdio bus node: should be named mdio
+> +- mdio bus node: should be named mdio (or mdio_parent in case of H3)
 
-Probably just an artifact of non-native English.
+The node would still be named "mdio". You are confusing the node name
+with the label. But you don't really need the mdio node for the H3.
+You could say here that it is not needed for the H3. See below.
 
-Judging by context, David probably meant more like "Remove the check for
-the return value". I believe I've seen other non-native English speakers
-use "judge" in a way similar to "check" or "test" in the context of
-comparisons and error checking. (A search through my mailbox for "judge"
-confirms this.)
+>
+>  Required properties of the mdio node:
+>  - #address-cells: shall be 1
+> @@ -48,14 +48,21 @@ Required properties of the mdio node:
+>  The device node referenced by "phy" or "phy-handle" should be a child node
+>  of the mdio node. See phy.txt for the generic PHY bindings.
+>
+> -Required properties of the phy node with the following compatibles:
+> +Required mdio-mux nodes for the following compatibles:
 
-Regards,
-Brian
+The following compatibles require an mdio-mux node:
+
+> +  - "allwinner,sun8i-h3-emac",
+
+Drop the comma. It's already a list.
+
+> +- a mdio-mux node with compatible = "allwinner,sun8i-h3-mdio-switch"
+
+Required properties for the mdio-mux node:
+  - compatible: "allwinner,sun8i-h3-mdio-switch"
+
+> +  - mdio-parent-bus: The parent bus is "mdio_parent"
+
+This is optional in the mdio-mux binding. Since you have the mdio-mux under
+the EMAC node, it should be obvious that it is connected to the EMAC. The
+parent phandle is more useful for muxes that are separate from the controller,
+such as an external GPIO-controlled mux. So you could just drop it.
+
+> +  - two child mdio, one for the integrated mdio, one for the external mdio
+> +
+> +Required properties of the integrated phy node with the following compatibles:
+
+The following compatibles require a PHY node representing the integrated
+PHY, under the integrated MDIO bus node if an mdio-mux node is used:
+
+>    - "allwinner,sun8i-h3-emac",
+>    - "allwinner,sun8i-v3s-emac":
+
+Required properties of the integrated PHY node:
+
+>  - clocks: a phandle to the reference clock for the EPHY
+>  - resets: a phandle to the reset control for the EPHY
+> +- phy-is-integrated
+> +- Should be a child of the integrated mdio
+>
+> -Example:
+> -
+> +Example with integrated PHY:
+>  emac: ethernet@1c0b000 {
+>         compatible = "allwinner,sun8i-h3-emac";
+>         syscon = <&syscon>;
+> @@ -75,10 +82,101 @@ emac: ethernet@1c0b000 {
+>         mdio: mdio {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> -               int_mii_phy: ethernet-phy@1 {
+> +       };
+> +       mdio-mux {
+
+Drop the mdio node as mentioned above. And also have spaces between
+blocks to be consistent in styling. It's also easier to read.
+
+> +               compatible = "allwinner,sun8i-h3-mdio-switch";
+> +               mdio-parent-bus = <&mdio>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               int_mdio: mdio@1 {
+> +                       reg = <1>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       int_mii_phy: ethernet-phy@1 {
+> +                               reg = <1>;
+> +                               clocks = <&ccu CLK_BUS_EPHY>;
+> +                               resets = <&ccu RST_BUS_EPHY>;
+> +                               phy-is-integrated
+> +                       };
+> +               };
+> +               ext_mdio: mdio@0 {
+> +                       reg = <0>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +               };
+> +};
+> +
+> +Example with external PHY:
+> +emac: ethernet@1c0b000 {
+> +       compatible = "allwinner,sun8i-h3-emac";
+> +       syscon = <&syscon>;
+> +       reg = <0x01c0b000 0x104>;
+> +       interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +       interrupt-names = "macirq";
+> +       resets = <&ccu RST_BUS_EMAC>;
+> +       reset-names = "stmmaceth";
+> +       clocks = <&ccu CLK_BUS_EMAC>;
+> +       clock-names = "stmmaceth";
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +
+> +       phy-handle = <&ext_rgmii_phy>;
+> +       phy-mode = "rgmii";
+> +       allwinner,leds-active-low;
+
+You don't need this when using the external PHY.
+
+Regards
+ChenYu
+
+> +       mdio: mdio {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +       };
+> +       mdio-mux {
+> +               compatible = "allwinner,sun8i-h3-mdio-switch";
+> +               mdio-parent-bus = <&mdio>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               int_mdio: mdio@1 {
+> +                       reg = <1>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       int_mii_phy: ethernet-phy@1 {
+> +                               reg = <1>;
+> +                               clocks = <&ccu CLK_BUS_EPHY>;
+> +                               resets = <&ccu RST_BUS_EPHY>;
+> +                               phy-is-integrated
+> +                       };
+> +               };
+> +               ext_mdio: mdio@0 {
+> +                       reg = <0>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       ext_rgmii_phy: ethernet-phy@1 {
+> +                               reg = <1>;
+> +                       };
+> +               };
+> +};
+> +
+> +Example with SoC without integrated PHY
+> +
+> +emac: ethernet@1c0b000 {
+> +       compatible = "allwinner,sun8i-a83t-emac";
+> +       syscon = <&syscon>;
+> +       reg = <0x01c0b000 0x104>;
+> +       interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +       interrupt-names = "macirq";
+> +       resets = <&ccu RST_BUS_EMAC>;
+> +       reset-names = "stmmaceth";
+> +       clocks = <&ccu CLK_BUS_EMAC>;
+> +       clock-names = "stmmaceth";
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +
+> +       phy-handle = <&ext_rgmii_phy>;
+> +       phy-mode = "rgmii";
+> +       mdio: mdio {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               ext_rgmii_phy: ethernet-phy@1 {
+>                         reg = <1>;
+> -                       clocks = <&ccu CLK_BUS_EPHY>;
+> -                       resets = <&ccu RST_BUS_EPHY>;
+>                 };
+>         };
+>  };
+> --
+> 2.13.0
+>
