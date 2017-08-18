@@ -1,43 +1,33 @@
 From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 03/16] dmaengine: bcm-sba-raid: Common flags for
- sba_request state and fence
-Date: Fri, 18 Aug 2017 10:55:01 +0530
-Message-ID: <20170818052501.GD3053@localhost>
+Subject: Re: [PATCH v2 15/16] dmaengine: bcm-sba-raid: Add debugfs support
+Date: Fri, 18 Aug 2017 10:56:13 +0530
+Message-ID: <20170818052613.GE3053@localhost>
 References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
- <1501583880-32072-4-git-send-email-anup.patel@broadcom.com>
- <20170817034534.GY3053@localhost>
- <CAALAos8HhiGO3XHDS3ia5G51TmYWGeY9aSzCBDoWKSqr195Meg@mail.gmail.com>
+ <1501583880-32072-16-git-send-email-anup.patel@broadcom.com>
+ <20170817080142.GC3053@localhost>
+ <CAALAos_SXTMms8XmhEC28gxx4qvvr0z3wqQ=o_-BohMpcXwQTw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAALAos8HhiGO3XHDS3ia5G51TmYWGeY9aSzCBDoWKSqr195Meg@mail.gmail.com>
+In-Reply-To: <CAALAos_SXTMms8XmhEC28gxx4qvvr0z3wqQ=o_-BohMpcXwQTw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Anup Patel <anup.patel@broadcom.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 10:26:54AM +0530, Anup Patel wrote:
-> On Thu, Aug 17, 2017 at 9:15 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> > On Tue, Aug 01, 2017 at 04:07:47PM +0530, Anup Patel wrote:
-> >> This patch merges sba_request state and fence into common
-> >> sba_request flags. Also, in-future we can extend sba_request
-> >> flags as required.
-> >
-> > and it also changes the flag values to bits, which I have no idea why that
-> > was done, care to explain that please...
+On Fri, Aug 18, 2017 at 10:33:54AM +0530, Anup Patel wrote:
+> On Thu, Aug 17, 2017 at 1:31 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> > On Tue, Aug 01, 2017 at 04:07:59PM +0530, Anup Patel wrote:
+> > why fail, debugfs should be an optional thingy, why would you want to fail here?
 > 
-> I thought its better to have separate bit each sba_request state so
-> that when a sba_request is accidentally in two states then we can
-> debug better.
-
-that is fine, but you need to comminucate the motivation behind such a
-change!!
-
+> Yes, we are handling the case when debugfs is not available
+> and skipping debugfs gracefully.
 > 
-> I will restore state values.
+> If debugfs is available then failure of debugfs_create_dir()
+> should be reported.
 
-either ways am okay, but if we are not using bits smartly then why to change
+reported yes, bailing out on that err no..
 
 -- 
 ~Vinod
