@@ -1,143 +1,60 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH ] ARM: dts: r8a7745: Add GPIO support
-Date: Fri, 18 Aug 2017 15:56:01 +0100
-Message-ID: <1503068161-55067-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH repost2] pwm: renesas-tpu: remove support for sh7372
+Date: Fri, 18 Aug 2017 17:28:01 +0200
+Message-ID: <20170818152801.GA18307@ulmo>
+References: <20170818100858.GA15521@verge.net.au>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170818100858.GA15521@verge.net.au>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Describe GPIO blocks in the R8A7745 device tree.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch has run time dependency on the below patch
-[PATCH/RFC] gpio: rcar: add gen[123] fallback compatibility strings
-https://patchwork.kernel.org/patch/9834611/
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch is tested against renesas-dev tag
-renesas-devel-20170818-v4.13-rc5 
+On Fri, Aug 18, 2017 at 12:09:01PM +0200, Simon Horman wrote:
+> Remove support for the SH7372 (SH-Mobile AP4) from the renesas-tpu driver.
+>=20
+> Commit edf4100906044225 ("ARM: shmobile: sh7372 dtsi: Remove Legacy file")
+> removes this SoC from the kernel in v4.1.
+>=20
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 1 -
+>  drivers/pwm/pwm-renesas-tpu.c                             | 1 -
+>  2 files changed, 2 deletions(-)
 
+Applied, thanks.
 
- arch/arm/boot/dts/r8a7745.dtsi | 105 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+Thierry
 
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index aff90df..18ca7ae 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -65,6 +65,111 @@
- 			resets = <&cpg 408>;
- 		};
- 
-+		gpio0: gpio@e6050000 {
-+			compatible = "renesas,gpio-r8a7745",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6050000 0 0x50>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 0 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 912>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 912>;
-+		};
-+
-+		gpio1: gpio@e6051000 {
-+			compatible = "renesas,gpio-r8a7745",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6051000 0 0x50>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 32 26>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 911>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 911>;
-+		};
-+
-+		gpio2: gpio@e6052000 {
-+			compatible = "renesas,gpio-r8a7745",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6052000 0 0x50>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 64 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 910>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 910>;
-+		};
-+
-+		gpio3: gpio@e6053000 {
-+			compatible = "renesas,gpio-r8a7745",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6053000 0 0x50>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 96 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 909>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 909>;
-+		};
-+
-+		gpio4: gpio@e6054000 {
-+			compatible = "renesas,gpio-r8a7745",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6054000 0 0x50>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 128 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 908>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 908>;
-+		};
-+
-+		gpio5: gpio@e6055000 {
-+			compatible = "renesas,gpio-r8a7745",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6055000 0 0x50>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 160 28>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 907>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 907>;
-+		};
-+
-+		gpio6: gpio@e6055400 {
-+			compatible = "renesas,gpio-r8a7745",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6055400 0 0x50>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 192 26>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 905>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 905>;
-+		};
-+
- 		irqc: interrupt-controller@e61c0000 {
- 			compatible = "renesas,irqc-r8a7745", "renesas,irqc";
- 			#interrupt-cells = <2>;
--- 
-1.9.1
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmXB4EACgkQ3SOs138+
+s6EQ/BAAuM2XlL+KPSzdKoO3Q26ek1Its1QmuGy5geSATWQI3hvLuC8eNrWTgdOb
+tWAmpJMWzNnBksbSPhVHrDJygkHts81+HKSShueqTd+tYeR+NRh013XlsjcR0d/V
+7TxDRBWT7iz1nAlBgCHYS7F5LESi/XMnwzwo+9JCqFWkYYjBqyzZz+Gwtzj83HgE
+ue6ezrLUtCIGK6qEfm0oLpf8oxYSdYz6TUucUWBvWWiYD7BJe/aCMDZXyFT5Yjgf
+RQl09oZvF+8tbBdCwZZQxeQIUB4SFvoWENtnkZ2793BXHxDaBWMxA/bBTP3SSh9N
+YgDi5g+ZYpGiCpcotcKWkhpjdkkRaxWjeLrK72fDyQLAAgx2eEwSI8ciJ9Z/zryy
+aC5ncG5Pn99X9aSsDFSbDwR1hn0UwuFhfTeuLOt22UUrzfH6u83MZSGQF0JcySH9
+UJivoLng//YkcJwwtqQNfMNAFqjdJX+QWMm1z2tUa8HhtXfajuTdWcJJttVG1n5q
+zEtsrhhoUFgFsW2iFlAQwTCvQmZZG/HD8gXCw7VtANrx5PDtJOjBWUOTd3IgaNf2
+R6pkWcFDEq8aWPYjI6rxqw6j2yhaFlM/JvR2HC6eEtzOYij1M8JrydnCBQbV8w2q
+TMyOeoyPayplz496Z/7N9m6Mr8DQBq4mWQWE4xdiIQtg9ButYPs=
+=QHE3
+-----END PGP SIGNATURE-----
+
+--UlVJffcvxoiEqYs2--
