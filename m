@@ -1,49 +1,36 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v2 03/16] dmaengine: bcm-sba-raid: Common flags for
- sba_request state and fence
-Date: Fri, 18 Aug 2017 11:35:51 +0530
-Message-ID: <CAALAos-UJ4QLbtyE0XzPR=HepDH1m4YnLQG=nTwaL47991F7vw@mail.gmail.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 09/16] dmaengine: bcm-sba-raid: Improve
+ sba_issue_pending() run duration
+Date: Fri, 18 Aug 2017 11:42:16 +0530
+Message-ID: <CAALAos8+K4XL7GS7rzLrwO=LoFM0wfG1QdWvPX3ryED5spKVcw@mail.gmail.com>
 References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
- <1501583880-32072-4-git-send-email-anup.patel@broadcom.com>
- <20170817034534.GY3053@localhost> <CAALAos8HhiGO3XHDS3ia5G51TmYWGeY9aSzCBDoWKSqr195Meg@mail.gmail.com>
- <20170818052501.GD3053@localhost>
+ <1501583880-32072-10-git-send-email-anup.patel@broadcom.com> <20170817063614.GZ3053@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170818052501.GD3053@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170817063614.GZ3053@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 10:55 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Fri, Aug 18, 2017 at 10:26:54AM +0530, Anup Patel wrote:
->> On Thu, Aug 17, 2017 at 9:15 AM, Vinod Koul <vinod.koul@intel.com> wrote:
->> > On Tue, Aug 01, 2017 at 04:07:47PM +0530, Anup Patel wrote:
->> >> This patch merges sba_request state and fence into common
->> >> sba_request flags. Also, in-future we can extend sba_request
->> >> flags as required.
->> >
->> > and it also changes the flag values to bits, which I have no idea why that
->> > was done, care to explain that please...
->>
->> I thought its better to have separate bit each sba_request state so
->> that when a sba_request is accidentally in two states then we can
->> debug better.
+On Thu, Aug 17, 2017 at 12:06 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Aug 01, 2017 at 04:07:53PM +0530, Anup Patel wrote:
+>> The pending sba_request list can become very long in real-life usage
+>> (e.g. setting up RAID array) which can cause sba_issue_pending() to
+>> run for long duration.
 >
-> that is fine, but you need to comminucate the motivation behind such a
-> change!!
+> that raises the warning flags.. Even if we have a long pending list why
+> would issue_pending run for long. The purpose of the issue_pending() is to
+> submit a txn if idle and return. The interrupt and tasklet shall push the
+> subsequent txn to hardware...
 
-Okay, I will add this info to commit description.
-
->
->>
->> I will restore state values.
->
-> either ways am okay, but if we are not using bits smartly then why to change
-
-Okay, I will keep new state values as-is and only update commit
-description.
+Yes, we are doing very similar thing in PATCH13 by further
+simplifying sba_process_deferred_requests()
 
 Regards,
 Anup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
