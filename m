@@ -1,62 +1,42 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v1 2/2] ASoC: mediatek: switch to use platform_get_irq_byname()
-Date: Fri, 18 Aug 2017 09:28:50 +0800
-Message-ID: <3c24b787fab90c898450a3027b2d11bf1c04ff24.1503019482.git.ryder.lee@mediatek.com>
-References: <8e309915033984c0b949254beef44a8307f479f4.1503019482.git.ryder.lee@mediatek.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_som2: fix PCIe reset
+Date: Fri, 18 Aug 2017 09:30:22 +0800
+Message-ID: <20170818013020.GH7608@dragon>
+References: <20170817135010.3042-1-gary.bisson@boundarydevices.com>
+ <20170817150236.GA8358@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8e309915033984c0b949254beef44a8307f479f4.1503019482.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, Garlic Tseng <garlic.tseng@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170817150236.GA8358-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Switch to use platform_get_irq_byname() so that binding can be agnostic
-of the IRQ order.
+On Thu, Aug 17, 2017 at 08:02:36AM -0700, Greg KH wrote:
+> On Thu, Aug 17, 2017 at 03:50:10PM +0200, Gary Bisson wrote:
+> > Previous value was a bad copy of nitrogen6_max device tree.
+> > 
+> > Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> <formletter>
+> 
+> This is not the correct way to submit patches for inclusion in the
+> stable kernel tree.  Please read:
+>     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> for how to do this properly.
+> 
+> </formletter>
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-CC: Garlic Tseng <garlic.tseng@mediatek.com>
----
- sound/soc/mediatek/mt2701/mt2701-afe-pcm.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+I didn't realized that Gary wants to get this into stable.  I will add
+Fixes and stable tags to the patch.  Thanks, Greg.
 
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-index bc5d4db..c7d38bf 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-@@ -1496,14 +1496,12 @@ static int mt2701_afe_runtime_resume(struct device *dev)
- 
- static int mt2701_afe_pcm_dev_probe(struct platform_device *pdev)
- {
--	int ret, i;
--	unsigned int irq_id;
- 	struct mtk_base_afe *afe;
- 	struct mt2701_afe_private *afe_priv;
- 	struct resource *res;
- 	struct device *dev;
-+	int i, irq_id, ret;
- 
--	ret = 0;
- 	afe = devm_kzalloc(&pdev->dev, sizeof(*afe), GFP_KERNEL);
- 	if (!afe)
- 		return -ENOMEM;
-@@ -1516,11 +1514,12 @@ static int mt2701_afe_pcm_dev_probe(struct platform_device *pdev)
- 	afe->dev = &pdev->dev;
- 	dev = afe->dev;
- 
--	irq_id = platform_get_irq(pdev, 0);
--	if (!irq_id) {
--		dev_err(dev, "%s no irq found\n", dev->of_node->name);
--		return -ENXIO;
-+	irq_id = platform_get_irq_byname(pdev, "asys");
-+	if (irq_id < 0) {
-+		dev_err(dev, "unable to get ASYS IRQ\n");
-+		return irq_id;
- 	}
-+
- 	ret = devm_request_irq(dev, irq_id, mt2701_asys_isr,
- 			       IRQF_TRIGGER_NONE, "asys-isr", (void *)afe);
- 	if (ret) {
--- 
-1.9.1
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
