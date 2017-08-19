@@ -1,49 +1,32 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/5] Add clk and scpsys support for MT6755
-Date: Sat, 19 Aug 2017 16:17:20 +0800
-Message-ID: <1503130640.8938.1.camel@mtkswgap22>
-References: <1502180014-7995-1-git-send-email-mars.cheng@mediatek.com>
-         <1502855993.4599.1.camel@mtkswgap22> <1502938079.4027.3.camel@mtksdaap41>
-         <341316e9-d7ce-85f1-4e54-f872771f530f@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 07/10] dt-bindings: add compatible string for Allwinner
+ R40 CCU
+Date: Sat, 19 Aug 2017 16:17:23 +0800
+Message-ID: <CAGb2v65CdqK1JZWwQAby5VRaLYMFYPttLcwb9XaRJ6_PMrPEjQ@mail.gmail.com>
+References: <20170527102308.1988-1-icenowy@aosc.io> <20170527102308.1988-8-icenowy@aosc.io>
+ <CAGb2v65174+qJTyReMH7ov0NWvp+f6YC3+ovPVZghw9tsokmZw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <341316e9-d7ce-85f1-4e54-f872771f530f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wendell.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v65174+qJTyReMH7ov0NWvp+f6YC3+ovPVZghw9tsokmZw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias, Yingjoe
+On Sun, May 28, 2017 at 11:09 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> On Sat, May 27, 2017 at 6:23 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+>> Allwinner R40 has a clock controlling unit like the ones on other
+>> Allwinner SoCs after sun6i, and can also use a CCU-based driver.
+>>
+>> Add a compatible string for it.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 
-On Thu, 2017-08-17 at 12:19 +0200, Matthias Brugger wrote:
-> 
-...
-> > Hi Mars,
-> > 
-> > Sean reworked the scpsys driver to remove code duplication, see:
-> > http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009687.html
-> > http://lists.infradead.org/pipermail/linux-mediatek/2017-August/009820.html
-> > 
-> > I think current driver will have conflict and can't merge as-is, you'll
-> > need to rebase to Matthias' for-next branch.
-> > 
-> 
-> Yes, please rebase, which should be trivial. Other then that the scpsys driver 
-> looks good.
-> 
+Fixed the conflict and applied for 4.14. Next time please include this when you
+send the driver patches.
 
-Thanks for your review. I will rebase it and send the patch again soon.
-
-Regards,
-Mars
-
-> Regards,
-> Matthias
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
