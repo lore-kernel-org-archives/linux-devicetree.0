@@ -1,108 +1,130 @@
-From: icenowy@aosc.io
-Subject: Re: [linux-sunxi] Re: [PATCH v5] clk: sunxi-ng: support R40 SoC
-Date: Sat, 19 Aug 2017 17:13:17 +0800
-Message-ID: <459ea29fd5c46cabe6c7c5727ee462e7@aosc.io>
-References: <20170815055529.4780-1-icenowy@aosc.io>
- <ba1af994f165b96c096ec03a72836739@aosc.io>
- <CAGb2v645YO-t-5+k2yRsj4_wcJuURic-HY6oD0-mZzOh7--4Ow@mail.gmail.com>
+From: Cao jin <caoj.fnst-BthXqXjhjHXQFUHtdCDX3A@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
+ copying _shipped files
+Date: Sat, 19 Aug 2017 19:31:06 +0800
+Message-ID: <5998217A.1030305@cn.fujitsu.com>
+References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v645YO-t-5+k2yRsj4_wcJuURic-HY6oD0-mZzOh7--4Ow@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1503132577-24423-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Richard Purdie <richard.purdie-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Markus Heiser <markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, SeongJae Park <sj38.park-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yann E. MORIN" <yann.morin.1998-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2017-08-19 17:11，Chen-Yu Tsai 写道：
-> On Tue, Aug 15, 2017 at 4:52 PM,  <icenowy@aosc.io> wrote:
->> 在 2017-08-15 13:55，Icenowy Zheng 写道：
->>> 
->>> Allwinner R40 SoC have a clock controller module in the style of the
->>> SoCs beyond sun6i, however, it's more rich and complex.
->>> 
->>> Add support for it.
->>> 
->>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->>> ---
->>> Changes in v5:
->>> - Added TODO's for PLL constraints.
->>> - Forced OHCI12M mux to 0.
->>> - Changed "adda" clock to "codec" to be consistent with "bus-codec".
->>> - Added several CLK_SET_RATE_{UNGATE,PARENT} flags.
->>> - Added PLL_CPU gate notifier.
->>> Changes in v4:
->>> - Removed usb-ohci-12M mux clocks.
->>> - Removed unused (and not in user manual) adda-4x clock.
->>> - Implemented proper SATA PLL system.
->>> - Renamed MP (Mixed Processor) clock names to drop the extra "DE_".
->>> - Renamed TCONs' clock names to "tcon-lcdX" or "tcon-tvX".
->>> - Added missing RST_DRAM.
->>> - Several clock post/pre-dividers and constraints fixes.
->>> Changes in v3:
->>> - Rebased on current linux-next.
->>> Changes in v2:
->>> - Fixes according to the SoC's user manual.
->>> 
->>>  drivers/clk/sunxi-ng/Kconfig              |    5 +
->>>  drivers/clk/sunxi-ng/Makefile             |    1 +
->>>  drivers/clk/sunxi-ng/ccu-sun8i-r40.c      | 1290
->>> +++++++++++++++++++++++++++++
->>>  drivers/clk/sunxi-ng/ccu-sun8i-r40.h      |   69 ++
->>>  include/dt-bindings/clock/sun8i-r40-ccu.h |  187 +++++
->>>  include/dt-bindings/reset/sun8i-r40-ccu.h |  130 +++
->>>  6 files changed, 1682 insertions(+)
->>>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r40.c
->>>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r40.h
->>>  create mode 100644 include/dt-bindings/clock/sun8i-r40-ccu.h
->>>  create mode 100644 include/dt-bindings/reset/sun8i-r40-ccu.h
->>> 
->>> [...]
->>> 
->>> +static void __init sun8i_r40_ccu_setup(struct device_node *node)
->>> +{
->>> +       void __iomem *reg;
->>> +       u32 val;
->>> +
->>> +       reg = of_io_request_and_map(node, 0, 
->>> of_node_full_name(node));
->>> +       if (IS_ERR(reg)) {
->>> +               pr_err("%s: Could not map the clock registers\n",
->>> +                      of_node_full_name(node));
->>> +               return;
->>> +       }
->>> +
->>> +       /* Force the PLL-Audio-1x divider to 4 */
->>> +       val = readl(reg + SUN8I_R40_PLL_AUDIO_REG);
->>> +       val &= ~GENMASK(19, 16);
->>> +       writel(val | (3 << 16), reg + SUN8I_R40_PLL_AUDIO_REG);
->>> +
->>> +       /* Force PLL-MIPI to MIPI mode */
->>> +       val = readl(reg + SUN8I_R40_PLL_MIPI_REG);
->>> +       val &= ~BIT(16);
->>> +       writel(val, reg + SUN8I_R40_PLL_MIPI_REG);
->>> +
->>> +       /* Force OHCI 12M parent to 0 */
-> 
-> Clarified the comment as
-> 
->         Force OHCI 12M parent to 12M divided from 48M
-> 
->>> +       val = readl(reg + SUN8I_R40_USB_CLK_REG);
->>> +       val &= ~GENMASK(20, 6);
->> 
->> 
->> Sorry but I think this line should be:
->> 
->> val &= ~GENMASK(25, 20);
->> 
->> I didn't understand GENMASK well...
-> 
-> Fixed and applied. Thanks!
+Hi,
+  I am stuck in a similar problem recent days by chance.
+  I am just curious about the purpose of introduction of these *_shipped
+file, are they just for user's convenience when user doesn't install the
+those tools?
 
-Thanks!
+-- 
+Sincerely,
+Cao jin
 
+On 08/19/2017 04:49 PM, Masahiro Yamada wrote:
+> In Linux build system convention, we do not run tools such as
+> flex, bison, gperf during the kernel building.  Instead, manage
+> generated C files in the repository with _shipped suffixes.
+> They are simply shipped (copied) removing the _shipped suffixes
+> during the kernel building.
 > 
-> ChenYu
+> Commit 7373f4f83c71 ("kbuild: add implicit rules for parser generation")
+> added a mechanism to regenerate intermediate C files easily.
+> The build rules are surrounded with ifdef REGENERATE_PARSERS.
+> So, we need to pass REGENERATE_PARSERS=1 from the command line
+> when we want to update them.
+> 
+> Here is one question.  Is it acceptable to use those rules all the time?
+> That is, generate those C files by flex, bison, gperf during the
+> kernel building.
+> 
+> This means, the build system depends on more external tools.
+>>From the users' point of view, they will need to install
+> flex, bison, gperf in order to build the kernel.
+>>From the developers' point of view, the advantage is
+> we do not need to version-control generated files, i.e. _shipped files
+> will be deleted.
+> 
+> I'd like to know if this is acceptable or not.
+> 
+> For example, currently some files are simply shipped (copied)
+> when building the kconfig program.
+> 
+>   $ make mrproper; make defconfig
+>     HOSTCC  scripts/basic/fixdep
+>     HOSTCC  scripts/kconfig/conf.o
+>     SHIPPED scripts/kconfig/zconf.tab.c
+>     SHIPPED scripts/kconfig/zconf.lex.c
+>     SHIPPED scripts/kconfig/zconf.hash.c
+>     HOSTCC  scripts/kconfig/zconf.tab.o
+>     HOSTLD  scripts/kconfig/conf
+>   *** Default configuration is based on 'x86_64_defconfig'
+>   #
+>   # configuration written to .config
+>   #
+> 
+> With this series, they are created from *real* sources
+> (*.y, *.l, *.gperf files).
+> 
+>   $ make mrproper; make defconfig
+>     HOSTCC  scripts/basic/fixdep
+>     HOSTCC  scripts/kconfig/conf.o
+>     YACC    scripts/kconfig/zconf.tab.c
+>     LEX     scripts/kconfig/zconf.lex.c
+>     GPERF   scripts/kconfig/zconf.hash.c
+>     HOSTCC  scripts/kconfig/zconf.tab.o
+>     HOSTLD  scripts/kconfig/conf
+>   *** Default configuration is based on 'x86_64_defconfig'
+>   #
+>   # configuration written to .config
+>   #
+> 
+> Note:
+> The tool versions in Documentation/process/changes.rst are just
+> place-holders for now.  We need to figure out the minimal versions
+> if we like to switch to this approach.
+> 
+> 
+> 
+> Masahiro Yamada (3):
+>   kbuild: generate *.hash.c during build
+>   kbuild: generate *.lex.c during build
+>   kbuild: generate *.tab.c and *.tab.h during build
+> 
+>  Documentation/process/changes.rst        |   36 +
+>  scripts/Makefile.lib                     |   26 +-
+>  scripts/dtc/Makefile                     |    6 +-
+>  scripts/dtc/dtc-lexer.lex.c_shipped      | 2259 ---------------------------
+>  scripts/dtc/dtc-parser.tab.c_shipped     | 2303 ----------------------------
+>  scripts/dtc/dtc-parser.tab.h_shipped     |  125 --
+>  scripts/genksyms/Makefile                |    4 +-
+>  scripts/genksyms/keywords.hash.c_shipped |  230 ---
+>  scripts/genksyms/lex.lex.c_shipped       | 2291 ---------------------------
+>  scripts/genksyms/parse.tab.c_shipped     | 2394 -----------------------------
+>  scripts/genksyms/parse.tab.h_shipped     |  119 --
+>  scripts/kconfig/Makefile                 |    1 +
+>  scripts/kconfig/zconf.hash.c_shipped     |  297 ----
+>  scripts/kconfig/zconf.lex.c_shipped      | 2473 ------------------------------
+>  scripts/kconfig/zconf.tab.c_shipped      | 2471 -----------------------------
+>  15 files changed, 53 insertions(+), 14982 deletions(-)
+>  delete mode 100644 scripts/dtc/dtc-lexer.lex.c_shipped
+>  delete mode 100644 scripts/dtc/dtc-parser.tab.c_shipped
+>  delete mode 100644 scripts/dtc/dtc-parser.tab.h_shipped
+>  delete mode 100644 scripts/genksyms/keywords.hash.c_shipped
+>  delete mode 100644 scripts/genksyms/lex.lex.c_shipped
+>  delete mode 100644 scripts/genksyms/parse.tab.c_shipped
+>  delete mode 100644 scripts/genksyms/parse.tab.h_shipped
+>  delete mode 100644 scripts/kconfig/zconf.hash.c_shipped
+>  delete mode 100644 scripts/kconfig/zconf.lex.c_shipped
+>  delete mode 100644 scripts/kconfig/zconf.tab.c_shipped
+> 
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
