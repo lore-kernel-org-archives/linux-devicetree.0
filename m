@@ -1,38 +1,63 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for
- sun8i-h3-emac
-Date: Sat, 19 Aug 2017 22:38:36 +0200
-Message-ID: <20170819203836.GA21567@lunn.ch>
-References: <20170818122118.4925-1-clabbe.montjoie@gmail.com>
- <20170818122118.4925-4-clabbe.montjoie@gmail.com>
- <CAGb2v66KcZkiDDHryMmVzm4WroXePPy3V44SLpVdoO3ZEjgC=g@mail.gmail.com>
- <20170819185025.GB13266@Red>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 0/3] AS3645A flash support
+Date: Sun, 20 Aug 2017 00:24:07 +0300
+Message-ID: <20170819212410.3084-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170819185025.GB13266@Red>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: javier@dowhile0.org, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 19, 2017 at 08:50:25PM +0200, Corentin Labbe wrote:
-> On Sat, Aug 19, 2017 at 01:05:21AM +0800, Chen-Yu Tsai wrote:
-> > On Fri, Aug 18, 2017 at 8:21 PM, Corentin Labbe
-> > <clabbe.montjoie@gmail.com> wrote:
-> > > In case of a MDIO switch, the registered MDIO node should be
-> > > the parent of the PHY. Otherwise of_phy_connect will fail.
+Hi everyone,
 
-Hi Corentin
+This set adds support for the AS3645A flash driver which can be found e.g.
+in Nokia N9.
 
-Sorry, I missed this patch series. Looking at patchwork...
+The set depeds on the flash patches here so I'd prefer to merge this
+through mediatree.
 
-Can you represent the MDIO mux using 
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=flash>
 
-Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
+Since v1:
 
-It would be better if you could reuse existing infrastructure than
-invent something new.
+- Fix flash label use.
 
-   Andrew
+- Drop "flash" property from sensors in N9 DTS patch. This will reappear in
+  a sepeate patch after the "flash" binding documentation patch.
+
+- Remove PM support from the driver (the LED framework handles this).
+
+- Enable runtime PM un as3645a driver.
+
+- Add I²C device ID table for module autoloading.
+
+- Add label to the binding examples as well as reference to common.txt.
+
+- Document label as an optional property for both LED sub-nodes.
+
+Since the RFC set:
+
+- Add back the DT binding documentation I lost long ago.
+
+- Use colon (":") in the default names instead of a space.
+
+Sakari Ailus (3):
+  dt: bindings: Document DT bindings for Analog devices as3645a
+  leds: as3645a: Add LED flash class driver
+  arm: dts: omap3: N9/N950: Add AS3645A camera flash
+
+ .../devicetree/bindings/leds/ams,as3645a.txt       |  71 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/omap3-n950-n9.dtsi               |  14 +
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-as3645a.c                        | 770 +++++++++++++++++++++
+ 6 files changed, 870 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/ams,as3645a.txt
+ create mode 100644 drivers/leds/leds-as3645a.c
+
+-- 
+2.11.0
