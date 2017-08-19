@@ -1,149 +1,55 @@
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PATCH] dts: Make it easier to enable __symbols__ generation in
- dtb files
-Date: Fri, 18 Aug 2017 22:29:50 -0400
-Message-ID: <20170819022950.GH17193@bill-the-cat>
-References: <1502930102-8648-1-git-send-email-trini@konsulko.com>
- <59953868.5060209@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/8] dt-bindings: phy: sun4i-usb-phy: Add property
+ descriptions for H3
+Date: Sat, 19 Aug 2017 10:34:34 +0800
+Message-ID: <CAGb2v67cMzvmZGMFptkak-M1AT0FNFSX7p-1xqsczMAnO8UFHA@mail.gmail.com>
+References: <20170803081411.22389-1-wens@csie.org> <20170803081411.22389-2-wens@csie.org>
+ <20170810170855.txcvwjfb4kzx4q66@rob-hp-laptop> <CAGb2v65mKdQC40ASsmeWqCxnDWV4mmf9QFo5-t7spX9RRJBdbg@mail.gmail.com>
+ <7a1889e0-6733-3f7d-4b34-b08e8bf3e2b5@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="CNfT9TXqV7nd4cfk"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <59953868.5060209@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sekhar Nori <nsekhar@ti.com>, Jason Kridner <jkridner@beagleboard.org>, Drew Fustini <drew@beagleboard.org>, Robert Nelson <robertcnelson@gmail.com>, Lokesh Vutla <lokeshvutla@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <mmarek@suse.com>, linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7a1889e0-6733-3f7d-4b34-b08e8bf3e2b5-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 18, 2017 at 6:53 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
+>
+> On Thursday 17 August 2017 10:35 PM, Chen-Yu Tsai wrote:
+>> On Fri, Aug 11, 2017 at 1:08 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Thu, Aug 03, 2017 at 04:14:04PM +0800, Chen-Yu Tsai wrote:
+>>>> The Allwinner H3 SoC has 4 USB PHYs, so it needs four sets of pmu
+>>>> regions, clocks, resets, and optional vbus properties. These were
+>>>> not described when the H3 compatible string was added.
+>>>>
+>>>> Fixes: 626a630e003c ("phy-sun4i-usb: Add support for the host usb-phys
+>>>>                     found on the H3 SoC")
+>>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 8 ++++++--
+>>>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> Kishon, are the dt binding and driver parts of this series OK for
+>> 4.14? I'd like to get an answer from you to be able to merge the
+>> device tree parts.
+>
+> Yes. I merged the phy driver patches to phy tree. I'm not able to merge the
+> dt-bindings patch due to conflicts. Can you resend the dt-binding patch based
+> on linux-phy next or let me know if I'm missing any dependent patch.
 
---CNfT9TXqV7nd4cfk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's weird. I just applied both patches on top of linux-phy/next and
+there were no conflicts or issues. Note that there are two dt binding
+patches, patches 1 and 2 in this series. Patch 1 has to be applied before
+patch 2
 
-On Wed, Aug 16, 2017 at 11:32:08PM -0700, Frank Rowand wrote:
-> Hi Tom,
->=20
-> Some nit picking on the patch comment.  :-)
->=20
->=20
-> On 08/16/17 17:35, Tom Rini wrote:
-> > This introduces the variabe DTC_EXTRA_FLAGS to allow for additional
-> > flags to be passed to dtc.  While this can have many uses (such as
-> > easier testing of new warning flags) the use case I wish to spell out
-> > here is passing of -@ to enable __symbols__ to be included in the
-> > resulting dtb and thus 'stacked' overlays to be able to be used.
->=20
-> Not just stacked overlays (I'm guessing by that you mean an
-> overlay applied on top of an overlay), but even an overlay on
-> top of the base dtb.
-
-In the case of outside of the kernel, we can today have some classes of
-overlays that work today.  "Stacked" is how Pantelis has been referring
-to overlays that make use of __symbols__ so that we can resolve
-references.  I guess this ended up being referenced as plugin support in
-dtc.git tho?  I'm not quite sure how to re-word the above to be clear
-that it's extending what can be used.
-
-> > When passing in -@ this will increase the size of the dtb (and resident
-> > memory usage) in exchange for allowing more types of overlays to be
-> > applied to the dtb file prior to passing it to Linux and additional
-> > functionality within the kernel when OF_OVERLAY is enabled and in tools
-> > outside of the kernel.
->=20
-> Not so much additional functionality within the kernel.  It is basic
-> functionality for any overlay to be applied in the kernel.
-
-Oh, I thought the kernel already handled using that information.  I'll
-think how to reword the line there then.
-
-> > Cc: Jason Kridner <jkridner@beagleboard.org>
-> > Cc: Drew Fustini <drew@beagleboard.org>
-> > Cc: Robert Nelson <robertcnelson@gmail.com>
-> > Cc: Lokesh Vutla <lokeshvutla@ti.com>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Russell King <linux@armlinux.org.uk>
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Cc: Michal Marek <mmarek@suse.com>
-> > CC: linux-kbuild@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Tom Rini <trini@konsulko.com>
-> > ---
-> > This would be v3 of my attempt to enable __symbols__ more widely (v2,
-> > for people not on the CC, enabled it always, but for some boards).
-> >=20
-> > To be clear, this version of the patch is more flexible in that it
-> > allows for arbitrary flags to be passed to dtc, which can have other
-> > uses.  But, I'm still spelling out -@ being the motivation behind this
-> > for clarity.
->=20
-> Thank you, that is very useful info to capture in the commit history.
->=20
->=20
-> > Both Frank and Rob were uncomfortable with v2, and Frank
-> > suggested this approach to make it easier for users  / distributions /
-> > etc to opt-in to this functionality.  For clarity, Frank was suggesting
-> > (at least at first) perhaps also a tie-in CONFIG option, which I have
-> > not done here as I feel that's adding extra hurdles to something that
-> > must already be opt-in.  Given that today many of the immediate uses are
-> > for "pre-boot" application of overlays (SoM + carrier + add-ons or EVM +
-> > LCD for example), I believe this is an acceptable trade-off to make
-> > currently.
->=20
-> If I understand correctly, then you are following Rob's suggestion of
-> passing the DTC_EXTRA_FLAGS value in the dtb make command.
->=20
-> That seems to be a reasonable approach for now.  Rob did mention that
-> he would like to remove the current hard coding of a base DTC_FLAGS
-> value, where several architectures initialize it with one of:
->=20
->    DTC_FLAGS ?=3D -p 1024
->    DTC_FLAGS :=3D -p 1024
->=20
-> If those initializations can be removed, then we could just use
-> DTC_FLAGS in the make command, instead of adding DTC_EXTRA_FLAGS.
-> Can you discuss that option with Rob?  (Sorry Rob, I'll be off-grid
-> soon.)
-
-With respect to the current users of DTC_FLAGS, we could just change c6x
-/ microblaze / openrisc / powerpc to use '+=3D' not '?=3D' or ':=3D' as
-one-line patches, from a quick test on microblaze.  Or maybe I'm missing
-something?
-
-But we can't only pass DTC_FLAGS on the command-line directly, unless we
-also pass in all other valid and normal flags (ie
--Wno-unit_address_vs_reg).  This is in-line with how for example CFLAGS
-is handled in the kernel, rather than by what, based on some googling,
-Makefiles can be made to do, in general.  Thanks!
-
---=20
-Tom
-
---CNfT9TXqV7nd4cfk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJZl6KeAAoJEIf59jXTHXZSYK4QAMVRzUktum3schQPo6cCBRVP
-8AZyzy9cLbsNiJkbjrnWvW9tU9K4+2oysBbMWUC2xyL+BJreOtpFHm+5iNKz1KMS
-nYJV0dQoQBMmnDilWa4SsMLJph2vbfUaYn5vn00xeSLkwg0oEoTL4BEfcVUt9aAJ
-AF946+KGwaanDGEzx9X5hUtSFqrb8SpefzEg0U4YHOcX6TcaGEjkQvZLBTjErpNT
-ZGaSIFnBL1+4OgfLVTd9cqgUcbBtG57zjDVXuCcIloXwWWd+ZL6LNGz0vaOMlDzT
-vtA9sZJhoL1S0xI11CXnlyEn615NRHoTQkBdHsvTjqzE3UGI2H0evg9No2JkRcsY
-JHeU/zOOX6nsM5Ycd8jft6/LmgdxigliEJk+Fn5wqF4Tbigdwud8EjH375TTOGC5
-H3X6yVObHBX3mscI7VieFE3VRdnJFAfFToWjp2spTpvNCZ1VdbFDgdLaEZBZQ3JW
-606sazQoXATGqbc7gYtuSYNAtxVW0ScqncwFzt4aARCj3RaJKxvu+0WfmH1H9sn6
-gArBwk8OCmytGcFM3Q6vr8u70Y3KAi+EIHELaPqHb7uL+ZaYtk7AxSCTAt5WgTrg
-czPweTBHJx75hTdqTDK4NBTk/Q2fCbKGlFy8CLtkul53tdRV8yNcO3WI8dIBbiD5
-Gz9nGI0WrVuQYUE6pqqT
-=N/Lv
------END PGP SIGNATURE-----
-
---CNfT9TXqV7nd4cfk--
+Thanks
+ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
