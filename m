@@ -1,47 +1,71 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch v3 2/3] drivers: jtag: Add Aspeed SoC 24xx and 25xx
- families JTAG master driver
-Date: Sat, 19 Aug 2017 14:27:37 +0200
-Message-ID: <CAK8P3a3H5QUBn9LDqqrwuES6UUH438B4asWXQ-PDhgb-oaWFHA@mail.gmail.com>
-References: <1502791207-26951-3-git-send-email-oleksandrs@mellanox.com> <201708190909.9GRNaEaj%fengguang.wu@intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
+ copying _shipped files
+Date: Sat, 19 Aug 2017 10:03:51 -0700
+Message-ID: <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
+References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201708190909.9GRNaEaj%fengguang.wu@intel.com>
+In-Reply-To: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Oleksandr Shamray <oleksandrs@mellanox.com>, kbuild-all@01.org, gregkh <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>, Tobias Klauser <tklauser@distanz.ch>, linux-serial@vger.kernel.org, mec@shout.net, vadimp@maellanox.com, system-sw-low-level@mellanox.com, Rob Herring <robh+dt@kernel.org>, openocd-devel-owner@lists.sourceforge.net, Jiri Pirko <jiri@mellanox.com>, Richard Weinberger <richard@nod.at>, uml-devel <user-mode-linux-devel@lists.sourceforge.net>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>, Michal Marek <mmarek@suse.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Richard Purdie <richard.purdie@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Markus Heiser <markus.heiser@darmarit.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, SeongJae Park <sj38.park@gmail.com>, "Yann E. MORIN" <yann.morin.1>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 19, 2017 at 3:21 AM, kbuild test robot <lkp@intel.com> wrote:
-> Hi Oleksandr,
+On Sat, Aug 19, 2017 at 1:49 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.13-rc5 next-20170817]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Oleksandr-Shamray/drivers-jtag-Add-JTAG-core-driver/20170818-114739
-> config: um-allyesconfig (attached as .config)
-> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=um
->
-> All errors (new ones prefixed by >>):
->
->    drivers/auxdisplay/img-ascii-lcd.o: In function `img_ascii_lcd_probe':
->    drivers/auxdisplay/img-ascii-lcd.c:386: undefined reference to `devm_ioremap_resource'
->    drivers/jtag/jtag-aspeed.o: In function `aspeed_jtag_init':
->>> drivers/jtag/jtag-aspeed.c:635: undefined reference to `devm_ioremap_resource'
->    collect2: error: ld returned 1 exit status
+> Here is one question.  Is it acceptable to use those rules all the time?
+> That is, generate those C files by flex, bison, gperf during the
+> kernel building.
 
-So arch/um now provides an ioremap() stub despite the absence of
-CONFIG_HAS_IOMEM, but the respective devm_* interface from
-lib/devres.c is not available.
+Yeah, I think we probably should do that.
 
-We can either work around this for new drivers as we used to do for
-ioremap() by adding a correct 'depends on HAS_IOMEM' Kconfig
-dependency, or we could find a way for arch/um to provide stubs
-for the additional functions as well.
+However, when I just tested, I noticed that we have issues with
+re-generating those files. With gperf 3.1 installed, I get
 
-      Arnd
+  In file included from scripts/kconfig/zconf.tab.c:213:0:
+  scripts/kconfig/zconf.gperf:147:1: error: conflicting types for
+=E2=80=98kconf_id_lookup=E2=80=99
+  scripts/kconfig/zconf.gperf:12:31: note: previous declaration of
+=E2=80=98kconf_id_lookup=E2=80=99 was here
+   static const struct kconf_id *kconf_id_lookup(register const char
+*str, register unsigned int len);
+                                 ^~~~~~~~~~~~~~~
+
+because gperf now generates
+
+   const struct kconf_id *
+  -kconf_id_lookup (register const char *str, register unsigned int len)
+  +kconf_id_lookup (register const char *str, register size_t len)
+
+and I'm not sure how to detect that automatically. It seems to be a
+gperf-3.1 change, and gperf doesn't seem to generate any version
+markers.
+
+Working around that, I hit:
+
+  In file included from scripts/genksyms/lex.lex.c:1921:0:
+  scripts/genksyms/keywords.gperf:54:1: error: conflicting types for
+=E2=80=98is_reserved_word=E2=80=99
+   static, STATIC_KEYW
+   ^~~~~~~~~~~~~~~~
+  In file included from scripts/genksyms/lex.lex.c:1921:0:
+  scripts/genksyms/keywords.gperf:6:30: note: previous declaration of
+=E2=80=98is_reserved_word=E2=80=99 was here
+   static const struct resword *is_reserved_word(register const char
+*str, register unsigned int len);
+                              ^~~~~~~~~~~~~~~~
+
+so we have at least two cases of this in the source tree.
+
+So one of the advantages of the pre-shipped files is that we can avoid
+that kind of crazy version issues with the tools.
+
+But if we can solve the versioning thing easily, I certainly don't
+mind getting rid of the pre-generated files. Having to have
+flex/bison/gperf isn't a huge onus on the kernel build system.
+
+              Linus
