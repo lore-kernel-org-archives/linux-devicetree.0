@@ -1,71 +1,50 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
  copying _shipped files
-Date: Sat, 19 Aug 2017 10:03:51 -0700
-Message-ID: <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
-References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
+Date: Sat, 19 Aug 2017 10:14:25 -0700
+Message-ID: <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug@mail.gmail.com>
+References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com> <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>, Michal Marek <mmarek@suse.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Richard Purdie <richard.purdie@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Markus Heiser <markus.heiser@darmarit.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, SeongJae Park <sj38.park@gmail.com>, "Yann E. MORIN" <yann.morin.1>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Richard Purdie <richard.purdie-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Markus Heiser <markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, SeongJae Park <sj38.park-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yann E. MORIN" <yann.morin.1>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 19, 2017 at 1:49 AM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Sat, Aug 19, 2017 at 10:03 AM, Linus Torvalds
+<torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
 >
-> Here is one question.  Is it acceptable to use those rules all the time?
-> That is, generate those C files by flex, bison, gperf during the
-> kernel building.
+> So one of the advantages of the pre-shipped files is that we can avoid
+> that kind of crazy version issues with the tools.
 
-Yeah, I think we probably should do that.
+Side note: the traditional way to handle this is autoconf etc. Since I
+think autoconf is evil crap, I refuse to have anything what-so-ever to
+do with it.
 
-However, when I just tested, I noticed that we have issues with
-re-generating those files. With gperf 3.1 installed, I get
+gperf is clearly written by clowns that don't understand about
+compatibility issues - it would have been trivial for them to add some
+kind of marker define so that you could test for this directly rather
+than depend on some kind of autoconf "try to build and see if it
+fails" crap.
 
-  In file included from scripts/kconfig/zconf.tab.c:213:0:
-  scripts/kconfig/zconf.gperf:147:1: error: conflicting types for
-=E2=80=98kconf_id_lookup=E2=80=99
-  scripts/kconfig/zconf.gperf:12:31: note: previous declaration of
-=E2=80=98kconf_id_lookup=E2=80=99 was here
-   static const struct kconf_id *kconf_id_lookup(register const char
-*str, register unsigned int len);
-                                 ^~~~~~~~~~~~~~~
+So I think the best option would be to jhust get rid of gperf, and use
+a normal hash function instead (even if it isn't "perfect" - it's not
+like perfect hashes are so wonderful).
 
-because gperf now generates
+I wonder if those two ID lookups are even worth hashing at all - the
+arrays aren't so big, and the uses aren't so timing-critical, so it's
+entirely possible that we could just get rid of any hashing at all and
+just use some stupid linear search thing.
 
-   const struct kconf_id *
-  -kconf_id_lookup (register const char *str, register unsigned int len)
-  +kconf_id_lookup (register const char *str, register size_t len)
+I assume that flex/bison are stable enough that we don't have the same
+kind of annoying stupid version issues with it.
 
-and I'm not sure how to detect that automatically. It seems to be a
-gperf-3.1 change, and gperf doesn't seem to generate any version
-markers.
+Anybody want to look at just getting rid of the gperf use?
 
-Working around that, I hit:
-
-  In file included from scripts/genksyms/lex.lex.c:1921:0:
-  scripts/genksyms/keywords.gperf:54:1: error: conflicting types for
-=E2=80=98is_reserved_word=E2=80=99
-   static, STATIC_KEYW
-   ^~~~~~~~~~~~~~~~
-  In file included from scripts/genksyms/lex.lex.c:1921:0:
-  scripts/genksyms/keywords.gperf:6:30: note: previous declaration of
-=E2=80=98is_reserved_word=E2=80=99 was here
-   static const struct resword *is_reserved_word(register const char
-*str, register unsigned int len);
-                              ^~~~~~~~~~~~~~~~
-
-so we have at least two cases of this in the source tree.
-
-So one of the advantages of the pre-shipped files is that we can avoid
-that kind of crazy version issues with the tools.
-
-But if we can solve the versioning thing easily, I certainly don't
-mind getting rid of the pre-generated files. Having to have
-flex/bison/gperf isn't a huge onus on the kernel build system.
-
-              Linus
+                  Linus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
