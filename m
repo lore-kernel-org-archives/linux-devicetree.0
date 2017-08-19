@@ -1,50 +1,81 @@
-From: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
- copying _shipped files
-Date: Sat, 19 Aug 2017 10:14:25 -0700
-Message-ID: <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug@mail.gmail.com>
-References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com> <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 2/2] serial: 8250: of: Add new port type for MediaTek BTIF controller on MT7622/23 SoC
+Date: Sun, 20 Aug 2017 02:03:30 +0800
+Message-ID: <c2696f6a17ca5914098ad1da394834f8b4b30141.1503165144.git.sean.wang@mediatek.com>
+References: <cover.1503165144.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Richard Purdie <richard.purdie-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Markus Heiser <markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, SeongJae Park <sj38.park-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yann E. MORIN" <yann.morin.1>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1503165144.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com, andriy.shevchenko@linux.intel.com, robert.jarzmik@free.fr, arnd@arndb.de, p.zabel@pengutronix.de, joel@jms.id.au, david@lechnology.com, jan.kiszka@siemens.com, heikki.krogerus@linux.intel.com, hpeter@gmail.com, vigneshr@ti.com, matthias.bgg@gmail.com, tthayer@opensource.altera.com
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 19, 2017 at 10:03 AM, Linus Torvalds
-<torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
->
-> So one of the advantages of the pre-shipped files is that we can avoid
-> that kind of crazy version issues with the tools.
+From: Sean Wang <sean.wang@mediatek.com>
 
-Side note: the traditional way to handle this is autoconf etc. Since I
-think autoconf is evil crap, I refuse to have anything what-so-ever to
-do with it.
+MediaTek BTIF controller is the serial interface similar to UART but it
+works only as the digital device which is mainly used to communicate with
+the connectivity module called CONNSYS inside the SoC which could be mostly
+found on those MediaTek SoCs with Bluetooth feature such as MT7622 and
+MT7623 SoCs.
 
-gperf is clearly written by clowns that don't understand about
-compatibility issues - it would have been trivial for them to add some
-kind of marker define so that you could test for this directly rather
-than depend on some kind of autoconf "try to build and see if it
-fails" crap.
+And the controller is made as being compatible with the 8250 register
+layout with extra registers such as DMA enablement so it tends to be
+integrated with reusing 8250 OF driver. However, DMA mode is not being
+supported yet in the current driver.
 
-So I think the best option would be to jhust get rid of gperf, and use
-a normal hash function instead (even if it isn't "perfect" - it's not
-like perfect hashes are so wonderful).
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/tty/serial/8250/8250_of.c   | 2 ++
+ drivers/tty/serial/8250/8250_port.c | 8 ++++++++
+ include/uapi/linux/serial_core.h    | 3 +++
+ 3 files changed, 13 insertions(+)
 
-I wonder if those two ID lookups are even worth hashing at all - the
-arrays aren't so big, and the uses aren't so timing-critical, so it's
-entirely possible that we could just get rid of any hashing at all and
-just use some stupid linear search thing.
-
-I assume that flex/bison are stable enough that we don't have the same
-kind of annoying stupid version issues with it.
-
-Anybody want to look at just getting rid of the gperf use?
-
-                  Linus
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+index 6c5a8ca..47d4772 100644
+--- a/drivers/tty/serial/8250/8250_of.c
++++ b/drivers/tty/serial/8250/8250_of.c
+@@ -300,6 +300,8 @@ static const struct of_device_id of_platform_serial_table[] = {
+ 		.data = (void *)PORT_ALTR_16550_F64, },
+ 	{ .compatible = "altr,16550-FIFO128",
+ 		.data = (void *)PORT_ALTR_16550_F128, },
++	{ .compatible = "mediatek,mt7623-btif",
++		.data = (void *)PORT_MTK_BTIF, },
+ 	{ .compatible = "mrvl,mmp-uart",
+ 		.data = (void *)PORT_XSCALE, },
+ 	{ .compatible = "ti,da830-uart", .data = (void *)PORT_DA830, },
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 25aae66..053bb38 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -289,6 +289,14 @@ static const struct serial8250_config uart_config[] = {
+ 		.rxtrig_bytes	= {1, 4, 8, 14},
+ 		.flags		= UART_CAP_FIFO | UART_CAP_AFE,
+ 	},
++	[PORT_MTK_BTIF] = {
++		.name		= "MediaTek BTIF",
++		.fifo_size	= 16,
++		.tx_loadsz	= 16,
++		.fcr		= UART_FCR_ENABLE_FIFO |
++				  UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT,
++		.flags		= UART_CAP_FIFO,
++	},
+ };
+ 
+ /* Uart divisor latch read */
+diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
+index 38bea32..cfc07a5 100644
+--- a/include/uapi/linux/serial_core.h
++++ b/include/uapi/linux/serial_core.h
+@@ -272,4 +272,7 @@
+ /* MPS2 UART */
+ #define PORT_MPS2UART	116
+ 
++/* MediaTek BTIF */
++#define PORT_MTK_BTIF	117
++
+ #endif /* _UAPILINUX_SERIAL_CORE_H */
+-- 
+2.7.4
