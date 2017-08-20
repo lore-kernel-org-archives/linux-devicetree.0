@@ -1,67 +1,72 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 2/2] ARM: sunxi: add support for R40 SoC
-Date: Sun, 20 Aug 2017 13:29:57 +0800
-Message-ID: <20170820052957.34597-2-icenowy@aosc.io>
-References: <20170820052957.34597-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170820052957.34597-1-icenowy@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH] ARM: sun8i: a83t: Add device tree for Sinovoip Bananapi
+ BPI-M3
+Date: Sun, 20 Aug 2017 14:02:47 +0800
+Message-ID: <f14d6c43ddcf403775dfb6efe25e7196@aosc.io>
+References: <201708200827.WQojuopU%fengguang.wu@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201708200827.WQojuopU%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allwinner R40 is a new SoC, with Quad Core Cortex-A7 and peripherals
-like A20.
+在 2017-08-20 08:59，kbuild test robot 写道：
+> Hi Chen-Yu,
+> 
+> [auto build test ERROR on robh/for-next]
+> [also build test ERROR on v4.13-rc5 next-20170817]
+> [if your patch is applied to the wrong git tree, please drop us a note
+> to help improve the system]
 
-Add support for it.
+In fact this tree shouldn't be applied on robh's tree, but the arm-soc 
+tree
+or its downstream, sunxi tree.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
- Documentation/arm/sunxi/README                  | 6 ++++++
- Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
- arch/arm/mach-sunxi/sunxi.c                     | 1 +
- 3 files changed, 8 insertions(+)
-
-diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
-index d7b1f016bd62..4fa836782e46 100644
---- a/Documentation/arm/sunxi/README
-+++ b/Documentation/arm/sunxi/README
-@@ -75,6 +75,12 @@ SunXi family
-         + Datasheet
-           http://linux-sunxi.org/File:Allwinner_V3s_Datasheet_V1.0.pdf
- 
-+      - Allwinner R40 (sun8i)
-+        + Datasheet
-+          https://github.com/tinalinux/docs/raw/r40-v1.y/R40_Datasheet_V1.0.pdf
-+        + User Manual
-+          https://github.com/tinalinux/docs/raw/r40-v1.y/Allwinner_R40_User_Manual_V1.0.pdf
-+
-     * Quad ARM Cortex-A15, Quad ARM Cortex-A7 based SoCs
-       - Allwinner A80
-         + Datasheet
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index f35c6ada5a65..e4beec3d9ad3 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -14,6 +14,7 @@ using one of the following compatible strings:
-   allwinner,sun8i-a83t
-   allwinner,sun8i-h2-plus
-   allwinner,sun8i-h3
-+  allwinner-sun8i-r40
-   allwinner,sun8i-v3s
-   allwinner,sun9i-a80
-   allwinner,sun50i-a64
-diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-index 7ab353fb25f2..311e6c4fc4f4 100644
---- a/arch/arm/mach-sunxi/sunxi.c
-+++ b/arch/arm/mach-sunxi/sunxi.c
-@@ -66,6 +66,7 @@ static const char * const sun8i_board_dt_compat[] = {
- 	"allwinner,sun8i-h2-plus",
- 	"allwinner,sun8i-h3",
- 	"allwinner,sun8i-v3s",
-+	"allwinner,sun8i-r40",
- 	NULL,
- };
- 
--- 
-2.13.0
+> 
+> url:
+> https://github.com/0day-ci/linux/commits/Chen-Yu-Tsai/ARM-sun8i-a83t-Add-device-tree-for-Sinovoip-Bananapi-BPI-M3/20170820-055904
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git 
+> for-next
+> config: arm-at91_dt_defconfig (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>         wget
+> https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross
+> -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:64.1-7 Label or 
+>>> path ehci0 not found
+>>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:71.1-6 Label or 
+>>> path mmc0 not found
+>>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:81.1-6 Label or 
+>>> path mmc2 not found
+>>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:91.1-7 Label or 
+>>> path r_rsb not found
+>>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:145.1-8 Label or 
+>>> path usbphy not found
+>    FATAL ERROR: Syntax error parsing input tree
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology 
+> Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel 
+> Corporation
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
