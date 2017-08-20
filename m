@@ -1,58 +1,38 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [RFC PATCH] dt-binding: net: sfp binding documentation
-Date: Sun, 20 Aug 2017 13:28:06 +0300
-Message-ID: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v6 0/7] Add support for IPQ8074 PCIe phy and controller
+Date: Sun, 20 Aug 2017 16:28:19 +0530
+Message-ID: <1d805064-de1f-365a-cdec-97152a2d94a8@ti.com>
+References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
+ <4cce58c3-3fec-db2d-8c97-28beb0e3b3ab@ti.com>
+ <20170803230758.GS20308@bhelgaas-glaptop.roam.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170803230758.GS20308@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Varadarajan Narayanan <varada@codeaurora.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree binding documentation SFP transceivers. Support for SFP
-transceivers has been recently introduced (drivers/net/phy/sfp.c).
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
----
 
-The SFP driver is on net-next.
+On Friday 04 August 2017 04:37 AM, Bjorn Helgaas wrote:
+> On Wed, Aug 02, 2017 at 10:38:21AM +0530, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Monday 31 July 2017 12:04 PM, Varadarajan Narayanan wrote:
+>>> v6:
+>>>   Added 'Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>' and fixed
+>>>   white space issues as mentioned by Vivek.
+>>> 	phy: qcom-qmp: Fix phy pipe clock name
+>>> 	dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+>>
+>> merged the 1st four patches (phy patches) of the series to linux-phy -next.
+> 
+> Heh :)  Ignore my nitpicks on them then!
 
-Not sure about the rate-select-gpio property name. The SFP+ standard
-(not supported yet) uses two signals, RS0 and RS1. RS0 is compatible
-with the SFP rate select signal, while RS1 controls the Tx rate.
----
- Documentation/devicetree/bindings/net/sff-sfp.txt | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/sff-sfp.txt
+I've fixed them. Thanks for reviewing.
 
-diff --git a/Documentation/devicetree/bindings/net/sff-sfp.txt b/Documentation/devicetree/bindings/net/sff-sfp.txt
-new file mode 100644
-index 000000000000..f0c27bc3925e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/sff-sfp.txt
-@@ -0,0 +1,24 @@
-+Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
-+Transceiver
-+
-+Required properties:
-+
-+- compatible : must be "sff,sfp"
-+
-+Optional Properties:
-+
-+- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-+  interface
-+
-+- moddef0-gpio : phandle of the MOD-DEF0 (AKA Mod_ABS) module presence input
-+  gpio signal
-+
-+- los-gpio : phandle of the Receiver Loss of Signal Indication input gpio
-+  signal
-+
-+- tx-fault-gpio : phandle of the Module Transmitter Fault input gpio signal
-+
-+- tx-disable-gpio : phandle of the Transmitter Disable output gpio signal
-+
-+- rate-select-gpio : phandle of the Rx Signaling Rate Select (AKA RS0) output
-+  gpio
--- 
-2.14.1
+Cheers
+Kishon
