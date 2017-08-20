@@ -1,60 +1,65 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 1/4] arm: dts: mediatek: update audio node for mt2701 and mt7623
-Date: Sun, 20 Aug 2017 17:45:59 +0800
-Message-ID: <9c4a8be621ac76594fad303d5d49ed32bd530605.1503222289.git.ryder.lee@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/4 v2] drm/tve200: Add DT bindings
+Date: Sun, 20 Aug 2017 12:05:54 +0200
+Message-ID: <20170820100557.24991-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>, Garlic Tseng <garlic.tseng@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Eric Anholt <eric@anholt.net>, Daniel Vetter <daniel.vetter@intel.com>, Jani Nikula <jani.nikula@linux.intel.com>, Sean Paul <seanpaul@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds interrupt-names property in audio node so that
-binding can be agnostic of the IRQ order [1][2].
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-CC: Garlic Tseng <garlic.tseng@mediatek.com>
-CC: Erin Lo <erin.lo@mediatek.com>
-CC: Sean Wang <sean.wang@mediatek.com>
----
-[1]https://patchwork.kernel.org/patch/9901225/
-[2]https://lkml.org/lkml/2017/8/18/292
----
----
- arch/arm/boot/dts/mt2701.dtsi | 4 +++-
- arch/arm/boot/dts/mt7623.dtsi | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index afe12e5..fd88cbc 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -430,7 +430,9 @@
- 		compatible = "mediatek,mt2701-audio";
- 		reg = <0 0x11220000 0 0x2000>,
- 		      <0 0x112a0000 0 0x20000>;
--		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-+			      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names	= "afe", "asys";
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
- 
- 		clocks = <&infracfg CLK_INFRA_AUDIO>,
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index ec8a074..381843e 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -544,7 +544,9 @@
- 			     "mediatek,mt2701-audio";
- 		reg = <0 0x11220000 0 0x2000>,
- 		      <0 0x112a0000 0 0x20000>;
--		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-+			      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names	= "afe", "asys";
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
- 
- 		clocks = <&infracfg CLK_INFRA_AUDIO>,
--- 
-1.9.1
+VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgRmFyYWRheSBUVkUyMDAgSVAg
+YmxvY2suClRoaXMgSVAgYmxvY2sgaXMgcHJlc2VudCBpbiB0aGUgR2VtaW5pIEFSTSBTb0MgYW5k
+IGFsc28gaW4gc29tZQpHcmFpbiBNZWRpYSBHTXh4eHggU29Dcy4KCkNjOiBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZwpTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlq
+QGxpbmFyby5vcmc+Ci0tLQpDaGFuZ2VMb2cgdjEtPnYyOgotIEZpeCBkaXNwbGF5IHBvcnQgYmlu
+ZGluZ3M6IGxpc3QgcmVxdWlyZWQgZW5kcG9pbnQuCi0gRml4IHRoZSBleGFtcGxlIHRvIGluY2x1
+ZGUgYW4gZW5kcG9pbnQuCi0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9mYXJh
+ZGF5LHR2ZTIwMC50eHQgfCA1NCArKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgNTQgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAwLnR4dAoKZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAw
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZhcmFkYXks
+dHZlMjAwLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjgyZTNi
+YzBiNzQ4NQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAwLnR4dApAQCAtMCwwICsxLDU0IEBACisqIEZhcmFk
+YXkgVFYgRW5jb2RlciBUVkUyMDAKKworUmVxdWlyZWQgcHJvcGVydGllczoKKworLSBjb21wYXRp
+YmxlOiBtdXN0IGJlIG9uZSBvZjoKKwkiZmFyYWRheSx0dmUyMDAiCisJImNvcnRpbmEsZ2VtaW5p
+LXR2YyIsICJmYXJhZGF5LHR2ZTIwMCIKKworLSByZWc6IGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBv
+ZiB0aGUgY29udHJvbCByZWdpc3RlcnMgYmxvY2sKKworLSBpbnRlcnJ1cHRzOiBjb250YWlucyBh
+biBpbnRlcnJ1cHQgc3BlY2lmaWVyIGZvciB0aGUgaW50ZXJydXB0CisJbGluZSBmcm9tIHRoZSBU
+VkUyMDAKKworLSBjbG9jay1uYW1lczogc2hvdWxkIGNvbnRhaW4gIlBDTEsiIGZvciB0aGUgY2xv
+Y2sgbGluZSBjbG9ja2luZyB0aGUKKwlzaWxpY29uIGFuZCAiVFZFIiBmb3IgdGhlIDI3TUh6IGNs
+b2NrIHRvIHRoZSB2aWRlbyBkcml2ZXIKKworLSBjbG9ja3M6IGNvbnRhaW5zIHBoYW5kbGUgYW5k
+IGNsb2NrIHNwZWNpZmllciBwYWlycyBmb3IgdGhlIGVudHJpZXMKKwlpbiB0aGUgY2xvY2stbmFt
+ZXMgcHJvcGVydHkuIFNlZQorCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
+ay9jbG9jay1iaW5kaW5ncy50eHQKKworT3B0aW9uYWwgcHJvcGVydGllczoKKworLSByZXNldHM6
+IGNvbnRhaW5zIHRoZSByZXNldCBsaW5lIHBoYW5kbGUgZm9yIHRoZSBibG9jaworCitSZXF1aXJl
+ZCBzdWItbm9kZXM6CisKKy0gcG9ydDogZGVzY3JpYmVzIExDRCBwYW5lbCBzaWduYWxzLCBmb2xs
+b3dpbmcgdGhlIGNvbW1vbiBiaW5kaW5nCisJZm9yIHZpZGVvIHRyYW5zbWl0dGVyIGludGVyZmFj
+ZXM7IHNlZQorCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1p
+bnRlcmZhY2VzLnR4dAorCVRoaXMgcG9ydCBzaG91bGQgaGF2ZSB0aGUgcHJvcGVydGllczoKKwly
+ZWcgPSA8MD47CisJSXQgc2hvdWxkIGhhdmUgb25lIGVuZHBvaW50IGNvbm5lY3RlZCB0byBhIHJl
+bW90ZSBlbmRwb2ludCB3aGVyZQorCXRoZSBkaXNwbGF5IGlzIGNvbm5lY3RlZC4KKworRXhhbXBs
+ZToKKworZGlzcGxheS1jb250cm9sbGVyQDZhMDAwMDAwIHsKKwkjYWRkcmVzcy1jZWxscyA9IDwx
+PjsKKwkjc2l6ZS1jZWxscyA9IDwwPjsKKwljb21wYXRpYmxlID0gImZhcmFkYXksdHZlMjAwIjsK
+KwlyZWcgPSA8MHg2YTAwMDAwMCAweDEwMDA+OworCWludGVycnVwdHMgPSA8MTMgSVJRX1RZUEVf
+RURHRV9SSVNJTkc+OworCXJlc2V0cyA9IDwmc3lzY29uIEdFTUlOSV9SRVNFVF9UVkM+OworCWNs
+b2NrcyA9IDwmc3lzY29uIEdFTUlOSV9DTEtfR0FURV9UVkM+LAorCQkgPCZzeXNjb24gR0VNSU5J
+X0NMS19UVkM+OworCWNsb2NrLW5hbWVzID0gIlBDTEsiLCAiVFZFIjsKKworCXBvcnRAMCB7CisJ
+CXJlZyA9IDwwPjsKKwkJZGlzcGxheV9vdXQ6IGVuZHBvaW50IHsKKwkJCXJlbW90ZS1lbmRwb2lu
+dCA9IDwmcGFuZWxfaW4+OworCQl9OworCX07Cit9OwotLSAKMi4xMy41CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
