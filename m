@@ -1,113 +1,50 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: editing-type thoughts on devicetree spec 0.1 document
-Date: Sun, 20 Aug 2017 15:08:00 -0400 (EDT)
-Message-ID: <alpine.LFD.2.20.1708170751220.8230@localhost.localdomain>
+From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Add ZTE zx-irdec remote control driver
+Date: Sun, 20 Aug 2017 21:09:48 +0100
+Message-ID: <20170820200947.pvyj7fqlorfq56l5@gofer.mess.org>
+References: <1501420993-21977-1-git-send-email-shawnguo@kernel.org>
+ <20170818125418.GM7608@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170818125418.GM7608@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baoyou Xie <xie.baoyou-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Xin Zhou <zhou.xin8-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 18, 2017 at 08:54:20PM +0800, Shawn Guo wrote:
+> On Sun, Jul 30, 2017 at 09:23:10PM +0800, Shawn Guo wrote:
+> > From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > The series adds dt-bindings and remote control driver for IRDEC block
+> > found on ZTE ZX family SoCs.
+> > 
+> > Changes for v2:
+> >  - Add one patch to move generic NEC scancode composing and protocol
+> >    type detection code from ir_nec_decode() into an inline shared
+> >    function, which can be reused by zx-irdec driver.
+> > 
+> > Shawn Guo (3):
+> >   rc: ir-nec-decoder: move scancode composing code into a shared
+> >     function
+> >   dt-bindings: add bindings document for zx-irdec
+> >   rc: add zx-irdec remote control driver
+> 
+> Hi Sean,
+> 
+> We are getting close to 4.14 merge window.  Can we get this into -next
+> for a bit exposure, if you are fine with the patches?
 
-  Was recently asked to give a short tutorial on device trees, so
-started perusing the current 0.1 spec, comparing contents to current
-linux git repo, made a few notes, here they are, admittedly incredibly
-nitpicky so anyone is free to do with them what they want or just
-ignore them in their entirety; it's just my editor/proofreader side
-coming out. Page numbers refer to PDF document.
+The rc pull requests have been merged into the media_tree, so they should
+now get exposure in linux-next.
 
-p. 2: "... would like [to] thank ..."
+https://git.linuxtv.org/media_tree.git/
 
-p. 2: "... development [of] this specification ..."
+Thanks,
 
-p. 3: "In this document the term boot program ..."; italicize "boot
-program"
-
-p. 3,4: "Examples of a boot programs [sic] ..."
-
-p. 4: "IEEE-1275" should not be hyphenated (occurs more than once)
-
-p. 4: Should it be "PowerISA" or "Power ISA"? Both forms are used.
-
-p. 6: "An [sic] DTSpec-compliant ..."
-
-p. 7: "The nodes with the name Ethernet [sic] ..." actually, it's
-"ethernet".
-
-p. 8: Why are uart node and first ethernet node both at fe001000? Is
-that deliberate? That seems wrong.
-
-p. 9: Non-standard property names include orgs fsl, ibm and linux ...
-i would be tempted to add samsung since there is a *ton* of samsung
-content of that form. Just a thought.
-
-p. 11: "Chapter 4 describes the representation of specific devices
-[and?] may also specify additional requirements."
-
-p. 11: Example of compatible property is:
-
-  compatible = "fsl,mpc8641-uart", "ns16550";
-
-No such line appears in the current kernel source, but there is a
-*pile* of:
-
-  compatible = "fsl,ns16550", "ns16550";
-
-if one wants to provide an example that actually occurs in the source.
-
-p. 11: What is the "model" property used for? Apart from being
-moderately informational, is it used for any compatibility matching?
-That short section doesn't make that clear.
-
-p. 12: Regarding the deprecated "linux,phandle" property, the current
-linux source using that as part of an actual DTS file appears to
-consist entirely of three occurrences:
-
-  arm/boot/dts/imx6qdl-gw560x.dtsi:	linux,phandle = <&reg_vdd_arm>;
-  arm/boot/dts/imx6qdl-gw5903.dtsi:	linux,phandle = <&reg_vdd_arm>;
-  arm/boot/dts/imx6qdl-gw5903.dtsi:	linux,phandle = <&reg_vdd_soc>;
-
-If those last three instances were fixed, would there be any need to
-continue supporting "linux,phandle"?
-
-Still on the topic of phandles, i notice a number of lines of the
-form:
-
-  dcr-parent = <&{/cpus/cpu@0}>;
-
-What's with the curly braces there? Perhaps i missed it, but those
-don't seem to be explained in the spec. Are curly braces required when
-specifying the full path to the node name? If so, is that mentioned
-somewhere?
-
-p. 12: One listed value for status is "okay", but I notice a number of
-lines in various DTS files:
-
-  status = "ok";
-
-If that's an acceptable alternative, it should be mentioned.
-
-p. 13: "arbitraty"
-
-
-  i think i need to take a break and read the interrupts section
-carefully.
-
-rday
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
-
-
-
+Sean
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
