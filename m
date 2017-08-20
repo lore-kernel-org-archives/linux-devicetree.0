@@ -1,71 +1,50 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH] ARM: sun8i: a83t: Add device tree for Sinovoip Bananapi
- BPI-M3
-Date: Sun, 20 Aug 2017 14:02:47 +0800
-Message-ID: <f14d6c43ddcf403775dfb6efe25e7196@aosc.io>
-References: <201708200827.WQojuopU%fengguang.wu@intel.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for
+ sun8i-h3-emac
+Date: Sun, 20 Aug 2017 08:57:57 +0200
+Message-ID: <20170820065757.GA6081@Red>
+References: <20170818122118.4925-1-clabbe.montjoie@gmail.com>
+ <20170818122118.4925-4-clabbe.montjoie@gmail.com>
+ <CAGb2v66KcZkiDDHryMmVzm4WroXePPy3V44SLpVdoO3ZEjgC=g@mail.gmail.com>
+ <20170819185025.GB13266@Red>
+ <20170819203836.GA21567@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201708200827.WQojuopU%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170819203836.GA21567-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2017-08-20 08:59，kbuild test robot 写道：
-> Hi Chen-Yu,
+On Sat, Aug 19, 2017 at 10:38:36PM +0200, Andrew Lunn wrote:
+> On Sat, Aug 19, 2017 at 08:50:25PM +0200, Corentin Labbe wrote:
+> > On Sat, Aug 19, 2017 at 01:05:21AM +0800, Chen-Yu Tsai wrote:
+> > > On Fri, Aug 18, 2017 at 8:21 PM, Corentin Labbe
+> > > <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > In case of a MDIO switch, the registered MDIO node should be
+> > > > the parent of the PHY. Otherwise of_phy_connect will fail.
 > 
-> [auto build test ERROR on robh/for-next]
-> [also build test ERROR on v4.13-rc5 next-20170817]
-> [if your patch is applied to the wrong git tree, please drop us a note
-> to help improve the system]
+> Hi Corentin
+> 
+> Sorry, I missed this patch series. Looking at patchwork...
 
-In fact this tree shouldn't be applied on robh's tree, but the arm-soc 
-tree
-or its downstream, sunxi tree.
+That's my fault, I forgot to set you in recipient like in last send.
 
 > 
-> url:
-> https://github.com/0day-ci/linux/commits/Chen-Yu-Tsai/ARM-sun8i-a83t-Add-device-tree-for-Sinovoip-Bananapi-BPI-M3/20170820-055904
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git 
-> for-next
-> config: arm-at91_dt_defconfig (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> reproduce:
->         wget
-> https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross
-> -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm
+> Can you represent the MDIO mux using 
 > 
-> All errors (new ones prefixed by >>):
+> Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
 > 
->>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:64.1-7 Label or 
->>> path ehci0 not found
->>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:71.1-6 Label or 
->>> path mmc0 not found
->>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:81.1-6 Label or 
->>> path mmc2 not found
->>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:91.1-7 Label or 
->>> path r_rsb not found
->>> Error: arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts:145.1-8 Label or 
->>> path usbphy not found
->    FATAL ERROR: Syntax error parsing input tree
+> It would be better if you could reuse existing infrastructure than
+> invent something new.
 > 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology 
-> Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel 
-> Corporation
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+I think we cannot use mdio-mux-mmioreg since the register for doing the switch is in middle of the "System Control" and shared with other functions.
+This is why we use a sycon/regmap for selecting the MDIO.
+
+Regards
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
