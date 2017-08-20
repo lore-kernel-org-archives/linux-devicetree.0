@@ -1,43 +1,44 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for
- sun8i-h3-emac
-Date: Sun, 20 Aug 2017 16:25:45 +0200
-Message-ID: <20170820142545.GB24150@lunn.ch>
-References: <20170818122118.4925-1-clabbe.montjoie@gmail.com>
- <20170818122118.4925-4-clabbe.montjoie@gmail.com>
- <CAGb2v66KcZkiDDHryMmVzm4WroXePPy3V44SLpVdoO3ZEjgC=g@mail.gmail.com>
- <20170819185025.GB13266@Red>
- <20170819203836.GA21567@lunn.ch>
- <20170820065757.GA6081@Red>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 0/3] devicetree: cleanup and improve DT cross-arch reference
+Date: Mon, 21 Aug 2017 01:06:48 +0900
+Message-ID: <CAK7LNASfxqG7tFRi=RVdshVaNUFcJBHZ-O=DXUm1pMfDXXgcpA@mail.gmail.com>
+References: <1500949416-24105-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170820065757.GA6081@Red>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1500949416-24105-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Omar Sandoval <osandov@osandov.com>, Gaurav Minocha <gaurav.minocha.os@gmail.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <mmarek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> I think we cannot use mdio-mux-mmioreg since the register for doing
-> the switch is in middle of the "System Control" and shared with
-> other functions.  This is why we use a sycon/regmap for selecting
-> the MDIO.
+Hi Rob, DT developers,
 
-You could add a mdio-mux-regmap.c.
+Any comments for this series?
 
-However, it probably need restructuring of the stmmac mdio code, to
-make the mdio bus usable as a separate driver. You need stmmac mdio
-to probe first, then mdio-mux-remap should probe, and then lastly
-stmmmac mac driver.
+Thanks.
 
-With stmmac mdio and stmmac mac being in one driver, there is no time
-in the middle to allow the mux driver to probe.
 
-It is some effort, but a nice cleanup and generalization.
+2017-07-25 11:23 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+>
+> Masahiro Yamada (3):
+>   of: remove drivers/of/testcase-data from include search path for CPP
+>   of: remove arch/$(SRCARCH)/boot/dts from include search path for CPP
+>   of: search scripts/dtc/include-prefixes path for both CPP and DTC
+>
+>  scripts/Makefile.lib | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-   Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+-- 
+Best Regards
+Masahiro Yamada
