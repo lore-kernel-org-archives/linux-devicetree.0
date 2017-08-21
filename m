@@ -1,71 +1,83 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for
- sun8i-h3-emac
-Date: Mon, 21 Aug 2017 16:23:21 +0200
-Message-ID: <20170821142321.GE1703@lunn.ch>
-References: <20170818122118.4925-1-clabbe.montjoie@gmail.com>
- <20170818122118.4925-4-clabbe.montjoie@gmail.com>
- <CAGb2v66KcZkiDDHryMmVzm4WroXePPy3V44SLpVdoO3ZEjgC=g@mail.gmail.com>
- <20170819185025.GB13266@Red>
- <20170819203836.GA21567@lunn.ch>
- <20170820065757.GA6081@Red>
- <20170820142545.GB24150@lunn.ch>
- <CAGb2v67hQXSoCKP7qW+KRUYX+0djQ1Z23cQ67Lyg6G7ozGyfGQ@mail.gmail.com>
- <20170821132015.GB1703@lunn.ch>
- <20170821133104.qvrhvwin2rdg4aqo@flea.lan>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] device property: preserve usecount for node passed to of_fwnode_graph_get_port_parent()
+Date: Mon, 21 Aug 2017 16:35:03 +0200
+Message-ID: <CAMuHMdUpUW2Vyq=8vBWSMz+xF05Wc=rOo9KNZmZjkU0BDVjzJw@mail.gmail.com>
+References: <20170821125107.20746-1-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170821133104.qvrhvwin2rdg4aqo-ZC1Zs529Oq4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170821125107.20746-1-niklas.soderlund+renesas@ragnatech.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> All muxes are mostly always represented the same way afaik, or do you
-> want to simply introduce a new compatible / property?
+Hi Niklas,
 
-+      	  mdio-mux {
-+		compatible = "allwinner,sun8i-h3-mdio-switch";
-+		mdio-parent-bus = <&mdio_parent>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		internal_mdio: mdio@1 {
-			reg = <1>;
--			clocks = <&ccu CLK_BUS_EPHY>;
--			resets = <&ccu RST_BUS_EPHY>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			int_mii_phy: ethernet-phy@1 {
-+				compatible = "ethernet-phy-ieee802.3-c22";
-+				reg = <1>;
-+				clocks = <&ccu CLK_BUS_EPHY>;
-+				resets = <&ccu RST_BUS_EPHY>;
-+				phy-is-integrated;
-+			};
-+		};
-+		mdio: mdio@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 		
-Hi Maxim
+On Mon, Aug 21, 2017 at 2:51 PM, Niklas S=C3=B6derlund
+<niklas.soderlund+renesas@ragnatech.se> wrote:
+> Using CONFIG_OF_DYNAMIC=3Dy uncovered an imbalance in the usecount of the
+> node being passed to of_fwnode_graph_get_port_parent(). Preserve the
+> usecount just like it is done in of_graph_get_port_parent().
+>
+> Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmw=
+are specific locations")
+> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
+> ---
+>  drivers/of/property.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 067f9fab7b77c794..637dcb4833e2af60 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -922,6 +922,12 @@ of_fwnode_graph_get_port_parent(struct fwnode_handle=
+ *fwnode)
+>  {
+>         struct device_node *np;
+>
+> +       /*
+> +        * Preserve usecount for passed in node as of_get_next_parent()
+> +        * will do of_node_put() on it.
+> +        */
+> +       of_node_get(to_of_node(fwnode));
+> +
+>         /* Get the parent of the port */
+>         np =3D of_get_next_parent(to_of_node(fwnode));
+>         if (!np)
 
-Anybody who knows the MDIO-mux code/binding, knows that it is a run
-time mux. You swap the mux per MDIO transaction. You can access all
-the PHY and switches on the mux'ed MDIO bus.
+FWIW, I'd use "np" to store the intermediate value:
 
-However here, it is effectively a boot-time MUX. You cannot change it
-on the fly. What happens when somebody has a phandle to a PHY on the
-internal and a phandle to a phy on the external? Does the driver at
-least return -EINVAL, or -EBUSY? Is there a representation which
-eliminates this possibility?
+    struct device_node *np =3D to_of_node(fwnode);
 
-   Andrew
+     /*
+      * Preserve usecount for passed in node as of_get_next_parent()
+      * will do of_node_put() on it.
+      */
+    of_node_get(np);
+
+    /* Get the parent of the port */
+    np =3D of_get_next_parent(np);
+
+Alternatively, perhaps to_of_node() should increment the refcount and
+call of_node_get()? Oh, there's (static) of_fwnode_get(), too.
+
+Is drivers/iommu/iommu.c:iommu_fwspec_init() really the only place outside
+drivers/of/property.c that calls of_node_get() on a node obtained by
+to_of_node()?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
