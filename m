@@ -1,62 +1,73 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] pwm: pwm-tiecap: Add TI 66AK2G SoC specific
- compatible
-Date: Mon, 21 Aug 2017 08:12:34 +0200
-Message-ID: <20170821061234.GF18996@ulmo>
-References: <20170807114943.22612-1-vigneshr@ti.com>
- <20170807114943.22612-2-vigneshr@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] pwm: Convert to using %pOF instead of full_name
+Date: Mon, 21 Aug 2017 08:57:32 +0200
+Message-ID: <20170821065732.GI18996@ulmo>
+References: <20170718214339.7774-45-robh@kernel.org>
+ <20170725113854.GA22355@ulmo>
+ <CAL_Jsq+Oumkr=Npktxz2RnC9EMf8QWgvaw8SKx1uCLbjQg==Vg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rWhLK7VZz0iBluhq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="3U8TY7m7wOx7RL1F"
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170807114943.22612-2-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CAL_Jsq+Oumkr=Npktxz2RnC9EMf8QWgvaw8SKx1uCLbjQg==Vg@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---rWhLK7VZz0iBluhq
+--3U8TY7m7wOx7RL1F
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 07, 2017 at 05:19:40PM +0530, Vignesh R wrote:
-> Add a new compatible string "ti,k2g-ecap" to support PWM ECAP IP of
-> TI 66AK2G SoC.
+On Wed, Aug 09, 2017 at 05:12:55PM -0500, Rob Herring wrote:
+> On Tue, Jul 25, 2017 at 6:38 AM, Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+> > On Tue, Jul 18, 2017 at 04:43:25PM -0500, Rob Herring wrote:
+> >> Now that we have a custom printf format specifier, convert users of
+> >> full_name to use %pOF instead. This is preparation to remove storing
+> >> of the full path string for each node.
+> >>
+> >> Signed-off-by: Rob Herring <robh@kernel.org>
+> >> Cc: Thierry Reding <thierry.reding@gmail.com>
+> >> Cc: Carlo Caione <carlo@caione.org>
+> >> Cc: Kevin Hilman <khilman@baylibre.com>
+> >> Cc: linux-pwm@vger.kernel.org
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Cc: linux-amlogic@lists.infradead.org
+> >> ---
+> >>  drivers/pwm/pwm-meson.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > Applied, thanks.
 >=20
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-tiecap.txt | 1 +
->  1 file changed, 1 insertion(+)
+> This is not showing up in -next.
 
-Applied to for-4.14/drivers, thanks.
+Yes, I had forgotten to push this out. I've done that now, so it should
+be in the next -next.
 
 Thierry
 
---rWhLK7VZz0iBluhq
+--3U8TY7m7wOx7RL1F
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmaedIACgkQ3SOs138+
-s6GZHRAAnuHmEBq/oGgR52BkijTHuQ4yXLF2XLL9nBIPOElBQbz813M2ac9+fXaE
-aNlxVptbt2O/lMhlWpRGxvUm+F3ZM7LvDDWLHkSQF13FncLTQ9tAFofVxhD/UNzy
-0JCBVQJBr+vDJDiNoLChhBz6OzF/lYkBVBPSag4ecOMHJAw2y8ol6ZPSL71V/fH8
-wt2yd18NbdQWjXjuipNWok1gHAgkfz5mqSjjndH15Ct9H/YFcVsQ/dNso1f3POfj
-EybZ+309a9CVThuExkMwGbquCSPxpAtt8nkOyCDLuF8FfEUOPKcIef2jXaYAwj5s
-y76PnG0SX5is8j4USThzpRnEOP1PAxL5GV/QyYdbRXCpcmHgYtr1N6CVNpu0fmIs
-pYNBqJ3eiLQKAWqQx4oYwOlpaIGdLeXQAcdp08CAeFAQMnv6NNVhP1bCxAOupz4t
-pe4NvbA5yTX4Hml6Ouz5zqCeAB5LFmKakoOP+7RMlNiW8h3/SQNOjzXij73WCazH
-yGmUdrR8QUT6NShTNX23o/W+luwFGrhZ2JRQHo5dwCLzW6QDENT/gyl1rYnxG/Bd
-NfJN/XpYlWH7Pv2q1G1Y4tkTRzcbWsLI/KYGvLC2YOhot5rvOOsZuoFPKnWc10XU
-LTkpOfFagTY7iaVhJmakcT6Jn6p9JCd7XTMlPAw8MgzqBdcLgvg=
-=4VF5
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmahFwACgkQ3SOs138+
+s6GVDw/8CzXgEl+fJxpljAZ/ku2hPpZyyMPn8y/gRDQodBks01udSYleTW8rcpSx
+VHex+hsEsmSXwcD0cL1x9AQD13PuA+R3elfi+24WclSLg9hfE5M80G01YJaXB2zO
+bH/8fGo/7UfcBu1fynf2cxvxoG3xJvd0Zows0S9gULZZ5hh6XYFRBxev5toYscUF
+rsmZEplkTtc0m6aNdH6Q+ol8Ul6J0sPvDsI+Tn4RXBe48zgdn4ZSXOvUXFGq4Sa1
+qdzYuxVJavRO9SllOlXmjio2s/bFTVcM419KY5wLa/tJqYxp/D673nho0SA2lF8q
+08vWuwB1XvbtcWvR+KgL/iP7krgpm1QFAFUFabigzUMovrRmxLl0yFHGWGZcvk2v
+vjlQENGNbxVtd/ZEI6222MS8BoGi80/od02W8Ix3/pGcxZgjAUCMBa0J9GrjgBEr
+Uuyab4+rBs4BmtqMU37gdYJ/zeuBLNuebJcUscKH6z9QMMnfhUt4TYhSBIjkhxLb
+M6bps3PgmQHqS/iI9bbWtAmlAGYr6bK30y2xclDASzFeYSFAgNVlT7zrhfT8A5Wr
+ohv1l0xDbWItrVEYzBIuf7KSwA0fihwiXSbaJguUspjye3KmvhRcKz0wCZ22Yspr
+6KvHvYE65JUZxB7Bw8RRCPA72TUBWPZW4LXUOoA41VNzXXtcUCs=
+=5e/k
 -----END PGP SIGNATURE-----
 
---rWhLK7VZz0iBluhq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--3U8TY7m7wOx7RL1F--
