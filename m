@@ -1,39 +1,63 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: [PATCH v4 2/3] dt-bindings: i2c: Add MediaTek MT7622 i2c binding
-Date: Mon, 21 Aug 2017 11:36:53 +0800
-Message-ID: <1503286614-17670-3-git-send-email-jun.gao@mediatek.com>
-References: <1503286614-17670-1-git-send-email-jun.gao@mediatek.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 0/2] pwm: bcm2835: Support for polarity setting via DT
+Date: Mon, 21 Aug 2017 07:28:21 +0200
+Message-ID: <20170821052821.GA18996@ulmo>
+References: <1502533184-15765-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503286614-17670-1-git-send-email-jun.gao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Jun Gao <jun.gao@mediatek.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502533184-15765-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jun Gao <jun.gao@mediatek.com>
 
-Add MT7622 i2c binding to binding file. Compare to MT8173 i2c
-controller, MT7622 limits message numbers to 255, and does not
-support 4GB DMA mode.
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jun Gao <jun.gao@mediatek.com>
----
- Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 1 +
- 1 file changed, 1 insertion(+)
+On Sat, Aug 12, 2017 at 12:19:42PM +0200, Stefan Wahren wrote:
+> This patch series adds support for the third (optional) pwm cell to speci=
+fy the
+> polarity.
+>=20
+> Changes in V2:
+> * add ack and review tags
+>=20
+> Stefan Wahren (2):
+>   dt-bindings: pwm-bcm2835: Increase pwm-cells
+>   pwm: bcm2835: Support for polarity setting via DT
+>=20
+>  Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt | 4 ++--
+>  drivers/pwm/pwm-bcm2835.c                             | 2 ++
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-index 9c86424..ff7bf37 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-@@ -7,6 +7,7 @@ Required properties:
-       "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for MediaTek MT2701
-       "mediatek,mt6577-i2c": for MediaTek MT6577
-       "mediatek,mt6589-i2c": for MediaTek MT6589
-+      "mediatek,mt7622-i2c": for MediaTek MT7622
-       "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for MediaTek MT7623
-       "mediatek,mt8173-i2c": for MediaTek MT8173
-   - reg: physical base address of the controller and dma base, length of memory
--- 
-1.8.1.1
+Both patches applied to for-4.14/drivers, thanks.
+
+Thierry
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmab3QACgkQ3SOs138+
+s6EBVg//VOQt6/en9WU2H3fVFbd2gw56hqYMrX0DbZVHcZXoJGKRh8M48SrqNvX9
+a0KWTg9lupmGAJyYOeJVqCVPwbHZMbrcub4/IrhuJZmNgcPV1OVRx0gJlfyaR2ws
+sCKLLFxMV5lFgOrwvB4QM7b9hHCMINslKjwCI8Nd19JeUbPuPPhCyIkcj1bLLJvk
+61W8DlM1cMCNYvx5P8aTTQlbKv/scfgE/Cq/eiunSB7Gv6/DHt9vyurvhjqV61Hc
+E1WBa1C2p+R/vxHzQQNzOxJnEfFAiTAKFwMQq+2njcsJUuCP3UdnEpaK86zJLaue
+gd9Vxzr9acBjvm7iMGC87FbZXJ5iQh0BB2HPJpQwIiPomdyMxcWBRlkXKd4RV42W
+gEdqC5nHCjEoVW1daCX/tG+f5gT2JwNq0iqGuowTOvl6qYaWYCLHDW8K4KOHJNdW
+18ZMusZzAYpdrvCKaNXG2LvKmivFqo5foRJNzaMwy2oca7pZG58mE8+dFofbz+34
+6iBgAHGbPeXDJdG4mCoLU/biVTtH5/vLuPbTIvzXMWoCDBw56twvInkmFPM/AR9O
+Y8+9/v3dw5utccgEkbS7oIV1KNuClDOx1uZ2+dKEh9O61aUWb+3tdRj8ZdqAj3Fv
+djDXgu9hmfSqJJ55En+p7fjwQMPQJi2wBntWDgqO9gowHrkdD3c=
+=LgAq
+-----END PGP SIGNATURE-----
+
+--rwEMma7ioTxnRzrJ--
