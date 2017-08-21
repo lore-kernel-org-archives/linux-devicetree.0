@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 8/9] ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
-Date: Mon, 21 Aug 2017 18:06:36 +0200
-Message-ID: <20170821160637.22456-9-jbrunet@baylibre.com>
+Subject: [PATCH v2 9/9] ARM64: dts: meson-gxbb: nanopi-k2: enable sdr104 mode
+Date: Mon, 21 Aug 2017 18:06:37 +0200
+Message-ID: <20170821160637.22456-10-jbrunet@baylibre.com>
 References: <20170821160637.22456-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170821160637.22456-1-jbrunet@baylibre.com>
@@ -10,26 +10,26 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable UHS modes, up to SDR50, on the nanopi-k2 SBC.
+SDR104 seems to be OK on the nanopi-k2 SBC so enable it
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index de4ed28d78bc..38630871c2ea 100644
+index 38630871c2ea..eb08bc1623f7 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -227,6 +227,9 @@
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
- 	max-frequency = <100000000>;
+@@ -230,7 +230,8 @@
+ 	sd-uhs-sdr12;
+ 	sd-uhs-sdr25;
+ 	sd-uhs-sdr50;
+-	max-frequency = <100000000>;
++	sd-uhs-sdr104;
++	max-frequency = <200000000>;
  	disable-wp;
  
+ 	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
 -- 
 2.9.5
