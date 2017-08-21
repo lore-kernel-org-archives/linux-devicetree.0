@@ -1,176 +1,55 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 2/9] ARM64: dts: meson: remove cap-sd-highspeed from emmc
- nodes
-Date: Mon, 21 Aug 2017 18:06:30 +0200
-Message-ID: <20170821160637.22456-3-jbrunet@baylibre.com>
-References: <20170821160637.22456-1-jbrunet@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 3/3] kbuild: generate *.tab.c and *.tab.h during build
+Date: Mon, 21 Aug 2017 12:12:31 -0500
+Message-ID: <CAL_JsqKWX1kb58_cck5ACGJGg8p2irsZNXufq2ougbRDxnLhXw@mail.gmail.com>
+References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com> <1503132577-24423-4-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170821160637.22456-1-jbrunet@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1503132577-24423-4-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Richard Purdie <richard.purdie-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SeongJae Park <sj38.park-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yann E. MORIN" <yann.morin.1998-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It does not make much sense to define cap-sd-highspeed in the emmc nodes
-Just remove it.
+On Sat, Aug 19, 2017 at 3:49 AM, Masahiro Yamada
+<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> *.tab.[ch] files are artifacts generated from *.y by using bison.
+> Instead of running bison, we conventionally version-control
+> *.tab.[ch]_shipped files and copy them to *.tab.[ch] during build.
+>
+> It is true that this approach can minimize external tool dependency,
+> but we need to update the shipped files from time to time.  This
+> commit switches to build-time generation of the intermediate C files.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi            | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts           | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts         | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts            | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi               | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi           | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi          | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts            | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts             | 1 -
- 11 files changed, 11 deletions(-)
+When do we need to update them?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-index dc478d094c11..cff39c5a2632 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-@@ -208,7 +208,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index fa462831ccaf..b48a4576158a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -239,7 +239,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
- 	disable-wp;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index a1078b3e1c76..c64c2256d092 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -267,7 +267,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index d147c853ab05..a12303becab4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -274,7 +274,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
- 	disable-wp;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 58b32f272a0e..30b880b694de 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -234,7 +234,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 346753fb6324..0262ef8d48e4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -201,7 +201,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-index 2a5804ce7f4b..f779a985f923 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-@@ -144,7 +144,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <100000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-index 6633a5d8fdd3..83c35efbae8b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-@@ -224,7 +224,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-index f3eea8e89d12..8899121f79e1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-@@ -137,7 +137,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index 5f626d683088..583da09acf66 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -189,7 +189,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-index 08f1dd69b679..470f72bb863c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-@@ -220,7 +220,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
--- 
-2.9.5
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+>
+>  Documentation/process/changes.rst    |   12 +
+>  scripts/Makefile.lib                 |   14 +-
+>  scripts/dtc/Makefile                 |    9 +-
+>  scripts/dtc/dtc-parser.tab.c_shipped | 2303 -------------------------------
+>  scripts/dtc/dtc-parser.tab.h_shipped |  125 --
+
+The script to import dtc normally creates these. If you change this,
+please make sure the script still works.
+
+>  scripts/genksyms/Makefile            |    5 +-
+>  scripts/genksyms/parse.tab.c_shipped | 2394 --------------------------------
+>  scripts/genksyms/parse.tab.h_shipped |  119 --
+>  scripts/kconfig/Makefile             |    2 +-
+>  scripts/kconfig/zconf.tab.c_shipped  | 2471 ----------------------------------
+>  10 files changed, 24 insertions(+), 7430 deletions(-)
+>  delete mode 100644 scripts/dtc/dtc-parser.tab.c_shipped
+>  delete mode 100644 scripts/dtc/dtc-parser.tab.h_shipped
+>  delete mode 100644 scripts/genksyms/parse.tab.c_shipped
+>  delete mode 100644 scripts/genksyms/parse.tab.h_shipped
+>  delete mode 100644 scripts/kconfig/zconf.tab.c_shipped
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
