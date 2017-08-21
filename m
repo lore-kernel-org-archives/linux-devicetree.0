@@ -1,61 +1,53 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: hwmon: Document the IBM CCF power
- supply version 1
-Date: Mon, 21 Aug 2017 14:56:26 -0500
-Message-ID: <78252338-abc2-0119-7492-319624bbba7f@linux.vnet.ibm.com>
-References: <1503344773-7236-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1503344773-7236-2-git-send-email-eajames@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503344773-7236-2-git-send-email-eajames@linux.vnet.ibm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux@roeck-us.net, jdelvare@suse.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, corbet@lwn.net
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2.1 3/3] arm: dts: omap3: N9/N950: Add AS3645A camera flash
+Date: Mon, 21 Aug 2017 22:57:22 +0300
+Message-ID: <20170821195722.22918-1-sakari.ailus@linux.intel.com>
+References: <20170819212410.3084-4-sakari.ailus@linux.intel.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170819212410.3084-4-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, javier@dowhile0.org, jacek.anaszewski@gmail.com, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
+From: Sakari Ailus <sakari.ailus@iki.fi>
 
+Add the as3645a flash controller to the DT source.
 
-On 08/21/2017 02:46 PM, Eddie James wrote:
-> From: "Edward A. James" <eajames@us.ibm.com>
->
-> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+---
+since v3:
 
-Forgot to add Rob Herring for the bindings.
+- Drop reference names from flash and indicator nodes. They were unused.
 
-Eddie
+ arch/arm/boot/dts/omap3-n950-n9.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> ---
->   .../devicetree/bindings/hwmon/ibm,cffps1.txt        | 21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt b/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
-> new file mode 100644
-> index 0000000..f68a0a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
-> @@ -0,0 +1,21 @@
-> +Device-tree bindings for IBM Common Form Factor Power Supply Version 1
-> +----------------------------------------------------------------------
-> +
-> +Required properties:
-> + - compatible = "ibm,cffps1";
-> + - reg = < I2C bus address >;		: Address of the power supply on the
-> +					  I2C bus.
-> +
-> +Example:
-> +
-> +    i2c-bus@100 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        #interrupt-cells = <1>;
-> +        < more properties >
-> +
-> +        power-supply@68 {
-> +            compatible = "ibm,cffps1";
-> +            reg = <0x68>;
-> +        };
-> +    };
+diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+index df3366fa5409..cb47ae79a5f9 100644
+--- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
++++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+@@ -265,6 +265,20 @@
+ 
+ &i2c2 {
+ 	clock-frequency = <400000>;
++
++	as3645a@30 {
++		reg = <0x30>;
++		compatible = "ams,as3645a";
++		flash {
++			flash-timeout-us = <150000>;
++			flash-max-microamp = <320000>;
++			led-max-microamp = <60000>;
++			peak-current-limit = <1750000>;
++		};
++		indicator {
++			led-max-microamp = <10000>;
++		};
++	};
+ };
+ 
+ &i2c3 {
+-- 
+2.11.0
