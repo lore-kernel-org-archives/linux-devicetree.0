@@ -1,565 +1,241 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v9 RESEND 7/9] pinctrl: Add pinctrl driver for the RK805 PMIC
-Date: Mon, 21 Aug 2017 03:28:40 +0200
-Message-ID: <20170821012842.17875-8-heiko@sntech.de>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v9 RESEND 5/9] mfd: rk808: Add RK805 support
+Date: Mon, 21 Aug 2017 03:28:38 +0200
+Message-ID: <20170821012842.17875-6-heiko@sntech.de>
 References: <20170821012842.17875-1-heiko@sntech.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170821012842.17875-1-heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: chenjh@rock-chips.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20170821012842.17875-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Joseph Chen <chenjh@rock-chips.com>
+From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-RK805 is one of Rockchip PMICs family, it has 2 output only GPIOs.
+The RK805 chip is a Power Management IC (PMIC) for multimedia and handheld
+devices. It contains the following components:
 
-This driver is also designed for other Rockchip PMICs to expend.
-Different PMIC maybe have different pin features, for example,
-RK816 has one pin which can be used for TS or GPIO(input/out).
-The mainly difference between PMICs pins are pinmux, direction
-and output value, that is 'struct rk805_pin_config'.
+    - Regulators
+    - RTC
+    - Clocking
 
-Signed-off-by: Joseph Chen <chenjh@rock-chips.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Both RK808 and RK805 chips are using a similar register map,
+so we can reuse the RTC and Clocking functionality.
+
+Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- drivers/pinctrl/Kconfig         |   9 +
- drivers/pinctrl/Makefile        |   1 +
- drivers/pinctrl/pinctrl-rk805.c | 493 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 503 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-rk805.c
+ drivers/mfd/Kconfig |   4 +-
+ drivers/mfd/rk808.c | 108 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 110 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index e14b46c7b37f..124fe2c09c61 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -331,6 +331,15 @@ config PINCTRL_INGENIC
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select REGMAP_MMIO
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index c601ee1945c6..f247de83fa6c 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -965,13 +965,13 @@ config MFD_RC5T583
+ 	  different functionality of the device.
  
-+config PINCTRL_RK805
-+	tristate "Pinctrl and GPIO driver for RK805 PMIC"
-+	depends on MFD_RK808
-+	select GPIOLIB
-+	select PINMUX
-+	select GENERIC_PINCONF
-+	help
-+	  This selects the pinctrl driver for RK805.
-+
- source "drivers/pinctrl/aspeed/Kconfig"
- source "drivers/pinctrl/bcm/Kconfig"
- source "drivers/pinctrl/berlin/Kconfig"
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 2bc641d62400..792ffaeaf340 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -42,6 +42,7 @@ obj-$(CONFIG_PINCTRL_TB10X)	+= pinctrl-tb10x.o
- obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
- obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
- obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
-+obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
+ config MFD_RK808
+-	tristate "Rockchip RK808/RK818 Power Management Chip"
++	tristate "Rockchip RK805/RK808/RK818 Power Management Chip"
+ 	depends on I2C && OF
+ 	select MFD_CORE
+ 	select REGMAP_I2C
+ 	select REGMAP_IRQ
+ 	help
+-	  If you say yes here you get support for the RK808 and RK818
++	  If you say yes here you get support for the RK805, RK808 and RK818
+ 	  Power Management chips.
+ 	  This driver provides common support for accessing the device
+ 	  through I2C interface. The device supports multiple sub-devices
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index 8e60ebaeaadb..18329c8b4fe7 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -70,6 +70,14 @@ static const struct regmap_config rk818_regmap_config = {
+ 	.volatile_reg = rk808_is_volatile_reg,
+ };
  
- obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
- obj-y				+= bcm/
-diff --git a/drivers/pinctrl/pinctrl-rk805.c b/drivers/pinctrl/pinctrl-rk805.c
-new file mode 100644
-index 000000000000..b0bfd3082a1b
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-rk805.c
-@@ -0,0 +1,493 @@
-+/*
-+ * Pinctrl driver for Rockchip RK805 PMIC
-+ *
-+ * Copyright (c) 2017, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * Author: Joseph Chen <chenjh@rock-chips.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under  the terms of the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the License, or (at your
-+ * option) any later version.
-+ *
-+ * Based on the pinctrl-as3722 driver
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mfd/rk808.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/machine.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/pm.h>
-+#include <linux/slab.h>
-+
-+#include "core.h"
-+#include "pinconf.h"
-+#include "pinctrl-utils.h"
-+
-+struct rk805_pin_function {
-+	const char *name;
-+	const char *const *groups;
-+	unsigned int ngroups;
-+	int mux_option;
++static const struct regmap_config rk805_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = RK805_OFF_SOURCE_REG,
++	.cache_type = REGCACHE_RBTREE,
++	.volatile_reg = rk808_is_volatile_reg,
 +};
 +
-+struct rk805_pin_group {
-+	const char *name;
-+	const unsigned int pins[1];
-+	unsigned int npins;
-+};
-+
-+/*
-+ * @reg: gpio setting register;
-+ * @fun_mask: functions select mask value, when set is gpio;
-+ * @dir_mask: input or output mask value, when set is output, otherwise input;
-+ * @val_mask: gpio set value, when set is level high, otherwise low;
-+ *
-+ * Different PMIC has different pin features, belowing 3 mask members are not
-+ * all necessary for every PMIC. For example, RK805 has 2 pins that can be used
-+ * as output only GPIOs, so func_mask and dir_mask are not needed. RK816 has 1
-+ * pin that can be used as TS/GPIO, so fun_mask, dir_mask and val_mask are all
-+ * necessary.
-+ */
-+struct rk805_pin_config {
-+	u8 reg;
-+	u8 fun_msk;
-+	u8 dir_msk;
-+	u8 val_msk;
-+};
-+
-+struct rk805_pctrl_info {
-+	struct rk808 *rk808;
-+	struct device *dev;
-+	struct pinctrl_dev *pctl;
-+	struct gpio_chip gpio_chip;
-+	struct pinctrl_desc pinctrl_desc;
-+	const struct rk805_pin_function *functions;
-+	unsigned int num_functions;
-+	const struct rk805_pin_group *groups;
-+	int num_pin_groups;
-+	const struct pinctrl_pin_desc *pins;
-+	unsigned int num_pins;
-+	struct rk805_pin_config *pin_cfg;
-+};
-+
-+enum rk805_pinmux_option {
-+	RK805_PINMUX_GPIO,
-+};
-+
-+enum {
-+	RK805_GPIO0,
-+	RK805_GPIO1,
-+};
-+
-+static const char *const rk805_gpio_groups[] = {
-+	"gpio0",
-+	"gpio1",
-+};
-+
-+/* RK805: 2 output only GPIOs */
-+static const struct pinctrl_pin_desc rk805_pins_desc[] = {
-+	PINCTRL_PIN(RK805_GPIO0, "gpio0"),
-+	PINCTRL_PIN(RK805_GPIO1, "gpio1"),
-+};
-+
-+static const struct rk805_pin_function rk805_pin_functions[] = {
+ static const struct regmap_config rk808_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
+@@ -86,6 +94,16 @@ static struct resource rtc_resources[] = {
+ 	}
+ };
+ 
++static const struct mfd_cell rk805s[] = {
++	{ .name = "rk808-clkout", },
++	{ .name = "rk808-regulator", },
 +	{
-+		.name = "gpio",
-+		.groups = rk805_gpio_groups,
-+		.ngroups = ARRAY_SIZE(rk805_gpio_groups),
-+		.mux_option = RK805_PINMUX_GPIO,
++		.name = "rk808-rtc",
++		.num_resources = ARRAY_SIZE(rtc_resources),
++		.resources = &rtc_resources[0],
 +	},
 +};
 +
-+static const struct rk805_pin_group rk805_pin_groups[] = {
-+	{
-+		.name = "gpio0",
-+		.pins = { RK805_GPIO0 },
-+		.npins = 1,
+ static const struct mfd_cell rk808s[] = {
+ 	{ .name = "rk808-clkout", },
+ 	{ .name = "rk808-regulator", },
+@@ -106,6 +124,20 @@ static const struct mfd_cell rk818s[] = {
+ 	},
+ };
+ 
++static const struct rk808_reg_data rk805_pre_init_reg[] = {
++	{RK805_BUCK1_CONFIG_REG, RK805_BUCK1_2_ILMAX_MASK,
++				 RK805_BUCK1_2_ILMAX_4000MA},
++	{RK805_BUCK2_CONFIG_REG, RK805_BUCK1_2_ILMAX_MASK,
++				 RK805_BUCK1_2_ILMAX_4000MA},
++	{RK805_BUCK3_CONFIG_REG, RK805_BUCK3_4_ILMAX_MASK,
++				 RK805_BUCK3_ILMAX_3000MA},
++	{RK805_BUCK4_CONFIG_REG, RK805_BUCK3_4_ILMAX_MASK,
++				 RK805_BUCK4_ILMAX_3500MA},
++	{RK805_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK, BUCK_ILMIN_400MA},
++	{RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SLEEP_FUN},
++	{RK805_THERMAL_REG, TEMP_HOTDIE_MSK, TEMP115C},
++};
++
+ static const struct rk808_reg_data rk808_pre_init_reg[] = {
+ 	{ RK808_BUCK3_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_150MA },
+ 	{ RK808_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_200MA },
+@@ -135,6 +167,41 @@ static const struct rk808_reg_data rk818_pre_init_reg[] = {
+ 						    VB_LO_SEL_3500MV },
+ };
+ 
++static const struct regmap_irq rk805_irqs[] = {
++	[RK805_IRQ_PWRON_RISE] = {
++		.mask = RK805_IRQ_PWRON_RISE_MSK,
++		.reg_offset = 0,
 +	},
-+	{
-+		.name = "gpio1",
-+		.pins = { RK805_GPIO1 },
-+		.npins = 1,
++	[RK805_IRQ_VB_LOW] = {
++		.mask = RK805_IRQ_VB_LOW_MSK,
++		.reg_offset = 0,
++	},
++	[RK805_IRQ_PWRON] = {
++		.mask = RK805_IRQ_PWRON_MSK,
++		.reg_offset = 0,
++	},
++	[RK805_IRQ_PWRON_LP] = {
++		.mask = RK805_IRQ_PWRON_LP_MSK,
++		.reg_offset = 0,
++	},
++	[RK805_IRQ_HOTDIE] = {
++		.mask = RK805_IRQ_HOTDIE_MSK,
++		.reg_offset = 0,
++	},
++	[RK805_IRQ_RTC_ALARM] = {
++		.mask = RK805_IRQ_RTC_ALARM_MSK,
++		.reg_offset = 0,
++	},
++	[RK805_IRQ_RTC_PERIOD] = {
++		.mask = RK805_IRQ_RTC_PERIOD_MSK,
++		.reg_offset = 0,
++	},
++	[RK805_IRQ_PWRON_FALL] = {
++		.mask = RK805_IRQ_PWRON_FALL_MSK,
++		.reg_offset = 0,
 +	},
 +};
 +
-+#define RK805_GPIO0_VAL_MSK	BIT(0)
-+#define RK805_GPIO1_VAL_MSK	BIT(1)
-+
-+static struct rk805_pin_config rk805_gpio_cfgs[] = {
-+	{
-+		.reg = RK805_OUT_REG,
-+		.val_msk = RK805_GPIO0_VAL_MSK,
-+	},
-+	{
-+		.reg = RK805_OUT_REG,
-+		.val_msk = RK805_GPIO1_VAL_MSK,
-+	},
+ static const struct regmap_irq rk808_irqs[] = {
+ 	/* INT_STS */
+ 	[RK808_IRQ_VOUT_LO] = {
+@@ -247,6 +314,17 @@ static const struct regmap_irq rk818_irqs[] = {
+ 	},
+ };
+ 
++static struct regmap_irq_chip rk805_irq_chip = {
++	.name = "rk805",
++	.irqs = rk805_irqs,
++	.num_irqs = ARRAY_SIZE(rk805_irqs),
++	.num_regs = 1,
++	.status_base = RK805_INT_STS_REG,
++	.mask_base = RK805_INT_STS_MSK_REG,
++	.ack_base = RK805_INT_STS_REG,
++	.init_ack_masked = true,
 +};
 +
-+/* generic gpio chip */
-+static int rk805_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ static const struct regmap_irq_chip rk808_irq_chip = {
+ 	.name = "rk808",
+ 	.irqs = rk808_irqs,
+@@ -272,6 +350,25 @@ static const struct regmap_irq_chip rk818_irq_chip = {
+ };
+ 
+ static struct i2c_client *rk808_i2c_client;
++
++static void rk805_device_shutdown(void)
 +{
-+	struct rk805_pctrl_info *pci = gpiochip_get_data(chip);
-+	int ret, val;
++	int ret;
++	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
 +
-+	ret = regmap_read(pci->rk808->regmap, pci->pin_cfg[offset].reg, &val);
-+	if (ret) {
-+		dev_err(pci->dev, "get gpio%d value failed\n", offset);
-+		return ret;
++	if (!rk808) {
++		dev_warn(&rk808_i2c_client->dev,
++			 "have no rk805, so do nothing here\n");
++		return;
 +	}
 +
-+	return !!(val & pci->pin_cfg[offset].val_msk);
-+}
-+
-+static void rk805_gpio_set(struct gpio_chip *chip,
-+			   unsigned int offset,
-+			   int value)
-+{
-+	struct rk805_pctrl_info *pci = gpiochip_get_data(chip);
-+	int ret;
-+
-+	ret = regmap_update_bits(pci->rk808->regmap,
-+				 pci->pin_cfg[offset].reg,
-+				 pci->pin_cfg[offset].val_msk,
-+				 value ? pci->pin_cfg[offset].val_msk : 0);
++	ret = regmap_update_bits(rk808->regmap,
++				 RK805_DEV_CTRL_REG,
++				 DEV_OFF, DEV_OFF);
 +	if (ret)
-+		dev_err(pci->dev, "set gpio%d value %d failed\n",
-+			offset, value);
++		dev_err(&rk808_i2c_client->dev, "power off error!\n");
 +}
 +
-+static int rk805_gpio_direction_input(struct gpio_chip *chip,
-+				      unsigned int offset)
-+{
-+	return pinctrl_gpio_direction_input(chip->base + offset);
-+}
-+
-+static int rk805_gpio_direction_output(struct gpio_chip *chip,
-+				       unsigned int offset, int value)
-+{
-+	rk805_gpio_set(chip, offset, value);
-+	return pinctrl_gpio_direction_output(chip->base + offset);
-+}
-+
-+static int rk805_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct rk805_pctrl_info *pci = gpiochip_get_data(chip);
-+	unsigned int val;
-+	int ret;
-+
-+	/* default output*/
-+	if (!pci->pin_cfg[offset].dir_msk)
-+		return 0;
-+
-+	ret = regmap_read(pci->rk808->regmap,
-+			  pci->pin_cfg[offset].reg,
-+			  &val);
-+	if (ret) {
-+		dev_err(pci->dev, "get gpio%d direction failed\n", offset);
-+		return ret;
-+	}
-+
-+	return !(val & pci->pin_cfg[offset].dir_msk);
-+}
-+
-+static struct gpio_chip rk805_gpio_chip = {
-+	.label			= "rk805-gpio",
-+	.request		= gpiochip_generic_request,
-+	.free			= gpiochip_generic_free,
-+	.get_direction		= rk805_gpio_get_direction,
-+	.get			= rk805_gpio_get,
-+	.set			= rk805_gpio_set,
-+	.direction_input	= rk805_gpio_direction_input,
-+	.direction_output	= rk805_gpio_direction_output,
-+	.can_sleep		= true,
-+	.base			= -1,
-+	.owner			= THIS_MODULE,
-+};
-+
-+/* generic pinctrl */
-+static int rk805_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pci->num_pin_groups;
-+}
-+
-+static const char *rk805_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-+						unsigned int group)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pci->groups[group].name;
-+}
-+
-+static int rk805_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-+					unsigned int group,
-+					const unsigned int **pins,
-+					unsigned int *num_pins)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = pci->groups[group].pins;
-+	*num_pins = pci->groups[group].npins;
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops rk805_pinctrl_ops = {
-+	.get_groups_count = rk805_pinctrl_get_groups_count,
-+	.get_group_name = rk805_pinctrl_get_group_name,
-+	.get_group_pins = rk805_pinctrl_get_group_pins,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map = pinctrl_utils_free_map,
-+};
-+
-+static int rk805_pinctrl_get_funcs_count(struct pinctrl_dev *pctldev)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pci->num_functions;
-+}
-+
-+static const char *rk805_pinctrl_get_func_name(struct pinctrl_dev *pctldev,
-+					       unsigned int function)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pci->functions[function].name;
-+}
-+
-+static int rk805_pinctrl_get_func_groups(struct pinctrl_dev *pctldev,
-+					 unsigned int function,
-+					 const char *const **groups,
-+					 unsigned int *const num_groups)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*groups = pci->functions[function].groups;
-+	*num_groups = pci->functions[function].ngroups;
-+
-+	return 0;
-+}
-+
-+static int _rk805_pinctrl_set_mux(struct pinctrl_dev *pctldev,
-+				  unsigned int offset,
-+				  int mux)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+	int ret;
-+
-+	if (!pci->pin_cfg[offset].fun_msk)
-+		return 0;
-+
-+	if (mux == RK805_PINMUX_GPIO) {
-+		ret = regmap_update_bits(pci->rk808->regmap,
-+					 pci->pin_cfg[offset].reg,
-+					 pci->pin_cfg[offset].fun_msk,
-+					 pci->pin_cfg[offset].fun_msk);
-+		if (ret) {
-+			dev_err(pci->dev, "set gpio%d GPIO failed\n", offset);
-+			return ret;
-+		}
-+	} else {
-+		dev_err(pci->dev, "Couldn't find function mux %d\n", mux);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rk805_pinctrl_set_mux(struct pinctrl_dev *pctldev,
-+				 unsigned int function,
-+				 unsigned int group)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+	int mux = pci->functions[function].mux_option;
-+	int offset = group;
-+
-+	return _rk805_pinctrl_set_mux(pctldev, offset, mux);
-+}
-+
-+static int rk805_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
-+					struct pinctrl_gpio_range *range,
-+					unsigned int offset, bool input)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+	int ret;
-+
-+	/* switch to gpio function */
-+	ret = _rk805_pinctrl_set_mux(pctldev, offset, RK805_PINMUX_GPIO);
-+	if (ret) {
-+		dev_err(pci->dev, "set gpio%d mux failed\n", offset);
-+		return ret;
-+	}
-+
-+	/* set direction */
-+	if (!pci->pin_cfg[offset].dir_msk)
-+		return 0;
-+
-+	ret = regmap_update_bits(pci->rk808->regmap,
-+				 pci->pin_cfg[offset].reg,
-+				 pci->pin_cfg[offset].dir_msk,
-+				 input ? 0 : pci->pin_cfg[offset].dir_msk);
-+	if (ret) {
-+		dev_err(pci->dev, "set gpio%d direction failed\n", offset);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct pinmux_ops rk805_pinmux_ops = {
-+	.get_functions_count	= rk805_pinctrl_get_funcs_count,
-+	.get_function_name	= rk805_pinctrl_get_func_name,
-+	.get_function_groups	= rk805_pinctrl_get_func_groups,
-+	.set_mux		= rk805_pinctrl_set_mux,
-+	.gpio_set_direction	= rk805_pmx_gpio_set_direction,
-+};
-+
-+static int rk805_pinconf_get(struct pinctrl_dev *pctldev,
-+			     unsigned int pin, unsigned long *config)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+	enum pin_config_param param = pinconf_to_config_param(*config);
-+	u32 arg = 0;
-+
-+	switch (param) {
-+	case PIN_CONFIG_OUTPUT:
-+		arg = rk805_gpio_get(&pci->gpio_chip, pin);
-+		break;
-+	default:
-+		dev_err(pci->dev, "Properties not supported\n");
-+		return -ENOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, (u16)arg);
-+
-+	return 0;
-+}
-+
-+static int rk805_pinconf_set(struct pinctrl_dev *pctldev,
-+			     unsigned int pin, unsigned long *configs,
-+			     unsigned int num_configs)
-+{
-+	struct rk805_pctrl_info *pci = pinctrl_dev_get_drvdata(pctldev);
-+	enum pin_config_param param;
-+	u32 i, arg = 0;
-+
-+	for (i = 0; i < num_configs; i++) {
-+		param = pinconf_to_config_param(configs[i]);
-+		arg = pinconf_to_config_argument(configs[i]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_OUTPUT:
-+			rk805_gpio_set(&pci->gpio_chip, pin, arg);
-+			rk805_pmx_gpio_set_direction(pctldev, NULL, pin, false);
-+			break;
-+		default:
-+			dev_err(pci->dev, "Properties not supported\n");
-+			return -ENOTSUPP;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops rk805_pinconf_ops = {
-+	.pin_config_get = rk805_pinconf_get,
-+	.pin_config_set = rk805_pinconf_set,
-+};
-+
-+static struct pinctrl_desc rk805_pinctrl_desc = {
-+	.name = "rk805-pinctrl",
-+	.pctlops = &rk805_pinctrl_ops,
-+	.pmxops = &rk805_pinmux_ops,
-+	.confops = &rk805_pinconf_ops,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int rk805_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct rk805_pctrl_info *pci;
-+	int ret;
-+
-+	pci = devm_kzalloc(&pdev->dev, sizeof(*pci), GFP_KERNEL);
-+	if (!pci)
-+		return -ENOMEM;
-+
-+	pci->dev = &pdev->dev;
-+	pci->dev->of_node = pdev->dev.parent->of_node;
-+	pci->rk808 = dev_get_drvdata(pdev->dev.parent);
-+
-+	pci->pinctrl_desc = rk805_pinctrl_desc;
-+	pci->gpio_chip = rk805_gpio_chip;
-+	pci->gpio_chip.parent = &pdev->dev;
-+	pci->gpio_chip.of_node = pdev->dev.parent->of_node;
-+
-+	platform_set_drvdata(pdev, pci);
-+
-+	switch (pci->rk808->variant) {
+ static void rk808_device_shutdown(void)
+ {
+ 	int ret;
+@@ -309,6 +406,7 @@ static void rk818_device_shutdown(void)
+ }
+ 
+ static const struct of_device_id rk808_of_match[] = {
++	{ .compatible = "rockchip,rk805" },
+ 	{ .compatible = "rockchip,rk808" },
+ 	{ .compatible = "rockchip,rk818" },
+ 	{ },
+@@ -352,6 +450,15 @@ static int rk808_probe(struct i2c_client *client,
+ 	dev_info(&client->dev, "chip id: 0x%x\n", (unsigned int)rk808->variant);
+ 
+ 	switch (rk808->variant) {
 +	case RK805_ID:
-+		pci->pins = rk805_pins_desc;
-+		pci->num_pins = ARRAY_SIZE(rk805_pins_desc);
-+		pci->functions = rk805_pin_functions;
-+		pci->num_functions = ARRAY_SIZE(rk805_pin_functions);
-+		pci->groups = rk805_pin_groups;
-+		pci->num_pin_groups = ARRAY_SIZE(rk805_pin_groups);
-+		pci->pinctrl_desc.pins = rk805_pins_desc;
-+		pci->pinctrl_desc.npins = ARRAY_SIZE(rk805_pins_desc);
-+		pci->pin_cfg = rk805_gpio_cfgs;
-+		pci->gpio_chip.ngpio = ARRAY_SIZE(rk805_gpio_cfgs);
++		rk808->regmap_cfg = &rk805_regmap_config;
++		rk808->regmap_irq_chip = &rk805_irq_chip;
++		pre_init_reg = rk805_pre_init_reg;
++		nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
++		cells = rk805s;
++		nr_cells = ARRAY_SIZE(rk805s);
++		pm_pwroff_fn = rk805_device_shutdown;
 +		break;
-+	default:
-+		dev_err(&pdev->dev, "unsupported RK805 ID %lu\n",
-+			pci->rk808->variant);
-+		return -EINVAL;
-+	}
-+
-+	/* Add gpio chip */
-+	ret = devm_gpiochip_add_data(&pdev->dev, &pci->gpio_chip, pci);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Couldn't add gpiochip\n");
-+		return ret;
-+	}
-+
-+	/* Add pinctrl */
-+	pci->pctl = devm_pinctrl_register(&pdev->dev, &pci->pinctrl_desc, pci);
-+	if (IS_ERR(pci->pctl)) {
-+		dev_err(&pdev->dev, "Couldn't add pinctrl\n");
-+		return PTR_ERR(pci->pctl);
-+	}
-+
-+	/* Add pin range */
-+	ret = gpiochip_add_pin_range(&pci->gpio_chip, dev_name(&pdev->dev),
-+				     0, 0, pci->gpio_chip.ngpio);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Couldn't add gpiochip pin range\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver rk805_pinctrl_driver = {
-+	.probe = rk805_pinctrl_probe,
-+	.driver = {
-+		.name = "rk805-pinctrl",
-+	},
-+};
-+module_platform_driver(rk805_pinctrl_driver);
-+
-+MODULE_DESCRIPTION("RK805 pin control and GPIO driver");
-+MODULE_AUTHOR("Joseph Chen <chenjh@rock-chips.com>");
-+MODULE_LICENSE("GPL v2");
+ 	case RK808_ID:
+ 		rk808->regmap_cfg = &rk808_regmap_config;
+ 		rk808->regmap_irq_chip = &rk808_irq_chip;
+@@ -444,6 +551,7 @@ static int rk808_remove(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id rk808_ids[] = {
++	{ "rk805" },
+ 	{ "rk808" },
+ 	{ "rk818" },
+ 	{ },
 -- 
 2.14.1
