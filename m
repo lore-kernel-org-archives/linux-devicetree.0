@@ -1,61 +1,122 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
-Date: Mon, 21 Aug 2017 18:06:53 +0300
-Message-ID: <20170821150653.jmoogmxklkfbrzxg@sapphire.tkos.co.il>
-References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
- <20170821125317.GS20805@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170821125317.GS20805@n2100.armlinux.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/5] Removing full paths from DT full_name
+Date: Mon, 21 Aug 2017 10:16:46 -0500
+Message-ID: <20170821151651.25096-1-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+This series is the last steps to remove storing the full path for every
+DT node. Instead, we can create full path strings dynamically as needed
+with printf %pOF specifiers (commit ce4fecf1fe15). There are a number of
+remaining direct users of full_name after this series. I don't believe
+there should be any functional impact for those users with the change to
+only the node name (+unit-address). The majority are for struct
+resource.name. This should only affect /proc/iomem display.
 
-On Mon, Aug 21, 2017 at 01:53:17PM +0100, Russell King - ARM Linux wrote:
-> On Sun, Aug 20, 2017 at 01:28:06PM +0300, Baruch Siach wrote:
-> > Add device-tree binding documentation SFP transceivers. Support for SFP
-> > transceivers has been recently introduced (drivers/net/phy/sfp.c).
-> > 
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > ---
-> > 
-> > The SFP driver is on net-next.
-> > 
-> > Not sure about the rate-select-gpio property name. The SFP+ standard
-> > (not supported yet) uses two signals, RS0 and RS1. RS0 is compatible
-> > with the SFP rate select signal, while RS1 controls the Tx rate.
-> 
-> SFP+ is usable with this, but the platforms I have do not wire the
-> rate select pins on the SFP+ sockets to GPIOs, but hard-wire them.
+Michael, Please apply patches 1-3 for 4.14. Patches 4 and 5 are intended for 
+4.15. Testing of those in particular would be helpful.
 
-So maybe naming this signal 'rate-select0-gpio' would make it more future 
-(SPF+) proof? Or 'rate-select-rx-gpio'?
+Rob
 
-> Note that I didn't expect the SFP code to just get merged with very
-> little in the way of real in-depth review of things like:
-> 
-> * the way the SFP code works, and its structure
-> * analysis of the bindings checking that they're fit for everyone's
->   purposes.
+Rob Herring (5):
+  powerpc: Convert to using %pOF instead of full_name
+  powerpc: pseries: vio: match parent nodes with of_find_node_by_path
+  powerpc: pseries: remove dlpar_attach_node dependency on full path
+  powerpc: pseries: only store the device node basename in full_name
+  of/fdt: only store the device node basename in full_name
 
-I was also surprised to see the "sff,sfp" compatible string with no ack from 
-DT maintainers. Hence this RFC.
-
-> The implementation that I've designed is based around the boards that
-> I have access to and the various public SFP documentation.  I think
-> documenting the bindings suggests that they are stable - I don't think
-> we're really ready to make that assertion yet - there may be things
-> that have been missed which will only come up when other people start
-> using this code.
-
-baruch
+ arch/powerpc/kernel/btext.c                      |   2 +-
+ arch/powerpc/kernel/cacheinfo.c                  |  34 ++++---
+ arch/powerpc/kernel/io-workarounds.c             |   4 +-
+ arch/powerpc/kernel/isa-bridge.c                 |  32 +++----
+ arch/powerpc/kernel/legacy_serial.c              |  12 +--
+ arch/powerpc/kernel/of_platform.c                |   2 +-
+ arch/powerpc/kernel/pci-common.c                 |  15 ++-
+ arch/powerpc/kernel/pci_32.c                     |   4 +-
+ arch/powerpc/kernel/pci_64.c                     |   4 +-
+ arch/powerpc/kernel/pci_of_scan.c                |  24 ++---
+ arch/powerpc/kernel/setup-common.c               |   2 +-
+ arch/powerpc/platforms/4xx/cpm.c                 |   8 +-
+ arch/powerpc/platforms/4xx/gpio.c                |   3 +-
+ arch/powerpc/platforms/4xx/msi.c                 |   3 +-
+ arch/powerpc/platforms/4xx/pci.c                 | 116 ++++++++++-------------
+ arch/powerpc/platforms/4xx/soc.c                 |   5 +-
+ arch/powerpc/platforms/4xx/uic.c                 |  14 +--
+ arch/powerpc/platforms/512x/mpc512x_shared.c     |  12 +--
+ arch/powerpc/platforms/52xx/efika.c              |   8 +-
+ arch/powerpc/platforms/52xx/media5200.c          |   2 +-
+ arch/powerpc/platforms/52xx/mpc52xx_gpt.c        |   4 +-
+ arch/powerpc/platforms/52xx/mpc52xx_pci.c        |   8 +-
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c   |   3 +-
+ arch/powerpc/platforms/83xx/mpc832x_rdb.c        |   2 +-
+ arch/powerpc/platforms/85xx/p1022_ds.c           |   8 +-
+ arch/powerpc/platforms/85xx/xes_mpc85xx.c        |   4 +-
+ arch/powerpc/platforms/amigaone/setup.c          |   6 +-
+ arch/powerpc/platforms/cell/axon_msi.c           |  36 +++----
+ arch/powerpc/platforms/cell/interrupt.c          |   4 +-
+ arch/powerpc/platforms/cell/iommu.c              |  24 ++---
+ arch/powerpc/platforms/cell/ras.c                |   4 +-
+ arch/powerpc/platforms/cell/spider-pci.c         |   4 +-
+ arch/powerpc/platforms/cell/spider-pic.c         |   4 +-
+ arch/powerpc/platforms/cell/spu_manage.c         |  26 ++---
+ arch/powerpc/platforms/chrp/pci.c                |  18 ++--
+ arch/powerpc/platforms/embedded6xx/linkstation.c |   6 +-
+ arch/powerpc/platforms/embedded6xx/mvme5100.c    |   2 +-
+ arch/powerpc/platforms/embedded6xx/storcenter.c  |   2 +-
+ arch/powerpc/platforms/maple/pci.c               |  10 +-
+ arch/powerpc/platforms/pasemi/pci.c              |   2 +-
+ arch/powerpc/platforms/powermac/feature.c        |  14 +--
+ arch/powerpc/platforms/powermac/low_i2c.c        |  50 +++++-----
+ arch/powerpc/platforms/powermac/pci.c            |   6 +-
+ arch/powerpc/platforms/powermac/pfunc_base.c     |  24 ++---
+ arch/powerpc/platforms/powermac/pfunc_core.c     |   6 +-
+ arch/powerpc/platforms/powermac/pic.c            |   8 +-
+ arch/powerpc/platforms/powermac/setup.c          |   2 +-
+ arch/powerpc/platforms/powernv/opal-async.c      |   4 +-
+ arch/powerpc/platforms/powernv/opal-xscom.c      |   8 +-
+ arch/powerpc/platforms/powernv/pci-ioda.c        |  15 ++-
+ arch/powerpc/platforms/powernv/rng.c             |   6 +-
+ arch/powerpc/platforms/pseries/dlpar.c           |  39 ++------
+ arch/powerpc/platforms/pseries/event_sources.c   |   6 +-
+ arch/powerpc/platforms/pseries/hotplug-cpu.c     |   6 +-
+ arch/powerpc/platforms/pseries/ibmebus.c         |   5 +-
+ arch/powerpc/platforms/pseries/iommu.c           |  58 ++++++------
+ arch/powerpc/platforms/pseries/mobility.c        |   2 +-
+ arch/powerpc/platforms/pseries/msi.c             |  12 +--
+ arch/powerpc/platforms/pseries/pci_dlpar.c       |   2 +-
+ arch/powerpc/platforms/pseries/pseries.h         |   2 +-
+ arch/powerpc/platforms/pseries/reconfig.c        |   2 +-
+ arch/powerpc/platforms/pseries/vio.c             |  10 +-
+ arch/powerpc/sysdev/axonram.c                    |   4 +-
+ arch/powerpc/sysdev/dcr.c                        |   4 +-
+ arch/powerpc/sysdev/fsl_85xx_cache_sram.c        |  12 +--
+ arch/powerpc/sysdev/fsl_gtm.c                    |  14 +--
+ arch/powerpc/sysdev/fsl_msi.c                    |  16 ++--
+ arch/powerpc/sysdev/fsl_pci.c                    |  47 +++++----
+ arch/powerpc/sysdev/fsl_rio.c                    |  36 +++----
+ arch/powerpc/sysdev/fsl_rmu.c                    |  12 +--
+ arch/powerpc/sysdev/mpic.c                       |   4 +-
+ arch/powerpc/sysdev/mpic_msgr.c                  |   2 +-
+ arch/powerpc/sysdev/mpic_msi.c                   |   2 +-
+ arch/powerpc/sysdev/mpic_timer.c                 |  19 ++--
+ arch/powerpc/sysdev/msi_bitmap.c                 |   4 +-
+ arch/powerpc/sysdev/mv64x60_dev.c                |  20 ++--
+ arch/powerpc/sysdev/mv64x60_pci.c                |   4 +-
+ arch/powerpc/sysdev/of_rtc.c                     |  12 +--
+ arch/powerpc/sysdev/scom.c                       |   5 +-
+ arch/powerpc/sysdev/simple_gpio.c                |   3 +-
+ arch/powerpc/sysdev/tsi108_pci.c                 |   4 +-
+ arch/powerpc/sysdev/xive/native.c                |   2 +-
+ drivers/of/fdt.c                                 |  69 +++-----------
+ 83 files changed, 487 insertions(+), 578 deletions(-)
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
