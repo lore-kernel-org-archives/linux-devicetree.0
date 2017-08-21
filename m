@@ -1,71 +1,24 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [RESEND PATCH v5 11/16] arm64: zynqmp: Add generic compatible
- string for I2C EEPROM
-Date: Mon, 21 Aug 2017 14:58:37 +0200
-Message-ID: <CABxcv=k+3bi0XbuUDEu4nFvFhCHxjZMg1+oEnrBhH5gow4HaNw@mail.gmail.com>
-References: <20170615185418.13980-1-javier@dowhile0.org> <20170615185418.13980-12-javier@dowhile0.org>
- <e64ce8be-599a-5fc5-3194-92aac574173c@xilinx.com> <CABxcv=mOtPDU4RStdrF1EFci65N8sMB1MG4oKZiTXqUTe7GWHA@mail.gmail.com>
- <ae7ec977-4ec8-7dcf-8bc6-27cb8c6bf48d@xilinx.com>
+From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Subject: Re: [patch v5 3/3] doccumentation: jtag: Add bindings for Aspeed SoC
+ 24xx and 25xx families JTAG master driver
+Date: Mon, 21 Aug 2017 15:00:12 +0200
+Message-ID: <20170821130011.GK3546@distanz.ch>
+References: <1503315069-29465-1-git-send-email-oleksandrs@mellanox.com>
+ <1503315069-29465-4-git-send-email-oleksandrs@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae7ec977-4ec8-7dcf-8bc6-27cb8c6bf48d@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1503315069-29465-4-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Michal,
+> Subject: Re: [patch v5 3/3] doccumentation: jtag: Add bindings for Aspeed SoC 24xx and 25xx families JTAG master driver
 
-On Mon, Aug 21, 2017 at 2:04 PM, Michal Simek <michal.simek@xilinx.com> wrote:
-> On 21.8.2017 13:27, Javier Martinez Canillas wrote:
->> [snip]
->>
->>>>
->>>> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
->>>> index ef1b9e573af0..53907b7a7fd9 100644
->>>> --- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
->>>> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
->>>> @@ -55,7 +55,7 @@
->>>>       status = "okay";
->>>>       clock-frequency = <400000>;
->>>>       eeprom@54 {
->>>> -             compatible = "at,24c64";
->>>> +             compatible = "atmel,24c64";
->>>>               reg = <0x54>;
->>>>       };
->>>>  };
->>>> @@ -64,7 +64,7 @@
->>>>       status = "okay";
->>>>       clock-frequency = <400000>;
->>>>       eeprom@55 {
->>>> -             compatible = "at,24c64";
->>>> +             compatible = "atmel,24c64";
->>>>               reg = <0x55>;
->>>>       };
->>>>  };
->>>>
->>>
->>> Acked-by: Michal Simek <michal.simek@xilinx.com>
->>>
->>
->> Any reasons why this patch was never picked? It was acked two months ago.
->
-> Normally when you send series then it should be applied as the whole
-> series not just one piece of that.
->
-
-Right, I mentioned in the cover letter that the patches could be
-applied independently. Sorry for the confusion.
-
-> Anyway I see that changes are applied and this one is missing that's why
-> I will add to zynqmp/dt branch and going to send pull request today.
->
-
-Great, thanks a lot for your help.
-
-> Thanks,
-> Michal
-
-Best regards,
-Javier
+Small nit: s/doccumentation/Documentation/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
