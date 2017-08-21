@@ -1,71 +1,132 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v2.1 2/3] leds: as3645a: Add LED flash class driver
-Date: Mon, 21 Aug 2017 16:53:46 +0300
-Message-ID: <07392419-c586-a791-a994-bed39f73da94@iki.fi>
-References: <20170819212410.3084-3-sakari.ailus@linux.intel.com>
- <20170819214226.20736-1-sakari.ailus@linux.intel.com>
- <fc6c7893-863b-53ff-48e3-d14297364e5d@gmail.com>
+From: "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Subject: Re: [PATCH] device property: preserve usecount for node passed to
+ of_fwnode_graph_get_port_parent()
+Date: Mon, 21 Aug 2017 16:04:43 +0200
+Message-ID: <20170821140443.GA32709@bigcity.dyn.berto.se>
+References: <20170821125107.20746-1-niklas.soderlund+renesas@ragnatech.se>
+ <282c50da-8927-d1fc-27e5-39b75f3ba564@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fc6c7893-863b-53ff-48e3-d14297364e5d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <282c50da-8927-d1fc-27e5-39b75f3ba564-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Hi Sakari,
 
-Jacek Anaszewski wrote:
-> Hi Sakari,
+On 2017-08-21 16:30:17 +0300, Sakari Ailus wrote:
+> Hi Niklas,
 > 
-> Thanks for the update.
-> I've noticed that you added node labels to the child device nodes
-> in [0]:
+> Niklas Söderlund wrote:
+> > Using CONFIG_OF_DYNAMIC=y uncovered an imbalance in the usecount of the
+> > node being passed to of_fwnode_graph_get_port_parent(). Preserve the
+> > usecount just like it is done in of_graph_get_port_parent().
 > 
-> "as3645a_flash : flash" and "as3645a_indicator : indicator"
+> The of_fwnode_graph_get_port_parent() is called by
+> fwnode_graph_get_port_parent() which obtains the port node through
+> fwnode_get_parent(). If you take a reference here, calling
+> fwnode_graph_get_port_parent() will end up incrementing the port node's use
+> count. In other words, my understanding is that dropping the reference to
+> the port node isn't a problem but intended behaviour here.
 
-The phandle references (as3645a_flash and as3645a_indicator) should
-actually be moved to the patch adding the flash property to the sensor
-device node. It doesn't do anything here, yet.
+I'm not sure but I don't think the usecount will be incremented, without 
+this patch I think it's decremented by one instead. Lets look at the 
+code starting with fwnode_graph_get_port_parent().
+
+struct fwnode_handle *
+fwnode_graph_get_port_parent(struct fwnode_handle *endpoint)
+{
+        struct fwnode_handle *port, *parent;
+
+Increment usecount by 1
+
+        port = fwnode_get_parent(endpoint);
+        parent = fwnode_call_ptr_op(port, graph_get_port_parent);
+
+Decrement usecount by 1
+
+        fwnode_handle_put(port); << Usecount -1
+
+        return parent;
+}
+
+Here it looks like the counting is correct and balanced. But without 
+this patch it's in this function 'fwnode_handle_put(port)' which 
+triggers the error which this patch aims to fix. Lets look at 
+of_fwnode_graph_get_port_parent() which in my case is what is called by 
+the fwnode_call_ptr_op().
+
+static struct fwnode_handle *
+of_fwnode_graph_get_port_parent(struct fwnode_handle *fwnode)
+{
+        struct device_node *np;
+
+Here in of_get_next_parent() the usecount is decremented by 1 and the 
+parents usecount is incremented by 1. So for our node node which passed 
+in from fwnode_graph_get_port_parent() (where it's named 'port') will be 
+decremented by 1.
+
+        /* Get the parent of the port */
+        np = of_get_next_parent(to_of_node(fwnode));
+        if (!np)
+                return NULL;
+
+        /* Is this the "ports" node? If not, it's the port parent. */
+        if (of_node_cmp(np->name, "ports"))
+                return of_fwnode_handle(np);
+
+        return of_fwnode_handle(of_get_next_parent(np));
+}
+
+So unless I miss something I do think this patch is needed to restore 
+balance to the usecount of the node being passed to 
+of_fwnode_graph_get_port_parent(). Or maybe I have misunderstood 
+something?
 
 > 
-> I am still seeing problems with this approach:
+> I wonder if I miss something.
+
+I also wonder what I missed :-)
+
 > 
-> 1) AFAIK these labels are only used for referencing nodes inside dts
->    files and they don't affect the name property of struct device_node
-
-That's right.
-
-> 2) Even if you changed the node name from flash to as3645a_flash, you
->    would get weird LED class device name "as3645a_flash:flash" in case
->    label property is absent. Do you have any objections against the
->    approach I proposed in the previous review?:
+> > 
+> > Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmware specific locations")
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+> > ---
+> >  drivers/of/property.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > index 067f9fab7b77c794..637dcb4833e2af60 100644
+> > --- a/drivers/of/property.c
+> > +++ b/drivers/of/property.c
+> > @@ -922,6 +922,12 @@ of_fwnode_graph_get_port_parent(struct fwnode_handle *fwnode)
+> >  {
+> >  	struct device_node *np;
+> > 
+> > +	/*
+> > +	 * Preserve usecount for passed in node as of_get_next_parent()
+> > +	 * will do of_node_put() on it.
+> > +	 */
+> > +	of_node_get(to_of_node(fwnode));
+> > +
+> >  	/* Get the parent of the port */
+> >  	np = of_get_next_parent(to_of_node(fwnode));
+> >  	if (!np)
+> > 
 > 
 > 
->     snprintf(names->flash, sizeof(names->flash),
-> 	     AS_NAME":%s", node->name);
-
-In the current patch, the device node of the flash controller is used,
-postfixed with colon and the name of the LED ("flash" or "indicator") if
-no label is defined. In other words, with that DT source you'll have
-"as3645a:flash" and "as3645a:indicator". So if you change the name of
-the device node of the IÂ²C device, that will be reflected in the label.
-
-If a label exists, then the label is used as such.
-
-I don't really have objections to what you're proposing as such but my
-question is: is it useful? With that, the flash and indicator labels
-will not come from DT if label properties are undefined. They'll always
-be "as3645a:flash" and "as3645a:indicator", independently of the names
-of the device nodes.
+> -- 
+> Sakari Ailus
+> sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 
 -- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus-X3B1VOXEql0@public.gmane.org
+Regards,
+Niklas Söderlund
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
