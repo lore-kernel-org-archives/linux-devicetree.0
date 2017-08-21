@@ -1,72 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 2/2] dt-bindings: new binding for ps/2 gpio devices
-Date: Mon, 21 Aug 2017 14:19:52 -0500
-Message-ID: <CAL_JsqJFus4hQE-cBoSxBoB1ZtGSH9Am4kFs0_e_-2c=Qz2UNw@mail.gmail.com>
-References: <20170821133112.22276-1-danilokrummrich@dk-develop.de> <20170821133112.22276-3-danilokrummrich@dk-develop.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4 v2] drm/tve200: Add DT bindings
+Date: Mon, 21 Aug 2017 14:21:38 -0500
+Message-ID: <CAL_JsqKeVT5ODav+Mca0oHb0euJVUgU5UGgvsYXyPZj_DPqFsg@mail.gmail.com>
+References: <20170820100557.24991-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170821133112.22276-3-danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170820100557.24991-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel.vetter@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 8:31 AM, Danilo Krummrich
-<danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org> wrote:
-> The PS/2 gpio device binding defines the gpio pins (data and clock)
-> as well as the interrupt which should be used to drive the ps/2 bus.
-> It is expected to get an interrupt on the falling edge of the clock
-> line.
->
-> Also it can be configured whether the host should support writing to
-> the device.
->
-> Signed-off-by: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
-> ---
->  .../devicetree/bindings/serio/ps2-gpio.txt         | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serio/ps2-gpio.txt
->
-> diff --git a/Documentation/devicetree/bindings/serio/ps2-gpio.txt b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
-> new file mode 100644
-> index 000000000000..83e05ea05883
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
-> @@ -0,0 +1,22 @@
-> +Device-Tree binding for ps/2 gpio device
-> +
-> +Required properties:
-> +       - compatible = "ps2-gpio"
-> +       - gpios: data and clock gpio
-
-Doesn't match the example.
-
-> +       - interrupts: Should trigger on the falling edge of the clock line.
-> +
-> +Optional properties:
-> +       - write-enable: Indicates whether write function is provided
-> +       to serio device. Possibly providing the write fn will not work, because
-> +       of the tough timing requirements.
-> +
-> +Example nodes:
-> +
-> +ps2@0 {
-> +       compatible = "ps2-gpio";
-> +       interrupt-parent = <&gpio>;
-> +       interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-> +       data-gpios = <&gpio 24 GPIO_ACTIVE_HIGH>;
-> +       clk-gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
-> +       write-enable;
-> +};
-> --
-> 2.14.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCBBdWcgMjAsIDIwMTcgYXQgNTowNSBBTSwgTGludXMgV2FsbGVpaiA8bGludXMud2Fs
+bGVpakBsaW5hcm8ub3JnPiB3cm90ZToKPiBUaGlzIGFkZHMgZGV2aWNlIHRyZWUgYmluZGluZ3Mg
+Zm9yIHRoZSBGYXJhZGF5IFRWRTIwMCBJUCBibG9jay4KPiBUaGlzIElQIGJsb2NrIGlzIHByZXNl
+bnQgaW4gdGhlIEdlbWluaSBBUk0gU29DIGFuZCBhbHNvIGluIHNvbWUKPiBHcmFpbiBNZWRpYSBH
+TXh4eHggU29Dcy4KPgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IFNpZ25lZC1v
+ZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KPiAtLS0KPiBD
+aGFuZ2VMb2cgdjEtPnYyOgo+IC0gRml4IGRpc3BsYXkgcG9ydCBiaW5kaW5nczogbGlzdCByZXF1
+aXJlZCBlbmRwb2ludC4KPiAtIEZpeCB0aGUgZXhhbXBsZSB0byBpbmNsdWRlIGFuIGVuZHBvaW50
+Lgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAw
+LnR4dCB8IDU0ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDU0IGlu
+c2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2ZhcmFkYXksdHZlMjAwLnR4dAoKQWNrZWQtYnk6IFJvYiBIZXJy
+aW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
