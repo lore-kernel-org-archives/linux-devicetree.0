@@ -1,78 +1,169 @@
-From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
-Date: Mon, 21 Aug 2017 15:45:21 +0100
-Message-ID: <9cdccb9c-83c5-5867-06a5-3b344102d232@arm.com>
-References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
- <20170726102748.GM31807@n2100.armlinux.org.uk>
- <e68186a4-2435-a969-7eff-21556d6a6b03@arm.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: Re: [PATCH 2/4] dt-bindings: add binding for
+ RTL8211E Ethernet PHY
+Date: Mon, 21 Aug 2017 22:53:24 +0800
+Message-ID: <19ad1316a74e344d3e1c783458eb4d59@aosc.io>
+References: <20170421232436.10924-1-icenowy@aosc.io>
+ <20170421232436.10924-3-icenowy@aosc.io>
+ <c7aa9d7a-5e97-0e7f-2b1c-584a4de00837@gmail.com>
+ <edf26d7de605a93bfce258de0353df6d@aosc.io>
+ <a455c822-d5aa-3f66-03c5-4d1268f9104b@gmail.com>
+ <D714E47B-D6B2-4C9F-B9D7-FB9D170E0ADF@aosc.io>
+ <068f1323-3864-620c-0deb-6c5e04a9e498@gmail.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e68186a4-2435-a969-7eff-21556d6a6b03-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBZ7H5PGAKGQEPT5C7WA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <068f1323-3864-620c-0deb-6c5e04a9e498-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/17 13:15, Vladimir Murzin wrote:
-> On 26/07/17 11:27, Russell King - ARM Linux wrote:
->> I suspect the above failure is down to either (a) not having enough
->> memory available to allocate a 1920x1080 frame buffer, or (b) not
->> (yet) being able to program the hdlcd pixel clock for this platform,
->> which is currently hard-coded in DT at 23.75MHz.
-> 
-> Given it is NOMMU it is likely (a). Usually, tweaking FORCE_MAX_ZONEORDER
-> helped me in such cases.
+=E5=9C=A8 2017-05-05 02:29=EF=BC=8CFlorian Fainelli =E5=86=99=E9=81=93=EF=
+=BC=9A
+> On 05/04/2017 11:26 AM, Icenowy Zheng wrote:
+>>=20
+>>=20
+>> =E4=BA=8E 2017=E5=B9=B45=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+2:21:29, Florian Fainelli=20
+>> <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
+>>> On 05/04/2017 11:10 AM, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+>>>> =E5=9C=A8 2017-04-22 08:22=EF=BC=8CFlorian Fainelli =E5=86=99=E9=81=93=
+=EF=BC=9A
+>>>>> On 04/21/2017 04:24 PM, Icenowy Zheng wrote:
+>>>>>> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>>>>>>=20
+>>>>>> Some RTL8211E Ethernet PHY have an issue that needs a workaround
+>>>>>> indicated with device tree.
+>>>>>>=20
+>>>>>> Add the binding for a property that indicates this workaround.
+>>>>>>=20
+>>>>>> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/net/realtek,rtl8211e.txt   | 22
+>>>>>> ++++++++++++++++++++++
+>>>>>>  1 file changed, 22 insertions(+)
+>>>>>>  create mode 100644
+>>>>>> Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
+>>>>>>=20
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
+>>>>>> b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..c1913301bfe8
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
+>>>>>> @@ -0,0 +1,22 @@
+>>>>>> +Realtek RTL8211E Ethernet PHY
+>>>>>> +
+>>>>>> +One batch of RTL8211E is slight broken, that needs some special
+>>> (and
+>>>>>> +full of magic numbers) tweaking in order to make GbE to operate
+>>>>>> properly.
+>>>>>> +The only well-known board that used the broken batch is Pine64+.
+>>>>>> +Configure it through an Ethernet OF device node.
+>>>>>> +
+>>>>>> +Optional properties:
+>>>>>> +
+>>>>>> +- realtek,disable-rx-delay:
+>>>>>> +  If set, RX delay will be completely disabled (according to
+>>>>>> Realtek). This
+>>>>>> +  will affect the performance on non-broken boards.
+>>>>>> +  default: do not disable RX delay.
+>>>>>=20
+>>>>> Please don't introduce custom properties to do that, instead=20
+>>>>> correct
+>>>>> specify the "phy-mode" such that it is e.g: "rgmii-txid" which
+>>> indicates
+>>>>> that there should be no RX internal delay, but a TX internal delay
+>>> added
+>>>>> by the PHY.
+>>>>=20
+>>>> Checked the document, the meaning of "rgmii-txid" is not correct
+>>> here.
+>>>>=20
+>>>> This doesn't effect the MAC, and the MAC should still add TX delay.
+>>>>=20
+>>>> The definition of "rgmii-txid" in
+>>>> Documentation/devicetree/binding/net/ethernet.txt is "RGMII with
+>>>> internal TX delay provided by the PHY, the MAC should not add an TX
+>>> delay
+>>>> in this case". However, this do not indicate that the MAC doesn't=20
+>>>> add
+>>> TX
+>>>> delay; in fact that just totally disabled the PHY to provide the RX
+>>> delay.
+>>>> MAC still should to add delay on both TX/RX, which is the semantic=20
+>>>> of
+>>>> standard "rgmii".
+>>>>=20
+>>>> So I cannot used "rgmii-txid" here, but should continue to use this
+>>>> custom property.
 
-Ok, with CONFIG_FORCE_MAX_ZONEORDER=12 I see
+Sorry for replying an old email, but it's because the driver of the MAC=20
+I
+used is merged (dwmac-sun8i).
 
-[    5.242423] [drm] found ARM HDLCD version r0p0
-[    5.493835] tda998x 2-0070: found TDA19988
-[    5.527771] hdlcd 40205000.hdlcd: bound 2-0070 (ops 0x1470f8)
-[    5.535819] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    5.543478] [drm] No driver support for vblank timestamp query.
-[    7.443189] hdlcd 40205000.hdlcd: fb0:  frame buffer device
-[    7.501975] [drm] Initialized hdlcd 1.0.0 20151021 for 40205000.hdlcd on minor 0
+The driver of the MAC currently only supports "mii", "rmii", and=20
+"rgmii",
+and according to the SoC's user manual, the MAC cannot has its delays
+disabled.
 
-when display is connected.
+How should it handle this "rgmii-txid" here? Just treat it as "rgmii"?
 
-To make fb-test [1] happy I had to apply following diff:
+>>>=20
+>>> This is absolutely not a correct understanding. The 'phy-mode'=20
+>>> property
+>>> defines the contract between the MAC and PHY. It is defined from the
+>>> PHY's perspective of the delay, which means that the MAC has to=20
+>>> either
+>>> also provide an adequate delay (RX or TX) or not (RX or TX). So if=20
+>>> you
+>>> specified 'phy-mode' =3D "rgmii" this means that the MAC needs to adds
+>>> the
+>>> TX and RX delay, so implcitly this means that your MAC operates in
+>>=20
+>> The MAC doesn't lose its responsibility to tweak RX/TX delays with=20
+>> this property set.
+>=20
+> No it does not but now there is no contract binding the MAC and the PHY
+> together was to what an appropriate delay configuration there should=20
+> be.
+> This is why using phydev->interface (directly inherited from=20
+> 'phy-mode')
+> is important because it binds the PHY and MAC on a contract.
+>=20
+>>=20
+>> This situation is that, the PHY's RX delay tweaking function is=20
+>> broken. But it doesn't mean that the PHY can take over *all*=20
+>> responsibility to tweak TX, it still needs MAC to tweak TX.
+>=20
+> Correct, so what part of my answer was not clear in that sense?
+>=20
+>>=20
+>>> "rgmii-id", if the property was defined from the perspective of the
+>>> MAC,
+>>> which it is not.
+>>>=20
+>>> Both the Ethernet PHY driver and the MAC driver need to take care of
+>>> adjusting the delays based on the phydev->interface value.
+>>>=20
+>>> The property you are introducing here is absolutely not appropriate
+>>> because it is entirely redundant with what 'phy-mode' already=20
+>>> defines,
+>>> except the latter also covers a lot more cases.
 
-diff --git a/drivers/gpu/drm/arm/Kconfig b/drivers/gpu/drm/arm/Kconfig
-index 9a18e1b..d4cb1b1 100644
---- a/drivers/gpu/drm/arm/Kconfig
-+++ b/drivers/gpu/drm/arm/Kconfig
-@@ -10,6 +10,7 @@ config DRM_HDLCD
-        select DRM_ARM
-        select DRM_KMS_HELPER
-        select DRM_KMS_CMA_HELPER
-+       select FB_PROVIDE_GET_FB_UNMAPPED_AREA if !MMU
-        help
-          Choose this option if you have an ARM High Definition Colour LCD
-          controller.
-
-(The only user of FB_PROVIDE_GET_FB_UNMAPPED_AREA is NOMMU only drivers/gpu/drm/stm/)
-
-However, I do not see anything on the screen. I'm probably missing something
-obvious, so if you have an idea, please let me know and I can test the patch.
-
-[1] https://github.com/prpplague/fb-test-app.git 
-
-Thanks
-Vladimir
-
-> 
-> Cheers
-> Vladimir
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
