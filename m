@@ -1,7 +1,7 @@
 From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH 3/3] ARM: dts: rockchip: enable usb for rv1108-evb
-Date: Mon, 21 Aug 2017 16:39:28 +0800
-Message-ID: <1503304768-14520-4-git-send-email-frank.wang@rock-chips.com>
+Subject: [PATCH 2/3] ARM: dts: rockchip: add usb nodes for rv1108 SoCs
+Date: Mon, 21 Aug 2017 16:39:27 +0800
+Message-ID: <1503304768-14520-3-git-send-email-frank.wang@rock-chips.com>
 References: <1503304768-14520-1-git-send-email-frank.wang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1503304768-14520-1-git-send-email-frank.wang@rock-chips.com>
@@ -10,54 +10,111 @@ To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, huangtao@rock-chips.com, william.wu@rock-chips.com, daniel.meng@rock-chips.com, kever.yang@rock-chips.com, andy.yan@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Rockchip's rv1108-evb board has one usb otg controller and one usb
-host controller, each usb controller connect with one usb-phy port
-through UTMI+ interface. This patch enables them to support usb on
-rv1108-evb board.
+This patch adds usb otg/host controllers and phys nodes for RV1108 SoCs.
 
 Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
 ---
- arch/arm/boot/dts/rv1108-evb.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/rv1108.dtsi | 73 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 72 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index 010763f..5a48e79 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -103,6 +103,18 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index 25fab0b..2322328 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -262,8 +262,35 @@
+ 	};
  
-+&u2phy {
-+	status = "okay";
+ 	grf: syscon@10300000 {
+-		compatible = "rockchip,rv1108-grf", "syscon";
++		compatible = "rockchip,rv1108-grf", "syscon", "simple-mfd";
+ 		reg = <0x10300000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+	u2phy_otg: otg-port {
-+		status = "okay";
++		u2phy: usb2-phy@100 {
++			compatible = "rockchip,rv1108-usb2phy";
++			reg = <0x100 0x0c>;
++			rockchip,usbgrf = <&usbgrf>;
++			clocks = <&cru SCLK_USBPHY>;
++			clock-names = "phyclk";
++			#clock-cells = <0>;
++			clock-output-names = "usbphy";
++			status = "disabled";
++
++			u2phy_otg: otg-port {
++				#phy-cells = <0>;
++				interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "otg-mux";
++				status = "disabled";
++			};
++
++			u2phy_host: host-port {
++				#phy-cells = <0>;
++				interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "linestate";
++				status = "disabled";
++			};
++		};
+ 	};
+ 
+ 	watchdog: wdt@10360000 {
+@@ -353,6 +380,11 @@
+ 		reg = <0x20060000 0x1000>;
+ 	};
+ 
++	usbgrf: syscon@202a0000 {
++		compatible = "rockchip,rv1108-usbgrf", "syscon";
++		reg = <0x202a0000 0x1000>;
 +	};
 +
-+	u2phy_host: host-port {
-+		status = "okay";
+ 	cru: clock-controller@20200000 {
+ 		compatible = "rockchip,rv1108-cru";
+ 		reg = <0x20200000 0x1000>;
+@@ -399,6 +431,45 @@
+ 		status = "disabled";
+ 	};
+ 
++	usb_host_ehci: usb@30140000 {
++		compatible = "generic-ehci";
++		reg = <0x30140000 0x20000>;
++		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_HOST0>, <&u2phy>;
++		clock-names = "usbhost", "utmi";
++		phys = <&u2phy_host>;
++		phy-names = "usb";
++		status = "disabled";
 +	};
-+};
 +
- &uart0 {
- 	status = "okay";
- };
-@@ -114,3 +126,15 @@
- &uart2 {
- 	status = "okay";
- };
++	usb_host_ohci: usb@30160000 {
++		compatible = "generic-ohci";
++		reg = <0x30160000 0x20000>;
++		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_HOST0>, <&u2phy>;
++		clock-names = "usbhost", "utmi";
++		phys = <&u2phy_host>;
++		phy-names = "usb";
++		status = "disabled";
++	};
 +
-+&usb_host_ehci {
-+	status = "okay";
-+};
++	usb_otg: usb@30180000 {
++		compatible = "rockchip,rv1108-usb", "rockchip,rk3066-usb",
++			     "snps,dwc2";
++		reg = <0x30180000 0x40000>;
++		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_OTG>;
++		clock-names = "otg";
++		dr_mode = "otg";
++		g-np-tx-fifo-size = <16>;
++		g-rx-fifo-size = <280>;
++		g-tx-fifo-size = <256 128 128 64 32 16>;
++		g-use-dma;
++		phys = <&u2phy_otg>;
++		phy-names = "usb2-phy";
++		status = "disabled";
++	};
 +
-+&usb_host_ohci {
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	status = "okay";
-+};
+ 	gic: interrupt-controller@32010000 {
+ 		compatible = "arm,gic-400";
+ 		interrupt-controller;
 -- 
 2.0.0
