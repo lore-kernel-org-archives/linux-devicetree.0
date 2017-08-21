@@ -1,89 +1,50 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v2 1/9] devicetree: bindings: Add sata port phy config parameters in ahci-ceva
-Date: Mon, 21 Aug 2017 13:17:16 +0200
-Message-ID: <ad403e69fd5f17255db7d5190993f55ceb72c5a0.1503314240.git.michal.simek@xilinx.com>
-References: <cover.1503314240.git.michal.simek@xilinx.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <cover.1503314240.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1503314240.git.michal.simek@xilinx.com>
-References: <cover.1503314240.git.michal.simek@xilinx.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: Alexander Graf <agraf@suse.de>, Rob Herring <robh@kernel.org>, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [RESEND PATCH v5 11/16] arm64: zynqmp: Add generic compatible
+ string for I2C EEPROM
+Date: Mon, 21 Aug 2017 13:27:53 +0200
+Message-ID: <CABxcv=mOtPDU4RStdrF1EFci65N8sMB1MG4oKZiTXqUTe7GWHA@mail.gmail.com>
+References: <20170615185418.13980-1-javier@dowhile0.org> <20170615185418.13980-12-javier@dowhile0.org>
+ <e64ce8be-599a-5fc5-3194-92aac574173c@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e64ce8be-599a-5fc5-3194-92aac574173c@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+[snip]
 
-This patch adds device tree bindings for sata port phy parameters
-in the ahci-ceva.txt file.
+>>
+>> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>> index ef1b9e573af0..53907b7a7fd9 100644
+>> --- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>> @@ -55,7 +55,7 @@
+>>       status = "okay";
+>>       clock-frequency = <400000>;
+>>       eeprom@54 {
+>> -             compatible = "at,24c64";
+>> +             compatible = "atmel,24c64";
+>>               reg = <0x54>;
+>>       };
+>>  };
+>> @@ -64,7 +64,7 @@
+>>       status = "okay";
+>>       clock-frequency = <400000>;
+>>       eeprom@55 {
+>> -             compatible = "at,24c64";
+>> +             compatible = "atmel,24c64";
+>>               reg = <0x55>;
+>>       };
+>>  };
+>>
+>
+> Acked-by: Michal Simek <michal.simek@xilinx.com>
+>
 
-Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+Any reasons why this patch was never picked? It was acked two months ago.
 
-Changes in v2:
-- DT fix naming in parameters description use pN instead of phy
-  reported by Rob
-
- .../devicetree/bindings/ata/ahci-ceva.txt          | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/ata/ahci-ceva.txt b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
-index 7ca8b976c13a..7561cc4de371 100644
---- a/Documentation/devicetree/bindings/ata/ahci-ceva.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
-@@ -5,6 +5,36 @@ Required properties:
-   - compatible: Compatibility string. Must be 'ceva,ahci-1v84'.
-   - clocks: Input clock specifier. Refer to common clock bindings.
-   - interrupts: Interrupt specifier. Refer to interrupt binding.
-+  - ceva,p0-cominit-params: OOB timing value for COMINIT parameter for port 0.
-+  - ceva,p1-cominit-params: OOB timing value for COMINIT parameter for port 1.
-+			The fields for the above parameter must be as shown below:
-+			ceva,pN-cominit-params = /bits/ 8 <CIBGMN CIBGMX CIBGN CINMP>;
-+			CINMP : COMINIT Negate Minimum Period.
-+			CIBGN : COMINIT Burst Gap Nominal.
-+			CIBGMX: COMINIT Burst Gap Maximum.
-+			CIBGMN: COMINIT Burst Gap Minimum.
-+  - ceva,p0-comwake-params: OOB timing value for COMWAKE parameter for port 0.
-+  - ceva,p1-comwake-params: OOB timing value for COMWAKE parameter for port 1.
-+			The fields for the above parameter must be as shown below:
-+			ceva,pN-comwake-params = /bits/ 8 <CWBGMN CWBGMX CWBGN CWNMP>;
-+			CWBGMN: COMWAKE Burst Gap Minimum.
-+			CWBGMX: COMWAKE Burst Gap Maximum.
-+			CWBGN: COMWAKE Burst Gap Nominal.
-+			CWNMP: COMWAKE Negate Minimum Period.
-+  - ceva,p0-burst-params: Burst timing value for COM parameter for port 0.
-+  - ceva,p1-burst-params: Burst timing value for COM parameter for port 1.
-+			The fields for the above parameter must be as shown below:
-+			ceva,pN-burst-params = /bits/ 8 <BMX BNM SFD PTST>;
-+			BMX: COM Burst Maximum.
-+			BNM: COM Burst Nominal.
-+			SFD: Signal Failure Detection value.
-+			PTST: Partial to Slumber timer value.
-+  - ceva,p0-retry-params: Retry interval timing value for port 0.
-+  - ceva,p1-retry-params: Retry interval timing value for port 1.
-+			The fields for the above parameter must be as shown below:
-+			ceva,pN-retry-params = /bits/ 16 <RIT RCT>;
-+			RIT:  Retry Interval Timer.
-+			RCT:  Rate Change Timer.
- 
- Optional properties:
-   - ceva,broken-gen2: limit to gen1 speed instead of gen2.
-@@ -16,5 +46,14 @@ Examples:
- 		interrupt-parent = <&gic>;
- 		interrupts = <0 133 4>;
- 		clocks = <&clkc SATA_CLK_ID>;
-+		ceva,p0-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
-+		ceva,p0-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
-+		ceva,p0-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
-+		ceva,p0-retry-params = /bits/ 16 <0x0216 0x7F06>;
-+
-+		ceva,p1-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
-+		ceva,p1-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
-+		ceva,p1-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
-+		ceva,p1-retry-params = /bits/ 16 <0x0216 0x7F06>;
- 		ceva,broken-gen2;
- 	};
--- 
-1.9.1
-
+Best regards,
+Javier
