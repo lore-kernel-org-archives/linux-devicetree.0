@@ -1,48 +1,26 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 2/3] i2c: davinci: Add PM Runtime Support
-Date: Mon, 21 Aug 2017 14:39:56 +0530
-Message-ID: <3996b44e-68cd-0a19-c685-64f6345cdf88@ti.com>
-References: <20170816221715.15027-1-fcooper@ti.com>
- <20170816221715.15027-3-fcooper@ti.com>
- <20170817162427.izbfsa7xatjxb2aw@ninjato>
+From: "Sammy" <ts2@a.tnqj.org>
+Subject: Urgent Circuit Board Prototyping Service
+Date: Mon, 21 Aug 2017 17:15:26 +0800
+Message-ID: <201708211715264811223@a.tnqj.org>
+Reply-To: sammy-h4CsuzqGJ+yw4oTr9wS9Ww@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170817162427.izbfsa7xatjxb2aw@ninjato>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>, Franklin S Cooper Jr <fcooper@ti.com>
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, vigneshr@ti.com, Kevin Hilman <khilman@baylibre.com>, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain;
+        charset="GB2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
-
-On Thursday 17 August 2017 09:54 PM, Wolfram Sang wrote:
-> On Wed, Aug 16, 2017 at 05:17:14PM -0500, Franklin S Cooper Jr wrote:
->> 66AK2G has I2C instances that are not apart of the ALWAYS_ON power domain
->> like other Keystone 2 SoCs and OMAPL138. Therefore, pm_runtime
->> is required to insure the power domain used by the specific I2C instance is
->> properly turned on along with its functional clock.
->>
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> 
-> I'd need a review from the driver maintainers here. Which are Sekhar
-> Nori and Kevin Hilman(?) according to MAINTAINERS. Is that still
-> correct?
-
-I just finished the review (sent the comments). Thanks for the reminder!
-
-Also, tested the patches using i2cdetect and suspend/resume on OMAP-L138
-LCDK board.
-
-Regards,
-Sekhar
+SGkhDQpTaGVuemhlbiBQbHVzIENpcmN1aXRzIEx0ZC4gaGVyZSwgZXhwb3J0aW5nIHByaW50ZWQg
+Y2lyY3VpdCBib2FyZCB3aXRoIGdvb2QgcXVhbGl0eSBhbmQgc2hvcnQgbGVhZCB0aW1lLiBTYW1w
+bGVzIGFuZCBwcm90b3R5cGUgYXJlIHdlbGNvbWVkLg0KQ2FsbCBtZSBhbmQgbGV0oa9zIHRhbGsg
+aW4gZGV0YWlsLg0KDQpCZXN0IFJlZ2FyZHMsDQpTYW1teSBDaGFuZw0KT3ZlcnNlYXMgU2FsZXMN
+Ck1vYmlsZTogKzg2IDEzNTgwOTgyNjU2DQpTa3lwZTogKzg2IDEzNTgwOTgyNjU2DQoNClNoZW56
+aGVuIFBsdXMgQ2lyY3VpdHMgTGltaXRlZA0KV2Vic2l0ZTogd3d3LnBsdXNjaXJjdWl0cy5jb20g
+DQpBZGQ6IEJ1aWxkaW5nIDA1LCBMaXNoZW5nIEluZHVzdHJpYWwgUGFyaywgQmFvYW4gRGlzdHJp
+Y3QsIFNoZW56aGVuIENoaW5h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
