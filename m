@@ -1,54 +1,62 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] kbuild: generate *.tab.c and *.tab.h during build
-Date: Mon, 21 Aug 2017 12:12:31 -0500
-Message-ID: <CAL_JsqKWX1kb58_cck5ACGJGg8p2irsZNXufq2ougbRDxnLhXw@mail.gmail.com>
-References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com> <1503132577-24423-4-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] of: return of_get_cpu_node from of_cpu_device_node_get
+ if CPUs are not registered
+Date: Mon, 21 Aug 2017 12:20:39 -0500
+Message-ID: <20170821172039.jltg7kncl5z7q2jx@rob-hp-laptop>
+References: <1500904513-10483-1-git-send-email-sudeep.holla@arm.com>
+ <CAL_JsqLQBJL11XzmvSyD61syHKQKmzBVuUupo_Ctupaj8nxvVg@mail.gmail.com>
+ <75ed0ec4-2276-c098-f7d4-7d9ce168f10c@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503132577-24423-4-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <75ed0ec4-2276-c098-f7d4-7d9ce168f10c-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Richard Purdie <richard.purdie-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SeongJae Park <sj38.park-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yann E. MORIN" <yann.morin.1998-GANU6spQydw@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 19, 2017 at 3:49 AM, Masahiro Yamada
-<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> *.tab.[ch] files are artifacts generated from *.y by using bison.
-> Instead of running bison, we conventionally version-control
-> *.tab.[ch]_shipped files and copy them to *.tab.[ch] during build.
->
-> It is true that this approach can minimize external tool dependency,
-> but we need to update the shipped files from time to time.  This
-> commit switches to build-time generation of the intermediate C files.
+On Mon, Jul 24, 2017 at 05:32:21PM +0100, Sudeep Holla wrote:
+> 
+> 
+> On 24/07/17 17:00, Rob Herring wrote:
+> > On Mon, Jul 24, 2017 at 8:55 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> >> Instead of the callsites choosing between of_cpu_device_node_get if the
+> >> CPUs are registered as of_node is populated by then and of_get_cpu_node
+> >> when the CPUs are not yet registered as CPU of_nodes are not yet stashed
+> >> thereby needing to parse the device tree, we can call of_get_cpu_node
+> >> in case the CPUs are not yet registered.
+> >>
+> >> This will allow to use of_cpu_device_node_get anywhere hiding the
+> >> details from the caller.
+> >>
+> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> >> ---
+> >>  include/linux/of_device.h | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> Hi Rob,
+> >>
+> >> Let me know if you are OK with this change. I keep seeing different
+> >> drivers calling of_get_cpu_node or of_cpu_device_node_get based on what
+> >> they are aware of or copying from other place without knowing the
+> >> details. I am trying to avoid that and ask to use of_cpu_device_node_get
+> >> at all places instead.
+> > 
+> > Seems fine to me.
+> > 
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > 
+> 
+> Thanks. Can you take it through your tree itself ? I can make any follow
+> patches(if any) once this lands in the tree. I don't have any for now
+> just to avoid all cross dependencies.
 
-When do we need to update them?
+Done.
 
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> ---
->
->  Documentation/process/changes.rst    |   12 +
->  scripts/Makefile.lib                 |   14 +-
->  scripts/dtc/Makefile                 |    9 +-
->  scripts/dtc/dtc-parser.tab.c_shipped | 2303 -------------------------------
->  scripts/dtc/dtc-parser.tab.h_shipped |  125 --
-
-The script to import dtc normally creates these. If you change this,
-please make sure the script still works.
-
->  scripts/genksyms/Makefile            |    5 +-
->  scripts/genksyms/parse.tab.c_shipped | 2394 --------------------------------
->  scripts/genksyms/parse.tab.h_shipped |  119 --
->  scripts/kconfig/Makefile             |    2 +-
->  scripts/kconfig/zconf.tab.c_shipped  | 2471 ----------------------------------
->  10 files changed, 24 insertions(+), 7430 deletions(-)
->  delete mode 100644 scripts/dtc/dtc-parser.tab.c_shipped
->  delete mode 100644 scripts/dtc/dtc-parser.tab.h_shipped
->  delete mode 100644 scripts/genksyms/parse.tab.c_shipped
->  delete mode 100644 scripts/genksyms/parse.tab.h_shipped
->  delete mode 100644 scripts/kconfig/zconf.tab.c_shipped
->
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
