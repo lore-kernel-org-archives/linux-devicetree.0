@@ -1,88 +1,32 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCHv2 0/2] Input: atmel_mxt_ts: Add reset support
-Date: Mon, 21 Aug 2017 12:03:51 +0200
-Message-ID: <20170821100351.iou3b26hypuc7f4h@earth>
-References: <20170703123843.19340-1-sebastian.reichel@collabora.co.uk>
- <20170725135656.2ua5j76fctkkdmlr@earth>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: add rk805 node for rk3328-evb
+Date: Mon, 21 Aug 2017 12:05:35 +0200
+Message-ID: <1567365.GLZbXPjLJs@phil>
+References: <1502244224-11999-1-git-send-email-chenjh@rock-chips.com> <1502244224-11999-2-git-send-email-chenjh@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7m4ythvkybslxqsg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170725135656.2ua5j76fctkkdmlr@earth>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Dyer <nick@shmanahar.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
-Cc: Henrik Rydberg <rydberg@bitmath.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502244224-11999-2-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Am Mittwoch, 9. August 2017, 10:03:44 CEST schrieb Joseph Chen:
+> RK805 consists of 4 DCDCs, 3 LDOs. It's different from RK808
+> and RK818 that there are 2 output only GPIOs, we should add
+> properties "gpio-controller" and "gpio-cells = <2>".
+> 
+> Signed-off-by: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
---7m4ythvkybslxqsg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-ping?
-
--- Sebastian
-
-On Tue, Jul 25, 2017 at 03:56:56PM +0200, Sebastian Reichel wrote:
-> Hi Dmitry,
->=20
-> Gentle ping on this one. This helps to remove a hack from the
-> Droid 4 DT and will also be used by PPD, which is currently
-> being upstreamed:
->=20
-> https://lkml.org/lkml/2017/7/19/898
->=20
-> -- Sebastian
->=20
-> On Mon, Jul 03, 2017 at 02:38:41PM +0200, Sebastian Reichel wrote:
-> > Hi,
-> >=20
-> > This adds support for the reset pin of Atmel MXT.
-> >=20
-> > Changes since PATCHv1:
-> >  - Add new patch preparing for resource managed gpio
-> >  - Use resource managed gpio
-> >  - Wait for interrupt after reset
-> >=20
-> > -- Sebastian
-> >=20
-> > Sebastian Reichel (2):
-> >   Input: atmel_mxt_ts: Use more managed resources
-> >   Input: atmel_mxt_ts: Add support for reset line
-> >=20
-> >  .../devicetree/bindings/input/atmel,maxtouch.txt   |  2 ++
-> >  drivers/input/touchscreen/atmel_mxt_ts.c           | 42 ++++++++++++++=
-+-------
-> >  2 files changed, 31 insertions(+), 13 deletions(-)
-> >=20
-> > --=20
-> > 2.13.2
-> >=20
+adapted to the meanwhile changed rk3328-evb.dts and then
+applied for 4.14
 
 
-
---7m4ythvkybslxqsg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmasAQACgkQ2O7X88g7
-+poxdQ/9HCGNJ5Q5IhbsPrLYJezuOeSpP0w2iEqz0uV/3nnVhc8uCovPxBbtMyCk
-pIEa0C4Ot6c+9ucUkKHH2WBRWd3SAnMAwWAy/xO6Ubz1UQizp7LWSpeoFFP1O0XD
-YwydUwWmY+W8ChYqOZhIj9sTXu0T4UEdahvEJmQXH3y3+2lm0kDkCKVsOAc2KKJx
-uqToNb9US+MiM/Oma/rwCnI/jrY7W8KWqXY/aJBZo4kzTWezICW1W7mrdrCh2T0z
-69eD+U7+OV8MKJcVNkP3NqBpapLsYNxPrvJ1Ti7O5ArxF6dQTVz1nUCjK8AcKP/d
-XKILZpb1fF48U21sfQ99Jf3yaM9bnmlGm0HCVPraCbpslpdbauvkZ/JU6hmtbSL4
-ltkPxAv3ff2qvadThjfiE/66cQX/Z7TIjZGqSHnZGUwJ+3XcWNzy5DIbz+jikF39
-PzF2R0G1AKMKypOevGSoeHluntGnMImFynJUHe9KJyKYlcgYlQ0ozbmT/3krYQMp
-nbGU5zM4+Sb4fIFi1zLhNP8K12Ve+Ee5VshatJRxTB6Mp3EFdW2JNxT/or+M9iVn
-2xX3VQ5ktB2QOhpalqE2HZKgAWQn3AUPvY364ENj6dS1CNXROYAoQ9gdRPGe9ZdD
-KWUsJmDH0ka66aa/GUZ7hTHv72phKE9aa9CwYaDnqn56yikRHYA=
-=hznz
------END PGP SIGNATURE-----
-
---7m4ythvkybslxqsg--
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
