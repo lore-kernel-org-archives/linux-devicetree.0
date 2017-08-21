@@ -1,80 +1,88 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2.1 2/3] leds: as3645a: Add LED flash class driver
-Date: Mon, 21 Aug 2017 21:03:47 +0200
-Message-ID: <cadbcd5b-ad5b-4c6c-8360-1f59aa2e5bf4@gmail.com>
-References: <20170819212410.3084-3-sakari.ailus@linux.intel.com>
- <20170819214226.20736-1-sakari.ailus@linux.intel.com>
- <fc6c7893-863b-53ff-48e3-d14297364e5d@gmail.com>
- <07392419-c586-a791-a994-bed39f73da94@iki.fi>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
+Date: Mon, 21 Aug 2017 14:10:33 -0500
+Message-ID: <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
+References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <07392419-c586-a791-a994-bed39f73da94@iki.fi>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: javier@dowhile0.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Sun, Aug 20, 2017 at 5:28 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+> Add device-tree binding documentation SFP transceivers. Support for SFP
+> transceivers has been recently introduced (drivers/net/phy/sfp.c).
+>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> ---
+>
+> The SFP driver is on net-next.
+>
+> Not sure about the rate-select-gpio property name. The SFP+ standard
+> (not supported yet) uses two signals, RS0 and RS1. RS0 is compatible
+> with the SFP rate select signal, while RS1 controls the Tx rate.
+> ---
+>  Documentation/devicetree/bindings/net/sff-sfp.txt | 24 +++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/sff-sfp.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/sff-sfp.txt b/Documentation/devicetree/bindings/net/sff-sfp.txt
+> new file mode 100644
+> index 000000000000..f0c27bc3925e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/sff-sfp.txt
+> @@ -0,0 +1,24 @@
+> +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
+> +Transceiver
+> +
+> +Required properties:
+> +
+> +- compatible : must be "sff,sfp"
 
-On 08/21/2017 03:53 PM, Sakari Ailus wrote:
-> Hi Jacek,
-> 
-> Jacek Anaszewski wrote:
->> Hi Sakari,
->>
->> Thanks for the update.
->> I've noticed that you added node labels to the child device nodes
->> in [0]:
->>
->> "as3645a_flash : flash" and "as3645a_indicator : indicator"
-> 
-> The phandle references (as3645a_flash and as3645a_indicator) should
-> actually be moved to the patch adding the flash property to the sensor
-> device node. It doesn't do anything here, yet.
-> 
->>
->> I am still seeing problems with this approach:
->>
->> 1) AFAIK these labels are only used for referencing nodes inside dts
->>    files and they don't affect the name property of struct device_node
-> 
-> That's right.
-> 
->> 2) Even if you changed the node name from flash to as3645a_flash, you
->>    would get weird LED class device name "as3645a_flash:flash" in case
->>    label property is absent. Do you have any objections against the
->>    approach I proposed in the previous review?:
->>
->>
->>     snprintf(names->flash, sizeof(names->flash),
->> 	     AS_NAME":%s", node->name);
-> 
-> In the current patch, the device node of the flash controller is used,
-> postfixed with colon and the name of the LED ("flash" or "indicator") if
-> no label is defined. In other words, with that DT source you'll have
-> "as3645a:flash" and "as3645a:indicator". So if you change the name of
-> the device node of the I²C device, that will be reflected in the label.
-> 
-> If a label exists, then the label is used as such.
-> 
-> I don't really have objections to what you're proposing as such but my
-> question is: is it useful? With that, the flash and indicator labels
-> will not come from DT if label properties are undefined. They'll always
-> be "as3645a:flash" and "as3645a:indicator", independently of the names
-> of the device nodes.
-> 
+Need to document "sff" vendor prefix.
 
-Ah, indeed, the node->name is put in place of devicename segment and
-the node points to the LED controller node. Neat approach, likely to
-be adopted as a pattern from now on for all new LED class drivers.
+Kind of a short name, but I guess it is sufficient. Are there
+revisions of the standard (not SFP+) or more than one form factor (I
+don't recall any)?
 
+> +
+> +Optional Properties:
+> +
+> +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
+> +  interface
 
-For the patch going through media tree:
+Why not a child of the i2c bus it is on? IOW, what should this be a child of?
 
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> +
+> +- moddef0-gpio : phandle of the MOD-DEF0 (AKA Mod_ABS) module presence input
+> +  gpio signal
 
--- 
-Best regards,
-Jacek Anaszewski
+mod-def0-gpios?
+
+> +
+> +- los-gpio : phandle of the Receiver Loss of Signal Indication input gpio
+> +  signal
+> +
+> +- tx-fault-gpio : phandle of the Module Transmitter Fault input gpio signal
+> +
+> +- tx-disable-gpio : phandle of the Transmitter Disable output gpio signal
+> +
+> +- rate-select-gpio : phandle of the Rx Signaling Rate Select (AKA RS0) output
+> +  gpio
+
+-gpios is the preferred form for all of these.
+
+> --
+> 2.14.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
