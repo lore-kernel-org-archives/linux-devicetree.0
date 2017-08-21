@@ -1,97 +1,71 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
-Date: Mon, 21 Aug 2017 13:53:17 +0100
-Message-ID: <20170821125317.GS20805@n2100.armlinux.org.uk>
-References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [RESEND PATCH v5 11/16] arm64: zynqmp: Add generic compatible
+ string for I2C EEPROM
+Date: Mon, 21 Aug 2017 14:58:37 +0200
+Message-ID: <CABxcv=k+3bi0XbuUDEu4nFvFhCHxjZMg1+oEnrBhH5gow4HaNw@mail.gmail.com>
+References: <20170615185418.13980-1-javier@dowhile0.org> <20170615185418.13980-12-javier@dowhile0.org>
+ <e64ce8be-599a-5fc5-3194-92aac574173c@xilinx.com> <CABxcv=mOtPDU4RStdrF1EFci65N8sMB1MG4oKZiTXqUTe7GWHA@mail.gmail.com>
+ <ae7ec977-4ec8-7dcf-8bc6-27cb8c6bf48d@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
-Sender: netdev-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ae7ec977-4ec8-7dcf-8bc6-27cb8c6bf48d@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 20, 2017 at 01:28:06PM +0300, Baruch Siach wrote:
-> Add device-tree binding documentation SFP transceivers. Support for SFP
-> transceivers has been recently introduced (drivers/net/phy/sfp.c).
-> 
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
-> 
-> The SFP driver is on net-next.
-> 
-> Not sure about the rate-select-gpio property name. The SFP+ standard
-> (not supported yet) uses two signals, RS0 and RS1. RS0 is compatible
-> with the SFP rate select signal, while RS1 controls the Tx rate.
+Hello Michal,
 
-SFP+ is usable with this, but the platforms I have do not wire the
-rate select pins on the SFP+ sockets to GPIOs, but hard-wire them.
+On Mon, Aug 21, 2017 at 2:04 PM, Michal Simek <michal.simek@xilinx.com> wrote:
+> On 21.8.2017 13:27, Javier Martinez Canillas wrote:
+>> [snip]
+>>
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>>>> index ef1b9e573af0..53907b7a7fd9 100644
+>>>> --- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>>>> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+>>>> @@ -55,7 +55,7 @@
+>>>>       status = "okay";
+>>>>       clock-frequency = <400000>;
+>>>>       eeprom@54 {
+>>>> -             compatible = "at,24c64";
+>>>> +             compatible = "atmel,24c64";
+>>>>               reg = <0x54>;
+>>>>       };
+>>>>  };
+>>>> @@ -64,7 +64,7 @@
+>>>>       status = "okay";
+>>>>       clock-frequency = <400000>;
+>>>>       eeprom@55 {
+>>>> -             compatible = "at,24c64";
+>>>> +             compatible = "atmel,24c64";
+>>>>               reg = <0x55>;
+>>>>       };
+>>>>  };
+>>>>
+>>>
+>>> Acked-by: Michal Simek <michal.simek@xilinx.com>
+>>>
+>>
+>> Any reasons why this patch was never picked? It was acked two months ago.
+>
+> Normally when you send series then it should be applied as the whole
+> series not just one piece of that.
+>
 
-Note that I didn't expect the SFP code to just get merged with very
-little in the way of real in-depth review of things like:
+Right, I mentioned in the cover letter that the patches could be
+applied independently. Sorry for the confusion.
 
-* the way the SFP code works, and its structure
-* analysis of the bindings checking that they're fit for everyone's
-  purposes.
+> Anyway I see that changes are applied and this one is missing that's why
+> I will add to zynqmp/dt branch and going to send pull request today.
+>
 
-The implementation that I've designed is based around the boards that
-I have access to and the various public SFP documentation.  I think
-documenting the bindings suggests that they are stable - I don't think
-we're really ready to make that assertion yet - there may be things
-that have been missed which will only come up when other people start
-using this code.
+Great, thanks a lot for your help.
 
-> ---
->  Documentation/devicetree/bindings/net/sff-sfp.txt | 24 +++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/sff-sfp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/sff-sfp.txt b/Documentation/devicetree/bindings/net/sff-sfp.txt
-> new file mode 100644
-> index 000000000000..f0c27bc3925e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/sff-sfp.txt
-> @@ -0,0 +1,24 @@
-> +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
-> +Transceiver
-> +
-> +Required properties:
-> +
-> +- compatible : must be "sff,sfp"
-> +
-> +Optional Properties:
-> +
-> +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-> +  interface
+> Thanks,
+> Michal
 
-The code as it currently stands pretty much requires an I2C bus to be
-functional - but when I wrote the code, I left the possibility open for
-an implementation (eg, network driver) to provide its own functionality
-for reading the I2C EEPROM on the module.  Some adapters which already
-have SFP support do this.
-
-Hence, for current implementations, this is required.
-
-> +
-> +- moddef0-gpio : phandle of the MOD-DEF0 (AKA Mod_ABS) module presence input
-> +  gpio signal
-> +
-> +- los-gpio : phandle of the Receiver Loss of Signal Indication input gpio
-> +  signal
-> +
-> +- tx-fault-gpio : phandle of the Module Transmitter Fault input gpio signal
-> +
-> +- tx-disable-gpio : phandle of the Transmitter Disable output gpio signal
-> +
-> +- rate-select-gpio : phandle of the Rx Signaling Rate Select (AKA RS0) output
-> +  gpio
-> -- 
-> 2.14.1
-> 
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+Best regards,
+Javier
