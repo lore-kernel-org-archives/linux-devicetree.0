@@ -1,33 +1,57 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH repost2] pwm: renesas-tpu: remove support for sh7372
-Date: Mon, 21 Aug 2017 11:07:04 +0200
-Message-ID: <20170821090704.GG14174@verge.net.au>
-References: <20170818100858.GA15521@verge.net.au>
- <20170818152801.GA18307@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170818152801.GA18307@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH 1/2] ARM: dts: rockchip: add cpu opp table for rv1108
+Date: Mon, 21 Aug 2017 17:06:44 +0800
+Message-ID: <1503306404-28876-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 05:28:01PM +0200, Thierry Reding wrote:
-> On Fri, Aug 18, 2017 at 12:09:01PM +0200, Simon Horman wrote:
-> > Remove support for the SH7372 (SH-Mobile AP4) from the renesas-tpu driver.
-> > 
-> > Commit edf4100906044225 ("ARM: shmobile: sh7372 dtsi: Remove Legacy file")
-> > removes this SoC from the kernel in v4.1.
-> > 
-> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > ---
-> >  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 1 -
-> >  drivers/pwm/pwm-renesas-tpu.c                             | 1 -
-> >  2 files changed, 2 deletions(-)
-> 
-> Applied, thanks.
+Add cpu opp table for rv1108 to support frequency
+from 408MHZ to 1008MHZ.
 
-Thanks!
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+---
+
+ arch/arm/boot/dts/rv1108-evb.dts | 4 ++++
+ arch/arm/boot/dts/rv1108.dtsi    | 9 +++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
+index 32fb09a..e517aa3 100644
+--- a/arch/arm/boot/dts/rv1108-evb.dts
++++ b/arch/arm/boot/dts/rv1108-evb.dts
+@@ -104,6 +104,10 @@
+ 	};
+ };
+ 
++&cpu0 {
++	cpu-supply = <&vdd_core>;
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 	i2c-scl-rising-time-ns = <275>;
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index 064cec3..6ebf07c 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -69,6 +69,15 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0xf00>;
++			operating-points = <
++				/* KHz    uV */
++				408000	975000
++				600000	975000
++				816000	1025000
++				1008000	1150000
++			>;
++			clock-latency = <40000>;
++			clocks = <&cru ARMCLK>;
+ 		};
+ 	};
+ 
+-- 
+2.7.4
