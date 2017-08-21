@@ -1,114 +1,101 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: [V2 3/4] MIPS: dts: Add Vocore2 board
-Date: Mon, 21 Aug 2017 11:54:46 +0100
-Message-ID: <1503312887-34310-3-git-send-email-harvey.hunt@imgtec.com>
-References: <1503312887-34310-1-git-send-email-harvey.hunt@imgtec.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/8] MT2712 IOMMU SUPPORT
+Date: Mon, 21 Aug 2017 19:00:13 +0800
+Message-ID: <1503313221-26453-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1503312887-34310-1-git-send-email-harvey.hunt@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, john@phrozen.org
-Cc: Harvey Hunt <harvey.hunt@imgtec.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cloud.zhou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The VoCore2 board is a low cost MT7628A based board with 128MB RAM, 16MB
-flash and multiple external peripherals.
+This patchset mainly adds support for M4U of mt2712.
 
-This initial DTS provides enough support to get to userland and use the USB
-port.
+The M4U in mt2712 is MTK's generation2 M4U which use the ARM
+Short-descriptor like mt8173. The main difference is that there are 2
+M4Us and 2 smi-commons in mt2712, while there is only 1 M4U and 1
+smi-common in mt8173. The purpose is for balance the bandwidth.
 
-Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-mips@linux-mips.org
----
-Changes in V2:
-- Use uart2 phandle for stdout-path
+The mt2712 M4U-SMI HW diagram is as below:
 
- MAINTAINERS                           |  6 ++++++
- arch/mips/boot/dts/ralink/Makefile    |  1 +
- arch/mips/boot/dts/ralink/vocore2.dts | 18 ++++++++++++++++++
- arch/mips/ralink/Kconfig              |  5 +++++
- 4 files changed, 30 insertions(+)
- create mode 100644 arch/mips/boot/dts/ralink/vocore2.dts
+                            EMI
+                             |
+              ------------------------------------
+              |                                  |
+             M4U0                              M4U1
+              |                                  |
+         smi-common0                        smi-common1
+              |                                  |
+  -------------------------       --------------------------------
+  |     |     |     |     |       |         |        |     |     |
+  |     |     |     |     |       |         |        |     |     |
+larb0 larb1 larb2 larb3 larb6    larb4    larb5    larb7 larb8 larb9
+disp0 vdec  cam   venc   jpg  mdp1/disp1 mdp2/disp2 mdp3 vdo/nr tvd
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6f7721d..82dcc6f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14127,6 +14127,12 @@ L:	netdev@vger.kernel.org
- S:	Maintained
- F:	drivers/net/vmxnet3/
- 
-+VOCORE VOCORE2 BOARD
-+M:	Harvey Hunt <harveyhuntnexus@gmail.com>
-+L:	linux-mips@linux-mips.org
-+S:	Maintained
-+F:	arch/mips/boot/dts/ralink/vocore2.dts
-+
- VOLTAGE AND CURRENT REGULATOR FRAMEWORK
- M:	Liam Girdwood <lgirdwood@gmail.com>
- M:	Mark Brown <broonie@kernel.org>
-diff --git a/arch/mips/boot/dts/ralink/Makefile b/arch/mips/boot/dts/ralink/Makefile
-index 2a72259..a191788 100644
---- a/arch/mips/boot/dts/ralink/Makefile
-+++ b/arch/mips/boot/dts/ralink/Makefile
-@@ -2,6 +2,7 @@ dtb-$(CONFIG_DTB_RT2880_EVAL)	+= rt2880_eval.dtb
- dtb-$(CONFIG_DTB_RT305X_EVAL)	+= rt3052_eval.dtb
- dtb-$(CONFIG_DTB_RT3883_EVAL)	+= rt3883_eval.dtb
- dtb-$(CONFIG_DTB_MT7620A_EVAL)	+= mt7620a_eval.dtb
-+dtb-$(CONFIG_DTB_VOCORE2)		+= vocore2.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
- 
-diff --git a/arch/mips/boot/dts/ralink/vocore2.dts b/arch/mips/boot/dts/ralink/vocore2.dts
-new file mode 100644
-index 0000000..fa8a5f8
---- /dev/null
-+++ b/arch/mips/boot/dts/ralink/vocore2.dts
-@@ -0,0 +1,18 @@
-+/dts-v1/;
-+
-+#include "mt7628a.dtsi"
-+
-+/ {
-+	compatible = "vocore,vocore2", "ralink,mt7628a-soc";
-+	model = "VoCore2";
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x8000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS2,115200";
-+		stdout-path = &uart2;
-+	};
-+};
-diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
-index 710b04c..c2b2c2d 100644
---- a/arch/mips/ralink/Kconfig
-+++ b/arch/mips/ralink/Kconfig
-@@ -82,6 +82,11 @@ choice
- 		depends on SOC_MT7620
- 		select BUILTIN_DTB
- 
-+	config DTB_VOCORE2
-+		bool "VoCore2"
-+		depends on SOC_MT7620
-+		select BUILTIN_DTB
-+
- endchoice
- 
- endif
+This patchset is based on v4.13-rc1, Also it base on Robin's[1],
+Honghui[2],Arvind[3], all have been applied. Currently it don't contain
+the dtsi part.
+
+The patch 1 adds the binding for MT2712 IOMMU, the patch 2 is a
+prepared patch for mt2712, the patch 3 adds the MT2712 IOMMU support.
+the patch 4/5 improve the m4u flow for mt2712,
+the last patch 6/7/8 mainly fix bug or improve code.
+
+[1]:https://patchwork.kernel.org/patch/9828671/
+[2]:https://patchwork.kernel.org/patch/9880223/
+[3]:https://patchwork.kernel.org/patch/9892759/
+
+change log:
+v2:
+ 1) Add larb8 and larb9 in the HW diagram. larb8 and larb9 are called
+    by the bdpsys larb, they are a little special, their mmu_en register
+    offset is different from the normal larb. Fortunately, their mmu_en
+    register is enabled defaultly, we don't need set again.
+    After adding larb8 and larb9, the larb number is over 8, therefore,
+    MTK_LARB_NR_MAX also is increased.
+ 2) Add a prepared patch that moving the MTK_M4U_TO_LARB/PORT into the
+    c file.
+ 3) Discard the original patch[7/8] which was only a cleanup for SMI,
+    It's unnecessary for this patch-set.
+ 4) Use subsys_initcall instead of IOMMU_OF_DECLARE according to
+    Robin's suggestion. Also, Improve some coding format, like using
+    for_each_set_bit and changing the definition of
+    F_MMU_TF_PROTECT_SEL.
+
+v1:
+https://lists.linuxfoundation.org/pipermail/iommu/2017-August/023664.html
+
+Yong Wu (8):
+  dt-bindings: mediatek: Add binding for mt2712 IOMMU and SMI
+  iommu/mediatek: Move MTK_M4U_TO_LARB/PORT into mtk_iommu.c
+  iommu/mediatek: Add mt2712 IOMMU support
+  iommu/mediatek: Merge 2 M4U HWs into one iommu domain
+  iommu/mediatek: Move pgtable allocation into domain_alloc
+  iommu/mediatek: Disable iommu clock when system suspend
+  iommu/mediatek: Enlarge the validate PA range for 4GB mode
+  memory: mtk-smi: Degrade SMI init to module_init
+
+ .../devicetree/bindings/iommu/mediatek,iommu.txt   |   6 +-
+ .../memory-controllers/mediatek,smi-common.txt     |   6 +-
+ .../memory-controllers/mediatek,smi-larb.txt       |   5 +-
+ drivers/iommu/mtk_iommu.c                          | 214 +++++++++++++--------
+ drivers/iommu/mtk_iommu.h                          |   9 +
+ drivers/memory/mtk-smi.c                           |  65 ++++++-
+ include/dt-bindings/memory/mt2712-larb-port.h      | 102 ++++++++++
+ include/dt-bindings/memory/mt8173-larb-port.h      |   4 -
+ include/soc/mediatek/smi.h                         |   2 +-
+ 9 files changed, 314 insertions(+), 99 deletions(-)
+ create mode 100644 include/dt-bindings/memory/mt2712-larb-port.h
+
 -- 
-2.7.4
+1.9.1
