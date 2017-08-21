@@ -1,122 +1,58 @@
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
-Subject: [PATCH v2 1/2] arm64: dts: rockchip: add rk3328 pdm node
-Date: Mon, 21 Aug 2017 16:25:06 +0800
-Message-ID: <1503303907-57630-2-git-send-email-sugar.zhang@rock-chips.com>
-References: <1503303907-57630-1-git-send-email-sugar.zhang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503303907-57630-1-git-send-email-sugar.zhang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, broonie@kernel.org
-Cc: linux-rockchip@lists.infradead.org, Sugar Zhang <sugar.zhang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Liang Chen <cl@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH  2/3] ARM: dts: iwg20m: Enable SDHI0 controller
+Date: Mon, 21 Aug 2017 10:28:42 +0200
+Message-ID: <20170821082842.GB2418@katana>
+References: <1502711389-16040-1-git-send-email-biju.das@bp.renesas.com>
+ <1502711389-16040-3-git-send-email-biju.das@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="R3G7APHDIzY6R/pk"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502711389-16040-3-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add pdm controller device node for rk3328.
 
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+--R3G7APHDIzY6R/pk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
----
+> +
+> +&sdhi0 {
+> +	pinctrl-0 = <&sdhi0_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	vmmc-supply = <&reg_3p3v>;
+> +	vqmmc-supply = <&reg_3p3v>;
+> +	cd-gpios = <&gpio7 11 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
 
-Changes in v2:
-- separate pinctrl pins
-  remove unused fsync clk, it's debug pins
+Just to make sure: No 1.8V and UHS support (SDR50/104)? Or is this to be
+tested and added later?
 
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 77 ++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 0be96ce..c4f52ec 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -156,6 +156,27 @@
- 		clock-output-names = "xin24m";
- 	};
- 
-+	pdm: pdm@ff040000 {
-+		compatible = "rockchip,pdm";
-+		reg = <0x0 0xff040000 0x0 0x1000>;
-+		clocks = <&cru SCLK_PDM>, <&cru HCLK_PDM>;
-+		clock-names = "pdm_clk", "pdm_hclk";
-+		dmas = <&dmac 16>;
-+		dma-names = "rx";
-+		pinctrl-names = "default", "sleep";
-+		pinctrl-0 = <&pdmm0_clk
-+			     &pdmm0_sdi0
-+			     &pdmm0_sdi1
-+			     &pdmm0_sdi2
-+			     &pdmm0_sdi3>;
-+		pinctrl-1 = <&pdmm0_clk_sleep
-+			     &pdmm0_sdi0_sleep
-+			     &pdmm0_sdi1_sleep
-+			     &pdmm0_sdi2_sleep
-+			     &pdmm0_sdi3_sleep>;
-+		status = "disabled";
-+	};
-+
- 	grf: syscon@ff100000 {
- 		compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
- 		reg = <0x0 0xff100000 0x0 0x1000>;
-@@ -734,6 +755,62 @@
- 			};
- 		};
- 
-+		pdm-0 {
-+			pdmm0_clk: pdmm0-clk {
-+				rockchip,pins = <2 RK_PC2 2 &pcfg_pull_none>;
-+			};
-+
-+			pdmm0_fsync: pdmm0-fsync {
-+				rockchip,pins = <2 RK_PC7 2 &pcfg_pull_none>;
-+			};
-+
-+			pdmm0_sdi0: pdmm0-sdi0 {
-+				rockchip,pins = <2 RK_PC3 2 &pcfg_pull_none>;
-+			};
-+
-+			pdmm0_sdi1: pdmm0-sdi1 {
-+				rockchip,pins = <2 RK_PC4 2 &pcfg_pull_none>;
-+			};
-+
-+			pdmm0_sdi2: pdmm0-sdi2 {
-+				rockchip,pins = <2 RK_PC5 2 &pcfg_pull_none>;
-+			};
-+
-+			pdmm0_sdi3: pdmm0-sdi3 {
-+				rockchip,pins = <2 RK_PC6 2 &pcfg_pull_none>;
-+			};
-+
-+			pdmm0_clk_sleep: pdmm0-clk-sleep {
-+				rockchip,pins =
-+					<2 RK_PC2 RK_FUNC_GPIO &pcfg_input_high>;
-+			};
-+
-+			pdmm0_sdi0_sleep: pdmm0-sdi0-sleep {
-+				rockchip,pins =
-+					<2 RK_PC3 RK_FUNC_GPIO &pcfg_input_high>;
-+			};
-+
-+			pdmm0_sdi1_sleep: pdmm0-sdi1-sleep {
-+				rockchip,pins =
-+					<2 RK_PC4 RK_FUNC_GPIO &pcfg_input_high>;
-+			};
-+
-+			pdmm0_sdi2_sleep: pdmm0-sdi2-sleep {
-+				rockchip,pins =
-+					<2 RK_PC5 RK_FUNC_GPIO &pcfg_input_high>;
-+			};
-+
-+			pdmm0_sdi3_sleep: pdmm0-sdi3-sleep {
-+				rockchip,pins =
-+					<2 RK_PC6 RK_FUNC_GPIO &pcfg_input_high>;
-+			};
-+
-+			pdmm0_fsync_sleep: pdmm0-fsync-sleep {
-+				rockchip,pins =
-+					<2 RK_PC7 RK_FUNC_GPIO &pcfg_input_high>;
-+			};
-+		};
-+
- 		i2s1 {
- 			i2s1_mclk: i2s1-mclk {
- 				rockchip,pins = <2 RK_PB7 1 &pcfg_pull_none>;
--- 
-2.7.4
+--R3G7APHDIzY6R/pk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmamboACgkQFA3kzBSg
+KbZW1w//Y20D0mKIKOIxC1oYFcB2pEitTHKsa36oaK5BFswsGhMcdx1qc4B3Ly8Z
+PwHTYSQLxImdHCoyNN/NlVqCsai4D+zFJN2lXuDlcb4HFCGDFT07SqANJNLo+f6p
+LmVwqVY8fV8YjhoaMDIfg5KW/THr3jAsSabXh7xqNhiDLrWfOZAEdO03OiLodLxa
+gk9HsIDeCx8ozS02GbcFmVVL3KsHngspSQGQzK5riwICy4r/LLYgmjIYes4hTXOi
+AkijerGI5anHHP6FK6bVXoCqLr9Qy7v419ukn/st10Dl8NL+fP6dwM4efoAcIKlb
+XEzamueQAKLrleDfdBa/ZiK5pPSxRrgFDc1Mk6F89xNxC5O8bpgRB5jNK8eZjm/b
+XkN/lX5yy2hCd/yZbnR/cifi1ZXG6rEaX1LN3oSReE5bF4VgtIS8gRLifjRhm2qG
+IkIPDIXbRFEw47tfaRRf1OPatUE3zWsHaA0pgZXXzvZ02HMJQbTvfJhy42eVFJU0
+PAZtA+rkrQmm/2Zx4sPOxyMcpgMeVXETlLAUd1PHK9YWaB2TIIAKcuvA4mKNjOa8
+wXJ9bP+XAevsjG0gtzFx32PM9/vQo0JAxLs7Cf36xRQrLahjgokLL4qv2zJLCxFQ
+AOj9b1h8TcWLCj30UtW3YoOUujoj6Uxy13jFYB/c18wnqg/+u0k=
+=Zae7
+-----END PGP SIGNATURE-----
+
+--R3G7APHDIzY6R/pk--
