@@ -1,32 +1,25 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: i2c: i2c-davinci: Update binding for
- 66AK2Gx pwr dm property
-Date: Mon, 21 Aug 2017 15:21:22 +0530
-Message-ID: <9688ea55-74ac-32da-ff49-7e1cfbd3025e@ti.com>
-References: <20170816221715.15027-1-fcooper@ti.com>
- <20170816221715.15027-4-fcooper@ti.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 8/8] ARM: dts: rockchip: add accelerometer bma250e dt node for rv1108 evb
+Date: Mon, 21 Aug 2017 11:52:57 +0200
+Message-ID: <1682225.9zDcqiPKQS@phil>
+References: <1502699477-8063-1-git-send-email-andy.yan@rock-chips.com> <1502700251-8852-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170816221715.15027-4-fcooper-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502700251-8852-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 August 2017 03:47 AM, Franklin S Cooper Jr wrote:
-> Add pm-domains property which is required for 66AK2Gx. Also document 66AK2G
-> unique clocks property usage.
+Am Montag, 14. August 2017, 16:44:11 CEST schrieb Andy Yan:
+> Add dt node of bosch accelerometer bma250e on rv1108 evb.
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+applied for 4.14
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Thanks
+Heiko
