@@ -1,54 +1,32 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
-Date: Mon, 21 Aug 2017 10:25:23 +0200
-Message-ID: <20170821082523.GA2418@katana>
-References: <1502710766-44361-1-git-send-email-biju.das@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1502710766-44361-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
+From: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/2] Patches to add support pdm controller for rk3328
+Date: Mon, 21 Aug 2017 16:25:05 +0800
+Message-ID: <1503303907-57630-1-git-send-email-sugar.zhang@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+These patches to add support pdm for rk3328 socs.
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes in v2:
+- separate pinctrl pins
+  remove unused fsync clk, it's debug pins
+
+Sugar Zhang (2):
+  arm64: dts: rockchip: add rk3328 pdm node
+  ASoC: rockchip: separate pinctrl pins from each other
+
+ .../devicetree/bindings/sound/rockchip,pdm.txt     |  7 +-
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 77 ++++++++++++++++++++++
+ 2 files changed, 82 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
 
 
->  	  Below is the number clocks for each supported SoC:
-> -	   1: SH73A0, R8A73A4, R8A7740, R8A7778, R8A7779, R8A7790
-> -	      R8A7791, R8A7792, R8A7793, R8A7794, R8A7795, R8A7796
-> +	   1: SH73A0, R8A73A4, R8A7740, R8A7743, R8A7745, R8A7778, R8A7779,
-> +	      R8A7790, R8A7791, R8A7792, R8A7793, R8A7794, R8A7795, R8A7796
->  	   2: R7S72100
-
-Hmm, maybe we should convert this to only listing SoCs with two clocks?
-That will be easier to maintaine since the majority seems to have one.
-
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmamO8ACgkQFA3kzBSg
-KbZAhQ//eQYb5pxOg7/SDMdhRx8QA8awWsLI8fWdghLrchmdH1xfMfCnJGAHacq2
-frOqBHXgYbo/GiNL8SMqd72MFuviopK8AyMD7x81TtdtXb0gb5icz87HXQtABrlM
-gbROAhzDehJRcp2lwFrR98cYqobB0VTSNXm7R4rHVYOD2tWFaIEWPOMkTcBlvkNS
-/AjzqBCl8NJ4+VrxWtohNLHqUBOdTfbCDYP25A6vFaRYxj+ObDT120z522lVkt99
-N+0a1AnZemMWwmZphxv1SnuSqvzYxZZtqi51ONLILx0A6acEskEWpDDSX+PSZiS5
-zeWlspR5SslFlASUpl6nGXMKUvk+zTJqYQfptiSF1xNDlkeaGi+07BMsMEOSfhjz
-dB108iVOCzydxvwC8EVKEuJtMqjBu2hU/4QI+Nr8QELiUh3ozBDPWfSgSmlj0mdq
-r7zLuaHZCecagaL/WZbetNZ9KwY7RAFipR9aXgAty8v973ZOwMfx+kqY8QIS674r
-eVb9ctpEb1WqGV+j5Akd/W9JsrNy8x94c3lczeS3NDt1ehuoZby7raHoqNs4t9cn
-pRegQyYyOQZwKaRzUoJNElvHDLmVi/OijPfrOG9vulQ2tLHE5cHWHFOWGAcDdDiw
-N8p+GLMVurlO5mpjUyVBvaNVLTNL2Vl7vsB22x1gjycA7iMukMU=
-=lPi4
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
