@@ -1,62 +1,57 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH  2/3] ARM: dts: iwg20m: Enable SDHI0 controller
-Date: Mon, 21 Aug 2017 10:33:57 +0200
-Message-ID: <20170821083357.GC2418@katana>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH  3/3] ARM: dts: iwg20d-q7: Add SDHI1 support
+Date: Mon, 21 Aug 2017 10:34:56 +0200
+Message-ID: <20170821083456.GD2418@katana>
 References: <1502711389-16040-1-git-send-email-biju.das@bp.renesas.com>
- <1502711389-16040-3-git-send-email-biju.das@bp.renesas.com>
- <20170821082842.GB2418@katana>
- <KL1PR06MB1702AC0B4C40F48A80505B74B8870@KL1PR06MB1702.apcprd06.prod.outlook.com>
+ <1502711389-16040-4-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="JWEK1jqKZ6MHAcjA"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="pZs/OQEoSSbxGlYw"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <KL1PR06MB1702AC0B4C40F48A80505B74B8870@KL1PR06MB1702.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1502711389-16040-4-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---JWEK1jqKZ6MHAcjA
+--pZs/OQEoSSbxGlYw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-
-> > > +vmmc-supply =3D <&reg_3p3v>;
-> > > +vqmmc-supply =3D <&reg_3p3v>;
-> >
-> > Just to make sure: No 1.8V and UHS support (SDR50/104)? Or is this to be
-> > tested and added later?
+On Mon, Aug 14, 2017 at 12:49:49PM +0100, Biju Das wrote:
+> Define the iWave RainboW-G20D-Qseven board dependent part of the
+> SDHI1 device node.
 >=20
-> Thanks. The current hardware doesn't support 1.8V switching for SDHI0. Th=
-ere is a plan to
-> add this in future board varient, at that time we will add UHS support.
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-I see. Thanks for the info, patch looks good to me then:
-
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Acked-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 
 
---JWEK1jqKZ6MHAcjA
+--pZs/OQEoSSbxGlYw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmamvUACgkQFA3kzBSg
-KbZRZw//VaHQeiky1O6xGyUVW2w5/Az3BK/kibuncjXKbwI1kduAfB6sylnYo7FB
-UuHV4vldj2Tpq/k1TtYm+MppCIDbAZwwOcTevB7+rP138cUKO5/GBo0qhQUcYkKK
-P8nWWvIESb7naW0khTtyeFOE7bGDMUM9ToVIUYSVVpm5pqNFZ5UbV3uMK2LCt+0k
-fM3dq6iFGr1NP7zAaazAU1QOwF8Tm4X0uIBl84dMGsdwRR9UdgzVsGFpqxCj2M2v
-q03p3q5m0lgMzeSQv1V2mtFmaVayVBSE98obdIgmr8c3MvL8RAixRAvBsjHKdQMT
-RiNVp4WPJD1mmWt9Dh6C+DqvRahWBMQIfbh+BIYPtpSBbCIXPONtElXXk/MTeP1z
-965Z37RGELOW0M//3zsGRYO/M0LB86zDMtad30E4Oc9GB8bAFa97d/PlpuN1ys18
-yG22y5Or/LBupbzIcSGiKyKXo4D9VxjcLX0Kaj10GNN+/IfS4+CSU4T1o9JolUvP
-LaG1XmLJgU7VfvI9W46zgdgqXOrZgxYZKKW3B9FWf/8MuJAqdg52ex9erykYdMBR
-Wddj4c12EH8oyfJrFNPah3DuU9hOZYu30KT9rnFeST8G8SxvANpqMivrNt2TZH9L
-t17/ieMPji3YY6mjLb0YW9qyEE3Rmx6fhxSiT1lyMIVuPpe4u2k=
-=NiQK
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmamzAACgkQFA3kzBSg
+Kbb4PBAAieVL8oAiahaU0mCSIiwOvWY9VRi+C1x8wZPlXrEPTaNFWL+ZvxJ7GrFL
+wS6WvPvdyBQrOLhk9CWPwn7IKu/9I+OsGgEkkQ6fjYT1bu8cp2rZAcYy1eSrRE9s
+SAWqFVHtZ5l/j2xkl8d2Zjg/TPuuy6in6vfhJA0psNhd1HYjr6DSntVAdrm4ebFT
+cAb8cQnYm183794RZzWihYs17EzmTFeqP1hfeo+LDQYtajI/CJRcvzM2IwYyT9on
+1qMycLVh4eKHQ+qFucnvNz1meAxXb0Ynw1gutPdmwOniH22SVzzHHYMD9SSqZhrr
+X8PJQxEy6wBFTB0cEFgIyJeJvTURCK3DiZZulo7suywELM/xNxUODWD57DcKb1Cm
+Jf9Gg7jnzltcoGTTCGbTMDk4JHfYtHotWHYInE6Xzw22PRIQRqKwLCPISW5k2POo
+2bCZkAkzCve9JgwWaGHUiEXEA220ZE+MC4vYI8Tu7DImi6J4mtPcxlu2KRsw+X8V
+z2Mjhpsgf4zW0JK2TniO1f+1HlPRLNGSH8l/2n6MOy31HnJfg0oV74jvj35EA1Mi
+n29hNqIPuLR+e/UqZzWRxD1bRXP6tEUJKJ2VDIo2hbB6+EYfqbI8DVs6TfAd2zge
+yYnULu5DN1P50gD5d8Fb/oTisNOrqkUYOuw2fIhbf1kLExBC3gc=
+=fRLy
 -----END PGP SIGNATURE-----
 
---JWEK1jqKZ6MHAcjA--
+--pZs/OQEoSSbxGlYw--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
