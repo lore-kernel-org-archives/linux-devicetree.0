@@ -1,81 +1,114 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2] irqchip: uniphier-aidet: add UniPhier AIDET irqchip driver
-Date: Mon, 21 Aug 2017 19:54:43 +0900
-Message-ID: <CAK7LNAS_bTsweGB-WqbSoh8myTET9KW-7oN0FLZTmAf_K317aw@mail.gmail.com>
-References: <1503309663-2742-1-git-send-email-yamada.masahiro@socionext.com> <e3b865f5-a779-f176-67ef-9ffac25019d4@arm.com>
+From: Harvey Hunt <harvey.hunt@imgtec.com>
+Subject: [V2 3/4] MIPS: dts: Add Vocore2 board
+Date: Mon, 21 Aug 2017 11:54:46 +0100
+Message-ID: <1503312887-34310-3-git-send-email-harvey.hunt@imgtec.com>
+References: <1503312887-34310-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e3b865f5-a779-f176-67ef-9ffac25019d4@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1503312887-34310-1-git-send-email-harvey.hunt@imgtec.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, john@phrozen.org
+Cc: Harvey Hunt <harvey.hunt@imgtec.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+The VoCore2 board is a low cost MT7628A based board with 128MB RAM, 16MB
+flash and multiple external peripherals.
 
+This initial DTS provides enough support to get to userland and use the USB
+port.
 
-2017-08-21 19:25 GMT+09:00 Marc Zyngier <marc.zyngier@arm.com>:
-> On 21/08/17 11:01, Masahiro Yamada wrote:
->> +static struct irq_chip uniphier_aidet_irq_chip = {
->> +     .name = "AIDET",
->> +     .irq_mask = irq_chip_mask_parent,
->> +     .irq_unmask = irq_chip_unmask_parent,
->> +     .irq_eoi = irq_chip_eoi_parent,
->> +     .irq_set_type = uniphier_aidet_irq_set_type,
->
-> Is this irqchip only used in a uniprocessor system? If not, how is the
-> interrupt affinity managed without a irq_set_affinity callback?
+Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+---
+Changes in V2:
+- Use uart2 phandle for stdout-path
 
-I missed that.
-I will set irq_chip_set_affinity_parent.
+ MAINTAINERS                           |  6 ++++++
+ arch/mips/boot/dts/ralink/Makefile    |  1 +
+ arch/mips/boot/dts/ralink/vocore2.dts | 18 ++++++++++++++++++
+ arch/mips/ralink/Kconfig              |  5 +++++
+ 4 files changed, 30 insertions(+)
+ create mode 100644 arch/mips/boot/dts/ralink/vocore2.dts
 
-
-
-
->> +     /* parent is GIC */
->> +     parent_fwspec.fwnode = domain->parent->fwnode;
->> +     parent_fwspec.param_count = 3;
->> +     parent_fwspec.param[0] = 0;             /* SPI */
->> +     parent_fwspec.param[1] = hwirq;
->> +     parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;   /* properly set later */
->
-> Why defer it to later? You already have the right information in "type",
-> so you might as well provide it immediately.
-
-
-Because .irq_set_type() will set it up
-before the IRQ is really in use.
-
-
-If we look gic_irq_domain_alloc() implementation,
-it does not care "type".
-
-gic_set_type() will manipulate hardware registers.
-
-
-Having said that, it shouldn't hurt to set type here.
-
-
-
->> +
->> +     priv->domain = irq_domain_add_hierarchy(parent_domain, 0,
->> +                                             UNIPHIER_AIDET_NR_IRQS,
->> +                                             dev->of_node,
->> +                                             &uniphier_aidet_domain_ops,
->> +                                             priv);
->
-> Nit: please use irq_domain_create_hierarchy. This does the exact same
-> thing, but is consistent with the use of fwnode instead of mixing
-> of_node and fwnode in this code.
->
-
-I will do so.
-
-
-Thanks.
-
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6f7721d..82dcc6f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14127,6 +14127,12 @@ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	drivers/net/vmxnet3/
+ 
++VOCORE VOCORE2 BOARD
++M:	Harvey Hunt <harveyhuntnexus@gmail.com>
++L:	linux-mips@linux-mips.org
++S:	Maintained
++F:	arch/mips/boot/dts/ralink/vocore2.dts
++
+ VOLTAGE AND CURRENT REGULATOR FRAMEWORK
+ M:	Liam Girdwood <lgirdwood@gmail.com>
+ M:	Mark Brown <broonie@kernel.org>
+diff --git a/arch/mips/boot/dts/ralink/Makefile b/arch/mips/boot/dts/ralink/Makefile
+index 2a72259..a191788 100644
+--- a/arch/mips/boot/dts/ralink/Makefile
++++ b/arch/mips/boot/dts/ralink/Makefile
+@@ -2,6 +2,7 @@ dtb-$(CONFIG_DTB_RT2880_EVAL)	+= rt2880_eval.dtb
+ dtb-$(CONFIG_DTB_RT305X_EVAL)	+= rt3052_eval.dtb
+ dtb-$(CONFIG_DTB_RT3883_EVAL)	+= rt3883_eval.dtb
+ dtb-$(CONFIG_DTB_MT7620A_EVAL)	+= mt7620a_eval.dtb
++dtb-$(CONFIG_DTB_VOCORE2)		+= vocore2.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+ 
+diff --git a/arch/mips/boot/dts/ralink/vocore2.dts b/arch/mips/boot/dts/ralink/vocore2.dts
+new file mode 100644
+index 0000000..fa8a5f8
+--- /dev/null
++++ b/arch/mips/boot/dts/ralink/vocore2.dts
+@@ -0,0 +1,18 @@
++/dts-v1/;
++
++#include "mt7628a.dtsi"
++
++/ {
++	compatible = "vocore,vocore2", "ralink,mt7628a-soc";
++	model = "VoCore2";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x8000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyS2,115200";
++		stdout-path = &uart2;
++	};
++};
+diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
+index 710b04c..c2b2c2d 100644
+--- a/arch/mips/ralink/Kconfig
++++ b/arch/mips/ralink/Kconfig
+@@ -82,6 +82,11 @@ choice
+ 		depends on SOC_MT7620
+ 		select BUILTIN_DTB
+ 
++	config DTB_VOCORE2
++		bool "VoCore2"
++		depends on SOC_MT7620
++		select BUILTIN_DTB
++
+ endchoice
+ 
+ endif
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
