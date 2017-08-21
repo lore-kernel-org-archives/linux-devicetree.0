@@ -1,122 +1,165 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/5] Removing full paths from DT full_name
-Date: Mon, 21 Aug 2017 10:16:46 -0500
-Message-ID: <20170821151651.25096-1-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 5/5] of/fdt: only store the device node basename in full_name
+Date: Mon, 21 Aug 2017 10:16:51 -0500
+Message-ID: <20170821151651.25096-6-robh@kernel.org>
+References: <20170821151651.25096-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170821151651.25096-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, David Laight <David.Laight@aculab.com>
 List-Id: devicetree@vger.kernel.org
 
-This series is the last steps to remove storing the full path for every
-DT node. Instead, we can create full path strings dynamically as needed
-with printf %pOF specifiers (commit ce4fecf1fe15). There are a number of
-remaining direct users of full_name after this series. I don't believe
-there should be any functional impact for those users with the change to
-only the node name (+unit-address). The majority are for struct
-resource.name. This should only affect /proc/iomem display.
+With dependencies on a statically allocated full path name converted to
+use %pOF format specifier, we can store just the basename of node, and
+the unflattening of the FDT can be simplified.
 
-Michael, Please apply patches 1-3 for 4.14. Patches 4 and 5 are intended for 
-4.15. Testing of those in particular would be helpful.
+This commit will affect the remaining users of full_name. After
+analyzing these users, the remaining cases should only change some print
+messages. The main users of full_name are providing a name for struct
+resource. The resource names shouldn't be important other than providing
+/proc/iomem names.
 
-Rob
+We no longer distinguish between pre and post 0x10 dtb formats as either
+a full path or basename will work. However, less than 0x10 formats have
+been broken since the conversion to use libfdt (and no one has cared).
+The conversion of the unflattening code to be non-recursive also broke
+pre 0x10 formats as the populate_node function would return 0 in that
+case.
 
-Rob Herring (5):
-  powerpc: Convert to using %pOF instead of full_name
-  powerpc: pseries: vio: match parent nodes with of_find_node_by_path
-  powerpc: pseries: remove dlpar_attach_node dependency on full path
-  powerpc: pseries: only store the device node basename in full_name
-  of/fdt: only store the device node basename in full_name
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2:
+- rebase to linux-next
 
- arch/powerpc/kernel/btext.c                      |   2 +-
- arch/powerpc/kernel/cacheinfo.c                  |  34 ++++---
- arch/powerpc/kernel/io-workarounds.c             |   4 +-
- arch/powerpc/kernel/isa-bridge.c                 |  32 +++----
- arch/powerpc/kernel/legacy_serial.c              |  12 +--
- arch/powerpc/kernel/of_platform.c                |   2 +-
- arch/powerpc/kernel/pci-common.c                 |  15 ++-
- arch/powerpc/kernel/pci_32.c                     |   4 +-
- arch/powerpc/kernel/pci_64.c                     |   4 +-
- arch/powerpc/kernel/pci_of_scan.c                |  24 ++---
- arch/powerpc/kernel/setup-common.c               |   2 +-
- arch/powerpc/platforms/4xx/cpm.c                 |   8 +-
- arch/powerpc/platforms/4xx/gpio.c                |   3 +-
- arch/powerpc/platforms/4xx/msi.c                 |   3 +-
- arch/powerpc/platforms/4xx/pci.c                 | 116 ++++++++++-------------
- arch/powerpc/platforms/4xx/soc.c                 |   5 +-
- arch/powerpc/platforms/4xx/uic.c                 |  14 +--
- arch/powerpc/platforms/512x/mpc512x_shared.c     |  12 +--
- arch/powerpc/platforms/52xx/efika.c              |   8 +-
- arch/powerpc/platforms/52xx/media5200.c          |   2 +-
- arch/powerpc/platforms/52xx/mpc52xx_gpt.c        |   4 +-
- arch/powerpc/platforms/52xx/mpc52xx_pci.c        |   8 +-
- arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c   |   3 +-
- arch/powerpc/platforms/83xx/mpc832x_rdb.c        |   2 +-
- arch/powerpc/platforms/85xx/p1022_ds.c           |   8 +-
- arch/powerpc/platforms/85xx/xes_mpc85xx.c        |   4 +-
- arch/powerpc/platforms/amigaone/setup.c          |   6 +-
- arch/powerpc/platforms/cell/axon_msi.c           |  36 +++----
- arch/powerpc/platforms/cell/interrupt.c          |   4 +-
- arch/powerpc/platforms/cell/iommu.c              |  24 ++---
- arch/powerpc/platforms/cell/ras.c                |   4 +-
- arch/powerpc/platforms/cell/spider-pci.c         |   4 +-
- arch/powerpc/platforms/cell/spider-pic.c         |   4 +-
- arch/powerpc/platforms/cell/spu_manage.c         |  26 ++---
- arch/powerpc/platforms/chrp/pci.c                |  18 ++--
- arch/powerpc/platforms/embedded6xx/linkstation.c |   6 +-
- arch/powerpc/platforms/embedded6xx/mvme5100.c    |   2 +-
- arch/powerpc/platforms/embedded6xx/storcenter.c  |   2 +-
- arch/powerpc/platforms/maple/pci.c               |  10 +-
- arch/powerpc/platforms/pasemi/pci.c              |   2 +-
- arch/powerpc/platforms/powermac/feature.c        |  14 +--
- arch/powerpc/platforms/powermac/low_i2c.c        |  50 +++++-----
- arch/powerpc/platforms/powermac/pci.c            |   6 +-
- arch/powerpc/platforms/powermac/pfunc_base.c     |  24 ++---
- arch/powerpc/platforms/powermac/pfunc_core.c     |   6 +-
- arch/powerpc/platforms/powermac/pic.c            |   8 +-
- arch/powerpc/platforms/powermac/setup.c          |   2 +-
- arch/powerpc/platforms/powernv/opal-async.c      |   4 +-
- arch/powerpc/platforms/powernv/opal-xscom.c      |   8 +-
- arch/powerpc/platforms/powernv/pci-ioda.c        |  15 ++-
- arch/powerpc/platforms/powernv/rng.c             |   6 +-
- arch/powerpc/platforms/pseries/dlpar.c           |  39 ++------
- arch/powerpc/platforms/pseries/event_sources.c   |   6 +-
- arch/powerpc/platforms/pseries/hotplug-cpu.c     |   6 +-
- arch/powerpc/platforms/pseries/ibmebus.c         |   5 +-
- arch/powerpc/platforms/pseries/iommu.c           |  58 ++++++------
- arch/powerpc/platforms/pseries/mobility.c        |   2 +-
- arch/powerpc/platforms/pseries/msi.c             |  12 +--
- arch/powerpc/platforms/pseries/pci_dlpar.c       |   2 +-
- arch/powerpc/platforms/pseries/pseries.h         |   2 +-
- arch/powerpc/platforms/pseries/reconfig.c        |   2 +-
- arch/powerpc/platforms/pseries/vio.c             |  10 +-
- arch/powerpc/sysdev/axonram.c                    |   4 +-
- arch/powerpc/sysdev/dcr.c                        |   4 +-
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c        |  12 +--
- arch/powerpc/sysdev/fsl_gtm.c                    |  14 +--
- arch/powerpc/sysdev/fsl_msi.c                    |  16 ++--
- arch/powerpc/sysdev/fsl_pci.c                    |  47 +++++----
- arch/powerpc/sysdev/fsl_rio.c                    |  36 +++----
- arch/powerpc/sysdev/fsl_rmu.c                    |  12 +--
- arch/powerpc/sysdev/mpic.c                       |   4 +-
- arch/powerpc/sysdev/mpic_msgr.c                  |   2 +-
- arch/powerpc/sysdev/mpic_msi.c                   |   2 +-
- arch/powerpc/sysdev/mpic_timer.c                 |  19 ++--
- arch/powerpc/sysdev/msi_bitmap.c                 |   4 +-
- arch/powerpc/sysdev/mv64x60_dev.c                |  20 ++--
- arch/powerpc/sysdev/mv64x60_pci.c                |   4 +-
- arch/powerpc/sysdev/of_rtc.c                     |  12 +--
- arch/powerpc/sysdev/scom.c                       |   5 +-
- arch/powerpc/sysdev/simple_gpio.c                |   3 +-
- arch/powerpc/sysdev/tsi108_pci.c                 |   4 +-
- arch/powerpc/sysdev/xive/native.c                |   2 +-
- drivers/of/fdt.c                                 |  69 +++-----------
- 83 files changed, 487 insertions(+), 578 deletions(-)
+ drivers/of/fdt.c | 69 +++++++++-----------------------------------------------
+ 1 file changed, 11 insertions(+), 58 deletions(-)
 
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index ce30c9a588a4..27c535af0be8 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -266,74 +266,32 @@ static void populate_properties(const void *blob,
+ 		*pprev = NULL;
+ }
+ 
+-static unsigned int populate_node(const void *blob,
+-				  int offset,
+-				  void **mem,
+-				  struct device_node *dad,
+-				  unsigned int fpsize,
+-				  struct device_node **pnp,
+-				  bool dryrun)
++static bool populate_node(const void *blob,
++			  int offset,
++			  void **mem,
++			  struct device_node *dad,
++			  struct device_node **pnp,
++			  bool dryrun)
+ {
+ 	struct device_node *np;
+ 	const char *pathp;
+ 	unsigned int l, allocl;
+-	int new_format = 0;
+ 
+ 	pathp = fdt_get_name(blob, offset, &l);
+ 	if (!pathp) {
+ 		*pnp = NULL;
+-		return 0;
++		return false;
+ 	}
+ 
+ 	allocl = ++l;
+ 
+-	/* version 0x10 has a more compact unit name here instead of the full
+-	 * path. we accumulate the full path size using "fpsize", we'll rebuild
+-	 * it later. We detect this because the first character of the name is
+-	 * not '/'.
+-	 */
+-	if ((*pathp) != '/') {
+-		new_format = 1;
+-		if (fpsize == 0) {
+-			/* root node: special case. fpsize accounts for path
+-			 * plus terminating zero. root node only has '/', so
+-			 * fpsize should be 2, but we want to avoid the first
+-			 * level nodes to have two '/' so we use fpsize 1 here
+-			 */
+-			fpsize = 1;
+-			allocl = 2;
+-			l = 1;
+-			pathp = "";
+-		} else {
+-			/* account for '/' and path size minus terminal 0
+-			 * already in 'l'
+-			 */
+-			fpsize += l;
+-			allocl = fpsize;
+-		}
+-	}
+-
+ 	np = unflatten_dt_alloc(mem, sizeof(struct device_node) + allocl,
+ 				__alignof__(struct device_node));
+ 	if (!dryrun) {
+ 		char *fn;
+ 		of_node_init(np);
+ 		np->full_name = fn = ((char *)np) + sizeof(*np);
+-		if (new_format) {
+-			/* rebuild full path for new format */
+-			if (dad && dad->parent) {
+-				strcpy(fn, dad->full_name);
+-#ifdef DEBUG
+-				if ((strlen(fn) + l + 1) != allocl) {
+-					pr_debug("%s: p: %d, l: %d, a: %d\n",
+-						pathp, (int)strlen(fn),
+-						l, allocl);
+-				}
+-#endif
+-				fn += strlen(fn);
+-			}
+-			*(fn++) = '/';
+-		}
++
+ 		memcpy(fn, pathp, l);
+ 
+ 		if (dad != NULL) {
+@@ -355,7 +313,7 @@ static unsigned int populate_node(const void *blob,
+ 	}
+ 
+ 	*pnp = np;
+-	return fpsize;
++	return true;
+ }
+ 
+ static void reverse_nodes(struct device_node *parent)
+@@ -399,7 +357,6 @@ static int unflatten_dt_nodes(const void *blob,
+ 	struct device_node *root;
+ 	int offset = 0, depth = 0, initial_depth = 0;
+ #define FDT_MAX_DEPTH	64
+-	unsigned int fpsizes[FDT_MAX_DEPTH];
+ 	struct device_node *nps[FDT_MAX_DEPTH];
+ 	void *base = mem;
+ 	bool dryrun = !base;
+@@ -418,7 +375,6 @@ static int unflatten_dt_nodes(const void *blob,
+ 		depth = initial_depth = 1;
+ 
+ 	root = dad;
+-	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
+ 	nps[depth] = dad;
+ 
+ 	for (offset = 0;
+@@ -427,11 +383,8 @@ static int unflatten_dt_nodes(const void *blob,
+ 		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
+ 			continue;
+ 
+-		fpsizes[depth+1] = populate_node(blob, offset, &mem,
+-						 nps[depth],
+-						 fpsizes[depth],
+-						 &nps[depth+1], dryrun);
+-		if (!fpsizes[depth+1])
++		if (!populate_node(blob, offset, &mem, nps[depth],
++				   &nps[depth+1], dryrun))
+ 			return mem - base;
+ 
+ 		if (!dryrun && nodepp && !*nodepp)
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
