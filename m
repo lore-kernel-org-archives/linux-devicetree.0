@@ -1,123 +1,61 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [RFC] interrupts DT property for irqdomain hierarchy
-Date: Mon, 21 Aug 2017 14:35:25 +0900
-Message-ID: <CAK7LNASENLBy9vCi8tPLJ00v8yzkGiV+0w8LoiuCxiVJnxQCzA@mail.gmail.com>
-References: <CAK7LNATme8P1uHx5hZr6Eez4KGweUi=jQ6zJ=bdBf1XmxZVoLg@mail.gmail.com>
- <CAL_JsqLC2kUvhHHJdKd_UinvgRHpSv+vsPgRh0xGowfDX5BXYQ@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] pwm: pwm-tiecap: Add TI 66AK2G SoC specific
+ compatible
+Date: Mon, 21 Aug 2017 08:12:34 +0200
+Message-ID: <20170821061234.GF18996@ulmo>
+References: <20170807114943.22612-1-vigneshr@ti.com>
+ <20170807114943.22612-2-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rWhLK7VZz0iBluhq"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLC2kUvhHHJdKd_UinvgRHpSv+vsPgRh0xGowfDX5BXYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170807114943.22612-2-vigneshr-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
+--rWhLK7VZz0iBluhq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-2017-08-11 2:23 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Thu, Jul 6, 2017 at 4:58 PM, Masahiro Yamada
-> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->> Hi IRQ experts, DT exports,
->>
->>
->> I have a question about CONFIG_IRQ_DOMAIN_HIERARCHY.
->>
->> When IRQ domains are hierarchy,
->> how can we specify IRQ number re-mapping between the
->> parent irqchip and the child irqchip?
->>
->> The following figure shows a simplified example.
->>
->> |----------|        |----------|       |----------|
->> | parent   |        | child    |       |  IRQ     |
->> | IRQ chip | <----- | IRQ chip |<----- | consumer |
->> |          |        |          |       | Device   |
->> |----------|        |----------|       |----------|
->>
->> Perhaps, we may describe DT like follows
->>
->>     gic: interrupt-controller {
->>             ...
->>             interrupt-controller;
->>             #interrupt-cells = <3>;
->>     };
->>
->>     child_intc: child-interrupt-controller {
->>             ...
->>             interrupt-parent = <&gic>;
->>             interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>;
->>             interrupt-controller;
->>             #interrupt-cells = <2>;
->>     };
->>
->>     i2c: i2c {
->>             ...
->>             interrupt-parent = <&child_intc>;
->>             interrupts = <0 4>;
->>     };
->>
->>
->> In this example, the I2C controller takes HWIRQ=0 of the child_intc device.
->> This goes through the child IRQ chip,
->> then connected to HWIRQ=50 of the parent intc.
->>
->> The DT above describes the hardware connection well,
->> but it actually does not work.
->>
->> The root irqchip is usually declared with IRQCHIP_DECLARE().
->> So, IRQ resources are allocated when platform devices are populated from DT.
->> This means IRQ allocation happens before drivers are probed.
->>
->> of_pupulate_default_populate() does not know the fact about irqdomain hierarchy.
->
-> This has not been true for some time now. The irqs are resolved at
-> probe time rather than statically created resources and deferred probe
-> is supported if one of the interrupt controllers is not yet
-> initialized.
+On Mon, Aug 07, 2017 at 05:19:40PM +0530, Vignesh R wrote:
+> Add a new compatible string "ti,k2g-ecap" to support PWM ECAP IP of
+> TI 66AK2G SoC.
+>=20
+> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-tiecap.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
+Applied to for-4.14/drivers, thanks.
 
-Yes, it is true if the irqchip is a platform driver instead of
-IRQCHIP_DECLARE(),
-but irqdomain hierarchy always wants to disable the static resource allocation.
+Thierry
 
+--rWhLK7VZz0iBluhq
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlmaedIACgkQ3SOs138+
+s6GZHRAAnuHmEBq/oGgR52BkijTHuQ4yXLF2XLL9nBIPOElBQbz813M2ac9+fXaE
+aNlxVptbt2O/lMhlWpRGxvUm+F3ZM7LvDDWLHkSQF13FncLTQ9tAFofVxhD/UNzy
+0JCBVQJBr+vDJDiNoLChhBz6OzF/lYkBVBPSag4ecOMHJAw2y8ol6ZPSL71V/fH8
+wt2yd18NbdQWjXjuipNWok1gHAgkfz5mqSjjndH15Ct9H/YFcVsQ/dNso1f3POfj
+EybZ+309a9CVThuExkMwGbquCSPxpAtt8nkOyCDLuF8FfEUOPKcIef2jXaYAwj5s
+y76PnG0SX5is8j4USThzpRnEOP1PAxL5GV/QyYdbRXCpcmHgYtr1N6CVNpu0fmIs
+pYNBqJ3eiLQKAWqQx4oYwOlpaIGdLeXQAcdp08CAeFAQMnv6NNVhP1bCxAOupz4t
+pe4NvbA5yTX4Hml6Ouz5zqCeAB5LFmKakoOP+7RMlNiW8h3/SQNOjzXij73WCazH
+yGmUdrR8QUT6NShTNX23o/W+luwFGrhZ2JRQHo5dwCLzW6QDENT/gyl1rYnxG/Bd
+NfJN/XpYlWH7Pv2q1G1Y4tkTRzcbWsLI/KYGvLC2YOhot5rvOOsZuoFPKnWc10XU
+LTkpOfFagTY7iaVhJmakcT6Jn6p9JCd7XTMlPAw8MgzqBdcLgvg=
+=4VF5
+-----END PGP SIGNATURE-----
 
-
-
->>    interrupt-ranges = <0 0 0 50 0 4>;
->>
->> This means   <0 0>, <0 1>, <0 2>, <0 3> in the child
->> should be mapped to  <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0> in the parent,
->> respectively.
->
-> interrupt-map property does this. See here[1].
->
-> Rob
->
-> [1] http://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
-
-
-Thanks for the pointer.
-
-I read it and of_irq_parse_raw() implementation as well.
-
-The interrupt-map would not work for the irqdomain hierarchy
-because the interrupt-map transforms irq-spec based on "reg" property.
-
-In this case, no relation between the irqchip and its irq-consumers
-(between "child_intc" and "i2c") in therms of the physical address view.
-
-Some irq-consumers have address cell size 1,
-and other irq-consumers have address cells size 2.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+--rWhLK7VZz0iBluhq--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
