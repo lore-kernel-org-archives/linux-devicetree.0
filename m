@@ -1,95 +1,62 @@
 From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH v2] mmc: renesas_sdhi: Add r8a7743/5 support
-Date: Mon, 21 Aug 2017 12:13:11 +0000
-Message-ID: <KL1PR06MB1702B56392DC90F9B02FB956B8870@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1502710766-44361-1-git-send-email-biju.das@bp.renesas.com>
- <1503311897-18807-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdWUxxp75u1VSLY3WnObmhSMDvP3skr9Uf3rV4Bf-ixy_w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Subject: [PATCH v3] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Mon, 21 Aug 2017 13:25:11 +0100
+Message-ID: <1503318311-48664-1-git-send-email-biju.das@bp.renesas.com>
+References: <CAMuHMdWUxxp75u1VSLY3WnObmhSMDvP3skr9Uf3rV4Bf-ixy_w@mail.gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <CAMuHMdWUxxp75u1VSLY3WnObmhSMDvP3skr9Uf3rV4Bf-ixy_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZGV2aWNldHJlZS1vd25l
-ckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpkZXZpY2V0cmVlLQ0KPiBvd25lckB2Z2VyLmtlcm5l
-bC5vcmddIE9uIEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogMjEgQXVndXN0
-IDIwMTcgMTI6MzANCj4gVG86IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4g
-Q2M6IFVsZiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPjsgUm9iIEhlcnJpbmcgPHJv
-YmgrZHRAa2VybmVsLm9yZz47DQo+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
-OyBXb2xmcmFtIFNhbmcgPHdzYUB0aGUtDQo+IGRyZWFtcy5kZT47IFNpbW9uIEhvcm1hbiA8aG9y
-bXNAdmVyZ2UubmV0LmF1PjsgTWFnbnVzIERhbW0NCj4gPG1hZ251cy5kYW1tQGdtYWlsLmNvbT47
-IENocmlzIFBhdGVyc29uDQo+IDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgTGludXgtUmVuZXNhcw0KPiA8bGludXgtcmVuZXNhcy1zb2NA
-dmdlci5rZXJuZWwub3JnPjsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
-PiBMaW51eCBNTUMgTGlzdCA8bGludXgtbW1jQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2Ml0gbW1jOiByZW5lc2FzX3NkaGk6IEFkZCByOGE3NzQzLzUgc3VwcG9ydA0K
-Pg0KPiBIaSBCaWp1LA0KPg0KPiBPbiBNb24sIEF1ZyAyMSwgMjAxNyBhdCAxMjozOCBQTSwgQmlq
-dSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiB3cm90ZToNCj4gPiBBZGQgc3VwcG9y
-dCBmb3IgcjhhNzc0My81IFNvQy4gUmVuZXNhcyBSWi9HMVtNRV0gKFI4QTc3NDMvNSkgU0RISSBp
-cw0KPiA+IGlkZW50aWNhbCB0byB0aGUgUi1DYXIgR2VuMiBmYW1pbHkuDQo+ID4NCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+
-ID4gdjEtPnYyDQo+ID4gICAgIC1Nb2RpZmllZCB0aGUgbGlzdGluZyBTb0MncyBkZXNjcmlwdGlv
-biByZWxhdGVkIHRvIFNvQw0KPiA+ICAgICAgd2l0aCAxIENsb2NrIGFuZCAyIENsb2Nrcw0KPiA+
-DQo+ID4gVGhpcyBwYXRjaCBpcyBjb21waWxlZCBhbmQgdGVzdGVkIGFnYWluc3QgbGludXggbmV4
-dCB0YWcNCj4gPiBuZXh0LTIwMTcwODE3Lg0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tbWMvdG1pb19tbWMudHh0IHwgOSArKysrKy0tLS0NCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL3RtaW9fbW1jLnR4
-dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy90bWlvX21tYy50
-eHQNCj4gPiBpbmRleCA0ZmQ4YjdhLi4xZTMxMDZlIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvdG1pb19tbWMudHh0DQo+ID4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy90bWlvX21tYy50eHQNCj4gPiBAQCAt
-MTUsNiArMTUsOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgICAgICAgICAgICAgICAi
-cmVuZXNhcyxzZGhpLXI3czcyMTAwIiAtIFNESEkgSVAgb24gUjdTNzIxMDAgU29DDQo+ID4gICAg
-ICAgICAgICAgICAgICJyZW5lc2FzLHNkaGktcjhhNzNhNCIgLSBTREhJIElQIG9uIFI4QTczQTQg
-U29DDQo+ID4gICAgICAgICAgICAgICAgICJyZW5lc2FzLHNkaGktcjhhNzc0MCIgLSBTREhJIElQ
-IG9uIFI4QTc3NDAgU29DDQo+ID4gKyAgICAgICAgICAgICAgICJyZW5lc2FzLHNkaGktcjhhNzc0
-MyIgLSBTREhJIElQIG9uIFI4QTc3NDMgU29DDQo+ID4gKyAgICAgICAgICAgICAgICJyZW5lc2Fz
-LHNkaGktcjhhNzc0NSIgLSBTREhJIElQIG9uIFI4QTc3NDUgU29DDQo+ID4gICAgICAgICAgICAg
-ICAgICJyZW5lc2FzLHNkaGktcjhhNzc3OCIgLSBTREhJIElQIG9uIFI4QTc3NzggU29DDQo+ID4g
-ICAgICAgICAgICAgICAgICJyZW5lc2FzLHNkaGktcjhhNzc3OSIgLSBTREhJIElQIG9uIFI4QTc3
-NzkgU29DDQo+ID4gICAgICAgICAgICAgICAgICJyZW5lc2FzLHNkaGktcjhhNzc5MCIgLSBTREhJ
-IElQIG9uIFI4QTc3OTAgU29DIEBADQo+ID4gLTMzLDEwICszNSw5IEBAIFJlcXVpcmVkIHByb3Bl
-cnRpZXM6DQo+ID4gICAgICAgICAgIElmIDIgY2xvY2tzIGFyZSBzcGVjaWZpZWQgYnkgdGhlIGhh
-cmR3YXJlLCB5b3UgbXVzdCBuYW1lIHRoZW0gYXMNCj4gPiAgICAgICAgICAgImNvcmUiIGFuZCAi
-Y2QiLiBJZiB0aGUgY29udHJvbGxlciBvbmx5IGhhcyAxIGNsb2NrLCBuYW1pbmcgaXMgbm90DQo+
-ID4gICAgICAgICAgIHJlcXVpcmVkLg0KPiA+IC0gICAgICAgICBCZWxvdyBpcyB0aGUgbnVtYmVy
-IGNsb2NrcyBmb3IgZWFjaCBzdXBwb3J0ZWQgU29DOg0KPiA+IC0gICAgICAgICAgMTogU0g3M0Ew
-LCBSOEE3M0E0LCBSOEE3NzQwLCBSOEE3Nzc4LCBSOEE3Nzc5LCBSOEE3NzkwDQo+ID4gLSAgICAg
-ICAgICAgICBSOEE3NzkxLCBSOEE3NzkyLCBSOEE3NzkzLCBSOEE3Nzk0LCBSOEE3Nzk1LCBSOEE3
-Nzk2DQo+ID4gLSAgICAgICAgICAyOiBSN1M3MjEwMA0KPiA+ICsgICAgICAgICBNb3N0IHN1cHBv
-cnRlZCBTb0NzIG9ubHkgaGF2ZSAxIGNsb2NrLiBEZXZpY2VzIHdoaWNoIGhhdmUNCj4gPiArIG1v
-cmUNCj4NCj4gVGhhdCBpcyBhY3R1YWxseSBtZW50aW9uZWQgaW4gdGhlIHBhcmFncmFwaCBhYm92
-ZToNCj4NCj4gLSBjbG9ja3M6IE1vc3QgY29udHJvbGxlcnMgb25seSBoYXZlIDEgY2xvY2sgc291
-cmNlIHBlciBjaGFubmVsLiBIb3dldmVyLCBvbg0KPiAgICAgICAgICAgc29tZSB2YXJpYXRpb25z
-IG9mIHRoaXMgY29udHJvbGxlciwgdGhlIGludGVybmFsIGNhcmQgZGV0ZWN0aW9uDQo+ICAgICAg
-ICAgICBsb2dpYyB0aGF0IGV4aXN0cyBpbiB0aGlzIGNvbnRyb2xsZXIgaXMgc2VjdGlvbmVkIG9m
-ZiB0byBiZSBydW4gYnkgYQ0KPiAgICAgICAgICAgc2VwYXJhdGUgc2Vjb25kIGNsb2NrIHNvdXJj
-ZSB0byBhbGxvdyB0aGUgbWFpbiBjb3JlIGNsb2NrIHRvIGJlIHR1cm5lZA0KPiAgICAgICAgICAg
-b2ZmIHRvIHNhdmUgcG93ZXIuDQo+DQo+IHNvIEkgc3VnZ2VzdCBqdXN0IGludGVncmF0aW5nIHRo
-ZSAoc2hvcnQpIGxpc3QgaW4gdGhhdCBwYXJhZ3JhcGguDQo+DQo+ID4gKyAgICAgICAgIHRoYW4g
-MSBjbG9jayBhcmUgbGlzdGVkIGJlbG93Og0KPiA+ICsgICAgICAgICAyOiBSN1M3MjEwMCINCj4N
-Cj4gQm9ndXMgdHJhaWxpbmcgZG91YmxlIHF1b3RlLg0KDQpUaGFua3MuIEkgd2lsbCBzZW5kIHYz
-IHdpdGggYWJvdmUgY2hhbmdlcy4NCg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0t
-IFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC0NCj4gbTY4
-ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9w
-bGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpv
-dXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQu
-DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCj4g
-LS0NCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vi
-c2NyaWJlIGRldmljZXRyZWUiIGluIHRoZSBib2R5DQo+IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRv
-bW9Admdlci5rZXJuZWwub3JnIE1vcmUgbWFqb3Jkb21vIGluZm8gYXQNCj4gaHR0cDovL3ZnZXIu
-a2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNz
-IEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1
-Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVz
-IHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+Add support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5) SDHI
+is identical to the R-Car Gen2 family.
+
+Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+---
+v1->v2
+    - Modified the listing SoC's description related to SoC
+      with 1 Clock and 2 Clocks
+v2->v3
+    - Fixed the trailing double quote.
+    - Updated listing SoC's description. 
+
+This patch is compiled and tested against linux next tag
+next-20170817.
+
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+index 4fd8b7a..54ef642 100644
+--- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+@@ -15,6 +15,8 @@ Required properties:
+ 		"renesas,sdhi-r7s72100" - SDHI IP on R7S72100 SoC
+ 		"renesas,sdhi-r8a73a4" - SDHI IP on R8A73A4 SoC
+ 		"renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
++		"renesas,sdhi-r8a7743" - SDHI IP on R8A7743 SoC
++		"renesas,sdhi-r8a7745" - SDHI IP on R8A7745 SoC
+ 		"renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
+ 		"renesas,sdhi-r8a7779" - SDHI IP on R8A7779 SoC
+ 		"renesas,sdhi-r8a7790" - SDHI IP on R8A7790 SoC
+@@ -33,10 +35,8 @@ Required properties:
+ 	  If 2 clocks are specified by the hardware, you must name them as
+ 	  "core" and "cd". If the controller only has 1 clock, naming is not
+ 	  required.
+-	  Below is the number clocks for each supported SoC:
+-	   1: SH73A0, R8A73A4, R8A7740, R8A7778, R8A7779, R8A7790
+-	      R8A7791, R8A7792, R8A7793, R8A7794, R8A7795, R8A7796
+-	   2: R7S72100
++	  Devices which have more than 1 clock are listed below:
++	  2: R7S72100
+ 
+ Optional properties:
+ - toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
