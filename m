@@ -1,35 +1,100 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v6 1/6] perf: Export perf_event_update_userpage
-Date: Mon, 21 Aug 2017 18:55:04 +0100
-Message-ID: <1503338109-32540-2-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v6 2/6] of: Add helper for mapping device node to logical CPU number
+Date: Mon, 21 Aug 2017 18:55:05 +0100
+Message-ID: <1503338109-32540-3-git-send-email-suzuki.poulose@arm.com>
 References: <1503338109-32540-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1503338109-32540-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org, Jonathan.Cameron@huawei.com, Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org, Jonathan.Cameron@huawei.com, Suzuki K Poulose <suzuki.poulose@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Export perf_event_update_userpage() so that PMU driver using them,
-can be built as modules.
+Add a helper to map a device node to a logical CPU number to avoid
+duplication. Currently this is open coded in different places (e.g
+gic-v3, coresight). The helper tries to map device node to a "possible"
+logical CPU id, which may not be online yet. It is the responsibility
+of the user to make sure that the CPU is online. The helper uses
+of_get_cpu_node() which uses arch specific backends to match the phyiscal
+ids.
 
-Cc: Peter Zilstra <peterz@infradead.org>
+Cc: devicetree@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- kernel/events/core.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes since V3:
+ - Renamed the helper to of_cpu_node_to_id(), suggested by Rob
+ - Return -ENODEV on failure than nr_cpus_id
+---
+ drivers/of/base.c  | 26 ++++++++++++++++++++++++++
+ include/linux/of.h |  7 +++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ee20d4c..309ad68 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4977,6 +4977,7 @@ void perf_event_update_userpage(struct perf_event *event)
- unlock:
- 	rcu_read_unlock();
- }
-+EXPORT_SYMBOL_GPL(perf_event_update_userpage);
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 686628d..e8625ff 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -420,6 +420,32 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+ EXPORT_SYMBOL(of_get_cpu_node);
  
- static int perf_mmap_fault(struct vm_fault *vmf)
+ /**
++ * of_cpu_node_to_id: Get the logical CPU number for a given device_node
++ *
++ * @cpu_node: Pointer to the device_node for CPU.
++ *
++ * Returns the logical CPU number of the given CPU device_node.
++ * Returns -ENODEV if the CPU is not found.
++ */
++int of_cpu_node_to_id(struct device_node *cpu_node)
++{
++	int cpu;
++	bool found = false;
++	struct device_node *np;
++
++	for_each_possible_cpu(cpu) {
++		np = of_get_cpu_node(cpu, NULL);
++		found = (cpu_node == np);
++		of_node_put(np);
++		if (found)
++			return cpu;
++	}
++
++	return -ENODEV;
++}
++EXPORT_SYMBOL(of_cpu_node_to_id);
++
++/**
+  * __of_device_is_compatible() - Check if the node matches given constraints
+  * @device: pointer to node
+  * @compat: required compatible string, NULL or "" for any match
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4a8a709..23cf02d 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -539,6 +539,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
+ 
+ bool of_console_check(struct device_node *dn, char *name, int index);
+ 
++extern int of_cpu_node_to_id(struct device_node *np);
++
+ #else /* CONFIG_OF */
+ 
+ static inline void of_core_init(void)
+@@ -863,6 +865,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
  {
+ }
+ 
++static inline int of_cpu_node_to_id(struct device_node *np)
++{
++	return -ENODEV;
++}
++
+ #define of_match_ptr(_ptr)	NULL
+ #define of_match_node(_matches, _node)	NULL
+ #endif /* CONFIG_OF */
 -- 
 2.7.5
