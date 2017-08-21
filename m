@@ -1,62 +1,52 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH] device property: preserve usecount for node passed to
- of_fwnode_graph_get_port_parent()
-Date: Mon, 21 Aug 2017 16:30:17 +0300
-Message-ID: <282c50da-8927-d1fc-27e5-39b75f3ba564@linux.intel.com>
-References: <20170821125107.20746-1-niklas.soderlund+renesas@ragnatech.se>
+From: Danilo Krummrich <danilokrummrich@dk-develop.de>
+Subject: [PATCH v8 0/2] serio: PS/2 gpio bit banging driver for serio bus
+Date: Mon, 21 Aug 2017 15:31:10 +0200
+Message-ID: <20170821133112.22276-1-danilokrummrich@dk-develop.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170821125107.20746-1-niklas.soderlund+renesas@ragnatech.se>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-renesas-soc@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org
+Cc: Danilo Krummrich <danilokrummrich@dk-develop.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+v2: Removed one verbose print statement, changed another one to dev_dbg.
+v3: - fixed compiler warning on blackfin
+    - depends on GPIOLIB
+    - clarify documentation
+v4: - fixed concurrent calls to ps2_gpio_write (serio->write)
+    - use gpiod API·
+    - use generic device properties
+    - request irq separately, do not use gpiod_to_irq
+    - abort when gpio is connected via slow bus·
+    - Fixed a bug where PS2_CMD_RESEND is always send after tx failed once.
+      The makes the write functionallity work better, tough timing is still
+      critical.
+    - disable irq initially until ps2_gpip_open (serio->open) is called
+v5: Checked again why timings are that hard to reach while in tx mode and·
+    discovered that there is an extra clock pulse between stop bit sent from
+    host and acknowledgement from device. By just skipping this clock pulse
+    tx works fine now, though it still happens sometimes that the timing can·
+    not be reached of course.
+v6: - fixed typos
+    - use of_match_ptr
+v7: remove unnecessary barriers
+v8: - split patch to have a separate one for the dt binding
+    - remove ps2-gpio prefix in binding
 
-Niklas Söderlund wrote:
-> Using CONFIG_OF_DYNAMIC=y uncovered an imbalance in the usecount of the
-> node being passed to of_fwnode_graph_get_port_parent(). Preserve the
-> usecount just like it is done in of_graph_get_port_parent().
+Danilo Krummrich (2):
+  serio: PS/2 gpio bit banging driver for serio bus
+  dt-bindings: new binding for ps/2 gpio devices
 
-The of_fwnode_graph_get_port_parent() is called by 
-fwnode_graph_get_port_parent() which obtains the port node through 
-fwnode_get_parent(). If you take a reference here, calling 
-fwnode_graph_get_port_parent() will end up incrementing the port node's 
-use count. In other words, my understanding is that dropping the 
-reference to the port node isn't a problem but intended behaviour here.
+ .../devicetree/bindings/serio/ps2-gpio.txt         |  22 +
+ Documentation/gpio/drivers-on-gpio.txt             |   5 +
+ drivers/input/serio/Kconfig                        |  11 +
+ drivers/input/serio/Makefile                       |   1 +
+ drivers/input/serio/ps2-gpio.c                     | 453 +++++++++++++++++++++
+ 5 files changed, 492 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serio/ps2-gpio.txt
+ create mode 100644 drivers/input/serio/ps2-gpio.c
 
-I wonder if I miss something.
-
->
-> Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmware specific locations")
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
->  drivers/of/property.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 067f9fab7b77c794..637dcb4833e2af60 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -922,6 +922,12 @@ of_fwnode_graph_get_port_parent(struct fwnode_handle *fwnode)
->  {
->  	struct device_node *np;
->
-> +	/*
-> +	 * Preserve usecount for passed in node as of_get_next_parent()
-> +	 * will do of_node_put() on it.
-> +	 */
-> +	of_node_get(to_of_node(fwnode));
-> +
->  	/* Get the parent of the port */
->  	np = of_get_next_parent(to_of_node(fwnode));
->  	if (!np)
->
-
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+--
+2.14.1
