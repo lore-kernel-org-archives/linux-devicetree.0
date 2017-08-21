@@ -1,503 +1,69 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 3/9] ARM64: dts: meson: add mmc clk gate pins
-Date: Mon, 21 Aug 2017 18:06:31 +0200
-Message-ID: <20170821160637.22456-4-jbrunet@baylibre.com>
-References: <20170821160637.22456-1-jbrunet@baylibre.com>
+Subject: [PATCH v2 0/9] ARM64: dts: meson: update around mmc
+Date: Mon, 21 Aug 2017 18:06:28 +0200
+Message-ID: <20170821160637.22456-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170821160637.22456-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the pinctrl to switch mmc clk pins in gpio (pulled down) mode. This
-is necessary to be able to gate the clk outside of the SoC while
-keeping it running in the controller
+This patchset feature updates around mmc. It is linked to this series [0]
+but does not strictly depends on it. It adds:
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  9 ++++--
- .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts      |  9 ++++--
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 11 +++++---
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  8 ++++--
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  9 ++++--
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  9 ++++--
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 33 ++++++++++++++++++++++
- .../dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts |  6 ++--
- .../dts/amlogic/meson-gxl-s905x-libretech-cc.dts   |  6 ++--
- .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    |  9 ++++--
- .../boot/dts/amlogic/meson-gxl-s905x-p212.dtsi     |  9 ++++--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         | 33 ++++++++++++++++++++++
- .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  6 ++--
- 13 files changed, 126 insertions(+), 31 deletions(-)
+* The regulator settling times for the gpio regulator of nanopi-k2 and
+  the libretech-cc.
+* UHS modes for the p20x and nanopi-k2.
+* clk-gate pins: these are the pinmuxes used for the clk-stop work
+  around explained here [1]
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-index cff39c5a2632..9ac904f75013 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-@@ -161,7 +161,8 @@
- &sd_emmc_a {
- 	status = "okay";
- 	pinctrl-0 = <&sdio_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 
-@@ -187,7 +188,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -205,7 +207,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index b48a4576158a..e4c6b2fd52ee 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -192,7 +192,8 @@
- &sd_emmc_a {
- 	status = "okay";
- 	pinctrl-0 = <&sdio_pins>, <&sdio_irq_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 
-@@ -218,7 +219,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -236,7 +238,8 @@
- &sd_emmc_c {
- 	status = "disabled";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	max-frequency = <200000000>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index c64c2256d092..7342c31f73b6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -51,7 +51,7 @@
- / {
- 	compatible = "nexbox,a95x", "amlogic,meson-gxbb";
- 	model = "NEXBOX A95X";
--	
-+
- 	aliases {
- 		serial0 = &uart_AO;
- 	};
-@@ -225,7 +225,8 @@
- &sd_emmc_a {
- 	status = "okay";
- 	pinctrl-0 = <&sdio_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 
-@@ -246,7 +247,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -264,7 +266,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index a12303becab4..1ffa1c238a72 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -50,7 +50,7 @@
- / {
- 	compatible = "hardkernel,odroid-c2", "amlogic,meson-gxbb";
- 	model = "Hardkernel ODROID-C2";
--	
-+
- 	aliases {
- 		serial0 = &uart_AO;
- 	};
-@@ -253,7 +253,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -271,7 +272,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	max-frequency = <200000000>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 30b880b694de..99c409d1c8f8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -187,7 +187,8 @@
- &sd_emmc_a {
- 	status = "okay";
- 	pinctrl-0 = <&sdio_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 
-@@ -213,7 +214,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -231,7 +233,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 0262ef8d48e4..f2bc6dea1fc6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -155,7 +155,8 @@
- &sd_emmc_a {
- 	status = "okay";
- 	pinctrl-0 = <&sdio_pins &sdio_irq_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 
-@@ -181,7 +182,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -198,7 +200,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 9a1e478f80d5..1d6314e2eb8a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -383,6 +383,17 @@
- 			};
- 		};
- 
-+		emmc_clk_gate_pins: emmc_clk_gate {
-+			mux {
-+				groups = "BOOT_8";
-+				function = "gpio_periphs";
-+			};
-+			cfg-pull-down {
-+				pins = "BOOT_8";
-+				bias-pull-down;
-+			};
-+		};
-+
- 		nor_pins: nor {
- 			mux {
- 				groups = "nor_d",
-@@ -421,6 +432,17 @@
- 			};
- 		};
- 
-+		sdcard_clk_gate_pins: sdcard_clk_gate {
-+			mux {
-+				groups = "CARD_2";
-+				function = "gpio_periphs";
-+			};
-+			cfg-pull-down {
-+				pins = "CARD_2";
-+				bias-pull-down;
-+			};
-+		};
-+
- 		sdio_pins: sdio {
- 			mux {
- 				groups = "sdio_d0",
-@@ -433,6 +455,17 @@
- 			};
- 		};
- 
-+		sdio_clk_gate_pins: sdio_clk_gate {
-+			mux {
-+				groups = "GPIOX_4";
-+				function = "gpio_periphs";
-+			};
-+			cfg-pull-down {
-+				pins = "GPIOX_4";
-+				bias-pull-down;
-+			};
-+		};
-+
- 		sdio_irq_pins: sdio_irq {
- 			mux {
- 				groups = "sdio_irq";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-index f779a985f923..977b4240f3c1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-@@ -123,7 +123,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -141,7 +142,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 51c4ecc3b31e..2b56f7d9be2b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -134,7 +134,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -156,7 +157,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-index 83c35efbae8b..df448b11a16b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-@@ -182,7 +182,8 @@
- &sd_emmc_a {
- 	status = "okay";
- 	pinctrl-0 = <&sdio_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 
-@@ -203,7 +204,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -221,7 +223,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-index 8899121f79e1..129af9068814 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-@@ -95,7 +95,8 @@
- &sd_emmc_a {
- 	status = "okay";
- 	pinctrl-0 = <&sdio_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 
-@@ -116,7 +117,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -134,7 +136,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 071eca074a91..e3433a4bf451 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -271,6 +271,17 @@
- 			};
- 		};
- 
-+		emmc_clk_gate_pins: emmc_clk_gate {
-+			mux {
-+				groups = "BOOT_8";
-+				function = "gpio_periphs";
-+			};
-+			cfg-pull-down {
-+				pins = "BOOT_8";
-+				bias-pull-down;
-+			};
-+		};
-+
- 		nor_pins: nor {
- 			mux {
- 				groups = "nor_d",
-@@ -309,6 +320,17 @@
- 			};
- 		};
- 
-+		sdcard_clk_gate_pins: sdcard_clk_gate {
-+			mux {
-+				groups = "CARD_2";
-+				function = "gpio_periphs";
-+			};
-+			cfg-pull-down {
-+				pins = "CARD_2";
-+				bias-pull-down;
-+			};
-+		};
-+
- 		sdio_pins: sdio {
- 			mux {
- 				groups = "sdio_d0",
-@@ -321,6 +343,17 @@
- 			};
- 		};
- 
-+		sdio_clk_gate_pins: sdio_clk_gate {
-+			mux {
-+				groups = "GPIOX_4";
-+				function = "gpio_periphs";
-+			};
-+			cfg-pull-down {
-+				pins = "GPIOX_4";
-+				bias-pull-down;
-+			};
-+		};
-+
- 		sdio_irq_pins: sdio_irq {
- 			mux {
- 				groups = "sdio_irq";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index 583da09acf66..7af153535073 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -168,7 +168,8 @@
- &sd_emmc_b {
- 	status = "okay";
- 	pinctrl-0 = <&sdcard_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-@@ -186,7 +187,8 @@
- &sd_emmc_c {
- 	status = "okay";
- 	pinctrl-0 = <&emmc_pins>;
--	pinctrl-names = "default";
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
+It also removes cap-sd-highspeed from eMMC nodes.
+
+Special note on SDR104:
+While the PCB of the p200 and the libretech-cc does not seems to handle
+SDR104 completely, the nanopi-k2 seems to be handling it correctly.
+
+The patch enabling this mode on the nanopi-k2 is the last one of this
+series. It should propabably be left out until more people can test
+sdr104 on the nanopi-k2
+
+This series has been tested on the gxbb-200, the gxbb-nanopi-k2 and the
+gxl-s905x-libretech-cc
+
+Changes since v1 [2]:
+* Reorder patches to put fixes first, then enhancements
+* Fix error in the SDIO clk_gate pins (GPIOX_5 instead GPIOX_4)
+
+[0]: https://lkml.kernel.org/r/20170821160301.21899-1-jbrunet@baylibre.com
+[1]: https://lkml.kernel.org/r/20170821160301.21899-11-jbrunet@baylibre.com
+[2]: https://lkml.kernel.org/r/20170804180816.18737-1-jbrunet@baylibre.com
+
+Jerome Brunet (9):
+  ARM64: dts: meson-gx: Use correct mmc clock source 0
+  ARM64: dts: meson: remove cap-sd-highspeed from emmc nodes
+  ARM64: dts: meson: add mmc clk gate pins
+  ARM64: dts: meson-gxbb: nanopi-k2: add card regulator settle times
+  ARM64: dts: meson-gxl: libretech-cc: add card regulator settle times
+  ARM64: dts: meson-gxl: libretech-cc: remove sdr104 capability
+  ARM64: dts: meson-gxbb: p20x: enable sdcard UHS modes
+  ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
+  ARM64: dts: meson-gxbb: nanopi-k2: enable sdr104 mode
+
+ .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 10 +++---
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts      | 19 ++++++++---
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 12 ++++---
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  9 ++---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   | 13 +++++---
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 10 +++---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 39 ++++++++++++++++++++--
+ .../dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts |  7 ++--
+ .../dts/amlogic/meson-gxl-s905x-libretech-cc.dts   | 10 ++++--
+ .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 10 +++---
+ .../boot/dts/amlogic/meson-gxl-s905x-p212.dtsi     | 10 +++---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         | 39 ++++++++++++++++++++--
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  7 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts |  1 -
+ 14 files changed, 146 insertions(+), 50 deletions(-)
+
 -- 
 2.9.5
