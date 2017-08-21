@@ -1,51 +1,98 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 0/3] devicetree: cleanup and improve DT cross-arch reference
-Date: Mon, 21 Aug 2017 12:23:45 -0500
-Message-ID: <CAL_JsqL-2RX=BjJNekHa1+88y+D1NPevu6jNSEgmYBY1XfTy5Q@mail.gmail.com>
-References: <1500949416-24105-1-git-send-email-yamada.masahiro@socionext.com> <CAK7LNASfxqG7tFRi=RVdshVaNUFcJBHZ-O=DXUm1pMfDXXgcpA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNASfxqG7tFRi=RVdshVaNUFcJBHZ-O=DXUm1pMfDXXgcpA@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Omar Sandoval <osandov@osandov.com>, Gaurav Minocha <gaurav.minocha.os@gmail.com>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Russell King <linux@armlinux.org.uk>, Michal Marek <mmarek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v6 0/6] perf: Support for ARM DynamIQ Shared Unit
+Date: Mon, 21 Aug 2017 18:55:03 +0100
+Message-ID: <1503338109-32540-1-git-send-email-suzuki.poulose@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org, Jonathan.Cameron@huawei.com, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 20, 2017 at 11:06 AM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Hi Rob, DT developers,
->
-> Any comments for this series?
+This series adds support for the PMU in ARM DynamIQ Shared Unit (DSU).
+The DSU integrates one or more cores with an L3 memory system, control
+logic, and external interfaces to form a multicore cluster. The PMU
+allows counting the various events related to L3, SCU etc, using 32bit
+independent counters along with providing a 64bit cycle counter.
 
-I've applied the series now.
+The PMU can only be accessed via CPU system registers, which are common
+to the cores connected to the same DSU. The PMU registers follow the
+semantics of the ARMv8 PMU, mostly, with the exception that
+the counters record the cluster wide events.
 
-Rob
+Tested on a Fast model with DSU. The driver only supports ARM64 at the
+moment. It can be extended to support ARM32 by providing register
+accessors like we do in arch/arm64/include/arm_dsu_pmu.h.
 
->
-> Thanks.
->
->
-> 2017-07-25 11:23 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
->>
->> Masahiro Yamada (3):
->>   of: remove drivers/of/testcase-data from include search path for CPP
->>   of: remove arch/$(SRCARCH)/boot/dts from include search path for CPP
->>   of: search scripts/dtc/include-prefixes path for both CPP and DTC
->>
->>  scripts/Makefile.lib | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> --
->> 2.7.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+The firmware should setup appropriate bits in the ACTLR_EL3/EL2 to
+allow EL1 access to the PMU registers.
+
+Series applies on v4.13-rc6 and is also available at:
+
+  git://linux-arm.org/linux-skp.git 4.13/dsu-v6
+
+Changes since V5:
+ - Pickedup ack from Rob
+ - Address comments on V5 by Mark.
+ - Use IRQ_NOBALANCING for IRQ handler
+ - Don't expose events which could be unimplemented.
+ - Get rid of dsu_pmu_event_supported and allow raw event
+   code to be used without validating whether it is supported.
+ - Rename "supported_cpus" mask to "associated_cpus"
+ - Add Documentation for the PMU driver
+ - Don't disable IRQ for dsu_pmu_{enable/disable}_counters
+ - Use consistent return codes for validate_event/group calls.
+ - Check PERF_ATTACH_TASK flag in event_init.
+ - Allow missing CPUs in dsu_pmu_dt_get_cpus, to handle cases
+   where kernel could have capped nr_cpus.
+ - Cleanup sanity checking for the CPU before accessing DSU
+ - Reject events with counting CPU not associated with DSU
+
+Changes since V4:
+ - Fix regressions introduced by v4, with the rename of generic
+   helper.
+ - Added reviewed-by tag from Rob
+
+Changes since V3:
+ - Rename the of generic helper to of_cpu_node_to_id(), and return
+   -ENODEV upon failure than nr_cpus_id
+ - Fix node name in device tree node example.
+
+Changes since V2:
+ - Cleanup dsu_pmu_device_probe error handling.
+ - Fix event validate_group to invert the result check of validate_event
+ - Return errors if we failed to parse CPUs in the DSU.
+ - Add MODULE_DEVICE_TABLE entry
+ - Use hlist_entry_safe for converting cpuhp_node to dsu_pmu.
+ - Added Reviews and Acks.
+
+Changes since V1:
+ - Use the new of_device_node_get_cpu() helper for Coresight
+ - Rebased to 4.13-rc2
+
+Suzuki K Poulose (6):
+  perf: Export perf_event_update_userpage
+  of: Add helper for mapping device node to logical CPU number
+  coresight: of: Use of_cpu_node_to_id helper
+  irqchip: gic-v3: Use of_cpu_node_to_id helper
+  dt-bindings: Document devicetree binding for ARM DSU PMU
+  perf: ARM DynamIQ Shared Unit PMU support
+
+ .../devicetree/bindings/arm/arm-dsu-pmu.txt        |  27 +
+ Documentation/perf/arm_dsu_pmu.txt                 |  28 +
+ arch/arm64/include/asm/arm_dsu_pmu.h               | 124 +++
+ drivers/hwtracing/coresight/of_coresight.c         |  15 +-
+ drivers/irqchip/irq-gic-v3.c                       |  29 +-
+ drivers/of/base.c                                  |  26 +
+ drivers/perf/Kconfig                               |   9 +
+ drivers/perf/Makefile                              |   1 +
+ drivers/perf/arm_dsu_pmu.c                         | 828 +++++++++++++++++++++
+ include/linux/of.h                                 |   7 +
+ kernel/events/core.c                               |   1 +
+ 11 files changed, 1056 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
+ create mode 100644 Documentation/perf/arm_dsu_pmu.txt
+ create mode 100644 arch/arm64/include/asm/arm_dsu_pmu.h
+ create mode 100644 drivers/perf/arm_dsu_pmu.c
+
+-- 
+2.7.5
