@@ -1,82 +1,94 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v9 RESEND 1/9] mfd: rk808: fix up the chip id get failed
-Date: Mon, 21 Aug 2017 03:28:34 +0200
-Message-ID: <20170821012842.17875-2-heiko@sntech.de>
+Subject: [PATCH v9 RESEND 6/9] pinctrl: dt-bindings: add bindings for Rockchip RK805 PMIC
+Date: Mon, 21 Aug 2017 03:28:39 +0200
+Message-ID: <20170821012842.17875-7-heiko@sntech.de>
 References: <20170821012842.17875-1-heiko@sntech.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170821012842.17875-1-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: lee.jones@linaro.org
-Cc: chenjh@rock-chips.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: chenjh@rock-chips.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Elaine Zhang <zhangqing@rock-chips.com>
+From: Joseph Chen <chenjh@rock-chips.com>
 
-the rk8xx chip id is:
-((MSB << 8) | LSB) & 0xfff0
-
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 Signed-off-by: Joseph Chen <chenjh@rock-chips.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- drivers/mfd/rk808.c       | 21 +++++++++++++++------
- include/linux/mfd/rk808.h |  1 +
- 2 files changed, 16 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/pinctrl/pinctrl-rk805.txt  | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-rk805.txt
 
-diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-index fd087cbb0bde..8e60ebaeaadb 100644
---- a/drivers/mfd/rk808.c
-+++ b/drivers/mfd/rk808.c
-@@ -325,7 +325,7 @@ static int rk808_probe(struct i2c_client *client,
- 	void (*pm_pwroff_fn)(void);
- 	int nr_pre_init_regs;
- 	int nr_cells;
--	int pm_off = 0;
-+	int pm_off = 0, msb, lsb;
- 	int ret;
- 	int i;
- 
-@@ -333,14 +333,23 @@ static int rk808_probe(struct i2c_client *client,
- 	if (!rk808)
- 		return -ENOMEM;
- 
--	rk808->variant = i2c_smbus_read_word_data(client, RK808_ID_MSB);
--	if (rk808->variant < 0) {
--		dev_err(&client->dev, "Failed to read the chip id at 0x%02x\n",
-+	/* Read chip variant */
-+	msb = i2c_smbus_read_byte_data(client, RK808_ID_MSB);
-+	if (msb < 0) {
-+		dev_err(&client->dev, "failed to read the chip id at 0x%x\n",
- 			RK808_ID_MSB);
--		return rk808->variant;
-+		return msb;
- 	}
- 
--	dev_dbg(&client->dev, "Chip id: 0x%x\n", (unsigned int)rk808->variant);
-+	lsb = i2c_smbus_read_byte_data(client, RK808_ID_LSB);
-+	if (lsb < 0) {
-+		dev_err(&client->dev, "failed to read the chip id at 0x%x\n",
-+			RK808_ID_LSB);
-+		return lsb;
-+	}
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-rk805.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-rk805.txt
+new file mode 100644
+index 000000000000..eee3dc260934
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-rk805.txt
+@@ -0,0 +1,63 @@
++Pincontrol driver for RK805 Power management IC.
 +
-+	rk808->variant = ((msb << 8) | lsb) & RK8XX_ID_MSK;
-+	dev_info(&client->dev, "chip id: 0x%x\n", (unsigned int)rk808->variant);
- 
- 	switch (rk808->variant) {
- 	case RK808_ID:
-diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-index 83701ef7d3c7..54feb140c210 100644
---- a/include/linux/mfd/rk808.h
-+++ b/include/linux/mfd/rk808.h
-@@ -298,6 +298,7 @@ enum rk818_reg {
- #define VOUT_LO_INT	BIT(0)
- #define CLK32KOUT2_EN	BIT(0)
- 
-+#define RK8XX_ID_MSK			0xfff0
- enum {
- 	BUCK_ILMIN_50MA,
- 	BUCK_ILMIN_100MA,
++RK805 has 2 pins which can be configured as GPIO output only.
++
++Please refer file <devicetree/bindings/pinctrl/pinctrl-bindings.txt>
++for details of the common pinctrl bindings used by client devices,
++including the meaning of the phrase "pin configuration node".
++
++Optional Pinmux properties:
++--------------------------
++Following properties are required if default setting of pins are required
++at boot.
++- pinctrl-names: A pinctrl state named per <pinctrl-binding.txt>.
++- pinctrl[0...n]: Properties to contain the phandle for pinctrl states per
++		<pinctrl-binding.txt>.
++
++The pin configurations are defined as child of the pinctrl states node. Each
++sub-node have following properties:
++
++Required properties:
++------------------
++- #gpio-cells: Should be two. The first cell is the pin number and the
++  second is the GPIO flags.
++
++- gpio-controller: Marks the device node as a GPIO controller.
++
++- pins: List of pins. Valid values of pins properties are: gpio0, gpio1.
++
++First 2 properties must be added in the RK805 PMIC node, documented in
++Documentation/devicetree/bindings/mfd/rk808.txt
++
++Optional properties:
++-------------------
++Following are optional properties defined as pinmux DT binding document
++<pinctrl-bindings.txt>. Absence of properties will leave the configuration
++on default.
++	function,
++	output-low,
++	output-high.
++
++Valid values for function properties are: gpio.
++
++Theres is also not customised properties for any GPIO.
++
++Example:
++--------
++rk805: rk805@18 {
++	compatible = "rockchip,rk805";
++	...
++	gpio-controller;
++	#gpio-cells = <2>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pmic_int_l>, <&rk805_default>;
++
++	rk805_default: pinmux {
++		gpio01 {
++			pins = "gpio0", "gpio1";
++			function = "gpio";
++			output-high;
++		};
++	};
++};
 -- 
 2.14.1
