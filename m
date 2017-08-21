@@ -1,67 +1,54 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [GIT PULL] Immutable branch between MFD, Pinctrl and Regulator due
- for the v4.14 merge window
-Date: Mon, 21 Aug 2017 09:25:10 +0100
-Message-ID: <20170821082510.qbxdhuffce22uuoe@dell>
-References: <20170821012842.17875-1-heiko@sntech.de>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Mon, 21 Aug 2017 10:25:23 +0200
+Message-ID: <20170821082523.GA2418@katana>
+References: <1502710766-44361-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170821012842.17875-1-heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: chenjh@rock-chips.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1502710766-44361-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enjoy!
 
-The following changes since commit 5771a8c08880cdca3bfb4a3fc6d309d6bba20877:
+--82I3+IH0IqGh5yIs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  Linux v4.13-rc1 (2017-07-15 15:22:10 -0700)
 
-are available in the git repository at:
+>  	  Below is the number clocks for each supported SoC:
+> -	   1: SH73A0, R8A73A4, R8A7740, R8A7778, R8A7779, R8A7790
+> -	      R8A7791, R8A7792, R8A7793, R8A7794, R8A7795, R8A7796
+> +	   1: SH73A0, R8A73A4, R8A7740, R8A7743, R8A7745, R8A7778, R8A7779,
+> +	      R8A7790, R8A7791, R8A7792, R8A7793, R8A7794, R8A7795, R8A7796
+>  	   2: R7S72100
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pinctrl-regulator-v4.14
+Hmm, maybe we should convert this to only listing SoCs with two clocks?
+That will be easier to maintaine since the majority seems to have one.
 
-for you to fetch changes up to f7c22398f5e95c995a34d4f196d53cfc32562aed:
 
-  mfd: rk808: Add RK805 power key support (2017-08-21 08:54:56 +0100)
+--82I3+IH0IqGh5yIs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-----------------------------------------------------------------
-Immutable branch between MFD, Pinctrl and Regulator due for the v4.14 merge window
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Elaine Zhang (5):
-      mfd: rk808: Fix up the chip id get failed
-      mfd: rk808: Add rk805 regs addr and ID
-      regulator: rk808: Add regulator driver for RK805
-      mfd: rk808: Add RK805 support
-      mfd: dt-bindings: Add RK805 device tree bindings document
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmamO8ACgkQFA3kzBSg
+KbZAhQ//eQYb5pxOg7/SDMdhRx8QA8awWsLI8fWdghLrchmdH1xfMfCnJGAHacq2
+frOqBHXgYbo/GiNL8SMqd72MFuviopK8AyMD7x81TtdtXb0gb5icz87HXQtABrlM
+gbROAhzDehJRcp2lwFrR98cYqobB0VTSNXm7R4rHVYOD2tWFaIEWPOMkTcBlvkNS
+/AjzqBCl8NJ4+VrxWtohNLHqUBOdTfbCDYP25A6vFaRYxj+ObDT120z522lVkt99
+N+0a1AnZemMWwmZphxv1SnuSqvzYxZZtqi51ONLILx0A6acEskEWpDDSX+PSZiS5
+zeWlspR5SslFlASUpl6nGXMKUvk+zTJqYQfptiSF1xNDlkeaGi+07BMsMEOSfhjz
+dB108iVOCzydxvwC8EVKEuJtMqjBu2hU/4QI+Nr8QELiUh3ozBDPWfSgSmlj0mdq
+r7zLuaHZCecagaL/WZbetNZ9KwY7RAFipR9aXgAty8v973ZOwMfx+kqY8QIS674r
+eVb9ctpEb1WqGV+j5Akd/W9JsrNy8x94c3lczeS3NDt1ehuoZby7raHoqNs4t9cn
+pRegQyYyOQZwKaRzUoJNElvHDLmVi/OijPfrOG9vulQ2tLHE5cHWHFOWGAcDdDiw
+N8p+GLMVurlO5mpjUyVBvaNVLTNL2Vl7vsB22x1gjycA7iMukMU=
+=lPi4
+-----END PGP SIGNATURE-----
 
-Joseph Chen (4):
-      pinctrl: dt-bindings: Add bindings for Rockchip RK805 PMIC
-      pinctrl: Add pinctrl driver for the RK805 PMIC
-      mfd: rk808: Add RK805 pinctrl support
-      mfd: rk808: Add RK805 power key support
-
- Documentation/devicetree/bindings/mfd/rk808.txt    |  22 +-
- .../devicetree/bindings/pinctrl/pinctrl-rk805.txt  |  63 +++
- drivers/mfd/Kconfig                                |   4 +-
- drivers/mfd/rk808.c                                | 147 +++++-
- drivers/pinctrl/Kconfig                            |   9 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-rk805.c                    | 493 +++++++++++++++++++++
- drivers/regulator/Kconfig                          |   4 +-
- drivers/regulator/rk808-regulator.c                | 130 ++++++
- include/linux/mfd/rk808.h                          | 121 +++++
- 10 files changed, 983 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-rk805.txt
- create mode 100644 drivers/pinctrl/pinctrl-rk805.c
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--82I3+IH0IqGh5yIs--
