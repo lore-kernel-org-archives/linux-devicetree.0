@@ -1,36 +1,52 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
-Date: Mon, 21 Aug 2017 16:05:30 +0200
-Message-ID: <20170821140530.GD1703@lunn.ch>
-References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
- <20170821125317.GS20805@n2100.armlinux.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 3/5] dt-bindings: ti-omap-hsmmc: Document new compatible
+ for sdhci omap
+Date: Mon, 21 Aug 2017 07:21:32 -0700
+Message-ID: <20170821142132.GH6008@atomide.com>
+References: <20170821074132.4622-1-kishon@ti.com>
+ <20170821074132.4622-4-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170821125317.GS20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170821074132.4622-4-kishon@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> The implementation that I've designed is based around the boards that
-> I have access to and the various public SFP documentation.  I think
-> documenting the bindings suggests that they are stable - I don't think
-> we're really ready to make that assertion yet - there may be things
-> that have been missed which will only come up when other people start
-> using this code.
+* Kishon Vijay Abraham I <kishon@ti.com> [170821 00:42]:
+> Document the new compatible string "ti,dra7-sdhci" to be used for
+> MMC controllers in DRA7 and DRA72 SoCs.
 
-Hi Russell
+I suggest that you add a new one sdhci-omap.txt instead.
+We are not currently parsing the all the hsmmc properties for
+sdhci.
 
-That was the point of merging the code. It gets it into people hands
-so they can start using it. I want to add support for DSA to make use
-of phylink, since i have a couple of boards with SFF connected to
-switch ports. I know Cumulus have interest in the code, for their
-switches and so do Westermo. 
+Then eventually when they are fully compatible, we can just
+change ti-omap-hsmmc.txt to point to the sdhci-omap.txt.
 
-       Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
+
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> index 0e026c151c1c..db80fdfd05d7 100644
+> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> @@ -13,6 +13,7 @@ Required properties:
+>   Should be "ti,omap3-pre-es3-hsmmc" for OMAP3 controllers pre ES3.0
+>   Should be "ti,omap4-hsmmc", for OMAP4 controllers
+>   Should be "ti,am33xx-hsmmc", for AM335x controllers
+> + Should be "ti,dra7-sdhci" for DRA7 and DRA72 controllers
+>  - ti,hwmods: Must be "mmc<n>", n is controller instance starting 1
+>  
+>  Optional properties:
+> -- 
+> 2.11.0
+> 
