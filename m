@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v9 RESEND 2/9] mfd: rk808: add rk805 regs addr and ID
-Date: Mon, 21 Aug 2017 03:28:35 +0200
-Message-ID: <20170821012842.17875-3-heiko@sntech.de>
+Subject: [PATCH v9 RESEND 9/9] mfd: rk808: Add RK805 power key support
+Date: Mon, 21 Aug 2017 03:28:42 +0200
+Message-ID: <20170821012842.17875-10-heiko@sntech.de>
 References: <20170821012842.17875-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,164 +18,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Signed-off-by: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- include/linux/mfd/rk808.h | 120 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 120 insertions(+)
+ drivers/mfd/rk808.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-index 54feb140c210..d3156594674c 100644
---- a/include/linux/mfd/rk808.h
-+++ b/include/linux/mfd/rk808.h
-@@ -206,6 +206,97 @@ enum rk818_reg {
- #define RK818_USB_ILMIN_2000MA		0x7
- #define RK818_USB_CHG_SD_VSEL_MASK	0x70
- 
-+/* RK805 */
-+enum rk805_reg {
-+	RK805_ID_DCDC1,
-+	RK805_ID_DCDC2,
-+	RK805_ID_DCDC3,
-+	RK805_ID_DCDC4,
-+	RK805_ID_LDO1,
-+	RK805_ID_LDO2,
-+	RK805_ID_LDO3,
-+};
-+
-+/* CONFIG REGISTER */
-+#define RK805_VB_MON_REG		0x21
-+#define RK805_THERMAL_REG		0x22
-+
-+/* POWER CHANNELS ENABLE REGISTER */
-+#define RK805_DCDC_EN_REG		0x23
-+#define RK805_SLP_DCDC_EN_REG		0x25
-+#define RK805_SLP_LDO_EN_REG		0x26
-+#define RK805_LDO_EN_REG		0x27
-+
-+/* BUCK AND LDO CONFIG REGISTER */
-+#define RK805_BUCK_LDO_SLP_LP_EN_REG	0x2A
-+#define RK805_BUCK1_CONFIG_REG		0x2E
-+#define RK805_BUCK1_ON_VSEL_REG		0x2F
-+#define RK805_BUCK1_SLP_VSEL_REG	0x30
-+#define RK805_BUCK2_CONFIG_REG		0x32
-+#define RK805_BUCK2_ON_VSEL_REG		0x33
-+#define RK805_BUCK2_SLP_VSEL_REG	0x34
-+#define RK805_BUCK3_CONFIG_REG		0x36
-+#define RK805_BUCK4_CONFIG_REG		0x37
-+#define RK805_BUCK4_ON_VSEL_REG		0x38
-+#define RK805_BUCK4_SLP_VSEL_REG	0x39
-+#define RK805_LDO1_ON_VSEL_REG		0x3B
-+#define RK805_LDO1_SLP_VSEL_REG		0x3C
-+#define RK805_LDO2_ON_VSEL_REG		0x3D
-+#define RK805_LDO2_SLP_VSEL_REG		0x3E
-+#define RK805_LDO3_ON_VSEL_REG		0x3F
-+#define RK805_LDO3_SLP_VSEL_REG		0x40
-+
-+/* INTERRUPT REGISTER */
-+#define RK805_PWRON_LP_INT_TIME_REG	0x47
-+#define RK805_PWRON_DB_REG		0x48
-+#define RK805_DEV_CTRL_REG		0x4B
-+#define RK805_INT_STS_REG		0x4C
-+#define RK805_INT_STS_MSK_REG		0x4D
-+#define RK805_GPIO_IO_POL_REG		0x50
-+#define RK805_OUT_REG			0x52
-+#define RK805_ON_SOURCE_REG		0xAE
-+#define RK805_OFF_SOURCE_REG		0xAF
-+
-+#define RK805_NUM_REGULATORS		7
-+
-+#define RK805_PWRON_FALL_RISE_INT_EN	0x0
-+#define RK805_PWRON_FALL_RISE_INT_MSK	0x81
-+
-+/* RK805 IRQ Definitions */
-+#define RK805_IRQ_PWRON_RISE		0
-+#define RK805_IRQ_VB_LOW		1
-+#define RK805_IRQ_PWRON			2
-+#define RK805_IRQ_PWRON_LP		3
-+#define RK805_IRQ_HOTDIE		4
-+#define RK805_IRQ_RTC_ALARM		5
-+#define RK805_IRQ_RTC_PERIOD		6
-+#define RK805_IRQ_PWRON_FALL		7
-+
-+#define RK805_IRQ_PWRON_RISE_MSK	BIT(0)
-+#define RK805_IRQ_VB_LOW_MSK		BIT(1)
-+#define RK805_IRQ_PWRON_MSK		BIT(2)
-+#define RK805_IRQ_PWRON_LP_MSK		BIT(3)
-+#define RK805_IRQ_HOTDIE_MSK		BIT(4)
-+#define RK805_IRQ_RTC_ALARM_MSK		BIT(5)
-+#define RK805_IRQ_RTC_PERIOD_MSK	BIT(6)
-+#define RK805_IRQ_PWRON_FALL_MSK	BIT(7)
-+
-+#define RK805_PWR_RISE_INT_STATUS	BIT(0)
-+#define RK805_VB_LOW_INT_STATUS		BIT(1)
-+#define RK805_PWRON_INT_STATUS		BIT(2)
-+#define RK805_PWRON_LP_INT_STATUS	BIT(3)
-+#define RK805_HOTDIE_INT_STATUS		BIT(4)
-+#define RK805_ALARM_INT_STATUS		BIT(5)
-+#define RK805_PERIOD_INT_STATUS		BIT(6)
-+#define RK805_PWR_FALL_INT_STATUS	BIT(7)
-+
-+#define RK805_BUCK1_2_ILMAX_MASK	(3 << 6)
-+#define RK805_BUCK3_4_ILMAX_MASK        (3 << 3)
-+#define RK805_RTC_PERIOD_INT_MASK	(1 << 6)
-+#define RK805_RTC_ALARM_INT_MASK	(1 << 5)
-+#define RK805_INT_ALARM_EN		(1 << 3)
-+#define RK805_INT_TIMER_EN		(1 << 2)
-+
- /* RK808 IRQ Definitions */
- #define RK808_IRQ_VOUT_LO	0
- #define RK808_IRQ_VB_LO		1
-@@ -298,7 +389,14 @@ enum rk818_reg {
- #define VOUT_LO_INT	BIT(0)
- #define CLK32KOUT2_EN	BIT(0)
- 
-+#define TEMP115C			0x0c
-+#define TEMP_HOTDIE_MSK			0x0c
-+#define SLP_SD_MSK			(0x3 << 2)
-+#define SHUTDOWN_FUN			(0x2 << 2)
-+#define SLEEP_FUN			(0x1 << 2)
- #define RK8XX_ID_MSK			0xfff0
-+#define FPWM_MODE			BIT(7)
-+
- enum {
- 	BUCK_ILMIN_50MA,
- 	BUCK_ILMIN_100MA,
-@@ -322,6 +420,28 @@ enum {
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index c803d2d5dfb7..216fbf6adec9 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -94,6 +94,19 @@ static struct resource rtc_resources[] = {
+ 	}
  };
  
- enum {
-+	RK805_BUCK1_2_ILMAX_2500MA,
-+	RK805_BUCK1_2_ILMAX_3000MA,
-+	RK805_BUCK1_2_ILMAX_3500MA,
-+	RK805_BUCK1_2_ILMAX_4000MA,
++static struct resource rk805_key_resources[] = {
++	{
++		.start  = RK805_IRQ_PWRON_FALL,
++		.end    = RK805_IRQ_PWRON_FALL,
++		.flags  = IORESOURCE_IRQ,
++	},
++	{
++		.start  = RK805_IRQ_PWRON_RISE,
++		.end    = RK805_IRQ_PWRON_RISE,
++		.flags  = IORESOURCE_IRQ,
++	}
 +};
 +
-+enum {
-+	RK805_BUCK3_ILMAX_1500MA,
-+	RK805_BUCK3_ILMAX_2000MA,
-+	RK805_BUCK3_ILMAX_2500MA,
-+	RK805_BUCK3_ILMAX_3000MA,
-+};
-+
-+enum {
-+	RK805_BUCK4_ILMAX_2000MA,
-+	RK805_BUCK4_ILMAX_2500MA,
-+	RK805_BUCK4_ILMAX_3000MA,
-+	RK805_BUCK4_ILMAX_3500MA,
-+};
-+
-+enum {
-+	RK805_ID = 0x8050,
- 	RK808_ID = 0x0000,
- 	RK818_ID = 0x8181,
+ static const struct mfd_cell rk805s[] = {
+ 	{ .name = "rk808-clkout", },
+ 	{ .name = "rk808-regulator", },
+@@ -103,6 +116,10 @@ static const struct mfd_cell rk805s[] = {
+ 		.num_resources = ARRAY_SIZE(rtc_resources),
+ 		.resources = &rtc_resources[0],
+ 	},
++	{	.name = "rk805-pwrkey",
++		.num_resources = ARRAY_SIZE(rk805_key_resources),
++		.resources = &rk805_key_resources[0],
++	},
  };
+ 
+ static const struct mfd_cell rk808s[] = {
 -- 
 2.14.1
