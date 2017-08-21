@@ -1,56 +1,72 @@
-From: Danilo Krummrich <danilokrummrich@dk-develop.de>
-Subject: [PATCH v8 2/2] dt-bindings: new binding for ps/2 gpio devices
-Date: Mon, 21 Aug 2017 15:31:12 +0200
-Message-ID: <20170821133112.22276-3-danilokrummrich@dk-develop.de>
-References: <20170821133112.22276-1-danilokrummrich@dk-develop.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170821133112.22276-1-danilokrummrich@dk-develop.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org
-Cc: Danilo Krummrich <danilokrummrich@dk-develop.de>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v2.1 2/3] leds: as3645a: Add LED flash class driver
+Date: Mon, 21 Aug 2017 16:53:46 +0300
+Message-ID: <07392419-c586-a791-a994-bed39f73da94@iki.fi>
+References: <20170819212410.3084-3-sakari.ailus@linux.intel.com>
+ <20170819214226.20736-1-sakari.ailus@linux.intel.com>
+ <fc6c7893-863b-53ff-48e3-d14297364e5d@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <fc6c7893-863b-53ff-48e3-d14297364e5d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The PS/2 gpio device binding defines the gpio pins (data and clock)
-as well as the interrupt which should be used to drive the ps/2 bus.
-It is expected to get an interrupt on the falling edge of the clock
-line.
+Hi Jacek,
 
-Also it can be configured whether the host should support writing to
-the device.
+Jacek Anaszewski wrote:
+> Hi Sakari,
+> 
+> Thanks for the update.
+> I've noticed that you added node labels to the child device nodes
+> in [0]:
+> 
+> "as3645a_flash : flash" and "as3645a_indicator : indicator"
 
-Signed-off-by: Danilo Krummrich <danilokrummrich@dk-develop.de>
----
- .../devicetree/bindings/serio/ps2-gpio.txt         | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serio/ps2-gpio.txt
+The phandle references (as3645a_flash and as3645a_indicator) should
+actually be moved to the patch adding the flash property to the sensor
+device node. It doesn't do anything here, yet.
 
-diff --git a/Documentation/devicetree/bindings/serio/ps2-gpio.txt b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
-new file mode 100644
-index 000000000000..83e05ea05883
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
-@@ -0,0 +1,22 @@
-+Device-Tree binding for ps/2 gpio device
-+
-+Required properties:
-+	- compatible = "ps2-gpio"
-+	- gpios: data and clock gpio
-+	- interrupts: Should trigger on the falling edge of the clock line.
-+
-+Optional properties:
-+	- write-enable: Indicates whether write function is provided
-+	to serio device. Possibly providing the write fn will not work, because
-+	of the tough timing requirements.
-+
-+Example nodes:
-+
-+ps2@0 {
-+	compatible = "ps2-gpio";
-+	interrupt-parent = <&gpio>;
-+	interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-+	data-gpios = <&gpio 24 GPIO_ACTIVE_HIGH>;
-+	clk-gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
-+	write-enable;
-+};
+> 
+> I am still seeing problems with this approach:
+> 
+> 1) AFAIK these labels are only used for referencing nodes inside dts
+>    files and they don't affect the name property of struct device_node
+
+That's right.
+
+> 2) Even if you changed the node name from flash to as3645a_flash, you
+>    would get weird LED class device name "as3645a_flash:flash" in case
+>    label property is absent. Do you have any objections against the
+>    approach I proposed in the previous review?:
+> 
+> 
+>     snprintf(names->flash, sizeof(names->flash),
+> 	     AS_NAME":%s", node->name);
+
+In the current patch, the device node of the flash controller is used,
+postfixed with colon and the name of the LED ("flash" or "indicator") if
+no label is defined. In other words, with that DT source you'll have
+"as3645a:flash" and "as3645a:indicator". So if you change the name of
+the device node of the I²C device, that will be reflected in the label.
+
+If a label exists, then the label is used as such.
+
+I don't really have objections to what you're proposing as such but my
+question is: is it useful? With that, the flash and indicator labels
+will not come from DT if label properties are undefined. They'll always
+be "as3645a:flash" and "as3645a:indicator", independently of the names
+of the device nodes.
+
 -- 
-2.14.1
+Kind regards,
+
+Sakari Ailus
+sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
