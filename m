@@ -1,23 +1,56 @@
-From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [patch v5 3/3] doccumentation: jtag: Add bindings for Aspeed SoC
- 24xx and 25xx families JTAG master driver
-Date: Mon, 21 Aug 2017 15:00:12 +0200
-Message-ID: <20170821130011.GK3546@distanz.ch>
-References: <1503315069-29465-1-git-send-email-oleksandrs@mellanox.com>
- <1503315069-29465-4-git-send-email-oleksandrs@mellanox.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/4] GPIO driver for Maxim MAX3191x
+Date: Mon, 21 Aug 2017 15:12:00 +0200
+Message-ID: <cover.1503319573.git.lukas@wunner.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1503315069-29465-4-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bart Van Assche <bart.vanassche-Sjgp3cTcYWE@public.gmane.org>, Alasdair Kergon <agk-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [patch v5 3/3] doccumentation: jtag: Add bindings for Aspeed SoC 24xx and 25xx families JTAG master driver
+GPIO driver for Maxim MAX31910, MAX31911, MAX31912, MAX31913,
+MAX31953 and MAX31963 industrial serializer, a daisy-chainable
+chip to make 8 digital 24V inputs available via SPI.  Supports
+CRC checksums to guard against electromagnetic interference,
+as well as undervoltage and overtemperature detection.
 
-Small nit: s/doccumentation/Documentation/
+The chip is used by the "Revolution Pi" family of open source PLCs
+based on the Raspberry Pi (https://revolution.kunbus.com/).
+
+In a typical SCADA system, all input signals are read periodically,
+say, every 5 or 10 ms, and stored in a so-called "process image".
+To make this perform well with serializers, add a ->get_multiple
+callback to struct gpio_chip, add corresponding consumer functions
+and wire it up with linehandle_ioctl().
+
+Thanks,
+
+Lukas
+
+
+Lukas Wunner (4):
+  bitops: Introduce assign_bit()
+  gpio: Introduce ->get_multiple callback
+  dt-bindings: gpio: max3191x: Document new driver
+  gpio: Add driver for Maxim MAX3191x industrial serializer
+
+ .../devicetree/bindings/gpio/gpio-max3191x.txt     |  37 ++
+ drivers/gpio/Kconfig                               |  10 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max3191x.c                       | 482 +++++++++++++++++++++
+ drivers/gpio/gpiolib.c                             | 181 +++++++-
+ drivers/gpio/gpiolib.h                             |   4 +
+ drivers/md/dm-mpath.c                              |   8 -
+ include/linux/bitops.h                             |  24 +
+ include/linux/gpio/consumer.h                      |  44 ++
+ include/linux/gpio/driver.h                        |   5 +
+ 10 files changed, 777 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
+ create mode 100644 drivers/gpio/gpio-max3191x.c
+
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
