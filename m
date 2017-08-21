@@ -1,28 +1,56 @@
-From: William Wu <william.wu@rock-chips.com>
-Subject: [PATCH v3 0/3] Add usb3 ctrl node on RK3328 SoCs and enable usb3 host on RK3328 evb
-Date: Mon, 21 Aug 2017 21:36:03 +0800
-Message-ID: <1503322566-31489-1-git-send-email-william.wu@rock-chips.com>
+From: Danilo Krummrich <danilokrummrich@dk-develop.de>
+Subject: [PATCH v8 2/2] dt-bindings: new binding for ps/2 gpio devices
+Date: Mon, 21 Aug 2017 15:31:12 +0200
+Message-ID: <20170821133112.22276-3-danilokrummrich@dk-develop.de>
+References: <20170821133112.22276-1-danilokrummrich@dk-develop.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170821133112.22276-1-danilokrummrich@dk-develop.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, balbi@kernel.org, gregkh@linuxfoundation.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, frank.wang@rock-chips.com, huangtao@rock-chips.com, daniel.meng@rock-chips.com, william.wu@rock-chips.com
+To: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org
+Cc: Danilo Krummrich <danilokrummrich@dk-develop.de>
 List-Id: devicetree@vger.kernel.org
 
-This series add support for usb3 controller on RK3328 SoCs.
-This series don't include usb3 phy patches, and I will try
-to submit usb3 phy patches individually later.
+The PS/2 gpio device binding defines the gpio pins (data and clock)
+as well as the interrupt which should be used to drive the ps/2 bus.
+It is expected to get an interrupt on the falling edge of the clock
+line.
 
-Tested on RK3328 evaluation board.
+Also it can be configured whether the host should support writing to
+the device.
 
-William Wu (3):
-  dt-bindings: usb: add DT binding for RK3328 dwc3 controller
-  arm64: dts: rockchip: add usb3 controller node for RK3328 SoCs
-  arm64: dts: rockchip: enable usb3 for RK3328 evaluation board
+Signed-off-by: Danilo Krummrich <danilokrummrich@dk-develop.de>
+---
+ .../devicetree/bindings/serio/ps2-gpio.txt         | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serio/ps2-gpio.txt
 
- .../devicetree/bindings/usb/rockchip,dwc3.txt      |  4 +++-
- arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |  9 ++++++++
- arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 27 ++++++++++++++++++++++
- 3 files changed, 39 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/serio/ps2-gpio.txt b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
+new file mode 100644
+index 000000000000..83e05ea05883
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
+@@ -0,0 +1,22 @@
++Device-Tree binding for ps/2 gpio device
++
++Required properties:
++	- compatible = "ps2-gpio"
++	- gpios: data and clock gpio
++	- interrupts: Should trigger on the falling edge of the clock line.
++
++Optional properties:
++	- write-enable: Indicates whether write function is provided
++	to serio device. Possibly providing the write fn will not work, because
++	of the tough timing requirements.
++
++Example nodes:
++
++ps2@0 {
++	compatible = "ps2-gpio";
++	interrupt-parent = <&gpio>;
++	interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
++	data-gpios = <&gpio 24 GPIO_ACTIVE_HIGH>;
++	clk-gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
++	write-enable;
++};
 -- 
-2.0.0
+2.14.1
