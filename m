@@ -1,49 +1,33 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/4] ARM: dts: rcar-gen2: Stop grouping clocks under a
- "clocks" subnode
-Date: Mon, 21 Aug 2017 11:06:13 +0200
-Message-ID: <20170821090613.GF14174@verge.net.au>
-References: <1503047817-29439-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH repost2] pwm: renesas-tpu: remove support for sh7372
+Date: Mon, 21 Aug 2017 11:07:04 +0200
+Message-ID: <20170821090704.GG14174@verge.net.au>
+References: <20170818100858.GA15521@verge.net.au>
+ <20170818152801.GA18307@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503047817-29439-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20170818152801.GA18307@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 11:16:53AM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
+On Fri, Aug 18, 2017 at 05:28:01PM +0200, Thierry Reding wrote:
+> On Fri, Aug 18, 2017 at 12:09:01PM +0200, Simon Horman wrote:
+> > Remove support for the SH7372 (SH-Mobile AP4) from the renesas-tpu driver.
+> > 
+> > Commit edf4100906044225 ("ARM: shmobile: sh7372 dtsi: Remove Legacy file")
+> > removes this SoC from the kernel in v4.1.
+> > 
+> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > ---
+> >  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 1 -
+> >  drivers/pwm/pwm-renesas-tpu.c                             | 1 -
+> >  2 files changed, 2 deletions(-)
 > 
-> The current practice is to not group clocks under a "clocks" subnode,
-> but just put them together with the other on-SoC devices.
-> 
-> Hence this patch series implements this for the various R-Car Gen2
-> DTSes that still need this (r8a7792.dtsi is OK).
-> 
-> Changes compared to v1:
->   - Rebased.
-> 
-> Dependencies:
->   - renesas-devel-20170818-v4.13-rc5,
->   - Patch series "[PATCH v2 0/5] ARM: dts: rcar-gen2: Convert to new
->     CPG/MSSR bindings".
-> 
-> For your convenience, this series is also available in the
-> topic/rcar2-cpg-mssr-dt-v2 branch of my renesas-drivers git repository at
-> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
-> 
-> Thanks for applying!
-> 
-> Geert Uytterhoeven (4):
->   ARM: dts: r8a7790: Stop grouping clocks under a "clocks" subnode
->   ARM: dts: r8a7791: Stop grouping clocks under a "clocks" subnode
->   ARM: dts: r8a7793: Stop grouping clocks under a "clocks" subnode
->   ARM: dts: r8a7794: Stop grouping clocks under a "clocks" subnode
+> Applied, thanks.
 
-Thanks. r8a779[034] patches applied for v4.15.
-
-The r8a7791 patch did not apply cleanly for some reason.
-Could you rebase and repost once I have pushed today's devel branch?
+Thanks!
