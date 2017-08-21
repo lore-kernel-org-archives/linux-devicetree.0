@@ -1,57 +1,67 @@
-From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/4] GPIO driver for Maxim MAX3191x
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH 3/4] dt-bindings: gpio: max3191x: Document new driver
 Date: Mon, 21 Aug 2017 15:12:00 +0200
-Message-ID: <cover.1503319573.git.lukas@wunner.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bart Van Assche <bart.vanassche-Sjgp3cTcYWE@public.gmane.org>, Alasdair Kergon <agk-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Message-ID: <7fe7636eecba238d57ab6178cfa3f6b7deca98f1.1503319573.git.lukas@wunner.de>
+References: <cover.1503319573.git.lukas@wunner.de>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.1503319573.git.lukas@wunner.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mathias Duckeck <m.duckeck@kunbus.de>, Phil Elwell <phil@raspberrypi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-GPIO driver for Maxim MAX31910, MAX31911, MAX31912, MAX31913,
-MAX31953 and MAX31963 industrial serializer, a daisy-chainable
-chip to make 8 digital 24V inputs available via SPI.  Supports
-CRC checksums to guard against electromagnetic interference,
-as well as undervoltage and overtemperature detection.
+Add device tree bindings for Maxim MAX3191x industrial serializer.
 
-The chip is used by the "Revolution Pi" family of open source PLCs
-based on the Raspberry Pi (https://revolution.kunbus.com/).
-
-In a typical SCADA system, all input signals are read periodically,
-say, every 5 or 10 ms, and stored in a so-called "process image".
-To make this perform well with serializers, add a ->get_multiple
-callback to struct gpio_chip, add corresponding consumer functions
-and wire it up with linehandle_ioctl().
-
-Thanks,
-
-Lukas
-
-
-Lukas Wunner (4):
-  bitops: Introduce assign_bit()
-  gpio: Introduce ->get_multiple callback
-  dt-bindings: gpio: max3191x: Document new driver
-  gpio: Add driver for Maxim MAX3191x industrial serializer
-
- .../devicetree/bindings/gpio/gpio-max3191x.txt     |  37 ++
- drivers/gpio/Kconfig                               |  10 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-max3191x.c                       | 482 +++++++++++++++++++++
- drivers/gpio/gpiolib.c                             | 181 +++++++-
- drivers/gpio/gpiolib.h                             |   4 +
- drivers/md/dm-mpath.c                              |   8 -
- include/linux/bitops.h                             |  24 +
- include/linux/gpio/consumer.h                      |  44 ++
- include/linux/gpio/driver.h                        |   5 +
- 10 files changed, 777 insertions(+), 19 deletions(-)
+Cc: Mathias Duckeck <m.duckeck@kunbus.de>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ .../devicetree/bindings/gpio/gpio-max3191x.txt     | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
- create mode 100644 drivers/gpio/gpio-max3191x.c
 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt b/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
+new file mode 100644
+index 000000000000..18182ecaa199
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
+@@ -0,0 +1,37 @@
++GPIO driver for Maxim MAX3191x industrial serializer
++
++Required properties:
++ - compatible:		"maxim,max31910", "maxim,max31911", "maxim,max31912",
++			"maxim,max31913", "maxim,max31953", "maxim,max31963"
++ - gpio-controller:	Marks the device node as a GPIO controller.
++ - #gpio-cells: 	Should be two. For consumer use see gpio.txt.
++
++Optional properties:
++ - maxim,nchips:	Number of chips in the daisy-chain (default is 1).
++ - modesel-gpios:	GPIO pins to configure modesel of each chip.
++			The number of GPIOs must be equal to "maxim,nchips".
++ - fault-gpios: 	GPIO pins to read undervoltage fault of each chip.
++ - db0-gpios:		GPIO pins to configure debounce of each chip.
++ - db1-gpios:		GPIO pins to configure debounce of each chip.
++ - maxim,modesel:	Mode to use if hardwired (and thus not selectable
++			through GPIOs): 0 for 16-bit mode, 1 for 8-bit mode.
++ - maxim,no-vcc24v:	Boolean, whether the chips are powered through 5VOUT
++			instead of VCC24V.
++
++For other required and optional properties of SPI slave nodes please refer to
++../spi/spi-bus.txt.
++
++Example:
++	gpio@0 {
++		compatible = "maxim,max31913";
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		modesel-gpios = <&gpio2 23>;
++		fault-gpios   = <&gpio2 24 GPIO_ACTIVE_LOW>;
++		db0-gpios     = <&gpio2 25>;
++		db1-gpios     = <&gpio2 26>;
++
++		reg = <0>;
++		spi-max-frequency = <25000000>;
++	};
 -- 
 2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
