@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 5/9] ARM64: dts: meson-gxl: libretech-cc: add card regulator settle times
-Date: Mon, 21 Aug 2017 18:06:33 +0200
-Message-ID: <20170821160637.22456-6-jbrunet@baylibre.com>
+Subject: [PATCH v2 1/9] ARM64: dts: meson-gx: Use correct mmc clock source 0
+Date: Mon, 21 Aug 2017 18:06:29 +0200
+Message-ID: <20170821160637.22456-2-jbrunet@baylibre.com>
 References: <20170821160637.22456-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170821160637.22456-1-jbrunet@baylibre.com>
@@ -10,32 +10,72 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Changing the card voltage on the cc is not instantaneous, especially
-when switching from 3.3v to 1.8v.
+Now that the clock source 0 is properly described in the CCF, use it
+instead of assuming the default value (xtal)
 
-It take at least 30ms for the regulator to go from 3.3v to 1.8v. Add
-margin to that to make sure we don't upset the sdcard during the voltage
-switch
-
-Fixes: 61ff2af9b278 ("ARM64: dts: fixup libretech cc definition")
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 +++---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 2b56f7d9be2b..0537b92cd226 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -92,6 +92,9 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 17d3efdf1469..9a1e478f80d5 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -652,21 +652,21 @@
  
- 		states = <3300000 0>,
- 		         <1800000 1>;
-+
-+		regulator-settling-time-up-us = <200>;
-+		regulator-settling-time-down-us = <50000>;
- 	};
+ &sd_emmc_a {
+ 	clocks = <&clkc CLKID_SD_EMMC_A>,
+-		 <&xtal>,
++		 <&clkc CLKID_SD_EMMC_A_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
  
- 	vddio_boot: regulator-vddio_boot {
+ &sd_emmc_b {
+ 	clocks = <&clkc CLKID_SD_EMMC_B>,
+-		 <&xtal>,
++		 <&clkc CLKID_SD_EMMC_B_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
+ 
+ &sd_emmc_c {
+ 	clocks = <&clkc CLKID_SD_EMMC_C>,
+-		 <&xtal>,
++		 <&clkc CLKID_SD_EMMC_C_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 8d4f3160a0ee..071eca074a91 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -593,21 +593,21 @@
+ 
+ &sd_emmc_a {
+ 	clocks = <&clkc CLKID_SD_EMMC_A>,
+-		 <&xtal>,
++		 <&clkc CLKID_SD_EMMC_A_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
+ 
+ &sd_emmc_b {
+ 	clocks = <&clkc CLKID_SD_EMMC_B>,
+-		 <&xtal>,
++		 <&clkc CLKID_SD_EMMC_B_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+        clock-names = "core", "clkin0", "clkin1";
+ };
+ 
+ &sd_emmc_c {
+ 	clocks = <&clkc CLKID_SD_EMMC_C>,
+-		 <&xtal>,
++		 <&clkc CLKID_SD_EMMC_C_CLK0>,
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
 -- 
 2.9.5
