@@ -1,79 +1,45 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v3 0/5] Add support for the STM32F7 I2C
-Date: Tue, 22 Aug 2017 15:41:47 +0200
-Message-ID: <0e2ae765-1608-f25b-663f-948f8c3f1cf2@st.com>
-References: <1499356386-28779-1-git-send-email-pierre-yves.mordret@st.com>
- <d749429a-3cdc-ea9b-84ef-afa9fdf55f29@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d749429a-3cdc-ea9b-84ef-afa9fdf55f29@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/6] IIO driver for MCP3550/1/3
+Date: Tue, 22 Aug 2017 15:33:00 +0200
+Message-ID: <cover.1503407738.git.lukas@wunner.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello all,
+Two fixes, one speedup & one cleanup for the mcp320x.c driver,
+plus support for new chips:
 
-Another gentle ping for driver review since DT Bindings has been acked by Rob
-Herring.
+The MCP3550/1/3 are 22 bit delta-sigma ADCs with high accuracy,
+low noise characteristics and an extended temperature range.
+It's the top-of-the-line SPI ADC in Microchip's portfolio.
 
-Many thanks in advance
-Regards
+The chip is used by the "Revolution Pi" family of open source PLCs
+based on the Raspberry Pi (https://revolution.kunbus.com/).
 
-On 07/20/2017 10:34 AM, Pierre Yves MORDRET wrote:
-> 
-> 
-> On 07/06/2017 05:53 PM, Pierre-Yves MORDRET wrote:
->> This patchset adds support for the I2C controller embedded in STM32F7xx SoC.
->> It enables I2C transfer in interrupt mode with Standard-mode, Fast-mode and
->> Fast-mode+ bus speed.
-> 
-> Gentle ping for driver review since DT Bindings has been acked by Rob 
-> Herring.
-> 
-> Thanks
-> Py
-> 
->> ---
->>   Version history:
->>      v3:
->>          * Move stm32f7_i2c_match above stm32f7_i2c_driver
->>          * of_device_get_match_data instead of of_match_device
->>          * Improve I2C Speed DT gathering
->>          * dev_err into dev_dbg for Arbitration loss
->>          * Remove useless space aligned
->>
->>      v2:
->>          * Implement an I2C timings computation algorithm instead of static
->>            values(bindings). Algorithm uses generic I2C SCL Falling/Rising
->>            bindings and System clock to compute its timings.
->>          * I2C Device Tree Update
->> ---
->> Pierre-Yves MORDRET (5):
->>    dt-bindings: i2c-stm32: Document the STM32F7 I2C bindings
->>    i2c: i2c-stm32f4: use generic definition of speed enum
->>    i2c: i2c-stm32f7: add driver
->>    ARM: dts: stm32: Add I2C1 support for STM32F746 SoC
->>    ARM: dts: stm32: Add I2C1 support for STM32F746 eval board
->>
->>   .../devicetree/bindings/i2c/i2c-stm32.txt          |  29 +-
->>   arch/arm/boot/dts/stm32746g-eval.dts               |   8 +
->>   arch/arm/boot/dts/stm32f746.dtsi                   |  22 +
->>   drivers/i2c/busses/Kconfig                         |  10 +
->>   drivers/i2c/busses/Makefile                        |   1 +
->>   drivers/i2c/busses/i2c-stm32.h                     |  20 +
->>   drivers/i2c/busses/i2c-stm32f4.c                   |  18 +-
->>   drivers/i2c/busses/i2c-stm32f7.c                   | 974 +++++++++++++++++++++
->>   8 files changed, 1068 insertions(+), 14 deletions(-)
->>   create mode 100644 drivers/i2c/busses/i2c-stm32.h
->>   create mode 100644 drivers/i2c/busses/i2c-stm32f7.c
+Thanks,
+
+Lukas
+
+
+Lukas Wunner (6):
+  iio: adc: mcp320x: Fix oops on module unload
+  iio: adc: mcp320x: Fix readout of negative voltages
+  iio: adc: mcp320x: Speed up readout of single-channel ADCs
+  iio: adc: mcp320x: Drop unnecessary of_device_id attributes
+  dt-bindings: iio: adc: mcp320x: Update for mcp3550/1/3
+  iio: adc: mcp320x: Add support for mcp3550/1/3
+
+ .../devicetree/bindings/iio/adc/mcp320x.txt        |  23 ++
+ drivers/iio/adc/Kconfig                            |   5 +-
+ drivers/iio/adc/mcp320x.c                          | 264 ++++++++++++++-------
+ 3 files changed, 202 insertions(+), 90 deletions(-)
+
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
