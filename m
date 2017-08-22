@@ -1,26 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6] dt-bindings: host1x: Fix and add Tegra186 information
-Date: Mon, 21 Aug 2017 21:39:23 -0500
-Message-ID: <20170822023923.nr22ujsuiousvt2y@rob-hp-laptop>
-References: <20170817185413.6324-1-mperttunen@nvidia.com>
- <20170817185413.6324-5-mperttunen@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/9] ASoC: rockchip: Remove obsolete dmic-delay
+Date: Mon, 21 Aug 2017 21:42:09 -0500
+Message-ID: <20170822024209.ej6y7pv77ztupvrq@rob-hp-laptop>
+References: <20170818031147.16810-1-jeffy.chen@rock-chips.com>
+ <20170818031147.16810-3-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170817185413.6324-5-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dnibade-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sgurrappadi-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170818031147.16810-3-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de, briannorris@chromium.org, mka@chromium.org, dianders@chromium.org, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-rockchip@lists.infradead.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 09:54:11PM +0300, Mikko Perttunen wrote:
-> Add note that address/size-cells should be 2 on 64-bit systems,
-> and add Tegra186-specific register range properties.
+On Fri, Aug 18, 2017 at 11:11:40AM +0800, Jeffy Chen wrote:
+> This property is no longer used.
+> 
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> ---
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  .../bindings/sound/rockchip,rk3399-gru-sound.txt           |  7 -------
+>  sound/soc/rockchip/rk3399_gru_sound.c                      | 14 --------------
+>  2 files changed, 21 deletions(-)
 
-Generally the cell sizes have nothing to do with the addressing size of 
-the cpu. They should be as small as what fits for the given sub-tree. If 
-all the register space fits into 4GB, then there's no reason for the 
-#size-cells to be 2. The same is true if the sub-tree has a parent bus.
+Well, obviously not used since they don't even match.
 
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
