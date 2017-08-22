@@ -1,24 +1,26 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] ARM: dts: bcm283x: Use stdout-path instead of
- console bootarg
-Date: Mon, 21 Aug 2017 21:30:14 -0500
-Message-ID: <20170822023014.q7cc3v3nlocyjlog@rob-hp-laptop>
+Subject: Re: [PATCH v4 3/4] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 serial
+ slave
+Date: Mon, 21 Aug 2017 21:31:17 -0500
+Message-ID: <20170822023117.pdeocwozzxmlcvog@rob-hp-laptop>
 References: <1502992791-10265-1-git-send-email-loic.poulain@gmail.com>
- <1502992791-10265-2-git-send-email-loic.poulain@gmail.com>
+ <1502992791-10265-3-git-send-email-loic.poulain@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1502992791-10265-2-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1502992791-10265-3-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 07:59:49PM +0200, Loic Poulain wrote:
-> Add the serial port config to "chosen/stdout-path".
-> Create serial0/1 aliases referring to uart0 ant uart1 paths.
-> Remove unneeded earlyprintk.
+On Thu, Aug 17, 2017 at 07:59:50PM +0200, Loic Poulain wrote:
+> Add BCM43438 (bluetooth) as a slave device of uart0 (pl011/ttyAMA0).
+> This allows to automatically insert the bcm43438 to the bluetooth
+> subsystem instead of relying on userspace helpers (hciattach).
+> 
+> Overwrite chosen/stdout-path to use 8250 aux uart as console.
 > 
 > Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
@@ -35,11 +37,7 @@ On Thu, Aug 17, 2017 at 07:59:49PM +0200, Loic Poulain wrote:
 >      remove useless earlyprintk
 >      same changes in bcm283x.dtsi
 > 
->  arch/arm/boot/dts/bcm283x.dtsi | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
