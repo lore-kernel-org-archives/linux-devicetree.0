@@ -1,76 +1,31 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for
- sun8i-h3-emac
-Date: Tue, 22 Aug 2017 09:59:58 +0200
-Message-ID: <20170822075958.GA20320@Red>
-References: <20170818122118.4925-4-clabbe.montjoie@gmail.com>
- <CAGb2v66KcZkiDDHryMmVzm4WroXePPy3V44SLpVdoO3ZEjgC=g@mail.gmail.com>
- <20170819185025.GB13266@Red>
- <20170819203836.GA21567@lunn.ch>
- <20170820065757.GA6081@Red>
- <20170820142545.GB24150@lunn.ch>
- <CAGb2v67hQXSoCKP7qW+KRUYX+0djQ1Z23cQ67Lyg6G7ozGyfGQ@mail.gmail.com>
- <20170821132015.GB1703@lunn.ch>
- <20170821133104.qvrhvwin2rdg4aqo@flea.lan>
- <20170821142321.GE1703@lunn.ch>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Tue, 22 Aug 2017 10:00:08 +0200
+Message-ID: <20170822080008.GE30838@verge.net.au>
+References: <CAMuHMdWUxxp75u1VSLY3WnObmhSMDvP3skr9Uf3rV4Bf-ixy_w@mail.gmail.com>
+ <1503318311-48664-1-git-send-email-biju.das@bp.renesas.com>
+ <20170821124305.GA4276@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170821142321.GE1703@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+In-Reply-To: <20170821124305.GA4276@katana>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Biju Das <biju.das@bp.renesas.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 04:23:21PM +0200, Andrew Lunn wrote:
-> > All muxes are mostly always represented the same way afaik, or do you
-> > want to simply introduce a new compatible / property?
+On Mon, Aug 21, 2017 at 02:43:05PM +0200, Wolfram Sang wrote:
+> On Mon, Aug 21, 2017 at 01:25:11PM +0100, Biju Das wrote:
+> > Add support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5) SDHI
+> > is identical to the R-Car Gen2 family.
+> > 
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 > 
-> +      	  mdio-mux {
-> +		compatible = "allwinner,sun8i-h3-mdio-switch";
-> +		mdio-parent-bus = <&mdio_parent>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		internal_mdio: mdio@1 {
-> 			reg = <1>;
-> -			clocks = <&ccu CLK_BUS_EPHY>;
-> -			resets = <&ccu RST_BUS_EPHY>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			int_mii_phy: ethernet-phy@1 {
-> +				compatible = "ethernet-phy-ieee802.3-c22";
-> +				reg = <1>;
-> +				clocks = <&ccu CLK_BUS_EPHY>;
-> +				resets = <&ccu RST_BUS_EPHY>;
-> +				phy-is-integrated;
-> +			};
-> +		};
-> +		mdio: mdio@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
->  		};
->  		
-> Hi Maxim
-> 
-> Anybody who knows the MDIO-mux code/binding, knows that it is a run
-> time mux. You swap the mux per MDIO transaction. You can access all
-> the PHY and switches on the mux'ed MDIO bus.
-> 
-> However here, it is effectively a boot-time MUX. You cannot change it
-> on the fly. What happens when somebody has a phandle to a PHY on the
-> internal and a phandle to a phy on the external? Does the driver at
-> least return -EINVAL, or -EBUSY? Is there a representation which
-> eliminates this possibility?
-> 
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Exactly you can change it on the fly, but you need to reset the MAC for enabling the new configuration.
-The stmmac driver does not handle mdio-mux. It is why I have a patch which automaticly select parent MDIO node of the PHY node.
+Its probably time for some fallback compatibility strings but
+I think that should be done as follow-up (likely by me) in a considered
+way. So this patch is fine in my books.
 
-For representation we could keep the current. (With a big comment stating that it is a switch)
-
-We can also add a mdio-switch type node, or add a mdio-switch property to mdio-mux.
-
-Regards
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
