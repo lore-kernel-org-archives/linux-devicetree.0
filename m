@@ -1,33 +1,74 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: mt8173-mtu3: add generic compatible
- and rename file
-Date: Mon, 21 Aug 2017 21:02:20 -0500
-Message-ID: <20170822020220.q4odg5g3t7mnud7e@rob-hp-laptop>
-References: <670f9ce1ecaec5859006b6f02b45cfc72c3cca2c.1502854628.git.chunfeng.yun@mediatek.com>
- <2e43d8152c222264eb6c9d8299a824378c35a5a6.1502854628.git.chunfeng.yun@mediatek.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2] irqchip: uniphier-aidet: add UniPhier AIDET irqchip driver
+Date: Tue, 22 Aug 2017 11:03:08 +0900
+Message-ID: <CAK7LNASUzuKpQyZt6ks44EoQOhvqgUU8rUfJyNknGNVAgWYAKg@mail.gmail.com>
+References: <1503309663-2742-1-git-send-email-yamada.masahiro@socionext.com> <e3b865f5-a779-f176-67ef-9ffac25019d4@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2e43d8152c222264eb6c9d8299a824378c35a5a6.1502854628.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e3b865f5-a779-f176-67ef-9ffac25019d4@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 16, 2017 at 02:08:12PM +0800, Chunfeng Yun wrote:
-> The mt8173-mtu3.txt actually holds the bindings for all mediatek
-> SoCs with usb3 DRD IP, so add a generic compatible and change the
-> name to mediatek,mtu3.txt.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../usb/{mt8173-mtu3.txt => mediatek,mtu3.txt}     |    6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/usb/{mt8173-mtu3.txt => mediatek,mtu3.txt} (92%)
+Hi Mark,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+2017-08-21 19:25 GMT+09:00 Marc Zyngier <marc.zyngier@arm.com>:
+
+>> +static struct irq_chip uniphier_aidet_irq_chip = {
+>> +     .name = "AIDET",
+>> +     .irq_mask = irq_chip_mask_parent,
+>> +     .irq_unmask = irq_chip_unmask_parent,
+>> +     .irq_eoi = irq_chip_eoi_parent,
+>> +     .irq_set_type = uniphier_aidet_irq_set_type,
+>
+> Is this irqchip only used in a uniprocessor system? If not, how is the
+> interrupt affinity managed without a irq_set_affinity callback?
+>
+
+
+After consideration, some questions popped up.
+
+
+
+We can set other hooks, for example, .irq_{enable,disable} if we like.
+
+         .irq_enable = irq_chip_enable_parent,
+         .irq_disable = irq_chip_disable_parent,
+
+
+I know the parent (GIC) implements unmask/mask instead of enable/disable,
+but this is also out of the scope of this driver.
+
+I am not familiar with the difference between unmask/mask and enable/disable.
+IIUC, the difference is that
+if enable/disable hooks are missing, IRQs are masked lazily.
+
+If a child irqchip implemented enable/disable,
+IRQs would be masked immediately.  So, in irq-domain hierarchy,
+a child irqchip need to have a good insight about its parent
+which is be better, unmask/mask or enable/disable.
+
+
+
+
+> Nit: please use irq_domain_create_hierarchy.
+
+I'd like to know your intention about your commit
+2a5e9a072da6469a37d1f0b1577416f51223c280
+
+
+Is that mean, irq_domain_add_hierarchy will be deprecated
+some time in the future?
+
+
+If I grep under drivers/irqchip/,
+most drivers are currently using irq_domain_add_hierarchy(),
+and this provides a shorter form for DT-based drivers.
+
+
+-- 
+Best Regards
+Masahiro Yamada
