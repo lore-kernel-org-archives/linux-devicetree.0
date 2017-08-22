@@ -1,45 +1,63 @@
-From: Oza Pawandeep <oza.oza@broadcom.com>
-Subject: [PATCH v3 2/3] dt-bindings: PCI: Add PCIe hotplug property
-Date: Tue, 22 Aug 2017 13:40:55 +0530
-Message-ID: <1503389456-27373-3-git-send-email-oza.oza@broadcom.com>
-References: <1503389456-27373-1-git-send-email-oza.oza@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503389456-27373-1-git-send-email-oza.oza@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.oza@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH  0/3] Add SDHI Support
+Date: Tue, 22 Aug 2017 08:13:19 +0000
+Message-ID: <KL1PR06MB170244954ECB471B0212746FB8840@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1502711389-16040-1-git-send-email-biju.das@bp.renesas.com>
+ <20170822080258.GF30838@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170822080258.GF30838-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Host drivers have the requirement of implementing PCI hotplug
-based on the how their SOC supports PCI hotplug.
 
-Couple of properties have been added. the one to enable
-the hotplug feature itself, and the other caters to
-the PCI hotplug implementation with the use of gpios.
 
-Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
+> -----Original Message-----
+> From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
+> Sent: 22 August 2017 09:03
+> To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
+> <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>;
+> Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; Wolfram Sang
+> <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Subject: Re: [PATCH 0/3] Add SDHI Support
+>
+> On Mon, Aug 14, 2017 at 12:49:46PM +0100, Biju Das wrote:
+> > This series aims to add SDHI support for r8a7743 SoC.
+> >
+> > This series has been compiled and tested against renesas-dev tag
+> > renesas-devel-20170814-v4.13-rc5.
+> >
+> > There is no compile time dependencies.It has run time dependency on
+> > [PATCH ] mmc: renesas_sdhi: Add r8a7743/5 support.
+> > https://patchwork.kernel.org/patch/9898611/
+> >
+> > Biju Das (3):
+> >   ARM: dts: r8a7743: Add SDHI controllers
+> >   ARM: dts: iwg20m: Enable SDHI0 controller
+> >   ARM: dts: iwg20d-q7: Add SDHI1 support
+>
+> Thanks, applied for v4.15 with Wolfram's tags.
+>
+> There was some fuzz when applying the last patch.
+> Please check that is is correct once I push today's devel tag to the rene=
+sas tree.
 
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-index 50f9e2c..0bf25a1 100644
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ b/Documentation/devicetree/bindings/pci/pci.txt
-@@ -24,3 +24,18 @@ driver implementation may support the following properties:
-    unsupported link speed, for instance, trying to do training for
-    unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
-    for gen2, and '1' for gen1. Any other values are invalid.
-+
-+- slot-pluggable:
-+   PCI hotplug feature is supported.
-+   PCI hotplug implementation is SOC/Board specific, and also it depends on
-+   how add-in card is designed (e.g. how many present pins are implemented).
-+   If the slot-pluggable property is present, the following propertey could
-+   become effective.
-+   - prsnt-gpios:
-+      Array of gpios, could be present if hotplug is supported.
-+      This property defines gpio based hotplug implementation.
-+      Example:
-+      If x8 card is connected, then it might be possible that all the
-+      3 present pins could go low, or at least one pin goes low.
-+      If x4 card is connected, then it might be possible that 2 present
-+      pins go low, or at least one pin goes low.
--- 
-1.9.1
+Thanks. I will check and let you know if there is any issues.
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
