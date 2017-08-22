@@ -1,35 +1,61 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v2 1/3] dt-bindings: add compatible string for Allwinner V3s SoC
-Date: Tue, 22 Aug 2017 13:23:20 +0800
-Message-ID: <20170822052322.15338-1-icenowy@aosc.io>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 2/3] ARM: sunxi: fix the core number of V3s
+ in sunxi README
+Date: Tue, 22 Aug 2017 13:23:21 +0800
+Message-ID: <20170822052322.15338-2-icenowy@aosc.io>
+References: <20170822052322.15338-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB2X753GAKGQET7DFA2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170822052322.15338-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The compatible string for Allwinner V3s SoC used to be missing.
+The Allwinner V3s SoC is not quad-core, but single-core.
 
-Add it to the binding document.
+Fix this in the README file.
 
 Fixes: b074fede01c0 ("arm: sunxi: add support for V3s SoC")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/arm/sunxi/README | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index d2c46449b4eb..f35c6ada5a65 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -14,6 +14,7 @@ using one of the following compatible strings:
-   allwinner,sun8i-a83t
-   allwinner,sun8i-h2-plus
-   allwinner,sun8i-h3
-+  allwinner,sun8i-v3s
-   allwinner,sun9i-a80
-   allwinner,sun50i-a64
-   nextthing,gr8
+diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
+index d7b1f016bd62..de791e18ccef 100644
+--- a/Documentation/arm/sunxi/README
++++ b/Documentation/arm/sunxi/README
+@@ -33,6 +33,11 @@ SunXi family
+ 
+       - Next Thing Co GR8 (sun5i)
+ 
++    * Single ARM Cortex-A7 based SoCs
++      - Allwinner V3s (sun8i)
++        + Datasheet
++          http://linux-sunxi.org/File:Allwinner_V3s_Datasheet_V1.0.pdf
++
+     * Dual ARM Cortex-A7 based SoCs
+       - Allwinner A20 (sun7i)
+         + User Manual
+@@ -71,10 +76,6 @@ SunXi family
+         + Datasheet
+           http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
+ 
+-      - Allwinner V3s (sun8i)
+-        + Datasheet
+-          http://linux-sunxi.org/File:Allwinner_V3s_Datasheet_V1.0.pdf
+-
+     * Quad ARM Cortex-A15, Quad ARM Cortex-A7 based SoCs
+       - Allwinner A80
+         + Datasheet
 -- 
 2.13.5
-
