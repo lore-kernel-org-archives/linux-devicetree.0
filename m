@@ -1,104 +1,68 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v4 3/3] v4l: fwnode: Support generic parsing of graph endpoints in a single port
-Date: Tue, 22 Aug 2017 15:30:23 +0300
-Message-ID: <20170822123023.6149-4-sakari.ailus@linux.intel.com>
-References: <20170822123023.6149-1-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] omap3isp: Drop redundant isp->subdevs field and
+ ISP_MAX_SUBDEVS
+Date: Tue, 22 Aug 2017 15:33:07 +0300
+Message-ID: <20170822123307.gdgtg33vgppd4fog@valkosipuli.retiisi.org.uk>
+References: <20170818112317.30933-1-sakari.ailus@linux.intel.com>
+ <20170818112317.30933-2-sakari.ailus@linux.intel.com>
+ <3810750.ISKOUEcbCg@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170822123023.6149-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3810750.ISKOUEcbCg@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is the preferred way to parse the endpoints.
+On Tue, Aug 22, 2017 at 03:30:22PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> Thank you for the patch.
+> 
+> On Friday, 18 August 2017 14:23:15 EEST Sakari Ailus wrote:
+> > struct omap3isp.subdevs field and ISP_MAX_SUBDEVS macro are both unused.
+> > Remove them.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
+> The field and macro are still used, you only remove them in patch 2/3. You can 
+> squash 1/3 and 2/3 together.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 51 +++++++++++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           |  7 +++++
- 2 files changed, 58 insertions(+)
+Oh, I missed this indeed. I'll squash the patches.
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index cb0fc4b4e3bf..961bcdf22d9a 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -508,6 +508,57 @@ int v4l2_fwnode_endpoints_parse(
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoints_parse);
- 
-+/**
-+ * v4l2_fwnode_endpoint_parse - Parse V4L2 fwnode endpoints in a port node
-+ * @dev: local struct device
-+ * @notifier: async notifier related to @dev
-+ * @port: port number
-+ * @endpoint: endpoint number
-+ * @asd_struct_size: size of the driver's async sub-device struct, including
-+ *		     sizeof(struct v4l2_async_subdev)
-+ * @parse_single: driver's callback function called on each V4L2 fwnode endpoint
-+ *
-+ * Parse all V4L2 fwnode endpoints related to a given port. This is
-+ * the preferred interface over v4l2_fwnode_endpoints_parse() and
-+ * should be used by new drivers.
-+ */
-+int v4l2_fwnode_endpoint_parse_port(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	unsigned int port, unsigned int endpoint, size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct v4l2_fwnode_endpoint *vep,
-+			    struct v4l2_async_subdev *asd))
-+{
-+	struct fwnode_handle *fwnode;
-+	struct v4l2_async_subdev *asd;
-+	int ret;
-+
-+	fwnode = fwnode_graph_get_remote_node(dev_fwnode(dev), port, endpoint);
-+	if (!fwnode)
-+		return -ENOENT;
-+
-+	asd = devm_kzalloc(dev, asd_struct_size, GFP_KERNEL);
-+	if (!asd)
-+		return -ENOMEM;
-+
-+	ret = notifier_realloc(dev, notifier, notifier->num_subdevs + 1);
-+	if (ret)
-+		goto out_free;
-+
-+	ret = __v4l2_fwnode_endpoint_parse(dev, notifier, fwnode, asd,
-+					   parse_single);
-+	if (ret)
-+		goto out_free;
-+
-+	return 0;
-+
-+out_free:
-+	devm_kfree(dev, asd);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_parse_port);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index c75a768d4ef7..5adf28e7b070 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -131,4 +131,11 @@ int v4l2_fwnode_endpoints_parse(
- 			    struct v4l2_fwnode_endpoint *vep,
- 			    struct v4l2_async_subdev *asd));
- 
-+int v4l2_fwnode_endpoint_parse_port(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	unsigned int port, unsigned int endpoint, size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct v4l2_fwnode_endpoint *vep,
-+			    struct v4l2_async_subdev *asd));
-+
- #endif /* _V4L2_FWNODE_H */
+> 
+> > ---
+> >  drivers/media/platform/omap3isp/isp.h | 3 ---
+> >  1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/omap3isp/isp.h
+> > b/drivers/media/platform/omap3isp/isp.h index e528df6efc09..848cd96b67ca
+> > 100644
+> > --- a/drivers/media/platform/omap3isp/isp.h
+> > +++ b/drivers/media/platform/omap3isp/isp.h
+> > @@ -220,9 +220,6 @@ struct isp_device {
+> > 
+> >  	unsigned int sbl_resources;
+> >  	unsigned int subclk_resources;
+> > -
+> > -#define ISP_MAX_SUBDEVS		8
+> > -	struct v4l2_subdev *subdevs[ISP_MAX_SUBDEVS];
+> >  };
+> > 
+> >  struct isp_async_subdev {
+> 
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+
 -- 
-2.11.0
-
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
