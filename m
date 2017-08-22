@@ -1,90 +1,79 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2] irqchip: uniphier-aidet: add UniPhier AIDET irqchip
- driver
-Date: Tue, 22 Aug 2017 09:20:41 +0100
-Message-ID: <046d0078-bb9d-f043-b5b4-481c695e2bea@arm.com>
-References: <1503309663-2742-1-git-send-email-yamada.masahiro@socionext.com>
- <e3b865f5-a779-f176-67ef-9ffac25019d4@arm.com>
- <CAK7LNASUzuKpQyZt6ks44EoQOhvqgUU8rUfJyNknGNVAgWYAKg@mail.gmail.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH ] ARM: dts: iwg20d-q7: Add chosen node
+Date: Tue, 22 Aug 2017 08:32:06 +0000
+Message-ID: <KL1PR06MB1702BB904D378CC1303D935BB8840@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1503075488-44304-1-git-send-email-biju.das@bp.renesas.com>
+ <20170822080735.GH30838@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNASUzuKpQyZt6ks44EoQOhvqgUU8rUfJyNknGNVAgWYAKg@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170822080735.GH30838@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22/08/17 03:03, Masahiro Yamada wrote:
-> Hi Mark,
-> 
-> 
-> 2017-08-21 19:25 GMT+09:00 Marc Zyngier <marc.zyngier@arm.com>:
-> 
->>> +static struct irq_chip uniphier_aidet_irq_chip = {
->>> +     .name = "AIDET",
->>> +     .irq_mask = irq_chip_mask_parent,
->>> +     .irq_unmask = irq_chip_unmask_parent,
->>> +     .irq_eoi = irq_chip_eoi_parent,
->>> +     .irq_set_type = uniphier_aidet_irq_set_type,
->>
->> Is this irqchip only used in a uniprocessor system? If not, how is the
->> interrupt affinity managed without a irq_set_affinity callback?
->>
-> 
-> 
-> After consideration, some questions popped up.
-> 
-> 
-> 
-> We can set other hooks, for example, .irq_{enable,disable} if we like.
-> 
->          .irq_enable = irq_chip_enable_parent,
->          .irq_disable = irq_chip_disable_parent,
-> 
-> 
-> I know the parent (GIC) implements unmask/mask instead of enable/disable,
-> but this is also out of the scope of this driver.
-> 
-> I am not familiar with the difference between unmask/mask and enable/disable.
-> IIUC, the difference is that
-> if enable/disable hooks are missing, IRQs are masked lazily.
 
-That's a rather good thing. Disabling interrupts lazily is a net
-performance gain when you you have to repeatedly mask/unmask interrupts.
 
-> If a child irqchip implemented enable/disable,
-> IRQs would be masked immediately.  So, in irq-domain hierarchy,
-> a child irqchip need to have a good insight about its parent
-> which is be better, unmask/mask or enable/disable.
+> -----Original Message-----
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: 22 August 2017 09:08
+> To: Biju Das <biju.das@bp.renesas.com>
+> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> Russell King <linux@armlinux.org.uk>; Chris Paterson
+> <Chris.Paterson2@renesas.com>; Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com>; devicetree@vger.kernel.org; linux-renes=
+as-
+> soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH ] ARM: dts: iwg20d-q7: Add chosen node
+>
+> On Fri, Aug 18, 2017 at 05:58:08PM +0100, Biju Das wrote:
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> > This patch tested against renesas-dev tag
+> > renesas-devel-20170815-v4.13-rc5
+>
+> Thanks, I have applied this for v4.15.
+>
+> There was some fuzz when applying this patch.
+> Please check that it is correct when I have pushed today's devel tag to t=
+he
+> renesas tree.
 
-Not necessarily. irq_chip_enable_parent will call unmask if enable is
-not implemented in the parent. But you'll loose the benefit of lazy
-masking of interrupts routed through this controller.
+Thanks. I guess it may be related to the below RTC patch.
+[v2] ARM: dts: iwg20d-q7: Add RTC support
+https://patchwork.kernel.org/patch/9903327/
 
-There are many other things that are *much* worse, like the need to
-implement a irq_eoi callback even if the irqchip has no such concept.
+> >
+> >  arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+> > b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+> > index 081af01..305a6a1 100644
+> > --- a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+> > +++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+> > @@ -19,6 +19,11 @@
+> >  serial0 =3D &scif0;
+> >  ethernet0 =3D &avb;
+> >  };
+> > +
+> > +chosen {
+> > +bootargs =3D "ignore_loglevel rw root=3D/dev/nfs ip=3Ddhcp";
+> > +stdout-path =3D "serial0:115200n8";
+> > +};
+> >  };
+> >
+> >  &pfc {
+> > --
+> > 1.9.1
+> >
 
->> Nit: please use irq_domain_create_hierarchy.
-> 
-> I'd like to know your intention about your commit
-> 2a5e9a072da6469a37d1f0b1577416f51223c280
-> 
-> Is that mean, irq_domain_add_hierarchy will be deprecated
-> some time in the future?
 
-That's the intent, as we're moving towards a firmware-agnostic
-irq_domain layer. Think of it as a deprecated interface.
 
-> If I grep under drivers/irqchip/,
-> most drivers are currently using irq_domain_add_hierarchy(),
-> and this provides a shorter form for DT-based drivers.
-Yes, we have a lot of legacy, and I don't always catch new additions.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
