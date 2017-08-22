@@ -1,8 +1,8 @@
 From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH 3/5] ARC: AXS103: DTS: Add core pll node to manage cpu
  frequency
-Date: Tue, 22 Aug 2017 13:40:50 -0700
-Message-ID: <fe0d3b13-b689-0844-f232-d1054854be8e@synopsys.com>
+Date: Tue, 22 Aug 2017 13:45:28 -0700
+Message-ID: <9624a76d-a31f-10fc-aec5-5ffa1d437c3d@synopsys.com>
 References: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
  <20170814161213.17522-4-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
@@ -42,10 +42,6 @@ On 08/14/2017 09:12 AM, Eugeniy Paltsev wrote:
 >   			compatible = "fixed-clock";
 > -			clock-frequency = <90000000>;
 > +			clock-frequency = <33333333>;
-
-Note our custom built UP bitfiles for AXS generally can do 90 MHz only - you are 
-likely breaking linux on them now by forcing 100 MHz ?
-
 > +		};
 > +
 > +		core_clk: core-clk@80 {
@@ -81,6 +77,11 @@ likely breaking linux on them now by forcing 100 MHz ?
 >   
 >   		core_intc: archs-intc@cpu {
 
+
+Do we have a bisectability issue here - isn't system broken temporarily at 2/5 - 
+and only 3/5 makes it work again - if so we need to squash them together !
+
+-Vineet
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
