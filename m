@@ -1,116 +1,484 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: sunxi: add support for R40 SoC
-Date: Tue, 22 Aug 2017 22:00:04 +0200
-Message-ID: <20170822200004.cuuj63j7am6xypdw@flea.home>
-References: <20170820052957.34597-1-icenowy@aosc.io>
- <20170820052957.34597-2-icenowy@aosc.io>
- <20170821093405.n4bum7j6nswnv6wr@flea.lan>
- <0809ae2d75f210b9bfee49b383f226b2@aosc.io>
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Add basic dtsi file
+ for Allwinner R40
+Date: Tue, 22 Aug 2017 22:05:21 +0200
+Message-ID: <20170822200521.nadkb4335mcc5ah2@flea.home>
+References: <20170822061742.40869-1-icenowy@aosc.io>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="htx2btc2ybnn2izh"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUE26LGAKGQE6XWI54Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6mncluafbdfs5nfu"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDE56LGAKGQEJLEEQ5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <0809ae2d75f210b9bfee49b383f226b2-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20170822061742.40869-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---htx2btc2ybnn2izh
+--6mncluafbdfs5nfu
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 22, 2017 at 01:14:09PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
-> =E5=9C=A8 2017-08-21 17:34=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> > Hi,
-> >=20
-> > On Sun, Aug 20, 2017 at 01:29:57PM +0800, Icenowy Zheng wrote:
-> > > Allwinner R40 is a new SoC, with Quad Core Cortex-A7 and peripherals
-> > > like A20.
-> > >=20
-> > > Add support for it.
-> > >=20
-> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > ---
-> > >  Documentation/arm/sunxi/README                  | 6 ++++++
-> > >  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
-> > >  arch/arm/mach-sunxi/sunxi.c                     | 1 +
-> > >  3 files changed, 8 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/arm/sunxi/README
-> > > b/Documentation/arm/sunxi/README
-> > > index d7b1f016bd62..4fa836782e46 100644
-> > > --- a/Documentation/arm/sunxi/README
-> > > +++ b/Documentation/arm/sunxi/README
-> > > @@ -75,6 +75,12 @@ SunXi family
-> > >          + Datasheet
-> > > http://linux-sunxi.org/File:Allwinner_V3s_Datasheet_V1.0.pdf
-> > >=20
-> > > +      - Allwinner R40 (sun8i)
-> > > +        + Datasheet
-> > > +
-> > > https://github.com/tinalinux/docs/raw/r40-v1.y/R40_Datasheet_V1.0.pdf
-> > > +        + User Manual
-> > > +          https://github.com/tinalinux/docs/raw/r40-v1.y/Allwinner_R=
-40_User_Manual_V1.0.pdf
-> > > +
-> >=20
-> > Please sort it by alphabetical order.
->=20
-> I prefer to sort it by the wafer ID (the number after w in the
-> official ID).
->=20
-> The current document can be explained to follow the alphabetical
-> order or the wafer ID.
+Hi,
 
-You should know who your audience is. Whoever is going to end up here
-to have a list of the SoC names and their datasheet is very likely to
-not know by heart the wafer IDs, while anyone that can read knows the
-alphabet.
+On Tue, Aug 22, 2017 at 02:17:40PM +0800, Icenowy Zheng wrote:
+> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> 
+> The Allwinner R40 SoC is marketed as the successor to the A20 SoC.
+> The R40 is a smaller chip than the A20, but features the same set
+> of programmable pins, with a couple extra pins and some new pin
+> functions. The chip features 4 Cortex-A7 cores and a Mali-400 MP2
+> GPU. It retains most if not all features from the A20, while adding
+> some new features, such as MIPI DSI output, or updating various
+> hardware blocks, such as DE 2.0.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+
+I'm not sure why you have two series to achieve one thing here. And
+the fact that you don't have a cover letter doesn't make it any
+clearer.
+
+Please make series based on what you're trying to do and not split it
+arbitrarily. And document what you're doing in a cover letter.
+
+> ---
+>  arch/arm/boot/dts/sun8i-r40.dtsi | 396 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 396 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-r40.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> new file mode 100644
+> index 000000000000..5b48801bdd01
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> @@ -0,0 +1,396 @@
+> +/*
+> + * Copyright 2017 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> + * Copyright 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/sun8i-r40-ccu.h>
+> +#include <dt-bindings/reset/sun8i-r40-ccu.h>
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	interrupt-parent = <&gic>;
+> +
+> +	clocks {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		osc24M: osc24M {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <24000000>;
+> +			clock-output-names = "osc24M";
+> +		};
+> +
+> +		osc32k: osc32k {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <32768>;
+> +			clock-output-names = "osc32k";
+> +		};
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			compatible = "arm,cortex-a7";
+> +			device_type = "cpu";
+> +			reg = <0>;
+> +		};
+> +
+> +		cpu@1 {
+> +			compatible = "arm,cortex-a7";
+> +			device_type = "cpu";
+> +			reg = <1>;
+> +		};
+> +
+> +		cpu@2 {
+> +			compatible = "arm,cortex-a7";
+> +			device_type = "cpu";
+> +			reg = <2>;
+> +		};
+> +
+> +		cpu@3 {
+> +			compatible = "arm,cortex-a7";
+> +			device_type = "cpu";
+> +			reg = <3>;
+> +		};
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		nmi_intc: interrupt-controller@1c00030 {
+> +			compatible = "allwinner,sun7i-a20-sc-nmi";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			reg = <0x01c00030 0x0c>;
+> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+
+You should use the new compatible here.
+
+> +		mmc0: mmc@1c0f000 {
+> +			compatible = "allwinner,sun50i-a64-mmc";
+
+Please add a soc specific compatible for all the blocks.
+
+> +			reg = <0x01c0f000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+> +			clock-names = "ahb", "mmc";
+> +			resets = <&ccu RST_BUS_MMC0>;
+> +			reset-names = "ahb";
+> +			pinctrl-0 = <&mmc0_pins>;
+> +			pinctrl-names = "default";
+> +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <150000000>;
+
+have you tested that frequency?
+
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		mmc1: mmc@1c10000 {
+> +			compatible = "allwinner,sun50i-a64-mmc";
+> +			reg = <0x01c10000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
+> +			clock-names = "ahb", "mmc";
+> +			resets = <&ccu RST_BUS_MMC1>;
+> +			reset-names = "ahb";
+> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <150000000>;
+
+Ditto.
+
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		mmc2: mmc@1c11000 {
+> +			compatible = "allwinner,sun50i-a64-emmc";
+> +			reg = <0x01c11000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
+> +			clock-names = "ahb", "mmc";
+> +			resets = <&ccu RST_BUS_MMC2>;
+> +			reset-names = "ahb";
+> +			pinctrl-0 = <&mmc2_pins>;
+> +			pinctrl-names = "default";
+> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <200000000>;
+
+Ditto.
+
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		mmc3: mmc@1c12000 {
+> +			compatible = "allwinner,sun50i-a64-mmc";
+> +			reg = <0x01c12000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MMC3>, <&ccu CLK_MMC3>;
+> +			clock-names = "ahb", "mmc";
+> +			resets = <&ccu RST_BUS_MMC3>;
+> +			reset-names = "ahb";
+> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <150000000>;
+
+Ditto.
+
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		ccu: clock@1c20000 {
+> +			compatible = "allwinner,sun8i-r40-ccu";
+> +			reg = <0x01c20000 0x400>;
+> +			clocks = <&osc24M>, <&osc32k>;
+> +			clock-names = "hosc", "losc";
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+> +		pio: pinctrl@1c20800 {
+> +			compatible = "allwinner,sun8i-r40-pinctrl";
+> +			reg = <0x01c20800 0x400>;
+> +			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
+> +			clock-names = "apb", "hosc", "losc";
+> +			gpio-controller;
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			#gpio-cells = <3>;
+> +
+> +			i2c0_pins: i2c0-pins {
+> +				pins = "PB0", "PB1";
+> +				function = "i2c0";
+> +			};
+> +
+> +			mmc0_pins: mmc0-pins {
+> +				pins = "PF0", "PF1", "PF2",
+> +				       "PF3", "PF4", "PF5";
+> +				function = "mmc0";
+> +				drive-strength = <30>;
+> +				bias-pull-up;
+> +			};
+> +
+> +			mmc1_pg_pins: mmc1-pg-pins {
+> +				pins = "PG0", "PG1", "PG2",
+> +				       "PG3", "PG4", "PG5";
+> +				function = "mmc1";
+> +				drive-strength = <30>;
+> +				bias-pull-up;
+> +			};
+> +
+> +			mmc2_pins: mmc2-pins {
+> +				pins = "PC5", "PC6", "PC7", "PC8", "PC9",
+> +				       "PC10", "PC11", "PC12", "PC13", "PC14",
+> +				       "PC15", "PC24";
+> +				function = "mmc2";
+> +				drive-strength = <30>;
+> +				bias-pull-up;
+> +			};
+> +
+> +			uart0_pb_pins: uart0-pb-pins {
+> +				pins = "PB22", "PB23";
+> +				function = "uart0";
+> +			};
+> +		};
+> +
+> +		uart0: serial@1c28000 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x01c28000 0x400>;
+> +			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&ccu CLK_BUS_UART0>;
+> +			resets = <&ccu RST_BUS_UART0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@1c28400 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x01c28400 0x400>;
+> +			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&ccu CLK_BUS_UART1>;
+> +			resets = <&ccu RST_BUS_UART1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@1c28800 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x01c28800 0x400>;
+> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&ccu CLK_BUS_UART2>;
+> +			resets = <&ccu RST_BUS_UART2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart3: serial@1c28c00 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x01c28c00 0x400>;
+> +			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&ccu CLK_BUS_UART3>;
+> +			resets = <&ccu RST_BUS_UART3>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart4: serial@1c29000 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x01c29000 0x400>;
+> +			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&ccu CLK_BUS_UART4>;
+> +			resets = <&ccu RST_BUS_UART4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart5: serial@1c29400 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x01c29400 0x400>;
+> +			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&ccu CLK_BUS_UART5>;
+> +			resets = <&ccu RST_BUS_UART5>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart6: serial@1c29800 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x01c29800 0x400>;
+> +			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&ccu CLK_BUS_UART6>;
+> +			resets = <&ccu RST_BUS_UART6>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart7: serial@1c29c00 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x01c29c00 0x400>;
+> +			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&ccu CLK_BUS_UART7>;
+> +			resets = <&ccu RST_BUS_UART7>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c0: i2c@1c2ac00 {
+> +			compatible = "allwinner,sun6i-a31-i2c";
+> +			reg = <0x01c2ac00 0x400>;
+> +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_I2C0>;
+> +			resets = <&ccu RST_BUS_I2C0>;
+> +			pinctrl-0 = <&i2c0_pins>;
+> +			pinctrl-names = "default";
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		i2c1: i2c@1c2b000 {
+> +			compatible = "allwinner,sun6i-a31-i2c";
+> +			reg = <0x01c2b000 0x400>;
+> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_I2C1>;
+> +			resets = <&ccu RST_BUS_I2C1>;
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		i2c2: i2c@1c2b400 {
+> +			compatible = "allwinner,sun6i-a31-i2c";
+> +			reg = <0x01c2b400 0x400>;
+> +			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_I2C2>;
+> +			resets = <&ccu RST_BUS_I2C2>;
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		i2c3: i2c@1c2b800 {
+> +			compatible = "allwinner,sun6i-a31-i2c";
+> +			reg = <0x01c2b800 0x400>;
+> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_I2C3>;
+> +			resets = <&ccu RST_BUS_I2C3>;
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		i2c4: i2c@1c2c000 {
+> +			compatible = "allwinner,sun6i-a31-i2c";
+> +			reg = <0x01c2c000 0x400>;
+> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_I2C4>;
+> +			resets = <&ccu RST_BUS_I2C4>;
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		gic: interrupt-controller@1c81000 {
+> +			compatible = "arm,gic-400";
+> +			reg = <0x01c81000 0x1000>,
+> +			      <0x01c82000 0x1000>,
+> +			      <0x01c84000 0x2000>,
+> +			      <0x01c86000 0x2000>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+
+Those masks are wrong.
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---htx2btc2ybnn2izh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZnI1EAAoJEBx+YmzsjxAgYhQP/0UGAGm3xC090yp6cMjH4iUd
-Vd2cGHUywnQwcuWKLx+L07Z+qquofVrn1yF6G1tP61pFeIwiofDicUeVKE3uRM2C
-PYUGH1AxK5nX6FSjzfDung/w0jAqr4L0hCUUdj0cDktVtj/i3jfzAC+U/85wAzCt
-XnMxpQ2XGJrQHhWBZ4UhouUbvtNHF/YdIjpjUtjgF7rPLbfbIVmQAXGtNGsO5eNA
-sDwEcI8TMI1eb+uxo4qlllvI2PT9JKm2bIAzwFeOr0jVojuPRdAZwv2MSMBeiwwZ
-2AYDvRJNpz0TTtNQRPf7Q3d9c6sKTyNEtMF6Wl7WIfdLu2urGPKI6JUGSpml2NSt
-R2okiXZ72+ctBWR7+boRR7pv5GTDKNDlGV+sasewO8gIC4xLIJpJ3dhAUIu83mI5
-7ucMGZpPvqbdEdxYlN+Vp8vE4fO8D0UcZMjwTLPPA5MZG2WG9FpzFA3U1SiowPnl
-2c9yB5rWrWoxnTCeuiYy19/fIWeIYloVTXNlivYYmt8R9hZuvZ7t+Tcw3AjTpbfb
-U1VxzcJTncTu3s9U3LFQyVRIKVim6iBMj0aaqshkbezPiDF6+sxMrpEZnNDJNxRl
-R21bsfE0g6Q84+JfqhMq2c3TDI8yhT7+sP3rBiC96jmnUPy09dudK1GieolZLlKs
-vhc6H5Bo6ErcOjmcC1P+
-=an8P
------END PGP SIGNATURE-----
-
---htx2btc2ybnn2izh--
+--6mncluafbdfs5nfu--
