@@ -1,33 +1,54 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v4 0/5] Support for LEGO MINDSTORMS EV3 LCD display
-Date: Tue, 22 Aug 2017 19:32:15 +0530
-Message-ID: <a241d252-388c-8d40-d3df-fbd380181cdf@ti.com>
-References: <1502127581-10517-1-git-send-email-david@lechnology.com>
+From: Li Xu <li.xu@cirrus.com>
+Subject: Re: [PATCH v2 2/2] ASoC: cs43130: Add devicetree
+	bindings for CS43130
+Date: Tue, 22 Aug 2017 09:18:54 -0500
+Message-ID: <154cc0d8-05af-4a17-b426-5a1f5b916372@EX3.ad.cirrus.com>
+References: <1503072020-19999-1-git-send-email-li.xu@cirrus.com>
+ <65594a37-aecf-4be2-bc5e-f392b4d9a129@EX3.ad.cirrus.com>
+ <20170821233147.75jndug3j7lcggcp@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1502127581-10517-1-git-send-email-david@lechnology.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Kevin Hilman <khilman@kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20170821233147.75jndug3j7lcggcp@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, brian.austin@cirrus.com, tiwai@suse.com, lgirdwood@gmail.com, Paul.Handrigan@cirrus.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 August 2017 11:09 PM, David Lechner wrote:
+On Mon, Aug 21, 2017 at 06:31:48PM -0500, Rob Herring wrote:
+> On Fri, Aug 18, 2017 at 11:00:20AM -0500, Li Xu wrote:
+> > Add devicetree bindings documentation file for Cirrus
+> > Logic CS43130 codec.
+> > 
+> > Signed-off-by: Li Xu <li.xu@cirrus.com>
+> > ---
+> >  .../devicetree/bindings/sound/cs43130.txt          | 67 ++++++++++++++++++++++
+> >  1 file changed, 67 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/cs43130.txt
+> 
+> For the 4th time, I'm acking this (v2 and v3 last Dec and the new v1 a 
+> few weeks ago). Please add acks when posting new versions.
+> 
+> Though you keep changing something looking at the diffstats. I'm not 
+> sure what though because you have no version history.
+> 
+> Rob
 
->   ARM: dts: da850-lego-ev3: Add node for LCD display
->   ARM: davinci_all_defconfig: enable tinydrm and ST7586
+Thanks for the feedback.  I am new to Linux kernel patch submission.
 
-Queuing these two patches (4/5 and 5/5) through davinci tree.
+I will add cover letter to patch set, which would explain version change info.
+I will also add "Acked-by: Rob Herring <robh@kernel.org>" in commit message below
+"Signed-off-by: ..."
 
-Thanks,
-Sekhar
+
+Li
