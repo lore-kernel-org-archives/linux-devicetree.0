@@ -1,41 +1,25 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v2] device property: preserve usecount for node passed to of_fwnode_graph_get_port_parent()
-Date: Tue, 22 Aug 2017 02:19:12 +0200
-Message-ID: <20170822001912.27638-1-niklas.soderlund+renesas@ragnatech.se>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v1 2/2] clk: rockchip: rk3228: add SCLK_SDIO_SRC clk id
+Date: Tue, 22 Aug 2017 02:41:09 +0200
+Message-ID: <1643945.C1jRteoHrl@phil>
+References: <1503028165-27072-1-git-send-email-zhangqing@rock-chips.com> <1503028165-27072-3-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-media@vger.kernel.org
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1503028165-27072-3-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, cl@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Using CONFIG_OF_DYNAMIC=y uncovered an imbalance in the usecount of the
-node being passed to of_fwnode_graph_get_port_parent(). Preserve the
-usecount by using of_get_parent() instead of of_get_next_parent() which
-don't decrement the usecount of the node passed to it.
+Am Freitag, 18. August 2017, 11:49:25 CEST schrieb Elaine Zhang:
+> In some special circumstances, may be need to reparent clk for sclk_sdio_src.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 
-Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmware specific locations")
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/of/property.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+applied for 4.14
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 067f9fab7b77c794..59afeea9888e3b3d 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -923,7 +923,7 @@ of_fwnode_graph_get_port_parent(struct fwnode_handle *fwnode)
- 	struct device_node *np;
- 
- 	/* Get the parent of the port */
--	np = of_get_next_parent(to_of_node(fwnode));
-+	np = of_get_parent(to_of_node(fwnode));
- 	if (!np)
- 		return NULL;
- 
--- 
-2.14.0
+
+Thanks
+Heiko
