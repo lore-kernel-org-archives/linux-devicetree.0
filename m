@@ -1,23 +1,45 @@
 From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v1 0/3] arm: npcm: add basic support for Nuvoton BMCs
-Date: Mon, 21 Aug 2017 20:34:59 -0700
-Message-ID: <20170822033502.4100-1-brendanhiggins@google.com>
+Subject: [PATCH v1 3/3] MAINTAINERS: Add entry for the Nuvoton NPCM architecture
+Date: Mon, 21 Aug 2017 20:35:02 -0700
+Message-ID: <20170822033502.4100-4-brendanhiggins@google.com>
+References: <20170822033502.4100-1-brendanhiggins@google.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170822033502.4100-1-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds support for the Nuvoton NPCM Baseboard Management Controller
-(BMC) SoC architecture as well as the NPCM750 variant. NPCM is an ARM based SoC
-with external DDR RAM and supports a large set of peripherals.
+Add maintainers and reviewers for the Nuvoton NPCM architecture.
 
-The NPCM750 is based on Cortex A9 and comes in single core and dual core
-flavors.
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ MAINTAINERS | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-The device tree added in this patchset has a number of bindings for which the
-corresponding drivers will be sent out later and thus do not yet have binding
-documentation. Apologies in advance if you would like the bindings to be added
-along with the corresponding drivers.
-
-Thanks!
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 44cb004c765d..67064bf11904 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1598,6 +1598,19 @@ F:	drivers/pinctrl/nomadik/
+ F:	drivers/i2c/busses/i2c-nomadik.c
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
+ 
++ARM/NUVOTON NPCM ARCHITECTURE
++M:	Avi Fishman <avifishman70@gmail.com>
++M:	Tomer Maimon <tmaimon77@gmail.com>
++R:	Brendan Higgins <brendanhiggins@google.com>
++R:	Rick Altherr <raltherr@google.com>
++L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
++S:	Maintained
++F:	arch/arm/mach-npcm/
++F:	arch/arm/boot/dts/nuvoton-npcm*
++F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
++F:	drivers/*/*npcm*
++F:	Documentation/*/*npcm*
++
+ ARM/NUVOTON W90X900 ARM ARCHITECTURE
+ M:	Wan ZongShun <mcuos.com@gmail.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-- 
+2.14.1.480.gb18f417b89-goog
