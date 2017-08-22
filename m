@@ -1,48 +1,69 @@
-From: jeffy <jeffy.chen@rock-chips.com>
-Subject: Re: [PATCH v5 1/9] ASoC: rockchip: Remove obsolete
-	dmic-delay
-Date: Tue, 22 Aug 2017 19:01:52 +0800
-Message-ID: <599C0F20.7080807@rock-chips.com>
-References: <20170822075729.8438-1-jeffy.chen@rock-chips.com>
- <20170822075729.8438-2-jeffy.chen@rock-chips.com>
- <20170822103241.wjiycavsro7abknj@sirena.org.uk>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3] mmc: renesas_sdhi: Add r8a7743/5 support
+Date: Tue, 22 Aug 2017 13:13:28 +0200
+Message-ID: <CAPDyKFpWDP-XqRahy2YHgZZ+c_q4wP3jAboJrJAdWtt=Gukj5A@mail.gmail.com>
+References: <CAMuHMdWUxxp75u1VSLY3WnObmhSMDvP3skr9Uf3rV4Bf-ixy_w@mail.gmail.com>
+ <1503318311-48664-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170822103241.wjiycavsro7abknj@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, mengdong.lin@linux.intel.com, heiko@sntech.de, Liam Girdwood <lgirdwood@gmail.com>, Oder Chiou <oder_chiou@realtek.com>, briannorris@chromium.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dianders@chromium.org, linux-rockchip@lists.infradead.org, mka@chromium.org, Takashi Iwai <tiwai@suse.com>, dgreid@chromium.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1503318311-48664-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On 08/22/2017 06:32 PM, Mark Brown wrote:
-> On Tue, Aug 22, 2017 at 03:57:20PM +0800, Jeffy Chen wrote:
->> This property is no longer used.
+On 21 August 2017 at 14:25, Biju Das <biju.das@bp.renesas.com> wrote:
+> Add support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5) SDHI
+> is identical to the R-Car Gen2 family.
 >
-> I would still rather keep the existing property documented (the binding
-> does need to be fixed) than remove it.  It's better practice and it's
-> not costing a huge amount.
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+
+Thanks, applied for next!
+
+Kind regards
+Uffe
+
+> ---
+> v1->v2
+>     - Modified the listing SoC's description related to SoC
+>       with 1 Clock and 2 Clocks
+> v2->v3
+>     - Fixed the trailing double quote.
+>     - Updated listing SoC's description.
 >
-
-sorry, i should explain more in the commit msg...
-
-just to clarify, this property is replaced by 
-"realtek,dmic-init-delay-ms" in rt5514 driver:
-
-a5461fd6c8f7 ASoC: rt5514: Add the DMIC initial delay to wait it ready.
-
-which does exactly the same thing as the old one: perform a delay after 
-set clk...
-
-i can do that if you still insist to keep it, since it's harmless :)
+> This patch is compiled and tested against linux next tag
+> next-20170817.
+>
+>  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> index 4fd8b7a..54ef642 100644
+> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> @@ -15,6 +15,8 @@ Required properties:
+>                 "renesas,sdhi-r7s72100" - SDHI IP on R7S72100 SoC
+>                 "renesas,sdhi-r8a73a4" - SDHI IP on R8A73A4 SoC
+>                 "renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
+> +               "renesas,sdhi-r8a7743" - SDHI IP on R8A7743 SoC
+> +               "renesas,sdhi-r8a7745" - SDHI IP on R8A7745 SoC
+>                 "renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
+>                 "renesas,sdhi-r8a7779" - SDHI IP on R8A7779 SoC
+>                 "renesas,sdhi-r8a7790" - SDHI IP on R8A7790 SoC
+> @@ -33,10 +35,8 @@ Required properties:
+>           If 2 clocks are specified by the hardware, you must name them as
+>           "core" and "cd". If the controller only has 1 clock, naming is not
+>           required.
+> -         Below is the number clocks for each supported SoC:
+> -          1: SH73A0, R8A73A4, R8A7740, R8A7778, R8A7779, R8A7790
+> -             R8A7791, R8A7792, R8A7793, R8A7794, R8A7795, R8A7796
+> -          2: R7S72100
+> +         Devices which have more than 1 clock are listed below:
+> +         2: R7S72100
+>
+>  Optional properties:
+>  - toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
+> --
+> 1.9.1
+>
