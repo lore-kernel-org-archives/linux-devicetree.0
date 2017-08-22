@@ -1,122 +1,132 @@
-From: Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX
- Device Tree bindings
-Date: Tue, 22 Aug 2017 19:25:49 +0000
-Message-ID: <EB0D0DEA-1418-4237-910D-F0BE0B9069A1@cadence.com>
-References: <20170720092302.2982-1-maxime.ripard@free-electrons.com>
- <2362756.VjbdGaYBzu@avalon> <20170822085320.pdxbxfv53rb75btu@flea.lan>
- <6400552.TlCMAsqn3H@avalon>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for
+ sun8i-h3-emac
+Date: Tue, 22 Aug 2017 21:37:13 +0200
+Message-ID: <20170822193713.GB11596@Red>
+References: <20170820065757.GA6081@Red>
+ <20170820142545.GB24150@lunn.ch>
+ <CAGb2v67hQXSoCKP7qW+KRUYX+0djQ1Z23cQ67Lyg6G7ozGyfGQ@mail.gmail.com>
+ <20170821132015.GB1703@lunn.ch>
+ <20170821133104.qvrhvwin2rdg4aqo@flea.lan>
+ <20170821142321.GE1703@lunn.ch>
+ <CAGb2v64E4T=1ff3POGuXZA=MvjGAnKQ6OF6A3sT_cU-=jh6zNw@mail.gmail.com>
+ <bfe784b6-5137-8fcd-dbd0-ad96974f4060@gmail.com>
+ <20170822181140.GA11596@Red>
+ <352ae66b-78a4-e88b-4544-a8edd9390b0c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6400552.TlCMAsqn3H@avalon>
-Content-Language: en-GB
-Content-ID: <90678DB6A4436242B1E59491DF9F8940-Tk6F3M/euE6cE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <352ae66b-78a4-e88b-4544-a8edd9390b0c@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Andrew Lunn <andrew@lunn.ch>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KT24gMjIvMDgvMjAxNywgMDI6MDEsICJMYXVyZW50IFBpbmNoYXJ0IiA8
-bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToNCg0KICAgIEVYVEVSTkFM
-IE1BSUwNCiAgICANCiAgICANCiAgICBIaSBNYXhpbWUsDQogICAgDQogICAgT24gVHVlc2RheSwg
-MjIgQXVndXN0IDIwMTcgMTE6NTM6MjAgRUVTVCBNYXhpbWUgUmlwYXJkIHdyb3RlOg0KICAgID4g
-T24gTW9uLCBBdWcgMDcsIDIwMTcgYXQgMTE6MTg6MDNQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToNCiAgICA+ID4gT24gVGh1cnNkYXkgMjAgSnVsIDIwMTcgMTE6MjM6MDEgTWF4aW1l
-IFJpcGFyZCB3cm90ZToNCiAgICA+ID4+IFRoZSBDYWRlbmNlIE1JUEktQ1NJMiBSWCBjb250cm9s
-bGVyIGlzIGEgQ1NJMlJYIGJyaWRnZSB0aGF0IHN1cHBvcnRzIHVwDQogICAgPiA+PiB0byA0IENT
-SS0yIGxhbmVzLCBhbmQgY2FuIHJvdXRlIHRoZSBmcmFtZXMgdG8gdXAgdG8gNCBzdHJlYW1zLCBk
-ZXBlbmRpbmcNCiAgICA+ID4+IG9uIHRoZSBoYXJkd2FyZSBpbXBsZW1lbnRhdGlvbi4NCiAgICA+
-ID4+IA0KICAgID4gPj4gSXQgY2FuIG9wZXJhdGUgd2l0aCBhbiBleHRlcm5hbCBELVBIWSwgYW4g
-aW50ZXJuYWwgb25lIG9yIG5vIEQtUEhZIGF0DQogICAgPiA+PiBhbGwgaW4gc29tZSBjb25maWd1
-cmF0aW9ucy4NCiAgICA+ID4gDQogICAgPiA+IFdpdGhvdXQgYW55IFBIWSA/IEknbSBjdXJpb3Vz
-LCBob3cgZG9lcyB0aGF0IHdvcmsgPw0KICAgID4gDQogICAgPiBXZSdyZSBjdXJyZW50bHkgd29y
-a2luZyBvbiBhbiBGUEdBIGV4YWN0bHkgd2l0aCB0aGF0IGNvbmZpZ3VyYXRpb24uIFNvDQogICAg
-PiBJIGd1ZXNzIHRoZSBhbnN3ZXIgd291bGQgYmUgIml0IGRvZXNuJ3Qgb24gYW4gQVNJQyIgOikN
-CiAgICANCiAgICBXaGF0J3MgY29ubmVjdGVkIHRvIHRoZSBpbnB1dCBvZiB0aGUgQ1NJLTIgcmVj
-ZWl2ZXIgPw0KICAgIA0KSXQgaXMgY29ubmVjdGVkIHRvIGFuIGluc3RhbmNlIG9mIGEgQ1NJIFRY
-IGRpZ2l0YWwgaW50ZXJmYWNlLg0KDQogICAgPiA+PiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlw
-YXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4NCiAgICA+ID4+IC0tLQ0KICAg
-ID4gPj4gDQogICAgPiA+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2Rucy1jc2ky
-cngudHh0ICAgICAgfCA4NyArKysrKysrKysrKysrKysrDQogICAgPiA+PiAgMSBmaWxlIGNoYW5n
-ZWQsIDg3IGluc2VydGlvbnMoKykNCiAgICA+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCiAgICA+
-ID4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2Rucy1jc2kycngu
-dHh0DQogICAgPiA+PiANCiAgICA+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbWVkaWEvY2Rucy1jc2kycngudHh0DQogICAgPiA+PiBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZG5zLWNzaTJyeC50eHQgbmV3IGZpbGUg
-bW9kZQ0KICAgID4gPj4gMTAwNjQ0DQogICAgPiA+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmUwODU0
-N2FiZTg4NQ0KICAgID4gPj4gLS0tIC9kZXYvbnVsbA0KICAgID4gPj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NkbnMtY3NpMnJ4LnR4dA0KICAgID4gPj4g
-QEAgLTAsMCArMSw4NyBAQA0KICAgID4gPj4gK0NhZGVuY2UgTUlQSS1DU0kyIFJYIGNvbnRyb2xs
-ZXINCiAgICA+ID4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQogICAgPiA+PiAr
-DQogICAgPiA+PiArVGhlIENhZGVuY2UgTUlQSS1DU0kyIFJYIGNvbnRyb2xsZXIgaXMgYSBDU0kt
-MiBicmlkZ2Ugc3VwcG9ydGluZyB1cCB0bw0KICAgID4gPj4gND4gQ1NJDQogICAgPiA+PiArbGFu
-ZXMgaW4gaW5wdXQsIGFuZCA0IGRpZmZlcmVudCBwaXhlbCBzdHJlYW1zIGluIG91dHB1dC4NCiAg
-ICA+ID4+ICsNCiAgICA+ID4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KICAgID4gPj4gKyAgLSBj
-b21wYXRpYmxlOiBtdXN0IGJlIHNldCB0byAiY2Rucyxjc2kycngiIGFuZCBhbiBTb0Mtc3BlY2lm
-aWMNCiAgICA+ID4+IGNvbXBhdGlibGUNCiAgICA+ID4+ICsgIC0gcmVnOiBiYXNlIGFkZHJlc3Mg
-YW5kIHNpemUgb2YgdGhlIG1lbW9yeSBtYXBwZWQgcmVnaW9uDQogICAgPiA+PiArICAtIGNsb2Nr
-czogcGhhbmRsZXMgdG8gdGhlIGNsb2NrcyBkcml2aW5nIHRoZSBjb250cm9sbGVyDQogICAgPiA+
-PiArICAtIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW46DQogICAgPiA+PiArICAgICogc3lzX2Ns
-azogbWFpbiBjbG9jaw0KICAgID4gPj4gKyAgICAqIHBfY2xrOiByZWdpc3RlciBiYW5rIGNsb2Nr
-DQogICAgPiA+PiArICAgICogcF9mcmVlX2NsazogZnJlZSBydW5uaW5nIHJlZ2lzdGVyIGJhbmsg
-Y2xvY2sNCiAgICA+ID4+ICsgICAgKiBwaXhlbF9pZlhfY2xrOiBwaXhlbCBzdHJlYW0gb3V0cHV0
-IGNsb2NrLCBvbmUgZm9yIGVhY2ggc3RyZWFtDQogICAgPiA+PiArICAgICAgICAgICAgICAgICAg
-ICAgaW1wbGVtZW50ZWQgaW4gaGFyZHdhcmUsIGJldHdlZW4gMCBhbmQgMw0KICAgID4gPiANCiAg
-ICA+ID4gTml0cGlja2luZywgSSB3b3VsZCB3cml0ZSB0aGUgbmFtZSBpcyBwaXhlbF9pZlswLTNd
-X2NsaywgaXQgdG9vayBtZSBhIGZldw0KICAgID4gPiBzZWNvbmRzIHRvIHNlZSB0aGF0IHRoZSBY
-IHdhcyBhIHBsYWNlaG9sZGVyLg0KICAgID4gDQogICAgPiBPay4NCiAgICA+IA0KICAgID4gPj4g
-KyAgICAqIGRwaHlfcnhfY2xrOiBELVBIWSBieXRlIGNsb2NrLCBpZiBpbXBsZW1lbnRlZCBpbiBo
-YXJkd2FyZQ0KICAgID4gPj4gKyAgLSBwaHlzOiBwaGFuZGxlIHRvIHRoZSBleHRlcm5hbCBELVBI
-WQ0KICAgID4gPj4gKyAgLSBwaHktbmFtZXM6IG11c3QgY29udGFpbiBkcGh5LCBpZiB0aGUgaW1w
-bGVtZW50YXRpb24gdXNlcyBhbg0KICAgID4gPj4gKyAgICAgICAgICAgICAgIGV4dGVybmFsIEQt
-UEhZDQogICAgPiA+IA0KICAgID4gPiBJIHdvdWxkIG1vdmUgdGhlIGxhc3QgdHdvIHByb3BlcnRp
-ZXMgaW4gYW4gb3B0aW9uYWwgY2F0ZWdvcnkgYXMgdGhleSdyZQ0KICAgID4gPiBlZmZlY3RpdmVs
-eSBvcHRpb25hbC4gSSB0aGluayB5b3Ugc2hvdWxkIGFsc28gZXhwbGFpbiBhIGJpdCBtb3JlIGNs
-ZWFybHkNCiAgICA+ID4gdGhhdCB0aGUgcGh5cyBwcm9wZXJ0eSBtdXN0IG5vdCBiZSBwcmVzZW50
-IGlmIHRoZSBwaHktbmFtZXMgcHJvcGVydHkgaXMNCiAgICA+ID4gbm90IHByZXNlbnQuDQogICAg
-PiANCiAgICA+IEl0J3Mgbm90IHJlYWxseSBvcHRpb25hbC4gVGhlIElQIGhhcyBhIGNvbmZpZ3Vy
-YXRpb24gcmVnaXN0ZXIgdGhhdA0KICAgID4gYWxsb3dzIHlvdSB0byBzZWUgaWYgaXQncyBiZWVu
-IHN5bnRoZXNpemVkIHdpdGggb3Igd2l0aG91dCBhIFBIWS4gSWYNCiAgICA+IHRoZSByaWdodCBi
-aXQgaXMgc2V0LCB0aGF0IHByb3BlcnR5IHdpbGwgYmUgbWFuZGF0b3J5LCBpZiBub3QsIGl0J3MN
-CiAgICA+IHVzZWxlc3MuDQogICAgDQogICAgSnVzdCB0byBjb25maXJtLCB0aGUgUEhZIGlzIGEg
-c2VwYXJhdGUgSVAgY29yZSwgcmlnaHQgPyBJcyB0aGUgQ1NJLTIgcmVjZWl2ZXIgDQogICAgaW5w
-dXQgaW50ZXJmYWNlIGRpZmZlcmVudCB3aGVuIHVzZWQgd2l0aCBhIFBIWSBhbmQgd2hlbiB1c2Vk
-IHdpdGhvdXQgb25lID8gDQogICAgQ291bGQgYSB0aGlyZC1wYXJ0eSBQSFkgYmUgdXNlZCBhcyB3
-ZWxsID8gSWYgc28sIHdvdWxkIHRoZSBQSFkgc3ludGhlc2lzIGJpdCANCiAgICBiZSBzZXQgb3Ig
-bm90ID8NCg0KVGhlIFBIWSAoaW4gb3VyIGNhc2UgYSBELVBIWSkgaXMgYSBzZXBhcmF0ZSBlbnRp
-dHksIGl0IGNhbiBiZSBmcm9tIGEgM3JkIHBhcnR5IGFzIHRoZSBJUCBpbnRlcmZhY2UgaXMgc3Rh
-bmRhcmQsIHRoZSBTb0MgaW50ZWdyYXRvciB3b3VsZCBzZXQgdGhlIGJpdCBhY2NvcmRpbmdseSBi
-YXNlZCBvbiB3aGV0aGVyIGFueSBQSFkgaXMgcHJlc2VudCBvciBub3QuDQpUaGVyZSBpcyBhbHNv
-IGFuIG9wdGlvbiBvZiByb3V0aW5nIGRpZ2l0YWwgb3V0cHV0IGZyb20gYSBDU0ktVFggdG8gYSBD
-U0ktUlggYW5kIGluIHN1Y2ggY2FzZSBhIFBIWSB3b3VsZCBub3QgbmVlZCB0byBiZSB1c2VkIChh
-cyBpbiB0aGUgY2FzZSBvZiBvdXIgY3VycmVudCBwbGF0Zm9ybSkuDQogICAgDQogICAgPiBNYXli
-ZSBpdCdzIGp1c3Qgc2VtYW50aWNzLCBidXQgdG8gbWUsIG9wdGlvbmFsIG1lYW5zIHRoYXQgaXQg
-Y2FuDQogICAgPiBvcGVyYXRlIHdpdGggb3Igd2l0aG91dCBpdCB1bmRlciBhbnkgY2lyY3Vtc3Rh
-bmNlcy4gSXQncyBub3QgcmVhbGx5DQogICAgPiB0aGUgY2FzZSBoZXJlLg0KICAgIA0KICAgIEl0
-J3NhIHNlbWFudGljIGlzc3VlLCBidXQgZG9jdW1lbnRpbmcgYSBwcm9wZXJ0eSBhcyByZXF1aXJl
-ZCB3aGVuIGl0IGNhbiBiZSANCiAgICBvbW1pdHRlZCB1bmRlciBzb21lIGNpcmN1bXN0YW5jZXMg
-c2VlbXMgZXZlbiB3ZWlyZGVyIHRvIG1lIDotKSBJIHVuZGVyc3RhbmQgDQogICAgdGhlIG9wdGlv
-bmFsIGNhdGVnb3J5IGFzICJjYW4gYmUgb21taXR0ZWQgaW4gY2VydGFpbiBjaXJjdW1zdGFuY2Vz
-Ii4NCiAgICANCiAgICA+ID4+ICsNCiAgICA+ID4+ICtSZXF1aXJlZCBzdWJub2RlczoNCiAgICA+
-ID4+ICsgIC0gcG9ydHM6IEEgcG9ydHMgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25zIGFz
-IGRlZmluZWQgaW4NCiAgICA+ID4+ICsgICAgICAgICAgDQogICAgPiA+PiBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuDQogICAgPiA+
-PiBUaGUNCiAgICA+ID4+ICsgICAgICAgICAgIGZpcnN0IHBvcnQgc3Vibm9kZSBzaG91bGQgYmUg
-dGhlIGlucHV0IGVuZHBvaW50LCB0aGUgc2Vjb25kDQogICAgPiA+PiBvbmUgdGhlDQogICAgPiA+
-PiArICAgICAgICAgICBvdXRwdXRzDQogICAgPiA+PiArDQogICAgPiA+PiArICBUaGUgb3V0cHV0
-IHBvcnQgc2hvdWxkIGhhdmUgYXMgbWFueSBlbmRwb2ludHMgYXMgc3RyZWFtIHN1cHBvcnRlZCBi
-eQ0KICAgID4gPj4gKyAgdGhlIGhhcmR3YXJlIGltcGxlbWVudGF0aW9uLCBiZXR3ZWVuIDEgYW5k
-IDQsIHRoZWlyIElEIGJlaW5nIHRoZQ0KICAgID4gPj4gKyAgc3RyZWFtIG91dHB1dCBudW1iZXIg
-dXNlZCBpbiB0aGUgaW1wbGVtZW50YXRpb24uDQogICAgPiA+IA0KICAgID4gPiBJIGRvbid0IHRo
-aW5rIHRoYXQncyBjb3JyZWN0LiBUaGUgSVAgaGFzIGZvdXIgaW5kZXBlbmRlbnQgb3V0cHV0cywg
-aXQNCiAgICA+ID4gc2hvdWxkIGhhdmUgNCBvdXRwdXQgcG9ydHMgZm9yIGEgdG90YWwgZm9yIDUg
-cG9ydHMuIE11bHRpcGxlIGVuZHBvaW50cw0KICAgID4gPiBwZXIgcG9ydCB3b3VsZCBkZXNjcmli
-ZSBtdWx0aXBsZSBjb25uZWN0aW9ucyBmcm9tIHRoZSBzYW1lIG91dHB1dCB0bw0KICAgID4gPiBk
-aWZmZXJlbnQgc2lua3MuDQogICAgPg0KICAgID4gT2suDQoNClJlZ2FyZHMsDQoNCkN5cHJpYW4N
-Cg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Aug 22, 2017 at 11:35:01AM -0700, Florian Fainelli wrote:
+> On 08/22/2017 11:11 AM, Corentin Labbe wrote:
+> > On Tue, Aug 22, 2017 at 09:40:24AM -0700, Florian Fainelli wrote:
+> >> On 08/22/2017 08:39 AM, Chen-Yu Tsai wrote:
+> >>> On Mon, Aug 21, 2017 at 10:23 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> >>>>> All muxes are mostly always represented the same way afaik, or do you
+> >>>>> want to simply introduce a new compatible / property?
+> >>>>
+> >>>> +         mdio-mux {
+> >>>> +               compatible = "allwinner,sun8i-h3-mdio-switch";
+> >>>> +               mdio-parent-bus = <&mdio_parent>;
+> >>>> +               #address-cells = <1>;
+> >>>> +               #size-cells = <0>;
+> >>>> +
+> >>>> +               internal_mdio: mdio@1 {
+> >>>>                         reg = <1>;
+> >>>> -                       clocks = <&ccu CLK_BUS_EPHY>;
+> >>>> -                       resets = <&ccu RST_BUS_EPHY>;
+> >>>> +                       #address-cells = <1>;
+> >>>> +                       #size-cells = <0>;
+> >>>> +                       int_mii_phy: ethernet-phy@1 {
+> >>>> +                               compatible = "ethernet-phy-ieee802.3-c22";
+> >>>> +                               reg = <1>;
+> >>>> +                               clocks = <&ccu CLK_BUS_EPHY>;
+> >>>> +                               resets = <&ccu RST_BUS_EPHY>;
+> >>>> +                               phy-is-integrated;
+> >>>> +                       };
+> >>>> +               };
+> >>>> +               mdio: mdio@0 {
+> >>>> +                       reg = <0>;
+> >>>> +                       #address-cells = <1>;
+> >>>> +                       #size-cells = <0>;
+> >>>>                 };
+> >>>>
+> >>>> Hi Maxim
+> >>>>
+> >>>> Anybody who knows the MDIO-mux code/binding, knows that it is a run
+> >>>> time mux. You swap the mux per MDIO transaction. You can access all
+> >>>> the PHY and switches on the mux'ed MDIO bus.
+> >>>>
+> >>>> However here, it is effectively a boot-time MUX. You cannot change it
+> >>>> on the fly. What happens when somebody has a phandle to a PHY on the
+> >>>> internal and a phandle to a phy on the external? Does the driver at
+> >>>> least return -EINVAL, or -EBUSY? Is there a representation which
+> >>>> eliminates this possibility?
+> >>>
+> >>> There is only one controller. Either you use the internal PHY, which
+> >>> is then directly coupled (no magnetics needed) to the RJ45 port, or
+> >>> you use an external PHY over MII/RMII/RGMII. You could supposedly
+> >>> have both on a board, and let the user choose one. But why bother
+> >>> with the extra complexity and cost? Either you use the internal PHY
+> >>> at 100M, or an external RGMII PHY for gigabit speeds.
+> >>
+> >> I agree, there is no point in over-engineering any of this. I don't
+> >> think there is actually any MDIO mux per-se in that the MDIO clock and
+> >> data lines are muxed, however there has to be some kind of built-in port
+> >> multiplexer that lets you chose between connecting to the internal PHY
+> >> and any external PHY/MAC, but that is not what a "mdio-mux" node represents.
+> >>
+> >>>
+> >>> So I think what you are saying is either impossible or engineering-wise
+> >>> a very stupid design, like using an external MAC with a discrete PHY
+> >>> connected to the internal MAC's MDIO bus, while using the internal MAC
+> >>> with the internal PHY.
+> >>>
+> >>> Now can we please decide on something? We're a week and a half from
+> >>> the 4.13 release. If mdio-mux is wrong, then we could have two mdio
+> >>> nodes (internal-mdio & external-mdio).
+> >>
+> >> I really don't see a need for a mdio-mux in the first place, just have
+> >> one MDIO controller (current state) sub-node which describes the
+> >> built-in STMMAC MDIO controller and declare the internal PHY as a child
+> >> node (along with 'phy-is-integrated'). If a different configuration is
+> >> used, then just put the external PHY as a child node there.
+> >>
+> >> If fixed-link is required, the mdio node becomes unused anyway.
+> >>
+> >> Works for everyone?
+> > 
+> > If we put an external PHY with reg=1 as a child of internal MDIO, il will be merged with internal PHY node and get phy-is-integrated.
+> 
+> Then have the .dtsi file contain just the mdio node, but no internal or
+> external PHY and push all the internal and external PHY node definition
+> (in its entirety) to the per-board DTS file, does not that work?
+> 
+
+It is near what I sent in v2 of this serie. (only one MDIO with internal PHY, but phy-is-integrated is only set per-board DTS)
+But at that time Rob said to use a mdio-mux.
+
+> > 
+> > Does two MDIO node "internal-mdio" and "mdio" works for you ?
+> > (We keep "mdio" for external MDIO for reducing the number of patchs)
+> 
+> How does that solve the problem and not create a new one where both MDIO
+> nodes end-up being registered? Does that mean you force the writer of
+> the board-level DTS to systematically disable the internal MDIO node
+> when using an external PHY and vice versa? How is that better than not
+> being explicit like I suggested earlier?
+> 
+
+Only one node is registered.
+stmmac register only MDIO called "mdio".
+So it is why I have added a patch "register parent MDIO node for sun8i-h3-emac" which for H3 only register the PHY's parent MDIO
+
+But yes back to your solution "only one mdio with internal PHY," and phy-is-integrated only set on board DT which use internal PHY will work.
+
+Regards
