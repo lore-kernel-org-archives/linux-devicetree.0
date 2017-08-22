@@ -1,45 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 1/9] ASoC: rockchip: Remove obsolete dmic-delay
-Date: Tue, 22 Aug 2017 11:32:41 +0100
-Message-ID: <20170822103241.wjiycavsro7abknj@sirena.org.uk>
-References: <20170822075729.8438-1-jeffy.chen@rock-chips.com>
- <20170822075729.8438-2-jeffy.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sfd6kwa5gv2uuqiq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170822075729.8438-2-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de, briannorris@chromium.org, mengdong.lin@linux.intel.com, mka@chromium.org, lars@metafoo.de, dianders@chromium.org, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-rockchip@lists.infradead.org, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org
+Subject: [PATCH] arm: dts: am33xx: Add spi alias to match SOC schematics
+Date: Tue, 22 Aug 2017 16:27:33 +0530
+Message-ID: <1503399453-4946-1-git-send-email-sunil.m@techveda.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: karthik-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suniel Mahesh <sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Suniel Mahesh <sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
 
---sfd6kwa5gv2uuqiq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Linux bus numbers should match the numbers defined by the chip
+manufacturer. This patch add's spi aliases to acheive that bus
+naming convention.
 
-On Tue, Aug 22, 2017 at 03:57:20PM +0800, Jeffy Chen wrote:
-> This property is no longer used.
+Signed-off-by: Suniel Mahesh <sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Karthik Tummala <karthik-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+Tested-by: Karthik Tummala <karthik-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+---
+Note:
+- Patch was compile tested and built(ARCH=arm) on next-20170822.
+- Patch was hardware tested on AM335x (McSPI controller) with
+  spi flash chips.
+- No build/run-time issues reported.
+- At present bus numbers are represented as spi1 and spi2 in sysfs
+  instead of spi0 and spi1, as defined in SOC schematics.
+- The commit:
+"spi: Pick spi bus number from Linux idr or spi alias"
+(SHA1:9b61e302210eba55768962f2f11e96bb508c2408)
+has introduced bus numbering which happens dynamically either
+via Linux IDR or spi alias for master drivers.
+- The commit:
+"spi: omap: Allocate bus number from spi framework"
+(SHA1:b590782afe0a99fca84f451252ed7e2d64b2f155)
+is now using spi framework to allocate bus numbers.
+---
+ arch/arm/boot/dts/am33xx.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I would still rather keep the existing property documented (the binding
-does need to be fixed) than remove it.  It's better practice and it's
-not costing a huge amount.
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 7d7ca05..e58fab8 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -36,6 +36,8 @@
+ 		phy1 = &usb1_phy;
+ 		ethernet0 = &cpsw_emac0;
+ 		ethernet1 = &cpsw_emac1;
++		spi0 = &spi0;
++		spi1 = &spi1;
+ 	};
+ 
+ 	cpus {
+-- 
+1.9.1
 
---sfd6kwa5gv2uuqiq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmcCEkACgkQJNaLcl1U
-h9AnCwgAg1r83SQpPvfPsqZ3641YmOmeiYzy/h52Rff9VJzqgOY3zeaBFWty9mdg
-1IlvwS481SZcnu129HUQElZ/DImjRDyBKGuphOipcbYw3yX3Rn1vsnrxjefgptVh
-H64G3FFu3OzL4I/tXwAl29IR1EimbZ0FHBot9TkUgTkRGm0aWNw96msPDYphWm5E
-y61YlbgNsZNNIqHh4dIHzJY5uBvf96vFELZ5nxamXLVFjYYJ3Sc4+JxWdY9uM5mk
-HbpX5Ycn39p9ciC/Nue/V1Dh8cGHuD+FiMOU6cMfCtIqtlNFca876PhEBRlRK96G
-HVSWycfRAI4UfawBgaUmF3ph2qx2UA==
-=10xG
------END PGP SIGNATURE-----
-
---sfd6kwa5gv2uuqiq--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
