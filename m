@@ -1,62 +1,94 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH  0/2] ARM: dts: Add iWave RZ/G1E board support
-Date: Tue, 22 Aug 2017 16:03:23 +0000
-Message-ID: <TY1PR06MB070230193DD40E5D09D0A9AFB7840@TY1PR06MB0702.apcprd06.prod.outlook.com>
-References: <1502794460-30213-1-git-send-email-biju.das@bp.renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/9] ASoC: cygnus: Update bindings for
+	audio clock changes
+Date: Tue, 22 Aug 2017 17:07:03 +0100
+Message-ID: <20170822160703.nusf7sv6k4gj3pti@sirena.org.uk>
+References: <1502748417-26417-1-git-send-email-lori.hikichi@broadcom.com>
+ <1502748417-26417-3-git-send-email-lori.hikichi@broadcom.com>
+ <20170815171424.whcy4mftex6sgzgj@sirena.org.uk>
+ <d7e7144b-26c7-b96a-663d-03744bb60c36@broadcom.com>
+ <20170816105954.ve434zeeqinweo5a@sirena.org.uk>
+ <8c2fc92d-5ea8-8163-a588-0a4cba55e0f8@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1502794460-30213-1-git-send-email-biju.das@bp.renesas.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Biju Das <biju.das@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: multipart/mixed; boundary="===============3852886840588034674=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <8c2fc92d-5ea8-8163-a588-0a4cba55e0f8@broadcom.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lori Hikichi <lori.hikichi@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
 
-> From: Biju Das [mailto:biju.das@bp.renesas.com]
-> Sent: 15 August 2017 11:54
->=20
-> Hello,
->=20
-> This series aims to add iWave RZ/G1E (R8A7745) based RainboW-G22M-SM
-> SODIMM SoM and RainboW-G22D board support.
->=20
-> This series has been tested against linux-next tag next-20170815 as well =
-as
-> renesas-dev tag 20170814-v4.13-rc5
->=20
-> This patch has documentation dependency on below patches
-
-The below patches are now in your v4.14 branch. Does this mean that this DT=
- series can now be accepted?
-
-Thanks, Chris
+--===============3852886840588034674==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hevtcrkb534i7il6"
+Content-Disposition: inline
 
 
->=20
-> [repost,1/2] ARM: shmobile: document iW-RainboW-G22M-SM SODIMM
-> System on Module https://patchwork.kernel.org/patch/9890389/
-> [repost, 2/2] ARM: shmobile: document iW-RainboW-G22D SODIMM SOM
-> Development Platform https://patchwork.kernel.org/patch/9890391/
->=20
->=20
-> Regards,
->=20
-> Biju Das (2):
->   ARM: dts: iwg22m: Add iWave RZG1E SODIMM SOM
->   ARM: dts: iwg22d-sodimm: Add support for iWave G22D-SODIMM board
->=20
->  arch/arm/boot/dts/Makefile                  |  1 +
->  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 29
-> +++++++++++++++++++++++++++++
->  arch/arm/boot/dts/r8a7745-iwg22m.dtsi       | 24
-> ++++++++++++++++++++++++
->  3 files changed, 54 insertions(+)
->  create mode 100644 arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
->  create mode 100644 arch/arm/boot/dts/r8a7745-iwg22m.dtsi
->=20
-> --
-> 1.9.1
+--hevtcrkb534i7il6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Aug 16, 2017 at 12:39:42PM -0700, Lori Hikichi wrote:
+
+> By far the most common usage case for Cygnus is a configuration which
+> uses only the three i2s/tdm ports. In this case each port is assigned
+> a clock.  Each clock has the same capabilities so there would never be
+> a reason change the static mapping.
+
+The usual reason would be to bring things into sync.
+
+> Now for the case when the "non-audio block" uses one of these clocks.
+> In this situation we will only need one i2s port because this
+> configuration of the chip is not audio intensive.  When the system
+> is designed we know if this non-audio block will be in use, it is not
+> a runtime configurable thing. Again, a static mapping is fine.
+
+Is this limitation when the other block is in use a physical limitation
+or is it just a case of not seeing the use case.
+
+> At the time it did not seem necessary to make addition driver changes to
+> support a use case that will very likely never arise. As it turns out,
+> we are working on a new version of this audio block.  The clocking
+> configuration for this new version is more complex and I am already in
+> the process of creating clock bindings for all this this. I am hopeful
+> that the driver for this new version will be applicable to Cygnus.
+
+If the clocking is more complex that seems like even more reason to not
+fix this in the binding, and possibly to do as I think I suggested
+earlier and use the common clock bindings to manage this rather than
+doing something custom and driver specific.
+
+--hevtcrkb534i7il6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmcVqYACgkQJNaLcl1U
+h9C07Af/biWixLamc+SRgzNKdbhAkvZYpPHMqaJazZcY6ld35k7fSdRzZXZBePyC
+XKI36qdYqJymPBjYVzkt8ASqLHCfbFFMxnZOO5Fzhc/maTPfCHQcyzDd2f1pgOS+
+qZ43QsbIBVMGqxgQ9UMMarF7qB6IVBTp1JFck/vSTkE1NraWqxgq5rOH+Oed83nd
+lVMlSWKEEYoAV7nyekdxFwCKjZRXWWjhXoJPehfs3yhDvBWhVqvGhGQHQl+4+wvj
+8BAk2+z88Mm73AvycpzH6aGe4ZvmaNYUtShp6vgPkLRbpAvCXysM8X2Kh4SZDiMW
+LteDB8vVBfDfEwlD8q+qWH5okTkRtg==
+=u4Fr
+-----END PGP SIGNATURE-----
+
+--hevtcrkb534i7il6--
+
+--===============3852886840588034674==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3852886840588034674==--
