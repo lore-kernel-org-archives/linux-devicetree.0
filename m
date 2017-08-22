@@ -1,70 +1,49 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v2 3/3] ARM: sunxi: add support for R40 SoC
-Date: Tue, 22 Aug 2017 13:23:22 +0800
-Message-ID: <20170822052322.15338-3-icenowy@aosc.io>
-References: <20170822052322.15338-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170822052322.15338-1-icenowy@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: Jamie Huang <jamienstar-9Onoh4P/yGk@public.gmane.org>
+Subject: [PATCH] script:dtc: fix compile error
+Date: Tue, 22 Aug 2017 14:00:06 +0800
+Message-ID: <1503381606-30202-1-git-send-email-jamienstar@163.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jamie Huang <jamienstar-9Onoh4P/yGk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner R40 is a new SoC, with Quad Core Cortex-A7 and peripherals
-like A20.
+When building a 32-bit kernel, the following warnings will appear:
 
-Add support for it.
+scripts/dtc/checks.c: In function ‘check_simple_bus_reg’:
+scripts/dtc/checks.c:876:41: warning: format ‘%zx’ expects argument of type ‘size_t’, but argument 4 has type ‘uint64_t {aka long long unsigned int}’ [-Wformat=]
+  snprintf(unit_addr, sizeof(unit_addr), %zx, reg);
+                                         ^
+scripts/dtc/checks.c:876:41: warning: format ‘%zx’ expects argument of type ‘size_t’, but argument 4 has type ‘uint64_t {aka long long unsigned int}’ [-Wformat=]
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+This patch fixes it.
+
+Signed-off-by: Jamie Huang <jamienstar-9Onoh4P/yGk@public.gmane.org>
 ---
-Changes in v2:
-- Fix alphabetical orders.
+ scripts/dtc/checks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Documentation/arm/sunxi/README                  | 6 ++++++
- Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
- arch/arm/mach-sunxi/sunxi.c                     | 1 +
- 3 files changed, 8 insertions(+)
+diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+index 4b72b53..6dfb82f 100644
+--- a/scripts/dtc/checks.c
++++ b/scripts/dtc/checks.c
+@@ -873,7 +873,7 @@ static void check_simple_bus_reg(struct check *c, struct dt_info *dti, struct no
+ 	while (size--)
+ 		reg = (reg << 32) | fdt32_to_cpu(*(cells++));
 
-diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
-index de791e18ccef..f8efc21998bf 100644
---- a/Documentation/arm/sunxi/README
-+++ b/Documentation/arm/sunxi/README
-@@ -76,6 +76,12 @@ SunXi family
-         + Datasheet
-           http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
- 
-+      - Allwinner R40 (sun8i)
-+        + Datasheet
-+          https://github.com/tinalinux/docs/raw/r40-v1.y/R40_Datasheet_V1.0.pdf
-+        + User Manual
-+          https://github.com/tinalinux/docs/raw/r40-v1.y/Allwinner_R40_User_Manual_V1.0.pdf
-+
-     * Quad ARM Cortex-A15, Quad ARM Cortex-A7 based SoCs
-       - Allwinner A80
-         + Datasheet
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index f35c6ada5a65..e4beec3d9ad3 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -14,6 +14,7 @@ using one of the following compatible strings:
-   allwinner,sun8i-a83t
-   allwinner,sun8i-h2-plus
-   allwinner,sun8i-h3
-+  allwinner-sun8i-r40
-   allwinner,sun8i-v3s
-   allwinner,sun9i-a80
-   allwinner,sun50i-a64
-diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-index 7ab353fb25f2..5e9602ce1573 100644
---- a/arch/arm/mach-sunxi/sunxi.c
-+++ b/arch/arm/mach-sunxi/sunxi.c
-@@ -65,6 +65,7 @@ static const char * const sun8i_board_dt_compat[] = {
- 	"allwinner,sun8i-a83t",
- 	"allwinner,sun8i-h2-plus",
- 	"allwinner,sun8i-h3",
-+	"allwinner,sun8i-r40",
- 	"allwinner,sun8i-v3s",
- 	NULL,
- };
--- 
-2.13.5
+-	snprintf(unit_addr, sizeof(unit_addr), "%zx", reg);
++	snprintf(unit_addr, sizeof(unit_addr), "%llx", reg);
+ 	if (!streq(unitname, unit_addr))
+ 		FAIL(c, dti, "Node %s simple-bus unit address format error, expected \"%s\"",
+ 		     node->fullpath, unit_addr);
+--
+2.5.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
