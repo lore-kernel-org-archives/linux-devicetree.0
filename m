@@ -1,45 +1,43 @@
-From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/6] IIO driver for MCP3550/1/3
-Date: Tue, 22 Aug 2017 15:33:00 +0200
-Message-ID: <cover.1503407738.git.lukas@wunner.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] dt-bindings: apmu: Document r8a7745 support
+Date: Tue, 22 Aug 2017 14:52:19 +0100
+Message-ID: <1503409939-9355-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Two fixes, one speedup & one cleanup for the mcp320x.c driver,
-plus support for new chips:
+Document APMU and SMP enable method for RZ/G1E (also known as
+r8a7745) SoC.
 
-The MCP3550/1/3 are 22 bit delta-sigma ADCs with high accuracy,
-low noise characteristics and an extended temperature range.
-It's the top-of-the-line SPI ADC in Microchip's portfolio.
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/power/renesas,apmu.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-The chip is used by the "Revolution Pi" family of open source PLCs
-based on the Raspberry Pi (https://revolution.kunbus.com/).
-
-Thanks,
-
-Lukas
-
-
-Lukas Wunner (6):
-  iio: adc: mcp320x: Fix oops on module unload
-  iio: adc: mcp320x: Fix readout of negative voltages
-  iio: adc: mcp320x: Speed up readout of single-channel ADCs
-  iio: adc: mcp320x: Drop unnecessary of_device_id attributes
-  dt-bindings: iio: adc: mcp320x: Update for mcp3550/1/3
-  iio: adc: mcp320x: Add support for mcp3550/1/3
-
- .../devicetree/bindings/iio/adc/mcp320x.txt        |  23 ++
- drivers/iio/adc/Kconfig                            |   5 +-
- drivers/iio/adc/mcp320x.c                          | 264 ++++++++++++++-------
- 3 files changed, 202 insertions(+), 90 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/power/renesas,apmu.txt b/Documentation/devicetree/bindings/power/renesas,apmu.txt
+index af21502..f747f95 100644
+--- a/Documentation/devicetree/bindings/power/renesas,apmu.txt
++++ b/Documentation/devicetree/bindings/power/renesas,apmu.txt
+@@ -8,6 +8,7 @@ Required properties:
+ - compatible: Should be "renesas,<soctype>-apmu", "renesas,apmu" as fallback.
+ 	      Examples with soctypes are:
+ 		- "renesas,r8a7743-apmu" (RZ/G1M)
++		- "renesas,r8a7745-apmu" (RZ/G1E)
+ 		- "renesas,r8a7790-apmu" (R-Car H2)
+ 		- "renesas,r8a7791-apmu" (R-Car M2-W)
+ 		- "renesas,r8a7792-apmu" (R-Car V2H)
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
