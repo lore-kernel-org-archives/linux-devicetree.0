@@ -1,77 +1,78 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 2/3] ARM: dts: sun8i: Add board dts file for Banana Pi M2 Ultra
-Date: Tue, 22 Aug 2017 14:17:41 +0800
-Message-ID: <20170822061742.40869-2-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: sun8i: Add board dts file for
+ Banana Pi M2 Berry
+Date: Tue, 22 Aug 2017 14:17:42 +0800
+Message-ID: <20170822061742.40869-3-icenowy@aosc.io>
 References: <20170822061742.40869-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170822061742.40869-1-icenowy@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBLEZ57GAKGQEGWZ757Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170822061742.40869-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
-
-The Banana Pi M2 Ultra is an SBC based on the Allwinner R40 SoC. The
-form factor and position of various connectors, leds and buttons is
-similar to the Banana Pi M1+, Banana Pi M3, and is exactly the same
-as the latest Banana Pi M64.
+The Banana Pi M2 Ultra is an SBC based on the Allwinner V40 SoC (same as
+the R40 SoC). The form factor is similar to the Raspberry Pi series.
 
 It features:
 
-  - X-Powers AXP221s PMIC connected to i2c0
-  - 2 GB DDR3 DRAM
-  - 8 GB eMMC
-  - micro SD card slot
-  - DC power jack
-  - HDMI output
-  - MIPI DSI connector
-  - 2x USB 2.0 hosts
-  - 1x USB 2.0 OTG
-  - gigabit ethernet with Realtek RTL8211E transceiver
-  - WiFi/Bluetooth with AP6212 chip, with external antenna connector
-  - SATA and power connectors for native SATA support
-  - camera sensor connector
-  - consumer IR receiver
-  - audio out headphone jack
-  - onboard microphone
-  - red, green, and blue LEDs
-  - debug UART pins
-  - Li-Po battery connector
-  - Raspberry Pi B+ compatible GPIO header
-  - power, reset, and boot control buttons
+- X-Powers AXP221s PMIC connected to i2c0
+- 1GiB DDR3 DRAM
+- microSD slot
+- MicroUSB Type-B port for power and connected to usb0
+- HDMI output
+- MIPI DSI connector
+- 4 USB Type-A ports (connected to the usb1 controller via a hub)
+- gigabit ethernet with Realtek RTL8211E transceiver
+- WiFi/Bluetooth with AP6212 module, with external antenna connector
+- SATA and power connectors for native SATA support
+- camera sensor connector
+- audio out headphone jack
+- red and green LEDs
+- debug UART pins
+- Raspberry Pi B+ compatible GPIO header
+- power and reset buttons
 
 This patch adds a dts file that enables UART, MMC and PMIC support.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                        |   1 +
- arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 181 ++++++++++++++++++++++
- 2 files changed, 182 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+ arch/arm/boot/dts/Makefile                        |   3 +-
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 168 ++++++++++++++++++++++
+ 2 files changed, 170 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 570e107bf702..e0b1ed3e2e24 100644
+index e0b1ed3e2e24..c22cd6b914b4 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -927,6 +927,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-h3-orangepi-plus2e.dtb \
- 	sun8i-r16-bananapi-m2m.dtb \
+@@ -929,7 +929,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
  	sun8i-r16-parrot.dtb \
-+	sun8i-r40-bananapi-m2-ultra.dtb \
+ 	sun8i-r40-bananapi-m2-ultra.dtb \
  	sun8i-v3s-licheepi-zero.dtb \
- 	sun8i-v3s-licheepi-zero-dock.dtb
+-	sun8i-v3s-licheepi-zero-dock.dtb
++	sun8i-v3s-licheepi-zero-dock.dtb \
++	sun8i-v40-bananapi-m2-berry.dtb
  dtb-$(CONFIG_MACH_SUN9I) += \
-diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+ 	sun9i-a80-optimus.dtb \
+ 	sun9i-a80-cubieboard4.dtb
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
 new file mode 100644
-index 000000000000..daf55556036f
+index 000000000000..04d8bbb8ea51
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-@@ -0,0 +1,181 @@
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -0,0 +1,168 @@
 +/*
-+ * Copyright (C) 2017 Chen-Yu Tsai <wens@csie.org>
-+ * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
++ * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 + *
 + * This file is dual-licensed: you can use it either under the terms
 + * of the GPL or the X11 license, at your option. Note that this dual
@@ -117,8 +118,8 @@ index 000000000000..daf55556036f
 +#include "sunxi-common-regulators.dtsi"
 +
 +/ {
-+	model = "Banana Pi BPI-M2-Ultra";
-+	compatible = "sinovoip,bpi-m2-ultra", "allwinner,sun8i-r40";
++	model = "Banana Pi M2 Berry";
++	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
 +
 +	aliases {
 +		serial0 = &uart0;
@@ -127,6 +128,7 @@ index 000000000000..daf55556036f
 +	chosen {
 +		stdout-path = "serial0:115200n8";
 +	};
++
 +	leds {
 +		compatible = "gpio-leds";
 +
@@ -136,14 +138,9 @@ index 000000000000..daf55556036f
 +			default-state = "on";
 +		};
 +
-+		user-led-green {
++		user-led {
 +			label = "bananapi:green:user";
 +			gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		user-led-blue {
-+			label = "bananapi:blue:user";
-+			gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>;
 +		};
 +	};
 +
@@ -156,7 +153,7 @@ index 000000000000..daf55556036f
 +&i2c0 {
 +	status = "okay";
 +
-+	axp22x: pmic@34 {
++	axp22x: pmic@68 {
 +		compatible = "x-powers,axp221";
 +		reg = <0x34>;
 +		interrupt-parent = <&nmi_intc>;
@@ -233,14 +230,6 @@ index 000000000000..daf55556036f
 +	vqmmc-supply = <&reg_dldo1>;
 +	mmc-pwrseq = <&wifi_pwrseq>;
 +	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	vmmc-supply = <&reg_dcdc1>;
-+	vqmmc-supply = <&reg_dcdc1>;
-+	bus-width = <8>;
 +	non-removable;
 +	status = "okay";
 +};
