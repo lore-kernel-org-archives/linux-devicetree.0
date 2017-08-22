@@ -1,187 +1,138 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 1/3] media: V3s: Add support for Allwinner CSI.
-Date: Tue, 22 Aug 2017 19:43:39 +0200
-Message-ID: <20170822174339.6woauylgzkgqxygk@flea.lan>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
- <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
- <20170728160233.xooevio4hoqkgfaq@flea.lan>
- <20170731111640.d5a8e580a48183cfce85943d@magewell.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for
+ sun8i-h3-emac
+Date: Tue, 22 Aug 2017 20:11:40 +0200
+Message-ID: <20170822181140.GA11596@Red>
+References: <20170819185025.GB13266@Red>
+ <20170819203836.GA21567@lunn.ch>
+ <20170820065757.GA6081@Red>
+ <20170820142545.GB24150@lunn.ch>
+ <CAGb2v67hQXSoCKP7qW+KRUYX+0djQ1Z23cQ67Lyg6G7ozGyfGQ@mail.gmail.com>
+ <20170821132015.GB1703@lunn.ch>
+ <20170821133104.qvrhvwin2rdg4aqo@flea.lan>
+ <20170821142321.GE1703@lunn.ch>
+ <CAGb2v64E4T=1ff3POGuXZA=MvjGAnKQ6OF6A3sT_cU-=jh6zNw@mail.gmail.com>
+ <bfe784b6-5137-8fcd-dbd0-ad96974f4060@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zatyhyqmpkkyikjj"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170731111640.d5a8e580a48183cfce85943d@magewell.com>
+In-Reply-To: <bfe784b6-5137-8fcd-dbd0-ad96974f4060@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong <yong.deng@magewell.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Hans Verkuil <hverkuil@xs4all.nl>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>lin
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Andrew Lunn <andrew@lunn.ch>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Aug 22, 2017 at 09:40:24AM -0700, Florian Fainelli wrote:
+> On 08/22/2017 08:39 AM, Chen-Yu Tsai wrote:
+> > On Mon, Aug 21, 2017 at 10:23 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> >>> All muxes are mostly always represented the same way afaik, or do you
+> >>> want to simply introduce a new compatible / property?
+> >>
+> >> +         mdio-mux {
+> >> +               compatible = "allwinner,sun8i-h3-mdio-switch";
+> >> +               mdio-parent-bus = <&mdio_parent>;
+> >> +               #address-cells = <1>;
+> >> +               #size-cells = <0>;
+> >> +
+> >> +               internal_mdio: mdio@1 {
+> >>                         reg = <1>;
+> >> -                       clocks = <&ccu CLK_BUS_EPHY>;
+> >> -                       resets = <&ccu RST_BUS_EPHY>;
+> >> +                       #address-cells = <1>;
+> >> +                       #size-cells = <0>;
+> >> +                       int_mii_phy: ethernet-phy@1 {
+> >> +                               compatible = "ethernet-phy-ieee802.3-c22";
+> >> +                               reg = <1>;
+> >> +                               clocks = <&ccu CLK_BUS_EPHY>;
+> >> +                               resets = <&ccu RST_BUS_EPHY>;
+> >> +                               phy-is-integrated;
+> >> +                       };
+> >> +               };
+> >> +               mdio: mdio@0 {
+> >> +                       reg = <0>;
+> >> +                       #address-cells = <1>;
+> >> +                       #size-cells = <0>;
+> >>                 };
+> >>
+> >> Hi Maxim
+> >>
+> >> Anybody who knows the MDIO-mux code/binding, knows that it is a run
+> >> time mux. You swap the mux per MDIO transaction. You can access all
+> >> the PHY and switches on the mux'ed MDIO bus.
+> >>
+> >> However here, it is effectively a boot-time MUX. You cannot change it
+> >> on the fly. What happens when somebody has a phandle to a PHY on the
+> >> internal and a phandle to a phy on the external? Does the driver at
+> >> least return -EINVAL, or -EBUSY? Is there a representation which
+> >> eliminates this possibility?
+> > 
+> > There is only one controller. Either you use the internal PHY, which
+> > is then directly coupled (no magnetics needed) to the RJ45 port, or
+> > you use an external PHY over MII/RMII/RGMII. You could supposedly
+> > have both on a board, and let the user choose one. But why bother
+> > with the extra complexity and cost? Either you use the internal PHY
+> > at 100M, or an external RGMII PHY for gigabit speeds.
+> 
+> I agree, there is no point in over-engineering any of this. I don't
+> think there is actually any MDIO mux per-se in that the MDIO clock and
+> data lines are muxed, however there has to be some kind of built-in port
+> multiplexer that lets you chose between connecting to the internal PHY
+> and any external PHY/MAC, but that is not what a "mdio-mux" node represents.
+> 
+> > 
+> > So I think what you are saying is either impossible or engineering-wise
+> > a very stupid design, like using an external MAC with a discrete PHY
+> > connected to the internal MAC's MDIO bus, while using the internal MAC
+> > with the internal PHY.
+> > 
+> > Now can we please decide on something? We're a week and a half from
+> > the 4.13 release. If mdio-mux is wrong, then we could have two mdio
+> > nodes (internal-mdio & external-mdio).
+> 
+> I really don't see a need for a mdio-mux in the first place, just have
+> one MDIO controller (current state) sub-node which describes the
+> built-in STMMAC MDIO controller and declare the internal PHY as a child
+> node (along with 'phy-is-integrated'). If a different configuration is
+> used, then just put the external PHY as a child node there.
+> 
+> If fixed-link is required, the mdio node becomes unused anyway.
+> 
+> Works for everyone?
 
---zatyhyqmpkkyikjj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If we put an external PHY with reg=1 as a child of internal MDIO, il will be merged with internal PHY node and get phy-is-integrated.
 
-Hi Yong,
+Does two MDIO node "internal-mdio" and "mdio" works for you ?
+(We keep "mdio" for external MDIO for reducing the number of patchs)
 
-On Mon, Jul 31, 2017 at 11:16:40AM +0800, Yong wrote:
-> > > @@ -143,6 +143,7 @@ source "drivers/media/platform/am437x/Kconfig"
-> > >  source "drivers/media/platform/xilinx/Kconfig"
-> > >  source "drivers/media/platform/rcar-vin/Kconfig"
-> > >  source "drivers/media/platform/atmel/Kconfig"
-> > > +source "drivers/media/platform/sun6i-csi/Kconfig"
-> >=20
-> > We're going to have several different drivers in v4l eventually, so I
-> > guess it would make sense to move to a directory of our own.
->=20
-> Like this?
-> drivers/media/platform/sunxi/sun6i-csi
+Thanks
+Regards
 
-Yep.
-
-> > > +static int sun6i_graph_notify_complete(struct v4l2_async_notifier *n=
-otifier)
-> > > +{
-> > > +	struct sun6i_csi *csi =3D
-> > > +			container_of(notifier, struct sun6i_csi, notifier);
-> > > +	struct sun6i_graph_entity *entity;
-> > > +	int ret;
-> > > +
-> > > +	dev_dbg(csi->dev, "notify complete, all subdevs registered\n");
-> > > +
-> > > +	/* Create links for every entity. */
-> > > +	list_for_each_entry(entity, &csi->entities, list) {
-> > > +		ret =3D sun6i_graph_build_one(csi, entity);
-> > > +		if (ret < 0)
-> > > +			return ret;
-> > > +	}
-> > > +
-> > > +	/* Create links for video node. */
-> > > +	ret =3D sun6i_graph_build_video(csi);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> >=20
-> > Can you elaborate a bit on the difference between a node parsed with
-> > _graph_build_one and _graph_build_video? Can't you just store the
-> > remote sensor when you build the notifier, and reuse it here?
->=20
-> There maybe many usercases:
-> 1. CSI->Sensor.
-> 2. CSI->MIPI->Sensor.
-> 3. CSI->FPGA->Sensor1
->             ->Sensor2.
-> FPGA maybe some other video processor. FPGA, MIPI, Sensor can be
-> registered as v4l2 subdevs. We do not care about the driver code
-> of them. But they should be linked together here.
->=20
-> So, the _graph_build_one is used to link CSI port and subdevs.=20
-> _graph_build_video is used to link CSI port and video node.
-
-So the graph_build_one is for the two first cases, and the
-_build_video for the latter case?
-
-If so, you should take a look at the last iteration of the
-subnotifiers rework by Nikas S=F6derlund (v4l2-async: add subnotifier
-registration for subdevices).
-
-It allows subdevs to register notifiers, and you don't have to build
-the graph from the video device, each device and subdev can only care
-about what's next in the pipeline, but not really what's behind it.
-
-That would mean in your case that you can only deal with your single
-CSI pad, and whatever subdev driver will use it care about its own.
-
-> This part is also difficult to understand for me. The one CSI module
-> have only one DMA channel(single port). But thay can be linked to=20
-> different physical port (Parallel or MIPI)(multiple ep) by IF select
-> register.
->=20
-> For now, the binding can have several ep, the driver will just pick
-> the first valid one.
-
-Yeah, I'm not really sure how we could deal with that, but I guess we
-can do it later on.
-
-> >=20
-> > > +struct sun6i_csi_ops {
-> > > +	int (*get_supported_pixformats)(struct sun6i_csi *csi,
-> > > +					const u32 **pixformats);
-> > > +	bool (*is_format_support)(struct sun6i_csi *csi, u32 pixformat,
-> > > +				  u32 mbus_code);
-> > > +	int (*s_power)(struct sun6i_csi *csi, bool enable);
-> > > +	int (*update_config)(struct sun6i_csi *csi,
-> > > +			     struct sun6i_csi_config *config);
-> > > +	int (*update_buf_addr)(struct sun6i_csi *csi, dma_addr_t addr);
-> > > +	int (*s_stream)(struct sun6i_csi *csi, bool enable);
-> > > +};
-> >=20
-> > Didn't we agreed on removing those in the first iteration? It's not
-> > really clear at this point whether they will be needed at all. Make
-> > something simple first, without those ops. When we'll support other
-> > SoCs we'll have a better chance at seeing what and how we should deal
-> > with potential quirks.
->=20
-> OK. But without ops, it is inappropriate to sun6i_csi and sun6i_csi.
-> Maybe I should merge the two files.
-
-I'm not sure what you meant here, but if you think that's appropriate,
-please go ahead.
-
-> > > +		return IRQ_HANDLED;
-> > > +	}
-> > > +
-> > > +	if (status & CSI_CH_INT_STA_FD_PD) {
-> > > +		sun6i_video_frame_done(&sdev->csi.video);
-> > > +	}
-> > > +
-> > > +	regmap_write(regmap, CSI_CH_INT_STA_REG, status);
-> >=20
-> > Isn't it redundant with the one you did in the condition a bit above?
-> >=20
-> > You should also check that your device indeed generated an
-> > interrupt. In the occurence of a spourious interrupt, your code will
-> > return IRQ_HANDLED, which is the wrong thing to do.
-> >=20
-> > I think you should reverse your logic a bit here to make this
-> > easier. You should just check that your status flags are indeed set,
-> > and if not just bail out and return IRQ_NONE.
-> >=20
-> > And if they are, go on with treating your interrupt.
->=20
-> OK. I will add check for status flags.
-> BTW, how can a spurious interrupt occurred?
-
-Usually it's either through some interference, or some poorly designed
-controller. This is unlikely, but it's something you should take into
-account.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---zatyhyqmpkkyikjj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZnG1LAAoJEBx+YmzsjxAg0HcP/RrpgFmQ+kSctr5oXL7ZBYp5
-68BTDv4enVtnV2rA/VrFBbxf6bnFpfx2W1/XK9oo3+h+NQE8tBmMQglkNpxKr5h8
-OyVr5Q88Hm9cW1b+5hgp+/z6i1946evhFAI2LspPG7GlNGybXUILu7x15hAzMIyq
-N9gNn6qn4Tu7L/o3OWNaY4CsiUnhargxQRa7sxTiGaPFf39TjNw+Z8CgpwT6twQA
-cE8gro97zP9+mMrdW5W7gQ7bkTgfibP1ax6Zti68rqAqfG3nwWyW//sb62fQMuUR
-4axgFvYGIG1ky5UeyrwmrT14XvdPrFsoodKvyoremeZ3crFH86ZLwfTNoWlTJ05c
-OfOpuUFZtuvx5lCyN+s8cDjh9I+WjNopGJFugQSvik9xIxStt4vhYi50dmz1bZ6i
-9BChqVmmNh4IkS1NVqokt+PyX+2XJBZHLc/duGzUwy6aj4jFINQqvX5/I4L7Gv01
-WANwN84X6KCXdEr94hXCqxdejbB5LlAFmVJZbPc0psEGFX9fNxP6PGtIv2E2EWqa
-9z7q0U8k+m4Yyy2p1YwEcTD3AygxM9TSZTnn+VXAZWf5DhBisJJfHa0pXqRREa/l
-U0X3ZmedO8yuvE1pCYppsZB8IBupX05Aw6N5MqZpA8Azkz0lkcuzYW037t1EZYAP
-ysJ5K0MtOsZFvMV88Xud
-=QjH0
------END PGP SIGNATURE-----
-
---zatyhyqmpkkyikjj--
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 4b599b5d26f6..d5e7cf0d9454 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -417,7 +417,8 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			mdio: mdio {
++			/* Only one MDIO is usable at the time */
++			internal_mdio: mdio@1 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				int_mii_phy: ethernet-phy@1 {
+@@ -425,8 +426,13 @@
+ 					reg = <1>;
+ 					clocks = <&ccu CLK_BUS_EPHY>;
+ 					resets = <&ccu RST_BUS_EPHY>;
++					phy-is-integrated;
+ 				};
+ 			};
++			mdio: mdio@0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 		};
+ 
+ 		spi0: spi@01c68000 {
