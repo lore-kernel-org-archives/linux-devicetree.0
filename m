@@ -1,78 +1,43 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3] mfd: max77693: Add muic of_compatible in mfd_cell
-Date: Tue, 22 Aug 2017 14:01:13 +0200
-Message-ID: <CAJKOXPeJeMOgQB32ajWT15TLHw6h8cxnf5UFT-dturCfarxv0g@mail.gmail.com>
-References: <CGME20170822073921eucas1p19bfd5837c4788b9be3ab811c26391364@eucas1p1.samsung.com>
- <1503387537-18342-1-git-send-email-m.purski@samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
+Date: Tue, 22 Aug 2017 15:20:44 +0300
+Message-ID: <0b7c2e3e-e620-fc47-6bca-6ec4e6b4efb2@cogentembedded.com>
+References: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
+ <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
+ <20170810080121.GE16647@verge.net.au> <20170810112411.GA4380@katana>
+ <TY1PR06MB0702EA22AFE7D8145BF623A6B7880@TY1PR06MB0702.apcprd06.prod.outlook.com>
+ <CAMuHMdXX0BRvWOc4iosiYNWuA4tP2BpLF5kndNrDL4FeKctgkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503387537-18342-1-git-send-email-m.purski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, lee.jones@linaro.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXX0BRvWOc4iosiYNWuA4tP2BpLF5kndNrDL4FeKctgkA@mail.gmail.com>
+Content-Language: en-MW
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 22, 2017 at 9:38 AM, Maciej Purski <m.purski@samsung.com> wrote:
-> This patch adds muic of_compatible in order to use the muic device
-> driver in device tree.
->
-> v2:
-> - added muic to documentation
+Hello!
 
-Change log should not go to commit message. Put it after separator ---.
+On 08/14/2017 05:15 PM, Geert Uytterhoeven wrote:
 
-+cc devicetree - scripts/get_maintainer.pl should point you that list.
+>>> From: Wolfram Sang [mailto:wsa@the-dreams.de]
+>>> Sent: 10 August 2017 12:24
+>>>
+>>>
+>>>>>> +                i2c6: i2c@e60b0000 {
+>>>>>
+>>>>>     I'd use iic0 as the label.
+> 
+> Sergei: I assume you meant "iic3"? ;-)
 
-With the change in commit msg:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+    After having a look at the manual, yes. :-)
 
-Best regards,
-Krzysztof
+[...]
 
->
-> v3:
-> - removed duplication
->
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mfd/max77693.txt | 6 ++++++
->  drivers/mfd/max77693.c                             | 5 ++++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
-> index 6a1ae3a..e675497 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> @@ -127,6 +127,12 @@ Required properties for the LED child node:
->  Optional properties for the LED child node:
->  - label : see Documentation/devicetree/bindings/leds/common.txt
->
-> +Optional nodes:
-> +- max77693-muic :
-> +       Node used only by extcon consumers.
-> +       Required properties:
-> +               - compatible : "maxim,max77693-muic"
-> +
->  Example:
->  #include <dt-bindings/leds/common.h>
->
-> diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
-> index 662ae0d..1c05ea0 100644
-> --- a/drivers/mfd/max77693.c
-> +++ b/drivers/mfd/max77693.c
-> @@ -48,7 +48,10 @@ static const struct mfd_cell max77693_devs[] = {
->                 .name = "max77693-charger",
->                 .of_compatible = "maxim,max77693-charger",
->         },
-> -       { .name = "max77693-muic", },
-> +       {
-> +               .name = "max77693-muic",
-> +               .of_compatible = "maxim,max77693-muic",
-> +       },
->         {
->                 .name = "max77693-haptic",
->                 .of_compatible = "maxim,max77693-haptic",
-> --
-> 2.7.4
->
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+
+MBR, Sergei
