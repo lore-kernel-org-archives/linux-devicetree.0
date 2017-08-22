@@ -1,22 +1,30 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 2/4] clk: rockchip: rv1108: add ACLK_GMAC and PCLK_GMAC clk id
-Date: Tue, 22 Aug 2017 02:52:46 +0200
-Message-ID: <2771200.zl9p58xxmH@phil>
-References: <1503303367-17915-1-git-send-email-zhangqing@rock-chips.com> <1503303367-17915-3-git-send-email-zhangqing@rock-chips.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] clk: rockchip: rv1108: rename macphy to mac
+Date: Tue, 22 Aug 2017 02:56:26 +0200
+Message-ID: <5151080.hknpSUNAHO@phil>
+References: <1503303367-17915-1-git-send-email-zhangqing@rock-chips.com> <1503303367-17915-4-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1503303367-17915-3-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, cl@rock-chips.com, andy.yan@rock-chips.com, wdc@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1503303367-17915-4-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 21. August 2017, 16:16:05 CEST schrieb Elaine Zhang:
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+Am Montag, 21. August 2017, 16:16:06 CEST schrieb Elaine Zhang:
+> This MAC has no internal phy for rv1108.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-applied for 4.14 after adapting the subject and adding a commit message
+applied for 4.14 after adapting the subject and adding a sentence
+to the commit message that this change is safe due to gmac not
+being used yet.
 
 
 Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
