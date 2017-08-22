@@ -1,75 +1,78 @@
-From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 3/3] ARM: dts: sun7i: Rename sun7i-a20-olinuxino-lime2-emmc
-Date: Tue, 22 Aug 2017 14:43:13 +0300
-Message-ID: <20170822114313.9038-4-stefan@olimex.com>
-References: <20170822114313.9038-1-stefan@olimex.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3] mfd: max77693: Add muic of_compatible in mfd_cell
+Date: Tue, 22 Aug 2017 14:01:13 +0200
+Message-ID: <CAJKOXPeJeMOgQB32ajWT15TLHw6h8cxnf5UFT-dturCfarxv0g@mail.gmail.com>
+References: <CGME20170822073921eucas1p19bfd5837c4788b9be3ab811c26391364@eucas1p1.samsung.com>
+ <1503387537-18342-1-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170822114313.9038-1-stefan@olimex.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503387537-18342-1-git-send-email-m.purski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, lee.jones@linaro.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rename dts file for A20-OLinuXino-LIME2-eMMC to match Olimex Ltd.
-naming convention.
+On Tue, Aug 22, 2017 at 9:38 AM, Maciej Purski <m.purski@samsung.com> wrote:
+> This patch adds muic of_compatible in order to use the muic device
+> driver in device tree.
+>
+> v2:
+> - added muic to documentation
 
-<board-name>-exGB - option with <x>GB eMMC chip
-<board-name>-nxGB - option with <x>GB NAND chip
-<board-name>-sxMB - option with <x>MB SPI FLASH chip
+Change log should not go to commit message. Put it after separator ---.
 
-For example:
-	A20-OLinuXino-LIME2-e4GB - 4GB eMMC
-	A20-OLinuXIno-LIME2-n4GB - 4GB NAND
-	A20-OLinuXIno-LIME2-n8GB - 8GB NAND
++cc devicetree - scripts/get_maintainer.pl should point you that list.
 
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
----
- arch/arm/boot/dts/Makefile                                            | 2 +-
- ...20-olinuxino-lime2-emmc.dts => sun7i-a20-olinuxino-lime2-exgb.dts} | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
- rename arch/arm/boot/dts/{sun7i-a20-olinuxino-lime2-emmc.dts => sun7i-a20-olinuxino-lime2-exgb.dts} (96%)
+With the change in commit msg:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 90cbfc57948e..d37e93175fbf 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -878,7 +878,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-olimex-som-evb.dtb \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
--	sun7i-a20-olinuxino-lime2-emmc.dtb \
-+	sun7i-a20-olinuxino-lime2-exgb.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
- 	sun7i-a20-olinuxino-micro-exgb.dtb \
- 	sun7i-a20-orangepi.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-exgb.dts
-similarity index 96%
-rename from arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
-rename to arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-exgb.dts
-index 81f376f2a44d..38d95eaaa224 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-exgb.dts
-@@ -44,8 +44,8 @@
- #include "sun7i-a20-olinuxino-lime2.dts"
- 
- / {
--	model = "Olimex A20-OLinuXino-LIME2-eMMC";
--	compatible = "olimex,a20-olinuxino-lime2-emmc", "allwinner,sun7i-a20";
-+	model = "Olimex A20-OLinuXino-LIME2-exGB";
-+	compatible = "olimex,a20-olinuxino-lime2-exgb", "allwinner,sun7i-a20";
- 
- 	mmc2_pwrseq: pwrseq {
- 		pinctrl-0 = <&mmc2_pins_nrst>;
--- 
-2.11.0
+Best regards,
+Krzysztof
+
+>
+> v3:
+> - removed duplication
+>
+> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/max77693.txt | 6 ++++++
+>  drivers/mfd/max77693.c                             | 5 ++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+> index 6a1ae3a..e675497 100644
+> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+> @@ -127,6 +127,12 @@ Required properties for the LED child node:
+>  Optional properties for the LED child node:
+>  - label : see Documentation/devicetree/bindings/leds/common.txt
+>
+> +Optional nodes:
+> +- max77693-muic :
+> +       Node used only by extcon consumers.
+> +       Required properties:
+> +               - compatible : "maxim,max77693-muic"
+> +
+>  Example:
+>  #include <dt-bindings/leds/common.h>
+>
+> diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
+> index 662ae0d..1c05ea0 100644
+> --- a/drivers/mfd/max77693.c
+> +++ b/drivers/mfd/max77693.c
+> @@ -48,7 +48,10 @@ static const struct mfd_cell max77693_devs[] = {
+>                 .name = "max77693-charger",
+>                 .of_compatible = "maxim,max77693-charger",
+>         },
+> -       { .name = "max77693-muic", },
+> +       {
+> +               .name = "max77693-muic",
+> +               .of_compatible = "maxim,max77693-muic",
+> +       },
+>         {
+>                 .name = "max77693-haptic",
+>                 .of_compatible = "maxim,max77693-haptic",
+> --
+> 2.7.4
+>
