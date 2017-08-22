@@ -1,54 +1,27 @@
-From: Li Xu <li.xu@cirrus.com>
-Subject: Re: [PATCH v2 2/2] ASoC: cs43130: Add devicetree
-	bindings for CS43130
-Date: Tue, 22 Aug 2017 09:18:54 -0500
-Message-ID: <154cc0d8-05af-4a17-b426-5a1f5b916372@EX3.ad.cirrus.com>
-References: <1503072020-19999-1-git-send-email-li.xu@cirrus.com>
- <65594a37-aecf-4be2-bc5e-f392b4d9a129@EX3.ad.cirrus.com>
- <20170821233147.75jndug3j7lcggcp@rob-hp-laptop>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v2 0/8] MT2712 IOMMU SUPPORT
+Date: Tue, 22 Aug 2017 16:38:37 +0200
+Message-ID: <20170822143836.ac3faa7wcwfjtvjc@8bytes.org>
+References: <1503313221-26453-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170821233147.75jndug3j7lcggcp@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, brian.austin@cirrus.com, tiwai@suse.com, lgirdwood@gmail.com, Paul.Handrigan@cirrus.com, broonie@kernel.org
+In-Reply-To: <1503313221-26453-1-git-send-email-yong.wu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Tomasz Figa <tfiga@google.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, arnd@arndb.de, honghui.zhang@mediatek.com, k.zhang@mediatek.com, cloud.zhou@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 06:31:48PM -0500, Rob Herring wrote:
-> On Fri, Aug 18, 2017 at 11:00:20AM -0500, Li Xu wrote:
-> > Add devicetree bindings documentation file for Cirrus
-> > Logic CS43130 codec.
-> > 
-> > Signed-off-by: Li Xu <li.xu@cirrus.com>
-> > ---
-> >  .../devicetree/bindings/sound/cs43130.txt          | 67 ++++++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/cs43130.txt
-> 
-> For the 4th time, I'm acking this (v2 and v3 last Dec and the new v1 a 
-> few weeks ago). Please add acks when posting new versions.
-> 
-> Though you keep changing something looking at the diffstats. I'm not 
-> sure what though because you have no version history.
-> 
-> Rob
+On Mon, Aug 21, 2017 at 07:00:13PM +0800, Yong Wu wrote:
+> Yong Wu (8):
+>   dt-bindings: mediatek: Add binding for mt2712 IOMMU and SMI
+>   iommu/mediatek: Move MTK_M4U_TO_LARB/PORT into mtk_iommu.c
+>   iommu/mediatek: Add mt2712 IOMMU support
+>   iommu/mediatek: Merge 2 M4U HWs into one iommu domain
+>   iommu/mediatek: Move pgtable allocation into domain_alloc
+>   iommu/mediatek: Disable iommu clock when system suspend
+>   iommu/mediatek: Enlarge the validate PA range for 4GB mode
+>   memory: mtk-smi: Degrade SMI init to module_init
 
-Thanks for the feedback.  I am new to Linux kernel patch submission.
-
-I will add cover letter to patch set, which would explain version change info.
-I will also add "Acked-by: Rob Herring <robh@kernel.org>" in commit message below
-"Signed-off-by: ..."
-
-
-Li
+Applied patches 2-7. Patch 1 is something for Matthias.
