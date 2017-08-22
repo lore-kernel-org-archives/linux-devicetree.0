@@ -1,55 +1,64 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sun7i: Rename sun7i-a20-olinuxino-lime2-emmc
-Date: Tue, 22 Aug 2017 22:20:54 +0200
-Message-ID: <20170822202054.hpyl3ndo3apduone@flea.home>
-References: <20170822114313.9038-1-stefan@olimex.com>
- <20170822114313.9038-4-stefan@olimex.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: net: bluetooth: Add
+ broadcom-bluetooth
+Date: Tue, 22 Aug 2017 22:27:43 +0200
+Message-ID: <4c23bcb6-1b90-c41e-6e47-7d8315e760ae@gmail.com>
+References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
+ <20170822074726.e424lflqxn6mb4xd@flea.lan>
+ <f2fcf522-cd1e-e748-0ee7-ad28bbf8ae5d@i2se.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bewte7l4iqutbhld"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMNE6LGAKGQEUNJNECQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170822114313.9038-4-stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f2fcf522-cd1e-e748-0ee7-ad28bbf8ae5d-eS4NqCHxEME@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Maxime,
 
---bewte7l4iqutbhld
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+>> Thanks a lot for working on that, I've made a similar attempt a few
+>> weeks ago but didn't manage to get it to work.
+>>
+>> The way it's hooked in our boards is a bit more complex though, even
+>> if it could be because we're using a different part.
+>>
+>> In order to get it running we need:
+>>    - two clocks, called in the broadcom datasheets lpo and tcxo.
+>>    - three GPIOs, device wakeup, host wakeup and a shutdown GPIO (which
+>>      might be the BT_ON you were discussing about)
+>>    - two regulators called vbat and reg-en for us (I guess they're
+>>      meant to power the chip, and its registers >>
+>> Do you know if you're also using those? Or could it be that it's just
+>> hardwired to some non-gatable crystal / regulator on the RPI?
 
-Hi,
+Not on Pi3, but the three gpios and the clock are pretty common for
+Broadcom bt controller (cf v4 of dt-bindings patch).
 
-On Tue, Aug 22, 2017 at 02:43:13PM +0300, Stefan Mavrodiev wrote:
-> Rename dts file for A20-OLinuXino-LIME2-eMMC to match Olimex Ltd.
-> naming convention.
+This is already partially supported in the hci_bcm driver.
+Today this driver registers a platform_driver(legacy/ACPI) and a
+serdev_device_driver (new/DT).
+
+The platform driver retrieves the gpios and mainly uses them in pm ops.
+Once the ACPI for serdev will be supported, this plat driver should be
+removed.
+
+The serdev driver does no support this yet because I used the RPi3
+as dev platform. But this is something we want to have as well.
+
 > 
-> <board-name>-exGB - option with <x>GB eMMC chip
-> <board-name>-nxGB - option with <x>GB NAND chip
-> <board-name>-sxMB - option with <x>MB SPI FLASH chip
+> unfortunately the Foundation doesn't provide the full schematics for RPI 
+> 3 or RPI Zero W (which uses the same chip).
 > 
-> For example:
-> 	A20-OLinuXino-LIME2-e4GB - 4GB eMMC
-> 	A20-OLinuXIno-LIME2-n4GB - 4GB NAND
-> 	A20-OLinuXIno-LIME2-n8GB - 8GB NAND
+> Please also take a look at the RPI Zero W device tree sources, which 
+> describe the wifi part of the chip [1]. It contains a line called WL_ON 
+> on gpio41 and the low power clock on gpio43.
 
-I'm not going to merge this patch, because it basically breaks all the
-bootloaders scripts, distros or build systems out there. We have a
-name, let's stick with that.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---bewte7l4iqutbhld--
+Regards,
+Loic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
