@@ -1,85 +1,112 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] powerpc: pseries: vio: match parent nodes with of_find_node_by_path
-Date: Tue, 22 Aug 2017 15:12:17 +1000
-Message-ID: <87fuckb2z2.fsf@concordia.ellerman.id.au>
-References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-3-robh@kernel.org>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH 2/2] ARM: sunxi: add support for R40 SoC
+Date: Tue, 22 Aug 2017 13:14:09 +0800
+Message-ID: <0809ae2d75f210b9bfee49b383f226b2@aosc.io>
+References: <20170820052957.34597-1-icenowy@aosc.io>
+ <20170820052957.34597-2-icenowy@aosc.io>
+ <20170821093405.n4bum7j6nswnv6wr@flea.lan>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170821151651.25096-3-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJX353GAKGQEZD4WBPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170821093405.n4bum7j6nswnv6wr-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+=E5=9C=A8 2017-08-21 17:34=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> Hi,
+>=20
+> On Sun, Aug 20, 2017 at 01:29:57PM +0800, Icenowy Zheng wrote:
+>> Allwinner R40 is a new SoC, with Quad Core Cortex-A7 and peripherals
+>> like A20.
+>>=20
+>> Add support for it.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>>  Documentation/arm/sunxi/README                  | 6 ++++++
+>>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
+>>  3 files changed, 8 insertions(+)
+>>=20
+>> diff --git a/Documentation/arm/sunxi/README=20
+>> b/Documentation/arm/sunxi/README
+>> index d7b1f016bd62..4fa836782e46 100644
+>> --- a/Documentation/arm/sunxi/README
+>> +++ b/Documentation/arm/sunxi/README
+>> @@ -75,6 +75,12 @@ SunXi family
+>>          + Datasheet
+>>           =20
+>> http://linux-sunxi.org/File:Allwinner_V3s_Datasheet_V1.0.pdf
+>>=20
+>> +      - Allwinner R40 (sun8i)
+>> +        + Datasheet
+>> +         =20
+>> https://github.com/tinalinux/docs/raw/r40-v1.y/R40_Datasheet_V1.0.pdf
+>> +        + User Manual
+>> +         =20
+>> https://github.com/tinalinux/docs/raw/r40-v1.y/Allwinner_R40_User_Manual=
+_V1.0.pdf
+>> +
+>=20
+> Please sort it by alphabetical order.
 
-> In preparation to remove the full path from device_node.full_name, use
-> of_find_node_by_path instead of open coding with strcmp.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
-> v2:
-> - rebased to linux-next and removed spurious change fro patch 1.
->
->  arch/powerpc/platforms/pseries/vio.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
-> index aa5ca74316fa..5754572deb23 100644
-> --- a/arch/powerpc/platforms/pseries/vio.c
-> +++ b/arch/powerpc/platforms/pseries/vio.c
-> @@ -1357,9 +1357,9 @@ struct vio_dev *vio_register_device_node(struct device_node *of_node)
->  	 */
->  	parent_node = of_get_parent(of_node);
->  	if (parent_node) {
-> -		if (!strcmp(parent_node->full_name, "/ibm,platform-facilities"))
-> +		if (parent_node == of_find_node_by_path("/ibm,platform-facilities"))
->  			family = PFO;
-> -		else if (!strcmp(parent_node->full_name, "/vdevice"))
-> +		else if (parent_node == of_find_node_by_path("/vdevice"))
->  			family = VDEVICE;
+I prefer to sort it by the wafer ID (the number after w in the official=20
+ID).
 
-This leaks references to the looked up nodes.
+The current document can be explained to follow the alphabetical order
+or the wafer ID.
 
-Both these nodes are defined in PAPR (our hypervisor spec), and both of
-them must have a device_type, either "ibm,platform-facilities" or
-"vdevice".
+P.S. there's some error in the V3s datasheet position, and if it's fixed
+we can still continue to make the two kinds of order both meaningful ;-)
 
-Looking at the commit that added the code I don't see any particular
-reason it used the comparison against full_name, rather than using the
-device_type.
+>=20
+>>      * Quad ARM Cortex-A15, Quad ARM Cortex-A7 based SoCs
+>>        - Allwinner A80
+>>          + Datasheet
+>> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt=20
+>> b/Documentation/devicetree/bindings/arm/sunxi.txt
+>> index f35c6ada5a65..e4beec3d9ad3 100644
+>> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+>> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+>> @@ -14,6 +14,7 @@ using one of the following compatible strings:
+>>    allwinner,sun8i-a83t
+>>    allwinner,sun8i-h2-plus
+>>    allwinner,sun8i-h3
+>> +  allwinner-sun8i-r40
+>>    allwinner,sun8i-v3s
+>>    allwinner,sun9i-a80
+>>    allwinner,sun50i-a64
+>> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+>> index 7ab353fb25f2..311e6c4fc4f4 100644
+>> --- a/arch/arm/mach-sunxi/sunxi.c
+>> +++ b/arch/arm/mach-sunxi/sunxi.c
+>> @@ -66,6 +66,7 @@ static const char * const sun8i_board_dt_compat[] =3D=
+=20
+>> {
+>>  	"allwinner,sun8i-h2-plus",
+>>  	"allwinner,sun8i-h3",
+>>  	"allwinner,sun8i-v3s",
+>> +	"allwinner,sun8i-r40",
+>=20
+> And same thing here.
+>=20
+> Thanks!
+> Maxime
 
-So I'm inclined to do this instead:
-
-diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
-index 8a47f168476b..f26f906e6021 100644
---- a/arch/powerpc/platforms/pseries/vio.c
-+++ b/arch/powerpc/platforms/pseries/vio.c
-@@ -1357,9 +1357,9 @@ struct vio_dev *vio_register_device_node(struct device_node *of_node)
- 	 */
- 	parent_node = of_get_parent(of_node);
- 	if (parent_node) {
--		if (!strcmp(parent_node->full_name, "/ibm,platform-facilities"))
-+		if (!strcmp(parent_node->type, "ibm,platform-facilities"))
- 			family = PFO;
--		else if (!strcmp(parent_node->full_name, "/vdevice"))
-+		else if (!strcmp(parent_node->type, "vdevice"))
- 			family = VDEVICE;
- 		else {
- 			pr_warn("%s: parent(%s) of %s not recognized.\n",
-
-
-I've checked both Qemu and kvmtool add the device_type, and I'm fairly
-confident that PowerVM does too. Anyway I'll test it on all the machines
-I can find.
-
-cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
