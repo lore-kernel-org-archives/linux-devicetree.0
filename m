@@ -1,72 +1,156 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/3] media: V3s: Add support for Allwinner CSI.
-Date: Tue, 22 Aug 2017 23:52:12 +0300
-Message-ID: <4387854.RiNf2zWZcD@avalon>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com> <8dd8c350-cd45-5cd9-65cc-67102944811f@xs4all.nl> <20170822201731.hyjqrbkhggaoomfl@flea.home>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Wed, 23 Aug 2017 00:03:32 +0300
+Message-ID: <2518768.foDtbh9bhx@avalon>
+References: <20170720092302.2982-1-maxime.ripard@free-electrons.com> <6400552.TlCMAsqn3H@avalon> <EB0D0DEA-1418-4237-910D-F0BE0B9069A1@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170822201731.hyjqrbkhggaoomfl@flea.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Yong <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Robert Jarzmik <rober>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <EB0D0DEA-1418-4237-910D-F0BE0B9069A1-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Cyprian,
 
-On Tuesday, 22 August 2017 23:17:31 EEST Maxime Ripard wrote:
-> On Tue, Aug 22, 2017 at 08:43:35AM +0200, Hans Verkuil wrote:
-> >>>> +static int sun6i_video_link_setup(struct media_entity *entity,
-> >>>> +				  const struct media_pad *local,
-> >>>> +				  const struct media_pad *remote, u32 flags)
-> >>>> +{
-> >>>> +	struct video_device *vdev = media_entity_to_video_device(entity);
-> >>>> +	struct sun6i_video *video = video_get_drvdata(vdev);
-> >>>> +
-> >>>> +	if (WARN_ON(video == NULL))
-> >>>> +		return 0;
-> >>>> +
-> >>>> +	return sun6i_video_formats_init(video);
-> >>> 
-> >>> Why is this called here? Why not in video_init()?
-> >> 
-> >> sun6i_video_init is in the driver probe context.
-> >> sun6i_video_formats_init use media_entity_remote_pad and
-> >> media_entity_to_v4l2_subdev to find the subdevs.
-> >> The media_entity_remote_pad can't work before all the media pad linked.
-> > 
-> > A video_init is typically called from the notify_complete callback.
-> > Actually, that's where the video_register_device should be created as
-> > well. When you create it in probe() there is possibly no sensor yet, so it
-> > would be a dead video node (or worse, crash when used).
-> > 
-> > There are still a lot of platform drivers that create the video node in
-> > the probe, but it's not the right place if you rely on the async loading
-> > of subdevs.
+On Tuesday, 22 August 2017 22:25:49 EEST Cyprian Wronka wrote:
+> On 22/08/2017, 02:01, Laurent Pinchart wrote:
+>> On Tuesday, 22 August 2017 11:53:20 EEST Maxime Ripard wrote:
+>>> On Mon, Aug 07, 2017 at 11:18:03PM +0300, Laurent Pinchart wrote:
+>>>> On Thursday 20 Jul 2017 11:23:01 Maxime Ripard wrote:
+>>>> The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that
+>>>>> supports up to 4 CSI-2 lanes, and can route the frames to up to 4
+>>>>> streams, depending on the hardware implementation.
+>>>>> 
+>>>>> It can operate with an external D-PHY, an internal one or no D-PHY
+>>>>> at all in some configurations.
+>>>> 
+>>>> Without any PHY ? I'm curious, how does that work ?
+>>>
+>>> We're currently working on an FPGA exactly with that configuration.
+>>> So I guess the answer would be "it doesn't on an ASIC" :)
+>>>
+>> What's connected to the input of the CSI-2 receiver ?
+>> 
+> It is connected to an instance of a CSI TX digital interface.
+
+That makes sense. I suppose it's a test setup
+
+>>>>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>>> ---
+>>>>> 
+>>>>> 
+>>>>>  .../devicetree/bindings/media/cdns-csi2rx.txt> | 87
+>>>>>  ++++++++++++++++
+>>>>>  1 file changed, 87 insertions(+)
+>>>>>  create mode 100644
+>>>>>  Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+>>>>> 
+>>>>> 
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+>>>>> b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt new file
+>>>>> mode 100644
+>>>>> index 000000000000..e08547abe885
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+>>>>> @@ -0,0 +1,87 @@
+>>>>> +Cadence MIPI-CSI2 RX controller
+>>>>> +===============================
+>>>>> +
+>>>>> +The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting
+>>>>> up to 4 CSI
+>>>>> +lanes in input, and 4 different pixel streams in output.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +  - compatible: must be set to "cdns,csi2rx" and an SoC-specific
+>>>>> compatible
+>>>>> +  - reg: base address and size of the memory mapped region
+>>>>> +  - clocks: phandles to the clocks driving the controller
+>>>>> +  - clock-names: must contain:
+>>>>> +    * sys_clk: main clock
+>>>>> +    * p_clk: register bank clock
+>>>>> +    * p_free_clk: free running register bank clock
+>>>>> +    * pixel_ifX_clk: pixel stream output clock, one for each
+>>>>> stream
+>>>>> +      implemented in hardware, between 0 and 3
+>>>> 
+>>>> Nitpicking, I would write the name is pixel_if[0-3]_clk, it took me
+>>>> a few seconds to see that the X was a placeholder.
+>>> 
+>>> Ok.
+>>> 
+>>>>> +    * dphy_rx_clk: D-PHY byte clock, if implemented in hardware
+>>>>> +  - phys: phandle to the external D-PHY
+>>>>> +  - phy-names: must contain dphy, if the implementation uses an
+>>>>> +     external D-PHY
+>>>> 
+>>>> I would move the last two properties in an optional category as
+>>>> they're effectively optional. I think you should also explain a bit more
+>>>> clearly that the phys property must not be present if the phy-names
+>>>> property is not present.
+>>> 
+>>> It's not really optional. The IP has a configuration register that
+>>> allows you to see if it's been synthesized with or without a PHY. If
+>>> the right bit is set, that property will be mandatory, if not, it's
+>>> useless.
+>> 
+>> Just to confirm, the PHY is a separate IP core, right ? Is the CSI-2
+>> receiver input interface different when used with a PHY and when used
+>> without one ? Could a third-party PHY be used as well ? If so, would the
+>> PHY synthesis bit be set or not ?
 > 
-> That's not really related, but I'm not really sure it's a good way to
-> operate. This essentially means that you might wait forever for a
-> component in your pipeline to be probed, without any chance of it
-> happening (not compiled, compiled as a module and not loaded, hardware
-> defect preventing the driver from probing properly, etc), even though
-> that component might not be essential.
+> The PHY (in our case a D-PHY) is a separate entity, it can be from a 3rd
+> party as the IP interface is standard, the SoC integrator would set the bit
+> accordingly based on whether any PHY is present or not. There is also an
+> option of routing digital output from a CSI-TX to a CSI-RX and in such case
+> a PHY would not need to be used (as in the case of our current platform). 
 
-I agree with Maxime here, we should build the media device incrementally, and 
-offer userspace access early on without waiting for all pieces to be 
-available. If properly implemented (there should definitely be so crash) I 
-don't see any drawback to that approach.
+OK, thank you for the clarification. 
 
-> This is how DRM operates, and you sometimes end up in some very dumb
-> situations where you wait for say, the DSI controller to probe, while
-> you only care about HDMI in your system.
-> 
-> But this seems to be on of the hot topic these days, so we might
-> discuss it further in some other thread :)
+Maxime mentioned that a bit can be read from a register to notify whether a 
+PHY has been synthesized or not. Does it influence the CSI-2 RX input 
+interface at all, or is the CSI-2 RX IP core synthesized the same way 
+regardless of whether a PHY is present or not ?
 
-Or here :-)
+>>> Maybe it's just semantics, but to me, optional means that it can
+>>> operate with or without it under any circumstances. It's not really
+>>> the case here.
+>> 
+>> It's a semantic issue, but documenting a property as required when it can
+>> be ommitted under some circumstances seems even weirder to me :-) I
+>> understand the optional category as "can be ommitted in certain
+>> circumstances". 
+>> 
+>>>>> +
+>>>>> +Required subnodes:
+>>>>> +  - ports: A ports node with endpoint definitions as defined in
+>>>>> + Documentation/devicetree/bindings/media/video-interfaces.txt. The
+>>>>> + first port subnode should be the input endpoint, the
+>>>>> second one the
+>>>>> + outputs
+>>>>> +
+>>>>> +  The output port should have as many endpoints as stream
+>>>>> supported by
+>>>>> +  the hardware implementation, between 1 and 4, their ID being
+>>>>> the
+>>>>> +  stream output number used in the implementation.
+>>>> 
+>>>> I don't think that's correct. The IP has four independent outputs,
+>>>> it should have 4 output ports for a total for 5 ports. Multiple
+>>>> endpoints per port would describe multiple connections from the same
+>>>> output to different sinks.
+>>>
+>>> Ok.
 
 -- 
 Regards,
 
 Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
