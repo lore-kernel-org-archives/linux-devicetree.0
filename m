@@ -1,53 +1,38 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH ] ARM: dts: iwg20d-q7: Add chosen node
-Date: Tue, 22 Aug 2017 10:07:35 +0200
-Message-ID: <20170822080735.GH30838@verge.net.au>
-References: <1503075488-44304-1-git-send-email-biju.das@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1503075488-44304-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Oza Pawandeep <oza.oza@broadcom.com>
+Subject: [PATCH v3 0/3] PCI hotplug feature
+Date: Tue, 22 Aug 2017 13:40:53 +0530
+Message-ID: <1503389456-27373-1-git-send-email-oza.oza@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.oza@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 05:58:08PM +0100, Biju Das wrote:
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> ---
-> This patch tested against renesas-dev tag renesas-devel-20170815-v4.13-rc5
+These patches bring in PCI hotplug support for iproc family chipsets.
 
-Thanks, I have applied this for v4.15.
+It includes DT binding documentation update and, implementation in 
+iproc pcie RC driver.
 
-There was some fuzz when applying this patch.
-Please check that it is correct when I have pushed today's devel tag to
-the renesas tree.
+These patch set is made on top of following patches.
+[PATCH v7 2/2] PCI: iproc: add device shutdown for PCI RC
+[PATCH v7 1/2] PCI: iproc: Retry request when CRS returned from EP
 
-> 
->  arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-> index 081af01..305a6a1 100644
-> --- a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-> +++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-> @@ -19,6 +19,11 @@
->  		serial0 = &scif0;
->  		ethernet0 = &avb;
->  	};
-> +
-> +	chosen {
-> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-> +		stdout-path = "serial0:115200n8";
-> +	};
->  };
->  
->  &pfc {
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v2:
+Addressed Rob Herring's comments.
+Changed subject to "dt-bindings: PCI:..."
+Made generic PCI hotplug properties 'slot-pluggable' and 'prsnt-gpios'
+Rebased the patches on top of Lorenzo's patches.
+
+Oza Pawandeep (3):
+  PCI: iproc: Implement PCI hotplug support
+  dt-bindings: PCI: Add PCIe hotplug property
+  PCI: iproc: Implement optional property prsnt-gpios
+
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  14 ++
+ Documentation/devicetree/bindings/pci/pci.txt      |  15 ++
+ drivers/pci/host/pcie-iproc-platform.c             |   3 +
+ drivers/pci/host/pcie-iproc.c                      | 166 ++++++++++++++++++---
+ drivers/pci/host/pcie-iproc.h                      |   7 +
+ 5 files changed, 187 insertions(+), 18 deletions(-)
+
+-- 
+1.9.1
