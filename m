@@ -1,147 +1,131 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2 3/3] eeprom: at24: enable runtime pm support
-Date: Tue, 22 Aug 2017 11:55:56 +0300
-Message-ID: <20170822085555.o4tqwxpa5ukgwet5@valkosipuli.retiisi.org.uk>
-References: <1502736119-32084-1-git-send-email-divagar.mohandass@intel.com>
- <1502736119-32084-4-git-send-email-divagar.mohandass@intel.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Tue, 22 Aug 2017 12:01:11 +0300
+Message-ID: <6400552.TlCMAsqn3H@avalon>
+References: <20170720092302.2982-1-maxime.ripard@free-electrons.com> <2362756.VjbdGaYBzu@avalon> <20170822085320.pdxbxfv53rb75btu@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1502736119-32084-4-git-send-email-divagar.mohandass@intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Divagar Mohandass <divagar.mohandass@intel.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, rajmohan.mani@intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170822085320.pdxbxfv53rb75btu-ZC1Zs529Oq4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Divagar,
+Hi Maxime,
 
-Thanks for the patch. Please see my comments below.
-
-On Tue, Aug 15, 2017 at 12:11:59AM +0530, Divagar Mohandass wrote:
-> Currently the device is kept in D0, there is an opportunity
-> to save power by enabling runtime pm.
+On Tuesday, 22 August 2017 11:53:20 EEST Maxime Ripard wrote:
+> On Mon, Aug 07, 2017 at 11:18:03PM +0300, Laurent Pinchart wrote:
+> > On Thursday 20 Jul 2017 11:23:01 Maxime Ripard wrote:
+> >> The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up
+> >> to 4 CSI-2 lanes, and can route the frames to up to 4 streams, depending
+> >> on the hardware implementation.
+> >> 
+> >> It can operate with an external D-PHY, an internal one or no D-PHY at
+> >> all in some configurations.
+> > 
+> > Without any PHY ? I'm curious, how does that work ?
 > 
-> Device can be daisy chained from PMIC and we can't rely on I2C core
-> for auto resume/suspend. Driver will decide when to resume/suspend.
+> We're currently working on an FPGA exactly with that configuration. So
+> I guess the answer would be "it doesn't on an ASIC" :)
+
+What's connected to the input of the CSI-2 receiver ?
+
+> >> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >> ---
+> >> 
+> >>  .../devicetree/bindings/media/cdns-csi2rx.txt      | 87 ++++++++++++++++
+> >>  1 file changed, 87 insertions(+)
+> >>  create mode 100644
+> >>  Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> >> b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt new file mode
+> >> 100644
+> >> index 000000000000..e08547abe885
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> >> @@ -0,0 +1,87 @@
+> >> +Cadence MIPI-CSI2 RX controller
+> >> +===============================
+> >> +
+> >> +The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to
+> >> 4> CSI
+> >> +lanes in input, and 4 different pixel streams in output.
+> >> +
+> >> +Required properties:
+> >> +  - compatible: must be set to "cdns,csi2rx" and an SoC-specific
+> >> compatible
+> >> +  - reg: base address and size of the memory mapped region
+> >> +  - clocks: phandles to the clocks driving the controller
+> >> +  - clock-names: must contain:
+> >> +    * sys_clk: main clock
+> >> +    * p_clk: register bank clock
+> >> +    * p_free_clk: free running register bank clock
+> >> +    * pixel_ifX_clk: pixel stream output clock, one for each stream
+> >> +                     implemented in hardware, between 0 and 3
+> > 
+> > Nitpicking, I would write the name is pixel_if[0-3]_clk, it took me a few
+> > seconds to see that the X was a placeholder.
 > 
-> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
-> ---
->  drivers/misc/eeprom/at24.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+> Ok.
 > 
-> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index 2199c42..0d26681 100644
-> --- a/drivers/misc/eeprom/at24.c
-> +++ b/drivers/misc/eeprom/at24.c
-> @@ -24,6 +24,7 @@
->  #include <linux/i2c.h>
->  #include <linux/nvmem-provider.h>
->  #include <linux/platform_data/at24.h>
-> +#include <linux/pm_runtime.h>
->  
->  /*
->   * I2C EEPROMs from most vendors are inexpensive and mostly interchangeable.
-> @@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct at24_data *at24, const char *buf,
->  static int at24_read(void *priv, unsigned int off, void *val, size_t count)
->  {
->  	struct at24_data *at24 = priv;
-> +	struct i2c_client *client;
->  	char *buf = val;
-> +	int ret;
->  
->  	if (unlikely(!count))
->  		return count;
->  
-> +	client = at24_translate_offset(at24, &off);
-> +
-> +	ret = pm_runtime_get_sync(&client->dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(&client->dev);
-> +		return ret;
-> +	}
-> +
+> >> +    * dphy_rx_clk: D-PHY byte clock, if implemented in hardware
+> >> +  - phys: phandle to the external D-PHY
+> >> +  - phy-names: must contain dphy, if the implementation uses an
+> >> +               external D-PHY
+> > 
+> > I would move the last two properties in an optional category as they're
+> > effectively optional. I think you should also explain a bit more clearly
+> > that the phys property must not be present if the phy-names property is
+> > not present.
+> 
+> It's not really optional. The IP has a configuration register that
+> allows you to see if it's been synthesized with or without a PHY. If
+> the right bit is set, that property will be mandatory, if not, it's
+> useless.
 
-at24_read() may fail between the two chunks here. You'll need
-pm_runtime_put() before returning the error code.
+Just to confirm, the PHY is a separate IP core, right ? Is the CSI-2 receiver 
+input interface different when used with a PHY and when used without one ? 
+Could a third-party PHY be used as well ? If so, would the PHY synthesis bit 
+be set or not ?
 
->  	/*
->  	 * Read data from chip, protecting against concurrent updates
->  	 * from this host, but not from other I2C masters.
-> @@ -527,17 +538,29 @@ static int at24_read(void *priv, unsigned int off, void *val, size_t count)
->  
->  	mutex_unlock(&at24->lock);
->  
-> +	pm_runtime_put(&client->dev);
-> +
->  	return 0;
->  }
->  
->  static int at24_write(void *priv, unsigned int off, void *val, size_t count)
->  {
->  	struct at24_data *at24 = priv;
-> +	struct i2c_client *client;
->  	char *buf = val;
-> +	int ret;
->  
->  	if (unlikely(!count))
->  		return -EINVAL;
->  
-> +	client = at24_translate_offset(at24, &off);
-> +
-> +	ret = pm_runtime_get_sync(&client->dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(&client->dev);
-> +		return ret;
-> +	}
-> +
->  	/*
->  	 * Write data to chip, protecting against concurrent updates
->  	 * from this host, but not from other I2C masters.
+> Maybe it's just semantics, but to me, optional means that it can
+> operate with or without it under any circumstances. It's not really
+> the case here.
 
-Ditto for write.
+It'sa semantic issue, but documenting a property as required when it can be 
+ommitted under some circumstances seems even weirder to me :-) I understand 
+the optional category as "can be ommitted in certain circumstances".
 
-> @@ -559,6 +582,8 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
->  
->  	mutex_unlock(&at24->lock);
->  
-> +	pm_runtime_put(&client->dev);
-> +
->  	return 0;
->  }
->  
-> @@ -743,6 +768,13 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  
->  	i2c_set_clientdata(client, at24);
->  
-> +	/* enable runtime pm */
-> +	err = pm_runtime_set_active(&client->dev);
-> +	if (err < 0)
-> +		goto err_clients;
-> +
-> +	pm_runtime_enable(&client->dev);
-> +
-
-Here, too: at24_read() below can fail, as well as nvmem_register().
-
->  	/*
->  	 * Perform a one-byte test read to verify that the
->  	 * chip is functional.
-> @@ -810,6 +842,8 @@ static int at24_remove(struct i2c_client *client)
->  	for (i = 1; i < at24->num_addresses; i++)
->  		i2c_unregister_device(at24->client[i]);
->  
-> +	pm_runtime_disable(&client->dev);
-
-pm_runtime_set_suspended(&client->dev)
-
-> +
->  	return 0;
->  }
->  
+> >> +
+> >> +Required subnodes:
+> >> +  - ports: A ports node with endpoint definitions as defined in
+> >> +          
+> >> Documentation/devicetree/bindings/media/video-interfaces.txt.
+> >> The
+> >> +           first port subnode should be the input endpoint, the second
+> >> one the
+> >> +           outputs
+> >> +
+> >> +  The output port should have as many endpoints as stream supported by
+> >> +  the hardware implementation, between 1 and 4, their ID being the
+> >> +  stream output number used in the implementation.
+> > 
+> > I don't think that's correct. The IP has four independent outputs, it
+> > should have 4 output ports for a total for 5 ports. Multiple endpoints
+> > per port would describe multiple connections from the same output to
+> > different sinks.
+>
+> Ok.
 
 -- 
 Regards,
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
