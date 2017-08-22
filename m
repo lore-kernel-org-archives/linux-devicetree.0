@@ -1,60 +1,116 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] device property: preserve usecount for node passed to of_fwnode_graph_get_port_parent()
-Date: Tue, 22 Aug 2017 14:42:10 -0500
-Message-ID: <CAL_JsqJOZPrOwy1Hi7zdHb-+X69rV2M5ZZd=X8aoWjvjqt+NNg@mail.gmail.com>
-References: <20170822001912.27638-1-niklas.soderlund+renesas@ragnatech.se>
- <CAL_Jsq+ABipq+YCpSwu_vhjk0rkZQimCD2vG1x5GL91wi6dzKw@mail.gmail.com> <20170822150050.GD14873@bigcity.dyn.berto.se>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: sunxi: add support for R40 SoC
+Date: Tue, 22 Aug 2017 22:00:04 +0200
+Message-ID: <20170822200004.cuuj63j7am6xypdw@flea.home>
+References: <20170820052957.34597-1-icenowy@aosc.io>
+ <20170820052957.34597-2-icenowy@aosc.io>
+ <20170821093405.n4bum7j6nswnv6wr@flea.lan>
+ <0809ae2d75f210b9bfee49b383f226b2@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170822150050.GD14873@bigcity.dyn.berto.se>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="htx2btc2ybnn2izh"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUE26LGAKGQE6XWI54Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <0809ae2d75f210b9bfee49b383f226b2-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 22, 2017 at 10:00 AM, Niklas Söderlund
-<niklas.soderlund@ragnatech.se> wrote:
-> Hi Rob,
->
-> On 2017-08-22 09:49:35 -0500, Rob Herring wrote:
->> On Mon, Aug 21, 2017 at 7:19 PM, Niklas Söderlund
->> <niklas.soderlund+renesas@ragnatech.se> wrote:
->> > Using CONFIG_OF_DYNAMIC=y uncovered an imbalance in the usecount of the
->> > node being passed to of_fwnode_graph_get_port_parent(). Preserve the
->> > usecount by using of_get_parent() instead of of_get_next_parent() which
->> > don't decrement the usecount of the node passed to it.
->> >
->> > Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmware specific locations")
->> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
->> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> > ---
->> >  drivers/of/property.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> Isn't this already fixed with this fix:
->>
->> commit c0a480d1acf7dc184f9f3e7cf724483b0d28dc2e
->> Author: Tony Lindgren <tony@atomide.com>
->> Date:   Fri Jul 28 01:23:15 2017 -0700
->>
->> device property: Fix usecount for of_graph_get_port_parent()
->
-> No, that commit fixes it for of_graph_get_port_parent() while this
-> commit fixes it for of_fwnode_graph_get_port_parent(). But in essence it
-> is the same issue but needs two separate fixes.
 
-Ah, because one takes the port node and one takes the endpoint node.
-That won't confuse anyone.
+--htx2btc2ybnn2izh
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Can we please align this mess. I've tried to make the graph parsing
-not a free for all, open coded mess. There's no reason to have the
-port node handle and then need the parent device. Either you started
-with the parent device to parse local ports and endpoints or you got
-the remote endpoint with .graph_get_remote_endpoint(). Most of the
-time you don't even need the endpoint node handles. You really just
-need to know what is the remote device connected to port X, endpoint Y
-of my local device.
+On Tue, Aug 22, 2017 at 01:14:09PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> =E5=9C=A8 2017-08-21 17:34=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> > Hi,
+> >=20
+> > On Sun, Aug 20, 2017 at 01:29:57PM +0800, Icenowy Zheng wrote:
+> > > Allwinner R40 is a new SoC, with Quad Core Cortex-A7 and peripherals
+> > > like A20.
+> > >=20
+> > > Add support for it.
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > > ---
+> > >  Documentation/arm/sunxi/README                  | 6 ++++++
+> > >  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+> > >  arch/arm/mach-sunxi/sunxi.c                     | 1 +
+> > >  3 files changed, 8 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/arm/sunxi/README
+> > > b/Documentation/arm/sunxi/README
+> > > index d7b1f016bd62..4fa836782e46 100644
+> > > --- a/Documentation/arm/sunxi/README
+> > > +++ b/Documentation/arm/sunxi/README
+> > > @@ -75,6 +75,12 @@ SunXi family
+> > >          + Datasheet
+> > > http://linux-sunxi.org/File:Allwinner_V3s_Datasheet_V1.0.pdf
+> > >=20
+> > > +      - Allwinner R40 (sun8i)
+> > > +        + Datasheet
+> > > +
+> > > https://github.com/tinalinux/docs/raw/r40-v1.y/R40_Datasheet_V1.0.pdf
+> > > +        + User Manual
+> > > +          https://github.com/tinalinux/docs/raw/r40-v1.y/Allwinner_R=
+40_User_Manual_V1.0.pdf
+> > > +
+> >=20
+> > Please sort it by alphabetical order.
+>=20
+> I prefer to sort it by the wafer ID (the number after w in the
+> official ID).
+>=20
+> The current document can be explained to follow the alphabetical
+> order or the wafer ID.
 
-Rob
+You should know who your audience is. Whoever is going to end up here
+to have a list of the SoC names and their datasheet is very likely to
+not know by heart the wafer IDs, while anyone that can read knows the
+alphabet.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--htx2btc2ybnn2izh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZnI1EAAoJEBx+YmzsjxAgYhQP/0UGAGm3xC090yp6cMjH4iUd
+Vd2cGHUywnQwcuWKLx+L07Z+qquofVrn1yF6G1tP61pFeIwiofDicUeVKE3uRM2C
+PYUGH1AxK5nX6FSjzfDung/w0jAqr4L0hCUUdj0cDktVtj/i3jfzAC+U/85wAzCt
+XnMxpQ2XGJrQHhWBZ4UhouUbvtNHF/YdIjpjUtjgF7rPLbfbIVmQAXGtNGsO5eNA
+sDwEcI8TMI1eb+uxo4qlllvI2PT9JKm2bIAzwFeOr0jVojuPRdAZwv2MSMBeiwwZ
+2AYDvRJNpz0TTtNQRPf7Q3d9c6sKTyNEtMF6Wl7WIfdLu2urGPKI6JUGSpml2NSt
+R2okiXZ72+ctBWR7+boRR7pv5GTDKNDlGV+sasewO8gIC4xLIJpJ3dhAUIu83mI5
+7ucMGZpPvqbdEdxYlN+Vp8vE4fO8D0UcZMjwTLPPA5MZG2WG9FpzFA3U1SiowPnl
+2c9yB5rWrWoxnTCeuiYy19/fIWeIYloVTXNlivYYmt8R9hZuvZ7t+Tcw3AjTpbfb
+U1VxzcJTncTu3s9U3LFQyVRIKVim6iBMj0aaqshkbezPiDF6+sxMrpEZnNDJNxRl
+R21bsfE0g6Q84+JfqhMq2c3TDI8yhT7+sP3rBiC96jmnUPy09dudK1GieolZLlKs
+vhc6H5Bo6ErcOjmcC1P+
+=an8P
+-----END PGP SIGNATURE-----
+
+--htx2btc2ybnn2izh--
