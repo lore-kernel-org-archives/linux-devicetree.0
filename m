@@ -1,44 +1,63 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] serio: PS2 gpio bit banging driver for the serio bus
-Date: Tue, 22 Aug 2017 15:35:50 +0200
-Message-ID: <CACRpkdZ39AOYdN_KNLJXTkimW1WaHpYvrw89J_kJo_FJThWwuw@mail.gmail.com>
-References: <20170731222452.22887-1-danilokrummrich@dk-develop.de>
- <CACRpkdYz_+soss4Rb9zMiP4eZZtXqjW_Xy7hH=wm1x2m_R9R3A@mail.gmail.com>
- <20170807182207.348762301bf3d7f8509b1bf7@dk-develop.de> <8e5e73575b3a70e0e60931698687471d@dk-develop.de>
- <CACRpkda=bYacXmv8SoQu3wPoZW9v+j8myZnme=QpofD=Y-gYTg@mail.gmail.com> <20170817090908.GP20805@n2100.armlinux.org.uk>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] net: phy: realtek: add disable RX
+ internal delay mode
+Date: Tue, 22 Aug 2017 15:39:06 +0200
+Message-ID: <20170822133906.GG24555@lunn.ch>
+References: <20170822040400.12166-1-icenowy@aosc.io>
+ <20170822040400.12166-4-icenowy@aosc.io>
+Reply-To: andrew-g2DYL2Zd6BY@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170817090908.GP20805@n2100.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Danilo Krummrich <danilokrummrich@dk-develop.de>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDJNHL5JSEOBBD7I6DGAKGQEFAA2BSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170822040400.12166-4-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 11:09 AM, Russell King - ARM Linux
-<linux@armlinux.org.uk> wrote:
-> On Fri, Aug 11, 2017 at 11:16:20AM +0200, Linus Walleij wrote:
->> writel() should be guaranteeing that the values hit the hardware, wmb() is
->> spelled out "write memory barrier" I don't see what you're after here.
->
-> Incorrect.  writel() has a barrier which ensures that data written to
-> memory (eg, dma coherent memory) is visible to the hardware prior to
-> the write hitting the hardware.
->
-> There is no barrier to ensure that the write hits the hardware in a
-> timely manner - the write can be buffered by the buses, which will
-> delay it before it hits its destination.
->
-> PCI particularly buffers MMIO writes, and the requirement there has
-> always been that if you need the write to hit the hardware in a timely
-> fashion, you must perform a read-back to force the bus to deliver the
-> write (since a read is not allowed to overlap a write.)
->
-> The solution is never to use barrier() - barrier() is a _compiler_
-> barrier and does nothing for posted writes on hardware buses.
+On Tue, Aug 22, 2017 at 12:03:59PM +0800, Icenowy Zheng wrote:
+> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> 
+> Some RTL8211E chips have broken GbE function, which needs a hack to
+> fix. It's said that this fix will affect the performance on not-buggy
+> PHYs, so it should only be enabled on boards with the broken PHY.
 
-Thanks Russell. I tend to forget things over time even though I have
-some memory of this being spelled out to me in the past :(
+I would not call this a broken PHY. It is a question of board
+design. If you have shorter tracks, you need a delay. If you have long
+tracks, you don't. Hence the four RGMII modes, so you can select if
+the delay is needed or not, depending on your board design.
 
-Yours,
-Linus Walleij
+> Currently only some Pine64+ boards are known to have this issue.
+
+Design feature.
+
+Please remove all reference to bug.
+ 
+> This hack is said to disable RX relay for RTL8211E according to Realtek.
+> So implement it as RGMII-TXID mode.
+
+Do we know that the TX lines do have a delay after making this change?
+We need to be careful here. We will get into a mess if this is
+actually RGMII not RGMII_TXID, and somebody designs a board which
+needs RGMII-TXID.
+
+> +#include <linux/of.h>
+>  #include <linux/phy.h>
+>  #include <linux/module.h>
+
+> +static int rtl8211e_config_init(struct phy_device *phydev)
+> +{
+> +	struct device *dev = &phydev->mdio.dev;
+> +	struct device_node *of_node = dev->of_node;
+
+You don't appear to use of_node, nor dev. Please remove, along with
+the header file.
+
+    Andrew
