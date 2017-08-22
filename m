@@ -1,83 +1,202 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for sun8i-h3-emac
-Date: Tue, 22 Aug 2017 23:39:22 +0800
-Message-ID: <CAGb2v64E4T=1ff3POGuXZA=MvjGAnKQ6OF6A3sT_cU-=jh6zNw@mail.gmail.com>
-References: <20170818122118.4925-1-clabbe.montjoie@gmail.com>
- <20170818122118.4925-4-clabbe.montjoie@gmail.com> <CAGb2v66KcZkiDDHryMmVzm4WroXePPy3V44SLpVdoO3ZEjgC=g@mail.gmail.com>
- <20170819185025.GB13266@Red> <20170819203836.GA21567@lunn.ch>
- <20170820065757.GA6081@Red> <20170820142545.GB24150@lunn.ch>
- <CAGb2v67hQXSoCKP7qW+KRUYX+0djQ1Z23cQ67Lyg6G7ozGyfGQ@mail.gmail.com>
- <20170821132015.GB1703@lunn.ch> <20170821133104.qvrhvwin2rdg4aqo@flea.lan> <20170821142321.GE1703@lunn.ch>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v3 2/4] dmaengine: Add STM32 MDMA driver
+Date: Tue, 22 Aug 2017 17:59:26 +0200
+Message-ID: <40c24f87-6ea2-4c3a-1e86-9d30d30481c2@st.com>
+References: <1501062502-18778-1-git-send-email-pierre-yves.mordret@st.com>
+ <1501062502-18778-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170816164709.GR3053@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170821142321.GE1703-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170816164709.GR3053@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, linux-arm-kernel@lists.infradead.org, Herbert Xu <herbert@gondor.apana.org.au>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 10:23 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
->> All muxes are mostly always represented the same way afaik, or do you
->> want to simply introduce a new compatible / property?
->
-> +         mdio-mux {
-> +               compatible = "allwinner,sun8i-h3-mdio-switch";
-> +               mdio-parent-bus = <&mdio_parent>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               internal_mdio: mdio@1 {
->                         reg = <1>;
-> -                       clocks = <&ccu CLK_BUS_EPHY>;
-> -                       resets = <&ccu RST_BUS_EPHY>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       int_mii_phy: ethernet-phy@1 {
-> +                               compatible = "ethernet-phy-ieee802.3-c22";
-> +                               reg = <1>;
-> +                               clocks = <&ccu CLK_BUS_EPHY>;
-> +                               resets = <&ccu RST_BUS_EPHY>;
-> +                               phy-is-integrated;
-> +                       };
-> +               };
-> +               mdio: mdio@0 {
-> +                       reg = <0>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
->                 };
->
-> Hi Maxim
->
-> Anybody who knows the MDIO-mux code/binding, knows that it is a run
-> time mux. You swap the mux per MDIO transaction. You can access all
-> the PHY and switches on the mux'ed MDIO bus.
->
-> However here, it is effectively a boot-time MUX. You cannot change it
-> on the fly. What happens when somebody has a phandle to a PHY on the
-> internal and a phandle to a phy on the external? Does the driver at
-> least return -EINVAL, or -EBUSY? Is there a representation which
-> eliminates this possibility?
 
-There is only one controller. Either you use the internal PHY, which
-is then directly coupled (no magnetics needed) to the RJ45 port, or
-you use an external PHY over MII/RMII/RGMII. You could supposedly
-have both on a board, and let the user choose one. But why bother
-with the extra complexity and cost? Either you use the internal PHY
-at 100M, or an external RGMII PHY for gigabit speeds.
 
-So I think what you are saying is either impossible or engineering-wise
-a very stupid design, like using an external MAC with a discrete PHY
-connected to the internal MAC's MDIO bus, while using the internal MAC
-with the internal PHY.
+On 08/16/2017 06:47 PM, Vinod Koul wrote:
+> On Wed, Jul 26, 2017 at 11:48:20AM +0200, Pierre-Yves MORDRET wrote:
+> 
+>> +/* MDMA Channel x transfer configuration register */
+>> +#define STM32_MDMA_CTCR(x)		(0x50 + 0x40 * (x))
+>> +#define STM32_MDMA_CTCR_BWM		BIT(31)
+>> +#define STM32_MDMA_CTCR_SWRM		BIT(30)
+>> +#define STM32_MDMA_CTCR_TRGM_MSK	GENMASK(29, 28)
+>> +#define STM32_MDMA_CTCR_TRGM(n)		(((n) & 0x3) << 28)
+>> +#define STM32_MDMA_CTCR_TRGM_GET(n)	(((n) & STM32_MDMA_CTCR_TRGM_MSK) >> 28)
+> 
+> OK this seems oft repeated here.
+> 
+> So you are trying to extract the bit values and set the bit value, so why
+> not this do generically...
+> 
+> #define STM32_MDMA_SHIFT(n)		(ffs(n) - 1))
+> #define STM32_MDMA_SET(n, mask)		((n) << STM32_MDMA_SHIFT(mask))
+> #define STM32_MDMA_GET(n, mask)		(((n) && mask) >> STM32_MDMA_SHIFT(mask))
+> 
+> Basically, u extract the shift using the mask value and ffs helping out, so
+> no need to define these and reduce chances of coding errors...
+> 
 
-Now can we please decide on something? We're a week and a half from
-the 4.13 release. If mdio-mux is wrong, then we could have two mdio
-nodes (internal-mdio & external-mdio).
+OK.
+but I would prefer if you don't mind
+#define STM32_MDMA_SET(n, mask)		(((n) << STM32_MDMA_SHIFT(mask)) & mask)
 
-Regards
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +static int stm32_mdma_get_width(struct stm32_mdma_chan *chan,
+>> +				enum dma_slave_buswidth width)
+>> +{
+>> +	switch (width) {
+>> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+>> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+>> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+>> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
+>> +		return ffs(width) - 1;
+>> +	default:
+>> +		dev_err(chan2dev(chan), "Dma bus width not supported\n");
+> 
+> please log the width here, helps in debug...
+> 
+
+Hum.. just a dev_dbg to log the actual width or within the dev_err ?
+
+>> +static u32 stm32_mdma_get_best_burst(u32 buf_len, u32 tlen, u32 max_burst,
+>> +				     enum dma_slave_buswidth width)
+>> +{
+>> +	u32 best_burst = max_burst;
+>> +	u32 burst_len = best_burst * width;
+>> +
+>> +	while ((burst_len > 0) && (tlen % burst_len)) {
+>> +		best_burst = best_burst >> 1;
+>> +		burst_len = best_burst * width;
+>> +	}
+>> +
+>> +	return (best_burst > 0) ? best_burst : 1;
+> 
+> when would best_burst <= 0? DO we really need this check
+> 
+> 
+
+best_burst < 0 is obviously unlikely but =0 is likely whether no best burst
+found. Se we do need this check.
+
+>> +static struct dma_async_tx_descriptor *
+>> +stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
+>> +			   size_t buf_len, size_t period_len,
+>> +			   enum dma_transfer_direction direction,
+>> +			   unsigned long flags)
+>> +{
+>> +	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
+>> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
+>> +	struct dma_slave_config *dma_config = &chan->dma_config;
+>> +	struct stm32_mdma_desc *desc;
+>> +	dma_addr_t src_addr, dst_addr;
+>> +	u32 ccr, ctcr, ctbr, count;
+>> +	int i, ret;
+>> +
+>> +	if (!buf_len || !period_len || period_len > STM32_MDMA_MAX_BLOCK_LEN) {
+>> +		dev_err(chan2dev(chan), "Invalid buffer/period len\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	if (buf_len % period_len) {
+>> +		dev_err(chan2dev(chan), "buf_len not multiple of period_len\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	/*
+>> +	 * We allow to take more number of requests till DMA is
+>> +	 * not started. The driver will loop over all requests.
+>> +	 * Once DMA is started then new requests can be queued only after
+>> +	 * terminating the DMA.
+>> +	 */
+>> +	if (chan->busy) {
+>> +		dev_err(chan2dev(chan), "Request not allowed when dma busy\n");
+>> +		return NULL;
+>> +	}
+> 
+> is that a HW restriction? Once a txn is completed can't we submit
+> subsequent txn..? Can you explain this part please.
+> 
+
+Driver can prepare any request Slave SG, Memcpy or Cyclic. But if the channel is
+busy to complete a DMA transfer, the request will be put in pending list. This
+is only when the DMA transfer is going to be completed the next descriptor is
+going to be processed and started.
+However for cyclic this is different since when cyclic is ignited the channel
+will be busy until its termination. This is why we forbid any DMA preparation
+for this channel.
+Nonetheless I believe we have a flaw here since we have to forbid
+Slave/Memcpy/Cyclic whether a cyclic request is on-going.
+
+
+>> +	if (len <= STM32_MDMA_MAX_BLOCK_LEN) {
+>> +		cbndtr |= STM32_MDMA_CBNDTR_BNDT(len);
+>> +		if (len <= STM32_MDMA_MAX_BUF_LEN) {
+>> +			/* Setup a buffer transfer */
+>> +			tlen = len;
+>> +			ccr |= STM32_MDMA_CCR_TCIE | STM32_MDMA_CCR_CTCIE;
+>> +			ctcr |= STM32_MDMA_CTCR_TRGM(STM32_MDMA_BUFFER);
+>> +			ctcr |= STM32_MDMA_CTCR_TLEN((tlen - 1));
+>> +		} else {
+>> +			/* Setup a block transfer */
+>> +			tlen = STM32_MDMA_MAX_BUF_LEN;
+>> +			ccr |= STM32_MDMA_CCR_BTIE | STM32_MDMA_CCR_CTCIE;
+>> +			ctcr |= STM32_MDMA_CTCR_TRGM(STM32_MDMA_BLOCK);
+>> +			ctcr |= STM32_MDMA_CTCR_TLEN(tlen - 1);
+>> +		}
+>> +
+>> +		/* Set best burst size */
+>> +		max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
+> 
+> that maynot be best.. we should have wider and longer burst for best
+> throughput..
+> 
+
+Will look at that.
+
+>> +	ret = device_property_read_u32(&pdev->dev, "dma-requests",
+>> +				       &nr_requests);
+>> +	if (ret) {
+>> +		nr_requests = STM32_MDMA_MAX_REQUESTS;
+>> +		dev_warn(&pdev->dev, "MDMA defaulting on %i request lines\n",
+>> +			 nr_requests);
+>> +	}
+>> +
+>> +	count = of_property_count_u32_elems(of_node, "st,ahb-addr-masks");
+> 
+> We dont have device_property_xxx for this?
+
+Sorry no. Well didn't figure out one though.
+
+> 
+>> +	if (count < 0)
+>> +		count = 0;
+>> +
+>> +	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
+>> +			      GFP_KERNEL);
+>> +	if (!dmadev)
+>> +		return -ENOMEM;
+>> +
+>> +	dmadev->nr_channels = nr_channels;
+>> +	dmadev->nr_requests = nr_requests;
+>> +	of_property_read_u32_array(of_node, "st,ahb-addr-masks",
+>> +				   dmadev->ahb_addr_masks,
+>> +				   count);
+> 
+> i know we have an device api for array reads :)
+> and I think that helps in former case..
+> 
+
+Correct :) device_property_read_u32_array
