@@ -1,50 +1,64 @@
-From: "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v2] device property: preserve usecount for node passed to
- of_fwnode_graph_get_port_parent()
-Date: Tue, 22 Aug 2017 17:00:50 +0200
-Message-ID: <20170822150050.GD14873@bigcity.dyn.berto.se>
-References: <20170822001912.27638-1-niklas.soderlund+renesas@ragnatech.se>
- <CAL_Jsq+ABipq+YCpSwu_vhjk0rkZQimCD2vG1x5GL91wi6dzKw@mail.gmail.com>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v6 0/8] ASoC: rockchip: Parse dai links from dts
+Date: Tue, 22 Aug 2017 23:10:01 +0800
+Message-ID: <20170822151009.19014-1-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+ABipq+YCpSwu_vhjk0rkZQimCD2vG1x5GL91wi6dzKw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, briannorris@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Will Deacon <will.deacon@arm.com>, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, mka@chromium.org, Klaus Goger <klaus.goger@theobroma-systems.com>, Takashi Iwai <tiwai@suse.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 2017-08-22 09:49:35 -0500, Rob Herring wrote:
-> On Mon, Aug 21, 2017 at 7:19 PM, Niklas Söderlund
-> <niklas.soderlund+renesas@ragnatech.se> wrote:
-> > Using CONFIG_OF_DYNAMIC=y uncovered an imbalance in the usecount of the
-> > node being passed to of_fwnode_graph_get_port_parent(). Preserve the
-> > usecount by using of_get_parent() instead of of_get_next_parent() which
-> > don't decrement the usecount of the node passed to it.
-> >
-> > Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmware specific locations")
-> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  drivers/of/property.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Isn't this already fixed with this fix:
-> 
-> commit c0a480d1acf7dc184f9f3e7cf724483b0d28dc2e
-> Author: Tony Lindgren <tony@atomide.com>
-> Date:   Fri Jul 28 01:23:15 2017 -0700
-> 
-> device property: Fix usecount for of_graph_get_port_parent()
+Currently we are using a fixed list of dai links in the driver.
+This serial of patches would let the driver parse dai links from
+dts, so that we can make some of them optional for future boards.
 
-No, that commit fixes it for of_graph_get_port_parent() while this 
-commit fixes it for of_fwnode_graph_get_port_parent(). But in essence it 
-is the same issue but needs two separate fixes.
+Tested on my chromebook bob(with cros 4.4 kernel), it still works
+after disabled rt5514 codecs in the dts.
+
+
+Changes in v6:
+Add dmic wakeup delay(not used for now).
+
+Changes in v5:
+Keep the dmic-delay property, but correct it with the name in
+dt-binding.
+        -- Suggested-by Mark Brown <broonie@kernel.org>
+
+Changes in v3:
+Use compatible to match audio codecs
+        -- Suggested-by Matthias Kaehlcke <mka@chromium.org>
+
+Changes in v2:
+Let rockchip,codec-names be a required property, because we plan to
+add more supported codecs to the fixed dai link list in the driver.
+
+Jeffy Chen (8):
+  ASoC: rockchip: Correct 'dmic-delay' property name
+  ASoC: rockchip: Use codec of_node and dai_name for rt5514 dsp
+  arm64: dts: rockchip: Add rt5514 dsp for Gru
+  arm64: dts: rockchip: Update rt5514 devices' compatible for Gru
+  ASoC: rockchip: Parse dai links from dts
+  ASoC: rockchip: Add support for DP codec
+  ASoC: rockchip: Add support for DMIC codec
+  dt-bindings: ASoC: rockchip: Update description of rockchip,codec
+
+ .../bindings/sound/rockchip,rk3399-gru-sound.txt   |   2 +-
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       |   7 +-
+ sound/soc/rockchip/Kconfig                         |   2 +
+ sound/soc/rockchip/rk3399_gru_sound.c              | 270 ++++++++++++++-------
+ 4 files changed, 193 insertions(+), 88 deletions(-)
 
 -- 
-Regards,
-Niklas Söderlund
+2.11.0
