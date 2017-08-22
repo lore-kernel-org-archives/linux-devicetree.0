@@ -1,11 +1,14 @@
 From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 0/3] Update board support for OLinuXino boards
-Date: Tue, 22 Aug 2017 14:43:10 +0300
-Message-ID: <20170822114313.9038-1-stefan@olimex.com>
+Subject: [PATCH 1/3] ARM: dts: sun7i: Fix A20-OLinuXino-MICRO dts for use with
+ LAN8710
+Date: Tue, 22 Aug 2017 14:43:11 +0300
+Message-ID: <20170822114313.9038-2-stefan@olimex.com>
+References: <20170822114313.9038-1-stefan@olimex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170822114313.9038-1-stefan@olimex.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,25 +22,42 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russe
 Cc: linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
 List-Id: devicetree@vger.kernel.org
 
-Based of increased number of boards with their shipping options,
-there is new board naming convention.
+>From revision J the board uses new phy chip LAN8710. Compared
+with RTL8201, RA17 pin is TXERR. It has pullup which causes phy
+not to work. To fix this, PA17 must be configured output-low.
 
-Along with that, A20-OLinuXino-MICRO has new revision(rev.J),
-which introduce new PHY chip (LAN8710) and eMMC option. The new
-dts file is based on the already existing one for lime2-emmc.
+This patch is compatible with earlier board revisions, since this
+pin wasn't connected to phy.
 
-Stefan Mavrodiev (3):
-  ARM: dts: sun7i: Fix A20-OLinuXino-MICRO dts for use with LAN8710
-  ARM: dts: sun7i: Add dts file for A20-OLinuXino-MICRO-exGB
-  ARM: dts: sun7i: Rename sun7i-a20-olinuxino-lime2-emmc
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+---
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
- arch/arm/boot/dts/Makefile                         |  3 +-
- ...emmc.dts => sun7i-a20-olinuxino-lime2-exgb.dts} |  4 +-
- .../boot/dts/sun7i-a20-olinuxino-micro-exgb.dts    | 81 ++++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts    |  7 +-
- 4 files changed, 91 insertions(+), 4 deletions(-)
- rename arch/arm/boot/dts/{sun7i-a20-olinuxino-lime2-emmc.dts => sun7i-a20-olinuxino-lime2-exgb.dts} (96%)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-olinuxino-micro-exgb.dts
-
+diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+index 0b7403e4d687..578c761b551a 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+@@ -102,7 +102,7 @@
+ 
+ &gmac {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&gmac_pins_mii_a>;
++	pinctrl-0 = <&gmac_pins_mii_a>,<&gmac_txerr_pin>;
+ 	phy = <&phy1>;
+ 	phy-mode = "mii";
+ 	status = "okay";
+@@ -229,6 +229,11 @@
+ };
+ 
+ &pio {
++	gmac_txerr_pin: gmac_txerr_pin@0 {
++		pins = "PA17";
++		function = "gpio_out"
++	};
++
+ 	mmc3_cd_pin_olinuxinom: mmc3_cd_pin@0 {
+ 		pins = "PH11";
+ 		function = "gpio_in";
 -- 
 2.11.0
