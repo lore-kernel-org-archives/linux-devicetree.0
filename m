@@ -1,22 +1,19 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [RESENT PATCH v6 4/8] arm64: dts: rockchip: Update rt5514 devices' compatible for Gru
-Date: Tue, 22 Aug 2017 23:35:51 +0800
-Message-ID: <20170822153555.20735-5-jeffy.chen@rock-chips.com>
+From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RESENT PATCH v6 8/8] dt-bindings: ASoC: rockchip: Update description of rockchip,codec
+Date: Tue, 22 Aug 2017 23:35:55 +0800
+Message-ID: <20170822153555.20735-9-jeffy.chen@rock-chips.com>
 References: <20170822153555.20735-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170822153555.20735-1-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
-Cc: briannorris@chromium.org, mka@chromium.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170822153555.20735-1-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently the rt5514 i2c driver and rt5514 spi driver are using the same
-compatible string.
+Update description for newly added optional audio codecs.
 
-Add additional unused compatible strings to identify them for Gru
-boards.
-
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
 
 Changes in v6: None
@@ -24,30 +21,27 @@ Changes in v5: None
 Changes in v3: None
 Changes in v2: None
 
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 72717e77a0fc..c489c78b2b5b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -611,7 +611,7 @@ ap_i2c_mic: &i2c1 {
- 	i2c-scl-rising-time-ns = <300>;
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+index eac91db07178..72d3cf4c2606 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+@@ -4,7 +4,7 @@ Required properties:
+ - compatible: "rockchip,rk3399-gru-sound"
+ - rockchip,cpu: The phandle of the Rockchip I2S controller that's
+   connected to the codecs
+-- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
++- rockchip,codec: The phandle of the audio codecs
  
- 	headsetcodec: rt5514@57 {
--		compatible = "realtek,rt5514";
-+		compatible = "realtek,rt5514", "realtek,rt5514-i2c";
- 		reg = <0x57>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-@@ -828,7 +828,7 @@ ap_i2c_audio: &i2c8 {
- 	status = "okay";
- 
- 	wacky_spi_audio: spi2@0 {
--		compatible = "realtek,rt5514";
-+		compatible = "realtek,rt5514", "realtek,rt5514-spi";
- 		reg = <0>;
- 
- 		/* May run faster once verified. */
+ Optional properties:
+ - dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
 -- 
 2.11.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
