@@ -1,112 +1,87 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH 2/2] ARM: sunxi: add support for R40 SoC
-Date: Tue, 22 Aug 2017 13:14:09 +0800
-Message-ID: <0809ae2d75f210b9bfee49b383f226b2@aosc.io>
-References: <20170820052957.34597-1-icenowy@aosc.io>
- <20170820052957.34597-2-icenowy@aosc.io>
- <20170821093405.n4bum7j6nswnv6wr@flea.lan>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] i2c: davinci: Add PM Runtime Support
+Date: Tue, 22 Aug 2017 10:52:39 +0530
+Message-ID: <bd204f3b-8bfd-9015-18cc-dd915c88b812@ti.com>
+References: <20170816221715.15027-1-fcooper@ti.com>
+ <20170816221715.15027-3-fcooper@ti.com>
+ <8207a684-f010-ca82-baae-db06665f098e@ti.com>
+ <d06ef5c6-6501-eca6-2fa2-976d085091b2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJX353GAKGQEZD4WBPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170821093405.n4bum7j6nswnv6wr-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d06ef5c6-6501-eca6-2fa2-976d085091b2-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-08-21 17:34=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> Hi,
->=20
-> On Sun, Aug 20, 2017 at 01:29:57PM +0800, Icenowy Zheng wrote:
->> Allwinner R40 is a new SoC, with Quad Core Cortex-A7 and peripherals
->> like A20.
->>=20
->> Add support for it.
->>=20
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> ---
->>  Documentation/arm/sunxi/README                  | 6 ++++++
->>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
->>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
->>  3 files changed, 8 insertions(+)
->>=20
->> diff --git a/Documentation/arm/sunxi/README=20
->> b/Documentation/arm/sunxi/README
->> index d7b1f016bd62..4fa836782e46 100644
->> --- a/Documentation/arm/sunxi/README
->> +++ b/Documentation/arm/sunxi/README
->> @@ -75,6 +75,12 @@ SunXi family
->>          + Datasheet
->>           =20
->> http://linux-sunxi.org/File:Allwinner_V3s_Datasheet_V1.0.pdf
->>=20
->> +      - Allwinner R40 (sun8i)
->> +        + Datasheet
->> +         =20
->> https://github.com/tinalinux/docs/raw/r40-v1.y/R40_Datasheet_V1.0.pdf
->> +        + User Manual
->> +         =20
->> https://github.com/tinalinux/docs/raw/r40-v1.y/Allwinner_R40_User_Manual=
-_V1.0.pdf
->> +
->=20
-> Please sort it by alphabetical order.
+On Tuesday 22 August 2017 06:47 AM, Franklin S Cooper Jr wrote:
+> 
+> 
+> On 08/21/2017 04:05 AM, Sekhar Nori wrote:
+>> On Thursday 17 August 2017 03:47 AM, Franklin S Cooper Jr wrote:
+>>
+>>> @@ -802,7 +821,6 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>>>  	dev->clk = devm_clk_get(&pdev->dev, NULL);
+>>>  	if (IS_ERR(dev->clk))
+>>>  		return PTR_ERR(dev->clk);
+>>> -	clk_prepare_enable(dev->clk);
+>>>  
+>>>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>  	dev->base = devm_ioremap_resource(&pdev->dev, mem);
+>>> @@ -811,6 +829,18 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>>>  		goto err_unuse_clocks;
+>>
+>> This goto is wrong now. There is no need to unwind the pm_runtime setup
+>> on a devm_ioremap_resource() failure. You can just return error here.
+> 
+> Ok
+>>
+>>>  	}
+>>>  
+>>> +	pm_runtime_set_autosuspend_delay(dev->dev,
+>>> +					 DAVINCI_I2C_PM_TIMEOUT);
+>>> +	pm_runtime_use_autosuspend(dev->dev);
+>>> +
+>>> +	pm_runtime_enable(dev->dev);
+>>> +
+>>> +	r = pm_runtime_get_sync(dev->dev);
+>>> +	if (r < 0) {
+>>> +		dev_err(dev->dev, "failed to runtime_get device: %d\n", r);
+>>> +		goto err_unuse_clocks;
+>>> +	}
+>>> +
+>>>  	i2c_davinci_init(dev);
+>>>  
+>>>  	r = devm_request_irq(&pdev->dev, dev->irq, i2c_davinci_isr, 0,
+>>> @@ -849,10 +879,16 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>>>  	if (r)
+>>>  		goto err_unuse_clocks;
+>>>  
+>>> +	pm_runtime_mark_last_busy(dev->dev);
+>>> +	pm_runtime_put_autosuspend(dev->dev);
+>>> +
+>>>  	return 0;
+>>>  
+>>>  err_unuse_clocks:
+>>> -	clk_disable_unprepare(dev->clk);
+>>> +	pm_runtime_dont_use_autosuspend(dev->dev);
+>>> +	pm_runtime_put_sync(dev->dev);
+>>> +	pm_runtime_disable(dev->dev);
+>>> +
+>>>  	dev->clk = NULL;
+>>
+>> This null setting of clk seems quite bogus and can be cleaned-up.
+> 
+> Do you mean that I should just remove this line?
 
-I prefer to sort it by the wafer ID (the number after w in the official=20
-ID).
+Yes, and I noticed a similar line in at least one more place that can be
+removed as well.
 
-The current document can be explained to follow the alphabetical order
-or the wafer ID.
-
-P.S. there's some error in the V3s datasheet position, and if it's fixed
-we can still continue to make the two kinds of order both meaningful ;-)
-
->=20
->>      * Quad ARM Cortex-A15, Quad ARM Cortex-A7 based SoCs
->>        - Allwinner A80
->>          + Datasheet
->> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt=20
->> b/Documentation/devicetree/bindings/arm/sunxi.txt
->> index f35c6ada5a65..e4beec3d9ad3 100644
->> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
->> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
->> @@ -14,6 +14,7 @@ using one of the following compatible strings:
->>    allwinner,sun8i-a83t
->>    allwinner,sun8i-h2-plus
->>    allwinner,sun8i-h3
->> +  allwinner-sun8i-r40
->>    allwinner,sun8i-v3s
->>    allwinner,sun9i-a80
->>    allwinner,sun50i-a64
->> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
->> index 7ab353fb25f2..311e6c4fc4f4 100644
->> --- a/arch/arm/mach-sunxi/sunxi.c
->> +++ b/arch/arm/mach-sunxi/sunxi.c
->> @@ -66,6 +66,7 @@ static const char * const sun8i_board_dt_compat[] =3D=
-=20
->> {
->>  	"allwinner,sun8i-h2-plus",
->>  	"allwinner,sun8i-h3",
->>  	"allwinner,sun8i-v3s",
->> +	"allwinner,sun8i-r40",
->=20
-> And same thing here.
->=20
-> Thanks!
-> Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
