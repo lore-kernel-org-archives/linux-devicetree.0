@@ -1,80 +1,93 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
-Date: Tue, 22 Aug 2017 13:31:32 -0700
-Message-ID: <20170822203132.GC21656@codeaurora.org>
-References: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
- <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
- <20170822085541.GB3685@dragon>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/3] ARM: dts: sun7i: Fix A20-OLinuXino-MICRO dts for use
+ with LAN8710
+Date: Tue, 22 Aug 2017 22:31:57 +0200
+Message-ID: <20170822203157.mvnx224l546vamah@flea.home>
+References: <20170822114313.9038-1-stefan@olimex.com>
+ <20170822114313.9038-2-stefan@olimex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="cyescndbqelclbfq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170822085541.GB3685@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhijeet Dharmapurikar <adharmap-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170822114313.9038-2-stefan@olimex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Mavrodiev <stefan@olimex.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/22, Shawn Guo wrote:
-> On Mon, Aug 21, 2017 at 04:18:58PM -0700, Stephen Boyd wrote:
-> > On 08/18/2017 08:28 AM, Kiran Gunda wrote:
-> > > The peripheral ownership check is not necessary on single master
-> > > platforms. Hence, enforce the peripheral ownership check optionally.
-> > >
-> > > Signed-off-by: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > > Tested-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > ---
-> > 
-> > This sounds like a band-aid. Isn't the gpio driver going to keep probing
-> > all the pins that are not supposed to be accessed due to security
-> > constraints? What exactly is failing in the gpio case?
-> 
-> There is a platform_irq_count() call in pinctrl-spmi-gpio probe
-> function.  Due to the owner check in spmi-pmic-arb IRQ domain
-> qpnpint_irq_domain_dt_translate() function, the call will return irq
-> number as zero and cause pmic_gpio_probe() fail with -EINVAL error.
-> 
-> [    1.608516] [<ffff00000860e51c>] qpnpint_irq_domain_dt_translate+0x168/0x194
-> [    1.613557] [<ffff000008117040>] irq_create_fwspec_mapping+0x17c/0x2d8
-> [    1.620672] [<ffff000008117200>] irq_create_of_mapping+0x64/0x74
-> [    1.627008] [<ffff0000087b4fac>] of_irq_get+0x54/0x64
-> [    1.633169] [<ffff00000856b824>] platform_get_irq+0x20/0x150
-> [    1.638117] [<ffff00000856b97c>] platform_irq_count+0x28/0x44
-> [    1.643850] [<ffff0000083cf12c>] pmic_gpio_probe+0x50/0x544
-> 
 
-Hmm. Ok. I guess platform_irq_count() has to go and create irq
-mappings if they haven't been created yet and that then causes us
-to check if we can even get the interrupt for this particular
-irq? There are some interrupt lines that are not routed to the
-application processor in the system, so the irq_ee (irq execution
-environment) is different. This check is there to avoid creating
-flow handlers for irqs that can't be triggered.
+--cyescndbqelclbfq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I can see how trying to request that irq doesn't make sense,
-because it won't ever happen. But preventing that from being
-translated is confusing. Perhaps we can move the check for irq_ee
-to the irq_request_resources() callback in the irqchip? That way,
-we can fail installing the flow handler for the interrupt we
-can't ever receive, but otherwise translate the interrupt number
-so we can keep counting them.
+On Tue, Aug 22, 2017 at 02:43:11PM +0300, Stefan Mavrodiev wrote:
+> From revision J the board uses new phy chip LAN8710. Compared
+> with RTL8201, RA17 pin is TXERR. It has pullup which causes phy
+> not to work. To fix this, PA17 must be configured output-low.
+>=20
+> This patch is compatible with earlier board revisions, since this
+> pin wasn't connected to phy.
+>=20
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/b=
+oot/dts/sun7i-a20-olinuxino-micro.dts
+> index 0b7403e4d687..578c761b551a 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+> @@ -102,7 +102,7 @@
+> =20
+>  &gmac {
+>  	pinctrl-names =3D "default";
+> -	pinctrl-0 =3D <&gmac_pins_mii_a>;
+> +	pinctrl-0 =3D <&gmac_pins_mii_a>,<&gmac_txerr_pin>;
+>  	phy =3D <&phy1>;
+>  	phy-mode =3D "mii";
+>  	status =3D "okay";
+> @@ -229,6 +229,11 @@
+>  };
+> =20
+>  &pio {
+> +	gmac_txerr_pin: gmac_txerr_pin@0 {
+> +		pins =3D "PA17";
+> +		function =3D "gpio_out"
+> +	};
+> +
 
-Also, I see that on v4.13-rc series the read/write checks are
-causing the led driver to fail in a different way:
+You're not enforcing any level doing this. If you're using that pin as
+TXERR, why not mux it to the gmac function and let the GMAC control it?
 
-    spmi spmi-0: error: impermissible write to peripheral sid:0 addr:0xc040
-    qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x40 failed
-    leds-gpio soc:leds: Error applying setting, reverse things back
-    spmi spmi-0: error: impermissible write to peripheral sid:0 addr:0xc041
-    qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x41 failed
-    leds-gpio: probe of soc:leds failed with error -1 
+Maxime
 
-Are you seeing similar behavior?
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--cyescndbqelclbfq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZnJS9AAoJEBx+YmzsjxAg1yYQAIYG70JdlnlsvME475O/0hqc
+tAI8egUi2S36WQ787Yzmq1AQt/mb4rcPnexQyugIk6CTDq1WIvfZNs0BtF6l0cAG
+cv9hjb5BBjK2ZPMuDYvBAT5SQN9apo+S9KaT+d8gXxTvDSIQCk/tyO/XQtkHzSzp
+YIu+7iyBUiGEqR5RNvtv5v+uWvoABX3Nc58jr9ZQfCxNtgIR4X+3Z6d7nRsMRLwV
+Kuru8Y8IojCdPe/Lz4SaL9tw2QQ/X5PTAy2uF9kPFLX1azrETykmEFMR9mu6tQSg
+jNtfuOb/dh64/JMk8U8dMBi4n0c77OQ2Sofga2/KnYSSg4GgsvXnyBVpIsiiRkDC
+BmtmxAYyGG1LgyZ/AXeXPQXf8PQz6LCUTrIDcT5xVP4BGIwZFmO1mFCNcQ1do4tb
+3iAR+uqfyVRO6n6ZErUGF1F8ZOrct7l2iLN7JN8mSbZKwdFMEJzXE1FfUZOhEXRX
+wKQfQ9zh11ul3zCx+6jSi4ZxB+IW7iGlc7JQDN14dPvp/9wXLZm6KlOj9ZlmzRPX
+KKKnzc0ru70mdnHRY6jdTEFsAbeRF1Mufkp1F9ZTprsVOGBtkA8Jr5biR4j8+lcd
+uI6SZmgYZVWPjg73y568dSo5KWpqrQQIbBQc1pJ6H17SskfDB3X3AXUMHRtVajLt
+iGpKM64L8ZDOhg/T6crs
+=tyxa
+-----END PGP SIGNATURE-----
+
+--cyescndbqelclbfq--
