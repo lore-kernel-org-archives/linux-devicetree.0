@@ -1,879 +1,761 @@
-From: Oleksandr Shamray <oleksandrs@mellanox.com>
-Subject: [patch v6 2/3] drivers: jtag: Add Aspeed SoC 24xx and 25xx families JTAG master driver
-Date: Tue, 22 Aug 2017 19:10:55 +0300
-Message-ID: <1503418256-5215-3-git-send-email-oleksandrs@mellanox.com>
-References: <1503418256-5215-1-git-send-email-oleksandrs@mellanox.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503418256-5215-1-git-send-email-oleksandrs@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, mec@shout.net, vadimp@maellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, Oleksandr Shamray <oleksandrs@mellanox.com>, Jiri Pirko <jiri@mellanox.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v3] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Wed, 23 Aug 2017 01:16:41 +0900
+Message-ID: <1503418601-9728-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-gpio@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Driver adds support of Aspeed 2500/2400 series SOC JTAG master controller.
+This GPIO controller device is used on UniPhier SoCs.
 
-Driver implements the following jtag ops:
-- freq_get;
-- freq_set;
-- status_get;
-- idle;
-- xfer;
-
-It has been tested on Mellanox system with BMC equipped with
-Aspeed 2520 SoC for programming CPLD devices.
-
-Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
-v5->v6
-v4->v5
-Comments pointed by Arnd Bergmann <arnd@arndb.de>
-- Added HAS_IOMEM dependence in Kconfig to avoid
-  "undefined reference to `devm_ioremap_resource'" error,
-  because in some arch this not supported
 
-v3->v4
-Comments pointed by Arnd Bergmann <arnd@arndb.de>
-- change transaction pointer tdio type  to __u64
-- change internal status type from enum to __u32
+Changes in v3:
+  - Add .irq_set_affinity() hook
+  - Use irq_domain_create_hierarchy() instead of legacy
+    irq_domain_add_hierarchy().
 
-v2->v3
+Changes in v2:
+  - Remove +32 offset for parent interrupts to follow the GIC
+    binding convention
+  - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
+  - Allocate gpio_chip statically because just one instance is
+    supported
+  - Fix suspend and resume hooks
 
-v1->v2
-Comments pointed by Greg KH <gregkh@linuxfoundation.org>
-- change license type from GPLv2/BSD to GPLv2
+ .../devicetree/bindings/gpio/gpio-uniphier.txt     |  42 ++
+ MAINTAINERS                                        |   1 +
+ drivers/gpio/Kconfig                               |   7 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-uniphier.c                       | 589 +++++++++++++++++++++
+ include/dt-bindings/gpio/uniphier-gpio.h           |  18 +
+ 6 files changed, 658 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+ create mode 100644 drivers/gpio/gpio-uniphier.c
+ create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
 
-Comments pointed by Neil Armstrong <narmstrong@baylibre.com>
-- Add clk_prepare_enable/clk_disable_unprepare in clock init/deinit
-- Change .compatible to soc-specific compatible names
-  aspeed,aspeed4000-jtag/aspeed5000-jtag
-- Added dt-bindings
-
-Comments pointed by Arnd Bergmann <arnd@arndb.de>
-- Reorder functions and removed the forward declarations
-- Add static const qualifier to state machine states transitions
-- Change .compatible to soc-specific compatible names
-  aspeed,aspeed4000-jtag/aspeed5000-jtag
-- Add dt-bindings
-
-Comments pointed by Randy Dunlap <rdunlap@infradead.org>
-- Change module name jtag-aspeed in description in Kconfig
-
-Comments pointed by kbuild test robot <lkp@intel.com>
-- Remove invalid include <asm/mach-types.h>
-- add resource_size instead of calculation
----
- drivers/jtag/Kconfig       |   13 +
- drivers/jtag/Makefile      |    1 +
- drivers/jtag/jtag-aspeed.c |  772 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 786 insertions(+), 0 deletions(-)
- create mode 100644 drivers/jtag/jtag-aspeed.c
-
-diff --git a/drivers/jtag/Kconfig b/drivers/jtag/Kconfig
-index 0fad1a3..098beb0 100644
---- a/drivers/jtag/Kconfig
-+++ b/drivers/jtag/Kconfig
-@@ -14,3 +14,16 @@ menuconfig JTAG
- 
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called jtag.
-+
-+menuconfig JTAG_ASPEED
-+	tristate "Aspeed SoC JTAG controller support"
-+	depends on JTAG && HAS_IOMEM
-+	---help---
-+	  This provides a support for Aspeed JTAG device, equipped on
-+	  Aspeed SoC 24xx and 25xx families. Drivers allows programming
-+	  of hardware devices, connected to SoC through the JTAG interface.
-+
-+	  If you want this support, you should say Y here.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called jtag-aspeed.
-diff --git a/drivers/jtag/Makefile b/drivers/jtag/Makefile
-index af37493..04a855e 100644
---- a/drivers/jtag/Makefile
-+++ b/drivers/jtag/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_JTAG)		+= jtag.o
-+obj-$(CONFIG_JTAG_ASPEED)	+= jtag-aspeed.o
-diff --git a/drivers/jtag/jtag-aspeed.c b/drivers/jtag/jtag-aspeed.c
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
 new file mode 100644
-index 0000000..252bd91
+index 000000000000..8e3e1fe0d072
 --- /dev/null
-+++ b/drivers/jtag/jtag-aspeed.c
-@@ -0,0 +1,772 @@
++++ b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+@@ -0,0 +1,42 @@
++UniPhier GPIO controller
++
++Required properties:
++- compatible: Should be one of the following:
++    "socionext,uniphier-ld4-gpio"  - for LD4 SoC
++    "socionext,uniphier-pro4-gpio" - for Pro4 SoC
++    "socionext,uniphier-sld8-gpio" - for sLD8 SoC
++    "socionext,uniphier-pro5-gpio" - for Pro5 SoC
++    "socionext,uniphier-pxs2-gpio" - for PXs2/LD6b SoC
++    "socionext,uniphier-ld11-gpio" - for LD11 SoC
++    "socionext,uniphier-ld20-gpio" - for LD20 SoC
++    "socionext,uniphier-pxs3-gpio" - for PXs3 SoC
++- reg: Specifies offset and length of the register set for the device.
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Should be 2.  The first cell is the pin number and the second
++  cell is used to specify optional parameters
++- interrupt-parent: Specifies the parent interrupt controller.
++- interrupt-controller: Marks the device node as an interrupt controller
++- #interrupt-cells: Should be 2.  The first cell defines the interrupt number.
++  The second cell bits[3:0] is used to specify trigger type as follows:
++    1 = low-to-high edge triggered
++    2 = high-to-low edge triggered
++    4 = active high level-sensitive
++    8 = active low level-sensitive
++  Valid combinations are 1, 2, 3, 4, 8.
++- gpio-ranges: Mapping to pin controller pins (as described in gpio.txt)
++
++Optional properties:
++- gpio-ranges-group-names: Used for named gpio ranges (as described in gpio.txt)
++
++Example:
++	gpio: gpio@55000000 {
++		compatible = "socionext,uniphier-pro4-gpio";
++		reg = <0x55000000 0x200>;
++		interrupt-parent = <&aidet>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-ranges = <&pinctrl 0 0 0>;
++		gpio-ranges-group-names = "gpio_range";
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7b84f047b3fd..9a1f94ff99a6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1992,6 +1992,7 @@ F:	arch/arm/mm/cache-uniphier.c
+ F:	arch/arm64/boot/dts/socionext/
+ F:	drivers/bus/uniphier-system-bus.c
+ F:	drivers/clk/uniphier/
++F:	drivers/gpio/gpio-uniphier.c
+ F:	drivers/i2c/busses/i2c-uniphier*
+ F:	drivers/irqchip/irq-uniphier-aidet.c
+ F:	drivers/pinctrl/uniphier/
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 461d6fc3688b..5f6d2e984bb6 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -465,6 +465,13 @@ config GPIO_TZ1090_PDC
+ 	help
+ 	  Say yes here to support Toumaz Xenif TZ1090 PDC GPIOs.
+ 
++config GPIO_UNIPHIER
++	tristate "UniPhier GPIO support"
++	depends on ARCH_UNIPHIER
++	depends on OF_GPIO
++	help
++	  Say yes here to support UniPhier GPIOs.
++
+ config GPIO_VF610
+ 	def_bool y
+ 	depends on ARCH_MXC && SOC_VF610
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index a9fda6c55113..1de9fdb8cff9 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -129,6 +129,7 @@ obj-$(CONFIG_GPIO_TWL6040)	+= gpio-twl6040.o
+ obj-$(CONFIG_GPIO_TZ1090)	+= gpio-tz1090.o
+ obj-$(CONFIG_GPIO_TZ1090_PDC)	+= gpio-tz1090-pdc.o
+ obj-$(CONFIG_GPIO_UCB1400)	+= gpio-ucb1400.o
++obj-$(CONFIG_GPIO_UNIPHIER)	+= gpio-uniphier.o
+ obj-$(CONFIG_GPIO_VF610)	+= gpio-vf610.o
+ obj-$(CONFIG_GPIO_VIPERBOARD)	+= gpio-viperboard.o
+ obj-$(CONFIG_GPIO_VR41XX)	+= gpio-vr41xx.o
+diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
+new file mode 100644
+index 000000000000..e0cd408f8871
+--- /dev/null
++++ b/drivers/gpio/gpio-uniphier.c
+@@ -0,0 +1,589 @@
 +/*
-+ * drivers/jtag/jtag.c
++ * Copyright (C) 2017 Socionext Inc.
++ *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
 + *
-+ * Copyright (c) 2017 Mellanox Technologies. All rights reserved.
-+ * Copyright (c) 2017 Oleksandr Shamray <oleksandrs@mellanox.com>
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * Released under the GPLv2 only.
-+ * SPDX-License-Identifier: GPL-2.0
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/jtag.h>
-+#include <linux/kernel.h>
++#include <linux/bitops.h>
++#include <linux/gpio/driver.h>
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
 +#include <linux/module.h>
-+#include <linux/of_address.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
 +#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <uapi/linux/jtag.h>
++#include <linux/spinlock.h>
++#include <dt-bindings/gpio/uniphier-gpio.h>
 +
-+#define ASPEED_JTAG_DATA		0x00
-+#define ASPEED_JTAG_INST		0x04
-+#define ASPEED_JTAG_CTRL		0x08
-+#define ASPEED_JTAG_ISR			0x0C
-+#define ASPEED_JTAG_SW			0x10
-+#define ASPEED_JTAG_TCK			0x14
-+#define ASPEED_JTAG_EC			0x18
++#define UNIPHIER_GPIO_BANK_MASK		\
++				GENMASK((UNIPHIER_GPIO_LINES_PER_BANK) - 1, 0)
 +
-+#define ASPEED_JTAG_DATA_MSB		0x01
-+#define ASPEED_JTAG_DATA_CHUNK_SIZE	0x20
++#define UNIPHIER_GPIO_IRQ_NUM		24
 +
-+/* ASPEED_JTAG_CTRL: Engine Control */
-+#define ASPEED_JTAG_CTL_ENG_EN		BIT(31)
-+#define ASPEED_JTAG_CTL_ENG_OUT_EN	BIT(30)
-+#define ASPEED_JTAG_CTL_FORCE_TMS	BIT(29)
-+#define ASPEED_JTAG_CTL_INST_LEN(x)	((x) << 20)
-+#define ASPEED_JTAG_CTL_LASPEED_INST	BIT(17)
-+#define ASPEED_JTAG_CTL_INST_EN		BIT(16)
-+#define ASPEED_JTAG_CTL_DR_UPDATE	BIT(10)
-+#define ASPEED_JTAG_CTL_DATA_LEN(x)	((x) << 4)
-+#define ASPEED_JTAG_CTL_LASPEED_DATA	BIT(1)
-+#define ASPEED_JTAG_CTL_DATA_EN		BIT(0)
++#define UNIPHIER_GPIO_PORT_DATA		0x0	/* data */
++#define UNIPHIER_GPIO_PORT_DIR		0x4	/* direction (1:in, 0:out) */
++#define UNIPHIER_GPIO_IRQ_EN		0x90	/* irq enable */
++#define UNIPHIER_GPIO_IRQ_MODE		0x94	/* irq mode (1: both edge) */
++#define UNIPHIER_GPIO_IRQ_FLT_EN	0x98	/* noise filter enable */
++#define UNIPHIER_GPIO_IRQ_FLT_CYC	0x9c	/* noise filter clock cycle */
 +
-+/* ASPEED_JTAG_ISR : Interrupt status and enable */
-+#define ASPEED_JTAG_ISR_INST_PAUSE	BIT(19)
-+#define ASPEED_JTAG_ISR_INST_COMPLETE	BIT(18)
-+#define ASPEED_JTAG_ISR_DATA_PAUSE	BIT(17)
-+#define ASPEED_JTAG_ISR_DATA_COMPLETE	BIT(16)
-+#define ASPEED_JTAG_ISR_INST_PAUSE_EN	BIT(3)
-+#define ASPEED_JTAG_ISR_INST_COMPLETE_EN BIT(2)
-+#define ASPEED_JTAG_ISR_DATA_PAUSE_EN	BIT(1)
-+#define ASPEED_JTAG_ISR_DATA_COMPLETE_EN BIT(0)
-+#define ASPEED_JTAG_ISR_INT_EN_MASK	GENMASK(3, 0)
-+#define ASPEED_JTAG_ISR_INT_MASK	GENMASK(19, 16)
-+
-+/* ASPEED_JTAG_SW : Software Mode and Status */
-+#define ASPEED_JTAG_SW_MODE_EN		BIT(19)
-+#define ASPEED_JTAG_SW_MODE_TCK		BIT(18)
-+#define ASPEED_JTAG_SW_MODE_TMS		BIT(17)
-+#define ASPEED_JTAG_SW_MODE_TDIO	BIT(16)
-+
-+/* ASPEED_JTAG_TCK : TCK Control */
-+#define ASPEED_JTAG_TCK_DIVISOR_MASK	GENMASK(10, 0)
-+#define ASPEED_JTAG_TCK_GET_DIV(x)	((x) & ASPEED_JTAG_TCK_DIVISOR_MASK)
-+
-+/* ASPEED_JTAG_EC : Controller set for go to IDLE */
-+#define ASPEED_JTAG_EC_GO_IDLE		BIT(0)
-+
-+#define ASPEED_JTAG_IOUT_LEN(len)	(ASPEED_JTAG_CTL_ENG_EN |\
-+					 ASPEED_JTAG_CTL_ENG_OUT_EN |\
-+					 ASPEED_JTAG_CTL_INST_LEN(len))
-+
-+#define ASPEED_JTAG_DOUT_LEN(len)	(ASPEED_JTAG_CTL_ENG_EN |\
-+					 ASPEED_JTAG_CTL_ENG_OUT_EN |\
-+					 ASPEED_JTAG_CTL_DATA_LEN(len))
-+
-+#define ASPEED_JTAG_TCK_WAIT		10
-+#define ASPEED_JTAG_RESET_CNTR		10
-+
-+#define ASPEED_JTAG_NAME		"jtag-aspeed"
-+
-+struct aspeed_jtag {
-+	void __iomem			*reg_base;
-+	struct device			*dev;
-+	struct clk			*pclk;
-+	enum jtag_endstate		status;
-+	int				irq;
-+	u32				flag;
-+	wait_queue_head_t		jtag_wq;
-+	bool				is_open;
++struct uniphier_gpio_socdata {
++	unsigned int ngpio;
++	bool (*is_valid_irq)(unsigned int hwirq);
++	bool (*is_input_only)(unsigned int offset);
 +};
 +
-+static char *end_status_str[] = {"idle", "ir pause", "drpause"};
-+
-+static u32 aspeed_jtag_read(struct aspeed_jtag *aspeed_jtag, u32 reg)
-+{
-+	return readl(aspeed_jtag->reg_base + reg);
-+}
-+
-+static void
-+aspeed_jtag_write(struct aspeed_jtag *aspeed_jtag, u32 val, u32 reg)
-+{
-+	writel(val, aspeed_jtag->reg_base + reg);
-+}
-+
-+static int aspeed_jtag_freq_set(struct jtag *jtag, __u32 freq)
-+{
-+	struct aspeed_jtag *aspeed_jtag = jtag_priv(jtag);
-+	unsigned long apb_frq;
-+	u32 tck_val;
-+	u16 div;
-+
-+	apb_frq = clk_get_rate(aspeed_jtag->pclk);
-+	div = (apb_frq % freq == 0) ? (apb_frq / freq) - 1 : (apb_frq / freq);
-+	tck_val = aspeed_jtag_read(aspeed_jtag, ASPEED_JTAG_TCK);
-+	aspeed_jtag_write(aspeed_jtag,
-+			  (tck_val & ASPEED_JTAG_TCK_DIVISOR_MASK) | div,
-+			  ASPEED_JTAG_TCK);
-+	return 0;
-+}
-+
-+static int aspeed_jtag_freq_get(struct jtag *jtag, __u32 *frq)
-+{
-+	struct aspeed_jtag *aspeed_jtag = jtag_priv(jtag);
-+	u32 pclk;
-+	u32 tck;
-+
-+	pclk = clk_get_rate(aspeed_jtag->pclk);
-+	tck = aspeed_jtag_read(aspeed_jtag, ASPEED_JTAG_TCK);
-+	*frq = pclk / (ASPEED_JTAG_TCK_GET_DIV(tck) + 1);
-+
-+	return 0;
-+}
-+
-+static void aspeed_jtag_sw_delay(struct aspeed_jtag *aspeed_jtag, int cnt)
-+{
-+	int i;
-+
-+	for (i = 0; i < cnt; i++)
-+		aspeed_jtag_read(aspeed_jtag, ASPEED_JTAG_SW);
-+}
-+
-+static char aspeed_jtag_tck_cycle(struct aspeed_jtag *aspeed_jtag,
-+				  u8 tms, u8 tdi)
-+{
-+	char tdo = 0;
-+
-+	/* TCK = 0 */
-+	aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_SW_MODE_EN |
-+			  (tms * ASPEED_JTAG_SW_MODE_TMS) |
-+			  (tdi * ASPEED_JTAG_SW_MODE_TDIO), ASPEED_JTAG_SW);
-+
-+	aspeed_jtag_sw_delay(aspeed_jtag, ASPEED_JTAG_TCK_WAIT);
-+
-+	/* TCK = 1 */
-+	aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_SW_MODE_EN |
-+			  ASPEED_JTAG_SW_MODE_TCK |
-+			  (tms * ASPEED_JTAG_SW_MODE_TMS) |
-+			  (tdi * ASPEED_JTAG_SW_MODE_TDIO), ASPEED_JTAG_SW);
-+
-+	if (aspeed_jtag_read(aspeed_jtag, ASPEED_JTAG_SW) &
-+	    ASPEED_JTAG_SW_MODE_TDIO)
-+		tdo = 1;
-+
-+	aspeed_jtag_sw_delay(aspeed_jtag, ASPEED_JTAG_TCK_WAIT);
-+
-+	/* TCK = 0 */
-+	aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_SW_MODE_EN |
-+			  (tms * ASPEED_JTAG_SW_MODE_TMS) |
-+			  (tdi * ASPEED_JTAG_SW_MODE_TDIO), ASPEED_JTAG_SW);
-+	return tdo;
-+}
-+
-+static void aspeed_jtag_wait_instruction_pause(struct aspeed_jtag *aspeed_jtag)
-+{
-+	wait_event_interruptible(aspeed_jtag->jtag_wq, aspeed_jtag->flag &
-+				 ASPEED_JTAG_ISR_INST_PAUSE);
-+	aspeed_jtag->flag &= ~ASPEED_JTAG_ISR_INST_PAUSE;
-+}
-+
-+static void
-+aspeed_jtag_wait_instruction_complete(struct aspeed_jtag *aspeed_jtag)
-+{
-+	wait_event_interruptible(aspeed_jtag->jtag_wq, aspeed_jtag->flag &
-+				 ASPEED_JTAG_ISR_INST_COMPLETE);
-+	aspeed_jtag->flag &= ~ASPEED_JTAG_ISR_INST_COMPLETE;
-+}
-+
-+static void
-+aspeed_jtag_wait_data_pause_complete(struct aspeed_jtag *aspeed_jtag)
-+{
-+	wait_event_interruptible(aspeed_jtag->jtag_wq, aspeed_jtag->flag &
-+				 ASPEED_JTAG_ISR_DATA_PAUSE);
-+	aspeed_jtag->flag &= ~ASPEED_JTAG_ISR_DATA_PAUSE;
-+}
-+
-+static void aspeed_jtag_wait_data_complete(struct aspeed_jtag *aspeed_jtag)
-+{
-+	wait_event_interruptible(aspeed_jtag->jtag_wq, aspeed_jtag->flag &
-+				 ASPEED_JTAG_ISR_DATA_COMPLETE);
-+	aspeed_jtag->flag &= ~ASPEED_JTAG_ISR_DATA_COMPLETE;
-+}
-+
-+static void aspeed_jtag_sm_cycle(struct aspeed_jtag *aspeed_jtag, const u8 *tms,
-+				 int len)
-+{
-+	int i;
-+
-+	for (i = 0; i < len; i++)
-+		aspeed_jtag_tck_cycle(aspeed_jtag, tms[i], 0);
-+}
-+
-+static void aspeed_jtag_run_test_idle_sw(struct aspeed_jtag *aspeed_jtag,
-+					 struct jtag_run_test_idle *runtest)
-+{
-+	static const char sm_pause_irpause[] = {1, 1, 1, 1, 0, 1, 0};
-+	static const char sm_pause_drpause[] = {1, 1, 1, 0, 1, 0};
-+	static const char sm_idle_irpause[] = {1, 1, 0, 1, 0};
-+	static const char sm_idle_drpause[] = {1, 0, 1, 0};
-+	static const char sm_pause_idle[] = {1, 1, 0};
-+	int i;
-+
-+	/* SW mode from idle/pause-> to pause/idle */
-+	if (runtest->reset) {
-+		for (i = 0; i < ASPEED_JTAG_RESET_CNTR; i++)
-+			aspeed_jtag_tck_cycle(aspeed_jtag, 1, 0);
-+	}
-+
-+	switch (aspeed_jtag->status) {
-+	case JTAG_STATE_IDLE:
-+		switch (runtest->endstate) {
-+		case JTAG_STATE_PAUSEIR:
-+			/* ->DRSCan->IRSCan->IRCap->IRExit1->PauseIR */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_idle_irpause,
-+					     sizeof(sm_idle_irpause));
-+
-+			aspeed_jtag->status = JTAG_STATE_PAUSEIR;
-+			break;
-+		case JTAG_STATE_PAUSEDR:
-+			/* ->DRSCan->DRCap->DRExit1->PauseDR */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_idle_drpause,
-+					     sizeof(sm_idle_drpause));
-+
-+			aspeed_jtag->status = JTAG_STATE_PAUSEDR;
-+			break;
-+		case JTAG_STATE_IDLE:
-+			/* IDLE */
-+			aspeed_jtag_tck_cycle(aspeed_jtag, 0, 0);
-+			aspeed_jtag->status = JTAG_STATE_IDLE;
-+			break;
-+		default:
-+			break;
-+		}
-+		break;
-+
-+	case JTAG_STATE_PAUSEIR:
-+	/* Fall-through */
-+	case JTAG_STATE_PAUSEDR:
-+		/* From IR/DR Pause */
-+		switch (runtest->endstate) {
-+		case JTAG_STATE_PAUSEIR:
-+			/*
-+			 * to Exit2 IR/DR->Updt IR/DR->DRSCan->IRSCan->IRCap->
-+			 * IRExit1->PauseIR
-+			 */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_pause_irpause,
-+					     sizeof(sm_pause_irpause));
-+
-+			aspeed_jtag->status = JTAG_STATE_PAUSEIR;
-+			break;
-+		case JTAG_STATE_PAUSEDR:
-+			/*
-+			 * to Exit2 IR/DR->Updt IR/DR->DRSCan->DRCap->
-+			 * DRExit1->PauseDR
-+			 */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_pause_drpause,
-+					     sizeof(sm_pause_drpause));
-+			aspeed_jtag->status = JTAG_STATE_PAUSEDR;
-+			break;
-+		case JTAG_STATE_IDLE:
-+			/* to Exit2 IR/DR->Updt IR/DR->IDLE */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_pause_idle,
-+					     sizeof(sm_pause_idle));
-+			aspeed_jtag->status = JTAG_STATE_IDLE;
-+			break;
-+		default:
-+			break;
-+		}
-+		break;
-+
-+	default:
-+		dev_err(aspeed_jtag->dev, "aspeed_jtag_run_test_idle error\n");
-+		break;
-+	}
-+
-+	/* Stay on IDLE for at least  TCK cycle */
-+	for (i = 0; i < runtest->tck; i++)
-+		aspeed_jtag_tck_cycle(aspeed_jtag, 0, 0);
-+}
-+
-+/**
-+ * aspeed_jtag_run_test_idle:
-+ * JTAG reset: generates at least 9 TMS high and 1 TMS low to force
-+ * devices into Run-Test/Idle State.
-+ */
-+static int aspeed_jtag_idle(struct jtag *jtag,
-+			    struct jtag_run_test_idle *runtest)
-+{
-+	struct aspeed_jtag *aspeed_jtag = jtag_priv(jtag);
-+
-+	dev_dbg(aspeed_jtag->dev, "aspeed_jtag runtest, status:%d, mode:%s, state:%s, reset:%d, tck:%d\n",
-+		aspeed_jtag->status, runtest->mode ? "SW" : "HW",
-+		end_status_str[runtest->endstate], runtest->reset,
-+		runtest->tck);
-+
-+	if (runtest->mode) {
-+		aspeed_jtag_run_test_idle_sw(aspeed_jtag, runtest);
-+		return 0;
-+	}
-+
-+	/* Disable sw mode */
-+	aspeed_jtag_write(aspeed_jtag, 0, ASPEED_JTAG_SW);
-+	/* x TMS high + 1 TMS low */
-+	if (runtest->reset)
-+		aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_CTL_ENG_EN |
-+				  ASPEED_JTAG_CTL_ENG_OUT_EN |
-+				  ASPEED_JTAG_CTL_FORCE_TMS, ASPEED_JTAG_CTRL);
-+	else
-+		aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_EC_GO_IDLE,
-+				  ASPEED_JTAG_EC);
-+
-+	aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_SW_MODE_EN |
-+			  ASPEED_JTAG_SW_MODE_TDIO, ASPEED_JTAG_SW);
-+
-+	aspeed_jtag->status = JTAG_STATE_IDLE;
-+	return 0;
-+}
-+
-+static void aspeed_jtag_xfer_sw(struct aspeed_jtag *aspeed_jtag,
-+				struct jtag_xfer *xfer, unsigned long *data)
-+{
-+	unsigned long remain_xfer = xfer->length;
-+	unsigned long shift_bits = 0;
-+	unsigned long index = 0;
-+	unsigned long tdi;
-+	char          tdo;
-+
-+	if (xfer->direction == JTAG_READ_XFER)
-+		tdi = UINT_MAX;
-+	else
-+		tdi = data[index];
-+
-+	while (remain_xfer > 1) {
-+		tdo = aspeed_jtag_tck_cycle(aspeed_jtag, 0,
-+					    tdi & ASPEED_JTAG_DATA_MSB);
-+		data[index] |= tdo << (shift_bits %
-+					    ASPEED_JTAG_DATA_CHUNK_SIZE);
-+
-+		tdi >>= 1;
-+		shift_bits++;
-+		remain_xfer--;
-+
-+		if (shift_bits % ASPEED_JTAG_DATA_CHUNK_SIZE == 0) {
-+			dev_dbg(aspeed_jtag->dev, "R/W data[%lu]:%lx\n",
-+				index, data[index]);
-+
-+			tdo = 0;
-+			index++;
-+
-+			if (xfer->direction == JTAG_READ_XFER)
-+				tdi = UINT_MAX;
-+			else
-+				tdi = data[index];
-+		}
-+	}
-+
-+	tdo = aspeed_jtag_tck_cycle(aspeed_jtag, 1, tdi & ASPEED_JTAG_DATA_MSB);
-+	data[index] |= tdo << (shift_bits % ASPEED_JTAG_DATA_CHUNK_SIZE);
-+}
-+
-+static void aspeed_jtag_xfer_push_data(struct aspeed_jtag *aspeed_jtag,
-+				       enum jtag_xfer_type type, u32 bits_len)
-+{
-+	dev_dbg(aspeed_jtag->dev, "shift bits %d\n", bits_len);
-+
-+	if (type == JTAG_SIR_XFER) {
-+		aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_IOUT_LEN(bits_len),
-+				  ASPEED_JTAG_CTRL);
-+		aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_DOUT_LEN(bits_len) |
-+				  ASPEED_JTAG_CTL_INST_EN, ASPEED_JTAG_CTRL);
-+	} else {
-+		aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_DOUT_LEN(bits_len),
-+				  ASPEED_JTAG_CTRL);
-+		aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_DOUT_LEN(bits_len) |
-+				  ASPEED_JTAG_CTL_DATA_EN, ASPEED_JTAG_CTRL);
-+	}
-+}
-+
-+static void aspeed_jtag_xfer_push_data_last(struct aspeed_jtag *aspeed_jtag,
-+					    enum jtag_xfer_type type,
-+					    u32 shift_bits,
-+					    enum jtag_endstate endstate)
-+{
-+	if (endstate != JTAG_STATE_IDLE) {
-+		if (type == JTAG_SIR_XFER) {
-+			dev_dbg(aspeed_jtag->dev, "IR Keep Pause\n");
-+
-+			aspeed_jtag_write(aspeed_jtag,
-+					  ASPEED_JTAG_IOUT_LEN(shift_bits),
-+					  ASPEED_JTAG_CTRL);
-+			aspeed_jtag_write(aspeed_jtag,
-+					  ASPEED_JTAG_IOUT_LEN(shift_bits) |
-+					  ASPEED_JTAG_CTL_INST_EN,
-+					  ASPEED_JTAG_CTRL);
-+			aspeed_jtag_wait_instruction_pause(aspeed_jtag);
-+		} else {
-+			dev_dbg(aspeed_jtag->dev, "DR Keep Pause\n");
-+			aspeed_jtag_write(aspeed_jtag,
-+					  ASPEED_JTAG_DOUT_LEN(shift_bits) |
-+					  ASPEED_JTAG_CTL_DR_UPDATE,
-+					  ASPEED_JTAG_CTRL);
-+			aspeed_jtag_write(aspeed_jtag,
-+					  ASPEED_JTAG_DOUT_LEN(shift_bits) |
-+					  ASPEED_JTAG_CTL_DR_UPDATE |
-+					  ASPEED_JTAG_CTL_DATA_EN,
-+					  ASPEED_JTAG_CTRL);
-+			aspeed_jtag_wait_data_pause_complete(aspeed_jtag);
-+		}
-+	} else {
-+		if (type == JTAG_SIR_XFER) {
-+			dev_dbg(aspeed_jtag->dev, "IR go IDLE\n");
-+
-+			aspeed_jtag_write(aspeed_jtag,
-+					  ASPEED_JTAG_IOUT_LEN(shift_bits) |
-+					  ASPEED_JTAG_CTL_LASPEED_INST,
-+					  ASPEED_JTAG_CTRL);
-+			aspeed_jtag_write(aspeed_jtag,
-+					  ASPEED_JTAG_IOUT_LEN(shift_bits) |
-+					  ASPEED_JTAG_CTL_LASPEED_INST |
-+					  ASPEED_JTAG_CTL_INST_EN,
-+					  ASPEED_JTAG_CTRL);
-+			aspeed_jtag_wait_instruction_complete(aspeed_jtag);
-+		} else {
-+			dev_dbg(aspeed_jtag->dev, "DR go IDLE\n");
-+
-+			aspeed_jtag_write(aspeed_jtag,
-+					  ASPEED_JTAG_DOUT_LEN(shift_bits) |
-+					  ASPEED_JTAG_CTL_LASPEED_DATA,
-+					  ASPEED_JTAG_CTRL);
-+			aspeed_jtag_write(aspeed_jtag,
-+					  ASPEED_JTAG_DOUT_LEN(shift_bits) |
-+					  ASPEED_JTAG_CTL_LASPEED_DATA |
-+					  ASPEED_JTAG_CTL_DATA_EN,
-+					  ASPEED_JTAG_CTRL);
-+			aspeed_jtag_wait_data_complete(aspeed_jtag);
-+		}
-+	}
-+}
-+
-+static void aspeed_jtag_xfer_hw(struct aspeed_jtag *aspeed_jtag,
-+				struct jtag_xfer *xfer, unsigned long *data)
-+{
-+	unsigned long remain_xfer = xfer->length;
-+	unsigned long index = 0;
-+	char shift_bits;
-+	u32 data_reg;
-+
-+	data_reg = xfer->type == JTAG_SIR_XFER ?
-+		   ASPEED_JTAG_INST : ASPEED_JTAG_DATA;
-+	while (remain_xfer) {
-+		if (xfer->direction == JTAG_WRITE_XFER) {
-+			dev_dbg(aspeed_jtag->dev, "W dr->dr_data[%lu]:%lx\n",
-+				index, data[index]);
-+
-+			aspeed_jtag_write(aspeed_jtag, data[index], data_reg);
-+		} else {
-+			aspeed_jtag_write(aspeed_jtag, 0, data_reg);
-+		}
-+
-+		if (remain_xfer > ASPEED_JTAG_DATA_CHUNK_SIZE) {
-+			shift_bits = ASPEED_JTAG_DATA_CHUNK_SIZE;
-+
-+			/*
-+			 * Read bytes were not equals to column length
-+			 * and go to Pause-DR
-+			 */
-+			aspeed_jtag_xfer_push_data(aspeed_jtag, xfer->type,
-+						   shift_bits);
-+		} else {
-+			/*
-+			 * Read bytes equals to column length =>
-+			 * Update-DR
-+			 */
-+			shift_bits = remain_xfer;
-+			aspeed_jtag_xfer_push_data_last(aspeed_jtag, xfer->type,
-+							shift_bits,
-+							xfer->endstate);
-+		}
-+
-+		if (xfer->direction == JTAG_READ_XFER) {
-+			if (shift_bits < ASPEED_JTAG_DATA_CHUNK_SIZE) {
-+				data[index] = aspeed_jtag_read(aspeed_jtag,
-+							       data_reg);
-+
-+				data[index] >>= ASPEED_JTAG_DATA_CHUNK_SIZE -
-+								shift_bits;
-+			} else {
-+				data[index] = aspeed_jtag_read(aspeed_jtag,
-+							       data_reg);
-+			}
-+			dev_dbg(aspeed_jtag->dev, "R dr->dr_data[%lu]:%lx\n",
-+				index, data[index]);
-+		}
-+
-+		remain_xfer = remain_xfer - shift_bits;
-+		index++;
-+		dev_dbg(aspeed_jtag->dev, "remain_xfer %lu\n", remain_xfer);
-+	}
-+}
-+
-+static int aspeed_jtag_xfer(struct jtag *jtag, struct jtag_xfer *xfer)
-+{
-+	static const char sm_update_shiftir[] = {1, 1, 0, 0};
-+	static const char sm_update_shiftdr[] = {1, 0, 0};
-+	static const char sm_pause_idle[] = {1, 1, 0};
-+	static const char sm_pause_update[] = {1, 1};
-+	unsigned long *data = jtag_u64_to_ptr(xfer->tdio);
-+	struct aspeed_jtag *aspeed_jtag = jtag_priv(jtag);
-+	unsigned long remain_xfer = xfer->length;
-+	unsigned long offset;
-+	char dbg_str[256];
-+	int pos = 0;
-+	int i;
-+
-+	for (offset = 0, i = 0; offset < xfer->length;
-+			offset += ASPEED_JTAG_DATA_CHUNK_SIZE, i++) {
-+		pos += snprintf(&dbg_str[pos], sizeof(dbg_str) - pos,
-+				"0x%08lx ", data[i]);
-+	}
-+
-+	dev_dbg(aspeed_jtag->dev, "aspeed_jtag %s %s xfer, mode:%s, END:%d, len:%lu, TDI[%s]\n",
-+		xfer->type == JTAG_SIR_XFER ? "SIR" : "SDR",
-+		xfer->direction == JTAG_READ_XFER ? "READ" : "WRITE",
-+		xfer->mode ? "SW" : "HW",
-+		xfer->endstate, remain_xfer, dbg_str);
-+
-+	if (xfer->mode == JTAG_XFER_SW_MODE) {
-+		/* SW mode */
-+		aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_SW_MODE_EN |
-+				  ASPEED_JTAG_SW_MODE_TDIO, ASPEED_JTAG_SW);
-+
-+		if (aspeed_jtag->status != JTAG_STATE_IDLE) {
-+			/*IR/DR Pause->Exit2 IR / DR->Update IR /DR */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_pause_update,
-+					     sizeof(sm_pause_update));
-+		}
-+
-+		if (xfer->type == JTAG_SIR_XFER)
-+			/* ->IRSCan->CapIR->ShiftIR */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_update_shiftir,
-+					     sizeof(sm_update_shiftir));
-+		else
-+			/* ->DRScan->DRCap->DRShift */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_update_shiftdr,
-+					     sizeof(sm_update_shiftdr));
-+
-+		aspeed_jtag_xfer_sw(aspeed_jtag, xfer, data);
-+
-+		/* DIPause/DRPause */
-+		aspeed_jtag_tck_cycle(aspeed_jtag, 0, 0);
-+
-+		if (xfer->endstate == JTAG_STATE_IDLE) {
-+			/* ->DRExit2->DRUpdate->IDLE */
-+			aspeed_jtag_sm_cycle(aspeed_jtag, sm_pause_idle,
-+					     sizeof(sm_pause_idle));
-+		}
-+	} else {
-+		/* hw mode */
-+		aspeed_jtag_write(aspeed_jtag, 0, ASPEED_JTAG_SW);
-+		aspeed_jtag_xfer_hw(aspeed_jtag, xfer, data);
-+	}
-+
-+	aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_SW_MODE_EN |
-+			  ASPEED_JTAG_SW_MODE_TDIO, ASPEED_JTAG_SW);
-+	aspeed_jtag->status = xfer->endstate;
-+	return 0;
-+}
-+
-+static int aspeed_jtag_status_get(struct jtag *jtag, __u32 *status)
-+{
-+	struct aspeed_jtag *aspeed_jtag = jtag_priv(jtag);
-+
-+	*status = aspeed_jtag->status;
-+	return 0;
-+}
-+
-+static irqreturn_t aspeed_jtag_interrupt(s32 this_irq, void *dev_id)
-+{
-+	struct aspeed_jtag *aspeed_jtag = dev_id;
-+	irqreturn_t ret;
-+	u32 status;
-+
-+	status = aspeed_jtag_read(aspeed_jtag, ASPEED_JTAG_ISR);
-+	dev_dbg(aspeed_jtag->dev, "status %x\n", status);
-+
-+	if (status & ASPEED_JTAG_ISR_INT_MASK) {
-+		aspeed_jtag_write(aspeed_jtag,
-+				  (status & ASPEED_JTAG_ISR_INT_MASK)
-+				  | (status & ASPEED_JTAG_ISR_INT_EN_MASK),
-+				  ASPEED_JTAG_ISR);
-+		aspeed_jtag->flag |= status & ASPEED_JTAG_ISR_INT_MASK;
-+	}
-+
-+	if (aspeed_jtag->flag) {
-+		wake_up_interruptible(&aspeed_jtag->jtag_wq);
-+		ret = IRQ_HANDLED;
-+	} else {
-+		dev_err(aspeed_jtag->dev, "aspeed_jtag irq status:%x\n",
-+			status);
-+		ret = IRQ_NONE;
-+	}
-+	return ret;
-+}
-+
-+int aspeed_jtag_init(struct platform_device *pdev,
-+		     struct aspeed_jtag *aspeed_jtag)
-+{
-+	struct resource *res;
-+	int err;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	aspeed_jtag->reg_base = devm_ioremap_resource(aspeed_jtag->dev, res);
-+	if (IS_ERR(aspeed_jtag->reg_base)) {
-+		err = -ENOMEM;
-+		goto out_region;
-+	}
-+
-+	aspeed_jtag->pclk = devm_clk_get(aspeed_jtag->dev, NULL);
-+	if (IS_ERR(aspeed_jtag->pclk)) {
-+		dev_err(aspeed_jtag->dev, "devm_clk_get failed\n");
-+		return PTR_ERR(aspeed_jtag->pclk);
-+	}
-+
-+	clk_prepare_enable(aspeed_jtag->pclk);
-+
-+	aspeed_jtag->irq = platform_get_irq(pdev, 0);
-+	if (aspeed_jtag->irq < 0) {
-+		dev_err(aspeed_jtag->dev, "no irq specified\n");
-+		err = -ENOENT;
-+		goto out_region;
-+	}
-+
-+	/* Enable clock */
-+	aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_CTL_ENG_EN |
-+			  ASPEED_JTAG_CTL_ENG_OUT_EN, ASPEED_JTAG_CTRL);
-+	aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_SW_MODE_EN |
-+			  ASPEED_JTAG_SW_MODE_TDIO, ASPEED_JTAG_SW);
-+
-+	err = devm_request_irq(aspeed_jtag->dev, aspeed_jtag->irq,
-+			       aspeed_jtag_interrupt, 0,
-+			       "aspeed-jtag", aspeed_jtag);
-+	if (err) {
-+		dev_err(aspeed_jtag->dev, "aspeed_jtag unable to get IRQ");
-+		goto out_region;
-+	}
-+	dev_dbg(&pdev->dev, "aspeed_jtag:IRQ %d.\n", aspeed_jtag->irq);
-+
-+	aspeed_jtag_write(aspeed_jtag, ASPEED_JTAG_ISR_INST_PAUSE |
-+			  ASPEED_JTAG_ISR_INST_COMPLETE |
-+			  ASPEED_JTAG_ISR_DATA_PAUSE |
-+			  ASPEED_JTAG_ISR_DATA_COMPLETE |
-+			  ASPEED_JTAG_ISR_INST_PAUSE_EN |
-+			  ASPEED_JTAG_ISR_INST_COMPLETE_EN |
-+			  ASPEED_JTAG_ISR_DATA_PAUSE_EN |
-+			  ASPEED_JTAG_ISR_DATA_COMPLETE_EN,
-+			  ASPEED_JTAG_ISR);
-+
-+	aspeed_jtag->flag = 0;
-+	init_waitqueue_head(&aspeed_jtag->jtag_wq);
-+	return 0;
-+
-+out_region:
-+	release_mem_region(res->start, resource_size(res));
-+	return err;
-+}
-+
-+int aspeed_jtag_deinit(struct platform_device *pdev,
-+		       struct aspeed_jtag *aspeed_jtag)
-+{
-+	aspeed_jtag_write(aspeed_jtag, 0, ASPEED_JTAG_ISR);
-+	devm_free_irq(aspeed_jtag->dev, aspeed_jtag->irq, aspeed_jtag);
-+	/* Disabe clock */
-+	aspeed_jtag_write(aspeed_jtag, 0, ASPEED_JTAG_CTRL);
-+	clk_disable_unprepare(aspeed_jtag->pclk);
-+	return 0;
-+}
-+
-+static const struct jtag_ops aspeed_jtag_ops = {
-+	.freq_get = aspeed_jtag_freq_get,
-+	.freq_set = aspeed_jtag_freq_set,
-+	.status_get = aspeed_jtag_status_get,
-+	.idle = aspeed_jtag_idle,
-+	.xfer = aspeed_jtag_xfer
++struct uniphier_gpio_priv {
++	struct irq_domain *domain;
++	const struct uniphier_gpio_socdata *socdata;
++	void __iomem *regs;
++	spinlock_t lock;
++	u32 saved_vals[0];
 +};
 +
-+static int aspeed_jtag_probe(struct platform_device *pdev)
++static unsigned int uniphier_gpio_bank_to_reg(unsigned int bank)
 +{
-+	struct aspeed_jtag *aspeed_jtag;
-+	struct jtag *jtag;
-+	int err;
++	unsigned int reg;
 +
-+	if (!of_device_is_compatible(pdev->dev.of_node, "aspeed,aspeed-jtag"))
++	reg = (bank + 1) * 8;
++
++	/*
++	 * Unfortunately, the GPIO port registers are not contiguous because
++	 * offset 0x90-0x9f is used for IRQ.  Add 0x10 when crossing the region.
++	 */
++	if (reg >= UNIPHIER_GPIO_IRQ_EN)
++		reg += 0x10;
++
++	return reg;
++}
++
++static void uniphier_gpio_get_bank_and_mask(unsigned int offset,
++					    unsigned int *bank, u32 *mask)
++{
++	*bank = offset / UNIPHIER_GPIO_LINES_PER_BANK;
++	*mask = BIT(offset % UNIPHIER_GPIO_LINES_PER_BANK);
++}
++
++static void uniphier_gpio_reg_update(struct uniphier_gpio_priv *priv,
++				     unsigned int reg, u32 mask, u32 val)
++{
++	unsigned long flags;
++	u32 tmp;
++
++	spin_lock_irqsave(&priv->lock, flags);
++	tmp = readl(priv->regs + reg);
++	tmp &= ~mask;
++	tmp |= mask & val;
++	writel(tmp, priv->regs + reg);
++	spin_unlock_irqrestore(&priv->lock, flags);
++}
++
++static void uniphier_gpio_bank_write(struct gpio_chip *chip, unsigned int bank,
++				     unsigned int reg, u32 mask, u32 val)
++{
++	struct uniphier_gpio_priv *priv = gpiochip_get_data(chip);
++
++	if (!mask)
++		return;
++
++	uniphier_gpio_reg_update(priv, uniphier_gpio_bank_to_reg(bank) + reg,
++				 mask, val);
++}
++
++static void uniphier_gpio_offset_write(struct gpio_chip *chip,
++				       unsigned int offset, unsigned int reg,
++				       int val)
++{
++	unsigned int bank;
++	u32 mask;
++
++	uniphier_gpio_get_bank_and_mask(offset, &bank, &mask);
++
++	uniphier_gpio_bank_write(chip, bank, reg, mask, val ? mask : 0);
++}
++
++static int uniphier_gpio_offset_read(struct gpio_chip *chip,
++				     unsigned int offset, unsigned int reg)
++{
++	struct uniphier_gpio_priv *priv = gpiochip_get_data(chip);
++	unsigned int bank, reg_offset;
++	u32 mask;
++
++	uniphier_gpio_get_bank_and_mask(offset, &bank, &mask);
++	reg_offset = uniphier_gpio_bank_to_reg(bank) + reg;
++
++	return !!(readl(priv->regs + reg_offset) & mask);
++}
++
++static int uniphier_gpio_get_direction(struct gpio_chip *chip,
++				       unsigned int offset)
++{
++	return uniphier_gpio_offset_read(chip, offset, UNIPHIER_GPIO_PORT_DIR);
++}
++
++static int uniphier_gpio_direction_input(struct gpio_chip *chip,
++					 unsigned int offset)
++{
++	uniphier_gpio_offset_write(chip, offset, UNIPHIER_GPIO_PORT_DIR, 1);
++
++	return 0;
++}
++
++static int uniphier_gpio_direction_output(struct gpio_chip *chip,
++					  unsigned int offset, int val)
++{
++	struct uniphier_gpio_priv *priv = gpiochip_get_data(chip);
++
++	if (priv->socdata->is_input_only &&
++	    priv->socdata->is_input_only(offset)) {
++		dev_err(chip->parent, "GPIO%d is input only port\n", offset);
++		return -EINVAL;
++	}
++
++	uniphier_gpio_offset_write(chip, offset, UNIPHIER_GPIO_PORT_DATA, val);
++	uniphier_gpio_offset_write(chip, offset, UNIPHIER_GPIO_PORT_DIR, 0);
++
++	return 0;
++}
++
++static int uniphier_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	return uniphier_gpio_offset_read(chip, offset, UNIPHIER_GPIO_PORT_DATA);
++}
++
++static void uniphier_gpio_set(struct gpio_chip *chip,
++			      unsigned int offset, int val)
++{
++	uniphier_gpio_offset_write(chip, offset, UNIPHIER_GPIO_PORT_DATA, val);
++}
++
++static void uniphier_gpio_set_multiple(struct gpio_chip *chip,
++				       unsigned long *mask, unsigned long *bits)
++{
++	unsigned int bank, shift, bank_mask, bank_bits;
++	int i;
++
++	for (i = 0; i < chip->ngpio; i += UNIPHIER_GPIO_LINES_PER_BANK) {
++		bank = i / UNIPHIER_GPIO_LINES_PER_BANK;
++		shift = i % BITS_PER_LONG;
++		bank_mask = (mask[BIT_WORD(i)] >> shift) &
++						UNIPHIER_GPIO_BANK_MASK;
++		bank_bits = bits[BIT_WORD(i)] >> shift;
++
++		uniphier_gpio_bank_write(chip, bank, UNIPHIER_GPIO_PORT_DATA,
++					 bank_mask, bank_bits);
++	}
++}
++
++static int uniphier_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
++{
++	struct irq_fwspec fwspec;
++
++	if (offset < UNIPHIER_GPIO_IRQ_OFFSET)
++		return -ENXIO;
++
++	fwspec.fwnode = of_node_to_fwnode(chip->parent->of_node);
++	fwspec.param_count = 2;
++	fwspec.param[0] = offset - UNIPHIER_GPIO_IRQ_OFFSET;
++	fwspec.param[1] = IRQ_TYPE_NONE;
++
++	return irq_create_fwspec_mapping(&fwspec);
++}
++
++static struct gpio_chip uniphier_gpio_chip = {
++	.label = "UniPhier GPIO",
++	.request = gpiochip_generic_request,
++	.free = gpiochip_generic_free,
++	.get_direction = uniphier_gpio_get_direction,
++	.direction_input = uniphier_gpio_direction_input,
++	.direction_output = uniphier_gpio_direction_output,
++	.get = uniphier_gpio_get,
++	.set = uniphier_gpio_set,
++	.set_multiple = uniphier_gpio_set_multiple,
++	.to_irq = uniphier_gpio_to_irq,
++	.base = -1,
++};
++
++static void uniphier_gpio_irq_mask(struct irq_data *data)
++{
++	struct uniphier_gpio_priv *priv = data->chip_data;
++	u32 mask = BIT(data->hwirq);
++
++	uniphier_gpio_reg_update(priv, UNIPHIER_GPIO_IRQ_EN, mask, 0);
++
++	return irq_chip_mask_parent(data);
++}
++
++static void uniphier_gpio_irq_unmask(struct irq_data *data)
++{
++	struct uniphier_gpio_priv *priv = data->chip_data;
++	u32 mask = BIT(data->hwirq);
++
++	uniphier_gpio_reg_update(priv, UNIPHIER_GPIO_IRQ_EN, mask, mask);
++
++	return irq_chip_unmask_parent(data);
++}
++
++static int uniphier_gpio_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct uniphier_gpio_priv *priv = data->chip_data;
++	u32 mask = BIT(data->hwirq);
++	u32 val = 0;
++
++	if (type == IRQ_TYPE_EDGE_BOTH) {
++		val = mask;
++		type = IRQ_TYPE_EDGE_FALLING;
++	}
++
++	uniphier_gpio_reg_update(priv, UNIPHIER_GPIO_IRQ_MODE, mask, val);
++	/* To enable both edge detection, the noise filter must be enabled. */
++	uniphier_gpio_reg_update(priv, UNIPHIER_GPIO_IRQ_FLT_EN, mask, val);
++
++	return irq_chip_set_type_parent(data, type);
++}
++
++static struct irq_chip uniphier_gpio_irq_chip = {
++	.name = "GPIO",
++	.irq_mask = uniphier_gpio_irq_mask,
++	.irq_unmask = uniphier_gpio_irq_unmask,
++	.irq_eoi = irq_chip_eoi_parent,
++	.irq_set_affinity = irq_chip_set_affinity_parent,
++	.irq_set_type = uniphier_gpio_irq_set_type,
++};
++
++static const u32 uniphier_gpio_irq_parent_hwirqs[] = {
++	48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
++	154, 155, 156, 157, 158, 217, 218, 219,
++};
++
++static int uniphier_gpio_irq_domain_translate(struct irq_domain *domain,
++					      struct irq_fwspec *fwspec,
++					      unsigned long *out_hwirq,
++					      unsigned int *out_type)
++{
++	if (WARN_ON(fwspec->param_count < 2))
++		return -EINVAL;
++
++	*out_hwirq = fwspec->param[0];
++	*out_type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
++
++	return 0;
++}
++
++static int uniphier_gpio_irq_domain_alloc(struct irq_domain *domain,
++					  unsigned int virq,
++					  unsigned int nr_irqs, void *arg)
++{
++	struct uniphier_gpio_priv *priv = domain->host_data;
++	struct irq_fwspec parent_fwspec;
++	irq_hw_number_t hwirq;
++	unsigned int type;
++	int ret;
++
++	if (WARN_ON(nr_irqs != 1))
++		return -EINVAL;
++
++	ret = uniphier_gpio_irq_domain_translate(domain, arg, &hwirq, &type);
++	if (ret)
++		return ret;
++
++	if (!priv->socdata->is_valid_irq(hwirq))
++		return -ENXIO;
++
++	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
++					    &uniphier_gpio_irq_chip, priv);
++	if (ret)
++		return ret;
++
++	if (type == IRQ_TYPE_EDGE_BOTH)
++		type = IRQ_TYPE_EDGE_FALLING;
++
++	BUILD_BUG_ON(ARRAY_SIZE(uniphier_gpio_irq_parent_hwirqs) >
++		     UNIPHIER_GPIO_IRQ_NUM);
++
++	/* parent is UniPhier AIDET */
++	parent_fwspec.fwnode = domain->parent->fwnode;
++	parent_fwspec.param_count = 2;
++	parent_fwspec.param[0] = uniphier_gpio_irq_parent_hwirqs[hwirq];
++	parent_fwspec.param[1] = type;
++
++	return irq_domain_alloc_irqs_parent(domain, virq, 1, &parent_fwspec);
++}
++
++static void uniphier_gpio_irq_domain_activate(struct irq_domain *domain,
++					      struct irq_data *data)
++{
++	gpiochip_lock_as_irq(&uniphier_gpio_chip,
++			     data->hwirq + UNIPHIER_GPIO_IRQ_OFFSET);
++}
++
++static void uniphier_gpio_irq_domain_deactivate(struct irq_domain *domain,
++						struct irq_data *data)
++{
++	gpiochip_unlock_as_irq(&uniphier_gpio_chip,
++			       data->hwirq + UNIPHIER_GPIO_IRQ_OFFSET);
++}
++
++static const struct irq_domain_ops uniphier_gpio_irq_domain_ops = {
++	.alloc = uniphier_gpio_irq_domain_alloc,
++	.free = irq_domain_free_irqs_common,
++	.activate = uniphier_gpio_irq_domain_activate,
++	.deactivate = uniphier_gpio_irq_domain_deactivate,
++	.translate = uniphier_gpio_irq_domain_translate,
++};
++
++static void uniphier_gpio_hw_init(struct uniphier_gpio_priv *priv)
++{
++	/*
++	 * To detect both edge interrupts, the noise filter must be enabled.
++	 * This filter is intended to remove the noise from the irq lines.
++	 * It does not work for GPIO input, so GPIO debounce is not supported.
++	 * Unfortunately, the filter period is shared among all irq lines.
++	 * Just choose a sensible period here.
++	 */
++	writel(0xff, priv->regs + UNIPHIER_GPIO_IRQ_FLT_CYC);
++}
++
++static unsigned int uniphier_gpio_get_nbanks(unsigned int ngpio)
++{
++	return DIV_ROUND_UP(ngpio, UNIPHIER_GPIO_LINES_PER_BANK);
++}
++
++static int uniphier_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *parent_np;
++	struct irq_domain *parent_domain;
++	struct uniphier_gpio_priv *priv;
++	const struct uniphier_gpio_socdata *data;
++	struct resource *regs;
++	unsigned int nregs;
++	int ret;
++
++	parent_np = of_irq_find_parent(dev->of_node);
++	if (!parent_np)
++		return -ENXIO;
++
++	parent_domain = irq_find_host(parent_np);
++	of_node_put(parent_np);
++	if (!parent_domain)
++		return -EPROBE_DEFER;
++
++	data = of_device_get_match_data(dev);
++	if (WARN_ON(!data || !data->is_valid_irq))
++		return -EINVAL;
++
++	nregs = uniphier_gpio_get_nbanks(data->ngpio) * 2 + 3;
++	priv = devm_kzalloc(dev,
++			    sizeof(*priv) + sizeof(priv->saved_vals[0]) * nregs,
++			    GFP_KERNEL);
++	if (!priv)
 +		return -ENOMEM;
 +
-+	jtag = jtag_alloc(sizeof(*aspeed_jtag), &aspeed_jtag_ops);
-+	if (!jtag)
-+		return -ENODEV;
++	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	priv->regs = devm_ioremap_resource(dev, regs);
++	if (IS_ERR(priv->regs))
++		return PTR_ERR(priv->regs);
 +
-+	platform_set_drvdata(pdev, jtag);
-+	aspeed_jtag = jtag_priv(jtag);
-+	aspeed_jtag->dev = &pdev->dev;
++	spin_lock_init(&priv->lock);
++	priv->socdata = data;
 +
-+	/* Initialize device*/
-+	err = aspeed_jtag_init(pdev, aspeed_jtag);
-+	if (err)
-+		goto err_jtag_init;
++	uniphier_gpio_hw_init(priv);
 +
-+	/* Initialize JTAG core structure*/
-+	err = jtag_register(jtag);
-+	if (err)
-+		goto err_jtag_register;
++	uniphier_gpio_chip.parent = dev;
++	uniphier_gpio_chip.ngpio = data->ngpio;
++
++	ret = devm_gpiochip_add_data(dev, &uniphier_gpio_chip, priv);
++	if (ret)
++		return ret;
++
++	priv->domain = irq_domain_create_hierarchy(
++					parent_domain, 0, UNIPHIER_GPIO_IRQ_NUM,
++					of_node_to_fwnode(dev->of_node),
++					&uniphier_gpio_irq_domain_ops, priv);
++	if (!priv->domain)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, priv);
 +
 +	return 0;
-+
-+err_jtag_register:
-+	aspeed_jtag_deinit(pdev, aspeed_jtag);
-+err_jtag_init:
-+	jtag_free(jtag);
-+	return err;
 +}
 +
-+static int aspeed_jtag_remove(struct platform_device *pdev)
++static int uniphier_gpio_remove(struct platform_device *pdev)
 +{
-+	struct jtag *jtag;
++	struct uniphier_gpio_priv *priv = platform_get_drvdata(pdev);
 +
-+	jtag = platform_get_drvdata(pdev);
-+	aspeed_jtag_deinit(pdev, jtag_priv(jtag));
-+	jtag_unregister(jtag);
-+	jtag_free(jtag);
++	irq_domain_remove(priv->domain);
++
 +	return 0;
 +}
 +
-+static const struct of_device_id aspeed_jtag_of_match[] = {
-+	{ .compatible = "aspeed,aspeed2400-jtag", },
-+	{ .compatible = "aspeed,aspeed2500-jtag", },
-+	{}
++static int __maybe_unused uniphier_gpio_suspend(struct device *dev)
++{
++	struct uniphier_gpio_priv *priv = dev_get_drvdata(dev);
++	unsigned int nbanks = uniphier_gpio_get_nbanks(priv->socdata->ngpio);
++	u32 *val = priv->saved_vals;
++	unsigned int reg;
++	int i;
++
++	for (i = 0; i < nbanks; i++) {
++		reg = uniphier_gpio_bank_to_reg(i);
++
++		*val++ = readl(priv->regs + reg + UNIPHIER_GPIO_PORT_DATA);
++		*val++ = readl(priv->regs + reg + UNIPHIER_GPIO_PORT_DIR);
++	}
++
++	*val++ = readl(priv->regs + UNIPHIER_GPIO_IRQ_EN);
++	*val++ = readl(priv->regs + UNIPHIER_GPIO_IRQ_MODE);
++	*val++ = readl(priv->regs + UNIPHIER_GPIO_IRQ_FLT_EN);
++
++	return 0;
++}
++
++static int __maybe_unused uniphier_gpio_resume(struct device *dev)
++{
++	struct uniphier_gpio_priv *priv = dev_get_drvdata(dev);
++	unsigned int nbanks = uniphier_gpio_get_nbanks(priv->socdata->ngpio);
++	const u32 *val = priv->saved_vals;
++	unsigned int reg;
++	int i;
++
++	for (i = 0; i < nbanks; i++) {
++		reg = uniphier_gpio_bank_to_reg(i);
++
++		writel(*val++, priv->regs + reg + UNIPHIER_GPIO_PORT_DATA);
++		writel(*val++, priv->regs + reg + UNIPHIER_GPIO_PORT_DIR);
++	}
++
++	writel(*val++, priv->regs + UNIPHIER_GPIO_IRQ_EN);
++	writel(*val++, priv->regs + UNIPHIER_GPIO_IRQ_MODE);
++	writel(*val++, priv->regs + UNIPHIER_GPIO_IRQ_FLT_EN);
++
++	uniphier_gpio_hw_init(priv);
++
++	return 0;
++}
++
++static const struct dev_pm_ops uniphier_gpio_pm_ops = {
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(uniphier_gpio_suspend,
++				     uniphier_gpio_resume)
 +};
 +
-+static struct platform_driver aspeed_jtag_driver = {
-+	.probe = aspeed_jtag_probe,
-+	.remove = aspeed_jtag_remove,
++static bool uniphier_ld4_gpio_is_valid_irq(unsigned int hwirq)
++{
++	return hwirq < 16 && hwirq != 13;
++}
++
++static const struct uniphier_gpio_socdata uniphier_ld4_gpio_data = {
++	.ngpio = 136,
++	.is_valid_irq = uniphier_ld4_gpio_is_valid_irq,
++};
++
++static bool uniphier_pro4_gpio_is_valid_irq(unsigned int hwirq)
++{
++	return hwirq < 21;
++}
++
++static const struct uniphier_gpio_socdata uniphier_pro4_gpio_data = {
++	.ngpio = 248,
++	.is_valid_irq = uniphier_pro4_gpio_is_valid_irq,
++};
++
++static bool uniphier_pxs2_gpio_is_valid_irq(unsigned int hwirq)
++{
++	return hwirq < 24;
++}
++
++static const struct uniphier_gpio_socdata uniphier_pxs2_gpio_data = {
++	.ngpio = 232,
++	.is_valid_irq = uniphier_pxs2_gpio_is_valid_irq,
++};
++
++static bool uniphier_ld11_gpio_is_input_only(unsigned int offset)
++{
++	return offset >= 144 && offset <= 151;
++}
++
++static const struct uniphier_gpio_socdata uniphier_ld11_gpio_data = {
++	.ngpio = 200,
++	.is_valid_irq = uniphier_pxs2_gpio_is_valid_irq,
++	.is_input_only = uniphier_ld11_gpio_is_input_only,
++};
++
++static const struct uniphier_gpio_socdata uniphier_ld20_gpio_data = {
++	.ngpio = 205,
++	.is_valid_irq = uniphier_pxs2_gpio_is_valid_irq,
++	.is_input_only = uniphier_ld11_gpio_is_input_only,
++};
++
++static bool uniphier_pxs3_gpio_is_input_only(unsigned int offset)
++{
++	return offset >= 144 && offset <= 161;
++}
++
++static const struct uniphier_gpio_socdata uniphier_pxs3_gpio_data = {
++	.ngpio = 286,
++	.is_valid_irq = uniphier_pxs2_gpio_is_valid_irq,
++	.is_input_only = uniphier_pxs3_gpio_is_input_only,
++};
++
++static const struct of_device_id uniphier_gpio_match[] = {
++	{
++		.compatible = "socionext,uniphier-ld4-gpio",
++		.data = &uniphier_ld4_gpio_data,
++	},
++	{
++		.compatible = "socionext,uniphier-pro4-gpio",
++		.data = &uniphier_pro4_gpio_data,
++	},
++	{
++		.compatible = "socionext,uniphier-sld8-gpio",
++		.data = &uniphier_ld4_gpio_data,
++	},
++	{
++		.compatible = "socionext,uniphier-pro5-gpio",
++		.data = &uniphier_pro4_gpio_data,
++	},
++	{
++		.compatible = "socionext,uniphier-pxs2-gpio",
++		.data = &uniphier_pxs2_gpio_data,
++	},
++	{
++		.compatible = "socionext,uniphier-ld11-gpio",
++		.data = &uniphier_ld11_gpio_data,
++	},
++	{
++		.compatible = "socionext,uniphier-ld20-gpio",
++		.data = &uniphier_ld20_gpio_data,
++	},
++	{
++		.compatible = "socionext,uniphier-pxs3-gpio",
++		.data = &uniphier_pxs3_gpio_data,
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, uniphier_gpio_match);
++
++static struct platform_driver uniphier_gpio_driver = {
++	.probe = uniphier_gpio_probe,
++	.remove = uniphier_gpio_remove,
 +	.driver = {
-+		.name = ASPEED_JTAG_NAME,
-+		.of_match_table = aspeed_jtag_of_match,
++		.name = "uniphier-gpio",
++		.of_match_table = uniphier_gpio_match,
++		.pm = &uniphier_gpio_pm_ops,
 +	},
 +};
-+module_platform_driver(aspeed_jtag_driver);
++module_platform_driver(uniphier_gpio_driver);
 +
-+MODULE_AUTHOR("Oleksandr Shamray <oleksandrs@mellanox.com>");
-+MODULE_DESCRIPTION("ASPEED JTAG driver");
-+MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Masahiro Yamada <yamada.masahiro@socionext.com>");
++MODULE_DESCRIPTION("UniPhier GPIO driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/dt-bindings/gpio/uniphier-gpio.h b/include/dt-bindings/gpio/uniphier-gpio.h
+new file mode 100644
+index 000000000000..9f0ad174f61c
+--- /dev/null
++++ b/include/dt-bindings/gpio/uniphier-gpio.h
+@@ -0,0 +1,18 @@
++/*
++ * Copyright (C) 2017 Socionext Inc.
++ *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
++ */
++
++#ifndef _DT_BINDINGS_GPIO_UNIPHIER_H
++#define _DT_BINDINGS_GPIO_UNIPHIER_H
++
++#define UNIPHIER_GPIO_LINES_PER_BANK	8
++
++#define UNIPHIER_GPIO_IRQ_OFFSET	((UNIPHIER_GPIO_LINES_PER_BANK) * 15)
++
++#define UNIPHIER_GPIO_PORT(bank, line)	\
++			((UNIPHIER_GPIO_LINES_PER_BANK) * (bank) + (line))
++
++#define UNIPHIER_GPIO_IRQ(n)		((UNIPHIER_GPIO_IRQ_OFFSET) + (n))
++
++#endif /* _DT_BINDINGS_GPIO_UNIPHIER_H */
 -- 
-1.7.1
+2.7.4
