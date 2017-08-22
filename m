@@ -1,168 +1,43 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX
- Device Tree bindings
-Date: Tue, 22 Aug 2017 10:53:20 +0200
-Message-ID: <20170822085320.pdxbxfv53rb75btu@flea.lan>
-References: <20170720092302.2982-1-maxime.ripard@free-electrons.com>
- <20170720092302.2982-2-maxime.ripard@free-electrons.com>
- <2362756.VjbdGaYBzu@avalon>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
+Date: Tue, 22 Aug 2017 16:55:43 +0800
+Message-ID: <20170822085541.GB3685@dragon>
+References: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
+ <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yymmjalaldlbgipk"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2362756.VjbdGaYBzu@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Kiran Gunda <kgunda@codeaurora.org>, gregkh@linuxfoundation.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Abhijeet Dharmapurikar <adharmap@codeaurora.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---yymmjalaldlbgipk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Laurent,
-
-Thanks a lot for reviewing those patches.
-
-On Mon, Aug 07, 2017 at 11:18:03PM +0300, Laurent Pinchart wrote:
-> Hi Maxime,
->=20
-> Thank you for the patch.
->=20
-> On Thursday 20 Jul 2017 11:23:01 Maxime Ripard wrote:
-> > The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up=
- to
-> > 4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
-> > the hardware implementation.
-> >=20
-> > It can operate with an external D-PHY, an internal one or no D-PHY at a=
-ll
-> > in some configurations.
->=20
-> Without any PHY ? I'm curious, how does that work ?
-
-We're currently working on an FPGA exactly with that configuration. So
-I guess the answer would be "it doesn't on an ASIC" :)
-
-> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Mon, Aug 21, 2017 at 04:18:58PM -0700, Stephen Boyd wrote:
+> On 08/18/2017 08:28 AM, Kiran Gunda wrote:
+> > The peripheral ownership check is not necessary on single master
+> > platforms. Hence, enforce the peripheral ownership check optionally.
+> >
+> > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> > Tested-by: Shawn Guo <shawnguo@kernel.org>
 > > ---
-> >  .../devicetree/bindings/media/cdns-csi2rx.txt      | 87 ++++++++++++++=
-++++
-> >  1 file changed, 87 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/cdns-csi2rx=
-=2Etxt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
-> > b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt new file mode
-> > 100644
-> > index 000000000000..e08547abe885
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
-> > @@ -0,0 +1,87 @@
-> > +Cadence MIPI-CSI2 RX controller
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to=
- 4
-> > CSI
-> > +lanes in input, and 4 different pixel streams in output.
-> > +
-> > +Required properties:
-> > +  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compa=
-tible
-> > +  - reg: base address and size of the memory mapped region
-> > +  - clocks: phandles to the clocks driving the controller
-> > +  - clock-names: must contain:
-> > +    * sys_clk: main clock
-> > +    * p_clk: register bank clock
-> > +    * p_free_clk: free running register bank clock
-> > +    * pixel_ifX_clk: pixel stream output clock, one for each stream
-> > +                     implemented in hardware, between 0 and 3
->=20
-> Nitpicking, I would write the name is pixel_if[0-3]_clk, it took me a few=
-=20
-> seconds to see that the X was a placeholder.
+> 
+> This sounds like a band-aid. Isn't the gpio driver going to keep probing
+> all the pins that are not supposed to be accessed due to security
+> constraints? What exactly is failing in the gpio case?
 
-Ok.
+There is a platform_irq_count() call in pinctrl-spmi-gpio probe
+function.  Due to the owner check in spmi-pmic-arb IRQ domain
+qpnpint_irq_domain_dt_translate() function, the call will return irq
+number as zero and cause pmic_gpio_probe() fail with -EINVAL error.
 
-> > +    * dphy_rx_clk: D-PHY byte clock, if implemented in hardware
-> > +  - phys: phandle to the external D-PHY
-> > +  - phy-names: must contain dphy, if the implementation uses an
-> > +               external D-PHY
->=20
-> I would move the last two properties in an optional category as they're=
-=20
-> effectively optional. I think you should also explain a bit more clearly =
-that=20
-> the phys property must not be present if the phy-names property is not=20
-> present.
+[    1.608516] [<ffff00000860e51c>] qpnpint_irq_domain_dt_translate+0x168/0x194
+[    1.613557] [<ffff000008117040>] irq_create_fwspec_mapping+0x17c/0x2d8
+[    1.620672] [<ffff000008117200>] irq_create_of_mapping+0x64/0x74
+[    1.627008] [<ffff0000087b4fac>] of_irq_get+0x54/0x64
+[    1.633169] [<ffff00000856b824>] platform_get_irq+0x20/0x150
+[    1.638117] [<ffff00000856b97c>] platform_irq_count+0x28/0x44
+[    1.643850] [<ffff0000083cf12c>] pmic_gpio_probe+0x50/0x544
 
-It's not really optional. The IP has a configuration register that
-allows you to see if it's been synthesized with or without a PHY. If
-the right bit is set, that property will be mandatory, if not, it's
-useless.
-
-Maybe it's just semantics, but to me, optional means that it can
-operate with or without it under any circumstances. It's not really
-the case here.
-
-> > +
-> > +Required subnodes:
-> > +  - ports: A ports node with endpoint definitions as defined in
-> > +           Documentation/devicetree/bindings/media/video-interfaces.tx=
-t.
-> > The
-> > +           first port subnode should be the input endpoint, the second=
- one
-> > the
-> > +           outputs
-> > +
-> > +  The output port should have as many endpoints as stream supported by
-> > +  the hardware implementation, between 1 and 4, their ID being the
-> > +  stream output number used in the implementation.
->=20
-> I don't think that's correct. The IP has four independent outputs, it sho=
-uld=20
-> have 4 output ports for a total for 5 ports. Multiple endpoints per port =
-would=20
-> describe multiple connections from the same output to different sinks.
-
-Ok.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---yymmjalaldlbgipk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZm/EAAAoJEBx+YmzsjxAgvyoQAJhMPrD85aLsJAru7hOpMjGd
-DRG6UUK6EJ0vkZQlKa654MmvD+hAgi1J4triTaF6y6vGCLkfkJM51JkNgYys0ZL4
-3rxiJPLgoCLx9LT+lrxtjrZBSRVrIVd+2NtLIes+OtO9icP3Vfp3p4/T6aVBUw7g
-PsN8n23q44+FMRpq1eRanspXMiSQT1LVntabsdQFGYwsnreU0myI3Dz0tFiDvLYN
-KuFIMxzTJngQOSIxC8Vmi2R+PfxyqnKhfVBqTG/r9jMCoqkEcB82EuEf+kBPqrT2
-ZEM1bcUq5X0V8n1X00Jbih6FeMWjB8RZxI7mkP7H+u0Qzt2MIX8ob4uSwZPJu1RG
-4F1RY6/uI7Yat76iDLQnXscMIWlBUcYMwrlhslDmKnL40IFn+Z9mRYRu6wulb2Mj
-iVQqc/BVwzx1sObM/A7rAX7omEMLCErkejz/ka3Wu80dxeuK7FQT50jNqv6BNc3i
-Eo+Znpl8cUd2INmJK1vUO/2ktE2U6zIKhlOX+uTuQx6uFITOcoB5IDLRgF/LaqmV
-vKbvJKJHAJKbdSs0c0fttLczkVE47neq4dNq8seGfqrnCDy5u9868EB2mCr0X6Xi
-1Y2+0kEqZSVKqYeVhEGqoj31M5PMEt3dt0SNk/zqJ6Jtv+lZzSmXZq2XyZq6AbyJ
-oGD+IxHxsEgmuNE8X9Qt
-=4SLW
------END PGP SIGNATURE-----
-
---yymmjalaldlbgipk--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
