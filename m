@@ -1,41 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: r8a7743: add IIC cores to dtsi
-Date: Tue, 22 Aug 2017 15:23:39 +0300
-Message-ID: <b7434757-b151-5971-2b5f-525eeaf11467@cogentembedded.com>
-References: <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
- <1502704398-28378-1-git-send-email-biju.das@bp.renesas.com>
- <TY1PR06MB07027D9A55FBFE2D591CEDCFB7840@TY1PR06MB0702.apcprd06.prod.outlook.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 1/3] omap3isp: Drop redundant isp->subdevs field and ISP_MAX_SUBDEVS
+Date: Tue, 22 Aug 2017 15:30:22 +0300
+Message-ID: <3810750.ISKOUEcbCg@avalon>
+References: <20170818112317.30933-1-sakari.ailus@linux.intel.com> <20170818112317.30933-2-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <TY1PR06MB07027D9A55FBFE2D591CEDCFB7840-/PRLmSCtZ14u2TXDOttQZW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Content-Language: en-MW
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170818112317.30933-2-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2017 12:10 PM, Chris Paterson wrote:
+Hi Sakari,
 
->> From: Biju Das [mailto:biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org]
->> Sent: 14 August 2017 10:53
->>
->> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> ---
->> v1-->v2
->>     Corrected the resets property for i2c6 device node.
+Thank you for the patch.
+
+On Friday, 18 August 2017 14:23:15 EEST Sakari Ailus wrote:
+> struct omap3isp.subdevs field and ISP_MAX_SUBDEVS macro are both unused.
+> Remove them.
 > 
-> Are you happy with this version of the patch?
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+The field and macro are still used, you only remove them in patch 2/3. You can 
+squash 1/3 and 2/3 together.
+
+> ---
+>  drivers/media/platform/omap3isp/isp.h | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> Or is the discussion for moving to 'iic' still alive?
+> diff --git a/drivers/media/platform/omap3isp/isp.h
+> b/drivers/media/platform/omap3isp/isp.h index e528df6efc09..848cd96b67ca
+> 100644
+> --- a/drivers/media/platform/omap3isp/isp.h
+> +++ b/drivers/media/platform/omap3isp/isp.h
+> @@ -220,9 +220,6 @@ struct isp_device {
+> 
+>  	unsigned int sbl_resources;
+>  	unsigned int subclk_resources;
+> -
+> -#define ISP_MAX_SUBDEVS		8
+> -	struct v4l2_subdev *subdevs[ISP_MAX_SUBDEVS];
+>  };
+> 
+>  struct isp_async_subdev {
 
-    Yes, appears so. I'd like the labels to be named iic<n>.
 
-> Thanks, Chris
+-- 
+Regards,
 
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
