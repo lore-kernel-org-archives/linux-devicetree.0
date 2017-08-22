@@ -1,67 +1,63 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/3] ARM: dts: sun7i: Fix A20-OLinuXino-MICRO dts for use
- with LAN8710
-Date: Tue, 22 Aug 2017 22:31:57 +0200
-Message-ID: <20170822203157.mvnx224l546vamah@flea.home>
-References: <20170822114313.9038-1-stefan@olimex.com>
- <20170822114313.9038-2-stefan@olimex.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun8i: a33: add dts for Q8 tablets
+ with different resolution
+Date: Tue, 22 Aug 2017 22:33:54 +0200
+Message-ID: <20170822203354.la2w2fb3ljxwmjo4@flea.home>
+References: <20170817074926.3410-1-icenowy@aosc.io>
+ <20170821084053.s4qmhlvgsmckmqgh@flea.lan>
+ <4a0a72b4679db296a8e48512c41a2ce5@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cyescndbqelclbfq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="rjyi3vbtv2q6yu56"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPNK6LGAKGQELIJ7M7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170822114313.9038-2-stefan@olimex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Mavrodiev <stefan@olimex.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+In-Reply-To: <4a0a72b4679db296a8e48512c41a2ce5-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---cyescndbqelclbfq
-Content-Type: text/plain; charset=us-ascii
+--rjyi3vbtv2q6yu56
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 22, 2017 at 02:43:11PM +0300, Stefan Mavrodiev wrote:
-> From revision J the board uses new phy chip LAN8710. Compared
-> with RTL8201, RA17 pin is TXERR. It has pullup which causes phy
-> not to work. To fix this, PA17 must be configured output-low.
+On Mon, Aug 21, 2017 at 04:44:30PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> =E5=9C=A8 2017-08-21 16:40=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> > On Thu, Aug 17, 2017 at 03:49:26PM +0800, Icenowy Zheng wrote:
+> > > Q8 tablets with Allwinner A33 SoC now come with two kind of LCD,
+> > > either
+> > > 800x480 or 1024x600.
+> > >=20
+> > > In order for sun4i-drm to be able to choose correct LCD configuration=
+,
+> > > two different device trees should be present, one for a resolution.
+> > >=20
+> > > Add stub device trees for two resolutions.
+> > >=20
+> > > As the sun4i-drm driver still has some problems to support the LCDs,
+> > > the
+> > > real LCD device nodes are not added to the device tree files.
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >=20
+> > This should be an overlay, ideally applied by the bootloader.
 >=20
-> This patch is compatible with earlier board revisions, since this
-> pin wasn't connected to phy.
+> I think this is not suitable for overlay.
 >=20
-> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
->
-> ---
->  arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/b=
-oot/dts/sun7i-a20-olinuxino-micro.dts
-> index 0b7403e4d687..578c761b551a 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-> @@ -102,7 +102,7 @@
-> =20
->  &gmac {
->  	pinctrl-names =3D "default";
-> -	pinctrl-0 =3D <&gmac_pins_mii_a>;
-> +	pinctrl-0 =3D <&gmac_pins_mii_a>,<&gmac_txerr_pin>;
->  	phy =3D <&phy1>;
->  	phy-mode =3D "mii";
->  	status =3D "okay";
-> @@ -229,6 +229,11 @@
->  };
-> =20
->  &pio {
-> +	gmac_txerr_pin: gmac_txerr_pin@0 {
-> +		pins =3D "PA17";
-> +		function =3D "gpio_out"
-> +	};
-> +
+> The two kind of Q8 tablets are not compatible at all, and they
+> should both have a suitable device tree.
 
-You're not enforcing any level doing this. If you're using that pin as
-TXERR, why not mux it to the gmac function and let the GMAC control it?
+How are they not compatible?
 
 Maxime
 
@@ -70,24 +66,31 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---cyescndbqelclbfq
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--rjyi3vbtv2q6yu56
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZnJS9AAoJEBx+YmzsjxAg1yYQAIYG70JdlnlsvME475O/0hqc
-tAI8egUi2S36WQ787Yzmq1AQt/mb4rcPnexQyugIk6CTDq1WIvfZNs0BtF6l0cAG
-cv9hjb5BBjK2ZPMuDYvBAT5SQN9apo+S9KaT+d8gXxTvDSIQCk/tyO/XQtkHzSzp
-YIu+7iyBUiGEqR5RNvtv5v+uWvoABX3Nc58jr9ZQfCxNtgIR4X+3Z6d7nRsMRLwV
-Kuru8Y8IojCdPe/Lz4SaL9tw2QQ/X5PTAy2uF9kPFLX1azrETykmEFMR9mu6tQSg
-jNtfuOb/dh64/JMk8U8dMBi4n0c77OQ2Sofga2/KnYSSg4GgsvXnyBVpIsiiRkDC
-BmtmxAYyGG1LgyZ/AXeXPQXf8PQz6LCUTrIDcT5xVP4BGIwZFmO1mFCNcQ1do4tb
-3iAR+uqfyVRO6n6ZErUGF1F8ZOrct7l2iLN7JN8mSbZKwdFMEJzXE1FfUZOhEXRX
-wKQfQ9zh11ul3zCx+6jSi4ZxB+IW7iGlc7JQDN14dPvp/9wXLZm6KlOj9ZlmzRPX
-KKKnzc0ru70mdnHRY6jdTEFsAbeRF1Mufkp1F9ZTprsVOGBtkA8Jr5biR4j8+lcd
-uI6SZmgYZVWPjg73y568dSo5KWpqrQQIbBQc1pJ6H17SskfDB3X3AXUMHRtVajLt
-iGpKM64L8ZDOhg/T6crs
-=tyxa
+iQIcBAEBAgAGBQJZnJUyAAoJEBx+YmzsjxAgw/oP/1HozhQKc4Cc7AtJd7LQAk8c
+g4hkZh6HfVHgMqPV9CEsZsNMo9dvof97doaFOc6UBq4e1bVCh3bx32Vd5fNl5OXp
+dXEBfLzotuQikXnS1tbNzUrUa0yKDjn+y2NBebLxuN0/Ql1EBwin3/LXgm3HCqD3
+WIySN7yuAicNCy9Q/rHueV+rZCYN2hTCkT1C7ajq4FqlmwQSvICq2S2FOJuujTBA
+/9rQLGUi4XSpQnaVsnFP7X2RPrpK059RUpTdcOvYTB+YkwZ8/q6me3yh9pmmhrq8
+4sfijsDG4801icPFdneCWCgRRRtshC/OaTb4B64JyraHANs24C+CIzguFyOnG31h
+il5tAvy5HY02hoF5hLN3H0kjrFcSg0WlkFO5pamZrd73F1DxbTJ+aByXeRdnjNZr
+bM2QpjW/10Xr/+3JJ1/RmLflZrsN6C3yQlgrDi2igB2r1y3oFBDK1AosxeRt/4ox
+bITWWQbnNQB5eipo6y/2xlqecPQpQWoFY1Wyt4IUaigkvj2fV8aNghPhcPR/jm8n
+rzo6nJDf9dX8eM3FbTsij+vB5/ppqnSHbRYQbZ80polyzi/2hqhxb/oKk5JEeBS2
+AG+QJKvDmtXytIB4O9OuZAQFbFL5th0jWwp4Zeu/G8vW59Ygvq5ERP8ADVrsU/pz
+t+xbO5xAzsPj/y0AD2BS
+=xSox
 -----END PGP SIGNATURE-----
 
---cyescndbqelclbfq--
+--rjyi3vbtv2q6yu56--
