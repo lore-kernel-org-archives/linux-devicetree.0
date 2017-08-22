@@ -1,24 +1,44 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] dt-bindings: iio: accel: add LIS2DW12 sensor
- device binding
-Date: Mon, 21 Aug 2017 21:25:08 -0500
-Message-ID: <20170822022508.qnwew7swflevdjkr@rob-hp-laptop>
-References: <20170817173729.10899-1-lorenzo.bianconi@st.com>
- <20170817173729.10899-6-lorenzo.bianconi@st.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: bluetooth: Add
+ broadcom-bluetooth
+Date: Mon, 21 Aug 2017 21:29:21 -0500
+Message-ID: <20170822022921.7o2h3w3crmrjulga@rob-hp-laptop>
+References: <1502992791-10265-1-git-send-email-loic.poulain@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170817173729.10899-6-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1502992791-10265-1-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 07:37:29PM +0200, Lorenzo Bianconi wrote:
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+On Thu, Aug 17, 2017 at 07:59:48PM +0200, Loic Poulain wrote:
+> Add binding document for serial bluetooth chips using
+> Broadcom protocol.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  v2: dt-bindings as separate patch
+>      rebase on upcoming pi3 dts changes
+>  v3: changes in bcm serdev drivers:
+>      name refactoring and additional comments
+>      Add generic host_set_baudrate method
+>      Use agnostic device_property_read
+>  v4: changes in doc and dts:
+>      Add additional params to broadcom bt dt-bindings
+>      Set the max baudrate to 2000000 instead of 921600
+>      use chosen/stdout-path instead of console=
+>      remove useless earlyprintk
+>      same changes in bcm283x.dtsi
+> 
+>  .../devicetree/bindings/net/broadcom-bluetooth.txt | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
