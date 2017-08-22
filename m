@@ -1,43 +1,26 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 serial
- slave
-Date: Mon, 21 Aug 2017 21:31:17 -0500
-Message-ID: <20170822023117.pdeocwozzxmlcvog@rob-hp-laptop>
-References: <1502992791-10265-1-git-send-email-loic.poulain@gmail.com>
- <1502992791-10265-3-git-send-email-loic.poulain@gmail.com>
+Subject: Re: [PATCH 4/6] dt-bindings: host1x: Fix and add Tegra186 information
+Date: Mon, 21 Aug 2017 21:39:23 -0500
+Message-ID: <20170822023923.nr22ujsuiousvt2y@rob-hp-laptop>
+References: <20170817185413.6324-1-mperttunen@nvidia.com>
+ <20170817185413.6324-5-mperttunen@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1502992791-10265-3-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170817185413.6324-5-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dnibade-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sgurrappadi-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 07:59:50PM +0200, Loic Poulain wrote:
-> Add BCM43438 (bluetooth) as a slave device of uart0 (pl011/ttyAMA0).
-> This allows to automatically insert the bcm43438 to the bluetooth
-> subsystem instead of relying on userspace helpers (hciattach).
-> 
-> Overwrite chosen/stdout-path to use 8250 aux uart as console.
-> 
-> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  v2: dt-bindings as separate patch
->      rebase on upcoming pi3 dts changes
->  v3: changes in bcm serdev drivers:
->      name refactoring and additional comments
->      Add generic host_set_baudrate method
->      Use agnostic device_property_read
->  v4: changes in doc and dts:
->      Add additional params to broadcom bt dt-bindings
->      Set the max baudrate to 2000000 instead of 921600
->      use chosen/stdout-path instead of console=
->      remove useless earlyprintk
->      same changes in bcm283x.dtsi
-> 
->  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+On Thu, Aug 17, 2017 at 09:54:11PM +0300, Mikko Perttunen wrote:
+> Add note that address/size-cells should be 2 on 64-bit systems,
+> and add Tegra186-specific register range properties.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Generally the cell sizes have nothing to do with the addressing size of 
+the cpu. They should be as small as what fits for the given sub-tree. If 
+all the register space fits into 4GB, then there's no reason for the 
+#size-cells to be 2. The same is true if the sub-tree has a parent bus.
+
+Rob
