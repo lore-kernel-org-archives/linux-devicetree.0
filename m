@@ -1,33 +1,66 @@
-From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] crypto: add driver for Axis ARTPEC crypto
- accelerator
-Date: Tue, 22 Aug 2017 15:57:23 +0800
-Message-ID: <20170822075723.GC6269@gondor.apana.org.au>
-References: <cover.1502368677.git.larper@axis.com>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v5 0/9] ASoC: rockchip: Parse dai links from dts
+Date: Tue, 22 Aug 2017 15:57:19 +0800
+Message-ID: <20170822075729.8438-1-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1502368677.git.larper-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, mengdong.lin@linux.intel.com, lars@metafoo.de, Liam Girdwood <lgirdwood@gmail.com>, briannorris@chromium.org, Mark Brown <broonie@kernel.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Will Deacon <will.deacon@arm.com>, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, mka@chromium.org, Klaus Goger <klaus.goger@theobroma-systems.com>, Catalin Marinas <catalin.marinas@arm.com>, Takashi Iwai <tiwai@suse.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 02:53:50PM +0200, Lars Persson wrote:
-> This series adds a driver for the crypto accelerator in the ARTPEC series of
-> SoCs from Axis Communications AB.
-> 
-> Changelog v4:
-> - The skcipher conversion had a mistake where the algos were registered
->   instead of unregistered at module unloading.
 
-All applied.  Thanks.
+Currently we are using a fixed list of dai links in the driver.
+This serial of patches would let the driver parse dai links from
+dts, so that we can make some of them optional for future boards.
+
+Tested on my chromebook bob(with cros 4.4 kernel), it still works
+after disabled rt5514 codecs in the dts.
+
+
+Changes in v5:
+Allow searching for dai driver name in snd_soc_find_dai, instead of
+hacking non-zero device id to avoid legay dai naming.
+
+Changes in v4:
+Use non-zero drv id to avoid legacy dai naming instead of switching to
+snd_soc_register_codec.
+
+Changes in v3:
+Use compatible to match audio codecs
+        -- Suggested-by Matthias Kaehlcke <mka@chromium.org>
+
+Changes in v2:
+Let rockchip,codec-names be a required property, because we plan to
+add more supported codecs to the fixed dai link list in the driver.
+
+Jeffy Chen (9):
+  ASoC: rockchip: Remove obsolete dmic-delay
+  ASoC: soc-core: Allow searching dai driver name in snd_soc_find_dai
+  ASoC: rockchip: Use codec of_node and dai_name for rt5514 dsp
+  arm64: dts: rockchip: Add rt5514 dsp for Gru
+  arm64: dts: rockchip: Update rt5514 devices' compatible for Gru
+  ASoC: rockchip: Parse dai links from dts
+  ASoC: rockchip: Add support for DP codec
+  ASoC: rockchip: Add support for DMIC codec
+  dt-bindings: ASoC: rockchip: Update description of rockchip,codec
+
+ .../bindings/sound/rockchip,rk3399-gru-sound.txt   |   9 +-
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       |   7 +-
+ sound/soc/rockchip/Kconfig                         |   2 +
+ sound/soc/rockchip/rk3399_gru_sound.c              | 263 ++++++++++++++-------
+ sound/soc/soc-core.c                               |   5 +-
+ 5 files changed, 185 insertions(+), 101 deletions(-)
+
 -- 
-Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
