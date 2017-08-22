@@ -1,71 +1,84 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
-Date: Tue, 22 Aug 2017 07:49:01 +0300
-Message-ID: <20170822044900.debakzpc3qatx4cg@sapphire.tkos.co.il>
-References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
- <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] powerpc: pseries: vio: match parent nodes with of_find_node_by_path
+Date: Tue, 22 Aug 2017 15:12:17 +1000
+Message-ID: <87fuckb2z2.fsf@concordia.ellerman.id.au>
+References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-3-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170821151651.25096-3-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-On Mon, Aug 21, 2017 at 02:10:33PM -0500, Rob Herring wrote:
-> On Sun, Aug 20, 2017 at 5:28 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> > Add device-tree binding documentation SFP transceivers. Support for SFP
-> > transceivers has been recently introduced (drivers/net/phy/sfp.c).
-> >
-> > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > ---
-> >
-> > The SFP driver is on net-next.
-> >
-> > Not sure about the rate-select-gpio property name. The SFP+ standard
-> > (not supported yet) uses two signals, RS0 and RS1. RS0 is compatible
-> > with the SFP rate select signal, while RS1 controls the Tx rate.
-> > ---
-> >  Documentation/devicetree/bindings/net/sff-sfp.txt | 24 +++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/sff-sfp.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/sff-sfp.txt b/Documentation/devicetree/bindings/net/sff-sfp.txt
-> > new file mode 100644
-> > index 000000000000..f0c27bc3925e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/sff-sfp.txt
-> > @@ -0,0 +1,24 @@
-> > +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
-> > +Transceiver
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : must be "sff,sfp"
-> 
-> Need to document "sff" vendor prefix.
+> In preparation to remove the full path from device_node.full_name, use
+> of_find_node_by_path instead of open coding with strcmp.
+>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> ---
+> v2:
+> - rebased to linux-next and removed spurious change fro patch 1.
+>
+>  arch/powerpc/platforms/pseries/vio.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
+> index aa5ca74316fa..5754572deb23 100644
+> --- a/arch/powerpc/platforms/pseries/vio.c
+> +++ b/arch/powerpc/platforms/pseries/vio.c
+> @@ -1357,9 +1357,9 @@ struct vio_dev *vio_register_device_node(struct device_node *of_node)
+>  	 */
+>  	parent_node = of_get_parent(of_node);
+>  	if (parent_node) {
+> -		if (!strcmp(parent_node->full_name, "/ibm,platform-facilities"))
+> +		if (parent_node == of_find_node_by_path("/ibm,platform-facilities"))
+>  			family = PFO;
+> -		else if (!strcmp(parent_node->full_name, "/vdevice"))
+> +		else if (parent_node == of_find_node_by_path("/vdevice"))
+>  			family = VDEVICE;
 
-"sff" stands for Small Form Factor Committee, now under Storage Networking 
-Industry Association (SNIA). Not really a vendor, but a standards body. Does 
-that count? I could not find any other example in vendor-prefixes.txt, other 
-than "linux" which is kind of special.
+This leaks references to the looked up nodes.
 
-> Kind of a short name, but I guess it is sufficient. Are there
-> revisions of the standard (not SFP+) or more than one form factor (I
-> don't recall any)?
+Both these nodes are defined in PAPR (our hypervisor spec), and both of
+them must have a device_type, either "ibm,platform-facilities" or
+"vdevice".
 
-I'm not aware of any other revisions.
+Looking at the commit that added the code I don't see any particular
+reason it used the comparison against full_name, rather than using the
+device_type.
 
-baruch
+So I'm inclined to do this instead:
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
+index 8a47f168476b..f26f906e6021 100644
+--- a/arch/powerpc/platforms/pseries/vio.c
++++ b/arch/powerpc/platforms/pseries/vio.c
+@@ -1357,9 +1357,9 @@ struct vio_dev *vio_register_device_node(struct device_node *of_node)
+ 	 */
+ 	parent_node = of_get_parent(of_node);
+ 	if (parent_node) {
+-		if (!strcmp(parent_node->full_name, "/ibm,platform-facilities"))
++		if (!strcmp(parent_node->type, "ibm,platform-facilities"))
+ 			family = PFO;
+-		else if (!strcmp(parent_node->full_name, "/vdevice"))
++		else if (!strcmp(parent_node->type, "vdevice"))
+ 			family = VDEVICE;
+ 		else {
+ 			pr_warn("%s: parent(%s) of %s not recognized.\n",
+
+
+I've checked both Qemu and kvmtool add the device_type, and I'm fairly
+confident that PowerVM does too. Anyway I'll test it on all the machines
+I can find.
+
+cheers
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
