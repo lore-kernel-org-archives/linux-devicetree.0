@@ -1,47 +1,76 @@
-From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 9/9] dt-bindings: ASoC: rockchip: Update description of rockchip,codec
-Date: Tue, 22 Aug 2017 15:57:28 +0800
-Message-ID: <20170822075729.8438-10-jeffy.chen@rock-chips.com>
-References: <20170822075729.8438-1-jeffy.chen@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170822075729.8438-1-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mengdong.lin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for
+ sun8i-h3-emac
+Date: Tue, 22 Aug 2017 09:59:58 +0200
+Message-ID: <20170822075958.GA20320@Red>
+References: <20170818122118.4925-4-clabbe.montjoie@gmail.com>
+ <CAGb2v66KcZkiDDHryMmVzm4WroXePPy3V44SLpVdoO3ZEjgC=g@mail.gmail.com>
+ <20170819185025.GB13266@Red>
+ <20170819203836.GA21567@lunn.ch>
+ <20170820065757.GA6081@Red>
+ <20170820142545.GB24150@lunn.ch>
+ <CAGb2v67hQXSoCKP7qW+KRUYX+0djQ1Z23cQ67Lyg6G7ozGyfGQ@mail.gmail.com>
+ <20170821132015.GB1703@lunn.ch>
+ <20170821133104.qvrhvwin2rdg4aqo@flea.lan>
+ <20170821142321.GE1703@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170821142321.GE1703@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Update description for newly added optional audio codecs.
+On Mon, Aug 21, 2017 at 04:23:21PM +0200, Andrew Lunn wrote:
+> > All muxes are mostly always represented the same way afaik, or do you
+> > want to simply introduce a new compatible / property?
+> 
+> +      	  mdio-mux {
+> +		compatible = "allwinner,sun8i-h3-mdio-switch";
+> +		mdio-parent-bus = <&mdio_parent>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		internal_mdio: mdio@1 {
+> 			reg = <1>;
+> -			clocks = <&ccu CLK_BUS_EPHY>;
+> -			resets = <&ccu RST_BUS_EPHY>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			int_mii_phy: ethernet-phy@1 {
+> +				compatible = "ethernet-phy-ieee802.3-c22";
+> +				reg = <1>;
+> +				clocks = <&ccu CLK_BUS_EPHY>;
+> +				resets = <&ccu RST_BUS_EPHY>;
+> +				phy-is-integrated;
+> +			};
+> +		};
+> +		mdio: mdio@0 {
+> +			reg = <0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+>  		};
+>  		
+> Hi Maxim
+> 
+> Anybody who knows the MDIO-mux code/binding, knows that it is a run
+> time mux. You swap the mux per MDIO transaction. You can access all
+> the PHY and switches on the mux'ed MDIO bus.
+> 
+> However here, it is effectively a boot-time MUX. You cannot change it
+> on the fly. What happens when somebody has a phandle to a PHY on the
+> internal and a phandle to a phy on the external? Does the driver at
+> least return -EINVAL, or -EBUSY? Is there a representation which
+> eliminates this possibility?
+> 
 
-Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+Exactly you can change it on the fly, but you need to reset the MAC for enabling the new configuration.
+The stmmac driver does not handle mdio-mux. It is why I have a patch which automaticly select parent MDIO node of the PHY node.
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+For representation we could keep the current. (With a big comment stating that it is a switch)
 
- Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We can also add a mdio-switch type node, or add a mdio-switch property to mdio-mux.
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index f19b6c830a34..f54b4e91e97c 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible: "rockchip,rk3399-gru-sound"
- - rockchip,cpu: The phandle of the Rockchip I2S controller that's
-   connected to the codecs
--- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+- rockchip,codec: The phandle of the audio codecs
- 
- Example:
- 
--- 
-2.11.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
