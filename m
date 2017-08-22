@@ -1,116 +1,122 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/3] dt: bindings: Document DT bindings for Analog
- devices as3645a
-Date: Tue, 22 Aug 2017 20:34:54 +0200
-Message-ID: <93a8cb02-2eb9-e0d5-ec0f-b39193ccccf5@gmail.com>
-References: <20170819212410.3084-1-sakari.ailus@linux.intel.com>
- <20170819212410.3084-2-sakari.ailus@linux.intel.com>
+From: Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX
+ Device Tree bindings
+Date: Tue, 22 Aug 2017 19:25:49 +0000
+Message-ID: <EB0D0DEA-1418-4237-910D-F0BE0B9069A1@cadence.com>
+References: <20170720092302.2982-1-maxime.ripard@free-electrons.com>
+ <2362756.VjbdGaYBzu@avalon> <20170822085320.pdxbxfv53rb75btu@flea.lan>
+ <6400552.TlCMAsqn3H@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170819212410.3084-2-sakari.ailus@linux.intel.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: javier@dowhile0.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6400552.TlCMAsqn3H@avalon>
+Content-Language: en-GB
+Content-ID: <90678DB6A4436242B1E59491DF9F8940-Tk6F3M/euE6cE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-Thanks for the update.
-
-On 08/19/2017 11:24 PM, Sakari Ailus wrote:
-> From: Sakari Ailus <sakari.ailus@iki.fi>
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  .../devicetree/bindings/leds/ams,as3645a.txt       | 71 ++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> new file mode 100644
-> index 000000000000..12c5ef26ec73
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> @@ -0,0 +1,71 @@
-> +Analog devices AS3645A device tree bindings
-> +
-> +The AS3645A flash LED controller can drive two LEDs, one high current
-> +flash LED and one indicator LED. The high current flash LED can be
-> +used in torch mode as well.
-> +
-> +Ranges below noted as [a, b] are closed ranges between a and b, i.e. a
-> +and b are included in the range.
-> +
-> +Please also see common.txt in the same directory.
-> +
-> +
-> +Required properties
-> +===================
-> +
-> +compatible	: Must be "ams,as3645a".
-> +reg		: The I2C address of the device. Typically 0x30.
-> +
-> +
-> +Required properties of the "flash" child node
-> +=============================================
-> +
-> +flash-timeout-us: Flash timeout in microseconds. The value must be in
-> +		  the range [100000, 850000] and divisible by 50000.
-> +flash-max-microamp: Maximum flash current in microamperes. Has to be
-> +		    in the range between [200000, 500000] and
-> +		    divisible by 20000.
-> +led-max-microamp: Maximum torch (assist) current in microamperes. The
-> +		  value must be in the range between [20000, 160000] and
-> +		  divisible by 20000.
-> +ams,input-max-microamp: Maximum flash controller input current. The
-> +			value must be in the range [1250000, 2000000]
-> +			and divisible by 50000.
-> +
-> +
-> +Optional properties of the "flash" child node
-> +=============================================
-> +
-> +label		: The label of the flash LED.
-> +
-> +
-> +Required properties of the "indicator" child node
-> +=================================================
-> +
-> +led-max-microamp: Maximum indicator current. The allowed values are
-> +		  2500, 5000, 7500 and 10000.
-> +
-> +Optional properties of the "indicator" child node
-> +=================================================
-> +
-> +label		: The label of the indicator LED.
-> +
-> +
-> +Example
-> +=======
-> +
-> +	as3645a@30 {
-> +		reg = <0x30>;
-> +		compatible = "ams,as3645a";
-> +		flash {
-> +			flash-timeout-us = <150000>;
-> +			flash-max-microamp = <320000>;
-> +			led-max-microamp = <60000>;
-> +			ams,input-max-microamp = <1750000>;
-> +			label = "as3645a:flash";
-> +		};
-> +		indicator {
-> +			led-max-microamp = <10000>;
-> +			label = "as3645a:indicator";
-> +		};
-> +	};
-> 
-
-For the patch going through media tree:
-
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-
--- 
-Best regards,
-Jacek Anaszewski
+SGkgTGF1cmVudCwNCg0KT24gMjIvMDgvMjAxNywgMDI6MDEsICJMYXVyZW50IFBpbmNoYXJ0IiA8
+bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToNCg0KICAgIEVYVEVSTkFM
+IE1BSUwNCiAgICANCiAgICANCiAgICBIaSBNYXhpbWUsDQogICAgDQogICAgT24gVHVlc2RheSwg
+MjIgQXVndXN0IDIwMTcgMTE6NTM6MjAgRUVTVCBNYXhpbWUgUmlwYXJkIHdyb3RlOg0KICAgID4g
+T24gTW9uLCBBdWcgMDcsIDIwMTcgYXQgMTE6MTg6MDNQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToNCiAgICA+ID4gT24gVGh1cnNkYXkgMjAgSnVsIDIwMTcgMTE6MjM6MDEgTWF4aW1l
+IFJpcGFyZCB3cm90ZToNCiAgICA+ID4+IFRoZSBDYWRlbmNlIE1JUEktQ1NJMiBSWCBjb250cm9s
+bGVyIGlzIGEgQ1NJMlJYIGJyaWRnZSB0aGF0IHN1cHBvcnRzIHVwDQogICAgPiA+PiB0byA0IENT
+SS0yIGxhbmVzLCBhbmQgY2FuIHJvdXRlIHRoZSBmcmFtZXMgdG8gdXAgdG8gNCBzdHJlYW1zLCBk
+ZXBlbmRpbmcNCiAgICA+ID4+IG9uIHRoZSBoYXJkd2FyZSBpbXBsZW1lbnRhdGlvbi4NCiAgICA+
+ID4+IA0KICAgID4gPj4gSXQgY2FuIG9wZXJhdGUgd2l0aCBhbiBleHRlcm5hbCBELVBIWSwgYW4g
+aW50ZXJuYWwgb25lIG9yIG5vIEQtUEhZIGF0DQogICAgPiA+PiBhbGwgaW4gc29tZSBjb25maWd1
+cmF0aW9ucy4NCiAgICA+ID4gDQogICAgPiA+IFdpdGhvdXQgYW55IFBIWSA/IEknbSBjdXJpb3Vz
+LCBob3cgZG9lcyB0aGF0IHdvcmsgPw0KICAgID4gDQogICAgPiBXZSdyZSBjdXJyZW50bHkgd29y
+a2luZyBvbiBhbiBGUEdBIGV4YWN0bHkgd2l0aCB0aGF0IGNvbmZpZ3VyYXRpb24uIFNvDQogICAg
+PiBJIGd1ZXNzIHRoZSBhbnN3ZXIgd291bGQgYmUgIml0IGRvZXNuJ3Qgb24gYW4gQVNJQyIgOikN
+CiAgICANCiAgICBXaGF0J3MgY29ubmVjdGVkIHRvIHRoZSBpbnB1dCBvZiB0aGUgQ1NJLTIgcmVj
+ZWl2ZXIgPw0KICAgIA0KSXQgaXMgY29ubmVjdGVkIHRvIGFuIGluc3RhbmNlIG9mIGEgQ1NJIFRY
+IGRpZ2l0YWwgaW50ZXJmYWNlLg0KDQogICAgPiA+PiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlw
+YXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4NCiAgICA+ID4+IC0tLQ0KICAg
+ID4gPj4gDQogICAgPiA+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2Rucy1jc2ky
+cngudHh0ICAgICAgfCA4NyArKysrKysrKysrKysrKysrDQogICAgPiA+PiAgMSBmaWxlIGNoYW5n
+ZWQsIDg3IGluc2VydGlvbnMoKykNCiAgICA+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCiAgICA+
+ID4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2Rucy1jc2kycngu
+dHh0DQogICAgPiA+PiANCiAgICA+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbWVkaWEvY2Rucy1jc2kycngudHh0DQogICAgPiA+PiBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZG5zLWNzaTJyeC50eHQgbmV3IGZpbGUg
+bW9kZQ0KICAgID4gPj4gMTAwNjQ0DQogICAgPiA+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmUwODU0
+N2FiZTg4NQ0KICAgID4gPj4gLS0tIC9kZXYvbnVsbA0KICAgID4gPj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NkbnMtY3NpMnJ4LnR4dA0KICAgID4gPj4g
+QEAgLTAsMCArMSw4NyBAQA0KICAgID4gPj4gK0NhZGVuY2UgTUlQSS1DU0kyIFJYIGNvbnRyb2xs
+ZXINCiAgICA+ID4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQogICAgPiA+PiAr
+DQogICAgPiA+PiArVGhlIENhZGVuY2UgTUlQSS1DU0kyIFJYIGNvbnRyb2xsZXIgaXMgYSBDU0kt
+MiBicmlkZ2Ugc3VwcG9ydGluZyB1cCB0bw0KICAgID4gPj4gND4gQ1NJDQogICAgPiA+PiArbGFu
+ZXMgaW4gaW5wdXQsIGFuZCA0IGRpZmZlcmVudCBwaXhlbCBzdHJlYW1zIGluIG91dHB1dC4NCiAg
+ICA+ID4+ICsNCiAgICA+ID4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KICAgID4gPj4gKyAgLSBj
+b21wYXRpYmxlOiBtdXN0IGJlIHNldCB0byAiY2Rucyxjc2kycngiIGFuZCBhbiBTb0Mtc3BlY2lm
+aWMNCiAgICA+ID4+IGNvbXBhdGlibGUNCiAgICA+ID4+ICsgIC0gcmVnOiBiYXNlIGFkZHJlc3Mg
+YW5kIHNpemUgb2YgdGhlIG1lbW9yeSBtYXBwZWQgcmVnaW9uDQogICAgPiA+PiArICAtIGNsb2Nr
+czogcGhhbmRsZXMgdG8gdGhlIGNsb2NrcyBkcml2aW5nIHRoZSBjb250cm9sbGVyDQogICAgPiA+
+PiArICAtIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW46DQogICAgPiA+PiArICAgICogc3lzX2Ns
+azogbWFpbiBjbG9jaw0KICAgID4gPj4gKyAgICAqIHBfY2xrOiByZWdpc3RlciBiYW5rIGNsb2Nr
+DQogICAgPiA+PiArICAgICogcF9mcmVlX2NsazogZnJlZSBydW5uaW5nIHJlZ2lzdGVyIGJhbmsg
+Y2xvY2sNCiAgICA+ID4+ICsgICAgKiBwaXhlbF9pZlhfY2xrOiBwaXhlbCBzdHJlYW0gb3V0cHV0
+IGNsb2NrLCBvbmUgZm9yIGVhY2ggc3RyZWFtDQogICAgPiA+PiArICAgICAgICAgICAgICAgICAg
+ICAgaW1wbGVtZW50ZWQgaW4gaGFyZHdhcmUsIGJldHdlZW4gMCBhbmQgMw0KICAgID4gPiANCiAg
+ICA+ID4gTml0cGlja2luZywgSSB3b3VsZCB3cml0ZSB0aGUgbmFtZSBpcyBwaXhlbF9pZlswLTNd
+X2NsaywgaXQgdG9vayBtZSBhIGZldw0KICAgID4gPiBzZWNvbmRzIHRvIHNlZSB0aGF0IHRoZSBY
+IHdhcyBhIHBsYWNlaG9sZGVyLg0KICAgID4gDQogICAgPiBPay4NCiAgICA+IA0KICAgID4gPj4g
+KyAgICAqIGRwaHlfcnhfY2xrOiBELVBIWSBieXRlIGNsb2NrLCBpZiBpbXBsZW1lbnRlZCBpbiBo
+YXJkd2FyZQ0KICAgID4gPj4gKyAgLSBwaHlzOiBwaGFuZGxlIHRvIHRoZSBleHRlcm5hbCBELVBI
+WQ0KICAgID4gPj4gKyAgLSBwaHktbmFtZXM6IG11c3QgY29udGFpbiBkcGh5LCBpZiB0aGUgaW1w
+bGVtZW50YXRpb24gdXNlcyBhbg0KICAgID4gPj4gKyAgICAgICAgICAgICAgIGV4dGVybmFsIEQt
+UEhZDQogICAgPiA+IA0KICAgID4gPiBJIHdvdWxkIG1vdmUgdGhlIGxhc3QgdHdvIHByb3BlcnRp
+ZXMgaW4gYW4gb3B0aW9uYWwgY2F0ZWdvcnkgYXMgdGhleSdyZQ0KICAgID4gPiBlZmZlY3RpdmVs
+eSBvcHRpb25hbC4gSSB0aGluayB5b3Ugc2hvdWxkIGFsc28gZXhwbGFpbiBhIGJpdCBtb3JlIGNs
+ZWFybHkNCiAgICA+ID4gdGhhdCB0aGUgcGh5cyBwcm9wZXJ0eSBtdXN0IG5vdCBiZSBwcmVzZW50
+IGlmIHRoZSBwaHktbmFtZXMgcHJvcGVydHkgaXMNCiAgICA+ID4gbm90IHByZXNlbnQuDQogICAg
+PiANCiAgICA+IEl0J3Mgbm90IHJlYWxseSBvcHRpb25hbC4gVGhlIElQIGhhcyBhIGNvbmZpZ3Vy
+YXRpb24gcmVnaXN0ZXIgdGhhdA0KICAgID4gYWxsb3dzIHlvdSB0byBzZWUgaWYgaXQncyBiZWVu
+IHN5bnRoZXNpemVkIHdpdGggb3Igd2l0aG91dCBhIFBIWS4gSWYNCiAgICA+IHRoZSByaWdodCBi
+aXQgaXMgc2V0LCB0aGF0IHByb3BlcnR5IHdpbGwgYmUgbWFuZGF0b3J5LCBpZiBub3QsIGl0J3MN
+CiAgICA+IHVzZWxlc3MuDQogICAgDQogICAgSnVzdCB0byBjb25maXJtLCB0aGUgUEhZIGlzIGEg
+c2VwYXJhdGUgSVAgY29yZSwgcmlnaHQgPyBJcyB0aGUgQ1NJLTIgcmVjZWl2ZXIgDQogICAgaW5w
+dXQgaW50ZXJmYWNlIGRpZmZlcmVudCB3aGVuIHVzZWQgd2l0aCBhIFBIWSBhbmQgd2hlbiB1c2Vk
+IHdpdGhvdXQgb25lID8gDQogICAgQ291bGQgYSB0aGlyZC1wYXJ0eSBQSFkgYmUgdXNlZCBhcyB3
+ZWxsID8gSWYgc28sIHdvdWxkIHRoZSBQSFkgc3ludGhlc2lzIGJpdCANCiAgICBiZSBzZXQgb3Ig
+bm90ID8NCg0KVGhlIFBIWSAoaW4gb3VyIGNhc2UgYSBELVBIWSkgaXMgYSBzZXBhcmF0ZSBlbnRp
+dHksIGl0IGNhbiBiZSBmcm9tIGEgM3JkIHBhcnR5IGFzIHRoZSBJUCBpbnRlcmZhY2UgaXMgc3Rh
+bmRhcmQsIHRoZSBTb0MgaW50ZWdyYXRvciB3b3VsZCBzZXQgdGhlIGJpdCBhY2NvcmRpbmdseSBi
+YXNlZCBvbiB3aGV0aGVyIGFueSBQSFkgaXMgcHJlc2VudCBvciBub3QuDQpUaGVyZSBpcyBhbHNv
+IGFuIG9wdGlvbiBvZiByb3V0aW5nIGRpZ2l0YWwgb3V0cHV0IGZyb20gYSBDU0ktVFggdG8gYSBD
+U0ktUlggYW5kIGluIHN1Y2ggY2FzZSBhIFBIWSB3b3VsZCBub3QgbmVlZCB0byBiZSB1c2VkIChh
+cyBpbiB0aGUgY2FzZSBvZiBvdXIgY3VycmVudCBwbGF0Zm9ybSkuDQogICAgDQogICAgPiBNYXli
+ZSBpdCdzIGp1c3Qgc2VtYW50aWNzLCBidXQgdG8gbWUsIG9wdGlvbmFsIG1lYW5zIHRoYXQgaXQg
+Y2FuDQogICAgPiBvcGVyYXRlIHdpdGggb3Igd2l0aG91dCBpdCB1bmRlciBhbnkgY2lyY3Vtc3Rh
+bmNlcy4gSXQncyBub3QgcmVhbGx5DQogICAgPiB0aGUgY2FzZSBoZXJlLg0KICAgIA0KICAgIEl0
+J3NhIHNlbWFudGljIGlzc3VlLCBidXQgZG9jdW1lbnRpbmcgYSBwcm9wZXJ0eSBhcyByZXF1aXJl
+ZCB3aGVuIGl0IGNhbiBiZSANCiAgICBvbW1pdHRlZCB1bmRlciBzb21lIGNpcmN1bXN0YW5jZXMg
+c2VlbXMgZXZlbiB3ZWlyZGVyIHRvIG1lIDotKSBJIHVuZGVyc3RhbmQgDQogICAgdGhlIG9wdGlv
+bmFsIGNhdGVnb3J5IGFzICJjYW4gYmUgb21taXR0ZWQgaW4gY2VydGFpbiBjaXJjdW1zdGFuY2Vz
+Ii4NCiAgICANCiAgICA+ID4+ICsNCiAgICA+ID4+ICtSZXF1aXJlZCBzdWJub2RlczoNCiAgICA+
+ID4+ICsgIC0gcG9ydHM6IEEgcG9ydHMgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25zIGFz
+IGRlZmluZWQgaW4NCiAgICA+ID4+ICsgICAgICAgICAgDQogICAgPiA+PiBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuDQogICAgPiA+
+PiBUaGUNCiAgICA+ID4+ICsgICAgICAgICAgIGZpcnN0IHBvcnQgc3Vibm9kZSBzaG91bGQgYmUg
+dGhlIGlucHV0IGVuZHBvaW50LCB0aGUgc2Vjb25kDQogICAgPiA+PiBvbmUgdGhlDQogICAgPiA+
+PiArICAgICAgICAgICBvdXRwdXRzDQogICAgPiA+PiArDQogICAgPiA+PiArICBUaGUgb3V0cHV0
+IHBvcnQgc2hvdWxkIGhhdmUgYXMgbWFueSBlbmRwb2ludHMgYXMgc3RyZWFtIHN1cHBvcnRlZCBi
+eQ0KICAgID4gPj4gKyAgdGhlIGhhcmR3YXJlIGltcGxlbWVudGF0aW9uLCBiZXR3ZWVuIDEgYW5k
+IDQsIHRoZWlyIElEIGJlaW5nIHRoZQ0KICAgID4gPj4gKyAgc3RyZWFtIG91dHB1dCBudW1iZXIg
+dXNlZCBpbiB0aGUgaW1wbGVtZW50YXRpb24uDQogICAgPiA+IA0KICAgID4gPiBJIGRvbid0IHRo
+aW5rIHRoYXQncyBjb3JyZWN0LiBUaGUgSVAgaGFzIGZvdXIgaW5kZXBlbmRlbnQgb3V0cHV0cywg
+aXQNCiAgICA+ID4gc2hvdWxkIGhhdmUgNCBvdXRwdXQgcG9ydHMgZm9yIGEgdG90YWwgZm9yIDUg
+cG9ydHMuIE11bHRpcGxlIGVuZHBvaW50cw0KICAgID4gPiBwZXIgcG9ydCB3b3VsZCBkZXNjcmli
+ZSBtdWx0aXBsZSBjb25uZWN0aW9ucyBmcm9tIHRoZSBzYW1lIG91dHB1dCB0bw0KICAgID4gPiBk
+aWZmZXJlbnQgc2lua3MuDQogICAgPg0KICAgID4gT2suDQoNClJlZ2FyZHMsDQoNCkN5cHJpYW4N
+Cg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
