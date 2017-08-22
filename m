@@ -1,130 +1,56 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] ARM: dtsi: r8a7745: Add I2C DT support
-Date: Tue, 22 Aug 2017 16:27:02 +0100
-Message-ID: <1503415622-13450-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [PATCH v6 6/6] perf: ARM DynamIQ Shared Unit PMU support
+Date: Tue, 22 Aug 2017 16:35:34 +0100
+Message-ID: <f59706eb-8702-7557-10a7-27535aa5f91c@arm.com>
+References: <1503338109-32540-1-git-send-email-suzuki.poulose@arm.com>
+ <1503338109-32540-7-git-send-email-suzuki.poulose@arm.com>
+ <20170822121722.0000712c@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170822121722.0000712c@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add I2C[0-5] devices to the r8a7745 device tree.
+On 22/08/17 12:17, Jonathan Cameron wrote:
+> On Mon, 21 Aug 2017 18:55:09 +0100
+> Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+>> Add support for the Cluster PMU part of the ARM DynamIQ Shared Unit (DSU).
+>> The DSU integrates one or more cores with an L3 memory system, control
+>> logic, and external interfaces to form a multicore cluster. The PMU
+>> allows counting the various events related to L3, SCU etc, along with
+>> providing a cycle counter.
+>>
+>> The PMU can be accessed via system registers, which are common
+>> to the cores in the same cluster. The PMU registers follow the
+>> semantics of the ARMv8 PMU, mostly, with the exception that
+>> the counters record the cluster wide events.
+>>
+>> This driver is mostly based on the ARMv8 and CCI PMU drivers.
+>> The driver only supports ARM64 at the moment. It can be extended
+>> to support ARM32 by providing register accessors like we do in
+>> arch/arm64/include/arm_dsu_pmu.h.
+>>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>
+> Hi Suzuki,
+>
+> Was just reading this again out of curiosity and picked up on a couple of
+> really trivial things.  Nothing that should slow down a merge, but if you happen
+> to be doing a v6...
+>
+> Driver looks good to me.
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7745.dtsi | 93 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+Jonathan,
 
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index 18ca7ae..2fa989f 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -18,6 +18,15 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		i2c5 = &i2c5;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -613,6 +622,90 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
-+
-+		i2c0: i2c@e6508000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a7745",
-+				     "renesas,rcar-gen2-i2c";
-+			reg = <0 0xe6508000 0 0x40>;
-+			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 931>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 931>;
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@e6518000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a7745",
-+				     "renesas,rcar-gen2-i2c";
-+			reg = <0 0xe6518000 0 0x40>;
-+			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 930>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 930>;
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@e6530000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a7745",
-+				     "renesas,rcar-gen2-i2c";
-+			reg = <0 0xe6530000 0 0x40>;
-+			interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 929>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 929>;
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@e6540000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a7745",
-+				     "renesas,rcar-gen2-i2c";
-+			reg = <0 0xe6540000 0 0x40>;
-+			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 928>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 928>;
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@e6520000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a7745",
-+				     "renesas,rcar-gen2-i2c";
-+			reg = <0 0xe6520000 0 0x40>;
-+			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 927>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 927>;
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@e6528000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,i2c-r8a7745",
-+				     "renesas,rcar-gen2-i2c";
-+			reg = <0 0xe6528000 0 0x40>;
-+			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 925>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 925>;
-+			i2c-scl-internal-delay-ns = <6>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	/* External root clock */
--- 
-2.7.4
+Thanks for taking a look. I will fix those issues.
+
+Suzuki
