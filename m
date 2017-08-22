@@ -1,61 +1,44 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH ] ARM: dts: r8a7745: Add Ethernet AVB support
-Date: Tue, 22 Aug 2017 08:53:25 +0100
-Message-ID: <1503388405-48325-1-git-send-email-biju.das@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Chris Paterson <chris.paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
+From: Oza Pawandeep <oza.oza@broadcom.com>
+Subject: [PATCH v3 3/3] dt-bindings: PCI iproc: Add optional property prsnt-gpios
+Date: Tue, 22 Aug 2017 13:40:56 +0530
+Message-ID: <1503389456-27373-4-git-send-email-oza.oza@broadcom.com>
+References: <1503389456-27373-1-git-send-email-oza.oza@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503389456-27373-1-git-send-email-oza.oza@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.oza@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Ethernet AVB support for r8a7745 SoC.
+Add description for optional device tree property
+'prsnt-gpios' for PCI hotplug feature.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch is depend upon the below patch
-[1/2] ARM: dts: r8a7745: Add MMC interface support
-https://patchwork.kernel.org/patch/9906803/
+Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
 
-It is tested against renesas-devel branch tag
-renesas-devel-20170821-v4.13-rc5
-
- arch/arm/boot/dts/r8a7745.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index a55d98f..2816a0b 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -614,6 +614,19 @@
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+index b8e48b4..0c5f631 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+@@ -72,6 +72,20 @@ Optional properties:
+ - brcm,pcie-msi-inten: Needs to be present for some older iProc platforms that
+ require the interrupt enable registers to be set explicitly to enable MSI
  
-+		avb: ethernet@e6800000 {
-+			compatible = "renesas,etheravb-r8a7745",
-+				     "renesas,etheravb-rcar-gen2";
-+			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
-+			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 812>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 812>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
++Optional properties:
++- slot-pluggable: PCI hotplug feature is supported.
++- prsnt-gpios: Array of gpios, needs to be present if Hotplug is supported.
 +
- 		mmcif0: mmc@ee200000 {
- 			compatible = "renesas,mmcif-r8a7745",
- 				     "renesas,sh-mmcif";
++Refer to the following binding documents for more detailed description on
++the use of 'slot-pluggable' and 'prsnt-gpios'.
++  Documentation/devicetree/bindings/pci/pci.txt
++
++Example:
++prsnt-gpios: <&pca9505 32 1>, <&pca9505 33 1>;
++This is x4 connector: monitoring max 2 present lines.
++prsnt-gpios: <&pca9505 32 1>, <&pca9505 33 1>, <&pca9505 34 1>;
++This is x8 connector: monitoring max 3 present lines.
++
+ Example:
+ 	pcie0: pcie@18012000 {
+ 		compatible = "brcm,iproc-pcie";
 -- 
 1.9.1
