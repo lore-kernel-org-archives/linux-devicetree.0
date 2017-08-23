@@ -1,95 +1,496 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: gpio: max3191x: Document new driver
-Date: Tue, 22 Aug 2017 19:48:47 -0500
-Message-ID: <20170823004847.jmkb53xtdmmn6vtf@rob-hp-laptop>
-References: <cover.1503319573.git.lukas@wunner.de>
- <7fe7636eecba238d57ab6178cfa3f6b7deca98f1.1503319573.git.lukas@wunner.de>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Add basic dtsi file for Allwinner R40
+Date: Wed, 23 Aug 2017 08:56:31 +0800
+Message-ID: <9E7FE1B0-475C-43D8-8298-E03BB4B1CA7F@aosc.io>
+References: <20170822061742.40869-1-icenowy@aosc.io> <20170822200521.nadkb4335mcc5ah2@flea.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7fe7636eecba238d57ab6178cfa3f6b7deca98f1.1503319573.git.lukas@wunner.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mathias Duckeck <m.duckeck@kunbus.de>, Phil Elwell <phil@raspberrypi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170822200521.nadkb4335mcc5ah2-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 03:12:00PM +0200, Lukas Wunner wrote:
-> Add device tree bindings for Maxim MAX3191x industrial serializer.
-> 
-> Cc: Mathias Duckeck <m.duckeck@kunbus.de>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> ---
->  .../devicetree/bindings/gpio/gpio-max3191x.txt     | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt b/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
-> new file mode 100644
-> index 000000000000..18182ecaa199
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
-> @@ -0,0 +1,37 @@
-> +GPIO driver for Maxim MAX3191x industrial serializer
-> +
-> +Required properties:
-> + - compatible:		"maxim,max31910", "maxim,max31911", "maxim,max31912",
-> +			"maxim,max31913", "maxim,max31953", "maxim,max31963"
 
-One valid combination per line please.
 
-> + - gpio-controller:	Marks the device node as a GPIO controller.
-> + - #gpio-cells: 	Should be two. For consumer use see gpio.txt.
-> +
-> +Optional properties:
-> + - maxim,nchips:	Number of chips in the daisy-chain (default is 1).
-> + - modesel-gpios:	GPIO pins to configure modesel of each chip.
-> +			The number of GPIOs must be equal to "maxim,nchips".
-> + - fault-gpios: 	GPIO pins to read undervoltage fault of each chip.
-> + - db0-gpios:		GPIO pins to configure debounce of each chip.
-> + - db1-gpios:		GPIO pins to configure debounce of each chip.
+于 2017年8月23日 GMT+08:00 上午4:05:21, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> 写到:
+>Hi,
+>
+>On Tue, Aug 22, 2017 at 02:17:40PM +0800, Icenowy Zheng wrote:
+>> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> 
+>> The Allwinner R40 SoC is marketed as the successor to the A20 SoC.
+>> The R40 is a smaller chip than the A20, but features the same set
+>> of programmable pins, with a couple extra pins and some new pin
+>> functions. The chip features 4 Cortex-A7 cores and a Mali-400 MP2
+>> GPU. It retains most if not all features from the A20, while adding
+>> some new features, such as MIPI DSI output, or updating various
+>> hardware blocks, such as DE 2.0.
+>> 
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>
+>I'm not sure why you have two series to achieve one thing here. And
+>the fact that you don't have a cover letter doesn't make it any
+>clearer.
+>
+>Please make series based on what you're trying to do and not split it
+>arbitrarily. And document what you're doing in a cover letter.
+>
+>> ---
+>>  arch/arm/boot/dts/sun8i-r40.dtsi | 396
+>+++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 396 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun8i-r40.dtsi
+>> 
+>> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi
+>b/arch/arm/boot/dts/sun8i-r40.dtsi
+>> new file mode 100644
+>> index 000000000000..5b48801bdd01
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+>> @@ -0,0 +1,396 @@
+>> +/*
+>> + * Copyright 2017 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> + * Copyright 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this
+>dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License
+>as
+>> + *     published by the Free Software Foundation; either version 2
+>of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty
+>of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated
+>documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom
+>the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall
+>be
+>> + *     included in all copies or substantial portions of the
+>Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+>KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+>WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/sun8i-r40-ccu.h>
+>> +#include <dt-bindings/reset/sun8i-r40-ccu.h>
+>> +
+>> +/ {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +	interrupt-parent = <&gic>;
+>> +
+>> +	clocks {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		osc24M: osc24M {
+>> +			#clock-cells = <0>;
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <24000000>;
+>> +			clock-output-names = "osc24M";
+>> +		};
+>> +
+>> +		osc32k: osc32k {
+>> +			#clock-cells = <0>;
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <32768>;
+>> +			clock-output-names = "osc32k";
+>> +		};
+>> +	};
+>> +
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu@0 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <0>;
+>> +		};
+>> +
+>> +		cpu@1 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <1>;
+>> +		};
+>> +
+>> +		cpu@2 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <2>;
+>> +		};
+>> +
+>> +		cpu@3 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <3>;
+>> +		};
+>> +	};
+>> +
+>> +	soc {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		nmi_intc: interrupt-controller@1c00030 {
+>> +			compatible = "allwinner,sun7i-a20-sc-nmi";
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>> +			reg = <0x01c00030 0x0c>;
+>> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+>> +		};
+>
+>You should use the new compatible here.
 
-Perhaps an array db-gpios with 2 entries.
+It's not the R_INTC, but the same NMI with A20.
 
-These gpios all need a vendor prefix.
+R40 has even no R_ peripherals.
 
-> + - maxim,modesel:	Mode to use if hardwired (and thus not selectable
-> +			through GPIOs): 0 for 16-bit mode, 1 for 8-bit mode.
+>
+>> +		mmc0: mmc@1c0f000 {
+>> +			compatible = "allwinner,sun50i-a64-mmc";
+>
+>Please add a soc specific compatible for all the blocks.
+>
+>> +			reg = <0x01c0f000 0x1000>;
+>> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+>> +			clock-names = "ahb", "mmc";
+>> +			resets = <&ccu RST_BUS_MMC0>;
+>> +			reset-names = "ahb";
+>> +			pinctrl-0 = <&mmc0_pins>;
+>> +			pinctrl-names = "default";
+>> +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-frequency = <150000000>;
+>
+>have you tested that frequency?
 
-Make this a boolean and define the default when not present (and 
-modesel-gpios not present).
+No.
 
-> + - maxim,no-vcc24v:	Boolean, whether the chips are powered through 5VOUT
-> +			instead of VCC24V.
+Should I decrease it?
 
-Use the regulator binding here?
-
-> +
-> +For other required and optional properties of SPI slave nodes please refer to
-> +../spi/spi-bus.txt.
-> +
-> +Example:
-> +	gpio@0 {
-> +		compatible = "maxim,max31913";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		modesel-gpios = <&gpio2 23>;
-> +		fault-gpios   = <&gpio2 24 GPIO_ACTIVE_LOW>;
-> +		db0-gpios     = <&gpio2 25>;
-> +		db1-gpios     = <&gpio2 26>;
-> +
-> +		reg = <0>;
-
-reg usually comes after compatible. Also, reg needs to be documented 
-above.
-
-> +		spi-max-frequency = <25000000>;
-> +	};
-> -- 
-> 2.11.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		mmc1: mmc@1c10000 {
+>> +			compatible = "allwinner,sun50i-a64-mmc";
+>> +			reg = <0x01c10000 0x1000>;
+>> +			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
+>> +			clock-names = "ahb", "mmc";
+>> +			resets = <&ccu RST_BUS_MMC1>;
+>> +			reset-names = "ahb";
+>> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-frequency = <150000000>;
+>
+>Ditto.
+>
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		mmc2: mmc@1c11000 {
+>> +			compatible = "allwinner,sun50i-a64-emmc";
+>> +			reg = <0x01c11000 0x1000>;
+>> +			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
+>> +			clock-names = "ahb", "mmc";
+>> +			resets = <&ccu RST_BUS_MMC2>;
+>> +			reset-names = "ahb";
+>> +			pinctrl-0 = <&mmc2_pins>;
+>> +			pinctrl-names = "default";
+>> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-frequency = <200000000>;
+>
+>Ditto.
+>
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		mmc3: mmc@1c12000 {
+>> +			compatible = "allwinner,sun50i-a64-mmc";
+>> +			reg = <0x01c12000 0x1000>;
+>> +			clocks = <&ccu CLK_BUS_MMC3>, <&ccu CLK_MMC3>;
+>> +			clock-names = "ahb", "mmc";
+>> +			resets = <&ccu RST_BUS_MMC3>;
+>> +			reset-names = "ahb";
+>> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-frequency = <150000000>;
+>
+>Ditto.
+>
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		ccu: clock@1c20000 {
+>> +			compatible = "allwinner,sun8i-r40-ccu";
+>> +			reg = <0x01c20000 0x400>;
+>> +			clocks = <&osc24M>, <&osc32k>;
+>> +			clock-names = "hosc", "losc";
+>> +			#clock-cells = <1>;
+>> +			#reset-cells = <1>;
+>> +		};
+>> +
+>> +		pio: pinctrl@1c20800 {
+>> +			compatible = "allwinner,sun8i-r40-pinctrl";
+>> +			reg = <0x01c20800 0x400>;
+>> +			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
+>> +			clock-names = "apb", "hosc", "losc";
+>> +			gpio-controller;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+>> +			#gpio-cells = <3>;
+>> +
+>> +			i2c0_pins: i2c0-pins {
+>> +				pins = "PB0", "PB1";
+>> +				function = "i2c0";
+>> +			};
+>> +
+>> +			mmc0_pins: mmc0-pins {
+>> +				pins = "PF0", "PF1", "PF2",
+>> +				       "PF3", "PF4", "PF5";
+>> +				function = "mmc0";
+>> +				drive-strength = <30>;
+>> +				bias-pull-up;
+>> +			};
+>> +
+>> +			mmc1_pg_pins: mmc1-pg-pins {
+>> +				pins = "PG0", "PG1", "PG2",
+>> +				       "PG3", "PG4", "PG5";
+>> +				function = "mmc1";
+>> +				drive-strength = <30>;
+>> +				bias-pull-up;
+>> +			};
+>> +
+>> +			mmc2_pins: mmc2-pins {
+>> +				pins = "PC5", "PC6", "PC7", "PC8", "PC9",
+>> +				       "PC10", "PC11", "PC12", "PC13", "PC14",
+>> +				       "PC15", "PC24";
+>> +				function = "mmc2";
+>> +				drive-strength = <30>;
+>> +				bias-pull-up;
+>> +			};
+>> +
+>> +			uart0_pb_pins: uart0-pb-pins {
+>> +				pins = "PB22", "PB23";
+>> +				function = "uart0";
+>> +			};
+>> +		};
+>> +
+>> +		uart0: serial@1c28000 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28000 0x400>;
+>> +			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART0>;
+>> +			resets = <&ccu RST_BUS_UART0>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart1: serial@1c28400 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28400 0x400>;
+>> +			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART1>;
+>> +			resets = <&ccu RST_BUS_UART1>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart2: serial@1c28800 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28800 0x400>;
+>> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART2>;
+>> +			resets = <&ccu RST_BUS_UART2>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart3: serial@1c28c00 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28c00 0x400>;
+>> +			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART3>;
+>> +			resets = <&ccu RST_BUS_UART3>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart4: serial@1c29000 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c29000 0x400>;
+>> +			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART4>;
+>> +			resets = <&ccu RST_BUS_UART4>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart5: serial@1c29400 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c29400 0x400>;
+>> +			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART5>;
+>> +			resets = <&ccu RST_BUS_UART5>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart6: serial@1c29800 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c29800 0x400>;
+>> +			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART6>;
+>> +			resets = <&ccu RST_BUS_UART6>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart7: serial@1c29c00 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c29c00 0x400>;
+>> +			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART7>;
+>> +			resets = <&ccu RST_BUS_UART7>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		i2c0: i2c@1c2ac00 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2ac00 0x400>;
+>> +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C0>;
+>> +			resets = <&ccu RST_BUS_I2C0>;
+>> +			pinctrl-0 = <&i2c0_pins>;
+>> +			pinctrl-names = "default";
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		i2c1: i2c@1c2b000 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2b000 0x400>;
+>> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C1>;
+>> +			resets = <&ccu RST_BUS_I2C1>;
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		i2c2: i2c@1c2b400 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2b400 0x400>;
+>> +			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C2>;
+>> +			resets = <&ccu RST_BUS_I2C2>;
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		i2c3: i2c@1c2b800 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2b800 0x400>;
+>> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C3>;
+>> +			resets = <&ccu RST_BUS_I2C3>;
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		i2c4: i2c@1c2c000 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2c000 0x400>;
+>> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C4>;
+>> +			resets = <&ccu RST_BUS_I2C4>;
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		gic: interrupt-controller@1c81000 {
+>> +			compatible = "arm,gic-400";
+>> +			reg = <0x01c81000 0x1000>,
+>> +			      <0x01c82000 0x1000>,
+>> +			      <0x01c84000 0x2000>,
+>> +			      <0x01c86000 0x2000>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+>> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
+>IRQ_TYPE_LEVEL_HIGH)>;
+>> +		};
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv7-timer";
+>> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+>IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>
+>Those masks are wrong.
+>
+>Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
