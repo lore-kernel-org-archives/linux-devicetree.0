@@ -1,27 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 1/3] dt-bindings: rtc: Add Realtek RTD1295
-Date: Tue, 22 Aug 2017 19:29:11 -0500
-Message-ID: <20170823002911.y35nn7jkt34dvjbc@rob-hp-laptop>
-References: <20170820013632.18375-1-afaerber@suse.de>
- <20170820013632.18375-2-afaerber@suse.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
+Date: Tue, 22 Aug 2017 19:33:44 -0500
+Message-ID: <20170823003344.zcft4wfgtnh2vpo7@rob-hp-laptop>
+References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
+ <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
+ <20170822044900.debakzpc3qatx4cg@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170820013632.18375-2-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?utf-8?B?6JKL5Li955C0?= <jiang.liqin@geniatech.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20170822044900.debakzpc3qatx4cg-MwjkAAnuF3khR1HGirfZ1z4kX+cae0hd@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 20, 2017 at 03:36:29AM +0200, Andreas Färber wrote:
-> Add a binding for the RTC on the Realtek RTD119x/RTD129x SoC families.
+On Tue, Aug 22, 2017 at 07:49:01AM +0300, Baruch Siach wrote:
+> Hi Rob,
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  .../devicetree/bindings/rtc/realtek,rtd119x.txt          | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+> On Mon, Aug 21, 2017 at 02:10:33PM -0500, Rob Herring wrote:
+> > On Sun, Aug 20, 2017 at 5:28 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+> > > Add device-tree binding documentation SFP transceivers. Support for SFP
+> > > transceivers has been recently introduced (drivers/net/phy/sfp.c).
+> > >
+> > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> > > ---
+> > >
+> > > The SFP driver is on net-next.
+> > >
+> > > Not sure about the rate-select-gpio property name. The SFP+ standard
+> > > (not supported yet) uses two signals, RS0 and RS1. RS0 is compatible
+> > > with the SFP rate select signal, while RS1 controls the Tx rate.
+> > > ---
+> > >  Documentation/devicetree/bindings/net/sff-sfp.txt | 24 +++++++++++++++++++++++
+> > >  1 file changed, 24 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/net/sff-sfp.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/sff-sfp.txt b/Documentation/devicetree/bindings/net/sff-sfp.txt
+> > > new file mode 100644
+> > > index 000000000000..f0c27bc3925e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/net/sff-sfp.txt
+> > > @@ -0,0 +1,24 @@
+> > > +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
+> > > +Transceiver
+> > > +
+> > > +Required properties:
+> > > +
+> > > +- compatible : must be "sff,sfp"
+> > 
+> > Need to document "sff" vendor prefix.
+> 
+> "sff" stands for Small Form Factor Committee, now under Storage Networking 
+> Industry Association (SNIA). Not really a vendor, but a standards body. Does 
+> that count? I could not find any other example in vendor-prefixes.txt, other 
+> than "linux" which is kind of special.
 
-Acked-by: Rob Herring <robh@kernel.org>
+sff is fine. I'd be fine with 'snia' too. Just need to add it to vendor 
+prefixes.
+
+One more thing, use "sff,sfp.txt" matching the compatible for the 
+filename.
+
+> 
+> > Kind of a short name, but I guess it is sufficient. Are there
+> > revisions of the standard (not SFP+) or more than one form factor (I
+> > don't recall any)?
+> 
+> I'm not aware of any other revisions.
+
+Okay.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
