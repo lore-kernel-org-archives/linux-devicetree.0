@@ -1,51 +1,88 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
-Date: Wed, 23 Aug 2017 14:57:44 +0100
-Message-ID: <20170823135744.GU20805@n2100.armlinux.org.uk>
-References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
- <20170821125317.GS20805@n2100.armlinux.org.uk>
- <20170821150653.jmoogmxklkfbrzxg@sapphire.tkos.co.il>
- <CAL_JsqJNeibfFVKVjdTJJ88WKonSYnXMdT5mu7V46AGPRbAKbw@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 3/5] dt-bindings: sdhci-omap: Add bindings for the
+ sdhci-omap controller
+Date: Wed, 23 Aug 2017 19:26:35 +0530
+Message-ID: <c9342689-f09e-44af-0975-d43ef122a477@ti.com>
+References: <20170821142132.GH6008@atomide.com>
+ <20170823054246.23927-1-kishon@ti.com>
+ <CAPDyKFp7gchVQ+JPNqv4LktvHRm2Lzx6KakOw85zEZxDEX0OhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJNeibfFVKVjdTJJ88WKonSYnXMdT5mu7V46AGPRbAKbw@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Baruch Siach <baruch@tkos.co.il>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFp7gchVQ+JPNqv4LktvHRm2Lzx6KakOw85zEZxDEX0OhA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 02:12:42PM -0500, Rob Herring wrote:
-> On Mon, Aug 21, 2017 at 10:06 AM, Baruch Siach <baruch@tkos.co.il> wrote:
-> > Hi Russell,
-> >
-> > On Mon, Aug 21, 2017 at 01:53:17PM +0100, Russell King - ARM Linux wrote:
-> >> On Sun, Aug 20, 2017 at 01:28:06PM +0300, Baruch Siach wrote:
-> >> > Add device-tree binding documentation SFP transceivers. Support for SFP
-> >> > transceivers has been recently introduced (drivers/net/phy/sfp.c).
-> >> >
-> >> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> >> > ---
-> >> >
-> >> > The SFP driver is on net-next.
-> >> >
-> >> > Not sure about the rate-select-gpio property name. The SFP+ standard
-> >> > (not supported yet) uses two signals, RS0 and RS1. RS0 is compatible
-> >> > with the SFP rate select signal, while RS1 controls the Tx rate.
-> >>
-> >> SFP+ is usable with this, but the platforms I have do not wire the
-> >> rate select pins on the SFP+ sockets to GPIOs, but hard-wire them.
-> >
-> > So maybe naming this signal 'rate-select0-gpio' would make it more future
-> > (SPF+) proof? Or 'rate-select-rx-gpio'?
+Hi Uffe,
+
+On Wednesday 23 August 2017 06:37 PM, Ulf Hansson wrote:
+> On 23 August 2017 at 07:42, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> Add binding for the TI's sdhci-omap controller. This now includes only
+>> a subset of properties documented in ti-omap-hsmmc.txt but will eventually
+>> include all the properties.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> Changes from v2:
+>> *) Fixed example to use the updated compatible
+>>
+>> Changes from v1:
+>> *) Create a new sdhci-omap.txt document for TI's sdhci-omap controller instead
+>>    of using the ti-omap-hsmmc.txt as suggested by Tony
+>>  .../devicetree/bindings/mmc/sdhci-omap.txt         | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+>> new file mode 100644
+>> index 000000000000..139695ad2d58
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+>> @@ -0,0 +1,22 @@
+>> +* TI OMAP SDHCI Controller
+>> +
+>> +Refer to mmc.txt for standard MMC bindings.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "ti,dra7-sdhci" for DRA7 and DRA72 controllers
+>> +- ti,hwmods: Must be "mmc<n>", <n> is controller instance starting 1
+>> +
+>> +Optional properties:
+>> +- ti,dual-volt: boolean, supports dual voltage cards
+>> +- ti,non-removable: non-removable slot (like eMMC)
+>> +
+>> +Example:
+>> +       mmc1: mmc@0x4809c000 {
+>> +               compatible = "ti,dra7-sdhci";
+>> +               reg = <0x4809c000 0x400>;
+>> +               ti,hwmods = "mmc1";
+>> +               ti,dual-volt;
+>> +               bus-width = <4>;
+>> +               vmmc-supply = <&vmmc>; /* phandle to regulator node */
+>> +               ti,non-removable;
+>> +       };
+>> --
+>> 2.11.0
+>>
 > 
-> Just extend it by making it an array of 2 gpios.
+> I am wondering a bit on the long term plan here.
+> 
+> Ideally at some point in future, we would like to remove the old
+> omap_hsmmc driver, but from compatible string point of view, that
+> means we first needs to deprecate the old ones for a while. Right?
 
-What do you do if you have only one rate select wired up and it doesn't
-correspond with the first?
+right but sdhci-omap is still lacking features that was present in omap_hsmmc
+like context save/restore, SDIO support etc. I think we should deprecate
+omap_hsmmc compatible once we add all the features in sdhci-omap?
+> 
+> That said, what is then the reason to why we should bring over the
+> existing omap_hsmmc bindings to the sdhci-omap bindings?
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+This is mainly for old dt compatibility. Even after removing the omap_hsmmc
+driver, users should still be able to use newer kernel with their existing dtbs.
+
+Thanks
+Kishon
