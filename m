@@ -1,84 +1,56 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] dt-bindings: sdhci-omap: Add bindings for the
- sdhci-omap controller
-Date: Wed, 23 Aug 2017 15:07:54 +0200
-Message-ID: <CAPDyKFp7gchVQ+JPNqv4LktvHRm2Lzx6KakOw85zEZxDEX0OhA@mail.gmail.com>
-References: <20170821142132.GH6008@atomide.com> <20170823054246.23927-1-kishon@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
+Date: Wed, 23 Aug 2017 15:10:51 +0200
+Message-ID: <20170823131051.GD28612@lunn.ch>
+References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
+ <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
+ <20170823121653.xha2obe4ewlhwyvh@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170823054246.23927-1-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ravikumar Kattekola <rk-l0cyMroinI0@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170823121653.xha2obe4ewlhwyvh@sapphire.tkos.co.il>
+Sender: netdev-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Russell King <rmk+kernel@arm.linux.org.uk>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23 August 2017 at 07:42, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> Add binding for the TI's sdhci-omap controller. This now includes only
-> a subset of properties documented in ti-omap-hsmmc.txt but will eventually
-> include all the properties.
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
-> Changes from v2:
-> *) Fixed example to use the updated compatible
->
-> Changes from v1:
-> *) Create a new sdhci-omap.txt document for TI's sdhci-omap controller instead
->    of using the ti-omap-hsmmc.txt as suggested by Tony
->  .../devicetree/bindings/mmc/sdhci-omap.txt         | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-omap.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
-> new file mode 100644
-> index 000000000000..139695ad2d58
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
-> @@ -0,0 +1,22 @@
-> +* TI OMAP SDHCI Controller
-> +
-> +Refer to mmc.txt for standard MMC bindings.
-> +
-> +Required properties:
-> +- compatible: Should be "ti,dra7-sdhci" for DRA7 and DRA72 controllers
-> +- ti,hwmods: Must be "mmc<n>", <n> is controller instance starting 1
-> +
-> +Optional properties:
-> +- ti,dual-volt: boolean, supports dual voltage cards
-> +- ti,non-removable: non-removable slot (like eMMC)
-> +
-> +Example:
-> +       mmc1: mmc@0x4809c000 {
-> +               compatible = "ti,dra7-sdhci";
-> +               reg = <0x4809c000 0x400>;
-> +               ti,hwmods = "mmc1";
-> +               ti,dual-volt;
-> +               bus-width = <4>;
-> +               vmmc-supply = <&vmmc>; /* phandle to regulator node */
-> +               ti,non-removable;
-> +       };
-> --
-> 2.11.0
->
+On Wed, Aug 23, 2017 at 03:16:53PM +0300, Baruch Siach wrote:
+> Hi Rob,
+> 
+> On Mon, Aug 21, 2017 at 02:10:33PM -0500, Rob Herring wrote:
+> > On Sun, Aug 20, 2017 at 5:28 AM, Baruch Siach <baruch@tkos.co.il> wrote:
+> > > Add device-tree binding documentation SFP transceivers. Support for SFP
+> > > transceivers has been recently introduced (drivers/net/phy/sfp.c).
+> > >
+> > > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> > > ---
+> > >
+> > > The SFP driver is on net-next.
+> 
+> [...]
+> 
+> > > +Optional Properties:
+> > > +
+> > > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
+> > > +  interface
+> > 
+> > Why not a child of the i2c bus it is on? IOW, what should this be a child of?
+> 
+> As I understand form the code the ID of the SFP i2c slave is derived from the 
+> Ethernet PHY 'reg' property. The PHY node's 'sfp' property points to a phandle 
+> of the sff,sfp node.
 
-I am wondering a bit on the long term plan here.
+Hi Rob
 
-Ideally at some point in future, we would like to remove the old
-omap_hsmmc driver, but from compatible string point of view, that
-means we first needs to deprecate the old ones for a while. Right?
+The SFP module uses multiple addresses on the i2c bus. 0x50 is
+something like an EEPROM, but some of the content is
+dynamic. Depending of the version of the standard, it can also use
+0x51 for additional information. If the SPF module contains a copper
+PHY, it also uses another address on the i2c bus for the standard
+copper PHY registers.
 
-That said, what is then the reason to why we should bring over the
-existing omap_hsmmc bindings to the sdhci-omap bindings?
+An SFP module does not fit the usual I2C client model, since it is a
+collection of interconnected i2c clients in one package.
 
-For example, "ti,dual-volt" can likely be replaced with something
-better that already exists (either a common mmc binding or an sdhci
-binding). For "ti,non-removable", we already have a common mmc binding
-"non-removable" for this.
-
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	   Andrew
