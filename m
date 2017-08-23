@@ -1,493 +1,69 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Add basic dtsi file for Allwinner
- R40
-Date: Wed, 23 Aug 2017 19:56:29 +0800
-Message-ID: <ea10374b49489d2250fd804e1fdbf204@aosc.io>
-References: <20170822061742.40869-1-icenowy@aosc.io>
- <20170822200521.nadkb4335mcc5ah2@flea.home>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
+Date: Wed, 23 Aug 2017 15:16:53 +0300
+Message-ID: <20170823121653.xha2obe4ewlhwyvh@sapphire.tkos.co.il>
+References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
+ <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170822200521.nadkb4335mcc5ah2-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Russell King <rmk+kernel@arm.linux.org.uk>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2017-08-23 04:05，Maxime Ripard 写道：
-> Hi,
-> 
-> On Tue, Aug 22, 2017 at 02:17:40PM +0800, Icenowy Zheng wrote:
->> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> 
->> The Allwinner R40 SoC is marketed as the successor to the A20 SoC.
->> The R40 is a smaller chip than the A20, but features the same set
->> of programmable pins, with a couple extra pins and some new pin
->> functions. The chip features 4 Cortex-A7 cores and a Mali-400 MP2
->> GPU. It retains most if not all features from the A20, while adding
->> some new features, such as MIPI DSI output, or updating various
->> hardware blocks, such as DE 2.0.
->> 
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> 
-> I'm not sure why you have two series to achieve one thing here. And
-> the fact that you don't have a cover letter doesn't make it any
-> clearer.
-> 
-> Please make series based on what you're trying to do and not split it
-> arbitrarily. And document what you're doing in a cover letter.
-> 
->> ---
->>  arch/arm/boot/dts/sun8i-r40.dtsi | 396 
->> +++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 396 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun8i-r40.dtsi
->> 
->> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi 
->> b/arch/arm/boot/dts/sun8i-r40.dtsi
->> new file mode 100644
->> index 000000000000..5b48801bdd01
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
->> @@ -0,0 +1,396 @@
->> +/*
->> + * Copyright 2017 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> + * Copyright 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of 
->> the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the 
->> Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY 
->> KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
->> WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/clock/sun8i-r40-ccu.h>
->> +#include <dt-bindings/reset/sun8i-r40-ccu.h>
->> +
->> +/ {
->> +	#address-cells = <1>;
->> +	#size-cells = <1>;
->> +	interrupt-parent = <&gic>;
->> +
->> +	clocks {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		osc24M: osc24M {
->> +			#clock-cells = <0>;
->> +			compatible = "fixed-clock";
->> +			clock-frequency = <24000000>;
->> +			clock-output-names = "osc24M";
->> +		};
->> +
->> +		osc32k: osc32k {
->> +			#clock-cells = <0>;
->> +			compatible = "fixed-clock";
->> +			clock-frequency = <32768>;
->> +			clock-output-names = "osc32k";
->> +		};
->> +	};
->> +
->> +	cpus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		cpu@0 {
->> +			compatible = "arm,cortex-a7";
->> +			device_type = "cpu";
->> +			reg = <0>;
->> +		};
->> +
->> +		cpu@1 {
->> +			compatible = "arm,cortex-a7";
->> +			device_type = "cpu";
->> +			reg = <1>;
->> +		};
->> +
->> +		cpu@2 {
->> +			compatible = "arm,cortex-a7";
->> +			device_type = "cpu";
->> +			reg = <2>;
->> +		};
->> +
->> +		cpu@3 {
->> +			compatible = "arm,cortex-a7";
->> +			device_type = "cpu";
->> +			reg = <3>;
->> +		};
->> +	};
->> +
->> +	soc {
->> +		compatible = "simple-bus";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		nmi_intc: interrupt-controller@1c00030 {
->> +			compatible = "allwinner,sun7i-a20-sc-nmi";
->> +			interrupt-controller;
->> +			#interrupt-cells = <2>;
->> +			reg = <0x01c00030 0x0c>;
->> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
-> 
-> You should use the new compatible here.
-> 
->> +		mmc0: mmc@1c0f000 {
->> +			compatible = "allwinner,sun50i-a64-mmc";
-> 
-> Please add a soc specific compatible for all the blocks.
-> 
->> +			reg = <0x01c0f000 0x1000>;
->> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
->> +			clock-names = "ahb", "mmc";
->> +			resets = <&ccu RST_BUS_MMC0>;
->> +			reset-names = "ahb";
->> +			pinctrl-0 = <&mmc0_pins>;
->> +			pinctrl-names = "default";
->> +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
->> +			max-frequency = <150000000>;
-> 
-> have you tested that frequency?
+Hi Rob,
 
-I think the frequency should be kept here, although my cards cannot
-reach this frequency.
+On Mon, Aug 21, 2017 at 02:10:33PM -0500, Rob Herring wrote:
+> On Sun, Aug 20, 2017 at 5:28 AM, Baruch Siach <baruch@tkos.co.il> wrote:
+> > Add device-tree binding documentation SFP transceivers. Support for SFP
+> > transceivers has been recently introduced (drivers/net/phy/sfp.c).
+> >
+> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> > ---
+> >
+> > The SFP driver is on net-next.
 
-The numbers are same as the corresponding controllers in A64.
+[...]
 
-Maybe I should add a comment saying it's educated guess?
+> > +Optional Properties:
+> > +
+> > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
+> > +  interface
+> 
+> Why not a child of the i2c bus it is on? IOW, what should this be a child of?
 
-> 
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		mmc1: mmc@1c10000 {
->> +			compatible = "allwinner,sun50i-a64-mmc";
->> +			reg = <0x01c10000 0x1000>;
->> +			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
->> +			clock-names = "ahb", "mmc";
->> +			resets = <&ccu RST_BUS_MMC1>;
->> +			reset-names = "ahb";
->> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
->> +			max-frequency = <150000000>;
-> 
-> Ditto.
-> 
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		mmc2: mmc@1c11000 {
->> +			compatible = "allwinner,sun50i-a64-emmc";
->> +			reg = <0x01c11000 0x1000>;
->> +			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
->> +			clock-names = "ahb", "mmc";
->> +			resets = <&ccu RST_BUS_MMC2>;
->> +			reset-names = "ahb";
->> +			pinctrl-0 = <&mmc2_pins>;
->> +			pinctrl-names = "default";
->> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
->> +			max-frequency = <200000000>;
-> 
-> Ditto.
-> 
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		mmc3: mmc@1c12000 {
->> +			compatible = "allwinner,sun50i-a64-mmc";
->> +			reg = <0x01c12000 0x1000>;
->> +			clocks = <&ccu CLK_BUS_MMC3>, <&ccu CLK_MMC3>;
->> +			clock-names = "ahb", "mmc";
->> +			resets = <&ccu RST_BUS_MMC3>;
->> +			reset-names = "ahb";
->> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
->> +			max-frequency = <150000000>;
-> 
-> Ditto.
-> 
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		ccu: clock@1c20000 {
->> +			compatible = "allwinner,sun8i-r40-ccu";
->> +			reg = <0x01c20000 0x400>;
->> +			clocks = <&osc24M>, <&osc32k>;
->> +			clock-names = "hosc", "losc";
->> +			#clock-cells = <1>;
->> +			#reset-cells = <1>;
->> +		};
->> +
->> +		pio: pinctrl@1c20800 {
->> +			compatible = "allwinner,sun8i-r40-pinctrl";
->> +			reg = <0x01c20800 0x400>;
->> +			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
->> +			clock-names = "apb", "hosc", "losc";
->> +			gpio-controller;
->> +			interrupt-controller;
->> +			#interrupt-cells = <3>;
->> +			#gpio-cells = <3>;
->> +
->> +			i2c0_pins: i2c0-pins {
->> +				pins = "PB0", "PB1";
->> +				function = "i2c0";
->> +			};
->> +
->> +			mmc0_pins: mmc0-pins {
->> +				pins = "PF0", "PF1", "PF2",
->> +				       "PF3", "PF4", "PF5";
->> +				function = "mmc0";
->> +				drive-strength = <30>;
->> +				bias-pull-up;
->> +			};
->> +
->> +			mmc1_pg_pins: mmc1-pg-pins {
->> +				pins = "PG0", "PG1", "PG2",
->> +				       "PG3", "PG4", "PG5";
->> +				function = "mmc1";
->> +				drive-strength = <30>;
->> +				bias-pull-up;
->> +			};
->> +
->> +			mmc2_pins: mmc2-pins {
->> +				pins = "PC5", "PC6", "PC7", "PC8", "PC9",
->> +				       "PC10", "PC11", "PC12", "PC13", "PC14",
->> +				       "PC15", "PC24";
->> +				function = "mmc2";
->> +				drive-strength = <30>;
->> +				bias-pull-up;
->> +			};
->> +
->> +			uart0_pb_pins: uart0-pb-pins {
->> +				pins = "PB22", "PB23";
->> +				function = "uart0";
->> +			};
->> +		};
->> +
->> +		uart0: serial@1c28000 {
->> +			compatible = "snps,dw-apb-uart";
->> +			reg = <0x01c28000 0x400>;
->> +			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
->> +			reg-shift = <2>;
->> +			reg-io-width = <4>;
->> +			clocks = <&ccu CLK_BUS_UART0>;
->> +			resets = <&ccu RST_BUS_UART0>;
->> +			status = "disabled";
->> +		};
->> +
->> +		uart1: serial@1c28400 {
->> +			compatible = "snps,dw-apb-uart";
->> +			reg = <0x01c28400 0x400>;
->> +			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
->> +			reg-shift = <2>;
->> +			reg-io-width = <4>;
->> +			clocks = <&ccu CLK_BUS_UART1>;
->> +			resets = <&ccu RST_BUS_UART1>;
->> +			status = "disabled";
->> +		};
->> +
->> +		uart2: serial@1c28800 {
->> +			compatible = "snps,dw-apb-uart";
->> +			reg = <0x01c28800 0x400>;
->> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
->> +			reg-shift = <2>;
->> +			reg-io-width = <4>;
->> +			clocks = <&ccu CLK_BUS_UART2>;
->> +			resets = <&ccu RST_BUS_UART2>;
->> +			status = "disabled";
->> +		};
->> +
->> +		uart3: serial@1c28c00 {
->> +			compatible = "snps,dw-apb-uart";
->> +			reg = <0x01c28c00 0x400>;
->> +			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
->> +			reg-shift = <2>;
->> +			reg-io-width = <4>;
->> +			clocks = <&ccu CLK_BUS_UART3>;
->> +			resets = <&ccu RST_BUS_UART3>;
->> +			status = "disabled";
->> +		};
->> +
->> +		uart4: serial@1c29000 {
->> +			compatible = "snps,dw-apb-uart";
->> +			reg = <0x01c29000 0x400>;
->> +			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
->> +			reg-shift = <2>;
->> +			reg-io-width = <4>;
->> +			clocks = <&ccu CLK_BUS_UART4>;
->> +			resets = <&ccu RST_BUS_UART4>;
->> +			status = "disabled";
->> +		};
->> +
->> +		uart5: serial@1c29400 {
->> +			compatible = "snps,dw-apb-uart";
->> +			reg = <0x01c29400 0x400>;
->> +			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
->> +			reg-shift = <2>;
->> +			reg-io-width = <4>;
->> +			clocks = <&ccu CLK_BUS_UART5>;
->> +			resets = <&ccu RST_BUS_UART5>;
->> +			status = "disabled";
->> +		};
->> +
->> +		uart6: serial@1c29800 {
->> +			compatible = "snps,dw-apb-uart";
->> +			reg = <0x01c29800 0x400>;
->> +			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
->> +			reg-shift = <2>;
->> +			reg-io-width = <4>;
->> +			clocks = <&ccu CLK_BUS_UART6>;
->> +			resets = <&ccu RST_BUS_UART6>;
->> +			status = "disabled";
->> +		};
->> +
->> +		uart7: serial@1c29c00 {
->> +			compatible = "snps,dw-apb-uart";
->> +			reg = <0x01c29c00 0x400>;
->> +			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
->> +			reg-shift = <2>;
->> +			reg-io-width = <4>;
->> +			clocks = <&ccu CLK_BUS_UART7>;
->> +			resets = <&ccu RST_BUS_UART7>;
->> +			status = "disabled";
->> +		};
->> +
->> +		i2c0: i2c@1c2ac00 {
->> +			compatible = "allwinner,sun6i-a31-i2c";
->> +			reg = <0x01c2ac00 0x400>;
->> +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&ccu CLK_BUS_I2C0>;
->> +			resets = <&ccu RST_BUS_I2C0>;
->> +			pinctrl-0 = <&i2c0_pins>;
->> +			pinctrl-names = "default";
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		i2c1: i2c@1c2b000 {
->> +			compatible = "allwinner,sun6i-a31-i2c";
->> +			reg = <0x01c2b000 0x400>;
->> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&ccu CLK_BUS_I2C1>;
->> +			resets = <&ccu RST_BUS_I2C1>;
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		i2c2: i2c@1c2b400 {
->> +			compatible = "allwinner,sun6i-a31-i2c";
->> +			reg = <0x01c2b400 0x400>;
->> +			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&ccu CLK_BUS_I2C2>;
->> +			resets = <&ccu RST_BUS_I2C2>;
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		i2c3: i2c@1c2b800 {
->> +			compatible = "allwinner,sun6i-a31-i2c";
->> +			reg = <0x01c2b800 0x400>;
->> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&ccu CLK_BUS_I2C3>;
->> +			resets = <&ccu RST_BUS_I2C3>;
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		i2c4: i2c@1c2c000 {
->> +			compatible = "allwinner,sun6i-a31-i2c";
->> +			reg = <0x01c2c000 0x400>;
->> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&ccu CLK_BUS_I2C4>;
->> +			resets = <&ccu RST_BUS_I2C4>;
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +		};
->> +
->> +		gic: interrupt-controller@1c81000 {
->> +			compatible = "arm,gic-400";
->> +			reg = <0x01c81000 0x1000>,
->> +			      <0x01c82000 0x1000>,
->> +			      <0x01c84000 0x2000>,
->> +			      <0x01c86000 0x2000>;
->> +			interrupt-controller;
->> +			#interrupt-cells = <3>;
->> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | 
->> IRQ_TYPE_LEVEL_HIGH)>;
->> +		};
->> +	};
->> +
->> +	timer {
->> +		compatible = "arm,armv7-timer";
->> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | 
->> IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> 
-> Those masks are wrong.
+As I understand form the code the ID of the SFP i2c slave is derived from the 
+Ethernet PHY 'reg' property. The PHY node's 'sfp' property points to a phandle 
+of the sff,sfp node.
 
-I compared it with other sun8i SoCs' device tree.
+It is also possible for the 'sfp' property to appear directly in the Ethernet 
+device node.
 
-Where's wrong?
+Quoting RMK from merge commit 234709336b8 (net-next):
 
-> 
-> Maxime
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    To add to the complexity, SFP modules can be connected in at least
+    two places:
+    
+    1. Directly to the serdes output of a MAC with no intervening PHY.
+       For example:
+    
+         mvneta ----> SFP socket
+    
+    2. To a PHY, for example:
+    
+         mvpp2 ---> PHY ---> copper
+                     |
+                     `-----> SFP socket
+    
+    This code supports both setups, although it's not fully implemented
+    with scenario (2).
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
