@@ -1,35 +1,39 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARC: AXS103: DTS: Set cpu frequency explicitly via
- dts
-Date: Wed, 23 Aug 2017 09:39:41 -0700
-Message-ID: <864f955c-c4c5-c801-1d1f-119873e02827@synopsys.com>
-References: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
- <20170814161213.17522-5-Eugeniy.Paltsev@synopsys.com>
- <4685c3d5-7a2f-78cd-a11b-2eda0de2dd35@synopsys.com>
- <1503487454.2586.58.camel@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503487454.2586.58.camel-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Priit Laes <plaes@plaes.org>
+Subject: [PATCH v7 3/5] dt-bindings: List devicetree binding for the CCU of Allwinner A10
+Date: Wed, 23 Aug 2017 20:23:31 +0300
+Message-ID: <8164ec90ec4949801522a1b6b3fe57efe9feb60e.1503507503.git-series.plaes@plaes.org>
+References: <cover.2a284ee63f45063ec7c0720b1098860e0b516c6d.1503507503.git-series.plaes@plaes.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.2a284ee63f45063ec7c0720b1098860e0b516c6d.1503507503.git-series.plaes@plaes.org>
+In-Reply-To: <cover.2a284ee63f45063ec7c0720b1098860e0b516c6d.1503507503.git-series.plaes@plaes.org>
+References: <cover.2a284ee63f45063ec7c0720b1098860e0b516c6d.1503507503.git-series.plaes@plaes.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-sunxi@googlegroups.com, Jonathan Liu <net147@gmail.com>, Olliver Schinagl <oliver@schinagl.nl>, Priit Laes <plaes@plaes.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2017 04:24 AM, Eugeniy Paltsev wrote:
->> Given that you added a generic feature as part of 1/5 - do other
->> platforms
->> abilis/nps need corresponding fixups as this one !
-> Actually no.
-> If cpu 0 node don't have "cpu-freq" property we simply print cpu
-> frequency and don't try to change it.
-> So we can left other dts untouched.
+Allwinner A10 is now driven by sunxi-ng CCU driver.
 
-OK good. But to keep things consistent lets fix the rest of DTs, as needed, as a 
-separate patch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Add devicetree binding for it.
+
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Priit Laes <plaes@plaes.org>
+---
+ Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+index 2712891..7eda08e 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+@@ -3,6 +3,7 @@ Allwinner Clock Control Unit Binding
+ 
+ Required properties :
+ - compatible: must contain one of the following compatibles:
++		- "allwinner,sun4i-a10-ccu"
+ 		- "allwinner,sun5i-a10s-ccu"
+ 		- "allwinner,sun5i-a13-ccu"
+ 		- "allwinner,sun6i-a31-ccu"
+-- 
+git-series 0.9.1
