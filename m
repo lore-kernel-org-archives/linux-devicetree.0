@@ -1,48 +1,39 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sun8i: Add board dts file for
- Banana Pi M2 Berry
-Date: Wed, 23 Aug 2017 13:46:50 +0800
-Message-ID: <D377CF9E-AE08-4AA4-AAD4-C9047C8007E9@aosc.io>
-References: <20170822061742.40869-1-icenowy@aosc.io> <20170822061742.40869-3-icenowy@aosc.io> <20170822201215.wbpioc7vbse4ajja@flea.home>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBU5N6TGAKGQESBPOAVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170822201215.wbpioc7vbse4ajja-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 1/2] dt-bindings: aspeed-scu: Add clock and reset properties
+Date: Wed, 23 Aug 2017 15:39:56 +0930
+Message-ID: <20170823060957.31167-1-joel@jms.id.au>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, Rick Altherr <raltherr@google.com>, Ryan Chen <ryan_chen@aspeedtech.com>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ Documentation/devicetree/bindings/mfd/aspeed-scu.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+index 4fc5b83726d6..ce8cf0ec6279 100644
+--- a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
++++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+@@ -9,10 +9,16 @@ Required properties:
+ 		"aspeed,g5-scu", "syscon", "simple-mfd"
+ 
+ - reg:		contains the offset and length of the SCU memory region
++- #clock-cells: should be set to <1> - the system controller is also a
++	clock provider
++- #reset-cells: should be set to <1> - the system controller is also a
++	reset line provider
+ 
+ Example:
+ 
+ syscon: syscon@1e6e2000 {
+ 	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+ 	reg = <0x1e6e2000 0x1a8>;
++	#clock-cells = <1>;
++	#reset-cells = <1>;
+ };
+-- 
+2.14.1
 
-=E4=BA=8E 2017=E5=B9=B48=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=884:=
-12:15, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->On Tue, Aug 22, 2017 at 02:17:42PM +0800, Icenowy Zheng wrote:
->> +&reg_vcc5v0 {
->> +	gpio =3D <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
->> +	enable-active-high;
->> +};
->
->Same thing here, you're not using that regulator anywhere. You don't
->even use any of the regulators in sunxi-common-regulators.
-
-Maybe I should drop the regulator now, and re-introduce it when adding USB/=
-SATA?
-
->
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
