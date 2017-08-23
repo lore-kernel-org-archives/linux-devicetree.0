@@ -1,121 +1,41 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] mfd: Add support for TI LMP92001
-Date: Wed, 23 Aug 2017 14:21:49 +0100
-Message-ID: <20170823132149.svvvhtvrxv3fxhax@dell>
-References: <1503383171-15515-1-git-send-email-s.abhisit@gmail.com>
- <alpine.DEB.2.20.1708220911130.5706@vps.pmeerw.net>
- <CAMV_pUbBCkX6NME1c4NG-e48c0Vcs48N8JDYaDQqqypC0VjmDw@mail.gmail.com>
+From: Bastian Stender <bst@pengutronix.de>
+Subject: Re: [PATCH v13 3/6] fpga manager: Add altera-ps-spi driver for Altera
+ FPGAs
+Date: Wed, 23 Aug 2017 15:54:12 +0200
+Message-ID: <e63152d3-ef91-55d2-4af3-d6e27dab7168@pengutronix.de>
+References: <03e591707dc72f4c2b5e63a1272060956294ea51.1497047816.git.stillcompiling@gmail.com>
+ <aadca281de183aa8b0471dc3e6c850012c775a9c.1497047816.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMV_pUbBCkX6NME1c4NG-e48c0Vcs48N8JDYaDQqqypC0VjmDw@mail.gmail.com>
+In-Reply-To: <aadca281de183aa8b0471dc3e6c850012c775a9c.1497047816.git.stillcompiling@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abhisit Sangjan <s.abhisit@gmail.com>
-Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, jmondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+To: Joshua Clayton <stillcompiling@gmail.com>, Alan Tull <atull@kernel.org>, Moritz Fischer <moritz.fischer@ettus.com>, Anatolij Gustschin <agust@denx.de>, Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Aug 2017, Abhisit Sangjan wrote:
-> > > From: Abhisit Sangjan <s.abhisit@gmail.com>
-> > >
-> > > TI LMP92001 Analog System Monitor and Controller
- 
-[...]
-
-> > > Signed-off-by: Abhisit Sangjan <s.abhisit@gmail.com>
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-bus-iio-lmp920001  |  92 ++++
-> > >  .../devicetree/bindings/gpio/gpio-lmp92001.txt     |  22 +
-> > >  .../bindings/iio/adc/ti-lmp92001-adc.txt           |  21 +
-> > >  .../bindings/iio/dac/ti-lmp92001-dac.txt           |  35 ++
-> > >  drivers/gpio/Kconfig                               |   7 +
-> > >  drivers/gpio/Makefile                              |   1 +
-> > >  drivers/gpio/gpio-lmp92001.c                       | 209 +++++++++
-> > >  drivers/iio/adc/Kconfig                            |  10 +
-> > >  drivers/iio/adc/Makefile                           |   1 +
-> > >  drivers/iio/adc/lmp92001-adc.c                     | 500
-> > +++++++++++++++++++++
-> > >  drivers/iio/dac/Kconfig                            |   9 +
-> > >  drivers/iio/dac/Makefile                           |   1 +
-> > >  drivers/iio/dac/lmp92001-dac.c                     | 390
-> > ++++++++++++++++
-> > >  drivers/mfd/Kconfig                                |  12 +
-> > >  drivers/mfd/Makefile                               |   4 +
-> > >  drivers/mfd/lmp92001-core.c                        | 308 +++++++++++++
-> > >  drivers/mfd/lmp92001-debug.c                       |  67 +++
-> > >  drivers/mfd/lmp92001-i2c.c                         | 215 +++++++++
-> > >  include/linux/mfd/lmp92001/core.h                  | 119 +++++
-> > >  include/linux/mfd/lmp92001/debug.h                 |  28 ++
-> > >  20 files changed, 2051 insertions(+)
-> > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-lmp920001
-> > >  create mode 100644 Documentation/devicetree/
-> > bindings/gpio/gpio-lmp92001.txt
-> > >  create mode 100644 Documentation/devicetree/
-> > bindings/iio/adc/ti-lmp92001-adc.txt
-> > >  create mode 100644 Documentation/devicetree/
-> > bindings/iio/dac/ti-lmp92001-dac.txt
-> > >  create mode 100644 drivers/gpio/gpio-lmp92001.c
-> > >  create mode 100644 drivers/iio/adc/lmp92001-adc.c
-> > >  create mode 100644 drivers/iio/dac/lmp92001-dac.c
-> > >  create mode 100644 drivers/mfd/lmp92001-core.c
-> > >  create mode 100644 drivers/mfd/lmp92001-debug.c
-> > >  create mode 100644 drivers/mfd/lmp92001-i2c.c
-> > >  create mode 100644 include/linux/mfd/lmp92001/core.h
-> > >  create mode 100644 include/linux/mfd/lmp92001/debug.h
-
-[...]
-
-> > > +struct lmp92001_gpio {
-> > > +     struct lmp92001 *lmp92001;
-> > > +     struct gpio_chip gpio_chip;
-> > > +};
-> > > +
-> > > +static int lmp92001_gpio_get_direction(struct gpio_chip *chip,
-> > unsigned offset)
-> >
-> > unsigned vs unsigned int
-> >
+On 06/10/2017 12:39 AM, Joshua Clayton wrote:
+> altera-ps-spi loads FPGA firmware over SPI, using the "passive serial"
+> interface on Altera Arria 10, Cyclone V or Stratix V FPGAs.
 > 
-> I am follow the function prototype, it is unsigned.
+> This is one of the simpler ways to set up an FPGA at runtime.
+> The signal interface is close to unidirectional SPI with lsb first.
 > 
-> struct gpio_chip {
-> ...
-> int (*get_direction)(struct gpio_chip *chip,
-> unsigned offset);
-> ...
-> };
+> Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+> Signed-off-by: Anatolij Gustschin <agust@denx.de>
 
-[...]
+Tested-by: Bastian Stender <bst@pengutronix.de>
 
-> > > +#ifdef CONFIG_DEBUG_FS
-> > > +static void lmp92001_gpio_dbg_show(struct seq_file *s, struct gpio_chip
-> > *chip)
-> > > +{
-> > > +     struct lmp92001_gpio *lmp92001_gpio = gpiochip_get_data(chip);
-> > > +     struct lmp92001 *lmp92001 = lmp92001_gpio->lmp92001;
-> > > +     int i, gpio;
-> > > +     unsigned int cgpo;
-> > > +     const char *label, *dir, *logic;
-> > > +
-> > > +     for (i = 0; i < chip->ngpio; i++) {
-> > > +             gpio = i + chip->base;
-> > > +
-> > > +             label = gpiochip_is_requested(chip, i);
-> > > +             if (!label)
-> > > +                     continue;
-> > > +
-> > > +             regmap_read(lmp92001->regmap, LMP92001_CGPO, &cgpo);
-> >
-> > retval is not checked here (and elsewhere)
-> >
-> 
-> This function is return void.
+I tested the whole series with an Altera Arria 10 and it's working as 
+expected. Thanks again!
 
-Please clip your responses!
+Bastian
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.
+Industrial Linux Solutions
+http://www.pengutronix.de/
+Peiner Str. 6-8, 31137 Hildesheim, Germany
+Amtsgericht Hildesheim, HRA 2686
