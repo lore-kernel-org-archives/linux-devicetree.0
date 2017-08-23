@@ -1,31 +1,55 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: add rk3399-q7 SoM
-Date: Wed, 23 Aug 2017 09:27:13 +0200
-Message-ID: <2096549.gy0YvV4IgV@phil>
-References: <20170818193445.47542-1-klaus.goger@theobroma-systems.com> <20170818193445.47542-4-klaus.goger@theobroma-systems.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2 1/3] dt: bindings: Document DT bindings for Analog
+ devices as3645a
+Date: Wed, 23 Aug 2017 10:33:15 +0300
+Message-ID: <20170823073315.clz5u5pbontskrvm@paasikivi.fi.intel.com>
+References: <20170819212410.3084-1-sakari.ailus@linux.intel.com>
+ <20170819212410.3084-2-sakari.ailus@linux.intel.com>
+ <20170823002810.d4qiyghf4ti4vpa2@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170818193445.47542-4-klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Cc: Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UGF3ZcWC?= Jarosz <paweljarosz3691-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH73oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170823002810.d4qiyghf4ti4vpa2@rob-hp-laptop>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-media@vger.kernel.org, javier@dowhile0.org, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 18. August 2017, 21:34:43 CEST schrieb Klaus Goger:
-> RK3399-Q7 is a Qseven compatible system-on-module by Theobroma Systems.
+Hi Rob,
+
+On Tue, Aug 22, 2017 at 07:28:10PM -0500, Rob Herring wrote:
+> On Sun, Aug 20, 2017 at 12:24:08AM +0300, Sakari Ailus wrote:
+> > From: Sakari Ailus <sakari.ailus@iki.fi>
 > 
-> This adds the module and the EVK baseboard "Haikou"
+> Commit msg?
+
+I'll add:
+
+Document DT bindings for analog devices as3645a flash LED controller which
+also supports an indicator LED.
+
 > 
-> Signed-off-by: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> 
+> Shouldn't author and SoB be the same email?
 
-applied for 4.14 with Rob's Ack
+I'll change that.
 
+> 
+> > ---
+> >  .../devicetree/bindings/leds/ams,as3645a.txt       | 71 ++++++++++++++++++++++
+> >  1 file changed, 71 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> 
+> Otherwise,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
