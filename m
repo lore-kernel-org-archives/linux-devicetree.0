@@ -1,91 +1,79 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
-Date: Wed, 23 Aug 2017 18:27:22 +0530
-Message-ID: <632ae6ac77226ed528dbc50b2ca9ac9f@codeaurora.org>
-References: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
- <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
- <20170822085541.GB3685@dragon> <20170822203132.GC21656@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 1/2] clk: renesas: add R8A7797 CPG core clock definitions
+Date: Wed, 23 Aug 2017 15:52:28 +0300
+Message-ID: <20170823125740.342120870@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170822203132.GC21656@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, gregkh@linuxfoundation.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Abhijeet Dharmapurikar <adharmap@codeaurora.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=clk-renesas-add-R8A7797-CPG-core-clock-definitions.patch
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-23 02:01, Stephen Boyd wrote:
-> On 08/22, Shawn Guo wrote:
->> On Mon, Aug 21, 2017 at 04:18:58PM -0700, Stephen Boyd wrote:
->> > On 08/18/2017 08:28 AM, Kiran Gunda wrote:
->> > > The peripheral ownership check is not necessary on single master
->> > > platforms. Hence, enforce the peripheral ownership check optionally.
->> > >
->> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> > > Tested-by: Shawn Guo <shawnguo@kernel.org>
->> > > ---
->> >
->> > This sounds like a band-aid. Isn't the gpio driver going to keep probing
->> > all the pins that are not supposed to be accessed due to security
->> > constraints? What exactly is failing in the gpio case?
->> 
->> There is a platform_irq_count() call in pinctrl-spmi-gpio probe
->> function.  Due to the owner check in spmi-pmic-arb IRQ domain
->> qpnpint_irq_domain_dt_translate() function, the call will return irq
->> number as zero and cause pmic_gpio_probe() fail with -EINVAL error.
->> 
->> [    1.608516] [<ffff00000860e51c>] 
->> qpnpint_irq_domain_dt_translate+0x168/0x194
->> [    1.613557] [<ffff000008117040>] 
->> irq_create_fwspec_mapping+0x17c/0x2d8
->> [    1.620672] [<ffff000008117200>] irq_create_of_mapping+0x64/0x74
->> [    1.627008] [<ffff0000087b4fac>] of_irq_get+0x54/0x64
->> [    1.633169] [<ffff00000856b824>] platform_get_irq+0x20/0x150
->> [    1.638117] [<ffff00000856b97c>] platform_irq_count+0x28/0x44
->> [    1.643850] [<ffff0000083cf12c>] pmic_gpio_probe+0x50/0x544
->> 
-> 
-> Hmm. Ok. I guess platform_irq_count() has to go and create irq
-> mappings if they haven't been created yet and that then causes us
-> to check if we can even get the interrupt for this particular
-> irq? There are some interrupt lines that are not routed to the
-> application processor in the system, so the irq_ee (irq execution
-> environment) is different. This check is there to avoid creating
-> flow handlers for irqs that can't be triggered.
-> 
-> I can see how trying to request that irq doesn't make sense,
-> because it won't ever happen. But preventing that from being
-> translated is confusing. Perhaps we can move the check for irq_ee
-> to the irq_request_resources() callback in the irqchip? That way,
-> we can fail installing the flow handler for the interrupt we
-> can't ever receive, but otherwise translate the interrupt number
-> so we can keep counting them.
-> 
-Hi Stephen,
-The idea to move the ownership check to irq_request_resources sounds 
-good.
-I am dropping this patch and sent the new patch to move the irq 
-ownership to
-irq_request_resource. Following is the patchwork link.
+Add macros usable by the device tree sources to reference the R8A7797 CPG
+clocks  by index.
 
-Shawn, can you please give a try with it?
-https://patchwork.kernel.org/patch/9917315/
+Based on the original (and large) patch by Daisuke Matsushita
+<daisuke.matsushita.ns@hitachi.com>.
 
-> Also, I see that on v4.13-rc series the read/write checks are
-> causing the led driver to fail in a different way:
-> 
->     spmi spmi-0: error: impermissible write to peripheral sid:0 
-> addr:0xc040
->     qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x40 failed
->     leds-gpio soc:leds: Error applying setting, reverse things back
->     spmi spmi-0: error: impermissible write to peripheral sid:0 
-> addr:0xc041
->     qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x41 failed
->     leds-gpio: probe of soc:leds failed with error -1
-> 
-> Are you seeing similar behavior?
-With the new patch series these errors will go away, as we are removing 
-the ownership
-checks from the read/write path.
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+---
+ include/dt-bindings/clock/r8a7797-cpg-mssr.h |   48 +++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+Index: linux/include/dt-bindings/clock/r8a7797-cpg-mssr.h
+===================================================================
+--- /dev/null
++++ linux/include/dt-bindings/clock/r8a7797-cpg-mssr.h
+@@ -0,0 +1,48 @@
++/*
++ * Copyright (C) 2016 Renesas Electronics Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __DT_BINDINGS_CLOCK_R8A7797_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_R8A7797_CPG_MSSR_H__
++
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
++
++/* r8a7797 CPG Core Clocks */
++#define R8A7797_CLK_Z2			0
++#define R8A7797_CLK_ZR			1
++#define R8A7797_CLK_ZTR			2
++#define R8A7797_CLK_ZTRD2		3
++#define R8A7797_CLK_ZT			4
++#define R8A7797_CLK_ZX			5
++#define R8A7797_CLK_S1D1		6
++#define R8A7797_CLK_S1D2		7
++#define R8A7797_CLK_S1D4		8
++#define R8A7797_CLK_S2D1		9
++#define R8A7797_CLK_S2D2		10
++#define R8A7797_CLK_S2D4		11
++#define R8A7797_CLK_LB			12
++#define R8A7797_CLK_CL			13
++#define R8A7797_CLK_ZB3			14
++#define R8A7797_CLK_ZB3D2		15
++#define R8A7797_CLK_DDR			16
++#define R8A7797_CLK_CR			17
++#define R8A7797_CLK_CRD2		18
++#define R8A7797_CLK_SD0H		19
++#define R8A7797_CLK_SD0			20
++#define R8A7797_CLK_RPC			21
++#define R8A7797_CLK_RPCD2		22
++#define R8A7797_CLK_MSO			23
++#define R8A7797_CLK_CANFD		24
++#define R8A7797_CLK_CSI0		25
++#define R8A7797_CLK_CSIREF		26
++#define R8A7797_CLK_FRAY		27
++#define R8A7797_CLK_CP			28
++#define R8A7797_CLK_CPEX		29
++#define R8A7797_CLK_R			30
++#define R8A7797_CLK_OSC			31
++
++#endif /* __DT_BINDINGS_CLOCK_R8A7797_CPG_MSSR_H__ */
