@@ -1,81 +1,83 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] dt-bindings: gpio: max3191x: Document new driver
-Date: Wed, 23 Aug 2017 08:03:15 -0500
-Message-ID: <CAL_JsqJWuCPyiY-mr5kyHfm0QjYn_CzzD=UTZwPgrhcJin1dOA@mail.gmail.com>
-References: <cover.1503319573.git.lukas@wunner.de> <7fe7636eecba238d57ab6178cfa3f6b7deca98f1.1503319573.git.lukas@wunner.de>
- <20170823004847.jmkb53xtdmmn6vtf@rob-hp-laptop> <20170823094438.GA12416@wunner.de>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] dt-bindings: sdhci-omap: Add bindings for the
+ sdhci-omap controller
+Date: Wed, 23 Aug 2017 15:07:54 +0200
+Message-ID: <CAPDyKFp7gchVQ+JPNqv4LktvHRm2Lzx6KakOw85zEZxDEX0OhA@mail.gmail.com>
+References: <20170821142132.GH6008@atomide.com> <20170823054246.23927-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170823094438.GA12416-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20170823054246.23927-1-kishon-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ravikumar Kattekola <rk-l0cyMroinI0@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 23, 2017 at 4:44 AM, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
-> Thanks Rob for the helpful review!
+On 23 August 2017 at 07:42, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> Add binding for the TI's sdhci-omap controller. This now includes only
+> a subset of properties documented in ti-omap-hsmmc.txt but will eventually
+> include all the properties.
 >
-> On Tue, Aug 22, 2017 at 07:48:47PM -0500, Rob Herring wrote:
->> On Mon, Aug 21, 2017 at 03:12:00PM +0200, Lukas Wunner wrote:
->> > + - modesel-gpios:  GPIO pins to configure modesel of each chip.
->> > +                   The number of GPIOs must be equal to "maxim,nchips".
->> > + - fault-gpios:    GPIO pins to read undervoltage fault of each chip.
->> > + - db0-gpios:      GPIO pins to configure debounce of each chip.
->> > + - db1-gpios:      GPIO pins to configure debounce of each chip.
->>
->> Perhaps an array db-gpios with 2 entries.
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> ---
+> Changes from v2:
+> *) Fixed example to use the updated compatible
 >
-> Each of the db0-gpios and db1-gpios is already an array with one pin for
-> each chip in the daisy-chain.
-
-Okay.
-
-> So it would have to be a two-dimensional array, which AFAICS is not
-> supported by the devicetree spec, or is it?
-
-Not in the sense that the dimensions are encoded into the property,
-but the binding doc can define that. You know one dimension is 2, so
-you could figure out the other. But it's fine as is.
-
-> However I realize that for clarity I should amend fault-gpios, db0-gpios
-> and db1-gpios with the same text as modesel-gpios:
->                         The number of GPIOs must be equal to "maxim,nchips".
-
-Really, this binding should be 1 node per chip instead, but I don't
-know how you would describe that. You'd need a parent node with reg
-for the chipselect, and then child nodes for each chip.
-
->> > + - maxim,no-vcc24v:Boolean, whether the chips are powered through
->> > +                   5VOUT instead of VCC24V.
->>
->> Use the regulator binding here?
+> Changes from v1:
+> *) Create a new sdhci-omap.txt document for TI's sdhci-omap controller instead
+>    of using the ti-omap-hsmmc.txt as suggested by Tony
+>  .../devicetree/bindings/mmc/sdhci-omap.txt         | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-omap.txt
 >
-> I'd have to look at the regulator's current voltage to determine through
-> which pin the chips in the daisy-chain are powered (5VOUT or VCC24V).
-
-No, the supply properties should correspond to the power pins/rails.
-So it would be whichever property is present that tells you if 5V or
-24V is hooked up.
-
-> But if the regulator is generating 5V I couldn't discern if it's a
-> faulting 24V supply or a non-faulting 5V supply.
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+> new file mode 100644
+> index 000000000000..139695ad2d58
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+> @@ -0,0 +1,22 @@
+> +* TI OMAP SDHCI Controller
+> +
+> +Refer to mmc.txt for standard MMC bindings.
+> +
+> +Required properties:
+> +- compatible: Should be "ti,dra7-sdhci" for DRA7 and DRA72 controllers
+> +- ti,hwmods: Must be "mmc<n>", <n> is controller instance starting 1
+> +
+> +Optional properties:
+> +- ti,dual-volt: boolean, supports dual voltage cards
+> +- ti,non-removable: non-removable slot (like eMMC)
+> +
+> +Example:
+> +       mmc1: mmc@0x4809c000 {
+> +               compatible = "ti,dra7-sdhci";
+> +               reg = <0x4809c000 0x400>;
+> +               ti,hwmods = "mmc1";
+> +               ti,dual-volt;
+> +               bus-width = <4>;
+> +               vmmc-supply = <&vmmc>; /* phandle to regulator node */
+> +               ti,non-removable;
+> +       };
+> --
+> 2.11.0
 >
-> So a boolean does seem necessary, however I realize now that "no-vcc24v"
-> is misleading, I've changed it to "maxim,ignore-undervoltage" for clarity:
->
-> - maxim,ignore-undervoltage:
->                         Boolean, whether to ignore undervoltage alarms signaled
->                         by the "maxim,fault-gpios" and by the status byte
->                         (in 16-bit mode).  Use this if the chips are powered
->                         through 5VOUT instead of VCC24V, in which case they
->                         will constantly signal undervoltage.
 
-But I'm not that concerned with a single property like this if you
-feel strongly about it and want to avoid the complexity of the
-regulator binding.
+I am wondering a bit on the long term plan here.
 
-Rob
+Ideally at some point in future, we would like to remove the old
+omap_hsmmc driver, but from compatible string point of view, that
+means we first needs to deprecate the old ones for a while. Right?
+
+That said, what is then the reason to why we should bring over the
+existing omap_hsmmc bindings to the sdhci-omap bindings?
+
+For example, "ti,dual-volt" can likely be replaced with something
+better that already exists (either a common mmc binding or an sdhci
+binding). For "ti,non-removable", we already have a common mmc binding
+"non-removable" for this.
+
+Kind regards
+Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
