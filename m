@@ -1,106 +1,94 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Add basic dtsi file
- for Allwinner R40
-Date: Wed, 23 Aug 2017 23:13:04 +0800
-Message-ID: <9554c7524c8608e1eceafe762a487c11@aosc.io>
-References: <20170822061742.40869-1-icenowy@aosc.io>
- <20170822200521.nadkb4335mcc5ah2@flea.home>
- <ea10374b49489d2250fd804e1fdbf204@aosc.io>
- <20170823143532.owocqyq3tehsahhg@flea.home>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [PATCH v2 4/4] crypto: jz4780-rng: Enable PRNG support in CI20 defconfig
+Date: Wed, 23 Aug 2017 20:45:00 +0530
+Message-ID: <CANc+2y5qkx0mk4P1y-sEgYGAxBAAz_d7WtOcHa0Wh2h9AGe33Q@mail.gmail.com>
+References: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
+ <20170823025707.27888-5-prasannatsmkumar@gmail.com> <9da7ab8b-aa81-e012-596c-54355758da83@imgtec.com>
+ <CANc+2y6LPFf6a-oJJ8=Sf59mCOH0q2s6Na5zCAMhnBAiOMjDcQ@mail.gmail.com> <02fb41c2-c740-ec2c-d82f-aabecfa798ea@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBAVX63GAKGQETLO4YOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170823143532.owocqyq3tehsahhg-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <02fb41c2-c740-ec2c-d82f-aabecfa798ea@imgtec.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Harvey Hunt <Harvey.Hunt@imgtec.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Cercueil <paul@crapouillou.net>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Mathieu Malaterre <malat@debian.org>, noloader@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-08-23 22:35=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> On Wed, Aug 23, 2017 at 07:56:29PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->> > > +			reg =3D <0x01c0f000 0x1000>;
->> > > +			clocks =3D <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
->> > > +			clock-names =3D "ahb", "mmc";
->> > > +			resets =3D <&ccu RST_BUS_MMC0>;
->> > > +			reset-names =3D "ahb";
->> > > +			pinctrl-0 =3D <&mmc0_pins>;
->> > > +			pinctrl-names =3D "default";
->> > > +			interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
->> > > +			max-frequency =3D <150000000>;
->> >
->> > have you tested that frequency?
->>=20
->> I think the frequency should be kept here, although my cards cannot
->> reach this frequency.
->>=20
->> The numbers are same as the corresponding controllers in A64.
->>=20
->> Maybe I should add a comment saying it's educated guess?
->=20
-> I'd rather have it tested by someone, and then add the proper
-> frequencies. It took quite a while to figure out how these modes were
-> supposed to be working on the A64, so it's not obvious that they're
-> just going to work.
+Hi Harvey,
 
-Should I add my results here?
+On 23 August 2017 at 20:21, Harvey Hunt <Harvey.Hunt@imgtec.com> wrote:
+> Hi PrasannaKumar,
+>
+>
+> On 23/08/17 15:50, PrasannaKumar Muralidharan wrote:
+>>
+>> Hi Harvey,
+>>
+>> On 23 August 2017 at 14:39, Harvey Hunt <Harvey.Hunt@imgtec.com> wrote:
+>>>
+>>> Hi PrasannaKumar,
+>>>
+>>> On 23/08/17 03:57, PrasannaKumar Muralidharan wrote:
+>>>>
+>>>>
+>>>> Enable PRNG driver support in MIPS Creator CI20 default config.
+>>>>
+>>>> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>>>> ---
+>>>> No changes in v2
+>>>>
+>>>>    arch/mips/configs/ci20_defconfig | 5 +++++
+>>>>    1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/arch/mips/configs/ci20_defconfig
+>>>> b/arch/mips/configs/ci20_defconfig
+>>>> index b42cfa7..9f48f2c 100644
+>>>> --- a/arch/mips/configs/ci20_defconfig
+>>>> +++ b/arch/mips/configs/ci20_defconfig
+>>>> @@ -88,6 +88,11 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=5
+>>>>    CONFIG_SERIAL_8250_INGENIC=y
+>>>>    CONFIG_SERIAL_OF_PLATFORM=y
+>>>>    # CONFIG_HW_RANDOM is not set
+>>>> +CONFIG_CRYPTO_USER=y
+>>>> +CONFIG_CRYPTO_USER_API=y
+>>>> +CONFIG_CRYPTO_USER_API_RNG=y
+>>>> +CONFIG_CRYPTO_HW=y
+>>>> +CONFIG_CRYPTO_DEV_JZ4780_RNG=y
+>>>>    CONFIG_I2C=y
+>>>>    CONFIG_I2C_JZ4780=y
+>>>>    CONFIG_GPIO_SYSFS=y
+>>>>
+>>>
+>>> You need to regenerate your defconfig as it is missing CONFIG_MFD_SYSCON.
+>>>
+>>> Thanks,
+>>>
+>>> Harvey
+>>
+>>
+>> CONFIG_MFD_SYSCON gets selected when CONFIG_CRYPTO_DEV_JZ4780_RNG is
+>> selected. Please see the Kconfig changes. Given that should I add it
+>> in ci20_defconfig? If it is required I will add and send a new
+>> version.
+>
+>
+> Oops, I hadn't noticed that - just skimmed the patches before my morning
+> coffee. :-)
+>
+> It's fine as is, excuse the noise.
 
-MMC0: 25MHz
-MMC1: 50MHz
-MMC2: 52MHz
-MMC3: not wired :-(
+No issues.
 
-I think it's conservative enough and works well ;-)
+>
+>>
+>> Thanks,
+>> PrasannaKumar
+>>
+>
+> Thanks,
+>
+> Harvey
+>
 
->=20
->> > > +		gic: interrupt-controller@1c81000 {
->> > > +			compatible =3D "arm,gic-400";
->> > > +			reg =3D <0x01c81000 0x1000>,
->> > > +			      <0x01c82000 0x1000>,
->> > > +			      <0x01c84000 0x2000>,
->> > > +			      <0x01c86000 0x2000>;
->> > > +			interrupt-controller;
->> > > +			#interrupt-cells =3D <3>;
->> > > +			interrupts =3D <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
->> > > IRQ_TYPE_LEVEL_HIGH)>;
->> > > +		};
->> > > +	};
->> > > +
->> > > +	timer {
->> > > +		compatible =3D "arm,armv7-timer";
->> > > +		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
->> > > IRQ_TYPE_LEVEL_LOW)>,
->> > > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
->> > > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
->> > > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->> >
->> > Those masks are wrong.
->>=20
->> I compared it with other sun8i SoCs' device tree.
->>=20
->> Where's wrong?
->=20
-> It's supposed to be a mask of the CPUs in your system. Since you just
-> have one of them, it shouldn't be 4.
-
-R40 has 4 cores...
-
-Or I didn't understand this?
-
->=20
-> Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards,
+PrasannaKumar
