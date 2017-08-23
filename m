@@ -1,39 +1,54 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 1/2] dt-bindings: aspeed-scu: Add clock and reset properties
-Date: Wed, 23 Aug 2017 15:39:56 +0930
-Message-ID: <20170823060957.31167-1-joel@jms.id.au>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, Rick Altherr <raltherr@google.com>, Ryan Chen <ryan_chen@aspeedtech.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH] dt-binding: net/phy: fix interrupts description
+Date: Wed, 23 Aug 2017 09:11:00 +0300
+Message-ID: <b3756346473feadfeba70ecb71960cad48e66621.1503468660.git.baruch@tkos.co.il>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S . Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- Documentation/devicetree/bindings/mfd/aspeed-scu.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+Commit b053dc5a722ea (powerpc: Refactor device tree binding) split the
+Ethernet PHY binding documentation out of the big booting-without-of.txt
+file, leaving a dangling reference to "section 2" in the 'interrupts'
+property description. Drop that reference, and make the description look
+more like the rest.
 
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-index 4fc5b83726d6..ce8cf0ec6279 100644
---- a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-@@ -9,10 +9,16 @@ Required properties:
- 		"aspeed,g5-scu", "syscon", "simple-mfd"
+While at it, make the example interrupt-parent phandle look more like a
+real world phandle, and use an IRQ_TYPE_ macro for the 'interrupts'
+type.
+
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+ Documentation/devicetree/bindings/net/phy.txt | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index b55857696fc3..86ba72af6163 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -2,11 +2,7 @@ PHY nodes
  
- - reg:		contains the offset and length of the SCU memory region
-+- #clock-cells: should be set to <1> - the system controller is also a
-+	clock provider
-+- #reset-cells: should be set to <1> - the system controller is also a
-+	reset line provider
+ Required properties:
  
- Example:
+- - interrupts : <a b> where a is the interrupt number and b is a
+-   field that represents an encoding of the sense and level
+-   information for the interrupt.  This should be encoded based on
+-   the information in section 2) depending on the type of interrupt
+-   controller you have.
++ - interrupts : interrupt specifier for the sole interrupt.
+  - interrupt-parent : the phandle for the interrupt controller that
+    services interrupts for this device.
+  - reg : The ID number for the phy, usually a small integer
+@@ -56,7 +52,7 @@ Example:
  
- syscon: syscon@1e6e2000 {
- 	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
- 	reg = <0x1e6e2000 0x1a8>;
-+	#clock-cells = <1>;
-+	#reset-cells = <1>;
+ ethernet-phy@0 {
+ 	compatible = "ethernet-phy-id0141.0e90", "ethernet-phy-ieee802.3-c22";
+-	interrupt-parent = <40000>;
+-	interrupts = <35 1>;
++	interrupt-parent = <&PIC>;
++	interrupts = <35 IRQ_TYPE_EDGE_RISING>;
+ 	reg = <0>;
  };
 -- 
 2.14.1
-
