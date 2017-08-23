@@ -1,108 +1,67 @@
-From: Sandy Huang <hjc@rock-chips.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: display: Add Document for Rockchip
- Soc LVDS
-Date: Wed, 23 Aug 2017 14:30:13 +0800
-Message-ID: <26b54c1d-8529-eb27-bc76-1ca6f7a62871@rock-chips.com>
-References: <1503043780-22605-1-git-send-email-hjc@rock-chips.com>
- <1503043792-22746-1-git-send-email-hjc@rock-chips.com>
- <20170822024819.cmhmumpps6xgming@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170822024819.cmhmumpps6xgming@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4] mfd: max77693: Add muic of_compatible in mfd_cell
+Date: Wed, 23 Aug 2017 08:30:12 +0200
+Message-ID: <1503469812-3668-1-git-send-email-m.purski@samsung.com>
+References: <CGME20170823063057eucas1p18045ff589bef62e656594d0bcf6ec5b3@eucas1p1.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgrlnKggMjAxNy84LzIyIDEwOjQ4LCBSb2IgSGVycmluZyDlhpnpgZM6Cj4gT24gRnJpLCBBdWcg
-MTgsIDIwMTcgYXQgMDQ6MDk6NDlQTSArMDgwMCwgU2FuZHkgSHVhbmcgd3JvdGU6Cj4+IFRoaXMg
-cGF0Y2ggYWRkIERvY3VtZW50IGZvciBSb2NrY2hpcCBTb2MgUkszMjg4IExWRFMsCj4+IFRoaXMg
-YmFzZWQgb24gdGhlIHBhdGNoZXMgZnJvbSBNYXJrIHlhbyBhbmQgSGVpa28gU3R1ZWJuZXIuCj4+
-Cj4+IFNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+Cj4+IFNp
-Z25lZC1vZmYtYnk6IE1hcmsgeWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KPj4gU2lnbmVk
-LW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPj4gLS0tCj4+IENoYW5n
-ZXM6Cj4+ICAgICAgLSB1c2UgZGF0YS1tYXBwaW5nIGluc3RlYWQgb2Ygcm9ja2NoaXAsZGF0YS1t
-YXBwaW5nIGFuZCByb2NrY2hpcCxkYXRhLXdpZHRoCj4+ICAgICAgLSBtb3ZlIHJvY2tjaGlwLG91
-dHB1dCB0byBsdmRzIG5vZGUKPj4KPj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9y
-b2NrY2hpcC1sdmRzLnR4dCAgICB8IDEwMCArKysrKysrKysrKysrKysrKysrKysKPj4gICAxIGZp
-bGUgY2hhbmdlZCwgMTAwIGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAt
-bHZkcy50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQKPj4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uYTMzODIxYgo+PiAtLS0gL2Rl
-di9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0Cj4+IEBAIC0wLDAgKzEsMTAwIEBACj4+ICtSb2Nr
-Y2hpcCBSSzMyODggTFZEUyBpbnRlcmZhY2UKPj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09Cj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6IG1h
-dGNoaW5nIHRoZSBzb2MgdHlwZSwgb25lIG9mCj4+ICsJLSAicm9ja2NoaXAscmszMjg4LWx2ZHMi
-Owo+PiArCj4+ICstIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVy
-IGFuZCBsZW5ndGgKPj4gKwlvZiBtZW1vcnkgbWFwcGVkIHJlZ2lvbi4KPj4gKy0gY2xvY2tzOiBt
-dXN0IGluY2x1ZGUgY2xvY2sgc3BlY2lmaWVycyBjb3JyZXNwb25kaW5nIHRvIGVudHJpZXMgaW4g
-dGhlCj4+ICsJY2xvY2stbmFtZXMgcHJvcGVydHkuCj4+ICstIGNsb2NrLW5hbWVzOiBtdXN0IGNv
-bnRhaW4gInBjbGtfbHZkcyIKPj4gKwo+PiArLSBhdmRkMXYwLXN1cHBseTogcmVndWxhdG9yIHBo
-YW5kbGUgZm9yIDEuMFYgYW5hbG9nIHBvd2VyCj4+ICstIGF2ZGQxdjgtc3VwcGx5OiByZWd1bGF0
-b3IgcGhhbmRsZSBmb3IgMS44ViBhbmFsb2cgcG93ZXIKPj4gKy0gYXZkZDN2My1zdXBwbHk6IHJl
-Z3VsYXRvciBwaGFuZGxlIGZvciAzLjNWIGFuYWxvZyBwb3dlcgo+PiArCj4+ICstIHJvY2tjaGlw
-LGdyZjogcGhhbmRsZSB0byB0aGUgZ2VuZXJhbCByZWdpc3RlciBmaWxlcyBzeXNjb24KPj4gKy0g
-cm9ja2NoaXAsb3V0cHV0OiAicmdiIiwgImx2ZHMiIG9yICJkdWFsbHZkcyIsIFRoaXMgZGVzY3Jp
-YmVzIHRoZSBvdXRwdXQgZmFjZS4KPiAKPiBzL2ZhY2UvaW50ZXJmYWNlLwo+CnRoYW5rcywgdGhp
-cyB3aWxsIGJlIGZpeCBhdCBuZXh0IHZlcnNpb247Cgo+PiArCj4+ICtPcHRpb25hbCBwcm9wZXJ0
-aWVzOgo+PiArLSBwaW5jdHJsLW5hbWVzOiBtdXN0IGNvbnRhaW4gYSAibGNkYyIgZW50cnkuCj4+
-ICstIHBpbmN0cmwtMDogcGluIGNvbnRyb2wgZ3JvdXAgdG8gYmUgdXNlZCBmb3IgdGhpcyBjb250
-cm9sbGVyLgo+PiArCj4+ICtSZXF1aXJlZCBub2RlczoKPj4gKwo+PiArVGhlIGx2ZHMgaGFzIHR3
-byB2aWRlbyBwb3J0cyBhcyBkZXNjcmliZWQgYnkKPj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuCj4+ICtUaGVpciBjb25uZWN0
-aW9ucyBhcmUgbW9kZWxlZCB1c2luZyB0aGUgT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGlu
-Cj4+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPj4gKwo+
-PiArLSB2aWRlbyBwb3J0IDAgZm9yIHRoZSBWT1AgaW5wdXRzCj4gCj4gd2l0aCAyIGVuZHBvaW50
-cy4uLgo+IAp5ZXMsIGx2ZHMgcG9ydDAgcmVtb3RlIGVuZHBvaW50IG1heWJlIHZvcGIgb3Igdm9w
-bCwgaSB3aWxsIGFkZCB0aGlzIApkZXNjcmliZSBhdCBuZXh0IHZlcnNpb24uCgo+PiArLSB2aWRl
-byBwb3J0IDEgZm9yIGVpdGhlciBhIHBhbmVsIG9yIHN1YnNlcXVlbnQgZW5jb2Rlcgo+PiArCj4+
-ICt0aGUgbHZkcyBwYW5lbCBkZXNjcmliZWQgYnkKPj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4+ICsKPj4gK1BhbmVs
-IHJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIHBvcnRzIGZvciByZW1vdGUgTFZEUyBvdXRwdXQK
-Pj4gKwo+PiArUGFuZWwgb3B0aW9uYWwgcHJvcGVydGllczoKPj4gKy0gZGF0YS1tYXBwaW5nOiBz
-aG91bGQgYmUgInZlc2EtMjQiLCJqZWlkYS0yNCIgb3IgImplaWRhLTE4Ii4KPj4gK1RoaXMgZGVz
-Y3JpYmVzIGRlY3JpYmVkIGJ5Ogo+PiArCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0Cj4+ICsKPj4gK0V4YW1wbGU6Cj4+ICsKPj4g
-K2x2ZHNfcGFuZWw6IGx2ZHMtcGFuZWwgewo+PiArCXN0YXR1cyA9ICJva2F5IjsKPiAKPiBEb24n
-dCBzaG93IHN0YXR1cyBpbiBleGFtcGxlcy4KPiAKdGhhbmtzLCB0aGlzIHdpbGwgYmUgZml4IGF0
-IG5leHQgdmVyc2lvbjsKPj4gKwljb21wYXRpYmxlID0gImF1byxiMTAxZWFuMDEiOwo+PiArCWVu
-YWJsZS1ncGlvcyA9IDwmZ3BpbzcgMjEgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsJZGF0YS1tYXBw
-aW5nID0gImplaWRhLTI0IjsKPj4gKwo+PiArCXBvcnRzIHsKPj4gKwkJcGFuZWxfaW5fbHZkczog
-ZW5kcG9pbnQgewo+PiArCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzX291dF9wYW5lbD47Cj4+
-ICsJCX07Cj4+ICsJfTsKPj4gK307Cj4+ICsKPj4gK0ZvciBSb2NrY2hpcCBSSzMyODg6Cj4+ICsK
-Pj4gKwlsdmRzOiBsdmRzQGZmOTZjMDAwIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxy
-azMyODgtbHZkcyI7Cj4+ICsJCXJvY2tjaGlwLGdyZiA9IDwmZ3JmPjsKPj4gKwkJcmVnID0gPDB4
-ZmY5NmMwMDAgMHg0MDAwPjsKPj4gKwkJY2xvY2tzID0gPCZjcnUgUENMS19MVkRTX1BIWT47Cj4+
-ICsJCWNsb2NrLW5hbWVzID0gInBjbGtfbHZkcyI7Cj4+ICsJCXBpbmN0cmwtbmFtZXMgPSAibGNk
-YyI7Cj4+ICsJCXBpbmN0cmwtMCA9IDwmbGNkY19jdGw+Owo+PiArCQlhdmRkMXYwLXN1cHBseSA9
-IDwmdmRkMTBfbGNkPjsKPj4gKwkJYXZkZDF2OC1zdXBwbHkgPSA8JnZjYzE4X2xjZD47Cj4+ICsJ
-CWF2ZGQzdjMtc3VwcGx5ID0gPCZ2Y2NhXzMzPjsKPj4gKwkJcm9ja2NoaXAsb3V0cHV0ID0gInJn
-YiI7Cj4+ICsJCXBvcnRzIHsKPj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkJI3Np
-emUtY2VsbHMgPSA8MD47Cj4+ICsKPj4gKwkJCWx2ZHNfaW46IHBvcnRAMCB7Cj4+ICsJCQkJcmVn
-ID0gPDA+Owo+PiArCj4+ICsJCQkJbHZkc19pbl92b3BiOiBlbmRwb2ludEAwIHsKPj4gKwkJCQkJ
-cmVnID0gPDA+Owo+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGJfb3V0X2x2ZHM+Owo+
-PiArCQkJCX07Cj4+ICsJCQkJbHZkc19pbl92b3BsOiBlbmRwb2ludEAxIHsKPj4gKwkJCQkJcmVn
-ID0gPDE+Owo+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGxfb3V0X2x2ZHM+Owo+PiAr
-CQkJCX07Cj4+ICsJCQl9Owo+PiArCj4+ICsJCQlsdmRzX291dDogcG9ydEAxIHsKPj4gKwkJCQly
-ZWcgPSA8MT47Cj4+ICsKPj4gKwkJCQlsdmRzX291dF9wYW5lbDogZW5kcG9pbnQgewo+PiArCQkJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luX2x2ZHM+Owo+PiArCQkJCX07Cj4+ICsJCQl9
-Owo+PiArCQl9Owo+PiArCX07Cj4+IC0tIAo+PiAyLjcuNAo+Pgo+Pgo+IAo+IF9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gTGludXgtcm9ja2NoaXAgbWFp
-bGluZyBsaXN0Cj4gTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAKPiAKPiAK
-PiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patch adds muic of_compatible in order to use the muic device
+driver in device tree.
+
+Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+v2:
+- added muic to documentation
+v3:
+- removed duplication
+v4:
+- fixed commit message
+
+ Documentation/devicetree/bindings/mfd/max77693.txt | 6 ++++++
+ drivers/mfd/max77693.c                             | 5 ++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+index 6a1ae3a..e675497 100644
+--- a/Documentation/devicetree/bindings/mfd/max77693.txt
++++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+@@ -127,6 +127,12 @@ Required properties for the LED child node:
+ Optional properties for the LED child node:
+ - label : see Documentation/devicetree/bindings/leds/common.txt
+ 
++Optional nodes:
++- max77693-muic :
++	Node used only by extcon consumers.
++	Required properties:
++		- compatible : "maxim,max77693-muic"
++
+ Example:
+ #include <dt-bindings/leds/common.h>
+ 
+diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
+index 662ae0d..1c05ea0 100644
+--- a/drivers/mfd/max77693.c
++++ b/drivers/mfd/max77693.c
+@@ -48,7 +48,10 @@ static const struct mfd_cell max77693_devs[] = {
+ 		.name = "max77693-charger",
+ 		.of_compatible = "maxim,max77693-charger",
+ 	},
+-	{ .name = "max77693-muic", },
++	{
++		.name = "max77693-muic",
++		.of_compatible = "maxim,max77693-muic",
++	},
+ 	{
+ 		.name = "max77693-haptic",
+ 		.of_compatible = "maxim,max77693-haptic",
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
