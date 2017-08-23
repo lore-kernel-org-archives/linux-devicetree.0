@@ -1,94 +1,229 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: Re: [PATCH v2 4/4] crypto: jz4780-rng: Enable PRNG support in CI20 defconfig
-Date: Wed, 23 Aug 2017 20:45:00 +0530
-Message-ID: <CANc+2y5qkx0mk4P1y-sEgYGAxBAAz_d7WtOcHa0Wh2h9AGe33Q@mail.gmail.com>
-References: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
- <20170823025707.27888-5-prasannatsmkumar@gmail.com> <9da7ab8b-aa81-e012-596c-54355758da83@imgtec.com>
- <CANc+2y6LPFf6a-oJJ8=Sf59mCOH0q2s6Na5zCAMhnBAiOMjDcQ@mail.gmail.com> <02fb41c2-c740-ec2c-d82f-aabecfa798ea@imgtec.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] dmaengine: Add STM32 MDMA driver
+Date: Wed, 23 Aug 2017 21:30:45 +0530
+Message-ID: <20170823160044.GE3053@localhost>
+References: <1501062502-18778-1-git-send-email-pierre-yves.mordret@st.com>
+ <1501062502-18778-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170816164709.GR3053@localhost>
+ <40c24f87-6ea2-4c3a-1e86-9d30d30481c2@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <02fb41c2-c740-ec2c-d82f-aabecfa798ea@imgtec.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Harvey Hunt <Harvey.Hunt@imgtec.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Cercueil <paul@crapouillou.net>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Mathieu Malaterre <malat@debian.org>, noloader@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <40c24f87-6ea2-4c3a-1e86-9d30d30481c2-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Harvey,
+On Tue, Aug 22, 2017 at 05:59:26PM +0200, Pierre Yves MORDRET wrote:
+> 
+> 
+> On 08/16/2017 06:47 PM, Vinod Koul wrote:
+> > On Wed, Jul 26, 2017 at 11:48:20AM +0200, Pierre-Yves MORDRET wrote:
+> > 
+> >> +/* MDMA Channel x transfer configuration register */
+> >> +#define STM32_MDMA_CTCR(x)		(0x50 + 0x40 * (x))
+> >> +#define STM32_MDMA_CTCR_BWM		BIT(31)
+> >> +#define STM32_MDMA_CTCR_SWRM		BIT(30)
+> >> +#define STM32_MDMA_CTCR_TRGM_MSK	GENMASK(29, 28)
+> >> +#define STM32_MDMA_CTCR_TRGM(n)		(((n) & 0x3) << 28)
+> >> +#define STM32_MDMA_CTCR_TRGM_GET(n)	(((n) & STM32_MDMA_CTCR_TRGM_MSK) >> 28)
+> > 
+> > OK this seems oft repeated here.
+> > 
+> > So you are trying to extract the bit values and set the bit value, so why
+> > not this do generically...
+> > 
+> > #define STM32_MDMA_SHIFT(n)		(ffs(n) - 1))
+> > #define STM32_MDMA_SET(n, mask)		((n) << STM32_MDMA_SHIFT(mask))
+> > #define STM32_MDMA_GET(n, mask)		(((n) && mask) >> STM32_MDMA_SHIFT(mask))
+> > 
+> > Basically, u extract the shift using the mask value and ffs helping out, so
+> > no need to define these and reduce chances of coding errors...
+> > 
+> 
+> OK.
+> but I would prefer if you don't mind
 
-On 23 August 2017 at 20:21, Harvey Hunt <Harvey.Hunt@imgtec.com> wrote:
-> Hi PrasannaKumar,
->
->
-> On 23/08/17 15:50, PrasannaKumar Muralidharan wrote:
->>
->> Hi Harvey,
->>
->> On 23 August 2017 at 14:39, Harvey Hunt <Harvey.Hunt@imgtec.com> wrote:
->>>
->>> Hi PrasannaKumar,
->>>
->>> On 23/08/17 03:57, PrasannaKumar Muralidharan wrote:
->>>>
->>>>
->>>> Enable PRNG driver support in MIPS Creator CI20 default config.
->>>>
->>>> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>> ---
->>>> No changes in v2
->>>>
->>>>    arch/mips/configs/ci20_defconfig | 5 +++++
->>>>    1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/arch/mips/configs/ci20_defconfig
->>>> b/arch/mips/configs/ci20_defconfig
->>>> index b42cfa7..9f48f2c 100644
->>>> --- a/arch/mips/configs/ci20_defconfig
->>>> +++ b/arch/mips/configs/ci20_defconfig
->>>> @@ -88,6 +88,11 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=5
->>>>    CONFIG_SERIAL_8250_INGENIC=y
->>>>    CONFIG_SERIAL_OF_PLATFORM=y
->>>>    # CONFIG_HW_RANDOM is not set
->>>> +CONFIG_CRYPTO_USER=y
->>>> +CONFIG_CRYPTO_USER_API=y
->>>> +CONFIG_CRYPTO_USER_API_RNG=y
->>>> +CONFIG_CRYPTO_HW=y
->>>> +CONFIG_CRYPTO_DEV_JZ4780_RNG=y
->>>>    CONFIG_I2C=y
->>>>    CONFIG_I2C_JZ4780=y
->>>>    CONFIG_GPIO_SYSFS=y
->>>>
->>>
->>> You need to regenerate your defconfig as it is missing CONFIG_MFD_SYSCON.
->>>
->>> Thanks,
->>>
->>> Harvey
->>
->>
->> CONFIG_MFD_SYSCON gets selected when CONFIG_CRYPTO_DEV_JZ4780_RNG is
->> selected. Please see the Kconfig changes. Given that should I add it
->> in ci20_defconfig? If it is required I will add and send a new
->> version.
->
->
-> Oops, I hadn't noticed that - just skimmed the patches before my morning
-> coffee. :-)
->
-> It's fine as is, excuse the noise.
+hmmm, I don't have a very strong opinion, so okay. But from programming PoV
+it reduces human errors..
 
-No issues.
+> #define STM32_MDMA_SET(n, mask)		(((n) << STM32_MDMA_SHIFT(mask)) & mask)
+> 
+> >> +static int stm32_mdma_get_width(struct stm32_mdma_chan *chan,
+> >> +				enum dma_slave_buswidth width)
+> >> +{
+> >> +	switch (width) {
+> >> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+> >> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+> >> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+> >> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
+> >> +		return ffs(width) - 1;
+> >> +	default:
+> >> +		dev_err(chan2dev(chan), "Dma bus width not supported\n");
+> > 
+> > please log the width here, helps in debug...
+> > 
+> 
+> Hum.. just a dev_dbg to log the actual width or within the dev_err ?
 
->
->>
->> Thanks,
->> PrasannaKumar
->>
->
-> Thanks,
->
-> Harvey
->
+latter pls
 
-Regards,
-PrasannaKumar
+> 
+> >> +static u32 stm32_mdma_get_best_burst(u32 buf_len, u32 tlen, u32 max_burst,
+> >> +				     enum dma_slave_buswidth width)
+> >> +{
+> >> +	u32 best_burst = max_burst;
+> >> +	u32 burst_len = best_burst * width;
+> >> +
+> >> +	while ((burst_len > 0) && (tlen % burst_len)) {
+> >> +		best_burst = best_burst >> 1;
+> >> +		burst_len = best_burst * width;
+> >> +	}
+> >> +
+> >> +	return (best_burst > 0) ? best_burst : 1;
+> > 
+> > when would best_burst <= 0? DO we really need this check
+> > 
+> > 
+> 
+> best_burst < 0 is obviously unlikely but =0 is likely whether no best burst
+> found. Se we do need this check.
+> 
+> >> +static struct dma_async_tx_descriptor *
+> >> +stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
+> >> +			   size_t buf_len, size_t period_len,
+> >> +			   enum dma_transfer_direction direction,
+> >> +			   unsigned long flags)
+> >> +{
+> >> +	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
+> >> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
+> >> +	struct dma_slave_config *dma_config = &chan->dma_config;
+> >> +	struct stm32_mdma_desc *desc;
+> >> +	dma_addr_t src_addr, dst_addr;
+> >> +	u32 ccr, ctcr, ctbr, count;
+> >> +	int i, ret;
+> >> +
+> >> +	if (!buf_len || !period_len || period_len > STM32_MDMA_MAX_BLOCK_LEN) {
+> >> +		dev_err(chan2dev(chan), "Invalid buffer/period len\n");
+> >> +		return NULL;
+> >> +	}
+> >> +
+> >> +	if (buf_len % period_len) {
+> >> +		dev_err(chan2dev(chan), "buf_len not multiple of period_len\n");
+> >> +		return NULL;
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	 * We allow to take more number of requests till DMA is
+> >> +	 * not started. The driver will loop over all requests.
+> >> +	 * Once DMA is started then new requests can be queued only after
+> >> +	 * terminating the DMA.
+> >> +	 */
+> >> +	if (chan->busy) {
+> >> +		dev_err(chan2dev(chan), "Request not allowed when dma busy\n");
+> >> +		return NULL;
+> >> +	}
+> > 
+> > is that a HW restriction? Once a txn is completed can't we submit
+> > subsequent txn..? Can you explain this part please.
+> > 
+> 
+> Driver can prepare any request Slave SG, Memcpy or Cyclic. But if the channel is
+> busy to complete a DMA transfer, the request will be put in pending list. This
+> is only when the DMA transfer is going to be completed the next descriptor is
+> going to be processed and started.
+> However for cyclic this is different since when cyclic is ignited the channel
+> will be busy until its termination. This is why we forbid any DMA preparation
+> for this channel.
+> Nonetheless I believe we have a flaw here since we have to forbid
+> Slave/Memcpy/Cyclic whether a cyclic request is on-going.
+
+But you are not submitting a txn to HW. The prepare_xxx operation prepares a
+descriptor which is pushed to pending queue on submit and further pushed to
+hw on queue move or issue_pending()
+
+So here we should ideally accept the request.
+
+After you finish memcpy you can submit a memcpy right...?
+
+> 
+> 
+> >> +	if (len <= STM32_MDMA_MAX_BLOCK_LEN) {
+> >> +		cbndtr |= STM32_MDMA_CBNDTR_BNDT(len);
+> >> +		if (len <= STM32_MDMA_MAX_BUF_LEN) {
+> >> +			/* Setup a buffer transfer */
+> >> +			tlen = len;
+> >> +			ccr |= STM32_MDMA_CCR_TCIE | STM32_MDMA_CCR_CTCIE;
+> >> +			ctcr |= STM32_MDMA_CTCR_TRGM(STM32_MDMA_BUFFER);
+> >> +			ctcr |= STM32_MDMA_CTCR_TLEN((tlen - 1));
+> >> +		} else {
+> >> +			/* Setup a block transfer */
+> >> +			tlen = STM32_MDMA_MAX_BUF_LEN;
+> >> +			ccr |= STM32_MDMA_CCR_BTIE | STM32_MDMA_CCR_CTCIE;
+> >> +			ctcr |= STM32_MDMA_CTCR_TRGM(STM32_MDMA_BLOCK);
+> >> +			ctcr |= STM32_MDMA_CTCR_TLEN(tlen - 1);
+> >> +		}
+> >> +
+> >> +		/* Set best burst size */
+> >> +		max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
+> > 
+> > that maynot be best.. we should have wider and longer burst for best
+> > throughput..
+> > 
+> 
+> Will look at that.
+> 
+> >> +	ret = device_property_read_u32(&pdev->dev, "dma-requests",
+> >> +				       &nr_requests);
+> >> +	if (ret) {
+> >> +		nr_requests = STM32_MDMA_MAX_REQUESTS;
+> >> +		dev_warn(&pdev->dev, "MDMA defaulting on %i request lines\n",
+> >> +			 nr_requests);
+> >> +	}
+> >> +
+> >> +	count = of_property_count_u32_elems(of_node, "st,ahb-addr-masks");
+> > 
+> > We dont have device_property_xxx for this?
+> 
+> Sorry no. Well didn't figure out one though.
+
+we do :) the array property with NULL argument returns the size of array..
+
+int device_property_read_u32_array(struct device *dev, const char *propname,
+				   u32 *val, size_t nval)
+
+Documentation says:
+ Return: number of values if @val was %NULL,
+
+> 
+> > 
+> >> +	if (count < 0)
+> >> +		count = 0;
+> >> +
+> >> +	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
+> >> +			      GFP_KERNEL);
+> >> +	if (!dmadev)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	dmadev->nr_channels = nr_channels;
+> >> +	dmadev->nr_requests = nr_requests;
+> >> +	of_property_read_u32_array(of_node, "st,ahb-addr-masks",
+> >> +				   dmadev->ahb_addr_masks,
+> >> +				   count);
+> > 
+> > i know we have an device api for array reads :)
+> > and I think that helps in former case..
+> > 
+> 
+> Correct :) device_property_read_u32_array
+
+yes..
+
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
