@@ -1,56 +1,37 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH] devfreq: Convert to using %pOF instead of full_name
-Date: Wed, 23 Aug 2017 13:09:53 -0500
-Message-ID: <CAL_JsqL9x16Z76VSAkDUiyEddafYuiH4mFTUur=8LgrJehrFLw@mail.gmail.com>
-References: <20170718214339.7774-17-robh@kernel.org> <CGME20170718214411epcas2p43fc1475c80245889737ba9e731497e38@epcms1p2>
- <596EB809.7050605@samsung.com> <20170720052553epcms1p24dc190a0d51f2e447a76e417e519bd28@epcms1p2>
+Subject: Re: [PATCH] c6x: Convert to using %pOF instead of full_name
+Date: Wed, 23 Aug 2017 13:11:17 -0500
+Message-ID: <CAL_Jsq+FUAhv_W3uqhKWC+M0EcqQJ91B=YcerefY564twfLcBA@mail.gmail.com>
+References: <20170718214339.7774-3-robh@kernel.org> <1500486128.14060.7.camel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170720052553epcms1p24dc190a0d51f2e447a76e417e519bd28@epcms1p2>
+In-Reply-To: <1500486128.14060.7.camel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Aurelien Jacquiot <jacquiot.aurelien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 20, 2017 at 12:25 AM, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> On 2017년 07월 19일 06:42, Rob Herring wrote:
->> > Now that we have a custom printf format specifier, convert users of
->> > full_name to use %pOF instead. This is preparation to remove storing
->> > of the full path string for each node.
->> >
->> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> > Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> > Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> > Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> > ---
->> >  drivers/devfreq/devfreq-event.c | 4 ++--
->> >  1 file changed, 2 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
->> > index 8648b32ebc89..d67242d87744 100644
->> > --- a/drivers/devfreq/devfreq-event.c
->> > +++ b/drivers/devfreq/devfreq-event.c
->> > @@ -277,8 +277,8 @@ int devfreq_event_get_edev_count(struct device *dev)
->> >                                             sizeof(u32));
->> >     if (count < 0) {
->> >             dev_err(dev,
->> > -                   "failed to get the count of devfreq-event in %s node\n",
->> > -                   dev->of_node->full_name);
->> > +                   "failed to get the count of devfreq-event in %pOF node\n",
->> > +                   dev->of_node);
->> >             return count;
->> >     }
->> >
+On Wed, Jul 19, 2017 at 12:42 PM, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> On Tue, 2017-07-18 at 16:42 -0500, Rob Herring wrote:
+>> Now that we have a custom printf format specifier, convert users of
+>> full_name to use %pOF instead. This is preparation to remove storing
+>> of the full path string for each node.
 >>
->> Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Cc: Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>
+>> Cc: linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
+>> ---
+>>  arch/c6x/platforms/megamod-pic.c | 22 +++++++++++-----------
+>>  arch/c6x/platforms/plldata.c     |  4 ++--
+>>  arch/c6x/platforms/timer64.c     |  8 ++++----
+>>  3 files changed, 17 insertions(+), 17 deletions(-)
 >
-> Acked-by: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> For the c6x bits:
+> Acked-by: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Please take this thru the devfreq tree.
+Please take this thru the c6x tree.
 
 Rob
 --
