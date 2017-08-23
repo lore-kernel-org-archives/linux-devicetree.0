@@ -1,76 +1,492 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARC: AXS103: DTS: Set cpu frequency explicitly via
- dts
-Date: Wed, 23 Aug 2017 11:24:15 +0000
-Message-ID: <1503487454.2586.58.camel@synopsys.com>
-References: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
-         <20170814161213.17522-5-Eugeniy.Paltsev@synopsys.com>
-         <4685c3d5-7a2f-78cd-a11b-2eda0de2dd35@synopsys.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Add basic dtsi file for Allwinner
+ R40
+Date: Wed, 23 Aug 2017 19:56:29 +0800
+Message-ID: <ea10374b49489d2250fd804e1fdbf204@aosc.io>
+References: <20170822061742.40869-1-icenowy@aosc.io>
+ <20170822200521.nadkb4335mcc5ah2@flea.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4685c3d5-7a2f-78cd-a11b-2eda0de2dd35-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <0FCCF0542B240B4EA68F16282A2C369C-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+In-Reply-To: <20170822200521.nadkb4335mcc5ah2-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE3LTA4LTIyIGF0IDE0OjQwIC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+
-IE9uIDA4LzE0LzIwMTcgMDk6MTIgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gPiBTZXQg
-Y3B1IGZyZXF1ZW5jeSBleHBsaWNpdGx5IHZpYSAiY3B1LWZyZXEiIHBhcmFtIGluIGNwdSAwIG5v
-ZGUNCj4gPiBpbiBkZXZpY2UgdHJlZS4NCj4gPiANCj4gPiBXZSBhZGQgImNwdS1mcmVxIiBvbmx5
-IHRvIGNwdSAwIGFzIGFsbCBjcHVzIGFyZSBjbG9ja2luZyBmcm9tIHNhbWUNCj4gPiBjbG9jayBz
-b3VyY2UgKHNhbWUgcGxsIGluIG91ciBjYXNlKS4NCj4gPiANCj4gPiBXZSBvdmVycmlkZSBjcHVz
-IG5vZGUgaW4gc2tlbGV0b24gYXMgd2UgZG9uJ3QgbmVlZCB0aGlzIGNoYW5nZSBmb3INCj4gPiBu
-c2ltLg0KPiANCj4gR2l2ZW4gdGhhdCB5b3UgYWRkZWQgYSBnZW5lcmljIGZlYXR1cmUgYXMgcGFy
-dCBvZiAxLzUgLSBkbyBvdGhlcg0KPiBwbGF0Zm9ybXPCoA0KPiBhYmlsaXMvbnBzIG5lZWQgY29y
-cmVzcG9uZGluZyBmaXh1cHMgYXMgdGhpcyBvbmUgIQ0KDQpBY3R1YWxseSBuby4NCklmIGNwdSAw
-IG5vZGUgZG9uJ3QgaGF2ZSAiY3B1LWZyZXEiIHByb3BlcnR5IHdlIHNpbXBseSBwcmludCBjcHUN
-CmZyZXF1ZW5jeSBhbmQgZG9uJ3QgdHJ5IHRvIGNoYW5nZSBpdC4NClNvIHdlIGNhbiBsZWZ0IG90
-aGVyIGR0cyB1bnRvdWNoZWQuIA0KDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogRXVnZW5peSBQ
-YWx0c2V2IDxFdWdlbml5LlBhbHRzZXZAc3lub3BzeXMuY29tPg0KPiA+IC0tLQ0KPiA+IMKgIGFy
-Y2gvYXJjL2Jvb3QvZHRzL2F4YzAwMy5kdHNpwqDCoMKgwqDCoHwgMTMgKysrKysrKysrKysrKw0K
-PiA+IMKgIGFyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwM19pZHUuZHRzaSB8IDM1DQo+ID4gKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiDCoCAyIGZpbGVzIGNoYW5nZWQsIDQ4
-IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMv
-YXhjMDAzLmR0c2kNCj4gPiBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwMy5kdHNpDQo+ID4gaW5k
-ZXggZGNhN2UzOS4uN2M3NDExYyAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FyYy9ib290L2R0cy9h
-eGMwMDMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwMy5kdHNpDQo+ID4g
-QEAgLTE3LDYgKzE3LDE5IEBADQo+ID4gwqDCoAkjYWRkcmVzcy1jZWxscyA9IDwyPjsNCj4gPiDC
-oMKgCSNzaXplLWNlbGxzID0gPDI+Ow0KPiA+IMKgwqANCj4gPiArCWNwdXMgew0KPiA+ICsJCSNh
-ZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4g
-PiArCQljcHVAMCB7DQo+ID4gKwkJCWRldmljZV90eXBlID0gImNwdSI7DQo+ID4gKwkJCWNvbXBh
-dGlibGUgPSAic25wcyxhcmNoczM4IjsNCj4gPiArCQkJcmVnID0gPDA+Ow0KPiA+ICsJCQljcHUt
-ZnJlcSA9IDwxMDAwMDAwMDA+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNvcmVfY2xrPjsNCj4gPiAr
-CQl9Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gwqDCoAljcHVfY2FyZCB7DQo+ID4gwqDCoAkJY29t
-cGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsNCj4gPiDCoMKgCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsN
-Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhjMDAzX2lkdS5kdHNpDQo+ID4g
-Yi9hcmNoL2FyYy9ib290L2R0cy9heGMwMDNfaWR1LmR0c2kNCj4gPiBpbmRleCA1YjU2YmVmLi40
-NGJjMDFlIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwM19pZHUuZHRz
-aQ0KPiA+ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwM19pZHUuZHRzaQ0KPiA+IEBAIC0x
-Nyw2ICsxNyw0MSBAQA0KPiA+IMKgwqAJI2FkZHJlc3MtY2VsbHMgPSA8Mj47DQo+ID4gwqDCoAkj
-c2l6ZS1jZWxscyA9IDwyPjsNCj4gPiDCoMKgDQo+ID4gKwljcHVzIHsNCj4gPiArCQkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArDQo+ID4gKwkJ
-LyoNCj4gPiArCQnCoCogImNwdS1mcmVxIiB3YXMgYWRkZWQgb25seSB0byBjcHUgMCBhcyBhbGwg
-Y3B1cw0KPiA+IGFyZSBjbG9ja2luZw0KPiA+ICsJCcKgKiBmcm9tIHNhbWUgY2xvY2sgc291cmNl
-IChzYW1lIHBsbCAoY29yZV9jbGspIGluDQo+ID4gb3VyIGNhc2UpLg0KPiA+ICsJCcKgKi8NCj4g
-PiArCQljcHVAMCB7DQo+ID4gKwkJCWRldmljZV90eXBlID0gImNwdSI7DQo+ID4gKwkJCWNvbXBh
-dGlibGUgPSAic25wcyxhcmNoczM4IjsNCj4gPiArCQkJcmVnID0gPDA+Ow0KPiA+ICsJCQljcHUt
-ZnJlcSA9IDwxMDAwMDAwMDA+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNvcmVfY2xrPjsNCj4gPiAr
-CQl9Ow0KPiA+ICsJCWNwdUAxIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiAr
-CQkJY29tcGF0aWJsZSA9ICJzbnBzLGFyY2hzMzgiOw0KPiA+ICsJCQlyZWcgPSA8MT47DQo+ID4g
-KwkJCWNsb2NrcyA9IDwmY29yZV9jbGs+Ow0KPiA+ICsJCX07DQo+ID4gKwkJY3B1QDIgew0KPiA+
-ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KPiA+ICsJCQljb21wYXRpYmxlID0gInNucHMsYXJj
-aHMzOCI7DQo+ID4gKwkJCXJlZyA9IDwyPjsNCj4gPiArCQkJY2xvY2tzID0gPCZjb3JlX2Nsaz47
-DQo+ID4gKwkJfTsNCj4gPiArCQljcHVAMyB7DQo+ID4gKwkJCWRldmljZV90eXBlID0gImNwdSI7
-DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAic25wcyxhcmNoczM4IjsNCj4gPiArCQkJcmVnID0gPDM+
-Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNvcmVfY2xrPjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4g
-PiArDQo+ID4gwqDCoAljcHVfY2FyZCB7DQo+ID4gwqDCoAkJY29tcGF0aWJsZSA9ICJzaW1wbGUt
-YnVzIjsNCj4gPiDCoMKgCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gDQo+IA0KLS0gDQrCoEV1
-Z2VuaXkgUGFsdHNldg==
+在 2017-08-23 04:05，Maxime Ripard 写道：
+> Hi,
+> 
+> On Tue, Aug 22, 2017 at 02:17:40PM +0800, Icenowy Zheng wrote:
+>> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> 
+>> The Allwinner R40 SoC is marketed as the successor to the A20 SoC.
+>> The R40 is a smaller chip than the A20, but features the same set
+>> of programmable pins, with a couple extra pins and some new pin
+>> functions. The chip features 4 Cortex-A7 cores and a Mali-400 MP2
+>> GPU. It retains most if not all features from the A20, while adding
+>> some new features, such as MIPI DSI output, or updating various
+>> hardware blocks, such as DE 2.0.
+>> 
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> 
+> I'm not sure why you have two series to achieve one thing here. And
+> the fact that you don't have a cover letter doesn't make it any
+> clearer.
+> 
+> Please make series based on what you're trying to do and not split it
+> arbitrarily. And document what you're doing in a cover letter.
+> 
+>> ---
+>>  arch/arm/boot/dts/sun8i-r40.dtsi | 396 
+>> +++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 396 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun8i-r40.dtsi
+>> 
+>> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi 
+>> b/arch/arm/boot/dts/sun8i-r40.dtsi
+>> new file mode 100644
+>> index 000000000000..5b48801bdd01
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+>> @@ -0,0 +1,396 @@
+>> +/*
+>> + * Copyright 2017 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> + * Copyright 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of 
+>> the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the 
+>> Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY 
+>> KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+>> WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/sun8i-r40-ccu.h>
+>> +#include <dt-bindings/reset/sun8i-r40-ccu.h>
+>> +
+>> +/ {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +	interrupt-parent = <&gic>;
+>> +
+>> +	clocks {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		osc24M: osc24M {
+>> +			#clock-cells = <0>;
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <24000000>;
+>> +			clock-output-names = "osc24M";
+>> +		};
+>> +
+>> +		osc32k: osc32k {
+>> +			#clock-cells = <0>;
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <32768>;
+>> +			clock-output-names = "osc32k";
+>> +		};
+>> +	};
+>> +
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu@0 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <0>;
+>> +		};
+>> +
+>> +		cpu@1 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <1>;
+>> +		};
+>> +
+>> +		cpu@2 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <2>;
+>> +		};
+>> +
+>> +		cpu@3 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <3>;
+>> +		};
+>> +	};
+>> +
+>> +	soc {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		nmi_intc: interrupt-controller@1c00030 {
+>> +			compatible = "allwinner,sun7i-a20-sc-nmi";
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>> +			reg = <0x01c00030 0x0c>;
+>> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+>> +		};
+> 
+> You should use the new compatible here.
+> 
+>> +		mmc0: mmc@1c0f000 {
+>> +			compatible = "allwinner,sun50i-a64-mmc";
+> 
+> Please add a soc specific compatible for all the blocks.
+> 
+>> +			reg = <0x01c0f000 0x1000>;
+>> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+>> +			clock-names = "ahb", "mmc";
+>> +			resets = <&ccu RST_BUS_MMC0>;
+>> +			reset-names = "ahb";
+>> +			pinctrl-0 = <&mmc0_pins>;
+>> +			pinctrl-names = "default";
+>> +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-frequency = <150000000>;
+> 
+> have you tested that frequency?
+
+I think the frequency should be kept here, although my cards cannot
+reach this frequency.
+
+The numbers are same as the corresponding controllers in A64.
+
+Maybe I should add a comment saying it's educated guess?
+
+> 
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		mmc1: mmc@1c10000 {
+>> +			compatible = "allwinner,sun50i-a64-mmc";
+>> +			reg = <0x01c10000 0x1000>;
+>> +			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
+>> +			clock-names = "ahb", "mmc";
+>> +			resets = <&ccu RST_BUS_MMC1>;
+>> +			reset-names = "ahb";
+>> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-frequency = <150000000>;
+> 
+> Ditto.
+> 
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		mmc2: mmc@1c11000 {
+>> +			compatible = "allwinner,sun50i-a64-emmc";
+>> +			reg = <0x01c11000 0x1000>;
+>> +			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
+>> +			clock-names = "ahb", "mmc";
+>> +			resets = <&ccu RST_BUS_MMC2>;
+>> +			reset-names = "ahb";
+>> +			pinctrl-0 = <&mmc2_pins>;
+>> +			pinctrl-names = "default";
+>> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-frequency = <200000000>;
+> 
+> Ditto.
+> 
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		mmc3: mmc@1c12000 {
+>> +			compatible = "allwinner,sun50i-a64-mmc";
+>> +			reg = <0x01c12000 0x1000>;
+>> +			clocks = <&ccu CLK_BUS_MMC3>, <&ccu CLK_MMC3>;
+>> +			clock-names = "ahb", "mmc";
+>> +			resets = <&ccu RST_BUS_MMC3>;
+>> +			reset-names = "ahb";
+>> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-frequency = <150000000>;
+> 
+> Ditto.
+> 
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		ccu: clock@1c20000 {
+>> +			compatible = "allwinner,sun8i-r40-ccu";
+>> +			reg = <0x01c20000 0x400>;
+>> +			clocks = <&osc24M>, <&osc32k>;
+>> +			clock-names = "hosc", "losc";
+>> +			#clock-cells = <1>;
+>> +			#reset-cells = <1>;
+>> +		};
+>> +
+>> +		pio: pinctrl@1c20800 {
+>> +			compatible = "allwinner,sun8i-r40-pinctrl";
+>> +			reg = <0x01c20800 0x400>;
+>> +			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
+>> +			clock-names = "apb", "hosc", "losc";
+>> +			gpio-controller;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+>> +			#gpio-cells = <3>;
+>> +
+>> +			i2c0_pins: i2c0-pins {
+>> +				pins = "PB0", "PB1";
+>> +				function = "i2c0";
+>> +			};
+>> +
+>> +			mmc0_pins: mmc0-pins {
+>> +				pins = "PF0", "PF1", "PF2",
+>> +				       "PF3", "PF4", "PF5";
+>> +				function = "mmc0";
+>> +				drive-strength = <30>;
+>> +				bias-pull-up;
+>> +			};
+>> +
+>> +			mmc1_pg_pins: mmc1-pg-pins {
+>> +				pins = "PG0", "PG1", "PG2",
+>> +				       "PG3", "PG4", "PG5";
+>> +				function = "mmc1";
+>> +				drive-strength = <30>;
+>> +				bias-pull-up;
+>> +			};
+>> +
+>> +			mmc2_pins: mmc2-pins {
+>> +				pins = "PC5", "PC6", "PC7", "PC8", "PC9",
+>> +				       "PC10", "PC11", "PC12", "PC13", "PC14",
+>> +				       "PC15", "PC24";
+>> +				function = "mmc2";
+>> +				drive-strength = <30>;
+>> +				bias-pull-up;
+>> +			};
+>> +
+>> +			uart0_pb_pins: uart0-pb-pins {
+>> +				pins = "PB22", "PB23";
+>> +				function = "uart0";
+>> +			};
+>> +		};
+>> +
+>> +		uart0: serial@1c28000 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28000 0x400>;
+>> +			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART0>;
+>> +			resets = <&ccu RST_BUS_UART0>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart1: serial@1c28400 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28400 0x400>;
+>> +			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART1>;
+>> +			resets = <&ccu RST_BUS_UART1>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart2: serial@1c28800 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28800 0x400>;
+>> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART2>;
+>> +			resets = <&ccu RST_BUS_UART2>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart3: serial@1c28c00 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28c00 0x400>;
+>> +			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART3>;
+>> +			resets = <&ccu RST_BUS_UART3>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart4: serial@1c29000 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c29000 0x400>;
+>> +			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART4>;
+>> +			resets = <&ccu RST_BUS_UART4>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart5: serial@1c29400 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c29400 0x400>;
+>> +			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART5>;
+>> +			resets = <&ccu RST_BUS_UART5>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart6: serial@1c29800 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c29800 0x400>;
+>> +			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART6>;
+>> +			resets = <&ccu RST_BUS_UART6>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart7: serial@1c29c00 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c29c00 0x400>;
+>> +			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&ccu CLK_BUS_UART7>;
+>> +			resets = <&ccu RST_BUS_UART7>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		i2c0: i2c@1c2ac00 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2ac00 0x400>;
+>> +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C0>;
+>> +			resets = <&ccu RST_BUS_I2C0>;
+>> +			pinctrl-0 = <&i2c0_pins>;
+>> +			pinctrl-names = "default";
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		i2c1: i2c@1c2b000 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2b000 0x400>;
+>> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C1>;
+>> +			resets = <&ccu RST_BUS_I2C1>;
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		i2c2: i2c@1c2b400 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2b400 0x400>;
+>> +			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C2>;
+>> +			resets = <&ccu RST_BUS_I2C2>;
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		i2c3: i2c@1c2b800 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2b800 0x400>;
+>> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C3>;
+>> +			resets = <&ccu RST_BUS_I2C3>;
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		i2c4: i2c@1c2c000 {
+>> +			compatible = "allwinner,sun6i-a31-i2c";
+>> +			reg = <0x01c2c000 0x400>;
+>> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&ccu CLK_BUS_I2C4>;
+>> +			resets = <&ccu RST_BUS_I2C4>;
+>> +			status = "disabled";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +
+>> +		gic: interrupt-controller@1c81000 {
+>> +			compatible = "arm,gic-400";
+>> +			reg = <0x01c81000 0x1000>,
+>> +			      <0x01c82000 0x1000>,
+>> +			      <0x01c84000 0x2000>,
+>> +			      <0x01c86000 0x2000>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+>> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | 
+>> IRQ_TYPE_LEVEL_HIGH)>;
+>> +		};
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv7-timer";
+>> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | 
+>> IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> 
+> Those masks are wrong.
+
+I compared it with other sun8i SoCs' device tree.
+
+Where's wrong?
+
+> 
+> Maxime
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
