@@ -1,48 +1,92 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] gpio: Add driver for Maxim MAX3191x industrial serializer
-Date: Wed, 23 Aug 2017 10:09:56 +0200
-Message-ID: <CACRpkdYVSTgPo=7DVWr+RMMOZma8pzzmA9AAdjWhy-LVJ35RvQ@mail.gmail.com>
-References: <cover.1503319573.git.lukas@wunner.de> <df530ae703fcfdf52d27a1b6d19b6d1a4724b103.1503319573.git.lukas@wunner.de>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 0/3] AS3645A flash support
+Date: Wed, 23 Aug 2017 11:10:57 +0300
+Message-ID: <20170823081100.11733-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <df530ae703fcfdf52d27a1b6d19b6d1a4724b103.1503319573.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, javier@dowhile0.org, jacek.anaszewski@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 3:12 PM, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
+Hi everyone,
 
-> The driver was developed for and tested with the MAX31913 built into
-> the Revolution Pi by KUNBUS, but should work with all members of the
-> MAX3191x family:
->
-> MAX31910: low power
-> MAX31911: LED drivers
-> MAX31912: LED drivers + 2nd voltage monitor + low power
-> MAX31913: LED drivers + 2nd voltage monitor
-> MAX31953: LED drivers + 2nd voltage monitor + isolation
-> MAX31963: LED drivers + 2nd voltage monitor + isolation + buck regulator
->
-> They are similar to but more versatile than the TI SN65HVS880/2/3/5
-> supported by gpio-pisosr.c as they clock out a CRC checksum to guard
-> against electromagnetic interference, as well as undervoltage and
-> overtemperature indicator bits.  If these features are not needed
-> they can be disabled by pulling the "modesel" pin high and then
-> gpio-pisosr.c can be used instead of the present driver.
->
-> Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
-> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+This set adds support for the AS3645A flash driver which can be found e.g.
+in Nokia N9.
 
-This looks like a fine piece of driver.
+The set depeds on the flash patches here so I'd prefer to merge this
+through mediatree.
 
-We just need to get the infrastructure in place and I can
-merge it.
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=flash>
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+since v2:
+
+- Add acks.
+
+- Improve commit message in dt binding patch.
+
+- Align From header and SoB tags.
+
+Since v1:
+
+- Fix flash label use.
+
+- Drop "flash" property from sensors in N9 DTS patch. This will reappear in
+  a sepeate patch after the "flash" binding documentation patch.
+
+- Remove PM support from the driver (the LED framework handles this).
+
+- Enable runtime PM un as3645a driver.
+
+- Add I²C device ID table for module autoloading.
+
+- Add label to the binding examples as well as reference to common.txt.
+
+- Document label as an optional property for both LED sub-nodes.
+
+Since the RFC set:
+
+- Add back the DT binding documentation I lost long ago.
+
+- Use colon (":") in the default names instead of a space.
+
+Sakari Ailus (3):
+  dt: bindings: Document DT bindings for Analog devices as3645a
+  leds: as3645a: Add LED flash class driver
+  arm: dts: omap3: N9/N950: Add AS3645A camera flash
+
+ .../devicetree/bindings/leds/ams,as3645a.txt       |  71 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/omap3-n950-n9.dtsi               |  14 +
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-as3645a.c                        | 770 +++++++++++++++++++++
+ 6 files changed, 870 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/ams,as3645a.txt
+ create mode 100644 drivers/leds/leds-as3645a.c
+
+-- 
+2.11.0
+
+
+*** BLURB HERE ***
+
+Sakari Ailus (3):
+  dt: bindings: Document DT bindings for Analog devices as3645a
+  leds: as3645a: Add LED flash class driver
+  arm: dts: omap3: N9/N950: Add AS3645A camera flash
+
+ .../devicetree/bindings/leds/ams,as3645a.txt       |  71 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/omap3-n950-n9.dtsi               |  14 +
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-as3645a.c                        | 763 +++++++++++++++++++++
+ 6 files changed, 863 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/ams,as3645a.txt
+ create mode 100644 drivers/leds/leds-as3645a.c
+
+-- 
+2.11.0
