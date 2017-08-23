@@ -1,107 +1,89 @@
 From: Sandy Huang <hjc@rock-chips.com>
-Subject: [PATCH v7 2/3] ARM: dts: Add LVDS info for rk3288
-Date: Wed, 23 Aug 2017 14:27:04 +0800
-Message-ID: <1503469625-39519-1-git-send-email-hjc@rock-chips.com>
+Subject: [PATCH v7 1/3] dt-bindings: display: Add Document for Rockchip Soc
+ LVDS
+Date: Wed, 23 Aug 2017 14:26:59 +0800
+Message-ID: <1503469622-39462-1-git-send-email-hjc@rock-chips.com>
 References: <1503469615-39406-1-git-send-email-hjc@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1503469615-39406-1-git-send-email-hjc@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Sandy Huang <hjc@rock-chips.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-add LVDS info in rk3288.dtsi for LVDS driver
-This based on the patches from Mark yao and Heiko Stuebner.
-
-Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-Signed-off-by: Mark yao <mark.yao@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- arch/arm/boot/dts/rk3288.dtsi | 52 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 2484f11..c2e33b8 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -983,6 +983,11 @@
- 				reg = <2>;
- 				remote-endpoint = <&mipi_in_vopb>;
- 			};
-+
-+			vopb_out_lvds: endpoint@3 {
-+				reg = <3>;
-+				remote-endpoint = <&lvds_in_vopb>;
-+			};
- 		};
- 	};
- 
-@@ -1026,6 +1031,11 @@
- 				reg = <2>;
- 				remote-endpoint = <&mipi_in_vopl>;
- 			};
-+
-+			vopl_out_lvds: endpoint@3 {
-+				reg = <3>;
-+				remote-endpoint = <&lvds_in_vopl>;
-+			};
- 		};
- 	};
- 
-@@ -1099,6 +1109,39 @@
- 		};
- 	};
- 
-+	lvds: lvds@ff96c000 {
-+		compatible = "rockchip,rk3288-lvds";
-+		reg = <0xff96c000 0x4000>;
-+		clocks = <&cru PCLK_LVDS_PHY>;
-+		clock-names = "pclk_lvds";
-+		pinctrl-names = "lcdc";
-+		pinctrl-0 = <&lcdc_ctl>;
-+		power-domains = <&power RK3288_PD_VIO>;
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			lvds_in: port@0 {
-+				reg = <0>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				lvds_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_lvds>;
-+				};
-+				lvds_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_lvds>;
-+				};
-+			};
-+		};
-+	};
-+
- 	hdmi: hdmi@ff980000 {
- 		compatible = "rockchip,rk3288-dw-hdmi";
- 		reg = <0xff980000 0x20000>;
-@@ -1823,5 +1866,14 @@
- 				rockchip,pins = <RK_GPIO6 11 RK_FUNC_1 &pcfg_pull_none>;
- 			};
- 		};
-+
-+		lcdc {
-+			lcdc_ctl: lcdc-ctl {
-+				rockchip,pins = <1 24 RK_FUNC_1 &pcfg_pull_none>,
-+						<1 25 RK_FUNC_1 &pcfg_pull_none>,
-+						<1 26 RK_FUNC_1 &pcfg_pull_none>,
-+						<1 27 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
- 	};
- };
--- 
-2.7.4
+VGhpcyBwYXRjaCBhZGQgRG9jdW1lbnQgZm9yIFJvY2tjaGlwIFNvYyBSSzMyODggTFZEUywKVGhp
+cyBiYXNlZCBvbiB0aGUgcGF0Y2hlcyBmcm9tIE1hcmsgeWFvIGFuZCBIZWlrbyBTdHVlYm5lci4K
+ClNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1v
+ZmYtYnk6IE1hcmsgeWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KU2lnbmVkLW9mZi1ieTog
+SGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KLS0tCgpDaGFuZ2VzIGFjY29yZGluZyB0
+byBSb2IgSGVycmluZydzIHJldmlldy4gICAgCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2No
+aXAvcm9ja2NoaXAtbHZkcy50eHQgICAgfCA5OSArKysrKysrKysrKysrKysrKysrKysrCiAxIGZp
+bGUgY2hhbmdlZCwgOTkgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMu
+dHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dApuZXcgZmlsZSBtb2Rl
+IDEwMDY0NAppbmRleCAwMDAwMDAwLi5kYTY5MzllCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZk
+cy50eHQKQEAgLTAsMCArMSw5OSBAQAorUm9ja2NoaXAgUkszMjg4IExWRFMgaW50ZXJmYWNlCis9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgor
+LSBjb21wYXRpYmxlOiBtYXRjaGluZyB0aGUgc29jIHR5cGUsIG9uZSBvZgorCS0gInJvY2tjaGlw
+LHJrMzI4OC1sdmRzIjsKKworLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgY29u
+dHJvbGxlciBhbmQgbGVuZ3RoCisJb2YgbWVtb3J5IG1hcHBlZCByZWdpb24uCistIGNsb2Nrczog
+bXVzdCBpbmNsdWRlIGNsb2NrIHNwZWNpZmllcnMgY29ycmVzcG9uZGluZyB0byBlbnRyaWVzIGlu
+IHRoZQorCWNsb2NrLW5hbWVzIHByb3BlcnR5LgorLSBjbG9jay1uYW1lczogbXVzdCBjb250YWlu
+ICJwY2xrX2x2ZHMiCisKKy0gYXZkZDF2MC1zdXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAx
+LjBWIGFuYWxvZyBwb3dlcgorLSBhdmRkMXY4LXN1cHBseTogcmVndWxhdG9yIHBoYW5kbGUgZm9y
+IDEuOFYgYW5hbG9nIHBvd2VyCistIGF2ZGQzdjMtc3VwcGx5OiByZWd1bGF0b3IgcGhhbmRsZSBm
+b3IgMy4zViBhbmFsb2cgcG93ZXIKKworLSByb2NrY2hpcCxncmY6IHBoYW5kbGUgdG8gdGhlIGdl
+bmVyYWwgcmVnaXN0ZXIgZmlsZXMgc3lzY29uCistIHJvY2tjaGlwLG91dHB1dDogInJnYiIsICJs
+dmRzIiBvciAiZHVhbGx2ZHMiLCBUaGlzIGRlc2NyaWJlcyB0aGUgb3V0cHV0IGludGVyZmFjZQor
+CitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBwaW5jdHJsLW5hbWVzOiBtdXN0IGNvbnRhaW4gYSAi
+bGNkYyIgZW50cnkuCistIHBpbmN0cmwtMDogcGluIGNvbnRyb2wgZ3JvdXAgdG8gYmUgdXNlZCBm
+b3IgdGhpcyBjb250cm9sbGVyLgorCitSZXF1aXJlZCBub2RlczoKKworVGhlIGx2ZHMgaGFzIHR3
+byB2aWRlbyBwb3J0cyBhcyBkZXNjcmliZWQgYnkKKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKK1RoZWlyIGNvbm5lY3Rpb25zIGFy
+ZSBtb2RlbGVkIHVzaW5nIHRoZSBPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4KKwlEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0LgorCistIHZpZGVvIHBvcnQg
+MCBmb3IgdGhlIFZPUCBpbnB1dCwgdGhlIHJlbW90ZSBlbmRwb2ludCBtYXliZSB2b3BiIG9yIHZv
+cGwKKy0gdmlkZW8gcG9ydCAxIGZvciBlaXRoZXIgYSBwYW5lbCBvciBzdWJzZXF1ZW50IGVuY29k
+ZXIKKwordGhlIGx2ZHMgcGFuZWwgZGVzY3JpYmVkIGJ5CisJRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAorCitQYW5lbCByZXF1
+aXJlZCBwcm9wZXJ0aWVzOgorLSBwb3J0cyBmb3IgcmVtb3RlIExWRFMgb3V0cHV0CisKK1BhbmVs
+IG9wdGlvbmFsIHByb3BlcnRpZXM6CistIGRhdGEtbWFwcGluZzogc2hvdWxkIGJlICJ2ZXNhLTI0
+IiwiamVpZGEtMjQiIG9yICJqZWlkYS0xOCIuCitUaGlzIGRlc2NyaWJlcyBkZWNyaWJlZCBieToK
+KwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1s
+dmRzLnR4dAorCitFeGFtcGxlOgorCitsdmRzX3BhbmVsOiBsdmRzLXBhbmVsIHsKKwljb21wYXRp
+YmxlID0gImF1byxiMTAxZWFuMDEiOworCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbzcgMjEgR1BJT19B
+Q1RJVkVfSElHSD47CisJZGF0YS1tYXBwaW5nID0gImplaWRhLTI0IjsKKworCXBvcnRzIHsKKwkJ
+cGFuZWxfaW5fbHZkczogZW5kcG9pbnQgeworCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzX291
+dF9wYW5lbD47CisJCX07CisJfTsKK307CisKK0ZvciBSb2NrY2hpcCBSSzMyODg6CisKKwlsdmRz
+OiBsdmRzQGZmOTZjMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMyODgtbHZkcyI7
+CisJCXJvY2tjaGlwLGdyZiA9IDwmZ3JmPjsKKwkJcmVnID0gPDB4ZmY5NmMwMDAgMHg0MDAwPjsK
+KwkJY2xvY2tzID0gPCZjcnUgUENMS19MVkRTX1BIWT47CisJCWNsb2NrLW5hbWVzID0gInBjbGtf
+bHZkcyI7CisJCXBpbmN0cmwtbmFtZXMgPSAibGNkYyI7CisJCXBpbmN0cmwtMCA9IDwmbGNkY19j
+dGw+OworCQlhdmRkMXYwLXN1cHBseSA9IDwmdmRkMTBfbGNkPjsKKwkJYXZkZDF2OC1zdXBwbHkg
+PSA8JnZjYzE4X2xjZD47CisJCWF2ZGQzdjMtc3VwcGx5ID0gPCZ2Y2NhXzMzPjsKKwkJcm9ja2No
+aXAsb3V0cHV0ID0gInJnYiI7CisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owor
+CQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCWx2ZHNfaW46IHBvcnRAMCB7CisJCQkJcmVnID0g
+PDA+OworCisJCQkJbHZkc19pbl92b3BiOiBlbmRwb2ludEAwIHsKKwkJCQkJcmVnID0gPDA+Owor
+CQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGJfb3V0X2x2ZHM+OworCQkJCX07CisJCQkJbHZk
+c19pbl92b3BsOiBlbmRwb2ludEAxIHsKKwkJCQkJcmVnID0gPDE+OworCQkJCQlyZW1vdGUtZW5k
+cG9pbnQgPSA8JnZvcGxfb3V0X2x2ZHM+OworCQkJCX07CisJCQl9OworCisJCQlsdmRzX291dDog
+cG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisKKwkJCQlsdmRzX291dF9wYW5lbDogZW5kcG9pbnQg
+eworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luX2x2ZHM+OworCQkJCX07CisJCQl9
+OworCQl9OworCX07Ci0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
