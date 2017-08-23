@@ -1,44 +1,70 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 4/4] crypto: jz4780-rng: Enable PRNG support in CI20 defconfig
-Date: Wed, 23 Aug 2017 08:27:07 +0530
-Message-ID: <20170823025707.27888-5-prasannatsmkumar@gmail.com>
-References: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170823025707.27888-1-prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, noloader-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 3/5] dt-bindings: sdhci-omap: Add bindings for the
+ sdhci-omap controller
+Date: Wed, 23 Aug 2017 11:12:46 +0530
+Message-ID: <20170823054246.23927-1-kishon@ti.com>
+References: <20170821142132.GH6008@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170821142132.GH6008@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable PRNG driver support in MIPS Creator CI20 default config.
+Add binding for the TI's sdhci-omap controller. This now includes only
+a subset of properties documented in ti-omap-hsmmc.txt but will eventually
+include all the properties.
 
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
-No changes in v2
+Changes from v2:
+*) Fixed example to use the updated compatible
 
- arch/mips/configs/ci20_defconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes from v1:
+*) Create a new sdhci-omap.txt document for TI's sdhci-omap controller instead
+   of using the ti-omap-hsmmc.txt as suggested by Tony
+ .../devicetree/bindings/mmc/sdhci-omap.txt         | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-omap.txt
 
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index b42cfa7..9f48f2c 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -88,6 +88,11 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=5
- CONFIG_SERIAL_8250_INGENIC=y
- CONFIG_SERIAL_OF_PLATFORM=y
- # CONFIG_HW_RANDOM is not set
-+CONFIG_CRYPTO_USER=y
-+CONFIG_CRYPTO_USER_API=y
-+CONFIG_CRYPTO_USER_API_RNG=y
-+CONFIG_CRYPTO_HW=y
-+CONFIG_CRYPTO_DEV_JZ4780_RNG=y
- CONFIG_I2C=y
- CONFIG_I2C_JZ4780=y
- CONFIG_GPIO_SYSFS=y
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+new file mode 100644
+index 000000000000..139695ad2d58
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+@@ -0,0 +1,22 @@
++* TI OMAP SDHCI Controller
++
++Refer to mmc.txt for standard MMC bindings.
++
++Required properties:
++- compatible: Should be "ti,dra7-sdhci" for DRA7 and DRA72 controllers
++- ti,hwmods: Must be "mmc<n>", <n> is controller instance starting 1
++
++Optional properties:
++- ti,dual-volt: boolean, supports dual voltage cards
++- ti,non-removable: non-removable slot (like eMMC)
++
++Example:
++	mmc1: mmc@0x4809c000 {
++		compatible = "ti,dra7-sdhci";
++		reg = <0x4809c000 0x400>;
++		ti,hwmods = "mmc1";
++		ti,dual-volt;
++		bus-width = <4>;
++		vmmc-supply = <&vmmc>; /* phandle to regulator node */
++		ti,non-removable;
++	};
 -- 
-2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
