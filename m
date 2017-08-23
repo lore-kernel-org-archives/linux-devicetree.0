@@ -1,69 +1,91 @@
-From: wlf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: usb: add DT binding for RK3328 dwc3
- controller
-Date: Wed, 23 Aug 2017 20:22:42 +0800
-Message-ID: <4406bd06-8b2b-9e30-f0b4-b41596622782@rock-chips.com>
-References: <1503322566-31489-1-git-send-email-william.wu@rock-chips.com>
- <1503322566-31489-2-git-send-email-william.wu@rock-chips.com>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
+Date: Wed, 23 Aug 2017 18:27:22 +0530
+Message-ID: <632ae6ac77226ed528dbc50b2ca9ac9f@codeaurora.org>
+References: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
+ <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
+ <20170822085541.GB3685@dragon> <20170822203132.GC21656@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503322566-31489-2-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170822203132.GC21656@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, gregkh@linuxfoundation.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Abhijeet Dharmapurikar <adharmap@codeaurora.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Balbi & Gregkh,
+On 2017-08-23 02:01, Stephen Boyd wrote:
+> On 08/22, Shawn Guo wrote:
+>> On Mon, Aug 21, 2017 at 04:18:58PM -0700, Stephen Boyd wrote:
+>> > On 08/18/2017 08:28 AM, Kiran Gunda wrote:
+>> > > The peripheral ownership check is not necessary on single master
+>> > > platforms. Hence, enforce the peripheral ownership check optionally.
+>> > >
+>> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> > > Tested-by: Shawn Guo <shawnguo@kernel.org>
+>> > > ---
+>> >
+>> > This sounds like a band-aid. Isn't the gpio driver going to keep probing
+>> > all the pins that are not supposed to be accessed due to security
+>> > constraints? What exactly is failing in the gpio case?
+>> 
+>> There is a platform_irq_count() call in pinctrl-spmi-gpio probe
+>> function.  Due to the owner check in spmi-pmic-arb IRQ domain
+>> qpnpint_irq_domain_dt_translate() function, the call will return irq
+>> number as zero and cause pmic_gpio_probe() fail with -EINVAL error.
+>> 
+>> [    1.608516] [<ffff00000860e51c>] 
+>> qpnpint_irq_domain_dt_translate+0x168/0x194
+>> [    1.613557] [<ffff000008117040>] 
+>> irq_create_fwspec_mapping+0x17c/0x2d8
+>> [    1.620672] [<ffff000008117200>] irq_create_of_mapping+0x64/0x74
+>> [    1.627008] [<ffff0000087b4fac>] of_irq_get+0x54/0x64
+>> [    1.633169] [<ffff00000856b824>] platform_get_irq+0x20/0x150
+>> [    1.638117] [<ffff00000856b97c>] platform_irq_count+0x28/0x44
+>> [    1.643850] [<ffff0000083cf12c>] pmic_gpio_probe+0x50/0x544
+>> 
+> 
+> Hmm. Ok. I guess platform_irq_count() has to go and create irq
+> mappings if they haven't been created yet and that then causes us
+> to check if we can even get the interrupt for this particular
+> irq? There are some interrupt lines that are not routed to the
+> application processor in the system, so the irq_ee (irq execution
+> environment) is different. This check is there to avoid creating
+> flow handlers for irqs that can't be triggered.
+> 
+> I can see how trying to request that irq doesn't make sense,
+> because it won't ever happen. But preventing that from being
+> translated is confusing. Perhaps we can move the check for irq_ee
+> to the irq_request_resources() callback in the irqchip? That way,
+> we can fail installing the flow handler for the interrupt we
+> can't ever receive, but otherwise translate the interrupt number
+> so we can keep counting them.
+> 
+Hi Stephen,
+The idea to move the ownership check to irq_request_resources sounds 
+good.
+I am dropping this patch and sent the new patch to move the irq 
+ownership to
+irq_request_resource. Following is the patchwork link.
 
-在 2017年08月21日 21:36, William Wu 写道:
-> Adds the device tree bindings description for RK3328 and
-> compatible USB DWC3 controller.
->
-> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> Changes in v3:
-> - Add this for separate usb dt-bindings patch.
->
-> Changes in v2:
-> - None
->
->   Documentation/devicetree/bindings/usb/rockchip,dwc3.txt | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-> index 0536a93..d6b2e47 100644
-> --- a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-> @@ -1,7 +1,9 @@
->   Rockchip SuperSpeed DWC3 USB SoC controller
->   
->   Required properties:
-> -- compatible:	should contain "rockchip,rk3399-dwc3" for rk3399 SoC
-> +- compatible:	should be one of the following:
-> +  - "rockchip,rk3399-dwc3": for rk3399 SoC
-> +  - "rockchip,rk3328-dwc3", "rockchip,rk3399-dwc3": for rk3328 SoC
->   - clocks:	A list of phandle + clock-specifier pairs for the
->   		clocks listed in clock-names
->   - clock-names:	Should contain the following:
-         Could you help to reviewed this patch? According to Heiko's 
-suggestion, this patch
-         need to be submitted to usb tree or at least get an Ack from you.
+Shawn, can you please give a try with it?
+https://patchwork.kernel.org/patch/9917315/
 
-         Thank you!
-
--- 
-吴良峰 William.Wu
-福建省福州市铜盘路软件大道89号软件园A区21号楼
-No.21 Building, A District, No.89,software Boulevard Fuzhou,Fujian, PRC
-手机: 13685012275
-座机: 0591-83991906-8520
-邮件:wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Also, I see that on v4.13-rc series the read/write checks are
+> causing the led driver to fail in a different way:
+> 
+>     spmi spmi-0: error: impermissible write to peripheral sid:0 
+> addr:0xc040
+>     qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x40 failed
+>     leds-gpio soc:leds: Error applying setting, reverse things back
+>     spmi spmi-0: error: impermissible write to peripheral sid:0 
+> addr:0xc041
+>     qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x41 failed
+>     leds-gpio: probe of soc:leds failed with error -1
+> 
+> Are you seeing similar behavior?
+With the new patch series these errors will go away, as we are removing 
+the ownership
+checks from the read/write path.
