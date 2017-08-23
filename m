@@ -1,85 +1,68 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARC: AXS103: DTS: Add core pll node to manage cpu
- frequency
-Date: Wed, 23 Aug 2017 12:18:40 +0000
-Message-ID: <1503490719.15555.1.camel@synopsys.com>
-References: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
-         <20170814161213.17522-4-Eugeniy.Paltsev@synopsys.com>
-         <9624a76d-a31f-10fc-aec5-5ffa1d437c3d@synopsys.com>
+From: wlf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: usb: add DT binding for RK3328 dwc3
+ controller
+Date: Wed, 23 Aug 2017 20:22:42 +0800
+Message-ID: <4406bd06-8b2b-9e30-f0b4-b41596622782@rock-chips.com>
+References: <1503322566-31489-1-git-send-email-william.wu@rock-chips.com>
+ <1503322566-31489-2-git-send-email-william.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9624a76d-a31f-10fc-aec5-5ffa1d437c3d-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1503322566-31489-2-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Content-Language: en-US
-Content-ID: <437D91E90BE2B2498C3B8E39AC61F0BC-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE3LTA4LTIyIGF0IDEzOjQ1IC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+
-IE9uIDA4LzE0LzIwMTcgMDk6MTIgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gPiBBZGQg
-Y29yZSBwbGwgbm9kZSAoY29yZV9jbGspIHRvIG1hbmFnZSBjcHUgZnJlcXVlbmN5Lg0KPiA+IGNv
-cmVfY2xrIHJlcHJlc2VudHMgcGxsIGl0c2VsZi4NCj4gPiBpbnB1dF9jbGsgcmVwcmVzZW50cyBj
-bG9jayBzaWduYWwgc291cmNlIChiYXNpY2FsbHkgeHRhbCkgd2hpY2gNCj4gPiBjb21lcyB0byBw
-bGwgaW5wdXQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogRXVnZW5peSBQYWx0c2V2IDxFdWdl
-bml5LlBhbHRzZXZAc3lub3BzeXMuY29tPg0KPiA+IC0tLQ0KPiA+IMKgIGFyY2gvYXJjL2Jvb3Qv
-ZHRzL2F4YzAwMy5kdHNpwqDCoMKgwqDCoHwgMTEgKysrKysrKysrLS0NCj4gPiDCoCBhcmNoL2Fy
-Yy9ib290L2R0cy9heGMwMDNfaWR1LmR0c2kgfCAxMSArKysrKysrKystLQ0KPiA+IMKgIDIgZmls
-ZXMgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhjMDAzLmR0c2kNCj4gPiBiL2FyY2gvYXJj
-L2Jvb3QvZHRzL2F4YzAwMy5kdHNpDQo+ID4gaW5kZXggY2M5MjM5ZS4uZGNhN2UzOSAxMDA2NDQN
-Cj4gPiAtLS0gYS9hcmNoL2FyYy9ib290L2R0cy9heGMwMDMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gv
-YXJjL2Jvb3QvZHRzL2F4YzAwMy5kdHNpDQo+ID4gQEAgLTI0LDEwICsyNCwxNyBAQA0KPiA+IMKg
-wqANCj4gPiDCoMKgCQlyYW5nZXMgPSA8MHgwMDAwMDAwMCAweDAgMHhmMDAwMDAwMCAweDEwMDAw
-MDAwPjsNCj4gPiDCoMKgDQo+ID4gLQkJY29yZV9jbGs6IGNvcmVfY2xrIHsNCj4gPiArCQlpbnB1
-dF9jbGs6IGlucHV0LWNsayB7DQo+ID4gwqDCoAkJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiDC
-oMKgCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gLQkJCWNsb2NrLWZyZXF1ZW5j
-eSA9IDw5MDAwMDAwMD47DQo+ID4gKwkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwzMzMzMzMzMz47DQo+
-ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJY29yZV9jbGs6IGNvcmUtY2xrQDgwIHsNCj4gPiArCQkJ
-Y29tcGF0aWJsZSA9ICJzbnBzLGF4czEweC1hcmMtcGxsLWNsb2NrIjsNCj4gPiArCQkJcmVnID0g
-PDB4ODAgMHgxMD4sIDwweDEwMCAweDEwPjsNCj4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0K
-PiA+ICsJCQljbG9ja3MgPSA8JmlucHV0X2Nsaz47DQo+ID4gwqDCoAkJfTsNCj4gPiDCoMKgDQo+
-ID4gwqDCoAkJY29yZV9pbnRjOiBhcmNocy1pbnRjQGNwdSB7DQo+ID4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJjL2Jvb3QvZHRzL2F4YzAwM19pZHUuZHRzaQ0KPiA+IGIvYXJjaC9hcmMvYm9vdC9kdHMv
-YXhjMDAzX2lkdS5kdHNpDQo+ID4gaW5kZXggNGViYjIxNzAuLjViNTZiZWYgMTAwNjQ0DQo+ID4g
-LS0tIGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhjMDAzX2lkdS5kdHNpDQo+ID4gKysrIGIvYXJjaC9h
-cmMvYm9vdC9kdHMvYXhjMDAzX2lkdS5kdHNpDQo+ID4gQEAgLTI0LDEwICsyNCwxNyBAQA0KPiA+
-IMKgwqANCj4gPiDCoMKgCQlyYW5nZXMgPSA8MHgwMDAwMDAwMCAweDAgMHhmMDAwMDAwMCAweDEw
-MDAwMDAwPjsNCj4gPiDCoMKgDQo+ID4gLQkJY29yZV9jbGs6IGNvcmVfY2xrIHsNCj4gPiArCQlp
-bnB1dF9jbGs6IGlucHV0LWNsayB7DQo+ID4gwqDCoAkJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4g
-PiDCoMKgCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gLQkJCWNsb2NrLWZyZXF1
-ZW5jeSA9IDwxMDAwMDAwMDA+Ow0KPiA+ICsJCQljbG9jay1mcmVxdWVuY3kgPSA8MzMzMzMzMzM+
-Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCWNvcmVfY2xrOiBjb3JlLWNsa0A4MCB7DQo+ID4g
-KwkJCWNvbXBhdGlibGUgPSAic25wcyxheHMxMHgtYXJjLXBsbC1jbG9jayI7DQo+ID4gKwkJCXJl
-ZyA9IDwweDgwIDB4MTA+LCA8MHgxMDAgMHgxMD47DQo+ID4gKwkJCSNjbG9jay1jZWxscyA9IDww
-PjsNCj4gPiArCQkJY2xvY2tzID0gPCZpbnB1dF9jbGs+Ow0KPiA+IMKgwqAJCX07DQo+ID4gwqDC
-oA0KPiA+IMKgwqAJCWNvcmVfaW50YzogYXJjaHMtaW50Y0BjcHUgew0KPiANCj4gDQo+IERvIHdl
-IGhhdmUgYSBiaXNlY3RhYmlsaXR5IGlzc3VlIGhlcmUgLSBpc24ndCBzeXN0ZW0gYnJva2VuDQo+
-IHRlbXBvcmFyaWx5IGF0IDIvNSAtwqANCj4gYW5kIG9ubHkgMy81IG1ha2VzIGl0IHdvcmsgYWdh
-aW4gLSBpZiBzbyB3ZSBuZWVkIHRvIHNxdWFzaCB0aGVtDQo+IHRvZ2V0aGVyICENCg0KQ291bGQg
-eW91IHBsZWFzZSBiZSBtb3JlIHNwZWNpZmljIGFib3V0IHRoaXMgYmlzZWN0YWJpbGl0eSBpc3N1
-ZSBhcyBJDQpjYW4ndCBzZWUgaXQgaGVyZS4NCg0KSWYgd2UgYXBwbHkgMi81IGFuZCBkb24ndCBh
-cHBseSAzLzUgd2Ugc2ltcGx5IHdvbid0IGNoYW5nZSBmcmVxdWVuY3kNCmFmdGVyIGxpbnV4IGJv
-b3QuIFdlIHdvbid0IGluY3JlYXNlIGZyZXF1ZW5jeSBzbyBJIGNhbid0IHNlZSBhbnkNCnByb2Js
-ZW0gaGVyZSBoZXJlLg0KDQoNCg0KLS0tDQpUaGUgb25seSBwcm9ibGVtIEkgY2FuIHNlZSBpcyBp
-biA0LzU6DQpJIHNob3VsZCB1c2UNCmNwdS1mcmVxID0gPDkwMDAwMDAwPjsNCmluc3RlYWQgb2YN
-CmNwdS1mcmVxID0gPDEwMDAwMDAwMD47DQppbiBhcmNoL2FyYy9ib290L2R0cy9heGMwMDMuZHRz
-aQ0KU28gZGlmZiBzaG91bGQgYmUgbGlrZQ0KLS0tLS0tLS0tLS0tLS0tPjgtLS0tLS0tLS0tLQ0K
-K8KgwqDCoMKgwqDCoMKgY3B1cyB7DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI3NpemUt
-Y2VsbHMgPSA8MD47DQorDQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY3B1QDAgew0K
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZpY2VfdHlw
-ZSA9ICJjcHUiOw0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqBjb21wYXRpYmxlID0gInNucHMsYXJjaHMzOCI7DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwwPjsNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY3B1LWZyZXEgPSA8OTAwMDAwMDA+Ow0KK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbG9ja3MgPSA8JmNvcmVfY2xr
-PjsNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KK8KgwqDCoMKgwqDCoMKgfTsN
-CisNCi0tLS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0NCg0KU2hvdWxkIEkgc2VuZCB5b3UgdjIg
-cmVzcGluIG9yIHlvdSdsbCBmaXggdGhhdCB1cCBsb2NhbGx5Pw0KIA0KPiAtVmluZWV0DQotLSAN
-CsKgRXVnZW5peSBQYWx0c2V2
+Dear Balbi & Gregkh,
+
+在 2017年08月21日 21:36, William Wu 写道:
+> Adds the device tree bindings description for RK3328 and
+> compatible USB DWC3 controller.
+>
+> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> Changes in v3:
+> - Add this for separate usb dt-bindings patch.
+>
+> Changes in v2:
+> - None
+>
+>   Documentation/devicetree/bindings/usb/rockchip,dwc3.txt | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+> index 0536a93..d6b2e47 100644
+> --- a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+> @@ -1,7 +1,9 @@
+>   Rockchip SuperSpeed DWC3 USB SoC controller
+>   
+>   Required properties:
+> -- compatible:	should contain "rockchip,rk3399-dwc3" for rk3399 SoC
+> +- compatible:	should be one of the following:
+> +  - "rockchip,rk3399-dwc3": for rk3399 SoC
+> +  - "rockchip,rk3328-dwc3", "rockchip,rk3399-dwc3": for rk3328 SoC
+>   - clocks:	A list of phandle + clock-specifier pairs for the
+>   		clocks listed in clock-names
+>   - clock-names:	Should contain the following:
+         Could you help to reviewed this patch? According to Heiko's 
+suggestion, this patch
+         need to be submitted to usb tree or at least get an Ack from you.
+
+         Thank you!
+
+-- 
+吴良峰 William.Wu
+福建省福州市铜盘路软件大道89号软件园A区21号楼
+No.21 Building, A District, No.89,software Boulevard Fuzhou,Fujian, PRC
+手机: 13685012275
+座机: 0591-83991906-8520
+邮件:wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
