@@ -1,56 +1,121 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
-Date: Wed, 23 Aug 2017 15:10:51 +0200
-Message-ID: <20170823131051.GD28612@lunn.ch>
-References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
- <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
- <20170823121653.xha2obe4ewlhwyvh@sapphire.tkos.co.il>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] mfd: Add support for TI LMP92001
+Date: Wed, 23 Aug 2017 14:21:49 +0100
+Message-ID: <20170823132149.svvvhtvrxv3fxhax@dell>
+References: <1503383171-15515-1-git-send-email-s.abhisit@gmail.com>
+ <alpine.DEB.2.20.1708220911130.5706@vps.pmeerw.net>
+ <CAMV_pUbBCkX6NME1c4NG-e48c0Vcs48N8JDYaDQqqypC0VjmDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170823121653.xha2obe4ewlhwyvh@sapphire.tkos.co.il>
-Sender: netdev-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Russell King <rmk+kernel@arm.linux.org.uk>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <CAMV_pUbBCkX6NME1c4NG-e48c0Vcs48N8JDYaDQqqypC0VjmDw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abhisit Sangjan <s.abhisit@gmail.com>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, jmondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 23, 2017 at 03:16:53PM +0300, Baruch Siach wrote:
-> Hi Rob,
-> 
-> On Mon, Aug 21, 2017 at 02:10:33PM -0500, Rob Herring wrote:
-> > On Sun, Aug 20, 2017 at 5:28 AM, Baruch Siach <baruch@tkos.co.il> wrote:
-> > > Add device-tree binding documentation SFP transceivers. Support for SFP
-> > > transceivers has been recently introduced (drivers/net/phy/sfp.c).
+On Wed, 23 Aug 2017, Abhisit Sangjan wrote:
+> > > From: Abhisit Sangjan <s.abhisit@gmail.com>
 > > >
-> > > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> > > TI LMP92001 Analog System Monitor and Controller
+ 
+[...]
+
+> > > Signed-off-by: Abhisit Sangjan <s.abhisit@gmail.com>
 > > > ---
-> > >
-> > > The SFP driver is on net-next.
-> 
-> [...]
-> 
-> > > +Optional Properties:
+> > >  Documentation/ABI/testing/sysfs-bus-iio-lmp920001  |  92 ++++
+> > >  .../devicetree/bindings/gpio/gpio-lmp92001.txt     |  22 +
+> > >  .../bindings/iio/adc/ti-lmp92001-adc.txt           |  21 +
+> > >  .../bindings/iio/dac/ti-lmp92001-dac.txt           |  35 ++
+> > >  drivers/gpio/Kconfig                               |   7 +
+> > >  drivers/gpio/Makefile                              |   1 +
+> > >  drivers/gpio/gpio-lmp92001.c                       | 209 +++++++++
+> > >  drivers/iio/adc/Kconfig                            |  10 +
+> > >  drivers/iio/adc/Makefile                           |   1 +
+> > >  drivers/iio/adc/lmp92001-adc.c                     | 500
+> > +++++++++++++++++++++
+> > >  drivers/iio/dac/Kconfig                            |   9 +
+> > >  drivers/iio/dac/Makefile                           |   1 +
+> > >  drivers/iio/dac/lmp92001-dac.c                     | 390
+> > ++++++++++++++++
+> > >  drivers/mfd/Kconfig                                |  12 +
+> > >  drivers/mfd/Makefile                               |   4 +
+> > >  drivers/mfd/lmp92001-core.c                        | 308 +++++++++++++
+> > >  drivers/mfd/lmp92001-debug.c                       |  67 +++
+> > >  drivers/mfd/lmp92001-i2c.c                         | 215 +++++++++
+> > >  include/linux/mfd/lmp92001/core.h                  | 119 +++++
+> > >  include/linux/mfd/lmp92001/debug.h                 |  28 ++
+> > >  20 files changed, 2051 insertions(+)
+> > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-lmp920001
+> > >  create mode 100644 Documentation/devicetree/
+> > bindings/gpio/gpio-lmp92001.txt
+> > >  create mode 100644 Documentation/devicetree/
+> > bindings/iio/adc/ti-lmp92001-adc.txt
+> > >  create mode 100644 Documentation/devicetree/
+> > bindings/iio/dac/ti-lmp92001-dac.txt
+> > >  create mode 100644 drivers/gpio/gpio-lmp92001.c
+> > >  create mode 100644 drivers/iio/adc/lmp92001-adc.c
+> > >  create mode 100644 drivers/iio/dac/lmp92001-dac.c
+> > >  create mode 100644 drivers/mfd/lmp92001-core.c
+> > >  create mode 100644 drivers/mfd/lmp92001-debug.c
+> > >  create mode 100644 drivers/mfd/lmp92001-i2c.c
+> > >  create mode 100644 include/linux/mfd/lmp92001/core.h
+> > >  create mode 100644 include/linux/mfd/lmp92001/debug.h
+
+[...]
+
+> > > +struct lmp92001_gpio {
+> > > +     struct lmp92001 *lmp92001;
+> > > +     struct gpio_chip gpio_chip;
+> > > +};
 > > > +
-> > > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-> > > +  interface
-> > 
-> > Why not a child of the i2c bus it is on? IOW, what should this be a child of?
+> > > +static int lmp92001_gpio_get_direction(struct gpio_chip *chip,
+> > unsigned offset)
+> >
+> > unsigned vs unsigned int
+> >
 > 
-> As I understand form the code the ID of the SFP i2c slave is derived from the 
-> Ethernet PHY 'reg' property. The PHY node's 'sfp' property points to a phandle 
-> of the sff,sfp node.
+> I am follow the function prototype, it is unsigned.
+> 
+> struct gpio_chip {
+> ...
+> int (*get_direction)(struct gpio_chip *chip,
+> unsigned offset);
+> ...
+> };
 
-Hi Rob
+[...]
 
-The SFP module uses multiple addresses on the i2c bus. 0x50 is
-something like an EEPROM, but some of the content is
-dynamic. Depending of the version of the standard, it can also use
-0x51 for additional information. If the SPF module contains a copper
-PHY, it also uses another address on the i2c bus for the standard
-copper PHY registers.
+> > > +#ifdef CONFIG_DEBUG_FS
+> > > +static void lmp92001_gpio_dbg_show(struct seq_file *s, struct gpio_chip
+> > *chip)
+> > > +{
+> > > +     struct lmp92001_gpio *lmp92001_gpio = gpiochip_get_data(chip);
+> > > +     struct lmp92001 *lmp92001 = lmp92001_gpio->lmp92001;
+> > > +     int i, gpio;
+> > > +     unsigned int cgpo;
+> > > +     const char *label, *dir, *logic;
+> > > +
+> > > +     for (i = 0; i < chip->ngpio; i++) {
+> > > +             gpio = i + chip->base;
+> > > +
+> > > +             label = gpiochip_is_requested(chip, i);
+> > > +             if (!label)
+> > > +                     continue;
+> > > +
+> > > +             regmap_read(lmp92001->regmap, LMP92001_CGPO, &cgpo);
+> >
+> > retval is not checked here (and elsewhere)
+> >
+> 
+> This function is return void.
 
-An SFP module does not fit the usual I2C client model, since it is a
-collection of interconnected i2c clients in one package.
+Please clip your responses!
 
-	   Andrew
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
