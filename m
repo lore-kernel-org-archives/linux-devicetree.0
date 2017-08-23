@@ -1,99 +1,56 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH 2/7] dt-bindings: PM / OPP: add clocks per OPP node support
-Date: Thu, 24 Aug 2017 00:10:05 +0800
-Message-ID: <1503504610-12880-3-git-send-email-aisheng.dong@nxp.com>
-References: <1503504610-12880-1-git-send-email-aisheng.dong@nxp.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
+Date: Wed, 23 Aug 2017 11:18:38 -0500
+Message-ID: <CAL_JsqJpNAFiKDpFxMX4ScAktp6gVs7oAjpAG++bkF6DnyU=Zw@mail.gmail.com>
+References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
+ <20170821125317.GS20805@n2100.armlinux.org.uk> <20170821150653.jmoogmxklkfbrzxg@sapphire.tkos.co.il>
+ <CAL_JsqJNeibfFVKVjdTJJ88WKonSYnXMdT5mu7V46AGPRbAKbw@mail.gmail.com> <20170823135744.GU20805@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503504610-12880-1-git-send-email-aisheng.dong@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, vireshk@kernel.org, nm@ti.com, rjw@rjwysocki.net, shawnguo@kernel.org, Anson.Huang@nxp.com, ping.bai@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170823135744.GU20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It's used for platforms where different OPPs may use different clocks.
-With this extended binding, user could specify the correct clock for each
-OPP node.
+On Wed, Aug 23, 2017 at 8:57 AM, Russell King - ARM Linux
+<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> On Mon, Aug 21, 2017 at 02:12:42PM -0500, Rob Herring wrote:
+>> On Mon, Aug 21, 2017 at 10:06 AM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+>> > Hi Russell,
+>> >
+>> > On Mon, Aug 21, 2017 at 01:53:17PM +0100, Russell King - ARM Linux wrote:
+>> >> On Sun, Aug 20, 2017 at 01:28:06PM +0300, Baruch Siach wrote:
+>> >> > Add device-tree binding documentation SFP transceivers. Support for SFP
+>> >> > transceivers has been recently introduced (drivers/net/phy/sfp.c).
+>> >> >
+>> >> > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+>> >> > ---
+>> >> >
+>> >> > The SFP driver is on net-next.
+>> >> >
+>> >> > Not sure about the rate-select-gpio property name. The SFP+ standard
+>> >> > (not supported yet) uses two signals, RS0 and RS1. RS0 is compatible
+>> >> > with the SFP rate select signal, while RS1 controls the Tx rate.
+>> >>
+>> >> SFP+ is usable with this, but the platforms I have do not wire the
+>> >> rate select pins on the SFP+ sockets to GPIOs, but hard-wire them.
+>> >
+>> > So maybe naming this signal 'rate-select0-gpio' would make it more future
+>> > (SPF+) proof? Or 'rate-select-rx-gpio'?
+>>
+>> Just extend it by making it an array of 2 gpios.
+>
+> What do you do if you have only one rate select wired up and it doesn't
+> correspond with the first?
 
-Cc: Viresh Kumar <vireshk@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- Documentation/devicetree/bindings/opp/opp.txt | 52 +++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Seems unlikely, but possible I guess. In that case, 2 properties is
+probably better. Otherwise, you'd have to put in -1 or 0 for the first
+phandle.
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index e36d261..40a4340 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -152,6 +152,11 @@ Optional properties:
-   hierarchy can be contained in multiple 32 bit values. i.e. <X Y Z1 Z2> in the
-   above example, Z1 & Z2 refer to the version hierarchy Z.
- 
-+- clocks: Clock phandle and specifier used for this opp.
-+
-+- clock-names: clock names for this opp. The valid clock names are platform
-+	       specific.
-+
- - status: Marks the node enabled/disabled.
- 
- Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
-@@ -528,3 +533,50 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
- 		};
- 	};
- };
-+
-+Example 7: Single core ARM cortex A7, switch separate clocks for each OPP:
-+
-+/ {
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+			clocks = <&clk_controller 0>;
-+			clock-names = "cpu";
-+			cpu-supply = <&cpu_supply0>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+	};
-+
-+	cpu0_opp_table: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <975000 970000 985000>;
-+			opp-microamp = <70000>;
-+			clock-latency-ns = <300000>;
-+			clocks = <&clk_controller 0>;
-+			opp-suspend;
-+		};
-+		opp-1100000000 {
-+			opp-hz = /bits/ 64 <1100000000>;
-+			opp-microvolt = <1000000 980000 1010000>;
-+			opp-microamp = <80000>;
-+			clocks = <&clk_controller 1>;
-+			clock-latency-ns = <310000>;
-+		};
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1025000>;
-+			clocks = <&clk_controller 2>;
-+			clock-latency-ns = <290000>;
-+			turbo-mode;
-+		};
-+	};
-+};
--- 
-2.7.4
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
