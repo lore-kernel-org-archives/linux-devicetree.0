@@ -1,69 +1,86 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [RFC PATCH] dt-binding: net: sfp binding documentation
-Date: Wed, 23 Aug 2017 15:16:53 +0300
-Message-ID: <20170823121653.xha2obe4ewlhwyvh@sapphire.tkos.co.il>
-References: <d73b635069a2054d110632f1f4196cd4bc281e7f.1503224886.git.baruch@tkos.co.il>
- <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/5] ARC: AXS103: DTS: Add core pll node to manage cpu
+ frequency
+Date: Wed, 23 Aug 2017 12:18:40 +0000
+Message-ID: <1503490719.15555.1.camel@synopsys.com>
+References: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
+         <20170814161213.17522-4-Eugeniy.Paltsev@synopsys.com>
+         <9624a76d-a31f-10fc-aec5-5ffa1d437c3d@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL_7gG8FSEJDXu=37DFpHjfLhQuUhPFRKcScYTzM4cNyg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Russell King <rmk+kernel@arm.linux.org.uk>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9624a76d-a31f-10fc-aec5-5ffa1d437c3d-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Content-ID: <437D91E90BE2B2498C3B8E39AC61F0BC-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Mon, Aug 21, 2017 at 02:10:33PM -0500, Rob Herring wrote:
-> On Sun, Aug 20, 2017 at 5:28 AM, Baruch Siach <baruch@tkos.co.il> wrote:
-> > Add device-tree binding documentation SFP transceivers. Support for SFP
-> > transceivers has been recently introduced (drivers/net/phy/sfp.c).
-> >
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > ---
-> >
-> > The SFP driver is on net-next.
-
-[...]
-
-> > +Optional Properties:
-> > +
-> > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-> > +  interface
-> 
-> Why not a child of the i2c bus it is on? IOW, what should this be a child of?
-
-As I understand form the code the ID of the SFP i2c slave is derived from the 
-Ethernet PHY 'reg' property. The PHY node's 'sfp' property points to a phandle 
-of the sff,sfp node.
-
-It is also possible for the 'sfp' property to appear directly in the Ethernet 
-device node.
-
-Quoting RMK from merge commit 234709336b8 (net-next):
-
-    To add to the complexity, SFP modules can be connected in at least
-    two places:
-    
-    1. Directly to the serdes output of a MAC with no intervening PHY.
-       For example:
-    
-         mvneta ----> SFP socket
-    
-    2. To a PHY, for example:
-    
-         mvpp2 ---> PHY ---> copper
-                     |
-                     `-----> SFP socket
-    
-    This code supports both setups, although it's not fully implemented
-    with scenario (2).
-
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+T24gVHVlLCAyMDE3LTA4LTIyIGF0IDEzOjQ1IC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+
+IE9uIDA4LzE0LzIwMTcgMDk6MTIgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gPiBBZGQg
+Y29yZSBwbGwgbm9kZSAoY29yZV9jbGspIHRvIG1hbmFnZSBjcHUgZnJlcXVlbmN5Lg0KPiA+IGNv
+cmVfY2xrIHJlcHJlc2VudHMgcGxsIGl0c2VsZi4NCj4gPiBpbnB1dF9jbGsgcmVwcmVzZW50cyBj
+bG9jayBzaWduYWwgc291cmNlIChiYXNpY2FsbHkgeHRhbCkgd2hpY2gNCj4gPiBjb21lcyB0byBw
+bGwgaW5wdXQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogRXVnZW5peSBQYWx0c2V2IDxFdWdl
+bml5LlBhbHRzZXZAc3lub3BzeXMuY29tPg0KPiA+IC0tLQ0KPiA+IMKgIGFyY2gvYXJjL2Jvb3Qv
+ZHRzL2F4YzAwMy5kdHNpwqDCoMKgwqDCoHwgMTEgKysrKysrKysrLS0NCj4gPiDCoCBhcmNoL2Fy
+Yy9ib290L2R0cy9heGMwMDNfaWR1LmR0c2kgfCAxMSArKysrKysrKystLQ0KPiA+IMKgIDIgZmls
+ZXMgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBk
+aWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhjMDAzLmR0c2kNCj4gPiBiL2FyY2gvYXJj
+L2Jvb3QvZHRzL2F4YzAwMy5kdHNpDQo+ID4gaW5kZXggY2M5MjM5ZS4uZGNhN2UzOSAxMDA2NDQN
+Cj4gPiAtLS0gYS9hcmNoL2FyYy9ib290L2R0cy9heGMwMDMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gv
+YXJjL2Jvb3QvZHRzL2F4YzAwMy5kdHNpDQo+ID4gQEAgLTI0LDEwICsyNCwxNyBAQA0KPiA+IMKg
+wqANCj4gPiDCoMKgCQlyYW5nZXMgPSA8MHgwMDAwMDAwMCAweDAgMHhmMDAwMDAwMCAweDEwMDAw
+MDAwPjsNCj4gPiDCoMKgDQo+ID4gLQkJY29yZV9jbGs6IGNvcmVfY2xrIHsNCj4gPiArCQlpbnB1
+dF9jbGs6IGlucHV0LWNsayB7DQo+ID4gwqDCoAkJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiDC
+oMKgCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gLQkJCWNsb2NrLWZyZXF1ZW5j
+eSA9IDw5MDAwMDAwMD47DQo+ID4gKwkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwzMzMzMzMzMz47DQo+
+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJY29yZV9jbGs6IGNvcmUtY2xrQDgwIHsNCj4gPiArCQkJ
+Y29tcGF0aWJsZSA9ICJzbnBzLGF4czEweC1hcmMtcGxsLWNsb2NrIjsNCj4gPiArCQkJcmVnID0g
+PDB4ODAgMHgxMD4sIDwweDEwMCAweDEwPjsNCj4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0K
+PiA+ICsJCQljbG9ja3MgPSA8JmlucHV0X2Nsaz47DQo+ID4gwqDCoAkJfTsNCj4gPiDCoMKgDQo+
+ID4gwqDCoAkJY29yZV9pbnRjOiBhcmNocy1pbnRjQGNwdSB7DQo+ID4gZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJjL2Jvb3QvZHRzL2F4YzAwM19pZHUuZHRzaQ0KPiA+IGIvYXJjaC9hcmMvYm9vdC9kdHMv
+YXhjMDAzX2lkdS5kdHNpDQo+ID4gaW5kZXggNGViYjIxNzAuLjViNTZiZWYgMTAwNjQ0DQo+ID4g
+LS0tIGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhjMDAzX2lkdS5kdHNpDQo+ID4gKysrIGIvYXJjaC9h
+cmMvYm9vdC9kdHMvYXhjMDAzX2lkdS5kdHNpDQo+ID4gQEAgLTI0LDEwICsyNCwxNyBAQA0KPiA+
+IMKgwqANCj4gPiDCoMKgCQlyYW5nZXMgPSA8MHgwMDAwMDAwMCAweDAgMHhmMDAwMDAwMCAweDEw
+MDAwMDAwPjsNCj4gPiDCoMKgDQo+ID4gLQkJY29yZV9jbGs6IGNvcmVfY2xrIHsNCj4gPiArCQlp
+bnB1dF9jbGs6IGlucHV0LWNsayB7DQo+ID4gwqDCoAkJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4g
+PiDCoMKgCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gLQkJCWNsb2NrLWZyZXF1
+ZW5jeSA9IDwxMDAwMDAwMDA+Ow0KPiA+ICsJCQljbG9jay1mcmVxdWVuY3kgPSA8MzMzMzMzMzM+
+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCWNvcmVfY2xrOiBjb3JlLWNsa0A4MCB7DQo+ID4g
+KwkJCWNvbXBhdGlibGUgPSAic25wcyxheHMxMHgtYXJjLXBsbC1jbG9jayI7DQo+ID4gKwkJCXJl
+ZyA9IDwweDgwIDB4MTA+LCA8MHgxMDAgMHgxMD47DQo+ID4gKwkJCSNjbG9jay1jZWxscyA9IDww
+PjsNCj4gPiArCQkJY2xvY2tzID0gPCZpbnB1dF9jbGs+Ow0KPiA+IMKgwqAJCX07DQo+ID4gwqDC
+oA0KPiA+IMKgwqAJCWNvcmVfaW50YzogYXJjaHMtaW50Y0BjcHUgew0KPiANCj4gDQo+IERvIHdl
+IGhhdmUgYSBiaXNlY3RhYmlsaXR5IGlzc3VlIGhlcmUgLSBpc24ndCBzeXN0ZW0gYnJva2VuDQo+
+IHRlbXBvcmFyaWx5IGF0IDIvNSAtwqANCj4gYW5kIG9ubHkgMy81IG1ha2VzIGl0IHdvcmsgYWdh
+aW4gLSBpZiBzbyB3ZSBuZWVkIHRvIHNxdWFzaCB0aGVtDQo+IHRvZ2V0aGVyICENCg0KQ291bGQg
+eW91IHBsZWFzZSBiZSBtb3JlIHNwZWNpZmljIGFib3V0IHRoaXMgYmlzZWN0YWJpbGl0eSBpc3N1
+ZSBhcyBJDQpjYW4ndCBzZWUgaXQgaGVyZS4NCg0KSWYgd2UgYXBwbHkgMi81IGFuZCBkb24ndCBh
+cHBseSAzLzUgd2Ugc2ltcGx5IHdvbid0IGNoYW5nZSBmcmVxdWVuY3kNCmFmdGVyIGxpbnV4IGJv
+b3QuIFdlIHdvbid0IGluY3JlYXNlIGZyZXF1ZW5jeSBzbyBJIGNhbid0IHNlZSBhbnkNCnByb2Js
+ZW0gaGVyZSBoZXJlLg0KDQoNCg0KLS0tDQpUaGUgb25seSBwcm9ibGVtIEkgY2FuIHNlZSBpcyBp
+biA0LzU6DQpJIHNob3VsZCB1c2UNCmNwdS1mcmVxID0gPDkwMDAwMDAwPjsNCmluc3RlYWQgb2YN
+CmNwdS1mcmVxID0gPDEwMDAwMDAwMD47DQppbiBhcmNoL2FyYy9ib290L2R0cy9heGMwMDMuZHRz
+aQ0KU28gZGlmZiBzaG91bGQgYmUgbGlrZQ0KLS0tLS0tLS0tLS0tLS0tPjgtLS0tLS0tLS0tLQ0K
+K8KgwqDCoMKgwqDCoMKgY3B1cyB7DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI3NpemUt
+Y2VsbHMgPSA8MD47DQorDQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY3B1QDAgew0K
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZpY2VfdHlw
+ZSA9ICJjcHUiOw0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqBjb21wYXRpYmxlID0gInNucHMsYXJjaHMzOCI7DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwwPjsNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY3B1LWZyZXEgPSA8OTAwMDAwMDA+Ow0KK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbG9ja3MgPSA8JmNvcmVfY2xr
+PjsNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KK8KgwqDCoMKgwqDCoMKgfTsN
+CisNCi0tLS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0NCg0KU2hvdWxkIEkgc2VuZCB5b3UgdjIg
+cmVzcGluIG9yIHlvdSdsbCBmaXggdGhhdCB1cCBsb2NhbGx5Pw0KIA0KPiAtVmluZWV0DQotLSAN
+CsKgRXVnZW5peSBQYWx0c2V2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
