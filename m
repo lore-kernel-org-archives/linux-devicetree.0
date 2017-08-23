@@ -1,88 +1,93 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sun8i: Add board dts file for
- Banana Pi M2 Berry
-Date: Wed, 23 Aug 2017 16:31:13 +0200
-Message-ID: <20170823143113.nt6p4hqeglqmynmg@flea.home>
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Add basic dtsi file
+ for Allwinner R40
+Date: Wed, 23 Aug 2017 16:35:32 +0200
+Message-ID: <20170823143532.owocqyq3tehsahhg@flea.home>
 References: <20170822061742.40869-1-icenowy@aosc.io>
- <20170822061742.40869-3-icenowy@aosc.io>
- <20170822201215.wbpioc7vbse4ajja@flea.home>
- <D377CF9E-AE08-4AA4-AAD4-C9047C8007E9@aosc.io>
+ <20170822200521.nadkb4335mcc5ah2@flea.home>
+ <ea10374b49489d2250fd804e1fdbf204@aosc.io>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tjl7patdnin5zmxw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPFD63GAKGQEUSC3TNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="jyr6nkumx2plx4ca"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBP5F63GAKGQEAMOVTQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <D377CF9E-AE08-4AA4-AAD4-C9047C8007E9-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <ea10374b49489d2250fd804e1fdbf204-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+To: icenowy-h8G6r0blFSE@public.gmane.org
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---tjl7patdnin5zmxw
+--jyr6nkumx2plx4ca
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 23, 2017 at 01:46:50PM +0800, Icenowy Zheng wrote:
->=20
->=20
-> =E4=BA=8E 2017=E5=B9=B48=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
-4:12:15, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
-=B0:
-> >On Tue, Aug 22, 2017 at 02:17:42PM +0800, Icenowy Zheng wrote:
-> >> +&reg_vcc5v0 {
-> >> +	gpio =3D <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
-> >> +	enable-active-high;
-> >> +};
-> >
-> >Same thing here, you're not using that regulator anywhere. You don't
-> >even use any of the regulators in sunxi-common-regulators.
->=20
-> Maybe I should drop the regulator now, and re-introduce it when adding US=
-B/SATA?
+On Wed, Aug 23, 2017 at 07:56:29PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> > > +			reg = <0x01c0f000 0x1000>;
+> > > +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+> > > +			clock-names = "ahb", "mmc";
+> > > +			resets = <&ccu RST_BUS_MMC0>;
+> > > +			reset-names = "ahb";
+> > > +			pinctrl-0 = <&mmc0_pins>;
+> > > +			pinctrl-names = "default";
+> > > +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> > > +			max-frequency = <150000000>;
+> > 
+> > have you tested that frequency?
+> 
+> I think the frequency should be kept here, although my cards cannot
+> reach this frequency.
+> 
+> The numbers are same as the corresponding controllers in A64.
+> 
+> Maybe I should add a comment saying it's educated guess?
 
-If that's what it's used for, then yes, please.
+I'd rather have it tested by someone, and then add the proper
+frequencies. It took quite a while to figure out how these modes were
+supposed to be working on the A64, so it's not obvious that they're
+just going to work.
+
+> > > +		gic: interrupt-controller@1c81000 {
+> > > +			compatible = "arm,gic-400";
+> > > +			reg = <0x01c81000 0x1000>,
+> > > +			      <0x01c82000 0x1000>,
+> > > +			      <0x01c84000 0x2000>,
+> > > +			      <0x01c86000 0x2000>;
+> > > +			interrupt-controller;
+> > > +			#interrupt-cells = <3>;
+> > > +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
+> > > IRQ_TYPE_LEVEL_HIGH)>;
+> > > +		};
+> > > +	};
+> > > +
+> > > +	timer {
+> > > +		compatible = "arm,armv7-timer";
+> > > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+> > > IRQ_TYPE_LEVEL_LOW)>,
+> > > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> > > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> > > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> > 
+> > Those masks are wrong.
+> 
+> I compared it with other sun8i SoCs' device tree.
+> 
+> Where's wrong?
+
+It's supposed to be a mask of the CPUs in your system. Since you just
+have one of them, it shouldn't be 4.
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---tjl7patdnin5zmxw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZnZGxAAoJEBx+YmzsjxAgfZAQALcIPJkvPS2fhK6nmLUIjWmr
-h5DmqeRxP4QMvbJ0mtsZwbZuyRt9MYDZHMZ/24KkDs6dHHXi7fFcsiFZVs8kq2ox
-BFdQMHSmcXumeAHEhuP4Jy6C4tXlR44N1DH1795MNCsNfZ6Io2OqGjy58zuziZFo
-eaVOD06eQnxEdEyc03KQwBDXpo92d+I/AbLVNAoxbFBOWIteSEjKRkmSvrBy90k3
-ikG6zAZT3tiNoFZ1i4//70Mgkums0dmNuDAF7G5mfkBvp0E6sKIIuYcH3qCtZ/q6
-0hdp9Cj9uSoPE8rSLV/Hq3SuryH3i0zE7KolQAcyitZHP0sbZPAol1xSx5BW/A+V
-jxe3LipCjaWuh4RsPPv6iv2egzKMJG07EMGzNhjIa2ZDr2jf61CscBOhZJnbGFeX
-ATfmiuknY5KuC4iPvnflYJQzi2CrnGLyoiDMgGTP+NHc0iW/fPnzxgJQpek0wAim
-eZh7ctrhKj1yMepB3FS9oAW7gx/PdeyHTuXuTLnioANYFPf09ep8rm6zL1+ZkCyY
-ihrF2Q+wDJyFldS26cvJfWJt+4Mr3n6uflh3qE+sBLV6v+giyTb2y0VDn/o+mlXa
-j0sUXbcncMqRfj042/crtkolPPGPckridR3E0qbyiLYIpQUlwV3NkELEoH3ElMRx
-fFMcyxDrflTeyh+WVerF
-=kS8M
------END PGP SIGNATURE-----
-
---tjl7patdnin5zmxw--
+--jyr6nkumx2plx4ca--
