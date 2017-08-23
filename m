@@ -1,68 +1,155 @@
-From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] dt-bindings: gpio: max3191x: Document new driver
-Date: Wed, 23 Aug 2017 11:44:38 +0200
-Message-ID: <20170823094438.GA12416@wunner.de>
-References: <cover.1503319573.git.lukas@wunner.de>
- <7fe7636eecba238d57ab6178cfa3f6b7deca98f1.1503319573.git.lukas@wunner.de>
- <20170823004847.jmkb53xtdmmn6vtf@rob-hp-laptop>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v1 1/3] arm64: dts: rockchip: add mmc nodes for rk3328
+ evaluation board
+Date: Wed, 23 Aug 2017 17:58:10 +0800
+Message-ID: <70373b2e-2b2f-215e-04e3-1559a00950f0@rock-chips.com>
+References: <1503477632-9661-1-git-send-email-cl@rock-chips.com>
+ <1503477632-9661-2-git-send-email-cl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170823004847.jmkb53xtdmmn6vtf@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503477632-9661-2-git-send-email-cl@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cl@rock-chips.com
+Cc: heiko@sntech.de, shawn.lin@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, rocky.hao@rock-chips.com, afaerber@suse.de, fabio.estevam@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, kever.yang@rock-chips.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rob for the helpful review!
 
-On Tue, Aug 22, 2017 at 07:48:47PM -0500, Rob Herring wrote:
-> On Mon, Aug 21, 2017 at 03:12:00PM +0200, Lukas Wunner wrote:
-> > + - modesel-gpios:	GPIO pins to configure modesel of each chip.
-> > +			The number of GPIOs must be equal to "maxim,nchips".
-> > + - fault-gpios: 	GPIO pins to read undervoltage fault of each chip.
-> > + - db0-gpios:	GPIO pins to configure debounce of each chip.
-> > + - db1-gpios:	GPIO pins to configure debounce of each chip.
+On 2017/8/23 16:40, cl@rock-chips.com wrote:
+> From: Liang Chen <cl@rock-chips.com>
 > 
-> Perhaps an array db-gpios with 2 entries.
-
-Each of the db0-gpios and db1-gpios is already an array with one pin for
-each chip in the daisy-chain.
-
-So it would have to be a two-dimensional array, which AFAICS is not
-supported by the devicetree spec, or is it?
-
-However I realize that for clarity I should amend fault-gpios, db0-gpios
-and db1-gpios with the same text as modesel-gpios:
-			The number of GPIOs must be equal to "maxim,nchips".
-
-
-> > + - maxim,no-vcc24v:Boolean, whether the chips are powered through
-> > +			5VOUT instead of VCC24V.
+> Rockchip's rk3328 evaluation board has 3 mmc controllers for
+> sdio/sdmmc/emmc, let's enable them.
 > 
-> Use the regulator binding here?
+> Signed-off-by: Liang Chen <cl@rock-chips.com>
+> ---
+>   arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 74 +++++++++++++++++++++++++++++
+>   1 file changed, 74 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> index 86605ae..479f9d9 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+> @@ -60,6 +60,20 @@
+>   		regulator-max-microvolt = <12000000>;
+>   	};
+>   
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wifi_enable_h>;
+> +
+> +		/*
+> +		 * On the module itself this is one of these (depending
+> +		 * on the actual card populated):
+> +		 * - SDIO_RESET_L_WL_REG_ON
+> +		 * - PDN (power down when low)
+> +		 */
+> +		reset-gpios = <&gpio1 18 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+>   	vcc_sys: vcc-sys {
+>   		compatible = "regulator-fixed";
+>   		regulator-name = "vcc_sys";
+> @@ -69,6 +83,29 @@
+>   		regulator-max-microvolt = <5000000>;
+>   		vin-supply = <&dc_12v>;
+>   	};
+> +
+> +	vcc_sd: sdmmc-regulator {
+> +		compatible = "regulator-fixed";
+> +		gpio = <&gpio0 30 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sdmmc0m1_gpio>;
+> +		regulator-name = "vcc_sd";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc_io>;
+> +	};
+> +};
+> +
+> +&emmc {
+> +	bus-width = <8>;
+> +	cap-mmc-highspeed;
+> +	supports-emmc;
+> +	disable-wp;
 
-I'd have to look at the regulator's current voltage to determine through
-which pin the chips in the daisy-chain are powered (5VOUT or VCC24V).
+Please remove supports-{emmc,sd, sdio} for all mmc node.
 
-But if the regulator is generating 5V I couldn't discern if it's a
-faulting 24V supply or a non-faulting 5V supply.
+And disable-wp is for SD *only*.
 
-So a boolean does seem necessary, however I realize now that "no-vcc24v"
-is misleading, I've changed it to "maxim,ignore-undervoltage" for clarity:
+> +	non-removable;
+> +	num-slots = <1>;
 
-- maxim,ignore-undervoltage:
-			Boolean, whether to ignore undervoltage alarms signaled
-			by the "maxim,fault-gpios" and by the status byte
-			(in 16-bit mode).  Use this if the chips are powered
-			through 5VOUT instead of VCC24V, in which case they
-			will constantly signal undervoltage.
+num-slots is deprecated.
 
-Thanks,
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+> +	status = "okay";
+>   };
+>   
+>   &i2c1 {
+> @@ -186,6 +223,43 @@
+>   			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
+>   		};
+>   	};
+> +
+> +	sdio-pwrseq {
+> +		wifi_enable_h: wifi-enable-h {
+> +		rockchip,pins =
+> +			<1 18 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +};
+> +
+> +&sdio {
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+> +	disable-wp;
 
-Lukas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ditto
+
+> +	keep-power-in-suspend;
+> +	max-frequency = <150000000>;
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +	non-removable;
+> +	num-slots = <1>;
+
+Ditto
+
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_cmd &sdmmc1_clk>;
+> +	supports-sdio;
+
+Ditto
+
+> +	status = "okay";
+> +};
+> +
+> +&sdmmc {
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
+
+Ditto
+
+> +	disable-wp;
+> +	max-frequency = <150000000>;
+> +	num-slots = <1>;
+
+Ditto
+
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
+> +	supports-sd;
+
+Ditto
+
+> +	vmmc-supply = <&vcc_sd>;
+> +	status = "okay";
+>   };
+>   
+>   &tsadc {
+> 
