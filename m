@@ -1,55 +1,51 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 1/3] dt: bindings: Document DT bindings for Analog
- devices as3645a
-Date: Wed, 23 Aug 2017 10:33:15 +0300
-Message-ID: <20170823073315.clz5u5pbontskrvm@paasikivi.fi.intel.com>
-References: <20170819212410.3084-1-sakari.ailus@linux.intel.com>
- <20170819212410.3084-2-sakari.ailus@linux.intel.com>
- <20170823002810.d4qiyghf4ti4vpa2@rob-hp-laptop>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] arm64: dts: add RK3399-Q7 (Puma) SoM
+Date: Wed, 23 Aug 2017 09:38:06 +0200
+Message-ID: <1970473.BhgrPuBMdS@phil>
+References: <20170818193445.47542-1-klaus.goger@theobroma-systems.com> <20170818193445.47542-5-klaus.goger@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170823002810.d4qiyghf4ti4vpa2@rob-hp-laptop>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, javier@dowhile0.org, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170818193445.47542-5-klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Aug 22, 2017 at 07:28:10PM -0500, Rob Herring wrote:
-> On Sun, Aug 20, 2017 at 12:24:08AM +0300, Sakari Ailus wrote:
-> > From: Sakari Ailus <sakari.ailus@iki.fi>
+Am Freitag, 18. August 2017, 21:34:44 CEST schrieb Klaus Goger:
+> The RK3399-Q7 SoM is a Qseven-compatible (70mm x 70mm, MXM-230
+> connector) system-on-module from Theobroma Systems, featuring the
+> Rockchip RK3399.
 > 
-> Commit msg?
-
-I'll add:
-
-Document DT bindings for analog devices as3645a flash LED controller which
-also supports an indicator LED.
-
+> It provides the following feature set:
+>  * up to 4GB DDR3
+>  * on-module SPI-NOR flash
+>  * on-module eMMC (with 8-bit 1.8V interface)
+>  * SD card (on a baseboad) via edge connector
+>  * Gigabit Ethernet with on-module Micrel KSZ9031 GbE PHY
+>  * HDMI/eDP/2x MIPI-DSI
+>  * 2x MIPI-CSI
+>  * USB
+>    - 1x USB 3.0 dual-role (direct connection)
+>    - 2x USB 3.0 host + 1x USB 2.0 (on-module USB 3.0 hub)
+>  * on-module STM32 Cortex-M0 companion controller, implementing:
+>    - low-power RTC functionality (ISL1208 emulation)
+>    - fan controller (AMC6821 emulation)
+>    - USB<->CAN bridge controller
 > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> 
-> Shouldn't author and SoB be the same email?
+> Signed-off-by: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 
-I'll change that.
+applied for 4.14 with:
+- a comment style fix
+- added "rockchip:" to patch subject 
+- 2 minor indentation fixes
+- property and node reorderings
 
-> 
-> > ---
-> >  .../devicetree/bindings/leds/ams,as3645a.txt       | 71 ++++++++++++++++++++++
-> >  1 file changed, 71 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> 
-> Otherwise,
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks!
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
