@@ -1,70 +1,48 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 3/5] dt-bindings: sdhci-omap: Add bindings for the
- sdhci-omap controller
-Date: Wed, 23 Aug 2017 11:12:46 +0530
-Message-ID: <20170823054246.23927-1-kishon@ti.com>
-References: <20170821142132.GH6008@atomide.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sun8i: Add board dts file for
+ Banana Pi M2 Berry
+Date: Wed, 23 Aug 2017 13:46:50 +0800
+Message-ID: <D377CF9E-AE08-4AA4-AAD4-C9047C8007E9@aosc.io>
+References: <20170822061742.40869-1-icenowy@aosc.io> <20170822061742.40869-3-icenowy@aosc.io> <20170822201215.wbpioc7vbse4ajja@flea.home>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170821142132.GH6008@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBU5N6TGAKGQESBPOAVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170822201215.wbpioc7vbse4ajja-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding for the TI's sdhci-omap controller. This now includes only
-a subset of properties documented in ti-omap-hsmmc.txt but will eventually
-include all the properties.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
-Changes from v2:
-*) Fixed example to use the updated compatible
 
-Changes from v1:
-*) Create a new sdhci-omap.txt document for TI's sdhci-omap controller instead
-   of using the ti-omap-hsmmc.txt as suggested by Tony
- .../devicetree/bindings/mmc/sdhci-omap.txt         | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+=E4=BA=8E 2017=E5=B9=B48=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=884:=
+12:15, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Tue, Aug 22, 2017 at 02:17:42PM +0800, Icenowy Zheng wrote:
+>> +&reg_vcc5v0 {
+>> +	gpio =3D <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
+>> +	enable-active-high;
+>> +};
+>
+>Same thing here, you're not using that regulator anywhere. You don't
+>even use any of the regulators in sunxi-common-regulators.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
-new file mode 100644
-index 000000000000..139695ad2d58
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
-@@ -0,0 +1,22 @@
-+* TI OMAP SDHCI Controller
-+
-+Refer to mmc.txt for standard MMC bindings.
-+
-+Required properties:
-+- compatible: Should be "ti,dra7-sdhci" for DRA7 and DRA72 controllers
-+- ti,hwmods: Must be "mmc<n>", <n> is controller instance starting 1
-+
-+Optional properties:
-+- ti,dual-volt: boolean, supports dual voltage cards
-+- ti,non-removable: non-removable slot (like eMMC)
-+
-+Example:
-+	mmc1: mmc@0x4809c000 {
-+		compatible = "ti,dra7-sdhci";
-+		reg = <0x4809c000 0x400>;
-+		ti,hwmods = "mmc1";
-+		ti,dual-volt;
-+		bus-width = <4>;
-+		vmmc-supply = <&vmmc>; /* phandle to regulator node */
-+		ti,non-removable;
-+	};
--- 
-2.11.0
+Maybe I should drop the regulator now, and re-introduce it when adding USB/=
+SATA?
+
+>
+>Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
