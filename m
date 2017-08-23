@@ -1,49 +1,51 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] irqchip: uniphier-aidet: add UniPhier AIDET irqchip
- driver
-Date: Tue, 22 Aug 2017 19:40:12 -0500
-Message-ID: <20170823004012.nxpslh37we7btqkg@rob-hp-laptop>
-References: <1503309663-2742-1-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [V2 1/4] MIPS: dts: ralink: Add Mediatek MT7628A SoC
+Date: Tue, 22 Aug 2017 19:41:14 -0500
+Message-ID: <20170823004114.a7raxjrjj7vcmpbb@rob-hp-laptop>
+References: <1503312931-34416-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503309663-2742-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1503312931-34416-1-git-send-email-harvey.hunt@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harvey Hunt <harvey.hunt@imgtec.com>
+Cc: mark.rutland@arm.com, ralf@linux-mips.org, john@phrozen.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 07:01:03PM +0900, Masahiro Yamada wrote:
-> UniPhier SoCs contain AIDET (ARM Interrupt Detector).  This is intended
-> to provide additional features that are not covered by GIC.  The main
-> purpose is to provide logic inverter to support low level and falling
-> edge trigger type for interrupt lines from on-board devices.
+On Mon, Aug 21, 2017 at 11:55:29AM +0100, Harvey Hunt wrote:
+> The MT7628A is the successor to the MT7620 and pin compatible with the
+> MT7688A, although the latter supports only a 1T1R antenna rather than
+> a 2T2R antenna.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> This commit adds support for the following features:
+> 
+> - UART
+> - USB PHY
+> - EHCI
+> - Interrupt controller
+> - System controller
+> - Memory controller
+> - Reset controller
+> 
+> Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+> Cc: linux-mips@linux-mips.org 
+> Cc: devicetree@vger.kernel.org 
+> Cc: linux-kernel@vger.kernel.org 
+> Cc: linux-mediatek@lists.infradead.org 
 > ---
+> Ralf: I've added this patch to both my vocore2 and omega2+
+> patchsets for ease of review, please only merge it once :-)
 > 
-> Changes in v2:
->   - Use readl/write_relaxed instead of readl/writel
->   - Move val = 0 for code symmetry
->   - .alloc() hook only supports nr_irqs==1 case
->   - Move struct irq_chip to static data because this driver expects
->     only one device instance in the system
->   - Match the interrupt number to SPI of GIC to make DT binding clearer
->     (register offset starts from 0x4)
+> Changes in V2:
+> - Add MT7628 to patchset to keep kbuild happy and retain context
+> - Rename multiple DT nodes to standard names
+> - Add labels for uarts
+> - Rename USB PHY handle
 > 
->  .../socionext,uniphier-aidet.txt                   |  32 +++
+>  Documentation/devicetree/bindings/mips/ralink.txt |   1 +
+>  arch/mips/boot/dts/ralink/mt7628a.dtsi            | 126 ++++++++++++++++++++++
+>  2 files changed, 127 insertions(+)
+>  create mode 100644 arch/mips/boot/dts/ralink/mt7628a.dtsi
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  MAINTAINERS                                        |   1 +
->  drivers/irqchip/Kconfig                            |   8 +
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-uniphier-aidet.c               | 246 +++++++++++++++++++++
->  5 files changed, 288 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
->  create mode 100644 drivers/irqchip/irq-uniphier-aidet.c
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
