@@ -1,37 +1,53 @@
 From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: [PATCH v2 0/4] crypto: Add driver for JZ4780 PRNG
-Date: Wed, 23 Aug 2017 08:27:03 +0530
-Message-ID: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
+Subject: [PATCH v2 1/4] crypto: jz4780-rng: Add JZ4780 PRNG devicetree binding documentation
+Date: Wed, 23 Aug 2017 08:27:04 +0530
+Message-ID: <20170823025707.27888-2-prasannatsmkumar@gmail.com>
+References: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
 Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
 Sender: linux-crypto-owner@vger.kernel.org
 To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paul@crapouillou.net, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, malat@debian.org, noloader@gmail.com
 Cc: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support of pseudo random number generator found
-in Ingenic's JZ4780 and X1000 SoC.
+Add devicetree bindings for hardware pseudo random number generator
+present in Ingenic JZ4780 SoC.
 
-Based on Paul's review comments, add 'syscon' compatible in CGU node in
-jz4780.dtsi. jz4780-rng driver uses regmap exposed via syscon interface
-to access the RNG registers. CGU driver is not modified in this patch
-set as registers used by CGU driver and this driver are different.
+Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+---
+Changes in v2:
+* Add "syscon" in CGU node's compatible section
+* Make RNG child node of CGU.
 
-PrasannaKumar Muralidharan (4):
-  crypto: jz4780-rng: Add JZ4780 PRNG devicetree binding documentation
-  crypto: jz4780-rng: Add Ingenic JZ4780 hardware PRNG driver
-  crypto: jz4780-rng: Add RNG node to jz4780.dtsi
-  crypto: jz4780-rng: Enable PRNG support in CI20 defconfig
-
- .../bindings/crypto/ingenic,jz4780-rng.txt         |  20 +++
- MAINTAINERS                                        |   5 +
- arch/mips/boot/dts/ingenic/jz4780.dtsi             |   6 +-
- arch/mips/configs/ci20_defconfig                   |   5 +
- drivers/crypto/Kconfig                             |  19 +++
- drivers/crypto/Makefile                            |   1 +
- drivers/crypto/jz4780-rng.c                        | 168 +++++++++++++++++++++
- 7 files changed, 223 insertions(+), 1 deletion(-)
+ .../bindings/crypto/ingenic,jz4780-rng.txt           | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt
- create mode 100644 drivers/crypto/jz4780-rng.c
 
+diff --git a/Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt b/Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt
+new file mode 100644
+index 0000000..a0c18e5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt
+@@ -0,0 +1,20 @@
++Ingenic jz4780 RNG driver
++
++Required properties:
++- compatible : Should be "ingenic,jz4780-rng"
++
++Example:
++
++cgu: jz4780-cgu@10000000 {
++	compatible = "ingenic,jz4780-cgu", "syscon";
++	reg = <0x10000000 0x100>;
++
++	clocks = <&ext>, <&rtc>;
++	clock-names = "ext", "rtc";
++
++	#clock-cells = <1>;
++
++	rng: rng@d8 {
++		compatible = "ingenic,jz480-rng";
++	};
++};
 -- 
 2.10.0
