@@ -1,99 +1,77 @@
-From: icenowy@aosc.io
-Subject: Re: [PATCH v2 1/3] media: V3s: Add support for Allwinner CSI.
-Date: Wed, 23 Aug 2017 19:13:31 +0800
-Message-ID: <8f6b9ca17a987a5aec0bdd47870688ab@aosc.io>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
- <20170822201731.hyjqrbkhggaoomfl@flea.home>
- <3392c717-10ea-4d6e-4c25-9be0bbec004e@xs4all.nl> <3036789.1NOcar0Ykn@avalon>
+From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARC: AXS103: DTS: Set cpu frequency explicitly via
+ dts
+Date: Wed, 23 Aug 2017 11:24:15 +0000
+Message-ID: <1503487454.2586.58.camel@synopsys.com>
+References: <20170814161213.17522-1-Eugeniy.Paltsev@synopsys.com>
+         <20170814161213.17522-5-Eugeniy.Paltsev@synopsys.com>
+         <4685c3d5-7a2f-78cd-a11b-2eda0de2dd35@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3036789.1NOcar0Ykn@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mark Rutland <mark.rutland@arm.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, linux-sunxi@googlegroups.com, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Krzysztof Kozlowski <krzk@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Benoit Parrot <bparrot@ti.com>, Rob Herring <robh+dt@kernel.org>, Yong <yong.deng@magewell.com>, Hugues Fruchet <hugues.fruchet@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Jean-Christophe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4685c3d5-7a2f-78cd-a11b-2eda0de2dd35-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Content-ID: <0FCCF0542B240B4EA68F16282A2C369C-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2017-08-23 15:43，Laurent Pinchart 写道：
-> Hi Hans,
-> 
-> On Wednesday, 23 August 2017 09:52:00 EEST Hans Verkuil wrote:
->> On 08/22/2017 10:17 PM, Maxime Ripard wrote:
->> > On Tue, Aug 22, 2017 at 08:43:35AM +0200, Hans Verkuil wrote:
->> >>>>> +static int sun6i_video_link_setup(struct media_entity *entity,
->> >>>>> +				  const struct media_pad *local,
->> >>>>> +				  const struct media_pad *remote, u32 flags)
->> >>>>> +{
->> >>>>> +	struct video_device *vdev = media_entity_to_video_device(entity);
->> >>>>> +	struct sun6i_video *video = video_get_drvdata(vdev);
->> >>>>> +
->> >>>>> +	if (WARN_ON(video == NULL))
->> >>>>> +		return 0;
->> >>>>> +
->> >>>>> +	return sun6i_video_formats_init(video);
->> >>>>
->> >>>> Why is this called here? Why not in video_init()?
->> >>>
->> >>> sun6i_video_init is in the driver probe context.
->> >>> sun6i_video_formats_init use media_entity_remote_pad and
->> >>> media_entity_to_v4l2_subdev to find the subdevs.
->> >>> The media_entity_remote_pad can't work before all the media pad linked.
->> >>
->> >> A video_init is typically called from the notify_complete callback.
->> >> Actually, that's where the video_register_device should be created as
->> >> well. When you create it in probe() there is possibly no sensor yet, so
->> >> it would be a dead video node (or worse, crash when used).
->> >>
->> >> There are still a lot of platform drivers that create the video node in
->> >> the probe, but it's not the right place if you rely on the async loading
->> >> of subdevs.
->> >
->> > That's not really related, but I'm not really sure it's a good way to
->> > operate. This essentially means that you might wait forever for a
->> > component in your pipeline to be probed, without any chance of it
->> > happening (not compiled, compiled as a module and not loaded, hardware
->> > defect preventing the driver from probing properly, etc), even though
->> > that component might not be essential.
->> 
->> We're talking straightforward video pipelines here. I.e. a source, 
->> some
->> processing units and a DMA engine at the end.
-> 
-> As a first step possibly, but many SoCs have ISPs that are not 
-> supported by
-> the initial camera driver version.
-
-I think here it's also the situation.
-
-Allwinner SoCs beyond sun6i (which is this driver targeting at) has an 
-ISP
-internally called "HawkView ISP", and there's no document of it (even 
-the
-source code is only released in recent several months).
-
-> 
->> There is no point in creating a video node if the pipeline is not 
->> complete
->> since you need the full pipeline.
->> 
->> I've had bad experiences in the past where video nodes were created 
->> too
->> soon and part of the internal state was still incomplete, causing at 
->> best
->> weird behavior and at worst crashes.
-> 
-> Drivers obviously need to be fixed if they are buggy in that regard. 
-> Such race
-> conditions are definitely something I keep an eye on when reviewing 
-> code.
-> 
->> More complex devices are a whole different ballgame.
->> 
->> > This is how DRM operates, and you sometimes end up in some very dumb
->> > situations where you wait for say, the DSI controller to probe, while
->> > you only care about HDMI in your system.
->> >
->> > But this seems to be on of the hot topic these days, so we might
->> > discuss it further in some other thread :)
+T24gVHVlLCAyMDE3LTA4LTIyIGF0IDE0OjQwIC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+
+IE9uIDA4LzE0LzIwMTcgMDk6MTIgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gPiBTZXQg
+Y3B1IGZyZXF1ZW5jeSBleHBsaWNpdGx5IHZpYSAiY3B1LWZyZXEiIHBhcmFtIGluIGNwdSAwIG5v
+ZGUNCj4gPiBpbiBkZXZpY2UgdHJlZS4NCj4gPiANCj4gPiBXZSBhZGQgImNwdS1mcmVxIiBvbmx5
+IHRvIGNwdSAwIGFzIGFsbCBjcHVzIGFyZSBjbG9ja2luZyBmcm9tIHNhbWUNCj4gPiBjbG9jayBz
+b3VyY2UgKHNhbWUgcGxsIGluIG91ciBjYXNlKS4NCj4gPiANCj4gPiBXZSBvdmVycmlkZSBjcHVz
+IG5vZGUgaW4gc2tlbGV0b24gYXMgd2UgZG9uJ3QgbmVlZCB0aGlzIGNoYW5nZSBmb3INCj4gPiBu
+c2ltLg0KPiANCj4gR2l2ZW4gdGhhdCB5b3UgYWRkZWQgYSBnZW5lcmljIGZlYXR1cmUgYXMgcGFy
+dCBvZiAxLzUgLSBkbyBvdGhlcg0KPiBwbGF0Zm9ybXPCoA0KPiBhYmlsaXMvbnBzIG5lZWQgY29y
+cmVzcG9uZGluZyBmaXh1cHMgYXMgdGhpcyBvbmUgIQ0KDQpBY3R1YWxseSBuby4NCklmIGNwdSAw
+IG5vZGUgZG9uJ3QgaGF2ZSAiY3B1LWZyZXEiIHByb3BlcnR5IHdlIHNpbXBseSBwcmludCBjcHUN
+CmZyZXF1ZW5jeSBhbmQgZG9uJ3QgdHJ5IHRvIGNoYW5nZSBpdC4NClNvIHdlIGNhbiBsZWZ0IG90
+aGVyIGR0cyB1bnRvdWNoZWQuIA0KDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogRXVnZW5peSBQ
+YWx0c2V2IDxFdWdlbml5LlBhbHRzZXZAc3lub3BzeXMuY29tPg0KPiA+IC0tLQ0KPiA+IMKgIGFy
+Y2gvYXJjL2Jvb3QvZHRzL2F4YzAwMy5kdHNpwqDCoMKgwqDCoHwgMTMgKysrKysrKysrKysrKw0K
+PiA+IMKgIGFyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwM19pZHUuZHRzaSB8IDM1DQo+ID4gKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiDCoCAyIGZpbGVzIGNoYW5nZWQsIDQ4
+IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMv
+YXhjMDAzLmR0c2kNCj4gPiBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwMy5kdHNpDQo+ID4gaW5k
+ZXggZGNhN2UzOS4uN2M3NDExYyAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FyYy9ib290L2R0cy9h
+eGMwMDMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwMy5kdHNpDQo+ID4g
+QEAgLTE3LDYgKzE3LDE5IEBADQo+ID4gwqDCoAkjYWRkcmVzcy1jZWxscyA9IDwyPjsNCj4gPiDC
+oMKgCSNzaXplLWNlbGxzID0gPDI+Ow0KPiA+IMKgwqANCj4gPiArCWNwdXMgew0KPiA+ICsJCSNh
+ZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4g
+PiArCQljcHVAMCB7DQo+ID4gKwkJCWRldmljZV90eXBlID0gImNwdSI7DQo+ID4gKwkJCWNvbXBh
+dGlibGUgPSAic25wcyxhcmNoczM4IjsNCj4gPiArCQkJcmVnID0gPDA+Ow0KPiA+ICsJCQljcHUt
+ZnJlcSA9IDwxMDAwMDAwMDA+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNvcmVfY2xrPjsNCj4gPiAr
+CQl9Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gwqDCoAljcHVfY2FyZCB7DQo+ID4gwqDCoAkJY29t
+cGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsNCj4gPiDCoMKgCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsN
+Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhjMDAzX2lkdS5kdHNpDQo+ID4g
+Yi9hcmNoL2FyYy9ib290L2R0cy9heGMwMDNfaWR1LmR0c2kNCj4gPiBpbmRleCA1YjU2YmVmLi40
+NGJjMDFlIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwM19pZHUuZHRz
+aQ0KPiA+ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwM19pZHUuZHRzaQ0KPiA+IEBAIC0x
+Nyw2ICsxNyw0MSBAQA0KPiA+IMKgwqAJI2FkZHJlc3MtY2VsbHMgPSA8Mj47DQo+ID4gwqDCoAkj
+c2l6ZS1jZWxscyA9IDwyPjsNCj4gPiDCoMKgDQo+ID4gKwljcHVzIHsNCj4gPiArCQkjYWRkcmVz
+cy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArDQo+ID4gKwkJ
+LyoNCj4gPiArCQnCoCogImNwdS1mcmVxIiB3YXMgYWRkZWQgb25seSB0byBjcHUgMCBhcyBhbGwg
+Y3B1cw0KPiA+IGFyZSBjbG9ja2luZw0KPiA+ICsJCcKgKiBmcm9tIHNhbWUgY2xvY2sgc291cmNl
+IChzYW1lIHBsbCAoY29yZV9jbGspIGluDQo+ID4gb3VyIGNhc2UpLg0KPiA+ICsJCcKgKi8NCj4g
+PiArCQljcHVAMCB7DQo+ID4gKwkJCWRldmljZV90eXBlID0gImNwdSI7DQo+ID4gKwkJCWNvbXBh
+dGlibGUgPSAic25wcyxhcmNoczM4IjsNCj4gPiArCQkJcmVnID0gPDA+Ow0KPiA+ICsJCQljcHUt
+ZnJlcSA9IDwxMDAwMDAwMDA+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNvcmVfY2xrPjsNCj4gPiAr
+CQl9Ow0KPiA+ICsJCWNwdUAxIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiAr
+CQkJY29tcGF0aWJsZSA9ICJzbnBzLGFyY2hzMzgiOw0KPiA+ICsJCQlyZWcgPSA8MT47DQo+ID4g
+KwkJCWNsb2NrcyA9IDwmY29yZV9jbGs+Ow0KPiA+ICsJCX07DQo+ID4gKwkJY3B1QDIgew0KPiA+
+ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KPiA+ICsJCQljb21wYXRpYmxlID0gInNucHMsYXJj
+aHMzOCI7DQo+ID4gKwkJCXJlZyA9IDwyPjsNCj4gPiArCQkJY2xvY2tzID0gPCZjb3JlX2Nsaz47
+DQo+ID4gKwkJfTsNCj4gPiArCQljcHVAMyB7DQo+ID4gKwkJCWRldmljZV90eXBlID0gImNwdSI7
+DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAic25wcyxhcmNoczM4IjsNCj4gPiArCQkJcmVnID0gPDM+
+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNvcmVfY2xrPjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4g
+PiArDQo+ID4gwqDCoAljcHVfY2FyZCB7DQo+ID4gwqDCoAkJY29tcGF0aWJsZSA9ICJzaW1wbGUt
+YnVzIjsNCj4gPiDCoMKgCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gDQo+IA0KLS0gDQrCoEV1
+Z2VuaXkgUGFsdHNldg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
