@@ -1,59 +1,115 @@
-From: "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH 0/3] DW9714 DT support
-Date: Wed, 23 Aug 2017 01:22:38 +0000
-Message-ID: <6F87890CF0F5204F892DEA1EF0D77A5972FA7293@FMSMSX114.amr.corp.intel.com>
-References: <1502977376-22836-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2] irqchip: uniphier-aidet: add UniPhier AIDET irqchip driver
+Date: Wed, 23 Aug 2017 10:30:07 +0900
+Message-ID: <CAK7LNATfeDk0rFjspEM08Y4R_3TKffE2dcBNCLnNn+t1G5YXew@mail.gmail.com>
+References: <1503309663-2742-1-git-send-email-yamada.masahiro@socionext.com>
+ <e3b865f5-a779-f176-67ef-9ffac25019d4@arm.com> <CAK7LNASUzuKpQyZt6ks44EoQOhvqgUU8rUfJyNknGNVAgWYAKg@mail.gmail.com>
+ <046d0078-bb9d-f043-b5b4-481c695e2bea@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502977376-22836-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <046d0078-bb9d-f043-b5b4-481c695e2bea@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi Marc,
 
-Thanks for the patches.
+2017-08-22 17:20 GMT+09:00 Marc Zyngier <marc.zyngier@arm.com>:
+> On 22/08/17 03:03, Masahiro Yamada wrote:
+>> Hi Mark,
+>>
+>>
+>> 2017-08-21 19:25 GMT+09:00 Marc Zyngier <marc.zyngier@arm.com>:
+>>
+>>>> +static struct irq_chip uniphier_aidet_irq_chip = {
+>>>> +     .name = "AIDET",
+>>>> +     .irq_mask = irq_chip_mask_parent,
+>>>> +     .irq_unmask = irq_chip_unmask_parent,
+>>>> +     .irq_eoi = irq_chip_eoi_parent,
+>>>> +     .irq_set_type = uniphier_aidet_irq_set_type,
+>>>
+>>> Is this irqchip only used in a uniprocessor system? If not, how is the
+>>> interrupt affinity managed without a irq_set_affinity callback?
+>>>
+>>
+>>
+>> After consideration, some questions popped up.
+>>
+>>
+>>
+>> We can set other hooks, for example, .irq_{enable,disable} if we like.
+>>
+>>          .irq_enable = irq_chip_enable_parent,
+>>          .irq_disable = irq_chip_disable_parent,
+>>
+>>
+>> I know the parent (GIC) implements unmask/mask instead of enable/disable,
+>> but this is also out of the scope of this driver.
+>>
+>> I am not familiar with the difference between unmask/mask and enable/disable.
+>> IIUC, the difference is that
+>> if enable/disable hooks are missing, IRQs are masked lazily.
+>
+> That's a rather good thing. Disabling interrupts lazily is a net
+> performance gain when you you have to repeatedly mask/unmask interrupts.
+>
+>> If a child irqchip implemented enable/disable,
+>> IRQs would be masked immediately.  So, in irq-domain hierarchy,
+>> a child irqchip need to have a good insight about its parent
+>> which is be better, unmask/mask or enable/disable.
+>
+> Not necessarily. irq_chip_enable_parent will call unmask if enable is
+> not implemented in the parent. But you'll loose the benefit of lazy
+> masking of interrupts routed through this controller.
 
-I have verified that the dw9714 driver gets probed via DT bindings, with these patches on 4.13-rc6 kernel.
+Right.
+I will not add .irq_{enable/disable} to keep the benefit of lazy masking.
 
-Feel free to add
 
-Tested-by: Rajmohan Mani <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-Raj
 
-> -----Original Message-----
-> From: Sakari Ailus [mailto:sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org]
-> Sent: Thursday, August 17, 2017 6:43 AM
-> To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mani, Rajmohan
-> <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Subject: [PATCH 0/3] DW9714 DT support
-> 
-> Hi all,
-> 
-> This patchset adds DT bindings as well as DT support for DW9714. The unused
-> ACPI match table is removed.
-> 
-> Sakari Ailus (3):
->   dt-bindings: Add bindings for Dongwoon DW9714 voice coil
->   dw9714: Add Devicetree support
->   dw9714: Remove ACPI match tables, convert to use probe_new
-> 
->  .../bindings/media/i2c/dongwoon,dw9714.txt         |  9 ++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  drivers/media/i2c/dw9714.c                         | 26 +++++++++-------------
->  3 files changed, 21 insertions(+), 15 deletions(-)  create mode 100644
-> Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
-> 
-> --
-> 2.7.4
+> There are many other things that are *much* worse, like the need to
+> implement a irq_eoi callback even if the irqchip has no such concept.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Right. I noticed irq_eoi is mandatory when I tested my driver.
+
+I notice handle_percpu_irq() and handle_percpu_devid_irq()
+check the NULL pointer dereference like
+
+        if (chip->irq_eoi)
+                chip->irq_eoi(&desc->irq_data);
+
+But, other flow handlers do not this.
+
+
+
+
+>>> Nit: please use irq_domain_create_hierarchy.
+>>
+>> I'd like to know your intention about your commit
+>> 2a5e9a072da6469a37d1f0b1577416f51223c280
+>>
+>> Is that mean, irq_domain_add_hierarchy will be deprecated
+>> some time in the future?
+>
+> That's the intent, as we're moving towards a firmware-agnostic
+> irq_domain layer. Think of it as a deprecated interface.
+>
+>> If I grep under drivers/irqchip/,
+>> most drivers are currently using irq_domain_add_hierarchy(),
+>> and this provides a shorter form for DT-based drivers.
+> Yes, we have a lot of legacy, and I don't always catch new additions.
+
+I see.
+
+I hope all drivers will be converted and irq_domain_add_hierarchy() will be
+deleted.
+
+Having many variants with slight difference is confusing to driver developers.
+
+
+-- 
+Best Regards
+Masahiro Yamada
