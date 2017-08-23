@@ -1,398 +1,195 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3] irqchip: uniphier-aidet: add UniPhier AIDET irqchip driver
-Date: Wed, 23 Aug 2017 10:31:47 +0900
-Message-ID: <1503451907-21535-1-git-send-email-yamada.masahiro@socionext.com>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for
+ Allwinner CSI.
+Date: Wed, 23 Aug 2017 10:32:16 +0800
+Message-ID: <20170823103216.e43283308c195c4a80d929fa@magewell.com>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+	<1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+	<20170728160233.xooevio4hoqkgfaq@flea.lan>
+	<20170731111640.d5a8e580a48183cfce85943d@magewell.com>
+	<20170822174339.6woauylgzkgqxygk@flea.lan>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBBO6S6PGAKGQET3H2SOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170822174339.6woauylgzkgqxygk-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sun
 List-Id: devicetree@vger.kernel.org
 
-UniPhier SoCs contain AIDET (ARM Interrupt Detector).  This is intended
-to provide additional features that are not covered by GIC.  The main
-purpose is to provide logic inverter to support low level and falling
-edge trigger types for interrupt lines from on-board devices.
+On Tue, 22 Aug 2017 19:43:39 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+> Hi Yong,
+>=20
+> On Mon, Jul 31, 2017 at 11:16:40AM +0800, Yong wrote:
+> > > > @@ -143,6 +143,7 @@ source "drivers/media/platform/am437x/Kconfig"
+> > > >  source "drivers/media/platform/xilinx/Kconfig"
+> > > >  source "drivers/media/platform/rcar-vin/Kconfig"
+> > > >  source "drivers/media/platform/atmel/Kconfig"
+> > > > +source "drivers/media/platform/sun6i-csi/Kconfig"
+> > >=20
+> > > We're going to have several different drivers in v4l eventually, so I
+> > > guess it would make sense to move to a directory of our own.
+> >=20
+> > Like this?
+> > drivers/media/platform/sunxi/sun6i-csi
+>=20
+> Yep.
+>=20
+> > > > +static int sun6i_graph_notify_complete(struct v4l2_async_notifier =
+*notifier)
+> > > > +{
+> > > > +	struct sun6i_csi *csi =3D
+> > > > +			container_of(notifier, struct sun6i_csi, notifier);
+> > > > +	struct sun6i_graph_entity *entity;
+> > > > +	int ret;
+> > > > +
+> > > > +	dev_dbg(csi->dev, "notify complete, all subdevs registered\n");
+> > > > +
+> > > > +	/* Create links for every entity. */
+> > > > +	list_for_each_entry(entity, &csi->entities, list) {
+> > > > +		ret =3D sun6i_graph_build_one(csi, entity);
+> > > > +		if (ret < 0)
+> > > > +			return ret;
+> > > > +	}
+> > > > +
+> > > > +	/* Create links for video node. */
+> > > > +	ret =3D sun6i_graph_build_video(csi);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > >=20
+> > > Can you elaborate a bit on the difference between a node parsed with
+> > > _graph_build_one and _graph_build_video? Can't you just store the
+> > > remote sensor when you build the notifier, and reuse it here?
+> >=20
+> > There maybe many usercases:
+> > 1. CSI->Sensor.
+> > 2. CSI->MIPI->Sensor.
+> > 3. CSI->FPGA->Sensor1
+> >             ->Sensor2.
+> > FPGA maybe some other video processor. FPGA, MIPI, Sensor can be
+> > registered as v4l2 subdevs. We do not care about the driver code
+> > of them. But they should be linked together here.
+> >=20
+> > So, the _graph_build_one is used to link CSI port and subdevs.=20
+> > _graph_build_video is used to link CSI port and video node.
+>=20
+> So the graph_build_one is for the two first cases, and the
+> _build_video for the latter case?
 
-Changes in v3:
-  - Use irq_domain_create_hierarchy() instead of legacy
-    irq_domain_add_hierarchy()
-  - Add .irq_set_affinity hook
-  - Pass proper trigger type to parent
+No.=20
+The _graph_build_one is used to link the subdevs found in the device=20
+tree. _build_video is used to link the closest subdev to video node.
+Video node is created in the driver, so the method to get it's pad is
+diffrent to the subdevs.
 
-Changes in v2:
-  - Use readl/write_relaxed instead of readl/writel
-  - Move val = 0 for code symmetry
-  - .alloc() hook only supports nr_irqs==1 case
-  - Move struct irq_chip to static data because this driver expects
-    only one device instance in the system
-  - Match the interrupt number to SPI of GIC to make DT binding clearer
-    (register offset starts from 0x4)
+>=20
+> If so, you should take a look at the last iteration of the
+> subnotifiers rework by Nikas S=C3=B6derlund (v4l2-async: add subnotifier
+> registration for subdevices).
+>=20
+> It allows subdevs to register notifiers, and you don't have to build
+> the graph from the video device, each device and subdev can only care
+> about what's next in the pipeline, but not really what's behind it.
+>=20
+> That would mean in your case that you can only deal with your single
+> CSI pad, and whatever subdev driver will use it care about its own.
 
- .../socionext,uniphier-aidet.txt                   |  32 +++
- MAINTAINERS                                        |   1 +
- drivers/irqchip/Kconfig                            |   8 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-uniphier-aidet.c               | 261 +++++++++++++++++++++
- 5 files changed, 303 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
- create mode 100644 drivers/irqchip/irq-uniphier-aidet.c
+Do you mean the subdevs create pad link in the notifier registered by
+themself ?
+If so, _graph_build_one is needless. But how to make sure the pipeline
+has linked correctly when operateing the pipeline.=20
+I will lookt at this in more detail.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt b/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
-new file mode 100644
-index 000000000000..48e71d3ac2ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
-@@ -0,0 +1,32 @@
-+UniPhier AIDET
-+
-+UniPhier AIDET (ARM Interrupt Detector) is an add-on block for ARM GIC (Generic
-+Interrupt Controller).  GIC itself can handle only high level and rising edge
-+interrupts.  The AIDET provides logic inverter to support low level and falling
-+edge interrupts.
-+
-+Required properties:
-+- compatible: Should be one of the following:
-+    "socionext,uniphier-ld4-aidet"  - for LD4 SoC
-+    "socionext,uniphier-pro4-aidet" - for Pro4 SoC
-+    "socionext,uniphier-sld8-aidet" - for sLD8 SoC
-+    "socionext,uniphier-pro5-aidet" - for Pro5 SoC
-+    "socionext,uniphier-pxs2-aidet" - for PXs2/LD6b SoC
-+    "socionext,uniphier-ld11-aidet" - for LD11 SoC
-+    "socionext,uniphier-ld20-aidet" - for LD20 SoC
-+    "socionext,uniphier-pxs3-aidet" - for PXs3 SoC
-+- reg: Specifies offset and length of the register set for the device.
-+- interrupt-controller: Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an interrupt
-+  source.  The value should be 2.  The first cell defines the interrupt number
-+  (corresponds to the SPI interrupt number of GIC).  The second cell specifies
-+  the trigger type as defined in interrupts.txt in this directory.
-+
-+Example:
-+
-+	aidet: aidet@5fc20000 {
-+		compatible = "socionext,uniphier-pro4-aidet";
-+		reg = <0x5fc20000 0x200>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1c3feffb1c1c..7b84f047b3fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1993,6 +1993,7 @@ F:	arch/arm64/boot/dts/socionext/
- F:	drivers/bus/uniphier-system-bus.c
- F:	drivers/clk/uniphier/
- F:	drivers/i2c/busses/i2c-uniphier*
-+F:	drivers/irqchip/irq-uniphier-aidet.c
- F:	drivers/pinctrl/uniphier/
- F:	drivers/reset/reset-uniphier.c
- F:	drivers/tty/serial/8250/8250_uniphier.c
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index f1fd5f44d1d4..d1f43cb92e4d 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -306,3 +306,11 @@ config QCOM_IRQ_COMBINER
- 	help
- 	  Say yes here to add support for the IRQ combiner devices embedded
- 	  in Qualcomm Technologies chips.
-+
-+config IRQ_UNIPHIER_AIDET
-+	bool "UniPhier AIDET support" if COMPILE_TEST
-+	depends on ARCH_UNIPHIER || COMPILE_TEST
-+	default ARCH_UNIPHIER
-+	select IRQ_DOMAIN_HIERARCHY
-+	help
-+	  Support for the UniPhier AIDET (ARM Interrupt Detector).
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index e88d856cc09c..2c630574986f 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -78,3 +78,4 @@ obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
- obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
- obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
- obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
-+obj-$(CONFIG_IRQ_UNIPHIER_AIDET)	+= irq-uniphier-aidet.o
-diff --git a/drivers/irqchip/irq-uniphier-aidet.c b/drivers/irqchip/irq-uniphier-aidet.c
-new file mode 100644
-index 000000000000..7ba7f253470e
---- /dev/null
-+++ b/drivers/irqchip/irq-uniphier-aidet.c
-@@ -0,0 +1,261 @@
-+/*
-+ * Driver for UniPhier AIDET (ARM Interrupt Detector)
-+ *
-+ * Copyright (C) 2017 Socionext Inc.
-+ *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+#define UNIPHIER_AIDET_NR_IRQS		256
-+
-+#define UNIPHIER_AIDET_DETCONF		0x04	/* inverter register base */
-+
-+struct uniphier_aidet_priv {
-+	struct irq_domain *domain;
-+	void __iomem *reg_base;
-+	spinlock_t lock;
-+	u32 saved_vals[UNIPHIER_AIDET_NR_IRQS / 32];
-+};
-+
-+static void uniphier_aidet_reg_update(struct uniphier_aidet_priv *priv,
-+				      unsigned int reg, u32 mask, u32 val)
-+{
-+	unsigned long flags;
-+	u32 tmp;
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+	tmp = readl_relaxed(priv->reg_base + reg);
-+	tmp &= ~mask;
-+	tmp |= mask & val;
-+	writel_relaxed(tmp, priv->reg_base + reg);
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+}
-+
-+static void uniphier_aidet_detconf_update(struct uniphier_aidet_priv *priv,
-+					  unsigned long index, unsigned int val)
-+{
-+	unsigned int reg;
-+	u32 mask;
-+
-+	reg = UNIPHIER_AIDET_DETCONF + index / 32 * 4;
-+	mask = BIT(index % 32);
-+
-+	uniphier_aidet_reg_update(priv, reg, mask, val ? mask : 0);
-+}
-+
-+static int uniphier_aidet_irq_set_type(struct irq_data *data, unsigned int type)
-+{
-+	struct uniphier_aidet_priv *priv = data->chip_data;
-+	unsigned int val;
-+
-+	/* enable inverter for active low triggers */
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		val = 0;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		val = 1;
-+		type = IRQ_TYPE_EDGE_RISING;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		val = 1;
-+		type = IRQ_TYPE_LEVEL_HIGH;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	uniphier_aidet_detconf_update(priv, data->hwirq, val);
-+
-+	return irq_chip_set_type_parent(data, type);
-+}
-+
-+static struct irq_chip uniphier_aidet_irq_chip = {
-+	.name = "AIDET",
-+	.irq_mask = irq_chip_mask_parent,
-+	.irq_unmask = irq_chip_unmask_parent,
-+	.irq_eoi = irq_chip_eoi_parent,
-+	.irq_set_affinity = irq_chip_set_affinity_parent,
-+	.irq_set_type = uniphier_aidet_irq_set_type,
-+};
-+
-+static int uniphier_aidet_domain_translate(struct irq_domain *domain,
-+					   struct irq_fwspec *fwspec,
-+					   unsigned long *out_hwirq,
-+					   unsigned int *out_type)
-+{
-+	if (WARN_ON(fwspec->param_count < 2))
-+		return -EINVAL;
-+
-+	*out_hwirq = fwspec->param[0];
-+	*out_type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+
-+	return 0;
-+}
-+
-+static int uniphier_aidet_domain_alloc(struct irq_domain *domain,
-+				       unsigned int virq, unsigned int nr_irqs,
-+				       void *arg)
-+{
-+	struct irq_fwspec parent_fwspec;
-+	irq_hw_number_t hwirq;
-+	unsigned int type;
-+	int ret;
-+
-+	if (nr_irqs != 1)
-+		return -EINVAL;
-+
-+	ret = uniphier_aidet_domain_translate(domain, arg, &hwirq, &type);
-+	if (ret)
-+		return ret;
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		type = IRQ_TYPE_EDGE_RISING;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		type = IRQ_TYPE_LEVEL_HIGH;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (hwirq >= UNIPHIER_AIDET_NR_IRQS)
-+		return -ENXIO;
-+
-+	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-+					    &uniphier_aidet_irq_chip,
-+					    domain->host_data);
-+	if (ret)
-+		return ret;
-+
-+	/* parent is GIC */
-+	parent_fwspec.fwnode = domain->parent->fwnode;
-+	parent_fwspec.param_count = 3;
-+	parent_fwspec.param[0] = 0;		/* SPI */
-+	parent_fwspec.param[1] = hwirq;
-+	parent_fwspec.param[2] = type;
-+
-+	return irq_domain_alloc_irqs_parent(domain, virq, 1, &parent_fwspec);
-+}
-+
-+static const struct irq_domain_ops uniphier_aidet_domain_ops = {
-+	.alloc = uniphier_aidet_domain_alloc,
-+	.free = irq_domain_free_irqs_common,
-+	.translate = uniphier_aidet_domain_translate,
-+};
-+
-+static int uniphier_aidet_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *parent_np;
-+	struct irq_domain *parent_domain;
-+	struct uniphier_aidet_priv *priv;
-+	struct resource *res;
-+
-+	parent_np = of_irq_find_parent(dev->of_node);
-+	if (!parent_np)
-+		return -ENXIO;
-+
-+	parent_domain = irq_find_host(parent_np);
-+	of_node_put(parent_np);
-+	if (!parent_domain)
-+		return -EPROBE_DEFER;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->reg_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->reg_base))
-+		return PTR_ERR(priv->reg_base);
-+
-+	spin_lock_init(&priv->lock);
-+
-+	priv->domain = irq_domain_create_hierarchy(
-+					parent_domain, 0,
-+					UNIPHIER_AIDET_NR_IRQS,
-+					of_node_to_fwnode(dev->of_node),
-+					&uniphier_aidet_domain_ops, priv);
-+	if (!priv->domain)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused uniphier_aidet_suspend(struct device *dev)
-+{
-+	struct uniphier_aidet_priv *priv = dev_get_drvdata(dev);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(priv->saved_vals); i++)
-+		priv->saved_vals[i] = readl_relaxed(
-+			priv->reg_base + UNIPHIER_AIDET_DETCONF + i * 4);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused uniphier_aidet_resume(struct device *dev)
-+{
-+	struct uniphier_aidet_priv *priv = dev_get_drvdata(dev);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(priv->saved_vals); i++)
-+		writel_relaxed(priv->saved_vals[i],
-+			       priv->reg_base + UNIPHIER_AIDET_DETCONF + i * 4);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops uniphier_aidet_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(uniphier_aidet_suspend,
-+				      uniphier_aidet_resume)
-+};
-+
-+static const struct of_device_id uniphier_aidet_match[] = {
-+	{ .compatible = "socionext,uniphier-ld4-aidet" },
-+	{ .compatible = "socionext,uniphier-pro4-aidet" },
-+	{ .compatible = "socionext,uniphier-sld8-aidet" },
-+	{ .compatible = "socionext,uniphier-pro5-aidet" },
-+	{ .compatible = "socionext,uniphier-pxs2-aidet" },
-+	{ .compatible = "socionext,uniphier-ld11-aidet" },
-+	{ .compatible = "socionext,uniphier-ld20-aidet" },
-+	{ .compatible = "socionext,uniphier-pxs3-aidet" },
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver uniphier_aidet_driver = {
-+	.probe = uniphier_aidet_probe,
-+	.driver = {
-+		.name = "uniphier-aidet",
-+		.of_match_table = uniphier_aidet_match,
-+		.pm = &uniphier_aidet_pm_ops,
-+	},
-+};
-+builtin_platform_driver(uniphier_aidet_driver);
--- 
-2.7.4
+>=20
+> > This part is also difficult to understand for me. The one CSI module
+> > have only one DMA channel(single port). But thay can be linked to=20
+> > different physical port (Parallel or MIPI)(multiple ep) by IF select
+> > register.
+> >=20
+> > For now, the binding can have several ep, the driver will just pick
+> > the first valid one.
+>=20
+> Yeah, I'm not really sure how we could deal with that, but I guess we
+> can do it later on.
+>=20
+> > >=20
+> > > > +struct sun6i_csi_ops {
+> > > > +	int (*get_supported_pixformats)(struct sun6i_csi *csi,
+> > > > +					const u32 **pixformats);
+> > > > +	bool (*is_format_support)(struct sun6i_csi *csi, u32 pixformat,
+> > > > +				  u32 mbus_code);
+> > > > +	int (*s_power)(struct sun6i_csi *csi, bool enable);
+> > > > +	int (*update_config)(struct sun6i_csi *csi,
+> > > > +			     struct sun6i_csi_config *config);
+> > > > +	int (*update_buf_addr)(struct sun6i_csi *csi, dma_addr_t addr);
+> > > > +	int (*s_stream)(struct sun6i_csi *csi, bool enable);
+> > > > +};
+> > >=20
+> > > Didn't we agreed on removing those in the first iteration? It's not
+> > > really clear at this point whether they will be needed at all. Make
+> > > something simple first, without those ops. When we'll support other
+> > > SoCs we'll have a better chance at seeing what and how we should deal
+> > > with potential quirks.
+> >=20
+> > OK. But without ops, it is inappropriate to sun6i_csi and sun6i_csi.
+> > Maybe I should merge the two files.
+>=20
+> I'm not sure what you meant here, but if you think that's appropriate,
+> please go ahead.
+>=20
+> > > > +		return IRQ_HANDLED;
+> > > > +	}
+> > > > +
+> > > > +	if (status & CSI_CH_INT_STA_FD_PD) {
+> > > > +		sun6i_video_frame_done(&sdev->csi.video);
+> > > > +	}
+> > > > +
+> > > > +	regmap_write(regmap, CSI_CH_INT_STA_REG, status);
+> > >=20
+> > > Isn't it redundant with the one you did in the condition a bit above?
+> > >=20
+> > > You should also check that your device indeed generated an
+> > > interrupt. In the occurence of a spourious interrupt, your code will
+> > > return IRQ_HANDLED, which is the wrong thing to do.
+> > >=20
+> > > I think you should reverse your logic a bit here to make this
+> > > easier. You should just check that your status flags are indeed set,
+> > > and if not just bail out and return IRQ_NONE.
+> > >=20
+> > > And if they are, go on with treating your interrupt.
+> >=20
+> > OK. I will add check for status flags.
+> > BTW, how can a spurious interrupt occurred?
+>=20
+> Usually it's either through some interference, or some poorly designed
+> controller. This is unlikely, but it's something you should take into
+> account.
+>=20
+> Thanks!
+> Maxime
+>=20
+> --=20
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
+
+Thanks,
+Yong
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
