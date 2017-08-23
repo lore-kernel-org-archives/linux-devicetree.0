@@ -1,48 +1,63 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 serial
- slave
-Date: Wed, 23 Aug 2017 16:22:11 +0200
-Message-ID: <972AD2C1-FE7C-412D-AEC6-FFED22EC4B77@holtmann.org>
-References: <1502992791-10265-1-git-send-email-loic.poulain@gmail.com>
- <1502992791-10265-3-git-send-email-loic.poulain@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502992791-10265-3-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RESEND PATCH v5 10/16] ARM: dts: zynq: Add generic compatible
+ string for I2C EEPROM
+Date: Wed, 23 Aug 2017 16:28:20 +0200
+Message-ID: <CABxcv=n4pCJLPb_C6eYVJ3CLBVH7T0amiJj7mYbshpv4u8xkXA@mail.gmail.com>
+References: <20170615185418.13980-1-javier@dowhile0.org> <20170615185418.13980-11-javier@dowhile0.org>
+ <b22a7db6-7daf-b5c1-3978-cdc699723e30@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b22a7db6-7daf-b5c1-3978-cdc699723e30-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Loic,
+Hello Michal,
 
-> Add BCM43438 (bluetooth) as a slave device of uart0 (pl011/ttyAMA0).
-> This allows to automatically insert the bcm43438 to the bluetooth
-> subsystem instead of relying on userspace helpers (hciattach).
-> 
-> Overwrite chosen/stdout-path to use 8250 aux uart as console.
-> 
-> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> v2: dt-bindings as separate patch
->     rebase on upcoming pi3 dts changes
-> v3: changes in bcm serdev drivers:
->     name refactoring and additional comments
->     Add generic host_set_baudrate method
->     Use agnostic device_property_read
-> v4: changes in doc and dts:
->     Add additional params to broadcom bt dt-bindings
->     Set the max baudrate to 2000000 instead of 921600
->     use chosen/stdout-path instead of console=
->     remove useless earlyprintk
->     same changes in bcm283x.dtsi
-> 
-> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
-> 1 file changed, 10 insertions(+)
+On Wed, Jun 21, 2017 at 1:43 PM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> On 15.6.2017 20:54, Javier Martinez Canillas wrote:
+>> The at24 driver allows to register I2C EEPROM chips using different vendor
+>> and devices, but the I2C subsystem does not take the vendor into account
+>> when matching using the I2C table since it only has device entries.
+>>
+>> But when matching using an OF table, both the vendor and device has to be
+>> taken into account so the driver defines only a set of compatible strings
+>> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+>>
+>> So add this generic fallback to the device node compatible string to make
+>> the device to match the driver using the OF device ID table.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+>>
 
-do you mind resending the 2 pending patches with Rob’s ack on it. And ensure that this goes with DT tree since I can currently not take it since net-next has not pulled in the pending DT patches.
+[snip]
 
-Regards
+>> --- a/arch/arm/boot/dts/zynq-zc706.dts
+>> +++ b/arch/arm/boot/dts/zynq-zc706.dts
+>> @@ -92,7 +92,7 @@
+>>                       #size-cells = <0>;
+>>                       reg = <2>;
+>>                       eeprom@54 {
+>> -                             compatible = "at,24c08";
+>> +                             compatible = "atmel,24c08";
+>>                               reg = <0x54>;
+>>                       };
+>>               };
+>>
+>
+> Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>
 
-Marcel
+Same question than for the other patch, could you please also apply this?
+
+Sorry for not being clear in the cover letter that the patches could
+be applied independently.
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
