@@ -1,201 +1,89 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] PCI: mediatek: Add MSI support for MT2712 and
- MT7622
-Date: Wed, 23 Aug 2017 13:58:30 -0500
-Message-ID: <20170823185830.GE8498@bhelgaas-glaptop.roam.corp.google.com>
-References: <1502715868-17651-1-git-send-email-honghui.zhang@mediatek.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for Allwinner CSI.
+Date: Wed, 23 Aug 2017 21:24:13 +0200
+Message-ID: <20170823192413.y5psmcgd3ghvpkbz@flea.home>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+ <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+ <20170728160233.xooevio4hoqkgfaq@flea.lan>
+ <20170730060801.bkc2kvm72ktixy74@tarshish>
+ <20170821202145.kmxancepyq55v3o2@flea.lan>
+ <20170823104118.b4524830e4bb767d7714772c@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gpulx6hmx2kzzbcc"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1502715868-17651-1-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+In-Reply-To: <20170823104118.b4524830e4bb767d7714772c@magewell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong <yong.deng@magewell.com>
+Cc: Baruch Siach <baruch@tkos.co.il>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Hans Verkuil <hverkuil@xs4all.nl>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Robert
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 09:04:25PM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> MT2712 and MT7622's PCIe host controller support MSI, but only 32bit MSI
-> address are supportted. It connect to GIC with the same IRQ number of INTx
-> IRQ, so it shares the same IRQ with INTx IRQ.
-> 
-> This patchset add MSI support for MT2712 and MT7622.
-> Also do some code fixup and cleanups.
-> 
-> Change Since V1:
->  - Add the first two patches into this patchset.
->  - Using -ENODEV instead of PTR_ERR if msi_domain == NULL
->  - Change the error logs with consistency of lower-case
->  - Using has_msi instead of support_msi to make the parameter name a bit shorter
-> 
-> Honghui Zhang (3):
->   PCI: mediatek: Fix return value in case of error
->   PCI: mediatek: take use of bus->sysdata to get host private data
->   PCI: mediatek: add msi support for MT2712 and MT7622
-> 
->  drivers/pci/host/pcie-mediatek.c | 157 +++++++++++++++++++++++++++++++++++++--
->  1 file changed, 151 insertions(+), 6 deletions(-)
 
-Since "PCI: mediatek: Add controller support for MT2712 and MT7622" patch
-hasn't appeared upstream yet, I folded the return value fix directly into
-it.
+--gpulx6hmx2kzzbcc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I applied the others to pci/host-mediatek.  I modified the third one to
-remove what seemed to be needless differences from the rcar and tegra
-drivers.  The incremental diff is attached.  Please check to make sure I
-didn't break anything.
+On Wed, Aug 23, 2017 at 10:41:18AM +0800, Yong wrote:
+> > > > > +static irqreturn_t sun6i_csi_isr(int irq, void *dev_id)
+> > > > > +{
+> > > > > +	struct sun6i_csi_dev *sdev =3D (struct sun6i_csi_dev *)dev_id;
+> > > > > +	struct regmap *regmap =3D sdev->regmap;
+> > > > > +	u32 status;
+> > > > > +
+> > > > > +	regmap_read(regmap, CSI_CH_INT_STA_REG, &status);
+> > > > > +
+> > > > > +	if ((status & CSI_CH_INT_STA_FIFO0_OF_PD) ||
+> > > > > +	    (status & CSI_CH_INT_STA_FIFO1_OF_PD) ||
+> > > > > +	    (status & CSI_CH_INT_STA_FIFO2_OF_PD) ||
+> > > > > +	    (status & CSI_CH_INT_STA_HB_OF_PD)) {
+> > > > > +		regmap_write(regmap, CSI_CH_INT_STA_REG, status);
+> > > > > +		regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN, 0);
+> > > > > +		regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN,
+> > > > > +				   CSI_EN_CSI_EN);
+> > > >=20
+> > > > You need to enable / disable it at every frame? How do you deal with
+> > > > double buffering? (or did you choose to ignore it for now?)
+> > >=20
+> > > These *_OF_PD status bits indicate an overflow error condition.
+> >=20
+> > Shouldn't we return an error code then? The names of these flags could
+> > be better too.
+>=20
+> Then, where and how to deal with the error coce.
 
+If you want to deal with FIFO overflow, I'm not sure you have anything
+to do. It means, you've been to slow to queue buffers, so I guess
+stopping the pipeline until more buffers are queued would make
+sense. And we should probably increase the sequence number while doing
+so to notify the userspace that some frames were lost.
 
-diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index 35ab2321ed16..8891c00bf13c 100644
---- a/drivers/pci/host/pcie-mediatek.c
-+++ b/drivers/pci/host/pcie-mediatek.c
-@@ -134,7 +134,7 @@ struct mtk_pcie_port;
- 
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-- * @has_msi: whether this host support MSI interrupt or not
-+ * @has_msi: whether this host supports MSI interrupts or not
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-@@ -439,44 +439,51 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 	return 0;
- }
- 
--static int mtk_pcie_assign_msi(struct mtk_pcie_port *port)
-+static int mtk_pcie_msi_alloc(struct mtk_pcie_port *port)
- {
--	int pos;
-+	int msi;
- 
--	pos = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
--	if (pos < MTK_MSI_IRQS_NUM)
--		set_bit(pos, port->msi_irq_in_use);
-+	msi = find_first_zero_bit(port->msi_irq_in_use, MTK_MSI_IRQS_NUM);
-+	if (msi < MTK_MSI_IRQS_NUM)
-+		set_bit(msi, port->msi_irq_in_use);
- 	else
- 		return -ENOSPC;
- 
--	return pos;
-+	return msi;
-+}
-+
-+static void mtk_pcie_msi_free(struct mtk_pcie_port *port, unsigned long hwirq)
-+{
-+	clear_bit(hwirq, port->msi_irq_in_use);
- }
- 
- static int mtk_pcie_msi_setup_irq(struct msi_controller *chip,
--				  struct pci_dev *pdev,
--				  struct msi_desc *desc)
-+				  struct pci_dev *pdev, struct msi_desc *desc)
- {
- 	struct mtk_pcie_port *port;
- 	struct msi_msg msg;
-+	unsigned int irq;
- 	int hwirq;
--	u32 irq;
- 
- 	port = mtk_pcie_find_port(pdev->bus, pdev->devfn);
- 	if (!port)
- 		return -EINVAL;
- 
--	chip->dev = &pdev->dev;
--	hwirq = mtk_pcie_assign_msi(port);
-+	hwirq = mtk_pcie_msi_alloc(port);
- 	if (hwirq < 0)
- 		return hwirq;
- 
- 	irq = irq_create_mapping(port->msi_domain, hwirq);
--	if (!irq)
-+	if (!irq) {
-+		mtk_pcie_msi_free(port, hwirq);
- 		return -EINVAL;
-+	}
-+
-+	chip->dev = &pdev->dev;
- 
- 	irq_set_msi_desc(irq, desc);
- 
--	/* MT2712/MT7622 only support 32 bit MSI address */
-+	/* MT2712/MT7622 only support 32-bit MSI addresses */
- 	msg.address_hi = 0;
- 	msg.address_lo = lower_32_bits((u64)(port->base + PCIE_MSI_VECTOR));
- 	msg.data = hwirq;
-@@ -497,10 +504,8 @@ static void mtk_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
- 	if (!port)
- 		return;
- 
--	if (!test_bit(hwirq, port->msi_irq_in_use))
--		dev_err(&pdev->dev, "trying to free unused MSI#%d\n", irq);
--	else
--		clear_bit(hwirq, port->msi_irq_in_use);
-+	irq_dispose_mapping(irq);
-+	mtk_pcie_msi_free(port, hwirq);
- }
- 
- static struct msi_controller mtk_pcie_msi_chip = {
-@@ -529,16 +534,26 @@ static const struct irq_domain_ops msi_domain_ops = {
- 	.map = mtk_pcie_msi_map,
- };
- 
--static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
-+static int mtk_pcie_enable_msi(struct mtk_pcie_port *port)
- {
- 	u32 val;
- 
-+	port->msi_domain = irq_domain_add_linear(node, MTK_MSI_IRQS_NUM,
-+						 &msi_domain_ops,
-+						 &mtk_pcie_msi_chip);
-+	if (!port->msi_domain) {
-+		dev_err(dev, "failed to create MSI IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
- 	val = lower_32_bits((u64)(port->base + PCIE_MSI_VECTOR));
- 	writel(val, port->base + PCIE_IMSI_ADDR);
- 
- 	val = readl(port->base + PCIE_INT_MASK);
- 	val &= ~MSI_MASK;
- 	writel(val, port->base + PCIE_INT_MASK);
-+
-+	return 0;
- }
- 
- static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-@@ -559,6 +574,7 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
- {
- 	struct device *dev = port->pcie->dev;
- 	struct device_node *pcie_intc_node;
-+	int err;
- 
- 	/* Setup INTx */
- 	pcie_intc_node = of_get_next_child(node, NULL);
-@@ -574,16 +590,10 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
- 		return -ENODEV;
- 	}
- 
--	/* Setup MSI */
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
--		port->msi_domain = irq_domain_add_linear(node, MTK_MSI_IRQS_NUM,
--							 &msi_domain_ops,
--							 &mtk_pcie_msi_chip);
--		if (!port->msi_domain) {
--			dev_err(dev, "failed to get MSI IRQ domain\n");
--			return -ENODEV;
--		}
--		mtk_pcie_enable_msi(port);
-+		err = mtk_pcie_enable_msi(port);
-+		if (err < 0)
-+			return err;
- 	}
- 
- 	return 0;
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--gpulx6hmx2kzzbcc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZndZdAAoJEBx+YmzsjxAgxNMP/j4dG39peK/0A3yVi0cULJeZ
+elrAmFZcV+zD7hvugBW1uvMUPJrE+wKYD7pn5Ku7zcqwE37mVTcnJHe2jtMNpWz7
+WpxEau3zgHFUnoVQDuAOIukdC9YB1sp9ocsPNlUmEFpnFe84Lp7fSMGp5SRy4ae/
+lA4vPMaxohiuNjAhKWB67zB/gOYP6L28gtAV4Y+xtAMii+5eT5aAheyGbjl4qi65
+UcqyjKSl+wXutJJ4vzp2FwRdNHBgwhLNd6Bx7LTKdsMx3oQqhQGQOynRg0dApf3Y
+wwDdCkrEXpjCPa/HOmCHM3mUV19QadeHrbufdhpn7CsqqE1sEfy/GkgbLBbb3gF9
+3kJ941WwrBk0ea8Q6EIn65yy0IZNL4rEf3gQ+mOKWT4ueDhtiVS4+6lgoPS6GRuM
+2i0jyc02tDn/4dIW75MOqXgAO+8k2esxPqO+Ok85KE72IBpRSrOknqQmbTGSZF5F
+ICVRLAqhKZLiYAqottL73DFl51fO7fdUfFGUAmwAwtGcR1GrlnMQAVDyOABn2EfV
+SgMYu2rifKYaTskdUfJe/KQ9WCxNJFVDBAwtedsdqbq1C+bv6PRrA2sCZMrtG+9e
+jR0j/Jp4U9A9l/mTC8n0bq5T2JrLSvj9de09tchELP+dwUWZ8vYWdh6MYKI9Pc4H
+ZoadvlBN3bQ8q91EUiMk
+=43hd
+-----END PGP SIGNATURE-----
+
+--gpulx6hmx2kzzbcc--
