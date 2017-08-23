@@ -1,50 +1,57 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] PCI: mediatek: Add MSI support for MT2712 and
- MT7622
-Date: Wed, 23 Aug 2017 09:04:26 +0800
-Message-ID: <1503450266.11985.3.camel@mtkswgap22>
-References: <1502715868-17651-1-git-send-email-honghui.zhang@mediatek.com>
-         <20170822213602.GK6948@bhelgaas-glaptop.roam.corp.google.com>
+From: "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 0/3] DW9714 DT support
+Date: Wed, 23 Aug 2017 01:22:38 +0000
+Message-ID: <6F87890CF0F5204F892DEA1EF0D77A5972FA7293@FMSMSX114.amr.corp.intel.com>
+References: <1502977376-22836-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170822213602.GK6948-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1502977376-22836-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-22 at 16:36 -0500, Bjorn Helgaas wrote:
-> On Mon, Aug 14, 2017 at 09:04:25PM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > MT2712 and MT7622's PCIe host controller support MSI, but only 32bit MSI
-> > address are supportted. It connect to GIC with the same IRQ number of INTx
-> > IRQ, so it shares the same IRQ with INTx IRQ.
-> > 
-> > This patchset add MSI support for MT2712 and MT7622.
-> > Also do some code fixup and cleanups.
-> > 
-> > Change Since V1:
-> >  - Add the first two patches into this patchset.
-> >  - Using -ENODEV instead of PTR_ERR if msi_domain == NULL
-> >  - Change the error logs with consistency of lower-case
-> >  - Using has_msi instead of support_msi to make the parameter name a bit shorter
-> > 
-> > Honghui Zhang (3):
-> >   PCI: mediatek: Fix return value in case of error
-> >   PCI: mediatek: take use of bus->sysdata to get host private data
-> >   PCI: mediatek: add msi support for MT2712 and MT7622
-> > 
-> >  drivers/pci/host/pcie-mediatek.c | 157 +++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 151 insertions(+), 6 deletions(-)
+Hi Sakari,
+
+Thanks for the patches.
+
+I have verified that the dw9714 driver gets probed via DT bindings, with these patches on 4.13-rc6 kernel.
+
+Feel free to add
+
+Tested-by: Rajmohan Mani <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+
+Raj
+
+> -----Original Message-----
+> From: Sakari Ailus [mailto:sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org]
+> Sent: Thursday, August 17, 2017 6:43 AM
+> To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mani, Rajmohan
+> <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Subject: [PATCH 0/3] DW9714 DT support
 > 
-> Just waiting for an ack from Ryder...
-
-For whole series:
-
-Acked-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Hi all,
+> 
+> This patchset adds DT bindings as well as DT support for DW9714. The unused
+> ACPI match table is removed.
+> 
+> Sakari Ailus (3):
+>   dt-bindings: Add bindings for Dongwoon DW9714 voice coil
+>   dw9714: Add Devicetree support
+>   dw9714: Remove ACPI match tables, convert to use probe_new
+> 
+>  .../bindings/media/i2c/dongwoon,dw9714.txt         |  9 ++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  drivers/media/i2c/dw9714.c                         | 26 +++++++++-------------
+>  3 files changed, 21 insertions(+), 15 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
+> 
+> --
+> 2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
