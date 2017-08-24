@@ -1,78 +1,42 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: designware: add binding for
- Designware PCIe in ECAM mode
-Date: Thu, 24 Aug 2017 21:12:22 +0100
-Message-ID: <CAKv+Gu-D0tgygJ84iGEoEU9OcjUwrtvS2Z2wrOHAZ9kO_kE_rA@mail.gmail.com>
-References: <20170824184321.19432-1-ard.biesheuvel@linaro.org>
- <20170824184321.19432-4-ard.biesheuvel@linaro.org> <CAL_JsqJTGeLv-c0wXCvMZggU4yzo__s-pD7qEZ7Q3w8=uUuu4Q@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] serial: sh-sci: document R8A7797 bindings
+Date: Thu, 24 Aug 2017 23:31:36 +0300
+Message-ID: <20170824203144.032561541@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJTGeLv-c0wXCvMZggU4yzo__s-pD7qEZ7Q3w8=uUuu4Q@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Marc Zyngier <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline; filename=serial-sh-sci-document-R8A7797-bindings.patch
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24 August 2017 at 21:02, Rob Herring <robh@kernel.org> wrote:
-> Cc the DT list for bindings please.
->
-> On Thu, Aug 24, 2017 at 1:43 PM, Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
->> Describe the binding for firmware-configured instances of the Synopsys
->> Designware PCIe controller in RC mode.
->>
->> Cc: Rob Herring <robh@kernel.org>
->> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt | 56 ++++++++++++++++++++
->>  1 file changed, 56 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt b/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
->> new file mode 100644
->> index 000000000000..b8127b19c220
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
->> @@ -0,0 +1,56 @@
->> +* Synopsys Designware PCIe root complex in ECAM mode
->> +
->> +In some cases, firmware may already have configured the Synopsys Designware
->> +PCIe controller in RC mode with static ATU window mappings that cover all
->> +config, MMIO and I/O spaces in a [mostly] ECAM compatible fashion.
->> +In this case, there is no need for the OS to perform any low level setup
->> +of clocks or device registers, nor is there any reason for the driver to
->> +reconfigure ATU windows for config and/or IO space accesses at runtime.
->> +
->> +Such hardware configurations should be described as "pci-host-ecam-generic"
->> +if they are truly ECAM compatible. Configurations that require no low-level
->> +setup by the OS nor any ATU window reconfiguration at runtime, but do
->> +require special handling for type 0 config TLPs may instead be described as
->> +"snps,dw-pcie-ecam".
->
-> Humm, what happens when we have the next exception that's SoC specific
-> or another vendor?
+R-Car V3M (R8A7797) SoC also has the R-Car gen3 compatible SCIF and HSCIF
+ports, so document the SoC specific bindings.
 
-This is not SoC specific, but IP specific. We are working with two
-different SoCs from completely different vendors that both synthesized
-this IP with a 64 KB ATU window size, not expecting this to break ECAM
-compatibility.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-> Seems like perhaps "firmware initialized" should
-> have been a separate property flag for bootloaders to add rather than
-> a compatible string.
->
+---
+This patch is against the 'tty-next' branch of GregKH's 'tty.git' repo.
 
-Yes, but then you still have 10 different drivers that all retain the
-low-level bits that are all different between SoCs. That is exactly
-what I want to get rid of, and usually we can do that with existing
-bindings, because we simply expose it as pci-host-ecam-generic. Only
-in this particular case, that doesn't fly due to the quirk.
+ Documentation/devicetree/bindings/serial/renesas,sci-serial.txt |    2 ++
+ 1 file changed, 2 insertions(+)
 
-> I'd rather see this done in a way that does not require DT updates if
-> quirks have to be handled/added later.
->
+Index: tty/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+===================================================================
+--- tty.orig/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
++++ tty/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -41,6 +41,8 @@ Required properties:
+     - "renesas,hscif-r8a7795" for R8A7795 (R-Car H3) HSCIF compatible UART.
+     - "renesas,scif-r8a7796" for R8A7796 (R-Car M3-W) SCIF compatible UART.
+     - "renesas,hscif-r8a7796" for R8A7796 (R-Car M3-W) HSCIF compatible UART.
++    - "renesas,scif-r8a7797" for R8A7797 (R-Car V3M) SCIF compatible UART.
++    - "renesas,hscif-r8a7797" for R8A7797 (R-Car V3M) HSCIF compatible UART.
+     - "renesas,scifa-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFA compatible UART.
+     - "renesas,scifb-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFB compatible UART.
+     - "renesas,rcar-gen1-scif" for R-Car Gen1 SCIF compatible UART,
 
-Do you see a way that still allows us to keep the abstraction? I don't
-want a flag, I simply don't want to expose any low-level specifics
-about the device to the OS, beyond what it needs to use it in its
-configured state.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
