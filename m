@@ -1,30 +1,90 @@
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-Subject: Re: [v2, 3/5] powerpc: pseries: remove dlpar_attach_node dependency on full path
-Date: Thu, 24 Aug 2017 22:37:34 +1000 (AEST)
-Message-ID: <3xdP2Q710hz9sR9@ozlabs.org>
-References: <20170821151651.25096-4-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170821151651.25096-4-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: David Laight <David.Laight@aculab.com>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>
+From: jmondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 3/4] arm: dts: gr-peach: Add ETHER pin group
+Date: Thu, 24 Aug 2017 14:53:59 +0200
+Message-ID: <20170824125359.GB3905@w540>
+References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1503564523-31899-4-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdUoMU=qN3Qjoqmf6uxcS3j5hqthhuBDMPZzA+wSD_BH5A@mail.gmail.com>
+ <20170824114656.GA3905@w540>
+ <CAMuHMdU5Vep+m7XtjcbSvyXUzD_Pn2crcQ68VRmS4bgY44ut0w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdU5Vep+m7XtjcbSvyXUzD_Pn2crcQ68VRmS4bgY44ut0w@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-08-21 at 15:16:49 UTC, Rob Herring wrote:
-> In preparation to stop storing the full node path in full_name, remove the
-> dependency on full_name from dlpar_attach_node(). Callers of
-> dlpar_attach_node() already have the parent device_node, so just pass the
-> parent node into dlpar_attach_node instead of the path. This avoids doing
-> a lookup of the parent node by the path.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
+Thanks Geert,
 
-Applied to powerpc next, thanks.
+On Thu, Aug 24, 2017 at 01:56:16PM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+>
 
-https://git.kernel.org/powerpc/c/215ee763f8cb9a2912d411f96f6f67
+[snip]
 
-cheers
+> > I haven't find any mention in device tree bindings documentation of a
+> > "reset-gpio" property for sh_eth, in the code examples I've seen in
+> > u-boot and mbed, the interface is reset before any actual
+> > configuration is performed. I feel like that should be the place where
+> > that gpio is requested and cycled...
+>
+> Documentation/devicetree/bindings/net/mdio.txt says
+>
+> These are generic properties that can apply to any MDIO bus.
+>
+
+I have now used mdio defined generic properties
+
+&ether {
+	pinctrl-names = "default";
+	pinctrl-0 = <&ether_pins>;
+
+	status = "okay";
+
+	reset-gpios = <&port4 2 GPIO_ACTIVE_LOW>;
+	reset-delay-us = <5>;
+
+	renesas,no-ether-link;
+	phy-handle = <&phy0>;
+	phy0: ethernet-phy@0 {
+               reg = <0>;
+	};
+};
+
+I see the gpio being cycled, but same results as before: device gets
+probed, address set, but I cannot ping, device gets probed, address
+gets set, but I cannot ping
+
+--- target ---
+[    0.000000] libphy: sh_mii: probed
+[    0.000000] sh-eth e8203000.ethernet eth0: Base address at 0xe8203000, 68:14:97:20:97:00, IRQ 22.
+
+# ifconfig eth0 192.168.100.50
+[    0.000000] Generic PHY e8203000.ethernet-ffffffff:00: attached PHY driver [Generic PHY] (mii_bus:phy_addr=e8203000.ethernet-f)
+
+--- host ---
+$ping 192.168.100.50
+PING 192.168.100.50 (192.168.100.50) 56(84) bytes of data.
+>From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
+>From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
+>From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
+
+
+Let's leave this out of the DTS series I've just sent for now, ok?
+
+Thanks
+   j
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
