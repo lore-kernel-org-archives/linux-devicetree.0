@@ -1,136 +1,76 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: Re: [PATCH 1/3] ARM: dts: sun8i: Add basic dtsi
- file for Allwinner R40
-Date: Thu, 24 Aug 2017 14:25:07 +0800
-Message-ID: <9031dbc939a9379222ecbf59cfeddd83@aosc.io>
-References: <20170822061742.40869-1-icenowy@aosc.io>
- <20170822200521.nadkb4335mcc5ah2@flea.home>
- <ea10374b49489d2250fd804e1fdbf204@aosc.io>
- <20170823143532.owocqyq3tehsahhg@flea.home>
- <9554c7524c8608e1eceafe762a487c11@aosc.io>
- <20170824060709.ejlmhzfhr7pwt3tx@flea.lan>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [v2,1/3] can: m_can: Make hclk optional
+Date: Thu, 24 Aug 2017 13:30:30 +0530
+Message-ID: <6f574628-51cd-0db8-e5aa-e7ae4a9cf79a@ti.com>
+References: <20170724225142.19975-2-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBS7C7HGAKGQEEASQEEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170824060709.ejlmhzfhr7pwt3tx-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170724225142.19975-2-fcooper@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin Cooper <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com
+Cc: "Kristo, Tero" <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP List <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-08-24 14:07=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> On Wed, Aug 23, 2017 at 11:13:04PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->> =E5=9C=A8 2017-08-23 22:35=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=
-=BC=9A
->> > On Wed, Aug 23, 2017 at 07:56:29PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->> > > > > +			reg =3D <0x01c0f000 0x1000>;
->> > > > > +			clocks =3D <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
->> > > > > +			clock-names =3D "ahb", "mmc";
->> > > > > +			resets =3D <&ccu RST_BUS_MMC0>;
->> > > > > +			reset-names =3D "ahb";
->> > > > > +			pinctrl-0 =3D <&mmc0_pins>;
->> > > > > +			pinctrl-names =3D "default";
->> > > > > +			interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
->> > > > > +			max-frequency =3D <150000000>;
->> > > >
->> > > > have you tested that frequency?
->> > >
->> > > I think the frequency should be kept here, although my cards cannot
->> > > reach this frequency.
->> > >
->> > > The numbers are same as the corresponding controllers in A64.
->> > >
->> > > Maybe I should add a comment saying it's educated guess?
->> >
->> > I'd rather have it tested by someone, and then add the proper
->> > frequencies. It took quite a while to figure out how these modes were
->> > supposed to be working on the A64, so it's not obvious that they're
->> > just going to work.
->>=20
->> Should I add my results here?
->>=20
->> MMC0: 25MHz
->> MMC1: 50MHz
->> MMC2: 52MHz
->> MMC3: not wired :-(
->>=20
->> I think it's conservative enough and works well ;-)
->=20
-> And that's my point. You didn't test HS200, SDR50 or SDR104 for
-> example. So you have no idea whether the frequencies from 50MHz to
-> 150MHz are actually working or not.
++ some OMAP folks and Linux OMAP list
 
-OK.
+On Tuesday 25 July 2017 04:21 AM, Franklin Cooper wrote:
+> Hclk is the MCAN's interface clock. However, for OMAP based devices such as
+> DRA7 SoC family the interface clock is handled by hwmod. Therefore, this
+> interface clock is managed by hwmod driver via pm_runtime_get and
+> pm_runtime_put calls. Therefore, this interface clock isn't defined in DT
+> and thus the driver shouldn't fail if this clock isn't found.
 
-I will leave a TODO here, although I cannot measure the frequencies
-with Banana Pis -- it will requires custom boards.
+I agree that hclk is defined as interface clock for M_CAN IP on DRA76x.
 
->=20
->>=20
->> >
->> > > > > +		gic: interrupt-controller@1c81000 {
->> > > > > +			compatible =3D "arm,gic-400";
->> > > > > +			reg =3D <0x01c81000 0x1000>,
->> > > > > +			      <0x01c82000 0x1000>,
->> > > > > +			      <0x01c84000 0x2000>,
->> > > > > +			      <0x01c86000 0x2000>;
->> > > > > +			interrupt-controller;
->> > > > > +			#interrupt-cells =3D <3>;
->> > > > > +			interrupts =3D <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
->> > > > > IRQ_TYPE_LEVEL_HIGH)>;
->> > > > > +		};
->> > > > > +	};
->> > > > > +
->> > > > > +	timer {
->> > > > > +		compatible =3D "arm,armv7-timer";
->> > > > > +		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
->> > > > > IRQ_TYPE_LEVEL_LOW)>,
->> > > > > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LO=
-W)>,
->> > > > > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LO=
-W)>,
->> > > > > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LO=
-W)>;
->> > > >
->> > > > Those masks are wrong.
->> > >
->> > > I compared it with other sun8i SoCs' device tree.
->> > >
->> > > Where's wrong?
->> >
->> > It's supposed to be a mask of the CPUs in your system. Since you just
->> > have one of them, it shouldn't be 4.
->>=20
->> R40 has 4 cores...
->>=20
->> Or I didn't understand this?
->=20
-> Gah, sorry, I mistook this for the V3s for some reason...
+However, there may be a need for the driver to know the value of hclk to
+properly configure the RAM watchdog register which has a counter
+counting down using hclk. Looks like the driver does not use the RAM
+watchdog today. But if there is a need to configure it in future, it
+might be a problem.
 
-Thanks.
+Is there a restriction in OMAP architecture against passing the
+interface clock also in the 'clocks' property in DT. I have not tried it
+myself, but wonder if you hit an issue that led to this patch.
 
-I think I should send a fix for V3s.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+> Version 2 changes:
+> Used NULL instead of 0 for unused hclk handle
+> 
+>  drivers/net/can/m_can/m_can.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+> index f4947a7..ea48e59 100644
+> --- a/drivers/net/can/m_can/m_can.c
+> +++ b/drivers/net/can/m_can/m_can.c
+> @@ -1568,8 +1568,13 @@ static int m_can_plat_probe(struct platform_device *pdev)
+>  	hclk = devm_clk_get(&pdev->dev, "hclk");
+>  	cclk = devm_clk_get(&pdev->dev, "cclk");
+>  
+> -	if (IS_ERR(hclk) || IS_ERR(cclk)) {
+> -		dev_err(&pdev->dev, "no clock found\n");
+> +	if (IS_ERR(hclk)) {
+> +		dev_warn(&pdev->dev, "hclk could not be found\n");
+> +		hclk = NULL;
 
->=20
-> Maxime
->=20
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+What is the purpose of NULL setting the clock. I think this is taking it
+into a very implementation defined territory and the result could be
+different on different architectures. See Russell's explanation here:
+https://lkml.org/lkml/2016/11/10/799
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Sekhar
+
+> +	}
+> +
+> +	if (IS_ERR(cclk)) {
+> +		dev_err(&pdev->dev, "cclk could not be found\n");
+>  		ret = -ENODEV;
+>  		goto failed_ret;
+>  	}
+> 
