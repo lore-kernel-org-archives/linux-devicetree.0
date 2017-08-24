@@ -1,52 +1,63 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH ] ARM: dts: r8a7745: Add Ethernet AVB support
-Date: Thu, 24 Aug 2017 13:51:44 +0000
-Message-ID: <SG2PR06MB1711ED12F86E1A71563744C8B89A0@SG2PR06MB1711.apcprd06.prod.outlook.com>
-References: <1503388405-48325-1-git-send-email-biju.das@bp.renesas.com>
- <20170824101843.GF17607@verge.net.au>
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Subject: Re: [PATCH v2 01/10] drm/exynos/decon5433: use readl_poll_timeout
+ helpers
+Date: Thu, 24 Aug 2017 15:54:52 +0200
+Message-ID: <2ae55d7a-3730-72f7-ae7e-8556b9e4e4a5@math.uni-bielefeld.de>
+References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
+ <CGME20170824133408eucas1p1e7b9988ac74fdd3e8dd8d25ead949ec5@eucas1p1.samsung.com>
+ <1503581639-580-2-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170824101843.GF17607@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1503581639-580-2-git-send-email-a.hajda@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Simon Horman [mailto:horms@verge.net.au]
-> Sent: 24 August 2017 11:19
-> To: Biju Das <biju.das@bp.renesas.com>
-> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
-> Russell King <linux@armlinux.org.uk>; Chris Paterson
-> <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org; linux-renesas-
-> soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH ] ARM: dts: r8a7745: Add Ethernet AVB support
->
-> On Tue, Aug 22, 2017 at 08:53:25AM +0100, Biju Das wrote:
-> > Add Ethernet AVB support for r8a7745 SoC.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > ---
-> > This patch is depend upon the below patch [1/2] ARM: dts: r8a7745: Add
-> > MMC interface support https://patchwork.kernel.org/patch/9906803/
-> >
-> > It is tested against renesas-devel branch tag
-> > renesas-devel-20170821-v4.13-rc5
->
-> This patch does not seem to apply cleanly (using git am) on top of the ta=
-g
-> above. Please resolve this problem and resubmit.
-
-Thanks. I will resubmit the patch.
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+SGVsbG8gQW5kcnplaiwKCgpBbmRyemVqIEhhamRhIHdyb3RlOgo+IExpbnV4IGNvcmUgcHJvdmlk
+ZSBoZWxwZXJzIGZvciBwb2xsaW5nIHdpdGggdGltZW91dCwgbGV0cyB1c2UgdGhlbS4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IC0tLQo+
+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMgfCAyMCArKysr
+KysrKy0tLS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxMiBk
+ZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
+b3M1NDMzX2RybV9kZWNvbi5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3M1NDMzX2Ry
+bV9kZWNvbi5jCj4gaW5kZXggNTc5MmNhODguLjIzN2I0YzkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL2V4eW5vcy9leHlub3M1NDMzX2RybV9kZWNvbi5jCj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL2V4eW5vcy9leHlub3M1NDMzX2RybV9kZWNvbi5jCj4gQEAgLTEzLDYgKzEzLDcgQEAK
+PiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ICAjaW5jbHVkZSA8bGludXgv
+Y2xrLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9jb21wb25lbnQuaD4KPiArI2luY2x1ZGUgPGxpbnV4
+L2lvcG9sbC5oPgo+ICAjaW5jbHVkZSA8bGludXgvbWZkL3N5c2Nvbi5oPgo+ICAjaW5jbHVkZSA8
+bGludXgvb2ZfZGV2aWNlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9vZl9ncGlvLmg+Cj4gQEAgLTQw
+NywyNCArNDA4LDE5IEBAIHN0YXRpYyB2b2lkIGRlY29uX2F0b21pY19mbHVzaChzdHJ1Y3QgZXh5
+bm9zX2RybV9jcnRjICpjcnRjKQo+ICAKPiAgc3RhdGljIHZvaWQgZGVjb25fc3dyZXNldChzdHJ1
+Y3QgZGVjb25fY29udGV4dCAqY3R4KQo+ICB7Cj4gLQl1bnNpZ25lZCBpbnQgdHJpZXM7Cj4gIAl1
+bnNpZ25lZCBsb25nIGZsYWdzOwo+ICsJdTMyIHZhbDsKPiArCWludCByZXQ7Cj4gIAo+ICAJd3Jp
+dGVsKDAsIGN0eC0+YWRkciArIERFQ09OX1ZJRENPTjApOwo+IC0JZm9yICh0cmllcyA9IDIwMDA7
+IHRyaWVzOyAtLXRyaWVzKSB7Cj4gLQkJaWYgKH5yZWFkbChjdHgtPmFkZHIgKyBERUNPTl9WSURD
+T04wKSAmIFZJRENPTjBfU1RPUF9TVEFUVVMpCj4gLQkJCWJyZWFrOwo+IC0JCXVkZWxheSgxMCk7
+Cj4gLQl9Cj4gKwlyZWFkbF9wb2xsX3RpbWVvdXQoY3R4LT5hZGRyICsgREVDT05fVklEQ09OMCwg
+dmFsLAo+ICsJCQkgICB+dmFsICYgVklEQ09OMF9TVE9QX1NUQVRVUywgMTIsIDIwMDAwKTsKV291
+bGRuJ3QgaXQgYmUgbW9yZSBjb25zaXN0ZW50IHRvIGFsc28gY2hlY2sgZm9yIGEgdGltZW91dCBo
+ZXJlPwoKV2l0aCBiZXN0IHdpc2hlcywKVG9iaWFzCgoKCj4gIAl3cml0ZWwoVklEQ09OMF9TV1JF
+U0VULCBjdHgtPmFkZHIgKyBERUNPTl9WSURDT04wKTsKPiAtCWZvciAodHJpZXMgPSAyMDAwOyB0
+cmllczsgLS10cmllcykgewo+IC0JCWlmICh+cmVhZGwoY3R4LT5hZGRyICsgREVDT05fVklEQ09O
+MCkgJiBWSURDT04wX1NXUkVTRVQpCj4gLQkJCWJyZWFrOwo+IC0JCXVkZWxheSgxMCk7Cj4gLQl9
+Cj4gKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQoY3R4LT5hZGRyICsgREVDT05fVklEQ09OMCwg
+dmFsLAo+ICsJCQkJIH52YWwgJiBWSURDT04wX1NXUkVTRVQsIDEyLCAyMDAwMCk7Cj4gIAo+IC0J
+V0FSTih0cmllcyA9PSAwLCAiZmFpbGVkIHRvIHNvZnR3YXJlIHJlc2V0IERFQ09OXG4iKTsKPiAr
+CVdBUk4ocmV0IDwgMCwgImZhaWxlZCB0byBzb2Z0d2FyZSByZXNldCBERUNPTlxuIik7Cj4gIAo+
+ICAJc3Bpbl9sb2NrX2lycXNhdmUoJmN0eC0+dmJsYW5rX2xvY2ssIGZsYWdzKTsKPiAgCWN0eC0+
+ZnJhbWVfaWQgPSAwOwo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
