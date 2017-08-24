@@ -1,66 +1,37 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/4] arm: dts: gr-peach: Add ETHER pin group
-Date: Thu, 24 Aug 2017 13:56:16 +0200
-Message-ID: <CAMuHMdU5Vep+m7XtjcbSvyXUzD_Pn2crcQ68VRmS4bgY44ut0w@mail.gmail.com>
-References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
- <1503564523-31899-4-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdUoMU=qN3Qjoqmf6uxcS3j5hqthhuBDMPZzA+wSD_BH5A@mail.gmail.com> <20170824114656.GA3905@w540>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
+Date: Thu, 24 Aug 2017 20:18:20 +0800
+Message-ID: <20170824121818.GE3685@dragon>
+References: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
+ <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
+ <20170822085541.GB3685@dragon>
+ <20170822203132.GC21656@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170824114656.GA3905@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jmondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170822203132.GC21656@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Kiran Gunda <kgunda@codeaurora.org>, gregkh@linuxfoundation.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Abhijeet Dharmapurikar <adharmap@codeaurora.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Tue, Aug 22, 2017 at 01:31:32PM -0700, Stephen Boyd wrote:
+> Also, I see that on v4.13-rc series the read/write checks are
+> causing the led driver to fail in a different way:
+> 
+>     spmi spmi-0: error: impermissible write to peripheral sid:0 addr:0xc040
+>     qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x40 failed
+>     leds-gpio soc:leds: Error applying setting, reverse things back
+>     spmi spmi-0: error: impermissible write to peripheral sid:0 addr:0xc041
+>     qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x41 failed
+>     leds-gpio: probe of soc:leds failed with error -1 
+> 
+> Are you seeing similar behavior?
 
-On Thu, Aug 24, 2017 at 1:46 PM, jmondi <jacopo@jmondi.org> wrote:
-> On Thu, Aug 24, 2017 at 11:48:14AM +0200, Geert Uytterhoeven wrote:
->> On Thu, Aug 24, 2017 at 10:48 AM, Jacopo Mondi
->> <jacopo+renesas@jmondi.org> wrote:
->> > Add pin configuration subnode for ETHER pin group.
->> > The interface can be configured and probed, but no traffic can be
->> > transmitted or received.
->> >
->> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->> >
->> > ---
->> > When in u-boot console I can ping a connected host, after the
->> > system has booted I can configure an ip address on the interface but
->> > cannot exchange any traffic.
->> > I have compared the pin configuration procedure with the u-boot
->> > implemented one and some sketches from mbed operating system libraries,
->> > the configured pins are correct and registers values seems to match.
->> > Not sure if this patch should be sent for inclusion but sending it out
->> > anyway for you to judge this.
+Yes.  I forgot to mention that, and leds-gpio failure is gone after
+applying Kiran's patch below.
 
->> All OK, but do you need P4_2, which is used for ET_nRST?
->
-> I tried requesting the GPIO in the "ether" subnode and define it as
-> "active low", so that it is kept high during regular operations.
-> I have verified through register writes dump it is cycled just after
-> the gpio is requested, and this should reset the interface before the
-> actual sh_eth driver kicks in.
->
-> I haven't find any mention in device tree bindings documentation of a
-> "reset-gpio" property for sh_eth, in the code examples I've seen in
-> u-boot and mbed, the interface is reset before any actual
-> configuration is performed. I feel like that should be the place where
-> that gpio is requested and cycled...
+spmi: pmic-arb: remove the read/write access checks
 
-Documentation/devicetree/bindings/net/mdio.txt says
-
-These are generic properties that can apply to any MDIO bus.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Shawn
