@@ -1,130 +1,31 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 0/3] Add support for IPQ8074 PCIe phy and controller
-Date: Thu, 24 Aug 2017 11:21:53 -0500
-Message-ID: <20170824162153.GD31858@bhelgaas-glaptop.roam.corp.google.com>
-References: <1503041393-19593-1-git-send-email-varada@codeaurora.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of/device: Prevent buffer overflow in of_device_modalias()
+Date: Thu, 24 Aug 2017 11:24:51 -0500
+Message-ID: <CAL_Jsq+FpKHb59J_UEx2ndOqM9aHKe-Loopos4UW=uS+dk9+9g@mail.gmail.com>
+References: <20170824010404.9145-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1503041393-19593-1-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20170824010404.9145-1-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 12:59:50PM +0530, Varadarajan Narayanan wrote:
-> v9:
->   Incorporate Stanimir's feedback for
-> 	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-> 
->   Add Stanimir's Ack for
-> 	PCI: dwc: qcom: Use block IP version for operations
-> 	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-> 
->   Add Rob's Ack for
-> 	dt-bindings: pci: qcom: Add support for IPQ8074
-> 
-> v8:
->   Incorporate Stanimir's feedback for
-> 	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-> 
-> v7:
->   Skip PHY patches as they are already included by Kishon
-> 
->   Incorporate Stanimir's feedback for the below patches
-> 	PCI: dwc: qcom: Use block IP version for operations
-> 	PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-> 
-> v6:
->   Added 'Reviewed-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>' and fixed
->   white space issues as mentioned by Vivek.
-> 	phy: qcom-qmp: Fix phy pipe clock name
-> 	dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
-> 
-> v5:
->   dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
->         Renamed phy_phy clock as common clock
-> 
->   phy: qcom-qmp: Fix phy pipe clock name
->         Moved the DT get into the registering function
-> 
->   phy: qcom-qmp: Add support for IPQ8074
->         Place the IPQ8074 related structs similar to existing SoC.
->         Renamed phy_phy clock as common clock
-> v4:
->   phy: qcom-qmp: Fix phy pipe clock name
-> 	Based on Vivek's comments, return failure only for
-> 	PCI/USB type of phys.
-> 	Removed Ack.
-> 
->   phy: qcom-qmp: Handle unavailable registers
-> 	Removed this patch.
-> 	Incorrectly used a block of code that is not applicable
-> 	to IPQ8074, hence had to avoid an "unavailable" register.
-> 	Since that is addressed using 'has_phy_com_ctrl' this
-> 	patch is not needed.
-> 
->   phy: qcom-qmp: Add support for IPQ8074
-> 	Set 'has_phy_com_ctrl' to false
-> 	Remove ipq8074_pciephy_regs_layout
-> 
-> v3:
->   PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-> 	Incoporate Stan's feedback:-
-> 	 - Add SoC Wrapper and Synopsys Core IP versions
-> 
-> v2:
->   dt-bindings: phy: qmp: Add output-clock-names
-> 	Added Rob H's Ack
-> 
->   dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
-> 	Removed example
-> 	Added IPQ8074 specific details
-> 
->   phy: qcom-qmp: Fix phy pipe clock name
-> 	Added Vivek's Ack
-> 
->   phy: qcom-qmp: Handle unavailable registers
-> 	No changes
-> 
->   phy: qcom-qmp: Add support for IPQ8074
-> 	No changes
-> 
->   PCI: dwc: qcom: Use block IP version for operations
-> 	Added new patch to use block IP version instead of v1, v2...
-> 
->   dt-bindings: pci: qcom: Add support for IPQ8074
-> 	Removed example
-> 	Added IPQ8074 specific details
-> 
->   PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-> 	Incorporated Bjorn's feedback:-
-> 	 - Removed reset names, helper function to assert/deassert, helper
-> 	   function to R/M/W register.
-> 	 - Renamed sys_noc clock as iface clock
-> 	 - Added deinit if phy power on fails
-> 
-> v1:
-> Add definitions required to enable QMP phy support for IPQ8074.
-> 
-> Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
-> Gen 1/2, one lane, two PCIe root complex with support for MSI and
-> legacy interrupts, and it conforms to PCI Express Base 2.1
-> specification.
-> 
-> Varadarajan Narayanan (3):
->   PCI: dwc: qcom: Use block IP version for operations
->   dt-bindings: pci: qcom: Add support for IPQ8074
->   PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt          |  23 ++
->  drivers/pci/dwc/pcie-qcom.c                        | 346 +++++++++++++++++----
->  2 files changed, 302 insertions(+), 67 deletions(-)
+On Wed, Aug 23, 2017 at 8:04 PM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> As of_device_get_modalias() returns the number of bytes that would have
+> been written to the target string, regardless of how much did fit in the
+> buffer, it's possible that the returned index points beyond the buffer
+> passed to of_device_modalias() - causing memory beyond the buffer to be
+> null terminated.
 
-Applied to pci/host-qcom for v4.14, thanks!
+I guess ibmebus and macio had this bug for some time because I just
+copied those implementations.
 
-I made minor tweaks to match existing code style in pcie-qcom.c.
+Applying both patches. Thanks.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
