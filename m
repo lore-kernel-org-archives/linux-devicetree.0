@@ -1,62 +1,65 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] iommu/mediatek: Fix a build fail of m4u_type
-Date: Thu, 24 Aug 2017 13:24:09 +0800
-Message-ID: <1503552249-22060-1-git-send-email-yong.wu@mediatek.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Thu, 24 Aug 2017 08:47:56 +0300
+Message-ID: <d1cc3cbb-c4aa-2acc-91ff-1d6713cb8867@ti.com>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170722065133.GT3053@localhost>
+ <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
+ <20170726052930.GF3053@localhost>
+ <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
+ <20170731123157.GJ3053@localhost>
+ <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
+ <20170802045522.GU3053@localhost>
+ <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
+ <7bcad698-fa1a-3dc2-e918-4400639ca6d7@st.com>
+ <47ceba83-1097-072e-bed6-d1964bce7a25@ti.com>
+ <0e16a519-3d60-f683-5517-12a520e0e521@st.com>
+ <f0db566e-5613-8914-e070-915c8c4d9b9f@ti.com>
+ <71b7ef2a-d745-d16b-4538-567c856cce9a@st.com>
+ <401305f0-15d8-1996-60d6-69c13cbacc06@ti.com>
+ <58bf2f7c-faf1-d1e9-3c87-d7964d1ba3d4@st.com>
+ <6e8e19f1-8d0f-183b-e02f-1ec8c4dd57b3@ti.com>
+ <f7ddd927-5db3-e1b1-b7f1-94050b508298@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f7ddd927-5db3-e1b1-b7f1-94050b508298@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>, Vinod Koul <vinod.koul@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie DELAUNAY <amelie.delaunay@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>
 List-Id: devicetree@vger.kernel.org
 
-The commit ("iommu/mediatek: Enlarge the validate PA range
-for 4GB mode") introduce the following build error:
 
-   drivers/iommu/mtk_iommu.c: In function 'mtk_iommu_hw_init':
->> drivers/iommu/mtk_iommu.c:536:30: error: 'const struct mtk_iommu_data'
- has no member named 'm4u_type'; did you mean 'm4u_dom'?
-     if (data->enable_4GB && data->m4u_type != M4U_MT8173) {
 
-This patch fix it, use "m4u_plat" instead of "m4u_type".
+On 2017-08-21 12:34, Pierre Yves MORDRET wrote:
+> OK. I will redesign my driver to take into account this idea.
+> 
+> I believe I should get rid of my custom API in DMA for channelID as well. Please
+> confirm. Not very clear for me whether I can keep it or not.
 
-Reported-by: kernel test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
-1) In the v2 of mt2712 iommu support patch-set, We changed a variant
-name from "m4u_type" to "m4u_plat", But I'm sorry that I forgot to
-change it in the later patch.
-2) This patch is based on [1].
-[1]:https://lists.linuxfoundation.org/pipermail/iommu/2017-August/023847.html
-3) I cann't find the commit id of the patch ("iommu/mediatek: Enlarge
-the validate PA range for 4GB mode") in the [2].
-So I don't write the commit id for that patch in the commit message.
-[2]https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
----
- drivers/iommu/mtk_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, you should be able to get rid of any custom API.
+The DMA event router should be 'invisible' to both the DMA driver itself
+and for the DMA users as well. If you end up still needing custom API
+(which I doubt) then it is better to extend the core support to cover
+that in a generic way since it is likely that other might have similar
+needs.
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 4f233e1..bc00e40 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -533,7 +533,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 
- 	writel_relaxed(F_MMU_IVRP_PA_SET(data->protect_base, data->enable_4GB),
- 		       data->base + REG_MMU_IVRP_PADDR);
--	if (data->enable_4GB && data->m4u_type != M4U_MT8173) {
-+	if (data->enable_4GB && data->m4u_plat != M4U_MT8173) {
- 		/*
- 		 * If 4GB mode is enabled, the validate PA range is from
- 		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
--- 
-1.9.1
+You need to identify what you need to manage with the DMA router, again
+in my cases:
+am335x/am437x: The DMA channel is fixed, but the DMA event to be handled
+by the channel (DMA event muxer) is selected by the router.
+dra7x: The DMA event is the fixed part and I needed to translate that to
+local eDMA/sDMA events and in eDMA I needed to pick a channel based on
+the translated event.
+
+The same router code works for eDMA and sDMA in dra7, while the two DMA
+engines are different in their internal works.
+
+At the end of the day I only needed to plug the DMA event routers and
+there is no change in the DMA drivers at all.
+
+I'm happy to answer any questions you might have, if I can.
+
+- Péter
