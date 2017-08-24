@@ -1,27 +1,42 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dtsi: iwg22m: Add RTC support
-Date: Thu, 24 Aug 2017 06:48:16 -0400
-Message-ID: <20170824104816.GB27788@verge.net.au>
-References: <1503426166-26773-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/4] GR-Peach DTS update
+Date: Thu, 24 Aug 2017 06:53:50 -0400
+Message-ID: <20170824105350.GD27788@verge.net.au>
+References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503426166-26773-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 22, 2017 at 07:22:46PM +0100, Fabrizio Castro wrote:
-> Add support for the bq32000 RTC to the iwg22m device tree.
+On Thu, Aug 24, 2017 at 10:48:39AM +0200, Jacopo Mondi wrote:
+> Hello Simon,
+>    now that RZ/A1 pin controller is merged, it's time to enable some peripheral
+> devices on GR-Peach has it has been done for Genmai and RSK boards.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> The series is based on Simon's "renesas-dt2-for-v4.14" tag release, so it should
+> be ideally applied after v4.14-rc1 is out, as it needs pin controller nodes to
+> be defined in r7s72100.dtsi.
+> 
+> Patch 2/4 enables EHTER interface, even if I've not been able to exchange any
+> traffic on that. I can set the ip address and probe the device and double
+> checked the pin configuration process against u-boot sources (where the
+> interface is working instead). Sending the patch anyway and let you decide what
+> to do with that.
+> 
+> Thanks
+>    j
+> 
+> Jacopo Mondi (4):
+>   arm: dts: gr-peach: Remove empty line
+>   arm: dts: gr-peach: Add SCIF2 pin group
+>   arm: dts: gr-peach: Add ETHER pin group
+>   arm: dts: gr-peach: Add user led device nodes
 
-The prefix of this patch should be "ARM: dts: iwg22m:"
-
-I have fixed that and applied this patch for v4.15
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks I have applied the 1st, 2nd and 4th (non-ETHER) patches above for v4.15.
+I am leaving the 3rd (ETHER) patch pending resolution of the review
+provided by Geert.
