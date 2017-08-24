@@ -1,74 +1,51 @@
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH ] ARM: dts: iwg20d-q7: Add chosen node
-Date: Thu, 24 Aug 2017 14:32:47 +0000
-Message-ID: <SG2PR06MB1711E12964D1C1300C4EEB64B89A0@SG2PR06MB1711.apcprd06.prod.outlook.com>
-References: <1503075488-44304-1-git-send-email-biju.das@bp.renesas.com>
- <20170822080735.GH30838@verge.net.au>
+Subject: RE: [PATCH v2] ARM: dts: iwg20d-q7: Add RTC support
+Date: Thu, 24 Aug 2017 14:53:55 +0000
+Message-ID: <SG2PR06MB1711B313440D06B838E3DBD1B89A0@SG2PR06MB1711.apcprd06.prod.outlook.com>
+References: <1502874990-12006-1-git-send-email-chris.paterson2@renesas.com>
+ <20170824104701.GA30281@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170822080735.GH30838@verge.net.au>
+In-Reply-To: <20170824104701.GA30281@verge.net.au>
 Content-Language: en-US
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
-
 
 
 > -----Original Message-----
 > From: Simon Horman [mailto:horms@verge.net.au]
-> Sent: 22 August 2017 09:08
-> To: Biju Das <biju.das@bp.renesas.com>
+> Sent: 24 August 2017 11:47
+> To: Chris Paterson <Chris.Paterson2@renesas.com>
 > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
 > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
-> Russell King <linux@armlinux.org.uk>; Chris Paterson
-> <Chris.Paterson2@renesas.com>; Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com>; devicetree@vger.kernel.org; linux-renes=
-as-
-> soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH ] ARM: dts: iwg20d-q7: Add chosen node
+> Russell King <linux@armlinux.org.uk>; Biju Das <biju.das@bp.renesas.com>;
+> devicetree@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH v2] ARM: dts: iwg20d-q7: Add RTC support
 >
-> On Fri, Aug 18, 2017 at 05:58:08PM +0100, Biju Das wrote:
+> On Wed, Aug 16, 2017 at 10:16:30AM +0100, Chris Paterson wrote:
+> > From: Biju Das <biju.das@bp.renesas.com>
+> >
+> > Define the iWave RainboW-G20D-Qseven board dependent part of the RTC
+> > device node.
+> >
 > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > [chris: corrected bq32000 compatible string]
+> > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
 > > ---
-> > This patch tested against renesas-dev tag
-> > renesas-devel-20170815-v4.13-rc5
+> > v1 -> v2
+> > Added ti to bq32000 compatible string - Thanks Geert
 >
-> Thanks, I have applied this for v4.15.
->
-> There was some fuzz when applying this patch.
-> Please check that it is correct when I have pushed today's devel tag to t=
-he
-> renesas tree.
+> Thanks, applied for v4.15.
 
-Looks like this node is misplaced. I will repost this patch.
+Looks like i2c2_pins nodes are misplaced. Please drop this patch,
+So that I can send a new patch.
 
-> >
-> >  arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-> > b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-> > index 081af01..305a6a1 100644
-> > --- a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-> > +++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-> > @@ -19,6 +19,11 @@
-> >  serial0 =3D &scif0;
-> >  ethernet0 =3D &avb;
-> >  };
-> > +
-> > +chosen {
-> > +bootargs =3D "ignore_loglevel rw root=3D/dev/nfs ip=3Ddhcp";
-> > +stdout-path =3D "serial0:115200n8";
-> > +};
-> >  };
-> >
-> >  &pfc {
-> > --
-> > 1.9.1
-> >
+
 
 
 
