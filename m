@@ -1,103 +1,83 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/device: Fix of_device_get_modalias() buffer handling
-Date: Thu, 24 Aug 2017 11:51:14 -0500
-Message-ID: <CAL_JsqLqc488ALEqZT-PKw54h5QAbU=q=CEhM9jwROmukR7fZg@mail.gmail.com>
-References: <20170824010352.9085-1-bjorn.andersson@linaro.org>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: PCI: rockchip: Add support for pcie
+ wake irq
+Date: Thu, 24 Aug 2017 11:53:54 -0500
+Message-ID: <20170824165353.GL31858@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170822031934.8675-1-jeffy.chen@rock-chips.com>
+ <20170822031934.8675-4-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170824010352.9085-1-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170822031934.8675-4-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 23, 2017 at 8:03 PM, Bjorn Andersson
-<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> of_device_request_module() calls of_device_get_modalias() with "len" 0,
-> to calculate the size of the buffer needed to store the result, but due
-> to integer promotion the ssize_t "len" will be compared as unsigned with
-> strlen(compat) and the loop will generally never break. This results in
-> a call to snprintf() with a negative len, which triggers below warning,
-> followed by a dereference of a invalid pointer:
->
->   [    3.060067] WARNING: CPU: 0 PID: 51 at lib/vsprintf.c:2122 vsnprintf+0x348/0x6d8
->   ...
->   [    3.060301] [<ffffff800891ede8>] vsnprintf+0x348/0x6d8
->   [    3.060308] [<ffffff800891f248>] snprintf+0x48/0x50
->   [    3.060316] [<ffffff80086a7c80>] of_device_get_modalias+0x108/0x160
->   [    3.060322] [<ffffff80086a7cf8>] of_device_request_module+0x20/0x88
->   ...
->
-> Further more of_device_get_modalias() is supposed to return the number
-> of bytes needed to store the entire modalias, so the loop needs to
-> continue accumulate the total size even though the buffer is full.
->
-> Finally the function is not expected to ensure space for the NUL, nor
-> include it in the returned size, so only 1 should be added to the length
-> of "compat" in the loop (to account for the character 'C').
->
-> Fixes: bc575064d688 ("of/device: use of_property_for_each_string to parse compatible strings")
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Tue, Aug 22, 2017 at 11:19:33AM +0800, Jeffy Chen wrote:
+> Add an optional interrupt for PCIE_WAKE pin.
+
+Rob?
+
+> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  drivers/of/device.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 6f33a0e0d351..7cff599a9c6a 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -195,10 +195,11 @@ EXPORT_SYMBOL(of_device_get_match_data);
->
->  static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->  {
-> -       const char *compat, *start = str;
-> +       const char *compat;
->         char *c;
->         struct property *p;
->         ssize_t csize;
-> +       ssize_t tsize;
->
->         if ((!dev) || (!dev->of_node))
->                 return -ENODEV;
-> @@ -206,12 +207,16 @@ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len
->         /* Name & Type */
->         csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
->                          dev->of_node->type);
-> +       tsize = csize;
->         len -= csize;
-> -       str += csize;
-> +       if (str)
-> +               str += csize;
->
->         of_property_for_each_string(dev->of_node, "compatible", p, compat) {
-> -               if (strlen(compat) + 2 > len)
-> -                       break;
-> +               csize = strlen(compat) + 1;
-> +               tsize += csize;
-> +               if (csize > len)
-> +                       continue;
->
->                 csize = snprintf(str, len, "C%s", compat);
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/pci/rockchip-pcie.txt        | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> index 5678be82530d..9f6504129e80 100644
+> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> @@ -20,10 +20,13 @@ Required properties:
+>  - msi-map: Maps a Requester ID to an MSI controller and associated
+>  	msi-specifier data. See ./pci-msi.txt
+>  - interrupts: Three interrupt entries must be specified.
+> -- interrupt-names: Must include the following names
+> -	- "sys"
+> -	- "legacy"
+> -	- "client"
+> +- interrupt-names: Include the following names
+> +	Required:
+> +		- "sys"
+> +		- "legacy"
+> +		- "client"
+> +	Optional:
+> +		- "wake"
 
-We could just use the snprintf to give us the length. Something like
-this following the snprintf:
+Why is there no other PCI binding that includes "wake" as an
+interrupt-name?  This feels like something that should be fairly
+common across host controllers.  I don't want a Rockport-specific
+DT description if it could be made more general.
 
-tsize +=csize;
-if (csize > len) {
-  if (len) {
-    str[0] = '\0';
-    len = 0;
-  }
-  continue;
-}
-
-You'd need to prevent len from going negative up above too. It ends up
-being more lines but you save a strlen call. So perhaps it's fine as
-is, but since I've written it already throwing it out there...
-
-Rob
+>  - resets: Must contain seven entries for each entry in reset-names.
+>  	   See ../reset/reset.txt for details.
+>  - reset-names: Must include the following names
+> @@ -87,10 +90,11 @@ pcie0: pcie@f8000000 {
+>  	clock-names = "aclk", "aclk-perf",
+>  		      "hclk", "pm";
+>  	bus-range = <0x0 0x1>;
+> -	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
+> -		     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
+> -		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>;
+> -	interrupt-names = "sys", "legacy", "client";
+> +	interrupts-extended = <&gic GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			      <&gic GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			      <&gic GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			      <&gpio0 8 IRQ_TYPE_LEVEL_LOW>;
+> +	interrupt-names = "sys", "legacy", "client", "wake";
+>  	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
+>  	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
+>  	assigned-clock-rates = <100000000>;
+> -- 
+> 2.11.0
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
