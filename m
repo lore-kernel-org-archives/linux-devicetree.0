@@ -1,65 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] devfreq: Convert to using %pOF instead of full_name
-Date: Thu, 24 Aug 2017 09:23:08 -0500
-Message-ID: <CAL_Jsq+LW8ZmE_J0B9Cea_Y0iDkBX46cXWnAF882C9-7SB_T=A@mail.gmail.com>
-References: <20170718214339.7774-17-robh@kernel.org> <CGME20170718214411epcas2p43fc1475c80245889737ba9e731497e38@epcms1p2>
- <596EB809.7050605@samsung.com> <20170720052553epcms1p24dc190a0d51f2e447a76e417e519bd28@epcms1p2>
- <CAL_JsqL9x16Z76VSAkDUiyEddafYuiH4mFTUur=8LgrJehrFLw@mail.gmail.com> <599E0D45.7030001@samsung.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH ] ARM: dts: iwg20d-q7: Add chosen node
+Date: Thu, 24 Aug 2017 14:32:47 +0000
+Message-ID: <SG2PR06MB1711E12964D1C1300C4EEB64B89A0@SG2PR06MB1711.apcprd06.prod.outlook.com>
+References: <1503075488-44304-1-git-send-email-biju.das@bp.renesas.com>
+ <20170822080735.GH30838@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <599E0D45.7030001@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170822080735.GH30838@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 23, 2017 at 6:18 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> Hi Rob,
->
-> On 2017년 08월 24일 03:09, Rob Herring wrote:
->> On Thu, Jul 20, 2017 at 12:25 AM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
->>>> On 2017년 07월 19일 06:42, Rob Herring wrote:
->>>>> Now that we have a custom printf format specifier, convert users of
->>>>> full_name to use %pOF instead. This is preparation to remove storing
->>>>> of the full path string for each node.
->>>>>
->>>>> Signed-off-by: Rob Herring <robh@kernel.org>
->>>>> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->>>>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
->>>>> Cc: Kyungmin Park <kyungmin.park@samsung.com>
->>>>> Cc: linux-pm@vger.kernel.org
->>>>> ---
->>>>>  drivers/devfreq/devfreq-event.c | 4 ++--
->>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
->>>>> index 8648b32ebc89..d67242d87744 100644
->>>>> --- a/drivers/devfreq/devfreq-event.c
->>>>> +++ b/drivers/devfreq/devfreq-event.c
->>>>> @@ -277,8 +277,8 @@ int devfreq_event_get_edev_count(struct device *dev)
->>>>>                                             sizeof(u32));
->>>>>     if (count < 0) {
->>>>>             dev_err(dev,
->>>>> -                   "failed to get the count of devfreq-event in %s node\n",
->>>>> -                   dev->of_node->full_name);
->>>>> +                   "failed to get the count of devfreq-event in %pOF node\n",
->>>>> +                   dev->of_node);
->>>>>             return count;
->>>>>     }
->>>>>
->>>>
->>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>>
->>>
->>> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
->>
->> Please take this thru the devfreq tree.
->
-> This patch was merged on devfreq tree.
-> https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=7f46535e8a2e3c3e415e55eaadcb9d9a153a5300
 
-Okay, it's not showing up in linux-next which is why I asked.
 
-Rob
+> -----Original Message-----
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: 22 August 2017 09:08
+> To: Biju Das <biju.das@bp.renesas.com>
+> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> Russell King <linux@armlinux.org.uk>; Chris Paterson
+> <Chris.Paterson2@renesas.com>; Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com>; devicetree@vger.kernel.org; linux-renes=
+as-
+> soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH ] ARM: dts: iwg20d-q7: Add chosen node
+>
+> On Fri, Aug 18, 2017 at 05:58:08PM +0100, Biju Das wrote:
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> > This patch tested against renesas-dev tag
+> > renesas-devel-20170815-v4.13-rc5
+>
+> Thanks, I have applied this for v4.15.
+>
+> There was some fuzz when applying this patch.
+> Please check that it is correct when I have pushed today's devel tag to t=
+he
+> renesas tree.
+
+Looks like this node is misplaced. I will repost this patch.
+
+> >
+> >  arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+> > b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+> > index 081af01..305a6a1 100644
+> > --- a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+> > +++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+> > @@ -19,6 +19,11 @@
+> >  serial0 =3D &scif0;
+> >  ethernet0 =3D &avb;
+> >  };
+> > +
+> > +chosen {
+> > +bootargs =3D "ignore_loglevel rw root=3D/dev/nfs ip=3Ddhcp";
+> > +stdout-path =3D "serial0:115200n8";
+> > +};
+> >  };
+> >
+> >  &pfc {
+> > --
+> > 1.9.1
+> >
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
