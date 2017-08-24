@@ -1,67 +1,93 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] devfreq: Convert to using %pOF instead of full_name
-Date: Thu, 24 Aug 2017 08:18:29 +0900
-Message-ID: <599E0D45.7030001@samsung.com>
-References: <20170718214339.7774-17-robh@kernel.org>
-        <CGME20170718214411epcas2p43fc1475c80245889737ba9e731497e38@epcms1p2>
-        <596EB809.7050605@samsung.com>
-        <20170720052553epcms1p24dc190a0d51f2e447a76e417e519bd28@epcms1p2>
-        <CAL_JsqL9x16Z76VSAkDUiyEddafYuiH4mFTUur=8LgrJehrFLw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAL_JsqL9x16Z76VSAkDUiyEddafYuiH4mFTUur=8LgrJehrFLw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of/device: Fix of_device_get_modalias() buffer handling
+Date: Wed, 23 Aug 2017 18:03:52 -0700
+Message-ID: <20170824010352.9085-1-bjorn.andersson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+of_device_request_module() calls of_device_get_modalias() with "len" 0,
+to calculate the size of the buffer needed to store the result, but due
+to integer promotion the ssize_t "len" will be compared as unsigned with
+strlen(compat) and the loop will generally never break. This results in
+a call to snprintf() with a negative len, which triggers below warning,
+followed by a dereference of a invalid pointer:
 
-On 2017년 08월 24일 03:09, Rob Herring wrote:
-> On Thu, Jul 20, 2017 at 12:25 AM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
->>> On 2017년 07월 19일 06:42, Rob Herring wrote:
->>>> Now that we have a custom printf format specifier, convert users of
->>>> full_name to use %pOF instead. This is preparation to remove storing
->>>> of the full path string for each node.
->>>>
->>>> Signed-off-by: Rob Herring <robh@kernel.org>
->>>> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->>>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
->>>> Cc: Kyungmin Park <kyungmin.park@samsung.com>
->>>> Cc: linux-pm@vger.kernel.org
->>>> ---
->>>>  drivers/devfreq/devfreq-event.c | 4 ++--
->>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
->>>> index 8648b32ebc89..d67242d87744 100644
->>>> --- a/drivers/devfreq/devfreq-event.c
->>>> +++ b/drivers/devfreq/devfreq-event.c
->>>> @@ -277,8 +277,8 @@ int devfreq_event_get_edev_count(struct device *dev)
->>>>                                             sizeof(u32));
->>>>     if (count < 0) {
->>>>             dev_err(dev,
->>>> -                   "failed to get the count of devfreq-event in %s node\n",
->>>> -                   dev->of_node->full_name);
->>>> +                   "failed to get the count of devfreq-event in %pOF node\n",
->>>> +                   dev->of_node);
->>>>             return count;
->>>>     }
->>>>
->>>
->>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>
->>
->> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-> 
-> Please take this thru the devfreq tree.
+  [    3.060067] WARNING: CPU: 0 PID: 51 at lib/vsprintf.c:2122 vsnprintf+0x348/0x6d8
+  ...
+  [    3.060301] [<ffffff800891ede8>] vsnprintf+0x348/0x6d8
+  [    3.060308] [<ffffff800891f248>] snprintf+0x48/0x50
+  [    3.060316] [<ffffff80086a7c80>] of_device_get_modalias+0x108/0x160
+  [    3.060322] [<ffffff80086a7cf8>] of_device_request_module+0x20/0x88
+  ...
 
-This patch was merged on devfreq tree.
-https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=7f46535e8a2e3c3e415e55eaadcb9d9a153a5300
+Further more of_device_get_modalias() is supposed to return the number
+of bytes needed to store the entire modalias, so the loop needs to
+continue accumulate the total size even though the buffer is full.
 
+Finally the function is not expected to ensure space for the NUL, nor
+include it in the returned size, so only 1 should be added to the length
+of "compat" in the loop (to account for the character 'C').
+
+Fixes: bc575064d688 ("of/device: use of_property_for_each_string to parse compatible strings")
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/device.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 6f33a0e0d351..7cff599a9c6a 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -195,10 +195,11 @@ EXPORT_SYMBOL(of_device_get_match_data);
+ 
+ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+ {
+-	const char *compat, *start = str;
++	const char *compat;
+ 	char *c;
+ 	struct property *p;
+ 	ssize_t csize;
++	ssize_t tsize;
+ 
+ 	if ((!dev) || (!dev->of_node))
+ 		return -ENODEV;
+@@ -206,12 +207,16 @@ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len
+ 	/* Name & Type */
+ 	csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
+ 			 dev->of_node->type);
++	tsize = csize;
+ 	len -= csize;
+-	str += csize;
++	if (str)
++		str += csize;
+ 
+ 	of_property_for_each_string(dev->of_node, "compatible", p, compat) {
+-		if (strlen(compat) + 2 > len)
+-			break;
++		csize = strlen(compat) + 1;
++		tsize += csize;
++		if (csize > len)
++			continue;
+ 
+ 		csize = snprintf(str, len, "C%s", compat);
+ 		for (c = str; c; ) {
+@@ -223,7 +228,7 @@ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len
+ 		str += csize;
+ 	}
+ 
+-	return str - start;
++	return tsize;
+ }
+ 
+ int of_device_request_module(struct device *dev)
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.12.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
