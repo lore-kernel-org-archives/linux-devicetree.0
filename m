@@ -1,36 +1,21 @@
-From: Rocky Hao <rocky.hao@rock-chips.com>
-Subject: [PATCH 5/5] arm: dts: rockchip: enable tsadc module on RV1108 evaluation board
-Date: Thu, 24 Aug 2017 18:32:14 +0800
-Message-ID: <1503570734-8942-1-git-send-email-rocky.hao@rock-chips.com>
-References: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com, rocky.hao@rock-chips.com
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dtsi: r8a7745: Add I2C DT support
+Date: Thu, 24 Aug 2017 06:34:24 -0400
+Message-ID: <20170824103424.GH17607@verge.net.au>
+References: <1503415622-13450-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1503415622-13450-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable tsadc module on RV1108 evaluation board
+On Tue, Aug 22, 2017 at 04:27:02PM +0100, Fabrizio Castro wrote:
+> Add I2C[0-5] devices to the r8a7745 device tree.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
----
- arch/arm/boot/dts/rv1108-evb.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index 39197c3e9e0e..885f760d8ca1 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -218,6 +218,10 @@
- 	status = "okay";
- };
- 
-+&tsadc {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
--- 
-1.9.1
+Thanks, applied for v4.15.
