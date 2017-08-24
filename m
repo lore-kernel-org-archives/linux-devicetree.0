@@ -1,90 +1,112 @@
-From: jmondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 3/4] arm: dts: gr-peach: Add ETHER pin group
-Date: Thu, 24 Aug 2017 14:53:59 +0200
-Message-ID: <20170824125359.GB3905@w540>
-References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
- <1503564523-31899-4-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdUoMU=qN3Qjoqmf6uxcS3j5hqthhuBDMPZzA+wSD_BH5A@mail.gmail.com>
- <20170824114656.GA3905@w540>
- <CAMuHMdU5Vep+m7XtjcbSvyXUzD_Pn2crcQ68VRmS4bgY44ut0w@mail.gmail.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Thu, 24 Aug 2017 15:03:30 +0200
+Message-ID: <ea66ba14-fe18-cb83-5989-8ae7b3ab50c6@st.com>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170722065133.GT3053@localhost>
+ <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
+ <20170726052930.GF3053@localhost>
+ <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
+ <20170731123157.GJ3053@localhost>
+ <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
+ <20170802045522.GU3053@localhost>
+ <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
+ <7bcad698-fa1a-3dc2-e918-4400639ca6d7@st.com>
+ <47ceba83-1097-072e-bed6-d1964bce7a25@ti.com>
+ <0e16a519-3d60-f683-5517-12a520e0e521@st.com>
+ <f0db566e-5613-8914-e070-915c8c4d9b9f@ti.com>
+ <71b7ef2a-d745-d16b-4538-567c856cce9a@st.com>
+ <401305f0-15d8-1996-60d6-69c13cbacc06@ti.com>
+ <58bf2f7c-faf1-d1e9-3c87-d7964d1ba3d4@st.com>
+ <6e8e19f1-8d0f-183b-e02f-1ec8c4dd57b3@ti.com>
+ <f7ddd927-5db3-e1b1-b7f1-94050b508298@st.com>
+ <d1cc3cbb-c4aa-2acc-91ff-1d6713cb8867@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdU5Vep+m7XtjcbSvyXUzD_Pn2crcQ68VRmS4bgY44ut0w@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d1cc3cbb-c4aa-2acc-91ff-1d6713cb8867-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Geert,
-
-On Thu, Aug 24, 2017 at 01:56:16PM +0200, Geert Uytterhoeven wrote:
-> Hi Jacopo,
->
-
-[snip]
-
-> > I haven't find any mention in device tree bindings documentation of a
-> > "reset-gpio" property for sh_eth, in the code examples I've seen in
-> > u-boot and mbed, the interface is reset before any actual
-> > configuration is performed. I feel like that should be the place where
-> > that gpio is requested and cycled...
->
-> Documentation/devicetree/bindings/net/mdio.txt says
->
-> These are generic properties that can apply to any MDIO bus.
->
-
-I have now used mdio defined generic properties
-
-&ether {
-	pinctrl-names = "default";
-	pinctrl-0 = <&ether_pins>;
-
-	status = "okay";
-
-	reset-gpios = <&port4 2 GPIO_ACTIVE_LOW>;
-	reset-delay-us = <5>;
-
-	renesas,no-ether-link;
-	phy-handle = <&phy0>;
-	phy0: ethernet-phy@0 {
-               reg = <0>;
-	};
-};
-
-I see the gpio being cycled, but same results as before: device gets
-probed, address set, but I cannot ping, device gets probed, address
-gets set, but I cannot ping
-
---- target ---
-[    0.000000] libphy: sh_mii: probed
-[    0.000000] sh-eth e8203000.ethernet eth0: Base address at 0xe8203000, 68:14:97:20:97:00, IRQ 22.
-
-# ifconfig eth0 192.168.100.50
-[    0.000000] Generic PHY e8203000.ethernet-ffffffff:00: attached PHY driver [Generic PHY] (mii_bus:phy_addr=e8203000.ethernet-f)
-
---- host ---
-$ping 192.168.100.50
-PING 192.168.100.50 (192.168.100.50) 56(84) bytes of data.
->From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
->From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
->From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
 
 
-Let's leave this out of the DTS series I've just sent for now, ok?
+On 08/24/2017 07:47 AM, Peter Ujfalusi wrote:
+> 
+> 
+> On 2017-08-21 12:34, Pierre Yves MORDRET wrote:
+>> OK. I will redesign my driver to take into account this idea.
+>>
+>> I believe I should get rid of my custom API in DMA for channelID as well. Please
+>> confirm. Not very clear for me whether I can keep it or not.
+> 
+> Yes, you should be able to get rid of any custom API.
+> The DMA event router should be 'invisible' to both the DMA driver itself
+> and for the DMA users as well. If you end up still needing custom API
+> (which I doubt) then it is better to extend the core support to cover
+> that in a generic way since it is likely that other might have similar
+> needs.
+> 
+
+Will see that later on :)
+
+> You need to identify what you need to manage with the DMA router, again
+> in my cases:
+> am335x/am437x: The DMA channel is fixed, but the DMA event to be handled
+> by the channel (DMA event muxer) is selected by the router.
+> dra7x: The DMA event is the fixed part and I needed to translate that to
+> local eDMA/sDMA events and in eDMA I needed to pick a channel based on
+> the translated event.
+> 
+> The same router code works for eDMA and sDMA in dra7, while the two DMA
+> engines are different in their internal works.
+> 
+> At the end of the day I only needed to plug the DMA event routers and
+> there is no change in the DMA drivers at all.
+> 
+
+Please tell me whether I'm wrong but for am335x/am437x both DMA Channels and
+events are given by DT. I believe IP Spec provides the mapping for the channel
+(this is what you call fixed channel) and DMA router event is selected randomly
+within the DT.
+As for dra7 events comes from DT but channel is selected though out local
+algorithm. IP Spec defines DMA event muxer mapping.
+
+At my opinion my router is more closed to dra7. IP Spec defines event mapping.
+Nonetheless the DMA has a fixed allocated mapping. Using DMA alone DT has to
+provide channel number. In router mode this number doesn't matter since router
+makes the routing from fixed event to channel. However router needs to know
+which channel will be assign to event: any random channel is allowed.
+
+I'm pretty sure I can mimic what has been for DRA7 related to DMA Channel
+allocation however it seems to be this is aside DMA engine. This kind of
+implementation forbid the use of DMA and DMA router at the same time : I
+remember you already raise the point. If a DMA channel is requested DMA router
+is not aware of this allocation. This is the idea of my custom API which relies
+on get_any_slave_channel().
+Using DT to assign channel seems not a good idea either as I lost router's benefice.
+
+BTW I need the channel ID within router.
+Looking at core or of_dma_router_xlate() I don't really know how to do it a
+generic manner.
+
+Ideas are welcomed
+
+> I'm happy to answer any questions you might have, if I can.
+> 
+
+You will be happy then.
+
+> - Péter
+> 
 
 Thanks
-   j
-
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Py
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
