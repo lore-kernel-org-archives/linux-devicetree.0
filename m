@@ -1,42 +1,85 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: [PATCH v11 06/10] i2c: mux: pca954x: Return error if irq_create_mapping fails
-Date: Thu, 24 Aug 2017 17:31:06 +0800
-Message-ID: <1503567070-115646-7-git-send-email-preid@electromag.com.au>
-References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm: dts: gr-peach: Add ETHER pin group
+Date: Thu, 24 Aug 2017 11:48:14 +0200
+Message-ID: <CAMuHMdUoMU=qN3Qjoqmf6uxcS3j5hqthhuBDMPZzA+wSD_BH5A@mail.gmail.com>
+References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org> <1503564523-31899-4-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503567070-115646-1-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+In-Reply-To: <1503564523-31899-4-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-irq_create_mapping can return an error, report error to log and return.
-Cleanup will occur in the probe function when an error is returned.
+Hi Jacopo,
 
-Suggested-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
----
- drivers/i2c/muxes/i2c-mux-pca954x.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On Thu, Aug 24, 2017 at 10:48 AM, Jacopo Mondi
+<jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> Add pin configuration subnode for ETHER pin group.
+> The interface can be configured and probed, but no traffic can be
+> transmitted or received.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+>
+> ---
+> When in u-boot console I can ping a connected host, after the
+> system has booted I can configure an ip address on the interface but
+> cannot exchange any traffic.
+> I have compared the pin configuration procedure with the u-boot
+> implemented one and some sketches from mbed operating system libraries,
+> the configured pins are correct and registers values seems to match.
+> Not sure if this patch should be sent for inclusion but sending it out
+> anyway for you to judge this.
+>
+> Thanks
+>    j
+> ---
+>  arch/arm/boot/dts/r7s72100-gr-peach.dts | 35 +++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/r7s72100-gr-peach.dts b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> index bcfa644..5ce558f 100644
+> --- a/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> +++ b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> @@ -58,6 +58,28 @@
+>                 /* P6_2 as RxD2; P6_3 as TxD2 */
+>                 pinmux = <RZA1_PINMUX(6, 2, 7)>, <RZA1_PINMUX(6, 3, 7)>;
+>         };
+> +
+> +       ether_pins: ether {
+> +               /* Ethernet on Ports 1,3,5,10 */
+> +               pinmux = <RZA1_PINMUX(1, 14, 4)>, /* P1_14 = ET_COL   */
+> +                        <RZA1_PINMUX(3, 0, 2)>,  /* P3_0 = ET_TXCLK  */
+> +                        <RZA1_PINMUX(3, 3, 2)>,  /* P3_3 = ET_MDIO   */
+> +                        <RZA1_PINMUX(3, 4, 2)>,  /* P3_4 = ET_RXCLK  */
+> +                        <RZA1_PINMUX(3, 5, 2)>,  /* P3_5 = ET_RXER   */
+> +                        <RZA1_PINMUX(3, 6, 2)>,  /* P3_6 = ET_RXDV   */
+> +                        <RZA1_PINMUX(5, 9, 2)>,  /* P5_9 = ET_MDC    */
+> +                        <RZA1_PINMUX(10, 1, 4)>, /* P10_1 = ET_TXER  */
+> +                        <RZA1_PINMUX(10, 2, 4)>, /* P10_2 = ET_TXEN  */
+> +                        <RZA1_PINMUX(10, 3, 4)>, /* P10_3 = ET_CRS   */
+> +                        <RZA1_PINMUX(10, 4, 4)>, /* P10_4 = ET_TXD0  */
+> +                        <RZA1_PINMUX(10, 5, 4)>, /* P10_5 = ET_TXD1  */
+> +                        <RZA1_PINMUX(10, 6, 4)>, /* P10_6 = ET_TXD2  */
+> +                        <RZA1_PINMUX(10, 7, 4)>, /* P10_7 = ET_TXD3  */
+> +                        <RZA1_PINMUX(10, 8, 4)>, /* P10_8 = ET_RXD0  */
+> +                        <RZA1_PINMUX(10, 9, 4)>, /* P10_9 = ET_RXD1  */
+> +                        <RZA1_PINMUX(10, 10, 4)>,/* P10_10 = ET_RXD2 */
+> +                        <RZA1_PINMUX(10, 11, 4)>;/* P10_11 = ET_RXD3 */
 
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index 5ec5020..fb725de 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -277,6 +277,10 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
- 
- 	for (c = 0; c < data->chip->nchans; c++) {
- 		irq = irq_create_mapping(data->irq, c);
-+		if (!irq) {
-+			dev_err(&client->dev, "failed irq create map\n");
-+			return -EINVAL;
-+		}
- 		irq_set_chip_data(irq, data);
- 		irq_set_chip_and_handler(irq, &pca954x_irq_chip,
- 			handle_simple_irq);
--- 
-1.8.3.1
+All OK, but do you need P4_2, which is used for ET_nRST?
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
