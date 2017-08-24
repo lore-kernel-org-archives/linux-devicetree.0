@@ -1,58 +1,78 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 3/4] leds: pca955x: add GPIO support
-Date: Thu, 24 Aug 2017 22:03:59 +0200
-Message-ID: <c403ddf1-a26c-1ccc-f722-eacac6115c34@gmail.com>
-References: <1502199760-763-1-git-send-email-clg@kaod.org>
- <1502199760-763-4-git-send-email-clg@kaod.org> <20170811134757.GA22561@amd>
- <9330f31a-110c-8398-8cd1-764f8dd358e9@kaod.org> <20170811153742.GA31267@amd>
- <b585f234-6ad6-e63f-f4ec-f7d1efaf83ca@kaod.org> <20170812084213.GA20383@amd>
- <4a6d3c67-c7ac-664c-2506-8c5e0530a2c1@kaod.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: designware: add binding for
+ Designware PCIe in ECAM mode
+Date: Thu, 24 Aug 2017 21:12:22 +0100
+Message-ID: <CAKv+Gu-D0tgygJ84iGEoEU9OcjUwrtvS2Z2wrOHAZ9kO_kE_rA@mail.gmail.com>
+References: <20170824184321.19432-1-ard.biesheuvel@linaro.org>
+ <20170824184321.19432-4-ard.biesheuvel@linaro.org> <CAL_JsqJTGeLv-c0wXCvMZggU4yzo__s-pD7qEZ7Q3w8=uUuu4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <4a6d3c67-c7ac-664c-2506-8c5e0530a2c1@kaod.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>, Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJTGeLv-c0wXCvMZggU4yzo__s-pD7qEZ7Q3w8=uUuu4Q@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Marc Zyngier <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Cedric,
-
-On 08/24/2017 01:30 PM, Cédric Le Goater wrote:
-> On 08/12/2017 10:42 AM, Pavel Machek wrote:
->> Hi!
+On 24 August 2017 at 21:02, Rob Herring <robh@kernel.org> wrote:
+> Cc the DT list for bindings please.
+>
+> On Thu, Aug 24, 2017 at 1:43 PM, Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+>> Describe the binding for firmware-configured instances of the Synopsys
+>> Designware PCIe controller in RC mode.
 >>
->>>>>>> +static u8 pca955x_read_input(struct i2c_client *client, int n)
->>>>>>> +{
->>>>>>> +	return (u8)i2c_smbus_read_byte_data(client, n);
->>>>>>> +}
->>>>>>
->>>>>> Is the cast needed? Should you attempt to handle errors?
->>>>>
->>>>> ah. this is a left over. I can fix in a resend.
->>>>
->>>> No need to resend just for this.
->>>>
->>>> Should you WARN_ON() if the read_byte_data returns < 0 or something?
->>>>
->>>> https://linuxtv.org/downloads/v4l-dvb-internals/device-drivers/API-i2c-smbus-read-byte-data.html
->>>
->>> I don't think so as this is just to read the gpio value. 
->>>
->>> I suppose that the i2c layer will output some errors before 
->>> if it catches some invalid state.
+>> Cc: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> ---
+>>  Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt | 56 ++++++++++++++++++++
+>>  1 file changed, 56 insertions(+)
 >>
->> Normally its driver's job to output errors. (Same for write).
-> 
-> ok. I can respin the patchset with an extra patch adding checks
-> for I2C errors (see below). In which order would you want that, 
-> before the gpio support or after ? 
+>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt b/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+>> new file mode 100644
+>> index 000000000000..b8127b19c220
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+>> @@ -0,0 +1,56 @@
+>> +* Synopsys Designware PCIe root complex in ECAM mode
+>> +
+>> +In some cases, firmware may already have configured the Synopsys Designware
+>> +PCIe controller in RC mode with static ATU window mappings that cover all
+>> +config, MMIO and I/O spaces in a [mostly] ECAM compatible fashion.
+>> +In this case, there is no need for the OS to perform any low level setup
+>> +of clocks or device registers, nor is there any reason for the driver to
+>> +reconfigure ATU windows for config and/or IO space accesses at runtime.
+>> +
+>> +Such hardware configurations should be described as "pci-host-ecam-generic"
+>> +if they are truly ECAM compatible. Configurations that require no low-level
+>> +setup by the OS nor any ATU window reconfiguration at runtime, but do
+>> +require special handling for type 0 config TLPs may instead be described as
+>> +"snps,dw-pcie-ecam".
+>
+> Humm, what happens when we have the next exception that's SoC specific
+> or another vendor?
 
-I'd prefer an incremental patch. The patch set has received 10
-days of testing and the merge window is imminent. Not the best
-moment to respin the for-next branch.
+This is not SoC specific, but IP specific. We are working with two
+different SoCs from completely different vendors that both synthesized
+this IP with a 64 KB ATU window size, not expecting this to break ECAM
+compatibility.
 
--- 
-Best regards,
-Jacek Anaszewski
+> Seems like perhaps "firmware initialized" should
+> have been a separate property flag for bootloaders to add rather than
+> a compatible string.
+>
+
+Yes, but then you still have 10 different drivers that all retain the
+low-level bits that are all different between SoCs. That is exactly
+what I want to get rid of, and usually we can do that with existing
+bindings, because we simply expose it as pci-host-ecam-generic. Only
+in this particular case, that doesn't fly due to the quirk.
+
+> I'd rather see this done in a way that does not require DT updates if
+> quirks have to be handled/added later.
+>
+
+Do you see a way that still allows us to keep the abstraction? I don't
+want a flag, I simply don't want to expose any low-level specifics
+about the device to the OS, beyond what it needs to use it in its
+configured state.
