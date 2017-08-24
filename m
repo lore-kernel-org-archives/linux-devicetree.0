@@ -1,62 +1,53 @@
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [RESENT PATCH v7 0/7] ASoC: rockchip: Parse dai links
-	from dts
-Date: Thu, 24 Aug 2017 12:52:20 +0800
-Message-ID: <20170824045227.15504-1-jeffy.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
+Subject: [RESENT PATCH v7 3/7] arm64: dts: rockchip: Update rt5514 devices' compatible for Gru
+Date: Thu, 24 Aug 2017 12:52:23 +0800
+Message-ID: <20170824045227.15504-4-jeffy.chen@rock-chips.com>
+References: <20170824045227.15504-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170824045227.15504-1-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, briannorris@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Will Deacon <will.deacon@arm.com>, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, mka@chromium.org, Klaus Goger <klaus.goger@theobroma-systems.com>, Takashi Iwai <tiwai@suse.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+Cc: briannorris@chromium.org, mka@chromium.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Currently the rt5514 i2c driver and rt5514 spi driver are using the same
+compatible string.
 
-Currently we are using a fixed list of dai links in the driver.
-This serial of patches would let the driver parse dai links from
-dts, so that we can make some of them optional for future boards.
+Add additional unused compatible strings to identify them for Gru
+boards.
 
-Tested on my chromebook bob(with cros 4.4 kernel), it still works
-after disabled rt5514 codecs in the dts.
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+---
 
+Changes in v7: None
+Changes in v6: None
+Changes in v3: None
+Changes in v2: None
 
-Changes in v7:
-Rebase on the newest for-next
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes in v6:
-Add dmic wakeup delay(not used for now).
-
-Changes in v3:
-Use compatible to match audio codecs
-        -- Suggested-by Matthias Kaehlcke <mka@chromium.org>
-
-Changes in v2:
-Let rockchip,codec-names be a required property, because we plan to
-add more supported codecs to the fixed dai link list in the driver.
-
-Jeffy Chen (7):
-  ASoC: rockchip: Use codec of_node and dai_name for rt5514 dsp
-  arm64: dts: rockchip: Add rt5514 dsp for Gru
-  arm64: dts: rockchip: Update rt5514 devices' compatible for Gru
-  ASoC: rockchip: Parse dai links from dts
-  ASoC: rockchip: Add support for DP codec
-  ASoC: rockchip: Add support for DMIC codec
-  dt-bindings: ASoC: rockchip: Update description of rockchip,codec
-
- .../bindings/sound/rockchip,rk3399-gru-sound.txt   |   2 +-
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       |   7 +-
- sound/soc/rockchip/Kconfig                         |   2 +
- sound/soc/rockchip/rk3399_gru_sound.c              | 255 +++++++++++++++------
- 4 files changed, 186 insertions(+), 80 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+index 5772c52fbfd3..50fb11ad9f17 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+@@ -611,7 +611,7 @@ ap_i2c_mic: &i2c1 {
+ 	i2c-scl-rising-time-ns = <300>;
+ 
+ 	headsetcodec: rt5514@57 {
+-		compatible = "realtek,rt5514";
++		compatible = "realtek,rt5514", "realtek,rt5514-i2c";
+ 		reg = <0x57>;
+ 		realtek,dmic-init-delay-ms = <20>;
+ 	};
+@@ -820,7 +820,7 @@ ap_i2c_audio: &i2c8 {
+ 	status = "okay";
+ 
+ 	wacky_spi_audio: spi2@0 {
+-		compatible = "realtek,rt5514";
++		compatible = "realtek,rt5514", "realtek,rt5514-spi";
+ 		reg = <0>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.11.0
