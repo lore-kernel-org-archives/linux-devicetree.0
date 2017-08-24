@@ -1,63 +1,56 @@
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Subject: Re: [PATCH v2 01/10] drm/exynos/decon5433: use readl_poll_timeout
- helpers
-Date: Thu, 24 Aug 2017 15:54:52 +0200
-Message-ID: <2ae55d7a-3730-72f7-ae7e-8556b9e4e4a5@math.uni-bielefeld.de>
-References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
- <CGME20170824133408eucas1p1e7b9988ac74fdd3e8dd8d25ead949ec5@eucas1p1.samsung.com>
- <1503581639-580-2-git-send-email-a.hajda@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1503581639-580-2-git-send-email-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH resend] ARM: dts: r8a7745: Add Ethernet AVB support
+Date: Thu, 24 Aug 2017 14:45:59 +0100
+Message-ID: <1503582359-43820-1-git-send-email-biju.das@bp.renesas.com>
+References: <1503388405-48325-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1503388405-48325-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQW5kcnplaiwKCgpBbmRyemVqIEhhamRhIHdyb3RlOgo+IExpbnV4IGNvcmUgcHJvdmlk
-ZSBoZWxwZXJzIGZvciBwb2xsaW5nIHdpdGggdGltZW91dCwgbGV0cyB1c2UgdGhlbS4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IC0tLQo+
-ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMgfCAyMCArKysr
-KysrKy0tLS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxMiBk
-ZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
-b3M1NDMzX2RybV9kZWNvbi5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3M1NDMzX2Ry
-bV9kZWNvbi5jCj4gaW5kZXggNTc5MmNhODguLjIzN2I0YzkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL2V4eW5vcy9leHlub3M1NDMzX2RybV9kZWNvbi5jCj4gKysrIGIvZHJpdmVycy9n
-cHUvZHJtL2V4eW5vcy9leHlub3M1NDMzX2RybV9kZWNvbi5jCj4gQEAgLTEzLDYgKzEzLDcgQEAK
-PiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ICAjaW5jbHVkZSA8bGludXgv
-Y2xrLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9jb21wb25lbnQuaD4KPiArI2luY2x1ZGUgPGxpbnV4
-L2lvcG9sbC5oPgo+ICAjaW5jbHVkZSA8bGludXgvbWZkL3N5c2Nvbi5oPgo+ICAjaW5jbHVkZSA8
-bGludXgvb2ZfZGV2aWNlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9vZl9ncGlvLmg+Cj4gQEAgLTQw
-NywyNCArNDA4LDE5IEBAIHN0YXRpYyB2b2lkIGRlY29uX2F0b21pY19mbHVzaChzdHJ1Y3QgZXh5
-bm9zX2RybV9jcnRjICpjcnRjKQo+ICAKPiAgc3RhdGljIHZvaWQgZGVjb25fc3dyZXNldChzdHJ1
-Y3QgZGVjb25fY29udGV4dCAqY3R4KQo+ICB7Cj4gLQl1bnNpZ25lZCBpbnQgdHJpZXM7Cj4gIAl1
-bnNpZ25lZCBsb25nIGZsYWdzOwo+ICsJdTMyIHZhbDsKPiArCWludCByZXQ7Cj4gIAo+ICAJd3Jp
-dGVsKDAsIGN0eC0+YWRkciArIERFQ09OX1ZJRENPTjApOwo+IC0JZm9yICh0cmllcyA9IDIwMDA7
-IHRyaWVzOyAtLXRyaWVzKSB7Cj4gLQkJaWYgKH5yZWFkbChjdHgtPmFkZHIgKyBERUNPTl9WSURD
-T04wKSAmIFZJRENPTjBfU1RPUF9TVEFUVVMpCj4gLQkJCWJyZWFrOwo+IC0JCXVkZWxheSgxMCk7
-Cj4gLQl9Cj4gKwlyZWFkbF9wb2xsX3RpbWVvdXQoY3R4LT5hZGRyICsgREVDT05fVklEQ09OMCwg
-dmFsLAo+ICsJCQkgICB+dmFsICYgVklEQ09OMF9TVE9QX1NUQVRVUywgMTIsIDIwMDAwKTsKV291
-bGRuJ3QgaXQgYmUgbW9yZSBjb25zaXN0ZW50IHRvIGFsc28gY2hlY2sgZm9yIGEgdGltZW91dCBo
-ZXJlPwoKV2l0aCBiZXN0IHdpc2hlcywKVG9iaWFzCgoKCj4gIAl3cml0ZWwoVklEQ09OMF9TV1JF
-U0VULCBjdHgtPmFkZHIgKyBERUNPTl9WSURDT04wKTsKPiAtCWZvciAodHJpZXMgPSAyMDAwOyB0
-cmllczsgLS10cmllcykgewo+IC0JCWlmICh+cmVhZGwoY3R4LT5hZGRyICsgREVDT05fVklEQ09O
-MCkgJiBWSURDT04wX1NXUkVTRVQpCj4gLQkJCWJyZWFrOwo+IC0JCXVkZWxheSgxMCk7Cj4gLQl9
-Cj4gKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQoY3R4LT5hZGRyICsgREVDT05fVklEQ09OMCwg
-dmFsLAo+ICsJCQkJIH52YWwgJiBWSURDT04wX1NXUkVTRVQsIDEyLCAyMDAwMCk7Cj4gIAo+IC0J
-V0FSTih0cmllcyA9PSAwLCAiZmFpbGVkIHRvIHNvZnR3YXJlIHJlc2V0IERFQ09OXG4iKTsKPiAr
-CVdBUk4ocmV0IDwgMCwgImZhaWxlZCB0byBzb2Z0d2FyZSByZXNldCBERUNPTlxuIik7Cj4gIAo+
-ICAJc3Bpbl9sb2NrX2lycXNhdmUoJmN0eC0+dmJsYW5rX2xvY2ssIGZsYWdzKTsKPiAgCWN0eC0+
-ZnJhbWVfaWQgPSAwOwo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+Add Ethernet AVB support for r8a7745 SoC.
+
+Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+---
+It is applying cleanly on renesas-devel branch tag
+renesas-devel-20170824-v4.13-rc6.
+
+It is tested against renesas-devel branch tag
+renesas-devel-20170824-v4.13-rc6.
+
+ arch/arm/boot/dts/r8a7745.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+index 7fd2967..c34f88e 100644
+--- a/arch/arm/boot/dts/r8a7745.dtsi
++++ b/arch/arm/boot/dts/r8a7745.dtsi
+@@ -707,6 +707,19 @@
+ 			status = "disabled";
+ 		};
+ 
++		avb: ethernet@e6800000 {
++			compatible = "renesas,etheravb-r8a7745",
++				     "renesas,etheravb-rcar-gen2";
++			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
++			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 812>;
++			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 812>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		mmcif0: mmc@ee200000 {
+ 			compatible = "renesas,mmcif-r8a7745",
+ 				     "renesas,sh-mmcif";
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
