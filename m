@@ -1,56 +1,41 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 2/4] arm: dts: gr-peach: Add SCIF2 pin group
-Date: Thu, 24 Aug 2017 10:48:41 +0200
-Message-ID: <1503564523-31899-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Oza Pawandeep <oza.oza@broadcom.com>
+Subject: [PATCH v4 0/3] PCI hotplug feature
+Date: Thu, 24 Aug 2017 14:19:05 +0530
+Message-ID: <1503564548-1834-1-git-send-email-oza.oza@broadcom.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.oza@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pin configuration subnode for SCIF2 serial debug interface.
+These patches bring in PCI hotplug support for iproc family chipsets.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- arch/arm/boot/dts/r7s72100-gr-peach.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+It includes DT binding documentation update and, implementation in
+iproc pcie RC driver.
 
-diff --git a/arch/arm/boot/dts/r7s72100-gr-peach.dts b/arch/arm/boot/dts/r7s72100-gr-peach.dts
-index 1c40a1a..bcfa644 100644
---- a/arch/arm/boot/dts/r7s72100-gr-peach.dts
-+++ b/arch/arm/boot/dts/r7s72100-gr-peach.dts
-@@ -11,6 +11,7 @@
- 
- /dts-v1/;
- #include "r7s72100.dtsi"
-+#include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
- 
- / {
- 	model = "GR-Peach";
-@@ -52,6 +53,13 @@
- 	};
- };
- 
-+&pinctrl {
-+	scif2_pins: serial2 {
-+		/* P6_2 as RxD2; P6_3 as TxD2 */
-+		pinmux = <RZA1_PINMUX(6, 2, 7)>, <RZA1_PINMUX(6, 3, 7)>;
-+	};
-+};
-+
- &extal_clk {
- 	clock-frequency = <13333000>;
- };
-@@ -61,5 +69,8 @@
- };
- 
- &scif2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&scif2_pins>;
-+
- 	status = "okay";
- };
+These patch set is made on top of following patches.
+[PATCH v8 2/2] PCI: iproc: add device shutdown for PCI RC
+[PATCH v8 1/2] PCI: iproc: Retry request when CRS returned from EP
+
+Changes since v3:
+Resend. just to be in sync previous in-flight patches.
+
+Changes since v2:
+Addressed Rob Herring's comments.
+Changed subject to "dt-bindings: PCI:..."
+Made generic PCI hotplug properties 'slot-pluggable' and 'prsnt-gpios'
+Rebased the patches on top of Lorenzo's patches.
+
+Oza Pawandeep (3):
+  PCI: iproc: implement PCI hotplug support
+  dt-bindings: PCI: add PCIe hotplug property
+  dt-bindings: PCI iproc: add optional property prsnt-gpios
+
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  14 ++
+ Documentation/devicetree/bindings/pci/pci.txt      |  15 ++
+ drivers/pci/host/pcie-iproc-platform.c             |   3 +
+ drivers/pci/host/pcie-iproc.c                      | 166 ++++++++++++++++++---
+ drivers/pci/host/pcie-iproc.h                      |   7 +
+ 5 files changed, 187 insertions(+), 18 deletions(-)
+
 -- 
-2.7.4
+1.9.1
