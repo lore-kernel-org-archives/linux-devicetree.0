@@ -1,41 +1,54 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [RESENT PATCH v7 7/7] dt-bindings: ASoC: rockchip: Update description of rockchip,codec
-Date: Thu, 24 Aug 2017 12:52:27 +0800
-Message-ID: <20170824045227.15504-8-jeffy.chen@rock-chips.com>
-References: <20170824045227.15504-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170824045227.15504-1-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
-Cc: briannorris@chromium.org, mka@chromium.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Oza Pawandeep <oza.oza@broadcom.com>
+Subject: [PATCH v8 0/3] PCI: iproc: SOC specific fixes
+Date: Thu, 24 Aug 2017 10:34:23 +0530
+Message-ID: <1503551066-23212-1-git-send-email-oza.oza@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.oza@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Update description for newly added optional audio codecs.
+PCI: iproc: Retry request when CRS returned from EP Above patch adds
+support for CRS in PCI RC driver, otherwise if not handled at lower
+level, the user space PMD (poll mode drivers) can timeout.
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+PCI: iproc: add device shutdown for PCI RC This fixes the issue where
+certian PCI endpoints are not getting detected on Stingray SOC after
+reboot.
 
-Changes in v7: None
-Changes in v6: None
-Changes in v3: None
-Changes in v2: None
+Changes Since v7:
+Factor out the ep config access code.
 
- Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes Since v6:
+Rebased patches on top of Lorenzo's patches.
+Bjorn's comments addressed.
+now the confg retry returns 0xffffffff as data.
+Added reference to PCIe spec and iproc Controller spec in Changelog.
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index eac91db07178..72d3cf4c2606 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible: "rockchip,rk3399-gru-sound"
- - rockchip,cpu: The phandle of the Rockchip I2S controller that's
-   connected to the codecs
--- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+- rockchip,codec: The phandle of the audio codecs
- 
- Optional properties:
- - dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
+Changes Since v5:
+Ray's comments addressed.
+
+Changes Since v4:
+Bjorn's comments addressed.
+
+Changes Since v3:
+[re-send]
+
+Changes Since v2:
+Fix compilation errors for pcie-iproc-platform.ko which was caught
+by kbuild.
+
+Oza Pawandeep (3):
+  PCI: iproc: factor-out ep configuration access
+  PCI: iproc: Retry request when CRS returned from EP
+  PCI: iproc: add device shutdown for PCI RC
+
+ drivers/pci/host/pcie-iproc-platform.c |   8 ++
+ drivers/pci/host/pcie-iproc.c          | 143 ++++++++++++++++++++++++++-------
+ drivers/pci/host/pcie-iproc.h          |   1 +
+ 3 files changed, 124 insertions(+), 28 deletions(-)
+
 -- 
-2.11.0
+1.9.1
