@@ -1,112 +1,40 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
-Date: Thu, 24 Aug 2017 15:03:30 +0200
-Message-ID: <ea66ba14-fe18-cb83-5989-8ae7b3ab50c6@st.com>
-References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
- <20170722065133.GT3053@localhost>
- <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
- <20170726052930.GF3053@localhost>
- <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
- <20170731123157.GJ3053@localhost>
- <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
- <20170802045522.GU3053@localhost>
- <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
- <7bcad698-fa1a-3dc2-e918-4400639ca6d7@st.com>
- <47ceba83-1097-072e-bed6-d1964bce7a25@ti.com>
- <0e16a519-3d60-f683-5517-12a520e0e521@st.com>
- <f0db566e-5613-8914-e070-915c8c4d9b9f@ti.com>
- <71b7ef2a-d745-d16b-4538-567c856cce9a@st.com>
- <401305f0-15d8-1996-60d6-69c13cbacc06@ti.com>
- <58bf2f7c-faf1-d1e9-3c87-d7964d1ba3d4@st.com>
- <6e8e19f1-8d0f-183b-e02f-1ec8c4dd57b3@ti.com>
- <f7ddd927-5db3-e1b1-b7f1-94050b508298@st.com>
- <d1cc3cbb-c4aa-2acc-91ff-1d6713cb8867@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] net: phy: realtek: add disable RX
+ internal delay mode
+Date: Thu, 24 Aug 2017 15:12:21 +0200
+Message-ID: <20170824131221.GA8022@lunn.ch>
+References: <20170822040400.12166-1-icenowy@aosc.io>
+ <20170822040400.12166-4-icenowy@aosc.io>
+ <20170822133906.GG24555@lunn.ch>
+ <7c43220aef447e5cf21e48a9eca18535@aosc.io>
+Reply-To: andrew-g2DYL2Zd6BY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d1cc3cbb-c4aa-2acc-91ff-1d6713cb8867-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJNHL5JSEOBBOVB7PGAKGQE35YR5MI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <7c43220aef447e5cf21e48a9eca18535-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/24/2017 07:47 AM, Peter Ujfalusi wrote:
+> >Do we know that the TX lines do have a delay after making this change?
+> >We need to be careful here. We will get into a mess if this is
+> >actually RGMII not RGMII_TXID, and somebody designs a board which
+> >needs RGMII-TXID.
 > 
-> 
-> On 2017-08-21 12:34, Pierre Yves MORDRET wrote:
->> OK. I will redesign my driver to take into account this idea.
->>
->> I believe I should get rid of my custom API in DMA for channelID as well. Please
->> confirm. Not very clear for me whether I can keep it or not.
-> 
-> Yes, you should be able to get rid of any custom API.
-> The DMA event router should be 'invisible' to both the DMA driver itself
-> and for the DMA users as well. If you end up still needing custom API
-> (which I doubt) then it is better to extend the core support to cover
-> that in a generic way since it is likely that other might have similar
-> needs.
-> 
+> In fact I'm not sure -- I'm even not sure that after making this change
+> there's no TX delay. The change is totally not documented, so I choose
+> to use a custom property in v1.
 
-Will see that later on :)
-
-> You need to identify what you need to manage with the DMA router, again
-> in my cases:
-> am335x/am437x: The DMA channel is fixed, but the DMA event to be handled
-> by the channel (DMA event muxer) is selected by the router.
-> dra7x: The DMA event is the fixed part and I needed to translate that to
-> local eDMA/sDMA events and in eDMA I needed to pick a channel based on
-> the translated event.
-> 
-> The same router code works for eDMA and sDMA in dra7, while the two DMA
-> engines are different in their internal works.
-> 
-> At the end of the day I only needed to plug the DMA event routers and
-> there is no change in the DMA drivers at all.
-> 
-
-Please tell me whether I'm wrong but for am335x/am437x both DMA Channels and
-events are given by DT. I believe IP Spec provides the mapping for the channel
-(this is what you call fixed channel) and DMA router event is selected randomly
-within the DT.
-As for dra7 events comes from DT but channel is selected though out local
-algorithm. IP Spec defines DMA event muxer mapping.
-
-At my opinion my router is more closed to dra7. IP Spec defines event mapping.
-Nonetheless the DMA has a fixed allocated mapping. Using DMA alone DT has to
-provide channel number. In router mode this number doesn't matter since router
-makes the routing from fixed event to channel. However router needs to know
-which channel will be assign to event: any random channel is allowed.
-
-I'm pretty sure I can mimic what has been for DRA7 related to DMA Channel
-allocation however it seems to be this is aside DMA engine. This kind of
-implementation forbid the use of DMA and DMA router at the same time : I
-remember you already raise the point. If a DMA channel is requested DMA router
-is not aware of this allocation. This is the idea of my custom API which relies
-on get_any_slave_channel().
-Using DT to assign channel seems not a good idea either as I lost router's benefice.
-
-BTW I need the channel ID within router.
-Looking at core or of_dma_router_xlate() I don't really know how to do it a
-generic manner.
-
-Ideas are welcomed
-
-> I'm happy to answer any questions you might have, if I can.
-> 
-
-You will be happy then.
-
-> - Péter
-> 
+Can you get in touch with Realtek and ask? Or can you get a hardware
+guy to do some measurements?
 
 Thanks
-Py
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    Andrew
