@@ -1,36 +1,43 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [RESEND v9 06/12] rtc: Kconfig: Name RK805 in Kconfig for
- RTC_DRV_RK808
-Date: Thu, 24 Aug 2017 11:17:50 +0200
-Message-ID: <20170824091750.yoo5wzg77ftt2wyt@piout.net>
-References: <1502848628-27757-1-git-send-email-chenjh@rock-chips.com>
- <1502848835-24800-1-git-send-email-chenjh@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1502848835-24800-1-git-send-email-chenjh@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Joseph Chen <chenjh@rock-chips.com>
-Cc: gnurou@gmail.com, linus.walleij@linaro.org, dmitry.torokhov@gmail.com, lee.jones@linaro.org, linux-kernel@vger.kernel.org, huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, zhangqing@rock-chips.com, robh+dt@kernel.org, lgirdwood@gmail.com, linux-rockchip@lists.infradead.org, wdc@rock-chips.com, tony.xie@rock-chips.com, linux-input@vger.kernel.org, mark.rutland@arm.com, w.egorov@phytec.de, linux-clk@vger.kernel.org, a.zummo@towertech.it, rtc-linux@googlegroups.com
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 1/3] dt-bindings: i2c: i2c-gpio: Add support for named gpios
+Date: Thu, 24 Aug 2017 11:21:12 +0200
+Message-ID: <1503566474-5335-2-git-send-email-geert+renesas@glider.be>
+References: <1503566474-5335-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1503566474-5335-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 16/08/2017 at 10:00:35 +0800, Joseph Chen wrote:
-> From: Elaine Zhang <zhangqing@rock-chips.com>
-> 
-> The RK808 and RK805 PMICs are using a similar register map.
-> We can reuse the rtc driver for the RK805 PMIC. So let's add
-> the RK805 in the Kconfig description.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> Signed-off-by: Joseph Chen <chenjh@rock-chips.com>
-> ---
->  drivers/rtc/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-Applied, thanks.
+The current i2c-gpio DT bindings use a single unnamed "gpios" property
+to refer to the SDA and SCL signal lines by index.  This is error-prone
+for the casual DT writer and reviewer, as one has to look up the order
+in the DT bindings.
 
+Fix this by amending the DT bindings to use two separate named gpios
+properties, and deprecate the old unnamed variant.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/i2c/i2c-gpio.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+index 4f8ec947c6bd9cad..61033f73577dd70e 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+@@ -2,8 +2,9 @@ Device-Tree bindings for i2c gpio driver
+ 
+ Required properties:
+ 	- compatible = "i2c-gpio";
+-	- gpios: sda and scl gpio
+-
++	- sda-gpios: gpio used for the sda signal
++	- scl-gpios: gpio used for the scl signal
++	- gpios: sda and scl gpio, alternative for {sda,scl}-gpios (deprecated)
+ 
+ Optional properties:
+ 	- i2c-gpio,sda-open-drain: sda as open drain
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.7.4
