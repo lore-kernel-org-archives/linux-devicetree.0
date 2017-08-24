@@ -1,146 +1,62 @@
-From: Oza Pawandeep <oza.oza@broadcom.com>
-Subject: [PATCH v8 3/3] PCI: iproc: add device shutdown for PCI RC
-Date: Thu, 24 Aug 2017 10:34:26 +0530
-Message-ID: <1503551066-23212-4-git-send-email-oza.oza@broadcom.com>
-References: <1503551066-23212-1-git-send-email-oza.oza@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503551066-23212-1-git-send-email-oza.oza@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.oza@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] iommu/mediatek: Fix a build fail of m4u_type
+Date: Thu, 24 Aug 2017 13:24:09 +0800
+Message-ID: <1503552249-22060-1-git-send-email-yong.wu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PERST must be asserted around ~500ms before the reboot is applied.
+The commit ("iommu/mediatek: Enlarge the validate PA range
+for 4GB mode") introduce the following build error:
 
-During soft reset (e.g., "reboot" from Linux) on some iproc based SOCs
-LCPLL clock and PERST both goes off simultaneously.
-This will cause certain Endpoints Intel NVMe not get detected, upon
-next boot sequence.
+   drivers/iommu/mtk_iommu.c: In function 'mtk_iommu_hw_init':
+>> drivers/iommu/mtk_iommu.c:536:30: error: 'const struct mtk_iommu_data'
+ has no member named 'm4u_type'; did you mean 'm4u_dom'?
+     if (data->enable_4GB && data->m4u_type != M4U_MT8173) {
 
-This is specifically happening with Intel P3700 400GB series.
-Endpoint is expecting the clock for some amount of time after PERST is
-asserted, which is not happening in Stingray (iproc based SOC).
-This causes NVMe to behave in undefined way.
+This patch fix it, use "m4u_plat" instead of "m4u_type".
 
-On the contrary, Intel x86 boards will have ref clock running, so we
-do not see this behavior there.
+Reported-by: kernel test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+1) In the v2 of mt2712 iommu support patch-set, We changed a variant
+name from "m4u_type" to "m4u_plat", But I'm sorry that I forgot to
+change it in the later patch.
+2) This patch is based on [1].
+[1]:https://lists.linuxfoundation.org/pipermail/iommu/2017-August/023847.html
+3) I cann't find the commit id of the patch ("iommu/mediatek: Enlarge
+the validate PA range for 4GB mode") in the [2].
+So I don't write the commit id for that patch in the commit message.
+[2]https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
+---
+ drivers/iommu/mtk_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Besides, PCI spec does not stipulate about such timings.
-In-fact it does not tell us, whether PCIe device should consider
-refclk to be available or not to be.
-
-It is completely up to vendor to design their EP the way they want
-with respect to ref clock availability.
-
-500ms is just based on the observation and taken as safe margin.
-This patch adds platform shutdown where it should be
-called in device_shutdown while reboot command is issued.
-So in sequence first Endpoint Shutdown (e.g. nvme_shutdown)
-followed by RC shutdown, which issues safe PERST assertion.
-
-Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-
-diff --git a/drivers/pci/host/pcie-iproc-platform.c b/drivers/pci/host/pcie-iproc-platform.c
-index 2253119..a5073a9 100644
---- a/drivers/pci/host/pcie-iproc-platform.c
-+++ b/drivers/pci/host/pcie-iproc-platform.c
-@@ -134,6 +134,13 @@ static int iproc_pcie_pltfm_remove(struct platform_device *pdev)
- 	return iproc_pcie_remove(pcie);
- }
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index 4f233e1..bc00e40 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -533,7 +533,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
  
-+static void iproc_pcie_pltfm_shutdown(struct platform_device *pdev)
-+{
-+	struct iproc_pcie *pcie = platform_get_drvdata(pdev);
-+
-+	iproc_pcie_shutdown(pcie);
-+}
-+
- static struct platform_driver iproc_pcie_pltfm_driver = {
- 	.driver = {
- 		.name = "iproc-pcie",
-@@ -141,6 +148,7 @@ static int iproc_pcie_pltfm_remove(struct platform_device *pdev)
- 	},
- 	.probe = iproc_pcie_pltfm_probe,
- 	.remove = iproc_pcie_pltfm_remove,
-+	.shutdown = iproc_pcie_pltfm_shutdown,
- };
- module_platform_driver(iproc_pcie_pltfm_driver);
- 
-diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
-index 37f4adf..cbdabe8 100644
---- a/drivers/pci/host/pcie-iproc.c
-+++ b/drivers/pci/host/pcie-iproc.c
-@@ -659,7 +659,7 @@ static int iproc_pcie_config_write32(struct pci_bus *bus, unsigned int devfn,
- 	.write = iproc_pcie_config_write32,
- };
- 
--static void iproc_pcie_reset(struct iproc_pcie *pcie)
-+static void iproc_pcie_perst_ctrl(struct iproc_pcie *pcie, bool assert)
- {
- 	u32 val;
- 
-@@ -671,19 +671,26 @@ static void iproc_pcie_reset(struct iproc_pcie *pcie)
- 	if (pcie->ep_is_internal)
- 		return;
- 
--	/*
--	 * Select perst_b signal as reset source. Put the device into reset,
--	 * and then bring it out of reset
--	 */
--	val = iproc_pcie_read_reg(pcie, IPROC_PCIE_CLK_CTRL);
--	val &= ~EP_PERST_SOURCE_SELECT & ~EP_MODE_SURVIVE_PERST &
--		~RC_PCIE_RST_OUTPUT;
--	iproc_pcie_write_reg(pcie, IPROC_PCIE_CLK_CTRL, val);
--	udelay(250);
--
--	val |= RC_PCIE_RST_OUTPUT;
--	iproc_pcie_write_reg(pcie, IPROC_PCIE_CLK_CTRL, val);
--	msleep(100);
-+	if (assert) {
-+		val = iproc_pcie_read_reg(pcie, IPROC_PCIE_CLK_CTRL);
-+		val &= ~EP_PERST_SOURCE_SELECT & ~EP_MODE_SURVIVE_PERST &
-+			~RC_PCIE_RST_OUTPUT;
-+		iproc_pcie_write_reg(pcie, IPROC_PCIE_CLK_CTRL, val);
-+		udelay(250);
-+	} else {
-+		val = iproc_pcie_read_reg(pcie, IPROC_PCIE_CLK_CTRL);
-+		val |= RC_PCIE_RST_OUTPUT;
-+		iproc_pcie_write_reg(pcie, IPROC_PCIE_CLK_CTRL, val);
-+		msleep(100);
-+	}
-+}
-+
-+int iproc_pcie_shutdown(struct iproc_pcie *pcie)
-+{
-+	iproc_pcie_perst_ctrl(pcie, true);
-+	msleep(500);
-+
-+	return 0;
- }
- 
- static int iproc_pcie_check_link(struct iproc_pcie *pcie)
-@@ -1365,7 +1372,8 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
- 		goto err_exit_phy;
- 	}
- 
--	iproc_pcie_reset(pcie);
-+	iproc_pcie_perst_ctrl(pcie, true);
-+	iproc_pcie_perst_ctrl(pcie, false);
- 
- 	if (pcie->need_ob_cfg) {
- 		ret = iproc_pcie_map_ranges(pcie, res);
-diff --git a/drivers/pci/host/pcie-iproc.h b/drivers/pci/host/pcie-iproc.h
-index 0bbe2ea..a6b55ce 100644
---- a/drivers/pci/host/pcie-iproc.h
-+++ b/drivers/pci/host/pcie-iproc.h
-@@ -110,6 +110,7 @@ struct iproc_pcie {
- 
- int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res);
- int iproc_pcie_remove(struct iproc_pcie *pcie);
-+int iproc_pcie_shutdown(struct iproc_pcie *pcie);
- 
- #ifdef CONFIG_PCIE_IPROC_MSI
- int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node);
+ 	writel_relaxed(F_MMU_IVRP_PA_SET(data->protect_base, data->enable_4GB),
+ 		       data->base + REG_MMU_IVRP_PADDR);
+-	if (data->enable_4GB && data->m4u_type != M4U_MT8173) {
++	if (data->enable_4GB && data->m4u_plat != M4U_MT8173) {
+ 		/*
+ 		 * If 4GB mode is enabled, the validate PA range is from
+ 		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
 -- 
 1.9.1
