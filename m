@@ -1,48 +1,32 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH/RFC 2/3] i2c: gpio: Add support for named gpios in DT
-Date: Thu, 24 Aug 2017 11:21:13 +0200
-Message-ID: <1503566474-5335-3-git-send-email-geert+renesas@glider.be>
-References: <1503566474-5335-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503566474-5335-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/4] arm: dts: gr-peach: Remove empty line
+Date: Thu, 24 Aug 2017 11:22:43 +0200
+Message-ID: <CAMuHMdWZLCaLhCF9S26YnLU-tt8SD5Z4jRZD2Vqnd5+GW9c4AQ@mail.gmail.com>
+References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org> <1503564523-31899-2-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1503564523-31899-2-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the new DT bindings using named gpios, which are less
-error-prone than unnamed gpios.  The latter are still supported as a
-fallback.
+On Thu, Aug 24, 2017 at 10:48 AM, Jacopo Mondi
+<jacopo+renesas@jmondi.org> wrote:
+> Remove an empty line in gr-peach device tree source file.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- drivers/i2c/busses/i2c-gpio.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-index 0ef8fcc6ac3aca1e..45b7ec99dc210bbe 100644
---- a/drivers/i2c/busses/i2c-gpio.c
-+++ b/drivers/i2c/busses/i2c-gpio.c
-@@ -88,6 +88,15 @@ static int i2c_gpio_getscl(void *data)
- static int of_i2c_gpio_get_pins(struct device_node *np,
- 				unsigned int *sda_pin, unsigned int *scl_pin)
- {
-+	*sda_pin = of_get_named_gpio(np, "sda-gpios", 0);
-+	*scl_pin = of_get_named_gpio(np, "scl-gpios", 0);
-+	if (*sda_pin == -EPROBE_DEFER || *scl_pin == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	if (gpio_is_valid(*sda_pin) && gpio_is_valid(*scl_pin))
-+		return 0;
-+
-+	/* Try deprecated unnamed gpios */
- 	if (of_gpio_count(np) < 2)
- 		return -ENODEV;
- 
--- 
-2.7.4
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
