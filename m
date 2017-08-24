@@ -1,259 +1,103 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v3 3/4] leds: pca955x: add GPIO support
-Date: Thu, 24 Aug 2017 13:30:07 +0200
-Message-ID: <4a6d3c67-c7ac-664c-2506-8c5e0530a2c1@kaod.org>
-References: <1502199760-763-1-git-send-email-clg@kaod.org>
- <1502199760-763-4-git-send-email-clg@kaod.org> <20170811134757.GA22561@amd>
- <9330f31a-110c-8398-8cd1-764f8dd358e9@kaod.org> <20170811153742.GA31267@amd>
- <b585f234-6ad6-e63f-f4ec-f7d1efaf83ca@kaod.org> <20170812084213.GA20383@amd>
+From: jmondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 3/4] arm: dts: gr-peach: Add ETHER pin group
+Date: Thu, 24 Aug 2017 13:46:56 +0200
+Message-ID: <20170824114656.GA3905@w540>
+References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1503564523-31899-4-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdUoMU=qN3Qjoqmf6uxcS3j5hqthhuBDMPZzA+wSD_BH5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170812084213.GA20383@amd>
-Content-Language: en-US
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUoMU=qN3Qjoqmf6uxcS3j5hqthhuBDMPZzA+wSD_BH5A@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/12/2017 10:42 AM, Pavel Machek wrote:
-> Hi!
-> 
->>>>>> +static u8 pca955x_read_input(struct i2c_client *client, int n)
->>>>>> +{
->>>>>> +	return (u8)i2c_smbus_read_byte_data(client, n);
->>>>>> +}
->>>>>
->>>>> Is the cast needed? Should you attempt to handle errors?
->>>>
->>>> ah. this is a left over. I can fix in a resend.
->>>
->>> No need to resend just for this.
->>>
->>> Should you WARN_ON() if the read_byte_data returns < 0 or something?
->>>
->>> https://linuxtv.org/downloads/v4l-dvb-internals/device-drivers/API-i2c-smbus-read-byte-data.html
->>
->> I don't think so as this is just to read the gpio value. 
->>
->> I suppose that the i2c layer will output some errors before 
->> if it catches some invalid state.
-> 
-> Normally its driver's job to output errors. (Same for write).
+Hi Geert,
 
-ok. I can respin the patchset with an extra patch adding checks
-for I2C errors (see below). In which order would you want that, 
-before the gpio support or after ? 
+On Thu, Aug 24, 2017 at 11:48:14AM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+>
+> On Thu, Aug 24, 2017 at 10:48 AM, Jacopo Mondi
+> <jacopo+renesas@jmondi.org> wrote:
+> > Add pin configuration subnode for ETHER pin group.
+> > The interface can be configured and probed, but no traffic can be
+> > transmitted or received.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >
+> > ---
+> > When in u-boot console I can ping a connected host, after the
+> > system has booted I can configure an ip address on the interface but
+> > cannot exchange any traffic.
+> > I have compared the pin configuration procedure with the u-boot
+> > implemented one and some sketches from mbed operating system libraries,
+> > the configured pins are correct and registers values seems to match.
+> > Not sure if this patch should be sent for inclusion but sending it out
+> > anyway for you to judge this.
+> >
+> > Thanks
+> >    j
+> > ---
+> >  arch/arm/boot/dts/r7s72100-gr-peach.dts | 35 +++++++++++++++++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r7s72100-gr-peach.dts b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> > index bcfa644..5ce558f 100644
+> > --- a/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> > +++ b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> > @@ -58,6 +58,28 @@
+> >                 /* P6_2 as RxD2; P6_3 as TxD2 */
+> >                 pinmux = <RZA1_PINMUX(6, 2, 7)>, <RZA1_PINMUX(6, 3, 7)>;
+> >         };
+> > +
+> > +       ether_pins: ether {
+> > +               /* Ethernet on Ports 1,3,5,10 */
+> > +               pinmux = <RZA1_PINMUX(1, 14, 4)>, /* P1_14 = ET_COL   */
+> > +                        <RZA1_PINMUX(3, 0, 2)>,  /* P3_0 = ET_TXCLK  */
+> > +                        <RZA1_PINMUX(3, 3, 2)>,  /* P3_3 = ET_MDIO   */
+> > +                        <RZA1_PINMUX(3, 4, 2)>,  /* P3_4 = ET_RXCLK  */
+> > +                        <RZA1_PINMUX(3, 5, 2)>,  /* P3_5 = ET_RXER   */
+> > +                        <RZA1_PINMUX(3, 6, 2)>,  /* P3_6 = ET_RXDV   */
+> > +                        <RZA1_PINMUX(5, 9, 2)>,  /* P5_9 = ET_MDC    */
+> > +                        <RZA1_PINMUX(10, 1, 4)>, /* P10_1 = ET_TXER  */
+> > +                        <RZA1_PINMUX(10, 2, 4)>, /* P10_2 = ET_TXEN  */
+> > +                        <RZA1_PINMUX(10, 3, 4)>, /* P10_3 = ET_CRS   */
+> > +                        <RZA1_PINMUX(10, 4, 4)>, /* P10_4 = ET_TXD0  */
+> > +                        <RZA1_PINMUX(10, 5, 4)>, /* P10_5 = ET_TXD1  */
+> > +                        <RZA1_PINMUX(10, 6, 4)>, /* P10_6 = ET_TXD2  */
+> > +                        <RZA1_PINMUX(10, 7, 4)>, /* P10_7 = ET_TXD3  */
+> > +                        <RZA1_PINMUX(10, 8, 4)>, /* P10_8 = ET_RXD0  */
+> > +                        <RZA1_PINMUX(10, 9, 4)>, /* P10_9 = ET_RXD1  */
+> > +                        <RZA1_PINMUX(10, 10, 4)>,/* P10_10 = ET_RXD2 */
+> > +                        <RZA1_PINMUX(10, 11, 4)>;/* P10_11 = ET_RXD3 */
+>
+> All OK, but do you need P4_2, which is used for ET_nRST?
 
-Thanks,
+I tried requesting the GPIO in the "ether" subnode and define it as
+"active low", so that it is kept high during regular operations.
+I have verified through register writes dump it is cycled just after
+the gpio is requested, and this should reset the interface before the
+actual sh_eth driver kicks in.
 
-C.  
+I haven't find any mention in device tree bindings documentation of a
+"reset-gpio" property for sh_eth, in the code examples I've seen in
+u-boot and mbed, the interface is reset before any actual
+configuration is performed. I feel like that should be the place where
+that gpio is requested and cycled...
 
->From c52749964ee435eec8dc5b8634f7f76cf637e7b1 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Date: Thu, 24 Aug 2017 13:27:45 +0200
-Subject: [PATCH] leds: pca955x: check for I2C errors
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This should also allow probing to fail when a pca955x chip is not
-found on a I2C bus.
-
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
----
- drivers/leds/leds-pca955x.c | 89 +++++++++++++++++++++++++++++++++++----------
- 1 file changed, 70 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
-index f062d1e7640f..17ac7cf2728d 100644
---- a/drivers/leds/leds-pca955x.c
-+++ b/drivers/leds/leds-pca955x.c
-@@ -165,13 +165,18 @@ static inline u8 pca955x_ledsel(u8 oldval, int led_num, int state)
-  * Write to frequency prescaler register, used to program the
-  * period of the PWM output.  period = (PSCx + 1) / 38
-  */
--static void pca955x_write_psc(struct i2c_client *client, int n, u8 val)
-+static int pca955x_write_psc(struct i2c_client *client, int n, u8 val)
- {
- 	struct pca955x *pca955x = i2c_get_clientdata(client);
-+	int ret;
- 
--	i2c_smbus_write_byte_data(client,
-+	ret = i2c_smbus_write_byte_data(client,
- 		pca95xx_num_input_regs(pca955x->chipdef->bits) + 2*n,
- 		val);
-+	if (ret < 0)
-+		dev_err(&client->dev, "%s: reg 0x%x, val 0x%x, err %d\n",
-+			__func__, n, val, ret);
-+	return ret;
- }
- 
- /*
-@@ -181,38 +186,57 @@ static void pca955x_write_psc(struct i2c_client *client, int n, u8 val)
-  *
-  * Duty cycle is (256 - PWMx) / 256
-  */
--static void pca955x_write_pwm(struct i2c_client *client, int n, u8 val)
-+static int pca955x_write_pwm(struct i2c_client *client, int n, u8 val)
- {
- 	struct pca955x *pca955x = i2c_get_clientdata(client);
-+	int ret;
- 
--	i2c_smbus_write_byte_data(client,
-+	ret = i2c_smbus_write_byte_data(client,
- 		pca95xx_num_input_regs(pca955x->chipdef->bits) + 1 + 2*n,
- 		val);
-+	if (ret < 0)
-+		dev_err(&client->dev, "%s: reg 0x%x, val 0x%x, err %d\n",
-+			__func__, n, val, ret);
-+	return ret;
- }
- 
-+
- /*
-  * Write to LED selector register, which determines the source that
-  * drives the LED output.
-  */
--static void pca955x_write_ls(struct i2c_client *client, int n, u8 val)
-+static int pca955x_write_ls(struct i2c_client *client, int n, u8 val)
- {
- 	struct pca955x *pca955x = i2c_get_clientdata(client);
-+	int ret;
- 
--	i2c_smbus_write_byte_data(client,
-+	ret = i2c_smbus_write_byte_data(client,
- 		pca95xx_num_input_regs(pca955x->chipdef->bits) + 4 + n,
- 		val);
-+	if (ret < 0)
-+		dev_err(&client->dev, "%s: reg 0x%x, val 0x%x, err %d\n",
-+			__func__, n, val, ret);
-+	return ret;
- }
- 
- /*
-  * Read the LED selector register, which determines the source that
-  * drives the LED output.
-  */
--static u8 pca955x_read_ls(struct i2c_client *client, int n)
-+static int pca955x_read_ls(struct i2c_client *client, int n, u8 *val)
- {
- 	struct pca955x *pca955x = i2c_get_clientdata(client);
-+	int ret;
- 
--	return (u8) i2c_smbus_read_byte_data(client,
-+	ret = i2c_smbus_read_byte_data(client,
- 		pca95xx_num_input_regs(pca955x->chipdef->bits) + 4 + n);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "%s: reg 0x%x, err %d\n",
-+			__func__, n, ret);
-+		return ret;
-+	}
-+	*val = (u8) ret;
-+	return 0;
- }
- 
- static int pca955x_led_set(struct led_classdev *led_cdev,
-@@ -223,6 +247,7 @@ static int pca955x_led_set(struct led_classdev *led_cdev,
- 	u8 ls;
- 	int chip_ls;	/* which LSx to use (0-3 potentially) */
- 	int ls_led;	/* which set of bits within LSx to use (0-3) */
-+	int ret;
- 
- 	pca955x_led = container_of(led_cdev, struct pca955x_led, led_cdev);
- 	pca955x = pca955x_led->pca955x;
-@@ -232,7 +257,9 @@ static int pca955x_led_set(struct led_classdev *led_cdev,
- 
- 	mutex_lock(&pca955x->lock);
- 
--	ls = pca955x_read_ls(pca955x->client, chip_ls);
-+	ret = pca955x_read_ls(pca955x->client, chip_ls, &ls);
-+	if (ret)
-+		return ret;
- 
- 	switch (value) {
- 	case LED_FULL:
-@@ -252,13 +279,17 @@ static int pca955x_led_set(struct led_classdev *led_cdev,
- 		 * OFF, HALF, or FULL.  But, this is probably better than
- 		 * just turning off for all other values.
- 		 */
--		pca955x_write_pwm(pca955x->client, 1,
--				255 - value);
-+		ret = pca955x_write_pwm(pca955x->client, 1,
-+					255 - value);
-+		if (ret)
-+			return ret;
- 		ls = pca955x_ledsel(ls, ls_led, PCA955X_LS_BLINK1);
- 		break;
- 	}
- 
--	pca955x_write_ls(pca955x->client, chip_ls, ls);
-+	ret = pca955x_write_ls(pca955x->client, chip_ls, ls);
-+	if (ret)
-+		return ret;
- 
- 	mutex_unlock(&pca955x->lock);
- 
-@@ -269,9 +300,18 @@ static int pca955x_led_set(struct led_classdev *led_cdev,
- /*
-  * Read the INPUT register, which contains the state of LEDs.
-  */
--static u8 pca955x_read_input(struct i2c_client *client, int n)
-+static int pca955x_read_input(struct i2c_client *client, int n, u8 *val)
- {
--	return (u8)i2c_smbus_read_byte_data(client, n);
-+	int ret = i2c_smbus_read_byte_data(client, n);
-+
-+	if (ret < 0) {
-+		dev_err(&client->dev, "%s: reg 0x%x, err %d\n",
-+			__func__, n, ret);
-+		return ret;
-+	}
-+	*val = (u8) ret;
-+	return 0;
-+
- }
- 
- static int pca955x_gpio_request_pin(struct gpio_chip *gc, unsigned int offset)
-@@ -301,7 +341,10 @@ static int pca955x_gpio_get_value(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct pca955x *pca955x = gpiochip_get_data(gc);
- 	struct pca955x_led *led = &pca955x->leds[offset];
--	u8 reg = pca955x_read_input(pca955x->client, led->led_num / 8);
-+	u8 reg = 0;
-+
-+	/* There is nothing we can do about errors */
-+	pca955x_read_input(pca955x->client, led->led_num / 8, &reg);
- 
- 	return !!(reg & (1 << (led->led_num % 8)));
- }
-@@ -496,14 +539,22 @@ static int pca955x_probe(struct i2c_client *client,
- 	}
- 
- 	/* PWM0 is used for half brightness or 50% duty cycle */
--	pca955x_write_pwm(client, 0, 255-LED_HALF);
-+	err = pca955x_write_pwm(client, 0, 255-LED_HALF);
-+	if (err)
-+		return err;
- 
- 	/* PWM1 is used for variable brightness, default to OFF */
--	pca955x_write_pwm(client, 1, 0);
-+	err = pca955x_write_pwm(client, 1, 0);
-+	if (err)
-+		return err;
- 
- 	/* Set to fast frequency so we do not see flashing */
--	pca955x_write_psc(client, 0, 0);
--	pca955x_write_psc(client, 1, 0);
-+	err = pca955x_write_psc(client, 0, 0);
-+	if (err)
-+		return err;
-+	err = pca955x_write_psc(client, 1, 0);
-+	if (err)
-+		return err;
- 
- #ifdef CONFIG_LEDS_PCA955X_GPIO
- 	if (ngpios) {
--- 
-2.13.5
+Thanks
+   j
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
