@@ -1,59 +1,63 @@
-From: Markus Mayer <code@mmayer.net>
-Subject: [PATCH v3 0/2] SoC driver for Broadcom STB DPFE
-Date: Thu, 24 Aug 2017 16:36:24 -0700
-Message-ID: <20170824233626.1343-1-code@mmayer.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>
-Cc: Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH v3 1/2] dt/bindings: Add bindings for Broadcom STB DRAM Sensors
+Date: Thu, 24 Aug 2017 16:36:25 -0700
+Message-ID: <20170824233626.1343-2-code@mmayer.net>
+References: <20170824233626.1343-1-code@mmayer.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170824233626.1343-1-code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Mayer <mmayer@broadcom.com>
+From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-This series introduces a driver to interact with the Broadcom STB DDR
-PHY Front End (DPFE), specifically to communicate with the DCPU that is
-part of the DDR PHY and which is running its own firmware.
+Provide bindings for the Broadcom STB DDR PHY Front End (DPFE).
 
-The DCPU provides information such as DRAM refresh rate, which can be
-used as indirect indicator for the DRAM temperature (the higher the
-refresh rate, the hotter the RAM).
-
-The series was previously submitted as HWMON driver[1]. It has been
-removed from that subsystem, because it doesn't provide any standard
-HWMON data due to hardware design properties, and is now implemented as
-SoC driver.
-
-Changes since v2:
-  - moved driver from drivers/soc/bcm/brcmstb to drivers/memory
-  - renamed the driver from dpfe.c to brcmstb_dpfe.c
-  - added le32_to_cpu() in a few places (where be32_to_cpu() calls
-    already existed)
-  - added a little blurb what the le32_to_cpu()/be32_to_cpu() business
-    is all about
-
-Changes since v1:
-  - binding simplified to use one node with three memory regions
-    instead of three nodes with one region
-  - no longer part of the HWMON subsystem
-  - better error handling and error reporting to userland
-  - uses [readl|writel]_relaxed() directly, since there is no need for
-    wrappers doing endian conversion
-  - re-download firmware upon "resume"
-  - minor changes to improve clarity
-
-[1] https://lkml.org/lkml/2017/4/18/640
-
-Markus Mayer (2):
-  dt/bindings: Add bindings for Broadcom STB DRAM Sensors
-  memory: brcmstb: Add driver for DPFE
-
- .../bindings/memory-controllers/brcm,dpfe-cpu.txt  |  27 +
- MAINTAINERS                                        |   8 +
- drivers/memory/Makefile                            |   1 +
- drivers/memory/brcmstb_dpfe.c                      | 701 +++++++++++++++++++++
- 4 files changed, 737 insertions(+)
+Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/memory-controllers/brcm,dpfe-cpu.txt  | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/memory-controllers/brcm,dpfe-cpu.txt
- create mode 100644 drivers/memory/brcmstb_dpfe.c
 
+diff --git a/Documentation/devicetree/bindings/memory-controllers/brcm,dpfe-cpu.txt b/Documentation/devicetree/bindings/memory-controllers/brcm,dpfe-cpu.txt
+new file mode 100644
+index 0000000..82d923e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/brcm,dpfe-cpu.txt
+@@ -0,0 +1,27 @@
++DDR PHY Front End (DPFE) for Broadcom STB
++=========================================
++
++DPFE and the DPFE firmware provide an interface for the host CPU to
++communicate with the DCPU, which resides inside the DDR PHY.
++
++There are three memory regions for interacting with the DCPU. These are
++specified in a single reg property.
++
++Required properties:
++  - compatible: must be "brcm,bcm7271-dpfe-cpu", "brcm,bcm7268-dpfe-cpu"
++    or "brcm,dpfe-cpu"
++  - reg: must reference three register ranges
++      - start address and length of the DCPU register space
++      - start address and length of the DCPU data memory space
++      - start address and length of the DCPU instruction memory space
++  - reg-names: must contain "dpfe-cpu", "dpfe-dmem", and "dpfe-imem";
++        they must be in the same order as the register declarations
++
++Example:
++	dpfe_cpu0: dpfe-cpu@f1132000 {
++		compatible = "brcm,bcm7271-dpfe-cpu", "brcm,dpfe-cpu";
++		reg =  <0xf1132000 0x180
++			0xf1134000 0x1000
++			0xf1138000 0x4000>;
++		reg-names = "dpfe-cpu", "dpfe-dmem", "dpfe-imem";
++	};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
