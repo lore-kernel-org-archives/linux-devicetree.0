@@ -1,385 +1,84 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] v4l: fwnode: Support generic parsing of graph
- endpoints in a device
-Date: Thu, 24 Aug 2017 11:01:17 +0300
-Message-ID: <20170824080116.wb2ohtpdg56hzvd6@valkosipuli.retiisi.org.uk>
-References: <20170818112317.30933-1-sakari.ailus@linux.intel.com>
- <2804301.TqBigdGaBJ@avalon>
- <20170823090123.ztqz6usu7l5qdwkj@valkosipuli.retiisi.org.uk>
- <7848458.ASShLhbEvA@avalon>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v2 3/4] net: phy: realtek: add disable RX
+ internal delay mode
+Date: Thu, 24 Aug 2017 16:05:54 +0800
+Message-ID: <7c43220aef447e5cf21e48a9eca18535@aosc.io>
+References: <20170822040400.12166-1-icenowy@aosc.io>
+ <20170822040400.12166-4-icenowy@aosc.io> <20170822133906.GG24555@lunn.ch>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7848458.ASShLhbEvA@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBZMR7LGAKGQEQRFYWJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170822133906.GG24555-g2DYL2Zd6BY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+=E5=9C=A8 2017-08-22 21:39=EF=BC=8CAndrew Lunn =E5=86=99=E9=81=93=EF=BC=9A
+> On Tue, Aug 22, 2017 at 12:03:59PM +0800, Icenowy Zheng wrote:
+>> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>>=20
+>> Some RTL8211E chips have broken GbE function, which needs a hack to
+>> fix. It's said that this fix will affect the performance on not-buggy
+>> PHYs, so it should only be enabled on boards with the broken PHY.
+>=20
+> I would not call this a broken PHY. It is a question of board
+> design. If you have shorter tracks, you need a delay. If you have long
+> tracks, you don't. Hence the four RGMII modes, so you can select if
+> the delay is needed or not, depending on your board design.
+>=20
+>> Currently only some Pine64+ boards are known to have this issue.
+>=20
+> Design feature.
+>=20
+> Please remove all reference to bug.
+>=20
+>> This hack is said to disable RX relay for RTL8211E according to=20
+>> Realtek.
+>> So implement it as RGMII-TXID mode.
+>=20
+> Do we know that the TX lines do have a delay after making this change?
+> We need to be careful here. We will get into a mess if this is
+> actually RGMII not RGMII_TXID, and somebody designs a board which
+> needs RGMII-TXID.
 
-On Wed, Aug 23, 2017 at 03:59:35PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Wednesday, 23 August 2017 12:01:24 EEST Sakari Ailus wrote:
-> > On Tue, Aug 22, 2017 at 03:52:33PM +0300, Laurent Pinchart wrote:
-> > > On Friday, 18 August 2017 14:23:16 EEST Sakari Ailus wrote:
-> > >> The current practice is that drivers iterate over their endpoints and
-> > >> parse each endpoint separately. This is very similar in a number of
-> > >> drivers, implement a generic function for the job. Driver specific
-> > >> matters can be taken into account in the driver specific callback.
-> > >> 
-> > >> Convert the omap3isp as an example.
-> > > 
-> > > It would be nice to convert at least two drivers to show that the code can
-> > > indeed be shared between multiple drivers. Even better, you could convert
-> > > all drivers.
-> > 
-> > That's the intent in the long run. There's still no definite need to do
-> > this in a single, big, hot patchset.
-> 
-> You don't need to convert them all in a single patch, but I'd still prefer 
-> converting them all in a single patch series (and I'd split this patch in two 
-> to make backporting easier). Otherwise we'll likely end up with multiple 
-> competing implementations.
+In fact I'm not sure -- I'm even not sure that after making this change
+there's no TX delay. The change is totally not documented, so I choose
+to use a custom property in v1.
 
-I don't think that presumption is founded. The fact that there is a driver
-doing something on its own does not prevent add a helper function to the
-framework which could be used to remove driver code. We have, as an
-example, the pipeline power management code in v4l2-mc.c. It was introduced
-with the omap3isp driver and is now used by a number of drivers.
+But Florian required me to use RGMII-TXID instead.
 
-This is also related preparation for supporting associations that will be
-needed for lens and flash devices.
+>=20
+>> +#include <linux/of.h>
+>>  #include <linux/phy.h>
+>>  #include <linux/module.h>
+>=20
+>> +static int rtl8211e_config_init(struct phy_device *phydev)
+>> +{
+>> +	struct device *dev =3D &phydev->mdio.dev;
+>> +	struct device_node *of_node =3D dev->of_node;
+>=20
+> You don't appear to use of_node, nor dev. Please remove, along with
+> the header file.
+>=20
+>     Andrew
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> 
-> > >> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > >> ---
-> > >> drivers/media/platform/omap3isp/isp.c | 116 ++++++++++------------------
-> > >> drivers/media/v4l2-core/v4l2-fwnode.c | 125 +++++++++++++++++++++++++
-> > >> include/media/v4l2-async.h            |   4 +-
-> > >> include/media/v4l2-fwnode.h           |   9 +++
-> > >> 4 files changed, 173 insertions(+), 81 deletions(-)
-> > > 
-> > > [snip]
-> > > 
-> > >> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > >> b/drivers/media/v4l2-core/v4l2-fwnode.c index 5cd2687310fe..cb0fc4b4e3bf
-> > >> 100644
-> > >> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > >> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > >> @@ -26,6 +26,7 @@
-> > >>  #include <linux/string.h>
-> > >>  #include <linux/types.h>
-> > >> 
-> > >> +#include <media/v4l2-async.h>
-> > >>  #include <media/v4l2-fwnode.h>
-> > >>  
-> > >>  enum v4l2_fwnode_bus_type {
-> > >> @@ -383,6 +384,130 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link
-> > >> *link) }
-> > >> 
-> > >>  EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
-> > >> 
-> > >> +static int notifier_realloc(struct device *dev,
-> > >> +			    struct v4l2_async_notifier *notifier,
-> > >> +			    unsigned int max_subdevs)
-> > > 
-> > > It looks like you interpret the variable as an increment. You shouldn't
-> > > call it max_subdevs in that case. I would however keep the name and pass
-> > > the total number of subdevs instead of an increment, to mimic the realloc
-> > > API.
-> > 
-> > Works for me.
-> > 
-> > >> +{
-> > >> +	struct v4l2_async_subdev **subdevs;
-> > >> +	unsigned int i;
-> > >> +
-> > >> +	if (max_subdevs + notifier->num_subdevs <= notifier->max_subdevs)
-> > >> +		return 0;
-> > >> +
-> > >> +	subdevs = devm_kcalloc(
-> > >> +		dev, max_subdevs + notifier->num_subdevs,
-> > >> +		sizeof(*notifier->subdevs), GFP_KERNEL);
-> > > 
-> > > We know that we'll have to move away from devm_* allocation to fix object
-> > > lifetime management, so we could as well start now.
-> > 
-> > The memory is in practice allocated using devm_() interface in existing
-> > drivers.
-> 
-> Yes, and that's bad :-)
-> 
-> > The fact that it's in a single location makes it much easier getting rid of
-> > it.
-> 
-> Great, so let's get rid of it :-)
-> 
-> > I'd rather get rid of memory allocation here in the first place, to be
-> > replaced by a linked list. But first the user of notifier->subdevs in
-> > drivers need to go. The framework interface doesn't need to change as a
-> > result.
-> 
-> How are you going to allocate and free the linked list entries ?
-
-Thinking about it some more --- we can't actually use other objects (not
-allocated here) to hold the list struct, so we'll keep the allocation.
-
-I think we'll need v4l2_async_notifier_release() as a result. I'll add that
-to v2. This could be used to release resources related to a notifier which
-is not yet registered.
-
-> 
-> > >> +	if (!subdevs)
-> > >> +		return -ENOMEM;
-> > >> +
-> > >> +	if (notifier->subdevs) {
-> > >> +		for (i = 0; i < notifier->num_subdevs; i++)
-> > >> +			subdevs[i] = notifier->subdevs[i];
-> > > 
-> > > Is there a reason to use a loop here instead of a memcpy() covering the
-> > > whole array ?
-> > 
-> > You could do that, yes, although I'd think this looks nicer. Performance is
-> > hardly a concern here.
-> 
-> It's certainly not a performance issue, I would find the code easier to read.
-
-Would you find
-
-	memcpy(subdevs, notifier->subdevs, sizeof(*subdevs) * num_subdevs);
-
-easier to read?
-
-You also lose type checking as a result.
-
-> 
-> > >> +		devm_kfree(dev, notifier->subdevs);
-> > >> +	}
-> > >> +
-> > >> +	notifier->subdevs = subdevs;
-> > >> +	notifier->max_subdevs = max_subdevs + notifier->num_subdevs;
-> > >> +
-> > >> +	return 0;
-> > >> +}
-> > >> +
-> > >> +static int __v4l2_fwnode_endpoint_parse(
-> > >> +	struct device *dev, struct v4l2_async_notifier *notifier,
-> > >> +	struct fwnode_handle *endpoint, struct v4l2_async_subdev *asd,
-> > >> +	int (*parse_single)(struct device *dev,
-> > >> +			    struct v4l2_fwnode_endpoint *vep,
-> > >> +			    struct v4l2_async_subdev *asd))
-> > >> +{
-> > >> +	struct v4l2_fwnode_endpoint *vep;
-> > >> +	int ret;
-> > >> +
-> > >> +	/* Ignore endpoints the parsing of which failed. */
-> > > 
-> > > Silently ignoring invalid DT sounds bad, I'd rather catch errors and
-> > > return with an error code to make sure that DT gets fixed.
-> > 
-> > That would mean that if a single node is bad, none of the correct ones can
-> > be used either. I'm not sure everyone would be happy about it.
-> 
-> We should be tolerant towards hardware failures and make as much of the device 
-> usable as possible, but be very pedantic when parsing DT to catch errors as 
-> early as possible.
-
-How about shouting out loud about this, and continuing then?
-
-> 
-> > >> +	vep = v4l2_fwnode_endpoint_alloc_parse(endpoint);
-> > >> +	if (IS_ERR(vep))
-> > >> +		return 0;
-> > >> +
-> > >> +	notifier->subdevs[notifier->num_subdevs] = asd;
-> > >> +
-> > >> +	ret = parse_single(dev, vep, asd);
-> > >> +	v4l2_fwnode_endpoint_free(vep);
-> > >> +	if (ret)
-> > >> +		return ret;
-> > >> +
-> > >> +	asd->match.fwnode.fwnode =
-> > >> +		fwnode_graph_get_remote_port_parent(endpoint);
-> > >> +	if (!asd->match.fwnode.fwnode) {
-> > >> +		dev_warn(dev, "bad remote port parent\n");
-> > >> +		return -EINVAL;
-> > >> +	}
-> > >> +
-> > >> +	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> > >> +	notifier->num_subdevs++;
-> > >> +
-> > >> +	return 0;
-> > >> +}
-> > >> +
-> > >> +/**
-> > >> + * v4l2_fwnode_endpoint_parse - Parse V4L2 fwnode endpoints in a device
-> > >> node
-> > > 
-> > > This doesn't match the function name.
-> > 
-> > Will fix.
-> > 
-> > >> + * @dev: local struct device
-> > > 
-> > > Based on the documentation only and without a priori knowledge of the API,
-> > > local struct device is very vague.
-> > 
-> > What would you use then?
-> > 
-> > Write a fairytale about it? :-)
-> 
-> Just explain which struct device is expected, and how it relates to the 
-> purpose of the function and its other parameters. If you find that hard to 
-> explain, imagine how confused someone trying to use the API without any a 
-> priori knowledge of the subsystem will feel.
-
-Having a good example is often more important than perfect documentation.
-I'll add more documentation to the next version.
-
-> 
-> > >> + * @notifier: async notifier related to @dev
-> > > 
-> > > Ditto. You need more documentation, especially given that this is the
-> > > first function in the core that fills a notifier from DT. You might also
-> > > want to reflect that fact in the function name.
-> > 
-> > I can add more documentation.
-> > 
-> > >> + * @asd_struct_size: size of the driver's async sub-device struct,
-> > >> including
-> > >> + *		     sizeof(struct v4l2_async_subdev)
-> > >> + * @parse_single: driver's callback function called on each V4L2 fwnode
-> > >> endpoint
-> > > 
-> > > The parse_single return values should be documented.
-> > 
-> > Agreed.
-> > 
-> > >> + * Parse all V4L2 fwnode endpoints related to the device.
-> > >> + *
-> > >> + * Note that this function is intended for drivers to replace the
-> > >> existing
-> > >> + * implementation that loops over all ports and endpoints. It is NOT
-> > >> INTENDED TO
-> > >> + * BE USED BY NEW DRIVERS.
-> > > 
-> > > You should document what the preferred way is. And I'd much rather convert
-> > > drivers to the preferred way instead of adding a helper function that is
-> > > already deprecated.
-> > 
-> > The preferred way is not a part of this patch but the second one. This is
-> > intended for moving the existing copies of the same code away from drivers.
-> 
-> You remove the code from a single driver here. How many drivers do we need to 
-> convert ?
-
-About 15, based on how many drivers use v4l2_async_notifier_register().
-
-> 
-> > The preferred way would be to explicitly check ports and endpoints in them
-> > for connections. I'm not sure if the existing DT documentation is enough to
-> > cover this for it does not generally document endpoint numbering.
-> > 
-> > >> + */
-> > >> +int v4l2_fwnode_endpoints_parse(
-> > > 
-> > > v4l2_fwnode_parse_endpoints() would sound more natural.
-> > 
-> > We'll need to think more about naming this. v4l2_fwnode_endpoint_parse()
-> > will parse a single endpoint and is entirely unaware of the notifier.
-> > 
-> > How about v4l2_async_notifier_parse_endpoints()? It's a big lengthy though.
-> 
-> And it's missing fwnode in the name :-)
-
-Yes.
-
-v4l2_async_notifier_parse_fwnode_endpoints()?
-
-It'll still fit in practice. :-)
-
-> 
-> > >> +	struct device *dev, struct v4l2_async_notifier *notifier,
-> > >> +	size_t asd_struct_size,
-> > >> +	int (*parse_single)(struct device *dev,
-> > >> +			    struct v4l2_fwnode_endpoint *vep,
-> > >> +			    struct v4l2_async_subdev *asd))
-> > >> +{
-> > >> +	struct fwnode_handle *fwnode = NULL;
-> > >> +	unsigned int max_subdevs = notifier->max_subdevs;
-> > >> +	int ret;
-> > >> +
-> > >> +	if (asd_struct_size < sizeof(struct v4l2_async_subdev))
-> > >> +		return -EINVAL;
-> > >> +
-> > >> +	while ((fwnode = fwnode_graph_get_next_endpoint(dev_fwnode(dev),
-> > >> +							fwnode)))
-> > >> +		max_subdevs++;
-> > >> +
-> > >> +	ret = notifier_realloc(dev, notifier, max_subdevs);
-> > >> +	if (ret)
-> > >> +		return ret;
-> > >> +
-> > >> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
-> > >> +				     dev_fwnode(dev), fwnode)) &&
-> > >> +		     !WARN_ON(notifier->num_subdevs >= notifier->max_subdevs);
-> > > 
-> > > It's nice to warn that the kernel will crash, but it would be even nicer
-> > > to prevent the crash by returning an error instead of continuing parsing
-> > > endpoints :-)
-> > 
-> > I'm not quite sure what do you mean. If the number of sub-devices reaches
-> > what's allocated for them in the array, this will stop with a warning.
-> 
-> Oops, my bad, I've misread the code. Your for loop is not very readable :-/ 
-> How about moving the num_subdevs test inside the loop with
-> 
-> 		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs))
-> 			break;
-> 
-> That should make it more readable.
-
-I can move it inside the loop.
-
-> 
-> > >> +		) {
-> > >> +		struct v4l2_async_subdev *asd;
-> > >> +
-> > >> +		asd = devm_kzalloc(dev, asd_struct_size, GFP_KERNEL);
-> > >> +		if (!asd) {
-> > >> +			ret = -ENOMEM;
-> > >> +			goto error;
-> > >> +		}
-> > >> +
-> > >> +		ret = __v4l2_fwnode_endpoint_parse(dev, notifier, fwnode, asd,
-> > >> +						   parse_single);
-> > >> +		if (ret < 0)
-> > >> +			goto error;
-> > >> +	}
-> > >> +
-> > >> +error:
-> > >> +	fwnode_handle_put(fwnode);
-> > >> +	return ret;
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoints_parse);
-> 
-> [snip]
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
