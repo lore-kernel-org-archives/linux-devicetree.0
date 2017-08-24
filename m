@@ -1,50 +1,61 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
-Date: Thu, 24 Aug 2017 11:37:01 -0700
-Message-ID: <20170824183701.GN21656@codeaurora.org>
-References: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
- <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
- <20170822085541.GB3685@dragon>
- <20170822203132.GC21656@codeaurora.org>
- <20170824121818.GE3685@dragon>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] checks: add phandle with arg property checks
+Date: Thu, 24 Aug 2017 14:19:27 -0500
+Message-ID: <CAL_Jsq+NVBF6npai2_CRSVchGN_EQBSYnQcw3rHZcNFKpP7pDg@mail.gmail.com>
+References: <20170822230208.20987-1-robh@kernel.org> <20170822230208.20987-2-robh@kernel.org>
+ <20170824020338.GV5379@umbus.fritz.box> <CAL_Jsq+0Njjs_PHBSD-B7W9YFzdfpB2ApBcBD=48+BoXQKv2pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170824121818.GE3685@dragon>
+In-Reply-To: <CAL_Jsq+0Njjs_PHBSD-B7W9YFzdfpB2ApBcBD=48+BoXQKv2pw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhijeet Dharmapurikar <adharmap-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/24, Shawn Guo wrote:
-> On Tue, Aug 22, 2017 at 01:31:32PM -0700, Stephen Boyd wrote:
-> > Also, I see that on v4.13-rc series the read/write checks are
-> > causing the led driver to fail in a different way:
-> > 
-> >     spmi spmi-0: error: impermissible write to peripheral sid:0 addr:0xc040
-> >     qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x40 failed
-> >     leds-gpio soc:leds: Error applying setting, reverse things back
-> >     spmi spmi-0: error: impermissible write to peripheral sid:0 addr:0xc041
-> >     qcom-spmi-gpio 200f000.spmi:pm8916@0:gpios@c000: write 0x41 failed
-> >     leds-gpio: probe of soc:leds failed with error -1 
-> > 
-> > Are you seeing similar behavior?
-> 
-> Yes.  I forgot to mention that, and leds-gpio failure is gone after
-> applying Kiran's patch below.
-> 
-> spmi: pmic-arb: remove the read/write access checks
-> 
+On Thu, Aug 24, 2017 at 12:23 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Aug 23, 2017 at 9:03 PM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> On Tue, Aug 22, 2017 at 06:02:06PM -0500, Rob Herring wrote:
+>>> Many common bindings follow the same pattern of client properties
+>>> containing a phandle and N arg cells where N is defined in the provider
+>>> with a '#<specifier>-cells' property such as:
 
-Sure. Removing the checks will silence the warnings, but it still
-means that we're attempting to configure GPIOs that we shouldn't
-be configuring. Is there some sort of default configuration that
-gets applied to all pins by default?
+[...]
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>>> +             if (prop->val.len < ((cell + cellsize + 1) * sizeof(cell_t))) {
+>>> +                     FAIL(c, dti, "%s property size (%d) too small for cell size %d in %s",
+>>> +                          prop->name, prop->val.len, cellsize, node->fullpath);
+>>> +             }
+>>
+>> How will this cope if the property is really badly formed - e.g. a 3
+>> byte property, so you can't even grab a whole first phandle?  I think
+>> it will trip the assert() in propval_cell_n() which isn't great.
+>
+> At least for your example, we'd exit the loop (cell < 3/4). But I need
+> to a check for that because it would be silent currently. I'll add a
+> check that the size is a multiple of 4 and greater than 0.
+>
+> However, the check here is not perfect because we could have
+> "<&phandle1 1 2>" when really it should be "<&phandle1 &phandle2
+> &phandle3>". We don't fail until we're checking the 2nd phandle.
+> That's why I added the "or bad phandle" and the cell # in the message
+> above. In the opposite case, we'd be silent. One thing that could be
+> done is double check things against the markers if they are present.
+
+Here's what that looks like:
+
+/* If we have markers, verify the current cell is a phandle */
+if (prop->val.markers) {
+  struct marker *m = prop->val.markers;
+  for_each_marker_of_type(m, REF_PHANDLE) {
+    if (m->offset == (cell * sizeof(cell_t)))
+      break;
+  }
+  if (!m)
+  FAIL(c, dti, "Property '%s', cell %d is not a valid phandle in %s",
+    prop->name, cell, node->fullpath);
+}
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
