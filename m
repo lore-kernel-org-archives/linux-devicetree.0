@@ -1,142 +1,73 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH v2 08/10] drm/exynos/decon5433: use mode info stored in CRTC
- to detect i80 mode
-Date: Thu, 24 Aug 2017 15:33:57 +0200
-Message-ID: <1503581639-580-9-git-send-email-a.hajda@samsung.com>
-References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
-        <CGME20170824133411eucas1p1601aabfcb12d8ae39f5b6400d16da99e@eucas1p1.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RESEND PATCH v5 10/16] ARM: dts: zynq: Add generic compatible
+ string for I2C EEPROM
+Date: Thu, 24 Aug 2017 15:44:50 +0200
+Message-ID: <67a9d32a-0a20-f101-4660-0d5aa5ad8a8a@xilinx.com>
+References: <20170615185418.13980-1-javier@dowhile0.org>
+ <20170615185418.13980-11-javier@dowhile0.org>
+ <b22a7db6-7daf-b5c1-3978-cdc699723e30@xilinx.com>
+ <CABxcv=n4pCJLPb_C6eYVJ3CLBVH7T0amiJj7mYbshpv4u8xkXA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=n4pCJLPb_C6eYVJ3CLBVH7T0amiJj7mYbshpv4u8xkXA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>, Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Since panel's mode of work is propagated properly from panel to DECON,
-there is no need to use redundant private device tree property.
-The only issue with such approach is that check for required interrupts
-should be postponed until panel communicate its requirements, ie to
-mode validation phase - mode_valid callback.
+Hi,
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
----
- drivers/gpu/drm/exynos/exynos5433_drm_decon.c | 40 +++++++++++++++++----------
- 1 file changed, 25 insertions(+), 15 deletions(-)
+On 23.8.2017 16:28, Javier Martinez Canillas wrote:
+> Hello Michal,
+> 
+> On Wed, Jun 21, 2017 at 1:43 PM, Michal Simek <michal.simek@xilinx.com> wrote:
+>> On 15.6.2017 20:54, Javier Martinez Canillas wrote:
+>>> The at24 driver allows to register I2C EEPROM chips using different vendor
+>>> and devices, but the I2C subsystem does not take the vendor into account
+>>> when matching using the I2C table since it only has device entries.
+>>>
+>>> But when matching using an OF table, both the vendor and device has to be
+>>> taken into account so the driver defines only a set of compatible strings
+>>> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+>>>
+>>> So add this generic fallback to the device node compatible string to make
+>>> the device to match the driver using the OF device ID table.
+>>>
+>>> Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
+>>>
+> 
+> [snip]
+> 
+>>> --- a/arch/arm/boot/dts/zynq-zc706.dts
+>>> +++ b/arch/arm/boot/dts/zynq-zc706.dts
+>>> @@ -92,7 +92,7 @@
+>>>                       #size-cells = <0>;
+>>>                       reg = <2>;
+>>>                       eeprom@54 {
+>>> -                             compatible = "at,24c08";
+>>> +                             compatible = "atmel,24c08";
+>>>                               reg = <0x54>;
+>>>                       };
+>>>               };
+>>>
+>>
+>> Acked-by: Michal Simek <michal.simek@xilinx.com>
+>>
+> 
+> Same question than for the other patch, could you please also apply this?
+> 
+> Sorry for not being clear in the cover letter that the patches could
+> be applied independently.
 
-diff --git a/drivers/gpu/drm/exynos/exynos5433_drm_decon.c b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
-index 0f5acce..da183e0 100644
---- a/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
-+++ b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
-@@ -34,9 +34,8 @@
- #define WINDOWS_NR	3
- #define MIN_FB_WIDTH_FOR_16WORD_BURST	128
- 
--#define IFTYPE_I80	(1 << 0)
--#define I80_HW_TRG	(1 << 1)
--#define IFTYPE_HDMI	(1 << 2)
-+#define I80_HW_TRG	(1 << 0)
-+#define IFTYPE_HDMI	(1 << 1)
- 
- static const char * const decon_clks_name[] = {
- 	"pclk",
-@@ -93,7 +92,7 @@ static int decon_enable_vblank(struct exynos_drm_crtc *crtc)
- 	u32 val;
- 
- 	val = VIDINTCON0_INTEN;
--	if (ctx->out_type & IFTYPE_I80)
-+	if (crtc->i80_mode)
- 		val |= VIDINTCON0_FRAMEDONE;
- 	else
- 		val |= VIDINTCON0_INTFRMEN | VIDINTCON0_FRAMESEL_FP;
-@@ -142,7 +141,7 @@ static u32 decon_get_frame_count(struct decon_context *ctx, bool end)
- 
- 	switch (status & (VIDCON1_VSTATUS_MASK | VIDCON1_I80_ACTIVE)) {
- 	case VIDCON1_VSTATUS_VS:
--		if (!(ctx->out_type & IFTYPE_I80))
-+		if (!(ctx->crtc->i80_mode))
- 			--frm;
- 		break;
- 	case VIDCON1_VSTATUS_BP:
-@@ -169,7 +168,7 @@ static u32 decon_get_vblank_counter(struct exynos_drm_crtc *crtc)
- 
- static void decon_setup_trigger(struct decon_context *ctx)
- {
--	if (!(ctx->out_type & (IFTYPE_I80 | I80_HW_TRG)))
-+	if (!ctx->crtc->i80_mode && !(ctx->out_type & I80_HW_TRG))
- 		return;
- 
- 	if (!(ctx->out_type & I80_HW_TRG)) {
-@@ -209,7 +208,7 @@ static void decon_commit(struct exynos_drm_crtc *crtc)
- 	val = VIDOUT_LCD_ON;
- 	if (interlaced)
- 		val |= VIDOUT_INTERLACE_EN_F;
--	if (ctx->out_type & IFTYPE_I80) {
-+	if (crtc->i80_mode) {
- 		val |= VIDOUT_COMMAND_IF;
- 	} else {
- 		val |= VIDOUT_RGB_IF;
-@@ -225,7 +224,7 @@ static void decon_commit(struct exynos_drm_crtc *crtc)
- 			VIDTCON2_HOZVAL(m->hdisplay - 1);
- 	writel(val, ctx->addr + DECON_VIDTCON2);
- 
--	if (!(ctx->out_type & IFTYPE_I80)) {
-+	if (!crtc->i80_mode) {
- 		int vbp = m->crtc_vtotal - m->crtc_vsync_end;
- 		int vfp = m->crtc_vsync_start - m->crtc_vdisplay;
- 
-@@ -513,6 +512,22 @@ static void decon_clear_channels(struct exynos_drm_crtc *crtc)
- 		clk_disable_unprepare(ctx->clks[i]);
- }
- 
-+static enum drm_mode_status decon_mode_valid(struct exynos_drm_crtc *crtc,
-+		const struct drm_display_mode *mode)
-+{
-+	struct decon_context *ctx = crtc->ctx;
-+
-+	ctx->irq = crtc->i80_mode ? ctx->irq_lcd_sys : ctx->irq_vsync;
-+
-+	if (ctx->irq)
-+		return MODE_OK;
-+
-+	dev_info(ctx->dev, "Sink requires %s mode, but appropriate interrupt is not provided.\n",
-+			crtc->i80_mode ? "command" : "video");
-+
-+	return MODE_BAD;
-+}
-+
- static const struct exynos_drm_crtc_ops decon_crtc_ops = {
- 	.enable			= decon_enable,
- 	.disable		= decon_disable,
-@@ -522,6 +537,7 @@ static const struct exynos_drm_crtc_ops decon_crtc_ops = {
- 	.atomic_begin		= decon_atomic_begin,
- 	.update_plane		= decon_update_plane,
- 	.disable_plane		= decon_disable_plane,
-+	.mode_valid		= decon_mode_valid,
- 	.atomic_flush		= decon_atomic_flush,
- };
- 
-@@ -715,11 +731,8 @@ static int exynos5433_decon_probe(struct platform_device *pdev)
- 	ctx->out_type = (unsigned long)of_device_get_match_data(dev);
- 	spin_lock_init(&ctx->vblank_lock);
- 
--	if (ctx->out_type & IFTYPE_HDMI) {
-+	if (ctx->out_type & IFTYPE_HDMI)
- 		ctx->first_win = 1;
--	} else if (of_get_child_by_name(dev->of_node, "i80-if-timings")) {
--		ctx->out_type |= IFTYPE_I80;
--	}
- 
- 	for (i = 0; i < ARRAY_SIZE(decon_clks_name); i++) {
- 		struct clk *clk;
-@@ -753,9 +766,6 @@ static int exynos5433_decon_probe(struct platform_device *pdev)
- 		return ret;
- 	ctx->irq_lcd_sys = ret;
- 
--	ctx->irq = (ctx->out_type & IFTYPE_I80) ? ctx->irq_lcd_sys
--						: ctx->irq_vsync;
--
- 	ret = decon_conf_irq(ctx, "te", decon_te_irq_handler,
- 			IRQF_TRIGGER_RISING);
- 	if (ret < 0)
--- 
-2.7.4
+Ok. Applied to
+https://github.com/Xilinx/linux-xlnx/commits/zynq/dt
+
+Will wait if something else pop up.
+
+Arnd: If you want to take this directly, feel free to do it.
+
+Thanks,
+Michal
