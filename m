@@ -1,56 +1,65 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH resend] ARM: dts: r8a7745: Add Ethernet AVB support
-Date: Thu, 24 Aug 2017 14:45:59 +0100
-Message-ID: <1503582359-43820-1-git-send-email-biju.das@bp.renesas.com>
-References: <1503388405-48325-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503388405-48325-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] devfreq: Convert to using %pOF instead of full_name
+Date: Thu, 24 Aug 2017 09:23:08 -0500
+Message-ID: <CAL_Jsq+LW8ZmE_J0B9Cea_Y0iDkBX46cXWnAF882C9-7SB_T=A@mail.gmail.com>
+References: <20170718214339.7774-17-robh@kernel.org> <CGME20170718214411epcas2p43fc1475c80245889737ba9e731497e38@epcms1p2>
+ <596EB809.7050605@samsung.com> <20170720052553epcms1p24dc190a0d51f2e447a76e417e519bd28@epcms1p2>
+ <CAL_JsqL9x16Z76VSAkDUiyEddafYuiH4mFTUur=8LgrJehrFLw@mail.gmail.com> <599E0D45.7030001@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <599E0D45.7030001@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Ethernet AVB support for r8a7745 SoC.
+On Wed, Aug 23, 2017 at 6:18 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+> Hi Rob,
+>
+> On 2017년 08월 24일 03:09, Rob Herring wrote:
+>> On Thu, Jul 20, 2017 at 12:25 AM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
+>>>> On 2017년 07월 19일 06:42, Rob Herring wrote:
+>>>>> Now that we have a custom printf format specifier, convert users of
+>>>>> full_name to use %pOF instead. This is preparation to remove storing
+>>>>> of the full path string for each node.
+>>>>>
+>>>>> Signed-off-by: Rob Herring <robh@kernel.org>
+>>>>> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+>>>>> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+>>>>> Cc: linux-pm@vger.kernel.org
+>>>>> ---
+>>>>>  drivers/devfreq/devfreq-event.c | 4 ++--
+>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+>>>>> index 8648b32ebc89..d67242d87744 100644
+>>>>> --- a/drivers/devfreq/devfreq-event.c
+>>>>> +++ b/drivers/devfreq/devfreq-event.c
+>>>>> @@ -277,8 +277,8 @@ int devfreq_event_get_edev_count(struct device *dev)
+>>>>>                                             sizeof(u32));
+>>>>>     if (count < 0) {
+>>>>>             dev_err(dev,
+>>>>> -                   "failed to get the count of devfreq-event in %s node\n",
+>>>>> -                   dev->of_node->full_name);
+>>>>> +                   "failed to get the count of devfreq-event in %pOF node\n",
+>>>>> +                   dev->of_node);
+>>>>>             return count;
+>>>>>     }
+>>>>>
+>>>>
+>>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>
+>>>
+>>> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+>>
+>> Please take this thru the devfreq tree.
+>
+> This patch was merged on devfreq tree.
+> https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=7f46535e8a2e3c3e415e55eaadcb9d9a153a5300
 
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
----
-It is applying cleanly on renesas-devel branch tag
-renesas-devel-20170824-v4.13-rc6.
+Okay, it's not showing up in linux-next which is why I asked.
 
-It is tested against renesas-devel branch tag
-renesas-devel-20170824-v4.13-rc6.
-
- arch/arm/boot/dts/r8a7745.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index 7fd2967..c34f88e 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -707,6 +707,19 @@
- 			status = "disabled";
- 		};
- 
-+		avb: ethernet@e6800000 {
-+			compatible = "renesas,etheravb-r8a7745",
-+				     "renesas,etheravb-rcar-gen2";
-+			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
-+			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 812>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 812>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		mmcif0: mmc@ee200000 {
- 			compatible = "renesas,mmcif-r8a7745",
- 				     "renesas,sh-mmcif";
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
