@@ -1,82 +1,125 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] devfreq: Convert to using %pOF instead of full_name
-Date: Fri, 25 Aug 2017 10:26:32 +0900
-Message-ID: <599F7CC8.1040406@samsung.com>
-References: <20170718214339.7774-17-robh@kernel.org>
-        <CGME20170718214411epcas2p43fc1475c80245889737ba9e731497e38@epcms1p2>
-        <596EB809.7050605@samsung.com>
-        <20170720052553epcms1p24dc190a0d51f2e447a76e417e519bd28@epcms1p2>
-        <CAL_JsqL9x16Z76VSAkDUiyEddafYuiH4mFTUur=8LgrJehrFLw@mail.gmail.com>
-        <599E0D45.7030001@samsung.com>
-        <CAL_Jsq+LW8ZmE_J0B9Cea_Y0iDkBX46cXWnAF882C9-7SB_T=A@mail.gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v2 03/10] drm/exynos/dsi: refactor panel detection logic
+Date: Fri, 25 Aug 2017 10:46:07 +0900
+Message-ID: <599F815F.4070509@samsung.com>
+References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
+        <CGME20170824133409eucas1p170d11c2037d1f20629751f04c6f77c49@eucas1p1.samsung.com>
+        <1503581639-580-4-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <CAL_Jsq+LW8ZmE_J0B9Cea_Y0iDkBX46cXWnAF882C9-7SB_T=A@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1503581639-580-4-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017년 08월 24일 23:23, Rob Herring wrote:
-> On Wed, Aug 23, 2017 at 6:18 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
->> Hi Rob,
->>
->> On 2017년 08월 24일 03:09, Rob Herring wrote:
->>> On Thu, Jul 20, 2017 at 12:25 AM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
->>>>> On 2017년 07월 19일 06:42, Rob Herring wrote:
->>>>>> Now that we have a custom printf format specifier, convert users of
->>>>>> full_name to use %pOF instead. This is preparation to remove storing
->>>>>> of the full path string for each node.
->>>>>>
->>>>>> Signed-off-by: Rob Herring <robh@kernel.org>
->>>>>> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->>>>>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
->>>>>> Cc: Kyungmin Park <kyungmin.park@samsung.com>
->>>>>> Cc: linux-pm@vger.kernel.org
->>>>>> ---
->>>>>>  drivers/devfreq/devfreq-event.c | 4 ++--
->>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
->>>>>> index 8648b32ebc89..d67242d87744 100644
->>>>>> --- a/drivers/devfreq/devfreq-event.c
->>>>>> +++ b/drivers/devfreq/devfreq-event.c
->>>>>> @@ -277,8 +277,8 @@ int devfreq_event_get_edev_count(struct device *dev)
->>>>>>                                             sizeof(u32));
->>>>>>     if (count < 0) {
->>>>>>             dev_err(dev,
->>>>>> -                   "failed to get the count of devfreq-event in %s node\n",
->>>>>> -                   dev->of_node->full_name);
->>>>>> +                   "failed to get the count of devfreq-event in %pOF node\n",
->>>>>> +                   dev->of_node);
->>>>>>             return count;
->>>>>>     }
->>>>>>
->>>>>
->>>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>>>
->>>>
->>>> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
->>>
->>> Please take this thru the devfreq tree.
->>
->> This patch was merged on devfreq tree.
->> https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=7f46535e8a2e3c3e415e55eaadcb9d9a153a5300
+
+
+2017년 08월 24일 22:33에 Andrzej Hajda 이(가) 쓴 글:
+> Description of drm_helper_hpd_irq_event clearly states that drivers
+> supporting hotplug events per connector should use different helper -
+> drm_kms_helper_hotplug_event. To achieve it following changes have
+> been performed:
+> - moved down all DSI ops - they require exynos_dsi_disable function
+> to be defined earlier,
+> - simplified exynos_dsi_detect - there is no real detection, it just
+> returns if panel is attached,
+> - DSI attach/detach callbacks attaches/detaches DRM panel and sets
+> connector status and other context fields accordingly, all this is
+> performed under mutex, as these callbacks are asynchronous.
 > 
-> Okay, it's not showing up in linux-next which is why I asked.
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 203 ++++++++++++++++----------------
+>  1 file changed, 102 insertions(+), 101 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index 6b46df6..063bac3 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -254,7 +254,6 @@ struct exynos_dsi {
+>  	struct drm_encoder encoder;
+>  	struct mipi_dsi_host dsi_host;
+>  	struct drm_connector connector;
+> -	struct device_node *panel_node;
+>  	struct drm_panel *panel;
+>  	struct device *dev;
+>  
+> @@ -1329,12 +1328,13 @@ static int exynos_dsi_init(struct exynos_dsi *dsi)
+>  	return 0;
+>  }
+>  
+> -static int exynos_dsi_register_te_irq(struct exynos_dsi *dsi)
+> +static int exynos_dsi_register_te_irq(struct exynos_dsi *dsi,
+> +				      struct device *panel)
+>  {
+>  	int ret;
+>  	int te_gpio_irq;
+>  
+> -	dsi->te_gpio = of_get_named_gpio(dsi->panel_node, "te-gpios", 0);
+> +	dsi->te_gpio = of_get_named_gpio(panel->of_node, "te-gpios", 0);
+>  	if (dsi->te_gpio == -ENOENT)
+>  		return 0;
+>  
+> @@ -1374,85 +1374,6 @@ static void exynos_dsi_unregister_te_irq(struct exynos_dsi *dsi)
+>  	}
+>  }
+>  
+> -static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
+> -				  struct mipi_dsi_device *device)
+> -{
+> -	struct exynos_dsi *dsi = host_to_dsi(host);
+> -
+> -	dsi->lanes = device->lanes;
+> -	dsi->format = device->format;
+> -	dsi->mode_flags = device->mode_flags;
+> -	dsi->panel_node = device->dev.of_node;
+> -
+> -	/*
+> -	 * This is a temporary solution and should be made by more generic way.
+> -	 *
+> -	 * If attached panel device is for command mode one, dsi should register
+> -	 * TE interrupt handler.
+> -	 */
+> -	if (!(dsi->mode_flags & MIPI_DSI_MODE_VIDEO)) {
+> -		int ret = exynos_dsi_register_te_irq(dsi);
+> -
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	if (dsi->connector.dev)
+> -		drm_helper_hpd_irq_event(dsi->connector.dev);
+> -
+> -	return 0;
+> -}
+> -
+> -static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
+> -				  struct mipi_dsi_device *device)
+> -{
+> -	struct exynos_dsi *dsi = host_to_dsi(host);
+> -
+> -	exynos_dsi_unregister_te_irq(dsi);
+> -
+> -	dsi->panel_node = NULL;
+> -
+> -	if (dsi->connector.dev)
+> -		drm_helper_hpd_irq_event(dsi->connector.dev);
+> -
+> -	return 0;
+> -}
+> -
+> -static ssize_t exynos_dsi_host_transfer(struct mipi_dsi_host *host,
+> -				        const struct mipi_dsi_msg *msg)
 
-As I knew, devfreq maintainer has not yet asked
-the inclusion of devfreq tree in linux-next.
+I fixed below error.
 
-To Myungjoo,
-You can ask to 'Stephen Rothwell <sfr@canb.auug.org.au>'
-for the inclusion of devfreq tree in linux-next.
+ERROR: code indent should use tabs where possible
+#364: FILE: drivers/gpu/drm/exynos/exynos_drm_dsi.c:1581:
++^I^I^I^I        const struct mipi_dsi_msg *msg)$
 
-git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git for-next
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Thanks,
+Inki Dae
