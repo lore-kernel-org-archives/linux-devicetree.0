@@ -1,47 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] gpio: uniphier: add UniPhier GPIO controller driver
-Date: Fri, 25 Aug 2017 16:39:24 -0500
-Message-ID: <20170825213924.xhbeiffp3oidclor@rob-hp-laptop>
-References: <1503418601-9728-1-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] rtc: v3020: Add documentation for DT bindings
+Date: Fri, 25 Aug 2017 16:54:57 -0500
+Message-ID: <20170825215457.qcd5paiw5qtuybxv@rob-hp-laptop>
+References: <b832db93-9885-adfe-39b4-1950851b391d@mothictech.com>
+ <660fa006-4f91-2fb5-ef98-ba0482e1ecff@mothictech.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1503418601-9728-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <660fa006-4f91-2fb5-ef98-ba0482e1ecff-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brandon Martin <martinbv-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 23, 2017 at 01:16:41AM +0900, Masahiro Yamada wrote:
-> This GPIO controller device is used on UniPhier SoCs.
+On Tue, Aug 22, 2017 at 05:05:47PM -0400, Brandon Martin wrote:
+> Document the DT bindings for the rtc-v3020 driver.  MMIO and GPIO
+> attachment modes are both supported via DT.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Brandon Martin <martinbv-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org>
 > ---
+>  .../devicetree/bindings/rtc/rtc-v3020.txt          | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-v3020.txt
 > 
-> Changes in v3:
->   - Add .irq_set_affinity() hook
->   - Use irq_domain_create_hierarchy() instead of legacy
->     irq_domain_add_hierarchy().
-> 
-> Changes in v2:
->   - Remove +32 offset for parent interrupts to follow the GIC
->     binding convention
->   - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
->   - Allocate gpio_chip statically because just one instance is
->     supported
->   - Fix suspend and resume hooks
-> 
->  .../devicetree/bindings/gpio/gpio-uniphier.txt     |  42 ++
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-v3020.txt b/Documentation/devicetree/bindings/rtc/rtc-v3020.txt
+> new file mode 100644
+> index 000000000000..8b32e6a79960
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-v3020.txt
+> @@ -0,0 +1,38 @@
+> + EM Micro v3020 RTC
+> +~~~~~~~~~~~~~~~~~~~~
+> +
+> +Required properties:
+> +  - compatible : "emmicro,v3020"
+> +
+> +Required for MMIO connection:
+> +  - reg : should contain registers location and length.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Looking at the datasheet, there's really no such thing. You'd have to 
+have some specialized h/w to generate the serial waveform.
 
->  MAINTAINERS                                        |   1 +
->  drivers/gpio/Kconfig                               |   7 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-uniphier.c                       | 589 +++++++++++++++++++++
->  include/dt-bindings/gpio/uniphier-gpio.h           |  18 +
->  6 files changed, 658 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
->  create mode 100644 drivers/gpio/gpio-uniphier.c
->  create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
+> +
+> +Required for GPIO connection:
+> +- emmicro,use-gpio
+> +- cs-gpios, wr-gpios, rd-gpios, io-gpios : specify gpios connected to
+> +  corresponding pins of the RTC
+> +
+> +Optional properties:
+> +- emmicro,mmio-left-shift : data bit to which IO line is connected for MMIO
+> +  connection (defaults to 0)
+
+This has come up several times on RTCs (LP8841, DS1302). This really 
+looks like SPI and could probably use the spi-gpio bitbang driver. 
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
