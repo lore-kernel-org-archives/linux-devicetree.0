@@ -1,105 +1,165 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] checks: add phandle with arg property checks
-Date: Fri, 25 Aug 2017 23:17:27 +1000
-Message-ID: <20170825131727.GJ2772@umbus.fritz.box>
-References: <20170822230208.20987-1-robh@kernel.org>
- <20170822230208.20987-2-robh@kernel.org>
- <20170824020338.GV5379@umbus.fritz.box>
- <CAL_Jsq+0Njjs_PHBSD-B7W9YFzdfpB2ApBcBD=48+BoXQKv2pw@mail.gmail.com>
- <CAL_Jsq+NVBF6npai2_CRSVchGN_EQBSYnQcw3rHZcNFKpP7pDg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for
+ Allwinner CSI.
+Date: Fri, 25 Aug 2017 15:41:14 +0200
+Message-ID: <20170825134114.rwttrmzw5gbtwdx2@flea.lan>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+ <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+ <20170728160233.xooevio4hoqkgfaq@flea.lan>
+ <20170731111640.d5a8e580a48183cfce85943d@magewell.com>
+ <20170822174339.6woauylgzkgqxygk@flea.lan>
+ <20170823103216.e43283308c195c4a80d929fa@magewell.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YZVh52eu0Ophig4D"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="q5eugcagmdzotuv4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBOSQDGQKGQEK4FDI7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+NVBF6npai2_CRSVchGN_EQBSYnQcw3rHZcNFKpP7pDg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170823103216.e43283308c195c4a80d929fa-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinu
 List-Id: devicetree@vger.kernel.org
 
 
---YZVh52eu0Ophig4D
-Content-Type: text/plain; charset=us-ascii
+--q5eugcagmdzotuv4
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 24, 2017 at 02:19:27PM -0500, Rob Herring wrote:
-> On Thu, Aug 24, 2017 at 12:23 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, Aug 23, 2017 at 9:03 PM, David Gibson
-> > <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> >> On Tue, Aug 22, 2017 at 06:02:06PM -0500, Rob Herring wrote:
-> >>> Many common bindings follow the same pattern of client properties
-> >>> containing a phandle and N arg cells where N is defined in the provid=
-er
-> >>> with a '#<specifier>-cells' property such as:
->=20
-> [...]
->=20
-> >>> +             if (prop->val.len < ((cell + cellsize + 1) * sizeof(cel=
-l_t))) {
-> >>> +                     FAIL(c, dti, "%s property size (%d) too small f=
-or cell size %d in %s",
-> >>> +                          prop->name, prop->val.len, cellsize, node-=
->fullpath);
-> >>> +             }
-> >>
-> >> How will this cope if the property is really badly formed - e.g. a 3
-> >> byte property, so you can't even grab a whole first phandle?  I think
-> >> it will trip the assert() in propval_cell_n() which isn't great.
-> >
-> > At least for your example, we'd exit the loop (cell < 3/4). But I need
-> > to a check for that because it would be silent currently. I'll add a
-> > check that the size is a multiple of 4 and greater than 0.
-> >
-> > However, the check here is not perfect because we could have
-> > "<&phandle1 1 2>" when really it should be "<&phandle1 &phandle2
-> > &phandle3>". We don't fail until we're checking the 2nd phandle.
-> > That's why I added the "or bad phandle" and the cell # in the message
-> > above. In the opposite case, we'd be silent. One thing that could be
-> > done is double check things against the markers if they are present.
->=20
-> Here's what that looks like:
->=20
-> /* If we have markers, verify the current cell is a phandle */
-> if (prop->val.markers) {
->   struct marker *m =3D prop->val.markers;
->   for_each_marker_of_type(m, REF_PHANDLE) {
->     if (m->offset =3D=3D (cell * sizeof(cell_t)))
->       break;
->   }
->   if (!m)
->   FAIL(c, dti, "Property '%s', cell %d is not a valid phandle in %s",
->     prop->name, cell, node->fullpath);
+Hi Yong,
 
-The logic seems sound, but I don't like the message.  An integer
-literal is no less a phandle than a reference, just usually not the
-best way of entering one.
+On Wed, Aug 23, 2017 at 10:32:16AM +0800, Yong wrote:
+> > > > > +static int sun6i_graph_notify_complete(struct v4l2_async_notifie=
+r *notifier)
+> > > > > +{
+> > > > > +	struct sun6i_csi *csi =3D
+> > > > > +			container_of(notifier, struct sun6i_csi, notifier);
+> > > > > +	struct sun6i_graph_entity *entity;
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	dev_dbg(csi->dev, "notify complete, all subdevs registered\n");
+> > > > > +
+> > > > > +	/* Create links for every entity. */
+> > > > > +	list_for_each_entry(entity, &csi->entities, list) {
+> > > > > +		ret =3D sun6i_graph_build_one(csi, entity);
+> > > > > +		if (ret < 0)
+> > > > > +			return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	/* Create links for video node. */
+> > > > > +	ret =3D sun6i_graph_build_video(csi);
+> > > > > +	if (ret < 0)
+> > > > > +		return ret;
+> > > >=20
+> > > > Can you elaborate a bit on the difference between a node parsed wit=
+h
+> > > > _graph_build_one and _graph_build_video? Can't you just store the
+> > > > remote sensor when you build the notifier, and reuse it here?
+> > >=20
+> > > There maybe many usercases:
+> > > 1. CSI->Sensor.
+> > > 2. CSI->MIPI->Sensor.
+> > > 3. CSI->FPGA->Sensor1
+> > >             ->Sensor2.
+> > > FPGA maybe some other video processor. FPGA, MIPI, Sensor can be
+> > > registered as v4l2 subdevs. We do not care about the driver code
+> > > of them. But they should be linked together here.
+> > >=20
+> > > So, the _graph_build_one is used to link CSI port and subdevs.=20
+> > > _graph_build_video is used to link CSI port and video node.
+> >=20
+> > So the graph_build_one is for the two first cases, and the
+> > _build_video for the latter case?
+>=20
+> No.=20
+> The _graph_build_one is used to link the subdevs found in the device=20
+> tree. _build_video is used to link the closest subdev to video node.
+> Video node is created in the driver, so the method to get it's pad is
+> diffrent to the subdevs.
+
+Sorry for being slow here, I'm still not sure I get it.
+
+In summary, both the sun6i_graph_build_one and sun6i_graph_build_video
+will iterate over each endpoint, will retrieve the remote entity, and
+will create the media link between the CSI pad and the remote pad.
+
+As far as I can see, there's basically two things that
+sun6i_graph_build_one does that sun6i_graph_build_video doesn't:
+  - It skips all the links that would connect to one of the CSI sinks
+  - It skips all the links that would connect to a remote node that is
+    equal to the CSI node.
+
+I assume the latter is because you want to avoid going in an infinite
+loop when you would follow one of the CSI endpoint (going to the
+sensor), and then follow back the same link in the opposite
+direction. Right?
+
+I'm confused about the first one though. All the pads you create in
+your driver are sink pads, so wouldn't that skip all the pads of the
+CSI nodes?
+
+Also, why do you iterate on all the CSI endpoints, when there's only
+of them? You want to anticipate the future binding for devices with
+multiple channels?
+
+> >=20
+> > If so, you should take a look at the last iteration of the
+> > subnotifiers rework by Nikas S=C3=B6derlund (v4l2-async: add subnotifie=
+r
+> > registration for subdevices).
+> >=20
+> > It allows subdevs to register notifiers, and you don't have to build
+> > the graph from the video device, each device and subdev can only care
+> > about what's next in the pipeline, but not really what's behind it.
+> >=20
+> > That would mean in your case that you can only deal with your single
+> > CSI pad, and whatever subdev driver will use it care about its own.
+>=20
+> Do you mean the subdevs create pad link in the notifier registered by
+> themself ?
+
+Yes.
+
+Thanks!
+Maxime
 
 --=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
---YZVh52eu0Ophig4D
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--q5eugcagmdzotuv4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmgI2QACgkQbDjKyiDZ
-s5Lf3Q/+NNGYhZhvXM0Vah0IgVJwH6KmBbxPu0u2iAKEyAlCXnb91TemUqzhEh8Y
-q+efHd+ogrcGq2ICs6t26SlF8rCAPohfUl8IJMi2AaMpeCXFNo4tE18O15PlQnBd
-h9ECgMuJvUSvMExbH39LLFc0lC2marg85yWYu52OzeGXjPzm8bVH5irV9hVVNcwH
-tRS59juYjuN8j7v4gmp/i1TQ6AzbpiuR33llVY74V12EY4x0KAzBfFm/5N0YF0+9
-DywUcQjYx9bagUQ0cp9FXHGbOGPgLo2Foik8fvqHA7iCQ9ZqCWb25mZp7nsyPP/w
-k0KVNN7Mmp/hErLB8G5mzgUDolj7EEVAqxvSYYAyrUHw4r1/LgLH9RI2C2SWgO68
-lu7kKFlnDB7IExPWZb4flcD5MCYthBzU0FqSltgbiQlJwzMUNIFaT6hJgTv/ffKi
-yMHyh0F2/+UfgdNtwOqAgUHgUGZiocC63NMnATdG7iIZg8ABXyyC/Iu2YOGhCe52
-C+h2YU1AYJeHo7ATHcDh6AevBHx/X1dV/YRj2m1AB0GqJeLoP9nE8VCAjpTv3JbK
-pNVNOQSXpkVJ3c7jPHkq8uwoFi11LE4HCDDikMwzbysVBXvbwWQJcJjLk3U7MGn0
-f6Zs8Osdee+DGpYNRfKAULIlEC2AgOkEFYFIxyGduQLj+74vsTw=
-=YiDF
+iQIcBAEBAgAGBQJZoCj6AAoJEBx+YmzsjxAgOgAQAKs3HSFXvN0bvXdsKh/ncGrN
+sbsxwt5GcHU30Um2Qlopek7Fu1LEEjLdg+XJFu6ltoRz9VPT+PhJbyoIBLUza9jO
+4QPiBhMHcs2x3HRlifLOS3DMQ/GCV8wgUMX0MFfDKQuk8c1nQYQLc9FSjrxnU94L
+llJGrgRV9sbohz4Q2fTT1q6heU3BJsNsdKx/YE52U+B12WHJbmxJzLoJBbAXFhwX
+ajosPtDGtWKVBL37C0kB5A5qc8WDVooqulXEVluIEYALCHI7sRsUfTOOhqa9Cv+C
+5xRyEagOhUDWvMLoDiu2IOI1DA52rS8uWN4ZS2A64GEnm7a7AYU11sDiSi7VK+lL
+xxI/QobuVnvEXMAEp8ajaKfXFSOEX/Fxke28qBsVhAN9XIOr4S/+eKITN+G8a+Jm
+oJxuElIJuJeMN6lKdCvY1HGENqrRiYYqaGW1r2LSzYdktm/D+ynOSDhRn6nJyVVy
+kahwMgXmuXLPdn5zAeq2hghVCp3jiUy3epqItPTPceAQCYwtYOlcnTxc2ynlnEsD
+pD1i3BnX3Q2p3YqPaWQKFazOb79uDzqoa6MWcmQPsPQM0UQRvlVCe7itvszxiuop
+SB52+mlkrLmAlwK3ytoJU3WeNbcBEpJ+QencWNFhjeN6NzPkPBcQJTbbnIGlFKgt
+WY6NXvOruF1ZPyPjS7v8
+=MzUW
 -----END PGP SIGNATURE-----
 
---YZVh52eu0Ophig4D--
+--q5eugcagmdzotuv4--
