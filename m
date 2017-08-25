@@ -1,44 +1,47 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] devicetree: power: Add docs for TI BQ24190
- battery charger
-Date: Fri, 25 Aug 2017 13:29:22 -0700
-Message-ID: <20170825202920.GU3930@atomide.com>
-References: <20170807195420.20767-1-liam@networkimprov.net>
- <20170807195420.20767-3-liam@networkimprov.net>
- <20170811025038.5qnhbabyybx7rgu5@rob-hp-laptop>
- <CAKvHMgSuwm5UFivbsq9dQn_wfd7kbs63UuuQSHVdGxDf_WReUA@mail.gmail.com>
- <20170812164233.won7fairxmrnblps@earth>
- <CAKvHMgR+GxSqhy+iwdYmku2600HzoF__oXV7_w72ZJg-aK7O-Q@mail.gmail.com>
- <20170816154701.GR3930@atomide.com>
- <CAKvHMgTvVMsvmyi0o89m1SfS9A4U1GbNuU05Tkt6C0ARR9NyWw@mail.gmail.com>
- <20170816210644.GX3930@atomide.com>
- <CAKvHMgTJjTxffoP4Kt=KzGvCQ-BihLeQn3i4TaF4OBSXV7i6TA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Fri, 25 Aug 2017 16:39:24 -0500
+Message-ID: <20170825213924.xhbeiffp3oidclor@rob-hp-laptop>
+References: <1503418601-9728-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAKvHMgTJjTxffoP4Kt=KzGvCQ-BihLeQn3i4TaF4OBSXV7i6TA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+In-Reply-To: <1503418601-9728-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> [170816 14:16]:
-> On Wed, Aug 16, 2017 at 2:06 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > If the kernel does not need to do anything about it, how about
-> > just leave it out of the binding docs then?
+On Wed, Aug 23, 2017 at 01:16:41AM +0900, Masahiro Yamada wrote:
+> This GPIO controller device is used on UniPhier SoCs.
 > 
-> It seemed useful to document the OTG pin DT config for boards that
-> have it wired to a gpio... Is that not wise?
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> Changes in v3:
+>   - Add .irq_set_affinity() hook
+>   - Use irq_domain_create_hierarchy() instead of legacy
+>     irq_domain_add_hierarchy().
+> 
+> Changes in v2:
+>   - Remove +32 offset for parent interrupts to follow the GIC
+>     binding convention
+>   - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
+>   - Allocate gpio_chip statically because just one instance is
+>     supported
+>   - Fix suspend and resume hooks
+> 
+>  .../devicetree/bindings/gpio/gpio-uniphier.txt     |  42 ++
 
-Well maybe add it as a note to the description rather than
-a binding. It might be actually best to document it in both
-places.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  MAINTAINERS                                        |   1 +
+>  drivers/gpio/Kconfig                               |   7 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-uniphier.c                       | 589 +++++++++++++++++++++
+>  include/dt-bindings/gpio/uniphier-gpio.h           |  18 +
+>  6 files changed, 658 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+>  create mode 100644 drivers/gpio/gpio-uniphier.c
+>  create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
