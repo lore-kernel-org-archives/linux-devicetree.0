@@ -1,71 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [patch v6 0/3] JTAG driver introduction
-Date: Fri, 25 Aug 2017 10:32:44 +0200
-Message-ID: <CACRpkdbozWaL0RXyZXjzxYK3JHiqYziSkTGSgGORdptX-rwR8A@mail.gmail.com>
-References: <1503418256-5215-1-git-send-email-oleksandrs@mellanox.com>
- <CACRpkdZePXyo8Q36mBH7OnJU3E=yWPWSGkGUOH=zJFMjM=Yrhw@mail.gmail.com>
- <CAPLgG==Jj=Ys=SvhOCspSfunbWnuqPySvW9RfuqE8HYnG4C=ZQ@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 1/5] mfd: mt6397: create irq mappings in mfd core
+ driver
+Date: Fri, 25 Aug 2017 10:39:29 +0200
+Message-ID: <20170825083929.ztyzfelwqcxvpiex@piout.net>
+References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
+ <1503642753-12385-2-git-send-email-chen.zhong@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPLgG==Jj=Ys=SvhOCspSfunbWnuqPySvW9RfuqE8HYnG4C=ZQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rick Altherr <raltherr@google.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>, Arnd Bergmann <arnd@arndb.de>, system-sw-low-level@mellanox.com, Greg KH <gregkh@linuxfoundation.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, openocd-devel-owner@lists.sourceforge.net, mec@shout.net, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, vadimp@maellanox.com, Tobias Klauser <tklauser@distanz.ch>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, Oleksandr Shamray <oleksandrs@mellanox.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1503642753-12385-2-git-send-email-chen.zhong@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen Zhong <chen.zhong@mediatek.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Andi Shyti <andi.shyti@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Jaechul Lee <jcsing.lee@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 11:37 PM, Rick Altherr <raltherr@google.com> wrote:
-> On Thu, Aug 24, 2017 at 2:07 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Tue, Aug 22, 2017 at 6:10 PM, Oleksandr Shamray
->> <oleksandrs@mellanox.com> wrote:
->>
->>> SoC which are not equipped with JTAG master interface, can be built
->>> on top of JTAG core driver infrastructure, by applying bit-banging of
->>> TDI, TDO, TCK and TMS pins within the hardware specific driver.
->>
->> I guess you mean it should then use GPIO lines for bit-banging?
->>
->> I was wondering about how some JTAG clients like openOCD does
->> this in some cases.
->
-> Many common uses of OpenOCD leverage USB devices, such as FTDI FT232R,
-> that have a command queue for bitbanging operations.  Managing these
-> via libusb is ugly but platform-agnostic.
+On 25/08/2017 at 14:32:29 +0800, Chen Zhong wrote:
+> The core driver should create and manage irq mappings instead of
+> leaf drivers. This patch change to pass irq domain to
+> devm_mfd_add_devices() and it will create mapping for irq resources
+> automatically. And remove irq mapping in rtc driver since this has
+> been done in core driver.
+> 
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 
-Incidentally, people are sending patches to expose the FTDI
-expanders as common GPIO chips under Linux, so we can
-internally in the kernel or from the usersapce character device
-access them as "some GPIOs".
+> ---
+>  drivers/mfd/mt6397-core.c |    4 ++--
+>  drivers/rtc/rtc-mt6397.c  |    7 +++----
+>  2 files changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> index 04a601f..6546d7f 100644
+> --- a/drivers/mfd/mt6397-core.c
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -289,7 +289,7 @@ static int mt6397_probe(struct platform_device *pdev)
+>  
+>  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
+>  					   ARRAY_SIZE(mt6323_devs), NULL,
+> -					   0, NULL);
+> +					   0, pmic->irq_domain);
+>  		break;
+>  
+>  	case MT6397_CID_CODE:
+> @@ -304,7 +304,7 @@ static int mt6397_probe(struct platform_device *pdev)
+>  
+>  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
+>  					   ARRAY_SIZE(mt6397_devs), NULL,
+> -					   0, NULL);
+> +					   0, pmic->irq_domain);
+>  		break;
+>  
+>  	default:
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index 1a61fa5..385f830 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -322,10 +322,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	rtc->addr_base = res->start;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> -	rtc->irq = irq_create_mapping(mt6397_chip->irq_domain, res->start);
+> -	if (rtc->irq <= 0)
+> -		return -EINVAL;
+> +	rtc->irq = platform_get_irq(pdev, 0);
+> +	if (rtc->irq < 0)
+> +		return rtc->irq;
+>  
+>  	rtc->regmap = mt6397_chip->regmap;
+>  	rtc->dev = &pdev->dev;
+> -- 
+> 1.7.9.5
+> 
 
->> In my worst nightmare they export GPIO lines using
->> the horrid ABI in /sys/gpio/*
->
-> https://sourceforge.net/p/openocd/code/ci/v0.10.0/tree/src/jtag/drivers/sysfsgpio.c
-
-Gnah!
-Whoever writes a slot-in replacement making the character device
-take precendence wins lots of karma.
-
-> While that is certainly horrible (and slow), mapping in the GPIO
-> registers via /dev/mem strikes me as worse:
->
-> https://sourceforge.net/p/openocd/code/ci/v0.10.0/tree/src/jtag/drivers/bcm2835gpio.c
-
-Yeah that is quite horrible.
-
-There were reasons to do things like that, but since we have
-developed .set_multiple() to hammer several lines in a register
-at once, the same efficiency can be achieved using the standard
-character device.
-
-Yours,
-Linus Walleij
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
