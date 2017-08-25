@@ -1,122 +1,184 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v2 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Date: Fri, 25 Aug 2017 16:03:37 +0200
-Message-ID: <20170825140337.ywrponpjetjnam5n@flea.lan>
+Date: Fri, 25 Aug 2017 16:30:28 +0200
+Message-ID: <20170825143028.dh2cgfvfde6w567n@flea.lan>
 References: <20170720092302.2982-1-maxime.ripard@free-electrons.com>
  <20170720092302.2982-3-maxime.ripard@free-electrons.com>
- <20170807192423.GD10611@ti.com>
+ <5380447.UyHVojvDsx@avalon>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="dhhjlobvuunpaxuq"
+        protocol="application/pgp-signature"; boundary="u5nte5v5onvnlzvn"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170807192423.GD10611-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <5380447.UyHVojvDsx@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---dhhjlobvuunpaxuq
+--u5nte5v5onvnlzvn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Benoit,
+Hi Laurent,
 
-On Mon, Aug 07, 2017 at 02:24:24PM -0500, Benoit Parrot wrote:
-> > +#define CSI2RX_STREAMS_MAX	4
+I've removed the comments I'll take into account
+
+On Mon, Aug 07, 2017 at 11:42:01PM +0300, Laurent Pinchart wrote:
+> > +	csi2rx_reset(csi2rx);
 > > +
+> > +	// TODO: modify the mapping of the DPHY lanes?
 >=20
-> Just to confirm here that "streams" in this case are equivalent to
-> "Virtual Channel", correct?
+> The mapping should be read from DT and applied here.
 
-Kind of, yes, but it's a bit more complicated than that. The streams
-are the output of the CSI2-RX block, so the interface to the capture
-devices.
+As far as I understand it, this is a mapping between logical and
+physical lanes before forwarding it to the D-PHY. Would data-lanes
+apply for such a case?
 
-You can associate any CSI-2 virtual channel (in input) to any stream
-(in output). However, as we don't have a way to change that routing at
-runtime using v4l2 (yet [1]), the driver currently hardcode that
-routing to have CSI-2 VC0 sent to stream 0, VC1 to stream 1, etc.
-
-> > +static void csi2rx_reset(struct csi2rx_priv *csi2rx)
+> > +static int csi2rx_s_stream(struct v4l2_subdev *sd, int enable)
 > > +{
-> > +	writel(CSI2RX_SOFT_RESET_PROTOCOL | CSI2RX_SOFT_RESET_FRONT,
-> > +	       csi2rx->base + CSI2RX_SOFT_RESET_REG);
+> > +	struct csi2rx_priv *csi2rx =3D v4l2_subdev_to_csi2rx(sd);
 > > +
-> > +	udelay(10);
+> > +	v4l2_subdev_call(csi2rx->sensor_subdev, video, s_stream,
+> > +			 enable);
 >=20
-> Shouldn't we use usleep_range() instead?
+> Shouldn't you handle errors here ?
 
-We totally should.
+Yes.
 
-> > +static int csi2rx_stop(struct csi2rx_priv *csi2rx)
-> > +{
-> > +	int i;
+> I'm not familiar with this IP core, but most D-PHYs need to synchronize t=
+o the=20
+> input and must be started before the source.
+
+We don't have any kind of D-PHY support at the moment, but I guess we
+should put it there once we do.
+
+> > +		return PTR_ERR(csi2rx->base);
+> > +	}
 > > +
-> > +	for (i =3D 0; i < csi2rx->max_streams; i++)
-> > +		writel(0, csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
+> > +	reg =3D readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
+>=20
+> Shouldn't you enable the register access clock(s) before reading the
+> register ?
+
+Argh, you're right.
+
+>=20
+> > +	csi2rx->max_lanes =3D (reg & 7) + 1;
+>=20
+> Up to 8 lanes ? Shouldn't this be (reg & 3) + 1 ?
+
+The bit field is indeed documented 3 bits wide, hence the 7.
+
+> > +	csi2rx->max_streams =3D ((reg >> 4) & 7);
+>=20
+> Should you validate the value as you use it as an array access index ?
+
+I should, yes.
+
+> > +	csi2rx->cdns_dphy =3D reg & BIT(3);
 > > +
-> > +	return 0;
-> > +}
+> > +	csi2rx->sys_clk =3D devm_clk_get(&pdev->dev, "sys_clk");
+> > +	if (IS_ERR(csi2rx->sys_clk)) {
+> > +		dev_err(&pdev->dev, "Couldn't get sys clock\n");
+>=20
+> If you wrote this as
+>=20
+> 		dev_err(&pdev->dev, "Couldn't get %s clock\n", "sys");
+>=20
+> and the next messages in a similar fashion, most of the message wouldn't =
+be=20
+> duplicated, resulting in smaller code size.
+
+I'm usually not a big fan of this, since one side effect is also that
+you can't grep / search it anymore, and I'm not sure it's worth the
+hassle for a couple dozen bytes.
+
+>=20
+> > +		return PTR_ERR(csi2rx->sys_clk);
+> > +	}
 > > +
+> > +	csi2rx->p_clk =3D devm_clk_get(&pdev->dev, "p_clk");
+> > +	if (IS_ERR(csi2rx->p_clk)) {
+> > +		dev_err(&pdev->dev, "Couldn't get P clock\n");
+> > +		return PTR_ERR(csi2rx->p_clk);
+> > +	}
+> > +
+> > +	csi2rx->p_free_clk =3D devm_clk_get(&pdev->dev, "p_free_clk");
+> > +	if (IS_ERR(csi2rx->p_free_clk)) {
+> > +		dev_err(&pdev->dev, "Couldn't get free running P clock\n");
+> > +		return PTR_ERR(csi2rx->p_free_clk);
+> > +	}
+> > +
+> > +	for (i =3D 0; i < csi2rx->max_streams; i++) {
+> > +		char clk_name[16];
 >=20
-> Here, it is entirely possible that the "dma/buffer" engine which will
-> make use of this receiver creates separates video nodes for each streams.
-> In which case, you could theoretically have multiple user space capture
-> on-going.
-> But the "start" and "stop" method above would disrupt any of the other
-> stream. Unless you start and stop all 4 capture streams in lock step.
+> Isn't 13 enough ?
+
+It is, if you have an int short enough.
+
+> > +	csi2rx->sensor_node =3D remote;
+> > +	csi2rx->asd.match.fwnode.fwnode =3D &remote->fwnode;
+> > +	csi2rx->asd.match_type =3D V4L2_ASYNC_MATCH_FWNODE;
+> > +
+> > +	subdevs =3D devm_kzalloc(csi2rx->dev, sizeof(*subdevs), GFP_KERNEL);
 >=20
-> Eventually, the sub device might be a port aggregator which has up to
-> 4 sensors on the source pad and feed each camera traffic on its own
-> Virtual Channel.
+> Could you store this in the csi2rx_priv structure to avoid a dynamic=20
+> allocation ?
+
+It's used only in this function, so it seems a bit overkill to do
+that. But I guess I could just allocate it on the stack.
+
+> > +
+> > +	csi2rx =3D devm_kzalloc(&pdev->dev, sizeof(*csi2rx), GFP_KERNEL);
 >=20
-> I know there isn't support in the framework for this currently but it
-> is something to think about.
+> Please don't use devm_kzalloc() to allocate structures that can be access=
+ed=20
+> from userspace (in this case because it embeds the subdev structure,=20
+> accessible at least through the subdevs ioctls). This is incompatible wit=
+h=20
+> proper unplug handling. There are many other issues that we will need to =
+solve=20
+> in the V4L2 core to handling unplugging properly, but let's not add a new=
+ one.
 
-I guess you could make the same argument if you have several engines,
-each one connected to a stream.
+What's wrong with kzalloc in such a case? As far as I know, the
+userspace can access such a memory, as long as you use copy_to_user,
+right? Or is it because of the life-cycle of the allocation that would
+be gone while the userspace might not be yet? I'm not sure what would
+be a proper fix for it though.
 
-One way to work around that could be to add some reference counting in
-the start and stop functions, and keep enabling all the outputs.
-
-This wouldn't solve the underlying issue that all the stream would be
-enabled and we don't really have a way to tell which one we want to
-enable, but at least we wouldn't disrupt active streams when the first
-one goes away.
-
+Thanks for your review!
 Maxime
-
-1: https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg116955.html
 
 --=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---dhhjlobvuunpaxuq
+--u5nte5v5onvnlzvn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZoC45AAoJEBx+YmzsjxAgjq4P/jMtzcV6vFfHl3lQCsHvgQgz
-+buA/FI755G6CobQ7N5mXTFzk7KgIZnooDHabTq7fnVkHNxf5MTIboNtpTNP3EvF
-BD533hXOUFvsInztNL/zafFRxJTkYpFTBjkq1FqKThxuGT1Yu7+IFwHCIlImR7N6
-tGk2kwPX16Rg45dqRYIYGtW4mjFE/y2iWbBzICBXom8NSwiayBzi3ZKNlxJQuc6I
-1wNfG+yZkpTAg3z1sEu7ewjwcC0ePx7ZH3rthC605WfXO7PkC2IrJum/lqtk24L7
-2Q7DcG84/s0Q04M6h2FSFp1TBwOFiqo+silDHTEUMMMzttr/+G0efGSwsIe0McjK
-kPHXbWJWn7y1hcTax198zrmhAD8wt/zmzl6rLBVIbTj2oioeXuM4I1nFujq6/EcU
-z1BdCXViqK1qoRU3pZuYj6Pwy74R9b5+dtiWY891GM+syCHMqTeQ5A1wgXfaFXI7
-X6yCVCZlj/Bq9gt1Dqo0hHgxSJGsh2tJZ49EyMcpla6jJwJ6m4Ft8/S1J/89mZfi
-nT4oRqp/6dcau0G+iTZBcKp5WR88lDi8aeWC3bRvLeVZSDNm6lwBArMntxKDbvp4
-y3vxcULwbw4RDGu44tB7oTGHcibGiJzq+E+StrakgjWcTisMTp3tfk0UlZ9B2YwL
-+wGU36BqNbJ7IG+x9sjh
-=u1Qh
+iQIcBAEBAgAGBQJZoDSEAAoJEBx+YmzsjxAgGJgQAJyjrAag2gRT5d7YveFsz54Y
+YlO0JYvmuBUAhBudjRbD4ezVEfZEfMsQpxefVhSbUTh6njWOeCRcBysDYNMiLwZo
+7mH9FDgD2V2FKYsGLBauaHLc5YBV6x4azUr/4W767vST4oD3Y9PWU9N+Ml1kwSYw
+YYPMyCpQrHLzDFtY6SJohF2YXmWa6WmM0yLZIwwBJLNyWlq6BwPYoWoFDMtztEPS
+JgZAS3xtq7u1PQ/c8F8aXnTFSVrYVKhIpRIJcRKCoL9/0Fes42L9TSaO9LXK4Gfb
+EPkAjnAL09Jf8a6KUF2ixmRenLdFsIlJ6TAHfOHnXH4J7CO/sv+bJdXjW0ifomz+
+LvP6lNHmrd1Yy/NI3mx4be0qDSRZAZXYDxxEE7np3RYcSrLf8qMCZYQKkBfurbAn
+cu7hBrutdMYl+bRnkdkdMSwEs8qFDJuiJOrcLK5fyo6jmb2zLwGSipaZiV7gd7KN
+mcC7v5Suf6Cwy+Qh51lf2S+cRJn+QFP9RpcofY4FwbY+Rr/jA0aY6c2VQUlxH9oT
+ULrxLxSqfcIc1AIuSFRCyaiHqiNVi5LcpWu80TaDeyd7puOTRRWu2J2A4kUHS1Kj
+gS+7XfInMf0nobQ9e8dJuJNOT7erPEML/l+1zVTRqpa6sFnlr/CZeVOme5cUuyAP
+pyNZNaU7ltLrH7si8Jyp
+=OvRs
 -----END PGP SIGNATURE-----
 
---dhhjlobvuunpaxuq--
+--u5nte5v5onvnlzvn--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
