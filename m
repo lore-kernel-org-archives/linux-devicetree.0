@@ -1,36 +1,40 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 2/2] dt-bindings: new binding for ps/2 gpio devices
-Date: Fri, 25 Aug 2017 13:03:23 -0500
-Message-ID: <20170825180323.g6pbqox5omeyuf4a@rob-hp-laptop>
-References: <20170821193142.29688-1-danilokrummrich@dk-develop.de>
- <20170821193142.29688-3-danilokrummrich@dk-develop.de>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] OF: move extern declarations of of_stdout inside ifdef
+Date: Fri, 25 Aug 2017 13:07:30 -0500
+Message-ID: <CAL_JsqJ4dPY0L21y8RwFfJVRvkdNi4uBWwsg6dOeyxru2dRFXQ@mail.gmail.com>
+References: <20170825165644.30800-1-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170821193142.29688-3-danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
+In-Reply-To: <20170825165644.30800-1-Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arcml <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 09:31:42PM +0200, Danilo Krummrich wrote:
-> The PS/2 gpio device binding defines the gpio pins (data and clock)
-> as well as the interrupt which should be used to drive the ps/2 bus.
-> It is expected to get an interrupt on the falling edge of the clock
-> line.
-> 
-> Also it can be configured whether the host should support writing to
-> the device.
-> 
-> Signed-off-by: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
+On Fri, Aug 25, 2017 at 11:56 AM, Eugeniy Paltsev
+<Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
+> Move extern declarations of "of_stdout" pointer inside "CONFIG_OF"
+> ifdef to be able to get rid of "CONFIG_OF" ifdef in its usage places.
+>
+> Suggested-by: Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+>
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/serio/ps2-gpio.txt         | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serio/ps2-gpio.txt
+> For example see: https://lkml.org/lkml/2017/8/25/337
+>
+> Changes v1->v2:
+>  * Move only "of_stdout" declarations instead of all entry pointers
+>    declarations
+>
+>  include/linux/of.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
+Merge this with the console change needing it.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
