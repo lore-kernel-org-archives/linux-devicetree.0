@@ -1,94 +1,96 @@
-From: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] thermal: imx: Add support for reading OCOTP
- through nvmem
-Date: Fri, 25 Aug 2017 10:20:49 +0800
-Message-ID: <1503627649.2774.6.camel@intel.com>
-References: <cover.1500041281.git.leonard.crestez@nxp.com>
-         <faf9c3e5f970b9609073c4c191a7af03d647ea51.1500041281.git.leonard.crestez@nxp.com>
-         <20170725080835.GD20064@dragon> <1502176915.4296.1.camel@intel.com>
-         <26407dd5-a9b1-67c0-c4ab-d97fa0b88b79@linaro.org>
-         <1502192287.24350.9.camel@nxp.com>
-         <9732c524-fbdc-d1be-cd03-089dbb2266c4@linaro.org>
-         <1502197100.4296.45.camel@intel.com> <1502897621.23210.41.camel@nxp.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: PCI: rockchip: Add support for pcie
+ wake irq
+Date: Fri, 25 Aug 2017 10:35:33 +0800
+Message-ID: <53dc2510-cf96-fdd6-4fb7-ba8cfa485556@rock-chips.com>
+References: <20170822031934.8675-1-jeffy.chen@rock-chips.com>
+ <20170822031934.8675-4-jeffy.chen@rock-chips.com>
+ <20170824165353.GL31858@bhelgaas-glaptop.roam.corp.google.com>
+ <20170825021132.GA104845@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502897621.23210.41.camel-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170825021132.GA104845@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: shawn.lin@rock-chips.com, Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, bhelgaas@google.com, dianders@chromium.org, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-08-16 at 18:33 +0300, Leonard Crestez wrote:
-> On Tue, 2017-08-08 at 20:58 +0800, Zhang Rui wrote:
-> > 
-> > On Tue, 2017-08-08 at 12:44 +0100, Srinivas Kandagatla wrote:
-> > > 
-> > > On 08/08/17 12:38, Leonard Crestez wrote:
-> > > > 
-> > > > On Tue, 2017-08-08 at 12:00 +0100, Srinivas Kandagatla wrote:
-> > > > > 
-> > > > > On 08/08/17 08:21, Zhang Rui wrote:
-> > 
-> > > 
-> > > > 
-> > > > > 
-> > > > > > 
-> > > > > > I'm okay with the thermal change.
-> > > > > > We still need ACK for the nvmem changes in this patch
-> > > > > > series.
-> > 
-> > > 
-> > > > 
-> > > > > 
-> > > > > NVMEM changes are already sent to Greg K H with other patches
-> > > > > https://lkml.org/lkml/2017/8/8/436, should appear in next.
-> > 
-> > > 
-> > > > 
-> > > > These patches have a compile-time dependency on each other.
-> > > > Wouldn't it make more sense for the whole series to go through
-> > > > a single
-> > > > maintainer tree, atomically? Most of the changes are in
-> > > > driver/thermal.
-> > 
-> > > 
-> > > I was expecting that the nvmem change go in as fix in a rc
-> > > release
-> > > so that you could apply the other patches after that.
-> > > 
-> > > Let me ping Greg about this!!
-> > 
 
-Srinivas,
-
-Will you take patch 2/5?
-Only after that, we can push the other changes.
-
-thanks,
-rui
-
-> > As Shawn is okay with patch 4/5 and 5/5, I guess I can queue patch
-> > 1/5,
-> > 3/5, 4/5, 5/5 for 4.14-rc1, if the nvmem patch can catch 4.13, or I
-> > can
-> > queue the full patch set for 4.14, with Srinivas' ACK.
-> It's been a week since the last email and it seems that nothing
-> happened. I can't find any of these patches in either torvalds/master
-> or linux-next. It seems to me that the nvmem series linked above was
-> not picked up after all?
+On 2017/8/25 10:11, Brian Norris wrote:
+> On Thu, Aug 24, 2017 at 11:53:54AM -0500, Bjorn Helgaas wrote:
+>> On Tue, Aug 22, 2017 at 11:19:33AM +0800, Jeffy Chen wrote:
+>>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 > 
-> It's not clear how to proceed. It's been more a month since the
-> series
-> was sent so maybe I should resend it but it's not clear who would
-> pick
-> it up.
+>>> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>>> index 5678be82530d..9f6504129e80 100644
+>>> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>>> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>>> @@ -20,10 +20,13 @@ Required properties:
+>>>   - msi-map: Maps a Requester ID to an MSI controller and associated
+>>>   	msi-specifier data. See ./pci-msi.txt
+>>>   - interrupts: Three interrupt entries must be specified.
+>>> -- interrupt-names: Must include the following names
+>>> -	- "sys"
+>>> -	- "legacy"
+>>> -	- "client"
+>>> +- interrupt-names: Include the following names
+>>> +	Required:
+>>> +		- "sys"
+>>> +		- "legacy"
+>>> +		- "client"
+>>> +	Optional:
+>>> +		- "wake"
+>>
+>> Why is there no other PCI binding that includes "wake" as an
+>> interrupt-name?  This feels like something that should be fairly
+>> common across host controllers.  I don't want a Rockport-specific
 > 
-> --
-> Regards,
-> Leonard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> s/port/chip/ :)
+> 
+>> DT description if it could be made more general.
+> 
+> I'm not sure we can really answer that question ("why do no other PCI
+> bindings have this?"). But one guess would be that every other
+> controller uses only beacon wake.
+> 
+> It would be OK with me if we made a blanket statement that a controller
+> with a "wake" interrupt means PCI WAKE# (per the specification). It's
+> possible this could even be stuck into some generic PCI/DT code
+> eventually. (I don't think we have a really good place for this today.)
+
+I guess we could register a pcie port service for dedicated WAKE# as it 
+seems fairly parallel to pme code there, if we need a common place for
+that?
+
+
+> 
+> Brian
+> 
+>>>   - resets: Must contain seven entries for each entry in reset-names.
+>>>   	   See ../reset/reset.txt for details.
+>>>   - reset-names: Must include the following names
+>>> @@ -87,10 +90,11 @@ pcie0: pcie@f8000000 {
+>>>   	clock-names = "aclk", "aclk-perf",
+>>>   		      "hclk", "pm";
+>>>   	bus-range = <0x0 0x1>;
+>>> -	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
+>>> -		     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
+>>> -		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>;
+>>> -	interrupt-names = "sys", "legacy", "client";
+>>> +	interrupts-extended = <&gic GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
+>>> +			      <&gic GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
+>>> +			      <&gic GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>,
+>>> +			      <&gpio0 8 IRQ_TYPE_LEVEL_LOW>;
+>>> +	interrupt-names = "sys", "legacy", "client", "wake";
+>>>   	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
+>>>   	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
+>>>   	assigned-clock-rates = <100000000>;
+>>> -- 
+>>> 2.11.0
+>>>
+>>>
+> 
+> 
+> 
