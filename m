@@ -1,29 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: PCI: add PCIe hotplug property
-Date: Fri, 25 Aug 2017 17:03:57 -0500
-Message-ID: <20170825220356.s75yxkfasnnaygfc@rob-hp-laptop>
-References: <1503564548-1834-1-git-send-email-oza.oza@broadcom.com>
- <1503564548-1834-3-git-send-email-oza.oza@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH trivial] dt-bindings: usb: musb: Grammar s/the/to/,
+ s/is/are/
+Date: Fri, 25 Aug 2017 17:07:58 -0500
+Message-ID: <20170825220758.wmky3hqcj6acdyap@rob-hp-laptop>
+References: <1503671906-24321-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1503564548-1834-3-git-send-email-oza.oza@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oza Pawandeep <oza.oza@broadcom.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
+In-Reply-To: <1503671906-24321-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 02:19:07PM +0530, Oza Pawandeep wrote:
-> Host drivers have the requirement of implementing PCI hotplug
-> based on the how their SOC supports PCI hotplug.
-> 
-> Couple of properties have been added. the one to enable
-> the hotplug feature itself, and the other caters to
-> the PCI hotplug implementation with the use of gpios.
-> 
-> Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
+On Fri, Aug 25, 2017 at 04:38:26PM +0200, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/am33xx-usb.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-I acked v2. Please add acks when posting new versions.
+Applied.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
