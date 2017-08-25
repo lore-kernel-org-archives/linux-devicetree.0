@@ -1,52 +1,65 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: do not leak console options
-Date: Fri, 25 Aug 2017 17:37:21 -0500
-Message-ID: <20170825223721.hilqpt5z4urevh6b@rob-hp-laptop>
-References: <20170825173647.1004-1-sergey.senozhatsky@gmail.com>
+From: Brandon Martin <martinbv-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] rtc: v3020: Add documentation for DT bindings
+Date: Fri, 25 Aug 2017 18:36:20 -0400
+Message-ID: <59A0A664.7040904@mothictech.com>
+References: <b832db93-9885-adfe-39b4-1950851b391d@mothictech.com> <660fa006-4f91-2fb5-ef98-ba0482e1ecff@mothictech.com> <20170825215457.qcd5paiw5qtuybxv@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170825173647.1004-1-sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170825215457.qcd5paiw5qtuybxv@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 26, 2017 at 02:36:47AM +0900, Sergey Senozhatsky wrote:
-> If add_preferred_console() returns error then we must free a
-> copy of `of_stdout_options' that we create right before the
-> console registration.
-> 
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/of/base.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 260d33c0f26c..9fcf7011d206 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1779,10 +1779,17 @@ EXPORT_SYMBOL_GPL(of_alias_get_highest_id);
->   */
->  bool of_console_check(struct device_node *dn, char *name, int index)
->  {
-> +	bool ret;
-> +	char *options;
-> +
->  	if (!dn || dn != of_stdout || console_set_on_cmdline)
->  		return false;
-> -	return !add_preferred_console(name, index,
-> -				      kstrdup(of_stdout_options, GFP_KERNEL));
-> +
-> +	options = kstrdup(of_stdout_options, GFP_KERNEL);
+On 08/25/2017 05:54 PM, Rob Herring wrote:
+>> +
+>> +Required for MMIO connection:
+>> +  - reg : should contain registers location and length.
+>
+> Looking at the datasheet, there's really no such thing. You'd have to
+> have some specialized h/w to generate the serial waveform.
 
-The real question is why are we doing the kstrdup in the first place. 
-AFAICT, the only reason is options within the console/printk code is a 
-char * and not a const char *. I can't imagine that options need 
-modifications?
+If it's MMIO attached i.e. hooked up to a single data bit on an 
+otherwise multi-drop, flat addressed external bus, you do have to 
+specify the memory address at which one would access the device.  Length 
+is irrelevant, yes, as it has but one externally-accessible "register" 
+in its memory map.
 
-Rob
+Is there a better way to handle this sort of thing than the typical 
+"reg" binding?  It certainly seems to map nicely to ioremap().
+
+>
+>> +
+>> +Required for GPIO connection:
+>> +- emmicro,use-gpio
+>> +- cs-gpios, wr-gpios, rd-gpios, io-gpios : specify gpios connected to
+>> +  corresponding pins of the RTC
+>> +
+>> +Optional properties:
+>> +- emmicro,mmio-left-shift : data bit to which IO line is connected for MMIO
+>> +  connection (defaults to 0)
+>
+> This has come up several times on RTCs (LP8841, DS1302). This really
+> looks like SPI and could probably use the spi-gpio bitbang driver.
+
+Indeed it is perhaps like that.
+
+This was a comparatively blind pass at DT-izing the existing driver 
+without other changes.  It does work and has immediate application on a 
+mainline'd DT board: Compulab CM-T3517 which is in fact what I'm porting to.
+
+I don't think you could use spi-gpio bitbang if you had it 
+memory-mapped, and there are actual platforms that do this.  Some of 
+Compulab's older PXA based boards appear to do it, and they are in fact 
+the boards still using pdata rather than DT that caused me to keep that 
+around when doing this.
+
+-- 
+Brandon Martin
+Mothic Technologies
+317-565-1357 x7000
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
