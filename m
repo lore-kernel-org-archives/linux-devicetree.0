@@ -1,96 +1,89 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v4 3/4] dt-bindings: PCI: rockchip: Add support for pcie
- wake irq
-Date: Fri, 25 Aug 2017 10:35:33 +0800
-Message-ID: <53dc2510-cf96-fdd6-4fb7-ba8cfa485556@rock-chips.com>
-References: <20170822031934.8675-1-jeffy.chen@rock-chips.com>
- <20170822031934.8675-4-jeffy.chen@rock-chips.com>
- <20170824165353.GL31858@bhelgaas-glaptop.roam.corp.google.com>
- <20170825021132.GA104845@google.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v2 02/10] drm/exynos: use helper to set possible crtcs
+Date: Fri, 25 Aug 2017 11:42:21 +0900
+Message-ID: <599F8E8D.6040000@samsung.com>
+References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
+ <CGME20170824133409eucas1p11409c10ac302f9cb56106888ab7d5a25@eucas1p1.samsung.com>
+ <1503581639-580-3-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170825021132.GA104845@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: shawn.lin@rock-chips.com, Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, bhelgaas@google.com, dianders@chromium.org, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1503581639-580-3-git-send-email-a.hajda@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2017/8/25 10:11, Brian Norris wrote:
-> On Thu, Aug 24, 2017 at 11:53:54AM -0500, Bjorn Helgaas wrote:
->> On Tue, Aug 22, 2017 at 11:19:33AM +0800, Jeffy Chen wrote:
->>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> 
->>> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->>> index 5678be82530d..9f6504129e80 100644
->>> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->>> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->>> @@ -20,10 +20,13 @@ Required properties:
->>>   - msi-map: Maps a Requester ID to an MSI controller and associated
->>>   	msi-specifier data. See ./pci-msi.txt
->>>   - interrupts: Three interrupt entries must be specified.
->>> -- interrupt-names: Must include the following names
->>> -	- "sys"
->>> -	- "legacy"
->>> -	- "client"
->>> +- interrupt-names: Include the following names
->>> +	Required:
->>> +		- "sys"
->>> +		- "legacy"
->>> +		- "client"
->>> +	Optional:
->>> +		- "wake"
->>
->> Why is there no other PCI binding that includes "wake" as an
->> interrupt-name?  This feels like something that should be fairly
->> common across host controllers.  I don't want a Rockport-specific
-> 
-> s/port/chip/ :)
-> 
->> DT description if it could be made more general.
-> 
-> I'm not sure we can really answer that question ("why do no other PCI
-> bindings have this?"). But one guess would be that every other
-> controller uses only beacon wake.
-> 
-> It would be OK with me if we made a blanket statement that a controller
-> with a "wake" interrupt means PCI WAKE# (per the specification). It's
-> possible this could even be stuck into some generic PCI/DT code
-> eventually. (I don't think we have a really good place for this today.)
-
-I guess we could register a pcie port service for dedicated WAKE# as it 
-seems fairly parallel to pme code there, if we need a common place for
-that?
-
-
-> 
-> Brian
-> 
->>>   - resets: Must contain seven entries for each entry in reset-names.
->>>   	   See ../reset/reset.txt for details.
->>>   - reset-names: Must include the following names
->>> @@ -87,10 +90,11 @@ pcie0: pcie@f8000000 {
->>>   	clock-names = "aclk", "aclk-perf",
->>>   		      "hclk", "pm";
->>>   	bus-range = <0x0 0x1>;
->>> -	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
->>> -		     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
->>> -		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>;
->>> -	interrupt-names = "sys", "legacy", "client";
->>> +	interrupts-extended = <&gic GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
->>> +			      <&gic GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
->>> +			      <&gic GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>,
->>> +			      <&gpio0 8 IRQ_TYPE_LEVEL_LOW>;
->>> +	interrupt-names = "sys", "legacy", "client", "wake";
->>>   	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
->>>   	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
->>>   	assigned-clock-rates = <100000000>;
->>> -- 
->>> 2.11.0
->>>
->>>
-> 
-> 
-> 
+CgoyMDE364WEIDA47JuUIDI07J28IDIyOjMz7JeQIEFuZHJ6ZWogSGFqZGEg7J20KOqwgCkg7JO0
+IOq4gDoKPiBBbGwgZW5jb2RlcnMgc2hhcmUgdGhlIHNhbWUgY29kZSB0byBzZXQgZW5jb2RlcnMg
+cG9zc2libGVfY3J0Y3MgZmllbGQuCj4gVGhlIHBhdGNoIGNyZWF0ZXMgaGVscGVyIHRvIGFic3Ry
+YWN0IG91dCB0aGlzIGNvZGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5o
+YWpkYUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3Nf
+ZHAuYyAgICAgICB8IDE1ICsrKysrLS0tLS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9z
+L2V4eW5vc19kcm1fY29yZS5jIHwgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
+c19kcm1fY3J0Yy5jIHwgMjEgKysrKysrKysrKysrKysrKysrLS0tCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9leHlub3MvZXh5bm9zX2RybV9jcnRjLmggfCAxMCArKysrKysrLS0tCj4gIGRyaXZlcnMvZ3B1
+L2RybS9leHlub3MvZXh5bm9zX2RybV9kcGkuYyAgfCAxMiArKysrLS0tLS0tLS0KPiAgZHJpdmVy
+cy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jICB8IDEzICsrKystLS0tLS0tLS0KPiAg
+ZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX3ZpZGkuYyB8IDE1ICsrKysrLS0tLS0t
+LS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19oZG1pLmMgICAgIHwgMjUgKysr
+KysrKysrLS0tLS0tLS0tLS0tLS0tLQo+ICA4IGZpbGVzIGNoYW5nZWQsIDUzIGluc2VydGlvbnMo
+KyksIDU5IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5
+bm9zL2V4eW5vc19kcC5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHAuYwo+IGlu
+ZGV4IDM4NTUzN2IuLjM5NjI5ZTcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5v
+cy9leHlub3NfZHAuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RwLmMK
+PiBAQCAtMTU1LDcgKzE1NSw3IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RwX2JpbmQoc3RydWN0IGRl
+dmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gIAlzdHJ1Y3Qg
+ZXh5bm9zX2RwX2RldmljZSAqZHAgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiAgCXN0cnVjdCBk
+cm1fZW5jb2RlciAqZW5jb2RlciA9ICZkcC0+ZW5jb2RlcjsKPiAgCXN0cnVjdCBkcm1fZGV2aWNl
+ICpkcm1fZGV2ID0gZGF0YTsKPiAtCWludCBwaXBlLCByZXQ7Cj4gKwlpbnQgcmV0Owo+ICAKPiAg
+CS8qCj4gIAkgKiBKdXN0IGxpa2UgdGhlIHByb2JlIGZ1bmN0aW9uIHNhaWQsIHdlIGRvbid0IG5l
+ZWQgdGhlCj4gQEAgLTE3OSwyMCArMTc5LDE1IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RwX2JpbmQo
+c3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4g
+IAkJCXJldHVybiByZXQ7Cj4gIAl9Cj4gIAo+IC0JcGlwZSA9IGV4eW5vc19kcm1fY3J0Y19nZXRf
+cGlwZV9mcm9tX3R5cGUoZHJtX2RldiwKPiAtCQkJCQkJICBFWFlOT1NfRElTUExBWV9UWVBFX0xD
+RCk7Cj4gLQlpZiAocGlwZSA8IDApCj4gLQkJcmV0dXJuIHBpcGU7Cj4gLQo+IC0JZW5jb2Rlci0+
+cG9zc2libGVfY3J0Y3MgPSAxIDw8IHBpcGU7Cj4gLQo+IC0JRFJNX0RFQlVHX0tNUygicG9zc2li
+bGVfY3J0Y3MgPSAweCV4XG4iLCBlbmNvZGVyLT5wb3NzaWJsZV9jcnRjcyk7Cj4gLQo+ICAJZHJt
+X2VuY29kZXJfaW5pdChkcm1fZGV2LCBlbmNvZGVyLCAmZXh5bm9zX2RwX2VuY29kZXJfZnVuY3Ms
+Cj4gIAkJCSBEUk1fTU9ERV9FTkNPREVSX1RNRFMsIE5VTEwpOwo+ICAKPiAgCWRybV9lbmNvZGVy
+X2hlbHBlcl9hZGQoZW5jb2RlciwgJmV4eW5vc19kcF9lbmNvZGVyX2hlbHBlcl9mdW5jcyk7Cj4g
+IAo+ICsJcmV0ID0gZXh5bm9zX2RybV9zZXRfcG9zc2libGVfY3J0Y3MoZW5jb2RlciwgRVhZTk9T
+X0RJU1BMQVlfVFlQRV9MQ0QpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJcmV0dXJuIHJldDsKPiAr
+Cj4gIAlkcC0+cGxhdF9kYXRhLmVuY29kZXIgPSBlbmNvZGVyOwo+ICAKPiAgCXJldHVybiBhbmFs
+b2dpeF9kcF9iaW5kKGRldiwgZHAtPmRybV9kZXYsICZkcC0+cGxhdF9kYXRhKTsKPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2NvcmUuYyBiL2RyaXZlcnMv
+Z3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9jb3JlLmMKPiBpbmRleCBlZGJkOThmLi5iMGMwNjIx
+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9jb3JlLmMK
+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fY29yZS5jCj4gQEAgLTEz
+LDYgKzEzLDcgQEAKPiAgICovCj4gIAo+ICAjaW5jbHVkZSA8ZHJtL2RybVAuaD4KPiArCj4gICNp
+bmNsdWRlICJleHlub3NfZHJtX2Rydi5oIgo+ICAjaW5jbHVkZSAiZXh5bm9zX2RybV9jcnRjLmgi
+Cj4gIAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fY3J0
+Yy5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2NydGMuYwo+IGluZGV4IGMz
+NzA3OGYuLmFjNTQ0ZGUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
+b3NfZHJtX2NydGMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9j
+cnRjLmMKPiBAQCAtMTYsNiArMTYsNyBAQAo+ICAjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBl
+ci5oPgo+ICAjaW5jbHVkZSA8ZHJtL2RybV9hdG9taWMuaD4KPiAgI2luY2x1ZGUgPGRybS9kcm1f
+YXRvbWljX2hlbHBlci5oPgo+ICsjaW5jbHVkZSA8ZHJtL2RybV9lbmNvZGVyLmg+Cj4gIAo+ICAj
+aW5jbHVkZSAiZXh5bm9zX2RybV9jcnRjLmgiCj4gICNpbmNsdWRlICJleHlub3NfZHJtX2Rydi5o
+Igo+IEBAIC0xOTEsMTYgKzE5MiwzMCBAQCBzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpleHlub3Nf
+ZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAo+ICAJcmV0dXJuIEVS
+Ul9QVFIocmV0KTsKPiAgfQo+ICAKPiAtaW50IGV4eW5vc19kcm1fY3J0Y19nZXRfcGlwZV9mcm9t
+X3R5cGUoc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYsCj4gK3N0cnVjdCBleHlub3NfZHJtX2Ny
+dGMgKmV4eW5vc19kcm1fY3J0Y19nZXRfYnlfdHlwZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2Rl
+diwKCllvdSBkb24ndCBoYXZlIHRvIG1vZGlmeSB0aGlzIGZ1bmN0aW9uIGJlY2F1c2Ugbm8gdXNl
+ciB0byB1c2UgdGhpcyBmdW5jdGlvbiBoZXJlLgpNb3ZpbmcgdGhpcyBjaGFuZ2UgdG8gYWN0dWFs
+IHVzZXIsIHBhdGNoIDQsIHdvdWxkIGJlIGJldHRlci4gQW55d2F5IHRyaXZpYWwgdGhpbmcgc28g
+SSB3aWxsIG1lcmdlIGl0IGFzLWlzLgoKClRoYW5rcywKSW5raSBEYWUKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
