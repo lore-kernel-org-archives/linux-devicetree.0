@@ -1,89 +1,142 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v2 02/10] drm/exynos: use helper to set possible crtcs
-Date: Fri, 25 Aug 2017 11:42:21 +0900
-Message-ID: <599F8E8D.6040000@samsung.com>
-References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
- <CGME20170824133409eucas1p11409c10ac302f9cb56106888ab7d5a25@eucas1p1.samsung.com>
- <1503581639-580-3-git-send-email-a.hajda@samsung.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 3/4] net: stmmac: register parent MDIO node for sun8i-h3-emac
+Date: Fri, 25 Aug 2017 10:54:11 +0800
+Message-ID: <CAGb2v64jrDPSff+QL_PQBMaQJ+CcTVbskjuOUd1OqR4smbu+ig@mail.gmail.com>
+References: <CAGb2v67hQXSoCKP7qW+KRUYX+0djQ1Z23cQ67Lyg6G7ozGyfGQ@mail.gmail.com>
+ <20170821132015.GB1703@lunn.ch> <20170821133104.qvrhvwin2rdg4aqo@flea.lan>
+ <20170821142321.GE1703@lunn.ch> <CAGb2v64E4T=1ff3POGuXZA=MvjGAnKQ6OF6A3sT_cU-=jh6zNw@mail.gmail.com>
+ <bfe784b6-5137-8fcd-dbd0-ad96974f4060@gmail.com> <20170822181140.GA11596@Red>
+ <352ae66b-78a4-e88b-4544-a8edd9390b0c@gmail.com> <20170823074942.yt3c5gvnmdw5pqge@flea.home>
+ <f14fe754-6339-32a0-3439-2daff6dd1d7e@gmail.com> <20170824082124.GA14302@Red> <dfc8e7f3-e374-b30b-b320-017f1c50ab58@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1503581639-580-3-git-send-email-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <dfc8e7f3-e374-b30b-b320-017f1c50ab58@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoyMDE364WEIDA47JuUIDI07J28IDIyOjMz7JeQIEFuZHJ6ZWogSGFqZGEg7J20KOqwgCkg7JO0
-IOq4gDoKPiBBbGwgZW5jb2RlcnMgc2hhcmUgdGhlIHNhbWUgY29kZSB0byBzZXQgZW5jb2RlcnMg
-cG9zc2libGVfY3J0Y3MgZmllbGQuCj4gVGhlIHBhdGNoIGNyZWF0ZXMgaGVscGVyIHRvIGFic3Ry
-YWN0IG91dCB0aGlzIGNvZGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5o
-YWpkYUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3Nf
-ZHAuYyAgICAgICB8IDE1ICsrKysrLS0tLS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9z
-L2V4eW5vc19kcm1fY29yZS5jIHwgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
-c19kcm1fY3J0Yy5jIHwgMjEgKysrKysrKysrKysrKysrKysrLS0tCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9leHlub3MvZXh5bm9zX2RybV9jcnRjLmggfCAxMCArKysrKysrLS0tCj4gIGRyaXZlcnMvZ3B1
-L2RybS9leHlub3MvZXh5bm9zX2RybV9kcGkuYyAgfCAxMiArKysrLS0tLS0tLS0KPiAgZHJpdmVy
-cy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jICB8IDEzICsrKystLS0tLS0tLS0KPiAg
-ZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX3ZpZGkuYyB8IDE1ICsrKysrLS0tLS0t
-LS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19oZG1pLmMgICAgIHwgMjUgKysr
-KysrKysrLS0tLS0tLS0tLS0tLS0tLQo+ICA4IGZpbGVzIGNoYW5nZWQsIDUzIGluc2VydGlvbnMo
-KyksIDU5IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5
-bm9zL2V4eW5vc19kcC5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHAuYwo+IGlu
-ZGV4IDM4NTUzN2IuLjM5NjI5ZTcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5v
-cy9leHlub3NfZHAuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RwLmMK
-PiBAQCAtMTU1LDcgKzE1NSw3IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RwX2JpbmQoc3RydWN0IGRl
-dmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gIAlzdHJ1Y3Qg
-ZXh5bm9zX2RwX2RldmljZSAqZHAgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiAgCXN0cnVjdCBk
-cm1fZW5jb2RlciAqZW5jb2RlciA9ICZkcC0+ZW5jb2RlcjsKPiAgCXN0cnVjdCBkcm1fZGV2aWNl
-ICpkcm1fZGV2ID0gZGF0YTsKPiAtCWludCBwaXBlLCByZXQ7Cj4gKwlpbnQgcmV0Owo+ICAKPiAg
-CS8qCj4gIAkgKiBKdXN0IGxpa2UgdGhlIHByb2JlIGZ1bmN0aW9uIHNhaWQsIHdlIGRvbid0IG5l
-ZWQgdGhlCj4gQEAgLTE3OSwyMCArMTc5LDE1IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RwX2JpbmQo
-c3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4g
-IAkJCXJldHVybiByZXQ7Cj4gIAl9Cj4gIAo+IC0JcGlwZSA9IGV4eW5vc19kcm1fY3J0Y19nZXRf
-cGlwZV9mcm9tX3R5cGUoZHJtX2RldiwKPiAtCQkJCQkJICBFWFlOT1NfRElTUExBWV9UWVBFX0xD
-RCk7Cj4gLQlpZiAocGlwZSA8IDApCj4gLQkJcmV0dXJuIHBpcGU7Cj4gLQo+IC0JZW5jb2Rlci0+
-cG9zc2libGVfY3J0Y3MgPSAxIDw8IHBpcGU7Cj4gLQo+IC0JRFJNX0RFQlVHX0tNUygicG9zc2li
-bGVfY3J0Y3MgPSAweCV4XG4iLCBlbmNvZGVyLT5wb3NzaWJsZV9jcnRjcyk7Cj4gLQo+ICAJZHJt
-X2VuY29kZXJfaW5pdChkcm1fZGV2LCBlbmNvZGVyLCAmZXh5bm9zX2RwX2VuY29kZXJfZnVuY3Ms
-Cj4gIAkJCSBEUk1fTU9ERV9FTkNPREVSX1RNRFMsIE5VTEwpOwo+ICAKPiAgCWRybV9lbmNvZGVy
-X2hlbHBlcl9hZGQoZW5jb2RlciwgJmV4eW5vc19kcF9lbmNvZGVyX2hlbHBlcl9mdW5jcyk7Cj4g
-IAo+ICsJcmV0ID0gZXh5bm9zX2RybV9zZXRfcG9zc2libGVfY3J0Y3MoZW5jb2RlciwgRVhZTk9T
-X0RJU1BMQVlfVFlQRV9MQ0QpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJcmV0dXJuIHJldDsKPiAr
-Cj4gIAlkcC0+cGxhdF9kYXRhLmVuY29kZXIgPSBlbmNvZGVyOwo+ICAKPiAgCXJldHVybiBhbmFs
-b2dpeF9kcF9iaW5kKGRldiwgZHAtPmRybV9kZXYsICZkcC0+cGxhdF9kYXRhKTsKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2NvcmUuYyBiL2RyaXZlcnMv
-Z3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9jb3JlLmMKPiBpbmRleCBlZGJkOThmLi5iMGMwNjIx
-IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9jb3JlLmMK
-PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fY29yZS5jCj4gQEAgLTEz
-LDYgKzEzLDcgQEAKPiAgICovCj4gIAo+ICAjaW5jbHVkZSA8ZHJtL2RybVAuaD4KPiArCj4gICNp
-bmNsdWRlICJleHlub3NfZHJtX2Rydi5oIgo+ICAjaW5jbHVkZSAiZXh5bm9zX2RybV9jcnRjLmgi
-Cj4gIAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fY3J0
-Yy5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2NydGMuYwo+IGluZGV4IGMz
-NzA3OGYuLmFjNTQ0ZGUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
-b3NfZHJtX2NydGMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9j
-cnRjLmMKPiBAQCAtMTYsNiArMTYsNyBAQAo+ICAjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBl
-ci5oPgo+ICAjaW5jbHVkZSA8ZHJtL2RybV9hdG9taWMuaD4KPiAgI2luY2x1ZGUgPGRybS9kcm1f
-YXRvbWljX2hlbHBlci5oPgo+ICsjaW5jbHVkZSA8ZHJtL2RybV9lbmNvZGVyLmg+Cj4gIAo+ICAj
-aW5jbHVkZSAiZXh5bm9zX2RybV9jcnRjLmgiCj4gICNpbmNsdWRlICJleHlub3NfZHJtX2Rydi5o
-Igo+IEBAIC0xOTEsMTYgKzE5MiwzMCBAQCBzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpleHlub3Nf
-ZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAo+ICAJcmV0dXJuIEVS
-Ul9QVFIocmV0KTsKPiAgfQo+ICAKPiAtaW50IGV4eW5vc19kcm1fY3J0Y19nZXRfcGlwZV9mcm9t
-X3R5cGUoc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYsCj4gK3N0cnVjdCBleHlub3NfZHJtX2Ny
-dGMgKmV4eW5vc19kcm1fY3J0Y19nZXRfYnlfdHlwZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2Rl
-diwKCllvdSBkb24ndCBoYXZlIHRvIG1vZGlmeSB0aGlzIGZ1bmN0aW9uIGJlY2F1c2Ugbm8gdXNl
-ciB0byB1c2UgdGhpcyBmdW5jdGlvbiBoZXJlLgpNb3ZpbmcgdGhpcyBjaGFuZ2UgdG8gYWN0dWFs
-IHVzZXIsIHBhdGNoIDQsIHdvdWxkIGJlIGJldHRlci4gQW55d2F5IHRyaXZpYWwgdGhpbmcgc28g
-SSB3aWxsIG1lcmdlIGl0IGFzLWlzLgoKClRoYW5rcywKSW5raSBEYWUKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Aug 25, 2017 at 3:59 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 08/24/2017 01:21 AM, Corentin Labbe wrote:
+>> On Wed, Aug 23, 2017 at 09:31:53AM -0700, Florian Fainelli wrote:
+>>> On 08/23/2017 12:49 AM, Maxime Ripard wrote:
+>>>> Hi Florian,
+>>>>
+>>>> On Tue, Aug 22, 2017 at 11:35:01AM -0700, Florian Fainelli wrote:
+>>>>>>>> So I think what you are saying is either impossible or engineering-wise
+>>>>>>>> a very stupid design, like using an external MAC with a discrete PHY
+>>>>>>>> connected to the internal MAC's MDIO bus, while using the internal MAC
+>>>>>>>> with the internal PHY.
+>>>>>>>>
+>>>>>>>> Now can we please decide on something? We're a week and a half from
+>>>>>>>> the 4.13 release. If mdio-mux is wrong, then we could have two mdio
+>>>>>>>> nodes (internal-mdio & external-mdio).
+>>>>>>>
+>>>>>>> I really don't see a need for a mdio-mux in the first place, just have
+>>>>>>> one MDIO controller (current state) sub-node which describes the
+>>>>>>> built-in STMMAC MDIO controller and declare the internal PHY as a child
+>>>>>>> node (along with 'phy-is-integrated'). If a different configuration is
+>>>>>>> used, then just put the external PHY as a child node there.
+>>>>>>>
+>>>>>>> If fixed-link is required, the mdio node becomes unused anyway.
+>>>>>>>
+>>>>>>> Works for everyone?
+>>>>>>
+>>>>>> If we put an external PHY with reg=1 as a child of internal MDIO,
+>>>>>> il will be merged with internal PHY node and get
+>>>>>> phy-is-integrated.
+>>>>>
+>>>>> Then have the .dtsi file contain just the mdio node, but no internal or
+>>>>> external PHY and push all the internal and external PHY node definition
+>>>>> (in its entirety) to the per-board DTS file, does not that work?
+>>>>
+>>>> If possible, I'd really like to have the internal PHY in the
+>>>> DTSI. It's always there in hardware anyway, and duplicating the PHY,
+>>>> with its clock, reset line, and whatever info we might need in the
+>>>> future in each and every board DTS that uses it will be very error
+>>>> prone and we will have the usual bunch of issues that come up with
+>>>> duplication.
+>>>
+>>> OK, then what if you put the internal PHY in the DTSI, mark it with a
+>>> status = "disabled" property, and have the per-board DTS put a status =
+>>> "okay" property along with a "phy-is-integrated" boolean property? Would
+>>> that work?
+>>
+>> No, I tested and for example with sun8i-h3-orangepi-plus.dts, the external PHY (ethernet-phy@1) is still merged.
+>
+> Is not there is a mistake in the unit address not matching the "reg"
+> property, or am I not looking at the right tree?
+>
+> &mdio {
+>         ext_rgmii_phy: ethernet-phy@1 {
+>                 compatible = "ethernet-phy-ieee802.3-c22";
+>                 reg = <0>;
+>         };
+> };
+>
+> If the PHY is really at MDIO address 0, then it should be
+> ethernet-phy@0, and not ethernet-phy@1, and then no problem with the
+> merging?
+
+That is wrong. The board described in the example likely has a Realtek
+RTL8211E @ address 0x1. Address 0 for this PHY is a broadcast address,
+so it still works, but is the wrong representation.
+
+>
+>
+>> So that adding a 'status = "disabled"' does not bring anything.
+>>
+>>>
+>>> What I really don't think is necessary is:
+>>>
+>>> - duplicating the "mdio" controller node for external vs. internal PHY,
+>>> because this is not accurate, there is just one MDIO controller, but
+>>> there may be different kinds of MDIO/PHY devices attached
+>>
+>> For me, if we want to represent the reality, we need two MDIO:
+>> - since two PHY at the same address could co-exists
+>> - since they are isolated so not on the same MDIO bus
+>
+> Is that really true? It might be, but from experience with e.g:
+> bcmgenet, the integrated PHY and the external PHYs are on the same MDIO
+> bus, which is convenient, except when you have an address conflict.
+
+There's a mux in the hardware: either the internal MDIO+MII lines
+from the internal PHY are connected to the MAC, or the external
+MDIO+MII lines from the pin controller are connected. I believe
+this was already mentioned?
+
+>
+>>
+>>> - having the STMMAC driver MDIO probing code having to deal with a
+>>> "mdio" sub-node or an "internal-mdio" sub-node because this is confusing
+>>> and requiring more driver-level changes that are error prone
+>>
+>> My patch for stmmac is really small, only the name of my variable ("need_mdio_mux_ids")
+>> have to be changed to something like "register_parent_mdio"
+>>
+>>
+>> So I agree with Maxime, we need to avoid merging PHY nodes, and we can avoid it only by having two separate MDIO nodes.
+>> Furthermore, with only one MDIO, we will face with lots of small patch for adding phy-is-integrated, with two we do not need to change any board DT, all is simply clean.
+>> Really having two MDIO seems cleaner.
+>
+> The only valid thing that you have provided so far is this merging
+> problem. Anything else ranging from "we will face with lots of small
+> patch for adding phy-is-integrated" to "Really having two MDIO seems
+> cleaner." are hard to receive as technical arguments for correctness.
+>
+> What happens if someone connects an external PHY at the same MDIO
+> address than the internal PHY, which one do you get responses from? If
+> you shutdown the internal PHY and it stops responding, then this
+> probably becomes deterministic, but it still supports the fact there is
+> just one MDIO bus controller per MAC.
+
+Depends on whichever set of pins/lines are selected. But yeah, there's
+only one MDIO bus controller in the MAC.
+
+ChenYu
+
+> Anyway, do whatever works best for you I guess.
+> --
+> Florian
