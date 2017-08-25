@@ -1,107 +1,73 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3 v8] ARC: Set IO-coherency aperture base to
- LINUX_LINK_BASE
-Date: Fri, 25 Aug 2017 15:57:43 +0000
-Message-ID: <1503676662.15555.8.camel@synopsys.com>
-References: <20170712094023.23226-1-Eugeniy.Paltsev@synopsys.com>
-         <20170712094023.23226-2-Eugeniy.Paltsev@synopsys.com>
-         <5184d3eb-31bc-c456-3e65-6137a3ba72f7@synopsys.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Fri, 25 Aug 2017 19:34:55 +0300
+Message-ID: <1955840.czSnNPfaK8@avalon>
+References: <20170720092302.2982-1-maxime.ripard@free-electrons.com> <2518768.foDtbh9bhx@avalon> <20170825144440.beettgwsynics3hs@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5184d3eb-31bc-c456-3e65-6137a3ba72f7-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <6521BCF736599944ABCA91AEAE720997-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170825144440.beettgwsynics3hs@flea.lan>
+Sender: linux-media-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Cyprian Wronka <cwronka@cadence.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Neil Webb <neilw@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE3LTA4LTIyIGF0IDE0OjQ0IC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+
-IE9uIDA3LzEyLzIwMTcgMDI6NDAgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gPiBNb3N0
-IG9mIHRoZSB0aW1lIHdlIGluZGVlZCB1c2UgdGhlIG9uZSBhbmQgb25seSBMSU5VWF9MSU5LX0JB
-U0UNCj4gPiBzZXQgdG8gMHg4MDAwXzAwMDAuIEJ1dCB0aGVyZSBtaWdodCBiZSBnb29kIHJlYXNv
-bnMgdG8gbW92ZQ0KPiA+IHRoZSBrZXJuZWwgdG8gYW5vdGhlciBsb2NhdGlvbiBsaWtlIDB4OXog
-ZXRjLg0KPiA+IEFuZCB3ZSB3YW50IElPQyBhcGVydHVyZSB0byBjb3ZlciBlbnRpcmUgYXJlYSB1
-c2VkIGJ5IHRoZSBrZXJuZWwsDQo+ID4gc28gbGV0J3MgbWFrZSBpdHMgYmFzZSBtYXRjaGluZyBs
-aW5rIGJhc2UNCj4gDQo+IEhvdyBhYm91dCBzb21ldGhpbmcgYmVsb3cuLi4uDQo+IA0KPiBDdXJy
-ZW50bHkgSU9DIGFwZXJ0dXJlIGJhc2UgaXMgaGFyZGNvZGVkIHRvIDB4ODAwMF8wMDAwIHdoaWNo
-IG1heSBub3QNCj4gYmUgdHJ1ZSBmb3LCoA0KPiBub24gZGVmYXVsdCB2YWx1ZXMgb2YgQ09ORklH
-X0xJTlVYX0xJTktfQkFTRSwgc28gdXNlIHRoZSBjb25maWcgdmFsdWUNCj4gDQo+ID4gYW5kIGFk
-ZCByZXF1aXJlZCBhc3NlcnRzOg0KPiA+IGNoZWNraW5nIElPQyBhcGVydHVyZSBiYXNlIGFkZHJl
-c3MgYW5kIHNpemUgdG8gYmUgc3VwcG9ydGVkIGJ5IElPQy4NCj4gDQo+IC4uLi4gQW5kIHdoaWxl
-IGF0IGl0LCBhbHNvIGFkZCB0aGUgcmVxdWlyZWQgYXNzZXJ0cyBleHBlY3RlZCBieSB0aGUNCj4g
-SU9DwqANCj4gcHJvZ3JhbW1pbmcgbW9kZWwuDQo+IA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEV1Z2VuaXkgUGFsdHNldiA8RXVnZW5peS5QYWx0c2V2QHN5bm9wc3lzLmNvbT4NCj4gPiAtLS0N
-Cj4gPiDCoCBhcmNoL2FyYy9tbS9jYWNoZS5jIHwgMzMgKysrKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0tDQo+ID4gwqAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDkgZGVs
-ZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJjL21tL2NhY2hlLmMgYi9h
-cmNoL2FyYy9tbS9jYWNoZS5jDQo+ID4gaW5kZXggYTg2NzU3NS4uMzgzZmY3NyAxMDA2NDQNCj4g
-PiAtLS0gYS9hcmNoL2FyYy9tbS9jYWNoZS5jDQo+ID4gKysrIGIvYXJjaC9hcmMvbW0vY2FjaGUu
-Yw0KPiA+IEBAIC0xMDgzLDcgKzEwODMsOCBAQCBTWVNDQUxMX0RFRklORTMoY2FjaGVmbHVzaCwg
-dWludDMyX3QsIHN0YXJ0LA0KPiA+IHVpbnQzMl90LCBzeiwgdWludDMyX3QsIGZsYWdzKQ0KPiA+
-IMKgwqDCoCovDQo+ID4gwqAgbm9pbmxpbmUgdm9pZCBfX2luaXQgYXJjX2lvY19zZXR1cCh2b2lk
-KQ0KPiA+IMKgIHsNCj4gPiAtCXVuc2lnbmVkIGludCBhcF9zejsNCj4gPiArCXVuc2lnbmVkIGlu
-dCBhcF9iYXNlOw0KPiA+ICsJbG9uZyBhcF9zaXplOw0KPiANCj4gSXMgdGhlcmUgYSByZWFzb24g
-dGhleSBhcmUgZGlmZmVyZW50IHR5cGVzID8NCj4gQWxzbyB0aGUgd2F5IHlvdSB1c2UgaXQgYmVs
-b3csIGJlc3QgdG8gY2FsbCBpdCBtZW1fc2l6ZSAhDQoNCk9rLCBJIHVzZWTCoGxvbmcgZm9yIGFw
-X3NpemUgYXMgaXQgc2ltcGx5IHBvcHVsYXRlZCBiecKgYXJjX2dldF9tZW1fc3oNCi0tLS0tLS0t
-LS0tLS0+OC0tLS0tLS0tLS0NCmFwX3NpemUgPSBhcmNfZ2V0X21lbV9zeigpOw0KLS0tLS0tLS0t
-LS0tLT44LS0tLS0tLS0tLQ0KYW5kIGFyY19nZXRfbWVtX3N6IHJldHVybiBsb25nLg0KDQoNClBy
-b2JhYmx5IEkgc2hvdWxkIGZpeCBhcmNfZ2V0X21lbV9zeiBiZWNhdXNlIGl0IHNpbXBseSByZXR1
-cm4NCmxvd19tZW1fc3ogd2hpY2ggaXMgdW5zaWduZWQgbG9uZyENCg0KLS0tLS0tLS0tLS0tLT44
-LS0tLS0tLS0tLQ0Kc3RhdGljIHVuc2lnbmVkIGxvbmcgbG93X21lbV9zejsNCmxvbmcgX19pbml0
-IGFyY19nZXRfbWVtX3N6KHZvaWQpDQp7DQoJcmV0dXJuIGxvd19tZW1fc3o7DQp9DQotLS0tLS0t
-LS0tLS0tPjgtLS0tLS0tLS0tDQoNCj4gPiDCoMKgDQo+ID4gwqDCoAkvKiBGbHVzaCArIGludmFs
-aWRhdGUgKyBkaXNhYmxlIEwxIGRjYWNoZSAqLw0KPiA+IMKgwqAJX19kY19kaXNhYmxlKCk7DQo+
-ID4gQEAgLTEwOTIsMTggKzEwOTMsMzIgQEAgbm9pbmxpbmUgdm9pZCBfX2luaXQgYXJjX2lvY19z
-ZXR1cCh2b2lkKQ0KPiA+IMKgwqAJaWYgKHJlYWRfYXV4X3JlZyhBUkNfUkVHX1NMQ19CQ1IpKQ0K
-PiA+IMKgwqAJCXNsY19lbnRpcmVfb3AoT1BfRkxVU0hfTl9JTlYpOw0KPiA+IMKgwqANCj4gPiAt
-CS8qIElPQyBBcGVydHVyZSBzdGFydDogVERCOiBoYW5kbGUgbm9uIGRlZmF1bHQNCj4gPiBDT05G
-SUdfTElOVVhfTElOS19CQVNFICovDQo+ID4gLQl3cml0ZV9hdXhfcmVnKEFSQ19SRUdfSU9fQ09I
-X0FQMF9CQVNFLCAweDgwMDAwKTsNCj4gPiAtDQo+ID4gwqDCoAkvKg0KPiA+IC0JwqAqIElPQyBB
-cGVydHVyZSBzaXplOg0KPiA+IC0JwqAqwqDCoMKgZGVjb2RlZCBhcyAyIF4gKFNJWkUgKyAyKSBL
-Qjogc28gc2V0dGluZyAweDExIGltcGxpZXMNCj4gPiA1MTJNDQo+ID4gLQnCoCogVEJEOiBmaXgg
-Zm9yIFBHVSArIDFHQiBvZiBsb3cgbWVtDQo+ID4gKwnCoCogSU9DIEFwZXJ0dXJlIHNpemUgaXMg
-ZXF1YWwgdG8gbWVtb3J5IHNpemUuDQo+ID4gKwnCoCogVEJEOiBmaXggZm9yIFBHVSArIDFHaUIg
-b2YgbG93IG1lbQ0KPiANCj4gTm90IHJlYWxseSBhdmVyc2UgdG8gdGhpcyBwZXItc2UsIGJ1dCBj
-b252ZW50aW9uYWxseSB3ZSd2ZSBub3QgdXNlZA0KPiBLaUIgb3IgR2lCwqANCj4gZXRjLCBzbyBJ
-J2QgcHJlZmVyIEtCLCBHQi4uLiBqdXN0IGZvciBjb25zaXN0ZW5jeSBhbmQgYWJpbGl0eSB0byBn
-cmVwDQo+IGNvcnJlY3RseS4NCg0KQnV0IHdlIGFsc28gdXNlIEtpQiwgTWlCLCBHaUIgZm9yIEFS
-QzoNCiQgZ3JlcCAtciAtSSAtZSAiTWlCIiAtZSAiR2lCIiBhcmNoL2FyYy8NCnJlZyA9IDwweDAg
-MHg4MDAwMDAwMCAweDAgMHgyMDAwMDAwMAkvKiA1MTIgTWlCIGxvdyBtZW0gKi8NCjB4MSAweGMw
-MDAwMDAwIDB4MCAweDQwMDAwMDAwPjsJLyogMSBHaUIgaGlnaG1lbSAqLw0KcmVnID0gPDB4MCAw
-eDgwMDAwMDAwIDB4MCAweDIwMDAwMDAwCS8qIDUxMiBNaUIgbG93IG1lbSAqLw0KMHgxIDB4YzAw
-MDAwMDAgMHgwIDB4NDAwMDAwMDA+OwkvKiAxIEdpQiBoaWdobWVtICovDQpyZWcgPSA8MHgwIDB4
-ODAwMDAwMDAgMHgwIDB4MWIwMDAwMDA+OwkvKiAoNTEyIC0gMzIpIE1pQiAqLw0KcmVnID0gPDB4
-ODAwMDAwMDAgMHgyMDAwMDAwMD47CS8qIDUxMk1pQiAqLw0KcmVnID0gPDB4ODAwMDAwMDAgMHgy
-MDAwMDAwMD47CS8qIDUxMk1pQiAqLw0KLi4uLi4uLi4uLg0KDQoNCj4gPiDCoMKgCcKgKiBUQkQ6
-IGZpeCBmb3IgUEFFDQo+ID4gwqDCoAnCoCovDQo+ID4gLQlhcF9zeiA9IG9yZGVyX2Jhc2VfMihh
-cmNfZ2V0X21lbV9zeigpLzEwMjQpIC0gMjsNCj4gPiAtCXdyaXRlX2F1eF9yZWcoQVJDX1JFR19J
-T19DT0hfQVAwX1NJWkUsIGFwX3N6KTsNCj4gPiArCWFwX3NpemUgPSBhcmNfZ2V0X21lbV9zeigp
-Ow0KPiA+ICsNCj4gPiArCWlmICghaXNfcG93ZXJfb2ZfMihhcF9zaXplKSB8fCBhcF9zaXplIDwg
-NDA5NikNCj4gPiArCQlwYW5pYygiSU9DIEFwZXJ0dXJlIHNpemUgbXVzdCBiZSBwb3dlciBvZiAy
-IGxhcmdlcg0KPiA+IHRoYW4gNEtpQiIpOw0KPiA+ICsNCj4gPiArCS8qDQo+ID4gKwnCoCogSU9D
-IEFwZXJ0dXJlIHNpemUgZGVjb2RlZCBhcyAyIF4gKFNJWkUgKyAyKSBLaUIsDQo+ID4gKwnCoCog
-c28gc2V0dGluZyAweDExIGltcGxpZXMgNTEyTWlCLCAweDEyIGltcGxpZXMgMUcuLi4NCj4gPiAr
-CcKgKi8NCj4gPiArCXdyaXRlX2F1eF9yZWcoQVJDX1JFR19JT19DT0hfQVAwX1NJWkUsDQo+ID4g
-b3JkZXJfYmFzZV8yKGFwX3NpemUgLyAxMDI0KSAtIDIpOw0KPiANCj4gZm9yIChhcF9zaXplIC8g
-MTAyNCkgY2FuIHlvdSB1c2UgKGFwX3NpemUgPj4gMTApDQoNCkkgYWJzb2x1dGVseSBzdXJlIHdo
-YXQgY29tcGlsZXIgd2lsbCBpbXBsZW1lbnQgdGhpcyBkaXZpc2lvbsKgDQphcF9zaXplLzEwMjQg
-YXMgcmlnaHQgc2hpZnQgYnkgaXRzZWxmLg0KDQpTbyBsZXRzIGRvbid0IG1ha2UgdGhpbmdzIGxv
-b2sgbW9yZSBjb21wbGljYXRlZMKgdGhhbiB0aGV5IGFyZSA6KQ0KDQo+ID4gKw0KPiA+ICsJLyoN
-Cj4gPiArCcKgKiBGb3Igbm93IHdlIGFzc3VtZSBJT0MgYXBlcnR1cmUgdG8gY292ZXIgYWxsIHRo
-ZSBtZW1vcnkNCj4gPiB1c2VkIGJ5IHRoZQ0KPiA+ICsJwqAqIGtlcm5lbC4NCj4gPiArCcKgKi8N
-Cj4gPiArCWFwX2Jhc2UgPSBDT05GSUdfTElOVVhfTElOS19CQVNFOw0KPiA+ICsNCj4gPiArCWlm
-IChhcF9iYXNlICUgYXBfc2l6ZSAhPSAwKQ0KPiA+ICsJCXBhbmljKCJJT0MgQXBlcnR1cmUgc3Rh
-cnQgbXVzdCBiZSBhbGlnbmVkIHRvIHRoZQ0KPiA+IHNpemUgb2YgdGhlIGFwZXJ0dXJlIik7DQo+
-IA0KPiBUaGlzIGlzIGdvb2QuDQo+IA0KPiA+IMKgwqANCj4gPiArCXdyaXRlX2F1eF9yZWcoQVJD
-X1JFR19JT19DT0hfQVAwX0JBU0UsIGFwX2Jhc2UgPj4gMTIpOw0KPiA+IMKgwqAJd3JpdGVfYXV4
-X3JlZyhBUkNfUkVHX0lPX0NPSF9QQVJUSUFMLCAxKTsNCj4gPiDCoMKgCXdyaXRlX2F1eF9yZWco
-QVJDX1JFR19JT19DT0hfRU5BQkxFLCAxKTsNCj4gPiDCoMKgDQo+ID4gDQo+IA0KPiANCi0tIA0K
-wqBFdWdlbml5IFBhbHRzZXY=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Maxime,
+
+On Friday, 25 August 2017 17:44:40 EEST Maxime Ripard wrote:
+> On Wed, Aug 23, 2017 at 12:03:32AM +0300, Laurent Pinchart wrote:
+> >>>>>> +  - phys: phandle to the external D-PHY
+> >>>>>> +  - phy-names: must contain dphy, if the implementation uses an
+> >>>>>> +     external D-PHY
+> >>>>> 
+> >>>>> I would move the last two properties in an optional category as
+> >>>>> they're effectively optional. I think you should also explain a bit
+> >>>>> more clearly that the phys property must not be present if the phy-
+> >>>>> names property is not present.
+> >>>> 
+> >>>> It's not really optional. The IP has a configuration register that
+> >>>> allows you to see if it's been synthesized with or without a PHY. If
+> >>>> the right bit is set, that property will be mandatory, if not, it's
+> >>>> useless.
+> >>> 
+> >>> Just to confirm, the PHY is a separate IP core, right ? Is the CSI-2
+> >>> receiver input interface different when used with a PHY and when used
+> >>> without one ? Could a third-party PHY be used as well ? If so, would
+> >>> the PHY synthesis bit be set or not ?
+> >> 
+> >> The PHY (in our case a D-PHY) is a separate entity, it can be from a 3rd
+> >> party as the IP interface is standard, the SoC integrator would set the
+> >> bit accordingly based on whether any PHY is present or not. There is also
+> >> an option of routing digital output from a CSI-TX to a CSI-RX and in such
+> >> case a PHY would not need to be used (as in the case of our current
+> >> platform).
+> > 
+> > OK, thank you for the clarification.
+> > 
+> > Maxime mentioned that a bit can be read from a register to notify whether
+> > a PHY has been synthesized or not. Does it influence the CSI-2 RX input
+> > interface at all, or is the CSI-2 RX IP core synthesized the same way
+> > regardless of whether a PHY is present or not ?
+> 
+> So we got an answer to this, and the physical interface remains the
+> same.
+> 
+> However, the PHY bit is set only when there's an internal D-PHY, which
+> means we have basically three cases:
+>   - No D-PHY at all, D-PHY presence bit not set
+>   - Internal D-PHY, D-PHY presence bit set
+>   - External D-PHY, D-PHY presence bit not set
+> 
+> I guess that solves our discussion about whether the phys property
+> should be marked optional or not. It should indeed be optional, and
+> when it's not there, the D-PHY presence bit will tell whether we have
+> to program the internal D-PHY or not.
+
+Is the internal D-PHY programmed through the register space of the CSI2-RX ? 
+If so I agree with you.
+
+-- 
+Regards,
+
+Laurent Pinchart
