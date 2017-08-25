@@ -1,217 +1,130 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] checks: add phandle with arg property checks
-Date: Fri, 25 Aug 2017 10:49:43 +1000
-Message-ID: <20170825004943.GN5379@umbus.fritz.box>
-References: <20170822230208.20987-1-robh@kernel.org>
- <20170822230208.20987-2-robh@kernel.org>
- <20170824020338.GV5379@umbus.fritz.box>
- <CAL_Jsq+0Njjs_PHBSD-B7W9YFzdfpB2ApBcBD=48+BoXQKv2pw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: designware: add binding for
+ Designware PCIe in ECAM mode
+Date: Thu, 24 Aug 2017 20:22:36 -0500
+Message-ID: <CAL_JsqJz9THQ4jnZQJCNmk96-jvG2MKgcp9oiPT4=R36PW-=+A@mail.gmail.com>
+References: <20170824184321.19432-1-ard.biesheuvel@linaro.org>
+ <20170824184321.19432-4-ard.biesheuvel@linaro.org> <CAL_JsqJTGeLv-c0wXCvMZggU4yzo__s-pD7qEZ7Q3w8=uUuu4Q@mail.gmail.com>
+ <CAKv+Gu-D0tgygJ84iGEoEU9OcjUwrtvS2Z2wrOHAZ9kO_kE_rA@mail.gmail.com>
+ <CAL_JsqJkDmT3_Umhi+y9e6qML+Ei=ee7G7EohpoMJacBeecirQ@mail.gmail.com> <CAKv+Gu-ho_ipsuAViyaDY6=m+NO7Y-hpZ2TEz=7WgVJP-i+eAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UIkw8Cc2/Xz5YwHB"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+0Njjs_PHBSD-B7W9YFzdfpB2ApBcBD=48+BoXQKv2pw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAKv+Gu-ho_ipsuAViyaDY6=m+NO7Y-hpZ2TEz=7WgVJP-i+eAw@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Marc Zyngier <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 24, 2017 at 5:37 PM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On 24 August 2017 at 23:12, Rob Herring <robh@kernel.org> wrote:
+>> On Thu, Aug 24, 2017 at 3:12 PM, Ard Biesheuvel
+>> <ard.biesheuvel@linaro.org> wrote:
+>>> On 24 August 2017 at 21:02, Rob Herring <robh@kernel.org> wrote:
+>>>> Cc the DT list for bindings please.
+>>>>
+>>>> On Thu, Aug 24, 2017 at 1:43 PM, Ard Biesheuvel
+>>>> <ard.biesheuvel@linaro.org> wrote:
+>>>>> Describe the binding for firmware-configured instances of the Synopsys
+>>>>> Designware PCIe controller in RC mode.
+>>>>>
+>>>>> Cc: Rob Herring <robh@kernel.org>
+>>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt | 56 ++++++++++++++++++++
+>>>>>  1 file changed, 56 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt b/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+>>>>> new file mode 100644
+>>>>> index 000000000000..b8127b19c220
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+>>>>> @@ -0,0 +1,56 @@
+>>>>> +* Synopsys Designware PCIe root complex in ECAM mode
+>>>>> +
+>>>>> +In some cases, firmware may already have configured the Synopsys Designware
+>>>>> +PCIe controller in RC mode with static ATU window mappings that cover all
+>>>>> +config, MMIO and I/O spaces in a [mostly] ECAM compatible fashion.
+>>>>> +In this case, there is no need for the OS to perform any low level setup
+>>>>> +of clocks or device registers, nor is there any reason for the driver to
+>>>>> +reconfigure ATU windows for config and/or IO space accesses at runtime.
+>>>>> +
+>>>>> +Such hardware configurations should be described as "pci-host-ecam-generic"
+>>>>> +if they are truly ECAM compatible. Configurations that require no low-level
+>>>>> +setup by the OS nor any ATU window reconfiguration at runtime, but do
+>>>>> +require special handling for type 0 config TLPs may instead be described as
+>>>>> +"snps,dw-pcie-ecam".
+>>>>
+>>>> Humm, what happens when we have the next exception that's SoC specific
+>>>> or another vendor?
+>>>
+>>> This is not SoC specific, but IP specific. We are working with two
+>>> different SoCs from completely different vendors that both synthesized
+>>> this IP with a 64 KB ATU window size, not expecting this to break ECAM
+>>> compatibility.
+>>
+>> This case is not SoC specific, but quirks/bugs show up in both places.
+>> Plus "dw-pcie" is fairly meaningless because the IP is both
+>> configurable and has multiple releases.
+>>
+>>>> Seems like perhaps "firmware initialized" should
+>>>> have been a separate property flag for bootloaders to add rather than
+>>>> a compatible string.
+>>>>
+>>>
+>>> Yes, but then you still have 10 different drivers that all retain the
+>>> low-level bits that are all different between SoCs. That is exactly
+>>> what I want to get rid of, and usually we can do that with existing
+>>> bindings, because we simply expose it as pci-host-ecam-generic. Only
+>>> in this particular case, that doesn't fly due to the quirk.
+>>
+>> You can expose it as "vendor,soc-pcie", "pci-host-ecam-generic" and
+>> then the kernel can decide. Then you can use: the default ecam driver,
+>> the ecam driver but match on "vendor,soc-pcie" for quirks, or a vendor
+>> specific driver. The only thing that wouldn't work would be having
+>> both quirks in the ecam driver and a vendor driver which IMO we just
+>> shouldn't support anyway.
+>>
+>> Now if you have 10 SoCs all needing this same quirk, then maybe adding
+>> "snps,dw-pcie-ecam" addtionally to the above makes sense. But that
+>> only saves you match strings.
+>>
+>
+> Exposing this as "pci-host-ecam-generic" doesn't work, or we wouldn't
+> be having this discussion.
 
---UIkw8Cc2/Xz5YwHB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Exposing it *alone* won't work, but you could match on it for the
+driver and then in the probe function have an:
 
-On Thu, Aug 24, 2017 at 12:23:16PM -0500, Rob Herring wrote:
-> On Wed, Aug 23, 2017 at 9:03 PM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > On Tue, Aug 22, 2017 at 06:02:06PM -0500, Rob Herring wrote:
-> >> Many common bindings follow the same pattern of client properties
-> >> containing a phandle and N arg cells where N is defined in the provider
-> >> with a '#<specifier>-cells' property such as:
-> >>
-> >>       intc0: interrupt-controller@0 {
-> >>               #interrupt-cells =3D <3>;
-> >>       };
-> >>       intc1: interrupt-controller@1 {
-> >>               #interrupt-cells =3D <2>;
-> >>       };
-> >>
-> >>       node {
-> >>               interrupts-extended =3D <&intc0 1 2 3>, <&intc1 4 5>;
-> >>       };
-> >>
-> >> Add checks for properties following this pattern.
-> >>
-> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> ---
-> >> v2:
-> >> - Make each property a separate check
-> >> - Iterate over raw cells rather than markers
-> >> - Fix property length check for 2nd to Nth items
-> >> - Improve error messages. If cell sizes are wrong, the next iteration =
-can
-> >>   get a bad (but valid) phandle.
-> >> - Add a test
-> >>
-> >>  checks.c                    | 104 +++++++++++++++++++++++++++++++++++=
-+++++++++
-> >>  dtc.h                       |   1 +
-> >>  livetree.c                  |   6 +++
-> >>  tests/bad-phandle-cells.dts |  11 +++++
-> >>  tests/run_tests.sh          |   1 +
-> >>  5 files changed, 123 insertions(+)
-> >>  create mode 100644 tests/bad-phandle-cells.dts
-> >>
-> >> diff --git a/checks.c b/checks.c
-> >> index afabf64337d5..548d7e118c42 100644
-> >> --- a/checks.c
-> >> +++ b/checks.c
-> >> @@ -956,6 +956,93 @@ static void check_obsolete_chosen_interrupt_contr=
-oller(struct check *c,
-> >>  WARNING(obsolete_chosen_interrupt_controller,
-> >>       check_obsolete_chosen_interrupt_controller, NULL);
-> >>
-> >> +struct provider {
-> >> +     const char *prop_name;
-> >> +     const char *cell_name;
-> >> +     bool optional;
-> >
-> > AFAICT you don't actually use this optional flag, even in the followup
-> > patches; it's always false.
->=20
-> Yes, it is. Here:
->=20
-> >> +WARNING_PROPERTY_PHANDLE_CELLS(msi_parent, "msi-parent", "#msi-cells"=
-, true);
->=20
-> Well hidden, isn't it. :)
+if (of_device_is_compatible(np, "marvell,armada8k-pcie-ecam"))
+  // handle device quirk
 
-Little bit, yes.  Objection withdrawn.
+I haven't looked at what exactly you need to handle though. I don't
+have the rest of the series.
 
->=20
-> >
-> >> +};
-> >> +
-> >> +static void check_property_phandle_args(struct check *c,
-> >> +                                       struct dt_info *dti,
-> >> +                                       struct node *node,
-> >> +                                       struct property *prop,
-> >> +                                       const struct provider *provide=
-r)
-> >> +{
-> >> +     struct node *root =3D dti->dt;
-> >> +     int cell, cellsize =3D 0;
-> >> +
-> >> +     for (cell =3D 0; cell < prop->val.len / sizeof(cell_t); cell +=
-=3D cellsize + 1) {
-> >> +             struct node *provider_node;
-> >> +             struct property *cellprop;
-> >> +             int phandle;
-> >> +
-> >> +             phandle =3D propval_cell_n(prop, cell);
-> >> +             if (phandle =3D=3D 0 || phandle =3D=3D -1) {
-> >> +                     cellsize =3D 0;
-> >> +                     continue;
-> >
-> > I'm not clear what case this is handling.  If the property has an
-> > invalid (or unresolved) phandle value, shouldn't that be a FAIL?  As
-> > it is we interpret the next cell as a phandle, and since we couldn't
-> > resolve the first phandle, we can't be at all sure that it really is a
-> > phandle.
->=20
-> It is valid to have a "blank" phandle when you have optional entries,
-> but need to preserve the indexes of the entries. Say an array of gpio
-> lines and some may not be hooked up. Not widely used, but it does
-> exist in kernel dts files.
+But since you already know the problem, you could just drop
+"pci-host-ecam-generic" in this case.
 
-Ah ok.  A comment to that effect would be helpful.
+>
+> So if I understand you correctly, you would rather have
+>
+> marvell,armada8k-pcie-ecam
+> socionext,synquacer-pcie-ecam
+>
+> and add more of those to the list if needed, and update the
+> binding+driver to use those and drop the generic identifier?
 
->=20
->=20
-> >> +             }
-> >> +
-> >> +             provider_node =3D get_node_by_phandle(root, phandle);
-> >> +             if (!provider_node) {
-> >> +                     FAIL(c, dti, "Could not get phandle node for %s:=
-%s(cell %d)",
-> >> +                          node->fullpath, prop->name, cell);
-> >> +                     break;
-> >> +             }
-> >> +
-> >> +             cellprop =3D get_property(provider_node, provider->cell_=
-name);
-> >> +             if (cellprop) {
-> >> +                     cellsize =3D propval_cell(cellprop);
-> >> +             } else if (provider->optional) {
-> >> +                     cellsize =3D 0;
-> >> +             } else {
-> >> +                     FAIL(c, dti, "Missing property '%s' in node %s o=
-r bad phandle (referred from %s:%s[%d])",
-> >> +                          provider->cell_name,
-> >> +                          provider_node->fullpath,
-> >> +                          node->fullpath, prop->name, cell);
-> >> +                     break;
-> >> +             }
-> >> +
-> >> +             if (prop->val.len < ((cell + cellsize + 1) * sizeof(cell=
-_t))) {
-> >> +                     FAIL(c, dti, "%s property size (%d) too small fo=
-r cell size %d in %s",
-> >> +                          prop->name, prop->val.len, cellsize, node->=
-fullpath);
-> >> +             }
-> >
-> > How will this cope if the property is really badly formed - e.g. a 3
-> > byte property, so you can't even grab a whole first phandle?  I think
-> > it will trip the assert() in propval_cell_n() which isn't great.
->=20
-> At least for your example, we'd exit the loop (cell < 3/4). But I need
-> to a check for that because it would be silent currently. I'll add a
-> check that the size is a multiple of 4 and greater than 0.
+Yes, but dropping the generic identifier depends if you know you have
+some problem up front. You do here, but that's not always the case.
 
-Ok.
+The other part is that "pci-host-ecam-generic" alone should not be
+considered valid other than for VM guests. But I can't really enforce
+that.
 
-> However, the check here is not perfect because we could have
-> "<&phandle1 1 2>" when really it should be "<&phandle1 &phandle2
-> &phandle3>". We don't fail until we're checking the 2nd phandle.
-> That's why I added the "or bad phandle" and the cell # in the message
-> above. In the opposite case, we'd be silent. One thing that could be
-> done is double check things against the markers if they are present.
+> I take it
+> that applies to the description of the MSI frame as well?
 
-Uh.. I don't really understand what you're getting at here.  We should
-be able to determine which of these cases it should be by the
-#whatever-cells at &phandle1.
+Probably so. Is there something special about it, too?
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---UIkw8Cc2/Xz5YwHB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmfdCQACgkQbDjKyiDZ
-s5JYEg//W+5WnrM0lwMUwDsRfdy39x8H9IEilTUSvQ7ctetq9z6cSr/GKph9vqHY
-oKwB85Mxxrh4XHLTEszyex1LGbEXRrD6nOoKc+T1z3Q8jfe+uCkSTw7JUZP71HcF
-IptZIfrh9CSJqjYrnrtcl7zQECUnHGr6h4cn3G2t5tjpPDgeO5k89uqvlEh1+epg
-V2c81ftOrlmKusbFULg/QBxWynQ6yJP+6hYEAJ5rSvDIi+wOynjxs5GWpAseITI0
-kkkqd3C33dayUUh5M0K/ahQuH8HLAGQWkVCNAmkM6t8fJhZ0r1JQVs6MWVBniHRv
-sw1I0Oms1ZkRtU7fxf89v0RHb11E+UDPSWZR4c1ZZdkQtPqD4MPWFGOI9ah8Wp1I
-7x8+dnS0saQnTaSqddrJDOVokHPdV22co8HNLnugG6abK8hSPZ26T3kOS0Vf7Owf
-BtmYXAKAIqG10YdVzfcuMeBGcjz+Ui6WbhfM1lnAVxt20tSMFaq1h2GUcstyU7mx
-E2DUpcLQ9fLG5HEezWlFqn3f/x7tNB/g1eaHcT9wumsoHU3XK9OmVJwgykPFP7n0
-+Tn5kkWaWqMrRi51zMuiIEGwV6MbGfyxDgXnsKpr6+GDuYHCyLSQ4sB7PTpxhtDi
-UI7dWQPJDa5wDAK+CJUTxCFGS4bng252gAlSPuOnRYtKaVLqrMc=
-=WNz4
------END PGP SIGNATURE-----
-
---UIkw8Cc2/Xz5YwHB--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
