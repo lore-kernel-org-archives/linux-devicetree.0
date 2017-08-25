@@ -1,156 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] mfd: Add support for TI LMP92001
-Date: Fri, 25 Aug 2017 13:35:20 -0500
-Message-ID: <20170825183520.doacpiit7mxgsk7v@rob-hp-laptop>
-References: <1503383171-15515-1-git-send-email-s.abhisit@gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [RFC 1/3] dt-bindings: interrupt-controller: Add Realtek RTD1295
+Date: Fri, 25 Aug 2017 21:41:06 +0200
+Message-ID: <06bc5f05-cbfb-edc3-7881-dafeba6fa8ea@suse.de>
+References: <20170817101140.32000-1-afaerber@suse.de>
+ <20170817101140.32000-2-afaerber@suse.de>
+ <20170822021459.l3oiid3f4fs6vfa2@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1503383171-15515-1-git-send-email-s.abhisit@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: s.abhisit@gmail.com
-Cc: lee.jones@linaro.org, Jonathan.Cameron@huawei.com, pmeerw@pmeerw.net, jacopo@jmondi.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, fabrice.gasnier@st.com, akinobu.mita@gmail.com, marek.vasut+renesas@gmail.com, jacopo+renesas@jmondi.org, mike.looijmans@topic.nl, peda@axentia.se, jeff.dagenais@gmail.com, linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170822021459.l3oiid3f4fs6vfa2@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?B?6JKL5Li955C0?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 22, 2017 at 01:26:11PM +0700, s.abhisit@gmail.com wrote:
-> From: Abhisit Sangjan <s.abhisit@gmail.com>
+Am 22.08.2017 um 04:14 schrieb Rob Herring:
+> On Thu, Aug 17, 2017 at 12:11:38PM +0200, Andreas Färber wrote:
+>> Add binding for Realtek RTD1295 IRQ mux.
+>>
+>> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>> ---
+>>  .../interrupt-controller/realtek,rtd119x-mux.txt   | 28 ++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+>> new file mode 100644
+>> index 000000000000..4b43370e3d74
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+>> @@ -0,0 +1,28 @@
+>> +Realtek RTD119x/129x IRQ Mux Controller
+>> +=======================================
+>> +
+>> +Required properties:
+>> +
+>> +- compatible           :  Should be one of the following:
+>> +                          - "realtek,rtd1295-irq-mux"
+>> +                          - "realtek,rtd1295-iso-irq-mux"
+>> +- reg                  :  Specifies base physical address and size of the registers.
+>> +- interrupts           :  Specifies the interrupt line which is mux'ed.
+>> +- interrupt-controller :  Presence indicates the node as interrupt controller.
+>> +- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
+>> +
+>> +
+>> +Optional properties:
+>> +
+>> +See interrupt.txt for common bindings.
 > 
-> TI LMP92001 Analog System Monitor and Controller
-> 
-> 8-bit GPIOs.
-> 12 DACs with 12-bit resolution.
-> The GPIOs and DACs are shared port function with Cy function pin to
-> take control the pin suddenly from external hardware.
-> DAC's referance voltage selectable for Internal/External.
-> 
-> 16 + 1 ADCs with 12-bit resolution.
-> Built-in internal Temperature Sensor on channel 17.
-> Windows Comparator Function is supported on channel 1-3 and 9-11 for
-> monitoring with interrupt signal (pending to implement for interrupt).
-> ADC's referance voltage selectable for Internal/External.
-> 
-> Signed-off-by: Abhisit Sangjan <s.abhisit@gmail.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio-lmp920001  |  92 ++++
->  .../devicetree/bindings/gpio/gpio-lmp92001.txt     |  22 +
->  .../bindings/iio/adc/ti-lmp92001-adc.txt           |  21 +
->  .../bindings/iio/dac/ti-lmp92001-dac.txt           |  35 ++
+> What else would apply here? interrupt-parent is the only thing I see, 
+> but that's really implicit anyway.
 
+interrupt-names would be another optional property not needed today.
+interrupt-controller and #interrupt-cells are common properties, too.
 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt b/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
-> new file mode 100644
-> index 0000000..c68784e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
-> @@ -0,0 +1,22 @@
-> +* Texas Instruments' LMP92001 GPIOs
-> +
-> +Required properties:
-> + - compatible: Must be set to "ti,lmp92001-gpio".
-> + - reg: i2c chip address for the device.
+I'll drop both lines if you prefer. Otherwise okay?
 
-No, you show this in the parent which needs to be described in 
-bindings/mtd/...
+Regards,
+Andreas
 
-You could have reg here too if all the registers for each sub-block are 
-in a well defined range.
+>> +
+>> +
+>> +Example:
+>> +
+>> +	interrupt-controller@98007000 {
+>> +		compatible = "realtek,rtd1295-iso-irq-mux";
+>> +		reg = <0x98007000 0x100>;
+>> +		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <1>;
+>> +	};
+>> -- 
+>> 2.12.3
 
-> + - gpio-controller: Marks the device node as a gpio controller.
-> + - #gpio-cells : Should be two.  The first cell is the pin number and the
-> +  second cell is used to specify the gpio polarity:
-> +        0 = Active high
-> +        1 = Active low
-> +
-> +Example:
-> +lmp92001@20 {
-> +        compatible = "ti,lmp92001";
-> +        reg = <0x20>;
-> +
-> +        lmp92001_gpio: lmp92001-gpio {
-
-gpio-controller {
-
-> +                compatible = "ti,lmp92001-gpio";
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +        };
-> +};
-> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt b/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
-> new file mode 100644
-> index 0000000..34d7809
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
-> @@ -0,0 +1,21 @@
-> +* Texas Instruments' LMP92001 ADCs
-> +
-> +Required properties:
-> + - compatible: Must be set to "ti,lmp92001-adc".
-> + - reg: i2c chip address for the device.
-
-Same comment here.
-
-> + - ti,lmp92001-adc-mode: adc operation, either continuous or single-shot.
-
-No standard property for this?
-
-> + - ti,lmp92001-adc-mask: bit mask for which channel is enable.
-> +        0 = Off
-> +        1 = On
-> +
-> +Example:
-> +lmp92001@20 {
-> +        compatible = "ti,lmp92001";
-> +        reg = <0x20>;
-> +
-> +        lmp92001-adc {
-> +                compatible = "ti,lmp92001-adc";
-> +                ti,lmp92001-adc-mode = "continuous";
-> +                ti,lmp92001-adc-mask = <0x00000079>;
-> +        };
-> +};
-> \ No newline at end of file
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt b/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
-> new file mode 100644
-> index 0000000..882db9c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
-> @@ -0,0 +1,35 @@
-> +* Texas Instruments' LMP92001 DACs
-> +
-> +Required properties:
-> + - compatible: Must be set to "ti,lmp92001-dac".
-> + - reg: i2c chip address for the device.
-> + - ti,lmp92001-dac-hiz: hi-impedance control,
-> +        1 = Forces all OUT[1:12] outputs to hi-z, 0 = normal
-
-Just make this a boolean (i.e. no value).
-
-> + - ti,lmp92001-dac-outx:
-> +        Cy = 0, 1 = will force associated OUTx outputs to VDD
-> +        Cy = 0, 0 = will force associated OUTx outputs to GND
-> + - ti,lmp92001-dac-gang: What group of Cy is governed to.
-> +        -----------------------------------------
-> +        |  Cy   | CDAC:GANG = 0 | CDAC:GANG = 1 |
-> +        -----------------------------------------
-> +        |  C1   |   OUT[1:4]    |    OUT[1:3]   |
-> +        -----------------------------------------
-> +        |  C2   |   OUT[5:6]    |    OUT[4:6]   |
-> +        -----------------------------------------
-> +        |  C3   |   OUT[7:8]    |    OUT[7:9]   |
-> +        -----------------------------------------
-> +        |  C4   |   OUT[9:12]   |    OUT[10:12] |
-> +        -----------------------------------------
-> +
-> +Example:
-> +lmp92001@20 {
-> +        compatible = "ti,lmp92001";
-> +        reg = <0x20>;
-> +
-> +        lmp92001-dac {
-> +                compatible = "ti,lmp92001-dac";
-> +                ti,lmp92001-dac-hiz  = /bits/ 8 <0>;
-> +                ti,lmp92001-dac-outx = /bits/ 8 <0>;
-> +                ti,lmp92001-dac-gang = /bits/ 8 <0>;
-> +        };
-> +};
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
