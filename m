@@ -1,48 +1,57 @@
-From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [patch v6 0/3] JTAG driver introduction
-Date: Fri, 25 Aug 2017 09:53:40 -0700
-Message-ID: <CAPLgG=ke+5kX5TuTtciVCxtCr6agpFMo-6peXfhbE0UCvy6M3w@mail.gmail.com>
-References: <1503418256-5215-1-git-send-email-oleksandrs@mellanox.com>
- <CACRpkdZePXyo8Q36mBH7OnJU3E=yWPWSGkGUOH=zJFMjM=Yrhw@mail.gmail.com>
- <CAPLgG==Jj=Ys=SvhOCspSfunbWnuqPySvW9RfuqE8HYnG4C=ZQ@mail.gmail.com>
- <CACRpkdbozWaL0RXyZXjzxYK3JHiqYziSkTGSgGORdptX-rwR8A@mail.gmail.com> <593cd0d3-8e06-0992-c155-1322014c0477@longlandclan.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <593cd0d3-8e06-0992-c155-1322014c0477-3e+Fe6x+DsgJbe36r25VNhCuuivNXqWP@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stuart Longland <stuartl-3e+Fe6x+DsgJbe36r25VNhCuuivNXqWP@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v2] OF: move extern declarations of of_stdout inside ifdef
+Date: Fri, 25 Aug 2017 19:56:44 +0300
+Message-ID: <20170825165644.30800-1-Eugeniy.Paltsev@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 25, 2017 at 1:50 AM, Stuart Longland
-<stuartl-3e+Fe6x+DsgJbe36r25VNhCuuivNXqWP@public.gmane.org> wrote:
-> [Note: dropping vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org as SMTP server complained about the
-> DNS server returning NXDOMAIN.  Apologies.]
-> On 25/08/17 18:32, Linus Walleij wrote:
->> Gnah!
->> Whoever writes a slot-in replacement making the character device
->> take precendence wins lots of karma.
->
-> What would such a replacement look like though?
+Move extern declarations of "of_stdout" pointer inside "CONFIG_OF"
+ifdef to be able to get rid of "CONFIG_OF" ifdef in its usage places.
 
-See Linus's comments about using the existing kernel GPIO chardev
-interface.  It already supports requesting multiple GPIO line state
-changes in a single request.
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
 
->
-> Some sort of system whereby you can read/write single-line commands as
-> if talking to a GPIO expander over a UART?
->
-> Would you access the GPIOs one by one, or would you perhaps map them
-> into a bitmap (maybe arbitrarily, up to 64-bits wide) and perform masked
-> operations on the bitmap?
->
-> I'm no fan of the sysfs GPIO interface, but it beats poking around at
-> registers behind the kernel's back.
-> --
-> Stuart Longland (aka Redhatter, VK4MSL)
->
-> I haven't lost my mind...
->   ...it's backed up on a tape somewhere.
->
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+For example see: https://lkml.org/lkml/2017/8/25/337
+
+Changes v1->v2:
+ * Move only "of_stdout" declarations instead of all entry pointers
+   declarations
+
+ include/linux/of.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index cfc3411..be28cb9 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -135,7 +135,6 @@ static inline void of_node_put(struct device_node *node) { }
+ extern struct device_node *of_root;
+ extern struct device_node *of_chosen;
+ extern struct device_node *of_aliases;
+-extern struct device_node *of_stdout;
+ extern raw_spinlock_t devtree_lock;
+ 
+ /* flag descriptions (need to be visible even when !CONFIG_OF) */
+@@ -147,6 +146,8 @@ extern raw_spinlock_t devtree_lock;
+ #define OF_BAD_ADDR	((u64)-1)
+ 
+ #ifdef CONFIG_OF
++extern struct device_node *of_stdout;
++
+ void of_core_init(void);
+ 
+ static inline bool is_of_node(const struct fwnode_handle *fwnode)
+@@ -539,6 +540,7 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
+ bool of_console_check(struct device_node *dn, char *name, int index);
+ 
+ #else /* CONFIG_OF */
++#define of_stdout	NULL
+ 
+ static inline void of_core_init(void)
+ {
+-- 
+2.9.3
