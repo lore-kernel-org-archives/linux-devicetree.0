@@ -1,49 +1,42 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] serial: sh-sci: document R8A7797 bindings
-Date: Fri, 25 Aug 2017 09:09:06 +0200
-Message-ID: <CAMuHMdXkjYty_U9jA_Q-ziGcCSEa_GFLme5+XGgU3pLx5kTdDw@mail.gmail.com>
-References: <20170824203144.032561541@cogentembedded.com>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: document R8A7797 bindings
+Date: Fri, 25 Aug 2017 09:10:02 +0200
+Message-ID: <CAMuHMdUAF7Th+B0=wAvhcAj+qBzUyZmKS-OTZxEiMhH7D0-11w@mail.gmail.com>
+References: <20170824195616.327888699@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170824203144.032561541@cogentembedded.com>
+In-Reply-To: <20170824195616.327888699@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Thu, Aug 24, 2017 at 10:31 PM, Sergei Shtylyov
+On Thu, Aug 24, 2017 at 9:56 PM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> R-Car V3M (R8A7797) SoC also has the R-Car gen3 compatible SCIF and HSCIF
-> ports, so document the SoC specific bindings.
+> Renesas  R-Car V3M (R8A7797) SoC also has the R-Car gen2/3 compatible DMA
+> controllers, so document the SoC specific binding.
 >
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >
 > ---
-> This patch is against the 'tty-next' branch of GregKH's 'tty.git' repo.
+> The patch is against the 'next' branch of Vinod Koul's 'slave-dma.git' repo.
 >
->  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt |    2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt |    1 +
+>  1 file changed, 1 insertion(+)
 >
-> Index: tty/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> Index: slave-dma/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
 > ===================================================================
-> --- tty.orig/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> +++ tty/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> @@ -41,6 +41,8 @@ Required properties:
->      - "renesas,hscif-r8a7795" for R8A7795 (R-Car H3) HSCIF compatible UART.
->      - "renesas,scif-r8a7796" for R8A7796 (R-Car M3-W) SCIF compatible UART.
->      - "renesas,hscif-r8a7796" for R8A7796 (R-Car M3-W) HSCIF compatible UART.
-> +    - "renesas,scif-r8a7797" for R8A7797 (R-Car V3M) SCIF compatible UART.
-> +    - "renesas,hscif-r8a7797" for R8A7797 (R-Car V3M) HSCIF compatible UART.
+> --- slave-dma.orig/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> +++ slave-dma/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> @@ -25,6 +25,7 @@ Required Properties:
+>                 - "renesas,dmac-r8a7794" (R-Car E2)
+>                 - "renesas,dmac-r8a7795" (R-Car H3)
+>                 - "renesas,dmac-r8a7796" (R-Car M3-W)
+> +               - "renesas,dmac-r8a7797" (R-Car V3M)
 
-Please use "renesas,scif-r8a77970" and "renesas,hscif-r8a77970" instead,
-to follow the new 5-digit scheme started with r8a77995.
-
->      - "renesas,scifa-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFA compatible UART.
->      - "renesas,scifb-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFB compatible UART.
->      - "renesas,rcar-gen1-scif" for R-Car Gen1 SCIF compatible UART,
+Please use "renesas,dmac-r8a77970" instead, to follow the new 5-digit
+scheme started with r8a77995.
 
 Gr{oetje,eeting}s,
 
