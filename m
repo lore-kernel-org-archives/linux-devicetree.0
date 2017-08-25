@@ -1,29 +1,43 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: add cpu regulator for rk3328 evaluation board
-Date: Fri, 25 Aug 2017 11:35:41 +0200
-Message-ID: <3733498.rByIbfHvAf@phil>
-References: <1503542223-21044-1-git-send-email-cl@rock-chips.com> <1503542223-21044-4-git-send-email-cl@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503542223-21044-4-git-send-email-cl@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cl@rock-chips.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, rocky.hao@rock-chips.com, afaerber@suse.de, fabio.estevam@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, kever.yang@rock-chips.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 2/2] mmc: sunxi: Reset the device at probe time
+Date: Fri, 25 Aug 2017 11:49:53 +0200
+Message-ID: <20170825094953.3247-2-maxime.ripard@free-electrons.com>
+References: <20170825094953.3247-1-maxime.ripard@free-electrons.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170825094953.3247-1-maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 24. August 2017, 10:37:03 CEST schrieb cl@rock-chips.com:
-> From: Liang Chen <cl@rock-chips.com>
-> 
-> RK3328 Evaluation Board use rk805 pmic, and one of the DCDCs in
-> rk805 is for cpu regulator, assign the cpu regulator, so the
-> cpufreq can work fine.
-> 
-> Signed-off-by: Liang Chen <cl@rock-chips.com>
+We might be into some troubles if the bootloader misconfigured the MMC
+controller.
 
-applied ... but I cannot say if it will still be eligible for 4.14
-(late in the cycle). If necessary I'll move it forward a release.
+We currently only de-assert the reset line at probe time, which means that
+if the device was already out of reset, we're going to keep whatever state
+was set already.
 
-Thanks
-Heiko
+Switch to a reset instead of the deassert to have a device in a pristine
+state when we start operating.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ drivers/mmc/host/sunxi-mmc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+index da5f46a14497..53c970fe0873 100644
+--- a/drivers/mmc/host/sunxi-mmc.c
++++ b/drivers/mmc/host/sunxi-mmc.c
+@@ -1242,7 +1242,7 @@ static int sunxi_mmc_resource_request(struct sunxi_mmc_host *host,
+ 	}
+ 
+ 	if (!IS_ERR(host->reset)) {
+-		ret = reset_control_deassert(host->reset);
++		ret = reset_control_reset(host->reset);
+ 		if (ret) {
+ 			dev_err(&pdev->dev, "reset err %d\n", ret);
+ 			goto error_disable_clk_sample;
+-- 
+2.13.5
+
