@@ -1,58 +1,66 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [RESEND PATCH 1/1] arm64: dts: Add Variscite DART-SD410
- Evaluation board dts
-Date: Fri, 25 Aug 2017 13:44:18 +0300
-Message-ID: <20170825104418.fb7thsfukgh3im2k@tarshish>
-References: <014701d31418$8e419670$aac4c350$@variscite.com>
- <20170818203505.GB4042@hector.attlocal.net>
- <CAP6K80Sj9=im4CpXTAL+oR6XLmiBQYPeNMmvpC6v2W0xOP-j4g@mail.gmail.com>
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Subject: Re: [PATCH v2 01/10] drm/exynos/decon5433: use readl_poll_timeout
+ helpers
+Date: Fri, 25 Aug 2017 13:25:26 +0200
+Message-ID: <40d914b4-3584-8a14-1c2a-db1966bb6a2d@math.uni-bielefeld.de>
+References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
+ <CGME20170824133408eucas1p1e7b9988ac74fdd3e8dd8d25ead949ec5@eucas1p1.samsung.com>
+ <1503581639-580-2-git-send-email-a.hajda@samsung.com>
+ <2ae55d7a-3730-72f7-ae7e-8556b9e4e4a5@math.uni-bielefeld.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP6K80Sj9=im4CpXTAL+oR6XLmiBQYPeNMmvpC6v2W0xOP-j4g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leonid Segal <leonid.s@variscite.com>
-Cc: Andy Gross <andy.gross@linaro.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, catalin.marinas@arm.com, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2ae55d7a-3730-72f7-ae7e-8556b9e4e4a5@math.uni-bielefeld.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leonid,
-
-On Wed, Aug 23, 2017 at 08:44:56PM +0300, Leonid Segal wrote:
-> Thank you very much for the tips.
-> I have updated the documentation and schematics of our web site.
-> I also tried to implement all other fixes, but seems that I cannot file the git
-> you are talking about.
-> The patches i sent were done to:
-> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> and there is no -next branch.
-> I tried to check out the linaro git:
-> http://git.linaro.org/landing-teams/working/qualcomm/kernel.git
-> there is a -next branch, but the USB section is in old format.
-> 
-> I tried to complile the latest version from
-> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> the usb there in new format, but nothing works (even LEDS) on Dragonboard too.
-> So, I think I am missing something global on the way.
-> 
->    If you can help me with it, I will appreciate it.
-
-The linux-next tree is at [1]. Stephen Rothwell generates this tree on a daily 
-basis semi-automatically from subsystem maintainers branches that feed the 
--next tree. Read more about it in the linux-next web page[2]. The branch that 
-feeds the arm64 changes is for-next/core[3]. See the full list in the 
-Next/Trees file in the -next tree.
-
-Hope this helps,
-baruch
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
-[2] https://www.kernel.org/doc/man-pages/linux-next.html
-
-[3] git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux#for-next/core
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+VG9iaWFzIEpha29iaSB3cm90ZToKPiBIZWxsbyBBbmRyemVqLAo+IAo+IAo+IEFuZHJ6ZWogSGFq
+ZGEgd3JvdGU6Cj4+IExpbnV4IGNvcmUgcHJvdmlkZSBoZWxwZXJzIGZvciBwb2xsaW5nIHdpdGgg
+dGltZW91dCwgbGV0cyB1c2UgdGhlbS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpk
+YSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPj4gLS0tCj4+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9z
+L2V4eW5vczU0MzNfZHJtX2RlY29uLmMgfCAyMCArKysrKysrKy0tLS0tLS0tLS0tLQo+PiAgMSBm
+aWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMgYi9k
+cml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMKPj4gaW5kZXggNTc5
+MmNhODguLjIzN2I0YzkgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5
+bm9zNTQzM19kcm1fZGVjb24uYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
+czU0MzNfZHJtX2RlY29uLmMKPj4gQEAgLTEzLDYgKzEzLDcgQEAKPj4gICNpbmNsdWRlIDxsaW51
+eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPj4gICNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPj4gICNpbmNs
+dWRlIDxsaW51eC9jb21wb25lbnQuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9pb3BvbGwuaD4KPj4g
+ICNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvb2ZfZGV2
+aWNlLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvb2ZfZ3Bpby5oPgo+PiBAQCAtNDA3LDI0ICs0MDgs
+MTkgQEAgc3RhdGljIHZvaWQgZGVjb25fYXRvbWljX2ZsdXNoKHN0cnVjdCBleHlub3NfZHJtX2Ny
+dGMgKmNydGMpCj4+ICAKPj4gIHN0YXRpYyB2b2lkIGRlY29uX3N3cmVzZXQoc3RydWN0IGRlY29u
+X2NvbnRleHQgKmN0eCkKPj4gIHsKPj4gLQl1bnNpZ25lZCBpbnQgdHJpZXM7Cj4+ICAJdW5zaWdu
+ZWQgbG9uZyBmbGFnczsKPj4gKwl1MzIgdmFsOwo+PiArCWludCByZXQ7Cj4+ICAKPj4gIAl3cml0
+ZWwoMCwgY3R4LT5hZGRyICsgREVDT05fVklEQ09OMCk7Cj4+IC0JZm9yICh0cmllcyA9IDIwMDA7
+IHRyaWVzOyAtLXRyaWVzKSB7Cj4+IC0JCWlmICh+cmVhZGwoY3R4LT5hZGRyICsgREVDT05fVklE
+Q09OMCkgJiBWSURDT04wX1NUT1BfU1RBVFVTKQo+PiAtCQkJYnJlYWs7Cj4+IC0JCXVkZWxheSgx
+MCk7Cj4+IC0JfQo+PiArCXJlYWRsX3BvbGxfdGltZW91dChjdHgtPmFkZHIgKyBERUNPTl9WSURD
+T04wLCB2YWwsCj4+ICsJCQkgICB+dmFsICYgVklEQ09OMF9TVE9QX1NUQVRVUywgMTIsIDIwMDAw
+KTsKPiBXb3VsZG4ndCBpdCBiZSBtb3JlIGNvbnNpc3RlbnQgdG8gYWxzbyBjaGVjayBmb3IgYSB0
+aW1lb3V0IGhlcmU/Ckkgc2VlISBUaGFua3MgZm9yIHRoZSBjbGFyaWZpY2F0aW9uLgoKLSBUb2Jp
+YXMKCgo+IFdpdGggYmVzdCB3aXNoZXMsCj4gVG9iaWFzCj4gCj4gCj4gCj4+ICAJd3JpdGVsKFZJ
+RENPTjBfU1dSRVNFVCwgY3R4LT5hZGRyICsgREVDT05fVklEQ09OMCk7Cj4+IC0JZm9yICh0cmll
+cyA9IDIwMDA7IHRyaWVzOyAtLXRyaWVzKSB7Cj4+IC0JCWlmICh+cmVhZGwoY3R4LT5hZGRyICsg
+REVDT05fVklEQ09OMCkgJiBWSURDT04wX1NXUkVTRVQpCj4+IC0JCQlicmVhazsKPj4gLQkJdWRl
+bGF5KDEwKTsKPj4gLQl9Cj4+ICsJcmV0ID0gcmVhZGxfcG9sbF90aW1lb3V0KGN0eC0+YWRkciAr
+IERFQ09OX1ZJRENPTjAsIHZhbCwKPj4gKwkJCQkgfnZhbCAmIFZJRENPTjBfU1dSRVNFVCwgMTIs
+IDIwMDAwKTsKPj4gIAo+PiAtCVdBUk4odHJpZXMgPT0gMCwgImZhaWxlZCB0byBzb2Z0d2FyZSBy
+ZXNldCBERUNPTlxuIik7Cj4+ICsJV0FSTihyZXQgPCAwLCAiZmFpbGVkIHRvIHNvZnR3YXJlIHJl
+c2V0IERFQ09OXG4iKTsKPj4gIAo+PiAgCXNwaW5fbG9ja19pcnFzYXZlKCZjdHgtPnZibGFua19s
+b2NrLCBmbGFncyk7Cj4+ICAJY3R4LT5mcmFtZV9pZCA9IDA7Cj4+Cj4gCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
