@@ -1,26 +1,65 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 2/2] of: Restrict DMA configuration
-Date: Fri, 25 Aug 2017 16:54:57 +0200
-Message-ID: <20170825145457.GA17842@lst.de>
-References: <0819179085df6c41c70e83a2c5c138b95c0386b3.1502468875.git.robin.murphy@arm.com> <82633e62b64e28dc18bc466319065b92faf2414f.1502468875.git.robin.murphy@arm.com> <CAL_JsqKW7nhkCDu4eEDCgdC87b0MLH1UFO8LvaH22BcJMBsY7w@mail.gmail.com> <6819c6ae-e898-3293-d8b0-7a80108d7628@arm.com> <CAL_Jsq+pDHbrpLDYUVu22tk4OtR9Di4vxZUozwWJDu2ebYSBdg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH] OF: move extern declarations of entry pointers inside ifdef
+Date: Fri, 25 Aug 2017 18:00:26 +0300
+Message-ID: <20170825150027.25341-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+pDHbrpLDYUVu22tk4OtR9Di4vxZUozwWJDu2ebYSBdg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Stefan Wahren <stefan.wahren@i2se.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Hans Verkuil <hverkuil@xs4all.nl>, Johan Hovold <johan@kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+To: devicetree@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 15, 2017 at 09:19:50AM -0500, Rob Herring wrote:
-> > For the immediate issue at hand, I guess the alternative plan of attack
-> > would be to stick a flag in struct bus_type for the bus drivers
-> > themselves to opt into generic DMA configuration. That at least keeps
-> > everything within the kernel (and come to think of it probably works
-> > neatly for modular bus types as well).
-> 
-> I'm fine with the change as is, it's really just the commit text I'm
-> commenting on.
+Move extern declarations of "of_root", "of_chosen", "of_aliases",
+"of_stdout" pointers inside "CONFIG_OF" ifdef to be able to get rid
+of "CONFIG_OF" ifdef in their usage places.
 
-Robin, can you resend this with an updated commit text?
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+For example see: https://lkml.org/lkml/2017/8/25/337
+
+ include/linux/of.h | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index cfc3411..d117bf1 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -131,11 +131,6 @@ static inline struct device_node *of_node_get(struct device_node *node)
+ static inline void of_node_put(struct device_node *node) { }
+ #endif /* !CONFIG_OF_DYNAMIC */
+ 
+-/* Pointer for first entry in chain of all nodes. */
+-extern struct device_node *of_root;
+-extern struct device_node *of_chosen;
+-extern struct device_node *of_aliases;
+-extern struct device_node *of_stdout;
+ extern raw_spinlock_t devtree_lock;
+ 
+ /* flag descriptions (need to be visible even when !CONFIG_OF) */
+@@ -147,6 +142,12 @@ extern raw_spinlock_t devtree_lock;
+ #define OF_BAD_ADDR	((u64)-1)
+ 
+ #ifdef CONFIG_OF
++/* Pointer for first entry in chain of all nodes. */
++extern struct device_node *of_root;
++extern struct device_node *of_chosen;
++extern struct device_node *of_aliases;
++extern struct device_node *of_stdout;
++
+ void of_core_init(void);
+ 
+ static inline bool is_of_node(const struct fwnode_handle *fwnode)
+@@ -539,6 +540,10 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
+ bool of_console_check(struct device_node *dn, char *name, int index);
+ 
+ #else /* CONFIG_OF */
++#define of_root		NULL
++#define of_chosen	NULL
++#define of_aliases	NULL
++#define of_stdout	NULL
+ 
+ static inline void of_core_init(void)
+ {
+-- 
+2.9.3
