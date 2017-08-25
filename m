@@ -1,85 +1,87 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [RFC 1/3] dt-bindings: interrupt-controller: Add Realtek RTD1295
-Date: Fri, 25 Aug 2017 21:41:06 +0200
-Message-ID: <06bc5f05-cbfb-edc3-7881-dafeba6fa8ea@suse.de>
-References: <20170817101140.32000-1-afaerber@suse.de>
- <20170817101140.32000-2-afaerber@suse.de>
- <20170822021459.l3oiid3f4fs6vfa2@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: adc: mcp320x: Update for
+ mcp3550/1/3
+Date: Fri, 25 Aug 2017 14:59:41 -0500
+Message-ID: <20170825195941.iylf4w5hitjwniio@rob-hp-laptop>
+References: <cover.1503407738.git.lukas@wunner.de>
+ <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170822021459.l3oiid3f4fs6vfa2@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?B?6JKL5Li955C0?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 22.08.2017 um 04:14 schrieb Rob Herring:
-> On Thu, Aug 17, 2017 at 12:11:38PM +0200, Andreas Färber wrote:
->> Add binding for Realtek RTD1295 IRQ mux.
->>
->> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
->> ---
->>  .../interrupt-controller/realtek,rtd119x-mux.txt   | 28 ++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
->> new file mode 100644
->> index 000000000000..4b43370e3d74
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
->> @@ -0,0 +1,28 @@
->> +Realtek RTD119x/129x IRQ Mux Controller
->> +=======================================
->> +
->> +Required properties:
->> +
->> +- compatible           :  Should be one of the following:
->> +                          - "realtek,rtd1295-irq-mux"
->> +                          - "realtek,rtd1295-iso-irq-mux"
->> +- reg                  :  Specifies base physical address and size of the registers.
->> +- interrupts           :  Specifies the interrupt line which is mux'ed.
->> +- interrupt-controller :  Presence indicates the node as interrupt controller.
->> +- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
->> +
->> +
->> +Optional properties:
->> +
->> +See interrupt.txt for common bindings.
+On Tue, Aug 22, 2017 at 03:33:00PM +0200, Lukas Wunner wrote:
+> All chips supported by this driver clock data out on the falling edge
+> and latch data in on the rising edge, hence SPI mode (0,0) or (1,1)
+> must be used.
 > 
-> What else would apply here? interrupt-parent is the only thing I see, 
-> but that's really implicit anyway.
+> Furthermore, none of the chips has an internal reference voltage
+> regulator, so an external supply is always required and needs to be
+> specified in the device tree lest the IIO "scale" in sysfs cannot be
+> calculated.
+> 
+> Document these requirements in the device tree binding, together with
+> the new "microchip,continuous-conversion" property added specifically
+> for the mcp3550/1/3.
+> 
+> Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/adc/mcp320x.txt        | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> index bcd3ac8e6e0c..cf28af9ec0ac 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> @@ -29,15 +29,38 @@ Required properties:
+>  				"microchip,mcp3204"
+>  				"microchip,mcp3208"
+>  				"microchip,mcp3301"
+> +				"microchip,mcp3550-50"
+> +				"microchip,mcp3550-60"
+> +				"microchip,mcp3551"
+> +				"microchip,mcp3553"
+>  
+>  			NOTE: The use of the compatibles with no vendor prefix
+>  			is deprecated and only listed because old DT use them.
+>  
+> +	- spi-cpha, spi-cpol (boolean):
+> +			Either SPI mode (0,0) or (1,1) must be used, so specify
+> +			none or both of spi-cpha, spi-cpol.  The MCP3550/1/3
+> +			is more efficient in mode (1,1) as only 3 instead of
+> +			4 bytes need to be read from the ADC, but not all SPI
+> +			masters support it.
+> +
+> +	- vref-supply:	Phandle to the external reference voltage supply.
+> +
+> +Optional properties:
+> +	- microchip,continuous-conversion (boolean):
 
-interrupt-names would be another optional property not needed today.
-interrupt-controller and #interrupt-cells are common properties, too.
+Second binding I have seen today with a continuous property. Make this 
+common (or maybe we already have one).
 
-I'll drop both lines if you prefer. Otherwise okay?
-
-Regards,
-Andreas
-
->> +
->> +
->> +Example:
->> +
->> +	interrupt-controller@98007000 {
->> +		compatible = "realtek,rtd1295-iso-irq-mux";
->> +		reg = <0x98007000 0x100>;
->> +		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupt-controller;
->> +		#interrupt-cells = <1>;
->> +	};
->> -- 
->> 2.12.3
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +			Only applicable to MCP3550/1/3:  These ADCs have long
+> +			conversion times and therefore support "continuous
+> +			conversion mode" to allow retrieval of conversions
+> +			at any time without observing a delay.  The mode is
+> +			enabled by permanently driving CS low, e.g. by wiring
+> +			it to ground.
+> +
+>  Examples:
+>  spi_controller {
+>  	mcp3x0x@0 {
+>  		compatible = "mcp3002";
+>  		reg = <0>;
+>  		spi-max-frequency = <1000000>;
+> +		vref-supply = <&vref_reg>;
+>  	};
+>  };
+> -- 
+> 2.11.0
+> 
