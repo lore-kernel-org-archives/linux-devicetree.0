@@ -1,74 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] checks: add phandle with arg property checks
-Date: Fri, 25 Aug 2017 10:27:09 -0500
-Message-ID: <CAL_JsqKv=0Bu84Q0Mo9W9NhHqHE5VWCH_w38g=YMQ9ZCGqTFHw@mail.gmail.com>
-References: <20170822230208.20987-1-robh@kernel.org> <20170822230208.20987-2-robh@kernel.org>
- <20170824020338.GV5379@umbus.fritz.box> <CAL_Jsq+0Njjs_PHBSD-B7W9YFzdfpB2ApBcBD=48+BoXQKv2pw@mail.gmail.com>
- <CAL_Jsq+NVBF6npai2_CRSVchGN_EQBSYnQcw3rHZcNFKpP7pDg@mail.gmail.com> <20170825131727.GJ2772@umbus.fritz.box>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170825131727.GJ2772-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v1] of: Use PLATFORM_DEVID_NONE definition
+Date: Fri, 25 Aug 2017 18:33:13 +0300
+Message-ID: <20170825153313.60658-1-andriy.shevchenko@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 25, 2017 at 8:17 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->
-> On Thu, Aug 24, 2017 at 02:19:27PM -0500, Rob Herring wrote:
-> > On Thu, Aug 24, 2017 at 12:23 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > > On Wed, Aug 23, 2017 at 9:03 PM, David Gibson
-> > > <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > >> On Tue, Aug 22, 2017 at 06:02:06PM -0500, Rob Herring wrote:
-> > >>> Many common bindings follow the same pattern of client properties
-> > >>> containing a phandle and N arg cells where N is defined in the provider
-> > >>> with a '#<specifier>-cells' property such as:
-> >
-> > [...]
-> >
-> > >>> +             if (prop->val.len < ((cell + cellsize + 1) * sizeof(cell_t))) {
-> > >>> +                     FAIL(c, dti, "%s property size (%d) too small for cell size %d in %s",
-> > >>> +                          prop->name, prop->val.len, cellsize, node->fullpath);
-> > >>> +             }
-> > >>
-> > >> How will this cope if the property is really badly formed - e.g. a 3
-> > >> byte property, so you can't even grab a whole first phandle?  I think
-> > >> it will trip the assert() in propval_cell_n() which isn't great.
-> > >
-> > > At least for your example, we'd exit the loop (cell < 3/4). But I need
-> > > to a check for that because it would be silent currently. I'll add a
-> > > check that the size is a multiple of 4 and greater than 0.
-> > >
-> > > However, the check here is not perfect because we could have
-> > > "<&phandle1 1 2>" when really it should be "<&phandle1 &phandle2
-> > > &phandle3>". We don't fail until we're checking the 2nd phandle.
-> > > That's why I added the "or bad phandle" and the cell # in the message
-> > > above. In the opposite case, we'd be silent. One thing that could be
-> > > done is double check things against the markers if they are present.
-> >
-> > Here's what that looks like:
-> >
-> > /* If we have markers, verify the current cell is a phandle */
-> > if (prop->val.markers) {
-> >   struct marker *m = prop->val.markers;
-> >   for_each_marker_of_type(m, REF_PHANDLE) {
-> >     if (m->offset == (cell * sizeof(cell_t)))
-> >       break;
-> >   }
-> >   if (!m)
-> >   FAIL(c, dti, "Property '%s', cell %d is not a valid phandle in %s",
-> >     prop->name, cell, node->fullpath);
->
-> The logic seems sound, but I don't like the message.  An integer
-> literal is no less a phandle than a reference, just usually not the
-> best way of entering one.
+Use dedicated definition instead of plain -1 where it's appropriate.
 
-Then what do you propose? There's not really any way I can distinguish
-a mixture. If #whatever-cells was wrong and I'm pointing to an integer
-literal that's not a phandle, it looks no different than if
-#whatever-cells is correct and I'm pointing to an integer literal that
-is a phandle.
+No functional change intended.
 
-Rob
+Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ drivers/of/device.c   | 2 +-
+ drivers/of/platform.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 6f33a0e0d351..8963ec8ea96f 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -58,7 +58,7 @@ int of_device_add(struct platform_device *ofdev)
+ 	/* name and id have to be set so that the platform bus doesn't get
+ 	 * confused on matching */
+ 	ofdev->name = dev_name(&ofdev->dev);
+-	ofdev->id = -1;
++	ofdev->id = PLATFORM_DEVID_NONE;
+ 
+ 	/*
+ 	 * If this device has not binding numa node in devicetree, that is
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 683b2e74bef7..ac15d0e3d27d 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -118,7 +118,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 	int rc, i, num_reg = 0, num_irq;
+ 	struct resource *res, temp_res;
+ 
+-	dev = platform_device_alloc("", -1);
++	dev = platform_device_alloc("", PLATFORM_DEVID_NONE);
+ 	if (!dev)
+ 		return NULL;
+ 
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
