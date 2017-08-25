@@ -1,91 +1,37 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] powerpc: pseries: vio: match parent nodes with of_find_node_by_path
-Date: Fri, 25 Aug 2017 10:10:30 +1000
-Message-ID: <87mv6ov761.fsf@concordia.ellerman.id.au>
-References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-3-robh@kernel.org> <87fuckb2z2.fsf@concordia.ellerman.id.au> <CAL_Jsq+sUgVcfNkpAHG7TmkO03+-0_GuZVW2tpxq6Xm2qDzUog@mail.gmail.com>
+From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] PCI: rockchip: Move PCIE_WAKE handling into rockchip
+ pcie driver
+Date: Fri, 25 Aug 2017 08:49:55 +0800
+Message-ID: <599F7433.4070606@rock-chips.com>
+References: <20170822031934.8675-1-jeffy.chen@rock-chips.com> <20170824165505.GM31858@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+sUgVcfNkpAHG7TmkO03+-0_GuZVW2tpxq6Xm2qDzUog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170824165505.GM31858-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+Hi Bjorn,
 
-> On Tue, Aug 22, 2017 at 12:12 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
->> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
->>
->>> In preparation to remove the full path from device_node.full_name, use
->>> of_find_node_by_path instead of open coding with strcmp.
->>>
->>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
->>> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
->>> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
->>> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>> ---
->>> v2:
->>> - rebased to linux-next and removed spurious change fro patch 1.
->>>
->>>  arch/powerpc/platforms/pseries/vio.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
->>> index aa5ca74316fa..5754572deb23 100644
->>> --- a/arch/powerpc/platforms/pseries/vio.c
->>> +++ b/arch/powerpc/platforms/pseries/vio.c
->>> @@ -1357,9 +1357,9 @@ struct vio_dev *vio_register_device_node(struct device_node *of_node)
->>>        */
->>>       parent_node = of_get_parent(of_node);
->>>       if (parent_node) {
->>> -             if (!strcmp(parent_node->full_name, "/ibm,platform-facilities"))
->>> +             if (parent_node == of_find_node_by_path("/ibm,platform-facilities"))
->>>                       family = PFO;
->>> -             else if (!strcmp(parent_node->full_name, "/vdevice"))
->>> +             else if (parent_node == of_find_node_by_path("/vdevice"))
->>>                       family = VDEVICE;
->>
->> This leaks references to the looked up nodes.
->>
->> Both these nodes are defined in PAPR (our hypervisor spec), and both of
->> them must have a device_type, either "ibm,platform-facilities" or
->> "vdevice".
->>
->> Looking at the commit that added the code I don't see any particular
->> reason it used the comparison against full_name, rather than using the
->> device_type.
->>
->> So I'm inclined to do this instead:
->>
->> diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
->> index 8a47f168476b..f26f906e6021 100644
->> --- a/arch/powerpc/platforms/pseries/vio.c
->> +++ b/arch/powerpc/platforms/pseries/vio.c
->> @@ -1357,9 +1357,9 @@ struct vio_dev *vio_register_device_node(struct device_node *of_node)
->>          */
->>         parent_node = of_get_parent(of_node);
->>         if (parent_node) {
->> -               if (!strcmp(parent_node->full_name, "/ibm,platform-facilities"))
->> +               if (!strcmp(parent_node->type, "ibm,platform-facilities"))
->>                         family = PFO;
->> -               else if (!strcmp(parent_node->full_name, "/vdevice"))
->> +               else if (!strcmp(parent_node->type, "vdevice"))
->>                         family = VDEVICE;
->>                 else {
->>                         pr_warn("%s: parent(%s) of %s not recognized.\n",
->>
->>
->> I've checked both Qemu and kvmtool add the device_type, and I'm fairly
->> confident that PowerVM does too. Anyway I'll test it on all the machines
->> I can find.
+On 08/25/2017 12:55 AM, Bjorn Helgaas wrote:
+> Looking for acks from Shawn and Rob...
 >
-> Okay, do you want me to respin the patch or will you update it with
+> And I'm not sure about the DT wake IRQ description.  That seems like it
+> could potentially be generic than this Rockchip-specific proposal.
+>
+>
+it looks like shawn already take the error handling patch into his 
+series, so i'll remove that one in my next version.
 
-I merged it. Should be in next today.
+i'll wait for those error handling patches to land, then rebase and 
+resend this wake irq patches, thanks:)
 
-cheers
+>
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
