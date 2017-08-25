@@ -1,130 +1,82 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: designware: add binding for
- Designware PCIe in ECAM mode
-Date: Thu, 24 Aug 2017 20:22:36 -0500
-Message-ID: <CAL_JsqJz9THQ4jnZQJCNmk96-jvG2MKgcp9oiPT4=R36PW-=+A@mail.gmail.com>
-References: <20170824184321.19432-1-ard.biesheuvel@linaro.org>
- <20170824184321.19432-4-ard.biesheuvel@linaro.org> <CAL_JsqJTGeLv-c0wXCvMZggU4yzo__s-pD7qEZ7Q3w8=uUuu4Q@mail.gmail.com>
- <CAKv+Gu-D0tgygJ84iGEoEU9OcjUwrtvS2Z2wrOHAZ9kO_kE_rA@mail.gmail.com>
- <CAL_JsqJkDmT3_Umhi+y9e6qML+Ei=ee7G7EohpoMJacBeecirQ@mail.gmail.com> <CAKv+Gu-ho_ipsuAViyaDY6=m+NO7Y-hpZ2TEz=7WgVJP-i+eAw@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] devfreq: Convert to using %pOF instead of full_name
+Date: Fri, 25 Aug 2017 10:26:32 +0900
+Message-ID: <599F7CC8.1040406@samsung.com>
+References: <20170718214339.7774-17-robh@kernel.org>
+        <CGME20170718214411epcas2p43fc1475c80245889737ba9e731497e38@epcms1p2>
+        <596EB809.7050605@samsung.com>
+        <20170720052553epcms1p24dc190a0d51f2e447a76e417e519bd28@epcms1p2>
+        <CAL_JsqL9x16Z76VSAkDUiyEddafYuiH4mFTUur=8LgrJehrFLw@mail.gmail.com>
+        <599E0D45.7030001@samsung.com>
+        <CAL_Jsq+LW8ZmE_J0B9Cea_Y0iDkBX46cXWnAF882C9-7SB_T=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAKv+Gu-ho_ipsuAViyaDY6=m+NO7Y-hpZ2TEz=7WgVJP-i+eAw@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Marc Zyngier <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <CAL_Jsq+LW8ZmE_J0B9Cea_Y0iDkBX46cXWnAF882C9-7SB_T=A@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 5:37 PM, Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
-> On 24 August 2017 at 23:12, Rob Herring <robh@kernel.org> wrote:
->> On Thu, Aug 24, 2017 at 3:12 PM, Ard Biesheuvel
->> <ard.biesheuvel@linaro.org> wrote:
->>> On 24 August 2017 at 21:02, Rob Herring <robh@kernel.org> wrote:
->>>> Cc the DT list for bindings please.
->>>>
->>>> On Thu, Aug 24, 2017 at 1:43 PM, Ard Biesheuvel
->>>> <ard.biesheuvel@linaro.org> wrote:
->>>>> Describe the binding for firmware-configured instances of the Synopsys
->>>>> Designware PCIe controller in RC mode.
+On 2017년 08월 24일 23:23, Rob Herring wrote:
+> On Wed, Aug 23, 2017 at 6:18 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>> Hi Rob,
+>>
+>> On 2017년 08월 24일 03:09, Rob Herring wrote:
+>>> On Thu, Jul 20, 2017 at 12:25 AM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
+>>>>> On 2017년 07월 19일 06:42, Rob Herring wrote:
+>>>>>> Now that we have a custom printf format specifier, convert users of
+>>>>>> full_name to use %pOF instead. This is preparation to remove storing
+>>>>>> of the full path string for each node.
+>>>>>>
+>>>>>> Signed-off-by: Rob Herring <robh@kernel.org>
+>>>>>> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+>>>>>> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+>>>>>> Cc: linux-pm@vger.kernel.org
+>>>>>> ---
+>>>>>>  drivers/devfreq/devfreq-event.c | 4 ++--
+>>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+>>>>>> index 8648b32ebc89..d67242d87744 100644
+>>>>>> --- a/drivers/devfreq/devfreq-event.c
+>>>>>> +++ b/drivers/devfreq/devfreq-event.c
+>>>>>> @@ -277,8 +277,8 @@ int devfreq_event_get_edev_count(struct device *dev)
+>>>>>>                                             sizeof(u32));
+>>>>>>     if (count < 0) {
+>>>>>>             dev_err(dev,
+>>>>>> -                   "failed to get the count of devfreq-event in %s node\n",
+>>>>>> -                   dev->of_node->full_name);
+>>>>>> +                   "failed to get the count of devfreq-event in %pOF node\n",
+>>>>>> +                   dev->of_node);
+>>>>>>             return count;
+>>>>>>     }
+>>>>>>
 >>>>>
->>>>> Cc: Rob Herring <robh@kernel.org>
->>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt | 56 ++++++++++++++++++++
->>>>>  1 file changed, 56 insertions(+)
+>>>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 >>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt b/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
->>>>> new file mode 100644
->>>>> index 000000000000..b8127b19c220
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
->>>>> @@ -0,0 +1,56 @@
->>>>> +* Synopsys Designware PCIe root complex in ECAM mode
->>>>> +
->>>>> +In some cases, firmware may already have configured the Synopsys Designware
->>>>> +PCIe controller in RC mode with static ATU window mappings that cover all
->>>>> +config, MMIO and I/O spaces in a [mostly] ECAM compatible fashion.
->>>>> +In this case, there is no need for the OS to perform any low level setup
->>>>> +of clocks or device registers, nor is there any reason for the driver to
->>>>> +reconfigure ATU windows for config and/or IO space accesses at runtime.
->>>>> +
->>>>> +Such hardware configurations should be described as "pci-host-ecam-generic"
->>>>> +if they are truly ECAM compatible. Configurations that require no low-level
->>>>> +setup by the OS nor any ATU window reconfiguration at runtime, but do
->>>>> +require special handling for type 0 config TLPs may instead be described as
->>>>> +"snps,dw-pcie-ecam".
 >>>>
->>>> Humm, what happens when we have the next exception that's SoC specific
->>>> or another vendor?
+>>>> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 >>>
->>> This is not SoC specific, but IP specific. We are working with two
->>> different SoCs from completely different vendors that both synthesized
->>> this IP with a 64 KB ATU window size, not expecting this to break ECAM
->>> compatibility.
+>>> Please take this thru the devfreq tree.
 >>
->> This case is not SoC specific, but quirks/bugs show up in both places.
->> Plus "dw-pcie" is fairly meaningless because the IP is both
->> configurable and has multiple releases.
->>
->>>> Seems like perhaps "firmware initialized" should
->>>> have been a separate property flag for bootloaders to add rather than
->>>> a compatible string.
->>>>
->>>
->>> Yes, but then you still have 10 different drivers that all retain the
->>> low-level bits that are all different between SoCs. That is exactly
->>> what I want to get rid of, and usually we can do that with existing
->>> bindings, because we simply expose it as pci-host-ecam-generic. Only
->>> in this particular case, that doesn't fly due to the quirk.
->>
->> You can expose it as "vendor,soc-pcie", "pci-host-ecam-generic" and
->> then the kernel can decide. Then you can use: the default ecam driver,
->> the ecam driver but match on "vendor,soc-pcie" for quirks, or a vendor
->> specific driver. The only thing that wouldn't work would be having
->> both quirks in the ecam driver and a vendor driver which IMO we just
->> shouldn't support anyway.
->>
->> Now if you have 10 SoCs all needing this same quirk, then maybe adding
->> "snps,dw-pcie-ecam" addtionally to the above makes sense. But that
->> only saves you match strings.
->>
->
-> Exposing this as "pci-host-ecam-generic" doesn't work, or we wouldn't
-> be having this discussion.
+>> This patch was merged on devfreq tree.
+>> https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=7f46535e8a2e3c3e415e55eaadcb9d9a153a5300
+> 
+> Okay, it's not showing up in linux-next which is why I asked.
 
-Exposing it *alone* won't work, but you could match on it for the
-driver and then in the probe function have an:
+As I knew, devfreq maintainer has not yet asked
+the inclusion of devfreq tree in linux-next.
 
-if (of_device_is_compatible(np, "marvell,armada8k-pcie-ecam"))
-  // handle device quirk
+To Myungjoo,
+You can ask to 'Stephen Rothwell <sfr@canb.auug.org.au>'
+for the inclusion of devfreq tree in linux-next.
 
-I haven't looked at what exactly you need to handle though. I don't
-have the rest of the series.
+git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git for-next
 
-But since you already know the problem, you could just drop
-"pci-host-ecam-generic" in this case.
-
->
-> So if I understand you correctly, you would rather have
->
-> marvell,armada8k-pcie-ecam
-> socionext,synquacer-pcie-ecam
->
-> and add more of those to the list if needed, and update the
-> binding+driver to use those and drop the generic identifier?
-
-Yes, but dropping the generic identifier depends if you know you have
-some problem up front. You do here, but that's not always the case.
-
-The other part is that "pci-host-ecam-generic" alone should not be
-considered valid other than for VM guests. But I can't really enforce
-that.
-
-> I take it
-> that applies to the description of the MSI frame as well?
-
-Probably so. Is there something special about it, too?
-
-Rob
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
