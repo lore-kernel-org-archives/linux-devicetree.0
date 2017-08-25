@@ -1,84 +1,155 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: PCI: rockchip: Add support for pcie
- wake irq
-Date: Thu, 24 Aug 2017 19:11:32 -0700
-Message-ID: <20170825021132.GA104845@google.com>
-References: <20170822031934.8675-1-jeffy.chen@rock-chips.com>
- <20170822031934.8675-4-jeffy.chen@rock-chips.com>
- <20170824165353.GL31858@bhelgaas-glaptop.roam.corp.google.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v2 08/10] drm/exynos/decon5433: use mode info stored in
+ CRTC to detect i80 mode
+Date: Fri, 25 Aug 2017 11:15:08 +0900
+Message-ID: <599F882C.20507@samsung.com>
+References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
+        <CGME20170824133411eucas1p1601aabfcb12d8ae39f5b6400d16da99e@eucas1p1.samsung.com>
+        <1503581639-580-9-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170824165353.GL31858@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, bhelgaas@google.com, shawn.lin@rock-chips.com, dianders@chromium.org, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1503581639-580-9-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 11:53:54AM -0500, Bjorn Helgaas wrote:
-> On Tue, Aug 22, 2017 at 11:19:33AM +0800, Jeffy Chen wrote:
-> > Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 
-> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> > index 5678be82530d..9f6504129e80 100644
-> > --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> > @@ -20,10 +20,13 @@ Required properties:
-> >  - msi-map: Maps a Requester ID to an MSI controller and associated
-> >  	msi-specifier data. See ./pci-msi.txt
-> >  - interrupts: Three interrupt entries must be specified.
-> > -- interrupt-names: Must include the following names
-> > -	- "sys"
-> > -	- "legacy"
-> > -	- "client"
-> > +- interrupt-names: Include the following names
-> > +	Required:
-> > +		- "sys"
-> > +		- "legacy"
-> > +		- "client"
-> > +	Optional:
-> > +		- "wake"
+
+2017년 08월 24일 22:33에 Andrzej Hajda 이(가) 쓴 글:
+> Since panel's mode of work is propagated properly from panel to DECON,
+> there is no need to use redundant private device tree property.
+> The only issue with such approach is that check for required interrupts
+> should be postponed until panel communicate its requirements, ie to
+> mode validation phase - mode_valid callback.
+
+Same patch will be required for other Exynos SoCs for consistency later.
+
+
+Thanks,
+Inki Dae
+
 > 
-> Why is there no other PCI binding that includes "wake" as an
-> interrupt-name?  This feels like something that should be fairly
-> common across host controllers.  I don't want a Rockport-specific
-
-s/port/chip/ :)
-
-> DT description if it could be made more general.
-
-I'm not sure we can really answer that question ("why do no other PCI
-bindings have this?"). But one guess would be that every other
-controller uses only beacon wake.
-
-It would be OK with me if we made a blanket statement that a controller
-with a "wake" interrupt means PCI WAKE# (per the specification). It's
-possible this could even be stuck into some generic PCI/DT code
-eventually. (I don't think we have a really good place for this today.)
-
-Brian
-
-> >  - resets: Must contain seven entries for each entry in reset-names.
-> >  	   See ../reset/reset.txt for details.
-> >  - reset-names: Must include the following names
-> > @@ -87,10 +90,11 @@ pcie0: pcie@f8000000 {
-> >  	clock-names = "aclk", "aclk-perf",
-> >  		      "hclk", "pm";
-> >  	bus-range = <0x0 0x1>;
-> > -	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
-> > -		     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
-> > -		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>;
-> > -	interrupt-names = "sys", "legacy", "client";
-> > +	interrupts-extended = <&gic GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
-> > +			      <&gic GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
-> > +			      <&gic GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>,
-> > +			      <&gpio0 8 IRQ_TYPE_LEVEL_LOW>;
-> > +	interrupt-names = "sys", "legacy", "client", "wake";
-> >  	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
-> >  	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
-> >  	assigned-clock-rates = <100000000>;
-> > -- 
-> > 2.11.0
-> > 
-> > 
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos5433_drm_decon.c | 40 +++++++++++++++++----------
+>  1 file changed, 25 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos5433_drm_decon.c b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
+> index 0f5acce..da183e0 100644
+> --- a/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
+> +++ b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
+> @@ -34,9 +34,8 @@
+>  #define WINDOWS_NR	3
+>  #define MIN_FB_WIDTH_FOR_16WORD_BURST	128
+>  
+> -#define IFTYPE_I80	(1 << 0)
+> -#define I80_HW_TRG	(1 << 1)
+> -#define IFTYPE_HDMI	(1 << 2)
+> +#define I80_HW_TRG	(1 << 0)
+> +#define IFTYPE_HDMI	(1 << 1)
+>  
+>  static const char * const decon_clks_name[] = {
+>  	"pclk",
+> @@ -93,7 +92,7 @@ static int decon_enable_vblank(struct exynos_drm_crtc *crtc)
+>  	u32 val;
+>  
+>  	val = VIDINTCON0_INTEN;
+> -	if (ctx->out_type & IFTYPE_I80)
+> +	if (crtc->i80_mode)
+>  		val |= VIDINTCON0_FRAMEDONE;
+>  	else
+>  		val |= VIDINTCON0_INTFRMEN | VIDINTCON0_FRAMESEL_FP;
+> @@ -142,7 +141,7 @@ static u32 decon_get_frame_count(struct decon_context *ctx, bool end)
+>  
+>  	switch (status & (VIDCON1_VSTATUS_MASK | VIDCON1_I80_ACTIVE)) {
+>  	case VIDCON1_VSTATUS_VS:
+> -		if (!(ctx->out_type & IFTYPE_I80))
+> +		if (!(ctx->crtc->i80_mode))
+>  			--frm;
+>  		break;
+>  	case VIDCON1_VSTATUS_BP:
+> @@ -169,7 +168,7 @@ static u32 decon_get_vblank_counter(struct exynos_drm_crtc *crtc)
+>  
+>  static void decon_setup_trigger(struct decon_context *ctx)
+>  {
+> -	if (!(ctx->out_type & (IFTYPE_I80 | I80_HW_TRG)))
+> +	if (!ctx->crtc->i80_mode && !(ctx->out_type & I80_HW_TRG))
+>  		return;
+>  
+>  	if (!(ctx->out_type & I80_HW_TRG)) {
+> @@ -209,7 +208,7 @@ static void decon_commit(struct exynos_drm_crtc *crtc)
+>  	val = VIDOUT_LCD_ON;
+>  	if (interlaced)
+>  		val |= VIDOUT_INTERLACE_EN_F;
+> -	if (ctx->out_type & IFTYPE_I80) {
+> +	if (crtc->i80_mode) {
+>  		val |= VIDOUT_COMMAND_IF;
+>  	} else {
+>  		val |= VIDOUT_RGB_IF;
+> @@ -225,7 +224,7 @@ static void decon_commit(struct exynos_drm_crtc *crtc)
+>  			VIDTCON2_HOZVAL(m->hdisplay - 1);
+>  	writel(val, ctx->addr + DECON_VIDTCON2);
+>  
+> -	if (!(ctx->out_type & IFTYPE_I80)) {
+> +	if (!crtc->i80_mode) {
+>  		int vbp = m->crtc_vtotal - m->crtc_vsync_end;
+>  		int vfp = m->crtc_vsync_start - m->crtc_vdisplay;
+>  
+> @@ -513,6 +512,22 @@ static void decon_clear_channels(struct exynos_drm_crtc *crtc)
+>  		clk_disable_unprepare(ctx->clks[i]);
+>  }
+>  
+> +static enum drm_mode_status decon_mode_valid(struct exynos_drm_crtc *crtc,
+> +		const struct drm_display_mode *mode)
+> +{
+> +	struct decon_context *ctx = crtc->ctx;
+> +
+> +	ctx->irq = crtc->i80_mode ? ctx->irq_lcd_sys : ctx->irq_vsync;
+> +
+> +	if (ctx->irq)
+> +		return MODE_OK;
+> +
+> +	dev_info(ctx->dev, "Sink requires %s mode, but appropriate interrupt is not provided.\n",
+> +			crtc->i80_mode ? "command" : "video");
+> +
+> +	return MODE_BAD;
+> +}
+> +
+>  static const struct exynos_drm_crtc_ops decon_crtc_ops = {
+>  	.enable			= decon_enable,
+>  	.disable		= decon_disable,
+> @@ -522,6 +537,7 @@ static const struct exynos_drm_crtc_ops decon_crtc_ops = {
+>  	.atomic_begin		= decon_atomic_begin,
+>  	.update_plane		= decon_update_plane,
+>  	.disable_plane		= decon_disable_plane,
+> +	.mode_valid		= decon_mode_valid,
+>  	.atomic_flush		= decon_atomic_flush,
+>  };
+>  
+> @@ -715,11 +731,8 @@ static int exynos5433_decon_probe(struct platform_device *pdev)
+>  	ctx->out_type = (unsigned long)of_device_get_match_data(dev);
+>  	spin_lock_init(&ctx->vblank_lock);
+>  
+> -	if (ctx->out_type & IFTYPE_HDMI) {
+> +	if (ctx->out_type & IFTYPE_HDMI)
+>  		ctx->first_win = 1;
+> -	} else if (of_get_child_by_name(dev->of_node, "i80-if-timings")) {
+> -		ctx->out_type |= IFTYPE_I80;
+> -	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(decon_clks_name); i++) {
+>  		struct clk *clk;
+> @@ -753,9 +766,6 @@ static int exynos5433_decon_probe(struct platform_device *pdev)
+>  		return ret;
+>  	ctx->irq_lcd_sys = ret;
+>  
+> -	ctx->irq = (ctx->out_type & IFTYPE_I80) ? ctx->irq_lcd_sys
+> -						: ctx->irq_vsync;
+> -
+>  	ret = decon_conf_irq(ctx, "te", decon_te_irq_handler,
+>  			IRQF_TRIGGER_RISING);
+>  	if (ret < 0)
+> 
