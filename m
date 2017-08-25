@@ -1,52 +1,28 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v1] of: Use PLATFORM_DEVID_NONE definition
-Date: Fri, 25 Aug 2017 18:33:13 +0300
-Message-ID: <20170825153313.60658-1-andriy.shevchenko@linux.intel.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: uniphier: add reset controller node of analog amplifier
+Date: Sat, 26 Aug 2017 00:39:07 +0900
+Message-ID: <CAK7LNATGiGLSxkDeGmmyshi4zYA3q1=RPTTzjm-wm_jnSbzTRQ@mail.gmail.com>
+References: <20170821115504.27276-1-suzuki.katsuhiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170821115504.27276-1-suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+To: Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use dedicated definition instead of plain -1 where it's appropriate.
+2017-08-21 20:55 GMT+09:00 Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> This patch adds reset controller node of analog signal amplifier
+> core (ADAMV) for UniPhier LD11/LD20 SoCs.
+>
+> Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
-No functional change intended.
+Applied.  Thanks.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/of/device.c   | 2 +-
- drivers/of/platform.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 6f33a0e0d351..8963ec8ea96f 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -58,7 +58,7 @@ int of_device_add(struct platform_device *ofdev)
- 	/* name and id have to be set so that the platform bus doesn't get
- 	 * confused on matching */
- 	ofdev->name = dev_name(&ofdev->dev);
--	ofdev->id = -1;
-+	ofdev->id = PLATFORM_DEVID_NONE;
- 
- 	/*
- 	 * If this device has not binding numa node in devicetree, that is
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 683b2e74bef7..ac15d0e3d27d 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -118,7 +118,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	int rc, i, num_reg = 0, num_irq;
- 	struct resource *res, temp_res;
- 
--	dev = platform_device_alloc("", -1);
-+	dev = platform_device_alloc("", PLATFORM_DEVID_NONE);
- 	if (!dev)
- 		return NULL;
- 
 -- 
-2.14.1
-
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
