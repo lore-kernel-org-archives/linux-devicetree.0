@@ -1,84 +1,68 @@
-From: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V5 0/4] Add Broadcom STB USB phy driver
-Date: Fri, 25 Aug 2017 13:51:31 -0400
-Message-ID: <1503683495-11766-1-git-send-email-alcooperx@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Al Cooper <alcooperx@gmail.com>
+Subject: [PATCH V5 1/4] soc: brcmstb: Add Product ID and Family ID helper functions
+Date: Fri, 25 Aug 2017 13:51:32 -0400
+Message-ID: <1503683495-11766-2-git-send-email-alcooperx@gmail.com>
+References: <1503683495-11766-1-git-send-email-alcooperx@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503683495-11766-1-git-send-email-alcooperx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Al Cooper <alcooperx@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new USB Phy driver for Broadcom STB SoCs. This driver
-supports Broadcom STB ARM SoCs. This driver in
-combination with the Broadcom STB ohci, ehci and xhci
-drivers will enable USB1.1, USB2.0 and USB3.0 support.
-This Phy driver also supports the Broadcom BDC gadget
-driver.
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+---
+ drivers/soc/bcm/brcmstb/common.c    | 12 ++++++++++++
+ include/linux/soc/brcmstb/brcmstb.h | 10 ++++++++++
+ 2 files changed, 22 insertions(+)
 
-Changes since v4:
-- MIPS support was dropped, so remove MIPS specific code
-  in the brcmusb_readl/brcmusb_writel routines.
-- Use readl/writel instead of readl_relaxed/writel_relaxed.
-- Remove double blank lines between some functions.
-- Remove support for obselete phy phandle argument.
-
-Changes since v3:
-- Removed MIPS support because there is such a small
-  amount of code that is common to both ARM and MIPS.
-  I'll create a separate MIPS driver in the future.
-- Have the Kconfig selection for this driver also select
-  "CONFIG_SOC_BRCMSTB" which contains needed functions.
-- Change device tree properties to use "brcm,has_xhci" and
-  "brcm,has_eohci" to determine if the phy contains
-  a xhci phy, and e/ohci phy or both.
-- Change the phy xlate routine to return an error instead
-  of NULL for a requested phy that doesn't exist.
-- Moved some probe functionality into it's own funtion to
-  simplify the many "if (has_xhci)" statements.
-
-Changes since v2:
-- Fix kbuild errors by changing Kconfig so the driver
-  only builds for ARCH_BRCMSTB || BMIPS_GENERIC systems
-
-Changes since v1:
-- Rebased to next
-- Add Kconfig entry to build the driver
-- Commented all delays
-- Split out sysfs functionality in separate patch
-- Removed parsing of old obselete device tree properties
-- Changed device property "device" to "dr_mode" using
-  standard values "host" and "peripheral" along with new
-  values "drd" and "typec-pd"
-- Add ability to handle the standard PHY_TYPE_USB2 and
-  PHY_TYPE_USB3 arguments passed in by phy consumers.
-- Moved phy_provider_register() to end of probe routine
-
-Al Cooper (4):
-  soc: brcmstb: Add Product ID and Family ID helper functions
-  dt-bindings: Add Broadcom STB USB PHY binding document
-  phy: usb: phy-brcm-usb: Add Broadcom STB USB phy driver
-  phy: usb: phy-brcm-usb: Add ability to force DRD mode to host or
-    device
-
- .../bindings/phy/brcm,brcmstb-usb-phy.txt          |   43 +
- MAINTAINERS                                        |    7 +
- drivers/phy/broadcom/Kconfig                       |   13 +
- drivers/phy/broadcom/Makefile                      |    3 +
- drivers/phy/broadcom/phy-brcm-usb-init.c           | 1007 ++++++++++++++++++++
- drivers/phy/broadcom/phy-brcm-usb-init.h           |   50 +
- drivers/phy/broadcom/phy-brcm-usb.c                |  458 +++++++++
- drivers/soc/bcm/brcmstb/common.c                   |   12 +
- include/linux/soc/brcmstb/brcmstb.h                |   10 +
- 9 files changed, 1603 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
- create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init.c
- create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init.h
- create mode 100644 drivers/phy/broadcom/phy-brcm-usb.c
-
+diff --git a/drivers/soc/bcm/brcmstb/common.c b/drivers/soc/bcm/brcmstb/common.c
+index b6195fd..184dbf5 100644
+--- a/drivers/soc/bcm/brcmstb/common.c
++++ b/drivers/soc/bcm/brcmstb/common.c
+@@ -40,6 +40,18 @@ bool soc_is_brcmstb(void)
+ 	return of_match_node(brcmstb_machine_match, root) != NULL;
+ }
+ 
++u32 brcmstb_get_family_id(void)
++{
++	return family_id;
++}
++EXPORT_SYMBOL(brcmstb_get_family_id);
++
++u32 brcmstb_get_product_id(void)
++{
++	return product_id;
++}
++EXPORT_SYMBOL(brcmstb_get_product_id);
++
+ static const struct of_device_id sun_top_ctrl_match[] = {
+ 	{ .compatible = "brcm,bcm7125-sun-top-ctrl", },
+ 	{ .compatible = "brcm,bcm7346-sun-top-ctrl", },
+diff --git a/include/linux/soc/brcmstb/brcmstb.h b/include/linux/soc/brcmstb/brcmstb.h
+index 337ce41..23e4dc9 100644
+--- a/include/linux/soc/brcmstb/brcmstb.h
++++ b/include/linux/soc/brcmstb/brcmstb.h
+@@ -1,10 +1,20 @@
+ #ifndef __BRCMSTB_SOC_H
+ #define __BRCMSTB_SOC_H
+ 
++#define BRCM_ID(reg)	((u32)reg >> 28 ? (u32)reg >> 16 : (u32)reg >> 8)
++#define BRCM_REV(reg)	((u32)reg & 0xff)
++
+ /*
+  * Bus Interface Unit control register setup, must happen early during boot,
+  * before SMP is brought up, called by machine entry point.
+  */
+ void brcmstb_biuctrl_init(void);
+ 
++/*
++ * Helper functions for getting family or product id from the
++ * SoC driver.
++ */
++u32 brcmstb_get_family_id(void);
++u32 brcmstb_get_product_id(void);
++
+ #endif /* __BRCMSTB_SOC_H */
 -- 
 1.9.0.138.g2de3478
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
