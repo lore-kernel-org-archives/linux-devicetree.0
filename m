@@ -1,45 +1,74 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] OF: move extern declarations of entry pointers inside
- ifdef
-Date: Fri, 25 Aug 2017 11:25:41 -0400
-Message-ID: <20170825112541.681dafd2@gandalf.local.home>
-References: <20170825150027.25341-1-Eugeniy.Paltsev@synopsys.com>
-        <20170825111200.5f0891a5@gandalf.local.home>
-        <1503674411.15555.5.camel@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] checks: add phandle with arg property checks
+Date: Fri, 25 Aug 2017 10:27:09 -0500
+Message-ID: <CAL_JsqKv=0Bu84Q0Mo9W9NhHqHE5VWCH_w38g=YMQ9ZCGqTFHw@mail.gmail.com>
+References: <20170822230208.20987-1-robh@kernel.org> <20170822230208.20987-2-robh@kernel.org>
+ <20170824020338.GV5379@umbus.fritz.box> <CAL_Jsq+0Njjs_PHBSD-B7W9YFzdfpB2ApBcBD=48+BoXQKv2pw@mail.gmail.com>
+ <CAL_Jsq+NVBF6npai2_CRSVchGN_EQBSYnQcw3rHZcNFKpP7pDg@mail.gmail.com> <20170825131727.GJ2772@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503674411.15555.5.camel@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170825131727.GJ2772-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Aug 2017 15:20:12 +0000
-Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com> wrote:
+On Fri, Aug 25, 2017 at 8:17 AM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>
+> On Thu, Aug 24, 2017 at 02:19:27PM -0500, Rob Herring wrote:
+> > On Thu, Aug 24, 2017 at 12:23 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > > On Wed, Aug 23, 2017 at 9:03 PM, David Gibson
+> > > <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> > >> On Tue, Aug 22, 2017 at 06:02:06PM -0500, Rob Herring wrote:
+> > >>> Many common bindings follow the same pattern of client properties
+> > >>> containing a phandle and N arg cells where N is defined in the provider
+> > >>> with a '#<specifier>-cells' property such as:
+> >
+> > [...]
+> >
+> > >>> +             if (prop->val.len < ((cell + cellsize + 1) * sizeof(cell_t))) {
+> > >>> +                     FAIL(c, dti, "%s property size (%d) too small for cell size %d in %s",
+> > >>> +                          prop->name, prop->val.len, cellsize, node->fullpath);
+> > >>> +             }
+> > >>
+> > >> How will this cope if the property is really badly formed - e.g. a 3
+> > >> byte property, so you can't even grab a whole first phandle?  I think
+> > >> it will trip the assert() in propval_cell_n() which isn't great.
+> > >
+> > > At least for your example, we'd exit the loop (cell < 3/4). But I need
+> > > to a check for that because it would be silent currently. I'll add a
+> > > check that the size is a multiple of 4 and greater than 0.
+> > >
+> > > However, the check here is not perfect because we could have
+> > > "<&phandle1 1 2>" when really it should be "<&phandle1 &phandle2
+> > > &phandle3>". We don't fail until we're checking the 2nd phandle.
+> > > That's why I added the "or bad phandle" and the cell # in the message
+> > > above. In the opposite case, we'd be silent. One thing that could be
+> > > done is double check things against the markers if they are present.
+> >
+> > Here's what that looks like:
+> >
+> > /* If we have markers, verify the current cell is a phandle */
+> > if (prop->val.markers) {
+> >   struct marker *m = prop->val.markers;
+> >   for_each_marker_of_type(m, REF_PHANDLE) {
+> >     if (m->offset == (cell * sizeof(cell_t)))
+> >       break;
+> >   }
+> >   if (!m)
+> >   FAIL(c, dti, "Property '%s', cell %d is not a valid phandle in %s",
+> >     prop->name, cell, node->fullpath);
+>
+> The logic seems sound, but I don't like the message.  An integer
+> literal is no less a phandle than a reference, just usually not the
+> best way of entering one.
 
-> On Fri, 2017-08-25 at 11:12 -0400, Steven Rostedt wrote:
-> > On Fri, 25 Aug 2017 18:00:26 +0300
-> > Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com> wrote:
-> >   
-> > > Move extern declarations of "of_root", "of_chosen", "of_aliases",
-> > > "of_stdout" pointers inside "CONFIG_OF" ifdef to be able to get rid
-> > > of "CONFIG_OF" ifdef in their usage places.
-> > > 
-> > > Suggested-by: Steven Rostedt <rostedt@goodmis.org>  
-> > 
-> > Thanks!
-> > -- Steve  
-> 
-> Could you please ACK my patch if it looks good for you?
-> Thanks.
+Then what do you propose? There's not really any way I can distinguish
+a mixture. If #whatever-cells was wrong and I'm pointing to an integer
+literal that's not a phandle, it looks no different than if
+#whatever-cells is correct and I'm pointing to an integer literal that
+is a phandle.
 
-I could, but ACKs are usually for the maintainer of the code being
-changed. I don't maintain include/linux/of.h
-
-But for what it's worth...
-
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
+Rob
