@@ -1,125 +1,84 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v2 03/10] drm/exynos/dsi: refactor panel detection logic
-Date: Fri, 25 Aug 2017 10:46:07 +0900
-Message-ID: <599F815F.4070509@samsung.com>
-References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
-        <CGME20170824133409eucas1p170d11c2037d1f20629751f04c6f77c49@eucas1p1.samsung.com>
-        <1503581639-580-4-git-send-email-a.hajda@samsung.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: PCI: rockchip: Add support for pcie
+ wake irq
+Date: Thu, 24 Aug 2017 19:11:32 -0700
+Message-ID: <20170825021132.GA104845@google.com>
+References: <20170822031934.8675-1-jeffy.chen@rock-chips.com>
+ <20170822031934.8675-4-jeffy.chen@rock-chips.com>
+ <20170824165353.GL31858@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1503581639-580-4-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170824165353.GL31858@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, bhelgaas@google.com, shawn.lin@rock-chips.com, dianders@chromium.org, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 24, 2017 at 11:53:54AM -0500, Bjorn Helgaas wrote:
+> On Tue, Aug 22, 2017 at 11:19:33AM +0800, Jeffy Chen wrote:
+> > Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 
-
-2017년 08월 24일 22:33에 Andrzej Hajda 이(가) 쓴 글:
-> Description of drm_helper_hpd_irq_event clearly states that drivers
-> supporting hotplug events per connector should use different helper -
-> drm_kms_helper_hotplug_event. To achieve it following changes have
-> been performed:
-> - moved down all DSI ops - they require exynos_dsi_disable function
-> to be defined earlier,
-> - simplified exynos_dsi_detect - there is no real detection, it just
-> returns if panel is attached,
-> - DSI attach/detach callbacks attaches/detaches DRM panel and sets
-> connector status and other context fields accordingly, all this is
-> performed under mutex, as these callbacks are asynchronous.
+> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> > index 5678be82530d..9f6504129e80 100644
+> > --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> > @@ -20,10 +20,13 @@ Required properties:
+> >  - msi-map: Maps a Requester ID to an MSI controller and associated
+> >  	msi-specifier data. See ./pci-msi.txt
+> >  - interrupts: Three interrupt entries must be specified.
+> > -- interrupt-names: Must include the following names
+> > -	- "sys"
+> > -	- "legacy"
+> > -	- "client"
+> > +- interrupt-names: Include the following names
+> > +	Required:
+> > +		- "sys"
+> > +		- "legacy"
+> > +		- "client"
+> > +	Optional:
+> > +		- "wake"
 > 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 203 ++++++++++++++++----------------
->  1 file changed, 102 insertions(+), 101 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> index 6b46df6..063bac3 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> @@ -254,7 +254,6 @@ struct exynos_dsi {
->  	struct drm_encoder encoder;
->  	struct mipi_dsi_host dsi_host;
->  	struct drm_connector connector;
-> -	struct device_node *panel_node;
->  	struct drm_panel *panel;
->  	struct device *dev;
->  
-> @@ -1329,12 +1328,13 @@ static int exynos_dsi_init(struct exynos_dsi *dsi)
->  	return 0;
->  }
->  
-> -static int exynos_dsi_register_te_irq(struct exynos_dsi *dsi)
-> +static int exynos_dsi_register_te_irq(struct exynos_dsi *dsi,
-> +				      struct device *panel)
->  {
->  	int ret;
->  	int te_gpio_irq;
->  
-> -	dsi->te_gpio = of_get_named_gpio(dsi->panel_node, "te-gpios", 0);
-> +	dsi->te_gpio = of_get_named_gpio(panel->of_node, "te-gpios", 0);
->  	if (dsi->te_gpio == -ENOENT)
->  		return 0;
->  
-> @@ -1374,85 +1374,6 @@ static void exynos_dsi_unregister_te_irq(struct exynos_dsi *dsi)
->  	}
->  }
->  
-> -static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
-> -				  struct mipi_dsi_device *device)
-> -{
-> -	struct exynos_dsi *dsi = host_to_dsi(host);
-> -
-> -	dsi->lanes = device->lanes;
-> -	dsi->format = device->format;
-> -	dsi->mode_flags = device->mode_flags;
-> -	dsi->panel_node = device->dev.of_node;
-> -
-> -	/*
-> -	 * This is a temporary solution and should be made by more generic way.
-> -	 *
-> -	 * If attached panel device is for command mode one, dsi should register
-> -	 * TE interrupt handler.
-> -	 */
-> -	if (!(dsi->mode_flags & MIPI_DSI_MODE_VIDEO)) {
-> -		int ret = exynos_dsi_register_te_irq(dsi);
-> -
-> -		if (ret)
-> -			return ret;
-> -	}
-> -
-> -	if (dsi->connector.dev)
-> -		drm_helper_hpd_irq_event(dsi->connector.dev);
-> -
-> -	return 0;
-> -}
-> -
-> -static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
-> -				  struct mipi_dsi_device *device)
-> -{
-> -	struct exynos_dsi *dsi = host_to_dsi(host);
-> -
-> -	exynos_dsi_unregister_te_irq(dsi);
-> -
-> -	dsi->panel_node = NULL;
-> -
-> -	if (dsi->connector.dev)
-> -		drm_helper_hpd_irq_event(dsi->connector.dev);
-> -
-> -	return 0;
-> -}
-> -
-> -static ssize_t exynos_dsi_host_transfer(struct mipi_dsi_host *host,
-> -				        const struct mipi_dsi_msg *msg)
+> Why is there no other PCI binding that includes "wake" as an
+> interrupt-name?  This feels like something that should be fairly
+> common across host controllers.  I don't want a Rockport-specific
 
-I fixed below error.
+s/port/chip/ :)
 
-ERROR: code indent should use tabs where possible
-#364: FILE: drivers/gpu/drm/exynos/exynos_drm_dsi.c:1581:
-+^I^I^I^I        const struct mipi_dsi_msg *msg)$
+> DT description if it could be made more general.
 
+I'm not sure we can really answer that question ("why do no other PCI
+bindings have this?"). But one guess would be that every other
+controller uses only beacon wake.
 
-Thanks,
-Inki Dae
+It would be OK with me if we made a blanket statement that a controller
+with a "wake" interrupt means PCI WAKE# (per the specification). It's
+possible this could even be stuck into some generic PCI/DT code
+eventually. (I don't think we have a really good place for this today.)
+
+Brian
+
+> >  - resets: Must contain seven entries for each entry in reset-names.
+> >  	   See ../reset/reset.txt for details.
+> >  - reset-names: Must include the following names
+> > @@ -87,10 +90,11 @@ pcie0: pcie@f8000000 {
+> >  	clock-names = "aclk", "aclk-perf",
+> >  		      "hclk", "pm";
+> >  	bus-range = <0x0 0x1>;
+> > -	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
+> > -		     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
+> > -		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>;
+> > -	interrupt-names = "sys", "legacy", "client";
+> > +	interrupts-extended = <&gic GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
+> > +			      <&gic GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
+> > +			      <&gic GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>,
+> > +			      <&gpio0 8 IRQ_TYPE_LEVEL_LOW>;
+> > +	interrupt-names = "sys", "legacy", "client", "wake";
+> >  	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
+> >  	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
+> >  	assigned-clock-rates = <100000000>;
+> > -- 
+> > 2.11.0
+> > 
+> > 
