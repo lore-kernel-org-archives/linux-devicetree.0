@@ -1,81 +1,54 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v3 1/5] mfd: mt6397: create irq mappings in mfd core
- driver
-Date: Fri, 25 Aug 2017 10:39:29 +0200
-Message-ID: <20170825083929.ztyzfelwqcxvpiex@piout.net>
-References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
- <1503642753-12385-2-git-send-email-chen.zhong@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1503642753-12385-2-git-send-email-chen.zhong@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Zhong <chen.zhong@mediatek.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Andi Shyti <andi.shyti@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Jaechul Lee <jcsing.lee@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: r8a7745: Add Ethernet AVB support
+Date: Fri, 25 Aug 2017 09:31:53 +0100
+Message-ID: <1503649913-9985-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/08/2017 at 14:32:29 +0800, Chen Zhong wrote:
-> The core driver should create and manage irq mappings instead of
-> leaf drivers. This patch change to pass irq domain to
-> devm_mfd_add_devices() and it will create mapping for irq resources
-> automatically. And remove irq mapping in rtc driver since this has
-> been done in core driver.
-> 
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Add Ethernet AVB support for r8a7745 SoC.
 
-> ---
->  drivers/mfd/mt6397-core.c |    4 ++--
->  drivers/rtc/rtc-mt6397.c  |    7 +++----
->  2 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> index 04a601f..6546d7f 100644
-> --- a/drivers/mfd/mt6397-core.c
-> +++ b/drivers/mfd/mt6397-core.c
-> @@ -289,7 +289,7 @@ static int mt6397_probe(struct platform_device *pdev)
->  
->  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
->  					   ARRAY_SIZE(mt6323_devs), NULL,
-> -					   0, NULL);
-> +					   0, pmic->irq_domain);
->  		break;
->  
->  	case MT6397_CID_CODE:
-> @@ -304,7 +304,7 @@ static int mt6397_probe(struct platform_device *pdev)
->  
->  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
->  					   ARRAY_SIZE(mt6397_devs), NULL,
-> -					   0, NULL);
-> +					   0, pmic->irq_domain);
->  		break;
->  
->  	default:
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index 1a61fa5..385f830 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -322,10 +322,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> -	rtc->irq = irq_create_mapping(mt6397_chip->irq_domain, res->start);
-> -	if (rtc->irq <= 0)
-> -		return -EINVAL;
-> +	rtc->irq = platform_get_irq(pdev, 0);
-> +	if (rtc->irq < 0)
-> +		return rtc->irq;
->  
->  	rtc->regmap = mt6397_chip->regmap;
->  	rtc->dev = &pdev->dev;
-> -- 
-> 1.7.9.5
-> 
+Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+---
+v1-->v2
+    Position the avb node similar to r8a7794(R-Car E2) SoC.
 
+It is tested against renesas-devel branch tag
+renesas-devel-20170824-v4.13-rc6.
+
+ arch/arm/boot/dts/r8a7745.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+index 7fd2967..6e82991 100644
+--- a/arch/arm/boot/dts/r8a7745.dtsi
++++ b/arch/arm/boot/dts/r8a7745.dtsi
+@@ -623,6 +623,19 @@
+ 			status = "disabled";
+ 		};
+ 
++		avb: ethernet@e6800000 {
++			compatible = "renesas,etheravb-r8a7745",
++				     "renesas,etheravb-rcar-gen2";
++			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
++			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 812>;
++			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 812>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		i2c0: i2c@e6508000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
