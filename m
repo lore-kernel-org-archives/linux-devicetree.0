@@ -1,36 +1,30 @@
-From: Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 Subject: Re: [PATCH] OF: move extern declarations of entry pointers inside
  ifdef
-Date: Fri, 25 Aug 2017 11:12:00 -0400
-Message-ID: <20170825111200.5f0891a5@gandalf.local.home>
+Date: Fri, 25 Aug 2017 15:20:12 +0000
+Message-ID: <1503674411.15555.5.camel@synopsys.com>
 References: <20170825150027.25341-1-Eugeniy.Paltsev@synopsys.com>
+         <20170825111200.5f0891a5@gandalf.local.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170825150027.25341-1-Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170825111200.5f0891a5@gandalf.local.home>
+Content-Language: en-US
+Content-ID: <78A0D60CC47F034582D89D7956D17A1F@internal.synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "rostedt@goodmis.org" <rostedt@goodmis.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Aug 2017 18:00:26 +0300
-Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> wrote:
-
-> Move extern declarations of "of_root", "of_chosen", "of_aliases",
-> "of_stdout" pointers inside "CONFIG_OF" ifdef to be able to get rid
-> of "CONFIG_OF" ifdef in their usage places.
-> 
-> Suggested-by: Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
-
-Thanks!
-
--- Steve
-
-> 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyMDE3LTA4LTI1IGF0IDExOjEyIC0wNDAwLCBTdGV2ZW4gUm9zdGVkdCB3cm90ZToN
+Cj4gT24gRnJpLCAyNSBBdWcgMjAxNyAxODowMDoyNiArMDMwMA0KPiBFdWdlbml5IFBhbHRzZXYg
+PEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+IHdyb3RlOg0KPiANCj4gPiBNb3ZlIGV4dGVy
+biBkZWNsYXJhdGlvbnMgb2YgIm9mX3Jvb3QiLCAib2ZfY2hvc2VuIiwgIm9mX2FsaWFzZXMiLA0K
+PiA+ICJvZl9zdGRvdXQiIHBvaW50ZXJzIGluc2lkZSAiQ09ORklHX09GIiBpZmRlZiB0byBiZSBh
+YmxlIHRvIGdldCByaWQNCj4gPiBvZiAiQ09ORklHX09GIiBpZmRlZiBpbiB0aGVpciB1c2FnZSBw
+bGFjZXMuDQo+ID4gDQo+ID4gU3VnZ2VzdGVkLWJ5OiBTdGV2ZW4gUm9zdGVkdCA8cm9zdGVkdEBn
+b29kbWlzLm9yZz4NCj4gDQo+IFRoYW5rcyENCj4gLS0gU3RldmUNCg0KQ291bGQgeW91IHBsZWFz
+ZSBBQ0sgbXkgcGF0Y2ggaWYgaXQgbG9va3MgZ29vZCBmb3IgeW91Pw0KVGhhbmtzLg0KDQo+ID4g
+DQo+ID4gU2lnbmVkLW9mZi1ieTogRXVnZW5peSBQYWx0c2V2IDxFdWdlbml5LlBhbHRzZXZAc3lu
+b3BzeXMuY29tPg0KPiA+IC0tLQ0KLS0gDQrCoEV1Z2VuaXkgUGFsdHNldg==
