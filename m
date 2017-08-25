@@ -1,70 +1,57 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] dmaengine: usb-dmac: Add soctype for R-Car M3-W
-Date: Fri, 25 Aug 2017 06:42:19 +0000
-Message-ID: <TY1PR06MB0992C8FC508BCC46EBD3DA14D89B0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1501673614-6633-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20170810162538.j5whbtnucs3jkojh@rob-hp-laptop>
- <TY1PR06MB09923952ABA99387E9A27A8AD89B0@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <20170825063315.GP3053@localhost>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] serial: sh-sci: document R8A7797 bindings
+Date: Fri, 25 Aug 2017 09:09:06 +0200
+Message-ID: <CAMuHMdXkjYty_U9jA_Q-ziGcCSEa_GFLme5+XGgU3pLx5kTdDw@mail.gmail.com>
+References: <20170824203144.032561541@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170825063315.GP3053@localhost>
-Content-Language: ja-JP
+In-Reply-To: <20170824203144.032561541@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Vinod,
+Hi Sergei,
 
-Thank you for reply!
+On Thu, Aug 24, 2017 at 10:31 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> R-Car V3M (R8A7797) SoC also has the R-Car gen3 compatible SCIF and HSCIF
+> ports, so document the SoC specific bindings.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+> This patch is against the 'tty-next' branch of GregKH's 'tty.git' repo.
+>
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt |    2 ++
+>  1 file changed, 2 insertions(+)
+>
+> Index: tty/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> ===================================================================
+> --- tty.orig/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> +++ tty/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -41,6 +41,8 @@ Required properties:
+>      - "renesas,hscif-r8a7795" for R8A7795 (R-Car H3) HSCIF compatible UART.
+>      - "renesas,scif-r8a7796" for R8A7796 (R-Car M3-W) SCIF compatible UART.
+>      - "renesas,hscif-r8a7796" for R8A7796 (R-Car M3-W) HSCIF compatible UART.
+> +    - "renesas,scif-r8a7797" for R8A7797 (R-Car V3M) SCIF compatible UART.
+> +    - "renesas,hscif-r8a7797" for R8A7797 (R-Car V3M) HSCIF compatible UART.
 
-> From: Vinod Koul
-> Sent: Friday, August 25, 2017 3:33 PM
->=20
-> On Fri, Aug 25, 2017 at 05:47:22AM +0000, Yoshihiro Shimoda wrote:
-> > Hi Rob,
-> >
-> > > From: Rob Herring
-> > > Sent: Friday, August 11, 2017 1:26 AM
-> > >
-> > > On Wed, Aug 02, 2017 at 08:33:34PM +0900, Yoshihiro Shimoda wrote:
-> > > > This patch adds R-Car M3-W device tree bindings for usb-dmac driver=
-.
-> > > >
-> > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > >
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> >
-> > Thank you for your Acked-by!
-> >
-> > Hi, Vinod,
-> >
-> > I checked your next branch today, but it doesn't have this patch.
-> > So, would you apply this patch into your repo?
->=20
-> Can you check again, i can see it and also on Web UI
->=20
-> http://git.infradead.org/users/vkoul/slave-dma.git/commit/2d166e66aca3e83=
-2cb0851da7d0183090dd699d4
+Please use "renesas,scif-r8a77970" and "renesas,hscif-r8a77970" instead,
+to follow the new 5-digit scheme started with r8a77995.
 
-Oops! I looked at other repo (https://git.kernel.org/pub/scm/linux/kernel/g=
-it/vkoul/slave-dma.git/).
-I forgot the repo was changed.
+>      - "renesas,scifa-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFA compatible UART.
+>      - "renesas,scifb-sh73a0" for SH73A0 (SH-Mobile AG5) SCIFB compatible UART.
+>      - "renesas,rcar-gen1-scif" for R-Car Gen1 SCIF compatible UART,
 
-Thank you for applying this patch!
+Gr{oetje,eeting}s,
 
-Best regards,
-Yoshihiro Shimoda
+                        Geert
 
-> --
-> ~Vinod
-> --
-> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
