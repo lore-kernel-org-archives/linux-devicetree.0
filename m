@@ -1,155 +1,94 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v2 08/10] drm/exynos/decon5433: use mode info stored in
- CRTC to detect i80 mode
-Date: Fri, 25 Aug 2017 11:15:08 +0900
-Message-ID: <599F882C.20507@samsung.com>
-References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
-        <CGME20170824133411eucas1p1601aabfcb12d8ae39f5b6400d16da99e@eucas1p1.samsung.com>
-        <1503581639-580-9-git-send-email-a.hajda@samsung.com>
+From: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] thermal: imx: Add support for reading OCOTP
+ through nvmem
+Date: Fri, 25 Aug 2017 10:20:49 +0800
+Message-ID: <1503627649.2774.6.camel@intel.com>
+References: <cover.1500041281.git.leonard.crestez@nxp.com>
+         <faf9c3e5f970b9609073c4c191a7af03d647ea51.1500041281.git.leonard.crestez@nxp.com>
+         <20170725080835.GD20064@dragon> <1502176915.4296.1.camel@intel.com>
+         <26407dd5-a9b1-67c0-c4ab-d97fa0b88b79@linaro.org>
+         <1502192287.24350.9.camel@nxp.com>
+         <9732c524-fbdc-d1be-cd03-089dbb2266c4@linaro.org>
+         <1502197100.4296.45.camel@intel.com> <1502897621.23210.41.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1503581639-580-9-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502897621.23210.41.camel-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2017-08-16 at 18:33 +0300, Leonard Crestez wrote:
+> On Tue, 2017-08-08 at 20:58 +0800, Zhang Rui wrote:
+> > 
+> > On Tue, 2017-08-08 at 12:44 +0100, Srinivas Kandagatla wrote:
+> > > 
+> > > On 08/08/17 12:38, Leonard Crestez wrote:
+> > > > 
+> > > > On Tue, 2017-08-08 at 12:00 +0100, Srinivas Kandagatla wrote:
+> > > > > 
+> > > > > On 08/08/17 08:21, Zhang Rui wrote:
+> > 
+> > > 
+> > > > 
+> > > > > 
+> > > > > > 
+> > > > > > I'm okay with the thermal change.
+> > > > > > We still need ACK for the nvmem changes in this patch
+> > > > > > series.
+> > 
+> > > 
+> > > > 
+> > > > > 
+> > > > > NVMEM changes are already sent to Greg K H with other patches
+> > > > > https://lkml.org/lkml/2017/8/8/436, should appear in next.
+> > 
+> > > 
+> > > > 
+> > > > These patches have a compile-time dependency on each other.
+> > > > Wouldn't it make more sense for the whole series to go through
+> > > > a single
+> > > > maintainer tree, atomically? Most of the changes are in
+> > > > driver/thermal.
+> > 
+> > > 
+> > > I was expecting that the nvmem change go in as fix in a rc
+> > > release
+> > > so that you could apply the other patches after that.
+> > > 
+> > > Let me ping Greg about this!!
+> > 
 
+Srinivas,
 
-2017년 08월 24일 22:33에 Andrzej Hajda 이(가) 쓴 글:
-> Since panel's mode of work is propagated properly from panel to DECON,
-> there is no need to use redundant private device tree property.
-> The only issue with such approach is that check for required interrupts
-> should be postponed until panel communicate its requirements, ie to
-> mode validation phase - mode_valid callback.
+Will you take patch 2/5?
+Only after that, we can push the other changes.
 
-Same patch will be required for other Exynos SoCs for consistency later.
+thanks,
+rui
 
-
-Thanks,
-Inki Dae
-
+> > As Shawn is okay with patch 4/5 and 5/5, I guess I can queue patch
+> > 1/5,
+> > 3/5, 4/5, 5/5 for 4.14-rc1, if the nvmem patch can catch 4.13, or I
+> > can
+> > queue the full patch set for 4.14, with Srinivas' ACK.
+> It's been a week since the last email and it seems that nothing
+> happened. I can't find any of these patches in either torvalds/master
+> or linux-next. It seems to me that the nvmem series linked above was
+> not picked up after all?
 > 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos5433_drm_decon.c | 40 +++++++++++++++++----------
->  1 file changed, 25 insertions(+), 15 deletions(-)
+> It's not clear how to proceed. It's been more a month since the
+> series
+> was sent so maybe I should resend it but it's not clear who would
+> pick
+> it up.
 > 
-> diff --git a/drivers/gpu/drm/exynos/exynos5433_drm_decon.c b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
-> index 0f5acce..da183e0 100644
-> --- a/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
-> +++ b/drivers/gpu/drm/exynos/exynos5433_drm_decon.c
-> @@ -34,9 +34,8 @@
->  #define WINDOWS_NR	3
->  #define MIN_FB_WIDTH_FOR_16WORD_BURST	128
->  
-> -#define IFTYPE_I80	(1 << 0)
-> -#define I80_HW_TRG	(1 << 1)
-> -#define IFTYPE_HDMI	(1 << 2)
-> +#define I80_HW_TRG	(1 << 0)
-> +#define IFTYPE_HDMI	(1 << 1)
->  
->  static const char * const decon_clks_name[] = {
->  	"pclk",
-> @@ -93,7 +92,7 @@ static int decon_enable_vblank(struct exynos_drm_crtc *crtc)
->  	u32 val;
->  
->  	val = VIDINTCON0_INTEN;
-> -	if (ctx->out_type & IFTYPE_I80)
-> +	if (crtc->i80_mode)
->  		val |= VIDINTCON0_FRAMEDONE;
->  	else
->  		val |= VIDINTCON0_INTFRMEN | VIDINTCON0_FRAMESEL_FP;
-> @@ -142,7 +141,7 @@ static u32 decon_get_frame_count(struct decon_context *ctx, bool end)
->  
->  	switch (status & (VIDCON1_VSTATUS_MASK | VIDCON1_I80_ACTIVE)) {
->  	case VIDCON1_VSTATUS_VS:
-> -		if (!(ctx->out_type & IFTYPE_I80))
-> +		if (!(ctx->crtc->i80_mode))
->  			--frm;
->  		break;
->  	case VIDCON1_VSTATUS_BP:
-> @@ -169,7 +168,7 @@ static u32 decon_get_vblank_counter(struct exynos_drm_crtc *crtc)
->  
->  static void decon_setup_trigger(struct decon_context *ctx)
->  {
-> -	if (!(ctx->out_type & (IFTYPE_I80 | I80_HW_TRG)))
-> +	if (!ctx->crtc->i80_mode && !(ctx->out_type & I80_HW_TRG))
->  		return;
->  
->  	if (!(ctx->out_type & I80_HW_TRG)) {
-> @@ -209,7 +208,7 @@ static void decon_commit(struct exynos_drm_crtc *crtc)
->  	val = VIDOUT_LCD_ON;
->  	if (interlaced)
->  		val |= VIDOUT_INTERLACE_EN_F;
-> -	if (ctx->out_type & IFTYPE_I80) {
-> +	if (crtc->i80_mode) {
->  		val |= VIDOUT_COMMAND_IF;
->  	} else {
->  		val |= VIDOUT_RGB_IF;
-> @@ -225,7 +224,7 @@ static void decon_commit(struct exynos_drm_crtc *crtc)
->  			VIDTCON2_HOZVAL(m->hdisplay - 1);
->  	writel(val, ctx->addr + DECON_VIDTCON2);
->  
-> -	if (!(ctx->out_type & IFTYPE_I80)) {
-> +	if (!crtc->i80_mode) {
->  		int vbp = m->crtc_vtotal - m->crtc_vsync_end;
->  		int vfp = m->crtc_vsync_start - m->crtc_vdisplay;
->  
-> @@ -513,6 +512,22 @@ static void decon_clear_channels(struct exynos_drm_crtc *crtc)
->  		clk_disable_unprepare(ctx->clks[i]);
->  }
->  
-> +static enum drm_mode_status decon_mode_valid(struct exynos_drm_crtc *crtc,
-> +		const struct drm_display_mode *mode)
-> +{
-> +	struct decon_context *ctx = crtc->ctx;
-> +
-> +	ctx->irq = crtc->i80_mode ? ctx->irq_lcd_sys : ctx->irq_vsync;
-> +
-> +	if (ctx->irq)
-> +		return MODE_OK;
-> +
-> +	dev_info(ctx->dev, "Sink requires %s mode, but appropriate interrupt is not provided.\n",
-> +			crtc->i80_mode ? "command" : "video");
-> +
-> +	return MODE_BAD;
-> +}
-> +
->  static const struct exynos_drm_crtc_ops decon_crtc_ops = {
->  	.enable			= decon_enable,
->  	.disable		= decon_disable,
-> @@ -522,6 +537,7 @@ static const struct exynos_drm_crtc_ops decon_crtc_ops = {
->  	.atomic_begin		= decon_atomic_begin,
->  	.update_plane		= decon_update_plane,
->  	.disable_plane		= decon_disable_plane,
-> +	.mode_valid		= decon_mode_valid,
->  	.atomic_flush		= decon_atomic_flush,
->  };
->  
-> @@ -715,11 +731,8 @@ static int exynos5433_decon_probe(struct platform_device *pdev)
->  	ctx->out_type = (unsigned long)of_device_get_match_data(dev);
->  	spin_lock_init(&ctx->vblank_lock);
->  
-> -	if (ctx->out_type & IFTYPE_HDMI) {
-> +	if (ctx->out_type & IFTYPE_HDMI)
->  		ctx->first_win = 1;
-> -	} else if (of_get_child_by_name(dev->of_node, "i80-if-timings")) {
-> -		ctx->out_type |= IFTYPE_I80;
-> -	}
->  
->  	for (i = 0; i < ARRAY_SIZE(decon_clks_name); i++) {
->  		struct clk *clk;
-> @@ -753,9 +766,6 @@ static int exynos5433_decon_probe(struct platform_device *pdev)
->  		return ret;
->  	ctx->irq_lcd_sys = ret;
->  
-> -	ctx->irq = (ctx->out_type & IFTYPE_I80) ? ctx->irq_lcd_sys
-> -						: ctx->irq_vsync;
-> -
->  	ret = decon_conf_irq(ctx, "te", decon_te_irq_handler,
->  			IRQF_TRIGGER_RISING);
->  	if (ret < 0)
-> 
+> --
+> Regards,
+> Leonard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
