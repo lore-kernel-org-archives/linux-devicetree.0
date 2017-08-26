@@ -1,59 +1,56 @@
-From: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Add MediaTek PMIC keys support
-Date: Sat, 26 Aug 2017 10:30:39 +0800
-Message-ID: <1503714639.3340.14.camel@mhfsdcap03>
-References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v4 0/2] Add support for MediaTek AHCI SATA
+Date: Sat, 26 Aug 2017 11:19:39 +0800
+Message-ID: <1503717579.10648.9.camel@mtkswgap22>
+References: <cover.1503018631.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503642753-12385-1-git-send-email-chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <cover.1503018631.git.ryder.lee@mediatek.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Long Cheng <long.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Sorry for missing the change history.
+Hi Tejun,
 
-Changes since v2:
-- use standard properties for keycodes and debounce time
-- change to use platform_get_irq in leaf drivers
-- use better ways to define IRQ resources
+Just a gentle ping. I think others are okay with both :D
 
-Changes since v1:
-- create irq mappings in mfd core driver instead of leaf drivers
-- remove some unused parts in mtk-pmic-keys driver
+Thanks.
 
-On Fri, 2017-08-25 at 14:32 +0800, Chen Zhong wrote:
-> MediaTek PMIC are multi-function devices that can handle key interrupts,
-> typically there are two keys attached to PMIC, which called pwrkey
-> and homekey. PWRKEY usually used to wake up system from sleep. Homekey
-> can used as volume down key due to board design. Long press keys can
-> shutdown PMIC, the mode can be choose to be one key only or two keys
-> together.
-> This series add support for key functions for MediaTek PMIC MT6397/MT6323.
+On Fri, 2017-08-18 at 09:13 +0800, Ryder Lee wrote:
+> Hi,
 > 
-> Chen Zhong (5):
->   mfd: mt6397: create irq mappings in mfd core driver
->   dt-bindings: input: Add document bindings for mtk-pmic-keys
->   dt-bindings: mfd: Add bindings for the keys as subnode of PMIC
->   input: Add MediaTek PMIC keys support
->   mfd: mt6397: Add PMIC keys support to MT6397 driver
+> This patch series add support for AHCI compatible SATA controller, and it is
+> compliant with the ahci 1.3 and sata 3.0 specification. This driver is slightly
+> different than ahci_platform.c (e.g., reset control, subsystem setting).
 > 
->  .../devicetree/bindings/input/mtk-pmic-keys.txt    |  38 +++
->  Documentation/devicetree/bindings/mfd/mt6397.txt   |   6 +
->  drivers/input/keyboard/Kconfig                     |   9 +
->  drivers/input/keyboard/Makefile                    |   1 +
->  drivers/input/keyboard/mtk-pmic-keys.c             | 308 +++++++++++++++++++++
->  drivers/mfd/mt6397-core.c                          |  26 +-
->  drivers/rtc/rtc-mt6397.c                           |   7 +-
->  7 files changed, 388 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
->  create mode 100644 drivers/input/keyboard/mtk-pmic-keys.c
+> changes since v4:
+> - update binding text: Instead of "soc-model", pick something checkpatch.pl understands
+> 
+> changes since v3:
+> - update binding text: fix a typo and modify compatible strings.
+> 
+> changes since v2:
+> - according to Commit a53e35db70d1 ("reset: Ensure drivers are explicit when requesting reset lines").
+>   replace devm_reset_control_get_optional() by devm_reset_control_get_optional_exclusive().
+> 
+> changes since v1:
+> - update binding text: add missing "specifier pairs" descriptions.
+> - fix kbuild test warning: fix the error handling.
+> 
+> Ryder Lee (2):
+>   ata: mediatek: add support for MediaTek SATA controller
+>   dt-bindings: ata: add DT bindings for MediaTek SATA controller
+> 
+>  Documentation/devicetree/bindings/ata/ahci-mtk.txt |  51 ++++++
+>  drivers/ata/Kconfig                                |  10 ++
+>  drivers/ata/Makefile                               |   1 +
+>  drivers/ata/ahci_mtk.c                             | 196 +++++++++++++++++++++
+>  4 files changed, 258 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-mtk.txt
+>  create mode 100644 drivers/ata/ahci_mtk.c
 > 
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
