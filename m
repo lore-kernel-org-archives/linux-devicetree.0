@@ -1,87 +1,66 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: more pedantic proofing of DTSpec version 0.1
-Date: Sat, 26 Aug 2017 10:50:46 -0400 (EDT)
-Message-ID: <alpine.LFD.2.20.1708210705090.28188@localhost.localdomain>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] iommu/mediatek: Fix a build fail of m4u_type
+Date: Sat, 26 Aug 2017 21:33:00 +0300
+Message-ID: <ecd9b73a-0c8f-175c-175f-27ae318352bf@gmail.com>
+References: <1503552249-22060-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503552249-22060-1-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Tomasz Figa <tfiga@google.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, arnd@arndb.de, honghui.zhang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
 
-  a few more notes on more of the 0.1 DTSpec; all page numbers refer
-to the current PDF doc. lots of nitpickery, feel free to ignore any or
-all.
 
-p. 21: "... an [sic] DTSpec-compliant devicetree." (there are a number
-of places in the spec that use "an" before "DTSpec", which seems
-awkward.)
+On 08/24/2017 08:24 AM, Yong Wu wrote:
+> The commit ("iommu/mediatek: Enlarge the validate PA range
+> for 4GB mode") introduce the following build error:
+> 
+>     drivers/iommu/mtk_iommu.c: In function 'mtk_iommu_hw_init':
+>>> drivers/iommu/mtk_iommu.c:536:30: error: 'const struct mtk_iommu_data'
+>   has no member named 'm4u_type'; did you mean 'm4u_dom'?
+>       if (data->enable_4GB && data->m4u_type != M4U_MT8173) {
+> 
+> This patch fix it, use "m4u_plat" instead of "m4u_type".
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> ---
+> 1) In the v2 of mt2712 iommu support patch-set, We changed a variant
+> name from "m4u_type" to "m4u_plat", But I'm sorry that I forgot to
+> change it in the later patch.
+> 2) This patch is based on [1].
+> [1]:https://lists.linuxfoundation.org/pipermail/iommu/2017-August/023847.html
+> 3) I cann't find the commit id of the patch ("iommu/mediatek: Enlarge
+> the validate PA range for 4GB mode") in the [2].
+> So I don't write the commit id for that patch in the commit message.
+> [2]https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
 
-p. 21: in that early bullet list, is there a reason that the "/cpus"
-node name has a leading slash, and the "memory" node name does not?
-that seems inconsistent. (p.s. it's presented as "/memory" on the very
-next page.)
+Because the kernel test robot took the patch from the mailinglist. Please fold 
+this fix into v3 of the series.
 
-p. 21: table 3.1 mentions "model" root node property but, as before,
-it's not clear what value that property has, other than being mildly
-informational. is it actually used for anything in terms of matching?
+Regards,
+Matthias
 
-p. 21: table 3.1 uses example of "fsl,mpc8572ds" for compatibility;
-there is no longer any such string in the kernel source, i'd replace
-that with "fsl,ns16550", of which there are plenty of occurrences.
-
-p. 21,22: explanation of /aliases node refers solely to property
-values specifying the "full path" to a node in the device tree, using
-examples like:
-
-  aliases {
-      serial0 = "/simple-bus@fe000000/serial@llc500";
-      ethernet0 = "/simple-bus@fe000000/ethernet@31c000";
-  }    <----- missing semicolon?
-
-but (of course) everyone uses much shorter forms such as:
-
-   aliases {
-      mmcblk0 = &mmc1;
-      mmcblk1 = &mmc2;
-   };
-
-is there a reason that section doesn't mention this second form? are
-readers simply supposed to know automatically about that? note that
-the wording in that section *strongly* implies that the property value
-*must* be a full path and nothing else, so it seems at least a little
-misleading.
-
-p. 22: "Given the alias serial0, ..." i would render "serial0" in
-monospaced font for consistency.
-
-p. 23,24: i notice in the kernel that the OF code searches for the
-node "/chosen" and, as an alternative, "/chosen@0". i assume a node
-name of "/chosen@0" is long dead and need not be mentioned. in any
-event, i don't see a single DTS file in the current tree that uses it.
-
-p. 24,25: it might be worth rendering more content in monospaced font
-to make it clear that content is, say, a proper (node?) name. eg., in
-the section "/cpus Node Properties," lines like:
-
-  "A [cpus] node ..."
-  "... for child [cpu] nodes ..."
-  "The [cpus] node ..."
-  "A [cpu] node ..."
-  "... may be placed in the [cpus] node instead."
-
-  ... and so on. most of the time, node names are rendered that way,
-so might as well be consistent. also using a leading slash in cases
-like that would be consistent.
-
-p. 25: table 3.6, the acronym "PIR" comes out of nowhere, perhaps
-explain it the first time?
-
-p. 32: "... of other each [sic]."
-
-p. 32: "... if the new device fits into one [of] the ..."
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>   drivers/iommu/mtk_iommu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 4f233e1..bc00e40 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -533,7 +533,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>   
+>   	writel_relaxed(F_MMU_IVRP_PA_SET(data->protect_base, data->enable_4GB),
+>   		       data->base + REG_MMU_IVRP_PADDR);
+> -	if (data->enable_4GB && data->m4u_type != M4U_MT8173) {
+> +	if (data->enable_4GB && data->m4u_plat != M4U_MT8173) {
+>   		/*
+>   		 * If 4GB mode is enabled, the validate PA range is from
+>   		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
+> 
