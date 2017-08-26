@@ -1,56 +1,85 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v4 0/2] Add support for MediaTek AHCI SATA
-Date: Sat, 26 Aug 2017 11:19:39 +0800
-Message-ID: <1503717579.10648.9.camel@mtkswgap22>
-References: <cover.1503018631.git.ryder.lee@mediatek.com>
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [PATCH v2 1/4] crypto: jz4780-rng: Add JZ4780 PRNG devicetree
+ binding documentation
+Date: Sat, 26 Aug 2017 08:50:45 +0530
+Message-ID: <CANc+2y7pD7EkSS-9ky4YDxGjk3wGW1PVZje2UXMRuOQJA=S+HA@mail.gmail.com>
+References: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
+ <20170823025707.27888-2-prasannatsmkumar@gmail.com> <20170825215734.f5rc7fzxpl3ynnwl@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <cover.1503018631.git.ryder.lee@mediatek.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Long Cheng <long.cheng@mediatek.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20170825215734.f5rc7fzxpl3ynnwl@rob-hp-laptop>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Cercueil <paul@crapouillou.net>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Mathieu Malaterre <malat@debian.org>, noloader@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tejun,
+Hi Rob,
 
-Just a gentle ping. I think others are okay with both :D
+On 26 August 2017 at 03:27, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Aug 23, 2017 at 08:27:04AM +0530, PrasannaKumar Muralidharan wrote:
+>> Add devicetree bindings for hardware pseudo random number generator
+>> present in Ingenic JZ4780 SoC.
+>>
+>> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> ---
+>> Changes in v2:
+>> * Add "syscon" in CGU node's compatible section
+>> * Make RNG child node of CGU.
+>>
+>>  .../bindings/crypto/ingenic,jz4780-rng.txt           | 20 ++++++++++++++++++++
+>
+> bindings/rng/ for RNG h/w.
 
-Thanks.
+There are two subsystem for dealing with RNG hw. Hw_random subsystem
+for true RNG (driver/char/hw_random) and crypto framework for pseudo
+RNG (crypto/ and drviers/crypto). This HW is pseudo RNG so I have
+placed the dt bindings in bindings/crypto as the driver itself is in
+drivers/crypto folder. I am wondering if there is any relation between
+driver folder and bindings folder. Can you please explain the folder
+relation? Should this be put in bindings/rng or bindings/crypto?
 
-On Fri, 2017-08-18 at 09:13 +0800, Ryder Lee wrote:
-> Hi,
-> 
-> This patch series add support for AHCI compatible SATA controller, and it is
-> compliant with the ahci 1.3 and sata 3.0 specification. This driver is slightly
-> different than ahci_platform.c (e.g., reset control, subsystem setting).
-> 
-> changes since v4:
-> - update binding text: Instead of "soc-model", pick something checkpatch.pl understands
-> 
-> changes since v3:
-> - update binding text: fix a typo and modify compatible strings.
-> 
-> changes since v2:
-> - according to Commit a53e35db70d1 ("reset: Ensure drivers are explicit when requesting reset lines").
->   replace devm_reset_control_get_optional() by devm_reset_control_get_optional_exclusive().
-> 
-> changes since v1:
-> - update binding text: add missing "specifier pairs" descriptions.
-> - fix kbuild test warning: fix the error handling.
-> 
-> Ryder Lee (2):
->   ata: mediatek: add support for MediaTek SATA controller
->   dt-bindings: ata: add DT bindings for MediaTek SATA controller
-> 
->  Documentation/devicetree/bindings/ata/ahci-mtk.txt |  51 ++++++
->  drivers/ata/Kconfig                                |  10 ++
->  drivers/ata/Makefile                               |   1 +
->  drivers/ata/ahci_mtk.c                             | 196 +++++++++++++++++++++
->  4 files changed, 258 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ata/ahci-mtk.txt
->  create mode 100644 drivers/ata/ahci_mtk.c
-> 
+>
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt b/Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt
+>> new file mode 100644
+>> index 0000000..a0c18e5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt
+>> @@ -0,0 +1,20 @@
+>> +Ingenic jz4780 RNG driver
+>> +
+>> +Required properties:
+>> +- compatible : Should be "ingenic,jz4780-rng"
+>> +
+>> +Example:
+>> +
+>> +cgu: jz4780-cgu@10000000 {
+>> +     compatible = "ingenic,jz4780-cgu", "syscon";
+>> +     reg = <0x10000000 0x100>;
+>> +
+>> +     clocks = <&ext>, <&rtc>;
+>> +     clock-names = "ext", "rtc";
+>> +
+>> +     #clock-cells = <1>;
+>> +
+>> +     rng: rng@d8 {
+>
+> unit-address requires reg property.
 
+The driver uses regmap to access the registers. In this case reg
+property is not useful. Is reg property still needed? If not, how
+should the node be declared?
 
+>
+>> +             compatible = "ingenic,jz480-rng";
+>> +     };
+>> +};
+>> --
+>> 2.10.0
+>>
+
+Thanks,
+PrasannaKumar
