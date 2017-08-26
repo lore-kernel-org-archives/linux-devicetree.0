@@ -1,86 +1,37 @@
-From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Subject: [PATCH v3 2/5] devicetree: power: Add docs for TI BQ24190 battery charger
-Date: Fri, 25 Aug 2017 22:14:10 -0700
-Message-ID: <20170826051413.24569-3-liam@networkimprov.net>
-References: <20170826051413.24569-1-liam@networkimprov.net>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] of: Add vendor prefix for Amarula Solutions
+Date: Sat, 26 Aug 2017 12:21:42 +0530
+Message-ID: <1503730303-11422-1-git-send-email-jteki@openedev.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170826051413.24569-1-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Document monitored-battery and ti,system-minimum-microvolt properties.
+Added 'amarula' as a vendor prefix for Amarula Solutions,
+specialist in Embedded and Opensource solutions.
 
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- .../devicetree/bindings/power/supply/bq24190.txt   | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq24190.txt
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-new file mode 100644
-index 00000000..9e517d30
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-@@ -0,0 +1,51 @@
-+TI BQ24190 Li-Ion Battery Charger
-+
-+Required properties:
-+- compatible: contains one of the following:
-+    * "ti,bq24190"
-+    * "ti,bq24192i"
-+- reg: integer, I2C address of the charger.
-+- interrupts[-extended]: configuration for charger INT pin.
-+
-+Optional properties:
-+- monitored-battery: phandle of battery characteristics devicetree node
-+  The charger uses the following battery properties:
-+    + precharge-current-microamp: maximum charge current during precharge
-+      phase (typically 20% of battery capacity).
-+    + charge-term-current-microamp: a charge cycle terminates when the
-+      battery voltage is above recharge threshold, and the current is below
-+      this setting (typically 10% of battery capacity).
-+  See also Documentation/devicetree/bindings/power/supply/battery.txt
-+- ti,system-minimum-microvolt: when power is connected and the battery is below
-+  minimum system voltage, the system will be regulated above this setting.
-+
-+Notes:
-+- Some circuit boards wire the chip's "OTG" pin high (enabling 500mA default
-+  charge current on USB SDP ports, among other features). To simulate this on
-+  boards that wire the pin to a GPIO, set a gpio-hog.
-+
-+Example:
-+
-+	bat: battery {
-+		compatible = "simple-battery";
-+		precharge-current-microamp = <256000>;
-+		charge-term-current-microamp = <128000>;
-+		// etc.
-+	};
-+
-+	bq24190: charger@6a {
-+		compatible = "ti,bq24190";
-+		reg = <0x6a>;
-+		interrupts-extended = <&gpiochip 10 IRQ_TYPE_EDGE_FALLING>;
-+		monitored-battery = <&bat>;
-+		ti,system-minimum-microvolt = <3200000>;
-+	};
-+
-+	&twl_gpio {
-+		otg {
-+			gpio-hog;
-+			gpios = <6 0>;
-+			output-high;
-+			line-name = "otg-gpio";
-+		};
-+	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 7e5754e..2e9cd5a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -17,6 +17,7 @@ al	Annapurna Labs
+ allwinner	Allwinner Technology Co., Ltd.
+ alphascale	AlphaScale Integrated Circuits Systems, Inc.
+ altr	Altera Corp.
++amarula	Amarula Solutions
+ amazon	Amazon.com, Inc.
+ amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+ amd	Advanced Micro Devices (AMD), Inc.
 -- 
-2.13.2
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
