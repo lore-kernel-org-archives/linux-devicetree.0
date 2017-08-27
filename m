@@ -1,77 +1,77 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v3 14/14] [media] cxd2880 : Update MAINTAINERS file for
- CXD2880 driver
-Date: Sun, 27 Aug 2017 12:48:30 -0300
-Message-ID: <20170827124657.1feb8f36@vento.lan>
-References: <20170816041714.20551-1-Yasunari.Takiguchi@sony.com>
-        <20170816044733.21869-1-Yasunari.Takiguchi@sony.com>
-        <47f57a12-65fc-beb7-a330-eb38690ccdfc@sony.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [RFC 1/3] dt-bindings: rtc: Add Realtek RTD1295
+Date: Sun, 27 Aug 2017 19:26:11 +0200
+Message-ID: <feaa47ff-083a-9ee5-c055-ff1f7efce371@suse.de>
+References: <20170820013632.18375-1-afaerber@suse.de>
+ <20170820013632.18375-2-afaerber@suse.de>
+ <20170823002911.y35nn7jkt34dvjbc@rob-hp-laptop>
+ <629b9ed0-7b2d-7c5c-20b8-17289a76f097@suse.de>
+ <20170827134729.GE13622@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <47f57a12-65fc-beb7-a330-eb38690ccdfc@sony.com>
+In-Reply-To: <20170827134729.GE13622@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, tbird20d@gmail.com, frowand.list@gmail.com, Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>, Hideki Nozawa <Hideki.Nozawa@sony.com>, Kota Yonezawa <Kota.Yonezawa@sony.com>, Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>, Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh@kernel.org>, linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Roc He <hepeng@zidoo.tv>, devicetree@vger.kernel.org, ????????? <jiang.liqin@geniatech.com>, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 16 Aug 2017 17:02:05 +0900
-"Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com> escreveu:
+Hi Andrew,
 
-> From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+Am 27.08.2017 um 15:47 schrieb Andrew Lunn:
+>> Thanks. Did you read the RFC question in the cover letter as well and
+>> have any comments? Downstream has an rtc-base-year = <2014>; property
+>> that I had left out in this RFC and due to your ack not included in v2.
+>>
+>> Should we default to 2014 in the driver and add an optional base-year
+>> property once we encounter a diverging device, or should we make it
+>> required from the beginning? I did not spot any other rtc binding with
+>> such a property and would appreciate a clarification.
 > 
-> I add an e-mail address and re-send this mail again.
+> From the perspective of the hardware, does it care what the base is?
+
+The hardware stores a 15-bit number of days since Jan 1st of that base
+year. It does not store the base year.
+
+The datasheet does not name such a base year. No manual is available.
+
+The driver needs to get it from somewhere for calculating day/month/year
+in read_time and days in set_time.
+
+The read_offset/set_offset API appeared to be something different.
+
+> A device using a different base will initially return the wrong
+> time. But once the correct time has been written back, it will be O.K.
 > 
-> This is MAINTAINERS file update about the driver for
-> the Sony CXD2880 DVB-T2/T tuner + demodulator.
+> This only becomes an issue if a device is used with different OSs,
+> which have different bases. Swapping back and forth between OSs then
+> becomes an issue.
 
-Patches 12-14 look OK to me (although I didn't try to compile).
+These are TV boxes, so yes, I'm dual-booting into Android with a vendor
+4.1 kernel and would like to keep date compatibility.
 
-You can likely fold them into a single patch adding an entry to 
-MAINTAINERS and the driver to Kconfig/Makefile.
+https://en.opensuse.org/HCL:Zidoo_X9S
+https://en.opensuse.org/HCL:ProBox2_Ava
+https://en.opensuse.org/HCL:Lake1
+
+As stated in the v2 rtc commit message, 2014 is the base year
+encountered on all three devices that I've had access to.
+@Jiang, if you're using a different base year, please speak up!
+
+> KISS suggests not having a base in DT until it is actually
+> required. Since it is an additional property, it does not break
+> backwards compatibility when added.
+
+That's what I've attempted here - but for RDA8810PL serial Rob said he
+did not want future changes to my binding, therefore I am asking for his
+confirmation here.
 
 Regards,
-Mauro
+Andreas
 
-> 
-> [Change list]
-> Changes in V3
->    MAINTAINERS
->       -no change
-> 
-> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
-> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
-> Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
-> Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
-> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
-> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6f7721d1634c..12a80c33c194 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8302,6 +8302,15 @@ T:	git git://linuxtv.org/media_tree.git
->  S:	Supported
->  F:	drivers/media/dvb-frontends/cxd2841er*
->  
-> +MEDIA DRIVERS FOR CXD2880
-> +M:	Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
-> +L:	linux-media@vger.kernel.org
-> +W:	http://linuxtv.org/
-> +T:	git git://linuxtv.org/media_tree.git
-> +S:	Supported
-> +F:	drivers/media/dvb-frontends/cxd2880/*
-> +F:	drivers/media/spi/cxd2880*
-> +
->  MEDIA DRIVERS FOR FREESCALE IMX
->  M:	Steve Longerbeam <slongerbeam@gmail.com>
->  M:	Philipp Zabel <p.zabel@pengutronix.de>
-
-
-
-Thanks,
-Mauro
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
