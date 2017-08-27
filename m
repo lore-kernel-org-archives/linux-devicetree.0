@@ -1,96 +1,54 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/1] arm64: dts: Add Variscite DART-SD410
- Evaluation board dts
-Date: Sat, 26 Aug 2017 22:46:15 -0500
-Message-ID: <20170827034615.GD4042@hector.attlocal.net>
-References: <014701d31418$8e419670$aac4c350$@variscite.com>
- <20170818203505.GB4042@hector.attlocal.net>
- <CAP6K80Sj9=im4CpXTAL+oR6XLmiBQYPeNMmvpC6v2W0xOP-j4g@mail.gmail.com>
- <20170825104418.fb7thsfukgh3im2k@tarshish>
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [PATCH v2 0/4] crypto: Add driver for JZ4780 PRNG
+Date: Sun, 27 Aug 2017 12:09:58 +0530
+Message-ID: <CANc+2y4EmmeYX7DVdjR7evt1siK4YS9MenTwjJRvubOr-yfuVw@mail.gmail.com>
+References: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170825104418.fb7thsfukgh3im2k@tarshish>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Leonid Segal <leonid.s-/HTLZasLZWtl57MIdRCFDg@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20170823025707.27888-1-prasannatsmkumar@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Cercueil <paul@crapouillou.net>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Mathieu Malaterre <malat@debian.org>, noloader@gmail.com
+Cc: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 25, 2017 at 01:44:18PM +0300, Baruch Siach wrote:
-> Hi Leonid,
-> 
-> On Wed, Aug 23, 2017 at 08:44:56PM +0300, Leonid Segal wrote:
-> > Thank you very much for the tips.
-> > I have updated the documentation and schematics of our web site.
-> > I also tried to implement all other fixes, but seems that I cannot file the git
-> > you are talking about.
-> > The patches i sent were done to:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > and there is no -next branch.
-> > I tried to check out the linaro git:
-> > http://git.linaro.org/landing-teams/working/qualcomm/kernel.git
-> > there is a -next branch, but the USB section is in old format.
-> > 
-> > I tried to complile the latest version from
-> > git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > the usb there in new format, but nothing works (even LEDS) on Dragonboard too.
-> > So, I think I am missing something global on the way.
-> > 
-> >    If you can help me with it, I will appreciate it.
-> 
-> The linux-next tree is at [1]. Stephen Rothwell generates this tree on a daily 
-> basis semi-automatically from subsystem maintainers branches that feed the 
-> -next tree. Read more about it in the linux-next web page[2]. The branch that 
-> feeds the arm64 changes is for-next/core[3]. See the full list in the 
-> Next/Trees file in the -next tree.
-> 
-> Hope this helps,
-> baruch
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+On 23 August 2017 at 08:27, PrasannaKumar Muralidharan
+<prasannatsmkumar@gmail.com> wrote:
+> This patch series adds support of pseudo random number generator found
+> in Ingenic's JZ4780 and X1000 SoC.
+>
+> Based on Paul's review comments, add 'syscon' compatible in CGU node in
+> jz4780.dtsi. jz4780-rng driver uses regmap exposed via syscon interface
+> to access the RNG registers. CGU driver is not modified in this patch
+> set as registers used by CGU driver and this driver are different.
+>
+> PrasannaKumar Muralidharan (4):
+>   crypto: jz4780-rng: Add JZ4780 PRNG devicetree binding documentation
+>   crypto: jz4780-rng: Add Ingenic JZ4780 hardware PRNG driver
+>   crypto: jz4780-rng: Add RNG node to jz4780.dtsi
+>   crypto: jz4780-rng: Enable PRNG support in CI20 defconfig
+>
+>  .../bindings/crypto/ingenic,jz4780-rng.txt         |  20 +++
+>  MAINTAINERS                                        |   5 +
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi             |   6 +-
+>  arch/mips/configs/ci20_defconfig                   |   5 +
+>  drivers/crypto/Kconfig                             |  19 +++
+>  drivers/crypto/Makefile                            |   1 +
+>  drivers/crypto/jz4780-rng.c                        | 168 +++++++++++++++++++++
+>  7 files changed, 223 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/ingenic,jz4780-rng.txt
+>  create mode 100644 drivers/crypto/jz4780-rng.c
+>
+> --
+> 2.10.0
+>
 
-Thanks for sending this.  I should have been more clear.
+The rng node which is the child node of CGU is ignored so the driver's
+probe is not called at all. Realised that the tests were using crng
+instead of this. Don't know how to get this working. Will submit a new
+version once the issue is fixed.
 
-Once you pull the current next tag from linux-next, take a look at the
-SBC dtsi.  Specifically this excerpt from the file:
+Please do not take this patch series.
 
-	usb@78d9000 {
-		extcon = <&usb_id>;
-		status = "okay";
-		adp-disable;
-		hnp-disable;
-		srp-disable;
-		dr_mode = "host";
-		pinctrl-names = "default";
-		pinctrl-0 = <&usb_sw_sel_pm>;
-		ulpi {
-			phy {
-				v1p8-supply = <&pm8916_l7>;
-				v3p3-supply = <&pm8916_l13>;
-				extcon = <&usb_id>;
-			};
-		};
-	};
-
-	usb2513 {
-		compatible = "smsc,usb3503";
-		reset-gpios = <&pm8916_gpios 3 GPIO_ACTIVE_LOW>;
-		initial-mode = <1>;
-	};
-
-	usb_id: usb-id {
-		compatible = "linux,extcon-usb-gpio";
-		vbus-gpio = <&msmgpio 121 GPIO_ACTIVE_HIGH>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&usb_id_default>;
-
-Looking at the Dart, you are using a USB2514, but it should be similar.
-
-Regards,
-
-Andy Gross
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+PrasannaKumar
