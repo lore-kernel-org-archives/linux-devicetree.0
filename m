@@ -1,64 +1,96 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 0/3] arm64: Realtek RTD1295 RTC
-Date: Sun, 27 Aug 2017 02:33:25 +0200
-Message-ID: <20170827003328.28370-1-afaerber@suse.de>
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/1] arm64: dts: Add Variscite DART-SD410
+ Evaluation board dts
+Date: Sat, 26 Aug 2017 22:46:15 -0500
+Message-ID: <20170827034615.GD4042@hector.attlocal.net>
+References: <014701d31418$8e419670$aac4c350$@variscite.com>
+ <20170818203505.GB4042@hector.attlocal.net>
+ <CAP6K80Sj9=im4CpXTAL+oR6XLmiBQYPeNMmvpC6v2W0xOP-j4g@mail.gmail.com>
+ <20170825104418.fb7thsfukgh3im2k@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170825104418.fb7thsfukgh3im2k@tarshish>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Leonid Segal <leonid.s-/HTLZasLZWtl57MIdRCFDg@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Aug 25, 2017 at 01:44:18PM +0300, Baruch Siach wrote:
+> Hi Leonid,
+> 
+> On Wed, Aug 23, 2017 at 08:44:56PM +0300, Leonid Segal wrote:
+> > Thank you very much for the tips.
+> > I have updated the documentation and schematics of our web site.
+> > I also tried to implement all other fixes, but seems that I cannot file the git
+> > you are talking about.
+> > The patches i sent were done to:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> > and there is no -next branch.
+> > I tried to check out the linaro git:
+> > http://git.linaro.org/landing-teams/working/qualcomm/kernel.git
+> > there is a -next branch, but the USB section is in old format.
+> > 
+> > I tried to complile the latest version from
+> > git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> > the usb there in new format, but nothing works (even LEDS) on Dragonboard too.
+> > So, I think I am missing something global on the way.
+> > 
+> >    If you can help me with it, I will appreciate it.
+> 
+> The linux-next tree is at [1]. Stephen Rothwell generates this tree on a daily 
+> basis semi-automatically from subsystem maintainers branches that feed the 
+> -next tree. Read more about it in the linux-next web page[2]. The branch that 
+> feeds the arm64 changes is for-next/core[3]. See the full list in the 
+> Next/Trees file in the -next tree.
+> 
+> Hope this helps,
+> baruch
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 
-This series adds the RTC for the Realtek RTD1295 SoC.
-Based on my RTD1295 clk series.
+Thanks for sending this.  I should have been more clear.
 
-There being no public source code for RTD1295, the implementation is based on
-register offsets seen in the vendor DT, as well as older mach-rtk119x code
-published by QNAP.
+Once you pull the current next tag from linux-next, take a look at the
+SBC dtsi.  Specifically this excerpt from the file:
 
-The base year is still hardcoded in v2. Calculations changed.
+	usb@78d9000 {
+		extcon = <&usb_id>;
+		status = "okay";
+		adp-disable;
+		hnp-disable;
+		srp-disable;
+		dr_mode = "host";
+		pinctrl-names = "default";
+		pinctrl-0 = <&usb_sw_sel_pm>;
+		ulpi {
+			phy {
+				v1p8-supply = <&pm8916_l7>;
+				v3p3-supply = <&pm8916_l13>;
+				extcon = <&usb_id>;
+			};
+		};
+	};
 
-The DT node depends on the clk series for clock index and header.
+	usb2513 {
+		compatible = "smsc,usb3503";
+		reset-gpios = <&pm8916_gpios 3 GPIO_ACTIVE_LOW>;
+		initial-mode = <1>;
+	};
 
-More experimental patches at:
-https://github.com/afaerber/linux/commits/rtd1295-next
+	usb_id: usb-id {
+		compatible = "linux,extcon-usb-gpio";
+		vbus-gpio = <&msmgpio 121 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&usb_id_default>;
 
-Have a lot of fun!
+Looking at the Dart, you are using a USB2514, but it should be similar.
 
-Cheers,
-Andreas
+Regards,
 
-v1 -> v2:
-* Updated rtc driver to no longer use open/release (Alexandre)
-* Cleaned up debug output (Andrew)
-* Avoided COMPILE_TEST division errors (kbuild)
-* Various cleanups and extensions
-
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: linux-rtc@vger.kernel.org
-Cc: Roc He <hepeng@zidoo.tv>
-Cc: 蒋丽琴 <jiang.liqin@geniatech.com>
-Cc: devicetree@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>
-
-Andreas Färber (3):
-  dt-bindings: rtc: Add Realtek RTD1295
-  rtc: Add Realtek RTD1295
-  arm64: dts: realtek: Add RTD1295 RTC node
-
- .../devicetree/bindings/rtc/realtek,rtd119x.txt    |  16 ++
- arch/arm64/boot/dts/realtek/rtd1295.dtsi           |   6 +
- drivers/rtc/Kconfig                                |   8 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-rtd119x.c                          | 254 +++++++++++++++++++++
- 5 files changed, 285 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
- create mode 100644 drivers/rtc/rtc-rtd119x.c
-
--- 
-2.12.3
+Andy Gross
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
