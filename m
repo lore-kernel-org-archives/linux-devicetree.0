@@ -1,114 +1,38 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 3/3] arm64: dts: realtek: Add ProBox2 Ava
-Date: Sun, 27 Aug 2017 14:54:25 +0200
-Message-ID: <20170827125425.3400-4-afaerber@suse.de>
-References: <20170827125425.3400-1-afaerber@suse.de>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/2] clk: sunxi-ng: Provide a default reset hook
+Date: Sun, 27 Aug 2017 21:10:02 +0800
+Message-ID: <CAGb2v647hP6Ytm+bqNiuA+eMUU5WQrF36mFpVaagLgKZbuQrWQ@mail.gmail.com>
+References: <20170825094953.3247-1-maxime.ripard@free-electrons.com> <884514a2d304315f54dc81b8b42aea74@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170827125425.3400-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, support@probox2.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <884514a2d304315f54dc81b8b42aea74@aosc.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a Device Tree for the PROBOX2 AVA TV Box.
-Move common memory reservations into rtd1295.dtsi.
+On Sun, Aug 27, 2017 at 9:01 PM,  <icenowy@aosc.io> wrote:
+> 在 2017-08-25 17:49，Maxime Ripard 写道：
+>>
+>> The reset hook was left implemented. Provide a dumb implementation so that
+>> client drivers can depend on it.
+>
+>
+> I think some clients should also convert to use this.
+>
+> For example:
+>
+> - The TCON driver in sun4i-drm. (It now uses reset_control_status, but
+>   this is also not implemented in CCU.)
 
-Cc: support@probox2.com
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- I've been torn on whether this should be just rtd1295-ava.dts?
- The vendor is indicated in the compatible string and model property.
- rtd1295-x9s.dts hadn't sounded unique enough to me, but we might revisit that.
- 
- arch/arm64/boot/dts/realtek/Makefile               |  1 +
- .../arm64/boot/dts/realtek/rtd1295-probox2-ava.dts | 31 ++++++++++++++++++++++
- arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts  |  6 -----
- arch/arm64/boot/dts/realtek/rtd1295.dtsi           |  6 +++++
- 4 files changed, 38 insertions(+), 6 deletions(-)
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts
+I have patches for both sides of this.
 
-diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
-index 8521e921e59a..f43d0209ded7 100644
---- a/arch/arm64/boot/dts/realtek/Makefile
-+++ b/arch/arm64/boot/dts/realtek/Makefile
-@@ -1,3 +1,4 @@
-+dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-probox2-ava.dtb
- dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts b/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts
-new file mode 100644
-index 000000000000..8e2b0e75298a
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts
-@@ -0,0 +1,31 @@
-+/*
-+ * Copyright (c) 2017 Andreas Färber
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+/dts-v1/;
-+
-+#include "rtd1295.dtsi"
-+
-+/ {
-+	compatible = "probox2,ava", "realtek,rtd1295";
-+	model = "PROBOX2 AVA";
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
-index 6efa8091bb30..da19faab29d5 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
-+++ b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
-@@ -6,12 +6,6 @@
- 
- /dts-v1/;
- 
--/memreserve/	0x0000000000000000 0x0000000000030000;
--/memreserve/	0x000000000001f000 0x0000000000001000;
--/memreserve/	0x0000000000030000 0x00000000000d0000;
--/memreserve/	0x0000000001b00000 0x00000000004be000;
--/memreserve/	0x0000000001ffe000 0x0000000000004000;
--
- #include "rtd1295.dtsi"
- 
- / {
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-index 8ae0949ad89e..c0b48953439a 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-@@ -6,6 +6,12 @@
-  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-  */
- 
-+/memreserve/	0x0000000000000000 0x0000000000030000;
-+/memreserve/	0x000000000001f000 0x0000000000001000;
-+/memreserve/	0x0000000000030000 0x00000000000d0000;
-+/memreserve/	0x0000000001b00000 0x00000000004be000;
-+/memreserve/	0x0000000001ffe000 0x0000000000004000;
-+
- #include <dt-bindings/clock/realtek,rtd1295.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/realtek,rtd1295.h>
--- 
-2.12.3
+> - The EPHY in dwmac-sun8i driver. (It uses explicit assert then deassert)
+>
+> P.S. maybe the status hook should also be implemented?
+
+Yes.
+
+ChenYu
