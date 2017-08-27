@@ -1,58 +1,90 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 RESEND 1/2] dt-bindings: serial: 8250: Add MediaTek
- BTIF controller bindings
-Date: Sun, 27 Aug 2017 22:00:55 +0300
-Message-ID: <8548a72a-4bf3-d44a-6d26-d64721cffe85@gmail.com>
-References: <cover.1503165144.git.sean.wang@mediatek.com>
- <29b52a3b95982f1097766d515aae09c57e11b002.1503165144.git.sean.wang@mediatek.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [RFC 1/3] dt-bindings: rtc: Add Realtek RTD1295
+Date: Sun, 27 Aug 2017 21:07:49 +0200
+Message-ID: <20170827190749.6njixw7cxwbhmclp@piout.net>
+References: <20170820013632.18375-1-afaerber@suse.de>
+ <20170820013632.18375-2-afaerber@suse.de>
+ <20170823002911.y35nn7jkt34dvjbc@rob-hp-laptop>
+ <629b9ed0-7b2d-7c5c-20b8-17289a76f097@suse.de>
+ <20170827134729.GE13622@lunn.ch>
+ <feaa47ff-083a-9ee5-c055-ff1f7efce371@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <29b52a3b95982f1097766d515aae09c57e11b002.1503165144.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hpeter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <feaa47ff-083a-9ee5-c055-ff1f7efce371@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Roc He <hepeng@zidoo.tv>, devicetree@vger.kernel.org, ????????? <jiang.liqin@geniatech.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/19/2017 09:06 PM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 27/08/2017 at 19:26:11 +0200, Andreas Färber wrote:
+> Hi Andrew,
 > 
-> Document the devicetree bindings in 8250.txt for MediaTek BTIF
-> controller which could be found on MT7622 and MT7623 SoC.
+> Am 27.08.2017 um 15:47 schrieb Andrew Lunn:
+> >> Thanks. Did you read the RFC question in the cover letter as well and
+> >> have any comments? Downstream has an rtc-base-year = <2014>; property
+> >> that I had left out in this RFC and due to your ack not included in v2.
+> >>
+> >> Should we default to 2014 in the driver and add an optional base-year
+> >> property once we encounter a diverging device, or should we make it
+> >> required from the beginning? I did not spot any other rtc binding with
+> >> such a property and would appreciate a clarification.
+> > 
+> > From the perspective of the hardware, does it care what the base is?
 > 
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/serial/8250.txt | 3 +++
->   1 file changed, 3 insertions(+)
+> The hardware stores a 15-bit number of days since Jan 1st of that base
+> year. It does not store the base year.
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-> index 419ff6c..7528d90 100644
-> --- a/Documentation/devicetree/bindings/serial/8250.txt
-> +++ b/Documentation/devicetree/bindings/serial/8250.txt
-> @@ -14,6 +14,9 @@ Required properties:
->   	  tegra132, or tegra210.
->   	- "nxp,lpc3220-uart"
->   	- "ralink,rt2880-uart"
-> +	- For MediaTek MT7623, must contain "mediatek,mt7623-btif"
-> +	- For other MediaTek SoCs , must contain "mediatek,<chip>-btif",
-> +	  "mediatek,mt7623-btif" where <chip> is mt7622.
+> The datasheet does not name such a base year. No manual is available.
+> 
+> The driver needs to get it from somewhere for calculating day/month/year
+> in read_time and days in set_time.
+> 
+> The read_offset/set_offset API appeared to be something different.
+> 
 
-Hm, to me that's confusing. What about:
-"mediatek,mt7623-btif": for MediaTek MT7623
-"mediatek,mt7622-btif", "mediatek,mt7623-btif": for MediaTek MT7622
+There is no api to change the epoch of an RTC because it is difficult to
+do in a race free way. This has to be worked on.
 
-If in the future we have more SoCs that support the BTIF, we should add them 
-like the mt7622 case.
+Anyway, you don't really care for now as it goes up to 2093 and
+hopefully, you will never have a product with a different epoch.
 
-Make sense?
+> > A device using a different base will initially return the wrong
+> > time. But once the correct time has been written back, it will be O.K.
+> > 
 
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The other issue being that you don't have any way to know whether the
+base is correct or not until the date is set.
+
+> > This only becomes an issue if a device is used with different OSs,
+> > which have different bases. Swapping back and forth between OSs then
+> > becomes an issue.
+> 
+> These are TV boxes, so yes, I'm dual-booting into Android with a vendor
+> 4.1 kernel and would like to keep date compatibility.
+> 
+> https://en.opensuse.org/HCL:Zidoo_X9S
+> https://en.opensuse.org/HCL:ProBox2_Ava
+> https://en.opensuse.org/HCL:Lake1
+> 
+> As stated in the v2 rtc commit message, 2014 is the base year
+> encountered on all three devices that I've had access to.
+> @Jiang, if you're using a different base year, please speak up!
+> 
+> > KISS suggests not having a base in DT until it is actually
+> > required. Since it is an additional property, it does not break
+> > backwards compatibility when added.
+> 
+> That's what I've attempted here - but for RDA8810PL serial Rob said he
+> did not want future changes to my binding, therefore I am asking for his
+> confirmation here.
+
+It would be a change that is easy enough to do in a backward compatible
+way so that is probably fine.
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
