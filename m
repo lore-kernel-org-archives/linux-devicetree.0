@@ -1,40 +1,71 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: uniphier: fix size of sdctrl node
-Date: Sun, 27 Aug 2017 21:03:07 +0900
-Message-ID: <1503835387-9815-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1503835387-9815-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503835387-9815-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+From: icenowy@aosc.io
+Subject: Re: [PATCH 1/2] clk: sunxi-ng: Provide a default reset hook
+Date: Sun, 27 Aug 2017 21:01:04 +0800
+Message-ID: <884514a2d304315f54dc81b8b42aea74@aosc.io>
+References: <20170825094953.3247-1-maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170825094953.3247-1-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-All registers are located within 0x400 size from the base address.
+在 2017-08-25 17:49，Maxime Ripard 写道：
+> The reset hook was left implemented. Provide a dumb implementation so 
+> that
+> client drivers can depend on it.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
+I think some clients should also convert to use this.
 
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For example:
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index f4948d0aa348..a29c279b6e8e 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -320,7 +320,7 @@
- 		sdctrl@59810000 {
- 			compatible = "socionext,uniphier-ld20-sdctrl",
- 				     "simple-mfd", "syscon";
--			reg = <0x59810000 0x800>;
-+			reg = <0x59810000 0x400>;
- 
- 			sd_clk: clock {
- 				compatible = "socionext,uniphier-ld20-sd-clock";
--- 
-2.7.4
+- The TCON driver in sun4i-drm. (It now uses reset_control_status, but
+   this is also not implemented in CCU.)
+- The EPHY in dwmac-sun8i driver. (It uses explicit assert then 
+deassert)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+P.S. maybe the status hook should also be implemented?
+
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+>  drivers/clk/sunxi-ng/ccu_reset.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/clk/sunxi-ng/ccu_reset.c 
+> b/drivers/clk/sunxi-ng/ccu_reset.c
+> index 6c31d48783a7..1dc4e98ea802 100644
+> --- a/drivers/clk/sunxi-ng/ccu_reset.c
+> +++ b/drivers/clk/sunxi-ng/ccu_reset.c
+> @@ -8,6 +8,7 @@
+>   * the License, or (at your option) any later version.
+>   */
+> 
+> +#include <linux/delay.h>
+>  #include <linux/io.h>
+>  #include <linux/reset-controller.h>
+> 
+> @@ -49,7 +50,18 @@ static int ccu_reset_deassert(struct
+> reset_controller_dev *rcdev,
+>  	return 0;
+>  }
+> 
+> +static int ccu_reset_reset(struct reset_controller_dev *rcdev,
+> +			   unsigned long id)
+> +{
+> +	ccu_reset_assert(rcdev, id);
+> +	udelay(10);
+> +	ccu_reset_deassert(rcdev, id);
+> +
+> +	return 0;
+> +}
+> +
+>  const struct reset_control_ops ccu_reset_ops = {
+>  	.assert		= ccu_reset_assert,
+>  	.deassert	= ccu_reset_deassert,
+> +	.reset		= ccu_reset_reset,
+>  };
