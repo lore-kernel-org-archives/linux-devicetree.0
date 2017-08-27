@@ -1,1930 +1,805 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: Re: [PATCH v3 10/14] [media] cxd2880: Add DVB-T2 control functions
- for the driver
-Date: Sun, 27 Aug 2017 12:38:16 -0300
-Message-ID: <20170827123816.7a5f4c5e@vento.lan>
-References: <20170816041714.20551-1-Yasunari.Takiguchi@sony.com>
-        <20170816044232.21635-1-Yasunari.Takiguchi@sony.com>
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: Re: [PATCH 2/2] mtd: spi-nor: Altera ASMI Parallel II IP Core
+Date: Sun, 27 Aug 2017 08:42:37 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1708270826320.14130@mgerlach-VirtualBox>
+References: <1502043844-3626-1-git-send-email-matthew.gerlach@linux.intel.com> <1502043844-3626-3-git-send-email-matthew.gerlach@linux.intel.com> <e3c3f714-e8fd-a605-eb5a-c1b8a92ce0df@wedev4u.fr> <alpine.DEB.2.20.1708150841420.13425@mgerlach-VirtualBox>
+ <d3b174cc-69c8-41db-8d5d-79d9b4d7e517@wedev4u.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323329-1837119458-1503848558=:14130"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170816044232.21635-1-Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+In-Reply-To: <d3b174cc-69c8-41db-8d5d-79d9b4d7e517-yU5RGvR974pGWvitb5QawA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 16 Aug 2017 13:42:32 +0900
-<Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org> escreveu:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-> 
-> Provide definitions, interfaces and functions needed for DVB-T2
-> of the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
-> 
-> [Change list]
-> Changes in V3
->    drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
->       -changed hexadecimal code to lower case. 
->    drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
->       -modified return code
->       -modified coding style of if() 
->       -changed hexadecimal code to lower case. 
->    drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
->       -modified return code
-> 
-> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
-> ---
->  .../media/dvb-frontends/cxd2880/cxd2880_dvbt2.h    |  402 ++++++
->  .../dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c   | 1359 ++++++++++++++++++++
->  .../dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h   |   82 ++
->  3 files changed, 1843 insertions(+)
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
-> 
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
-> new file mode 100644
-> index 000000000000..674ed17deef5
-> --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_dvbt2.h
-> @@ -0,0 +1,402 @@
-> +/*
-> + * cxd2880_dvbt2.h
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-> + * DVB-T2 related definitions
-> + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef CXD2880_DVBT2_H
-> +#define CXD2880_DVBT2_H
-> +
-> +#include "cxd2880_common.h"
-> +
-> +enum cxd2880_dvbt2_profile {
-> +	CXD2880_DVBT2_PROFILE_BASE,
-> +	CXD2880_DVBT2_PROFILE_LITE,
-> +	CXD2880_DVBT2_PROFILE_ANY
-> +};
-> +
-> +enum cxd2880_dvbt2_version {
-> +	CXD2880_DVBT2_V111,
-> +	CXD2880_DVBT2_V121,
-> +	CXD2880_DVBT2_V131
-> +};
-> +
-> +enum cxd2880_dvbt2_s1 {
-> +	CXD2880_DVBT2_S1_BASE_SISO = 0x00,
-> +	CXD2880_DVBT2_S1_BASE_MISO = 0x01,
-> +	CXD2880_DVBT2_S1_NON_DVBT2 = 0x02,
-> +	CXD2880_DVBT2_S1_LITE_SISO = 0x03,
-> +	CXD2880_DVBT2_S1_LITE_MISO = 0x04,
-> +	CXD2880_DVBT2_S1_RSVD3 = 0x05,
-> +	CXD2880_DVBT2_S1_RSVD4 = 0x06,
-> +	CXD2880_DVBT2_S1_RSVD5 = 0x07,
-> +	CXD2880_DVBT2_S1_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_base_s2 {
-> +	CXD2880_DVBT2_BASE_S2_M2K_G_ANY = 0x00,
-> +	CXD2880_DVBT2_BASE_S2_M8K_G_DVBT = 0x01,
-> +	CXD2880_DVBT2_BASE_S2_M4K_G_ANY = 0x02,
-> +	CXD2880_DVBT2_BASE_S2_M1K_G_ANY = 0x03,
-> +	CXD2880_DVBT2_BASE_S2_M16K_G_ANY = 0x04,
-> +	CXD2880_DVBT2_BASE_S2_M32K_G_DVBT = 0x05,
-> +	CXD2880_DVBT2_BASE_S2_M8K_G_DVBT2 = 0x06,
-> +	CXD2880_DVBT2_BASE_S2_M32K_G_DVBT2 = 0x07,
-> +	CXD2880_DVBT2_BASE_S2_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_lite_s2 {
-> +	CXD2880_DVBT2_LITE_S2_M2K_G_ANY = 0x00,
-> +	CXD2880_DVBT2_LITE_S2_M8K_G_DVBT = 0x01,
-> +	CXD2880_DVBT2_LITE_S2_M4K_G_ANY = 0x02,
-> +	CXD2880_DVBT2_LITE_S2_M16K_G_DVBT2 = 0x03,
-> +	CXD2880_DVBT2_LITE_S2_M16K_G_DVBT = 0x04,
-> +	CXD2880_DVBT2_LITE_S2_RSVD1 = 0x05,
-> +	CXD2880_DVBT2_LITE_S2_M8K_G_DVBT2 = 0x06,
-> +	CXD2880_DVBT2_LITE_S2_RSVD2 = 0x07,
-> +	CXD2880_DVBT2_LITE_S2_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_guard {
-> +	CXD2880_DVBT2_G1_32 = 0x00,
-> +	CXD2880_DVBT2_G1_16 = 0x01,
-> +	CXD2880_DVBT2_G1_8 = 0x02,
-> +	CXD2880_DVBT2_G1_4 = 0x03,
-> +	CXD2880_DVBT2_G1_128 = 0x04,
-> +	CXD2880_DVBT2_G19_128 = 0x05,
-> +	CXD2880_DVBT2_G19_256 = 0x06,
-> +	CXD2880_DVBT2_G_RSVD1 = 0x07,
-> +	CXD2880_DVBT2_G_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_mode {
-> +	CXD2880_DVBT2_M2K = 0x00,
-> +	CXD2880_DVBT2_M8K = 0x01,
-> +	CXD2880_DVBT2_M4K = 0x02,
-> +	CXD2880_DVBT2_M1K = 0x03,
-> +	CXD2880_DVBT2_M16K = 0x04,
-> +	CXD2880_DVBT2_M32K = 0x05,
-> +	CXD2880_DVBT2_M_RSVD1 = 0x06,
-> +	CXD2880_DVBT2_M_RSVD2 = 0x07
-> +};
-> +
-> +enum cxd2880_dvbt2_bw {
-> +	CXD2880_DVBT2_BW_8 = 0x00,
-> +	CXD2880_DVBT2_BW_7 = 0x01,
-> +	CXD2880_DVBT2_BW_6 = 0x02,
-> +	CXD2880_DVBT2_BW_5 = 0x03,
-> +	CXD2880_DVBT2_BW_10 = 0x04,
-> +	CXD2880_DVBT2_BW_1_7 = 0x05,
-> +	CXD2880_DVBT2_BW_RSVD1 = 0x06,
-> +	CXD2880_DVBT2_BW_RSVD2 = 0x07,
-> +	CXD2880_DVBT2_BW_RSVD3 = 0x08,
-> +	CXD2880_DVBT2_BW_RSVD4 = 0x09,
-> +	CXD2880_DVBT2_BW_RSVD5 = 0x0a,
-> +	CXD2880_DVBT2_BW_RSVD6 = 0x0b,
-> +	CXD2880_DVBT2_BW_RSVD7 = 0x0c,
-> +	CXD2880_DVBT2_BW_RSVD8 = 0x0d,
-> +	CXD2880_DVBT2_BW_RSVD9 = 0x0e,
-> +	CXD2880_DVBT2_BW_RSVD10 = 0x0f,
-> +	CXD2880_DVBT2_BW_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_l1pre_type {
-> +	CXD2880_DVBT2_L1PRE_TYPE_TS = 0x00,
-> +	CXD2880_DVBT2_L1PRE_TYPE_GS = 0x01,
-> +	CXD2880_DVBT2_L1PRE_TYPE_TS_GS = 0x02,
-> +	CXD2880_DVBT2_L1PRE_TYPE_RESERVED = 0x03,
-> +	CXD2880_DVBT2_L1PRE_TYPE_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_papr {
-> +	CXD2880_DVBT2_PAPR_0 = 0x00,
-> +	CXD2880_DVBT2_PAPR_1 = 0x01,
-> +	CXD2880_DVBT2_PAPR_2 = 0x02,
-> +	CXD2880_DVBT2_PAPR_3 = 0x03,
-> +	CXD2880_DVBT2_PAPR_RSVD1 = 0x04,
-> +	CXD2880_DVBT2_PAPR_RSVD2 = 0x05,
-> +	CXD2880_DVBT2_PAPR_RSVD3 = 0x06,
-> +	CXD2880_DVBT2_PAPR_RSVD4 = 0x07,
-> +	CXD2880_DVBT2_PAPR_RSVD5 = 0x08,
-> +	CXD2880_DVBT2_PAPR_RSVD6 = 0x09,
-> +	CXD2880_DVBT2_PAPR_RSVD7 = 0x0a,
-> +	CXD2880_DVBT2_PAPR_RSVD8 = 0x0b,
-> +	CXD2880_DVBT2_PAPR_RSVD9 = 0x0c,
-> +	CXD2880_DVBT2_PAPR_RSVD10 = 0x0d,
-> +	CXD2880_DVBT2_PAPR_RSVD11 = 0x0e,
-> +	CXD2880_DVBT2_PAPR_RSVD12 = 0x0f,
-> +	CXD2880_DVBT2_PAPR_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_l1post_constell {
-> +	CXD2880_DVBT2_L1POST_BPSK = 0x00,
-> +	CXD2880_DVBT2_L1POST_QPSK = 0x01,
-> +	CXD2880_DVBT2_L1POST_QAM16 = 0x02,
-> +	CXD2880_DVBT2_L1POST_QAM64 = 0x03,
-> +	CXD2880_DVBT2_L1POST_C_RSVD1 = 0x04,
-> +	CXD2880_DVBT2_L1POST_C_RSVD2 = 0x05,
-> +	CXD2880_DVBT2_L1POST_C_RSVD3 = 0x06,
-> +	CXD2880_DVBT2_L1POST_C_RSVD4 = 0x07,
-> +	CXD2880_DVBT2_L1POST_C_RSVD5 = 0x08,
-> +	CXD2880_DVBT2_L1POST_C_RSVD6 = 0x09,
-> +	CXD2880_DVBT2_L1POST_C_RSVD7 = 0x0a,
-> +	CXD2880_DVBT2_L1POST_C_RSVD8 = 0x0b,
-> +	CXD2880_DVBT2_L1POST_C_RSVD9 = 0x0c,
-> +	CXD2880_DVBT2_L1POST_C_RSVD10 = 0x0d,
-> +	CXD2880_DVBT2_L1POST_C_RSVD11 = 0x0e,
-> +	CXD2880_DVBT2_L1POST_C_RSVD12 = 0x0f,
-> +	CXD2880_DVBT2_L1POST_CONSTELL_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_l1post_cr {
-> +	CXD2880_DVBT2_L1POST_R1_2 = 0x00,
-> +	CXD2880_DVBT2_L1POST_R_RSVD1 = 0x01,
-> +	CXD2880_DVBT2_L1POST_R_RSVD2 = 0x02,
-> +	CXD2880_DVBT2_L1POST_R_RSVD3 = 0x03,
-> +	CXD2880_DVBT2_L1POST_R_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_l1post_fec_type {
-> +	CXD2880_DVBT2_L1POST_FEC_LDPC16K = 0x00,
-> +	CXD2880_DVBT2_L1POST_FEC_RSVD1 = 0x01,
-> +	CXD2880_DVBT2_L1POST_FEC_RSVD2 = 0x02,
-> +	CXD2880_DVBT2_L1POST_FEC_RSVD3 = 0x03,
-> +	CXD2880_DVBT2_L1POST_FEC_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_pp {
-> +	CXD2880_DVBT2_PP1 = 0x00,
-> +	CXD2880_DVBT2_PP2 = 0x01,
-> +	CXD2880_DVBT2_PP3 = 0x02,
-> +	CXD2880_DVBT2_PP4 = 0x03,
-> +	CXD2880_DVBT2_PP5 = 0x04,
-> +	CXD2880_DVBT2_PP6 = 0x05,
-> +	CXD2880_DVBT2_PP7 = 0x06,
-> +	CXD2880_DVBT2_PP8 = 0x07,
-> +	CXD2880_DVBT2_PP_RSVD1 = 0x08,
-> +	CXD2880_DVBT2_PP_RSVD2 = 0x09,
-> +	CXD2880_DVBT2_PP_RSVD3 = 0x0a,
-> +	CXD2880_DVBT2_PP_RSVD4 = 0x0b,
-> +	CXD2880_DVBT2_PP_RSVD5 = 0x0c,
-> +	CXD2880_DVBT2_PP_RSVD6 = 0x0d,
-> +	CXD2880_DVBT2_PP_RSVD7 = 0x0e,
-> +	CXD2880_DVBT2_PP_RSVD8 = 0x0f,
-> +	CXD2880_DVBT2_PP_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_plp_code_rate {
-> +	CXD2880_DVBT2_R1_2 = 0x00,
-> +	CXD2880_DVBT2_R3_5 = 0x01,
-> +	CXD2880_DVBT2_R2_3 = 0x02,
-> +	CXD2880_DVBT2_R3_4 = 0x03,
-> +	CXD2880_DVBT2_R4_5 = 0x04,
-> +	CXD2880_DVBT2_R5_6 = 0x05,
-> +	CXD2880_DVBT2_R1_3 = 0x06,
-> +	CXD2880_DVBT2_R2_5 = 0x07,
-> +	CXD2880_DVBT2_PLP_CR_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_plp_constell {
-> +	CXD2880_DVBT2_QPSK = 0x00,
-> +	CXD2880_DVBT2_QAM16 = 0x01,
-> +	CXD2880_DVBT2_QAM64 = 0x02,
-> +	CXD2880_DVBT2_QAM256 = 0x03,
-> +	CXD2880_DVBT2_CON_RSVD1 = 0x04,
-> +	CXD2880_DVBT2_CON_RSVD2 = 0x05,
-> +	CXD2880_DVBT2_CON_RSVD3 = 0x06,
-> +	CXD2880_DVBT2_CON_RSVD4 = 0x07,
-> +	CXD2880_DVBT2_CONSTELL_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_plp_type {
-> +	CXD2880_DVBT2_PLP_TYPE_COMMON = 0x00,
-> +	CXD2880_DVBT2_PLP_TYPE_DATA1 = 0x01,
-> +	CXD2880_DVBT2_PLP_TYPE_DATA2 = 0x02,
-> +	CXD2880_DVBT2_PLP_TYPE_RSVD1 = 0x03,
-> +	CXD2880_DVBT2_PLP_TYPE_RSVD2 = 0x04,
-> +	CXD2880_DVBT2_PLP_TYPE_RSVD3 = 0x05,
-> +	CXD2880_DVBT2_PLP_TYPE_RSVD4 = 0x06,
-> +	CXD2880_DVBT2_PLP_TYPE_RSVD5 = 0x07,
-> +	CXD2880_DVBT2_PLP_TYPE_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_plp_payload {
-> +	CXD2880_DVBT2_PLP_PAYLOAD_GFPS = 0x00,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_GCS = 0x01,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_GSE = 0x02,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_TS = 0x03,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD1 = 0x04,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD2 = 0x05,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD3 = 0x06,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD4 = 0x07,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD5 = 0x08,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD6 = 0x09,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD7 = 0x0a,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD8 = 0x0b,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD9 = 0x0c,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD10 = 0x0d,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD11 = 0x0e,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD12 = 0x0f,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD13 = 0x10,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD14 = 0x11,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD15 = 0x12,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD16 = 0x13,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD17 = 0x14,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD18 = 0x15,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD19 = 0x16,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD20 = 0x17,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD21 = 0x18,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD22 = 0x19,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD23 = 0x1a,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD24 = 0x1b,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD25 = 0x1c,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD26 = 0x1d,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD27 = 0x1e,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_RSVD28 = 0x1f,
-> +	CXD2880_DVBT2_PLP_PAYLOAD_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_plp_fec {
-> +	CXD2880_DVBT2_FEC_LDPC_16K = 0x00,
-> +	CXD2880_DVBT2_FEC_LDPC_64K = 0x01,
-> +	CXD2880_DVBT2_FEC_RSVD1 = 0x02,
-> +	CXD2880_DVBT2_FEC_RSVD2 = 0x03,
-> +	CXD2880_DVBT2_FEC_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_plp_mode {
-> +	CXD2880_DVBT2_PLP_MODE_NOTSPECIFIED = 0x00,
-> +	CXD2880_DVBT2_PLP_MODE_NM = 0x01,
-> +	CXD2880_DVBT2_PLP_MODE_HEM = 0x02,
-> +	CXD2880_DVBT2_PLP_MODE_RESERVED = 0x03,
-> +	CXD2880_DVBT2_PLP_MODE_UNKNOWN = 0xff
-> +};
-> +
-> +enum cxd2880_dvbt2_plp_btype {
-> +	CXD2880_DVBT2_PLP_COMMON,
-> +	CXD2880_DVBT2_PLP_DATA
-> +};
-> +
-> +enum cxd2880_dvbt2_stream {
-> +	CXD2880_DVBT2_STREAM_GENERIC_PACKETIZED = 0x00,
-> +	CXD2880_DVBT2_STREAM_GENERIC_CONTINUOUS = 0x01,
-> +	CXD2880_DVBT2_STREAM_GENERIC_ENCAPSULATED = 0x02,
-> +	CXD2880_DVBT2_STREAM_TRANSPORT = 0x03,
-> +	CXD2880_DVBT2_STREAM_UNKNOWN = 0xff
-> +};
-> +
-> +struct cxd2880_dvbt2_l1pre {
-> +	enum cxd2880_dvbt2_l1pre_type type;
-> +	u8 bw_ext;
-> +	enum cxd2880_dvbt2_s1 s1;
-> +	u8 s2;
-> +	u8 mixed;
-> +	enum cxd2880_dvbt2_mode fft_mode;
-> +	u8 l1_rep;
-> +	enum cxd2880_dvbt2_guard gi;
-> +	enum cxd2880_dvbt2_papr papr;
-> +	enum cxd2880_dvbt2_l1post_constell mod;
-> +	enum cxd2880_dvbt2_l1post_cr cr;
-> +	enum cxd2880_dvbt2_l1post_fec_type fec;
-> +	u32 l1_post_size;
-> +	u32 l1_post_info_size;
-> +	enum cxd2880_dvbt2_pp pp;
-> +	u8 tx_id_availability;
-> +	u16 cell_id;
-> +	u16 network_id;
-> +	u16 sys_id;
-> +	u8 num_frames;
-> +	u16 num_symbols;
-> +	u8 regen;
-> +	u8 post_ext;
-> +	u8 num_rf_freqs;
-> +	u8 rf_idx;
-> +	enum cxd2880_dvbt2_version t2_version;
-> +	u8 l1_post_scrambled;
-> +	u8 t2_base_lite;
-> +	u32 crc32;
-> +};
-> +
-> +struct cxd2880_dvbt2_plp {
-> +	u8 id;
-> +	enum cxd2880_dvbt2_plp_type type;
-> +	enum cxd2880_dvbt2_plp_payload payload;
-> +	u8 ff;
-> +	u8 first_rf_idx;
-> +	u8 first_frm_idx;
-> +	u8 group_id;
-> +	enum cxd2880_dvbt2_plp_constell constell;
-> +	enum cxd2880_dvbt2_plp_code_rate plp_cr;
-> +	u8 rot;
-> +	enum cxd2880_dvbt2_plp_fec fec;
-> +	u16 num_blocks_max;
-> +	u8 frm_int;
-> +	u8 til_len;
-> +	u8 til_type;
-> +	u8 in_band_a_flag;
-> +	u8 in_band_b_flag;
-> +	u16 rsvd;
-> +	enum cxd2880_dvbt2_plp_mode plp_mode;
-> +	u8 static_flag;
-> +	u8 static_padding_flag;
-> +};
-> +
-> +struct cxd2880_dvbt2_l1post {
-> +	u16 sub_slices_per_frame;
-> +	u8 num_plps;
-> +	u8 num_aux;
-> +	u8 aux_cfg_rfu;
-> +	u8 rf_idx;
-> +	u32 freq;
-> +	u8 fef_type;
-> +	u32 fef_length;
-> +	u8 fef_intvl;
-> +};
-> +
-> +struct cxd2880_dvbt2_ofdm {
-> +	u8 mixed;
-> +	u8 is_miso;
-> +	enum cxd2880_dvbt2_mode mode;
-> +	enum cxd2880_dvbt2_guard gi;
-> +	enum cxd2880_dvbt2_pp pp;
-> +	u8 bw_ext;
-> +	enum cxd2880_dvbt2_papr papr;
-> +	u16 num_symbols;
-> +};
-> +
-> +struct cxd2880_dvbt2_bbheader {
-> +	enum cxd2880_dvbt2_stream stream_input;
-> +	u8 is_single_input_stream;
-> +	u8 is_constant_coding_modulation;
-> +	u8 issy_indicator;
-> +	u8 null_packet_deletion;
-> +	u8 ext;
-> +	u8 input_stream_identifier;
-> +	u16 user_packet_length;
-> +	u16 data_field_length;
-> +	u8 sync_byte;
-> +	u32 issy;
-> +	enum cxd2880_dvbt2_plp_mode plp_mode;
-> +};
-> +
-> +#endif
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
-> new file mode 100644
-> index 000000000000..3df0648598a1
-> --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.c
-> @@ -0,0 +1,1359 @@
-> +/*
-> + * cxd2880_tnrdmd_dvbt2.c
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-> + * control functions for DVB-T2
-> + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include "cxd2880_tnrdmd_dvbt2.h"
-> +#include "cxd2880_tnrdmd_dvbt2_mon.h"
-> +
-> +static int x_tune_dvbt2_demod_setting(struct cxd2880_tnrdmd
-> +				      *tnr_dmd,
-> +				      enum cxd2880_dtv_bandwidth
-> +				      bandwidth,
-> +				      enum cxd2880_tnrdmd_clockmode
-> +				      clk_mode)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!tnr_dmd)
-> +		return -EINVAL;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_SYS,
-> +				     0x00, 0x00);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_SYS,
-> +				     0x31, 0x02);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x00, 0x04);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x5d, 0x0b);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_SUB) {
-> +		u8 data[2] = { 0x01, 0x01 };
-
-static const.
-
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x00, 0x00);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0xce, data, 2);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	{
-> +		u8 data[14] = { 0x07, 0x06, 0x01, 0xf0,
-> +			0x00, 0x00, 0x04, 0xb0, 0x00, 0x00, 0x09, 0x9c, 0x0e,
-> +			    0x4c
-> +		};
-
-same notes I made to other patches apply:
-	- static const;
-	- don't use a code block where not needed.
-
-Won't repeat it. Please look on other similar stuff.
-
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x00, 0x20);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x8a, data[0]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x90, data[1]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x00, 0x25);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0xf0, &data[2], 2);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x00, 0x2a);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0xdc, data[4]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0xde, data[5]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x00, 0x2d);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0x73, &data[6], 4);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0x8f, &data[10], 4);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	{
-> +		u8 data_a_1[9] = { 0x52, 0x49, 0x2c, 0x51,
-> +			0x51, 0x3d, 0x15, 0x29, 0x0c
-> +		};
-> +		u8 data_b_1[9] = { 0x5d, 0x55, 0x32, 0x5c,
-> +			0x5c, 0x45, 0x17, 0x2e, 0x0d
-> +		};
-> +		u8 data_c_1[9] = { 0x60, 0x00, 0x34, 0x5e,
-> +			0x5e, 0x47, 0x18, 0x2f, 0x0e
-> +		};
-> +
-> +		u8 data_a_2[13] = { 0x04, 0xe7, 0x94, 0x92,
-> +			0x09, 0xcf, 0x7e, 0xd0, 0x49, 0xcd, 0xcd, 0x1f, 0x5b
-> +		};
-> +		u8 data_b_2[13] = { 0x05, 0x90, 0x27, 0x55,
-> +			0x0b, 0x20, 0x8f, 0xd6, 0xea, 0xc8, 0xc8, 0x23, 0x91
-> +		};
-> +		u8 data_c_2[13] = { 0x05, 0xb8, 0xd8, 0x00,
-> +			0x0b, 0x72, 0x93, 0xf3, 0x00, 0xcd, 0xcd, 0x24, 0x95
-> +		};
-> +
-> +		u8 data_a_3[5] = { 0x0b, 0x6a, 0xc9, 0x03,
-> +			0x33
-> +		};
-> +		u8 data_b_3[5] = { 0x01, 0x02, 0xe4, 0x03,
-> +			0x39
-> +		};
-> +		u8 data_c_3[5] = { 0x01, 0x02, 0xeb, 0x03,
-> +			0x3b
-> +		};
-> +
-> +		u8 *data_1 = NULL;
-> +		u8 *data_2 = NULL;
-> +		u8 *data_3 = NULL;
-> +
-> +		switch (clk_mode) {
-> +		case CXD2880_TNRDMD_CLOCKMODE_A:
-> +			data_1 = data_a_1;
-> +			data_2 = data_a_2;
-> +			data_3 = data_a_3;
-> +			break;
-> +		case CXD2880_TNRDMD_CLOCKMODE_B:
-> +			data_1 = data_b_1;
-> +			data_2 = data_b_2;
-> +			data_3 = data_b_3;
-> +			break;
-> +		case CXD2880_TNRDMD_CLOCKMODE_C:
-> +			data_1 = data_c_1;
-> +			data_2 = data_c_2;
-> +			data_3 = data_c_3;
-> +			break;
-> +		default:
-> +			return -EPERM;
-> +		}
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x00, 0x04);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0x1d, &data_1[0], 3);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x22, data_1[3]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x24, data_1[4]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x26, data_1[5]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0x29, &data_1[6], 2);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x2d, data_1[8]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_SUB) {
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x2e, &data_2[0], 6);
-> +			if (ret)
-> +				return ret;
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x35, &data_2[6], 7);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0x3c, &data_3[0], 2);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0x56, &data_3[2], 3);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	switch (bandwidth) {
-> +	case CXD2880_DTV_BW_8_MHZ:
-> +
-> +		{
-> +			u8 data_ac[6] = { 0x15, 0x00, 0x00, 0x00,
-> +				0x00, 0x00
-> +			};
-> +			u8 data_b[6] = { 0x14, 0x6a, 0xaa, 0xaa,
-> +				0xab, 0x00
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_ac;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x10, data, 6);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x4a, 0x00);
-> +		if (ret)
-> +			return ret;
-> +
-> +		{
-> +			u8 data_a[2] = { 0x19, 0xd2 };
-> +			u8 data_bc[2] = { 0x3f, 0xff };
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_bc;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x19, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		{
-> +			u8 data_a[2] = { 0x06, 0x2a };
-> +			u8 data_b[2] = { 0x06, 0x29 };
-> +			u8 data_c[2] = { 0x06, 0x28 };
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x1b, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +			u8 data_a[9] = { 0x28, 0x00, 0x50, 0x00,
-> +				0x60, 0x00, 0x00, 0x90, 0x00
-> +			};
-> +			u8 data_b[9] = { 0x2d, 0x5e, 0x5a, 0xbd,
-> +				0x6c, 0xe3, 0x00, 0xa3, 0x55
-> +			};
-> +			u8 data_c[9] = { 0x2e, 0xaa, 0x5d, 0x55,
-> +				0x70, 0x00, 0x00, 0xa8, 0x00
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x4b, data, 9);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +		break;
-> +
-> +	case CXD2880_DTV_BW_7_MHZ:
-> +
-> +		{
-> +			u8 data_ac[6] = { 0x18, 0x00, 0x00, 0x00,
-> +				0x00, 0x00
-> +			};
-> +			u8 data_b[6] = { 0x17, 0x55, 0x55, 0x55,
-> +				0x55, 0x00
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_ac;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x10, data, 6);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x4a, 0x02);
-> +		if (ret)
-> +			return ret;
-> +
-> +		{
-> +			u8 data[2] = { 0x3f, 0xff };
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x19, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		{
-> +			u8 data_a[2] = { 0x06, 0x23 };
-> +			u8 data_b[2] = { 0x06, 0x22 };
-> +			u8 data_c[2] = { 0x06, 0x21 };
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x1b, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +			u8 data_a[9] = { 0x2d, 0xb6, 0x5b, 0x6d,
-> +				0x6d, 0xb6, 0x00, 0xa4, 0x92
-> +			};
-> +			u8 data_b[9] = { 0x33, 0xda, 0x67, 0xb4,
-> +				0x7c, 0x71, 0x00, 0xba, 0xaa
-> +			};
-> +			u8 data_c[9] = { 0x35, 0x55, 0x6a, 0xaa,
-> +				0x80, 0x00, 0x00, 0xc0, 0x00
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x4b, data, 9);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +		break;
-> +
-> +	case CXD2880_DTV_BW_6_MHZ:
-> +
-> +		{
-> +			u8 data_ac[6] = { 0x1c, 0x00, 0x00, 0x00,
-> +				0x00, 0x00
-> +			};
-> +			u8 data_b[6] = { 0x1b, 0x38, 0xe3, 0x8e,
-> +				0x39, 0x00
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_ac;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x10, data, 6);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x4a, 0x04);
-> +		if (ret)
-> +			return ret;
-> +
-> +		{
-> +			u8 data[2] = { 0x3f, 0xff };
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x19, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		{
-> +			u8 data_a[2] = { 0x06, 0x1c };
-> +			u8 data_b[2] = { 0x06, 0x1b };
-> +			u8 data_c[2] = { 0x06, 0x1a };
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x1b, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +			u8 data_a[9] = { 0x35, 0x55, 0x6a, 0xaa,
-> +				0x80, 0x00, 0x00, 0xc0, 0x00
-> +			};
-> +			u8 data_b[9] = { 0x3c, 0x7e, 0x78, 0xfc,
-> +				0x91, 0x2f, 0x00, 0xd9, 0xc7
-> +			};
-> +			u8 data_c[9] = { 0x3e, 0x38, 0x7c, 0x71,
-> +				0x95, 0x55, 0x00, 0xdf, 0xff
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x4b, data, 9);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +		break;
-> +
-> +	case CXD2880_DTV_BW_5_MHZ:
-> +
-> +		{
-> +			u8 data_ac[6] = { 0x21, 0x99, 0x99, 0x99,
-> +				0x9a, 0x00
-> +			};
-> +			u8 data_b[6] = { 0x20, 0xaa, 0xaa, 0xaa,
-> +				0xab, 0x00
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_ac;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x10, data, 6);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x4a, 0x06);
-> +		if (ret)
-> +			return ret;
-> +
-> +		{
-> +			u8 data[2] = { 0x3f, 0xff };
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x19, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		{
-> +			u8 data_a[2] = { 0x06, 0x15 };
-> +			u8 data_b[2] = { 0x06, 0x15 };
-> +			u8 data_c[2] = { 0x06, 0x14 };
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x1b, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +			u8 data_a[9] = { 0x40, 0x00, 0x6a, 0xaa,
-> +				0x80, 0x00, 0x00, 0xe6, 0x66
-> +			};
-> +			u8 data_b[9] = { 0x48, 0x97, 0x78, 0xfc,
-> +				0x91, 0x2f, 0x01, 0x05, 0x55
-> +			};
-> +			u8 data_c[9] = { 0x4a, 0xaa, 0x7c, 0x71,
-> +				0x95, 0x55, 0x01, 0x0c, 0xcc
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x4b, data, 9);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +		break;
-> +
-> +	case CXD2880_DTV_BW_1_7_MHZ:
-> +
-> +		{
-> +			u8 data_a[6] = { 0x68, 0x0f, 0xa2, 0x32,
-> +				0xcf, 0x03
-> +			};
-> +			u8 data_c[6] = { 0x68, 0x0f, 0xa2, 0x32,
-> +				0xcf, 0x03
-> +			};
-> +			u8 data_b[6] = { 0x65, 0x2b, 0xa4, 0xcd,
-> +				0xd8, 0x03
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x10, data, 6);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x4a, 0x03);
-> +		if (ret)
-> +			return ret;
-> +
-> +		{
-> +			u8 data[2] = { 0x3f, 0xff };
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x19, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		{
-> +			u8 data_a[2] = { 0x06, 0x0c };
-> +			u8 data_b[2] = { 0x06, 0x0c };
-> +			u8 data_c[2] = { 0x06, 0x0b };
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x1b, data, 2);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +			u8 data_a[9] = { 0x40, 0x00, 0x6a, 0xaa,
-> +				0x80, 0x00, 0x02, 0xc9, 0x8f
-> +			};
-> +			u8 data_b[9] = { 0x48, 0x97, 0x78, 0xfc,
-> +				0x91, 0x2f, 0x03, 0x29, 0x5d
-> +			};
-> +			u8 data_c[9] = { 0x4a, 0xaa, 0x7c, 0x71,
-> +				0x95, 0x55, 0x03, 0x40, 0x7d
-> +			};
-> +			u8 *data = NULL;
-> +
-> +			switch (clk_mode) {
-> +			case CXD2880_TNRDMD_CLOCKMODE_A:
-> +				data = data_a;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_B:
-> +				data = data_b;
-> +				break;
-> +			case CXD2880_TNRDMD_CLOCKMODE_C:
-> +				data = data_c;
-> +				break;
-> +			default:
-> +				return -EPERM;
-> +			}
-> +
-> +			ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +						      CXD2880_IO_TGT_DMD,
-> +						      0x4b, data, 9);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +		break;
-> +
-> +	default:
-> +		return -EPERM;
-> +	}
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x00, 0x00);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0xfd, 0x01);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int x_sleep_dvbt2_demod_setting(struct cxd2880_tnrdmd
-> +				       *tnr_dmd)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!tnr_dmd)
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +		u8 data[] = { 0, 1, 0, 2,
-> +			0, 4, 0, 8, 0, 16, 0, 32
-> +		};
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x00, 0x1d);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0x47, data, 12);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dvbt2_set_profile(struct cxd2880_tnrdmd *tnr_dmd,
-> +			     enum cxd2880_dvbt2_profile profile)
-> +{
-> +	u8 t2_mode_tune_mode = 0;
-> +	u8 seq_not2_dtime = 0;
-> +	int ret = 0;
-> +
-> +	if (!tnr_dmd)
-> +		return -EINVAL;
-> +
-> +	{
-> +		u8 dtime1 = 0;
-> +		u8 dtime2 = 0;
-> +
-> +		switch (tnr_dmd->clk_mode) {
-> +		case CXD2880_TNRDMD_CLOCKMODE_A:
-> +			dtime1 = 0x27;
-> +			dtime2 = 0x0c;
-> +			break;
-> +		case CXD2880_TNRDMD_CLOCKMODE_B:
-> +			dtime1 = 0x2c;
-> +			dtime2 = 0x0d;
-> +			break;
-> +		case CXD2880_TNRDMD_CLOCKMODE_C:
-> +			dtime1 = 0x2e;
-> +			dtime2 = 0x0e;
-> +			break;
-> +		default:
-> +			return -EPERM;
-> +		}
-> +
-> +		switch (profile) {
-> +		case CXD2880_DVBT2_PROFILE_BASE:
-> +			t2_mode_tune_mode = 0x01;
-> +			seq_not2_dtime = dtime2;
-> +			break;
-> +
-> +		case CXD2880_DVBT2_PROFILE_LITE:
-> +			t2_mode_tune_mode = 0x05;
-> +			seq_not2_dtime = dtime1;
-> +			break;
-> +
-> +		case CXD2880_DVBT2_PROFILE_ANY:
-> +			t2_mode_tune_mode = 0x00;
-> +			seq_not2_dtime = dtime1;
-> +			break;
-> +
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x00, 0x2e);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x10, t2_mode_tune_mode);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x00, 0x04);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x2c, seq_not2_dtime);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ret;
-> +}
-> +
-> +int cxd2880_tnrdmd_dvbt2_tune1(struct cxd2880_tnrdmd *tnr_dmd,
-> +			       struct cxd2880_dvbt2_tune_param
-> +			       *tune_param)
-> +{
-> +	int ret = 0;
-> +
-> +	if ((!tnr_dmd) || (!tune_param))
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return -EINVAL;
-> +
-> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
-> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
-> +		return -EPERM;
-> +
-> +	if ((tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) &&
-> +	    (tune_param->profile == CXD2880_DVBT2_PROFILE_ANY))
-> +		return -EOPNOTSUPP;
-> +
-> +	ret =
-> +	    cxd2880_tnrdmd_common_tune_setting1(tnr_dmd, CXD2880_DTV_SYS_DVBT2,
-> +						tune_param->center_freq_khz,
-> +						tune_param->bandwidth, 0, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =
-> +	    x_tune_dvbt2_demod_setting(tnr_dmd, tune_param->bandwidth,
-> +				       tnr_dmd->clk_mode);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +		ret =
-> +		    x_tune_dvbt2_demod_setting(tnr_dmd->diver_sub,
-> +					       tune_param->bandwidth,
-> +					       tnr_dmd->diver_sub->clk_mode);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = dvbt2_set_profile(tnr_dmd, tune_param->profile);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +		ret =
-> +		    dvbt2_set_profile(tnr_dmd->diver_sub, tune_param->profile);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	if (tune_param->data_plp_id == CXD2880_DVBT2_TUNE_PARAM_PLPID_AUTO) {
-> +		ret = cxd2880_tnrdmd_dvbt2_set_plp_cfg(tnr_dmd, 1, 0);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		ret =
-> +		    cxd2880_tnrdmd_dvbt2_set_plp_cfg(tnr_dmd, 0,
-> +					     (u8)(tune_param->data_plp_id));
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int cxd2880_tnrdmd_dvbt2_tune2(struct cxd2880_tnrdmd *tnr_dmd,
-> +			       struct cxd2880_dvbt2_tune_param
-> +			       *tune_param)
-> +{
-> +	int ret = 0;
-> +
-> +	if ((!tnr_dmd) || (!tune_param))
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return -EINVAL;
-> +
-> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
-> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
-> +		return -EPERM;
-> +
-> +	{
-> +		u8 en_fef_intmtnt_ctrl = 1;
-> +
-> +		switch (tune_param->profile) {
-> +		case CXD2880_DVBT2_PROFILE_BASE:
-> +			en_fef_intmtnt_ctrl = tnr_dmd->en_fef_intmtnt_base;
-> +			break;
-> +		case CXD2880_DVBT2_PROFILE_LITE:
-> +			en_fef_intmtnt_ctrl = tnr_dmd->en_fef_intmtnt_lite;
-> +			break;
-> +		case CXD2880_DVBT2_PROFILE_ANY:
-> +			if (tnr_dmd->en_fef_intmtnt_base &&
-> +			    tnr_dmd->en_fef_intmtnt_lite)
-> +				en_fef_intmtnt_ctrl = 1;
-> +			else
-> +				en_fef_intmtnt_ctrl = 0;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +		ret =
-> +		    cxd2880_tnrdmd_common_tune_setting2(tnr_dmd,
-> +							CXD2880_DTV_SYS_DVBT2,
-> +							en_fef_intmtnt_ctrl);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	tnr_dmd->state = CXD2880_TNRDMD_STATE_ACTIVE;
-> +	tnr_dmd->frequency_khz = tune_param->center_freq_khz;
-> +	tnr_dmd->sys = CXD2880_DTV_SYS_DVBT2;
-> +	tnr_dmd->bandwidth = tune_param->bandwidth;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +		tnr_dmd->diver_sub->state = CXD2880_TNRDMD_STATE_ACTIVE;
-> +		tnr_dmd->diver_sub->frequency_khz = tune_param->center_freq_khz;
-> +		tnr_dmd->diver_sub->sys = CXD2880_DTV_SYS_DVBT2;
-> +		tnr_dmd->diver_sub->bandwidth = tune_param->bandwidth;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int cxd2880_tnrdmd_dvbt2_sleep_setting(struct cxd2880_tnrdmd
-> +				       *tnr_dmd)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!tnr_dmd)
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return -EINVAL;
-> +
-> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
-> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
-> +		return -EPERM;
-> +
-> +	ret = x_sleep_dvbt2_demod_setting(tnr_dmd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
-> +		ret = x_sleep_dvbt2_demod_setting(tnr_dmd->diver_sub);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int cxd2880_tnrdmd_dvbt2_check_demod_lock(struct cxd2880_tnrdmd
-> +					  *tnr_dmd,
-> +					  enum
-> +					  cxd2880_tnrdmd_lock_result
-> +					  *lock)
-> +{
-> +	int ret = 0;
-> +
-> +	u8 sync_stat = 0;
-> +	u8 ts_lock = 0;
-> +	u8 unlock_detected = 0;
-> +	u8 unlock_detected_sub = 0;
-> +
-> +	if ((!tnr_dmd) || (!lock))
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return -EPERM;
-> +
-> +	ret =
-> +	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_stat, &ts_lock,
-> +					       &unlock_detected);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE) {
-> +		if (sync_stat == 6)
-> +			*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-> +		else if (unlock_detected)
-> +			*lock = CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED;
-> +		else
-> +			*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-> +
-> +		return ret;
-> +	}
-> +
-> +	if (sync_stat == 6) {
-> +		*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-> +		return ret;
-> +	}
-> +
-> +	ret =
-> +	    cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub(tnr_dmd, &sync_stat,
-> +						   &unlock_detected_sub);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (sync_stat == 6)
-> +		*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-> +	else if (unlock_detected && unlock_detected_sub)
-> +		*lock = CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED;
-> +	else
-> +		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-> +
-> +	return ret;
-> +}
-> +
-> +int cxd2880_tnrdmd_dvbt2_check_ts_lock(struct cxd2880_tnrdmd
-> +				       *tnr_dmd,
-> +				       enum
-> +				       cxd2880_tnrdmd_lock_result
-> +				       *lock)
-> +{
-> +	int ret = 0;
-> +
-> +	u8 sync_stat = 0;
-> +	u8 ts_lock = 0;
-> +	u8 unlock_detected = 0;
-> +	u8 unlock_detected_sub = 0;
-> +
-> +	if ((!tnr_dmd) || (!lock))
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return -EPERM;
-> +
-> +	ret =
-> +	    cxd2880_tnrdmd_dvbt2_mon_sync_stat(tnr_dmd, &sync_stat, &ts_lock,
-> +					       &unlock_detected);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE) {
-> +		if (ts_lock)
-> +			*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-> +		else if (unlock_detected)
-> +			*lock = CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED;
-> +		else
-> +			*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-> +
-> +		return ret;
-> +	}
-> +
-> +	if (ts_lock) {
-> +		*lock = CXD2880_TNRDMD_LOCK_RESULT_LOCKED;
-> +		return ret;
-> +	} else if (!unlock_detected) {
-> +		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-> +		return ret;
-> +	}
-> +
-> +	ret =
-> +	    cxd2880_tnrdmd_dvbt2_mon_sync_stat_sub(tnr_dmd, &sync_stat,
-> +						   &unlock_detected_sub);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (unlock_detected && unlock_detected_sub)
-> +		*lock = CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED;
-> +	else
-> +		*lock = CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT;
-> +
-> +	return ret;
-> +}
-> +
-> +int cxd2880_tnrdmd_dvbt2_set_plp_cfg(struct cxd2880_tnrdmd
-> +				     *tnr_dmd, u8 auto_plp,
-> +				     u8 plp_id)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!tnr_dmd)
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return -EINVAL;
-> +
-> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
-> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
-> +		return -EPERM;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x00, 0x23);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!auto_plp) {
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0xaf, plp_id);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0xad, auto_plp ? 0x00 : 0x01);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ret;
-> +}
-> +
-> +int cxd2880_tnrdmd_dvbt2_diver_fef_setting(struct cxd2880_tnrdmd
-> +					   *tnr_dmd)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!tnr_dmd)
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return -EPERM;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE)
-> +		return 0;
-> +
-> +	{
-> +		struct cxd2880_dvbt2_ofdm ofdm;
-> +
-> +		ret = cxd2880_tnrdmd_dvbt2_mon_ofdm(tnr_dmd, &ofdm);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (!ofdm.mixed)
-> +			return 0;
-> +	}
-> +
-> +	{
-> +		u8 data[] = { 0, 8, 0, 16,
-> +			0, 32, 0, 64, 0, 128, 1, 0
-> +		};
-> +
-> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +					     CXD2880_IO_TGT_DMD,
-> +					     0x00, 0x1d);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> +					      CXD2880_IO_TGT_DMD,
-> +					      0x47, data, 12);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int cxd2880_tnrdmd_dvbt2_check_l1post_valid(struct cxd2880_tnrdmd
-> +					    *tnr_dmd,
-> +					    u8 *l1_post_valid)
-> +{
-> +	int ret = 0;
-> +
-> +	u8 data;
-> +
-> +	if ((!tnr_dmd) || (!l1_post_valid))
-> +		return -EINVAL;
-> +
-> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return -EINVAL;
-> +
-> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
-> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
-> +		return -EPERM;
-> +
-> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x00, 0x0b);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = tnr_dmd->io->read_regs(tnr_dmd->io,
-> +				     CXD2880_IO_TGT_DMD,
-> +				     0x86, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*l1_post_valid = data & 0x01;
-> +
-> +	return ret;
-> +}
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
-> new file mode 100644
-> index 000000000000..409685425b53
-> --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_dvbt2.h
-> @@ -0,0 +1,82 @@
-> +/*
-> + * cxd2880_tnrdmd_dvbt2.h
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-> + * control interface for DVB-T2
-> + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef CXD2880_TNRDMD_DVBT2_H
-> +#define CXD2880_TNRDMD_DVBT2_H
-> +
-> +#include "cxd2880_common.h"
-> +#include "cxd2880_tnrdmd.h"
-> +
-> +enum cxd2880_tnrdmd_dvbt2_tune_info {
-> +	CXD2880_TNRDMD_DVBT2_TUNE_INFO_OK,
-> +	CXD2880_TNRDMD_DVBT2_TUNE_INFO_INVALID_PLP_ID
-> +};
-> +
-> +struct cxd2880_dvbt2_tune_param {
-> +	u32 center_freq_khz;
-> +	enum cxd2880_dtv_bandwidth bandwidth;
-> +	u16 data_plp_id;
-> +	enum cxd2880_dvbt2_profile profile;
-> +	enum cxd2880_tnrdmd_dvbt2_tune_info tune_info;
-> +};
-> +
-> +#define CXD2880_DVBT2_TUNE_PARAM_PLPID_AUTO  0xffff
-> +
-> +int cxd2880_tnrdmd_dvbt2_tune1(struct cxd2880_tnrdmd *tnr_dmd,
-> +			       struct cxd2880_dvbt2_tune_param
-> +			       *tune_param);
-> +
-> +int cxd2880_tnrdmd_dvbt2_tune2(struct cxd2880_tnrdmd *tnr_dmd,
-> +			       struct cxd2880_dvbt2_tune_param
-> +			       *tune_param);
-> +
-> +int cxd2880_tnrdmd_dvbt2_sleep_setting(struct cxd2880_tnrdmd
-> +				       *tnr_dmd);
-> +
-> +int cxd2880_tnrdmd_dvbt2_check_demod_lock(struct cxd2880_tnrdmd
-> +					  *tnr_dmd,
-> +					  enum
-> +					  cxd2880_tnrdmd_lock_result
-> +					  *lock);
-> +
-> +int cxd2880_tnrdmd_dvbt2_check_ts_lock(struct cxd2880_tnrdmd
-> +				       *tnr_dmd,
-> +				       enum
-> +				       cxd2880_tnrdmd_lock_result
-> +				       *lock);
-> +
-> +int cxd2880_tnrdmd_dvbt2_set_plp_cfg(struct cxd2880_tnrdmd
-> +				     *tnr_dmd, u8 auto_plp,
-> +				     u8 plp_id);
-> +
-> +int cxd2880_tnrdmd_dvbt2_diver_fef_setting(struct cxd2880_tnrdmd
-> +					   *tnr_dmd);
-> +
-> +int cxd2880_tnrdmd_dvbt2_check_l1post_valid(struct cxd2880_tnrdmd
-> +					    *tnr_dmd,
-> +					    u8 *l1_post_valid);
-> +
-> +#endif
+--8323329-1837119458-1503848558=:14130
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
 
+Hi Cyrille,
 
-Thanks,
-Mauro
+I think I figured out the confusion with regards to dummy cycles.  See my 
+comment in line.
+
+Matthew Gerlach
+
+On Tue, 15 Aug 2017, Cyrille Pitchen wrote:
+
+> Le 15/08/2017 à 19:20, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org a écrit :
+>>
+>> Hi Cyrille,
+>>
+>> Thanks for the great feedback.  See my comments inline.
+>>
+>> Matthew Gerlach
+>>
+>> On Fri, 11 Aug 2017, Cyrille Pitchen wrote:
+>>
+>>> Hi Matthew,
+>>>
+>>> Le 06/08/2017 à 20:24, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org a écrit :
+>>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>>
+>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>> ---
+>>>>  MAINTAINERS                         |   7 +
+>>>>  drivers/mtd/spi-nor/Kconfig         |   6 +
+>>>>  drivers/mtd/spi-nor/Makefile        |   3 +-
+>>>>  drivers/mtd/spi-nor/altera-asmip2.c | 474
+>>>> ++++++++++++++++++++++++++++++++++++
+>>>>  include/linux/mtd/altera-asmip2.h   |  24 ++
+>>>>  5 files changed, 513 insertions(+), 1 deletion(-)
+>>>>  create mode 100644 drivers/mtd/spi-nor/altera-asmip2.c
+>>>>  create mode 100644 include/linux/mtd/altera-asmip2.h
+>>>>
+>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>>> index 672b5d5..9583c1a 100644
+>>>> --- a/MAINTAINERS
+>>>> +++ b/MAINTAINERS
+>>>> @@ -644,6 +644,13 @@ ALPS PS/2 TOUCHPAD DRIVER
+>>>>  R:    Pali Rohár <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>  F:    drivers/input/mouse/alps.*
+>>>>
+>>>> +ALTERA ASMI Parallel II Driver
+>>>> +M:      Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>> +L:      linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>>> +S:      Maintained
+>>>> +F:      drivers/mtd/spi-nor/altera-asmip2.c
+>>>> +F:      inclulde/linux/mtd/altera-asmip2.h
+>>>> +
+>>>>  ALTERA MAILBOX DRIVER
+>>>>  M:    Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>>>  L:    nios2-dev-g9ZBwUv/Ih/yUk5EbOjzuce+I+R0W71w@public.gmane.org (moderated for non-subscribers)
+>>>> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+>>>> index 69c638d..eb2c522 100644
+>>>> --- a/drivers/mtd/spi-nor/Kconfig
+>>>> +++ b/drivers/mtd/spi-nor/Kconfig
+>>>> @@ -129,4 +129,10 @@ config SPI_STM32_QUADSPI
+>>>>        This enables support for the STM32 Quad SPI controller.
+>>>>        We only connect the NOR to this controller.
+>>>>
+>>>> +config SPI_ALTERA_ASMIP2
+>>>> +    tristate "Altera ASMI Parallel II IP"
+>>>> +    depends on OF && HAS_IOMEM
+>>>> +    help
+>>>> +      Enable support for Altera ASMI Parallel II.
+>>>> +
+>>>>  endif # MTD_SPI_NOR
+>>>> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+>>>> index c5f171d..1c79324 100644
+>>>> --- a/drivers/mtd/spi-nor/Makefile
+>>>> +++ b/drivers/mtd/spi-nor/Makefile
+>>>> @@ -1,4 +1,5 @@
+>>>>  obj-$(CONFIG_MTD_SPI_NOR)    += spi-nor.o
+>>>> +obj-$(CONFIG_SPI_ALTERA_ASMIP2)    += altera-asmip2.o
+>>>>  obj-$(CONFIG_SPI_ASPEED_SMC)    += aspeed-smc.o
+>>>>  obj-$(CONFIG_SPI_ATMEL_QUADSPI)    += atmel-quadspi.o
+>>>>  obj-$(CONFIG_SPI_CADENCE_QUADSPI)    += cadence-quadspi.o
+>>>> @@ -9,4 +10,4 @@ obj-$(CONFIG_SPI_NXP_SPIFI)    += nxp-spifi.o
+>>>>  obj-$(CONFIG_SPI_INTEL_SPI)    += intel-spi.o
+>>>>  obj-$(CONFIG_SPI_INTEL_SPI_PCI)    += intel-spi-pci.o
+>>>>  obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)    += intel-spi-platform.o
+>>>> -obj-$(CONFIG_SPI_STM32_QUADSPI)    += stm32-quadspi.o
+>>>> \ No newline at end of file
+>>>> +obj-$(CONFIG_SPI_STM32_QUADSPI)    += stm32-quadspi.o
+>>>> diff --git a/drivers/mtd/spi-nor/altera-asmip2.c
+>>>> b/drivers/mtd/spi-nor/altera-asmip2.c
+>>>> new file mode 100644
+>>>> index 0000000..2095f2e
+>>>> --- /dev/null
+>>>> +++ b/drivers/mtd/spi-nor/altera-asmip2.c
+>>>> @@ -0,0 +1,474 @@
+>>>> +/*
+>>>> + * Copyright (C) 2017 Intel Corporation. All rights reserved.
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or
+>>>> modify it
+>>>> + * under the terms and conditions of the GNU General Public License,
+>>>> + * version 2, as published by the Free Software Foundation.
+>>>> + *
+>>>> + * This program is distributed in the hope it will be useful, but
+>>>> WITHOUT
+>>>> + * ANY WARRANTY; without even the implied warranty of
+>>>> MERCHANTABILITY or
+>>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+>>>> License for
+>>>> + * more details.
+>>>> + *
+>>>> + * You should have received a copy of the GNU General Public License
+>>>> along with
+>>>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>>>> + */
+>>>> +
+>>>> +#include <linux/iopoll.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/mtd/altera-asmip2.h>
+>>>> +#include <linux/mtd/mtd.h>
+>>>> +#include <linux/mtd/spi-nor.h>
+>>>> +#include <linux/of_device.h>
+>>>> +
+>>>> +#define QSPI_ACTION_REG 0
+>>>> +#define QSPI_ACTION_RST BIT(0)
+>>>> +#define QSPI_ACTION_EN BIT(1)
+>>>> +#define QSPI_ACTION_SC BIT(2)
+>>>> +#define QSPI_ACTION_CHIP_SEL_SFT 4
+>>>> +#define QSPI_ACTION_DUMMY_SFT 8
+>>>> +#define QSPI_ACTION_READ_BACK_SFT 16
+>>>> +
+>>>> +#define QSPI_FIFO_CNT_REG 4
+>>>> +#define QSPI_FIFO_DEPTH 0x200
+>>>> +#define QSPI_FIFO_CNT_MSK 0x3ff
+>>>> +#define QSPI_FIFO_CNT_RX_SFT 0
+>>>> +#define QSPI_FIFO_CNT_TX_SFT 12
+>>>> +
+>>>> +#define QSPI_DATA_REG 0x8
+>>>> +
+>>>> +#define QSPI_POLL_TIMEOUT 10000000
+>>>> +#define QSPI_POLL_INTERVAL 5
+>>>> +
+>>>> +struct altera_asmip2 {
+>>>> +    void __iomem *csr_base;
+>>>> +    u32 num_flashes;
+>>>> +    struct device *dev;
+>>>> +    struct altera_asmip2_flash
+>>>> *flash[ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP];
+>>>> +    struct mutex bus_mutex;
+>>>> +};
+>>>> +
+>>>> +struct altera_asmip2_flash {
+>>>> +    struct spi_nor nor;
+>>>> +    struct altera_asmip2 *q;
+>>>> +    u32 bank;
+>>>> +};
+>>>> +
+>>>> +static int altera_asmip2_write_reg(struct spi_nor *nor, u8 opcode,
+>>>> u8 *val,
+>>>> +                    int len)
+>>>> +{
+>>>> +    struct altera_asmip2_flash *flash = nor->priv;
+>>>> +    struct altera_asmip2 *q = flash->q;
+>>>> +    u32 reg;
+>>>> +    int ret;
+>>>> +    int i;
+>>>> +
+>>>> +    if ((len + 1) > QSPI_FIFO_DEPTH) {
+>>>> +        dev_err(q->dev, "%s bad len %d > %d\n",
+>>>> +            __func__, len + 1, QSPI_FIFO_DEPTH);
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +
+>>>> +    writel(opcode, q->csr_base + QSPI_DATA_REG);
+>>>> +
+>>>> +    for (i = 0; i < len; i++) {
+>>>> +        writel((u32)val[i], q->csr_base + QSPI_DATA_REG);
+>>>> +    }
+>>>> +
+>>>> +    reg = QSPI_ACTION_EN | QSPI_ACTION_SC;
+>>>> +
+>>>> +    writel(reg, q->csr_base + QSPI_ACTION_REG);
+>>>> +
+>>>> +    ret = readl_poll_timeout(q->csr_base + QSPI_FIFO_CNT_REG, reg,
+>>>> +                 (((reg >> QSPI_FIFO_CNT_TX_SFT) &
+>>>> +                 QSPI_FIFO_CNT_MSK) == 0), QSPI_POLL_INTERVAL,
+>>>> +                 QSPI_POLL_TIMEOUT);
+>>>> +    if (ret)
+>>>> +        dev_err(q->dev, "%s timed out\n", __func__);
+>>>> +
+>>>> +    reg = QSPI_ACTION_EN;
+>>>> +
+>>>> +    writel(reg, q->csr_base + QSPI_ACTION_REG);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static int altera_asmip2_read_reg(struct spi_nor *nor, u8 opcode, u8
+>>>> *val,
+>>>> +                   int len)
+>>>> +{
+>>>> +    struct altera_asmip2_flash *flash = nor->priv;
+>>>> +    struct altera_asmip2 *q = flash->q;
+>>>> +    u32 reg;
+>>>> +    int ret;
+>>>> +    int i;
+>>>> +
+>>>> +    if (len > QSPI_FIFO_DEPTH) {
+>>>> +        dev_err(q->dev, "%s bad len %d > %d\n",
+>>>> +            __func__, len, QSPI_FIFO_DEPTH);
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +
+>>>> +    writel(opcode, q->csr_base + QSPI_DATA_REG);
+>>>> +
+>>>> +    reg = QSPI_ACTION_EN | QSPI_ACTION_SC |
+>>>> +        (len << QSPI_ACTION_READ_BACK_SFT);
+>>>> +
+>>>> +    writel(reg, q->csr_base + QSPI_ACTION_REG);
+>>>> +
+>>>> +    ret = readl_poll_timeout(q->csr_base + QSPI_FIFO_CNT_REG, reg,
+>>>> +                 ((reg & QSPI_FIFO_CNT_MSK) == len),
+>>>> +                 QSPI_POLL_INTERVAL, QSPI_POLL_TIMEOUT);
+>>>> +
+>>>> +    if (!ret)
+>>>> +        for (i = 0; i < len; i++) {
+>>>> +            reg = readl(q->csr_base + QSPI_DATA_REG);
+>>>> +            val[i] = (u8)(reg & 0xff);
+>>>> +        }
+>>>> +    else
+>>>> +        dev_err(q->dev, "%s timeout\n", __func__);
+>>>> +
+>>>> +    writel(QSPI_ACTION_EN, q->csr_base + QSPI_ACTION_REG);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static ssize_t altera_asmip2_read(struct spi_nor *nor, loff_t from,
+>>>> size_t len,
+>>>> +                   u_char *buf)
+>>>> +{
+>>>> +    struct altera_asmip2_flash *flash = nor->priv;
+>>>> +    struct altera_asmip2 *q = flash->q;
+>>>> +    size_t bytes_to_read, i;
+>>>> +    u32 reg;
+>>>> +    int ret;
+>>>> +
+>>>> +    bytes_to_read = min_t(size_t, len, QSPI_FIFO_DEPTH);
+>>>> +
+>>>> +    writel(nor->read_opcode, q->csr_base + QSPI_DATA_REG);
+>>>> +
+>>>> +    writel((from & 0xff000000) >> 24, q->csr_base + QSPI_DATA_REG);
+>>>> +    writel((from & 0x00ff0000) >> 16, q->csr_base + QSPI_DATA_REG);
+>>>> +    writel((from & 0x0000ff00) >> 8, q->csr_base + QSPI_DATA_REG);
+>>>> +    writel((from & 0x000000ff), q->csr_base + QSPI_DATA_REG);
+>>>
+>>> Here it looks like you assume the address width is 32 bits. This is not
+>>> always the case, the address width is often 24 bits (almost always for
+>>> memory < 128Mib). Please check nor->addr_width to know the correct
+>>> number of address bytes to be used with the nor->read_opcode command.
+>>
+>> I will be combining this suggestion with Marek's suggestion to use a for
+>> loop.
+>>
+>>>
+>>>> +
+>>>> +    reg = QSPI_ACTION_EN | QSPI_ACTION_SC |
+>>>> +        (10 << QSPI_ACTION_DUMMY_SFT) |
+>>>
+>>> Here DUMMY_SFT suggests that you provide the number of dummy cycles to
+>>> be inserted between the address cycles and the data cycles.
+>>> If so, please fill this field based on nor->read_dummy: this is a number
+>>> of dummy CLOCK cycles. If you need to convert it into the number of byte
+>>> cycles you will have to take into account the number of I/O lines used
+>>> to transmit the address (+ dummy) clocks cycles:
+>>>
+>>> spi_nor_get_protocol_addr_nbits(nor->read_proto)
+>>>
+>>> This gives the 'y' in SPI x-y-z protocol. Should be 1, 2 or 4.
+>>>
+>>> Also could you tell us which SPI memory did you use to test your driver?
+>>> 10 is really strange as a number of dummy bytes or clock cycles
+>>> especially since this driver seems to support only Read (03h / 13h) and
+>>> Fast Read (0Bh / 0Ch) operations (see hwcaps below).
+>>>
+>>> Read doesn't use any dummy clock cycles whereas Fast Read uses 8 dummy
+>>> clock cycles for all SPI NOR memories I know.
+>>
+>>
+>> As it turns out, I tested this code with two Micron parts, "n25q00a" and
+>> "n25q512a".  To be honest, the formula for calculating dummy cycles is
+>> not clear to me.  This controller is instantiated in an fpga, and the fpga
+>> documentation states "The number of dummy cycles must be set to 12 for
+>> SPI flash operating in 3-byte addressing.  If the SPI flash operates
+>> in 4-byte addressing, the dummy cycles should be set to 4 for SPIx1 and
+>> 10 for SPIx4".
+>>
+>> I'm not sure that (nor->read_dummy + spi_nor_get_protocol_addr_nbits())
+>> implements what is in the spec.
+>>
+>
+> The number of dummy clock cycles to be inserted between address clock
+> cycles and data clock cycles is totally up to the SPI NOR memory. The
+> SPI controller has no other choice but to insert the exact number of
+> dummy clock cycles as expected by the memory.
+>
+> You can find the number of dummy clock cycles in the *memory* datasheet.
+> Usually this number depends on the SPI x-y-z protocol used to read the
+> memory data.
+
+
+Well my problem is that I was looking at the Micron data sheets when I 
+should have been looking at the EPCQ data sheets:
+
+https://www.altera.com/documentation/wtw1396921531042.html#sss1415881223672
+
+The EPCQ data sheet clearly states 10 dummy cycles, but unfortunately when 
+one reads the jedec id register, micron is reported back.  I suspect the 
+EPCQ flash are actually micron flash parts with some logic to make it 
+easier for the FPGA to configure itself on power up.
+
+Would it make sense to add a flag to the platform data/device tree to
+tell the driver to get the dummy cycles by reading Non-Volatile 
+configuration register, or should such a flag be passed to spi_nor_scan() 
+to tell it read the Non-Volatile configuration register for the dummy 
+cycles?
+
+>
+> x : number of I/O lines used during instruction op code clock cycles in
+> {0, 1, 2, 4, 8}. 0 for Continuous Read/XIP, when the instruction op code
+> is not sent at all: not supported by spi-nor, only relevant for XIP
+> application out of the scope of the MTD sub-system.
+>
+> y : number of I/O lines used during address/mode/dummy clock cycles in
+> {1, 2, 4, 8}
+>
+> z : number of I/O lines used during data clock cycles in {1, 2, 4, 8}.
+>
+> Existing SPI x-y-z protocols respect the following patterns:
+> - (x <= y) && (y <= z)
+> - (x == y) || (y == z)
+>
+> These are not formal rules but in practice all existing SPI protocols
+> match those patterns. Hence valid Quad SPI protocol are SPI 1-1-4, SPI
+> 1-4-4 or SPI 4-4-4 (plus SPI 0-4-4 for Continuous Read/XIP).
+>
+> The spi-nor.c driver doesn't enable the Micron Quad I/O mode which
+> forces the SPI 4-4-4 for ALL SPI commands. Micron Dual I/O mode is
+> neither used (it forces the SPI 2-2-2 protocols for ALL commands).
+>
+> The spi-nor driver expects the Micron (or any SPI NOR) memory to still
+> be in its factory settings. For Micron, it means that neither the Quad
+> I/O nor the Dual I/O modes should be enabled.
+>
+> Anyway, if one of those 2 modes were enabled before calling
+> spi_nor_scan(), this later function would fail to detect the Micron
+> memory since the Read JEDEC ID (9Fh) command is not supported by Micron
+> memories once in Quad or Dual I/O mode.
+>
+> Read commands (03h / 13h) expect no dummy clock cycles whereas Fast Read
+> commands (0Bh / 0Ch) expect 8 dummy clock cycles, not 10.
+>
+> 10 dummy clock cycles are the Micron factory settings when you use some
+> SPI x-4-4 protocol, ie with address, mode and dummy sent on 4 I/O lines.
+> This won't be the case with this Altera driver since it claims to
+> support only Read (SPI 1-1-1) and Fast Read (SPI 1-1-1) operations.
+>
+> The number of dummy clock cycles doesn't depend on whether we use a
+> 3-byte address or a 4-byte address SPI command.
+>
+>
+> tl;dr
+>
+> Your FPGA documentation seems to be all wrong, please just trust the
+> settings provided by the spi-nor.c driver and refer the *memory*
+> datasheet if the values chosen by spi-nor.c are not correct.
+>
+> Also please refer to the m25p80_read() function in
+> drivers/mtd/device/m25p80.c to get the formula to convert the number of
+> dummy clock cycles ino the number of dummy bytes:
+>
+> /* SPI x-y-z protocol */
+> u8 y = spi_not_get_protocol_addr_nbits(nor->read_proto);
+>
+> /* nor->read_dummy is the number of dummy clock cycles */
+> unsigned int dummy_bytes = (nor->read_dummy * y) / 8;
+>
+>
+> Best regards,
+>
+> Cyrille
+>
+>>>
+>>>> +        (bytes_to_read << QSPI_ACTION_READ_BACK_SFT);
+>>>> +
+>>>> +    writel(reg, q->csr_base + QSPI_ACTION_REG);
+>>>> +
+>>>> +    ret = readl_poll_timeout(q->csr_base + QSPI_FIFO_CNT_REG, reg,
+>>>> +                 ((reg & QSPI_FIFO_CNT_MSK) ==
+>>>> +                 bytes_to_read), QSPI_POLL_INTERVAL,
+>>>> +                 QSPI_POLL_TIMEOUT);
+>>>> +    if (ret) {
+>>>> +        dev_err(q->dev, "%s timed out\n", __func__);
+>>>> +        bytes_to_read = 0;
+>>>> +    } else
+>>>> +        for (i = 0; i < bytes_to_read; i++) {
+>>>> +            reg = readl(q->csr_base + QSPI_DATA_REG);
+>>>> +            *buf++ = (u8)(reg & 0xff);
+>>>> +        }
+>>>> +
+>>>> +    writel(QSPI_ACTION_EN, q->csr_base + QSPI_ACTION_REG);
+>>>> +
+>>>> +    return bytes_to_read;
+>>>> +}
+>>>> +
+>>>> +static ssize_t altera_asmip2_write(struct spi_nor *nor, loff_t to,
+>>>> +                    size_t len, const u_char *buf)
+>>>> +{
+>>>> +    struct altera_asmip2_flash *flash = nor->priv;
+>>>> +    struct altera_asmip2 *q = flash->q;
+>>>> +    size_t bytes_to_write, i;
+>>>> +    u32 reg;
+>>>> +    int ret;
+>>>> +
+>>>> +    bytes_to_write = min_t(size_t, len, (QSPI_FIFO_DEPTH - 5));
+>>>> +
+>>>
+>>> not 5 but (1 + nor->addr_width)
+>>>
+>>>
+>>>> +    writel(nor->program_opcode, q->csr_base + QSPI_DATA_REG);
+>>>> +
+>>>> +    writel((to & 0xff000000) >> 24, q->csr_base + QSPI_DATA_REG);
+>>>> +    writel((to & 0x00ff0000) >> 16, q->csr_base + QSPI_DATA_REG);
+>>>> +    writel((to & 0x0000ff00) >> 8, q->csr_base + QSPI_DATA_REG);
+>>>> +    writel((to & 0x000000ff), q->csr_base + QSPI_DATA_REG);
+>>>
+>>> Same as for altera_asmip2_read()
+>>>> +
+>>>> +    for (i = 0; i < bytes_to_write; i++) {
+>>>> +        reg = (u32)*buf++;
+>>>> +        writel(reg, q->csr_base + QSPI_DATA_REG);
+>>>> +    }
+>>>> +
+>>>> +    reg = QSPI_ACTION_EN | QSPI_ACTION_SC;
+>>>> +
+>>>> +    writel(reg, q->csr_base + QSPI_ACTION_REG);
+>>>> +
+>>>> +    ret = readl_poll_timeout(q->csr_base + QSPI_FIFO_CNT_REG, reg,
+>>>> +                 (((reg >> QSPI_FIFO_CNT_TX_SFT) &
+>>>> +                 QSPI_FIFO_CNT_MSK) == 0), QSPI_POLL_INTERVAL,
+>>>> +                 QSPI_POLL_TIMEOUT);
+>>>> +
+>>>> +    if (ret) {
+>>>> +        dev_err(q->dev,
+>>>> +            "%s timed out waiting for fifo to clear\n",
+>>>> +            __func__);
+>>>> +        bytes_to_write = 0;
+>>>> +    }
+>>>> +
+>>>> +    writel(QSPI_ACTION_EN, q->csr_base + QSPI_ACTION_REG);
+>>>> +
+>>>> +    return bytes_to_write;
+>>>> +
+>>>> +}
+>>>> +
+>>>> +static int altera_asmip2_prep(struct spi_nor *nor, enum spi_nor_ops
+>>>> ops)
+>>>> +{
+>>>> +    struct altera_asmip2_flash *flash = nor->priv;
+>>>> +    struct altera_asmip2 *q = flash->q;
+>>>> +
+>>>> +    mutex_lock(&q->bus_mutex);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static void altera_asmip2_unprep(struct spi_nor *nor, enum
+>>>> spi_nor_ops ops)
+>>>> +{
+>>>> +    struct altera_asmip2_flash *flash = nor->priv;
+>>>> +    struct altera_asmip2 *q = flash->q;
+>>>> +
+>>>> +    mutex_unlock(&q->bus_mutex);
+>>>> +}
+>>>> +
+>>>> +static int altera_asmip2_setup_banks(struct device *dev,
+>>>> +                      u32 bank, struct device_node *np)
+>>>> +{
+>>>> +    const struct spi_nor_hwcaps hwcaps = {
+>>>> +        .mask = SNOR_HWCAPS_READ |
+>>>> +            SNOR_HWCAPS_READ_FAST |
+>>>> +            SNOR_HWCAPS_PP,
+>>>> +    };
+>>>> +    struct altera_asmip2 *q = dev_get_drvdata(dev);
+>>>> +    struct altera_asmip2_flash *flash;
+>>>> +    struct spi_nor *nor;
+>>>> +    int ret = 0;
+>>>> +    char modalias[40] = {0};
+>>>> +
+>>>> +    if (bank > q->num_flashes - 1)
+>>>> +        return -EINVAL;
+>>>> +
+>>>> +    flash = devm_kzalloc(q->dev, sizeof(*flash), GFP_KERNEL);
+>>>> +    if (!flash)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    q->flash[bank] = flash;
+>>>> +    flash->q = q;
+>>>> +    flash->bank = bank;
+>>>> +
+>>>> +    nor = &flash->nor;
+>>>> +    nor->dev = dev;
+>>>> +    nor->priv = flash;
+>>>> +    nor->mtd.priv = nor;
+>>>> +    spi_nor_set_flash_node(nor, np);
+>>>> +
+>>>> +    /* spi nor framework*/
+>>>> +    nor->read_reg = altera_asmip2_read_reg;
+>>>> +    nor->write_reg = altera_asmip2_write_reg;
+>>>> +    nor->read = altera_asmip2_read;
+>>>> +    nor->write = altera_asmip2_write;
+>>>> +    nor->prepare = altera_asmip2_prep;
+>>>> +    nor->unprepare = altera_asmip2_unprep;
+>>>> +
+>>>> +    /* scanning flash and checking dev id */
+>>>> +#ifdef CONFIG_OF
+>>>> +    if (np && (of_modalias_node(np, modalias, sizeof(modalias)) < 0))
+>>>> +        return -EINVAL;
+>>>> +#endif
+>>>> +
+>>>> +    ret = spi_nor_scan(nor, modalias, &hwcaps);
+>>>
+>>> modalias is for legacy non-jedec SPI NOR memory support. Drop it and
+>>> pass NULL as the 2nd argument of spi_nor_scan() if possible. Unless you
+>>> really plan to use some old non-jedec SPI NOR memory?
+>>
+>> I am more than happy to get rid of old legacy code.
+>>
+>>>
+>>> All but m25p80.c driver pass NULL as the 2nd argument of spi_nor_scan().
+>>>
+>>> Best regards,
+>>>
+>>> Cyrille
+>>>
+>>>> +    if (ret) {
+>>>> +        dev_err(nor->dev, "flash not found\n");
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    ret =  mtd_device_register(&nor->mtd, NULL, 0);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static int altera_asmip2_create(struct device *dev, void __iomem
+>>>> *csr_base)
+>>>> +{
+>>>> +    struct altera_asmip2 *q;
+>>>> +    u32 reg;
+>>>> +
+>>>> +    q = devm_kzalloc(dev, sizeof(*q), GFP_KERNEL);
+>>>> +    if (!q)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    q->dev = dev;
+>>>> +    q->csr_base = csr_base;
+>>>> +
+>>>> +    mutex_init(&q->bus_mutex);
+>>>> +
+>>>> +    dev_set_drvdata(dev, q);
+>>>> +
+>>>> +    reg = readl(q->csr_base + QSPI_ACTION_REG);
+>>>> +    if (!(reg & QSPI_ACTION_RST)) {
+>>>> +        writel((reg | QSPI_ACTION_RST), q->csr_base + QSPI_ACTION_REG);
+>>>> +        dev_info(dev, "%s asserting reset\n", __func__);
+>>>> +        udelay(10);
+>>>> +    }
+>>>> +
+>>>> +    writel((reg & ~QSPI_ACTION_RST), q->csr_base + QSPI_ACTION_REG);
+>>>> +    udelay(10);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int altera_qspi_add_bank(struct device *dev,
+>>>> +             u32 bank, struct device_node *np)
+>>>> +{
+>>>> +    struct altera_asmip2 *q = dev_get_drvdata(dev);
+>>>> +
+>>>> +    if (q->num_flashes >= ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    q->num_flashes++;
+>>>> +
+>>>> +    return altera_asmip2_setup_banks(dev, bank, np);
+>>>> +}
+>>>> +
+>>>> +static int altera_asmip2_remove_banks(struct device *dev)
+>>>> +{
+>>>> +    struct altera_asmip2 *q = dev_get_drvdata(dev);
+>>>> +    struct altera_asmip2_flash *flash;
+>>>> +    int i;
+>>>> +    int ret = 0;
+>>>> +
+>>>> +    if (!q)
+>>>> +        return -EINVAL;
+>>>> +
+>>>> +    /* clean up for all nor flash */
+>>>> +    for (i = 0; i < q->num_flashes; i++) {
+>>>> +        flash = q->flash[i];
+>>>> +        if (!flash)
+>>>> +            continue;
+>>>> +
+>>>> +        /* clean up mtd stuff */
+>>>> +        ret = mtd_device_unregister(&flash->nor.mtd);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "error removing mtd\n");
+>>>> +            return ret;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int __probe_with_data(struct platform_device *pdev,
+>>>> +                 struct altera_asmip2_plat_data *qdata)
+>>>> +{
+>>>> +    struct device *dev = &pdev->dev;
+>>>> +    int ret, i;
+>>>> +
+>>>> +    ret = altera_asmip2_create(dev, qdata->csr_base);
+>>>> +
+>>>> +    if (ret) {
+>>>> +        dev_err(dev, "failed to create qspi device %d\n", ret);
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    for (i = 0; i < qdata->num_chip_sel; i++) {
+>>>> +        ret = altera_qspi_add_bank(dev, i, NULL);
+>>>> +        if (ret) {
+>>>> +            dev_err(dev, "failed to add qspi bank %d\n", ret);
+>>>> +            break;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static int altera_asmip2_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct device_node *np = pdev->dev.of_node;
+>>>> +    struct device *dev = &pdev->dev;
+>>>> +    struct altera_asmip2_plat_data *qdata;
+>>>> +    struct resource *res;
+>>>> +    void __iomem *csr_base;
+>>>> +    u32 bank;
+>>>> +    int ret;
+>>>> +    struct device_node *pp;
+>>>> +
+>>>> +    qdata = dev_get_platdata(dev);
+>>>> +
+>>>> +    if (qdata)
+>>>> +        return __probe_with_data(pdev, qdata);
+>>>> +
+>>>> +    if (!np) {
+>>>> +        dev_err(dev, "no device tree found %p\n", pdev);
+>>>> +        return -ENODEV;
+>>>> +    }
+>>>> +
+>>>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +    csr_base = devm_ioremap_resource(dev, res);
+>>>> +    if (IS_ERR(csr_base)) {
+>>>> +        dev_err(dev, "%s: ERROR: failed to map csr base\n", __func__);
+>>>> +        return PTR_ERR(csr_base);
+>>>> +    }
+>>>> +
+>>>> +    ret = altera_asmip2_create(dev, csr_base);
+>>>> +
+>>>> +    if (ret) {
+>>>> +        dev_err(dev, "failed to create qspi device\n");
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    for_each_available_child_of_node(np, pp) {
+>>>> +        of_property_read_u32(pp, "reg", &bank);
+>>>> +        if (bank >= ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP) {
+>>>> +            dev_err(dev, "bad reg value %u >= %u\n", bank,
+>>>> +                ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP);
+>>>> +            goto error;
+>>>> +        }
+>>>> +
+>>>> +        if (altera_qspi_add_bank(dev, bank, pp)) {
+>>>> +            dev_err(dev, "failed to add bank %u\n", bank);
+>>>> +            goto error;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>> +    return 0;
+>>>> +error:
+>>>> +    altera_asmip2_remove_banks(dev);
+>>>> +    return -EIO;
+>>>> +}
+>>>> +
+>>>> +static int altera_asmip2_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +    if (!pdev) {
+>>>> +        dev_err(&pdev->dev, "%s NULL\n", __func__);
+>>>> +        return -EINVAL;
+>>>> +    } else {
+>>>> +        return altera_asmip2_remove_banks(&pdev->dev);
+>>>> +    }
+>>>> +}
+>>>> +
+>>>> +static const struct of_device_id altera_asmip2_id_table[] = {
+>>>> +
+>>>> +    { .compatible = "altr,asmi_parallel2",},
+>>>> +    {}
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, altera_asmip2_id_table);
+>>>> +
+>>>> +static struct platform_driver altera_asmip2_driver = {
+>>>> +    .driver = {
+>>>> +        .name = ALTERA_ASMIP2_DRV_NAME,
+>>>> +        .of_match_table = altera_asmip2_id_table,
+>>>> +    },
+>>>> +    .probe = altera_asmip2_probe,
+>>>> +    .remove = altera_asmip2_remove,
+>>>> +};
+>>>> +module_platform_driver(altera_asmip2_driver);
+>>>> +
+>>>> +MODULE_AUTHOR("Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+>>>> +MODULE_DESCRIPTION("Altera ASMI Parallel II");
+>>>> +MODULE_LICENSE("GPL v2");
+>>>> +MODULE_ALIAS("platform:" ALTERA_ASMIP2_DRV_NAME);
+>>>> diff --git a/include/linux/mtd/altera-asmip2.h
+>>>> b/include/linux/mtd/altera-asmip2.h
+>>>> new file mode 100644
+>>>> index 0000000..580c43c
+>>>> --- /dev/null
+>>>> +++ b/include/linux/mtd/altera-asmip2.h
+>>>> @@ -0,0 +1,24 @@
+>>>> +/*
+>>>> + *
+>>>> + * Copyright 2017 Intel Corporation, Inc.
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modify
+>>>> + * it under the terms of the GNU General Public License as published by
+>>>> + * the Free Software Foundation; either version 2 of the License, or
+>>>> + * (at your option) any later version.
+>>>> + */
+>>>> +#ifndef __ALTERA_QUADSPI_H
+>>>> +#define __ALTERA_QUADSPI_H
+>>>> +
+>>>> +#include <linux/device.h>
+>>>> +
+>>>> +#define ALTERA_ASMIP2_DRV_NAME "altr-asmip2"
+>>>> +#define ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP 3
+>>>> +#define ALTERA_ASMIP2_RESOURCE_SIZE 0x10
+>>>> +
+>>>> +struct altera_asmip2_plat_data {
+>>>> +    void __iomem *csr_base;
+>>>> +    u32 num_chip_sel;
+>>>> +};
+>>>> +
+>>>> +#endif
+>>>>
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+--8323329-1837119458-1503848558=:14130--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
