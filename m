@@ -1,65 +1,52 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: net: bluetooth: Add
- broadcom-bluetooth
-Date: Sun, 27 Aug 2017 12:40:30 +0200 (CEST)
-Message-ID: <1169267908.44062.1503830430635@email.1und1.de>
-References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
- <20170822074726.e424lflqxn6mb4xd@flea.lan>
- <f2fcf522-cd1e-e748-0ee7-ad28bbf8ae5d@i2se.com>
- <4c23bcb6-1b90-c41e-6e47-7d8315e760ae@gmail.com>
- <9BD5C644-6B89-496C-B442-F276D7A99102@holtmann.org>
- <123116901.43777.1503827664160@email.1und1.de>
- <CF7BCF4E-A2BE-4D5D-9F3D-0490E75A0677@holtmann.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [RFC 1/3] dt-bindings: rtc: Add Realtek RTD1295
+Date: Sun, 27 Aug 2017 12:41:46 +0200
+Message-ID: <629b9ed0-7b2d-7c5c-20b8-17289a76f097@suse.de>
+References: <20170820013632.18375-1-afaerber@suse.de>
+ <20170820013632.18375-2-afaerber@suse.de>
+ <20170823002911.y35nn7jkt34dvjbc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CF7BCF4E-A2BE-4D5D-9F3D-0490E75A0677-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20170823002911.y35nn7jkt34dvjbc@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?B?6JKL5Li955C0?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcel,
+Hi Rob,
 
-> Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> hat am 27. August 2017 um 12:23 geschrieben:
+Am 23.08.2017 um 02:29 schrieb Rob Herring:
+> On Sun, Aug 20, 2017 at 03:36:29AM +0200, Andreas Färber wrote:
+>> Add a binding for the RTC on the Realtek RTD119x/RTD129x SoC families.
+>>
+>> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/rtc/realtek,rtd119x.txt          | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
 > 
-> 
-> Hi Stefan,
-> 
-> >>>>> Thanks a lot for working on that, I've made a similar attempt a few
-> >>>>> weeks ago but didn't manage to get it to work.
-> >>>>> 
-> >>>>> The way it's hooked in our boards is a bit more complex though, even
-> >>>>> if it could be because we're using a different part.
-> >>>>> 
-> >>>>> In order to get it running we need:
-> >>>>>  - two clocks, called in the broadcom datasheets lpo and tcxo.
-> >>>>>  - three GPIOs, device wakeup, host wakeup and a shutdown GPIO (which
-> >>>>>    might be the BT_ON you were discussing about)
-> >>>>>  - two regulators called vbat and reg-en for us (I guess they're
-> >>>>>    meant to power the chip, and its registers >>
-> >>>>> Do you know if you're also using those? Or could it be that it's just
-> >>>>> hardwired to some non-gatable crystal / regulator on the RPI?
-> >>> 
-> >>> Not on Pi3, but the three gpios and the clock are pretty common for
-> >>> Broadcom bt controller (cf v4 of dt-bindings patch).
-> >> 
-> >> once we get the GPIO expander driver upstream, I think we also need this for RPI 3 and Zero W. Right now we can just not do anything about this.
-> > 
-> > AFAIK the Zero W doesn't have this GPIO expander. Would it be easier for you?
-> 
-> I don’t understand the question. In general you want the BT_ON and wakeup GPIOs to be available so that you can have good power savings. If they are not there, then it is always powered. It works of course as shown with RPI 3 where the boot loader enables the GPIOs. Which means it is like the current support that we have in net-next.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-the question was related to the point that all SoC GPIOs should be directly connected to the 43438. So using Zero W for development could be easier, because you don't need the GPIO expander driver. But generally i agree that it should work with RPI 3. 
+Thanks. Did you read the RFC question in the cover letter as well and
+have any comments? Downstream has an rtc-base-year = <2014>; property
+that I had left out in this RFC and due to your ack not included in v2.
 
-> 
-> On the other hand, the hci_bcm.c support for RPI 3 is essentially a support for all Broadcom devices using DT. It should be extended to support all sorts of boards. And once ACPI becomes serdev support, we can unify ACPI, platform and DT devices into a single code path.
-> 
-> Regards
-> 
-> Marcel
->
+Should we default to 2014 in the driver and add an optional base-year
+property once we encounter a diverging device, or should we make it
+required from the beginning? I did not spot any other rtc binding with
+such a property and would appreciate a clarification.
+
+Thanks in advance,
+
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
