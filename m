@@ -1,33 +1,57 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v2 2/5] nvmem: core: Add nvmem_cell_read_u32
-Date: Mon, 28 Aug 2017 13:51:11 +0300
-Message-ID: <1503917471.22307.9.camel@nxp.com>
-References: <cover.1500041281.git.leonard.crestez@nxp.com>
-         <eedf98ecb5d9d47f3c8b9ffbf58e03c7a2fb8db4.1500041281.git.leonard.crestez@nxp.com>
-         <2744539a-d729-2568-47f0-42ba90036639@linaro.org>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v2 1/3] dt-bindings: interrupt-controller: Add Realtek RTD1295
+Date: Mon, 28 Aug 2017 12:53:42 +0200
+Message-ID: <20170828105344.8338-2-afaerber@suse.de>
+References: <20170828105344.8338-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <2744539a-d729-2568-47f0-42ba90036639@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Bai Ping <ping.bai@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170828105344.8338-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-08-25 at 10:07 +0100, Srinivas Kandagatla wrote:
-> On 14/07/17 15:11, Leonard Crestez wrote:
-> > 
-> > This function does a quick and easy read of an u32 value without any
-> > kind of resource management code on the consumer side.
-> > 
-> > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> > ---
-> Sorry about the long delay, I was expecting this patch to go via Greg KH 
-> tree to an rc, which seems to be very late now, so here is my Ack so 
-> that you could pick this patch from other tree along with this series.
-> 
-> I will resend my fixes to Greg without this patch.
-> 
-Ok. Should I resend my series? It's been a while since it was first
-posted.
+Add binding for Realtek RTD1295 IRQ mux.
+
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ v1 -> v2:
+ * Dropped reference to common interrupt.txt bindings (Rob)
+ 
+ .../interrupt-controller/realtek,rtd119x-mux.txt   | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+new file mode 100644
+index 000000000000..952e5c54a5fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+@@ -0,0 +1,23 @@
++Realtek RTD119x/129x IRQ Mux Controller
++=======================================
++
++Required properties:
++
++- compatible           :  Should be one of the following:
++                          - "realtek,rtd1295-irq-mux"
++                          - "realtek,rtd1295-iso-irq-mux"
++- reg                  :  Specifies base physical address and size of the registers.
++- interrupts           :  Specifies the interrupt line which is mux'ed.
++- interrupt-controller :  Presence indicates the node as interrupt controller.
++- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
++
++
++Example:
++
++	interrupt-controller@98007000 {
++		compatible = "realtek,rtd1295-iso-irq-mux";
++		reg = <0x98007000 0x100>;
++		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
+-- 
+2.12.3
