@@ -1,111 +1,78 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2] device property: preserve usecount for node passed to
- of_fwnode_graph_get_port_parent()
-Date: Mon, 28 Aug 2017 01:40:33 +0300
-Message-ID: <20170827224033.2ubrkzp33g5supab@kekkonen.localdomain>
-References: <20170822001912.27638-1-niklas.soderlund+renesas@ragnatech.se>
- <CAL_Jsq+ABipq+YCpSwu_vhjk0rkZQimCD2vG1x5GL91wi6dzKw@mail.gmail.com>
- <20170822150050.GD14873@bigcity.dyn.berto.se>
- <CAL_JsqJOZPrOwy1Hi7zdHb-+X69rV2M5ZZd=X8aoWjvjqt+NNg@mail.gmail.com>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: Re: [PATCH 2/2] leds: gpio: Allow LED to retain state at shutdown
+Date: Mon, 28 Aug 2017 09:30:19 +0930
+Message-ID: <1503878419.32695.9.camel@aj.id.au>
+References: <20170825063503.31577-1-andrew@aj.id.au>
+         <20170825063503.31577-3-andrew@aj.id.au> <20170825073239.GB15494@amd>
+         <3b89ad70-7024-b4ac-bf4e-49a02d12da51@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJOZPrOwy1Hi7zdHb-+X69rV2M5ZZd=X8aoWjvjqt+NNg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-uxUCu/RNPok7omOLWy6A"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3b89ad70-7024-b4ac-bf4e-49a02d12da51-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Tue, Aug 22, 2017 at 02:42:10PM -0500, Rob Herring wrote:
-> On Tue, Aug 22, 2017 at 10:00 AM, Niklas Söderlund
-> <niklas.soderlund@ragnatech.se> wrote:
-> > Hi Rob,
-> >
-> > On 2017-08-22 09:49:35 -0500, Rob Herring wrote:
-> >> On Mon, Aug 21, 2017 at 7:19 PM, Niklas Söderlund
-> >> <niklas.soderlund+renesas@ragnatech.se> wrote:
-> >> > Using CONFIG_OF_DYNAMIC=y uncovered an imbalance in the usecount of the
-> >> > node being passed to of_fwnode_graph_get_port_parent(). Preserve the
-> >> > usecount by using of_get_parent() instead of of_get_next_parent() which
-> >> > don't decrement the usecount of the node passed to it.
-> >> >
-> >> > Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmware specific locations")
-> >> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> >> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> >> > ---
-> >> >  drivers/of/property.c | 2 +-
-> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> Isn't this already fixed with this fix:
-> >>
-> >> commit c0a480d1acf7dc184f9f3e7cf724483b0d28dc2e
-> >> Author: Tony Lindgren <tony@atomide.com>
-> >> Date:   Fri Jul 28 01:23:15 2017 -0700
-> >>
-> >> device property: Fix usecount for of_graph_get_port_parent()
-> >
-> > No, that commit fixes it for of_graph_get_port_parent() while this
-> > commit fixes it for of_fwnode_graph_get_port_parent(). But in essence it
-> > is the same issue but needs two separate fixes.
-> 
-> Ah, because one takes the port node and one takes the endpoint node.
-> That won't confuse anyone.
+--=-uxUCu/RNPok7omOLWy6A
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I think we've had this for some time in naming of a few graph
-functions and increasingly so lately. It began with
-of_graph_get_remote_port_parent(), which likely was named so to avoid the
-name getting really long. The function itself gets a remove of the endpoint
-given as an argument, then the port related to the entpoint and finally the
-parent node of the port node (which is not the "ports" node). That's a lot
-of work for a single interface function.
+Hi Jacek, Pavel
 
-What comes to of_fwnode_graph_get_port_parent() --- it's the OF callback
-function for the fwnode graph API that, as the name suggests, gets the
-parent of the port node, no more, no less. The function is used in the
-fwnode graph API implementation and is not available in the API as such.
-The fwnode graph API itself only implements functionality already available
-in the OF graph API under the corresponding name.
+On Sun, 2017-08-27 at 13:01 +0200, Jacek Anaszewski wrote:
+> Hi Andrew,
+>=20
+> On 08/25/2017 09:32 AM, Pavel Machek wrote:
+> > On Fri 2017-08-25 16:05:03, Andrew Jeffery wrote:
+> > > In some systems, such as BMCs, we want to retain the state of LEDs
+> > > across a reboot of the BMC whilst the host remains up.
+> >=20
+> > I'd spell out what BMC is...
+>=20
+> I agree with Pavel. Please give the expansion of the acronym
+> in both DT patch and the driver commit message.
 
-> 
-> Can we please align this mess. I've tried to make the graph parsing
-> not a free for all, open coded mess. There's no reason to have the
-> port node handle and then need the parent device. Either you started
-> with the parent device to parse local ports and endpoints or you got
-> the remote endpoint with .graph_get_remote_endpoint(). Most of the
-> time you don't even need the endpoint node handles. You really just
-> need to know what is the remote device connected to port X, endpoint Y
-> of my local device.
+No worries, will reword and resend.
 
-Perhaps most of the time, yes. V4L2 devices store bus (e.g. MIPI CSI-2)
-specific information in the endpoint nodes.
+Thanks for the review.
 
-The current OF graph API is geared towards providing convenience functions
-to the extent that a single function performs actions a driver would
-typically need. More recently functions implementing a single operation has
-been added; the primitives that just perform a single operation would
-likely be easier to manage.
+Andrew
 
-The convenience functions have been, well, convenient as getting and
-putting nodes could have been somewhat ignored in drivers. If the OF graph
-API usage can be moved out of the drivers we'll likely have way fewer users
-and thus there's no real need for convenience functions. That has other
-benefits, too, such as parsing the graph correctly: most V4L2 drivers have
-issues in this area.
+>=20
+> >=20
+> > Otherwise series looks good.
+> >=20
+> > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+>=20
+>=20
+--=-uxUCu/RNPok7omOLWy6A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-The OF graph API (or the fwnode equivalent) is used effectively in all V4L2
-drivers that support OF (there are about 20 of them); we're moving these to
-the V4L2 framework but it'll take some time. That should make it easier for
-cleaning things up. Based on a quick look V4L2 and V4L2 drivers together
-represent a large proportion of all users in the kernel.
+-----BEGIN PGP SIGNATURE-----
 
-What do you think?
+iQIcBAABCgAGBQJZo10TAAoJEJ0dnzgO5LT5rB8QAKaheT4+T4uH++dwNNuXJ5DP
+PIFclCZ9oaFSkzyyMRecNMcifRRnhtMnQdlnOkQBzCaq10OxPFGKin/wr8BoANMw
+Z4Y6wM90XuTJEayg1b/4Cf35zDEpXr+SJTNvXsf8VootjkAysK5Y+2yLSORbf9tG
+v6ayMPmek4CYYMzZrDi1vlyFYJvKFsBe0eB/ngSCiwVZBp1GZG4CA7NhQ9+FiUYV
+831oZjoRTMRtVCqMJZAPEHe++OAKb5FCy0gb1O7bfQjqn1HG9LfN+TbgiCb4CwMo
+aabK2e+60NF+UpQ6r9j/HmMrDE3SOpxLyNoyj+/hR4DBuw+MQCqBY4B6f3xwHdTE
+m9p1BgGdLEyAxHBhsDbeeAT+jCMHLC3inwZkiU1EWa5bO+6VABk6iQOH/yFHA/Ph
+stuEtsY9koXiOxjciV9rx5CZRHzf54PcKkFbBGuZB52KkpwLrBBB1pIWE6ah/akt
+eMS01TR+8L6wiJaZa3qtJH+PR35feGtzuRmWQLUzi898UWuEtGxaVJn/0dwefbkV
+CKLSmMQLwzsrLCVZYO2zpUitEZkhOQzdSs5CEHyCiNtpuRABX4Zg5zEJuaHlsD+z
+gXF4YGCrK1HGz79ekeBvYD1eQZLHw9BDWoi4xOxhrPYTHCpJkjVIs6t6TD2CyOk2
+WdQrpgpyGwe4tg8zb0d0
+=nw0M
+-----END PGP SIGNATURE-----
 
--- 
-Kind regards,
+--=-uxUCu/RNPok7omOLWy6A--
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
