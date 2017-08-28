@@ -1,81 +1,52 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v6 2/2] dt-bindings: mfd: Add bindings for ZII RAVE devices
-Date: Mon, 28 Aug 2017 09:31:31 -0700
-Message-ID: <20170828163131.24815-3-andrew.smirnov@gmail.com>
-References: <20170828163131.24815-1-andrew.smirnov@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 4/5] input: Add MediaTek PMIC keys support
+Date: Mon, 28 Aug 2017 09:57:57 -0700
+Message-ID: <20170828165757.GE12195@dtor-ws>
+References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
+ <1503642753-12385-5-git-send-email-chen.zhong@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170828163131.24815-1-andrew.smirnov@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1503642753-12385-5-git-send-email-chen.zhong@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>
+To: Chen Zhong <chen.zhong@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andi Shyti <andi.shyti@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Jaechul Lee <jcsing.lee@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree bindings for RAVE Supervisory Processor, an MCU
-implementing varoius bits of housekeeping functionality (watchdoging,
-backlight control, LED control, etc) on RAVE family of products by
-Zodiac Inflight Innovations.
+Hi Chen,
 
-Cc: cphealy@gmail.com
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Acked-by: Rob Herring <robh+dt@kernel.org>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+On Fri, Aug 25, 2017 at 02:32:32PM +0800, Chen Zhong wrote:
+> +static int mtk_pmic_key_setup(struct mtk_pmic_keys *keys,
+> +		struct pmic_keys_info *info)
+> +{
+> +	int ret;
+> +
+> +	info->keys = keys;
+> +
+> +	ret = regmap_update_bits(keys->regmap, info->regs->intsel_reg,
+> +				 info->regs->intsel_mask,
+> +				 info->regs->intsel_mask);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = devm_request_threaded_irq(keys->dev, info->irq, NULL,
+> +					mtk_pmic_keys_irq_handler_thread,
+> +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> +					"mtk-pmic-keys", info);
+> +	if (ret) {
+> +		dev_err(keys->dev, "Failed to request IRQ: %d: %d\n",
+> +			info->irq, ret);
+> +		return ret;
+> +	}
+> +
+> +	if (info->wakeup)
+> +		irq_set_irq_wake(info->irq, 1);
 
-diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-new file mode 100644
-index 000000000000..088eff9ddb78
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-@@ -0,0 +1,39 @@
-+Zodiac Inflight Innovations RAVE Supervisory Processor
-+
-+RAVE Supervisory Processor communicates with SoC over UART. It is
-+expected that its Device Tree node is specified as a child of a node
-+corresponding to UART controller used for communication.
-+
-+Required parent device properties:
-+
-+ - compatible: Should be one of:
-+	- "zii,rave-sp-niu"
-+	- "zii,rave-sp-mezz"
-+	- "zii,rave-sp-esb"
-+	- "zii,rave-sp-rdu1"
-+	- "zii,rave-sp-rdu2"
-+
-+ - current-speed: Should be set to baud rate SP device is using
-+
-+RAVE SP consists of the following sub-devices:
-+
-+Device				 Description
-+------				 -----------
-+rave-sp-wdt			: Watchdog
-+rave-sp-nvmem			: Interface to onborad EEPROM
-+rave-sp-backlight		: Display backlight
-+rave-sp-hwmon			: Interface to onboard hardware sensors
-+rave-sp-leds			: Interface to onboard LEDs
-+rave-sp-input			: Interface to onboard power button
-+
-+Example of usage:
-+
-+	rdu {
-+		compatible = "zii,rave-sp-rdu2";
-+		current-speed = <1000000>;
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+		};
-+	};
-+
+Normally we do this in suspend() (and undo in resume()), and I believe
+the drover API is enable_irq_wake() and disable_irq_wake().
+
+Thanks.
+
 -- 
-2.13.5
+Dmitry
