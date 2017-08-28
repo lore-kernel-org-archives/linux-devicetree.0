@@ -1,73 +1,106 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: PCI: rockchip: Add support for pcie
- wake irq
-Date: Mon, 28 Aug 2017 16:32:55 -0500
-Message-ID: <CAL_Jsq+MeiwOf=VDLZrxgPuLNEDvtGY=X-K1=6w9aaFVZgg1hA@mail.gmail.com>
-References: <20170822031934.8675-1-jeffy.chen@rock-chips.com>
- <20170822031934.8675-4-jeffy.chen@rock-chips.com> <20170825181439.d3hlwrcbmcss3sx6@rob-hp-laptop>
- <20170825181959.GA64040@google.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 17/17] ARM: dts: Add missing hwmod related properties for
+ dra7
+Date: Mon, 28 Aug 2017 16:34:38 -0500
+Message-ID: <8c0ecbf6-26fb-1998-6bb5-0a74d9daa2ab@ti.com>
+References: <20170828211918.11573-1-tony@atomide.com>
+ <20170828211918.11573-18-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170825181959.GA64040-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170828211918.11573-18-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J . Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 25, 2017 at 1:20 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> On Fri, Aug 25, 2017 at 01:14:39PM -0500, Rob Herring wrote:
->> On Tue, Aug 22, 2017 at 11:19:33AM +0800, Jeffy Chen wrote:
->> > Add an optional interrupt for PCIE_WAKE pin.
->> >
->> > Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> > ---
->> >
->> > Changes in v4: None
->> > Changes in v3: None
->> > Changes in v2: None
->> >
->> >  .../devicetree/bindings/pci/rockchip-pcie.txt        | 20 ++++++++++++--------
->> >  1 file changed, 12 insertions(+), 8 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> > index 5678be82530d..9f6504129e80 100644
->> > --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> > +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> > @@ -20,10 +20,13 @@ Required properties:
->> >  - msi-map: Maps a Requester ID to an MSI controller and associated
->> >     msi-specifier data. See ./pci-msi.txt
->> >  - interrupts: Three interrupt entries must be specified.
->> > -- interrupt-names: Must include the following names
->> > -   - "sys"
->> > -   - "legacy"
->> > -   - "client"
->> > +- interrupt-names: Include the following names
->> > +   Required:
->> > +           - "sys"
->> > +           - "legacy"
->> > +           - "client"
->> > +   Optional:
->> > +           - "wake"
->>
->> Use the wakeup source binding:
->> Documentation/devicetree/bindings/power/wakeup-source.txt
->
-> And I suppose this means we'd fall under this paragraph?
->
->     "However if the devices have dedicated interrupt as the wakeup source
->     then they need to specify/identify the same using device specific
->     interrupt name. In such cases only that interrupt can be used as wakeup
->     interrupt."
->
-> We don't expect *any* interrupt to qualify as PCI WAKE#; so we should
-> still also document the interrupt name ("wake"?) in
-> Documentation/devicetree/bindings/pci/pci.txt as Bjorn suggested, in
-> addition to using the 'wakeup-source' property documented there.
+On 08/28/2017 04:19 PM, Tony Lindgren wrote:
+> On dra7 we're missing the smartreflex and hdq nodes with their
+> related "ti,hwmods" property that the SoC interconnect code needs.
+> 
+> Note that this will only show up as a bug with "doesn't have
+> mpu register target base" boot errors when the legacy platform
+> data is removed.
+> 
+> Note that the related driver also needs to be updated to probe
+> using device tree and get the platform data passed to it using
+> auxdata with arch/arm/mach-omap2/pdata-quirks.c.
+> 
+> Let's also update the related binding documentation while at it.
+> 
+> Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>   .../devicetree/bindings/power/ti-smartreflex.txt     |  2 ++
+>   arch/arm/boot/dts/dra7.dtsi                          | 20 ++++++++++++++++++++
+>   2 files changed, 22 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/ti-smartreflex.txt b/Documentation/devicetree/bindings/power/ti-smartreflex.txt
+> --- a/Documentation/devicetree/bindings/power/ti-smartreflex.txt
+> +++ b/Documentation/devicetree/bindings/power/ti-smartreflex.txt
+> @@ -11,6 +11,8 @@ compatible: Shall be one of the following:
+>   	    "ti,omap4-smartreflex-core"
+>   	    "ti,omap4-smartreflex-mpu"
+>   	    "ti,omap4-smartreflex-iva"
+> +	    "ti,dra7-smartreflex-core"
+> +	    "ti,dra7-smartreflex-mpu"
+>   
+>   reg: Shall contain the device instance IO range
+>   
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -457,6 +457,7 @@
+>   			#dma-cells = <1>;
+>   			dma-channels = <32>;
+>   			dma-requests = <127>;
+> +			ti,hwmods = "dma_system";
+>   		};
+>   
+>   		edma: edma@43300000 {
+> @@ -1069,6 +1070,13 @@
+>   			max-frequency = <192000000>;
+>   		};
+>   
+> +		hdqw1w: 1w@480b2000 {
+> +			compatible = "ti,omap3-1w";
+> +			reg = <0x480b2000 0x1000>;
+> +			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+> +			ti,hwmods = "hdq1w";
+> +		};
+> +
+>   		mmc2: mmc@480b4000 {
+>   			compatible = "ti,omap4-hsmmc";
+>   			reg = <0x480b4000 0x400>;
+> @@ -1489,6 +1497,18 @@
+>   			};
+>   		};
+>   
+> +		smartreflex_core: smartreflex4a0dd000 {
+> +			compatible = "ti,dra7-smartreflex-core";
+> +			ti,hwmods = "smartreflex_core";
+> +			reg = <0x4a0dd000 0x80>;
+> +		};
+> +
+> +		smartreflex_mpu: smartreflex@4a0d9000 {
+> +			compatible = "ti,dra7-smartreflex-mpu";
+> +			ti,hwmods = "smartreflex_mpu";
+> +			reg = <0x4a0d9000 0x80>;
+> +		};
 
-I believe the defined interrupt name is "wakeup" as example 1 shows.
 
-Rob
+Have you checked TRM for these? 
+http://www.ti.com/lit/ug/sprui30d/sprui30d.pdf
+
+These are disabled on the SoC and marked as reserved.
+
+-- 
+Regards,
+Nishanth Menon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
