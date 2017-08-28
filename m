@@ -1,93 +1,73 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v8 2/3] PCI: iproc: retry request when CRS returned from
- EP
-Date: Mon, 28 Aug 2017 14:54:02 -0500
-Message-ID: <20170828195402.GK8154@bhelgaas-glaptop.roam.corp.google.com>
-References: <1503551066-23212-1-git-send-email-oza.oza@broadcom.com>
- <1503551066-23212-3-git-send-email-oza.oza@broadcom.com>
- <20170828191708.GJ8154@bhelgaas-glaptop.roam.corp.google.com>
- <CAMSpPPf5LJqvjFdrsR0hXK7oq2n38zCUjEpdmV0m8h6R_oiEXg@mail.gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [patch v1 0/2] JTAG driver introduction
+Date: Mon, 28 Aug 2017 22:03:05 +0200
+Message-ID: <20170828200305.GA5132@amd>
+References: <1501679918-20486-1-git-send-email-oleksandrs@mellanox.com>
+ <20170802141209.GB25781@lunn.ch>
+ <AM4PR0501MB2194E6B8D14EC15356C1C0BFB1B10@AM4PR0501MB2194.eurprd05.prod.outlook.com>
+ <20170803174822.GI15018@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMSpPPf5LJqvjFdrsR0hXK7oq2n38zCUjEpdmV0m8h6R_oiEXg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oza Oza <oza.oza@broadcom.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
+In-Reply-To: <20170803174822.GI15018-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, system-sw-low-level <system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org" <mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org>, "joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org" <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org" <vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org>, "tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org" <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 29, 2017 at 01:09:53AM +0530, Oza Oza wrote:
-> On Tue, Aug 29, 2017 at 12:47 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Aug 24, 2017 at 10:34:25AM +0530, Oza Pawandeep wrote:
-> >> PCIe spec r3.1, sec 2.3.2
-> >> If CRS software visibility is not enabled, the RC must reissue the
-> >> config request as a new request.
-> >>
-> >> - If CRS software visibility is enabled,
-> >> - for a config read of Vendor ID, the RC must return 0x0001 data
-> >> - for all other config reads/writes, the RC must reissue the
-> >>   request
-> >>
-> >> iproc PCIe Controller spec:
-> >> 4.7.3.3. Retry Status On Configuration Cycle
-> >> Endpoints are allowed to generate retry status on configuration
-> >> cycles. In this case, the RC needs to re-issue the request. The IP
-> >> does not handle this because the number of configuration cycles needed
-> >> will probably be less than the total number of non-posted operations
-> >> needed.
-> >>
-> >> When a retry status is received on the User RX interface for a
-> >> configuration request that was sent on the User TX interface,
-> >> it will be indicated with a completion with the CMPL_STATUS field set
-> >> to 2=CRS, and the user will have to find the address and data values
-> >> and send a new transaction on the User TX interface.
-> >> When the internal configuration space returns a retry status during a
-> >> configuration cycle (user_cscfg = 1) on the Command/Status interface,
-> >> the pcie_cscrs will assert with the pcie_csack signal to indicate the
-> >> CRS status.
-> >> When the CRS Software Visibility Enable register in the Root Control
-> >> register is enabled, the IP will return the data value to 0x0001 for
-> >> the Vendor ID value and 0xffff  (all 1’s) for the rest of the data in
-> >> the request for reads of offset 0 that return with CRS status.  This
-> >> is true for both the User RX Interface and for the Command/Status
-> >> interface.  When CRS Software Visibility is enabled, the CMPL_STATUS
-> >> field of the completion on the User RX Interface will not be 2=CRS and
-> >> the pcie_cscrs signal will not assert on the Command/Status interface.
-> >>
-> >> Per PCIe r3.1, sec 2.3.2, config requests that receive completions
-> >> with Configuration Request Retry Status (CRS) should be reissued by
-> >> the hardware except reads of the Vendor ID when CRS Software
-> >> Visibility is enabled.
-> >>
-> >> This hardware never reissues configuration requests when it receives
-> >> CRS completions.
-> >> Note that, neither PCIe host bridge nor PCIe core re-issues the
-> >> request for any configuration offset.
-> >>
-> >> For config reads, this hardware returns CFG_RETRY_STATUS data when
-> >> it receives a CRS completion for a config read, regardless of the
-> >> address of the read or the CRS Software Visibility Enable bit.
-> >
-> > I can't remember how Stingray handles the CRS Software Visibility Enable
-> > bit.  Is it a read-only zero?  Is it writable?  Does the hardware look at
-> > it all (I think not)?
-> 
-> HW doesnt look it at all, it is "dont care" bit.
 
-Sigh, I made the classic mistake of asking more than one question, and
-I guess I'm about to do it again :)  It'll save time if you can answer
-all the questions at once.
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Linux enables PCI_EXP_RTCTL_CRSSVE if PCI_EXP_RTCAP says it is
-supported (see pci_enable_crs()).
+Hi!
 
-  - What does PCI_EXP_RTCAP say?
+> > Thanks a lot for review.
+> >=20
+>=20
+> > We used user space tool for that, which is an adaptation of some
+> > Lattice tools, which allows programming of SVF files. We are using
+> > it for Lattice CPLD burning, since we have for such devices on our
+> > system, but this tool could be used for programming other devices
+> > from other vendors as well.
+> =20
+> > https://github.com/mellanoxbmc/mellanox-bmc-tools
+>=20
+> Since you are defining a new Kernel ABI here, it would be good to get
+> some buy-in from potential users for the ABI. Maybe for the next
+> version of the patchset you can cross post to the OpenOCD-devel list?
 
-  - Is PCI_EXP_RTCTL_CRSSVE writable?
+Actually, since you are defining a new ABI, it would be nice to have a
+Documentation/ file with the ABI description, so that people can
+review it...
 
-With all the CRS-related work going on, I suspect we may someday want to
-read PCI_EXP_RTCTL_CRSSVE to see if CRS SV is enabled.
+Otherwise... yes, this looks like a step in right direction from 60000
+feet above. I guess it is still a lot of work to get gdb running...
 
-Bjorn
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmkdvgACgkQMOfwapXb+vKkXQCghrgqdzW9nSfI8109zd6tzRlZ
+5xoAniVlWnQFwV4TrpfbMvOW2cNp+FcA
+=b1qT
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
