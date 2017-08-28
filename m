@@ -1,31 +1,55 @@
-From: Tobias Klauser <tklauser@distanz.ch>
-Subject: Re: [patch v6 3/3] Doccumentation: jtag: Add bindings for Aspeed SoC
- 24xx and 25xx families JTAG master driver
-Date: Mon, 28 Aug 2017 10:36:11 +0200
-Message-ID: <20170828083610.GB1951@distanz.ch>
-References: <1503418256-5215-1-git-send-email-oleksandrs@mellanox.com>
- <1503418256-5215-4-git-send-email-oleksandrs@mellanox.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77995: add pfc device node
+Date: Mon, 28 Aug 2017 10:39:47 +0200
+Message-ID: <CAMuHMdWzc0A-16LUz4rVHJBRk9Fdhs_BLBHqpgPrYOdm23qzAg@mail.gmail.com>
+References: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1503418256-5215-4-git-send-email-oleksandrs@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Shamray <oleksandrs@mellanox.com>
-Cc: gregkh@linuxfoundation.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, linux-serial@vger.kernel.org, mec@shout.net, vadimp@maellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-22 at 18:10:56 +0200, Oleksandr Shamray <oleksandrs@mellanox.com> wrote:
-> It has been tested on Mellanox system with BMC equipped with
-> Aspeed 2520 SoC for programming CPLD devices.
-> 
-> Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
-> Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> v5->v6
-> Comments pointed by Tobias Klauser <tklauser@distanz.ch>
-> - Small nit: s/doccumentation/Documentation/
+Hi Shimoda-san, Simon,
 
-There's still one 'c' too many in 'Doccumentation' in the subject (in
-case you're doing another respin of the series).
+On Wed, Aug 9, 2017 at 2:20 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>
+>  This patch set is based on the renesas-drivers.git /
+> topic/r8a77995-integration branch and depends on the following patch
+>  "pinctrl: sh-pfc: r8a77995: Initial R8A77995 PFC support"
+>
+>  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> index 7419688..240b0f8 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> @@ -123,6 +123,11 @@
+>                         reg = <0 0xe6160000 0 0x0200>;
+>                 };
+>
+> +               pfc: pfc@e6060000 {
+
+Upon second look, this should use the generic "pin-controller@..." node name.
+I will fix the example in the bindings.
+
+> +                       compatible = "renesas,pfc-r8a77995";
+> +                       reg = <0 0xe6060000 0 0x508>;
+> +               };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
