@@ -1,101 +1,43 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 04/14] staging: typec: fusb302: Get max snk mv/ma/mw
- from device-properties
-Date: Mon, 28 Aug 2017 18:11:38 +0200
-Message-ID: <c6966f66-98bd-5271-a681-ed72c52805f6@redhat.com>
-References: <20170815200502.17339-1-hdegoede@redhat.com>
- <20170815200502.17339-5-hdegoede@redhat.com>
- <20170817214131.63vetzuove7dz5pi@rob-hp-laptop>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] dt-bindings: mfd: Add bindings for ZII RAVE devices
+Date: Mon, 28 Aug 2017 09:23:49 -0700
+Message-ID: <CAHQ1cqFhOVu2HUcjSQ-NMxyUH4n1hyc3c0T5D75y9xUp=hPzPg@mail.gmail.com>
+References: <20170728142704.11156-1-andrew.smirnov@gmail.com>
+ <20170728142704.11156-3-andrew.smirnov@gmail.com> <20170828155157.GB29358@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170817214131.63vetzuove7dz5pi@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Breck <liam@networkimprov.net>, Tony Lindgren <tony@atomide.com>, linux-i2c@vger.kernel.org, linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "Yueyao (Nathan) Zhu" <yueyao@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170828155157.GB29358-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 17-08-17 23:41, Rob Herring wrote:
-> On Tue, Aug 15, 2017 at 10:04:52PM +0200, Hans de Goede wrote:
->> This is board specific info so it should come from board config, such
->> as devicetree.
->>
->> I've chosen to prefix these with "fcs," treating them as fusb302 driver
->> specific for now. We may want to revisit this and replace these with
->> properties which are part of a (to be written) generic type-c controller
->> devicetree binding.
->>
->> Since this commit adds new dt-properties it also adds devicetree-bindings
->> documentation (which so far was absent for the fusb302 driver).
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Frank Rowand <frowand.list@gmail.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: "Yueyao (Nathan) Zhu" <yueyao@google.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Mon, Aug 28, 2017 at 8:51 AM, Greg Kroah-Hartman
+<gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Fri, Jul 28, 2017 at 07:27:04AM -0700, Andrey Smirnov wrote:
+>> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+>> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >> ---
->> Changes in v2:
->> -Use micro... instead of mili...
->> -Add devicetree bindings documentation
->> ---
->>   .../devicetree/bindings/usb/fcs,fusb302.txt        | 29 ++++++++++++++++++++++
->>   drivers/staging/typec/fusb302/TODO                 |  4 +++
->>   drivers/staging/typec/fusb302/fusb302.c            | 18 +++++++++++++-
->>   3 files changed, 50 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->> new file mode 100644
->> index 0000000..ffc6c87
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->> @@ -0,0 +1,29 @@
->> +Fairchild FUSB302 Type-C Port controllers
->> +
->> +Required properties :
->> +- compatible            : "fcs,fusb302"
->> +- reg                   : I2C slave address
->> +- interrupts            : Interrupt specifier
->> +
->> +Optional properties :
->> +- fcs,max-snk-microvolt : Maximum voltage to negotiate when configured as sink
->> +- fcs,max-snk-microamp  : Maximum current to negotiate when configured as sink
->> +- fcs,max-snk-microwatt : Maximum power to negotiate when configured as sink
->> +			  If this is less then max-snk-microvolt *
->> +			  max-snk-microamp then the configured current will
->> +			  be clamped.
->> +- fcs,operating-snk-microwatt :
-> 
-> Might as well spell out sink.
+>>  .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
+>>  1 file changed, 39 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+>
+> I can't take patches without any changelog text in them :(
 
-Fixed for v3.
+OK, will fix in v6.
 
-> Otherwise,
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Thank you, added to v3 of this patch-set.
-
-Regards,
-
-Hans
-
-> 
->> +                          Minimum amount of power accepted from a sink
->> +			  when negotiating
->> +
->> +Example:
->> +
->> +fusb302: typec-portc@54 {
->> +	compatible = "fcs,fusb302";
->> +	reg = <0x54>;
->> +	interrupt-parent = <&nmi_intc>;
->> +	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->> +	fcs,max-snk-microvolt = <12000000>;
->> +	fcs,max-snk-microamp = <3000000>;
->> +	fcs,max-snk-microwatt = <36000000>;
->> +};
+Thanks,
+Andrey Smirnov
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
