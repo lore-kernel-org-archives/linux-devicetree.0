@@ -1,27 +1,52 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 3/8] tty/bcm63xx_uart: use refclk for the expected clock
- name
-Date: Mon, 28 Aug 2017 14:51:29 +0200
-Message-ID: <20170828125129.GA2652@kroah.com>
-References: <20170802093429.12572-1-jonas.gorski@gmail.com>
- <20170802093429.12572-4-jonas.gorski@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [RESEND PATCH 1/3] dt-bindings: regulator: Add STM32 Voltage Reference Buffer
+Date: Mon, 28 Aug 2017 14:58:51 +0200
+Message-ID: <1503925133-30722-2-git-send-email-fabrice.gasnier@st.com>
+References: <1503925133-30722-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170802093429.12572-4-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503925133-30722-1-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 02, 2017 at 11:34:24AM +0200, Jonas Gorski wrote:
-> We now have the clock available under refclk, so use that.
-> 
-> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Document STM32 VREFBUF (voltage reference buffer) which can be used as
+voltage reference for ADCs, DACs and external components.
 
-Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/regulator/st,stm32-vrefbuf.txt          | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
+
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt b/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
+new file mode 100644
+index 0000000..3944ee3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
+@@ -0,0 +1,20 @@
++STM32 VREFBUF - Voltage reference buffer
++
++Some STM32 devices embed a voltage reference buffer which can be used as
++voltage reference for ADCs, DACs and also as voltage reference for external
++components through the dedicated VREF+ pin.
++
++Required properties:
++- compatible:		Must be "st,stm32-vrefbuf".
++- reg:			Offset and length of VREFBUF register set.
++- clocks:		Must contain an entry for peripheral clock.
++
++Example:
++	vrefbuf: regulator@58003C00 {
++		compatible = "st,stm32-vrefbuf";
++		reg = <0x58003C00 0x8>;
++		clocks = <&rcc VREF_CK>;
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <2500000>;
++		vdda-supply = <&vdda>;
++	};
+-- 
+1.9.1
