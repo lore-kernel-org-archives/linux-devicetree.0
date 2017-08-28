@@ -1,125 +1,88 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 05/17] ARM: dts: Add missing smartreflex node and binding for omap4
-Date: Mon, 28 Aug 2017 14:19:06 -0700
-Message-ID: <20170828211918.11573-6-tony@atomide.com>
-References: <20170828211918.11573-1-tony@atomide.com>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: [PATCH v4 2/5] devicetree: power: Add docs for TI BQ24190 battery charger
+Date: Mon, 28 Aug 2017 14:23:46 -0700
+Message-ID: <20170828212349.19037-3-liam@networkimprov.net>
+References: <20170828212349.19037-1-liam@networkimprov.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170828211918.11573-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170828212349.19037-1-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Rafael J . Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We are missing smartreflex device tree nodes for omap4 with
-their related "ti,hwmods" properties that the SoC interconnect
-code needs.
+From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 
-Note that this will only show up as a bug with "doesn't have
-mpu register target base" boot errors when the legacy platform
-data is removed.
+Document monitored-battery and ti,system-minimum-microvolt properties.
 
-And since we're missing the device tree binding for smartreflex,
-let's also add it and document the existing omap3 use too.
-
-Note that the related driver also needs to be updated to probe
-using device tree and get the platform data passed to it using
-auxdata with arch/arm/mach-omap2/pdata-quirks.c.
-
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 ---
- .../devicetree/bindings/power/ti-smartreflex.txt   | 47 ++++++++++++++++++++++
- arch/arm/boot/dts/omap4.dtsi                       | 21 ++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/ti-smartreflex.txt
+ .../devicetree/bindings/power/supply/bq24190.txt   | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq24190.txt
 
-diff --git a/Documentation/devicetree/bindings/power/ti-smartreflex.txt b/Documentation/devicetree/bindings/power/ti-smartreflex.txt
+diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b/Documentation/devicetree/bindings/power/supply/bq24190.txt
 new file mode 100644
+index 00000000..9e517d30
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/ti-smartreflex.txt
-@@ -0,0 +1,47 @@
-+Texas Instruments SmartReflex binding
-+
-+SmartReflex is used to set and adjust the SoC operating points.
-+
++++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+@@ -0,0 +1,51 @@
++TI BQ24190 Li-Ion Battery Charger
 +
 +Required properties:
-+
-+compatible: Shall be one of the following:
-+	    "ti,omap3-smartreflex-core"
-+	    "ti,omap3-smartreflex-iva"
-+	    "ti,omap4-smartreflex-core"
-+	    "ti,omap4-smartreflex-mpu"
-+	    "ti,omap4-smartreflex-iva"
-+
-+reg: Shall contain the device instance IO range
-+
-+interrupts: Shall contain the device instance interrupt
-+
++- compatible: contains one of the following:
++    * "ti,bq24190"
++    * "ti,bq24192i"
++- reg: integer, I2C address of the charger.
++- interrupts[-extended]: configuration for charger INT pin.
 +
 +Optional properties:
++- monitored-battery: phandle of battery characteristics devicetree node
++  The charger uses the following battery properties:
++    + precharge-current-microamp: maximum charge current during precharge
++      phase (typically 20% of battery capacity).
++    + charge-term-current-microamp: a charge cycle terminates when the
++      battery voltage is above recharge threshold, and the current is below
++      this setting (typically 10% of battery capacity).
++  See also Documentation/devicetree/bindings/power/supply/battery.txt
++- ti,system-minimum-microvolt: when power is connected and the battery is below
++  minimum system voltage, the system will be regulated above this setting.
 +
-+ti,hwmods: Shall contain the TI interconnect module name if needed
-+	   by the SoC
-+
++Notes:
++- Some circuit boards wire the chip's "OTG" pin high (enabling 500mA default
++  charge current on USB SDP ports, among other features). To simulate this on
++  boards that wire the pin to a GPIO, set a gpio-hog.
 +
 +Example:
 +
-+	smartreflex_iva: smartreflex@4a0db000 {
-+		compatible = "ti,omap4-smartreflex-iva";
-+		reg = <0x4a0db000 0x80>;
-+		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+		ti,hwmods = "smartreflex_iva";
++	bat: battery {
++		compatible = "simple-battery";
++		precharge-current-microamp = <256000>;
++		charge-term-current-microamp = <128000>;
++		// etc.
 +	};
 +
-+	smartreflex_core: smartreflex4a0dd000 {
-+		compatible = "ti,omap4-smartreflex-core";
-+		reg = <0x4a0dd000 0x80>;
-+		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+		ti,hwmods = "smartreflex_core";
++	bq24190: charger@6a {
++		compatible = "ti,bq24190";
++		reg = <0x6a>;
++		interrupts-extended = <&gpiochip 10 IRQ_TYPE_EDGE_FALLING>;
++		monitored-battery = <&bat>;
++		ti,system-minimum-microvolt = <3200000>;
 +	};
 +
-+	smartreflex_mpu: smartreflex@4a0d9000 {
-+		compatible = "ti,omap4-smartreflex-mpu";
-+		reg = <0x4a0d9000 0x80>;
-+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+		ti,hwmods = "smartreflex_mpu";
++	&twl_gpio {
++		otg {
++			gpio-hog;
++			gpios = <6 0>;
++			output-high;
++			line-name = "otg-gpio";
++		};
 +	};
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -442,6 +442,27 @@
- 			clock-frequency = <48000000>;
- 		};
- 
-+		smartreflex_iva: smartreflex@4a0db000 {
-+			compatible = "ti,omap4-smartreflex-iva";
-+			reg = <0x4a0db000 0x80>;
-+			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "smartreflex_iva";
-+		};
-+
-+		smartreflex_core: smartreflex4a0dd000 {
-+			compatible = "ti,omap4-smartreflex-core";
-+			reg = <0x4a0dd000 0x80>;
-+			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "smartreflex_core";
-+		};
-+
-+		smartreflex_mpu: smartreflex@4a0d9000 {
-+			compatible = "ti,omap4-smartreflex-mpu";
-+			reg = <0x4a0d9000 0x80>;
-+			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "smartreflex_mpu";
-+		};
-+
- 		hwspinlock: spinlock@4a0f6000 {
- 			compatible = "ti,omap4-hwspinlock";
- 			reg = <0x4a0f6000 0x1000>;
 -- 
-2.14.1
+2.13.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
