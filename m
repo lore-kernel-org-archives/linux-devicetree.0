@@ -1,193 +1,89 @@
-From: Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Subject: Re: [3/4] nvmem: rockchip: add support for RK3368
-Date: Mon, 28 Aug 2017 17:12:02 +0200 (CEST)
-Message-ID: <alpine.OSX.2.21.1708281701280.2068@vpn-10-11-0-14.lan>
-References: <20170828121604.15968-4-romain.perier@collabora.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RESEND PATCH v4 2/2] i2c: Add Spreadtrum I2C controller driver
+Date: Mon, 28 Aug 2017 17:13:06 +0200
+Message-ID: <20170828151306.GA10688@katana>
+References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
+ <acbfda522aa806284b86f8935278cc7f7133e876.1500021046.git.baolin.wang@spreadtrum.com>
+ <20170827153054.ijqxbjk25zpskojl@ninjato>
+ <CAMz4ku+MJ49-Orp4mGL=jW0bfnko5o9fZgAjpZKqAMVUiw-o4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20170828121604.15968-4-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMz4ku+MJ49-Orp4mGL=jW0bfnko5o9fZgAjpZKqAMVUiw-o4Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 28 Aug 2017, Romain Perier wrote:
 
-> This adds the necessary functions and data for handling support on RK3368
-> SoCs.
->
-> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
-> .../devicetree/bindings/nvmem/rockchip-efuse.txt   |  1 +
-> drivers/nvmem/rockchip-efuse.c                     | 80 ++++++++++++++++++++++
-> 2 files changed, 81 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
-> index 1ff02afdc55a..60bec4782806 100644
-> --- a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
-> +++ b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
-> @@ -6,6 +6,7 @@ Required properties:
->   - "rockchip,rk3188-efuse" - for RK3188 SoCs.
->   - "rockchip,rk3228-efuse" - for RK3228 SoCs.
->   - "rockchip,rk3288-efuse" - for RK3288 SoCs.
-> +  - "rockchip,rk3368-efuse" - for RK3368 SoCs.
->   - "rockchip,rk3399-efuse" - for RK3399 SoCs.
-> - reg: Should contain the registers location and exact eFuse size
-> - clocks: Should be the clock id of eFuse
-> diff --git a/drivers/nvmem/rockchip-efuse.c b/drivers/nvmem/rockchip-efuse.c
-> index 63e3eb55f3ac..4e11f251035f 100644
-> --- a/drivers/nvmem/rockchip-efuse.c
-> +++ b/drivers/nvmem/rockchip-efuse.c
-> @@ -14,6 +14,7 @@
->  * more details.
->  */
->
-> +#include <linux/arm-smccc.h>
-> #include <linux/clk.h>
-> #include <linux/delay.h>
-> #include <linux/device.h>
-> @@ -46,9 +47,17 @@
-> #define REG_EFUSE_CTRL		0x0000
-> #define REG_EFUSE_DOUT		0x0004
->
-> +/* SMC function IDs for SiP Service queries */
-> +#define ROCKCHIP_SIP_ACCESS_REG	0x82000002
-> +
-> +/* SIP access registers: read or write */
-> +#define ROCKCHIP_SIP_SECURE_REG_RD	0x0
-> +#define ROCKCHIP_SIP_SECURE_REG_WR	0x1
-> +
-> struct rockchip_efuse_chip {
-> 	struct device *dev;
-> 	void __iomem *base;
-> +	phys_addr_t phys;
-> 	struct clk *clk;
-> };
->
-> @@ -92,6 +101,72 @@ static int rockchip_rk3288_efuse_read(void *context, unsigned int offset,
-> 	return 0;
-> }
->
-> +static u32 smc_reg_read(u32 addr_phy)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(ROCKCHIP_SIP_ACCESS_REG, 0, addr_phy,
-> +		      ROCKCHIP_SIP_SECURE_REG_RD, 0, 0, 0, 0, &res);
-> +	if (res.a0)
-> +		pr_err("%s error: %d, addr phy: 0x%x\n", __func__, (int)res.a0,
-> +		       addr_phy);
-> +	return res.a1;
-> +}
-> +
-> +static u32 smc_reg_write(u32 addr_phy, u32 val)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(ROCKCHIP_SIP_ACCESS_REG, val, addr_phy,
-> +		      ROCKCHIP_SIP_SECURE_REG_WR, 0, 0, 0, 0, &res);
-> +	if (res.a0)
-> +		pr_err("%s error: %d, addr phy: 0x%x\n", __func__, (int)res.a0,
-> +                       addr_phy);
-> +	return res.a0;
-> +}
+> >> +     /*
+> >> +      * If we did not get one ACK from slave when writing data, we sh=
+ould
+> >> +      * dump all registers to check I2C status.
+> >
+> > Why? I would say no. NACK from a slave can always happen, e.g. when an
+> > EEPROM is busy erasing a page.
+>=20
+> For our I2C controller databook, if the master did not get one ACK
+> from slave when writing data to salve, we should send one STOP signal
+> to abort this data transfer or generate one repeated START signal to
+> start one new data transfer cycle. Considering our I2C usage
 
-I am not too happy with the SIP_SECURE_REG_RD/WR interfaces, as this opens 
-an unauthenticated path from the non-secure world into the secure world.
+Yes, so far so good.
 
-> +
-> +static int rockchip_rk3368_efuse_read(void *context, unsigned int offset,
-> +				      void *val, size_t bytes)
-> +{
-> +	struct rockchip_efuse_chip *efuse = context;
-> +	u8 *buf = val;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(efuse->clk);
-> +	if (ret < 0) {
-> +		dev_err(efuse->dev, "failed to prepare/enable efuse clk\n");
-> +		return ret;
-> +	}
-> +
-> +	smc_reg_write(efuse->phys + REG_EFUSE_CTRL, RK3288_LOAD | RK3288_PGENB);
-> +	udelay(1);
-> +	while (bytes--) {
-> +		smc_reg_write(efuse->phys + REG_EFUSE_CTRL,
-> +			      smc_reg_read(efuse->phys + REG_EFUSE_CTRL) &
-> +			      (~(RK3288_A_MASK << RK3288_A_SHIFT)));
-> +		smc_reg_write(efuse->phys + REG_EFUSE_CTRL,
-> +			      smc_reg_read(efuse->phys + REG_EFUSE_CTRL) |
-> +			      ((offset++ & RK3288_A_MASK) << RK3288_A_SHIFT));
-> +
-> +		udelay(1);
-> +		smc_reg_write(efuse->phys + REG_EFUSE_CTRL,
-> +			      smc_reg_read(efuse->phys + REG_EFUSE_CTRL) |
-> +			      RK3288_STROBE);
-> +		udelay(1);
-> +		*buf++ = smc_reg_read(efuse->phys + REG_EFUSE_DOUT);
-> +		smc_reg_write(efuse->phys + REG_EFUSE_CTRL,
-> +			      smc_reg_read(efuse->phys + REG_EFUSE_CTRL) &
-> +			      (~RK3288_STROBE));
-> +		udelay(1);
-> +	}
-> +
-> +	/* Switch to standby mode */
-> +	smc_reg_write(efuse->phys + REG_EFUSE_CTRL, RK3288_PGENB | RK3288_CSB);
-> +
-> +	clk_disable_unprepare(efuse->clk);
-> +	return 0;
-> +}
-> +
-> static int rockchip_rk3399_efuse_read(void *context, unsigned int offset,
-> 				      void *val, size_t bytes)
-> {
-> @@ -178,6 +253,10 @@ static const struct of_device_id rockchip_efuse_match[] = {
-> 		.data = (void *)&rockchip_rk3288_efuse_read,
-> 	},
-> 	{
-> +		.compatible = "rockchip,rk3368-efuse",
-> +		.data = (void *)&rockchip_rk3368_efuse_read,
-> +	},
-> +	{
-> 		.compatible = "rockchip,rk3399-efuse",
-> 		.data = (void *)&rockchip_rk3399_efuse_read,
-> 	},
+> scenarios, we should dump registers to analyze I2C status and notify
+> to user to re-start new data transfer.
 
-Both the 3368 and 3399 have two eFuse blocks: one is the 'secure' eFuse
-whereas the other is the 'non-secure' eFuse... for the 'secure' eFuse, 
-there is no other way to access the fuses than in EL3. However, the 
-non-secure eFuse access is configurable via SGRF.
+I disagree here. You notify the users by returning -EIO. The upper layer
+(e.g. the i2c client driver) will handle it, like the EEPROM driver
+might retry after a while. This all is expected behaviour, so no need to
+print the registers to the logfile.
 
-In other words: SMC calls would be necessary for accesses to the secure
-eFuse block only.
+If you really, really want to keep it, make it debug output. But I think
+the sentence "we should dump all registers" needs to be rephrased.
 
-Note that the DTS released in Rockchip's github account has nvmem point
-to 0xffb00000, which is efuse_256 (which is the 'non-secure' block).  I 
-have successfully read this on the RK3368 from the U-Boot commandline 
-using 'mw.l' and 'md.l' to the control registers, so the SMC call should 
-not be necessary.
+> As I explained before, in our Spreadtrum platform, our regulator
+> driver will depend on I2C driver and the regulator driver uses
+> subsys_initcall() level to initialize. Moreover some other drivers
+> like GPU, they will depend on regulator to set voltage and they also
+> need initialization much earlier.
+>=20
+> Since it is arch_initcall() level, Andy suggested I should get rid of
+> tristate (use bool) and drop module.h here and all leftovers like
+> MODULE_*() calls including module_exit().
 
-The same is also true for the RK3399, where we read the non-secure fuse 
-block in U-Boot. So the SMC interface shouldn't be needed there.
+I see. So the driver is really so essential for proper bootup that it is
+not even allowed to be unloaded. I might make an exception here and
+allow arch_initcall() then. But I do wonder: did you try deferred
+probing all over the place?
 
-> @@ -205,6 +284,7 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
-> 		return -ENOMEM;
->
-> 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	efuse->phys = res->start;
-> 	efuse->base = devm_ioremap_resource(&pdev->dev, res);
-> 	if (IS_ERR(efuse->base))
-> 		return PTR_ERR(efuse->base);
->
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmkMv4ACgkQFA3kzBSg
+KbYoDxAAkDn/t1M/0oACkmTaiBL49b9FxkEsRGAT1KzO3FX/XMolsfhfaT9lfkCs
+LvL0TGzUIc5zjTpkI1UGH4KG3vtUFsXPFU7vL37y4aWHnHdog6KKgI87JHN/mB+q
+ezCowPxj9ODbgB4VzefvTx6742a2mdcQM/W6m59VXgCLPAiy7RLU+JeLTAWnmhE1
+uhhKafY19IOfaKSTWOx08YeIJWKUse3Ce2YAWP1qQq9qf/UnwHAesJuB6SxVQkPT
+Tual0b0btGgnotrb9nsZipbJH6A+oiH8TXNZwMq5ORm9Kx7XZwknkwsahvZ87Jmj
+S7ynh/fqex8ArHIDLOyeXJsFGXrB5qUs0OxzlCDDv/Ev27xNQN1K8p+IwyH5Nx0S
+qts7yTN49MxP5rMHKR3qZRuc/vE8r1O0NfeQ5r6LMvGfgVqtYKu2mbJZYcqTHFMi
+XFseg7hGoukCf0juwuss8Kk4gbJVioDeMfEc6mD3Hh0GLisXfAkwO0Dv8Ag3lOuP
+uqIx371hiR4XtkgdkN34Ws3kEbXMiFstZsIfDnTtSjBxlNbgkQ2rgl2CFW5K0sYC
+0f0bSJW3qPYU7vl3wiWYypOevcDwqJZ0PV1zHCuJ2uhbSzrzKoJZ1Xe0POImKaG9
+8/rWM3L+hMFglH5SMpo8cruBDsyWEeFmZweGZ5BNz+0dSPPPCi8=
+=RICq
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
