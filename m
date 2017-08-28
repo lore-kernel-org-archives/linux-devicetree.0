@@ -1,189 +1,69 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] PCI: iproc: retry request when CRS returned from
- EP
-Date: Mon, 28 Aug 2017 16:47:53 -0500
-Message-ID: <20170828214753.GL8154@bhelgaas-glaptop.roam.corp.google.com>
-References: <1503551066-23212-1-git-send-email-oza.oza@broadcom.com>
- <1503551066-23212-3-git-send-email-oza.oza@broadcom.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 17/17] ARM: dts: Add missing hwmod related properties for
+ dra7
+Date: Mon, 28 Aug 2017 16:52:53 -0500
+Message-ID: <fd064c10-2051-1579-bde1-60c3fed2b4a0@ti.com>
+References: <20170828211918.11573-1-tony@atomide.com>
+ <20170828211918.11573-18-tony@atomide.com>
+ <8c0ecbf6-26fb-1998-6bb5-0a74d9daa2ab@ti.com>
+ <20170828213753.GP6008@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1503551066-23212-3-git-send-email-oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170828213753.GP6008-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Andy Gospodarek <gospo-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J . Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 10:34:25AM +0530, Oza Pawandeep wrote:
-> PCIe spec r3.1, sec 2.3.2
-> If CRS software visibility is not enabled, the RC must reissue the
-> config request as a new request.
+On 08/28/2017 04:37 PM, Tony Lindgren wrote:
+> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [170828 14:35]:
+>> On 08/28/2017 04:19 PM, Tony Lindgren wrote:
+>>> On dra7 we're missing the smartreflex and hdq nodes with their
+>>> related "ti,hwmods" property that the SoC interconnect code needs.
+>>>
+>>> Note that this will only show up as a bug with "doesn't have
+>>> mpu register target base" boot errors when the legacy platform
+>>> data is removed.
+>>>
+>>> Note that the related driver also needs to be updated to probe
+>>> using device tree and get the platform data passed to it using
+>>> auxdata with arch/arm/mach-omap2/pdata-quirks.c.
+>>>
+>>> Let's also update the related binding documentation while at it.
+> ...
+>>> @@ -1489,6 +1497,18 @@
+>>>    			};
+>>>    		};
+>>> +		smartreflex_core: smartreflex4a0dd000 {
+>>> +			compatible = "ti,dra7-smartreflex-core";
+>>> +			ti,hwmods = "smartreflex_core";
+>>> +			reg = <0x4a0dd000 0x80>;
+>>> +		};
+>>> +
+>>> +		smartreflex_mpu: smartreflex@4a0d9000 {
+>>> +			compatible = "ti,dra7-smartreflex-mpu";
+>>> +			ti,hwmods = "smartreflex_mpu";
+>>> +			reg = <0x4a0d9000 0x80>;
+>>> +		};
+>>
+>>
+>> Have you checked TRM for these?
+>> http://www.ti.com/lit/ug/sprui30d/sprui30d.pdf
+>>
+>> These are disabled on the SoC and marked as reserved.
 > 
-> - If CRS software visibility is enabled,
-> - for a config read of Vendor ID, the RC must return 0x0001 data
-> - for all other config reads/writes, the RC must reissue the
->   request
-> 
-> iproc PCIe Controller spec:
-> 4.7.3.3. Retry Status On Configuration Cycle
-> Endpoints are allowed to generate retry status on configuration
-> cycles. In this case, the RC needs to re-issue the request. The IP
-> does not handle this because the number of configuration cycles needed
-> will probably be less than the total number of non-posted operations
-> needed.
-> 
-> When a retry status is received on the User RX interface for a
-> configuration request that was sent on the User TX interface,
-> it will be indicated with a completion with the CMPL_STATUS field set
-> to 2=CRS, and the user will have to find the address and data values
-> and send a new transaction on the User TX interface.
-> When the internal configuration space returns a retry status during a
-> configuration cycle (user_cscfg = 1) on the Command/Status interface,
-> the pcie_cscrs will assert with the pcie_csack signal to indicate the
-> CRS status.
-> When the CRS Software Visibility Enable register in the Root Control
-> register is enabled, the IP will return the data value to 0x0001 for
-> the Vendor ID value and 0xffff  (all 1’s) for the rest of the data in
-> the request for reads of offset 0 that return with CRS status.  This
-> is true for both the User RX Interface and for the Command/Status
-> interface.  When CRS Software Visibility is enabled, the CMPL_STATUS
-> field of the completion on the User RX Interface will not be 2=CRS and
-> the pcie_cscrs signal will not assert on the Command/Status interface.
-> 
-> Per PCIe r3.1, sec 2.3.2, config requests that receive completions
-> with Configuration Request Retry Status (CRS) should be reissued by
-> the hardware except reads of the Vendor ID when CRS Software
-> Visibility is enabled.
-> 
-> This hardware never reissues configuration requests when it receives
-> CRS completions.
-> Note that, neither PCIe host bridge nor PCIe core re-issues the
-> request for any configuration offset.
-> 
-> For config reads, this hardware returns CFG_RETRY_STATUS data when
-> it receives a CRS completion for a config read, regardless of the
-> address of the read or the CRS Software Visibility Enable bit.
-> 
-> This patch implements iproc_pcie_config_read which gets called for
-> Stingray, if it receives a CRS completion, it retries reading it again.
-> In case of timeout, it returns 0xffffffff.
-> For other iproc based SOC, it falls back to PCI generic APIs.
-> 
-> Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> 
-> diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
-> index 61d9be6..37f4adf 100644
-> --- a/drivers/pci/host/pcie-iproc.c
-> +++ b/drivers/pci/host/pcie-iproc.c
-> @@ -68,6 +68,9 @@
->  #define APB_ERR_EN_SHIFT             0
->  #define APB_ERR_EN                   BIT(APB_ERR_EN_SHIFT)
->  
-> +#define CFG_RETRY_STATUS             0xffff0001
-> +#define CFG_RETRY_STATUS_TIMEOUT_US  500000 /* 500 milli-seconds. */
-> +
->  /* derive the enum index of the outbound/inbound mapping registers */
->  #define MAP_REG(base_reg, index)      ((base_reg) + (index) * 2)
->  
-> @@ -473,6 +476,64 @@ static void __iomem *iproc_pcie_map_ep_cfg_reg(struct iproc_pcie *pcie,
->  	return (pcie->base + offset);
->  }
->  
-> +static unsigned int iproc_pcie_cfg_retry(void __iomem *cfg_data_p)
-> +{
-> +	int timeout = CFG_RETRY_STATUS_TIMEOUT_US;
-> +	unsigned int data;
-> +
-> +	/*
-> +	 * As per PCIe spec r3.1, sec 2.3.2, CRS Software
-> +	 * Visibility only affects config read of the Vendor ID.
-> +	 * For config write or any other config read the Root must
-> +	 * automatically re-issue configuration request again as a
-> +	 * new request.
-> +	 *
-> +	 * For config reads, this hardware returns CFG_RETRY_STATUS data when
-> +	 * it receives a CRS completion for a config read, regardless of the
-> +	 * address of the read or the CRS Software Visibility Enable bit. As a
-> +	 * partial workaround for this, we retry in software any read that
-> +	 * returns CFG_RETRY_STATUS.
-> +	 */
-> +	data = readl(cfg_data_p);
-> +	while (data == CFG_RETRY_STATUS && timeout--) {
-> +		udelay(1);
-> +		data = readl(cfg_data_p);
-> +	}
-> +
-> +	if (data == CFG_RETRY_STATUS)
-> +		data = 0xffffffff;
-> +
-> +	return data;
-> +}
-> +
-> +static int iproc_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
-> +				    int where, int size, u32 *val)
-> +{
-> +	struct iproc_pcie *pcie = iproc_data(bus);
-> +	unsigned int slot = PCI_SLOT(devfn);
-> +	unsigned int fn = PCI_FUNC(devfn);
-> +	unsigned int busno = bus->number;
-> +	void __iomem *cfg_data_p;
-> +	unsigned int data;
-> +
-> +	/* root complex access. */
-> +	if (busno == 0)
-> +		return pci_generic_config_read32(bus, devfn, where, size, val);
+> Then why do we still have legacy hwmod data for them?
 
-It sounds like Stingray advertises CRS SV support in its Root Capabilities
-register.  I think we should mask out PCI_EXP_RTCAP_CRSVIS so we don't
-advertise it.  That will keep Linux from trying to enable it.  I know the
-hardware doesn't look at PCI_EXP_RTCTL_CRSSVE, but there's no point in
-confusing users reading the lspci output.
+We should probably drop them - probably legacy of autogeneration at 
+some point in history.
 
-We did something similar with f09f8735fb9c ("PCI: xgene: Disable
-Configuration Request Retry Status for v1 silicon").
 
-I tried to do this in the patch I pushed to pci/host-iproc.
-
-> +
-> +	cfg_data_p = iproc_pcie_map_ep_cfg_reg(pcie, busno, slot, fn, where);
-> +
-> +	if (!cfg_data_p)
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	data = iproc_pcie_cfg_retry(cfg_data_p);
-> +
-> +	*val = data;
-> +	if (size <= 2)
-> +		*val = (data >> (8 * (where & 3))) & ((1 << (size * 8)) - 1);
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-> +
->  /**
->   * Note access to the configuration registers are protected at the higher layer
->   * by 'pci_lock' in drivers/pci/access.c
-> @@ -567,8 +628,13 @@ static int iproc_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
->  				    int where, int size, u32 *val)
->  {
->  	int ret;
-> +	struct iproc_pcie *pcie = iproc_data(bus);
->  
->  	iproc_pcie_apb_err_disable(bus, true);
-> +	if (pcie->type == IPROC_PCIE_PAXB_V2)
-> +		ret = iproc_pcie_config_read(bus, devfn, where, size, val);
-> +	else
-> +		ret = pci_generic_config_read32(bus, devfn, where, size, val);
->  	ret = pci_generic_config_read32(bus, devfn, where, size, val);
-
-This last pci_generic_config_read32() call looks like a duplicate.
-
->  	iproc_pcie_apb_err_disable(bus, false);
->  
-> -- 
-> 1.9.1
-> 
+-- 
+Regards,
+Nishanth Menon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
