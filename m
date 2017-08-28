@@ -1,187 +1,81 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [RESEND PATCH v4 2/2] i2c: Add Spreadtrum I2C controller driver
-Date: Mon, 28 Aug 2017 11:21:09 +0800
-Message-ID: <CAMz4ku+MJ49-Orp4mGL=jW0bfnko5o9fZgAjpZKqAMVUiw-o4Q@mail.gmail.com>
-References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
- <acbfda522aa806284b86f8935278cc7f7133e876.1500021046.git.baolin.wang@spreadtrum.com>
- <20170827153054.ijqxbjk25zpskojl@ninjato>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 RESEND 1/2] dt-bindings: serial: 8250: Add MediaTek
+ BTIF controller bindings
+Date: Mon, 28 Aug 2017 08:21:20 +0300
+Message-ID: <13f6d052-0fad-e99f-2c87-6a98035787cf@gmail.com>
+References: <cover.1503165144.git.sean.wang@mediatek.com>
+ <29b52a3b95982f1097766d515aae09c57e11b002.1503165144.git.sean.wang@mediatek.com>
+ <8548a72a-4bf3-d44a-6d26-d64721cffe85@gmail.com>
+ <1503862785.19230.76.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170827153054.ijqxbjk25zpskojl@ninjato>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1503862785.19230.76.camel@mtkswgap22>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hpeter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
 
-On 27 August 2017 at 23:30, Wolfram Sang <wsa@the-dreams.de> wrote:
-> Hi,
->
-> thanks for your submission.
->
->> +static void sprd_i2c_dump_reg(struct sprd_i2c *i2c_dev)
->> +{
->> +     dev_err(&i2c_dev->adap.dev, ": ======dump i2c-%d reg=======\n",
->> +             i2c_dev->adap.nr);
->> +     dev_err(&i2c_dev->adap.dev, ": I2C_CTRL:0x%x\n",
->> +             readl(i2c_dev->base + I2C_CTL));
->> +     dev_err(&i2c_dev->adap.dev, ": I2C_ADDR_CFG:0x%x\n",
->> +             readl(i2c_dev->base + I2C_ADDR_CFG));
->> +     dev_err(&i2c_dev->adap.dev, ": I2C_COUNT:0x%x\n",
->> +             readl(i2c_dev->base + I2C_COUNT));
->> +     dev_err(&i2c_dev->adap.dev, ": I2C_RX:0x%x\n",
->> +             readl(i2c_dev->base + I2C_RX));
->> +     dev_err(&i2c_dev->adap.dev, ": I2C_STATUS:0x%x\n",
->> +             readl(i2c_dev->base + I2C_STATUS));
->> +     dev_err(&i2c_dev->adap.dev, ": ADDR_DVD0:0x%x\n",
->> +             readl(i2c_dev->base + ADDR_DVD0));
->> +     dev_err(&i2c_dev->adap.dev, ": ADDR_DVD1:0x%x\n",
->> +             readl(i2c_dev->base + ADDR_DVD1));
->> +     dev_err(&i2c_dev->adap.dev, ": ADDR_STA0_DVD:0x%x\n",
->> +             readl(i2c_dev->base + ADDR_STA0_DVD));
->> +     dev_err(&i2c_dev->adap.dev, ": ADDR_RST:0x%x\n",
->> +             readl(i2c_dev->base + ADDR_RST));
->
-> I really thing register dumps should be dev_dbg().
 
-OK. Will fix in next version.
+On 08/27/2017 10:39 PM, Sean Wang wrote:
+> On Sun, 2017-08-27 at 22:00 +0300, Matthias Brugger wrote:
+>>
+>> On 08/19/2017 09:06 PM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+>>> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>
+>>> Document the devicetree bindings in 8250.txt for MediaTek BTIF
+>>> controller which could be found on MT7622 and MT7623 SoC.
+>>>
+>>> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>    Documentation/devicetree/bindings/serial/8250.txt | 3 +++
+>>>    1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
+>>> index 419ff6c..7528d90 100644
+>>> --- a/Documentation/devicetree/bindings/serial/8250.txt
+>>> +++ b/Documentation/devicetree/bindings/serial/8250.txt
+>>> @@ -14,6 +14,9 @@ Required properties:
+>>>    	  tegra132, or tegra210.
+>>>    	- "nxp,lpc3220-uart"
+>>>    	- "ralink,rt2880-uart"
+>>> +	- For MediaTek MT7623, must contain "mediatek,mt7623-btif"
+>>> +	- For other MediaTek SoCs , must contain "mediatek,<chip>-btif",
+>>> +	  "mediatek,mt7623-btif" where <chip> is mt7622.
+>>
+>> Hm, to me that's confusing. What about:
+>> "mediatek,mt7623-btif": for MediaTek MT7623
+>> "mediatek,mt7622-btif", "mediatek,mt7623-btif": for MediaTek MT7622
+>>
+>> If in the future we have more SoCs that support the BTIF, we should add them
+>> like the mt7622 case.
+>>
+> 
+> I had v3, but it should have similar logic and also got ack from Rob
+> 
+> I knew all your logic of adding binding document for all MediaTek
+> devices, even I alway added MediaTek device in dt-bindings as the way
+> you mentioned here, but I felt this way is fine for this kind of
+> dedicated document.
+> 
+> The reason i don't add it as usual is the following. 8250.txt is common
+> and shared among all uart like devices, so i don't want btif device
+> occupies too much section and bloat the document when every new MediaTek
+> SoC is introduced.
+> 
+> So instead I refer to existing Nvidia device added in 8250.txt  which I
+> thought its way is simple, elegant and also using pattern I can use to
+> add btif devices.
+> 
 
->
->> +}
->> +
->> +static void sprd_i2c_set_count(struct sprd_i2c *i2c_dev, u32 count)
->> +{
->> +     writel(count, i2c_dev->base + I2C_COUNT);
->> +}
->> +
->> +static void sprd_i2c_send_stop(struct sprd_i2c *i2c_dev, int stop)
->> +{
->> +     unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
->
-> u32? Here and in many other places?
+Working on my email backlog after vactions I didn't see that this was accepted 
+by Rob. Sorry for the noise.
 
-OK.
-
->
-> ...
->
->> +static irqreturn_t sprd_i2c_isr_thread(int irq, void *dev_id)
->> +{
->> +     struct sprd_i2c *i2c_dev = dev_id;
->> +     struct i2c_msg *msg = i2c_dev->msg;
->> +     int ack = readl(i2c_dev->base + I2C_STATUS) & I2C_RX_ACK;
->> +     u32 i2c_count = readl(i2c_dev->base + I2C_COUNT);
->> +     u32 i2c_tran;
->> +
->> +     if (msg->flags & I2C_M_RD)
->> +             i2c_tran = i2c_dev->count >= I2C_FIFO_FULL_THLD;
->> +     else
->> +             i2c_tran = i2c_count;
->> +
->> +     /*
->> +      * If we got one ACK from slave when writing data, and we did not
->
-> Here you say: "If we get ack..."
->
->> +      * finish this transmission (i2c_tran is not zero), then we should
->> +      * continue to write data.
->> +      *
->> +      * For reading data, ack is always 0, if i2c_tran is not 0 which
->> +      * means we still need to contine to read data from slave.
->> +      */
->> +     if (i2c_tran && !ack) {
->
-> ... but the code gives the assumption you did NOT get an ack. So, either
-> rename the variable to 'ack_err' or keep it 'ack' and invert the logic
-> when initializing the variable.
-
-If ack == 0 means we got one ack. I will invert the logic as you suggested.
-
->
->> +             sprd_i2c_data_transfer(i2c_dev);
->> +             return IRQ_HANDLED;
->> +     }
->> +
->> +     i2c_dev->err = 0;
->> +
->> +     /*
->> +      * If we did not get one ACK from slave when writing data, we should
->> +      * dump all registers to check I2C status.
->
-> Why? I would say no. NACK from a slave can always happen, e.g. when an
-> EEPROM is busy erasing a page.
-
-For our I2C controller databook, if the master did not get one ACK
-from slave when writing data to salve, we should send one STOP signal
-to abort this data transfer or generate one repeated START signal to
-start one new data transfer cycle. Considering our I2C usage
-scenarios, we should dump registers to analyze I2C status and notify
-to user to re-start new data transfer.
-
->
->> +      */
->> +     if (ack) {
->> +             i2c_dev->err = -EIO;
->> +             sprd_i2c_dump_reg(i2c_dev);
->> +     } else if (msg->flags & I2C_M_RD && i2c_dev->count) {
->> +             sprd_i2c_read_bytes(i2c_dev, i2c_dev->buf, i2c_dev->count);
->> +     }
->> +
->> +     /* Transmission is done and clear ack and start operation */
->> +     sprd_i2c_clear_ack(i2c_dev);
->> +     sprd_i2c_clear_start(i2c_dev);
->> +     complete(&i2c_dev->complete);
->> +
->> +     return IRQ_HANDLED;
->> +}
->
-> ...
->
->> +
->> +     pm_runtime_set_autosuspend_delay(i2c_dev->dev, SPRD_I2C_PM_TIMEOUT);
->> +     pm_runtime_use_autosuspend(i2c_dev->dev);
->> +     pm_runtime_set_active(i2c_dev->dev);
->> +     pm_runtime_enable(i2c_dev->dev);
->> +
->> +     ret = pm_runtime_get_sync(i2c_dev->dev);
->> +     if (ret < 0) {
->> +             dev_err(&pdev->dev, "i2c%d pm runtime resume failed!\n",
->> +                     pdev->id);
->
-> Error message has wrong text.
-
-Will fix it.
-
->
->> +             goto err_rpm_put;
->> +     }
->> +
->> +static int sprd_i2c_init(void)
->> +{
->> +     return platform_driver_register(&sprd_i2c_driver);
->> +}
->> +arch_initcall_sync(sprd_i2c_init);
->
-> arch_initcall? and no exit() function? Why is it that way and/or why
-> can't you use platform_module_driver()?
-
-As I explained before, in our Spreadtrum platform, our regulator
-driver will depend on I2C driver and the regulator driver uses
-subsys_initcall() level to initialize. Moreover some other drivers
-like GPU, they will depend on regulator to set voltage and they also
-need initialization much earlier.
-
-Since it is arch_initcall() level, Andy suggested I should get rid of
-tristate (use bool) and drop module.h here and all leftovers like
-MODULE_*() calls including module_exit().
-
->
-> Rest looks good. I like the comments you added to the code.
-
-Really appreciated for your comments.
-
--- 
-Baolin.wang
-Best Regards
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
