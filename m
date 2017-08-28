@@ -1,34 +1,35 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 2/2] dt-bindings: mfd: Add bindings for ZII RAVE
- devices
-Date: Mon, 28 Aug 2017 17:51:57 +0200
-Message-ID: <20170828155157.GB29358@kroah.com>
-References: <20170728142704.11156-1-andrew.smirnov@gmail.com>
- <20170728142704.11156-3-andrew.smirnov@gmail.com>
+From: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: keystone-k2g: Add McASP nodes
+Date: Mon, 28 Aug 2017 08:56:38 -0700
+Message-ID: <574004f6-6e6c-7d15-e5f8-3c3beec0e9b8@oracle.com>
+References: <20170828071957.9597-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170728142704.11156-3-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170828071957.9597-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 07:27:04AM -0700, Andrey Smirnov wrote:
-> Cc: cphealy@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Acked-by: Rob Herring <robh+dt@kernel.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+On 8/28/2017 12:19 AM, Peter Ujfalusi wrote:
+> Add three McASP nodes present on 66AK2G device.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 > ---
->  .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> Hi Santosh,
+> 
+> There is no driver change dependency for McASP to work on 66AK2G, only the nodes
+> need to be in place.
+> 
+Will add that to 4.15 queue. Thanks !!
 
-I can't take patches without any changelog text in them :(
+Regards,
+Santosh
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
