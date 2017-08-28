@@ -1,53 +1,52 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v10 03/16] spi: spi-falcon: drop check of boot select
-Date: Mon, 28 Aug 2017 13:29:33 +0200
-Message-ID: <40428f8d-f781-7952-30c6-41f65ec1096b@hauke-m.de>
-References: <20170819221823.13850-1-hauke@hauke-m.de>
- <20170819221823.13850-4-hauke@hauke-m.de>
- <20170828112327.GA15640@linux-mips.org>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH 1/3] dt-bindings: watchdog: Add Realtek RTD1295
+Date: Mon, 28 Aug 2017 13:35:29 +0200
+Message-ID: <20170828113532.32627-2-afaerber@suse.de>
+References: <20170828113532.32627-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170828112327.GA15640-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170828113532.32627-1-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2017 01:23 PM, Ralf Baechle wrote:
-> On Sun, Aug 20, 2017 at 12:18:10AM +0200, Hauke Mehrtens wrote:
-> 
->> Do not check which flash type the SoC was booted from before
->> using this driver. Assume that the device tree is correct and use this
->> driver when it was added to device tree. This also removes a build
->> dependency to the SoC code.
->>
->> All device trees I am aware of only have one correct flash device entry
->> in it. The device tree is anyway bundled with the kernel in all systems
->> using device tree I know of.
->>
->> The boot mode can be specified with some pin straps and will select the
->> flash type the rom code will boot from. One SPI, NOR or NAND flash chip
->> can be connect to the EBU and used to load the first stage boot loader
->> from.
-> 
-> I think other than this patch we finally have all the acks necessary so
-> I merged the series except this patch which shouldn't be strictly necessary.
-> 
->   Ralf
-> 
+Add a binding for the Realtek RTD1295 watchdog.
 
-Hi Ralf and Mark,
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/realtek,rtd119x.txt    | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt
 
-this driver will not build any more without this patch, because
-ltq_boot_select() gets removed in "[PATCH v10 09/16] MIPS: lantiq:
-remove ltq_reset_cause() and ltq_boot_select()"
+diff --git a/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt b/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt
+new file mode 100644
+index 000000000000..05653054bd5b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt
+@@ -0,0 +1,17 @@
++Realtek RTD1295 Watchdog
++========================
++
++Required properties:
++
++- compatible :  Should be "realtek,rtd1295-watchdog"
++- reg        :  Specifies the physical base address and size of registers
++- clocks     :  Specifies one clock input
++
++
++Example:
++
++	watchdog@98007680 {
++		compatible = "realtek,rtd1295-watchdog";
++		reg = <0x98007680 0x100>;
++		clocks = <&osc27M>;
++	};
+-- 
+2.12.3
 
-Mark could you please have a look at the commit message if it is better now.
-
-Hauke
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
