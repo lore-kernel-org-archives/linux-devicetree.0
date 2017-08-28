@@ -1,66 +1,65 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [RESEND PATCH v5 00/16] eeprom: at24: Add OF device ID table
-Date: Mon, 28 Aug 2017 18:01:21 +0200
-Message-ID: <20170828160121.gu4wf7jqu4ditksc@ninjato>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RESEND PATCH v5 01/16] dt-bindings: i2c: eeprom: Document
+ vendor to be used and deprecated ones
+Date: Mon, 28 Aug 2017 18:02:27 +0200
+Message-ID: <20170828160227.awm3bnz23gecwk6j@ninjato>
 References: <20170615185418.13980-1-javier@dowhile0.org>
- <20170731153009.xkjknygpmckv2pfp@ninjato>
- <CABxcv=mdbE0QGjoi3aLzxRqM3-MbkQ_Ai6fShcGVUGSNNqqrqw@mail.gmail.com>
+ <20170615185418.13980-2-javier@dowhile0.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kxl2ldofwcq27yov"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="3ged2uoxu5omlfmw"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABxcv=mdbE0QGjoi3aLzxRqM3-MbkQ_Ai6fShcGVUGSNNqqrqw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Larysch <fl-J+Jo6bLUB7M@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>li
+In-Reply-To: <20170615185418.13980-2-javier@dowhile0.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Simon Horman <horms@verge.net.au>, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---kxl2ldofwcq27yov
+--3ged2uoxu5omlfmw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-
-> > But there is a dependency, no? If I apply the driver patch,
-> > non-converted device trees will not find their eeproms anymore. So, I
+On Thu, Jun 15, 2017 at 08:54:03PM +0200, Javier Martinez Canillas wrote:
+> The at24 driver allows to register I2C EEPROM chips using different vendor
+> and devices, but the I2C subsystem does not take the vendor into account
+> when matching using the I2C table since it only has device entries.
 >=20
-> I don't think that's correct. If you apply this patch before the DTS
-> changes, the driver will still match using the I2C device ID table
-> like it has been doing it until today.
+> But when matching using an OF table, both the vendor and device has to be
+> taken into account so the driver defines only a set of compatible strings
+> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+>=20
+> Document in the Device Tree binding document that this manufacturer should
+> be used as the generic fallback. Also document the deprecated vendors.
+>=20
+> Suggested-by: Wolfram Sang <wsa@the-dreams.de>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
+>=20
 
-My tests do not confirm this. If I add a node with a "renesas,24c01"
-compatible to my board, it works before your patch, but not after. If I
-change it to "atmel,24c01" it works even after your patch. I haven't
-looked into it, though, maybe i2c_of_match_device_sysfs() is stepping on
-our foots here?
-
-Did you test and did it work for you?
+Applied to for-next, thanks!
 
 
---kxl2ldofwcq27yov
+--3ged2uoxu5omlfmw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmkPlEACgkQFA3kzBSg
-KbY9mQ//ZYxuivYI37NBqNzvT6LEyeDnhT5YpI+3SDGk88+Ny3uOysJpehIW1zmQ
-/o4MmLhMZq0emuNniTUcq6hs1DmPC1YFAHoNPhdcPEJY9BDB5Z28l187ETQ0wtYD
-u8DAc11LnQLCGRgBngM9zAVClRI16o07T68hSGlUntK/oEAuqEqtcw3Nt4wAY1nD
-1ALzfhgtBsGJ+BSDLTvW7sZ5cqJ1NhjHnEV2rLDIxTQPTTVBc3guI7Zw7+qXuETX
-cJ/mIhwyYPpcdlPM7A9mt3CozKhjFEnWG+TZEl3xiQVs/5Gb6hF7c+q06g1t1BBE
-OufNGdCTbg3etFN0y//oj2+K2iUqfw4m/33VmGBltVZuKxcrEFCOHBaONdyAJ2ET
-tki7C+Vz/JzD5VDl7nUp7Ci95FbRjFGXDy45e8u0Nyb1eQX02Y+owo/Pk5ZuiRQw
-fi6c5lJP34KazsrmGpqm9W/wzggxJSoXW1abAOeDTindLZ4DiSH41od6tx2y/nHs
-e2i2OygFb3NNccXZ9QL/xmcRiCzwi9hk9Tt71fawGWQ+hLKxrLs7emt8kfpPU4aU
-ZpdA4TbozeaOWWDzbOzwV25d0kOe+LiwKx+PTNgW2Uimz1sQBWOpIm0vZGXxqa8y
-wSSRx/WWug0tYILnAP5BQmLV9X5N3m8zaJ6u1neWImCTNpCweFU=
-=nrOV
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmkPpMACgkQFA3kzBSg
+KbZJvQ//ezfZ3CRS4wPShzODiYo+w4+VsyAkS2VvWxrsBxgJwM45tFOVBauL2vji
+meUADXBVLnrCzLNocxfYQpcPdqhGR++71VRFoZ3OhZf6aNOVGvCf0tK4MVZbmyp5
+We+UTdJHRsNzQippw3GkJTnsy4H7a6PVDbrPGdYaTwM2r+BiBOPv0JviFLMBVjyr
+9BpOP3CRLtOq5AqvHrmIUr8sskpSfMowGoxqrlj1OHmdNPKgzWDghGIVTQs4fXNx
+yKhXp0t0xGGPEMWDhvSZco4xL1t+y2a1Vw22w82bZHlSRwIZF5VlFvUkdTBXHi/f
+npHTrnt3Cg7JMAw6i9rqx4qdPrrn3yOan89g2AQ/BoDAJvh8w1Ie5x8DTrHllTJ7
+NNWrJO9oFYkN4YibwEBN2u4qyfPtBxmO921one3YUDadV8vheXqvCOFxio8jZkKH
+GbSBJTHDV+CY1rzgZHkzJAFUu2SmxgeE317JzQUCOkhwkQc5afH+AxIT7NZDvGNI
+cNcV0AiIYOGjBnrd1A7eaf3/SzTXXv7D0Pu/+STXuarHCpjhHNfAZwinkqoqNYB5
+H8JMNH6w/6XHqDDRf2LQ87DdzVnmtfY3EFWxLf5mHc6B29WXu7Fb+8b5wY3EFn1a
+lyt8B3xvhNsD+T8AYEqdnlWN5kZRQAWrFSPb4ok9WtzIitY9tv8=
+=wn4K
 -----END PGP SIGNATURE-----
 
---kxl2ldofwcq27yov--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--3ged2uoxu5omlfmw--
