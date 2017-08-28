@@ -1,68 +1,187 @@
-From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [patch v6 0/3] JTAG driver introduction
-Date: Sun, 27 Aug 2017 19:55:43 -0700
-Message-ID: <CAPLgG=n2r+rJKSAZKknuqH_S2W6CrWN-Ynqph-qPc9BTs-_hQA@mail.gmail.com>
-References: <1503418256-5215-1-git-send-email-oleksandrs@mellanox.com>
- <CACRpkdZePXyo8Q36mBH7OnJU3E=yWPWSGkGUOH=zJFMjM=Yrhw@mail.gmail.com>
- <CAPLgG==Jj=Ys=SvhOCspSfunbWnuqPySvW9RfuqE8HYnG4C=ZQ@mail.gmail.com>
- <CACRpkdbozWaL0RXyZXjzxYK3JHiqYziSkTGSgGORdptX-rwR8A@mail.gmail.com>
- <CAPLgG=mv1p98e4Vzso1N-VU=1MSotkTmnF+DcDTXPcd3q-n8HA@mail.gmail.com> <CACRpkdb75L5BrYN+V-BMwzrRm8_Wtymr3d08eMWt43FiBpH5Qg@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [RESEND PATCH v4 2/2] i2c: Add Spreadtrum I2C controller driver
+Date: Mon, 28 Aug 2017 11:21:09 +0800
+Message-ID: <CAMz4ku+MJ49-Orp4mGL=jW0bfnko5o9fZgAjpZKqAMVUiw-o4Q@mail.gmail.com>
+References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
+ <acbfda522aa806284b86f8935278cc7f7133e876.1500021046.git.baolin.wang@spreadtrum.com>
+ <20170827153054.ijqxbjk25zpskojl@ninjato>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb75L5BrYN+V-BMwzrRm8_Wtymr3d08eMWt43FiBpH5Qg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170827153054.ijqxbjk25zpskojl@ninjato>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 27, 2017 at 3:30 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Aug 25, 2017 at 6:52 PM, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->
->>> Incidentally, people are sending patches to expose the FTDI
->>> expanders as common GPIO chips under Linux, so we can
->>> internally in the kernel or from the usersapce character device
->>> access them as "some GPIOs".
->>
->> I know my team at Google has an internal patch for exactly that.  FTDI
->> expanders are complicated as they can be used as UART, GPIO, I2C, SPI
->> depending on configuration.  Our project was using a mix of I2C and
->> GPIO so I directly my team to approach it as an MFD.  I'd like to see
->> all of these use cases handled by the kernel but I understand the
->> other viewpoint of relying on libusb for cross-platform compatiblity.
->
-> Hm. I see. But I see people pushing the in-kernel method so I think
-> it will eventually win out.
->
+Hi Wolfram,
 
-SGTM.  I'll see if my team can clean up the MFD-based FTDI driver and
-submit it upstream.
-
->>>>> In my worst nightmare they export GPIO lines using
->>>>> the horrid ABI in /sys/gpio/*
->>>>
->>>> https://sourceforge.net/p/openocd/code/ci/v0.10.0/tree/src/jtag/drivers/sysfsgpio.c
->>>
->>> Gnah!
->>> Whoever writes a slot-in replacement making the character device
->>> take precendence wins lots of karma.
->>
->> If they show up at Linux Plumbers or visit San Jose, I'll take them to
->> dinner.  I didn't see any docs for the chardev in Documentation.  I
->> _think_ I understand how it works from reading the relevant sections
->> of gpiolib.c but I can see how users end up using sysfs instead.
+On 27 August 2017 at 23:30, Wolfram Sang <wsa@the-dreams.de> wrote:
+> Hi,
 >
-> I intended tools/gpio/* to be the documentation:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/gpio
+> thanks for your submission.
 >
-> If we need more written documentation we can do it I guess,
+>> +static void sprd_i2c_dump_reg(struct sprd_i2c *i2c_dev)
+>> +{
+>> +     dev_err(&i2c_dev->adap.dev, ": ======dump i2c-%d reg=======\n",
+>> +             i2c_dev->adap.nr);
+>> +     dev_err(&i2c_dev->adap.dev, ": I2C_CTRL:0x%x\n",
+>> +             readl(i2c_dev->base + I2C_CTL));
+>> +     dev_err(&i2c_dev->adap.dev, ": I2C_ADDR_CFG:0x%x\n",
+>> +             readl(i2c_dev->base + I2C_ADDR_CFG));
+>> +     dev_err(&i2c_dev->adap.dev, ": I2C_COUNT:0x%x\n",
+>> +             readl(i2c_dev->base + I2C_COUNT));
+>> +     dev_err(&i2c_dev->adap.dev, ": I2C_RX:0x%x\n",
+>> +             readl(i2c_dev->base + I2C_RX));
+>> +     dev_err(&i2c_dev->adap.dev, ": I2C_STATUS:0x%x\n",
+>> +             readl(i2c_dev->base + I2C_STATUS));
+>> +     dev_err(&i2c_dev->adap.dev, ": ADDR_DVD0:0x%x\n",
+>> +             readl(i2c_dev->base + ADDR_DVD0));
+>> +     dev_err(&i2c_dev->adap.dev, ": ADDR_DVD1:0x%x\n",
+>> +             readl(i2c_dev->base + ADDR_DVD1));
+>> +     dev_err(&i2c_dev->adap.dev, ": ADDR_STA0_DVD:0x%x\n",
+>> +             readl(i2c_dev->base + ADDR_STA0_DVD));
+>> +     dev_err(&i2c_dev->adap.dev, ": ADDR_RST:0x%x\n",
+>> +             readl(i2c_dev->base + ADDR_RST));
+>
+> I really thing register dumps should be dev_dbg().
 
-I haven't been in the habit of looking in tools/.  Guess I should be.
+OK. Will fix in next version.
 
 >
-> Yours,
-> Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +}
+>> +
+>> +static void sprd_i2c_set_count(struct sprd_i2c *i2c_dev, u32 count)
+>> +{
+>> +     writel(count, i2c_dev->base + I2C_COUNT);
+>> +}
+>> +
+>> +static void sprd_i2c_send_stop(struct sprd_i2c *i2c_dev, int stop)
+>> +{
+>> +     unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
+>
+> u32? Here and in many other places?
+
+OK.
+
+>
+> ...
+>
+>> +static irqreturn_t sprd_i2c_isr_thread(int irq, void *dev_id)
+>> +{
+>> +     struct sprd_i2c *i2c_dev = dev_id;
+>> +     struct i2c_msg *msg = i2c_dev->msg;
+>> +     int ack = readl(i2c_dev->base + I2C_STATUS) & I2C_RX_ACK;
+>> +     u32 i2c_count = readl(i2c_dev->base + I2C_COUNT);
+>> +     u32 i2c_tran;
+>> +
+>> +     if (msg->flags & I2C_M_RD)
+>> +             i2c_tran = i2c_dev->count >= I2C_FIFO_FULL_THLD;
+>> +     else
+>> +             i2c_tran = i2c_count;
+>> +
+>> +     /*
+>> +      * If we got one ACK from slave when writing data, and we did not
+>
+> Here you say: "If we get ack..."
+>
+>> +      * finish this transmission (i2c_tran is not zero), then we should
+>> +      * continue to write data.
+>> +      *
+>> +      * For reading data, ack is always 0, if i2c_tran is not 0 which
+>> +      * means we still need to contine to read data from slave.
+>> +      */
+>> +     if (i2c_tran && !ack) {
+>
+> ... but the code gives the assumption you did NOT get an ack. So, either
+> rename the variable to 'ack_err' or keep it 'ack' and invert the logic
+> when initializing the variable.
+
+If ack == 0 means we got one ack. I will invert the logic as you suggested.
+
+>
+>> +             sprd_i2c_data_transfer(i2c_dev);
+>> +             return IRQ_HANDLED;
+>> +     }
+>> +
+>> +     i2c_dev->err = 0;
+>> +
+>> +     /*
+>> +      * If we did not get one ACK from slave when writing data, we should
+>> +      * dump all registers to check I2C status.
+>
+> Why? I would say no. NACK from a slave can always happen, e.g. when an
+> EEPROM is busy erasing a page.
+
+For our I2C controller databook, if the master did not get one ACK
+from slave when writing data to salve, we should send one STOP signal
+to abort this data transfer or generate one repeated START signal to
+start one new data transfer cycle. Considering our I2C usage
+scenarios, we should dump registers to analyze I2C status and notify
+to user to re-start new data transfer.
+
+>
+>> +      */
+>> +     if (ack) {
+>> +             i2c_dev->err = -EIO;
+>> +             sprd_i2c_dump_reg(i2c_dev);
+>> +     } else if (msg->flags & I2C_M_RD && i2c_dev->count) {
+>> +             sprd_i2c_read_bytes(i2c_dev, i2c_dev->buf, i2c_dev->count);
+>> +     }
+>> +
+>> +     /* Transmission is done and clear ack and start operation */
+>> +     sprd_i2c_clear_ack(i2c_dev);
+>> +     sprd_i2c_clear_start(i2c_dev);
+>> +     complete(&i2c_dev->complete);
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>
+> ...
+>
+>> +
+>> +     pm_runtime_set_autosuspend_delay(i2c_dev->dev, SPRD_I2C_PM_TIMEOUT);
+>> +     pm_runtime_use_autosuspend(i2c_dev->dev);
+>> +     pm_runtime_set_active(i2c_dev->dev);
+>> +     pm_runtime_enable(i2c_dev->dev);
+>> +
+>> +     ret = pm_runtime_get_sync(i2c_dev->dev);
+>> +     if (ret < 0) {
+>> +             dev_err(&pdev->dev, "i2c%d pm runtime resume failed!\n",
+>> +                     pdev->id);
+>
+> Error message has wrong text.
+
+Will fix it.
+
+>
+>> +             goto err_rpm_put;
+>> +     }
+>> +
+>> +static int sprd_i2c_init(void)
+>> +{
+>> +     return platform_driver_register(&sprd_i2c_driver);
+>> +}
+>> +arch_initcall_sync(sprd_i2c_init);
+>
+> arch_initcall? and no exit() function? Why is it that way and/or why
+> can't you use platform_module_driver()?
+
+As I explained before, in our Spreadtrum platform, our regulator
+driver will depend on I2C driver and the regulator driver uses
+subsys_initcall() level to initialize. Moreover some other drivers
+like GPU, they will depend on regulator to set voltage and they also
+need initialization much earlier.
+
+Since it is arch_initcall() level, Andy suggested I should get rid of
+tristate (use bool) and drop module.h here and all leftovers like
+MODULE_*() calls including module_exit().
+
+>
+> Rest looks good. I like the comments you added to the code.
+
+Really appreciated for your comments.
+
+-- 
+Baolin.wang
+Best Regards
