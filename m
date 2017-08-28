@@ -1,65 +1,101 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RESEND PATCH v5 01/16] dt-bindings: i2c: eeprom: Document
- vendor to be used and deprecated ones
-Date: Mon, 28 Aug 2017 18:02:27 +0200
-Message-ID: <20170828160227.awm3bnz23gecwk6j@ninjato>
-References: <20170615185418.13980-1-javier@dowhile0.org>
- <20170615185418.13980-2-javier@dowhile0.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 04/14] staging: typec: fusb302: Get max snk mv/ma/mw
+ from device-properties
+Date: Mon, 28 Aug 2017 18:11:38 +0200
+Message-ID: <c6966f66-98bd-5271-a681-ed72c52805f6@redhat.com>
+References: <20170815200502.17339-1-hdegoede@redhat.com>
+ <20170815200502.17339-5-hdegoede@redhat.com>
+ <20170817214131.63vetzuove7dz5pi@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3ged2uoxu5omlfmw"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170615185418.13980-2-javier@dowhile0.org>
+In-Reply-To: <20170817214131.63vetzuove7dz5pi@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Simon Horman <horms@verge.net.au>, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Breck <liam@networkimprov.net>, Tony Lindgren <tony@atomide.com>, linux-i2c@vger.kernel.org, linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "Yueyao (Nathan) Zhu" <yueyao@google.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---3ged2uoxu5omlfmw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 17-08-17 23:41, Rob Herring wrote:
+> On Tue, Aug 15, 2017 at 10:04:52PM +0200, Hans de Goede wrote:
+>> This is board specific info so it should come from board config, such
+>> as devicetree.
+>>
+>> I've chosen to prefix these with "fcs," treating them as fusb302 driver
+>> specific for now. We may want to revisit this and replace these with
+>> properties which are part of a (to be written) generic type-c controller
+>> devicetree binding.
+>>
+>> Since this commit adds new dt-properties it also adds devicetree-bindings
+>> documentation (which so far was absent for the fusb302 driver).
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Frank Rowand <frowand.list@gmail.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: "Yueyao (Nathan) Zhu" <yueyao@google.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> -Use micro... instead of mili...
+>> -Add devicetree bindings documentation
+>> ---
+>>   .../devicetree/bindings/usb/fcs,fusb302.txt        | 29 ++++++++++++++++++++++
+>>   drivers/staging/typec/fusb302/TODO                 |  4 +++
+>>   drivers/staging/typec/fusb302/fusb302.c            | 18 +++++++++++++-
+>>   3 files changed, 50 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>> new file mode 100644
+>> index 0000000..ffc6c87
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>> @@ -0,0 +1,29 @@
+>> +Fairchild FUSB302 Type-C Port controllers
+>> +
+>> +Required properties :
+>> +- compatible            : "fcs,fusb302"
+>> +- reg                   : I2C slave address
+>> +- interrupts            : Interrupt specifier
+>> +
+>> +Optional properties :
+>> +- fcs,max-snk-microvolt : Maximum voltage to negotiate when configured as sink
+>> +- fcs,max-snk-microamp  : Maximum current to negotiate when configured as sink
+>> +- fcs,max-snk-microwatt : Maximum power to negotiate when configured as sink
+>> +			  If this is less then max-snk-microvolt *
+>> +			  max-snk-microamp then the configured current will
+>> +			  be clamped.
+>> +- fcs,operating-snk-microwatt :
+> 
+> Might as well spell out sink.
 
-On Thu, Jun 15, 2017 at 08:54:03PM +0200, Javier Martinez Canillas wrote:
-> The at24 driver allows to register I2C EEPROM chips using different vendor
-> and devices, but the I2C subsystem does not take the vendor into account
-> when matching using the I2C table since it only has device entries.
->=20
-> But when matching using an OF table, both the vendor and device has to be
-> taken into account so the driver defines only a set of compatible strings
-> using the "atmel" vendor as a generic fallback for compatible I2C devices.
->=20
-> Document in the Device Tree binding document that this manufacturer should
-> be used as the generic fallback. Also document the deprecated vendors.
->=20
-> Suggested-by: Wolfram Sang <wsa@the-dreams.de>
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
->=20
+Fixed for v3.
 
-Applied to for-next, thanks!
+> Otherwise,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
+Thank you, added to v3 of this patch-set.
 
---3ged2uoxu5omlfmw
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards,
 
------BEGIN PGP SIGNATURE-----
+Hans
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmkPpMACgkQFA3kzBSg
-KbZJvQ//ezfZ3CRS4wPShzODiYo+w4+VsyAkS2VvWxrsBxgJwM45tFOVBauL2vji
-meUADXBVLnrCzLNocxfYQpcPdqhGR++71VRFoZ3OhZf6aNOVGvCf0tK4MVZbmyp5
-We+UTdJHRsNzQippw3GkJTnsy4H7a6PVDbrPGdYaTwM2r+BiBOPv0JviFLMBVjyr
-9BpOP3CRLtOq5AqvHrmIUr8sskpSfMowGoxqrlj1OHmdNPKgzWDghGIVTQs4fXNx
-yKhXp0t0xGGPEMWDhvSZco4xL1t+y2a1Vw22w82bZHlSRwIZF5VlFvUkdTBXHi/f
-npHTrnt3Cg7JMAw6i9rqx4qdPrrn3yOan89g2AQ/BoDAJvh8w1Ie5x8DTrHllTJ7
-NNWrJO9oFYkN4YibwEBN2u4qyfPtBxmO921one3YUDadV8vheXqvCOFxio8jZkKH
-GbSBJTHDV+CY1rzgZHkzJAFUu2SmxgeE317JzQUCOkhwkQc5afH+AxIT7NZDvGNI
-cNcV0AiIYOGjBnrd1A7eaf3/SzTXXv7D0Pu/+STXuarHCpjhHNfAZwinkqoqNYB5
-H8JMNH6w/6XHqDDRf2LQ87DdzVnmtfY3EFWxLf5mHc6B29WXu7Fb+8b5wY3EFn1a
-lyt8B3xvhNsD+T8AYEqdnlWN5kZRQAWrFSPb4ok9WtzIitY9tv8=
-=wn4K
------END PGP SIGNATURE-----
-
---3ged2uoxu5omlfmw--
+> 
+>> +                          Minimum amount of power accepted from a sink
+>> +			  when negotiating
+>> +
+>> +Example:
+>> +
+>> +fusb302: typec-portc@54 {
+>> +	compatible = "fcs,fusb302";
+>> +	reg = <0x54>;
+>> +	interrupt-parent = <&nmi_intc>;
+>> +	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> +	fcs,max-snk-microvolt = <12000000>;
+>> +	fcs,max-snk-microamp = <3000000>;
+>> +	fcs,max-snk-microwatt = <36000000>;
+>> +};
