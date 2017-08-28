@@ -1,129 +1,59 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: stm32: change pinctrl bindings definition
-Date: Mon, 28 Aug 2017 17:26:01 +0200
-Message-ID: <b8894885-a96e-f4e9-5513-a16d04ff3600@st.com>
-References: <1501163393-28884-1-git-send-email-alexandre.torgue@st.com>
- <1501163393-28884-2-git-send-email-alexandre.torgue@st.com>
- <20170803202134.ne3wkzremxf5mbuw@rob-hp-laptop>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v5 0/2] ZII RAVE platform driver
+Date: Mon, 28 Aug 2017 17:51:40 +0200
+Message-ID: <20170828155140.GA29358@kroah.com>
+References: <20170728142704.11156-1-andrew.smirnov@gmail.com>
+ <20170728233054.GB30604@kroah.com>
+ <CAHQ1cqFxgK-j3AtKD186L+M8SFWS02cv2fVSrJHToMPtr41hAw@mail.gmail.com>
+ <CAHQ1cqEjA39DXhpBR0JUpEiC1P_7aaku3P823Wh2En6KARF3aA@mail.gmail.com>
+ <20170802230334.GA23728@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170803202134.ne3wkzremxf5mbuw@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170802230334.GA23728-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vikas.manocha-qxv4g6HH51o@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Aug 02, 2017 at 04:03:34PM -0700, Greg Kroah-Hartman wrote:
+> On Wed, Aug 02, 2017 at 01:31:51PM -0700, Andrey Smirnov wrote:
+> > On Fri, Jul 28, 2017 at 5:07 PM, Andrey Smirnov
+> > <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > On Fri, Jul 28, 2017 at 4:30 PM, Greg Kroah-Hartman
+> > > <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> > >> On Fri, Jul 28, 2017 at 07:27:02AM -0700, Andrey Smirnov wrote:
+> > >>> Greg,
+> > >>>
+> > >>> I am not sure if you are the right person to send these to, if you are
+> > >>> not, please let me know who would be the appropriate recepient and sorry for the noise.
+> > >>
+> > >> Why not the platform driver maintainer(s)?  Doesn't
+> > >> scripts/get_maintainer.pl give you an idea for who to send them to?
+> > >
+> > > Unfortunately I wasn't able to find anyone in MAINTAINERS and running
+> > > scripts/get_maintainer.pl on the patch returns only:
+> > >
+> > > scripts/get_maintainer.pl
+> > > v5-0001-platform-Add-driver-for-RAVE-Supervisory-Processo.patch
+> > > Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > (commit_signer:1/1=100%,authored:1/1=100%,added_lines:2/2=100%,added_lines:1/1=100%,added_lines:26/26=100%,added_lines:1127/1127=100%,added_lines:54/54=100%)
+> > > Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (commit_signer:1/1=100%)
+> > > linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+> > >
+> > > hence me reaching out to you.
+> > 
+> > Greg, did you have any chance to consider this? I have a v6 with a fix
+> > for build break reported by kbuild test robot, and I want to avoid
+> > spamming the mailing list too much and send it to an appropriate
+> > person.
 
-On 08/03/2017 10:21 PM, Rob Herring wrote:
-> On Thu, Jul 27, 2017 at 03:49:53PM +0200, Alexandre Torgue wrote:
->> Initially each pin was declared in "include/dt-bindings/stm32<SOC>-pinfunc.h"
->> and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
->> Since this approach was approved, the number of supported MCU has
->> increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
->> file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
->> a new approach which consist to use a macro to define pin muxing in device
->> tree. All STM32 will use the common macro to define pinmux. Furthermore, it
->> will make STM32 maintenance and integration of new SOC easier .
->>
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
->> Reviewed-by: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
->> Reviewed-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->> index d907a74..567aa72 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->> @@ -126,22 +126,27 @@ configuration, pullups, drive, output high/low and output speed.
->>       };
->>   
->>   Required properties:
->> -- pinmux: integer array, represents gpio pin number and mux setting.
->> -  Supported pin number and mux varies for different SoCs, and are defined in
->> -  dt-bindings/pinctrl/<soc>-pinfunc.h directly.
->> -  These defines are calculated as:
->> -    ((port * 16 + line) << 8) | function
->> +- pinmux: integer array, represents gpio pin number and mux setting. Use
->> +  following macro: STM32_PINMUX(PIN_NO(port_name, line), mode) to declare it.
-> 
-> I would keep the above formula. It can't change because that is the ABI.
-> The macro is just convenience.
-> 
-> Is there any reason to have 2 macros? I'd just do STM32_PINMUX(port,
-> line, mode) and make port names defines (PA, PB, PC, etc.).
+As I can't do anything with v5, please send v6, never wait for me...
 
-No. It has been done in this way to simplify macro definition, but it 
-could be done in another way. I can try to create a macro like you 
-propose: STM32_PINMUX(port, line, mode) if you think it is more readable.
+thanks,
 
-> 
->> +
->>     With:
->> -    - port: The gpio port index (PA = 0, PB = 1, ..., PK = 11)
->> -    - line: The line offset within the port (PA0 = 0, PA1 = 1, ..., PA15 = 15)
->> -    - function: The function number, can be:
->> -      * 0 : GPIO
->> -      * 1 : Alternate Function 0
->> -      * 2 : Alternate Function 1
->> -      * 3 : Alternate Function 2
->> +    - port_name: The gpio port name ('A', 'B', ..., 'K')
->> +    - line: The line offset within the port (0, 1, ..., 15)
->> +    - mode: The mode can be:
->> +      * GPIO
->> +      * AF0 : Alternate Function 0
->> +      * AF1 : Alternate Function 1
->> +      * AF2 : Alternate Function 2
->>         * ...
->> -      * 16 : Alternate Function 15
->> -      * 17 : Analog
->> +      * AF15 : Alternate Function 15
->> +      * ANALOG
-> 
-> Here too, keeping the numbers is important.
-> 
-> Perhaps the macro description should either be its own additional
-> section or document it inline with the macro definition.
-
-I agree. I can keep previous definition like it was done, and add a 
-section only for the new macro.
-
-Thanks for your review.
-
-Alex
-
-
-> 
-> Overall, it does seem like a nice shrinking of the header files.
-> 
->> +
->> +  Example:
->> +    To declare pin PA7 in mode "alternate function 7" you have to
->> +    declare:
->> +      pinmux = <STM32_PINMUX(PIN_NO('A', 9), AF7)>;
->> +
->> +  This macro is defined in dt-bindings/pinctrl/stm32-pinfunc.h
->>   
->>   Optional properties:
->>   - GENERIC_PINCONFIG: is the generic pinconfig options to use.
->> @@ -165,13 +170,13 @@ pin-controller {
->>   ...
->>   	usart1_pins_a: usart1@0 {
->>   		pins1 {
->> -			pinmux = <STM32F429_PA9_FUNC_USART1_TX>;
->> +			pinmux = <STM32_PINMUX(PIN_NO('A', 9), AF7)>; /* USART1_TX */
->>   			bias-disable;
->>   			drive-push-pull;
->>   			slew-rate = <0>;
->>   		};
->>   		pins2 {
->> -			pinmux = <STM32F429_PA10_FUNC_USART1_RX>;
->> +			pinmux = <STM32_PINMUX(PIN_NO('A', 10), AF7)>; /* USART1_RX */
->>   			bias-disable;
->>   		};
->>   	};
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
