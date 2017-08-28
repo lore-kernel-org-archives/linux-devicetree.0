@@ -1,64 +1,130 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH 1/2] media:imx274 device tree binding file
-Date: Mon, 28 Aug 2017 08:15:33 -0700
-Message-ID: <20170828151534.13045-1-soren.brinkmann@xilinx.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: stm32: change pinctrl bindings definition
+Date: Mon, 28 Aug 2017 17:26:01 +0200
+Message-ID: <b8894885-a96e-f4e9-5513-a16d04ff3600@st.com>
+References: <1501163393-28884-1-git-send-email-alexandre.torgue@st.com>
+ <1501163393-28884-2-git-send-email-alexandre.torgue@st.com>
+ <20170803202134.ne3wkzremxf5mbuw@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Leon Luo <leonl@leopardimaging.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170803202134.ne3wkzremxf5mbuw@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vikas.manocha-qxv4g6HH51o@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Leon Luo <leonl@leopardimaging.com>
+Hi Rob,
 
-The binding file for imx274 CMOS sensor V4l2 driver
+On 08/03/2017 10:21 PM, Rob Herring wrote:
+> On Thu, Jul 27, 2017 at 03:49:53PM +0200, Alexandre Torgue wrote:
+>> Initially each pin was declared in "include/dt-bindings/stm32<SOC>-pinfunc.h"
+>> and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
+>> Since this approach was approved, the number of supported MCU has
+>> increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
+>> file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
+>> a new approach which consist to use a macro to define pin muxing in device
+>> tree. All STM32 will use the common macro to define pinmux. Furthermore, it
+>> will make STM32 maintenance and integration of new SOC easier .
+>>
+>> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>> Reviewed-by: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+>> Reviewed-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>> index d907a74..567aa72 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>> @@ -126,22 +126,27 @@ configuration, pullups, drive, output high/low and output speed.
+>>       };
+>>   
+>>   Required properties:
+>> -- pinmux: integer array, represents gpio pin number and mux setting.
+>> -  Supported pin number and mux varies for different SoCs, and are defined in
+>> -  dt-bindings/pinctrl/<soc>-pinfunc.h directly.
+>> -  These defines are calculated as:
+>> -    ((port * 16 + line) << 8) | function
+>> +- pinmux: integer array, represents gpio pin number and mux setting. Use
+>> +  following macro: STM32_PINMUX(PIN_NO(port_name, line), mode) to declare it.
+> 
+> I would keep the above formula. It can't change because that is the ABI.
+> The macro is just convenience.
+> 
+> Is there any reason to have 2 macros? I'd just do STM32_PINMUX(port,
+> line, mode) and make port names defines (PA, PB, PC, etc.).
 
-Signed-off-by: Leon Luo <leonl@leopardimaging.com>
-Acked-by: Sören Brinkmann <soren.brinkmann@xilinx.com>
----
- .../devicetree/bindings/media/i2c/imx274.txt       | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/imx274.txt
+No. It has been done in this way to simplify macro definition, but it 
+could be done in another way. I can try to create a macro like you 
+propose: STM32_PINMUX(port, line, mode) if you think it is more readable.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
-new file mode 100644
-index 000000000000..9154666d1149
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
-@@ -0,0 +1,32 @@
-+* Sony 1/2.5-Inch 8.51Mp CMOS Digital Image Sensor
-+
-+The Sony imx274 is a 1/2.5-inch CMOS active pixel digital image sensor with
-+an active array size of 3864H x 2202V. It is programmable through I2C
-+interface. The I2C address is fixed to 0x1a as per sensor data sheet.
-+Image data is sent through MIPI CSI-2, which is configured as 4 lanes
-+at 1440 Mbps.
-+
-+
-+Required Properties:
-+- compatible: value should be "sony,imx274" for imx274 sensor
-+
-+Optional Properties:
-+- reset-gpios: Sensor reset GPIO
-+
-+For further reading on port node refer to
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+	imx274: sensor@1a{
-+		compatible = "sony,imx274";
-+		reg = <0x1a>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reset-gpios = <&gpio_sensor 0 0>;
-+		port@0 {
-+			reg = <0>;
-+			sensor_out: endpoint {
-+				remote-endpoint = <&csiss_in>;
-+			};
-+		};
-+	};
--- 
-2.14.1.3.g5766cf452
+> 
+>> +
+>>     With:
+>> -    - port: The gpio port index (PA = 0, PB = 1, ..., PK = 11)
+>> -    - line: The line offset within the port (PA0 = 0, PA1 = 1, ..., PA15 = 15)
+>> -    - function: The function number, can be:
+>> -      * 0 : GPIO
+>> -      * 1 : Alternate Function 0
+>> -      * 2 : Alternate Function 1
+>> -      * 3 : Alternate Function 2
+>> +    - port_name: The gpio port name ('A', 'B', ..., 'K')
+>> +    - line: The line offset within the port (0, 1, ..., 15)
+>> +    - mode: The mode can be:
+>> +      * GPIO
+>> +      * AF0 : Alternate Function 0
+>> +      * AF1 : Alternate Function 1
+>> +      * AF2 : Alternate Function 2
+>>         * ...
+>> -      * 16 : Alternate Function 15
+>> -      * 17 : Analog
+>> +      * AF15 : Alternate Function 15
+>> +      * ANALOG
+> 
+> Here too, keeping the numbers is important.
+> 
+> Perhaps the macro description should either be its own additional
+> section or document it inline with the macro definition.
+
+I agree. I can keep previous definition like it was done, and add a 
+section only for the new macro.
+
+Thanks for your review.
+
+Alex
+
+
+> 
+> Overall, it does seem like a nice shrinking of the header files.
+> 
+>> +
+>> +  Example:
+>> +    To declare pin PA7 in mode "alternate function 7" you have to
+>> +    declare:
+>> +      pinmux = <STM32_PINMUX(PIN_NO('A', 9), AF7)>;
+>> +
+>> +  This macro is defined in dt-bindings/pinctrl/stm32-pinfunc.h
+>>   
+>>   Optional properties:
+>>   - GENERIC_PINCONFIG: is the generic pinconfig options to use.
+>> @@ -165,13 +170,13 @@ pin-controller {
+>>   ...
+>>   	usart1_pins_a: usart1@0 {
+>>   		pins1 {
+>> -			pinmux = <STM32F429_PA9_FUNC_USART1_TX>;
+>> +			pinmux = <STM32_PINMUX(PIN_NO('A', 9), AF7)>; /* USART1_TX */
+>>   			bias-disable;
+>>   			drive-push-pull;
+>>   			slew-rate = <0>;
+>>   		};
+>>   		pins2 {
+>> -			pinmux = <STM32F429_PA10_FUNC_USART1_RX>;
+>> +			pinmux = <STM32_PINMUX(PIN_NO('A', 10), AF7)>; /* USART1_RX */
+>>   			bias-disable;
+>>   		};
+>>   	};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
