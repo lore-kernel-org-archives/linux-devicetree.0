@@ -1,94 +1,55 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: allwinner: h5: add support for
- NanoPi NEO Plus 2
-Date: Mon, 28 Aug 2017 20:18:58 +0800
-Message-ID: <BF2F26DC-7014-4AF6-9C02-D1038A0FDA38@aosc.io>
-References: <20170824231716.2623-1-antony@phenome.org> <20170825103242.5665-1-antony@phenome.org> <CAEKpxBkUKGUQR2Vh1+Ci4wbB-+x48nRjLmWME2EUECCHuuwsmQ@mail.gmail.com> <20170828121644.p7mknytubsajzctg@AntonyAntony.local>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Devicetree at Linux Plumbers Conference 2017
+Date: Mon, 28 Aug 2017 13:30:35 +0100
+Message-ID: <CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og@mail.gmail.com>
+References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
+ <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
+ <CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com> <CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBSMUSDGQKGQECVIS6OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170828121644.p7mknytubsajzctg-sIi4olfLYEDaK4aX9S0K76zUEOm+Xw19@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Warren <SWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof.johansson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 10, 2017 at 8:23 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Wed, Aug 2, 2017 at 2:19 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>>> A number of people have asked about holding this at ELCE instead of
+>>> Linux Plumbers, so I'd like some feedback. Here's a quick survey.
+>>> Please reply ASAP if your interested in a Devicetree miniconference
+>>> this year:
+>>>
+>>> https://docs.google.com/forms/d/e/1FAIpQLSe0k9L597egFfOwZoDwq0Og-hRt8IAEPtp-JpvoH9nw2njx0g/viewform?usp=sf_link
+>>
+>> Last call for survey responses.
+>>
+>> I've had 10 responses so far, and the concensus it to hold it at ELCE.
+>> Ted thinks he'd be able to give us a 1/2 day on Thursday 26 October
+>> (ELCE runs 23-25, and KSummit 24-26). Unless someone makes a strong
+>> argument otherwise, I'm going to choose locating with ELCE/Ksummit.
+>
+> I've received 11 responses and by far the preference to hold the
+> miniconference at ELCE/KSummit, so I'm going with that. I proposed it
+> as a Ksummit workshop on ksummit-discuss. I've had a few private
+> replies, but there hasn't been any on-list traffic yet. If you're
+> planning to attend, it will help if you reply on ksummit-discuss
+> saying that you would like to be there.
+>
+> https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2017-August/004708.html
 
+I owe all of you an update. Unfortunately I don't have any new
+information yet. I've still got a proposal in to hold a devicetree
+workshop at Kernel Summit, and if it does get accepted, then /most
+likely/ it will happen on Thursday afternoon. Don't make any travel
+plans based on that.
 
-=E4=BA=8E 2017=E5=B9=B48=E6=9C=8828=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888:=
-16:44, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org> =E5=86=99=E5=88=B0:
->On Fri, Aug 25, 2017 at 03:28:41PM +0200, Code Kipper wrote:
->> On 25 August 2017 at 12:32, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org> wrote:
->
->> > +
->> > +       brcmf: bcrmf@1 {
->> > +               reg =3D <1>;
->> > +               compatible =3D "brcm,bcm4329-fmac";
->> > +       };
->> Incorrect wifi chip - just deliver what you've tested.
+As soon as I hear something either way I'll reply to this thread with
+the new information.
 
-Nope, this compatible is required by the dt binding, see the
-binding document or other DTs with brcmfmac SDIO.
-
-Please complain to brcmfmac maintainers.
-
->
->You are right. Now I found the correct chip ID by enabling debug with=20
->Broadcom kernel module 'modprobe brcmfmac debug=3D0x3ffff6'
->
->The module is Ampak AP6212A with Broadcom 43430 rev=3D1 inside it.
->
->brcmfmac: brcmf_chip_recognition found AXI chip: BCM43430, rev=3D1
->brcmfmac: brcmf_ops_sdio_probe sdio vendor ID: 0x02d0
->brcmfmac: brcmf_ops_sdio_probe sdio device ID: 0xa9a6
->
->IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
->
->This information mostly match with https://wikidevi.com/wiki/AMPAK,
->except=20
->module is actually AP6212A. Some of the modules may not have 'A'
->printed on=20
->them. However the ones that identify as rev=3D1 is a  AP6212A.
->
->FYI: there were two things that confused me
->	- bcm4329-fmac also works.
->	- I couldn't configure it to join WiFi network with password.
->
->With change I will send a v4. Here is the propssed diff to v3.
->
->arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
->
->        /*
->-        * WiFi driver support could be incomplete,
->-        * wlan0 is able to see Base Stations, however not able to
->join.
->+        * AMPAK AP6212A WiFi module with BCM43430, rev=3D1 inside
->+        * sdio vendor ID: 0x02d0, sdio device ID: 0xa9a6
->         */
->	brcmf: wifi@1 {
->		reg =3D <1>;
->-               compatible =3D "brcm,bcm4329-fmac";
->+               compatible =3D "brcm,bcm43430-fmac";
->	};=20
->
->I think now nanopi-neo-plus2.dts, v4, is in a good shape to merge.
->
->thanks for the feedback and review.
->
->regards,
->-antony
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
