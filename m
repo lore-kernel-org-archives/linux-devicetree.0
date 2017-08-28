@@ -1,73 +1,59 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH] dt-binding: net/phy: fix interrupts description
-Date: Mon, 28 Aug 2017 13:20:39 +0300
-Message-ID: <20170828102039.wdylojqcrn2avv2f@tarshish>
-References: <b3756346473feadfeba70ecb71960cad48e66621.1503468660.git.baruch@tkos.co.il>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt: bindings: Document DT bindings for Analog
+ devices as3645a
+Date: Mon, 28 Aug 2017 12:33:52 +0200
+Message-ID: <20170828103351.GF18012@amd>
+References: <20170819212410.3084-1-sakari.ailus@linux.intel.com>
+ <20170819212410.3084-2-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1Ow488MNN9B9o/ov"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <b3756346473feadfeba70ecb71960cad48e66621.1503468660.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+In-Reply-To: <20170819212410.3084-2-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dave,
 
-On Wed, Aug 23, 2017 at 09:11:00AM +0300, Baruch Siach wrote:
-> Commit b053dc5a722ea (powerpc: Refactor device tree binding) split the
-> Ethernet PHY binding documentation out of the big booting-without-of.txt
-> file, leaving a dangling reference to "section 2" in the 'interrupts'
-> property description. Drop that reference, and make the description look
-> more like the rest.
-> 
-> While at it, make the example interrupt-parent phandle look more like a
-> real world phandle, and use an IRQ_TYPE_ macro for the 'interrupts'
-> type.
+--1Ow488MNN9B9o/ov
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch is now marked 'Not Applicable' in the netdev patchwork. Why is 
-that? Should it go through some other tree?
+Hi!
 
-baruch
+> +
+> +Ranges below noted as [a, b] are closed ranges between a and b, i.e. a
+> +and b are included in the range.
 
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/phy.txt | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-> index b55857696fc3..86ba72af6163 100644
-> --- a/Documentation/devicetree/bindings/net/phy.txt
-> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> @@ -2,11 +2,7 @@ PHY nodes
->  
->  Required properties:
->  
-> - - interrupts : <a b> where a is the interrupt number and b is a
-> -   field that represents an encoding of the sense and level
-> -   information for the interrupt.  This should be encoded based on
-> -   the information in section 2) depending on the type of interrupt
-> -   controller you have.
-> + - interrupts : interrupt specifier for the sole interrupt.
->   - interrupt-parent : the phandle for the interrupt controller that
->     services interrupts for this device.
->   - reg : The ID number for the phy, usually a small integer
-> @@ -56,7 +52,7 @@ Example:
->  
->  ethernet-phy@0 {
->  	compatible = "ethernet-phy-id0141.0e90", "ethernet-phy-ieee802.3-c22";
-> -	interrupt-parent = <40000>;
-> -	interrupts = <35 1>;
-> +	interrupt-parent = <&PIC>;
-> +	interrupts = <35 IRQ_TYPE_EDGE_RISING>;
->  	reg = <0>;
->  };
+Normally I've seen <a, b> for closed ranges, (a, b) for open
+ranges. Is that different in your country?
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
+Otherwise
+
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--1Ow488MNN9B9o/ov
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmj8Y8ACgkQMOfwapXb+vLv2QCcDDuYKtiJuKG4IJfyJOP7otb5
+bkoAnRrWG+ypsWGkuTT4NV3gC2Xeulqw
+=Ur/3
+-----END PGP SIGNATURE-----
+
+--1Ow488MNN9B9o/ov--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
