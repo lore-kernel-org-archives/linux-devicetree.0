@@ -1,52 +1,158 @@
-From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH 4/4] arm64: dts: rockchip: add efuse for RK3368 SoCs
-Date: Mon, 28 Aug 2017 14:16:04 +0200
-Message-ID: <20170828121604.15968-5-romain.perier@collabora.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH 3/4] nvmem: rockchip: add support for RK3368
+Date: Mon, 28 Aug 2017 14:16:03 +0200
+Message-ID: <20170828121604.15968-4-romain.perier@collabora.com>
 References: <20170828121604.15968-1-romain.perier@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170828121604.15968-1-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170828121604.15968-1-romain.perier@collabora.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the definition for eFuse that is found on RK3368 SoCs with the
-corresponding data cells.
+This adds the necessary functions and data for handling support on RK3368
+SoCs.
 
-Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../devicetree/bindings/nvmem/rockchip-efuse.txt   |  1 +
+ drivers/nvmem/rockchip-efuse.c                     | 80 ++++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 3039c2da533e..cca2ce1705b3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -569,6 +569,20 @@
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+index 1ff02afdc55a..60bec4782806 100644
+--- a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
++++ b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+@@ -6,6 +6,7 @@ Required properties:
+   - "rockchip,rk3188-efuse" - for RK3188 SoCs.
+   - "rockchip,rk3228-efuse" - for RK3228 SoCs.
+   - "rockchip,rk3288-efuse" - for RK3288 SoCs.
++  - "rockchip,rk3368-efuse" - for RK3368 SoCs.
+   - "rockchip,rk3399-efuse" - for RK3399 SoCs.
+ - reg: Should contain the registers location and exact eFuse size
+ - clocks: Should be the clock id of eFuse
+diff --git a/drivers/nvmem/rockchip-efuse.c b/drivers/nvmem/rockchip-efuse.c
+index 63e3eb55f3ac..4e11f251035f 100644
+--- a/drivers/nvmem/rockchip-efuse.c
++++ b/drivers/nvmem/rockchip-efuse.c
+@@ -14,6 +14,7 @@
+  * more details.
+  */
  
-+	efuse: efuse@ffb00000 {
-+		compatible = "rockchip,rk3368-efuse";
-+		reg = <0x0 0xffb00000 0x0 0x20>;
-+		clocks = <&cru PCLK_EFUSE_256>;
-+		clock-names = "pclk_efuse";
++#include <linux/arm-smccc.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+@@ -46,9 +47,17 @@
+ #define REG_EFUSE_CTRL		0x0000
+ #define REG_EFUSE_DOUT		0x0004
+ 
++/* SMC function IDs for SiP Service queries */
++#define ROCKCHIP_SIP_ACCESS_REG	0x82000002
 +
-+		cpu_leakage: cpu-leakage@17 {
-+			reg = <0x17 0x1>;
-+		};
-+		temp_adjust: temp-adjust@1f {
-+			reg = <0x1f 0x1>;
-+		};
-+	};
++/* SIP access registers: read or write */
++#define ROCKCHIP_SIP_SECURE_REG_RD	0x0
++#define ROCKCHIP_SIP_SECURE_REG_WR	0x1
 +
- 	tsadc: tsadc@ff280000 {
- 		compatible = "rockchip,rk3368-tsadc";
- 		reg = <0x0 0xff280000 0x0 0x100>;
+ struct rockchip_efuse_chip {
+ 	struct device *dev;
+ 	void __iomem *base;
++	phys_addr_t phys;
+ 	struct clk *clk;
+ };
+ 
+@@ -92,6 +101,72 @@ static int rockchip_rk3288_efuse_read(void *context, unsigned int offset,
+ 	return 0;
+ }
+ 
++static u32 smc_reg_read(u32 addr_phy)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(ROCKCHIP_SIP_ACCESS_REG, 0, addr_phy,
++		      ROCKCHIP_SIP_SECURE_REG_RD, 0, 0, 0, 0, &res);
++	if (res.a0)
++		pr_err("%s error: %d, addr phy: 0x%x\n", __func__, (int)res.a0,
++		       addr_phy);
++	return res.a1;
++}
++
++static u32 smc_reg_write(u32 addr_phy, u32 val)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(ROCKCHIP_SIP_ACCESS_REG, val, addr_phy,
++		      ROCKCHIP_SIP_SECURE_REG_WR, 0, 0, 0, 0, &res);
++	if (res.a0)
++		pr_err("%s error: %d, addr phy: 0x%x\n", __func__, (int)res.a0,
++                       addr_phy);
++	return res.a0;
++}
++
++static int rockchip_rk3368_efuse_read(void *context, unsigned int offset,
++				      void *val, size_t bytes)
++{
++	struct rockchip_efuse_chip *efuse = context;
++	u8 *buf = val;
++	int ret;
++
++	ret = clk_prepare_enable(efuse->clk);
++	if (ret < 0) {
++		dev_err(efuse->dev, "failed to prepare/enable efuse clk\n");
++		return ret;
++	}
++
++	smc_reg_write(efuse->phys + REG_EFUSE_CTRL, RK3288_LOAD | RK3288_PGENB);
++	udelay(1);
++	while (bytes--) {
++		smc_reg_write(efuse->phys + REG_EFUSE_CTRL,
++			      smc_reg_read(efuse->phys + REG_EFUSE_CTRL) &
++			      (~(RK3288_A_MASK << RK3288_A_SHIFT)));
++		smc_reg_write(efuse->phys + REG_EFUSE_CTRL,
++			      smc_reg_read(efuse->phys + REG_EFUSE_CTRL) |
++			      ((offset++ & RK3288_A_MASK) << RK3288_A_SHIFT));
++
++		udelay(1);
++		smc_reg_write(efuse->phys + REG_EFUSE_CTRL,
++			      smc_reg_read(efuse->phys + REG_EFUSE_CTRL) |
++			      RK3288_STROBE);
++		udelay(1);
++		*buf++ = smc_reg_read(efuse->phys + REG_EFUSE_DOUT);
++		smc_reg_write(efuse->phys + REG_EFUSE_CTRL,
++			      smc_reg_read(efuse->phys + REG_EFUSE_CTRL) &
++			      (~RK3288_STROBE));
++		udelay(1);
++	}
++
++	/* Switch to standby mode */
++	smc_reg_write(efuse->phys + REG_EFUSE_CTRL, RK3288_PGENB | RK3288_CSB);
++
++	clk_disable_unprepare(efuse->clk);
++	return 0;
++}
++
+ static int rockchip_rk3399_efuse_read(void *context, unsigned int offset,
+ 				      void *val, size_t bytes)
+ {
+@@ -178,6 +253,10 @@ static const struct of_device_id rockchip_efuse_match[] = {
+ 		.data = (void *)&rockchip_rk3288_efuse_read,
+ 	},
+ 	{
++		.compatible = "rockchip,rk3368-efuse",
++		.data = (void *)&rockchip_rk3368_efuse_read,
++	},
++	{
+ 		.compatible = "rockchip,rk3399-efuse",
+ 		.data = (void *)&rockchip_rk3399_efuse_read,
+ 	},
+@@ -205,6 +284,7 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	efuse->phys = res->start;
+ 	efuse->base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(efuse->base))
+ 		return PTR_ERR(efuse->base);
 -- 
 2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
