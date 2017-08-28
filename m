@@ -1,70 +1,151 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 17/17] ARM: dts: Add missing hwmod related properties for
- dra7
-Date: Mon, 28 Aug 2017 16:52:53 -0500
-Message-ID: <fd064c10-2051-1579-bde1-60c3fed2b4a0@ti.com>
-References: <20170828211918.11573-1-tony@atomide.com>
- <20170828211918.11573-18-tony@atomide.com>
- <8c0ecbf6-26fb-1998-6bb5-0a74d9daa2ab@ti.com>
- <20170828213753.GP6008@atomide.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v8 0/3] PCI: iproc: SOC specific fixes
+Date: Mon, 28 Aug 2017 16:53:09 -0500
+Message-ID: <20170828215309.GM8154@bhelgaas-glaptop.roam.corp.google.com>
+References: <1503551066-23212-1-git-send-email-oza.oza@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170828213753.GP6008-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J . Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1503551066-23212-1-git-send-email-oza.oza@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oza Pawandeep <oza.oza@broadcom.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2017 04:37 PM, Tony Lindgren wrote:
-> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [170828 14:35]:
->> On 08/28/2017 04:19 PM, Tony Lindgren wrote:
->>> On dra7 we're missing the smartreflex and hdq nodes with their
->>> related "ti,hwmods" property that the SoC interconnect code needs.
->>>
->>> Note that this will only show up as a bug with "doesn't have
->>> mpu register target base" boot errors when the legacy platform
->>> data is removed.
->>>
->>> Note that the related driver also needs to be updated to probe
->>> using device tree and get the platform data passed to it using
->>> auxdata with arch/arm/mach-omap2/pdata-quirks.c.
->>>
->>> Let's also update the related binding documentation while at it.
-> ...
->>> @@ -1489,6 +1497,18 @@
->>>    			};
->>>    		};
->>> +		smartreflex_core: smartreflex4a0dd000 {
->>> +			compatible = "ti,dra7-smartreflex-core";
->>> +			ti,hwmods = "smartreflex_core";
->>> +			reg = <0x4a0dd000 0x80>;
->>> +		};
->>> +
->>> +		smartreflex_mpu: smartreflex@4a0d9000 {
->>> +			compatible = "ti,dra7-smartreflex-mpu";
->>> +			ti,hwmods = "smartreflex_mpu";
->>> +			reg = <0x4a0d9000 0x80>;
->>> +		};
->>
->>
->> Have you checked TRM for these?
->> http://www.ti.com/lit/ug/sprui30d/sprui30d.pdf
->>
->> These are disabled on the SoC and marked as reserved.
+On Thu, Aug 24, 2017 at 10:34:23AM +0530, Oza Pawandeep wrote:
+> PCI: iproc: Retry request when CRS returned from EP Above patch adds
+> support for CRS in PCI RC driver, otherwise if not handled at lower
+> level, the user space PMD (poll mode drivers) can timeout.
 > 
-> Then why do we still have legacy hwmod data for them?
+> PCI: iproc: add device shutdown for PCI RC This fixes the issue where
+> certian PCI endpoints are not getting detected on Stingray SOC after
+> reboot.
+> 
+> Changes Since v7:
+> Factor out the ep config access code.
+> 
+> Changes Since v6:
+> Rebased patches on top of Lorenzo's patches.
+> Bjorn's comments addressed.
+> now the confg retry returns 0xffffffff as data.
+> Added reference to PCIe spec and iproc Controller spec in Changelog.
+> 
+> Changes Since v5:
+> Ray's comments addressed.
+> 
+> Changes Since v4:
+> Bjorn's comments addressed.
+> 
+> Changes Since v3:
+> [re-send]
+> 
+> Changes Since v2:
+> Fix compilation errors for pcie-iproc-platform.ko which was caught
+> by kbuild.
+> 
+> Oza Pawandeep (3):
+>   PCI: iproc: factor-out ep configuration access
+>   PCI: iproc: Retry request when CRS returned from EP
+>   PCI: iproc: add device shutdown for PCI RC
+> 
+>  drivers/pci/host/pcie-iproc-platform.c |   8 ++
+>  drivers/pci/host/pcie-iproc.c          | 143 ++++++++++++++++++++++++++-------
+>  drivers/pci/host/pcie-iproc.h          |   1 +
+>  3 files changed, 124 insertions(+), 28 deletions(-)
 
-We should probably drop them - probably legacy of autogeneration at 
-some point in history.
+I applied these to pci/host-iproc for v4.14.  Man, this is ugly.
 
+I reworked the changelog to try to make it more readable.  I also tried to
+disable the PCI_EXP_RTCAP_CRSVIS bit, which advertises CRS SV support.  And
+I removed what looked like a duplicate pci_generic_config_read32() call.
+And I added a warning about the fact that we corrupt reads of config
+registers that happen to contain 0xffff0001.
 
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm pretty sure I broke something, so please take a look.
+
+Incremental diff from your v8 to what's on pci/host-iproc:
+
+diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
+index cbdabe8a073e..8bd5e544b1c1 100644
+--- a/drivers/pci/host/pcie-iproc.c
++++ b/drivers/pci/host/pcie-iproc.c
+@@ -69,7 +69,7 @@
+ #define APB_ERR_EN                   BIT(APB_ERR_EN_SHIFT)
+ 
+ #define CFG_RETRY_STATUS             0xffff0001
+-#define CFG_RETRY_STATUS_TIMEOUT_US  500000 /* 500 milli-seconds. */
++#define CFG_RETRY_STATUS_TIMEOUT_US  500000 /* 500 milliseconds */
+ 
+ /* derive the enum index of the outbound/inbound mapping registers */
+ #define MAP_REG(base_reg, index)      ((base_reg) + (index) * 2)
+@@ -482,17 +482,21 @@ static unsigned int iproc_pcie_cfg_retry(void __iomem *cfg_data_p)
+ 	unsigned int data;
+ 
+ 	/*
+-	 * As per PCIe spec r3.1, sec 2.3.2, CRS Software
+-	 * Visibility only affects config read of the Vendor ID.
+-	 * For config write or any other config read the Root must
+-	 * automatically re-issue configuration request again as a
+-	 * new request.
++	 * As per PCIe spec r3.1, sec 2.3.2, CRS Software Visibility only
++	 * affects config reads of the Vendor ID.  For config writes or any
++	 * other config reads, the Root may automatically reissue the
++	 * configuration request again as a new request.
+ 	 *
+-	 * For config reads, this hardware returns CFG_RETRY_STATUS data when
+-	 * it receives a CRS completion for a config read, regardless of the
+-	 * address of the read or the CRS Software Visibility Enable bit. As a
++	 * For config reads, this hardware returns CFG_RETRY_STATUS data
++	 * when it receives a CRS completion, regardless of the address of
++	 * the read or the CRS Software Visibility Enable bit.  As a
+ 	 * partial workaround for this, we retry in software any read that
+ 	 * returns CFG_RETRY_STATUS.
++	 *
++	 * Note that a non-Vendor ID config register may have a value of
++	 * CFG_RETRY_STATUS.  If we read that, we can't distinguish it from
++	 * a CRS completion, so we will incorrectly retry the read and
++	 * eventually return the wrong data (0xffffffff).
+ 	 */
+ 	data = readl(cfg_data_p);
+ 	while (data == CFG_RETRY_STATUS && timeout--) {
+@@ -515,10 +519,19 @@ static int iproc_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+ 	unsigned int busno = bus->number;
+ 	void __iomem *cfg_data_p;
+ 	unsigned int data;
++	int ret;
+ 
+-	/* root complex access. */
+-	if (busno == 0)
+-		return pci_generic_config_read32(bus, devfn, where, size, val);
++	/* root complex access */
++	if (busno == 0) {
++		ret = pci_generic_config_read32(bus, devfn, where, size, val);
++		if (ret != PCIBIOS_SUCCESSFUL)
++			return ret;
++
++		/* Don't advertise CRS SV support */
++		if ((where & ~0x3) == PCI_EXP_CAP + PCI_EXP_RTCAP)
++			*val &= ~(PCI_EXP_RTCAP_CRSVIS << 16);
++		return PCIBIOS_SUCCESSFUL;
++	}
+ 
+ 	cfg_data_p = iproc_pcie_map_ep_cfg_reg(pcie, busno, slot, fn, where);
+ 
+@@ -635,7 +648,6 @@ static int iproc_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
+ 		ret = iproc_pcie_config_read(bus, devfn, where, size, val);
+ 	else
+ 		ret = pci_generic_config_read32(bus, devfn, where, size, val);
+-	ret = pci_generic_config_read32(bus, devfn, where, size, val);
+ 	iproc_pcie_apb_err_disable(bus, false);
+ 
+ 	return ret;
+@@ -1309,6 +1321,8 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
+ 		pcie->ib.nr_regions = ARRAY_SIZE(paxb_v2_ib_map);
+ 		pcie->ib_map = paxb_v2_ib_map;
+ 		pcie->need_msi_steer = true;
++		dev_warn(dev, "reads of config registers that contain %#x return incorrect data\n",
++			 CFG_RETRY_STATUS);
+ 		break;
+ 	case IPROC_PCIE_PAXC:
+ 		regs = iproc_pcie_reg_paxc;
