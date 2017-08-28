@@ -1,44 +1,49 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] arm64: renesas: Add support for R-Car V3M
-Date: Mon, 28 Aug 2017 09:44:54 +0200
-Message-ID: <20170828074453.GA22421@verge.net.au>
-References: <1503665810-13945-1-git-send-email-geert+renesas@glider.be>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: dts: iwg20d-q7: Add RTC support
+Date: Mon, 28 Aug 2017 09:51:09 +0200
+Message-ID: <20170828075109.GB22421@verge.net.au>
+References: <1502874990-12006-1-git-send-email-chris.paterson2@renesas.com>
+ <20170824104701.GA30281@verge.net.au>
+ <SG2PR06MB1711B313440D06B838E3DBD1B89A0@SG2PR06MB1711.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503665810-13945-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <SG2PR06MB1711B313440D06B838E3DBD1B89A0@SG2PR06MB1711.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 25, 2017 at 02:56:48PM +0200, Geert Uytterhoeven wrote:
-> 	Hi all,
+On Thu, Aug 24, 2017 at 02:53:55PM +0000, Biju Das wrote:
 > 
-> This patch series adds initial R-Car V3M infrastructure:
->   1. SoC DT bindings,
->   2. Main Kconfig symbol.
+> > -----Original Message-----
+> > From: Simon Horman [mailto:horms@verge.net.au]
+> > Sent: 24 August 2017 11:47
+> > To: Chris Paterson <Chris.Paterson2@renesas.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> > Russell King <linux@armlinux.org.uk>; Biju Das <biju.das@bp.renesas.com>;
+> > devicetree@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org
+> > Subject: Re: [PATCH v2] ARM: dts: iwg20d-q7: Add RTC support
+> >
+> > On Wed, Aug 16, 2017 at 10:16:30AM +0100, Chris Paterson wrote:
+> > > From: Biju Das <biju.das@bp.renesas.com>
+> > >
+> > > Define the iWave RainboW-G20D-Qseven board dependent part of the RTC
+> > > device node.
+> > >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > [chris: corrected bq32000 compatible string]
+> > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > > ---
+> > > v1 -> v2
+> > > Added ti to bq32000 compatible string - Thanks Geert
+> >
+> > Thanks, applied for v4.15.
 > 
-> Both follow the example set by R-Car D3 aka r8a77995, using 5-digit instead
-> of 4-digit part numbers.
-> Alternatively, we could stick to 4-digit part numbers if the fifth digit is
-> a zero.
-> 
-> For your convenience, a branch with more preliminary work (thanks Sergei,
-> for posting the clock driver!) for testing on v3m/eagle is also available
-> in the topic/r8a77970-integration branch of my renesas-drivers git
-> repository at
-> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
-> 
-> Thanks for your comments!
+> Looks like i2c2_pins nodes are misplaced. Please drop this patch,
+> So that I can send a new patch.
 
-This looks good to me.
-
-I am in favour of using the 5-digit scheme for all new R-Car Gen 3 SoCs
-as it seems the safest option with regards to as yet unknown (to me) part
-numbers..
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I have dropped the patch.
