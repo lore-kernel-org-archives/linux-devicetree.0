@@ -1,50 +1,80 @@
-From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH] ARM: dts: uniphier: add pinctrl groups of ethernet phy mode
-Date: Mon, 28 Aug 2017 11:11:45 +0900
-Message-ID: <1503886305-29815-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH] arm: sun8i: nanopi-neo: Enable USB OTG
+Date: Mon, 28 Aug 2017 10:37:56 +0800
+Message-ID: <46910aa6a3f08e1628a5a23fb7751a61@aosc.io>
+References: <20170828001251.8440-1-ddiss@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170828001251.8440-1-ddiss-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+To: David Disseldorp <ddiss-l3A5Bk7waGM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl groups of ethenet phy mode, such as "ether_rgmii", "ether_rmii",
-and "ether_mii".
+在 2017-08-28 08:12，David Disseldorp 写道：
+> From: David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+> 
+> The NanoPi NEO features a MicroUSB port that can work in both host mode
+> and peripheral mode. Switching is handled via GPIO PG12.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
- arch/arm/boot/dts/uniphier-pinctrl.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+How's the Vbus of the OTG handled?
 
-diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-index 425b8f1..be82cdd 100644
---- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-@@ -18,6 +18,21 @@
- 		function = "emmc";
- 	};
- 
-+	pinctrl_ether_mii: ether_mii_grp {
-+		groups = "ether_mii";
-+		function = "ether_mii";
-+	};
-+
-+	pinctrl_ether_rgmii: ether_rgmii_grp {
-+		groups = "ether_rgmii";
-+		function = "ether_rgmii";
-+	};
-+
-+	pinctrl_ether_rmii: ether_rmii_grp {
-+		groups = "ether_rmii";
-+		function = "ether_rmii";
-+	};
-+
- 	pinctrl_i2c0: i2c0_grp {
- 		groups = "i2c0";
- 		function = "i2c0";
--- 
-2.7.4
+> 
+> Signed-off-by: David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts | 27 
+> +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> index 78f6c24952dd..5abf430ac5a6 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> @@ -47,9 +47,36 @@
+>  	compatible = "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
+>  };
+> 
+> +&ehci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ehci3 {
+> +	status = "okay";
+> +};
 
+Why do you also enable ehci/ohci3 here?
+I think they're already enabled in sun8i-h3-nanopi.dtsi .
+
+> +
+>  &emac {
+>  	phy-handle = <&int_mii_phy>;
+>  	phy-mode = "mii";
+>  	allwinner,leds-active-low;
+>  	status = "okay";
+>  };
+> +
+> +&ohci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci3 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_otg {
+> +	dr_mode = "otg";
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	/* USB Type-A port's VBUS is always on */
+> +	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+> +	status = "okay";
+> +};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
