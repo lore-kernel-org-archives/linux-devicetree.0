@@ -1,82 +1,58 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 3/3] arm64: dts: realtek: Add irq mux to RTD1295
-Date: Mon, 28 Aug 2017 12:53:44 +0200
-Message-ID: <20170828105344.8338-4-afaerber@suse.de>
-References: <20170828105344.8338-1-afaerber@suse.de>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 1/3] dt: bindings: Document DT bindings for Analog
+ devices as3645a
+Date: Mon, 28 Aug 2017 13:00:09 +0200
+Message-ID: <20170828110008.GA492@amd>
+References: <20170823081100.11733-1-sakari.ailus@linux.intel.com>
+ <20170823081100.11733-2-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170828105344.8338-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170823081100.11733-2-sakari.ailus@linux.intel.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, javier@dowhile0.org, jacek.anaszewski@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Update UART nodes with interrupts.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v1 -> v2:
- * Rebased
- 
- arch/arm64/boot/dts/realtek/rtd1295.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-index c8b7bb642a9a..6918373e9b5c 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-@@ -93,21 +93,41 @@
- 		/* Exclude up to 2 GiB of RAM */
- 		ranges = <0x80000000 0x80000000 0x80000000>;
- 
-+		iso_irq_mux: interrupt-controller@98007000 {
-+			compatible = "realtek,rtd1295-iso-irq-mux";
-+			reg = <0x98007000 0x100>;
-+			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
- 		uart0: serial@98007800 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x98007800 0x400>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clock-frequency = <27000000>;
-+			interrupt-parent = <&iso_irq_mux>;
-+			interrupts = <2>;
- 			status = "disabled";
- 		};
- 
-+		irq_mux: interrupt-controller@9801b000 {
-+			compatible = "realtek,rtd1295-irq-mux";
-+			reg = <0x9801b000 0x100>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
- 		uart1: serial@9801b200 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x9801b200 0x100>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clock-frequency = <432000000>;
-+			interrupt-parent = <&irq_mux>;
-+			interrupts = <3>, <5>;
- 			status = "disabled";
- 		};
- 
-@@ -117,6 +137,8 @@
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clock-frequency = <432000000>;
-+			interrupt-parent = <&irq_mux>;
-+			interrupts = <8>, <13>;
- 			status = "disabled";
- 		};
- 
--- 
-2.12.3
+Hi!
+
+> +led-max-microamp: Maximum torch (assist) current in microamperes. The
+> +		  value must be in the range between [20000, 160000] and
+> +		  divisible by 20000.
+> +ams,input-max-microamp: Maximum flash controller input current. The
+
+"in microamperes".
+
+> +			value must be in the range [1250000, 2000000]
+> +			and divisible by 50000.
+
+Is there any reason for "ams," prefix here?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmj97gACgkQMOfwapXb+vL0AwCfTK/KopJd8g0ti8wnQgLDFHjv
+eK4An1kQh3Rt6rGSyqD0BX+u2dMmxZ89
+=lOvG
+-----END PGP SIGNATURE-----
+
+--UlVJffcvxoiEqYs2--
