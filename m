@@ -1,35 +1,53 @@
-From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ata: mediatek: add support for MediaTek SATA
- controller
-Date: Mon, 28 Aug 2017 10:55:28 -0700
-Message-ID: <20170828175528.GY491396@devbig577.frc2.facebook.com>
-References: <cover.1503018631.git.ryder.lee@mediatek.com>
- <ab78899bd7fa99a12497b5b16ffb7acfeac1f42c.1503018631.git.ryder.lee@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ab78899bd7fa99a12497b5b16ffb7acfeac1f42c.1503018631.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Long Cheng <long.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH v3 0/2] pci: add support for firmware initialized designware RCs
+Date: Mon, 28 Aug 2017 19:04:35 +0100
+Message-ID: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, mw@semihalf.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 09:13:07AM +0800, Ryder Lee wrote:
-> This adds support the AHCI-compliant Serial ATA controller present
-> on MediaTek SoCs.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Acked-by: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+UEFI based systems incorporating a Synopsys Designware PCIe controller
+in RC mode will typically configure it before entering the OS. If this
+configuration is fully static and ECAM compliant, there is no need to
+expose particulars of the device to the OS, and we can simply describe
+it as "pci-host-ecam-generic".
 
-Applied to libata/for-4.14.  If you want me to take the dt patch too,
-please let me know.
+However, the Synopsys IP may be synthesized in a way where a quirk is
+needed for config space accesses to the first bus. It makes little sense
+to instantiate yet another pcie-designware driver that contains all the
+low level setup code, but it is also not justified to add quirks handling
+to the generic ECAM driver.
 
-Thanks.
+So instead, create a variant of the generic ECAM driver that filters config
+space accesses directed at device #1 and up on the first bus.
+
+v3: - use SoC specific compatible strings
+    - drop MSI patch [for now], since it turns out we may not need it
+
+v2: - use dev->fwnode directly
+    - replace an instance of pr_err with dev_err, and clarify the error message
+    - fix Kconfig/Makefile dependency errors reported by kbuild
+
+Cc: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: Graeme Gregory <graeme.gregory@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: Rob Herring <robh@kernel.org>
+
+Ard Biesheuvel (2):
+  pci: designware: add driver for DWC controller in ECAM shift mode
+  dt-bindings: designware: add binding for Designware PCIe in ECAM mode
+
+ Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt | 42 +++++++++++
+ drivers/pci/dwc/Kconfig                                        | 11 +++
+ drivers/pci/dwc/Makefile                                       |  1 +
+ drivers/pci/dwc/pcie-designware-ecam.c                         | 77 ++++++++++++++++++++
+ 4 files changed, 131 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+ create mode 100644 drivers/pci/dwc/pcie-designware-ecam.c
 
 -- 
-tejun
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
