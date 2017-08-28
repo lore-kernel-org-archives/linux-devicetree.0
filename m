@@ -1,80 +1,67 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH] arm: sun8i: nanopi-neo: Enable USB OTG
-Date: Mon, 28 Aug 2017 10:37:56 +0800
-Message-ID: <46910aa6a3f08e1628a5a23fb7751a61@aosc.io>
-References: <20170828001251.8440-1-ddiss@suse.de>
+From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [patch v6 0/3] JTAG driver introduction
+Date: Sun, 27 Aug 2017 19:55:43 -0700
+Message-ID: <CAPLgG=n2r+rJKSAZKknuqH_S2W6CrWN-Ynqph-qPc9BTs-_hQA@mail.gmail.com>
+References: <1503418256-5215-1-git-send-email-oleksandrs@mellanox.com>
+ <CACRpkdZePXyo8Q36mBH7OnJU3E=yWPWSGkGUOH=zJFMjM=Yrhw@mail.gmail.com>
+ <CAPLgG==Jj=Ys=SvhOCspSfunbWnuqPySvW9RfuqE8HYnG4C=ZQ@mail.gmail.com>
+ <CACRpkdbozWaL0RXyZXjzxYK3JHiqYziSkTGSgGORdptX-rwR8A@mail.gmail.com>
+ <CAPLgG=mv1p98e4Vzso1N-VU=1MSotkTmnF+DcDTXPcd3q-n8HA@mail.gmail.com> <CACRpkdb75L5BrYN+V-BMwzrRm8_Wtymr3d08eMWt43FiBpH5Qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170828001251.8440-1-ddiss-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <CACRpkdb75L5BrYN+V-BMwzrRm8_Wtymr3d08eMWt43FiBpH5Qg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Disseldorp <ddiss-l3A5Bk7waGM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2017-08-28 08:12，David Disseldorp 写道：
-> From: David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> 
-> The NanoPi NEO features a MicroUSB port that can work in both host mode
-> and peripheral mode. Switching is handled via GPIO PG12.
+On Sun, Aug 27, 2017 at 3:30 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Aug 25, 2017 at 6:52 PM, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+>
+>>> Incidentally, people are sending patches to expose the FTDI
+>>> expanders as common GPIO chips under Linux, so we can
+>>> internally in the kernel or from the usersapce character device
+>>> access them as "some GPIOs".
+>>
+>> I know my team at Google has an internal patch for exactly that.  FTDI
+>> expanders are complicated as they can be used as UART, GPIO, I2C, SPI
+>> depending on configuration.  Our project was using a mix of I2C and
+>> GPIO so I directly my team to approach it as an MFD.  I'd like to see
+>> all of these use cases handled by the kernel but I understand the
+>> other viewpoint of relying on libusb for cross-platform compatiblity.
+>
+> Hm. I see. But I see people pushing the in-kernel method so I think
+> it will eventually win out.
+>
 
-How's the Vbus of the OTG handled?
+SGTM.  I'll see if my team can clean up the MFD-based FTDI driver and
+submit it upstream.
 
-> 
-> Signed-off-by: David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts | 27 
-> +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-> b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-> index 78f6c24952dd..5abf430ac5a6 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-> @@ -47,9 +47,36 @@
->  	compatible = "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
->  };
-> 
-> +&ehci0 {
-> +	status = "okay";
-> +};
-> +
-> +&ehci3 {
-> +	status = "okay";
-> +};
+>>>>> In my worst nightmare they export GPIO lines using
+>>>>> the horrid ABI in /sys/gpio/*
+>>>>
+>>>> https://sourceforge.net/p/openocd/code/ci/v0.10.0/tree/src/jtag/drivers/sysfsgpio.c
+>>>
+>>> Gnah!
+>>> Whoever writes a slot-in replacement making the character device
+>>> take precendence wins lots of karma.
+>>
+>> If they show up at Linux Plumbers or visit San Jose, I'll take them to
+>> dinner.  I didn't see any docs for the chardev in Documentation.  I
+>> _think_ I understand how it works from reading the relevant sections
+>> of gpiolib.c but I can see how users end up using sysfs instead.
+>
+> I intended tools/gpio/* to be the documentation:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/gpio
+>
+> If we need more written documentation we can do it I guess,
 
-Why do you also enable ehci/ohci3 here?
-I think they're already enabled in sun8i-h3-nanopi.dtsi .
+I haven't been in the habit of looking in tools/.  Guess I should be.
 
-> +
->  &emac {
->  	phy-handle = <&int_mii_phy>;
->  	phy-mode = "mii";
->  	allwinner,leds-active-low;
->  	status = "okay";
->  };
-> +
-> +&ohci0 {
-> +	status = "okay";
-> +};
-> +
-> +&ohci3 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_otg {
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
-> +&usbphy {
-> +	/* USB Type-A port's VBUS is always on */
-> +	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-> +	status = "okay";
-> +};
+>
+> Yours,
+> Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
