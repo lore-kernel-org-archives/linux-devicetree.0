@@ -1,81 +1,73 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 1/3] dt: bindings: Document DT bindings for Analog
- devices as3645a
-Date: Mon, 28 Aug 2017 13:09:52 +0200
-Message-ID: <20170828110951.GC492@amd>
-References: <20170819212410.3084-1-sakari.ailus@linux.intel.com>
- <20170819212410.3084-2-sakari.ailus@linux.intel.com>
- <20170828103351.GF18012@amd>
- <46aaf723-a657-3b43-7be7-8d899d3db9c3@linux.intel.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v3 0/3] arm64: Realtek RTD1295 RTC
+Date: Mon, 28 Aug 2017 13:10:38 +0200
+Message-ID: <20170828111041.17946-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <46aaf723-a657-3b43-7be7-8d899d3db9c3@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, javier@dowhile0.org, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---iFRdW5/EC4oqxDHL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series adds the RTC for the Realtek RTD1295 SoC.
+Based on my RTD1295 clk series.
 
-Hi!
+There being no public source code for RTD1295, the implementation is based on
+register offsets seen in the vendor DT, as well as older mach-rtk119x code
+published by QNAP.
 
-> Thanks for the review!
->=20
-> On 08/28/17 13:33, Pavel Machek wrote:
-> > Hi!
-> >=20
-> >> +
-> >> +Ranges below noted as [a, b] are closed ranges between a and b, i.e. a
-> >> +and b are included in the range.
-> >=20
-> > Normally I've seen <a, b> for closed ranges, (a, b) for open
-> > ranges. Is that different in your country?
->=20
-> I guess there are different notations. :-) I've seen regular parentheses
-> being used for open ranges, too, but not < and >.
->=20
-> Open range is documented in a related well written Wikipedia article:
->=20
-> <URL:https://en.wikipedia.org/wiki/Open_range>
->=20
-> Are there such open ranges in Czechia? For instance, reindeer generally
-> roam freely in Finnish Lappland.
+v3 drops a redundant spinlock and refactors a helper.
 
-:-). Well, we have pigs and roes roaming freely in the woods, but
-would not normally call it open range.
+The DT node depends on the clk series for clock index and header.
 
-> What comes to the patch, I guess "interval" could be a more appropriate
-> term to use in this case:
->=20
-> <URL:https://en.wikipedia.org/wiki/Interval_(mathematics)>
->=20
-> The patch is in line with the Wikipedia article in notation but not in
-> terminology. I'll send a fix.
+More experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
 
-Ok, that was really nitpicking, thanks!
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Have a lot of fun!
 
---iFRdW5/EC4oqxDHL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Cheers,
+Andreas
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+v2 -> v3:
+* Dropped spinlock (Andrew)
+* Improved year_days vs. days_in_year readability
 
-iEYEARECAAYFAlmj+f8ACgkQMOfwapXb+vKT8wCeP7CFUOb2o/Zi58xXCmOWFDTE
-cngAnjV1r76Q6zIJ8X28ISzD+isjVrwk
-=ZoXD
------END PGP SIGNATURE-----
+v1 -> v2:
+* Updated rtc driver to no longer use open/release (Alexandre)
+* Cleaned up debug output (Andrew)
+* Avoided COMPILE_TEST division errors (kbuild)
+* Various cleanups and extensions
 
---iFRdW5/EC4oqxDHL--
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>
+Cc: 蒋丽琴 <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+
+Andreas Färber (3):
+  dt-bindings: rtc: Add Realtek RTD1295
+  rtc: Add Realtek RTD1295
+  arm64: dts: realtek: Add RTD1295 RTC node
+
+ .../devicetree/bindings/rtc/realtek,rtd119x.txt    |  16 ++
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi           |   6 +
+ drivers/rtc/Kconfig                                |   8 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-rtd119x.c                          | 241 +++++++++++++++++++++
+ 5 files changed, 272 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+ create mode 100644 drivers/rtc/rtc-rtd119x.c
+
+-- 
+2.12.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
