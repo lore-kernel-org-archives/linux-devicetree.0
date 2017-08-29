@@ -1,72 +1,99 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv4 1/9] irqchip/ls-scfg-msi: fix typo of MSI compatible
- strings
-Date: Tue, 29 Aug 2017 07:04:05 +0000
-Message-ID: <AM5PR0402MB277107C571183D2AF0E73EA5849F0@AM5PR0402MB2771.eurprd04.prod.outlook.com>
-References: <1499237943-24203-1-git-send-email-Zhiqiang.Hou@nxp.com>
+From: Adriana Reus <adi.reus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: adc: mcp320x: Update for mcp3550/1/3
+Date: Tue, 29 Aug 2017 10:21:13 +0300
+Message-ID: <CABjU8GvCB61envBiR0ei3gHEPadd5VDZ7FGysDjhCrJcQrEXDg@mail.gmail.com>
+References: <cover.1503407738.git.lukas@wunner.de> <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas@wunner.de>
+ <20170825195941.iylf4w5hitjwniio@rob-hp-laptop> <20170827153405.GA13399@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499237943-24203-1-git-send-email-Zhiqiang.Hou@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "M.h. Lian" <minghuan.lian@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170827153405.GA13399-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzLCBKYXNvbiBhbmQgTWFyYywNCg0KVGhlIHZlcnNpb24gNCBwYXRjaCBzZXQgZGlk
-bid0IGdldCBmZWVkYmFjayBmb3IgYSBsb25nIHRpbWUsIGNhbiB5b3UgaGVscCB0byByZXZpZXcg
-aXQsIGFuZCBpZiB0aGVyZSBpcyBubyBwcm9ibGVtIGNvdWxkIHlvdSBwbGVhc2UgaGVscCB0byBh
-cHBseSBpdD8NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBaaGlxaWFu
-ZyBIb3UgW21haWx0bzpaaGlxaWFuZy5Ib3VAbnhwLmNvbV0NCj4gU2VudDogMjAxN8TqN9TCNcjV
-IDE0OjU5DQo+IFRvOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyB0
-Z2x4QGxpbnV0cm9uaXguZGU7IGphc29uQGxha2VkYWVtb24ubmV0Ow0KPiBtYXJjLnp5bmdpZXJA
-YXJtLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGlu
-dXhAYXJtbGludXgub3JnLnVrOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBNLmguIExpYW4NCj4gPG1p
-bmdodWFuLmxpYW5AbnhwLmNvbT4NCj4gQ2M6IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNv
-bT4NCj4gU3ViamVjdDogW1BBVENIdjQgMS85XSBpcnFjaGlwL2xzLXNjZmctbXNpOiBmaXggdHlw
-byBvZiBNU0kgY29tcGF0aWJsZSBzdHJpbmdzDQo+IA0KPiBGcm9tOiBNaW5naHVhbiBMaWFuIDxN
-aW5naHVhbi5MaWFuQG54cC5jb20+DQo+IA0KPiBUaGUgcGF0Y2ggaXMgdG8gZml4IHR5cG8gb2Yg
-dGhlIExheWVyc2NhcGUgU0NGRyBNU0kgZHRzIGNvbXBhdGlibGUgc3RyaW5ncy4gIjEiDQo+IGlz
-IHJlcGxhY2VkIGJ5ICJsIi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1pbmdodWFuIExpYW4gPE1p
-bmdodWFuLkxpYW5AbnhwLmNvbT4NCj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
-bC5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5j
-b20+DQo+IC0tLQ0KPiB2NC12MToNCj4gIC0gTm9uZQ0KPiANCj4gIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ZzbCxscy1zY2ZnLW1zaS50eHQgICAgfCA2ICsr
-Ky0tLQ0KPiAgZHJpdmVycy9pcnFjaGlwL2lycS1scy1zY2ZnLW1zaS5jICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB8IDYNCj4gKysrKy0tDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDcg
-aW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQNCj4gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvZnNsLGxz
-LXNjZmctbXNpLnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRl
-cnJ1cHQtY29udHJvbGxlci9mc2wsbHMtc2NmZy1tc2kudHh0DQo+IGluZGV4IDllMzg5NDkuLjI3
-NTVjZDEgMTAwNjQ0DQo+IC0tLQ0KPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsbHMtc2NmZy1tc2kudHh0DQo+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsbHMt
-c2NmZw0KPiArKysgLW1zaS50eHQNCj4gQEAgLTQsOCArNCw4IEBAIFJlcXVpcmVkIHByb3BlcnRp
-ZXM6DQo+IA0KPiAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImZzbCw8c29jLW5hbWU+LW1zaSIg
-dG8gaWRlbnRpZnkNCj4gIAkgICAgICBMYXllcnNjYXBlIFBDSWUgTVNJIGNvbnRyb2xsZXIgYmxv
-Y2sgc3VjaCBhczoNCj4gLSAgICAgICAgICAgICAgImZzbCwxczEwMjFhLW1zaSINCj4gLSAgICAg
-ICAgICAgICAgImZzbCwxczEwNDNhLW1zaSINCj4gKyAgICAgICAgICAgICAgImZzbCxsczEwMjFh
-LW1zaSINCj4gKyAgICAgICAgICAgICAgImZzbCxsczEwNDNhLW1zaSINCj4gIC0gbXNpLWNvbnRy
-b2xsZXI6IGluZGljYXRlcyB0aGF0IHRoaXMgaXMgYSBQQ0llIE1TSSBjb250cm9sbGVyIG5vZGUN
-Cj4gIC0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIgYW5kIGxl
-bmd0aCBvZiBtZW1vcnkgbWFwcGVkLg0KPiAgLSBpbnRlcnJ1cHRzOiBhbiBpbnRlcnJ1cHQgdG8g
-dGhlIHBhcmVudCBpbnRlcnJ1cHQgY29udHJvbGxlci4NCj4gQEAgLTIzLDcgKzIzLDcgQEAgTVNJ
-IGNvbnRyb2xsZXIgbm9kZQ0KPiAgRXhhbXBsZXM6DQo+IA0KPiAgCW1zaTE6IG1zaS1jb250cm9s
-bGVyQDE1NzEwMDAgew0KPiAtCQljb21wYXRpYmxlID0gImZzbCwxczEwNDNhLW1zaSI7DQo+ICsJ
-CWNvbXBhdGlibGUgPSAiZnNsLGxzMTA0M2EtbXNpIjsNCj4gIAkJcmVnID0gPDB4MCAweDE1NzEw
-MDAgMHgwIDB4OD4sDQo+ICAJCW1zaS1jb250cm9sbGVyOw0KPiAgCQlpbnRlcnJ1cHRzID0gPDAg
-MTE2IDB4ND47DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLWxzLXNjZmctbXNp
-LmMgYi9kcml2ZXJzL2lycWNoaXAvaXJxLWxzLXNjZmctbXNpLmMNCj4gaW5kZXggMDJjY2E3NGMu
-LmNlZjY3Y2MgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbHMtc2NmZy1tc2ku
-Yw0KPiArKysgYi9kcml2ZXJzL2lycWNoaXAvaXJxLWxzLXNjZmctbXNpLmMNCj4gQEAgLTIxOSw4
-ICsyMTksMTAgQEAgc3RhdGljIGludCBsc19zY2ZnX21zaV9yZW1vdmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZQ0KPiAqcGRldikgIH0NCj4gDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rldmlj
-ZV9pZCBsc19zY2ZnX21zaV9pZFtdID0gew0KPiAtCXsgLmNvbXBhdGlibGUgPSAiZnNsLDFzMTAy
-MWEtbXNpIiwgfSwNCj4gLQl7IC5jb21wYXRpYmxlID0gImZzbCwxczEwNDNhLW1zaSIsIH0sDQo+
-ICsJeyAuY29tcGF0aWJsZSA9ICJmc2wsMXMxMDIxYS1tc2kiLCB9LCAvKiBhIHR5cG8gKi8NCj4g
-Kwl7IC5jb21wYXRpYmxlID0gImZzbCwxczEwNDNhLW1zaSIsIH0sIC8qIGEgdHlwbyAqLw0KPiAr
-CXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtbXNpIiwgfSwNCj4gKwl7IC5jb21wYXRpYmxl
-ID0gImZzbCxsczEwNDNhLW1zaSIsIH0sDQo+ICAJe30sDQo+ICB9Ow0KPiANCj4gLS0NCj4gMi4x
-LjAuMjcuZzk2ZGIzMjQNCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg==
+Hi,
+
+On Sun, Aug 27, 2017 at 6:34 PM, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
+> On Fri, Aug 25, 2017 at 02:59:41PM -0500, Rob Herring wrote:
+>> On Tue, Aug 22, 2017 at 03:33:00PM +0200, Lukas Wunner wrote:
+>> > --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+>> > +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+>> > +Optional properties:
+>> > +   - microchip,continuous-conversion (boolean):
+>> > +                   Only applicable to MCP3550/1/3:  These ADCs have long
+>> > +                   conversion times and therefore support "continuous
+>> > +                   conversion mode" to allow retrieval of conversions
+>> > +                   at any time without observing a delay.  The mode is
+>> > +                   enabled by permanently driving CS low, e.g. by wiring
+>> > +                   it to ground.
+>>
+>> Second binding I have seen today with a continuous property. Make this
+>> common (or maybe we already have one).
+>
+> The other one was the TI LMP92001 ADC driver posted by Abhisit Sangjan
+> (cc), however looking at the datasheet of that chip reveals that
+> continuous versus one-shot mode is selected by flipping a bit in the
+> chip's register map.
+>
+> So it is configurable at run-time.  It's not something that's hardwired.
+> (Which is the case with the MCP3550 in my patch.)
+>
+> My understanding was that run-time configurable options should not be
+> listed in the device-tree at all, only hardware features.  If that is
+> correct then that device-tree property should be dropped from Abhisit
+> Sangjan's patch.  Configuring the feature via sysfs is fine I guess.
+>
+> However we do have another driver supporting continuous versus one-shot
+> mode and that is drivers/iio/light/us5182d.c by Adriana Reus (cc).
+> The feature was added with commit c3304c212326.  I'm not sure if it's
+> hardwired or runtime-configurable, the datasheet is gone from the
+> manufacturer's website.
+For the us5182 continuous versus one-shot is also a configuration in the
+chip's registers. I think it would be fine also as a sysfs property instead.
+>
+> I agree that a common "continuous" property makes sense.  We haven't
+> defined any common IIO properties so far and that has already led to
+> inconsistencies.  E.g. most ADC/DAC drivers name the reference regulator
+> "vref-supply", but e.g. drivers/iio/dac/ad7303.c calls it "REF-supply".
+>
+> What do you think of this:
+>
+> -- >8 --
+> Subject: [PATCH] dt-bindings: iio: Document common properties
+>
+> It's about time we standardize on common names for frequently used IIO
+> properties.  For starters, document "vref-supply" and "continuous".
+>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/iio/iio-bindings.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> index 68d6f8c..c3e87e15 100644
+> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> @@ -95,3 +95,18 @@ vdd channel is connected to output 0 of the &ref device.
+>                 io-channels = <&adc 10>, <&adc 11>;
+>                 io-channel-names = "adc1", "adc2";
+>         };
+> +
+> +==Common IIO properties==
+> +
+> +Reference voltage:
+> +ADCs, DACs and several other IIO devices require a reference voltage.
+> +By convention the property specifying this regulator is named "vref-supply".
+> +If the chip lacks a dedicated Vref pin and instead uses its own power supply
+> +as reference, the property specifying the regulator is commonly named
+> +"vdd-supply" or "vcc-supply".
+> +
+> +Continuous mode:
+> +Some sensors can be configured to perform continuous (versus one-shot)
+> +measurements.  Continuous mode may require more energy in return for faster
+> +or more reliable measurements.  A boolean property named "continuous"
+> +signifies that the device is configured for this mode.
+> --
+> 2.11.0
