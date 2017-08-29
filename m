@@ -1,58 +1,69 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 14/17] ARM: dts: Add missing gpu node and binding for
- omap4
-Date: Tue, 29 Aug 2017 08:35:22 -0700
-Message-ID: <20170829153522.GA6008@atomide.com>
-References: <20170828211918.11573-1-tony@atomide.com>
- <20170828211918.11573-15-tony@atomide.com>
- <20170829090034.ytepjfv2jkkd2b3z@earth>
- <20170829144205.GX6008@atomide.com>
- <CAHCN7xK7Vy8Hw1OV3AQb4vAo3n=6qfE_8xunL1MXQaTLY0Yy4w@mail.gmail.com>
+From: Marcin Wojtas <mw@semihalf.com>
+Subject: Re: [PATCH v3 0/2] pci: add support for firmware initialized
+ designware RCs
+Date: Tue, 29 Aug 2017 17:40:30 +0200
+Message-ID: <CAPv3WKfzwA6C_jvw1i39q2X34PPLtDAipJMKuGvKh2fb8SPe_A@mail.gmail.com>
+References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xK7Vy8Hw1OV3AQb4vAo3n=6qfE_8xunL1MXQaTLY0Yy4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: linux-pci@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170829 08:31]:
-> On Tue, Aug 29, 2017 at 9:42 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > * Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> [170829 02:01]:
-> >> Hi,
-> >>
-> >> On Mon, Aug 28, 2017 at 02:19:15PM -0700, Tony Lindgren wrote:
-> >> > On omap4 we're missing the PowerVR SGX GPU node with it's related
-> >> > "ti,hwmods" property that the SoC interconnect code needs.
-> >> >
-> >> > Note that this will only show up as a bug with "doesn't have
-> >> > mpu register target base" boot errors when the legacy platform
-> >> > data is removed.
-> >>
-> >> I think OMAP3 & OMAP5 should also be documented and getting a
-> >> node in this series?
-> >
-> > Looks like we don't currently have any interconnect data defined
-> > for those, but yeah sure I can add those.
-> >
-> 
-> If there is anything I can test, I had modified the SGX driver for the
-> OMAP36, but abandoned my attempts since much of the device tree and
-> reset stuff was missing.  I'd love to see SGX work again.  :-)
+Hi Ard,
 
-Well the resets can be handled using platform data callbacks
-for now with pdata-quirks.c. Then when the reset driver is available,
-we can just remove the platform data.
+It works on Armada 8040 MacchiatoBin board with e1000 card. You can add my:
 
-And maybe push your changes to some tree so others can participate?
-I'm sure the n900 users would like to see it working too.
+Tested-by: Marcin Wojtas <mw@semihalf.com>
 
-Regards,
+Best regards,
+Marcin
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2017-08-28 20:04 GMT+02:00 Ard Biesheuvel <ard.biesheuvel@linaro.org>:
+> UEFI based systems incorporating a Synopsys Designware PCIe controller
+> in RC mode will typically configure it before entering the OS. If this
+> configuration is fully static and ECAM compliant, there is no need to
+> expose particulars of the device to the OS, and we can simply describe
+> it as "pci-host-ecam-generic".
+>
+> However, the Synopsys IP may be synthesized in a way where a quirk is
+> needed for config space accesses to the first bus. It makes little sense
+> to instantiate yet another pcie-designware driver that contains all the
+> low level setup code, but it is also not justified to add quirks handling
+> to the generic ECAM driver.
+>
+> So instead, create a variant of the generic ECAM driver that filters config
+> space accesses directed at device #1 and up on the first bus.
+>
+> v3: - use SoC specific compatible strings
+>     - drop MSI patch [for now], since it turns out we may not need it
+>
+> v2: - use dev->fwnode directly
+>     - replace an instance of pr_err with dev_err, and clarify the error message
+>     - fix Kconfig/Makefile dependency errors reported by kbuild
+>
+> Cc: Leif Lindholm <leif.lindholm@linaro.org>
+> Cc: Graeme Gregory <graeme.gregory@linaro.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Joao Pinto <Joao.Pinto@synopsys.com>
+> Cc: Rob Herring <robh@kernel.org>
+>
+> Ard Biesheuvel (2):
+>   pci: designware: add driver for DWC controller in ECAM shift mode
+>   dt-bindings: designware: add binding for Designware PCIe in ECAM mode
+>
+>  Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt | 42 +++++++++++
+>  drivers/pci/dwc/Kconfig                                        | 11 +++
+>  drivers/pci/dwc/Makefile                                       |  1 +
+>  drivers/pci/dwc/pcie-designware-ecam.c                         | 77 ++++++++++++++++++++
+>  4 files changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+>  create mode 100644 drivers/pci/dwc/pcie-designware-ecam.c
+>
+> --
+> 2.11.0
+>
