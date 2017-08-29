@@ -1,104 +1,39 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v4 4/5] net: stmmac: dwmac-sun8i: choose internal PHY via
- phy-is-integrated
-Date: Tue, 29 Aug 2017 10:34:32 +0200
-Message-ID: <20170829083432.GA28818@Red>
-References: <20170826073311.25612-1-clabbe.montjoie@gmail.com>
- <20170826073311.25612-5-clabbe.montjoie@gmail.com>
- <20170826212051.GA10418@lunn.ch>
+From: Li Wei <liwei213@huawei.com>
+Subject: [PATCH v3 4/5] arm64: defconfig: enable configs for Hisilicon ufs
+Date: Tue, 29 Aug 2017 16:41:15 +0800
+Message-ID: <20170829084116.106695-5-liwei213@huawei.com>
+References: <20170829084116.106695-1-liwei213@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170826212051.GA10418@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, peppe.cavallaro@st.com, alexandre.torgue@st.com, f.fainelli@gmail.com, icenowy@aosc.io, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <20170829084116.106695-1-liwei213@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
+Cc: guodong.xu@linaro.org, fengbaopeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 26, 2017 at 11:20:51PM +0200, Andrew Lunn wrote:
-> Hi Corentin
-> 
-> I think we have now all agreed this is an mdio-mux, plus it is also an
-> MII mux. We should represent that in device tree. This patchset does
-> this. However, as it is now, the mux structure in DT is ignored. All
-> it does is search for the phy-is-integrated flags and goes on that.
-> 
-> I made the comment that the device tree representation cannot be
-> implemented using an MDIO mux driver, because of driver loading
-> issues.  However, the core of the MDIO mux code is just a library,
-> symbols exported as GPL, free for anything to use.
-> 
-> What i think should happen is the mdio-mux is implemented inside the
-> MAC driver, using the mux-core as a library. The device tree structure
-> of a mix is then reflected within Linux. The mux switch callback is
-> implemented within the MAC driver. So it can reset the MAC when the
-> mux is switched. The 'phy-is-integrated' property is then no longer
-> needed.
+This enable configs for Hisilicon Hixxxx UFS driver.
 
-It is stilll needed because some settings (allwinner,leds-active-low for example) are only for integrated phy.
+Signed-off-by: Li Wei <liwei213@huawei.com>
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+---
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> 
-> I would suggest a binding something like:
-> 
-> emac: ethernet@1c0b000 {
->         compatible = "allwinner,sun8i-h3-emac";
->         syscon = <&syscon>;
->         reg = <0x01c0b000 0x104>;
->         interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
->         interrupt-names = "macirq";
->         resets = <&ccu RST_BUS_EMAC>;
->         reset-names = "stmmaceth";
->         clocks = <&ccu CLK_BUS_EMAC>;
->         clock-names = "stmmaceth";
->         #address-cells = <1>;
->         #size-cells = <0>;
-> 
->         phy-handle = <&int_mii_phy>;
->         phy-mode = "mii";
->         allwinner,leds-active-low;
-> 
->         mdio: mdio {
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> 	}
-> 
-> 	mdio-mux {
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> 
-> 		mdio@0 {
-> 			reg = <0>;
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> 
->                         int_mii_phy: ethernet-phy@1 {
->                                 reg = <1>;
->                                 clocks = <&ccu CLK_BUS_EPHY>;
->                                 resets = <&ccu RST_BUS_EPHY>;
->                         };
->                 };
->                 ext_mdio: mdio@0 {
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> 
->                         ext_rgmii_phy: ethernet-phy@1 {
->                                 reg = <1>;
->                         };
->                 };
->        };
-> };
-> 
-
-I am trying to do that but I get:
-dwmac-sun8i 1c30000.ethernet: Error: Failed to find reg for child /soc/ethernet@1c30000/mdio
-dwmac-sun8i 1c30000.ethernet: Error: Failed to find reg for child /soc/ethernet@1c30000/mdio-mux
-dwmac-sun8i 1c30000.ethernet: Error: No acceptable child buses found
-
-So it seems that mdio_mux_init() must be run on mdio-mux and not on emac node.
-But in the current state it cannot be done.
-
-Do you agree that another mdio_mux_init() must be written ? (taking a of_node (in our case: mdio-mux) instead of a device)
-Or do I miss something ?
-
-Regards
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index b4ca115b3be1..7514ecf08f2a 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -164,6 +164,9 @@ CONFIG_EEPROM_AT25=m
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_SCSI_SAS_ATA=y
+ CONFIG_SCSI_HISI_SAS=y
++CONFIG_SCSI_UFSHCD=y
++CONFIG_SCSI_UFSHCD_PLATFORM=y
++CONFIG_SCSI_UFS_HISI=y
+ CONFIG_ATA=y
+ CONFIG_SATA_AHCI=y
+ CONFIG_SATA_AHCI_PLATFORM=y
+-- 
+2.11.0
