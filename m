@@ -1,99 +1,65 @@
-From: Adriana Reus <adi.reus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/6] dt-bindings: iio: adc: mcp320x: Update for mcp3550/1/3
-Date: Tue, 29 Aug 2017 10:21:13 +0300
-Message-ID: <CABjU8GvCB61envBiR0ei3gHEPadd5VDZ7FGysDjhCrJcQrEXDg@mail.gmail.com>
-References: <cover.1503407738.git.lukas@wunner.de> <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas@wunner.de>
- <20170825195941.iylf4w5hitjwniio@rob-hp-laptop> <20170827153405.GA13399@wunner.de>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH v3 4/5] input: Add MediaTek PMIC keys support
+Date: Tue, 29 Aug 2017 16:34:53 +0900
+Message-ID: <20170829073453.GB4469@gangnam>
+References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
+        <CGME20170825063247epcas5p1df2f4440010dd55dada66e8764d18e50@epcas5p1.samsung.com>
+        <1503642753-12385-5-git-send-email-chen.zhong@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170827153405.GA13399-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <1503642753-12385-5-git-send-email-chen.zhong@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen Zhong <chen.zhong@mediatek.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Jaechul Lee <jcsing.lee@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chen,
 
-On Sun, Aug 27, 2017 at 6:34 PM, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
-> On Fri, Aug 25, 2017 at 02:59:41PM -0500, Rob Herring wrote:
->> On Tue, Aug 22, 2017 at 03:33:00PM +0200, Lukas Wunner wrote:
->> > --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
->> > +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
->> > +Optional properties:
->> > +   - microchip,continuous-conversion (boolean):
->> > +                   Only applicable to MCP3550/1/3:  These ADCs have long
->> > +                   conversion times and therefore support "continuous
->> > +                   conversion mode" to allow retrieval of conversions
->> > +                   at any time without observing a delay.  The mode is
->> > +                   enabled by permanently driving CS low, e.g. by wiring
->> > +                   it to ground.
->>
->> Second binding I have seen today with a continuous property. Make this
->> common (or maybe we already have one).
->
-> The other one was the TI LMP92001 ADC driver posted by Abhisit Sangjan
-> (cc), however looking at the datasheet of that chip reveals that
-> continuous versus one-shot mode is selected by flipping a bit in the
-> chip's register map.
->
-> So it is configurable at run-time.  It's not something that's hardwired.
-> (Which is the case with the MCP3550 in my patch.)
->
-> My understanding was that run-time configurable options should not be
-> listed in the device-tree at all, only hardware features.  If that is
-> correct then that device-tree property should be dropped from Abhisit
-> Sangjan's patch.  Configuring the feature via sysfs is fine I guess.
->
-> However we do have another driver supporting continuous versus one-shot
-> mode and that is drivers/iio/light/us5182d.c by Adriana Reus (cc).
-> The feature was added with commit c3304c212326.  I'm not sure if it's
-> hardwired or runtime-configurable, the datasheet is gone from the
-> manufacturer's website.
-For the us5182 continuous versus one-shot is also a configuration in the
-chip's registers. I think it would be fine also as a sysfs property instead.
->
-> I agree that a common "continuous" property makes sense.  We haven't
-> defined any common IIO properties so far and that has already led to
-> inconsistencies.  E.g. most ADC/DAC drivers name the reference regulator
-> "vref-supply", but e.g. drivers/iio/dac/ad7303.c calls it "REF-supply".
->
-> What do you think of this:
->
-> -- >8 --
-> Subject: [PATCH] dt-bindings: iio: Document common properties
->
-> It's about time we standardize on common names for frequently used IIO
-> properties.  For starters, document "vref-supply" and "continuous".
->
-> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/iio/iio-bindings.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> index 68d6f8c..c3e87e15 100644
-> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> @@ -95,3 +95,18 @@ vdd channel is connected to output 0 of the &ref device.
->                 io-channels = <&adc 10>, <&adc 11>;
->                 io-channel-names = "adc1", "adc2";
->         };
+what I would ask you is to be consistent with the naming, if your
+driver is called mtk-pmic, then all your functions and global
+variables should be named accordingly as mtk_pmic or MTK_PMIC.
+Please check in between the lines for real examples:
+
+> +#define PWRKEY_RST_EN_MASK	0x1
+> +#define PWRKEY_RST_EN_SHIFT	6
+> +#define HOMEKEY_RST_EN_MASK	0x1
+> +#define HOMEKEY_RST_EN_SHIFT	5
+> +#define RST_DU_MASK		0x3
+> +#define RST_DU_SHIFT		8
 > +
-> +==Common IIO properties==
+> +#define PMIC_PWRKEY_INDEX	0
+> +#define PMIC_HOMEKEY_INDEX	1
+> +#define PMIC_MAX_KEY_COUNT	2
+
+#define MTK_PMIC_*
+
+> +struct pmic_keys_regs {
+
+struct mtk_pmic_keys_regs
+
+> +	u32 deb_reg;
+> +	u32 deb_mask;
+> +	u32 intsel_reg;
+> +	u32 intsel_mask;
+> +};
 > +
-> +Reference voltage:
-> +ADCs, DACs and several other IIO devices require a reference voltage.
-> +By convention the property specifying this regulator is named "vref-supply".
-> +If the chip lacks a dedicated Vref pin and instead uses its own power supply
-> +as reference, the property specifying the regulator is commonly named
-> +"vdd-supply" or "vcc-supply".
+> +#define PMIC_KEYS_REGS(_deb_reg, _deb_mask, _intsel_reg, _intsel_mask)	\
+
+MTK_PMIC_KEYS_REGS
+
+> +{									\
+> +	.deb_reg		= _deb_reg,				\
+> +	.deb_mask		= _deb_mask,				\
+> +	.intsel_reg		= _intsel_reg,				\
+> +	.intsel_mask		= _intsel_mask,				\
+> +}
 > +
-> +Continuous mode:
-> +Some sensors can be configured to perform continuous (versus one-shot)
-> +measurements.  Continuous mode may require more energy in return for faster
-> +or more reliable measurements.  A boolean property named "continuous"
-> +signifies that the device is configured for this mode.
-> --
-> 2.11.0
+> +struct pmic_regs {
+
+mtk_pmic_regs
+
+and so on... you got the point.
+
+Andi
