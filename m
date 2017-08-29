@@ -1,75 +1,65 @@
-From: Chen Zhong <chen.zhong@mediatek.com>
-Subject: Re: [PATCH v3 4/5] input: Add MediaTek PMIC keys support
-Date: Tue, 29 Aug 2017 15:40:59 +0800
-Message-ID: <1503992459.15359.4.camel@mhfsdcap03>
-References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
-         <CGME20170825063247epcas5p1df2f4440010dd55dada66e8764d18e50@epcas5p1.samsung.com>
-         <1503642753-12385-5-git-send-email-chen.zhong@mediatek.com>
-         <20170829073453.GB4469@gangnam>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: r8a77995: add pfc device node
+Date: Tue, 29 Aug 2017 07:42:19 +0000
+Message-ID: <TY1PR06MB0992E9BA887138507CC3A216D89F0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWzc0A-16LUz4rVHJBRk9Fdhs_BLBHqpgPrYOdm23qzAg@mail.gmail.com>
+ <20170828140503.GI18592@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170829073453.GB4469@gangnam>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Jaechul Lee <jcsing.lee@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170828140503.GI18592@verge.net.au>
+Content-Language: ja-JP
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andi,
+Hi Simon-san,
 
-Sorry for that, i deleted some prefix since the namings will be such
-long. If this should be consistent, I'll check and modify them in the
-next version.
+> -----Original Message-----
+> From: Simon Horman
+> Sent: Monday, August 28, 2017 11:05 PM
+>=20
+> On Mon, Aug 28, 2017 at 10:39:47AM +0200, Geert Uytterhoeven wrote:
+> > Hi Shimoda-san, Simon,
+> >
+> > On Wed, Aug 9, 2017 at 2:20 PM, Yoshihiro Shimoda
+> > <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > ---
+> > >
+> > >  This patch set is based on the renesas-drivers.git /
+> > > topic/r8a77995-integration branch and depends on the following patch
+> > >  "pinctrl: sh-pfc: r8a77995: Initial R8A77995 PFC support"
+> > >
+> > >  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/b=
+oot/dts/renesas/r8a77995.dtsi
+> > > index 7419688..240b0f8 100644
+> > > --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> > > +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> > > @@ -123,6 +123,11 @@
+> > >                         reg =3D <0 0xe6160000 0 0x0200>;
+> > >                 };
+> > >
+> > > +               pfc: pfc@e6060000 {
+> >
+> > Upon second look, this should use the generic "pin-controller@..." node=
+ name.
+> > I will fix the example in the bindings.
+> >
+> > > +                       compatible =3D "renesas,pfc-r8a77995";
+> > > +                       reg =3D <0 0xe6060000 0 0x508>;
+> > > +               };
+>=20
+> Shimoda-san, as this patch has been accepted for v4.14 could
+> you please send a follow-up patch (for v4.15)?
 
-Thank you.
+Sure. I submitted a patch now.
 
-On Tue, 2017-08-29 at 16:34 +0900, Andi Shyti wrote:
-> Hi Chen,
-> 
-> what I would ask you is to be consistent with the naming, if your
-> driver is called mtk-pmic, then all your functions and global
-> variables should be named accordingly as mtk_pmic or MTK_PMIC.
-> Please check in between the lines for real examples:
-> 
-> > +#define PWRKEY_RST_EN_MASK	0x1
-> > +#define PWRKEY_RST_EN_SHIFT	6
-> > +#define HOMEKEY_RST_EN_MASK	0x1
-> > +#define HOMEKEY_RST_EN_SHIFT	5
-> > +#define RST_DU_MASK		0x3
-> > +#define RST_DU_SHIFT		8
-> > +
-> > +#define PMIC_PWRKEY_INDEX	0
-> > +#define PMIC_HOMEKEY_INDEX	1
-> > +#define PMIC_MAX_KEY_COUNT	2
-> 
-> #define MTK_PMIC_*
-> 
-> > +struct pmic_keys_regs {
-> 
-> struct mtk_pmic_keys_regs
-> 
-> > +	u32 deb_reg;
-> > +	u32 deb_mask;
-> > +	u32 intsel_reg;
-> > +	u32 intsel_mask;
-> > +};
-> > +
-> > +#define PMIC_KEYS_REGS(_deb_reg, _deb_mask, _intsel_reg, _intsel_mask)	\
-> 
-> MTK_PMIC_KEYS_REGS
-> 
-> > +{									\
-> > +	.deb_reg		= _deb_reg,				\
-> > +	.deb_mask		= _deb_mask,				\
-> > +	.intsel_reg		= _intsel_reg,				\
-> > +	.intsel_mask		= _intsel_mask,				\
-> > +}
-> > +
-> > +struct pmic_regs {
-> 
-> mtk_pmic_regs
-> 
-> and so on... you got the point.
-> 
-> Andi
+Best regards,
+Yoshihiro Shimoda
