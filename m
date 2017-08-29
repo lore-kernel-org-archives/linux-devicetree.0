@@ -1,84 +1,59 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [patch v1 1/2] dt-bindings: net: add binding documentation for
- mlxsw thermal control
-Date: Tue, 29 Aug 2017 21:15:25 +0200
-Message-ID: <20170829191525.GH8235@lunn.ch>
-References: <1504032311-195988-1-git-send-email-vadimp@mellanox.com>
- <1504032311-195988-2-git-send-email-vadimp@mellanox.com>
- <20170829172254.GG8235@lunn.ch>
- <AM4PR05MB33300CC580ADD6CDABD13167A29F0@AM4PR05MB3330.eurprd05.prod.outlook.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESEND PATCH 2/3] regulator: Add support for stm32-vrefbuf
+Date: Tue, 29 Aug 2017 19:57:19 +0100
+Message-ID: <20170829185719.h5fxvzmxbysyxwml@sirena.org.uk>
+References: <1503925133-30722-1-git-send-email-fabrice.gasnier@st.com>
+ <1503925133-30722-3-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="otah7lm27avz6sqa"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <AM4PR05MB33300CC580ADD6CDABD13167A29F0-n5Jp0YuYvM1LPiJj6BpYmdqRiQSDpxhJvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, "ivecera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <ivecera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1503925133-30722-3-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 29, 2017 at 05:57:01PM +0000, Vadim Pasternak wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Lunn [mailto:andrew-g2DYL2Zd6BY@public.gmane.org]
-> > Sent: Tuesday, August 29, 2017 8:23 PM
-> > To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> > Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org;
-> > ivecera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Subject: Re: [patch v1 1/2] dt-bindings: net: add binding documentation for
-> > mlxsw thermal control
-> > 
-> > > +- compatible		: "mellanox,mlxsw_minimal"
-> > 
-> > Interesting product name. Is there a mlxsw_maximal planned?
-> > 
-> 
-> Hi Andrew,
-> 
-> Thank you very much for review.
-> 
-> No plans for such product. We just have fully functional drivers for different
-> kind of Mellanox switch devices like spectrum, switchib, switchx2. All of them
-> work over PCI bus. The minimal is supposed to be used for the chassis
-> management and we uses it at BMC side. It works over I2C bus and doesn't
-> depend on switch type. So it has a minaml functionality, so name "minimal".
 
-That is not really how device tree compatible names work. The
-compatible should be the product name, or the first product which had
-this functionality. So in this case is the product is the chassis?
-What name does the chassis have?
+--otah7lm27avz6sqa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-At some point, it would be good if you made the .dts file public. That
-would give people a better idea how this all fits together.
+On Mon, Aug 28, 2017 at 02:58:52PM +0200, Fabrice Gasnier wrote:
 
-> > I don't know much about the thermal subsystem. But looking at other
-> > example binding documents, you seem to do something different here to
-> > other drivers. Why do you not use what seems to be the common format:
-> 
-> In mlxsw_thermal driver we have definition for the thermal trips, which contains
-> the type, like  "active" of "passive", temperature  in millicelsius and min/max states
-> for cooling device. These vector defines thermal trip points.
-> The hysteresis parameter is not relevant.
+> +	ret = clk_prepare_enable(priv->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "clk prepare failed\n");
 
-As i said, i don't know much about the thermal subsystem. So i cannot
-comment on if your binding is good or bad. It just seems different,
-which is often bad.
+If you're printing an error include the error code, it'll help users
+figure out what went wrong.
 
-You really need the thermal subsystem guys to review this. But you
-didn't Cc: them.
+> +	dev_info(&pdev->dev, "STM32 VREFBUF initialized\n");
 
-./scripts/get_maintainer.pl drivers/thermal/thermal_core.c 
-Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> (supporter:THERMAL)
-Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (supporter:THERMAL)
-linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:THERMAL)
+This is just noise, remove it.
 
-This driver has nothing to do with netdev. I'm wondering if it
-actually belongs in drivers/thermal? Or maybe drivers/hwmon?
-The pm and hwmon guys will probably tell you.
+> +static int __init stm32_vrefbuf_init(void)
+> +{
+> +	return platform_driver_register(&stm32_vrefbuf_driver);
+> +}
+> +subsys_initcall(stm32_vrefbuf_init);
 
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why is this at subsys_initcall()?
+
+--otah7lm27avz6sqa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmluQ4ACgkQJNaLcl1U
+h9D+awf6A0t7trQWkJ9xCOwswbRCLOcGxHKLETL+dyXAcLBVJuJ+HKhhigWTI3h5
+krOCNIty2QwPrkozDNUSryhiXlZVGTMgxbgnpfYez/+lLL5qGwy0itJm3Qjaz20E
+x/VbFlkvQM42FDkXVod5lZVBRYIlXtL9RpXo+0QuUvIO9yrpukTqYg7+K3ZsHoyj
+Y7unMNaAvXe+pkfrbv6PuJKR7yOhLQQHdNgvYX44DClAOdIKc2060QONccEaDLXb
+RHFdkX5Z6QVrVDjmydlq5Q0hLzwIfqR2sN1euUjyv55lblQGe287QFfoYriieCcY
+GqZYJldlMlTU0FOiyBuVqBdXu5TzUA==
+=SRV0
+-----END PGP SIGNATURE-----
+
+--otah7lm27avz6sqa--
