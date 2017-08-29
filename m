@@ -1,73 +1,102 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 14/17] ARM: dts: Add missing gpu node and binding for
- omap4
-Date: Tue, 29 Aug 2017 07:34:53 -0700
-Message-ID: <20170829143453.GV6008@atomide.com>
-References: <20170828211918.11573-1-tony@atomide.com>
- <20170828211918.11573-15-tony@atomide.com>
- <20170829090034.ytepjfv2jkkd2b3z@earth>
- <201708291135.v7TBZCHH020827@dflxv15.itg.ti.com>
- <20170829121041.dweciryplio5i4jr@earth>
- <e0c6447f-5a0f-b43a-7087-5ee37af2a1c1@ti.com>
+From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Subject: [PATCH 1/3] of/pci: Add dma-ranges parsing support
+Date: Tue, 29 Aug 2017 16:25:55 +0200
+Message-ID: <0d4313c7-6595-a7fb-680a-e231dc9c0902@sigmadesigns.com>
+References: <f10055cc-4430-ff30-f892-3d3d6f24354c@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e0c6447f-5a0f-b43a-7087-5ee37af2a1c1-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <f10055cc-4430-ff30-f892-3d3d6f24354c@sigmadesigns.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Mason <slash.tmp@free.fr>, Andrew Murray <amurray@embedded-bits.co.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [170829 05:25]:
-> ﻿
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-> On 29/08/17 15:10, Sebastian Reichel wrote:
-> 
-> >> Do we even want to add SGX to the .dts? We don't have proper drivers for
-> >> SGX. If we ever do, who knows what kind of DT data they need. I know the
-> >> DT data for SGX in TI's kernel tree has changed at least once.
-> > 
-> > I don't think reg or interrupts will be removed, so the properties
-> > added by Tony look pretty safe?. I guess if we ever have a driver
-> 
-> Maybe. At the moment we have this in TI's tree for DRA7:
-> 
-> gpu: gpu@56000000 {
-> 	compatible = "ti,dra7-sgx544", "img,sgx544";
-> 	reg = <0x56000000 0x10000>;
-> 	reg-names = "gpu_ocp_base";
-> 	interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> 	ti,hwmods = "gpu";
-> 	clocks = <&l3_iclk_div>, <&gpu_core_gclk_mux>,
-> 		<&gpu_hyd_gclk_mux>;
-> 	clock-names = "iclk", "fclk1", "fclk2";
-> };
-> 
-> > it would need some more properties and would bail out. Having no
-> > DT data is does not load at all, the result is the same. OTOH having
-> > the node means the kernel can properly send the module to idle.
-> 
-> I just get uneasy when adding DT data that we're not really sure if it's
-> ok or not. I've been fighting with such data for ages. But, as you say,
-> this probably won't matter if the driver will just reject DT data that
-> doesn't have all the details.
+Several host bridge drivers duplicate of_pci_range_parser_init()
+in order to parse their dma-ranges property.
 
-The above example looks OK to me, the interrupt is different for omap4.
+Provide of_pci_dma_range_parser_init() for that use-case.
 
-> If we need the DT node to idle SGX, and we don't even mean to actually
-> use an SGX driver with this data, it sounds fine to me.
+Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+---
+ drivers/of/address.c       | 19 ++++++++++++++++---
+ include/linux/of_address.h | 10 +++++++++-
+ 2 files changed, 25 insertions(+), 4 deletions(-)
 
-Well ideally the SGX driver will make use of it too. Let me know
-if you want to leave out some parts of the above example from
-TI tree.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 580bbf6ca2b1..4cfd29e4ee1b 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -232,8 +232,8 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
+ }
+ EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
+ 
+-int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+-				struct device_node *node)
++static int parser_init(struct of_pci_range_parser *parser,
++			struct device_node *node, const char *name)
+ {
+ 	const int na = 3, ns = 2;
+ 	int rlen;
+@@ -242,7 +242,7 @@ int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+ 	parser->pna = of_n_addr_cells(node);
+ 	parser->np = parser->pna + na + ns;
+ 
+-	parser->range = of_get_property(node, "ranges", &rlen);
++	parser->range = of_get_property(node, name, &rlen);
+ 	if (parser->range == NULL)
+ 		return -ENOENT;
+ 
+@@ -250,8 +250,21 @@ int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+ 
+ 	return 0;
+ }
++
++int of_pci_range_parser_init(struct of_pci_range_parser *parser,
++				struct device_node *node)
++{
++	return parser_init(parser, node, "ranges");
++}
+ EXPORT_SYMBOL_GPL(of_pci_range_parser_init);
+ 
++int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
++				struct device_node *node)
++{
++	return parser_init(parser, node, "dma-ranges");
++}
++EXPORT_SYMBOL_GPL(of_pci_dma_range_parser_init);
++
+ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 						struct of_pci_range *range)
+ {
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 37864734ca50..8beed2de98e9 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -49,6 +49,8 @@ extern const __be32 *of_get_address(struct device_node *dev, int index,
+ 
+ extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+ 			struct device_node *node);
++extern int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
++			struct device_node *node);
+ extern struct of_pci_range *of_pci_range_parser_one(
+ 					struct of_pci_range_parser *parser,
+ 					struct of_pci_range *range);
+@@ -85,7 +87,13 @@ static inline const __be32 *of_get_address(struct device_node *dev, int index,
+ static inline int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+ 			struct device_node *node)
+ {
+-	return -1;
++	return -ENOSYS;
++}
++
++static inline int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
++			struct device_node *node)
++{
++	return -ENOSYS;
+ }
+ 
+ static inline struct of_pci_range *of_pci_range_parser_one(
+-- 
+2.11.0
