@@ -1,59 +1,80 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESEND PATCH 2/3] regulator: Add support for stm32-vrefbuf
-Date: Tue, 29 Aug 2017 19:57:19 +0100
-Message-ID: <20170829185719.h5fxvzmxbysyxwml@sirena.org.uk>
-References: <1503925133-30722-1-git-send-email-fabrice.gasnier@st.com>
- <1503925133-30722-3-git-send-email-fabrice.gasnier@st.com>
+Subject: Applied "ASoC: rockchip: Update description of
+	rockchip, codec" to the asoc tree
+Date: Tue, 29 Aug 2017 20:25:47 +0100 (BST)
+Message-ID: <20170829192547.A15614400E7@finisterre.ee.mobilebroadband>
+References: <20170822153555.20735-9-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="otah7lm27avz6sqa"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1503925133-30722-3-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170822153555.20735-9-jeffy.chen@rock-chips.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, heiko@sntech.de, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, briannorris@chromium.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dianders@chromium.org, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, dgreid@chromium.org, mka@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---otah7lm27avz6sqa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   ASoC: rockchip: Update description of rockchip, codec
 
-On Mon, Aug 28, 2017 at 02:58:52PM +0200, Fabrice Gasnier wrote:
+has been applied to the asoc tree at
 
-> +	ret = clk_prepare_enable(priv->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "clk prepare failed\n");
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-If you're printing an error include the error code, it'll help users
-figure out what went wrong.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> +	dev_info(&pdev->dev, "STM32 VREFBUF initialized\n");
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-This is just noise, remove it.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> +static int __init stm32_vrefbuf_init(void)
-> +{
-> +	return platform_driver_register(&stm32_vrefbuf_driver);
-> +}
-> +subsys_initcall(stm32_vrefbuf_init);
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Why is this at subsys_initcall()?
+Thanks,
+Mark
 
---otah7lm27avz6sqa
-Content-Type: application/pgp-signature; name="signature.asc"
+>From aa71fba41b6fdcfe7d7772b057b76177304775dd Mon Sep 17 00:00:00 2001
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Date: Thu, 24 Aug 2017 12:52:27 +0800
+Subject: [PATCH] ASoC: rockchip: Update description of rockchip, codec
 
------BEGIN PGP SIGNATURE-----
+Update description for newly added optional audio codecs.
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmluQ4ACgkQJNaLcl1U
-h9D+awf6A0t7trQWkJ9xCOwswbRCLOcGxHKLETL+dyXAcLBVJuJ+HKhhigWTI3h5
-krOCNIty2QwPrkozDNUSryhiXlZVGTMgxbgnpfYez/+lLL5qGwy0itJm3Qjaz20E
-x/VbFlkvQM42FDkXVod5lZVBRYIlXtL9RpXo+0QuUvIO9yrpukTqYg7+K3ZsHoyj
-Y7unMNaAvXe+pkfrbv6PuJKR7yOhLQQHdNgvYX44DClAOdIKc2060QONccEaDLXb
-RHFdkX5Z6QVrVDjmydlq5Q0hLzwIfqR2sN1euUjyv55lblQGe287QFfoYriieCcY
-GqZYJldlMlTU0FOiyBuVqBdXu5TzUA==
-=SRV0
------END PGP SIGNATURE-----
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---otah7lm27avz6sqa--
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+index eac91db07178..72d3cf4c2606 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+@@ -4,7 +4,7 @@ Required properties:
+ - compatible: "rockchip,rk3399-gru-sound"
+ - rockchip,cpu: The phandle of the Rockchip I2S controller that's
+   connected to the codecs
+-- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
++- rockchip,codec: The phandle of the audio codecs
+ 
+ Optional properties:
+ - dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
+-- 
+2.13.2
