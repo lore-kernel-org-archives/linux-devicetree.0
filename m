@@ -1,58 +1,60 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH RESEND v2 3/3] dt-bindings: mt8173-mtu3: add generic
- compatible and rename file
-Date: Tue, 29 Aug 2017 13:08:09 +0300
-Message-ID: <1a489dcc-e95c-bfe3-8e2a-fe2591fe86d8@cogentembedded.com>
-References: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1503998338.git.chunfeng.yun@mediatek.com>
- <61060035e057b13f43d383645c53c8726b7e67ab.1503998339.git.chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <61060035e057b13f43d383645c53c8726b7e67ab.1503998339.git.chunfeng.yun@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 2/2] ARM: dts: iwg20d-q7: Add RTC support
+Date: Tue, 29 Aug 2017 10:56:23 +0100
+Message-ID: <1504000583-21996-3-git-send-email-biju.das@bp.renesas.com>
+References: <1504000583-21996-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1504000583-21996-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Define the iWave RainboW-G20D-Qseven board dependent part of the
+RTC device node.
 
-On 8/29/2017 12:20 PM, Chunfeng Yun wrote:
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+v1-->v2
+   * Added ti to bq32000 compatible string - Thanks Geert
+   * Repositioned i2c2_pins node.
 
-> The mt8173-mtu3.txt actually holds the bindings for all mediatek
-> SoCs with usb3 DRD IP, so add a generic compatible and change the
-> name to mediatek,mtu3.txt.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->   .../usb/{mt8173-mtu3.txt => mediatek,mtu3.txt}     |    6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
->   rename Documentation/devicetree/bindings/usb/{mt8173-mtu3.txt => mediatek,mtu3.txt} (92%)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> similarity index 92%
-> rename from Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-> rename to Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> index b8ea394..722a029 100644
-> --- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> @@ -1,7 +1,11 @@
->   The device node for Mediatek USB3.0 DRD controller
->   
->   Required properties:
-> - - compatible : should be "mediatek,mt8173-mtu3"
-> + - compatible : should be "mediatek,soc-model-mtu3", "mediatek,mtu3",
+ arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-    Worth enclosing soc-model in <>.
-
-> +	soc-model is the name of SoC, such as mt8173, mt2712 etc,
-> +	when using "mediatek,mtu3" compatible string, you need SoC specific
-> +	ones in addition, one of:
-> +	- "mediatek,mt8173-mtu3"
->    - reg : specifies physical base address and size of the registers
->    - reg-names: should be "mac" for device IP and "ippc" for IP port control
->    - interrupts : interrupt used by the device IP
-
-MBR, Sergei
+diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+index e30c586..2b58b53 100644
+--- a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
++++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+@@ -50,6 +50,11 @@
+ };
+ 
+ &pfc {
++	i2c2_pins: i2c2 {
++		groups = "i2c2";
++		function = "i2c2";
++	};
++
+ 	scif0_pins: scif0 {
+ 		groups = "scif0_data_d";
+ 		function = "scif0";
+@@ -107,3 +112,16 @@
+ 	sd-uhs-sdr50;
+ 	status = "okay";
+ };
++
++&i2c2 {
++	pinctrl-0 = <&i2c2_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	clock-frequency = <400000>;
++
++	rtc@68 {
++		compatible = "ti,bq32000";
++		reg = <0x68>;
++	};
++};
+-- 
+1.9.1
