@@ -1,78 +1,44 @@
-From: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [patch v1 1/2] dt-bindings: net: add binding documentation for mlxsw thermal control
-Date: Tue, 29 Aug 2017 18:45:10 +0000
-Message-ID: <1504032311-195988-2-git-send-email-vadimp@mellanox.com>
-References: <1504032311-195988-1-git-send-email-vadimp@mellanox.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
+Date: Tue, 29 Aug 2017 17:48:24 +0100
+Message-ID: <20170829164824.GH20805@n2100.armlinux.org.uk>
+References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
+ <20170726102748.GM31807@n2100.armlinux.org.uk>
+ <20170728152311.GA970@e110455-lin.cambridge.arm.com>
+ <20170728155827.GV31807@n2100.armlinux.org.uk>
+ <20170829133351.GK10796@e110455-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504032311-195988-1-git-send-email-vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170829133351.GK10796-A/Nd4k6kWRHZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Cc: jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, ivecera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding document for Mellanox switch devices.
+On Tue, Aug 29, 2017 at 02:33:52PM +0100, Liviu Dudau wrote:
+> I've worked with Vladimir Murzin inside ARM to try to sort out problems
+> on the board like the one that you have. He's got to a point where the HDLCD
+> starts correctly after adding a non-fixed pxlclk source, but then the rest of
+> the setup is semi-useless without a working IRQ because DRM atomic calls
+> will give you a vblank timeout splat everytime you invoke them. So I'm
+> not sure how you want to progress with this patch, as not having an IRQ
+> line means you will not get any vblank interrupts and you can't use the
+> driver with userspace that calls DRM API.
+> 
+> The RTL guys are apparently working on a fix, but I have no ETA or
+> details on when they are going to do.
 
-Signed-off-by: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/net/mellanox,mlxsw.txt     | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/mellanox,mlxsw.txt
+It sounds then like this patch doesn't make sense - so I'm happy
+for it to be dropped.  It's something to bear in mind in the future
+when folk decide whether to adopt fbdev or DRM support for hardware
+that gets used in MMU-less hardware...
 
-diff --git a/Documentation/devicetree/bindings/net/mellanox,mlxsw.txt b/Documentation/devicetree/bindings/net/mellanox,mlxsw.txt
-new file mode 100644
-index 0000000..55de5ff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/mellanox,mlxsw.txt
-@@ -0,0 +1,46 @@
-+Mellanox Technologies Switch ASICs
-+
-+This file provides information, what the device node
-+for the Switch ASIC interface contains.
-+
-+Required properties:
-+- compatible		: "mellanox,mlxsw_minimal"
-+- reg			: The I2C address of the device.
-+
-+Optional properties:
-+- cooling-phandle	: phandle of the cooling device, which is to be used
-+			  for the zone thermal control.
-+			  If absent, cooling device controlled internally by
-+			  the ASIC may be used.
-+
-+- trips			: the nodes to describe a point in the temperature
-+			  domain with key temperatures at which cooling is
-+			  recommended. Each node must contain the next values:
-+			  - type: the trip type. Expected values are:
-+			    0 - a trip point to enable active cooling;
-+			    1 - a trip point to enable passive cooling;
-+			    2 - a trip point to notify emergency;
-+			  - temperature: unsigned integer indicating the trip
-+			    temperature level in millicelsius;
-+			  - minimum cooling state allowed within the trip node;
-+			  - maximum cooling state allowed within the trip node;
-+
-+Example:
-+	asic_thermal: mlxsw_minimal@48 {
-+		compatible = "mlxsw_minimal";
-+		reg = <0x48>;
-+		status = "disabled";
-+		cooling-phandle = <&cooling>;
-+
-+		trips {
-+			trip@0 {
-+				trip = <0 75000 0 0>;
-+			};
-+			trip@1 {
-+				trip = <2 85000 1 5>;
-+			};
-+			trip@3 {
-+				trip = <2 105000 5 5>;
-+			};
-+		};
-+	};
 -- 
-2.1.4
-
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
