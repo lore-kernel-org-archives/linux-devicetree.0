@@ -1,69 +1,39 @@
-From: Marcin Wojtas <mw@semihalf.com>
-Subject: Re: [PATCH v3 0/2] pci: add support for firmware initialized
- designware RCs
-Date: Tue, 29 Aug 2017 17:40:30 +0200
-Message-ID: <CAPv3WKfzwA6C_jvw1i39q2X34PPLtDAipJMKuGvKh2fb8SPe_A@mail.gmail.com>
-References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 14/17] ARM: dts: Add missing gpu node and binding for
+ omap4
+Date: Tue, 29 Aug 2017 08:57:38 -0700
+Message-ID: <20170829155738.GB6008@atomide.com>
+References: <20170828211918.11573-1-tony@atomide.com>
+ <20170828211918.11573-15-tony@atomide.com>
+ <20170829090034.ytepjfv2jkkd2b3z@earth>
+ <201708291135.v7TBZCHH020827@dflxv15.itg.ti.com>
+ <20170829121041.dweciryplio5i4jr@earth>
+ <e0c6447f-5a0f-b43a-7087-5ee37af2a1c1@ti.com>
+ <20170829143453.GV6008@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: linux-pci@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170829143453.GV6008-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ard,
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170829 07:35]:
+> * Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [170829 05:25]:
+> > Maybe. At the moment we have this in TI's tree for DRA7:
+> > 
+> > gpu: gpu@56000000 {
+> > 	compatible = "ti,dra7-sgx544", "img,sgx544";
 
-It works on Armada 8040 MacchiatoBin board with e1000 card. You can add my:
+I'll leave out "img,sgx544" as that's the generic component
+that's really a child of this interconnect target module.
 
-Tested-by: Marcin Wojtas <mw@semihalf.com>
+Regards,
 
-Best regards,
-Marcin
-
-2017-08-28 20:04 GMT+02:00 Ard Biesheuvel <ard.biesheuvel@linaro.org>:
-> UEFI based systems incorporating a Synopsys Designware PCIe controller
-> in RC mode will typically configure it before entering the OS. If this
-> configuration is fully static and ECAM compliant, there is no need to
-> expose particulars of the device to the OS, and we can simply describe
-> it as "pci-host-ecam-generic".
->
-> However, the Synopsys IP may be synthesized in a way where a quirk is
-> needed for config space accesses to the first bus. It makes little sense
-> to instantiate yet another pcie-designware driver that contains all the
-> low level setup code, but it is also not justified to add quirks handling
-> to the generic ECAM driver.
->
-> So instead, create a variant of the generic ECAM driver that filters config
-> space accesses directed at device #1 and up on the first bus.
->
-> v3: - use SoC specific compatible strings
->     - drop MSI patch [for now], since it turns out we may not need it
->
-> v2: - use dev->fwnode directly
->     - replace an instance of pr_err with dev_err, and clarify the error message
->     - fix Kconfig/Makefile dependency errors reported by kbuild
->
-> Cc: Leif Lindholm <leif.lindholm@linaro.org>
-> Cc: Graeme Gregory <graeme.gregory@linaro.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Joao Pinto <Joao.Pinto@synopsys.com>
-> Cc: Rob Herring <robh@kernel.org>
->
-> Ard Biesheuvel (2):
->   pci: designware: add driver for DWC controller in ECAM shift mode
->   dt-bindings: designware: add binding for Designware PCIe in ECAM mode
->
->  Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt | 42 +++++++++++
->  drivers/pci/dwc/Kconfig                                        | 11 +++
->  drivers/pci/dwc/Makefile                                       |  1 +
->  drivers/pci/dwc/pcie-designware-ecam.c                         | 77 ++++++++++++++++++++
->  4 files changed, 131 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
->  create mode 100644 drivers/pci/dwc/pcie-designware-ecam.c
->
-> --
-> 2.11.0
->
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
