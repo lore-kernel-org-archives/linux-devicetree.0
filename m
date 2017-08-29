@@ -1,74 +1,58 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 3/9] devicetree: bindings: Remove sh7372 CMT binding
-Date: Tue, 29 Aug 2017 11:34:21 +0200
-Message-ID: <1503999271-15712-3-git-send-email-daniel.lezcano@linaro.org>
-References: <20170829093354.GA2572@mai>
- <1503999271-15712-1-git-send-email-daniel.lezcano@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH RESEND v2 3/3] dt-bindings: mt8173-mtu3: add generic
+ compatible and rename file
+Date: Tue, 29 Aug 2017 13:08:09 +0300
+Message-ID: <1a489dcc-e95c-bfe3-8e2a-fe2591fe86d8@cogentembedded.com>
+References: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1503998338.git.chunfeng.yun@mediatek.com>
+ <61060035e057b13f43d383645c53c8726b7e67ab.1503998339.git.chunfeng.yun@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503999271-15712-1-git-send-email-daniel.lezcano@linaro.org>
+In-Reply-To: <61060035e057b13f43d383645c53c8726b7e67ab.1503998339.git.chunfeng.yun@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+Hello!
 
-Remove the sh7372 CMT compat string to reduce maintenance burden.
+On 8/29/2017 12:20 PM, Chunfeng Yun wrote:
 
-It should be fine to break DT compatibility because:
-1) The sh7372 SoC support has been removed from upstream
-2) The sh7372 CMT DT binding was never part of upstream DTS
-3) The CMT driver never matches on the sh7372 binding
+> The mt8173-mtu3.txt actually holds the bindings for all mediatek
+> SoCs with usb3 DRD IP, so add a generic compatible and change the
+> name to mediatek,mtu3.txt.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>   .../usb/{mt8173-mtu3.txt => mediatek,mtu3.txt}     |    6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+>   rename Documentation/devicetree/bindings/usb/{mt8173-mtu3.txt => mediatek,mtu3.txt} (92%)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> similarity index 92%
+> rename from Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+> rename to Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> index b8ea394..722a029 100644
+> --- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> @@ -1,7 +1,11 @@
+>   The device node for Mediatek USB3.0 DRD controller
+>   
+>   Required properties:
+> - - compatible : should be "mediatek,mt8173-mtu3"
+> + - compatible : should be "mediatek,soc-model-mtu3", "mediatek,mtu3",
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+    Worth enclosing soc-model in <>.
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index 1a05c1b..961c0b6 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -14,32 +14,26 @@ Required Properties:
-   - compatible: must contain one or more of the following:
-     - "renesas,cmt-32-r8a7740" for the r8a7740 32-bit CMT
- 		(CMT0)
--    - "renesas,cmt-32-sh7372" for the sh7372 32-bit CMT
--		(CMT0)
-     - "renesas,cmt-32-sh73a0" for the sh73a0 32-bit CMT
- 		(CMT0)
-     - "renesas,cmt-32" for all 32-bit CMT without fast clock support
--		(CMT0 on sh7372, sh73a0 and r8a7740)
-+		(CMT0 on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-32-* entries.
- 
-     - "renesas,cmt-32-fast-r8a7740" for the r8a7740 32-bit CMT with fast
- 		clock support (CMT[234])
--    - "renesas,cmt-32-fast-sh7372" for the sh7372 32-bit CMT with fast
--		clock support (CMT[234])
-     - "renesas,cmt-32-fast-sh73a0" for the sh73A0 32-bit CMT with fast
- 		clock support (CMT[234])
-     - "renesas,cmt-32-fast" for all 32-bit CMT with fast clock support
--		(CMT[234] on sh7372, sh73a0 and r8a7740)
-+		(CMT[234] on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-32-fast-* entries.
- 
--    - "renesas,cmt-48-sh7372" for the sh7372 48-bit CMT
--		(CMT1)
-     - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
- 		(CMT1)
-     - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
- 		(CMT1)
-     - "renesas,cmt-48" for all non-second generation 48-bit CMT
--		(CMT1 on sh7372, sh73a0 and r8a7740)
-+		(CMT1 on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-48-* entries.
- 
-     - "renesas,cmt-48-r8a73a4" for the r8a73a4 48-bit CMT
--- 
-2.7.4
+> +	soc-model is the name of SoC, such as mt8173, mt2712 etc,
+> +	when using "mediatek,mtu3" compatible string, you need SoC specific
+> +	ones in addition, one of:
+> +	- "mediatek,mt8173-mtu3"
+>    - reg : specifies physical base address and size of the registers
+>    - reg-names: should be "mac" for device IP and "ippc" for IP port control
+>    - interrupts : interrupt used by the device IP
+
+MBR, Sergei
