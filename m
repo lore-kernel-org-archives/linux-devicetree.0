@@ -1,110 +1,122 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [GIT PULL] Immutable branch between MFD and HWMON due for the
- v4.14 merge window
-Date: Tue, 29 Aug 2017 16:19:13 +0200
-Message-ID: <20170829141913.ieujukwf4xxed3ez@earth>
-References: <20170821145404.18902-1-sebastian.reichel@collabora.co.uk>
- <20170822074741.jjynyudbfgzsl7ju@dell>
- <20170829125113.g74twfnahomtdr2x@earth>
- <a61ad063-07a2-c24c-45b8-c3bdfe630a0c@roeck-us.net>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 08/17] ARM: dts: Add missing hsi node for omap4
+Date: Tue, 29 Aug 2017 07:20:30 -0700
+Message-ID: <20170829142029.GS6008@atomide.com>
+References: <20170828211918.11573-1-tony@atomide.com>
+ <20170828211918.11573-9-tony@atomide.com>
+ <20170829091825.aye2ulcurnhs24uw@earth>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f2pl5gxxjo7ah37z"
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <a61ad063-07a2-c24c-45b8-c3bdfe630a0c@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Lee Jones <lee.jones@linaro.org>, Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170829091825.aye2ulcurnhs24uw@earth>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> [170829 02:18]:
+> Hi,
+> 
+> On Mon, Aug 28, 2017 at 02:19:09PM -0700, Tony Lindgren wrote:
+> > On omap4 we're missing the hsi node with it's related "ti,hwmods"
+> > property that the SoC interconnect code needs.
+> > 
+> > Note that this will only show up as a bug with "doesn't have
+> > mpu register target base" boot errors when the legacy platform
+> > data is removed.
+> > 
+> > Let's also update the binding accrodingly while at it.
+> > 
+> > Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/hsi/omap-ssi.txt | 6 +++++-
+> >  arch/arm/boot/dts/omap4.dtsi                       | 9 +++++++++
+> >  2 files changed, 14 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hsi/omap-ssi.txt b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+> > --- a/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+> > +++ b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+> > @@ -4,7 +4,7 @@ OMAP Synchronous Serial Interface (SSI) controller implements a legacy
+> >  variant of MIPI's High Speed Synchronous Serial Interface (HSI).
+> >  
+> >  Required properties:
+> > -- compatible:		Should include "ti,omap3-ssi".
+> > +- compatible:		Should include "ti,omap3-ssi" or "ti,omap4-hsi"
+> >  - reg-names:		Contains the values "sys" and "gdd" (in this order).
+> >  - reg:			Contains a matching register specifier for each entry
+> >  			in reg-names.
+> > @@ -38,6 +38,10 @@ Required Port sub-node properties:
+> >  			property. If it's missing the port will not be
+> >  			enabled.
+> >  
+> > +Optional properties:
+> > +- ti,hwmods:		Shall contain TI interconnect module name if needed
+> > +			by the SoC
+> > +
+> >  Example for Nokia N900:
+> >  
+> >  ssi-controller@48058000 {
+> > diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> > --- a/arch/arm/boot/dts/omap4.dtsi
+> > +++ b/arch/arm/boot/dts/omap4.dtsi
+> > @@ -632,6 +632,15 @@
+> >  			dma-names = "tx", "rx";
+> >  		};
+> >  
+> > +		hsi: hsi@4a058000 {
+> > +			compatible = "ti,omap4-hsi";
+> > +			reg = <0x4a058000 0x4000>;
+> > +			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+> > +			ti,hwmods = "hsi";
+> > +		};
+> > +
+> 
+> This does not follow the binding, which expects one subnode per
+> port and splits memory areas + interrupts accordingly. Fortunately
+> HSI is properly documented in the public OMAP4 TRM (in opposit to
+> SSI, which is missing completly in OMAP3 TRM). I think the node
+> should look like this:
 
---f2pl5gxxjo7ah37z
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK sure let's add the subnodes too :)
 
-Hi Guenter,
+> hsi: hsi@4a058000 {
+>     compatible = "ti,omap4-hsi";
+>     ti,hwmods = "hsi";
+> 
+>     reg = <0x4a058000 0x5000>,
+>           <0x4a058000 0x1000>;
+>     reg-names = "sys", "gdd";
 
-On Tue, Aug 29, 2017 at 06:34:39AM -0700, Guenter Roeck wrote:
-> On 08/29/2017 05:51 AM, Sebastian Reichel wrote:
-> > Hi Lee,
-> >=20
-> > I noticed, that you did not yet push out your for-mfd-next branch,
-> > so the patches did not yet appear in linux-next. Was this
-> > intentional?
-> >=20
-> The immutable branch referenced below doesn't exist either.
+The module size is 0x4000 in the hardware. Then there's the L4
+interconnect registers at 0x5c000 0x1000:
 
-The immutable branch looks ok for me:
+	reg = <0x4a058000 0x4000>,
+	      <0x4a05c000 0x1000>;
+	reg-names = "sys", "gdd";
 
-https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=3Dib-mfd=
--hwmon-v4.14
+Hmm, what's the "gdd" name for? Probably it would be be to use "ta"
+there for "target agent" as that's generic and available for every
+module.
 
-> Guenter
->=20
-> > -- Sebastian
-> >=20
-> > On Tue, Aug 22, 2017 at 08:47:41AM +0100, Lee Jones wrote:
-> > > Enjoy!
-> > >=20
-> > > The following changes since commit 5771a8c08880cdca3bfb4a3fc6d309d6bb=
-a20877:
-> > >=20
-> > >    Linux v4.13-rc1 (2017-07-15 15:22:10 -0700)
-> > >=20
-> > > are available in the git repository at:
-> > >=20
-> > >    git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-h=
-wmon-v4.14
-> > >=20
-> > > for you to fetch changes up to 4f16cab19a3d57638dd5d962ff6e87c154a6ca=
-b2:
-> > >=20
-> > >    hwmon: da9052: Add support for TSI channel (2017-08-22 08:45:02 +0=
-100)
-> > >=20
-> > > ----------------------------------------------------------------
-> > > Immutable branch between MFD and HWMON due for the v4.14 merge window
-> > >=20
-> > > ----------------------------------------------------------------
-> > > Sebastian Reichel (4):
-> > >        mfd: da9052: Add register details for TSI
-> > >        hwmon: da9052: Replace S_IRUGO with 0444
-> > >        mfd: da9052: Make touchscreen registration optional
-> > >        hwmon: da9052: Add support for TSI channel
-> > >=20
-> > >   drivers/hwmon/da9052-hwmon.c      | 285 +++++++++++++++++++++++++++=
-++++++++---
-> > >   drivers/mfd/da9052-core.c         |  26 +++-
-> > >   include/linux/mfd/da9052/da9052.h |   6 +
-> > >   include/linux/mfd/da9052/reg.h    |  11 +-
-> > >   4 files changed, 302 insertions(+), 26 deletions(-)
-> > > --=20
-> > > Lee Jones
-> > > Linaro STMicroelectronics Landing Team Lead
-> > > Linaro.org =E2=94=82 Open source software for ARM SoCs
-> > > Follow Linaro: Facebook | Twitter | Blog
->=20
+>     clocks = <&hsi_fck>;
+>     clock-names = "hsi_fck";
+> 
+>     interrupts = <71>;
+>     interrupt-names = "gdd_mpu";
 
---f2pl5gxxjo7ah37z
-Content-Type: application/pgp-signature; name="signature.asc"
+And the interrupts need to be mapped for omap4. I'll post
+v2 with the subnodes.
 
------BEGIN PGP SIGNATURE-----
+Regards,
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmld98ACgkQ2O7X88g7
-+prsiA//SxVMCTss5Z5/F7cMOJviDNpepvVqu0K+lL5N0B3AtpoWeIRdnL2w91+f
-VCO1AD7Y9xqiY/IBuxoFMVssOxXw0DWlIVvu4PRglxjDttFGFozXVuUdkLEO8emQ
-fxJ/iw0X9MrkQb7oak1ShO0IxOWT7q+JDb7ExdOCCqVe0E2POQYJvvqiGmO718k/
-yfWZMkZcTVnxXsjGrOyT1vTIwSRtTOI8e0DVu1xvxch9WUTStOMBHy2qjGdobWlH
-jVNvtXmJWdFFntkD0Azr2CXCbVzAcM7lKnO+56Jz/pkPv1NUhV7pniWjYVcHx/Mx
-ZT9HIyBv4ETywDWZXbI3lp9RbFl4gKeSdWb1DIgJVndvf+5dcRsvzBYjIIeP+GSP
-zDqlpumiQyTuPBIjXXE8nmt9QizYdXQ4hUSCKBbYXBrwc+CqdE9TH0IRfsUGkvsC
-rQo+dc0NINmqgNMKH9LND+2/QG081A+eVAswglpE8k5kiUlkxempGSKiizFzgBS/
-Y2zqGemYK+WW9j3SQt61Z2wNmZWLndfEGfeeFIfD8FcT4GcgoGFL3rhWn94YXRUx
-+fE/uq+NxFcVZTQTLkOkRTWFX81S4z/qtpS8NqBucWMQMNyXm7bQ72KVuzdMhgiH
-7jBwvfLXdCsZCgY46j84tFh8I/Tyn3UbqQFXfoZF8n/4S1w1Zvc=
-=2uB7
------END PGP SIGNATURE-----
+Tony
 
---f2pl5gxxjo7ah37z--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
