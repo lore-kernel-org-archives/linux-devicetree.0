@@ -1,102 +1,54 @@
-From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Subject: [PATCH 1/3] of/pci: Add dma-ranges parsing support
-Date: Tue, 29 Aug 2017 16:25:55 +0200
-Message-ID: <0d4313c7-6595-a7fb-680a-e231dc9c0902@sigmadesigns.com>
-References: <f10055cc-4430-ff30-f892-3d3d6f24354c@sigmadesigns.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 14/17] ARM: dts: Add missing gpu node and binding for
+ omap4
+Date: Tue, 29 Aug 2017 07:37:23 -0700
+Message-ID: <20170829143723.GW6008@atomide.com>
+References: <20170828211918.11573-1-tony@atomide.com>
+ <20170828211918.11573-15-tony@atomide.com>
+ <20170829090034.ytepjfv2jkkd2b3z@earth>
+ <201708291135.v7TBZCHH020827@dflxv15.itg.ti.com>
+ <20170829121041.dweciryplio5i4jr@earth>
+ <5efc9078-5886-5826-834e-facd67ddfbe5@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <f10055cc-4430-ff30-f892-3d3d6f24354c@sigmadesigns.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Mason <slash.tmp@free.fr>, Andrew Murray <amurray@embedded-bits.co.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DT <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5efc9078-5886-5826-834e-facd67ddfbe5-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Several host bridge drivers duplicate of_pci_range_parser_init()
-in order to parse their dma-ranges property.
+* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [170829 05:28]:
+> ﻿
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> On 29/08/17 15:10, Sebastian Reichel wrote:
+> 
+> >> Do we even want to add SGX to the .dts? We don't have proper drivers for
+> >> SGX. If we ever do, who knows what kind of DT data they need. I know the
+> >> DT data for SGX in TI's kernel tree has changed at least once.
+> > 
+> > I don't think reg or interrupts will be removed, so the properties
+> > added by Tony look pretty safe?. I guess if we ever have a driver
+> 
+> Oh, and one more thing about the regs. I believe SGX consists of
+> multiple register blocks. But as it's not documented in any public docs,
+> there's just that single block in the DT data. I'm not sure if single
+> block or multiple blocks would be the right approach, but then, I guess
+> we can always live with just a single block and if needed split the
+> blocks inside the driver.
 
-Provide of_pci_dma_range_parser_init() for that use-case.
+OK, those register blocks can easily be child nodes of the module
+if needed. This is for the parent interconnect target module
+revc/sysc/syss registers that we already have mapped in legacy
+platform data for the interconnect code.
 
-Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
----
- drivers/of/address.c       | 19 ++++++++++++++++---
- include/linux/of_address.h | 10 +++++++++-
- 2 files changed, 25 insertions(+), 4 deletions(-)
+Regards,
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 580bbf6ca2b1..4cfd29e4ee1b 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -232,8 +232,8 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
- }
- EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
- 
--int of_pci_range_parser_init(struct of_pci_range_parser *parser,
--				struct device_node *node)
-+static int parser_init(struct of_pci_range_parser *parser,
-+			struct device_node *node, const char *name)
- {
- 	const int na = 3, ns = 2;
- 	int rlen;
-@@ -242,7 +242,7 @@ int of_pci_range_parser_init(struct of_pci_range_parser *parser,
- 	parser->pna = of_n_addr_cells(node);
- 	parser->np = parser->pna + na + ns;
- 
--	parser->range = of_get_property(node, "ranges", &rlen);
-+	parser->range = of_get_property(node, name, &rlen);
- 	if (parser->range == NULL)
- 		return -ENOENT;
- 
-@@ -250,8 +250,21 @@ int of_pci_range_parser_init(struct of_pci_range_parser *parser,
- 
- 	return 0;
- }
-+
-+int of_pci_range_parser_init(struct of_pci_range_parser *parser,
-+				struct device_node *node)
-+{
-+	return parser_init(parser, node, "ranges");
-+}
- EXPORT_SYMBOL_GPL(of_pci_range_parser_init);
- 
-+int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
-+				struct device_node *node)
-+{
-+	return parser_init(parser, node, "dma-ranges");
-+}
-+EXPORT_SYMBOL_GPL(of_pci_dma_range_parser_init);
-+
- struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 						struct of_pci_range *range)
- {
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 37864734ca50..8beed2de98e9 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -49,6 +49,8 @@ extern const __be32 *of_get_address(struct device_node *dev, int index,
- 
- extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
- 			struct device_node *node);
-+extern int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
-+			struct device_node *node);
- extern struct of_pci_range *of_pci_range_parser_one(
- 					struct of_pci_range_parser *parser,
- 					struct of_pci_range *range);
-@@ -85,7 +87,13 @@ static inline const __be32 *of_get_address(struct device_node *dev, int index,
- static inline int of_pci_range_parser_init(struct of_pci_range_parser *parser,
- 			struct device_node *node)
- {
--	return -1;
-+	return -ENOSYS;
-+}
-+
-+static inline int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
-+			struct device_node *node)
-+{
-+	return -ENOSYS;
- }
- 
- static inline struct of_pci_range *of_pci_range_parser_one(
--- 
-2.11.0
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
