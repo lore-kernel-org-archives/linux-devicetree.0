@@ -1,39 +1,37 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 14/17] ARM: dts: Add missing gpu node and binding for
- omap4
-Date: Tue, 29 Aug 2017 08:57:38 -0700
-Message-ID: <20170829155738.GB6008@atomide.com>
-References: <20170828211918.11573-1-tony@atomide.com>
- <20170828211918.11573-15-tony@atomide.com>
- <20170829090034.ytepjfv2jkkd2b3z@earth>
- <201708291135.v7TBZCHH020827@dflxv15.itg.ti.com>
- <20170829121041.dweciryplio5i4jr@earth>
- <e0c6447f-5a0f-b43a-7087-5ee37af2a1c1@ti.com>
- <20170829143453.GV6008@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170829143453.GV6008-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v4 0/2] Introduce support for mlxreg mfd core and I2C drivers
+Date: Tue, 29 Aug 2017 18:00:14 +0000
+Message-ID: <1504029616-192277-1-git-send-email-vadimp@mellanox.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, j.anaszewski@samsung.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, jiri@resnulli.us, gregkh@linuxfoundation.org, platform-driver-x86@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170829 07:35]:
-> * Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [170829 05:25]:
-> > Maybe. At the moment we have this in TI's tree for DRA7:
-> > 
-> > gpu: gpu@56000000 {
-> > 	compatible = "ti,dra7-sgx544", "img,sgx544";
+This patchset adds support for the Mellanox BMC card equipped with the
+programmable devices controlling hardware.
+The support includes:
+- signal handling for chassis, ASIC, CPU events;
+- LED control;
+- exposing sysfs interface for reset control, reset monitoring and mux
+  selection for the access to remote devices at the host side.
 
-I'll leave out "img,sgx544" as that's the generic component
-that's really a child of this interconnect target module.
+Vadim Pasternak (2):
+  mfd: Add Mellanox regmap core driver
+  mfd: Add Mellanox regmap I2C driver
 
-Regards,
+ .../bindings/mfd/mellanox,mlxreg-core.txt          | 367 +++++++++
+ MAINTAINERS                                        |   8 +
+ drivers/mfd/Kconfig                                |  28 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/mlxreg-core.c                          | 839 +++++++++++++++++++++
+ drivers/mfd/mlxreg-i2c.c                           | 183 +++++
+ include/linux/platform_data/mlxreg.h               | 138 ++++
+ 7 files changed, 1565 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core.txt
+ create mode 100644 drivers/mfd/mlxreg-core.c
+ create mode 100644 drivers/mfd/mlxreg-i2c.c
+ create mode 100644 include/linux/platform_data/mlxreg.h
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.1.4
