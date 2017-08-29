@@ -1,40 +1,104 @@
-From: "Mrs.Moria Mose" <lorenzo.melchiori-1Ph4/jfBtgs@public.gmane.org>
-Subject: Greetings from Reguler mail post office benin,
-Date: Tue, 29 Aug 2017 14:28:59 +0200 (CEST)
-Message-ID: <15e2df75d61.lorenzo.melchiori@alice.it>
-Reply-To: unitedpostoffice-pveGkIeVMScAvxtiuMwx3w@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 09/17] ARM: dts: Add missing iss node and binding for omap4
+Date: Tue, 29 Aug 2017 15:37:18 +0300
+Message-ID: <1768059.eopKmxhyQx@avalon>
+References: <20170828211918.11573-1-tony@atomide.com> <20170828211918.11573-10-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170828211918.11573-10-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Greetings from Reguler mail post office benin,
-    Date:28th/8/2017
+Hi Tony,
 
-This is to inform you that there is a ATM CARD in this office deposited by a 
-UBA-BANK  UNITED BANK OF AFRICA OFFICER DR.PETER GRE,on the 23th of AUGUST 
-2017. Your email address was attached to it and is to be post to you. I have 
-been waiting for you to contact us for your confirmable card which contains a 
-sum of $1.800,000.00 United States Dollars and some vital Documents.
+Thank you for the patch.
 
-Kindly contact our branch office (Reguler mail post office benin) to avoid 
-fraudulent issues concerning the service-Contact Mr.Joseph osimu,Email:
-(unitedpostoffice-pveGkIeVMScAvxtiuMwx3w@public.gmane.org)-Tell: +229 99 30 48 67.You are required to provide 
-to us your postal information below.
-Your full Name
-Your Country
-your Postal address
+On Tuesday, 29 August 2017 00:19:10 EEST Tony Lindgren wrote:
+> On omap4 we're missing the iss node with it's related "ti,hwmods"
+> property that the SoC interconnect code needs.
+> 
+> Note that this will only show up as a bug with "doesn't have
+> mpu register target base" boot errors when the legacy platform
+> data is removed.
+> 
+> Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/media/ti-iss.txt | 32 +++++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi                       |  7 +++++
+>  2 files changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/ti-iss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/ti-iss.txt
+> b/Documentation/devicetree/bindings/media/ti-iss.txt new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/ti-iss.txt
+> @@ -0,0 +1,32 @@
+> +Texas Instruments Imaging Subsystem (ISS) binding
+> +
+> +ISS is used for cameras on Texas Instruments SoCs.
+> +
+> +
+> +Required properties:
+> +
+> +compatible: Shall be one of the following:
+> +	    "ti,omap4-iss"
+> +
+> +reg: Shall contain the device instance IO range
+> +
+> +interrupts: Shall contain the device instance interrupt
+> +
+> +
+> +Optional properties:
+> +
+> +reg-names: Shall contain the IO range names if multiple IO
+> +	   ranges are used by the SoC
+> +
+> +ti,hwmods: Shall contain the TI interconnect module name if needed
+> +	   by the SoC
 
-NOTE: Every claim has en expiry period of fourteen working days (14days).
+This isn't enough. The ISS isn't a stand-alone IP core, it is connected to 
+external devices and those connections must be modelled in DT similarly to the 
+OMAP3 ISP.
 
-Yours Faithful
-Mrs. Moria Mose,
-Regular mail Service 
-Benin Republic 
+> +Example:
+> +
+> +	iss: iss@52000000 {
+> +		compatible = "ti,omap4-iss";
+> +		reg = <0x52000000 0x1000000>;
+> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> +		ti,hwmods = "iss";
+> +	};
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -649,6 +649,13 @@
+>  			#iommu-cells = <0>;
+>  		};
+> 
+> +		iss: iss@52000000 {
+> +			compatible = "ti,omap4-iss";
+> +			reg = <0x52000000 0x1000000>;
+> +			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> +			ti,hwmods = "iss";
+> +		};
+> +
+>  		mmu_ipu: mmu@55082000 {
+>  			compatible = "ti,omap4-iommu";
+>  			reg = <0x55082000 0x100>;
 
-Greetings from Reguler mail post office benin, 
+
+-- 
+Regards,
+
+Laurent Pinchart
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
