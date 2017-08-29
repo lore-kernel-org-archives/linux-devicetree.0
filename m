@@ -1,65 +1,39 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] arm64: dts: renesas: r8a77995: add pfc device node
-Date: Tue, 29 Aug 2017 07:42:19 +0000
-Message-ID: <TY1PR06MB0992E9BA887138507CC3A216D89F0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdWzc0A-16LUz4rVHJBRk9Fdhs_BLBHqpgPrYOdm23qzAg@mail.gmail.com>
- <20170828140503.GI18592@verge.net.au>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: r8a77995: update PFC node name to pin-controller
+Date: Tue, 29 Aug 2017 09:47:51 +0200
+Message-ID: <CAMuHMdVdZg4x6xEcP=h0anrXTMc=9eLN9vJAeaYSj2ci9t9TcQ@mail.gmail.com>
+References: <1503992159-16354-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170828140503.GI18592@verge.net.au>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1503992159-16354-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon-san,
+On Tue, Aug 29, 2017 at 9:35 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch changes the name from from e6060000.pfc and pfc@e6060000 to
+> e6060000.pin-controller and pin-controller@e6060000 like other Renesas
+> SoCs.
+>
+> Reported-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-> -----Original Message-----
-> From: Simon Horman
-> Sent: Monday, August 28, 2017 11:05 PM
->=20
-> On Mon, Aug 28, 2017 at 10:39:47AM +0200, Geert Uytterhoeven wrote:
-> > Hi Shimoda-san, Simon,
-> >
-> > On Wed, Aug 9, 2017 at 2:20 PM, Yoshihiro Shimoda
-> > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > ---
-> > >
-> > >  This patch set is based on the renesas-drivers.git /
-> > > topic/r8a77995-integration branch and depends on the following patch
-> > >  "pinctrl: sh-pfc: r8a77995: Initial R8A77995 PFC support"
-> > >
-> > >  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/b=
-oot/dts/renesas/r8a77995.dtsi
-> > > index 7419688..240b0f8 100644
-> > > --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> > > @@ -123,6 +123,11 @@
-> > >                         reg =3D <0 0xe6160000 0 0x0200>;
-> > >                 };
-> > >
-> > > +               pfc: pfc@e6060000 {
-> >
-> > Upon second look, this should use the generic "pin-controller@..." node=
- name.
-> > I will fix the example in the bindings.
-> >
-> > > +                       compatible =3D "renesas,pfc-r8a77995";
-> > > +                       reg =3D <0 0xe6060000 0 0x508>;
-> > > +               };
->=20
-> Shimoda-san, as this patch has been accepted for v4.14 could
-> you please send a follow-up patch (for v4.15)?
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Sure. I submitted a patch now.
+Gr{oetje,eeting}s,
 
-Best regards,
-Yoshihiro Shimoda
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
