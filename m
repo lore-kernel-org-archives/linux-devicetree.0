@@ -1,59 +1,47 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 03/16] spi: spi-falcon: drop check of boot select
-Date: Tue, 29 Aug 2017 19:33:30 +0100
-Message-ID: <20170829183330.bw32izdgscs3qv7n@sirena.org.uk>
-References: <20170819221823.13850-1-hauke@hauke-m.de>
- <20170819221823.13850-4-hauke@hauke-m.de>
- <20170828112327.GA15640@linux-mips.org>
- <40428f8d-f781-7952-30c6-41f65ec1096b@hauke-m.de>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 13/17] ARM: dts: Add missing fdif node and binding for
+ omap4
+Date: Tue, 29 Aug 2017 12:01:07 -0700
+Message-ID: <20170829190107.GE6008@atomide.com>
+References: <20170828211918.11573-1-tony@atomide.com>
+ <5996934.WE9heBV2Dy@avalon>
+ <20170829142941.GU6008@atomide.com>
+ <5659095.JaecBxseot@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="em6bza2p3zhdutf5"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <40428f8d-f781-7952-30c6-41f65ec1096b-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <5659095.JaecBxseot@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [170829 10:13]:
+> On Tuesday, 29 August 2017 17:29:42 EEST Tony Lindgren wrote:
+> > > Are there SoCs that don't need this ?
+> > 
+> > DaVinci or Keystone maybe? And I do have patches coming that will
+> > remove the need for "ti,hwmods" but that's still maybe 200 patches
+> > away or something..
+> 
+> That would be amazing :-)
 
---em6bza2p3zhdutf5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeah.. FYI, the way to get there is to have a generic interonnect
+target agent driver for the module, then have the device ip
+instance(s) just be children of the interconnect target. But
+it will be a while until I can start posting those patches.
 
-On Mon, Aug 28, 2017 at 01:29:33PM +0200, Hauke Mehrtens wrote:
+Until that's available, we can have minimal device specific
+interconnect target module drivers just like we have
+drivers/usb/musb/musb_am335x.c. That's the parent for two
+musb instances and one cppi41 dma instance. See also the
+related "usb@47400000" node in am33xx.dtsi and it's children.
 
-> Mark could you please have a look at the commit message if it is better n=
-ow.
+Regards,
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-Sending content free pings just adds to the mail volume (if they are
-seen at all) and if something has gone wrong you'll have to resend the
-patches anyway.
-
---em6bza2p3zhdutf5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmls3kACgkQJNaLcl1U
-h9B79gf/Wa/VFkXnOlBBNgm63YVzh2QsxE9mKHpvq1zfYnZKXeW4dHKXtXd0NT0T
-WDNmcLPyxJ6nmEPAxsarDv86W1wQ6oS91N+17jgdkneocp290gLk6C/esWLR+AqZ
-NU8f9FA+hl/YQ6ZLRiyz3EaB3kDGxGyIJCLgAj8MP0qogG8I5a05/fwc184qpG/I
-98rvKfPPfZilzOeeK34nxoFTQrp7q9+HHS5I0ZtJuTeHBXnjofkBcNULZRUSP3db
-jMnk1GqbA+FcGnAbwRAxHXzsCCAUsk+Y5V63hYyReFUo1nVwC0E5xLvF1wguhVv3
-xilvTr6q7n8CeXYiyp8J4HIDf8VgUw==
-=BO/Z
------END PGP SIGNATURE-----
-
---em6bza2p3zhdutf5--
+Tony
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
