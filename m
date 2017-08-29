@@ -1,40 +1,47 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH RESEND v2 1/3] usb: xhci-mtk: add generic compatible string
-Date: Tue, 29 Aug 2017 17:20:41 +0800
-Message-ID: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1503998338.git.chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH RESEND v2 3/3] dt-bindings: mt8173-mtu3: add generic compatible and rename file
+Date: Tue, 29 Aug 2017 17:20:43 +0800
+Message-ID: <61060035e057b13f43d383645c53c8726b7e67ab.1503998339.git.chunfeng.yun@mediatek.com>
+References: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1503998338.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1503998338.git.chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The xhci-mtk driver is a generic driver for MediaTek xHCI IP, add
-a generic compatible to avoid confusion when support new SoCs but
-use a compatible with specific SoC's name "mt8173".
+The mt8173-mtu3.txt actually holds the bindings for all mediatek
+SoCs with usb3 DRD IP, so add a generic compatible and change the
+name to mediatek,mtu3.txt.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/usb/host/xhci-mtk.c |    1 +
- 1 file changed, 1 insertion(+)
+ .../usb/{mt8173-mtu3.txt => mediatek,mtu3.txt}     |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/usb/{mt8173-mtu3.txt => mediatek,mtu3.txt} (92%)
 
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 67d5dc7..8fb6065 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -795,6 +795,7 @@ static int __maybe_unused xhci_mtk_resume(struct device *dev)
- #ifdef CONFIG_OF
- static const struct of_device_id mtk_xhci_of_match[] = {
- 	{ .compatible = "mediatek,mt8173-xhci"},
-+	{ .compatible = "mediatek,mtk-xhci"},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, mtk_xhci_of_match);
+diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+similarity index 92%
+rename from Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+rename to Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+index b8ea394..722a029 100644
+--- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+@@ -1,7 +1,11 @@
+ The device node for Mediatek USB3.0 DRD controller
+ 
+ Required properties:
+- - compatible : should be "mediatek,mt8173-mtu3"
++ - compatible : should be "mediatek,soc-model-mtu3", "mediatek,mtu3",
++	soc-model is the name of SoC, such as mt8173, mt2712 etc,
++	when using "mediatek,mtu3" compatible string, you need SoC specific
++	ones in addition, one of:
++	- "mediatek,mt8173-mtu3"
+  - reg : specifies physical base address and size of the registers
+  - reg-names: should be "mac" for device IP and "ippc" for IP port control
+  - interrupts : interrupt used by the device IP
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
