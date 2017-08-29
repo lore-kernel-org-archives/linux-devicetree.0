@@ -1,79 +1,72 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v4 3/3] ARM: dts: exynos: Remove the display-timing and
- delay from rinato dts
-Date: Tue, 29 Aug 2017 07:58:52 +0200
-Message-ID: <CAJKOXPc0oOmx7jVbmDrSWnb-GWvO6Re1qgwiOF6CzL4Mbmx-1A@mail.gmail.com>
-References: <1499912443-3671-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170713022057epcas1p464b817a426638cc1566e665aa7903ed7@epcas1p4.samsung.com>
- <1499912443-3671-4-git-send-email-hoegeun.kwon@samsung.com> <2be78f06-8c3a-0076-a19b-07d501c3d460@samsung.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv4 1/9] irqchip/ls-scfg-msi: fix typo of MSI compatible
+ strings
+Date: Tue, 29 Aug 2017 07:04:05 +0000
+Message-ID: <AM5PR0402MB277107C571183D2AF0E73EA5849F0@AM5PR0402MB2771.eurprd04.prod.outlook.com>
+References: <1499237943-24203-1-git-send-email-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2be78f06-8c3a-0076-a19b-07d501c3d460@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, a.hajda@samsung.com
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499237943-24203-1-git-send-email-Zhiqiang.Hou@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 29, 2017 at 4:52 AM, Hoegeun Kwon <hoegeun.kwon@samsung.com> wrote:
-> Hi Krzysztof,
->
-> The driver has been merged into exynos-drm-misc.
-> Could you please check this patch(3/3).
-
-Hi, OK, no problems for me but it is too late for current cycle so it
-will go in for v4.15.
-
-Best regards,
-Krzysztof
-
->
-> Best regards,
-> Hoegeun
->
->
-> On 07/13/2017 11:20 AM, Hoegeun Kwon wrote:
->>
->> The display-timing and delay are included in the panel driver. So it
->> should be removed in dts.
->>
->> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos3250-rinato.dts | 22 ----------------------
->>   1 file changed, 22 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts
->> b/arch/arm/boot/dts/exynos3250-rinato.dts
->> index 443e0c9..6b70c8d 100644
->> --- a/arch/arm/boot/dts/exynos3250-rinato.dts
->> +++ b/arch/arm/boot/dts/exynos3250-rinato.dts
->> @@ -242,28 +242,6 @@
->>                 vci-supply = <&ldo20_reg>;
->>                 reset-gpios = <&gpe0 1 GPIO_ACTIVE_LOW>;
->>                 te-gpios = <&gpx0 6 GPIO_ACTIVE_HIGH>;
->> -               power-on-delay= <30>;
->> -               power-off-delay= <120>;
->> -               reset-delay = <5>;
->> -               init-delay = <100>;
->> -               flip-horizontal;
->> -               flip-vertical;
->> -               panel-width-mm = <29>;
->> -               panel-height-mm = <29>;
->> -
->> -               display-timings {
->> -                       timing-0 {
->> -                               clock-frequency = <4600000>;
->> -                               hactive = <320>;
->> -                               vactive = <320>;
->> -                               hfront-porch = <1>;
->> -                               hback-porch = <1>;
->> -                               hsync-len = <1>;
->> -                               vfront-porch = <150>;
->> -                               vback-porch = <1>;
->> -                               vsync-len = <2>;
->> -                       };
->> -               };
->>                 port {
->>                         dsi_in: endpoint {
->
->
+SGkgVGhvbWFzLCBKYXNvbiBhbmQgTWFyYywNCg0KVGhlIHZlcnNpb24gNCBwYXRjaCBzZXQgZGlk
+bid0IGdldCBmZWVkYmFjayBmb3IgYSBsb25nIHRpbWUsIGNhbiB5b3UgaGVscCB0byByZXZpZXcg
+aXQsIGFuZCBpZiB0aGVyZSBpcyBubyBwcm9ibGVtIGNvdWxkIHlvdSBwbGVhc2UgaGVscCB0byBh
+cHBseSBpdD8NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBaaGlxaWFu
+ZyBIb3UgW21haWx0bzpaaGlxaWFuZy5Ib3VAbnhwLmNvbV0NCj4gU2VudDogMjAxN8TqN9TCNcjV
+IDE0OjU5DQo+IFRvOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyB0
+Z2x4QGxpbnV0cm9uaXguZGU7IGphc29uQGxha2VkYWVtb24ubmV0Ow0KPiBtYXJjLnp5bmdpZXJA
+YXJtLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGlu
+dXhAYXJtbGludXgub3JnLnVrOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBNLmguIExpYW4NCj4gPG1p
+bmdodWFuLmxpYW5AbnhwLmNvbT4NCj4gQ2M6IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNv
+bT4NCj4gU3ViamVjdDogW1BBVENIdjQgMS85XSBpcnFjaGlwL2xzLXNjZmctbXNpOiBmaXggdHlw
+byBvZiBNU0kgY29tcGF0aWJsZSBzdHJpbmdzDQo+IA0KPiBGcm9tOiBNaW5naHVhbiBMaWFuIDxN
+aW5naHVhbi5MaWFuQG54cC5jb20+DQo+IA0KPiBUaGUgcGF0Y2ggaXMgdG8gZml4IHR5cG8gb2Yg
+dGhlIExheWVyc2NhcGUgU0NGRyBNU0kgZHRzIGNvbXBhdGlibGUgc3RyaW5ncy4gIjEiDQo+IGlz
+IHJlcGxhY2VkIGJ5ICJsIi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1pbmdodWFuIExpYW4gPE1p
+bmdodWFuLkxpYW5AbnhwLmNvbT4NCj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
+bC5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5j
+b20+DQo+IC0tLQ0KPiB2NC12MToNCj4gIC0gTm9uZQ0KPiANCj4gIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ZzbCxscy1zY2ZnLW1zaS50eHQgICAgfCA2ICsr
+Ky0tLQ0KPiAgZHJpdmVycy9pcnFjaGlwL2lycS1scy1zY2ZnLW1zaS5jICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8IDYNCj4gKysrKy0tDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDcg
+aW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQNCj4gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvZnNsLGxz
+LXNjZmctbXNpLnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRl
+cnJ1cHQtY29udHJvbGxlci9mc2wsbHMtc2NmZy1tc2kudHh0DQo+IGluZGV4IDllMzg5NDkuLjI3
+NTVjZDEgMTAwNjQ0DQo+IC0tLQ0KPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsbHMtc2NmZy1tc2kudHh0DQo+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsbHMt
+c2NmZw0KPiArKysgLW1zaS50eHQNCj4gQEAgLTQsOCArNCw4IEBAIFJlcXVpcmVkIHByb3BlcnRp
+ZXM6DQo+IA0KPiAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImZzbCw8c29jLW5hbWU+LW1zaSIg
+dG8gaWRlbnRpZnkNCj4gIAkgICAgICBMYXllcnNjYXBlIFBDSWUgTVNJIGNvbnRyb2xsZXIgYmxv
+Y2sgc3VjaCBhczoNCj4gLSAgICAgICAgICAgICAgImZzbCwxczEwMjFhLW1zaSINCj4gLSAgICAg
+ICAgICAgICAgImZzbCwxczEwNDNhLW1zaSINCj4gKyAgICAgICAgICAgICAgImZzbCxsczEwMjFh
+LW1zaSINCj4gKyAgICAgICAgICAgICAgImZzbCxsczEwNDNhLW1zaSINCj4gIC0gbXNpLWNvbnRy
+b2xsZXI6IGluZGljYXRlcyB0aGF0IHRoaXMgaXMgYSBQQ0llIE1TSSBjb250cm9sbGVyIG5vZGUN
+Cj4gIC0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIgYW5kIGxl
+bmd0aCBvZiBtZW1vcnkgbWFwcGVkLg0KPiAgLSBpbnRlcnJ1cHRzOiBhbiBpbnRlcnJ1cHQgdG8g
+dGhlIHBhcmVudCBpbnRlcnJ1cHQgY29udHJvbGxlci4NCj4gQEAgLTIzLDcgKzIzLDcgQEAgTVNJ
+IGNvbnRyb2xsZXIgbm9kZQ0KPiAgRXhhbXBsZXM6DQo+IA0KPiAgCW1zaTE6IG1zaS1jb250cm9s
+bGVyQDE1NzEwMDAgew0KPiAtCQljb21wYXRpYmxlID0gImZzbCwxczEwNDNhLW1zaSI7DQo+ICsJ
+CWNvbXBhdGlibGUgPSAiZnNsLGxzMTA0M2EtbXNpIjsNCj4gIAkJcmVnID0gPDB4MCAweDE1NzEw
+MDAgMHgwIDB4OD4sDQo+ICAJCW1zaS1jb250cm9sbGVyOw0KPiAgCQlpbnRlcnJ1cHRzID0gPDAg
+MTE2IDB4ND47DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLWxzLXNjZmctbXNp
+LmMgYi9kcml2ZXJzL2lycWNoaXAvaXJxLWxzLXNjZmctbXNpLmMNCj4gaW5kZXggMDJjY2E3NGMu
+LmNlZjY3Y2MgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbHMtc2NmZy1tc2ku
+Yw0KPiArKysgYi9kcml2ZXJzL2lycWNoaXAvaXJxLWxzLXNjZmctbXNpLmMNCj4gQEAgLTIxOSw4
+ICsyMTksMTAgQEAgc3RhdGljIGludCBsc19zY2ZnX21zaV9yZW1vdmUoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZQ0KPiAqcGRldikgIH0NCj4gDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rldmlj
+ZV9pZCBsc19zY2ZnX21zaV9pZFtdID0gew0KPiAtCXsgLmNvbXBhdGlibGUgPSAiZnNsLDFzMTAy
+MWEtbXNpIiwgfSwNCj4gLQl7IC5jb21wYXRpYmxlID0gImZzbCwxczEwNDNhLW1zaSIsIH0sDQo+
+ICsJeyAuY29tcGF0aWJsZSA9ICJmc2wsMXMxMDIxYS1tc2kiLCB9LCAvKiBhIHR5cG8gKi8NCj4g
+Kwl7IC5jb21wYXRpYmxlID0gImZzbCwxczEwNDNhLW1zaSIsIH0sIC8qIGEgdHlwbyAqLw0KPiAr
+CXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtbXNpIiwgfSwNCj4gKwl7IC5jb21wYXRpYmxl
+ID0gImZzbCxsczEwNDNhLW1zaSIsIH0sDQo+ICAJe30sDQo+ICB9Ow0KPiANCj4gLS0NCj4gMi4x
+LjAuMjcuZzk2ZGIzMjQNCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg==
