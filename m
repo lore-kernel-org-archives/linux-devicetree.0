@@ -1,108 +1,68 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
-Date: Tue, 29 Aug 2017 14:33:52 +0100
-Message-ID: <20170829133351.GK10796@e110455-lin.cambridge.arm.com>
-References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
- <20170726102748.GM31807@n2100.armlinux.org.uk>
- <20170728152311.GA970@e110455-lin.cambridge.arm.com>
- <20170728155827.GV31807@n2100.armlinux.org.uk>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [GIT PULL] Immutable branch between MFD and HWMON due for the
+ v4.14 merge window
+Date: Tue, 29 Aug 2017 06:34:39 -0700
+Message-ID: <a61ad063-07a2-c24c-45b8-c3bdfe630a0c@roeck-us.net>
+References: <20170821145404.18902-1-sebastian.reichel@collabora.co.uk>
+ <20170822074741.jjynyudbfgzsl7ju@dell>
+ <20170829125113.g74twfnahomtdr2x@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170728155827.GV31807@n2100.armlinux.org.uk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mali DP Maintainers <malidp@foss.arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170829125113.g74twfnahomtdr2x@earth>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Lee Jones <lee.jones@linaro.org>
+Cc: Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMjgsIDIwMTcgYXQgMDQ6NTg6MjdQTSArMDEwMCwgUnVzc2VsbCBLaW5nIC0g
-QVJNIExpbnV4IHdyb3RlOgo+IE9uIEZyaSwgSnVsIDI4LCAyMDE3IGF0IDA0OjIzOjExUE0gKzAx
-MDAsIExpdml1IER1ZGF1IHdyb3RlOgo+ID4gT24gV2VkLCBKdWwgMjYsIDIwMTcgYXQgMTE6Mjc6
-NDhBTSArMDEwMCwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOgo+ID4gPiBPbiBXZWQs
-IEp1bCAyNiwgMjAxNyBhdCAxMTowNTozOUFNICswMTAwLCBSdXNzZWxsIEtpbmcgd3JvdGU6Cj4g
-PiA+ID4gU29tZSBBUk0gcGxhdGZvcm1zIGRvIG5vdCB3aXJlIHRoZSBIRExDRCBpbnRlcnJ1cHQu
-ICBBbGxvdyBoZGxjZCB0bwo+ID4gPiA+IGluaXRpYWxpc2Ugd2l0aG91dCBhbiBpbnRlcnJ1cHQg
-cHJlc2VudC4KPiA+ID4gPiAKPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBSdXNzZWxsIEtpbmcgPHJt
-aytrZXJuZWxAYXJtbGludXgub3JnLnVrPgo+ID4gPiAKPiA+IAo+ID4gSGkgUnVzc2VsbCwKPiA+
-IAo+ID4gU29ycnkgZm9yIG15IHNpbGVuY2UsIEkgd2FzIG9uIGhvbGlkYXkgdGhpcyB3ZWVrIGFu
-ZCBqdXN0IGNhbWUgYmFjawo+ID4gdG9kYXkuCj4gPiAKPiA+ID4gVGhpcyBpc24ndCBmdWxseSBm
-dW5jdGlvbmFsIG9uIEFSTSBNUFMgcGxhdGZvcm1zIHlldCwgYnV0IGF0IGxlYXN0Cj4gPiA+IGdl
-dHMgdXMgZnVydGhlci4gIFdpdGhvdXQgYW55IGRpc3BsYXkgY29ubmVjdGVkOgo+ID4gPiAKPiA+
-ID4gWyAgIDE0LjMxNTk4Nl0gW2RybV0gZm91bmQgQVJNIEhETENEIHZlcnNpb24gcjBwMAo+ID4g
-PiBbICAgMTQuNTU3MDM4XSB0ZGE5OTh4IDItMDA3MDogZm91bmQgVERBMTk5ODgKPiA+ID4gWyAg
-IDE0LjYyMjIzMl0gaGRsY2QgNDAyMDUwMDAuaGRsY2Q6IGJvdW5kIDItMDA3MCAob3BzIDB4MjEz
-NTM0KQo+ID4gPiBbICAgMTQuNjMwNDA2XSBbZHJtXSBTdXBwb3J0cyB2YmxhbmsgdGltZXN0YW1w
-IGNhY2hpbmcgUmV2IDIgKDIxLjEwLjIwMTMpLgo+ID4gPiBbICAgMTQuNjM5MzM1XSBbZHJtXSBO
-byBkcml2ZXIgc3VwcG9ydCBmb3IgdmJsYW5rIHRpbWVzdGFtcCBxdWVyeS4KPiA+ID4gWyAgIDE0
-LjY1MzIxMF0gW2RybV0gQ2Fubm90IGZpbmQgYW55IGNydGMgb3Igc2l6ZXMgLSBnb2luZyAxMDI0
-eDc2OAo+ID4gPiBbICAgMTUuMjMyNTU2XSBoZGxjZCA0MDIwNTAwMC5oZGxjZDogZmIwOiAgZnJh
-bWUgYnVmZmVyIGRldmljZQo+ID4gPiBbICAgMTUuMjg0MDc2XSBbZHJtXSBJbml0aWFsaXplZCBo
-ZGxjZCAxLjAuMCAyMDE1MTAyMSBmb3IgNDAyMDUwMDAuaGRsY2Qgb24gbWlub3IgMAo+ID4gPiAK
-PiA+ID4gV2l0aCBhIFRWIGNvbm5lY3RlZCwgdGhlIGRyaXZlciBkb2Vzbid0IGluaXRpYWxpc2U6
-Cj4gPiA+IAo+ID4gPiBbICAgMTQuNDIyODEwXSBbZHJtXSBmb3VuZCBBUk0gSERMQ0QgdmVyc2lv
-biByMHAwCj4gPiA+IFsgICAxNC42NTcyMjddIHRkYTk5OHggMi0wMDcwOiBmb3VuZCBUREExOTk4
-OAo+ID4gPiBbICAgMTQuNzIyNDM5XSBoZGxjZCA0MDIwNTAwMC5oZGxjZDogYm91bmQgMi0wMDcw
-IChvcHMgMHgyMTM1MzQpCj4gPiA+IFsgICAxNC43MzA2MTNdIFtkcm1dIFN1cHBvcnRzIHZibGFu
-ayB0aW1lc3RhbXAgY2FjaGluZyBSZXYgMiAoMjEuMTAuMjAxMykuCj4gPiA+IFsgICAxNC43Mzk1
-MzhdIFtkcm1dIE5vIGRyaXZlciBzdXBwb3J0IGZvciB2YmxhbmsgdGltZXN0YW1wIHF1ZXJ5Lgo+
-ID4gPiBbICAgMTUuMzExOTc3XSBoZGxjZCA0MDIwNTAwMC5oZGxjZDogRmFpbGVkIHRvIHNldCBp
-bml0aWFsIGh3IGNvbmZpZ3VyYXRpb24uCj4gPiA+IFsgICAxNS4zNTc0MDJdIGhkbGNkIDQwMjA1
-MDAwLmhkbGNkOiBtYXN0ZXIgYmluZCBmYWlsZWQ6IC0xMgo+ID4gPiBbICAgMTUuMzY1MDgyXSB0
-ZGE5OTh4OiBwcm9iZSBvZiAyLTAwNzAgZmFpbGVkIHdpdGggZXJyb3IgLTEyCj4gPiA+IAo+ID4g
-PiBJIGRvbid0IHRoaW5rIHRoaXMgaXMgY29ycmVjdCBiZWhhdmlvdXIgLSBpZiB3ZSBmYWlsIHRv
-IHNldCBhbiBpbml0aWFsCj4gPiA+IGNvbmZpZ3VyYXRpb24gKHdoaWNoIHdpbGwgYmUgYmFzZWQg
-b24gdGhlIHJlc29sdXRpb24gb2YgdGhlIGNvbm5lY3RlZAo+ID4gPiBkaXNwbGF5KSB3aHkgc2hv
-dWxkIHRoZSBkcml2ZXIgZmFpbCB0byBwcm9iZSAtIGl0J3Mgbm90IHRoYXQgdGhlcmUgaXMKPiA+
-ID4gbm8gZGV2aWNlLCBpdCdzIChpbiB0aGlzIGNhc2UpIHRoYXQgdGhlcmUgYXJlbid0IHRoZSBy
-ZXNvdXJjZXMgZm9yIHRoZQo+ID4gPiBjaG9zZW4gbW9kZS4gIFVzZXJzcGFjZSBjb3VsZCBhbHdh
-eXMgdHJ5IHNldHRpbmcgYSBkaWZmZXJlbnQgbW9kZS4KPiA+ID4gCj4gPiA+IEkgc3VzcGVjdCB0
-aGUgYWJvdmUgZmFpbHVyZSBpcyBkb3duIHRvIGVpdGhlciAoYSkgbm90IGhhdmluZyBlbm91Z2gK
-PiA+ID4gbWVtb3J5IGF2YWlsYWJsZSB0byBhbGxvY2F0ZSBhIDE5MjB4MTA4MCBmcmFtZSBidWZm
-ZXIsIG9yIChiKSBub3QKPiA+ID4gKHlldCkgYmVpbmcgYWJsZSB0byBwcm9ncmFtIHRoZSBoZGxj
-ZCBwaXhlbCBjbG9jayBmb3IgdGhpcyBwbGF0Zm9ybSwKPiA+ID4gd2hpY2ggaXMgY3VycmVudGx5
-IGhhcmQtY29kZWQgaW4gRFQgYXQgMjMuNzVNSHouCj4gPiAKPiA+IEkgZG9uJ3QgdGhpbmsgaXQg
-aXMgdGhlIGNsb2NrLCBpZiB0aGF0IGZhaWxzIHRoZW4geW91IHdvdWxkIG5vdCBzZWUgdGhlCj4g
-PiByMHAwIHZlcnNpb24gbnVtYmVyIGJlaW5nIHByaW50ZWQuIER1ZSB0byB0aGUgZmFjdCB0aGF0
-IHVudGlsIG5vdyBIRExDRAo+ID4gaGFzIHJ1biBtb3N0bHkgb24gcGxhdGZvcm1zIHRoYXQgaGF2
-ZSBTQ1AsIHdoaWNoIHRha2VzIGNhcmUgb2YgYWN0dWFsCj4gPiBzZXR1cCBvZiB0aGUgY2xvY2tz
-LCBpdCBpcyBwcmV0dHkgbGF4IG9uIGVycm9ycyBvbiBwaXhlbCBjbG9jayBzZXR1cC4KPiAKPiBO
-b3RlLCBob3dldmVyLCB0aGF0IGluIHRoaXMgY2FzZSwgdGhlIGNsb2NrIGlzIGEgZml4ZWQgZnJl
-cXVlbmN5IGNsb2NrLgo+IEkgd2Fzbid0IG1lYW5pbmcgYSBmYWlsdXJlIHRvIG9idGFpbiB0aGUg
-Y2xvY2ssIEkgd2FzIG1lYW5pbmcgYSBmYWlsdXJlCj4gdG8gc2V0IHRoZSBhcHByb3ByaWF0ZSBy
-YXRlLgo+IAo+ID4gQWxzbywgbWF5IEkgYXNrIHdoYXQgTVBTIHBsYXRmb3JtIHlvdSBhcmUgdHJ5
-aW5nIHRvIHVzZT8gSSBtaWdodCBiZSBhYmxlCj4gPiB0byBzb3VyY2Ugb25lIGludGVybmFsbHkg
-YW5kIHRyeSB0byByZXByb2R1Y2UgeW91ciBwcm9ibGVtcy4KPiAKPiBJJ2xsIHBvaW50IHlvdSBp
-biB0aGUgZGlyZWN0aW9uIG9mIElhbiBSaWNrYXJkcyBpbiBBUk0gZm9yIHRoYXQKPiBpbmZvcm1h
-dGlvbi4gIChJJ20gbm90IHN1cmUgaWYgSSBjYW4gbWVudGlvbiB0aGUgYm9hcmQgcHVibGljYWxs
-eQo+IHlldCBhcyBpdHMgZWFybHkgZGF5cy4uLikKCkhpIFJ1c3NlbGwsCgpJJ3ZlIHdvcmtlZCB3
-aXRoIFZsYWRpbWlyIE11cnppbiBpbnNpZGUgQVJNIHRvIHRyeSB0byBzb3J0IG91dCBwcm9ibGVt
-cwpvbiB0aGUgYm9hcmQgbGlrZSB0aGUgb25lIHRoYXQgeW91IGhhdmUuIEhlJ3MgZ290IHRvIGEg
-cG9pbnQgd2hlcmUgdGhlIEhETENECnN0YXJ0cyBjb3JyZWN0bHkgYWZ0ZXIgYWRkaW5nIGEgbm9u
-LWZpeGVkIHB4bGNsayBzb3VyY2UsIGJ1dCB0aGVuIHRoZSByZXN0IG9mCnRoZSBzZXR1cCBpcyBz
-ZW1pLXVzZWxlc3Mgd2l0aG91dCBhIHdvcmtpbmcgSVJRIGJlY2F1c2UgRFJNIGF0b21pYyBjYWxs
-cwp3aWxsIGdpdmUgeW91IGEgdmJsYW5rIHRpbWVvdXQgc3BsYXQgZXZlcnl0aW1lIHlvdSBpbnZv
-a2UgdGhlbS4gU28gSSdtCm5vdCBzdXJlIGhvdyB5b3Ugd2FudCB0byBwcm9ncmVzcyB3aXRoIHRo
-aXMgcGF0Y2gsIGFzIG5vdCBoYXZpbmcgYW4gSVJRCmxpbmUgbWVhbnMgeW91IHdpbGwgbm90IGdl
-dCBhbnkgdmJsYW5rIGludGVycnVwdHMgYW5kIHlvdSBjYW4ndCB1c2UgdGhlCmRyaXZlciB3aXRo
-IHVzZXJzcGFjZSB0aGF0IGNhbGxzIERSTSBBUEkuCgpUaGUgUlRMIGd1eXMgYXJlIGFwcGFyZW50
-bHkgd29ya2luZyBvbiBhIGZpeCwgYnV0IEkgaGF2ZSBubyBFVEEgb3IKZGV0YWlscyBvbiB3aGVu
-IHRoZXkgYXJlIGdvaW5nIHRvIGRvLgoKQmVzdCByZWdhcmRzLApMaXZpdQoKPiAKPiAtLSAKPiBS
-TUsncyBQYXRjaCBzeXN0ZW06IGh0dHA6Ly93d3cuYXJtbGludXgub3JnLnVrL2RldmVsb3Blci9w
-YXRjaGVzLwo+IEZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCA5
-LjZNYnBzIGRvd24gNDAwa2JwcyB1cAo+IGFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgoKLS0g
-Cj09PT09PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtlIHRvIHwKfCBmaXggdGhlIHdvcmxk
-LCAgfAp8IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1lIHRoZSAgIHwKIFwgc291cmNlIGNv
-ZGUhICAvCiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOODhClfL8KvCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 08/29/2017 05:51 AM, Sebastian Reichel wrote:
+> Hi Lee,
+> 
+> I noticed, that you did not yet push out your for-mfd-next branch,
+> so the patches did not yet appear in linux-next. Was this
+> intentional?
+> 
+The immutable branch referenced below doesn't exist either.
+
+Guenter
+
+> -- Sebastian
+> 
+> On Tue, Aug 22, 2017 at 08:47:41AM +0100, Lee Jones wrote:
+>> Enjoy!
+>>
+>> The following changes since commit 5771a8c08880cdca3bfb4a3fc6d309d6bba20877:
+>>
+>>    Linux v4.13-rc1 (2017-07-15 15:22:10 -0700)
+>>
+>> are available in the git repository at:
+>>
+>>    git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-hwmon-v4.14
+>>
+>> for you to fetch changes up to 4f16cab19a3d57638dd5d962ff6e87c154a6cab2:
+>>
+>>    hwmon: da9052: Add support for TSI channel (2017-08-22 08:45:02 +0100)
+>>
+>> ----------------------------------------------------------------
+>> Immutable branch between MFD and HWMON due for the v4.14 merge window
+>>
+>> ----------------------------------------------------------------
+>> Sebastian Reichel (4):
+>>        mfd: da9052: Add register details for TSI
+>>        hwmon: da9052: Replace S_IRUGO with 0444
+>>        mfd: da9052: Make touchscreen registration optional
+>>        hwmon: da9052: Add support for TSI channel
+>>
+>>   drivers/hwmon/da9052-hwmon.c      | 285 +++++++++++++++++++++++++++++++++++---
+>>   drivers/mfd/da9052-core.c         |  26 +++-
+>>   include/linux/mfd/da9052/da9052.h |   6 +
+>>   include/linux/mfd/da9052/reg.h    |  11 +-
+>>   4 files changed, 302 insertions(+), 26 deletions(-)
+>>   
+>> -- 
+>> Lee Jones
+>> Linaro STMicroelectronics Landing Team Lead
+>> Linaro.org │ Open source software for ARM SoCs
+>> Follow Linaro: Facebook | Twitter | Blog
