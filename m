@@ -1,50 +1,57 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v5 1/5] v4l: fwnode: Move KernelDoc documentation to the
- header
-Date: Tue, 29 Aug 2017 16:22:32 +0300
-Message-ID: <20170829132231.7shg3bq4cjt2e6lu@paasikivi.fi.intel.com>
-References: <20170829110313.19538-1-sakari.ailus@linux.intel.com>
- <20170829110313.19538-2-sakari.ailus@linux.intel.com>
- <2676284.rKR023OhTM@avalon>
- <20170829132010.nfofeofidvpipw4h@paasikivi.fi.intel.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] docs-rst: v4l: Include Qualcomm CAMSS in documentation build
+Date: Tue, 29 Aug 2017 16:32:18 +0300
+Message-ID: <5454183.OQTL44fLZD@avalon>
+References: <20170829110313.19538-1-sakari.ailus@linux.intel.com> <20170829110313.19538-4-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170829132010.nfofeofidvpipw4h@paasikivi.fi.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170829110313.19538-4-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 29, 2017 at 04:20:10PM +0300, Sakari Ailus wrote:
-> Hi Laurent,
-> 
-> On Tue, Aug 29, 2017 at 04:15:22PM +0300, Laurent Pinchart wrote:
-> > Hi Sakari,
-> > 
-> > Thank you for the patch.
-> > 
-> > On Tuesday, 29 August 2017 14:03:09 EEST Sakari Ailus wrote:
-> > > In V4L2 the practice is to have the KernelDoc documentation in the header
-> > > and not in .c source code files. This consequientally makes the V4L2
-> > > fwnode function documentation part of the Media documentation build.
-> > > 
-> > > Also correct the link related function and argument naming in
-> > > documentation.
-> > > 
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > 
-> > I prefer documenting functions in the C file. Documentation in header files 
-> > will get out-of-sync with the implementation much more easily.
-> 
-> The fact is that there's very little KernelDoc documentation left in the .c
-> files in V4L2. This actually appears to be the only exception. And it seems
-> to have been in the Sphinx build; I missed that earlier, so that part of
-> the commit message doesn't apply.
+Hi Sakari,
 
-Oops. That was just a local change. So yes, the commit message is fine.
+Thank you for the patch.
+
+On Tuesday, 29 August 2017 14:03:11 EEST Sakari Ailus wrote:
+> Qualcomm CAMSS was left out from documentation build. Fix this.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+I've tested the qcom_camss documentation build and haven't noticed any new 
+warning or error, so
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> ---
+>  Documentation/media/v4l-drivers/index.rst | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/media/v4l-drivers/index.rst
+> b/Documentation/media/v4l-drivers/index.rst index
+> 10f2ce42ece2..5c202e23616b 100644
+> --- a/Documentation/media/v4l-drivers/index.rst
+> +++ b/Documentation/media/v4l-drivers/index.rst
+> @@ -50,6 +50,7 @@ For more details see the file COPYING in the source
+> distribution of Linux. philips
+>  	pvrusb2
+>  	pxa_camera
+> +	qcom_camss
+>  	radiotrack
+>  	rcar-fdp1
+>  	saa7134
+
 
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
