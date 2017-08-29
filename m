@@ -1,116 +1,262 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 13/17] ARM: dts: Add missing fdif node and binding for omap4
-Date: Tue, 29 Aug 2017 15:48:17 +0300
-Message-ID: <5996934.WE9heBV2Dy@avalon>
-References: <20170828211918.11573-1-tony@atomide.com> <20170828211918.11573-14-tony@atomide.com>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?=
+        <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] v4l: fwnode: Move KernelDoc documentation to the
+ header
+Date: Tue, 29 Aug 2017 14:50:41 +0200
+Message-ID: <20170829125041.GE12099@bigcity.dyn.berto.se>
+References: <20170829110313.19538-1-sakari.ailus@linux.intel.com>
+ <20170829110313.19538-2-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170828211918.11573-14-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170829110313.19538-2-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Hi Sakari,
 
-Thank you for the patch.
+Thanks for your patch.
 
-On Tuesday, 29 August 2017 00:19:14 EEST Tony Lindgren wrote:
-> On omap4 we're missing the fdif node with it's related "ti,hwmods"
-> property that the SoC interconnect code needs.
+On 2017-08-29 14:03:09 +0300, Sakari Ailus wrote:
+> In V4L2 the practice is to have the KernelDoc documentation in the header
+> and not in .c source code files. This consequientally makes the V4L2
+> fwnode function documentation part of the Media documentation build.
 > 
-> Note that this will only show up as a bug with "doesn't have
-> mpu register target base" boot errors when the legacy platform
-> data is removed.
+> Also correct the link related function and argument naming in
+> documentation.
 > 
-> Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+
 > ---
->  .../devicetree/bindings/media/ti-fdif.txt          | 37 +++++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi                       |  7 ++++
->  2 files changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/ti-fdif.txt
+>  drivers/media/v4l2-core/v4l2-fwnode.c | 75 --------------------------------
+>  include/media/v4l2-fwnode.h           | 81 ++++++++++++++++++++++++++++++++++-
+>  2 files changed, 80 insertions(+), 76 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/ti-fdif.txt
-> b/Documentation/devicetree/bindings/media/ti-fdif.txt new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti-fdif.txt
-> @@ -0,0 +1,37 @@
-> +Texas Instruments Face Detect (FDIF) binding
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> index 40b2fbfe8865..706f9e7b90f1 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -181,25 +181,6 @@ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
+>  		vep->bus_type = V4L2_MBUS_CSI1;
+>  }
+>  
+> -/**
+> - * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
+> - * @fwnode: pointer to the endpoint's fwnode handle
+> - * @vep: pointer to the V4L2 fwnode data structure
+> - *
+> - * All properties are optional. If none are found, we don't set any flags. This
+> - * means the port has a static configuration and no properties have to be
+> - * specified explicitly. If any properties that identify the bus as parallel
+> - * are found and slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if
+> - * we recognise the bus as serial CSI-2 and clock-noncontinuous isn't set, we
+> - * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
+> - * reference to @fwnode.
+> - *
+> - * NOTE: This function does not parse properties the size of which is variable
+> - * without a low fixed limit. Please use v4l2_fwnode_endpoint_alloc_parse() in
+> - * new drivers instead.
+> - *
+> - * Return: 0 on success or a negative error code on failure.
+> - */
+>  int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+>  			       struct v4l2_fwnode_endpoint *vep)
+>  {
+> @@ -239,14 +220,6 @@ int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_parse);
+>  
+> -/*
+> - * v4l2_fwnode_endpoint_free() - free the V4L2 fwnode acquired by
+> - * v4l2_fwnode_endpoint_alloc_parse()
+> - * @vep - the V4L2 fwnode the resources of which are to be released
+> - *
+> - * It is safe to call this function with NULL argument or on a V4L2 fwnode the
+> - * parsing of which failed.
+> - */
+>  void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep)
+>  {
+>  	if (IS_ERR_OR_NULL(vep))
+> @@ -257,29 +230,6 @@ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep)
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_free);
+>  
+> -/**
+> - * v4l2_fwnode_endpoint_alloc_parse() - parse all fwnode node properties
+> - * @fwnode: pointer to the endpoint's fwnode handle
+> - *
+> - * All properties are optional. If none are found, we don't set any flags. This
+> - * means the port has a static configuration and no properties have to be
+> - * specified explicitly. If any properties that identify the bus as parallel
+> - * are found and slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if
+> - * we recognise the bus as serial CSI-2 and clock-noncontinuous isn't set, we
+> - * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
+> - * reference to @fwnode.
+> - *
+> - * v4l2_fwnode_endpoint_alloc_parse() has two important differences to
+> - * v4l2_fwnode_endpoint_parse():
+> - *
+> - * 1. It also parses variable size data.
+> - *
+> - * 2. The memory it has allocated to store the variable size data must be freed
+> - *    using v4l2_fwnode_endpoint_free() when no longer needed.
+> - *
+> - * Return: Pointer to v4l2_fwnode_endpoint if successful, on an error pointer
+> - * on error.
+> - */
+>  struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+>  	struct fwnode_handle *fwnode)
+>  {
+> @@ -322,24 +272,6 @@ struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_alloc_parse);
+>  
+> -/**
+> - * v4l2_fwnode_endpoint_parse_link() - parse a link between two endpoints
+> - * @__fwnode: pointer to the endpoint's fwnode at the local end of the link
+> - * @link: pointer to the V4L2 fwnode link data structure
+> - *
+> - * Fill the link structure with the local and remote nodes and port numbers.
+> - * The local_node and remote_node fields are set to point to the local and
+> - * remote port's parent nodes respectively (the port parent node being the
+> - * parent node of the port node if that node isn't a 'ports' node, or the
+> - * grand-parent node of the port node otherwise).
+> - *
+> - * A reference is taken to both the local and remote nodes, the caller must use
+> - * v4l2_fwnode_endpoint_put_link() to drop the references when done with the
+> - * link.
+> - *
+> - * Return: 0 on success, or -ENOLINK if the remote endpoint fwnode can't be
+> - * found.
+> - */
+>  int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+>  			   struct v4l2_fwnode_link *link)
+>  {
+> @@ -374,13 +306,6 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fwnode_parse_link);
+>  
+> -/**
+> - * v4l2_fwnode_put_link() - drop references to nodes in a link
+> - * @link: pointer to the V4L2 fwnode link data structure
+> - *
+> - * Drop references to the local and remote nodes in the link. This function
+> - * must be called on every link parsed with v4l2_fwnode_parse_link().
+> - */
+>  void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+>  {
+>  	fwnode_handle_put(link->local_node);
+> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> index 7adec9851d9e..68eb22ba571b 100644
+> --- a/include/media/v4l2-fwnode.h
+> +++ b/include/media/v4l2-fwnode.h
+> @@ -113,13 +113,92 @@ struct v4l2_fwnode_link {
+>  	unsigned int remote_port;
+>  };
+>  
+> +/**
+> + * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
+> + * @fwnode: pointer to the endpoint's fwnode handle
+> + * @vep: pointer to the V4L2 fwnode data structure
+> + *
+> + * All properties are optional. If none are found, we don't set any flags. This
+> + * means the port has a static configuration and no properties have to be
+> + * specified explicitly. If any properties that identify the bus as parallel
+> + * are found and slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if
+> + * we recognise the bus as serial CSI-2 and clock-noncontinuous isn't set, we
+> + * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
+> + * reference to @fwnode.
+> + *
+> + * NOTE: This function does not parse properties the size of which is variable
+> + * without a low fixed limit. Please use v4l2_fwnode_endpoint_alloc_parse() in
+> + * new drivers instead.
+> + *
+> + * Return: 0 on success or a negative error code on failure.
+> + */
+>  int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+>  			       struct v4l2_fwnode_endpoint *vep);
 > +
-> +FDD can be used for face detection on Texas Instruments SoCs.
-
-Did you mean s/FDD/FDIF/ ?
-
-> +Note that the fdif binding is currently only used by the SoC interconnect
-> +code to idle the module on init and no open source driver is available
-> +for fdif. Please update this documentation if that changes.
-
-Device tree bindings should be driver-agnostic. I don't think this paragraph 
-is needed.
-
-> +Required properties:
+> +/*
+> + * v4l2_fwnode_endpoint_free() - free the V4L2 fwnode acquired by
+> + * v4l2_fwnode_endpoint_alloc_parse()
+> + * @vep - the V4L2 fwnode the resources of which are to be released
+> + *
+> + * It is safe to call this function with NULL argument or on a V4L2 fwnode the
+> + * parsing of which failed.
+> + */
+> +void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
 > +
-> +compatible: Shall be one of the following:
-> +	    "ti,omap4-fdif"
+> +/**
+> + * v4l2_fwnode_endpoint_alloc_parse() - parse all fwnode node properties
+> + * @fwnode: pointer to the endpoint's fwnode handle
+> + *
+> + * All properties are optional. If none are found, we don't set any flags. This
+> + * means the port has a static configuration and no properties have to be
+> + * specified explicitly. If any properties that identify the bus as parallel
+> + * are found and slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if
+> + * we recognise the bus as serial CSI-2 and clock-noncontinuous isn't set, we
+> + * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
+> + * reference to @fwnode.
+> + *
+> + * v4l2_fwnode_endpoint_alloc_parse() has two important differences to
+> + * v4l2_fwnode_endpoint_parse():
+> + *
+> + * 1. It also parses variable size data.
+> + *
+> + * 2. The memory it has allocated to store the variable size data must be freed
+> + *    using v4l2_fwnode_endpoint_free() when no longer needed.
+> + *
+> + * Return: Pointer to v4l2_fwnode_endpoint if successful, on an error pointer
+> + * on error.
+> + */
+>  struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+>  	struct fwnode_handle *fwnode);
+> -void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
 > +
-> +reg: Shall contain the device instance IO range
+> +/**
+> + * v4l2_fwnode_parse_link() - parse a link between two endpoints
+> + * @fwnode: pointer to the endpoint's fwnode at the local end of the link
+> + * @link: pointer to the V4L2 fwnode link data structure
+> + *
+> + * Fill the link structure with the local and remote nodes and port numbers.
+> + * The local_node and remote_node fields are set to point to the local and
+> + * remote port's parent nodes respectively (the port parent node being the
+> + * parent node of the port node if that node isn't a 'ports' node, or the
+> + * grand-parent node of the port node otherwise).
+> + *
+> + * A reference is taken to both the local and remote nodes, the caller must use
+> + * v4l2_fwnode_put_link() to drop the references when done with the
+> + * link.
+> + *
+> + * Return: 0 on success, or -ENOLINK if the remote endpoint fwnode can't be
+> + * found.
+> + */
+>  int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+>  			   struct v4l2_fwnode_link *link);
 > +
-> +interrupts: Shall contain the device instance interrupt
-> +
-> +
-> +Optional properties:
-> +
-> +reg-names: Shall contain the IO range names if multiple IO
-> +	   ranges are used by the SoC
-
-Is this ever the case on OMAP4 ? If not you can drop this property.
-
-> +ti,hwmods: Shall contain the TI interconnect module name if needed
-> +	   by the SoC
-
-Are there SoCs that don't need this ?
-
-> +Example:
-> +
-> +	fdif: fdif@4a10a000 {
-> +		compatible = "ti,omap4-fdif";
-> +		reg = <0x4a10a000 0x200>;
-> +		interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-> +		ti,hwmods = "fdif";
-> +	};
-> +
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -864,6 +864,13 @@
->  			};
->  		};
+> +/**
+> + * v4l2_fwnode_put_link() - drop references to nodes in a link
+> + * @link: pointer to the V4L2 fwnode link data structure
+> + *
+> + * Drop references to the local and remote nodes in the link. This function
+> + * must be called on every link parsed with v4l2_fwnode_parse_link().
+> + */
+>  void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+>  
+>  #endif /* _V4L2_FWNODE_H */
+> -- 
+> 2.11.0
 > 
-> +		fdif: fdif@4a10a000 {
-> +			compatible = "ti,omap4-fdif";
-> +			reg = <0x4a10a000 0x200>;
-
-According to the OMAP4460 datasheet the register range is 0x390 bytes long.
-
-> +			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-> +			ti,hwmods = "fdif";
-> +		};
-> +
->  		timer1: timer@4a318000 {
->  			compatible = "ti,omap3430-timer";
->  			reg = <0x4a318000 0x80>;
-
 
 -- 
 Regards,
-
-Laurent Pinchart
-
+Niklas Söderlund
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
