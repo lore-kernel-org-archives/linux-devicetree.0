@@ -1,57 +1,48 @@
-From: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: allwinner: h5: add support for NanoPi NEO Plus
- 2
-Date: Tue, 29 Aug 2017 23:51:12 +0200
-Message-ID: <20170829215112.4p34hryd7kmhhr6w@AntonyAntony.local>
-References: <20170824231716.2623-1-antony@phenome.org>
- <20170825103242.5665-1-antony@phenome.org>
- <CAEKpxBkUKGUQR2Vh1+Ci4wbB-+x48nRjLmWME2EUECCHuuwsmQ@mail.gmail.com>
- <20170828121644.p7mknytubsajzctg@AntonyAntony.local>
- <BF2F26DC-7014-4AF6-9C02-D1038A0FDA38@aosc.io>
+From: John Carter <john.carter-U313QQUz4dygSpxsJD1C4w@public.gmane.org>
+Subject: Status of drivers/of/configfs.c
+Date: Wed, 30 Aug 2017 10:37:24 +1200
+Message-ID: <CAFD1m3FQ6vNF9sUU67g_VE5nKsHWk-MfmHiVqyjpZmoq544AxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BF2F26DC-7014-4AF6-9C02-D1038A0FDA38-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+In 2014 Pantelis Antoniou sent a patch...
+    https://lkml.org/lkml/2014/3/18/625
+...creating an interface between the config filesystem and devicetree overlays.
 
-On Mon, Aug 28, 2017 at 08:18:58PM +0800, Icenowy Zheng wrote:
-> 
-> 
-> 于 2017年8月28日 GMT+08:00 下午8:16:44, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org> 写到:
-> >On Fri, Aug 25, 2017 at 03:28:41PM +0200, Code Kipper wrote:
-> >> On 25 August 2017 at 12:32, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org> wrote:
-> >
-> >> > +
-> >> > +       brcmf: bcrmf@1 {
-> >> > +               reg = <1>;
-> >> > +               compatible = "brcm,bcm4329-fmac";
-> >> > +       };
-> >> Incorrect wifi chip - just deliver what you've tested.
-> 
-> Nope, this compatible is required by the dt binding, see the
-> binding document or other DTs with brcmfmac SDIO.
+As far as I can see it is used in a couple of "off the mainstream
+kernel" like the beaglebone black.
 
-Icenowy,
+Alas, at this stage it doesn't seem to have made it into the upstream
+kernel.....
 
-Thanks for pointing out brcm,bcm43430-fmac is missing in Documenation.
-I just send a patch to wireless brcmfmac maintainers. 
+1) What is the status of this patch? Is it still being maintained? If so where?
 
-https://patchwork.kernel.org/patch/9928387/
+2) My interest in it is for an nasty bit of oddball hardware.
 
-Would this work?
+I have to change a pin from being an gpio input at boot time to being
+a uart output sometime after boot.
 
-> Please complain to brcmfmac maintainers.
+Would the of / configfs be the best way of doing that or is there a better way?
 
-Lets see how it shakes out. 
+Thank you!
 
-regards,
--antony
+-- 
+John Carter
+Phone : (64)(3) 358 6639
+Tait Electronics
+PO Box 1645 Christchurch
+New Zealand
+
+-- 
+
+------------------------------
+This Communication is Confidential. We only send and receive email on the
+basis of the terms set out at www.taitradio.com/email_disclaimer
+------------------------------
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
