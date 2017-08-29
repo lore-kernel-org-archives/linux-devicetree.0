@@ -1,53 +1,79 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RESEND PATCH v5 00/16] eeprom: at24: Add OF device ID table
-Date: Tue, 29 Aug 2017 10:48:31 +0200
-Message-ID: <20170829084831.hsdok3ksi7anxzuc@ninjato>
-References: <20170615185418.13980-1-javier@dowhile0.org>
- <20170731153009.xkjknygpmckv2pfp@ninjato>
- <CABxcv=mdbE0QGjoi3aLzxRqM3-MbkQ_Ai6fShcGVUGSNNqqrqw@mail.gmail.com>
- <20170828160121.gu4wf7jqu4ditksc@ninjato>
- <CABxcv=kSiqDN1=9fSfLkyW=uuXQZAoW4dhw=fco9RyOdDuPAdA@mail.gmail.com>
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: dma: Add Spreadtrum SC9860 DMA controller
+Date: Tue, 29 Aug 2017 16:47:16 +0800
+Message-ID: <b7bea49d254da89c43baf2ae02858bf67c59fd1d.1503995645.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xckmxrsvdukgxtmb"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABxcv=kSiqDN1=9fSfLkyW=uuXQZAoW4dhw=fco9RyOdDuPAdA@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Florian Larysch <fl@n621.de>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>, Simon Horman <horms@verge.net.au>, Michal Simek <michal.simek@xilinx.com>, Dinh Nguyen <dinguyen@kernel.org>, Russell King <linux@armlinux.org.uk>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joachim Eastwood <manabian@gmail.com>, Mark Rutland <mark.rutland@arm.com>li
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds the binding documentation for Spreadtrum SC9860 DMA
+controller device.
 
---xckmxrsvdukgxtmb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes since v1:
+ - Fix typos.
+---
+ Documentation/devicetree/bindings/dma/sprd-dma.txt |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sprd-dma.txt
 
+diff --git a/Documentation/devicetree/bindings/dma/sprd-dma.txt b/Documentation/devicetree/bindings/dma/sprd-dma.txt
+new file mode 100644
+index 0000000..7a10fea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sprd-dma.txt
+@@ -0,0 +1,41 @@
++* Spreadtrum DMA controller
++
++This binding follows the generic DMA bindings defined in dma.txt.
++
++Required properties:
++- compatible: Should be "sprd,sc9860-dma".
++- reg: Should contain DMA registers location and length.
++- interrupts: Should contain one interrupt shared by all channel.
++- #dma-cells: must be <1>. Used to represent the number of integer
++	cells in the dmas property of client device.
++- #dma-channels : Number of DMA channels supported. Should be 32.
++- clock-names: Should contain the clock of the DMA controller.
++- clocks: Should contain a clock specifier for each entry in clock-names.
++
++Example:
++
++Controller:
++apdma: dma-controller@20100000 {
++	compatible = "sprd,sc9860-dma";
++	reg = <0x20100000 0x4000>;
++	interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++	#dma-cells = <1>;
++	#dma-channels = <32>;
++	clock-names = "enable";
++	clocks = <&clk_ap_ahb_gates 5>;
++};
++
++
++Client:
++DMA clients connected to the Spreadtrum DMA controller must use the format
++described in the dma.txt file, using a two-cell specifier for each channel.
++The two cells in order are:
++1. A phandle pointing to the DMA controller.
++2. The channel id.
++
++spi0: spi@70a00000{
++	...
++	dma-names = "rx_chn", "tx_chn";
++	dmas = <&apdma 11>, <&apdma 12>;
++	...
++};
+-- 
+1.7.9.5
 
-> I don't have a DT based system at hand now, but I'll test it again and
-> let you know probably tomorrow.
-
-I will try again today, too. Thanks!
-
-
---xckmxrsvdukgxtmb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmlKl8ACgkQFA3kzBSg
-KbbJ/hAAsf8FDB/Es9uR8b+Rzmdr2IqMb8/dvO+NUNr3eTW2T8Pxkgq3FjBqIIjb
-JlVz7HYC/ZlkO4w6iHh935/maJaxyOCHG8Jfxm2oAvM24Z2Z2uEEC1fQ4TmEzJeJ
-NhTzYD4mzMFlS44t2kuJ+N2F8b4uqddwDwLONVnyF7exbDtLD/v0iVyCGo1mHNRU
-G2vQ/+ASDnFCZt3h/XJ2xH3s5cQRthIy2W/uUVKouRQUMEIFpNa6iNqFaLnCVwZU
-/X3f3F6/P0eo10XZhUJ6FCjPogJE0DxFUAri+tJflv5XZCNM07GVFOR3Wm2nVp9c
-pzk52JpL4kQl/IcbChdhg2offvEgDg12/LA5PegJkXe6SxjfFQy0clwOJm6BFj/+
-bEikY4FJS9WtMAvLnUIRXKY2gwu42YVUy7c68Xw/db8RHtnDT0C3mKCT08HaA0gE
-RLqo4zvCiHpG2cJdWwjfFThdOKIUn6X2aYYU4wnOsgnJtYtV0uzVz2jgrXt1YKeE
-HRbhn3YdZRrMfxjueVg4VsF52I9XQJHw8uuO5V0PuWXLHrtI6dKt8dnskD2DGCWl
-CjGwiTmZlCfd7FQPcFpParv9nJANMSBiPty9DK/hImRcbVBDdsmDbLtTJSjoym9/
-ZIe9xpgYDBOesdhnGyYilx6aKajbm7rQ5soACyoPtevooPt43CE=
-=jOix
------END PGP SIGNATURE-----
-
---xckmxrsvdukgxtmb--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
