@@ -1,50 +1,80 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 14/17] ARM: dts: Add missing gpu node and binding for
- omap4
-Date: Tue, 29 Aug 2017 09:26:06 -0700
-Message-ID: <20170829162606.GC6008@atomide.com>
-References: <20170828211918.11573-1-tony@atomide.com>
- <20170828211918.11573-15-tony@atomide.com>
- <20170829090034.ytepjfv2jkkd2b3z@earth>
- <201708291135.v7TBZCHH020827@dflxv15.itg.ti.com>
- <20170829121041.dweciryplio5i4jr@earth>
- <e0c6447f-5a0f-b43a-7087-5ee37af2a1c1@ti.com>
- <20170829143453.GV6008@atomide.com>
- <20170829155738.GB6008@atomide.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/1] dt: bindings: Add a binding for flash devices
+ associated to a sensor
+Date: Tue, 29 Aug 2017 11:43:09 -0500
+Message-ID: <20170829164309.shx2v2acucmvrs7y@rob-hp-laptop>
+References: <20170818125857.13430-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170829155738.GB6008-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170818125857.13430-1-sakari.ailus@linux.intel.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170829 08:58]:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170829 07:35]:
-> > * Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [170829 05:25]:
-> > > Maybe. At the moment we have this in TI's tree for DRA7:
-> > > 
-> > > gpu: gpu@56000000 {
-> > > 	compatible = "ti,dra7-sgx544", "img,sgx544";
+On Fri, Aug 18, 2017 at 03:58:57PM +0300, Sakari Ailus wrote:
+> Camera flash drivers (and LEDs) are separate from the sensor devices in
+> DT. In order to make an association between the two, provide the
+> association information to the software.
 > 
-> I'll leave out "img,sgx544" as that's the generic component
-> that's really a child of this interconnect target module.
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+> Hi Rob and Jacek, others,
+> 
+> I know I've submitted previous versions of this patch that I have changed
+> since getting your acks... that's bad. I realised there will be problems
+> due to the vague referencing in the old version.
+> 
+> Instead of referring to the flash LED controller itself, the references are
+> now suggested to be made to the LEDs explicitly.
+> 
+> While most of the time all LEDs are associated to the same camera sensor,
+> there's nothing that suggests that this will always be the case. This will
+> work rather nicely with this change to the V4L2 flash class:
+> 
+> <URL:https://git.linuxtv.org/sailus/media_tree.git/commit/?h=flash&id=ef62781f4468d93ba8328caf7db629add453e01d>
+> 
+> An alternative to this could be to refer to the LEDs using the LED
+> controller node and integer arguments. That would require e.g. #led-cells
+> property to tell how many arguments there are. The actual LEDs also have
+> device nodes already so I thought using them would probably be a good idea
+> so we continue to have a single way to refer to LEDs.
 
-And for the gpu clock, on omap4, it seems that the clocks
-are just the module clktrl with a mux option. So the top
-level module driver implementing runtime PM should be
-enough there. And on dra7, there are two functional clocks
-maybe as the SGX instance is dual core. And the mainline
-kernel is using "fck" naming vs "fclk" naming. So more
-consideration is for the clocks and I'll leave them out
-for now.
+There are some advantages to this approach, but I don't think it fits 
+the normal pattern since we do have LED nodes.
 
-Regards,
+> 
+> Let me know your thoughts / if you're ok with the patch.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, I think this patch is the right way to do it.
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> 
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index 852041a7480c..fee73cf2a714 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -67,6 +67,14 @@ are required in a relevant parent node:
+>  		    identifier, should be 1.
+>   - #size-cells    : should be zero.
+>  
+> +
+> +Optional properties
+> +-------------------
+> +
+> +- flash: An array of phandles referring to the flash LED, a sub-node
+> +  of the LED driver device node.
+> +
+> +
+>  Optional endpoint properties
+>  ----------------------------
+>  
+> -- 
+> 2.11.0
+> 
