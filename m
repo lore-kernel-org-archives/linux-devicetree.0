@@ -1,7 +1,7 @@
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 4/9] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
-Date: Tue, 29 Aug 2017 11:34:22 +0200
-Message-ID: <1503999271-15712-4-git-send-email-daniel.lezcano@linaro.org>
+Subject: [PATCH 6/9] devicetree: bindings: Deprecate property, update example
+Date: Tue, 29 Aug 2017 11:34:24 +0200
+Message-ID: <1503999271-15712-6-git-send-email-daniel.lezcano@linaro.org>
 References: <20170829093354.GA2572@mai>
  <1503999271-15712-1-git-send-email-daniel.lezcano@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -14,10 +14,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Add documentation for new separate CMT0 and CMT1 DT compatible strings
-for R-Car Gen2. These compat strings allow us to enable CMT1-specific
-features in the driver. The old compat strings will be deprecated in
-the not so distant future.
+Deprecate "renesas,channels-mask" and update the r8a7790 CMT example.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -25,22 +22,51 @@ Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/timer/renesas,cmt.txt      | 24 +++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index 961c0b6..2583aeb 100644
+index e81e0d2..8fb7c93 100644
 --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
 +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -36,6 +36,9 @@ Required Properties:
- 		(CMT1 on sh73a0 and r8a7740)
- 		This is a fallback for the above renesas,cmt-48-* entries.
+@@ -60,21 +60,31 @@ Required Properties:
+     in clock-names.
+   - clock-names: must contain "fck" for the functional clock.
  
-+    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2.
-+    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2.
-+
-     - "renesas,cmt-48-r8a73a4" for the r8a73a4 48-bit CMT
- 		(CMT[01])
-     - "renesas,cmt-48-r8a7790" for the r8a7790 48-bit CMT
+-  - renesas,channels-mask: bitmask of the available channels.
++  - renesas,channels-mask: <deprecated>, information kept in device driver.
+ 
+ 
+-Example: R8A7790 (R-Car H2) CMT0 node
+-
+-	CMT0 on R8A7790 implements hardware channels 5 and 6 only and names
+-	them channels 0 and 1 in the documentation.
++Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
++		compatible = "renesas,cmt0-r8a7790", "renesas,rcar-gen2-cmt0";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
+ 		clock-names = "fck";
++	};
+ 
+-		renesas,channels-mask = <0x60>;
++	cmt1: timer@e6130000 {
++		compatible = "renesas,cmt1-r8a7790", "renesas,rcar-gen2-cmt1";
++		reg = <0 0xe6130000 0 0x1004>;
++		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
++		clock-names = "fck";
+ 	};
 -- 
 2.7.4
