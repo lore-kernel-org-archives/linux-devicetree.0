@@ -1,331 +1,53 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv3 4/5] cec-gpio: add HDMI CEC GPIO driver
-Date: Wed, 30 Aug 2017 18:10:43 +0200
-Message-ID: <20170830161044.26571-5-hverkuil@xs4all.nl>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv3 3/5] dt-bindings: document the CEC GPIO bindings
+Date: Wed, 30 Aug 2017 18:10:42 +0200
+Message-ID: <20170830161044.26571-4-hverkuil@xs4all.nl>
 References: <20170830161044.26571-1-hverkuil@xs4all.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170830161044.26571-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170830161044.26571-1-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Add a simple HDMI CEC GPIO driver that sits on top of the cec-pin framework.
+Document the bindings for the cec-gpio module for hardware where the
+CEC pin and optionally the HPD pin are connected to GPIO pins.
 
-While I have heard of SoCs that use the GPIO pin for CEC (apparently an
-early RockChip SoC used that), the main use-case of this driver is to
-function as a debugging tool.
-
-By connecting the CEC line to a GPIO pin on a Raspberry Pi 3 for example
-it turns it into a CEC debugger and protocol analyzer.
-
-With 'cec-ctl --monitor-pin' the CEC traffic can be analyzed.
-
-But of course it can also be used with any hardware project where the
-HDMI CEC pin is hooked up to a pull-up gpio pin.
-
-In addition this has (optional) support for tracing HPD changes if the
-HPD is connected to a GPIO.
-
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/media/platform/Kconfig             |   9 ++
- drivers/media/platform/Makefile            |   2 +
- drivers/media/platform/cec-gpio/Makefile   |   1 +
- drivers/media/platform/cec-gpio/cec-gpio.c | 237 +++++++++++++++++++++++++++++
- 4 files changed, 249 insertions(+)
- create mode 100644 drivers/media/platform/cec-gpio/Makefile
- create mode 100644 drivers/media/platform/cec-gpio/cec-gpio.c
+ .../devicetree/bindings/media/cec-gpio.txt         | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 7e7cc49b8674..d95b0ee367d6 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -553,6 +553,15 @@ config VIDEO_MESON_AO_CEC
- 	  This is a driver for Amlogic Meson SoCs AO CEC interface. It uses the
- 	  generic CEC framework interface.
- 	  CEC bus is present in the HDMI connector and enables communication
-+
-+config CEC_GPIO
-+	tristate "Generic GPIO-based CEC driver"
-+	depends on PREEMPT
-+	select CEC_CORE
-+	select CEC_PIN
-+	---help---
-+	  This is a generic GPIO-based CEC driver.
-+	  The CEC bus is present in the HDMI connector and enables communication
- 	  between compatible devices.
- 
- config VIDEO_SAMSUNG_S5P_CEC
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index c1ef946bf032..9bf48f118537 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -26,6 +26,8 @@ obj-$(CONFIG_VIDEO_CODA) 		+= coda/
- 
- obj-$(CONFIG_VIDEO_SH_VEU)		+= sh_veu.o
- 
-+obj-$(CONFIG_CEC_GPIO)			+= cec-gpio/
-+
- obj-$(CONFIG_VIDEO_MEM2MEM_DEINTERLACE)	+= m2m-deinterlace.o
- 
- obj-$(CONFIG_VIDEO_MUX)			+= video-mux.o
-diff --git a/drivers/media/platform/cec-gpio/Makefile b/drivers/media/platform/cec-gpio/Makefile
+diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
 new file mode 100644
-index 000000000000..e82b258afa55
+index 000000000000..d1df742af0ac
 --- /dev/null
-+++ b/drivers/media/platform/cec-gpio/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_CEC_GPIO) += cec-gpio.o
-diff --git a/drivers/media/platform/cec-gpio/cec-gpio.c b/drivers/media/platform/cec-gpio/cec-gpio.c
-new file mode 100644
-index 000000000000..a582cf91bf87
---- /dev/null
-+++ b/drivers/media/platform/cec-gpio/cec-gpio.c
-@@ -0,0 +1,237 @@
-+/*
-+ * Copyright 2017 Cisco Systems, Inc. and/or its affiliates. All rights reserved.
-+ *
-+ * This program is free software; you may redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-+ * SOFTWARE.
-+ */
++++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
+@@ -0,0 +1,22 @@
++* HDMI CEC GPIO driver
 +
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
-+#include <linux/platform_device.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/of_gpio.h>
-+#include <media/cec-pin.h>
++The HDMI CEC GPIO module supports CEC implementations where the CEC pin
++is hooked up to a pull-up GPIO pin and - optionally - the HPD pin is
++hooked up to a pull-down GPIO pin.
 +
-+struct cec_gpio {
-+	struct cec_adapter	*adap;
-+	struct device		*dev;
-+	int			gpio;
-+	int			hpd_gpio;
-+	int			irq;
-+	int			hpd_irq;
-+	bool			hpd_is_high;
-+	ktime_t			hpd_ts;
-+	bool			is_low;
-+	bool			have_irq;
++Required properties:
++  - compatible: value must be "cec-gpio"
++  - cec-gpio: gpio that the CEC line is connected to
++
++Optional property:
++  - hpd-gpio: gpio that the HPD line is connected to
++
++Example for the Raspberry Pi 3 where the CEC line is connected to
++pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
++connected to pin 11 aka BCM17:
++
++cec-gpio@7 {
++       compatible = "cec-gpio";
++       cec-gpio = <&gpio 7 GPIO_ACTIVE_HIGH>;
++       hpd-gpio = <&gpio 17 GPIO_ACTIVE_HIGH>;
 +};
-+
-+static bool cec_gpio_read(struct cec_adapter *adap)
-+{
-+	struct cec_gpio *cec = cec_get_drvdata(adap);
-+
-+	if (cec->is_low)
-+		return false;
-+	return gpio_get_value(cec->gpio);
-+}
-+
-+static void cec_gpio_high(struct cec_adapter *adap)
-+{
-+	struct cec_gpio *cec = cec_get_drvdata(adap);
-+
-+	if (!cec->is_low)
-+		return;
-+	cec->is_low = false;
-+	gpio_direction_input(cec->gpio);
-+}
-+
-+static void cec_gpio_low(struct cec_adapter *adap)
-+{
-+	struct cec_gpio *cec = cec_get_drvdata(adap);
-+
-+	if (cec->is_low)
-+		return;
-+	if (WARN_ON_ONCE(cec->have_irq))
-+		free_irq(cec->irq, cec);
-+	cec->have_irq = false;
-+	cec->is_low = true;
-+	gpio_direction_output(cec->gpio, 0);
-+}
-+
-+static irqreturn_t cec_hpd_gpio_irq_handler_thread(int irq, void *priv)
-+{
-+	struct cec_gpio *cec = priv;
-+
-+	cec_queue_pin_hpd_event(cec->adap, cec->hpd_is_high, cec->hpd_ts);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t cec_hpd_gpio_irq_handler(int irq, void *priv)
-+{
-+	struct cec_gpio *cec = priv;
-+
-+	cec->hpd_ts = ktime_get();
-+	cec->hpd_is_high = gpio_get_value(cec->hpd_gpio);
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static irqreturn_t cec_gpio_irq_handler(int irq, void *priv)
-+{
-+	struct cec_gpio *cec = priv;
-+
-+	cec_pin_changed(cec->adap, gpio_get_value(cec->gpio));
-+	return IRQ_HANDLED;
-+}
-+
-+static bool cec_gpio_enable_irq(struct cec_adapter *adap)
-+{
-+	struct cec_gpio *cec = cec_get_drvdata(adap);
-+
-+	if (cec->have_irq)
-+		return true;
-+
-+	if (request_irq(cec->irq, cec_gpio_irq_handler,
-+			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-+			adap->name, cec))
-+		return false;
-+	cec->have_irq = true;
-+	return true;
-+}
-+
-+static void cec_gpio_disable_irq(struct cec_adapter *adap)
-+{
-+	struct cec_gpio *cec = cec_get_drvdata(adap);
-+
-+	if (cec->have_irq)
-+		free_irq(cec->irq, cec);
-+	cec->have_irq = false;
-+}
-+
-+static void cec_gpio_status(struct cec_adapter *adap, struct seq_file *file)
-+{
-+	struct cec_gpio *cec = cec_get_drvdata(adap);
-+
-+	seq_printf(file, "mode: %s\n", cec->is_low ? "low-drive" : "read");
-+	if (cec->have_irq)
-+		seq_printf(file, "using irq: %d\n", cec->irq);
-+	if (cec->hpd_gpio >= 0)
-+		seq_printf(file, "hpd: %s\n",
-+			   cec->hpd_is_high ? "high" : "low");
-+}
-+
-+static int cec_gpio_read_hpd(struct cec_adapter *adap)
-+{
-+	struct cec_gpio *cec = cec_get_drvdata(adap);
-+
-+	if (cec->hpd_gpio < 0)
-+		return -ENOTTY;
-+	return gpio_get_value(cec->hpd_gpio);
-+}
-+
-+static void cec_gpio_free(struct cec_adapter *adap)
-+{
-+	cec_gpio_disable_irq(adap);
-+}
-+
-+static const struct cec_pin_ops cec_gpio_pin_ops = {
-+	.read = cec_gpio_read,
-+	.low = cec_gpio_low,
-+	.high = cec_gpio_high,
-+	.enable_irq = cec_gpio_enable_irq,
-+	.disable_irq = cec_gpio_disable_irq,
-+	.status = cec_gpio_status,
-+	.free = cec_gpio_free,
-+	.read_hpd = cec_gpio_read_hpd,
-+};
-+
-+static int cec_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	enum of_gpio_flags hpd_gpio_flags;
-+	struct cec_gpio *cec;
-+	int ret;
-+
-+	cec = devm_kzalloc(dev, sizeof(*cec), GFP_KERNEL);
-+	if (!cec)
-+		return -ENOMEM;
-+
-+	cec->gpio = of_get_named_gpio_flags(dev->of_node,
-+					    "cec-gpio", 0, &hpd_gpio_flags);
-+	if (cec->gpio < 0)
-+		return cec->gpio;
-+
-+	cec->hpd_gpio = of_get_named_gpio_flags(dev->of_node,
-+					    "hpd-gpio", 0, &hpd_gpio_flags);
-+	cec->irq = gpio_to_irq(cec->gpio);
-+	gpio_direction_input(cec->gpio);
-+	cec->dev = dev;
-+
-+	if (cec->hpd_gpio >= 0) {
-+		cec->hpd_irq = gpio_to_irq(cec->hpd_gpio);
-+		gpio_direction_input(cec->hpd_gpio);
-+		if (devm_request_threaded_irq(dev, cec->hpd_irq,
-+				cec_hpd_gpio_irq_handler,
-+				cec_hpd_gpio_irq_handler_thread,
-+				IRQF_ONESHOT |
-+				IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
-+				"hpd-gpio", cec))
-+			cec->hpd_gpio = -1;
-+	}
-+
-+	cec->adap = cec_pin_allocate_adapter(&cec_gpio_pin_ops,
-+		cec, pdev->name, CEC_CAP_DEFAULTS | CEC_CAP_PHYS_ADDR |
-+				 CEC_CAP_MONITOR_ALL | CEC_CAP_MONITOR_PIN);
-+	if (IS_ERR(cec->adap))
-+		return PTR_ERR(cec->adap);
-+
-+	ret = cec_register_adapter(cec->adap, &pdev->dev);
-+	if (ret) {
-+		cec_delete_adapter(cec->adap);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, cec);
-+	return 0;
-+}
-+
-+static int cec_gpio_remove(struct platform_device *pdev)
-+{
-+	struct cec_gpio *cec = platform_get_drvdata(pdev);
-+
-+	cec_unregister_adapter(cec->adap);
-+	return 0;
-+}
-+
-+static const struct of_device_id cec_gpio_match[] = {
-+	{
-+		.compatible	= "cec-gpio",
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cec_gpio_match);
-+
-+static struct platform_driver cec_gpio_pdrv = {
-+	.probe	= cec_gpio_probe,
-+	.remove = cec_gpio_remove,
-+	.driver = {
-+		.name		= "cec-gpio",
-+		.of_match_table	= cec_gpio_match,
-+	},
-+};
-+
-+module_platform_driver(cec_gpio_pdrv);
-+
-+MODULE_AUTHOR("Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("CEC GPIO driver");
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
