@@ -1,96 +1,51 @@
-From: jmondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 3/4] arm: dts: gr-peach: Add ETHER pin group
-Date: Wed, 30 Aug 2017 09:35:28 +0200
-Message-ID: <20170830073528.GB5584@w540>
-References: <1503564523-31899-1-git-send-email-jacopo+renesas@jmondi.org>
- <1503564523-31899-4-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdUoMU=qN3Qjoqmf6uxcS3j5hqthhuBDMPZzA+wSD_BH5A@mail.gmail.com>
- <20170824114656.GA3905@w540>
- <CAMuHMdU5Vep+m7XtjcbSvyXUzD_Pn2crcQ68VRmS4bgY44ut0w@mail.gmail.com>
- <20170824125359.GB3905@w540>
- <20170830072542.GH10398@verge.net.au>
+From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v2] ARM: dts: r8a7743: add IIC cores to dtsi
+Date: Wed, 30 Aug 2017 07:46:34 +0000
+Message-ID: <SG2PR06MB069465C0EF929D98E5FEC2D0B79C0@SG2PR06MB0694.apcprd06.prod.outlook.com>
+References: <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
+ <1502704398-28378-1-git-send-email-biju.das@bp.renesas.com>
+ <TY1PR06MB07027D9A55FBFE2D591CEDCFB7840@TY1PR06MB0702.apcprd06.prod.outlook.com>
+ <b7434757-b151-5971-2b5f-525eeaf11467@cogentembedded.com>
+ <20170830073214.GL10398@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170830072542.GH10398@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170830073214.GL10398-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
 
-On Wed, Aug 30, 2017 at 09:25:42AM +0200, Simon Horman wrote:
-> On Thu, Aug 24, 2017 at 02:53:59PM +0200, jmondi wrote:
-> > Thanks Geert,
+
+> From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
+> Sent: 30 August 2017 08:32
+>=20
+> On Tue, Aug 22, 2017 at 03:23:39PM +0300, Sergei Shtylyov wrote:
+> > On 08/22/2017 12:10 PM, Chris Paterson wrote:
 > >
-> > On Thu, Aug 24, 2017 at 01:56:16PM +0200, Geert Uytterhoeven wrote:
-> > > Hi Jacopo,
+> > >>From: Biju Das [mailto:biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org]
+> > >>Sent: 14 August 2017 10:53
+> > >>
+> > >>Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > >>---
+> > >>v1-->v2
+> > >>    Corrected the resets property for i2c6 device node.
 > > >
-> >
-> > [snip]
-> >
-> > > > I haven't find any mention in device tree bindings documentation of a
-> > > > "reset-gpio" property for sh_eth, in the code examples I've seen in
-> > > > u-boot and mbed, the interface is reset before any actual
-> > > > configuration is performed. I feel like that should be the place where
-> > > > that gpio is requested and cycled...
+> > >Are you happy with this version of the patch?
 > > >
-> > > Documentation/devicetree/bindings/net/mdio.txt says
-> > >
-> > > These are generic properties that can apply to any MDIO bus.
-> > >
+> > >Or is the discussion for moving to 'iic' still alive?
 > >
-> > I have now used mdio defined generic properties
-> >
-> > &ether {
-> > 	pinctrl-names = "default";
-> > 	pinctrl-0 = <&ether_pins>;
-> >
-> > 	status = "okay";
-> >
-> > 	reset-gpios = <&port4 2 GPIO_ACTIVE_LOW>;
-> > 	reset-delay-us = <5>;
-> >
-> > 	renesas,no-ether-link;
-> > 	phy-handle = <&phy0>;
-> > 	phy0: ethernet-phy@0 {
-> >                reg = <0>;
-> > 	};
-> > };
-> >
-> > I see the gpio being cycled, but same results as before: device gets
-> > probed, address set, but I cannot ping, device gets probed, address
-> > gets set, but I cannot ping
-> >
-> > --- target ---
-> > [    0.000000] libphy: sh_mii: probed
-> > [    0.000000] sh-eth e8203000.ethernet eth0: Base address at 0xe8203000, 68:14:97:20:97:00, IRQ 22.
-> >
-> > # ifconfig eth0 192.168.100.50
-> > [    0.000000] Generic PHY e8203000.ethernet-ffffffff:00: attached PHY driver [Generic PHY] (mii_bus:phy_addr=e8203000.ethernet-f)
-> >
-> > --- host ---
-> > $ping 192.168.100.50
-> > PING 192.168.100.50 (192.168.100.50) 56(84) bytes of data.
-> > >From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
-> > >From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
-> > >From 192.168.100.18 icmp_seq=1 Destination Host Unreachable
-> >
-> >
-> > Let's leave this out of the DTS series I've just sent for now, ok?
->
-> I'm a little confused by this. Am I right in thinking that you don't want
-> this patch applied at this time and may resubmit it or an updated version
-> later? With that understanding I have marked it as "Rejected" for now. Feel
-> free to resubmit when you are ready.
+> >    Yes, appears so. I'd like the labels to be named iic<n>.
+>=20
+> Chirs, I'm marking this as "Changes Requested" and expecting to see iic i=
+n v3
+> when you are ready.
 
-Yes please, you got me right here.
-
-Even if pix muxing is performed "correctly", and I can set ip address
-and probe the interface, not traffic can be exchanged on it.
-
-For this reason, let's not enable it at this time
-
-Is this fine?
+Sure, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
