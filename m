@@ -1,112 +1,87 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RESEND PATCH v5 00/16] eeprom: at24: Add OF device ID table
-Date: Wed, 30 Aug 2017 19:42:28 +0200
-Message-ID: <20170830174228.sx5jgtxxy56zq47t@ninjato>
-References: <20170615185418.13980-1-javier@dowhile0.org>
- <20170731153009.xkjknygpmckv2pfp@ninjato>
- <CABxcv=mdbE0QGjoi3aLzxRqM3-MbkQ_Ai6fShcGVUGSNNqqrqw@mail.gmail.com>
- <20170828160121.gu4wf7jqu4ditksc@ninjato>
- <CABxcv=kSiqDN1=9fSfLkyW=uuXQZAoW4dhw=fco9RyOdDuPAdA@mail.gmail.com>
- <20170829084831.hsdok3ksi7anxzuc@ninjato>
- <CABxcv=nqbNsTs7D57VOt1-Tav_3i9U=XKn=BV=hPr1tG68eE2g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ytpb2jjbrb4v5ate"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABxcv=nqbNsTs7D57VOt1-Tav_3i9U=XKn=BV=hPr1tG68eE2g@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Florian Larysch <fl@n621.de>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>, Simon Horman <horms@verge.net.au>, Michal Simek <michal.simek@xilinx.com>, Dinh Nguyen <dinguyen@kernel.org>, Russell King <linux@armlinux.org.uk>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joachim Eastwood <manabian@gmail.com>, Mark Rutland <mark.rutland@arm.com>li
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "regulator: Add STM32 Voltage Reference Buffer" to the regulator tree
+Date: Wed, 30 Aug 2017 18:57:22 +0100
+Message-ID: <E1dn7Ew-0001IE-Tp@debutante>
+References: <1499776233-29116-2-git-send-email-fabrice.gasnier@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499776233-29116-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---ytpb2jjbrb4v5ate
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   regulator: Add STM32 Voltage Reference Buffer
 
-On Wed, Aug 30, 2017 at 06:19:02PM +0200, Javier Martinez Canillas wrote:
-> Hello Wolfram,
->=20
-> On Tue, Aug 29, 2017 at 10:48 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> >
-> >> I don't have a DT based system at hand now, but I'll test it again and
-> >> let you know probably tomorrow.
-> >
-> > I will try again today, too. Thanks!
-> >
->=20
-> Ok, I had some time to do some tests again. I used an ARM Chromebook
-> (Exynos Peach Pi) that has an I2C touchpad (Atmel maXTouch).
+has been applied to the regulator tree at
 
-I tried again as well and it still fails for me.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-> Tested the following cases:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-I think we should talk about the same case: Let me repeat what I did:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-1) I added your patch "eeprom: at24: Add OF device ID table"
-2) I added an EEPROM node to an I2C
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-+       eeprom@50 {
-+               compatible =3D "renesas,24c01";
-+               reg =3D <0x50>;
-+       };
-
--> no at24 binding to the device
-
-3) I revert your patch
-
--> at24 binding to the device
-
-I think you should be able to test this DTS snipplet even without a real
-eeprom. Especially after applying this to the at24 driver.
-
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 79c5c39be29cac..f9f547680c53db 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -805,11 +805,6 @@ static int at24_probe(struct i2c_client *client, const=
- struct i2c_device_id *id)
- 	 * Perform a one-byte test read to verify that the
- 	 * chip is functional.
- 	 */
--	err =3D at24_read(at24, 0, &test_byte, 1);
--	if (err) {
--		err =3D -ENODEV;
--		goto err_clients;
--	}
-=20
- 	at24->nvmem_config.name =3D dev_name(&client->dev);
- 	at24->nvmem_config.dev =3D &client->dev;
-
-
-Can you check this?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
+Mark
 
-   Wolfram
+>From ef7bb293a670c7a81c7a5b8aad6b93ba32e0e9ec Mon Sep 17 00:00:00 2001
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Date: Wed, 30 Aug 2017 17:55:27 +0200
+Subject: [PATCH] regulator: Add STM32 Voltage Reference Buffer
 
+Document STM32 VREFBUF (voltage reference buffer) which can be used as
+voltage reference for ADCs, DACs and external components.
 
---ytpb2jjbrb4v5ate
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/regulator/st,stm32-vrefbuf.txt          | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
 
------BEGIN PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt b/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
+new file mode 100644
+index 000000000000..3944ee3e731e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
+@@ -0,0 +1,20 @@
++STM32 VREFBUF - Voltage reference buffer
++
++Some STM32 devices embed a voltage reference buffer which can be used as
++voltage reference for ADCs, DACs and also as voltage reference for external
++components through the dedicated VREF+ pin.
++
++Required properties:
++- compatible:		Must be "st,stm32-vrefbuf".
++- reg:			Offset and length of VREFBUF register set.
++- clocks:		Must contain an entry for peripheral clock.
++
++Example:
++	vrefbuf: regulator@58003C00 {
++		compatible = "st,stm32-vrefbuf";
++		reg = <0x58003C00 0x8>;
++		clocks = <&rcc VREF_CK>;
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <2500000>;
++		vdda-supply = <&vdda>;
++	};
+-- 
+2.14.1
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmm+QAACgkQFA3kzBSg
-KbaE2Q//Ztb57N4sjqcTqycN0sZpXbdacPZDeXtEK8KJP8FVq2qJiry5i/Y3IueQ
-8eehX6yk7ZPuXV9A3oMCi9IMRB5pPaAN0iiyMeaprfjCjrZnohY8dV0Arxjdee0y
-IIfgcj/R8FrO5wco/VCNeNFn2Hkd5i+tlbHxi2CoDJ6jTuxj+5VHEnTNPthJDdiA
-L0Nu4jQPuL1tywQfCwHbx4p9fnUdcobnCZl7nRXB4SFCdU/714R1XuYDbF2ZNN7u
-Uy+xyEl7Ui5tvQMVMT2tUlrs3TTn4x9dX5pX0oQg4YYQieL+P20Yn4BkDbntzOWh
-Ja9V1uzyL03PHZbTXie6dfnQzDHifVZpfeSrn0ayNVbAnG6svBQ8KXIcpMlmZSaA
-biFOzjQlixCtp++uffxERZd9MWyZk1vQ2uL6OQBQMIm0RKUfzApb1jSADwHzM4Jn
-PgOb9mN8vD6LrFgGOz9AtDQZ2gzCEpd8OEyUPlI+WfRaNsJDyLEIitl0ZDdaehIT
-AfjhhXIVOB0mPdPsw4Z7IXkXhQn4LqQmVWS5wiLXBwgrk3nPePCVyTjGupZMvgoL
-g9lntxWx+wfQgIFpFVp/zBxjW85nzq2aB9Gi2tbIPaCo5nIII1LZRlQwqTEvQVwF
-hftPQqukT556jgHLoKu3tsDkEJqi4MpckAvU020qHEKcqyR4YrY=
-=aBjO
------END PGP SIGNATURE-----
-
---ytpb2jjbrb4v5ate--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
