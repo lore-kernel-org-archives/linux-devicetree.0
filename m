@@ -1,35 +1,50 @@
-From: Zhiqiang Hou <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCHv2 0/3] arm64: dts: ls1012a: add the DTS node for DSPI support
-Date: Wed, 30 Aug 2017 18:12:35 +0800
-Message-ID: <20170830101238.28378-1-Zhiqiang.Hou@nxp.com>
+From: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv2 3/3] Documentation: dt: mtd: add sst25wf040b and en25s64 to the SPI NOR support list
+Date: Wed, 30 Aug 2017 18:12:38 +0800
+Message-ID: <20170830101238.28378-4-Zhiqiang.Hou@nxp.com>
+References: <20170830101238.28378-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170830101238.28378-1-Zhiqiang.Hou@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, dwmw2@infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, computersforpeace@gmail.com
+Cc: Yuan Yao <yao.yuan@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+From: Yuan Yao <yao.yuan@nxp.com>
 
-Corrected the subject for 3/5 patch v1.
+The chip sst25wf040b and en25s64 are compatible with SPI NOR flash.
 
-Yuan Yao (3):
-  arm64: dts: ls1012a: add the DTS node for DSPI support
-  Documentation: fsl: dspi: Add fsl,ls1012a-dspi compatible string
-  Documentation: dt: mtd: add sst25wf040b and en25s64 to the SPI NOR
-    support list
+Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+V2:
+ - Corrected the subject.
 
- .../devicetree/bindings/mtd/jedec,spi-nor.txt      |  2 ++
- .../devicetree/bindings/spi/spi-fsl-dspi.txt       |  1 +
- arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts  | 33 ++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     | 13 +++++++++
- 4 files changed, 49 insertions(+)
+ Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+index 9ce35af8507c..4cab5d85cf6f 100644
+--- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
++++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+@@ -13,6 +13,7 @@ Required properties:
+                  at25df321a
+                  at25df641
+                  at26df081a
++                 en25s64
+                  mr25h256
+                  mr25h10
+                  mr25h40
+@@ -31,6 +32,7 @@ Required properties:
+                  s25fl008k
+                  s25fl064k
+                  sst25vf040b
++                 sst25wf040b
+                  m25p40
+                  m25p80
+                  m25p16
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
