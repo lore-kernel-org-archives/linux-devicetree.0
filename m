@@ -1,63 +1,60 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/5] mmc: sdhci: Add quirk to indicate MMC_RSP_136 has CRC
-Date: Wed, 30 Aug 2017 15:13:17 +0200
-Message-ID: <CAPDyKFqM96Ts2w6ESvCp75Kw+i91Cwr2EX39Xs9og0nUBTRLsA@mail.gmail.com>
-References: <20170821074132.4622-1-kishon@ti.com> <20170821074132.4622-3-kishon@ti.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 5/8] pinctrl: sh-pfc: r8a77995: Add EthernetAVB pins,
+ groups and functions
+Date: Wed, 30 Aug 2017 13:13:33 +0000
+Message-ID: <TY1PR06MB099216F35EEA6909DFE6AC80D89C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1502281187-24068-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWQD9Gnt0hCHf8nwdq0etWQW=zSuXqFe7qrxmQ7SAEVjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170821074132.4622-3-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWQD9Gnt0hCHf8nwdq0etWQW=zSuXqFe7qrxmQ7SAEVjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: ja-JP
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, TAKESHI KIHARA <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 August 2017 at 09:41, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> TI's implementation of sdhci controller used in DRA7 SoC's has
-> CRC in responses with length 136 bits. Add quirk to indicate
-> the controller has CRC in MMC_RSP_136. If this quirk is
-> set sdhci library shouldn't shift the response present in
-> SDHCI_RESPONSE register.
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-Thanks, applied for next!
-
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/host/sdhci.c | 3 +++
->  drivers/mmc/host/sdhci.h | 2 ++
->  2 files changed, 5 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index ba639b7851cb..9c8d7428df3c 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1182,6 +1182,9 @@ static void sdhci_read_rsp_136(struct sdhci_host *host, struct mmc_command *cmd)
->                 cmd->resp[i] = sdhci_readl(host, reg);
->         }
->
-> +       if (host->quirks2 & SDHCI_QUIRK2_RSP_136_HAS_CRC)
-> +               return;
-> +
->         /* CRC is stripped so we need to do some shifting */
->         for (i = 0; i < 4; i++) {
->                 cmd->resp[i] <<= 8;
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 399edc681623..54bc444c317f 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -435,6 +435,8 @@ struct sdhci_host {
->  #define SDHCI_QUIRK2_ACMD23_BROKEN                     (1<<14)
->  /* Broken Clock divider zero in controller */
->  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN             (1<<15)
-> +/* Controller has CRC in 136 bit Command Response */
-> +#define SDHCI_QUIRK2_RSP_136_HAS_CRC                   (1<<16)
->
->         int irq;                /* Device IRQ */
->         void __iomem *ioaddr;   /* Mapped address */
-> --
-> 2.11.0
->
+SGkgR2VlcnQtc2FuLA0KDQpTb3JyeSwgSSBhbHNvIG1pc3NlZCB0aGlzIGVtYWlsLi4uDQoNCj4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuDQo+
+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDE2LCAyMDE3IDg6MDYgUE0NCj4gDQo+IEhpIFNoaW1v
+ZGEtc2FuLCBLaWhhcmEtc2FuLA0KPiANCj4gT24gV2VkLCBBdWcgOSwgMjAxNyBhdCAyOjE5IFBN
+LCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+
+IHdyb3RlOg0KPiA+IEZyb206IFRha2VzaGkgS2loYXJhIDx0YWtlc2hpLmtpaGFyYS5kZkByZW5l
+c2FzLmNvbT4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRha2VzaGkgS2loYXJhIDx0YWtlc2hp
+LmtpaGFyYS5kZkByZW5lc2FzLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hp
+bW9kYSA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+DQo+IA0KPiBSZXZpZXdlZC1i
+eTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCj4gDQo+IEJ1
+dCBiZWZvcmUgSSBhcHBseSB0aGlzLCBwbGVhc2Ugc2VlIG15IHF1ZXN0aW9uIGJlbG93Li4uDQo+
+IA0KPiA+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9zaC1wZmMvcGZjLXI4YTc3OTk1LmMNCj4gPiAr
+KysgYi9kcml2ZXJzL3BpbmN0cmwvc2gtcGZjL3BmYy1yOGE3Nzk5NS5jDQo+IA0KPiA+ICtzdGF0
+aWMgY29uc3QgY2hhciAqIGNvbnN0IGF2YjBfZ3JvdXBzW10gPSB7DQo+ID4gKyAgICAgICAiYXZi
+MF90ZCIsDQo+ID4gKyAgICAgICAiYXZiMF9yZCIsDQo+ID4gKyAgICAgICAiYXZiMF90eF9jdGwi
+LA0KPiA+ICsgICAgICAgImF2YjBfcnhfY3RsIiwNCj4gPiArICAgICAgICJhdmIwX3R4YyIsDQo+
+ID4gKyAgICAgICAiYXZiMF9yeGMiLA0KPiA+ICsgICAgICAgImF2YjBfdHhjcmVmY2xrIiwNCj4g
+PiArICAgICAgICJhdmIwX2xpbmsiLA0KPiA+ICsgICAgICAgImF2YjBfbWFnaWMiLA0KPiA+ICsg
+ICAgICAgImF2YjBfcGh5X2ludCIsDQo+ID4gKyAgICAgICAiYXZiMF9tZGMiLA0KPiA+ICsgICAg
+ICAgImF2YjBfbWRpbyIsDQo+ID4gKyAgICAgICAiYXZiMF9hdnRwX3Bwc19hIiwNCj4gPiArICAg
+ICAgICJhdmIwX2F2dHBfbWF0Y2hfYSIsDQo+ID4gKyAgICAgICAiYXZiMF9hdnRwX2NhcHR1cmVf
+YSIsDQo+ID4gKyAgICAgICAiYXZiMF9hdnRwX3Bwc19iIiwNCj4gPiArICAgICAgICJhdmIwX2F2
+dHBfbWF0Y2hfYiIsDQo+ID4gKyAgICAgICAiYXZiMF9hdnRwX2NhcHR1cmVfYiIsDQo+ID4gK307
+DQo+IA0KPiBJcyB0aGVyZSBhbnkgc3BlY2lmaWMgcmVhc29uIHRoaXMgdXNlcyBhIGRpZmZlcmVu
+dCBzcGxpdCB0aGFuIHRoZQ0KPiBFdGhlckFWQiBncm91cHMNCj4gaW4gcGluY3RybCBkcml2ZXJz
+IGZvciBvdGhlciBTb0NzPw0KDQpJIHdpbGwgY2hlY2sgdGhpcyB0b21vcnJvdyAob3IgbGF0ZXIu
+Li4pLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IE5vdGUgdGhhdCBJ
+IGRvIHVuZGVyc3RhbmQgdGhhdCB0aGUgZGlmZmVyZW50IHByZWZpeCAoImF2YjAiIHZzLiAiYXZi
+IikNCj4gd2FzIHVzZWQgdG8NCj4gbWF0Y2ggdGhlIFItQ2FyIEQzIGRhdGFzaGVldCwgd2hpY2gg
+aXMgdGh1cyBPSy4NCj4gDQo+IFRoYW5rcyENCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiAN
+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRl
+cmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGlu
+dXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmlj
+YWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2lu
+ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
+ZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZh
+bGRzDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
