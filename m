@@ -1,51 +1,156 @@
-From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v2] ARM: dts: r8a7743: add IIC cores to dtsi
-Date: Wed, 30 Aug 2017 07:46:34 +0000
-Message-ID: <SG2PR06MB069465C0EF929D98E5FEC2D0B79C0@SG2PR06MB0694.apcprd06.prod.outlook.com>
-References: <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
- <1502704398-28378-1-git-send-email-biju.das@bp.renesas.com>
- <TY1PR06MB07027D9A55FBFE2D591CEDCFB7840@TY1PR06MB0702.apcprd06.prod.outlook.com>
- <b7434757-b151-5971-2b5f-525eeaf11467@cogentembedded.com>
- <20170830073214.GL10398@verge.net.au>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 3/3] eeprom: at24: enable runtime pm support
+Date: Wed, 30 Aug 2017 10:53:30 +0300
+Message-ID: <20170830075329.cyhzitpfwojq3aox@valkosipuli.retiisi.org.uk>
+References: <1504066266-30051-1-git-send-email-divagar.mohandass@intel.com>
+ <1504066266-30051-4-git-send-email-divagar.mohandass@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170830073214.GL10398-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1504066266-30051-4-git-send-email-divagar.mohandass@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Divagar Mohandass <divagar.mohandass@intel.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, rajmohan.mani@intel.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Divagar,
 
+Thanks for the update. A few more comments below.
 
-> From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
-> Sent: 30 August 2017 08:32
->=20
-> On Tue, Aug 22, 2017 at 03:23:39PM +0300, Sergei Shtylyov wrote:
-> > On 08/22/2017 12:10 PM, Chris Paterson wrote:
-> >
-> > >>From: Biju Das [mailto:biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org]
-> > >>Sent: 14 August 2017 10:53
-> > >>
-> > >>Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > >>---
-> > >>v1-->v2
-> > >>    Corrected the resets property for i2c6 device node.
-> > >
-> > >Are you happy with this version of the patch?
-> > >
-> > >Or is the discussion for moving to 'iic' still alive?
-> >
-> >    Yes, appears so. I'd like the labels to be named iic<n>.
->=20
-> Chirs, I'm marking this as "Changes Requested" and expecting to see iic i=
-n v3
-> when you are ready.
+On Wed, Aug 30, 2017 at 09:41:06AM +0530, Divagar Mohandass wrote:
+> Currently the device is kept in D0, there is an opportunity
+> to save power by enabling runtime pm.
+> 
+> Device can be daisy chained from PMIC and we can't rely on I2C core
+> for auto resume/suspend. Driver will decide when to resume/suspend.
+> 
+> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
+> ---
+>  drivers/misc/eeprom/at24.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> index 2199c42..a670814 100644
+> --- a/drivers/misc/eeprom/at24.c
+> +++ b/drivers/misc/eeprom/at24.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/nvmem-provider.h>
+>  #include <linux/platform_data/at24.h>
+> +#include <linux/pm_runtime.h>
+>  
+>  /*
+>   * I2C EEPROMs from most vendors are inexpensive and mostly interchangeable.
+> @@ -501,11 +502,22 @@ static ssize_t at24_eeprom_write_i2c(struct at24_data *at24, const char *buf,
+>  static int at24_read(void *priv, unsigned int off, void *val, size_t count)
+>  {
+>  	struct at24_data *at24 = priv;
+> +	struct i2c_client *client;
+>  	char *buf = val;
+> +	int ret;
+>  
+>  	if (unlikely(!count))
+>  		return count;
+>  
+> +	client = at24_translate_offset(at24, &off);
+> +
+> +	ret = pm_runtime_get_sync(&client->dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(&client->dev);
+> +		pm_runtime_put(&client->dev);
 
-Sure, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Two puts are too much here. How about dropping this one?
+
+> +		return ret;
+> +	}
+> +
+>  	/*
+>  	 * Read data from chip, protecting against concurrent updates
+>  	 * from this host, but not from other I2C masters.
+
+If an error happens between the two chunks, you'll need pm_runtime_put(),
+too.
+
+> @@ -527,17 +539,30 @@ static int at24_read(void *priv, unsigned int off, void *val, size_t count)
+>  
+>  	mutex_unlock(&at24->lock);
+>  
+> +	pm_runtime_put(&client->dev);
+> +
+>  	return 0;
+>  }
+>  
+>  static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+>  {
+>  	struct at24_data *at24 = priv;
+> +	struct i2c_client *client;
+>  	char *buf = val;
+> +	int ret;
+>  
+>  	if (unlikely(!count))
+>  		return -EINVAL;
+>  
+> +	client = at24_translate_offset(at24, &off);
+> +
+> +	ret = pm_runtime_get_sync(&client->dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(&client->dev);
+> +		pm_runtime_put(&client->dev);
+
+Same here.
+
+> +		return ret;
+> +	}
+> +
+>  	/*
+>  	 * Write data to chip, protecting against concurrent updates
+>  	 * from this host, but not from other I2C masters.
+
+Ditto.
+
+> @@ -559,6 +584,8 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+>  
+>  	mutex_unlock(&at24->lock);
+>  
+> +	pm_runtime_put(&client->dev);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -743,6 +770,15 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  
+>  	i2c_set_clientdata(client, at24);
+>  
+> +	/* enable runtime pm */
+> +	pm_runtime_get_noresume(&client->dev);
+> +	err = pm_runtime_set_active(&client->dev);
+> +	if (err < 0)
+> +		goto err_clients;
+> +
+> +	pm_runtime_enable(&client->dev);
+> +	pm_runtime_put(&client->dev);
+> +
+
+You're just about to perform a read here. I believe you should move the
+last put after that.
+
+>  	/*
+>  	 * Perform a one-byte test read to verify that the
+>  	 * chip is functional.
+> @@ -810,6 +846,9 @@ static int at24_remove(struct i2c_client *client)
+>  	for (i = 1; i < at24->num_addresses; i++)
+>  		i2c_unregister_device(at24->client[i]);
+>  
+> +	pm_runtime_disable(&client->dev);
+> +	pm_runtime_set_suspended(&client->dev);
+> +
+>  	return 0;
+>  }
+>  
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
