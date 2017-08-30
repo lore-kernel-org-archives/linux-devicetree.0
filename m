@@ -1,7 +1,7 @@
 From: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv2 3/3] Documentation: dt: mtd: add sst25wf040b and en25s64 to the SPI NOR support list
-Date: Wed, 30 Aug 2017 18:12:38 +0800
-Message-ID: <20170830101238.28378-4-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv2 1/3] arm64: dts: ls1012a: add the DTS node for DSPI support
+Date: Wed, 30 Aug 2017 18:12:36 +0800
+Message-ID: <20170830101238.28378-2-Zhiqiang.Hou@nxp.com>
 References: <20170830101238.28378-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,37 +14,83 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yuan Yao <yao.yuan@nxp.com>
 
-The chip sst25wf040b and en25s64 are compatible with SPI NOR flash.
-
 Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
 V2:
- - Corrected the subject.
+ - No change
 
- Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts | 33 +++++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi    | 13 +++++++++
+ 2 files changed, 46 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-index 9ce35af8507c..4cab5d85cf6f 100644
---- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-+++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-@@ -13,6 +13,7 @@ Required properties:
-                  at25df321a
-                  at25df641
-                  at26df081a
-+                 en25s64
-                  mr25h256
-                  mr25h10
-                  mr25h40
-@@ -31,6 +32,7 @@ Required properties:
-                  s25fl008k
-                  s25fl064k
-                  sst25vf040b
-+                 sst25wf040b
-                  m25p40
-                  m25p80
-                  m25p16
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+index 8c013b54db14..cdc4aee75227 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+@@ -93,6 +93,39 @@
+ 	};
+ };
+ 
++&dspi {
++	bus-num = <0>;
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "n25q128a11", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++	};
++
++	flash@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "sst25wf040b", "jedec,spi-nor";
++		spi-cpol;
++		spi-cpha;
++		reg = <1>;
++		spi-max-frequency = <10000000>;
++	};
++
++	flash@2 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "en25s64", "jedec,spi-nor";
++		spi-cpol;
++		spi-cpha;
++		reg = <2>;
++		spi-max-frequency = <10000000>;
++	};
++};
++
+ &duart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index df83915d6ea6..09ce00022728 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -355,6 +355,19 @@
+ 			status = "disabled";
+ 		};
+ 
++		dspi: dspi@2100000 {
++			compatible = "fsl,ls1012a-dspi", "fsl,ls1021a-v1.0-dspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2100000 0x0 0x10000>;
++			interrupts = <0 64 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "dspi";
++			clocks = <&clockgen 4 0>;
++			spi-num-chipselects = <5>;
++			big-endian;
++			status = "disabled";
++		};
++
+ 		duart0: serial@21c0500 {
+ 			compatible = "fsl,ns16550", "ns16550a";
+ 			reg = <0x00 0x21c0500 0x0 0x100>;
 -- 
 2.14.1
