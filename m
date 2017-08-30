@@ -1,101 +1,240 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/7] ARM: dts: sun8i: h3: Enable AP6212 WiFi
- on mmc1 on Nanopi M1 Plus
-Date: Wed, 30 Aug 2017 23:51:37 +0200
-Message-ID: <89e3d5f8-1b31-bf86-4a6b-aee454c0b85f@gmail.com>
-References: <1504062070-13523-1-git-send-email-embed3d@gmail.com>
- <1504062070-13523-5-git-send-email-embed3d@gmail.com>
- <20170830145211.snicbwdytobtd7ro@flea.lan>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBD257DPK24NRB4HGTTGQKGQEOSV6OMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170830145211.snicbwdytobtd7ro-ZC1Zs529Oq4@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 05/13] irqchip: add initial support for ompic
+Date: Thu, 31 Aug 2017 06:58:36 +0900
+Message-ID: <538699c64b5601e8800b77da29f7951bf23f57ce.1504129273.git.shorne@gmail.com>
+References: <cover.1504129273.git.shorne@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1504129273.git.shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1504129273.git.shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1504129273.git.shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-thanks for the feedback I will rework the patch.
-Should I also update the sun8i-h3-bananapi-m2-plus.dts? It uses also the 
-AP6212 and it is done in the same way like in this patch.
+From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
 
-Am 30.08.2017 um 16:52 schrieb Maxime Ripard:
-> Hi,
-> 
-> On Wed, Aug 30, 2017 at 05:01:07AM +0200, Philipp Rossak wrote:
->> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> The WiFi side of the AP6212 WiFi/BT combo module is connected to
->> mmc1. There are also GPIOs for enable and interrupts.
->>
->> Enable WiFi on this board by enabling mmc1 and adding the power
->> sequencing clocks and GPIO, as well as the chip's interrupt line.
->>
->> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 35 +++++++++++++++++++++++++++
->>   1 file changed, 35 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
->> index b9c6c27..3054308 100644
->> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
->> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
->> @@ -48,6 +48,7 @@
->>   
->>   	aliases {
->>   		ethernet0 = &emac;
->> +		ethernet1 = &ap6212;
->>   	};
->>   
->>   	reg_gmac_3v3: gmac-3v3 {
->> @@ -59,6 +60,14 @@
->>   		enable-active-high;
->>   		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
->>   	};
->> +
->> +	wifi_pwrseq: wifi_pwrseq {
->> +		compatible = "mmc-pwrseq-simple";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&wifi_en_npi_m1p>;
-> 
-> There's no need for pinctrl nodes when the pin is set to a GPIO.
-> 
->> +		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
->> +	};
->> +
->>   };
->>   
->>   &ehci1 {
->> @@ -93,6 +102,25 @@
->>   	};
->>   };
->>   
->> +&mmc1 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&mmc1_pins_a>;
->> +	vmmc-supply = <&reg_vcc3v3>;
->> +	vqmmc-supply = <&reg_vcc3v3>;
-> 
-> You don't need vqmmc in this case.
-> 
->> +	mmc-pwrseq = <&wifi_pwrseq>;
->> +	bus-width = <4>;
->> +	non-removable;
->> +	status = "okay";
->> +
->> +	ap6212: sdio_wifi@1 {
-> 
-> You're sure you need a label here?
-> 
-> Thanks!
-> Maxime
-> 
+IPI driver for OpenRISC Multicore programmable interrupt controller as
+described in the Multicore support section of the OpenRISC 1.2
+proposed architecture specification:
+
+  https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
+
+Each OpenRISC core contains a full interrupt controller which is used in
+the SMP architecture for interrupt balancing.  This IPI device is the
+only external device required for enabling SMP on OpenRISC.
+
+Pending ops are stored in a memory bit mask which can allow multiple
+pending operations to be set and serviced at a time. This is mostly
+borrowed from the alpha IPI implementation.
+
+Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+[shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
+Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../bindings/interrupt-controller/ompic.txt        |  22 ++++
+ arch/openrisc/Kconfig                              |   1 +
+ drivers/irqchip/Kconfig                            |   4 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-ompic.c                        | 117 +++++++++++++++++++++
+ 5 files changed, 145 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ompic.txt
+ create mode 100644 drivers/irqchip/irq-ompic.c
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/ompic.txt
+new file mode 100644
+index 000000000000..4176ecc3366d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/ompic.txt
+@@ -0,0 +1,22 @@
++OpenRISC Multicore Programmable Interrupt Controller
++
++Required properties:
++
++- compatible : This should be "ompic"
++- reg : Specifies base physical address and size of the register space. The
++  size can be arbitrary based on the number of cores the controller has
++  been configured to handle, typically 8 bytes per core.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++- interrupts : Specifies the interrupt line to which the ompic is wired.
++
++Example:
++
++ompic: ompic {
++	compatible = "ompic";
++	reg = <0x98000000 16>;
++	#interrupt-cells = <1>;
++	interrupt-controller;
++	interrupts = <1>;
++};
+diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
+index 214c837ce597..dd7e55e7e42d 100644
+--- a/arch/openrisc/Kconfig
++++ b/arch/openrisc/Kconfig
+@@ -30,6 +30,7 @@ config OPENRISC
+ 	select NO_BOOTMEM
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+ 	select ARCH_USE_QUEUED_RWLOCKS
++	select OMPIC if SMP
+ 
+ config CPU_BIG_ENDIAN
+ 	def_bool y
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index f1fd5f44d1d4..3fa60e6667a7 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -145,6 +145,10 @@ config CLPS711X_IRQCHIP
+ 	select SPARSE_IRQ
+ 	default y
+ 
++config OMPIC
++	bool
++	select IRQ_DOMAIN
++
+ config OR1K_PIC
+ 	bool
+ 	select IRQ_DOMAIN
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index e88d856cc09c..123047d7a20d 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
+ obj-$(CONFIG_METAG)			+= irq-metag-ext.o
+ obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
+ obj-$(CONFIG_CLPS711X_IRQCHIP)		+= irq-clps711x.o
++obj-$(CONFIG_OMPIC)			+= irq-ompic.o
+ obj-$(CONFIG_OR1K_PIC)			+= irq-or1k-pic.o
+ obj-$(CONFIG_ORION_IRQCHIP)		+= irq-orion.o
+ obj-$(CONFIG_OMAP_IRQCHIP)		+= irq-omap-intc.o
+diff --git a/drivers/irqchip/irq-ompic.c b/drivers/irqchip/irq-ompic.c
+new file mode 100644
+index 000000000000..438819f8a5a7
+--- /dev/null
++++ b/drivers/irqchip/irq-ompic.c
+@@ -0,0 +1,117 @@
++/*
++ * Open Multi-Processor Interrupt Controller driver
++ *
++ * Copyright (C) 2014 Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include <linux/io.h>
++#include <linux/interrupt.h>
++#include <linux/smp.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/of_address.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/delay.h>
++
++#include <linux/irqchip.h>
++
++#define OMPIC_IPI_BASE			0x0
++#define OMPIC_IPI_CTRL(cpu)		(OMPIC_IPI_BASE + 0x0 + (cpu)*8)
++#define OMPIC_IPI_STAT(cpu)		(OMPIC_IPI_BASE + 0x4 + (cpu)*8)
++
++#define OMPIC_IPI_CTRL_IRQ_ACK		(1 << 31)
++#define OMPIC_IPI_CTRL_IRQ_GEN		(1 << 30)
++#define OMPIC_IPI_CTRL_DST(cpu)		(((cpu) & 0x3fff) << 16)
++
++#define OMPIC_IPI_STAT_IRQ_PENDING	(1 << 30)
++
++#define OMPIC_IPI_DATA(x)		((x) & 0xffff)
++
++static struct {
++	unsigned long ops;
++} ipi_data[NR_CPUS];
++
++static void __iomem *ompic_base;
++
++static inline u32 ompic_readreg(void __iomem *base, loff_t offset)
++{
++	return ioread32be(base + offset);
++}
++
++static void ompic_writereg(void __iomem *base, loff_t offset, u32 data)
++{
++	iowrite32be(data, base + offset);
++}
++
++#ifdef CONFIG_SMP
++void ompic_raise_softirq(const struct cpumask *mask, unsigned int irq)
++{
++	unsigned int dst_cpu;
++	unsigned int src_cpu = smp_processor_id();
++
++	for_each_cpu(dst_cpu, mask) {
++		set_bit(irq, &ipi_data[dst_cpu].ops);
++
++		ompic_writereg(ompic_base, OMPIC_IPI_CTRL(src_cpu),
++			       OMPIC_IPI_CTRL_IRQ_GEN |
++			       OMPIC_IPI_CTRL_DST(dst_cpu) |
++			       OMPIC_IPI_DATA(1));
++	}
++}
++#endif
++
++irqreturn_t ompic_ipi_handler(int irq, void *dev_id)
++{
++	unsigned int cpu = smp_processor_id();
++	unsigned long *pending_ops = &ipi_data[cpu].ops;
++	unsigned long ops;
++
++	ompic_writereg(ompic_base, OMPIC_IPI_CTRL(cpu), OMPIC_IPI_CTRL_IRQ_ACK);
++	while ((ops = xchg(pending_ops, 0)) != 0) {
++		do {
++			unsigned long ipi;
++
++			ipi = ops & -ops;
++			ops &= ~ipi;
++			ipi = __ffs(ipi);
++
++			handle_IPI(ipi);
++		} while (ops);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static struct irqaction ompi_ipi_irqaction = {
++	.handler =      ompic_ipi_handler,
++	.flags =        IRQF_PERCPU,
++	.name =         "ompic_ipi",
++};
++
++#ifdef CONFIG_OF
++int __init ompic_of_init(struct device_node *node, struct device_node *parent)
++{
++	int irq;
++
++	if (WARN_ON(!node))
++		return -ENODEV;
++
++	memset(ipi_data, 0, sizeof(ipi_data));
++
++	ompic_base = of_iomap(node, 0);
++
++	irq = irq_of_parse_and_map(node, 0);
++	setup_irq(irq, &ompi_ipi_irqaction);
++
++#ifdef CONFIG_SMP
++	set_smp_cross_call(ompic_raise_softirq);
++#endif
++
++	return 0;
++}
++IRQCHIP_DECLARE(ompic, "ompic", ompic_of_init);
++#endif
+-- 
+2.13.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
