@@ -1,80 +1,44 @@
-From: Philipp Rossak <embed3d@gmail.com>
-Subject: [PATCH 3/7] ARM: dts: sun8i: h3: Enable dwmac-sun8i on the Nanopi M1 Plus
-Date: Wed, 30 Aug 2017 05:01:06 +0200
-Message-ID: <1504062070-13523-4-git-send-email-embed3d@gmail.com>
-References: <1504062070-13523-1-git-send-email-embed3d@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504062070-13523-1-git-send-email-embed3d@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
-Cc: Philipp Rossak <embed3d@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: dt-bindings: watchdog: renesas-wdt: Add support for the r8a77995
+ wdt
+Date: Tue, 29 Aug 2017 20:24:29 -0700
+Message-ID: <20170830032429.GA12010@roeck-us.net>
+References: <1502968465-7809-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502968465-7809-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Rossak <embed3d@gmail.com>
+On Thu, Aug 17, 2017 at 01:14:25PM +0200, Geert Uytterhoeven wrote:
+> Document support for the Watchdog Timer (WDT) Controller in the Renesas
+> R-Car D3 (r8a77995) SoC.
+> 
+> No driver update is needed.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-The dwmac-sun8i hardware is present on the Nanopi M1 Plus.
-It uses an external PHY.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Philipp Rossak <embed3d@gmail.com>
----
- arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 32 +++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-index ece275b..b9c6c27 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-@@ -45,6 +45,20 @@
- / {
- 	model = "FriendlyArm NanoPi M1 Plus";
- 	compatible = "friendlyarm,nanopi-m1-plus", "allwinner,sun8i-h3";
-+
-+	aliases {
-+		ethernet0 = &emac;
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
-+	};
- };
- 
- &ehci1 {
-@@ -55,12 +69,30 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_rgmii_pins>;
-+	phy-supply = <&reg_gmac_3v3>;
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-mode = "rgmii";
-+
-+	allwinner,leds-active-low;
-+	status = "okay";
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
- 	status = "okay";
- };
- 
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0>;
-+	};
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
--- 
-2.7.4
+> ---
+>  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> index 9e306afbbd49e91b..bf6d1ca58af7d198 100644
+> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>  	       Examples with soctypes are:
+>  	         - "renesas,r8a7795-wdt" (R-Car H3)
+>  	         - "renesas,r8a7796-wdt" (R-Car M3-W)
+> +	         - "renesas,r8a77995-wdt" (R-Car D3)
+>  	         - "renesas,r7s72100-wdt" (RZ/A1)
+>  
+>    When compatible with the generic version, nodes must list the SoC-specific
