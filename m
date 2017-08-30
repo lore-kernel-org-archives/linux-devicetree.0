@@ -1,173 +1,101 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 3/3] eeprom: at24: enable runtime pm support
-Date: Thu, 31 Aug 2017 00:19:38 +0300
-Message-ID: <20170830211938.3m4xdwlfq5yozymq@valkosipuli.retiisi.org.uk>
-References: <1504112740-14072-1-git-send-email-divagar.mohandass@intel.com>
- <1504112740-14072-4-git-send-email-divagar.mohandass@intel.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/7] ARM: dts: sun8i: h3: Enable AP6212 WiFi
+ on mmc1 on Nanopi M1 Plus
+Date: Wed, 30 Aug 2017 23:51:37 +0200
+Message-ID: <89e3d5f8-1b31-bf86-4a6b-aee454c0b85f@gmail.com>
+References: <1504062070-13523-1-git-send-email-embed3d@gmail.com>
+ <1504062070-13523-5-git-send-email-embed3d@gmail.com>
+ <20170830145211.snicbwdytobtd7ro@flea.lan>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1504112740-14072-4-git-send-email-divagar.mohandass@intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Divagar Mohandass <divagar.mohandass@intel.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, rajmohan.mani@intel.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBD257DPK24NRB4HGTTGQKGQEOSV6OMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170830145211.snicbwdytobtd7ro-ZC1Zs529Oq4@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Divagar,
+Hi,
+thanks for the feedback I will rework the patch.
+Should I also update the sun8i-h3-bananapi-m2-plus.dts? It uses also the 
+AP6212 and it is done in the same way like in this patch.
 
-Thanks for the update.
-
-On Wed, Aug 30, 2017 at 10:35:40PM +0530, Divagar Mohandass wrote:
-> Currently the device is kept in D0, there is an opportunity
-> to save power by enabling runtime pm.
+Am 30.08.2017 um 16:52 schrieb Maxime Ripard:
+> Hi,
 > 
-> Device can be daisy chained from PMIC and we can't rely on I2C core
-> for auto resume/suspend. Driver will decide when to resume/suspend.
+> On Wed, Aug 30, 2017 at 05:01:07AM +0200, Philipp Rossak wrote:
+>> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> The WiFi side of the AP6212 WiFi/BT combo module is connected to
+>> mmc1. There are also GPIOs for enable and interrupts.
+>>
+>> Enable WiFi on this board by enabling mmc1 and adding the power
+>> sequencing clocks and GPIO, as well as the chip's interrupt line.
+>>
+>> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 35 +++++++++++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+>> index b9c6c27..3054308 100644
+>> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+>> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+>> @@ -48,6 +48,7 @@
+>>   
+>>   	aliases {
+>>   		ethernet0 = &emac;
+>> +		ethernet1 = &ap6212;
+>>   	};
+>>   
+>>   	reg_gmac_3v3: gmac-3v3 {
+>> @@ -59,6 +60,14 @@
+>>   		enable-active-high;
+>>   		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
+>>   	};
+>> +
+>> +	wifi_pwrseq: wifi_pwrseq {
+>> +		compatible = "mmc-pwrseq-simple";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&wifi_en_npi_m1p>;
 > 
-> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
-> ---
->  drivers/misc/eeprom/at24.c | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
+> There's no need for pinctrl nodes when the pin is set to a GPIO.
 > 
-> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index 2199c42..65a7d83 100644
-> --- a/drivers/misc/eeprom/at24.c
-> +++ b/drivers/misc/eeprom/at24.c
-> @@ -24,6 +24,7 @@
->  #include <linux/i2c.h>
->  #include <linux/nvmem-provider.h>
->  #include <linux/platform_data/at24.h>
-> +#include <linux/pm_runtime.h>
->  
->  /*
->   * I2C EEPROMs from most vendors are inexpensive and mostly interchangeable.
-> @@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct at24_data *at24, const char *buf,
->  static int at24_read(void *priv, unsigned int off, void *val, size_t count)
->  {
->  	struct at24_data *at24 = priv;
-> +	struct i2c_client *client;
->  	char *buf = val;
-> +	int ret;
->  
->  	if (unlikely(!count))
->  		return count;
->  
-> +	client = at24_translate_offset(at24, &off);
-> +
-> +	ret = pm_runtime_get_sync(&client->dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(&client->dev);
-> +		return ret;
-> +	}
-> +
->  	/*
->  	 * Read data from chip, protecting against concurrent updates
->  	 * from this host, but not from other I2C masters.
-> @@ -518,6 +529,7 @@ static int at24_read(void *priv, unsigned int off, void *val, size_t count)
->  		status = at24->read_func(at24, buf, off, count);
->  		if (status < 0) {
->  			mutex_unlock(&at24->lock);
-> +			pm_runtime_put(&client->dev);
->  			return status;
->  		}
->  		buf += status;
-> @@ -527,17 +539,29 @@ static int at24_read(void *priv, unsigned int off, void *val, size_t count)
->  
->  	mutex_unlock(&at24->lock);
->  
-> +	pm_runtime_put(&client->dev);
-> +
->  	return 0;
->  }
->  
->  static int at24_write(void *priv, unsigned int off, void *val, size_t count)
->  {
->  	struct at24_data *at24 = priv;
-> +	struct i2c_client *client;
->  	char *buf = val;
-> +	int ret;
->  
->  	if (unlikely(!count))
->  		return -EINVAL;
->  
-> +	client = at24_translate_offset(at24, &off);
-> +
-> +	ret = pm_runtime_get_sync(&client->dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(&client->dev);
-> +		return ret;
-> +	}
-> +
->  	/*
->  	 * Write data to chip, protecting against concurrent updates
->  	 * from this host, but not from other I2C masters.
-> @@ -550,6 +574,7 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
->  		status = at24->write_func(at24, buf, off, count);
->  		if (status < 0) {
->  			mutex_unlock(&at24->lock);
-> +			pm_runtime_put(&client->dev);
->  			return status;
->  		}
->  		buf += status;
-> @@ -559,6 +584,8 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
->  
->  	mutex_unlock(&at24->lock);
->  
-> +	pm_runtime_put(&client->dev);
-> +
->  	return 0;
->  }
->  
-> @@ -743,6 +770,14 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  
->  	i2c_set_clientdata(client, at24);
->  
-> +	/* enable runtime pm */
-> +	pm_runtime_get_noresume(&client->dev);
-> +	err = pm_runtime_set_active(&client->dev);
-> +	if (err < 0)
-> +		goto err_clients;
-
-Btw. I don't think pm_runtime_set_active() can fail here. In other words
-it'd be fine to ignore the return value.
-
-> +
-> +	pm_runtime_enable(&client->dev);
-> +
->  	/*
->  	 * Perform a one-byte test read to verify that the
->  	 * chip is functional.
-> @@ -753,6 +788,8 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  		goto err_clients;
-
-I suppose the runtime PM state is re-initialised for a device when a driver
-is probed, but it'd still be nice to decrement the use count if this fails.
-You should also disable PM runtime if probe fails and set the device
-suspended again.
-
-Same for other error cases. I think you'll need a new label.
-
->  	}
->  
-> +	pm_runtime_put(&client->dev);
-> +
->  	at24->nvmem_config.name = dev_name(&client->dev);
->  	at24->nvmem_config.dev = &client->dev;
->  	at24->nvmem_config.read_only = !writable;
-> @@ -810,6 +847,9 @@ static int at24_remove(struct i2c_client *client)
->  	for (i = 1; i < at24->num_addresses; i++)
->  		i2c_unregister_device(at24->client[i]);
->  
-> +	pm_runtime_disable(&client->dev);
-> +	pm_runtime_set_suspended(&client->dev);
-> +
->  	return 0;
->  }
->  
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+>> +		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+>> +	};
+>> +
+>>   };
+>>   
+>>   &ehci1 {
+>> @@ -93,6 +102,25 @@
+>>   	};
+>>   };
+>>   
+>> +&mmc1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&mmc1_pins_a>;
+>> +	vmmc-supply = <&reg_vcc3v3>;
+>> +	vqmmc-supply = <&reg_vcc3v3>;
+> 
+> You don't need vqmmc in this case.
+> 
+>> +	mmc-pwrseq = <&wifi_pwrseq>;
+>> +	bus-width = <4>;
+>> +	non-removable;
+>> +	status = "okay";
+>> +
+>> +	ap6212: sdio_wifi@1 {
+> 
+> You're sure you need a label here?
+> 
+> Thanks!
+> Maxime
+> 
