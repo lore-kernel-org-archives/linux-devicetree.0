@@ -1,46 +1,60 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: Devicetree at Linux Plumbers Conference 2017
-Date: Wed, 30 Aug 2017 16:42:30 +0200
-Message-ID: <CAMuHMdUYNxgJjFF1X6KPiMRUoQ0eJibyeHsKoDM=JZ+gQF6qCA@mail.gmail.com>
-References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
- <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
- <CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com>
- <CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ@mail.gmail.com>
- <CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og@mail.gmail.com>
- <CACxGe6vOMsL=5tRzAyOoW-Rh5CjvJcvnn_Zv34L3g_tQVGfK4A@mail.gmail.com> <3AA247F8-C570-4F09-AF7A-B8619B0D69CD@linaro.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/7] ARM: dts: sun8i: h3: nanopi-m1: Enable IR controller
+Date: Wed, 30 Aug 2017 16:49:54 +0200
+Message-ID: <20170830144954.iee4syh6btswxtzn@flea.lan>
+References: <1504062070-13523-1-git-send-email-embed3d@gmail.com>
+ <1504062070-13523-2-git-send-email-embed3d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3AA247F8-C570-4F09-AF7A-B8619B0D69CD-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Warren <SWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof.johansson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="unvs7l4knclnh6x2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1504062070-13523-2-git-send-email-embed3d@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kumar,
 
-On Wed, Aug 30, 2017 at 4:36 PM, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Aug 30, 2017, at 5:41 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> Confirmed! The Devicetree Workshop will be Thursday 26 October in the
->> afternoon. Anyone registered for OSS will be able to attend. I don't
->> know yet if there are any other consessions for registration. I'm
->> finding out now and will update as soon as I know.
->>
->> Cheers,
->> g.
->
-> Does ELCE registration count?
+--unvs7l4knclnh6x2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, according to
-http://events.linuxfoundation.org/events/linux-kernel-summit/attend/register
+On Wed, Aug 30, 2017 at 05:01:04AM +0200, Philipp Rossak wrote:
+> From: Philipp Rossak <embed3d@gmail.com>
+>=20
+> The Nanopi M1 has an onboard IR receiver.
+> This enables the onboard IR receiver subnode.
+>=20
+> Signed-off-by: Philipp Rossak <embed3d@gmail.com>
 
-Gr{oetje,eeting}s,
+Queued for 4.15, thanks!
+Maxime
 
-                        Geert
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+--unvs7l4knclnh6x2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZptCSAAoJEBx+YmzsjxAgbK8P/1j7ySVfTdhE2sbohLUCYhFC
+Kks3VKs7eokc8mTaKbYkmyT5Qx8tOZ75AIPsya/9QU5xoRIEStmqxnorqVIVQtDS
+0YVWkN89+reJe/vOy0CoyDvycn9d0aPQ4XbyCZ0MB3KDuWqBWPxOJnoAZpyuvA9B
+C20K5wFWd7b0avDN6TDYstQK+kfk8PrRCaroKFOk9jmcxBXdxmFpmRe9+cK71iJR
+HLMMkeCNBDwWLnYzTcs2c/C11A2DJMj5hOVR7bD80+C3nsd+QxCoe/Ym9SzoTvUh
+Nm4Pht9/J56004aeR2d3qCyprd2QDsflyHrCOULNY4snOT1OHzX1TxfaBKK01xRr
+45QVwDgA5fQZccLrkqP/kH/i6IEf0rMCyia1se2+HQmxTAedikvynwXIZzck3MYV
+XmDLO6wZH18MrRMn6+umJPttgqigJiCRjzHHRutlixxmSnPE/vrShlMLF8b79/zG
+tiPn6H9Biqg1f16xMhjeHV9MdDROcG0djG3BRXEgxfgsvDyZL9UAGzcpRHxX1Uo5
+5RxDo/aOnQ2olsI6oLDKLdJnMT3jvDWPXvAdOwLmsWS4pzZ08FUoIF1rxI0heMS+
+jMDnvv27n12wGm+jG1Efl1HXr+bCbCiYzoBZNLU6VInTIg6r23OybGR3N3+7j7k8
+W6dm9jCrD4MoBqa77ylI
+=jZh8
+-----END PGP SIGNATURE-----
+
+--unvs7l4knclnh6x2--
