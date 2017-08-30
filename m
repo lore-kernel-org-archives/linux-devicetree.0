@@ -1,60 +1,53 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 5/8] pinctrl: sh-pfc: r8a77995: Add EthernetAVB pins,
- groups and functions
-Date: Wed, 30 Aug 2017 13:13:33 +0000
-Message-ID: <TY1PR06MB099216F35EEA6909DFE6AC80D89C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1502281187-24068-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdWQD9Gnt0hCHf8nwdq0etWQW=zSuXqFe7qrxmQ7SAEVjw@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 2/2] mmc: sunxi: Reset the device at probe time
+Date: Wed, 30 Aug 2017 15:14:11 +0200
+Message-ID: <CAPDyKFqAyhB1C096YjXNz2iAPL0Vrr5-hsyoiL8meho1b0qNPg@mail.gmail.com>
+References: <20170825094953.3247-1-maxime.ripard@free-electrons.com> <20170825094953.3247-2-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWQD9Gnt0hCHf8nwdq0etWQW=zSuXqFe7qrxmQ7SAEVjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: ja-JP
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, TAKESHI KIHARA <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170825094953.3247-2-maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpTb3JyeSwgSSBhbHNvIG1pc3NlZCB0aGlzIGVtYWlsLi4uDQoNCj4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuDQo+
-IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDE2LCAyMDE3IDg6MDYgUE0NCj4gDQo+IEhpIFNoaW1v
-ZGEtc2FuLCBLaWhhcmEtc2FuLA0KPiANCj4gT24gV2VkLCBBdWcgOSwgMjAxNyBhdCAyOjE5IFBN
-LCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+
-IHdyb3RlOg0KPiA+IEZyb206IFRha2VzaGkgS2loYXJhIDx0YWtlc2hpLmtpaGFyYS5kZkByZW5l
-c2FzLmNvbT4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRha2VzaGkgS2loYXJhIDx0YWtlc2hp
-LmtpaGFyYS5kZkByZW5lc2FzLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hp
-bW9kYSA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+DQo+IA0KPiBSZXZpZXdlZC1i
-eTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCj4gDQo+IEJ1
-dCBiZWZvcmUgSSBhcHBseSB0aGlzLCBwbGVhc2Ugc2VlIG15IHF1ZXN0aW9uIGJlbG93Li4uDQo+
-IA0KPiA+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9zaC1wZmMvcGZjLXI4YTc3OTk1LmMNCj4gPiAr
-KysgYi9kcml2ZXJzL3BpbmN0cmwvc2gtcGZjL3BmYy1yOGE3Nzk5NS5jDQo+IA0KPiA+ICtzdGF0
-aWMgY29uc3QgY2hhciAqIGNvbnN0IGF2YjBfZ3JvdXBzW10gPSB7DQo+ID4gKyAgICAgICAiYXZi
-MF90ZCIsDQo+ID4gKyAgICAgICAiYXZiMF9yZCIsDQo+ID4gKyAgICAgICAiYXZiMF90eF9jdGwi
-LA0KPiA+ICsgICAgICAgImF2YjBfcnhfY3RsIiwNCj4gPiArICAgICAgICJhdmIwX3R4YyIsDQo+
-ID4gKyAgICAgICAiYXZiMF9yeGMiLA0KPiA+ICsgICAgICAgImF2YjBfdHhjcmVmY2xrIiwNCj4g
-PiArICAgICAgICJhdmIwX2xpbmsiLA0KPiA+ICsgICAgICAgImF2YjBfbWFnaWMiLA0KPiA+ICsg
-ICAgICAgImF2YjBfcGh5X2ludCIsDQo+ID4gKyAgICAgICAiYXZiMF9tZGMiLA0KPiA+ICsgICAg
-ICAgImF2YjBfbWRpbyIsDQo+ID4gKyAgICAgICAiYXZiMF9hdnRwX3Bwc19hIiwNCj4gPiArICAg
-ICAgICJhdmIwX2F2dHBfbWF0Y2hfYSIsDQo+ID4gKyAgICAgICAiYXZiMF9hdnRwX2NhcHR1cmVf
-YSIsDQo+ID4gKyAgICAgICAiYXZiMF9hdnRwX3Bwc19iIiwNCj4gPiArICAgICAgICJhdmIwX2F2
-dHBfbWF0Y2hfYiIsDQo+ID4gKyAgICAgICAiYXZiMF9hdnRwX2NhcHR1cmVfYiIsDQo+ID4gK307
-DQo+IA0KPiBJcyB0aGVyZSBhbnkgc3BlY2lmaWMgcmVhc29uIHRoaXMgdXNlcyBhIGRpZmZlcmVu
-dCBzcGxpdCB0aGFuIHRoZQ0KPiBFdGhlckFWQiBncm91cHMNCj4gaW4gcGluY3RybCBkcml2ZXJz
-IGZvciBvdGhlciBTb0NzPw0KDQpJIHdpbGwgY2hlY2sgdGhpcyB0b21vcnJvdyAob3IgbGF0ZXIu
-Li4pLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IE5vdGUgdGhhdCBJ
-IGRvIHVuZGVyc3RhbmQgdGhhdCB0aGUgZGlmZmVyZW50IHByZWZpeCAoImF2YjAiIHZzLiAiYXZi
-IikNCj4gd2FzIHVzZWQgdG8NCj4gbWF0Y2ggdGhlIFItQ2FyIEQzIGRhdGFzaGVldCwgd2hpY2gg
-aXMgdGh1cyBPSy4NCj4gDQo+IFRoYW5rcyENCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiAN
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRl
-cmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGlu
-dXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmlj
-YWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2lu
-ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
-ZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZh
-bGRzDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 25 August 2017 at 11:49, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> We might be into some troubles if the bootloader misconfigured the MMC
+> controller.
+>
+> We currently only de-assert the reset line at probe time, which means that
+> if the device was already out of reset, we're going to keep whatever state
+> was set already.
+>
+> Switch to a reset instead of the deassert to have a device in a pristine
+> state when we start operating.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+Thanks, applied for next!
+
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/host/sunxi-mmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+> index da5f46a14497..53c970fe0873 100644
+> --- a/drivers/mmc/host/sunxi-mmc.c
+> +++ b/drivers/mmc/host/sunxi-mmc.c
+> @@ -1242,7 +1242,7 @@ static int sunxi_mmc_resource_request(struct sunxi_mmc_host *host,
+>         }
+>
+>         if (!IS_ERR(host->reset)) {
+> -               ret = reset_control_deassert(host->reset);
+> +               ret = reset_control_reset(host->reset);
+>                 if (ret) {
+>                         dev_err(&pdev->dev, "reset err %d\n", ret);
+>                         goto error_disable_clk_sample;
+> --
+> 2.13.5
+>
