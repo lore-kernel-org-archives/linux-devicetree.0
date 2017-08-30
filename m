@@ -1,33 +1,34 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/7] ARM: dts: sun8i: h3: nanopi-m1: Enable IR controller
-Date: Wed, 30 Aug 2017 16:49:54 +0200
-Message-ID: <20170830144954.iee4syh6btswxtzn@flea.lan>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/7] ARM: dts: sun8i: h3: nanopi-m1-plus: Enable IR
+ controller
+Date: Wed, 30 Aug 2017 16:50:56 +0200
+Message-ID: <20170830145056.mfl65p3fwo6vqiou@flea.lan>
 References: <1504062070-13523-1-git-send-email-embed3d@gmail.com>
- <1504062070-13523-2-git-send-email-embed3d@gmail.com>
+ <1504062070-13523-3-git-send-email-embed3d@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="unvs7l4knclnh6x2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="hfc3rp7et2dfsbd6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1504062070-13523-2-git-send-email-embed3d@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Rossak <embed3d@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1504062070-13523-3-git-send-email-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---unvs7l4knclnh6x2
+--hfc3rp7et2dfsbd6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 30, 2017 at 05:01:04AM +0200, Philipp Rossak wrote:
-> From: Philipp Rossak <embed3d@gmail.com>
+On Wed, Aug 30, 2017 at 05:01:05AM +0200, Philipp Rossak wrote:
+> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >=20
-> The Nanopi M1 has an onboard IR receiver.
+> The Nanopi M1 Plus has an onboard IR receiver.
 > This enables the onboard IR receiver subnode.
 >=20
-> Signed-off-by: Philipp Rossak <embed3d@gmail.com>
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 Queued for 4.15, thanks!
 Maxime
@@ -37,24 +38,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---unvs7l4knclnh6x2
+--hfc3rp7et2dfsbd6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZptCSAAoJEBx+YmzsjxAgbK8P/1j7ySVfTdhE2sbohLUCYhFC
-Kks3VKs7eokc8mTaKbYkmyT5Qx8tOZ75AIPsya/9QU5xoRIEStmqxnorqVIVQtDS
-0YVWkN89+reJe/vOy0CoyDvycn9d0aPQ4XbyCZ0MB3KDuWqBWPxOJnoAZpyuvA9B
-C20K5wFWd7b0avDN6TDYstQK+kfk8PrRCaroKFOk9jmcxBXdxmFpmRe9+cK71iJR
-HLMMkeCNBDwWLnYzTcs2c/C11A2DJMj5hOVR7bD80+C3nsd+QxCoe/Ym9SzoTvUh
-Nm4Pht9/J56004aeR2d3qCyprd2QDsflyHrCOULNY4snOT1OHzX1TxfaBKK01xRr
-45QVwDgA5fQZccLrkqP/kH/i6IEf0rMCyia1se2+HQmxTAedikvynwXIZzck3MYV
-XmDLO6wZH18MrRMn6+umJPttgqigJiCRjzHHRutlixxmSnPE/vrShlMLF8b79/zG
-tiPn6H9Biqg1f16xMhjeHV9MdDROcG0djG3BRXEgxfgsvDyZL9UAGzcpRHxX1Uo5
-5RxDo/aOnQ2olsI6oLDKLdJnMT3jvDWPXvAdOwLmsWS4pzZ08FUoIF1rxI0heMS+
-jMDnvv27n12wGm+jG1Efl1HXr+bCbCiYzoBZNLU6VInTIg6r23OybGR3N3+7j7k8
-W6dm9jCrD4MoBqa77ylI
-=jZh8
+iQIcBAEBAgAGBQJZptDQAAoJEBx+YmzsjxAgvNAQAIaS8ARg9xd+0sRRukBH+Fb2
+B6C8tcIhMuLmJ01jbjt11zFca3h+0K9VSx5RfOf5G1awYg93dwkUfpFppzPovvDy
+JQVN8aEAIQoWsbe51NOJoycFCGZjx6ouR3GsnjpQcGx1pixpeByMb9t0C3+K9jcM
+tMQiC7/0TqeX1qkG0GtywgVO+0Y9GQ8eKiXwH/3YUpAaLdg+oul6cRmUOobLojeC
+oVDP4dF4YgIylxE9mNJd61GTvv2E27428Y4OilqB0IJIo1bRXwTFhDE2kVTy9n3z
+WgvzkFQMxQOZBL0yB7OKwQwqJXgkfAgjpwbhnYoR1JI7i6Siw+GFBg38hrgXtBHQ
+C/oQ83Vk5767NV93Uh8YlHiYJr114/hcywqhkogU28f5kYWbo7P0S2tWpA0S8QsB
+Sm9vhdZEF5KqelL8XT/yxWjUtw/P8zLYNQEgtq5vwbbkPT4CbjUCtzkXmyCwm5MX
+SxJWnbIGid8n7LACPdI6aHK4VZ2xkr3K1Hdeq7HmoSuGakhJa9pyMWNPzLbA7msv
+9qw/QOYDr5K4sUqVR1gijENgk2RrB2o1RzhVxgULRq3jdE3IXlyCbfPoJ0RjyHjI
+oh03OccOK4Vs961hQD7qLV4B0mF6WfiWz9vbfsTMYAo+sXe6vzk1BiFFoGUBe2Uw
+wLddEwNNDgQbJYfz/h79
+=Og5/
 -----END PGP SIGNATURE-----
 
---unvs7l4knclnh6x2--
+--hfc3rp7et2dfsbd6--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
