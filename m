@@ -1,47 +1,41 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v3 3/3] dt-bindings: mt8173-mtu3: add generic compatible and rename file
-Date: Wed, 30 Aug 2017 19:34:11 +0800
-Message-ID: <15a1cdc6e2e7da0f7a74b56794b74c2d258e1b88.1504092763.git.chunfeng.yun@mediatek.com>
-References: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1504092763.git.chunfeng.yun@mediatek.com>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCH] devicetree/bindings: display: fix copy/paste error
+Date: Wed, 30 Aug 2017 12:41:12 +0200
+Message-ID: <1504089672-27490-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1504092763.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-The mt8173-mtu3.txt actually holds the bindings for all mediatek
-SoCs with usb3 DRD IP, so add a generic compatible and change the
-name to mediatek,mtu3.txt.
-
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../usb/{mt8173-mtu3.txt => mediatek,mtu3.txt}     |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/usb/{mt8173-mtu3.txt => mediatek,mtu3.txt} (92%)
-
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-similarity index 92%
-rename from Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-rename to Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index b8ea394..838ae48 100644
---- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -1,7 +1,11 @@
- The device node for Mediatek USB3.0 DRD controller
- 
- Required properties:
-- - compatible : should be "mediatek,mt8173-mtu3"
-+ - compatible : should be "mediatek,<soc-model>-mtu3", "mediatek,mtu3",
-+	soc-model is the name of SoC, such as mt8173, mt2712 etc,
-+	when using "mediatek,mtu3" compatible string, you need SoC specific
-+	ones in addition, one of:
-+	- "mediatek,mt8173-mtu3"
-  - reg : specifies physical base address and size of the registers
-  - reg-names: should be "mac" for device IP and "ippc" for IP port control
-  - interrupts : interrupt used by the device IP
--- 
-1.7.9.5
+QWRqdXN0IHRoZSBjb21wYXRpYmxlIHN0cmluZyB0aGF0IHdhcyBvYnZpb3VzbHkgY29waWVkIGZy
+b20gdGhlCm1pdHN1YmlzaGksYWExMjF0ZDAxLnR4dCBmaWxlLgoKU2lnbmVkLW9mZi1ieTogTG90
+aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgotLS0KIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbWl0c3ViaXNoaSxhYTEwNHhkMTIudHh0ICAgICAgICAg
+IHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvbWl0c3ViaXNoaSxhYTEwNHhkMTIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvbWl0c3ViaXNoaSxhYTEwNHhkMTIudHh0CmluZGV4IGNlZDAx
+MjEuLjYxMjFhNWEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL21pdHN1YmlzaGksYWExMDR4ZDEyLnR4dAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9taXRzdWJpc2hpLGFhMTA0eGQx
+Mi50eHQKQEAgLTksNyArOSw3IEBAIHdpdGggdGhlIGZvbGxvd2luZyBkZXZpY2Utc3BlY2lmaWMg
+cHJvcGVydGllcy4KIAogUmVxdWlyZWQgcHJvcGVydGllczoKIAotLSBjb21wYXRpYmxlOiBTaGFs
+bCBjb250YWluICJtaXRzdWJpc2hpLGFhMTIxdGQwMSIgYW5kICJwYW5lbC1sdmRzIiwgaW4gdGhh
+dAorLSBjb21wYXRpYmxlOiBTaGFsbCBjb250YWluICJtaXRzdWJpc2hpLGFhMTA0eGQxMiIgYW5k
+ICJwYW5lbC1sdmRzIiwgaW4gdGhhdAogICBvcmRlci4KIC0gdmNjLXN1cHBseTogUmVmZXJlbmNl
+IHRvIHRoZSByZWd1bGF0b3IgcG93ZXJpbmcgdGhlIHBhbmVsIFZDQyBwaW5zLgogCi0tIAoyLjEu
+NAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
