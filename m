@@ -1,88 +1,59 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [RESEND PATCH v5 00/16] eeprom: at24: Add OF device ID table
-Date: Wed, 30 Aug 2017 22:59:14 +0200
-Message-ID: <CABxcv=kbnNY9wvcRDuK02f6s6kmqd3SFhjwVg8zikVDqtRU4Mw@mail.gmail.com>
-References: <20170615185418.13980-1-javier@dowhile0.org> <20170731153009.xkjknygpmckv2pfp@ninjato>
- <CABxcv=mdbE0QGjoi3aLzxRqM3-MbkQ_Ai6fShcGVUGSNNqqrqw@mail.gmail.com>
- <20170828160121.gu4wf7jqu4ditksc@ninjato> <CABxcv=kSiqDN1=9fSfLkyW=uuXQZAoW4dhw=fco9RyOdDuPAdA@mail.gmail.com>
- <20170829084831.hsdok3ksi7anxzuc@ninjato> <CABxcv=nqbNsTs7D57VOt1-Tav_3i9U=XKn=BV=hPr1tG68eE2g@mail.gmail.com>
- <20170830174228.sx5jgtxxy56zq47t@ninjato> <CABxcv==JFm0H_kB8LRyRpZNbajcO3UkxYOepkk=YUAaT1UH1gg@mail.gmail.com>
- <CAMuHMdXRVnHsvCNfRqRgTusdyhOYcV7bWconD99OgXmVcHT8yw@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
+Date: Wed, 30 Aug 2017 14:02:03 -0700
+Message-ID: <20170830210203.GS21656@codeaurora.org>
+References: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
+ <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
+ <20170822085541.GB3685@dragon>
+ <20170822203132.GC21656@codeaurora.org>
+ <20170824121818.GE3685@dragon>
+ <20170824183701.GN21656@codeaurora.org>
+ <20170825074324.GF3685@dragon>
+ <20170825231818.GP21656@codeaurora.org>
+ <20170826034636.GG3685@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXRVnHsvCNfRqRgTusdyhOYcV7bWconD99OgXmVcHT8yw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Florian Larysch <fl@n621.de>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Simon Horman <horms@verge.net.au>, Michal Simek <michal.simek@xilinx.com>, Dinh Nguyen <dinguyen@kernel.org>, Russell King <linux@armlinux.org.uk>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joachim Eastwood <manabian@gmail.com>, Mark
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170826034636.GG3685@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhijeet Dharmapurikar <adharmap-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Geert,
+On 08/26, Shawn Guo wrote:
+> On Fri, Aug 25, 2017 at 04:18:18PM -0700, Stephen Boyd wrote:
+> > 
+> > Right. Does the GPIO work? If so, it sounds like the read/write
+> > access checks in spmi pmic arb don't work properly.
+> 
+> The check works.  With the check in there, PM8916 GPIO doesn't work.
+> However, the consequence is that not only user3 but all GPIO leds under
+> 'leds' node will fail to register, because any GPIO led's failing on
+> create_gpio_led() makes leds-gpio driver probe fail as a while.  That's
+> how leds-gpio driver works.
+> 
+> Also, per schematics, PM8916 GPIO1 is indeed routed to user3 LED on
+> db410c board.  Why do you think apq8016-sbc device tree shouldn't use
+> the GPIO for that at all?  Isn't it firmware's fault that the ownership
+> of the peripheral is not properly configured?
 
-On Wed, Aug 30, 2017 at 10:15 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Javier,
->
-> On Wed, Aug 30, 2017 at 9:57 PM, Javier Martinez Canillas
-> <javier@dowhile0.org> wrote:
->>> I think we should talk about the same case: Let me repeat what I did:
->>>
->>> 1) I added your patch "eeprom: at24: Add OF device ID table"
->>> 2) I added an EEPROM node to an I2C
->>>
->>> +       eeprom@50 {
->>> +               compatible = "renesas,24c01";
->>> +               reg = <0x50>;
->>> +       };
->>>
->>> -> no at24 binding to the device
->>>
->>> 3) I revert your patch
->>>
->>> -> at24 binding to the device
->>>
->>
->> I've tested this and you are right, it fails...
->>
->> The problem is that the patch also changes how the driver obtains the
->> EEPROM parameters (the magic value in the entry's data field).
->>
->> So even when module autoload and device / driver matching works, the
->> driver probe function fails because if (client->dev.of_node) the
->> driver attempts to get the entry data using
->> of_device_get_match_data(), which is obviously wrong since the
->> compatible string in the dev node isn't present in the OF table.
->>
->> The id->driver_data from the I2C table should be used instead since
->> that's the table that matches in this case.
->>
->> One option is to fallback to id->driver_data if
->> of_device_get_match_data() fails, but that's just an (ugly)
->> workaround. So I agree with you that the best option is to wait for
->> the DTS patches to land first.
->
-> Which means new kernels won't work with old DTBs. Oops...
-> I'm afraid that needs to be fixed.  People care about DTB backward
-> compatibility on many platforms.
->
+If the ownership was not properly configured in the firmware,
+then I imagine it would mean that we can't control the GPIO for
+the LED. But that doesn't seem to be true. I can see on my board
+that I get impermissible write failures on the GPIO when
+controlling the GPIO brightness, but it doesn't actually matter
+because the led still lights up. So the checks for write/read
+permission seem incorrect, or they're not being enforced.
 
-Right, I've yet to find one of those mythical platforms that ship old
-DTBs with new kernels, but I agree with you since people seem to care
-about backward compatibility (at least on theory).
+Anyway, I just wanted to make sure the GPIO still works, and it
+looks like it does, so removing the permission checks is enough
+to make me happy.
 
-So I see two options then:
-
-1) Use the workaround I mentioned and lookup the I2C device ID table
-entry data if of_device_get_match_data() fails
-
-2) Only call of_device_get_match_data() if (dev->of_node &&
-of_match_device(dev->driver->of_match_table, dev))
-
-Not sure what's the preferred idiom for these cases.
-
-To good thing about keeping backward compatibility is that Wolfram
-would be able to pick the driver patch even before the DTS patches
-land.
-
-Best regards,
-Javier
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
