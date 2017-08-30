@@ -1,44 +1,60 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: dt-bindings: watchdog: renesas-wdt: Add support for the r8a77995
- wdt
-Date: Tue, 29 Aug 2017 20:24:29 -0700
-Message-ID: <20170830032429.GA12010@roeck-us.net>
-References: <1502968465-7809-1-git-send-email-geert+renesas@glider.be>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH RESEND v2 3/3] dt-bindings: mt8173-mtu3: add generic
+ compatible and rename file
+Date: Wed, 30 Aug 2017 11:38:53 +0800
+Message-ID: <1504064333.17567.9.camel@mhfsdcap03>
+References: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1503998338.git.chunfeng.yun@mediatek.com>
+         <61060035e057b13f43d383645c53c8726b7e67ab.1503998339.git.chunfeng.yun@mediatek.com>
+         <1a489dcc-e95c-bfe3-8e2a-fe2591fe86d8@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1502968465-7809-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1a489dcc-e95c-bfe3-8e2a-fe2591fe86d8@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 17, 2017 at 01:14:25PM +0200, Geert Uytterhoeven wrote:
-> Document support for the Watchdog Timer (WDT) Controller in the Renesas
-> R-Car D3 (r8a77995) SoC.
+On Tue, 2017-08-29 at 13:08 +0300, Sergei Shtylyov wrote:
+> Hello!
 > 
-> No driver update is needed.
+> On 8/29/2017 12:20 PM, Chunfeng Yun wrote:
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
->  1 file changed, 1 insertion(+)
+> > The mt8173-mtu3.txt actually holds the bindings for all mediatek
+> > SoCs with usb3 DRD IP, so add a generic compatible and change the
+> > name to mediatek,mtu3.txt.
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> >   .../usb/{mt8173-mtu3.txt => mediatek,mtu3.txt}     |    6 +++++-
+> >   1 file changed, 5 insertions(+), 1 deletion(-)
+> >   rename Documentation/devicetree/bindings/usb/{mt8173-mtu3.txt => mediatek,mtu3.txt} (92%)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > similarity index 92%
+> > rename from Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+> > rename to Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > index b8ea394..722a029 100644
+> > --- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > @@ -1,7 +1,11 @@
+> >   The device node for Mediatek USB3.0 DRD controller
+> >   
+> >   Required properties:
+> > - - compatible : should be "mediatek,mt8173-mtu3"
+> > + - compatible : should be "mediatek,soc-model-mtu3", "mediatek,mtu3",
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> index 9e306afbbd49e91b..bf6d1ca58af7d198 100644
-> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> @@ -6,6 +6,7 @@ Required properties:
->  	       Examples with soctypes are:
->  	         - "renesas,r8a7795-wdt" (R-Car H3)
->  	         - "renesas,r8a7796-wdt" (R-Car M3-W)
-> +	         - "renesas,r8a77995-wdt" (R-Car D3)
->  	         - "renesas,r7s72100-wdt" (RZ/A1)
->  
->    When compatible with the generic version, nodes must list the SoC-specific
+>     Worth enclosing soc-model in <>.
+Ok, I'll modify it, thanks
+> 
+> > +	soc-model is the name of SoC, such as mt8173, mt2712 etc,
+> > +	when using "mediatek,mtu3" compatible string, you need SoC specific
+> > +	ones in addition, one of:
+> > +	- "mediatek,mt8173-mtu3"
+> >    - reg : specifies physical base address and size of the registers
+> >    - reg-names: should be "mac" for device IP and "ippc" for IP port control
+> >    - interrupts : interrupt used by the device IP
+> 
+> MBR, Sergei
