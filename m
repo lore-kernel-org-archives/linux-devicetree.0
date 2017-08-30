@@ -1,71 +1,53 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/2] clk: sunxi-ng: Provide a default reset hook
-Date: Wed, 30 Aug 2017 14:36:24 +0200
-Message-ID: <20170830123624.vurdnh6bojbtrjal@flea.lan>
-References: <20170825094953.3247-1-maxime.ripard@free-electrons.com>
- <CAPDyKFonXp4Uqi=DLxKf=1ecOx-2E5mUkEXqnqJPE-J57xXQcw@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] eeprom: at24: enable runtime pm support
+Date: Wed, 30 Aug 2017 15:41:23 +0300
+Message-ID: <20170830124122.3oipo4ykpzmkzdy2@valkosipuli.retiisi.org.uk>
+References: <1504066266-30051-1-git-send-email-divagar.mohandass@intel.com>
+ <1504066266-30051-4-git-send-email-divagar.mohandass@intel.com>
+ <20170830075329.cyhzitpfwojq3aox@valkosipuli.retiisi.org.uk>
+ <7B8CE47BD58441468D2BB13285B50E6031DE621E@BGSMSX107.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="aqzbkk2ndrwasqsp"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFonXp4Uqi=DLxKf=1ecOx-2E5mUkEXqnqJPE-J57xXQcw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+In-Reply-To: <7B8CE47BD58441468D2BB13285B50E6031DE621E-yHIBzpp8AekLtBVenmexd7fspsVTdybXVpNB7YpNyf8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Mohandass, Divagar" <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---aqzbkk2ndrwasqsp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Ulf,
-
-On Wed, Aug 30, 2017 at 02:29:24PM +0200, Ulf Hansson wrote:
-> On 25 August 2017 at 11:49, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > The reset hook was left implemented. Provide a dumb implementation so t=
-hat
-> > client drivers can depend on it.
+On Wed, Aug 30, 2017 at 12:32:07PM +0000, Mohandass, Divagar wrote:
+> >> @@ -743,6 +770,15 @@ static int at24_probe(struct i2c_client *client,
+> >> const struct i2c_device_id *id)
+> >>
+> >>  	i2c_set_clientdata(client, at24);
+> >>
+> >> +	/* enable runtime pm */
+> >> +	pm_runtime_get_noresume(&client->dev);
+> >> +	err = pm_runtime_set_active(&client->dev);
+> >> +	if (err < 0)
+> >> +		goto err_clients;
+> >> +
+> >> +	pm_runtime_enable(&client->dev);
+> >> +	pm_runtime_put(&client->dev);
+> >> +
 > >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->=20
-> Do you want me to pick this up via my mmc tree? If so, is that okay by
-> the clock maintainers?
+> >You're just about to perform a read here. I believe you should move the last
+> >put after that.
+> 
+> At the end of at24_read we are performing a pm_runtime_put, still we need this change ?
 
-I also happen to be the maintainer of that part of the kernel
-(reporting to Mike and Stephen of course). We don't have anything
-touching that file in next, so unless they feel like it should go
-through their tree, it would be easier to keep the two changes
-together and merge them through your tree.
+True, so this isn't an actual problem.
 
-Maxime
+It'll still power the chip down when you're about to need it, so it'd make
+sense to perform the check before pm_runtime_put().
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+I might move the runtime PM setup after the check altogether.
 
---aqzbkk2ndrwasqsp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZprFIAAoJEBx+YmzsjxAgnbcP/3gwfodfQelm5qubvJ0/q9QH
-FZD2FNwD0qMRYiygrxUUwDRVPVM/utt5avZdqnuW+yJuroZT2nKjan58gliiIWjo
-pgtPtGKMfsE7RJjAmhkJF2c16wuTLjBdEHo5Ft9jqk/W4hhyQGgKhWGjHpUVLHwU
-qttBOdvyCkbyATv8rXTxEB3ZSKdYtcQCf94Hiyw3B19CqVpZixpVKU1+/BpZcvx7
-vMf2DF8zz9DNRlVZLNjSJqXn9qPQbY3HwM35Hkefvb9KE5rx1XCPvHtU9zqvMdBY
-OApTeHfhRmgzBGkLHnaBEWXrD/UO3BNaDClXkiVU53/gtzjAuPGlHd0vK35ksRef
-LDFRkQFZGIz1re0jrT2N2BN7nKv8SuRJJc6yJ9V9ak4HCZAX/lNx0Hy7Q6wOObst
-8lvaN9dJx12HCWfe38ju58MZu+qRC8g1olSzZ7jZOGqyx5VTiqLmTqpowJuT6rtD
-mCU2udv7E989h/GN3CEwsjFHLSbTG4yUJCqWvH1TKqJA5vqPzHy9hyZQfh8uQjqi
-Xm4AV+kyRBPq8qFYnW91fYiwl+1xPfABZrQh/n7DYc66+KPw5P3NQbSCMXV8++MN
-tkgdmWjDmcmPQDCsvJ5CIYtsGdGkPcyzJ96CsUnqJskksR+Y2gCjvFUBeoUlngO8
-9xVLMk3kQa4B92cOyl/e
-=FDbk
------END PGP SIGNATURE-----
-
---aqzbkk2ndrwasqsp--
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
