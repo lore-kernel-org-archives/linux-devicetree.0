@@ -1,86 +1,99 @@
-From: Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Devicetree at Linux Plumbers Conference 2017
-Date: Wed, 30 Aug 2017 09:36:05 -0500
-Message-ID: <3AA247F8-C570-4F09-AF7A-B8619B0D69CD@linaro.org>
-References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
- <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
- <CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com>
- <CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ@mail.gmail.com>
- <CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og@mail.gmail.com>
- <CACxGe6vOMsL=5tRzAyOoW-Rh5CjvJcvnn_Zv34L3g_tQVGfK4A@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6vOMsL=5tRzAyOoW-Rh5CjvJcvnn_Zv34L3g_tQVGfK4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Warren <SWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof.johansson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 1/2]  ARM: dts: sun7i: Fix A20-OLinuXino-MICRO dts for
+ LAN8710
+Date: Wed, 30 Aug 2017 16:37:28 +0200
+Message-ID: <20170830143728.friajjequvioqjpu@flea.lan>
+References: <1503901963-9457-1-git-send-email-stefan@olimex.com>
+ <1503901963-9457-2-git-send-email-stefan@olimex.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="peez7wuo3f66wndb"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1503901963-9457-2-git-send-email-stefan@olimex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Mavrodiev <stefan@olimex.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 
-> On Aug 30, 2017, at 5:41 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> =
-wrote:
->=20
-> On Mon, Aug 28, 2017 at 1:30 PM, Grant Likely =
-<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> On Thu, Aug 10, 2017 at 8:23 AM, Grant Likely =
-<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>> On Wed, Aug 2, 2017 at 2:19 PM, Grant Likely =
-<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>>>> A number of people have asked about holding this at ELCE instead =
-of
->>>>> Linux Plumbers, so I'd like some feedback. Here's a quick survey.
->>>>> Please reply ASAP if your interested in a Devicetree =
-miniconference
->>>>> this year:
->>>>>=20
->>>>> =
-https://docs.google.com/forms/d/e/1FAIpQLSe0k9L597egFfOwZoDwq0Og-hRt8IAEPt=
-p-JpvoH9nw2njx0g/viewform?usp=3Dsf_link
->>>>=20
->>>> Last call for survey responses.
->>>>=20
->>>> I've had 10 responses so far, and the concensus it to hold it at =
-ELCE.
->>>> Ted thinks he'd be able to give us a 1/2 day on Thursday 26 October
->>>> (ELCE runs 23-25, and KSummit 24-26). Unless someone makes a strong
->>>> argument otherwise, I'm going to choose locating with ELCE/Ksummit.
->>>=20
->>> I've received 11 responses and by far the preference to hold the
->>> miniconference at ELCE/KSummit, so I'm going with that. I proposed =
-it
->>> as a Ksummit workshop on ksummit-discuss. I've had a few private
->>> replies, but there hasn't been any on-list traffic yet. If you're
->>> planning to attend, it will help if you reply on ksummit-discuss
->>> saying that you would like to be there.
->>>=20
->>> =
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2017-August/00=
-4708.html
->>=20
->> I owe all of you an update. Unfortunately I don't have any new
->> information yet. I've still got a proposal in to hold a devicetree
->> workshop at Kernel Summit, and if it does get accepted, then /most
->> likely/ it will happen on Thursday afternoon. Don't make any travel
->> plans based on that.
->>=20
->> As soon as I hear something either way I'll reply to this thread with
->> the new information.
->=20
-> Confirmed! The Devicetree Workshop will be Thursday 26 October in the
-> afternoon. Anyone registered for OSS will be able to attend. I don't
-> know yet if there are any other consessions for registration. I'm
-> finding out now and will update as soon as I know.
->=20
-> Cheers,
-> g.
+--peez7wuo3f66wndb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Does ELCE registration count?
+Hi,
 
-- k
+On Mon, Aug 28, 2017 at 09:32:42AM +0300, Stefan Mavrodiev wrote:
+> From revision J the board uses new phy chip LAN8710. Compared
+> with RTL8201, RA17 pin is TXERR. It has pullup which causes phy
+> not to work. To fix this PA17 is muxed with GMAC function. This
+> makes the pin output-low.
+>=20
+> This patch is compatible with earlier board revisions, since this
+> pin wasn't connected to phy.
+>=20
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/b=
+oot/dts/sun7i-a20-olinuxino-micro.dts
+> index 0b7403e..cb1b081 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+> @@ -102,7 +102,7 @@
+> =20
+>  &gmac {
+>  	pinctrl-names =3D "default";
+> -	pinctrl-0 =3D <&gmac_pins_mii_a>;
+> +	pinctrl-0 =3D <&gmac_pins_mii_a>,<&gmac_txerr>;
+>  	phy =3D <&phy1>;
+>  	phy-mode =3D "mii";
+>  	status =3D "okay";
+> @@ -229,6 +229,11 @@
+>  };
+> =20
+>  &pio {
+> +	gmac_txerr: gmac_txerr@0 {
+> +		pins =3D "PA17";
+> +		function =3D "gmac";
+> +	};
+> +
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The patch looks fine, I still have one question though.
+
+Can a PHY operate without this signal? My real question is, would it
+make sense to mux that pin for all the users, or is it an optional
+signal that each board designer can choose to use or not?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--peez7wuo3f66wndb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZps2oAAoJEBx+YmzsjxAg4RYP/1AFveF6n4BUUddh1W54vW42
+Rg2VEi1AAn/bJD1ra1ZHo17fT/8A/tnsuRzfgy8CxX8rAG4bFPw4X4ixt/s5s8em
+uMUZ4CLTllqjOSAIHGkwYUvzmL4YKUdR/zJUH25fSdNfrFk8KqWu64LafaTWMENo
+QHwarOrzopcKVtSM4tS36Bv/cRf5ibU7/Hebqb7UnNSbK+qOT1ALQj95be7QJQuM
+ECjD7gQBRS5H6eJ4CadPiuOUMcDtsJmX/nncbJCWteuOopEXDMp15J6VoFDCFwa6
+igW5FVyR3FwDg1aattsdtZoDpKuLVBm0mEWZ66/lqKXMgXblqBPpJSSY5WXXZvL1
+1B9SB12djvN4g1sbsIM/Ir5/8cAulGUVLMWuvtBLg7c/jGPhSMN5asjZJ5FMoofV
+Jwx1axVUYmKfhM1aEHlWnP7wkuCr4FXIdPJI3ybqXgAOFLjkQCGJgK0FN0Feo49a
+eP/wlyjhjygVefH2P4m20V2XVqYIMg8GVZv+bSTe07AAeW2J/v4OTGAqAm7bUU7E
+qJxny5+txVPugoJDxx0UDrQ9lxGKEHUCcULhFPDsbqFMF/tNEpHwjbnbAH+O2Yo4
+Pj9F1CY6AdEEy2Pzka/xIOOFY5RndDh3GmdODoOtup5OYGucBvBwjeoKJarPK1A+
+dNCWW1rpLdetDyGCnLRk
+=fKWS
+-----END PGP SIGNATURE-----
+
+--peez7wuo3f66wndb--
