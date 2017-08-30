@@ -1,58 +1,146 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] arm64: renesas: Add support for R-Car V3M
-Date: Wed, 30 Aug 2017 11:28:39 +0200
-Message-ID: <20170830092838.GC5183@verge.net.au>
-References: <1503665810-13945-1-git-send-email-geert+renesas@glider.be>
- <20170828074453.GA22421@verge.net.au>
- <20170830072644.GI10398@verge.net.au>
- <CAMuHMdWvRBH8ZNgQKDGS3Z41BN7_o_H=hN5aGdbK44YT8rusXw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWvRBH8ZNgQKDGS3Z41BN7_o_H=hN5aGdbK44YT8rusXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 04/11] staging: typec: fusb302: Get max snk mv/ma/mw from device-properties
+Date: Wed, 30 Aug 2017 11:48:07 +0200
+Message-ID: <20170830094814.17758-5-hdegoede@redhat.com>
+References: <20170830094814.17758-1-hdegoede@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170830094814.17758-1-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Sebastian Reichel <sre@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Liam Breck <liam@networkimprov.net>, Tony Lindgren <tony@atomide.com>, linux-pm@vger.kernel.org, devel@driverdev.osuosl.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "Yueyao (Nathan) Zhu" <yueyao@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 10:21:46AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Wed, Aug 30, 2017 at 9:26 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > On Mon, Aug 28, 2017 at 09:44:54AM +0200, Simon Horman wrote:
-> >> On Fri, Aug 25, 2017 at 02:56:48PM +0200, Geert Uytterhoeven wrote:
-> >> > This patch series adds initial R-Car V3M infrastructure:
-> >> >   1. SoC DT bindings,
-> >> >   2. Main Kconfig symbol.
-> >> >
-> >> > Both follow the example set by R-Car D3 aka r8a77995, using 5-digit instead
-> >> > of 4-digit part numbers.
-> >> > Alternatively, we could stick to 4-digit part numbers if the fifth digit is
-> >> > a zero.
-> >> >
-> >> > For your convenience, a branch with more preliminary work (thanks Sergei,
-> >> > for posting the clock driver!) for testing on v3m/eagle is also available
-> >> > in the topic/r8a77970-integration branch of my renesas-drivers git
-> >> > repository at
-> >> > git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
-> >> >
-> >> > Thanks for your comments!
-> >>
-> >> This looks good to me.
-> >>
-> >> I am in favour of using the 5-digit scheme for all new R-Car Gen 3 SoCs
-> >> as it seems the safest option with regards to as yet unknown (to me) part
-> >> numbers.
-> >
-> > Geert, any objections to me applying these?
-> > I'm happy to wait longer if you prefer.
-> 
-> It would be good to have an ack from Rob.
-> No need to hurry.
+This is board specific info so it should come from board config, such
+as devicetree.
 
-Understood, I will wait.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've chosen to prefix these with "fcs," treating them as fusb302 driver
+specific for now. We may want to revisit this and replace these with
+properties which are part of a (to be written) generic type-c controller
+devicetree binding.
+
+Since this commit adds new dt-properties it also adds devicetree-bindings
+documentation (which so far was absent for the fusb302 driver).
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: "Yueyao (Nathan) Zhu" <yueyao@google.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes in v2:
+-Use micro... instead of mili...
+-Add devicetree bindings documentation
+
+Changes in v3:
+-Use sink rather then snk in property names
+-Add Rob's Acked-by
+---
+ .../devicetree/bindings/usb/fcs,fusb302.txt        | 29 ++++++++++++++++++++++
+ drivers/staging/typec/fusb302/TODO                 |  4 +++
+ drivers/staging/typec/fusb302/fusb302.c            | 18 +++++++++++++-
+ 3 files changed, 50 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+new file mode 100644
+index 000000000000..472facfa5a71
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+@@ -0,0 +1,29 @@
++Fairchild FUSB302 Type-C Port controllers
++
++Required properties :
++- compatible             : "fcs,fusb302"
++- reg                    : I2C slave address
++- interrupts             : Interrupt specifier
++
++Optional properties :
++- fcs,max-sink-microvolt : Maximum voltage to negotiate when configured as sink
++- fcs,max-sink-microamp  : Maximum current to negotiate when configured as sink
++- fcs,max-sink-microwatt : Maximum power to negotiate when configured as sink
++			   If this is less then max-sink-microvolt *
++			   max-sink-microamp then the configured current will
++			   be clamped.
++- fcs,operating-sink-microwatt :
++			   Minimum amount of power accepted from a sink
++			   when negotiating
++
++Example:
++
++fusb302: typec-portc@54 {
++	compatible = "fcs,fusb302";
++	reg = <0x54>;
++	interrupt-parent = <&nmi_intc>;
++	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	fcs,max-sink-microvolt = <12000000>;
++	fcs,max-sink-microamp = <3000000>;
++	fcs,max-sink-microwatt = <36000000>;
++};
+diff --git a/drivers/staging/typec/fusb302/TODO b/drivers/staging/typec/fusb302/TODO
+index 4933a1d92c32..19b466eb585d 100644
+--- a/drivers/staging/typec/fusb302/TODO
++++ b/drivers/staging/typec/fusb302/TODO
+@@ -4,3 +4,7 @@ fusb302:
+ - Find a non-hacky way to coordinate between PM and I2C access
+ - Documentation? The FUSB302 datasheet provides information on the chip to help
+   understand the code. But it may still be helpful to have a documentation.
++- We may want to replace the  "fcs,max-snk-microvolt", "fcs,max-snk-microamp",
++  "fcs,max-snk-microwatt" and "fcs,operating-snk-microwatt" device(tree)
++  properties with properties which are part of a generic type-c controller
++  devicetree binding.
+diff --git a/drivers/staging/typec/fusb302/fusb302.c b/drivers/staging/typec/fusb302/fusb302.c
+index 6baed06a3c0d..1c1751c994db 100644
+--- a/drivers/staging/typec/fusb302/fusb302.c
++++ b/drivers/staging/typec/fusb302/fusb302.c
+@@ -90,6 +90,7 @@ struct fusb302_chip {
+ 	struct i2c_client *i2c_client;
+ 	struct tcpm_port *tcpm_port;
+ 	struct tcpc_dev tcpc_dev;
++	struct tcpc_config tcpc_config;
+ 
+ 	struct regulator *vbus;
+ 
+@@ -1198,7 +1199,6 @@ static const struct tcpc_config fusb302_tcpc_config = {
+ 
+ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
+ {
+-	fusb302_tcpc_dev->config = &fusb302_tcpc_config;
+ 	fusb302_tcpc_dev->init = tcpm_init;
+ 	fusb302_tcpc_dev->get_vbus = tcpm_get_vbus;
+ 	fusb302_tcpc_dev->set_cc = tcpm_set_cc;
+@@ -1684,7 +1684,9 @@ static int fusb302_probe(struct i2c_client *client,
+ {
+ 	struct fusb302_chip *chip;
+ 	struct i2c_adapter *adapter;
++	struct device *dev = &client->dev;
+ 	int ret = 0;
++	u32 v;
+ 
+ 	adapter = to_i2c_adapter(client->dev.parent);
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_I2C_BLOCK)) {
+@@ -1699,8 +1701,22 @@ static int fusb302_probe(struct i2c_client *client,
+ 	chip->i2c_client = client;
+ 	i2c_set_clientdata(client, chip);
+ 	chip->dev = &client->dev;
++	chip->tcpc_config = fusb302_tcpc_config;
++	chip->tcpc_dev.config = &chip->tcpc_config;
+ 	mutex_init(&chip->lock);
+ 
++	if (!device_property_read_u32(dev, "fcs,max-sink-microvolt", &v))
++		chip->tcpc_config.max_snk_mv = v / 1000;
++
++	if (!device_property_read_u32(dev, "fcs,max-sink-microamp", &v))
++		chip->tcpc_config.max_snk_ma = v / 1000;
++
++	if (!device_property_read_u32(dev, "fcs,max-sink-microwatt", &v))
++		chip->tcpc_config.max_snk_mw = v / 1000;
++
++	if (!device_property_read_u32(dev, "fcs,operating-sink-microwatt", &v))
++		chip->tcpc_config.operating_snk_mw = v / 1000;
++
+ 	ret = fusb302_debugfs_init(chip);
+ 	if (ret < 0)
+ 		return ret;
+-- 
+2.13.4
