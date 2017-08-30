@@ -1,48 +1,169 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv3 5/5] MAINTAINERS: add cec-gpio entry
-Date: Wed, 30 Aug 2017 18:10:44 +0200
-Message-ID: <20170830161044.26571-6-hverkuil@xs4all.nl>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv3 1/5] cec: add CEC_EVENT_PIN_HPD_LOW/HIGH events
+Date: Wed, 30 Aug 2017 18:10:40 +0200
+Message-ID: <20170830161044.26571-2-hverkuil@xs4all.nl>
 References: <20170830161044.26571-1-hverkuil@xs4all.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170830161044.26571-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170830161044.26571-1-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Add an entry for the CEC GPIO driver.
+Add support for two new low-level events: PIN_HPD_LOW and PIN_HPD_HIGH.
 
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+This is specifically meant for use with the upcoming cec-gpio driver
+and makes it possible to trace when the HPD pin changes. Some HDMI
+sinks do strange things with the HPD and this makes it easy to debug
+this.
+
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/media/cec/cec-adap.c | 18 +++++++++++++++++-
+ drivers/media/cec/cec-api.c  | 18 ++++++++++++++----
+ include/media/cec-pin.h      |  4 ++++
+ include/media/cec.h          | 12 +++++++++++-
+ include/uapi/linux/cec.h     |  2 ++
+ 5 files changed, 48 insertions(+), 6 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index eb930ebecfcb..5ef0d34ef502 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3205,6 +3205,15 @@ F:	include/uapi/linux/cec.h
- F:	include/uapi/linux/cec-funcs.h
- F:	Documentation/devicetree/bindings/media/cec.txt
+diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
+index dd769e40416f..eb904a71609a 100644
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -86,7 +86,7 @@ void cec_queue_event_fh(struct cec_fh *fh,
+ 			const struct cec_event *new_ev, u64 ts)
+ {
+ 	static const u8 max_events[CEC_NUM_EVENTS] = {
+-		1, 1, 64, 64,
++		1, 1, 64, 64, 8, 8,
+ 	};
+ 	struct cec_event_entry *entry;
+ 	unsigned int ev_idx = new_ev->event - 1;
+@@ -170,6 +170,22 @@ void cec_queue_pin_cec_event(struct cec_adapter *adap, bool is_high, ktime_t ts)
+ }
+ EXPORT_SYMBOL_GPL(cec_queue_pin_cec_event);
  
-+CEC GPIO DRIVER
-+M:	Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-+L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+T:	git git://linuxtv.org/media_tree.git
-+W:	http://linuxtv.org
-+S:	Supported
-+F:	drivers/media/platform/cec-gpio/
-+F:	Documentation/devicetree/bindings/media/cec-gpio.txt
++/* Notify userspace that the HPD pin changed state at the given time. */
++void cec_queue_pin_hpd_event(struct cec_adapter *adap, bool is_high, ktime_t ts)
++{
++	struct cec_event ev = {
++		.event = is_high ? CEC_EVENT_PIN_HPD_HIGH :
++				   CEC_EVENT_PIN_HPD_LOW,
++	};
++	struct cec_fh *fh;
 +
- CELL BROADBAND ENGINE ARCHITECTURE
- M:	Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
- L:	linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
++	mutex_lock(&adap->devnode.lock);
++	list_for_each_entry(fh, &adap->devnode.fhs, list)
++		cec_queue_event_fh(fh, &ev, ktime_to_ns(ts));
++	mutex_unlock(&adap->devnode.lock);
++}
++EXPORT_SYMBOL_GPL(cec_queue_pin_hpd_event);
++
+ /*
+  * Queue a new message for this filehandle.
+  *
+diff --git a/drivers/media/cec/cec-api.c b/drivers/media/cec/cec-api.c
+index a079f7fe018c..465bb3ec21f6 100644
+--- a/drivers/media/cec/cec-api.c
++++ b/drivers/media/cec/cec-api.c
+@@ -529,7 +529,7 @@ static int cec_open(struct inode *inode, struct file *filp)
+ 	 * Initial events that are automatically sent when the cec device is
+ 	 * opened.
+ 	 */
+-	struct cec_event ev_state = {
++	struct cec_event ev = {
+ 		.event = CEC_EVENT_STATE_CHANGE,
+ 		.flags = CEC_EVENT_FL_INITIAL_STATE,
+ 	};
+@@ -569,9 +569,19 @@ static int cec_open(struct inode *inode, struct file *filp)
+ 	filp->private_data = fh;
+ 
+ 	/* Queue up initial state events */
+-	ev_state.state_change.phys_addr = adap->phys_addr;
+-	ev_state.state_change.log_addr_mask = adap->log_addrs.log_addr_mask;
+-	cec_queue_event_fh(fh, &ev_state, 0);
++	ev.state_change.phys_addr = adap->phys_addr;
++	ev.state_change.log_addr_mask = adap->log_addrs.log_addr_mask;
++	cec_queue_event_fh(fh, &ev, 0);
++#ifdef CONFIG_CEC_PIN
++	if (adap->pin && adap->pin->ops->read_hpd) {
++		err = adap->pin->ops->read_hpd(adap);
++		if (err >= 0) {
++			ev.event = err ? CEC_EVENT_PIN_HPD_HIGH :
++					 CEC_EVENT_PIN_HPD_LOW;
++			cec_queue_event_fh(fh, &ev, 0);
++		}
++	}
++#endif
+ 
+ 	list_add(&fh->list, &devnode->fhs);
+ 	mutex_unlock(&devnode->lock);
+diff --git a/include/media/cec-pin.h b/include/media/cec-pin.h
+index f09cc9579d53..ea84b9c9e0c3 100644
+--- a/include/media/cec-pin.h
++++ b/include/media/cec-pin.h
+@@ -97,6 +97,9 @@ enum cec_pin_state {
+  * @free:	optional. Free any allocated resources. Called when the
+  *		adapter is deleted.
+  * @status:	optional, log status information.
++ * @read_hpd:	read the HPD pin. Return true if high, false if low or
++ *		an error if negative. If NULL or -ENOTTY is returned,
++ *		then this is not supported.
+  *
+  * These operations are used by the cec pin framework to manipulate
+  * the CEC pin.
+@@ -109,6 +112,7 @@ struct cec_pin_ops {
+ 	void (*disable_irq)(struct cec_adapter *adap);
+ 	void (*free)(struct cec_adapter *adap);
+ 	void (*status)(struct cec_adapter *adap, struct seq_file *file);
++	int  (*read_hpd)(struct cec_adapter *adap);
+ };
+ 
+ #define CEC_NUM_PIN_EVENTS 128
+diff --git a/include/media/cec.h b/include/media/cec.h
+index df6b3bd31284..9d0f983faea9 100644
+--- a/include/media/cec.h
++++ b/include/media/cec.h
+@@ -91,7 +91,7 @@ struct cec_event_entry {
+ };
+ 
+ #define CEC_NUM_CORE_EVENTS 2
+-#define CEC_NUM_EVENTS CEC_EVENT_PIN_CEC_HIGH
++#define CEC_NUM_EVENTS CEC_EVENT_PIN_HPD_HIGH
+ 
+ struct cec_fh {
+ 	struct list_head	list;
+@@ -296,6 +296,16 @@ static inline void cec_received_msg(struct cec_adapter *adap,
+ void cec_queue_pin_cec_event(struct cec_adapter *adap,
+ 			     bool is_high, ktime_t ts);
+ 
++/**
++ * cec_queue_pin_hpd_event() - queue a pin event with a given timestamp.
++ *
++ * @adap:	pointer to the cec adapter
++ * @is_high:	when true the HPD pin is high, otherwise it is low
++ * @ts:		the timestamp for this event
++ *
++ */
++void cec_queue_pin_hpd_event(struct cec_adapter *adap, bool is_high, ktime_t ts);
++
+ /**
+  * cec_get_edid_phys_addr() - find and return the physical address
+  *
+diff --git a/include/uapi/linux/cec.h b/include/uapi/linux/cec.h
+index 4351c3481aea..b9f8df3a0477 100644
+--- a/include/uapi/linux/cec.h
++++ b/include/uapi/linux/cec.h
+@@ -410,6 +410,8 @@ struct cec_log_addrs {
+ #define CEC_EVENT_LOST_MSGS		2
+ #define CEC_EVENT_PIN_CEC_LOW		3
+ #define CEC_EVENT_PIN_CEC_HIGH		4
++#define CEC_EVENT_PIN_HPD_LOW		5
++#define CEC_EVENT_PIN_HPD_HIGH		6
+ 
+ #define CEC_EVENT_FL_INITIAL_STATE	(1 << 0)
+ #define CEC_EVENT_FL_DROPPED_EVENTS	(1 << 1)
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
