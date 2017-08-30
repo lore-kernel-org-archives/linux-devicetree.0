@@ -1,240 +1,167 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 05/13] irqchip: add initial support for ompic
-Date: Thu, 31 Aug 2017 06:58:36 +0900
-Message-ID: <538699c64b5601e8800b77da29f7951bf23f57ce.1504129273.git.shorne@gmail.com>
+From: Stafford Horne <shorne@gmail.com>
+Subject: [PATCH 10/13] openrisc: add simple_smp dts and defconfig for simulators
+Date: Thu, 31 Aug 2017 07:03:11 +0900
+Message-ID: <37f0d48de4690694c18be3d32483dafee0730859.1504129273.git.shorne@gmail.com>
 References: <cover.1504129273.git.shorne@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1504129273.git.shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1504129273.git.shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1504129273.git.shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1504129273.git.shorne@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Openrisc <openrisc@lists.librecores.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonas Bonn <jonas@southpole.se>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
 
-IPI driver for OpenRISC Multicore programmable interrupt controller as
-described in the Multicore support section of the OpenRISC 1.2
-proposed architecture specification:
+Simple enough to be compatible with simulation environments,
+such as verilated systems, QEMU and other targets supporting OpenRISC
+SMP.  This also supports our base FPGA SoC's if the cpu frequency is
+upped to 50Mhz.
 
-  https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
-
-Each OpenRISC core contains a full interrupt controller which is used in
-the SMP architecture for interrupt balancing.  This IPI device is the
-only external device required for enabling SMP on OpenRISC.
-
-Pending ops are stored in a memory bit mask which can allow multiple
-pending operations to be set and serviced at a time. This is mostly
-borrowed from the alpha IPI implementation.
-
-Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-[shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
-Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+[shorne@gmail.com: Added defconfig]
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 ---
- .../bindings/interrupt-controller/ompic.txt        |  22 ++++
- arch/openrisc/Kconfig                              |   1 +
- drivers/irqchip/Kconfig                            |   4 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-ompic.c                        | 117 +++++++++++++++++++++
- 5 files changed, 145 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ompic.txt
- create mode 100644 drivers/irqchip/irq-ompic.c
+ arch/openrisc/boot/dts/simple_smp.dts      | 58 ++++++++++++++++++++++++++
+ arch/openrisc/configs/simple_smp_defconfig | 66 ++++++++++++++++++++++++++++++
+ 2 files changed, 124 insertions(+)
+ create mode 100644 arch/openrisc/boot/dts/simple_smp.dts
+ create mode 100644 arch/openrisc/configs/simple_smp_defconfig
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/ompic.txt
+diff --git a/arch/openrisc/boot/dts/simple_smp.dts b/arch/openrisc/boot/dts/simple_smp.dts
 new file mode 100644
-index 000000000000..4176ecc3366d
+index 000000000000..47c54101baae
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ompic.txt
-@@ -0,0 +1,22 @@
-+OpenRISC Multicore Programmable Interrupt Controller
++++ b/arch/openrisc/boot/dts/simple_smp.dts
+@@ -0,0 +1,58 @@
++/dts-v1/;
++/ {
++	compatible = "opencores,or1ksim";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	interrupt-parent = <&pic>;
 +
-+Required properties:
++	chosen {
++		bootargs = "console=uart,mmio,0x90000000,115200";
++	};
 +
-+- compatible : This should be "ompic"
-+- reg : Specifies base physical address and size of the register space. The
-+  size can be arbitrary based on the number of cores the controller has
-+  been configured to handle, typically 8 bytes per core.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 1.
-+- interrupts : Specifies the interrupt line to which the ompic is wired.
++	memory@0 {
++		device_type = "memory";
++		reg = <0x00000000 0x02000000>;
++	};
 +
-+Example:
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++			compatible = "opencores,or1200-rtlsvn481";
++			reg = <0>;
++			clock-frequency = <20000000>;
++		};
++		cpu@1 {
++			compatible = "opencores,or1200-rtlsvn481";
++			reg = <1>;
++			clock-frequency = <20000000>;
++		};
++	};
 +
-+ompic: ompic {
-+	compatible = "ompic";
-+	reg = <0x98000000 16>;
-+	#interrupt-cells = <1>;
-+	interrupt-controller;
-+	interrupts = <1>;
++	ompic: ompic {
++		compatible = "ompic";
++		reg = <0x98000000 16>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		interrupts = <1>;
++	};
++
++	/*
++	 * OR1K PIC is built into CPU and accessed via special purpose
++	 * registers.  It is not addressable and, hence, has no 'reg'
++	 * property.
++	 */
++	pic: pic {
++		compatible = "opencores,or1k-pic-level";
++		#interrupt-cells = <1>;
++		interrupt-controller;
++	};
++
++	serial0: serial@90000000 {
++		compatible = "opencores,uart16550-rtlsvn105", "ns16550a";
++		reg = <0x90000000 0x100>;
++		interrupts = <2>;
++		clock-frequency = <20000000>;
++	};
++
 +};
-diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
-index 214c837ce597..dd7e55e7e42d 100644
---- a/arch/openrisc/Kconfig
-+++ b/arch/openrisc/Kconfig
-@@ -30,6 +30,7 @@ config OPENRISC
- 	select NO_BOOTMEM
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_USE_QUEUED_RWLOCKS
-+	select OMPIC if SMP
- 
- config CPU_BIG_ENDIAN
- 	def_bool y
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index f1fd5f44d1d4..3fa60e6667a7 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -145,6 +145,10 @@ config CLPS711X_IRQCHIP
- 	select SPARSE_IRQ
- 	default y
- 
-+config OMPIC
-+	bool
-+	select IRQ_DOMAIN
-+
- config OR1K_PIC
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index e88d856cc09c..123047d7a20d 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
- obj-$(CONFIG_METAG)			+= irq-metag-ext.o
- obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
- obj-$(CONFIG_CLPS711X_IRQCHIP)		+= irq-clps711x.o
-+obj-$(CONFIG_OMPIC)			+= irq-ompic.o
- obj-$(CONFIG_OR1K_PIC)			+= irq-or1k-pic.o
- obj-$(CONFIG_ORION_IRQCHIP)		+= irq-orion.o
- obj-$(CONFIG_OMAP_IRQCHIP)		+= irq-omap-intc.o
-diff --git a/drivers/irqchip/irq-ompic.c b/drivers/irqchip/irq-ompic.c
+diff --git a/arch/openrisc/configs/simple_smp_defconfig b/arch/openrisc/configs/simple_smp_defconfig
 new file mode 100644
-index 000000000000..438819f8a5a7
+index 000000000000..b6e3c7e158e7
 --- /dev/null
-+++ b/drivers/irqchip/irq-ompic.c
-@@ -0,0 +1,117 @@
-+/*
-+ * Open Multi-Processor Interrupt Controller driver
-+ *
-+ * Copyright (C) 2014 Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/interrupt.h>
-+#include <linux/smp.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/delay.h>
-+
-+#include <linux/irqchip.h>
-+
-+#define OMPIC_IPI_BASE			0x0
-+#define OMPIC_IPI_CTRL(cpu)		(OMPIC_IPI_BASE + 0x0 + (cpu)*8)
-+#define OMPIC_IPI_STAT(cpu)		(OMPIC_IPI_BASE + 0x4 + (cpu)*8)
-+
-+#define OMPIC_IPI_CTRL_IRQ_ACK		(1 << 31)
-+#define OMPIC_IPI_CTRL_IRQ_GEN		(1 << 30)
-+#define OMPIC_IPI_CTRL_DST(cpu)		(((cpu) & 0x3fff) << 16)
-+
-+#define OMPIC_IPI_STAT_IRQ_PENDING	(1 << 30)
-+
-+#define OMPIC_IPI_DATA(x)		((x) & 0xffff)
-+
-+static struct {
-+	unsigned long ops;
-+} ipi_data[NR_CPUS];
-+
-+static void __iomem *ompic_base;
-+
-+static inline u32 ompic_readreg(void __iomem *base, loff_t offset)
-+{
-+	return ioread32be(base + offset);
-+}
-+
-+static void ompic_writereg(void __iomem *base, loff_t offset, u32 data)
-+{
-+	iowrite32be(data, base + offset);
-+}
-+
-+#ifdef CONFIG_SMP
-+void ompic_raise_softirq(const struct cpumask *mask, unsigned int irq)
-+{
-+	unsigned int dst_cpu;
-+	unsigned int src_cpu = smp_processor_id();
-+
-+	for_each_cpu(dst_cpu, mask) {
-+		set_bit(irq, &ipi_data[dst_cpu].ops);
-+
-+		ompic_writereg(ompic_base, OMPIC_IPI_CTRL(src_cpu),
-+			       OMPIC_IPI_CTRL_IRQ_GEN |
-+			       OMPIC_IPI_CTRL_DST(dst_cpu) |
-+			       OMPIC_IPI_DATA(1));
-+	}
-+}
-+#endif
-+
-+irqreturn_t ompic_ipi_handler(int irq, void *dev_id)
-+{
-+	unsigned int cpu = smp_processor_id();
-+	unsigned long *pending_ops = &ipi_data[cpu].ops;
-+	unsigned long ops;
-+
-+	ompic_writereg(ompic_base, OMPIC_IPI_CTRL(cpu), OMPIC_IPI_CTRL_IRQ_ACK);
-+	while ((ops = xchg(pending_ops, 0)) != 0) {
-+		do {
-+			unsigned long ipi;
-+
-+			ipi = ops & -ops;
-+			ops &= ~ipi;
-+			ipi = __ffs(ipi);
-+
-+			handle_IPI(ipi);
-+		} while (ops);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct irqaction ompi_ipi_irqaction = {
-+	.handler =      ompic_ipi_handler,
-+	.flags =        IRQF_PERCPU,
-+	.name =         "ompic_ipi",
-+};
-+
-+#ifdef CONFIG_OF
-+int __init ompic_of_init(struct device_node *node, struct device_node *parent)
-+{
-+	int irq;
-+
-+	if (WARN_ON(!node))
-+		return -ENODEV;
-+
-+	memset(ipi_data, 0, sizeof(ipi_data));
-+
-+	ompic_base = of_iomap(node, 0);
-+
-+	irq = irq_of_parse_and_map(node, 0);
-+	setup_irq(irq, &ompi_ipi_irqaction);
-+
-+#ifdef CONFIG_SMP
-+	set_smp_cross_call(ompic_raise_softirq);
-+#endif
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(ompic, "ompic", ompic_of_init);
-+#endif
++++ b/arch/openrisc/configs/simple_smp_defconfig
+@@ -0,0 +1,66 @@
++CONFIG_CROSS_COMPILE="or1k-linux-"
++CONFIG_LOCALVERSION="-simple-smp"
++CONFIG_NO_HZ=y
++CONFIG_LOG_BUF_SHIFT=14
++CONFIG_BLK_DEV_INITRD=y
++# CONFIG_RD_GZIP is not set
++# CONFIG_RD_BZIP2 is not set
++# CONFIG_RD_LZMA is not set
++# CONFIG_RD_XZ is not set
++# CONFIG_RD_LZO is not set
++# CONFIG_RD_LZ4 is not set
++CONFIG_EXPERT=y
++# CONFIG_KALLSYMS is not set
++# CONFIG_EPOLL is not set
++# CONFIG_TIMERFD is not set
++# CONFIG_EVENTFD is not set
++# CONFIG_AIO is not set
++# CONFIG_VM_EVENT_COUNTERS is not set
++# CONFIG_COMPAT_BRK is not set
++CONFIG_SLOB=y
++CONFIG_MODULES=y
++# CONFIG_BLOCK is not set
++CONFIG_OPENRISC_BUILTIN_DTB="simple_smp"
++CONFIG_SMP=y
++CONFIG_HZ_100=y
++CONFIG_OPENRISC_HAVE_SHADOW_GPRS=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
++# CONFIG_INET_XFRM_MODE_TUNNEL is not set
++# CONFIG_INET_XFRM_MODE_BEET is not set
++# CONFIG_INET_DIAG is not set
++CONFIG_TCP_CONG_ADVANCED=y
++# CONFIG_TCP_CONG_BIC is not set
++# CONFIG_TCP_CONG_CUBIC is not set
++# CONFIG_TCP_CONG_WESTWOOD is not set
++# CONFIG_TCP_CONG_HTCP is not set
++# CONFIG_IPV6 is not set
++# CONFIG_WIRELESS is not set
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_PREVENT_FIRMWARE_BUILD is not set
++# CONFIG_FW_LOADER is not set
++CONFIG_NETDEVICES=y
++CONFIG_ETHOC=y
++CONFIG_MICREL_PHY=y
++# CONFIG_WLAN is not set
++# CONFIG_INPUT is not set
++# CONFIG_SERIO is not set
++# CONFIG_VT is not set
++# CONFIG_LEGACY_PTYS is not set
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_OF_PLATFORM=y
++# CONFIG_HW_RANDOM is not set
++# CONFIG_HWMON is not set
++# CONFIG_USB_SUPPORT is not set
++# CONFIG_DNOTIFY is not set
++CONFIG_TMPFS=y
++CONFIG_NFS_FS=y
++CONFIG_XZ_DEC=y
++# CONFIG_ENABLE_WARN_DEPRECATED is not set
++# CONFIG_ENABLE_MUST_CHECK is not set
++# CONFIG_RCU_TRACE is not set
 -- 
 2.13.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
