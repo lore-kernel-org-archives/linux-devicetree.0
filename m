@@ -1,83 +1,54 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v2 2/3] dt-binding: net: sfp binding documentation
-Date: Wed, 30 Aug 2017 14:11:18 +0300
-Message-ID: <20170830111118.wy62va6sjzsxrgoo@tarshish>
-References: <d1e64c5752ef0dd5c5b543c2d4c3ef1783318173.1504086672.git.baruch@tkos.co.il>
- <7ae5d883fd038cf518949b0aa9cbe5369e2a1851.1504086672.git.baruch@tkos.co.il>
- <89261369-d97c-a78c-5a21-a269b2c7e513@cogentembedded.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
+Date: Wed, 30 Aug 2017 12:13:55 +0100
+Message-ID: <20170830111355.GK20805@n2100.armlinux.org.uk>
+References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
+ <20170726102748.GM31807@n2100.armlinux.org.uk>
+ <20170728152311.GA970@e110455-lin.cambridge.arm.com>
+ <20170728155827.GV31807@n2100.armlinux.org.uk>
+ <20170829133351.GK10796@e110455-lin.cambridge.arm.com>
+ <20170829164824.GH20805@n2100.armlinux.org.uk>
+ <20170830105414.GB1310@e110455-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <89261369-d97c-a78c-5a21-a269b2c7e513@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Russell King <rmk+kernel@arm.linux.org.uk>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170830105414.GB1310-A/Nd4k6kWRHZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-Thanks for reviewing.
-
-On Wed, Aug 30, 2017 at 02:04:11PM +0300, Sergei Shtylyov wrote:
-> On 8/30/2017 12:51 PM, Baruch Siach wrote:
-> 
-> > Add device-tree binding documentation SFP transceivers. Support for SFP
-> > transceivers has been recently introduced (drivers/net/phy/sfp.c).
+On Wed, Aug 30, 2017 at 11:54:14AM +0100, Liviu Dudau wrote:
+> On Tue, Aug 29, 2017 at 05:48:24PM +0100, Russell King - ARM Linux wrote:
+> > On Tue, Aug 29, 2017 at 02:33:52PM +0100, Liviu Dudau wrote:
+> > > I've worked with Vladimir Murzin inside ARM to try to sort out problems
+> > > on the board like the one that you have. He's got to a point where the HDLCD
+> > > starts correctly after adding a non-fixed pxlclk source, but then the rest of
+> > > the setup is semi-useless without a working IRQ because DRM atomic calls
+> > > will give you a vblank timeout splat everytime you invoke them. So I'm
+> > > not sure how you want to progress with this patch, as not having an IRQ
+> > > line means you will not get any vblank interrupts and you can't use the
+> > > driver with userspace that calls DRM API.
+> > > 
+> > > The RTL guys are apparently working on a fix, but I have no ETA or
+> > > details on when they are going to do.
 > > 
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > ---
-> > v2:
-> >    Rename -gpio properties to -gpios
-> >    Rename the rate-select-gpio property to rate-select0-gpios
-> >    Add the rate-select1-gpios property
-> >    Add examples
-> > ---
-> >   Documentation/devicetree/bindings/net/sff,sfp.txt | 74 +++++++++++++++++++++++
-> >   1 file changed, 74 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/net/sff,sfp.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/sff,sfp.txt b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> > new file mode 100644
-> > index 000000000000..1d9c786d6287
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> > @@ -0,0 +1,74 @@
-> > +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
-> > +Transceiver
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : must be "sff,sfp"
-> > +
-> > +Optional Properties:
-> > +
-> > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-> > +  interface
-> > +
-> > +- moddef0-gpios : phandle of the MOD-DEF0 (AKA Mod_ABS) module presence input
-> > +  gpio signal
+> > It sounds then like this patch doesn't make sense - so I'm happy
+> > for it to be dropped.  It's something to bear in mind in the future
+> > when folk decide whether to adopt fbdev or DRM support for hardware
+> > that gets used in MMU-less hardware...
 > 
->    Your example shows there's GPIO phandle *and* specifier.
+> I don't think this has anything to do with the presence of a MMU or not.
 
-Would "GPIO specifier" be enough here?
-
-[...]
-
-> > +Example #2: Serdes to PHY to SFP connection
-> > +
-> > +sfp_eth0: sfp-eth0 {
-> > +	compatible = "sff,sfp+";
-> > +	i2c-bus = <&sfpp0_i2c>;
-> > +	los-gpio = <&cps_gpio1 28 GPIO_ACTIVE_HIGH>;
-> 
->    You describe "los-gpios" above , not "los-gpio" (which is a deprecated form).
-
-Will fix.
-
-baruch
+It doesn't directly, but nommu is probably more likely to not wire the
+interrupt than mmu systems, on the grounds that nommu is more embedded.
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
