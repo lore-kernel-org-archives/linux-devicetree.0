@@ -1,48 +1,78 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [RESEND PATCH 2/3] regulator: Add support for stm32-vrefbuf
-Date: Wed, 30 Aug 2017 17:23:26 +0200
-Message-ID: <8777c604-e16c-4359-095d-b3bd6efab5e0@st.com>
-References: <1503925133-30722-1-git-send-email-fabrice.gasnier@st.com>
- <1503925133-30722-3-git-send-email-fabrice.gasnier@st.com>
- <20170829185719.h5fxvzmxbysyxwml@sirena.org.uk>
- <fd883990-cc87-f8cb-ebe7-5c4c4e51d6f6@st.com>
- <20170830150249.5sofmjz3n2skzucq@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170830150249.5sofmjz3n2skzucq@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH ] ARM: dts: iwg22d-sodimm: Add Ethernet AVB support
+Date: Wed, 30 Aug 2017 16:17:14 +0100
+Message-ID: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+Define the iWave RainboW-G22D board dependent part of the Ethernet
+AVB device node.
 
+On some older versions of the platform (before R4.0) the phy address
+may be 1 or 3. The address is fixed to 3 for R4.0 onwards (which
+will be the first mainstream release), hence using 3 in the dts.
 
-On 08/30/2017 05:02 PM, Mark Brown wrote:
-> On Wed, Aug 30, 2017 at 11:11:24AM +0200, Fabrice Gasnier wrote:
->> On 08/29/2017 08:57 PM, Mark Brown wrote:
->>> On Mon, Aug 28, 2017 at 02:58:52PM +0200, Fabrice Gasnier wrote:
-> 
->>>> +static int __init stm32_vrefbuf_init(void)
->>>> +{
->>>> +	return platform_driver_register(&stm32_vrefbuf_driver);
->>>> +}
->>>> +subsys_initcall(stm32_vrefbuf_init);
-> 
->>> Why is this at subsys_initcall()?
-> 
->> Several consumers depend on it when it's being used, among which: STM32
->> internal ADC and DAC, but also external components. Purpose is to ensure
->> it's ready before these drivers gets probed, instead of being deferred.
->> Is it ok to keep it ?
-> 
-> No, that's not OK - just let deferred probe handle it.  The same thing
-> applies to all regulator usage.
-> 
-Hi Mark,
-Ok, I'll update this in v2 as well.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+This patch is tested against renesas-dev tag 20170830-v4.13-rc7
 
-Thanks,
-Fabrice
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+index 442a5cb..aac84c6 100644
+--- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
++++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+@@ -17,9 +17,11 @@
+ 
+ 	aliases {
+ 		serial0 = &scif4;
++		ethernet0 = &avb;
+ 	};
+ 
+ 	chosen {
++		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ };
+@@ -29,6 +31,11 @@
+ 		groups = "scif4_data_b";
+ 		function = "scif4";
+ 	};
++
++	avb_pins: avb {
++		groups = "avb_mdio", "avb_gmii";
++		function = "avb";
++	};
+ };
+ 
+ &scif4 {
+@@ -37,3 +44,22 @@
+ 
+ 	status = "okay";
+ };
++
++&avb {
++	pinctrl-0 = <&avb_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&phy3>;
++	phy-mode = "gmii";
++	renesas,no-ether-link;
++	status = "okay";
++
++	phy3: ethernet-phy@3 {
++	/*
++	 * On some older versions of the platform (before R4.0) the phy address
++	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
++	 */
++		reg = <3>;
++		micrel,led-mode = <1>;
++	};
++};
+-- 
+1.9.1
