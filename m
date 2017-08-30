@@ -1,52 +1,54 @@
-From: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Status of drivers/of/configfs.c
-Date: Tue, 29 Aug 2017 20:13:40 -0500
-Message-ID: <CAOCHtYiifaWwRQJ8frZRtz=V6WeRnxE1AYLXwpZ9FJ7Am1vB-A@mail.gmail.com>
-References: <CAFD1m3FQ6vNF9sUU67g_VE5nKsHWk-MfmHiVqyjpZmoq544AxQ@mail.gmail.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH] PCI: mediatek: take use of PCI_NUM_INTX
+Date: Wed, 30 Aug 2017 09:19:14 +0800
+Message-ID: <1504055954-31545-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFD1m3FQ6vNF9sUU67g_VE5nKsHWk-MfmHiVqyjpZmoq544AxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Carter <john.carter-U313QQUz4dygSpxsJD1C4w@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-On Tue, Aug 29, 2017 at 5:37 PM, John Carter <john.carter-U313QQUz4dygSpxsJD1C4w@public.gmane.org> wrote:
-> In 2014 Pantelis Antoniou sent a patch...
->     https://lkml.org/lkml/2014/3/18/625
-> ...creating an interface between the config filesystem and devicetree overlays.
->
-> As far as I can see it is used in a couple of "off the mainstream
-> kernel" like the beaglebone black.
->
-> Alas, at this stage it doesn't seem to have made it into the upstream
-> kernel.....
->
-> 1) What is the status of this patch? Is it still being maintained? If so where?
->
-> 2) My interest in it is for an nasty bit of oddball hardware.
->
-> I have to change a pin from being an gpio input at boot time to being
-> a uart output sometime after boot.
->
-> Would the of / configfs be the best way of doing that or is there a better way?
+Switch from using a custom NUM_INTX macro to the generic PCI_NUM_INTX
+definition for the number of INTx interrupts.
 
-I think most of us have given up on making it work in the kernel, just
-too many race conditions.
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+---
+ drivers/pci/host/pcie-mediatek.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-I'd say for the last half year we (beagleboard) have been focusing on
-moving to u-boot overlays.  Just less issues when you have the
-device-tree-binary setup in a proper state at kernel boot.
-
-Regards,
-
+diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+index c567996..5c0ce9b 100644
+--- a/drivers/pci/host/pcie-mediatek.c
++++ b/drivers/pci/host/pcie-mediatek.c
+@@ -77,7 +77,6 @@
+ #define PCIE_INT_MASK		0x420
+ #define INTX_MASK		GENMASK(19, 16)
+ #define INTX_SHIFT		16
+-#define INTX_NUM		4
+ #define PCIE_INT_STATUS		0x424
+ #define MSI_STATUS		BIT(23)
+ #define PCIE_IMSI_STATUS	0x42c
+@@ -576,7 +575,7 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
+ 		return -ENODEV;
+ 	}
+ 
+-	port->irq_domain = irq_domain_add_linear(pcie_intc_node, INTX_NUM,
++	port->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
+ 						 &intx_domain_ops, port);
+ 	if (!port->irq_domain) {
+ 		dev_err(dev, "failed to get INTx IRQ domain\n");
+@@ -594,7 +593,7 @@ static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
+ 	u32 bit = INTX_SHIFT;
+ 
+ 	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
+-		for_each_set_bit_from(bit, &status, INTX_NUM + INTX_SHIFT) {
++		for_each_set_bit_from(bit, &status, PCI_NUM_INTX + INTX_SHIFT) {
+ 			/* Clear the INTx */
+ 			writel(1 << bit, port->base + PCIE_INT_STATUS);
+ 			virq = irq_find_mapping(port->irq_domain,
 -- 
-Robert Nelson
-https://rcn-ee.com/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.6.4
