@@ -1,46 +1,100 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: sun7i: Add dts file for A20-OLinuXino-MICRO-eMMC
-Date: Wed, 30 Aug 2017 16:38:48 +0200
-Message-ID: <20170830143848.z7z24nbgnrymflya@flea.lan>
-References: <1503901963-9457-1-git-send-email-stefan@olimex.com>
- <1503901963-9457-3-git-send-email-stefan@olimex.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Subject: Re: [PATCH] ARM: dts: sun7i: Enable power supplies on
+ A20-OLinuxIno-Micro
+Date: Wed, 30 Aug 2017 16:40:54 +0200
+Message-ID: <20170830144054.36m6wfilwdztcfij@flea.lan>
+References: <20170829170810.1302-1-harald@ccbib.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nepjurd4lh2we3f7"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBA44TPGQKGQEIZX5GII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="mpfurkajycglapac"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1503901963-9457-3-git-send-email-stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170829170810.1302-1-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---nepjurd4lh2we3f7
-Content-Type: text/plain; charset="UTF-8"
+--mpfurkajycglapac
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Aug 29, 2017 at 07:08:10PM +0200, Harald Geyer wrote:
+> The axp209.dtsi defines nodes for ac, usb and battery supplies for a
+> while now. This patch enables these nodes for the A20-Olinuxino-Micro,
+> which has connectors for all three of them.
+>=20
+> The patch was run-tested against linux-next-20170825.
+>=20
+> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+> ---
+> Note: I guess the same change is good for the olinuxino lime boards too.
+> However I don't have such boards to test, so I don't formally submit a
+> patch for them.
+>=20
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/b=
+oot/dts/sun7i-a20-olinuxino-micro.dts
+> index 0b7403e..64c993a 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+> @@ -256,6 +256,18 @@
+> =20
+>  #include "axp209.dtsi"
+> =20
+> +&ac_power_supply {
+> +	status =3D "okay";
+> +};
+> +
+> +&battery_power_supply {
+> +	status =3D "okay";
+> +};
+> +
+> +&usb_power_supply {
+> +	status =3D "okay";
+> +};
+> +
 
-On Mon, Aug 28, 2017 at 09:32:43AM +0300, Stefan Mavrodiev wrote:
-> A20-OLinuXino-MICRO has option with onboard eMMC chip. For
-> now it's only shipped with 4BG chip, but in the future this
-> may change.
-> 
-> Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+We usually try to sort the nodes per alphabetical order (even though
+it's a bit difficult for the battery and AC-IN power supplies).
 
-Queued for 4.15, thanks!
+I've moved the usb_power_supply node a bit below, where it belongs,
+and it will be part of 4.15.
+
+Thanks!
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---nepjurd4lh2we3f7--
+
+--mpfurkajycglapac
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZps52AAoJEBx+YmzsjxAgOkIQAK2Y218uhwOEMH+N+e+en5Ea
+PF3JulrqKfcgI+EKd30+a5zPj0Q/bEAPE6QO4L/SKHbdBhyO8lOTsuxx33M8QvkQ
+XZa2XJDdOb3+QbZGkY3T5b4Bh9+jnvFmYo2WXl4YXi7c9JMnO4XOGYinCSWXO1N6
+Kjq+u0pq7/O4uPQspYLGYGC+mgNZHxTpJAxa5Kd4/9KaIf34bCjpRFIia02ik+ct
+IqdwGrhEL1L3sr5LlwJkC0hWuNbwmrDS/wPrxDiqOZX5NM/lFr9gLTk8tg4XoLZG
+J8H2gEVAF5LXDaMQsRvzJ9VYp/7c9jcWbiiSsir+6ubp1sIuYOr5w2YDNfFLYDXO
+1dh1Cndsl+TNw1zJYvn8vP14yG6WYxZQ3nHZf8TM7BQQTKB6vdO5kjUznnG72WNF
+HYvJaq5F4vKwgw/s5FkURU0oqgnGFTs0pYUNwk15tEAeY4pGnnhCrgo/6EuKFrW8
+Sf8ML34rGq/YtgbVgBj6ZNxs4K0toUCIHRrfDVYvy2LI3cLmyuanq3yiK3wNU0+g
+Z3kBU6CEyvZGky/3AfPFnt3bn/rvAJrSieNkDXBegAmv7ez3ybils8rLPrtK8TWM
+O6INLh8AoqhxaSFqT2mjse4SxPnGR/BXEOP+0Wpu/RQjP73ipaLpCb6F8K3KhcSA
+H03ncprSRQL7OnLkwDtA
+=oUYn
+-----END PGP SIGNATURE-----
+
+--mpfurkajycglapac--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
