@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv3 2/5] cec-ioc-dqevent.rst: document new CEC_EVENT_PIN_HPD_LOW/HIGH events
-Date: Wed, 30 Aug 2017 18:10:41 +0200
-Message-ID: <20170830161044.26571-3-hverkuil@xs4all.nl>
+Subject: [PATCHv3 5/5] MAINTAINERS: add cec-gpio entry
+Date: Wed, 30 Aug 2017 18:10:44 +0200
+Message-ID: <20170830161044.26571-6-hverkuil@xs4all.nl>
 References: <20170830161044.26571-1-hverkuil@xs4all.nl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170830161044.26571-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
@@ -12,42 +12,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Document these new CEC events.
+Add an entry for the CEC GPIO driver.
 
 Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/media/uapi/cec/cec-ioc-dqevent.rst | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/media/uapi/cec/cec-ioc-dqevent.rst b/Documentation/media/uapi/cec/cec-ioc-dqevent.rst
-index db615e3405c0..32b47763f5a6 100644
---- a/Documentation/media/uapi/cec/cec-ioc-dqevent.rst
-+++ b/Documentation/media/uapi/cec/cec-ioc-dqevent.rst
-@@ -160,6 +160,24 @@ it is guaranteed that the state did change in between the two events.
-       - Generated if the CEC pin goes from a low voltage to a high voltage.
-         Only applies to adapters that have the ``CEC_CAP_MONITOR_PIN``
- 	capability set.
-+    * .. _`CEC-EVENT-PIN-HPD-LOW`:
-+
-+      - ``CEC_EVENT_PIN_HPD_LOW``
-+      - 5
-+      - Generated if the HPD pin goes from a high voltage to a low voltage.
-+        Only applies to adapters that have the ``CEC_CAP_MONITOR_PIN``
-+	capability set. When open() is called, the HPD pin can be read and
-+	the HPD is low, then an initial event will be generated for that
-+	filehandle.
-+    * .. _`CEC-EVENT-PIN-HPD-HIGH`:
-+
-+      - ``CEC_EVENT_PIN_HPD_HIGH``
-+      - 6
-+      - Generated if the HPD pin goes from a low voltage to a high voltage.
-+        Only applies to adapters that have the ``CEC_CAP_MONITOR_PIN``
-+	capability set. When open() is called, the HPD pin can be read and
-+	the HPD is high, then an initial event will be generated for that
-+	filehandle.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index eb930ebecfcb..5ef0d34ef502 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3205,6 +3205,15 @@ F:	include/uapi/linux/cec.h
+ F:	include/uapi/linux/cec-funcs.h
+ F:	Documentation/devicetree/bindings/media/cec.txt
  
- 
- .. tabularcolumns:: |p{6.0cm}|p{0.6cm}|p{10.9cm}|
++CEC GPIO DRIVER
++M:	Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
++L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++T:	git git://linuxtv.org/media_tree.git
++W:	http://linuxtv.org
++S:	Supported
++F:	drivers/media/platform/cec-gpio/
++F:	Documentation/devicetree/bindings/media/cec-gpio.txt
++
+ CELL BROADBAND ENGINE ARCHITECTURE
+ M:	Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+ L:	linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 -- 
 2.14.1
 
