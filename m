@@ -1,53 +1,69 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv3 3/5] dt-bindings: document the CEC GPIO bindings
-Date: Wed, 30 Aug 2017 18:10:42 +0200
-Message-ID: <20170830161044.26571-4-hverkuil@xs4all.nl>
-References: <20170830161044.26571-1-hverkuil@xs4all.nl>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170830161044.26571-1-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
+Subject: [PATCHv3 0/5] cec-gpio: add HDMI CEC GPIO-based driver
+Date: Wed, 30 Aug 2017 18:10:39 +0200
+Message-ID: <20170830161044.26571-1-hverkuil@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
-
-Document the bindings for the cec-gpio module for hardware where the
-CEC pin and optionally the HPD pin are connected to GPIO pins.
-
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
----
- .../devicetree/bindings/media/cec-gpio.txt         | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
-
-diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
-new file mode 100644
-index 000000000000..d1df742af0ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
-@@ -0,0 +1,22 @@
-+* HDMI CEC GPIO driver
-+
-+The HDMI CEC GPIO module supports CEC implementations where the CEC pin
-+is hooked up to a pull-up GPIO pin and - optionally - the HPD pin is
-+hooked up to a pull-down GPIO pin.
-+
-+Required properties:
-+  - compatible: value must be "cec-gpio"
-+  - cec-gpio: gpio that the CEC line is connected to
-+
-+Optional property:
-+  - hpd-gpio: gpio that the HPD line is connected to
-+
-+Example for the Raspberry Pi 3 where the CEC line is connected to
-+pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
-+connected to pin 11 aka BCM17:
-+
-+cec-gpio@7 {
-+       compatible = "cec-gpio";
-+       cec-gpio = <&gpio 7 GPIO_ACTIVE_HIGH>;
-+       hpd-gpio = <&gpio 17 GPIO_ACTIVE_HIGH>;
-+};
--- 
-2.14.1
+RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKVGhpcyBkcml2ZXIg
+YWRkcyBzdXBwb3J0IGZvciBDRUMgaW1wbGVtZW50YXRpb25zIHRoYXQgdXNlIGEgcHVsbC11cApH
+UElPIHBpbi4gV2hpbGUgU29DcyBleGlzdCB0aGF0IGRvIHRoaXMsIHRoZSBwcmltYXJ5IHVzZS1j
+YXNlIGlzIHRvCnR1cm4gYSBzaW5nbGUtYm9hcmQgY29tcHV0ZXIgaW50byBhIGNoZWFwIENFQyBk
+ZWJ1Z2dlci4KClRvZ2V0aGVyIHdpdGggJ2NlYy1jdGwgLS1tb25pdG9yLXBpbicgeW91IGNhbiBk
+byBsb3ctbGV2ZWwgQ0VDIGJ1cwptb25pdG9yaW5nIGFuZCBkbyBwcm90b2NvbCBhbmFseXNpcy4g
+QW5kIGVycm9yIGluamVjdGlvbiBpcyBhbHNvCnBsYW5uZWQgZm9yIHRoZSBmdXR1cmUuCgpIZXJl
+IGlzIGFuIGV4YW1wbGUgdXNpbmcgdGhlIFJhc3BiZXJyeSBQaSAzOgoKaHR0cHM6Ly9odmVya3Vp
+bC5ob21lLnhzNGFsbC5ubC9ycGkzLWNlYy5qcGcKCldoaWxlIHRoaXMgZXhhbXBsZSBpcyBmb3Ig
+dGhlIFJwaSwgdGhpcyBkcml2ZXIgd2lsbCB3b3JrIGZvciBhbnkKU29DIHdpdGggYSBwdWxsLXVw
+IEdQSU8gcGluLgoKSW4gYWRkaXRpb24gdGhlIGNlYy1ncGlvIGRyaXZlciBjYW4gb3B0aW9uYWxs
+eSBtb25pdG9yIHRoZSBIUEQgcGluLgpUaGUgc3RhdGUgb2YgdGhlIEhQRCBwaW4gaW5mbHVlbmNl
+cyB0aGUgQ0VDIGJlaGF2aW9yIHNvIGl0IGlzIHZlcnkKdXNlZnVsIHRvIGJlIGFibGUgdG8gbW9u
+aXRvciBib3RoLgoKQW5kIHNvbWUgSERNSSBzaW5rcyBhcmUga25vd24gdG8gcXVpY2tseSB0b2dn
+bGUgdGhlIEhQRCB3aGVuIGUuZy4Kc3dpdGNoaW5nIGJldHdlZW4gaW5wdXRzLiBTbyBpdCBpcyB1
+c2VmdWwgdG8gYmUgYWJsZSB0byBzZWUgYW4gZXZlbnQKd2hlbiB0aGUgSFBEIGNoYW5nZXMgdmFs
+dWUuCgpUaGUgZmlyc3QgdHdvIHBhdGNoZXMgYWRkIHN1cHBvcnQgZm9yIHRoZSBuZXcgSFBEIGV2
+ZW50cy4gVGhlIGxhc3QKdGhyZWUgcGF0Y2hlcyBhcmUgZm9yIHRoZSBjZWMtZ3BpbyBkcml2ZXIg
+aXRzZWxmLgoKUmVnYXJkcywKCiAgICAgICAgSGFucwoKQ2hhbmdlcyBzaW5jZSB2MjoKCi0gQWRk
+IHN1cHBvcnQgZm9yIEhQRCBldmVudHMuCi0gU3dpdGNoIGZyb20gcGluIEJDTTQgdG8gcGluIEJD
+TTcgaW4gdGhlIGJpbmRpbmdzIGV4YW1wbGUKCkNoYW5nZXMgc2luY2UgdjE6CgotIFVwZGF0ZWQg
+dGhlIGJpbmRpbmdzIGRvYyB0byBub3QgcmVmZXIgdG8gdGhlIGRyaXZlciwgaW5zdGVhZAogIHJl
+ZmVyIHRvIHRoZSBoYXJkd2FyZS4KCkhhbnMgVmVya3VpbCAoNSk6CiAgY2VjOiBhZGQgQ0VDX0VW
+RU5UX1BJTl9IUERfTE9XL0hJR0ggZXZlbnRzCiAgY2VjLWlvYy1kcWV2ZW50LnJzdDogZG9jdW1l
+bnQgbmV3IENFQ19FVkVOVF9QSU5fSFBEX0xPVy9ISUdIIGV2ZW50cwogIGR0LWJpbmRpbmdzOiBk
+b2N1bWVudCB0aGUgQ0VDIEdQSU8gYmluZGluZ3MKICBjZWMtZ3BpbzogYWRkIEhETUkgQ0VDIEdQ
+SU8gZHJpdmVyCiAgTUFJTlRBSU5FUlM6IGFkZCBjZWMtZ3BpbyBlbnRyeQoKIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21lZGlhL2NlYy1ncGlvLnR4dCAgICAgICAgIHwgIDIyICsrCiBEb2N1bWVu
+dGF0aW9uL21lZGlhL3VhcGkvY2VjL2NlYy1pb2MtZHFldmVudC5yc3QgICB8ICAxOCArKwogTUFJ
+TlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKwog
+ZHJpdmVycy9tZWRpYS9jZWMvY2VjLWFkYXAuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgMTgg
+Ky0KIGRyaXZlcnMvbWVkaWEvY2VjL2NlYy1hcGkuYyAgICAgICAgICAgICAgICAgICAgICAgIHwg
+IDE4ICstCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25maWcgICAgICAgICAgICAgICAgICAg
+ICB8ICAgOSArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL01ha2VmaWxlICAgICAgICAgICAgICAg
+ICAgICB8ICAgMiArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL2NlYy1ncGlvL01ha2VmaWxlICAg
+ICAgICAgICB8ICAgMSArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL2NlYy1ncGlvL2NlYy1ncGlv
+LmMgICAgICAgICB8IDIzNyArKysrKysrKysrKysrKysrKysrKysKIGluY2x1ZGUvbWVkaWEvY2Vj
+LXBpbi5oICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICsKIGluY2x1ZGUvbWVkaWEv
+Y2VjLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEyICstCiBpbmNsdWRlL3Vh
+cGkvbGludXgvY2VjLmggICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCiAxMiBmaWxl
+cyBjaGFuZ2VkLCAzNDYgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2VjLWdwaW8u
+dHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9jZWMtZ3Bpby9N
+YWtlZmlsZQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vY2VjLWdw
+aW8vY2VjLWdwaW8uYwoKLS0gCjIuMTQuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
