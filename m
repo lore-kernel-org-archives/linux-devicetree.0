@@ -1,65 +1,94 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [net-next PATCHv6 1/2] dt-bindings: net: Add DT bindings for
- Socionext Netsec
-Date: Wed, 30 Aug 2017 17:19:42 +0200
-Message-ID: <20170830151942.GB22289@lunn.ch>
-References: <1504088657-6102-1-git-send-email-jaswinder.singh@linaro.org>
- <1504088752-6204-1-git-send-email-jaswinder.singh@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCHv2 00/17] Fix missing device tree hwmods and IO ranges omap variants
+Date: Wed, 30 Aug 2017 08:19:36 -0700
+Message-ID: <20170830151953.30856-1-tony@atomide.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1504088752-6204-1-git-send-email-jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 03:55:52PM +0530, Jassi Brar wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Socionext NetSec Controller driver.
-> 
-> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/socionext-netsec.txt   | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
-> new file mode 100644
-> index 0000000..12d596c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
-> @@ -0,0 +1,46 @@
-> +* Socionext NetSec Ethernet Controller IP
-> +
-> +Required properties:
-> +- compatible: Should be "socionext,netsecv5"
-> +- reg: Address and length of the register sets, the first is the main
-> +	registers, then the rdlar and tdlar regions for the SoC
-> +- interrupts: Should contain ethernet controller interrupt
-> +- clocks: phandle to any clocks to be switched by runtime_pm
-> +- phy-mode: See ethernet.txt file in the same directory
+Hi all,
 
-> +- max-speed: See ethernet.txt file in the same directory
-> +- max-frame-size: See ethernet.txt file in the same directory, if 9000 or
-> +	above jumbo frames are enabled
-> +- local-mac-address: See ethernet.txt file in the same directory
+While cleaning up legacy platform data I noticed to my horror that we
+are in a "half-chicken, half-egg" state with with the legacy booting
+vs device tree booting instead of dealing with just the traditional
+"chicken or the egg" problem.
 
-These three are required, not optimal?
+Basically we are missing some critical dts data for "ti,hwmods" and
+IO ranges for example. This data is needed by the SoC interconnect
+code and things just happen to work now with the legacy platform
+data still around.
 
-> +- phy-handle: phandle to select child phy
-> +
-> +Optional properties:
-> +- use-jumbo: Boolean property to suggest if jumbo packets should be used or not
-> +
-> +For the child phy
-> +
-> +- compatible "ethernet-phy-ieee802.3-c22" is needed
+Note that the IO range in the dts should be for the interconnect
+target module, typically sized 0x1000. Then there can be one or
+more device instances as a child of the interconnect target module.
 
-This is normally considered optional. Why require it?
+Mostly this is a problem on omap4, the other SoCs only have few
+nodes and properties missing.
 
-     Andrew
+For the missing nodes and properties, I've also updated or added the
+binding documentation. For some devices, there is currently no driver
+available like is the case for face detect and GPU modules for
+example.
+
+Regards,
+
+Tony
+
+Changes since v1:
+
+- Updated hsi, iss, fdif, gpu, and smartreflex patches based on
+  the subsystem maintainer comments
+
+- Added Rob and Mark in Cc for the patches touching binding
+  documentation
+
+
+Tony Lindgren (17):
+  ARM: dts: Add missing dma hwmods property for omap3
+  ARM: dts: Configure pmu without interrupt for omap4430
+  ARM: dts: Add missing properties for omap4 control modules
+  ARM: dts: Add missing hwmods property for omap4 dma
+  ARM: dts: Add missing smartreflex node and binding for omap4
+  ARM: dts: Add missing slimbus node and binding for omap4
+  ARM: dts: Add missing onewire node for omap4
+  ARM: dts: Add missing hsi node for omap4
+  ARM: dts: Add missing iss node and binding for omap4
+  ARM: dts: Add missing wdt3 node for omap4
+  ARM: dts: Add missing mcasp node for omap4
+  ARM: dts: Add missing aess node and binding for omap4
+  ARM: dts: Add missing fdif node and binding for omap4
+  ARM: dts: Add missing gpu node and binding for omap4
+  ARM: dts: Add missing dma hwmod property for omap5
+  ARM: dts: Add missing hwmod related nodes for am33xx
+  ARM: dts: Add missing hwmod related properties for dra7
+
+ .../devicetree/bindings/arm/omap/ctrl.txt          |   2 +
+ .../devicetree/bindings/gpu/ti-powervr-sgx.txt     |  39 +++++
+ Documentation/devicetree/bindings/hsi/omap-ssi.txt |   7 +-
+ .../devicetree/bindings/media/ti-fdif.txt          |  29 ++++
+ Documentation/devicetree/bindings/media/ti-iss.txt |  33 ++++
+ .../bindings/memory-controllers/ti/emif.txt        |   6 +-
+ .../devicetree/bindings/power/ti-smartreflex.txt   |  47 ++++++
+ .../bindings/sound/davinci-mcasp-audio.txt         |   1 +
+ .../devicetree/bindings/sound/ti-aess.txt          |  33 ++++
+ .../devicetree/bindings/sound/ti-slimbus.txt       |  34 ++++
+ arch/arm/boot/dts/am33xx.dtsi                      |  10 +-
+ arch/arm/boot/dts/dra7.dtsi                        |   8 +
+ arch/arm/boot/dts/omap3.dtsi                       |   1 +
+ arch/arm/boot/dts/omap4.dtsi                       | 176 +++++++++++++++++++--
+ arch/arm/boot/dts/omap5.dtsi                       |   1 +
+ 15 files changed, 413 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpu/ti-powervr-sgx.txt
+ create mode 100644 Documentation/devicetree/bindings/media/ti-fdif.txt
+ create mode 100644 Documentation/devicetree/bindings/media/ti-iss.txt
+ create mode 100644 Documentation/devicetree/bindings/power/ti-smartreflex.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ti-aess.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ti-slimbus.txt
+
+-- 
+2.14.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
