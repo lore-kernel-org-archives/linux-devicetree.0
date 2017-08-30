@@ -1,68 +1,92 @@
-From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
-Date: Wed, 30 Aug 2017 11:54:14 +0100
-Message-ID: <20170830105414.GB1310@e110455-lin.cambridge.arm.com>
-References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
- <20170726102748.GM31807@n2100.armlinux.org.uk>
- <20170728152311.GA970@e110455-lin.cambridge.arm.com>
- <20170728155827.GV31807@n2100.armlinux.org.uk>
- <20170829133351.GK10796@e110455-lin.cambridge.arm.com>
- <20170829164824.GH20805@n2100.armlinux.org.uk>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [patch v4 1/2] mfd: Add Mellanox regmap core driver
+Date: Wed, 30 Aug 2017 12:59:56 +0200
+Message-ID: <20170830105955.GB4926@amd>
+References: <1504029616-192277-1-git-send-email-vadimp@mellanox.com>
+ <1504029616-192277-2-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170829164824.GH20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+In-Reply-To: <1504029616-192277-2-git-send-email-vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 29, 2017 at 05:48:24PM +0100, Russell King - ARM Linux wrote:
-> On Tue, Aug 29, 2017 at 02:33:52PM +0100, Liviu Dudau wrote:
-> > I've worked with Vladimir Murzin inside ARM to try to sort out problems
-> > on the board like the one that you have. He's got to a point where the HDLCD
-> > starts correctly after adding a non-fixed pxlclk source, but then the rest of
-> > the setup is semi-useless without a working IRQ because DRM atomic calls
-> > will give you a vblank timeout splat everytime you invoke them. So I'm
-> > not sure how you want to progress with this patch, as not having an IRQ
-> > line means you will not get any vblank interrupts and you can't use the
-> > driver with userspace that calls DRM API.
-> > 
-> > The RTL guys are apparently working on a fix, but I have no ETA or
-> > details on when they are going to do.
-> 
-> It sounds then like this patch doesn't make sense - so I'm happy
-> for it to be dropped.  It's something to bear in mind in the future
-> when folk decide whether to adopt fbdev or DRM support for hardware
-> that gets used in MMU-less hardware...
 
-I don't think this has anything to do with the presence of a MMU or not.
+--VrqPEDrXMn8OVzN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If you don't have a way of signaling back to userspace when a vblank event
-has occured then the driver needs to have additional code to reject ioctls
-that depend on that functionality. So your patch is not wrong, it just needs
-more code to be really useful.
+Hi!
 
-Best regards,
-Liviu
+>  Cause of reset nodes:
+>  - cpu_kernel_panic
+>  - cpu_shutdown
+>  - bmc_warm_reset
 
-> 
-> -- 
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-> According to speedtest.net: 8.21Mbps down 510kbps up
+This is not really suitable for hwmon, right?
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Can you talk to
+
+Date: Mon, 28 Aug 2017 09:31:30 -0700
+=46rom: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org,
+Subject: [PATCH v6 1/2] platform: Add driver for RAVE Supervisory Processor
+
+? He's currently trying to add very similar interface to the kernel,
+too.
+
++What:          /sys/devices/platform/*/serial*/serial*-*/reset_reason
++Date:          Aug 2017
++Contact:       "Andrey Smirnov" <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++Description:    (RO) Indicates reason for last reset.
++
++               The following values can be reported:
++                   * 0  -> Normal Power Off
++                   * 1  -> Hardware Watchdog
++                   * 2  -> Software Watchdog
++                   * 3  -> Input Voltage Out Of Range
++                   * 4  -> Host Requested
++                   * 5  -> Temperature Out Of Range
++                   * 6  -> User Requested (via long Power Button
+press)
++                   * 7  -> Illegal Configuration Word
++                   * 8  -> Illegal Insturction
++                   * 9  -> Illegal Trap
++                   * 10 -> Unknown
++                   * 11 -> Crew Panel Requested
++
++                NOTE: Codes 7,8 and 9 pertain to exceptions happening
++                in supervisory processor/its firmware and not host
++                CPU.
+
+We really want something common between different machines.
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--VrqPEDrXMn8OVzN4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmmmqsACgkQMOfwapXb+vLGygCbBSbk1mindegCEwIDTXj16SZF
+xDMAn2B9ALeAGthjTmCG6dS0YglNmN8O
+=hpKn
+-----END PGP SIGNATURE-----
+
+--VrqPEDrXMn8OVzN4--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
