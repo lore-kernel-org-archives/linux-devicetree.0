@@ -1,339 +1,52 @@
-From: Antony Antony <antony@phenome.org>
-Subject: [PATCH v5] arm64: allwinner: h5: add support for NanoPi NEO Plus2
-Date: Wed, 30 Aug 2017 14:50:57 +0200
-Message-ID: <20170830125057.38529-1-antony@phenome.org>
-References: <20170824231716.2623-1-antony@phenome.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 6/8] pinctrl: sh-pfc: r8a77995: Add USB2.0 host support
+Date: Wed, 30 Aug 2017 13:07:21 +0000
+Message-ID: <TY1PR06MB0992563B4C992762105E8590D89C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1502281187-24068-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdW27kVU2cB=iL-H7t44KeEboL+Ki0zvxkavRpZCepYuLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170824231716.2623-1-antony@phenome.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, Antony Antony <antony@phenome.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdW27kVU2cB=iL-H7t44KeEboL+Ki0zvxkavRpZCepYuLw@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-gpio-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, TAKESHI KIHARA <takeshi.kihara.df@renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-	Add initial DT support for NanoPi NEO Plus2 by FriendlyARM
-		Allwinner quad core H5 Cortex A53 with an ARM Mali-450MP GPU
-		1 GB DDR3 RAM
-		8GB eMMC flash (Samsung KLM8G1WEPD-B031)
-		micro SD card slot
-		Gigabit Ethernet (external RTL8211E-VB-CG chip)
-		802.11 b/g/n WiFi, Bluetooth 4.0 (Ampak AP6212A module)
-		2x USB 2.0 host ports & 2x USB via headers
-
-    The DTS is based on OrangePi PC 2, sun50i-h5-orangepi-pc2
-    Added dwmac-sun8i Gigabit Ethernet support based on
-    Nano Pi Neo2 DT and the schematics.
-
-Signed-off-by: Antony Antony <antony@phenome.org>
----
- arch/arm64/boot/dts/allwinner/Makefile             |   1 +
- .../dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts   | 262 +++++++++++++++++++++
- 2 files changed, 263 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-
----
-Changes
-v1 -> v2
- add wifi power controller,  mmc1, mmc2
- remove reg_usb0_vbus
-v2 -> v3
-fix typo s/orangepi/nanopi/, s/pus/plus/
- usb_otg set to host mode
- wifi fix, based on commit 442e1f7e brcm,bcm43xx-fmac.txt
- remove functions on header pins: spi, ir, ehci 1&2, ohci 1&2, uart 1&2
- remove hdmi, de2, r-gpio-keys, mixer - not supported the board
-v3->v4 update WiFi chip compatible to bcm43430-fmac
-v4->v5 back to bcm4329-fmac bcm43430-fmac is the wrong way.
- 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 108f12c..e6810c8 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo-plus2.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-new file mode 100644
-index 0000000..a6687db
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-@@ -0,0 +1,262 @@
-+/*
-+ * Copyright (C) 2017 Antony Antony <antony@phenome.org>
-+ * Copyright (C) 2016 ARM Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun50i-h5.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "FriendlyARM NanoPi NEO Plus2";
-+	compatible = "friendlyarm,nanopi-neo-plus2", "allwinner,sun50i-h5";
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	aliases {
-+		ethernet0 = &emac;
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		pwr {
-+			label = "nanopi:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		status {
-+			label = "nanopi:red:status";
-+			gpios = <&pio 0 20 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gmac_power_pin_nanopi>;
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	vdd_cpux: gpio-regulator {
-+		compatible = "regulator-gpio";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vdd_cpux_r_npi>;
-+
-+		regulator-name = "vdd-cpux";
-+		regulator-type = "voltage";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-ramp-delay = <50>; /* 4ms */
-+
-+		gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0x1>;
-+		states = <1100000 0x0
-+			  1300000 0x1>;
-+	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_en_npi>;
-+		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		post-power-on-delay-ms = <200>;
-+	};
-+};
-+
-+&codec {
-+	allwinner,audio-routing =
-+		"Line Out", "LINEOUT",
-+		"MIC1", "Mic",
-+		"Mic",  "MBIAS";
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci3 {
-+	status = "okay";
-+};
-+
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_rgmii_pins>;
-+	phy-supply = <&reg_gmac_3v3>;
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+};
-+
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@7 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <7>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	boot_device = <0>;
-+	status = "okay";
-+
-+	/*
-+	 * AMPAK AP6212A WiFi module with BCM43430, rev=1 inside
-+	 * sdio vendor ID: 0x02d0, sdio device ID: 0xa9a6
-+	 * There is no specific Documentation: dt-binding for BCM43430
-+	 * brcm,bcm4329-fmac compatible can initialize this module
-+	 */
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	boot_device = <0>;
-+	status = "okay";
-+};
-+
-+&mmc2_8bit_pins {
-+	/* Increase drive strength for DDR modes */
-+	drive-strength = <40>;
-+	/* eMMC is missing pull-ups */
-+	bias-pull-up;
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci3 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	leds_npi: led_pins@0 {
-+		pins = "PA10";
-+		function = "gpio_out";
-+	};
-+	gmac_power_pin_nanopi: gmac_power_pin@0 {
-+			pins = "PD6";
-+			function = "gpio_out";
-+	};
-+};
-+
-+&r_pio {
-+	leds_r_npi: led_pins@0 {
-+		pins = "PL10";
-+		function = "gpio_out";
-+	};
-+
-+	vdd_cpux_r_npi: regulator_pins@0 {
-+		allwinner,pins = "PL6";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	wifi_en_npi: wifi_en_pin {
-+		pins = "PL7";
-+		function = "gpio_out";
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	/* USB Type-A ports' VBUS is always on */
-+	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-+	status = "okay";
-+};
--- 
-2.9.3
+SGkgR2VlcnQtc2FuLA0KDQpJJ20gc29ycnkuIEkgbWlzc2VkIHRoaXMgZW1haWwuLi4NCg0KPiBG
+cm9tOiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgMTYsIDIw
+MTcgODoxMSBQTQ0KPiANCj4gSGkgU2hpbW9kYS1zYW4sIEtpaGFyYS1zYW4sDQo+IA0KPiBPbiBX
+ZWQsIEF1ZyA5LCAyMDE3IGF0IDI6MTkgUE0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhp
+cm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gRnJvbTogVGFrZXNoaSBLaWhh
+cmEgPHRha2VzaGkua2loYXJhLmRmQHJlbmVzYXMuY29tPg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogVGFrZXNoaSBLaWhhcmEgPHRha2VzaGkua2loYXJhLmRmQHJlbmVzYXMuY29tPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5l
+c2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9waW5jdHJsL3NoLXBmYy9wZmMtcjhhNzc5
+OTUuYyB8IDE1ICsrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0
+aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9zaC1wZmMvcGZj
+LXI4YTc3OTk1LmMgYi9kcml2ZXJzL3BpbmN0cmwvc2gtcGZjL3BmYy1yOGE3Nzk5NS5jDQo+ID4g
+aW5kZXggOWViMGNlZi4uNWMwYTk0ZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwv
+c2gtcGZjL3BmYy1yOGE3Nzk5NS5jDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJsL3NoLXBmYy9w
+ZmMtcjhhNzc5OTUuYw0KPiA+IEBAIC0xMzAyLDYgKzEzMDIsMTUgQEAgZW51bSB7DQo+ID4gICAg
+ICAgICBTQ0lGX0NMS19NQVJLLA0KPiA+ICB9Ow0KPiA+DQo+ID4gKy8qIC0gVVNCMCAtLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tICovDQo+ID4gK3N0YXRpYyBjb25zdCB1bnNpZ25lZCBpbnQgdXNiMF9waW5zW10gPSB7DQo+
+ID4gKyAgICAgICAvKiBQV0VOLCBPVkMgKi8NCj4gPiArICAgICAgIFJDQVJfR1BfUElOKDAsIDAp
+LCBSQ0FSX0dQX1BJTigwLCAxKSwNCj4gPiArfTsNCj4gPiArc3RhdGljIGNvbnN0IHVuc2lnbmVk
+IGludCB1c2IwX211eFtdID0gew0KPiA+ICsgICAgICAgVVNCMF9QV0VOX01BUkssIFVTQjBfT1ZD
+X01BUkssDQo+ID4gK307DQo+IA0KPiBXaGF0IGFib3V0IFVTQjBfSURQVSBhbmQgVVNCMF9JRElO
+Pw0KPiBBcmUgdGhleSBuZWVkZWQgZm9yIG5vcm1hbCBvcGVyYXRpb24sIG9yIGNhbiB0aGV5IGJl
+IGFkZGVkIGxhdGVyPw0KDQpJIGRvbid0IGtub3cgYWJvdXQgdGhlc2UgcGlucy4gVGhlIGRhdGFz
+aGVldCBkb2Vzbid0IG1lbnRpb24gdXNhZ2UgaW4gVVNCIHNlY3Rpb25zLi4uDQpTbywgSSdtIGFz
+a2luZyBIVyB0ZWFtIG5vdy4gKEkgdGhpbmsgdGhleSBjYW4gYmUgYWRkZWQgbGF0ZXIuKQ0KDQpC
+ZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IFRoYW5rcyENCj4gDQo+IEdye29l
+dGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+
+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25k
+IGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNh
+dGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQN
+Cj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVy
+IiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
