@@ -1,44 +1,60 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
-Subject: [PATCH 0/3] dmaengine: Fix DMA on current allwinner SoCs, add A64 support
-Date: Thu, 31 Aug 2017 01:36:06 +0200
-Message-ID: <20170830233609.13855-1-stefan.bruens@rwth-aachen.de>
+Subject: [PATCH 2/3] arm64: allwinner: a64: Add device node for DMA controller
+Date: Thu, 31 Aug 2017 01:36:08 +0200
+Message-ID: <20170830233609.13855-3-stefan.bruens@rwth-aachen.de>
+References: <20170830233609.13855-1-stefan.bruens@rwth-aachen.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170830233609.13855-1-stefan.bruens@rwth-aachen.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-sunxi@googlegroups.com
 Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The latest generation of allwinner SoCs (e.g. H3, H5, A64) have some significant
-differences to older SoC generations (e.g. A23):
+The A64 SoC has a DMA controller that supports 8 DMA channels
+to and from various peripherals.
 
-- different register location for the clock autogating register (offset 0x28 vs 0x20)
-- different field offset for the src/dest burst length fields in the channel
-  configuration register
-- additional burst lengths and widths
+Add a device node for it.
 
-This is the second change to the implementation of the DMA controller (first change
-being the addition of the clock autogating register in the A23). To differentiate
-between the different generations, the patch adds an enum value to the OF config
-data.
+Signed-off-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+---
+ Documentation/devicetree/bindings/dma/sun6i-dma.txt | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi       | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
-The A83t uses the same register layout as the A23, so this series also fixes the missing
-clock gating setting for the A83t.
-
-The A64 is register compatible to the H3, but supports less channels and has a different
-set of endpoints. Add a new compatible string to the device tree and the driver.
-
-Stefan Brüns (3):
-  dmaengine: sun6i: Correct DMA support on H3
-  arm64: allwinner: a64: Add device node for DMA controller
-  dmaengine: sun6i: Add support for Allwinner A64
-
- .../devicetree/bindings/dma/sun6i-dma.txt          |   1 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  13 ++
- drivers/dma/sun6i-dma.c                            | 135 +++++++++++++++------
- 3 files changed, 109 insertions(+), 40 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+index 6b267045f522..4398b990250c 100644
+--- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
++++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 		  "allwinner,sun8i-a23-dma"
+ 		  "allwinner,sun8i-a83t-dma"
+ 		  "allwinner,sun8i-h3-dma"
++		  "allwinner,sun50i-a64-dma"
+ - reg:		Should contain the registers base address and length
+ - interrupts:	Should contain a reference to the interrupt used by this device
+ - clocks:	Should contain a reference to the parent AHB clock
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 7be9eb2ad83c..f96287d3043a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -136,6 +136,15 @@
+ 			reg = <0x01c00000 0x1000>;
+ 		};
+ 
++		dma: dma-controller@01c02000 {
++			compatible = "allwinner,sun50i-a64-dma";
++			reg = <0x01c02000 0x1000>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_DMA>;
++			resets = <&ccu RST_BUS_DMA>;
++			#dma-cells = <1>;
++		};
++
+ 		mmc0: mmc@1c0f000 {
+ 			compatible = "allwinner,sun50i-a64-mmc";
+ 			reg = <0x01c0f000 0x1000>;
 -- 
 2.14.1
