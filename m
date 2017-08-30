@@ -1,78 +1,48 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH ] ARM: dts: iwg22d-sodimm: Add Ethernet AVB support
-Date: Wed, 30 Aug 2017 16:17:14 +0100
-Message-ID: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 0/3] Add support for STM32 vrefbuf regulator
+Date: Wed, 30 Aug 2017 17:55:26 +0200
+Message-ID: <1504108529-31727-1-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Define the iWave RainboW-G22D board dependent part of the Ethernet
-AVB device node.
+Some STM32 devices embed a voltage reference buffer which can be used as
+voltage reference for ADCs, DACs and also as voltage reference
+for external components through the dedicated VREF+ pin.
 
-On some older versions of the platform (before R4.0) the phy address
-may be 1 or 3. The address is fixed to 3 for R4.0 onwards (which
-will be the first mainstream release), hence using 3 in the dts.
+This patchset adds vrefbuf regulator driver, device tree bindings and
+vrefbuf device tree node for STM32H7 SoC.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
 ---
-This patch is tested against renesas-dev tag 20170830-v4.13-rc7
+Changes in v2:
+- Update regulator driver following Mark's remarks
 
- arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Fabrice Gasnier (3):
+  dt-bindings: regulator: Add STM32 Voltage Reference Buffer
+  regulator: Add support for stm32-vrefbuf
+  ARM: dts: stm32: add vrefbuf to stm32h743
 
-diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-index 442a5cb..aac84c6 100644
---- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-+++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-@@ -17,9 +17,11 @@
- 
- 	aliases {
- 		serial0 = &scif4;
-+		ethernet0 = &avb;
- 	};
- 
- 	chosen {
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
- 		stdout-path = "serial0:115200n8";
- 	};
- };
-@@ -29,6 +31,11 @@
- 		groups = "scif4_data_b";
- 		function = "scif4";
- 	};
-+
-+	avb_pins: avb {
-+		groups = "avb_mdio", "avb_gmii";
-+		function = "avb";
-+	};
- };
- 
- &scif4 {
-@@ -37,3 +44,22 @@
- 
- 	status = "okay";
- };
-+
-+&avb {
-+	pinctrl-0 = <&avb_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&phy3>;
-+	phy-mode = "gmii";
-+	renesas,no-ether-link;
-+	status = "okay";
-+
-+	phy3: ethernet-phy@3 {
-+	/*
-+	 * On some older versions of the platform (before R4.0) the phy address
-+	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
-+	 */
-+		reg = <3>;
-+		micrel,led-mode = <1>;
-+	};
-+};
+ .../bindings/regulator/st,stm32-vrefbuf.txt        |  20 ++
+ arch/arm/boot/dts/stm32h743.dtsi                   |   9 +
+ drivers/regulator/Kconfig                          |  12 ++
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/stm32-vrefbuf.c                  | 202 +++++++++++++++++++++
+ 5 files changed, 244 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
+ create mode 100644 drivers/regulator/stm32-vrefbuf.c
+
 -- 
 1.9.1
