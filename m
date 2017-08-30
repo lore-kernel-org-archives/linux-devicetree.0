@@ -1,104 +1,148 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 13/17] ARM: dts: Add missing fdif node and binding for omap4
-Date: Wed, 30 Aug 2017 20:05:59 +0300
-Message-ID: <18349253.zZQUxBsrvU@avalon>
-References: <20170830151953.30856-1-tony@atomide.com> <20170830151953.30856-14-tony@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170830151953.30856-14-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+From: Divagar Mohandass <divagar.mohandass@intel.com>
+Subject: [PATCH v4 3/3] eeprom: at24: enable runtime pm support
+Date: Wed, 30 Aug 2017 22:35:40 +0530
+Message-ID: <1504112740-14072-4-git-send-email-divagar.mohandass@intel.com>
+References: <1504112740-14072-1-git-send-email-divagar.mohandass@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504112740-14072-1-git-send-email-divagar.mohandass@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, sakari.ailus@iki.fi
+Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, rajmohan.mani@intel.com, Divagar Mohandass <divagar.mohandass@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Currently the device is kept in D0, there is an opportunity
+to save power by enabling runtime pm.
 
-Thank you for the patch.
+Device can be daisy chained from PMIC and we can't rely on I2C core
+for auto resume/suspend. Driver will decide when to resume/suspend.
 
-On Wednesday, 30 August 2017 18:19:49 EEST Tony Lindgren wrote:
-> On omap4 we're missing the fdif node with it's related "ti,hwmods"
-> property that the SoC interconnect code needs.
-> 
-> Note that this will only show up as a bug with "doesn't have
-> mpu register target base" boot errors when the legacy platform
-> data is removed.
-> 
-> Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
+---
+ drivers/misc/eeprom/at24.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-
-> ---
->  .../devicetree/bindings/media/ti-fdif.txt          | 29 +++++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi                       |  7 ++++++
->  2 files changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/ti-fdif.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/ti-fdif.txt
-> b/Documentation/devicetree/bindings/media/ti-fdif.txt new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti-fdif.txt
-> @@ -0,0 +1,29 @@
-> +Texas Instruments Face Detect (FDIF) binding
-> +
-> +FDIF can be used for face detection on Texas Instruments SoCs.
-> +
-> +Required properties:
-> +
-> +compatible: Shall be one of the following:
-> +	    "ti,omap4-fdif"
-> +
-> +reg: Shall contain the device instance IO range
-> +
-> +interrupts: Shall contain the device instance interrupt
-> +
-> +
-> +Optional properties:
-> +
-> +ti,hwmods: Shall contain the TI interconnect module name if needed
-> +	   by the SoC
-> +
-> +
-> +Example:
-> +
-> +	fdif: fdif@4a10a000 {
-> +		compatible = "ti,omap4-fdif";
-> +		reg = <0x4a10a000 0x1000>;
-> +		interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-> +		ti,hwmods = "fdif";
-> +	};
-> +
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -889,6 +889,13 @@
->  			};
->  		};
-> 
-> +		fdif: fdif@4a10a000 {
-> +			compatible = "ti,omap4-fdif";
-> +			reg = <0x4a10a000 0x1000>;
-> +			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-> +			ti,hwmods = "fdif";
-> +		};
-> +
->  		timer1: timer@4a318000 {
->  			compatible = "ti,omap3430-timer";
->  			reg = <0x4a318000 0x80>;
-
-
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 2199c42..65a7d83 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -24,6 +24,7 @@
+ #include <linux/i2c.h>
+ #include <linux/nvmem-provider.h>
+ #include <linux/platform_data/at24.h>
++#include <linux/pm_runtime.h>
+ 
+ /*
+  * I2C EEPROMs from most vendors are inexpensive and mostly interchangeable.
+@@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct at24_data *at24, const char *buf,
+ static int at24_read(void *priv, unsigned int off, void *val, size_t count)
+ {
+ 	struct at24_data *at24 = priv;
++	struct i2c_client *client;
+ 	char *buf = val;
++	int ret;
+ 
+ 	if (unlikely(!count))
+ 		return count;
+ 
++	client = at24_translate_offset(at24, &off);
++
++	ret = pm_runtime_get_sync(&client->dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(&client->dev);
++		return ret;
++	}
++
+ 	/*
+ 	 * Read data from chip, protecting against concurrent updates
+ 	 * from this host, but not from other I2C masters.
+@@ -518,6 +529,7 @@ static int at24_read(void *priv, unsigned int off, void *val, size_t count)
+ 		status = at24->read_func(at24, buf, off, count);
+ 		if (status < 0) {
+ 			mutex_unlock(&at24->lock);
++			pm_runtime_put(&client->dev);
+ 			return status;
+ 		}
+ 		buf += status;
+@@ -527,17 +539,29 @@ static int at24_read(void *priv, unsigned int off, void *val, size_t count)
+ 
+ 	mutex_unlock(&at24->lock);
+ 
++	pm_runtime_put(&client->dev);
++
+ 	return 0;
+ }
+ 
+ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+ {
+ 	struct at24_data *at24 = priv;
++	struct i2c_client *client;
+ 	char *buf = val;
++	int ret;
+ 
+ 	if (unlikely(!count))
+ 		return -EINVAL;
+ 
++	client = at24_translate_offset(at24, &off);
++
++	ret = pm_runtime_get_sync(&client->dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(&client->dev);
++		return ret;
++	}
++
+ 	/*
+ 	 * Write data to chip, protecting against concurrent updates
+ 	 * from this host, but not from other I2C masters.
+@@ -550,6 +574,7 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+ 		status = at24->write_func(at24, buf, off, count);
+ 		if (status < 0) {
+ 			mutex_unlock(&at24->lock);
++			pm_runtime_put(&client->dev);
+ 			return status;
+ 		}
+ 		buf += status;
+@@ -559,6 +584,8 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+ 
+ 	mutex_unlock(&at24->lock);
+ 
++	pm_runtime_put(&client->dev);
++
+ 	return 0;
+ }
+ 
+@@ -743,6 +770,14 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ 	i2c_set_clientdata(client, at24);
+ 
++	/* enable runtime pm */
++	pm_runtime_get_noresume(&client->dev);
++	err = pm_runtime_set_active(&client->dev);
++	if (err < 0)
++		goto err_clients;
++
++	pm_runtime_enable(&client->dev);
++
+ 	/*
+ 	 * Perform a one-byte test read to verify that the
+ 	 * chip is functional.
+@@ -753,6 +788,8 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		goto err_clients;
+ 	}
+ 
++	pm_runtime_put(&client->dev);
++
+ 	at24->nvmem_config.name = dev_name(&client->dev);
+ 	at24->nvmem_config.dev = &client->dev;
+ 	at24->nvmem_config.read_only = !writable;
+@@ -810,6 +847,9 @@ static int at24_remove(struct i2c_client *client)
+ 	for (i = 1; i < at24->num_addresses; i++)
+ 		i2c_unregister_device(at24->client[i]);
+ 
++	pm_runtime_disable(&client->dev);
++	pm_runtime_set_suspended(&client->dev);
++
+ 	return 0;
+ }
+ 
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
