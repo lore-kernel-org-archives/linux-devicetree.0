@@ -1,52 +1,82 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 6/8] pinctrl: sh-pfc: r8a77995: Add USB2.0 host support
-Date: Wed, 30 Aug 2017 13:07:21 +0000
-Message-ID: <TY1PR06MB0992563B4C992762105E8590D89C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1502281187-24068-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdW27kVU2cB=iL-H7t44KeEboL+Ki0zvxkavRpZCepYuLw@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/5] mmc: sdhci: Tidy reading 136-bit responses
+Date: Wed, 30 Aug 2017 15:13:12 +0200
+Message-ID: <CAPDyKFqF0TsCBj-GQnWsH3huxWMCuJnmCgbOWZ0nE88d6pCwnA@mail.gmail.com>
+References: <20170821074132.4622-1-kishon@ti.com> <20170821074132.4622-2-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW27kVU2cB=iL-H7t44KeEboL+Ki0zvxkavRpZCepYuLw@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, TAKESHI KIHARA <takeshi.kihara.df@renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170821074132.4622-2-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpJJ20gc29ycnkuIEkgbWlzc2VkIHRoaXMgZW1haWwuLi4NCg0KPiBG
-cm9tOiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgMTYsIDIw
-MTcgODoxMSBQTQ0KPiANCj4gSGkgU2hpbW9kYS1zYW4sIEtpaGFyYS1zYW4sDQo+IA0KPiBPbiBX
-ZWQsIEF1ZyA5LCAyMDE3IGF0IDI6MTkgUE0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhp
-cm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gRnJvbTogVGFrZXNoaSBLaWhh
-cmEgPHRha2VzaGkua2loYXJhLmRmQHJlbmVzYXMuY29tPg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
-eTogVGFrZXNoaSBLaWhhcmEgPHRha2VzaGkua2loYXJhLmRmQHJlbmVzYXMuY29tPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5l
-c2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9waW5jdHJsL3NoLXBmYy9wZmMtcjhhNzc5
-OTUuYyB8IDE1ICsrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0
-aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9zaC1wZmMvcGZj
-LXI4YTc3OTk1LmMgYi9kcml2ZXJzL3BpbmN0cmwvc2gtcGZjL3BmYy1yOGE3Nzk5NS5jDQo+ID4g
-aW5kZXggOWViMGNlZi4uNWMwYTk0ZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwv
-c2gtcGZjL3BmYy1yOGE3Nzk5NS5jDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJsL3NoLXBmYy9w
-ZmMtcjhhNzc5OTUuYw0KPiA+IEBAIC0xMzAyLDYgKzEzMDIsMTUgQEAgZW51bSB7DQo+ID4gICAg
-ICAgICBTQ0lGX0NMS19NQVJLLA0KPiA+ICB9Ow0KPiA+DQo+ID4gKy8qIC0gVVNCMCAtLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tICovDQo+ID4gK3N0YXRpYyBjb25zdCB1bnNpZ25lZCBpbnQgdXNiMF9waW5zW10gPSB7DQo+
-ID4gKyAgICAgICAvKiBQV0VOLCBPVkMgKi8NCj4gPiArICAgICAgIFJDQVJfR1BfUElOKDAsIDAp
-LCBSQ0FSX0dQX1BJTigwLCAxKSwNCj4gPiArfTsNCj4gPiArc3RhdGljIGNvbnN0IHVuc2lnbmVk
-IGludCB1c2IwX211eFtdID0gew0KPiA+ICsgICAgICAgVVNCMF9QV0VOX01BUkssIFVTQjBfT1ZD
-X01BUkssDQo+ID4gK307DQo+IA0KPiBXaGF0IGFib3V0IFVTQjBfSURQVSBhbmQgVVNCMF9JRElO
-Pw0KPiBBcmUgdGhleSBuZWVkZWQgZm9yIG5vcm1hbCBvcGVyYXRpb24sIG9yIGNhbiB0aGV5IGJl
-IGFkZGVkIGxhdGVyPw0KDQpJIGRvbid0IGtub3cgYWJvdXQgdGhlc2UgcGlucy4gVGhlIGRhdGFz
-aGVldCBkb2Vzbid0IG1lbnRpb24gdXNhZ2UgaW4gVVNCIHNlY3Rpb25zLi4uDQpTbywgSSdtIGFz
-a2luZyBIVyB0ZWFtIG5vdy4gKEkgdGhpbmsgdGhleSBjYW4gYmUgYWRkZWQgbGF0ZXIuKQ0KDQpC
-ZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IFRoYW5rcyENCj4gDQo+IEdye29l
-dGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+
-IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25k
-IGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNh
-dGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQN
-Cj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVy
-IiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
+On 21 August 2017 at 09:41, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> From: Adrian Hunter <adrian.hunter@intel.com>
+>
+> Read each register only once and move the code to a separate function so
+> that it is not jammed against the 80 column margin.
+>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+Thanks, applied for next!
+
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/host/sdhci.c | 28 ++++++++++++++++++----------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index a1ad2ddadca1..ba639b7851cb 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1173,24 +1173,32 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+>  }
+>  EXPORT_SYMBOL_GPL(sdhci_send_command);
+>
+> +static void sdhci_read_rsp_136(struct sdhci_host *host, struct mmc_command *cmd)
+> +{
+> +       int i, reg;
+> +
+> +       for (i = 0; i < 4; i++) {
+> +               reg = SDHCI_RESPONSE + (3 - i) * 4;
+> +               cmd->resp[i] = sdhci_readl(host, reg);
+> +       }
+> +
+> +       /* CRC is stripped so we need to do some shifting */
+> +       for (i = 0; i < 4; i++) {
+> +               cmd->resp[i] <<= 8;
+> +               if (i != 3)
+> +                       cmd->resp[i] |= cmd->resp[i + 1] >> 24;
+> +       }
+> +}
+> +
+>  static void sdhci_finish_command(struct sdhci_host *host)
+>  {
+>         struct mmc_command *cmd = host->cmd;
+> -       int i;
+>
+>         host->cmd = NULL;
+>
+>         if (cmd->flags & MMC_RSP_PRESENT) {
+>                 if (cmd->flags & MMC_RSP_136) {
+> -                       /* CRC is stripped so we need to do some shifting. */
+> -                       for (i = 0;i < 4;i++) {
+> -                               cmd->resp[i] = sdhci_readl(host,
+> -                                       SDHCI_RESPONSE + (3-i)*4) << 8;
+> -                               if (i != 3)
+> -                                       cmd->resp[i] |=
+> -                                               sdhci_readb(host,
+> -                                               SDHCI_RESPONSE + (3-i)*4-1);
+> -                       }
+> +                       sdhci_read_rsp_136(host, cmd);
+>                 } else {
+>                         cmd->resp[0] = sdhci_readl(host, SDHCI_RESPONSE);
+>                 }
+> --
+> 2.11.0
+>
