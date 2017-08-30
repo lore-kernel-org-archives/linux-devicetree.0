@@ -1,57 +1,66 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH v2 2/6] remoteproc: Export rproc_elf_get_boot_addr
-Date: Wed, 30 Aug 2017 20:43:40 +0530
-Message-ID: <1504106024-23569-3-git-send-email-sricharan@codeaurora.org>
-References: <1504106024-23569-1-git-send-email-sricharan@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504106024-23569-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: sricharan@codeaurora.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [net-next PATCHv6 1/2] dt-bindings: net: Add DT bindings for
+ Socionext Netsec
+Date: Wed, 30 Aug 2017 17:19:42 +0200
+Message-ID: <20170830151942.GB22289@lunn.ch>
+References: <1504088657-6102-1-git-send-email-jaswinder.singh@linaro.org>
+ <1504088752-6204-1-git-send-email-jaswinder.singh@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1504088752-6204-1-git-send-email-jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Export rproc_elf_get_boot_addr so that it can be
-used by any remoteproc to get the bootaddr of the
-elf type firmware images. This is used in the
-subsequent patch by the q6v5 based remoteproc
-while loading its elf based mdt type image.
+On Wed, Aug 30, 2017 at 03:55:52PM +0530, Jassi Brar wrote:
+> This patch adds documentation for Device-Tree bindings for the
+> Socionext NetSec Controller driver.
+> 
+> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/socionext-netsec.txt   | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+> new file mode 100644
+> index 0000000..12d596c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+> @@ -0,0 +1,46 @@
+> +* Socionext NetSec Ethernet Controller IP
+> +
+> +Required properties:
+> +- compatible: Should be "socionext,netsecv5"
+> +- reg: Address and length of the register sets, the first is the main
+> +	registers, then the rdlar and tdlar regions for the SoC
+> +- interrupts: Should contain ethernet controller interrupt
+> +- clocks: phandle to any clocks to be switched by runtime_pm
+> +- phy-mode: See ethernet.txt file in the same directory
 
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- drivers/remoteproc/remoteproc_elf_loader.c | 2 +-
- drivers/remoteproc/remoteproc_internal.h   | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+> +- max-speed: See ethernet.txt file in the same directory
+> +- max-frame-size: See ethernet.txt file in the same directory, if 9000 or
+> +	above jumbo frames are enabled
+> +- local-mac-address: See ethernet.txt file in the same directory
 
-diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-index c523983..f6d07d9 100644
---- a/drivers/remoteproc/remoteproc_elf_loader.c
-+++ b/drivers/remoteproc/remoteproc_elf_loader.c
-@@ -110,13 +110,13 @@
-  * Note that the boot address is not a configurable property of all remote
-  * processors. Some will always boot at a specific hard-coded address.
-  */
--static
- u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
- {
- 	struct elf32_hdr *ehdr  = (struct elf32_hdr *)fw->data;
- 
- 	return ehdr->e_entry;
- }
-+EXPORT_SYMBOL(rproc_elf_get_boot_addr);
- 
- /**
-  * rproc_elf_load_segments() - load firmware segments to memory
-diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-index 1e9e5b3..b898510 100644
---- a/drivers/remoteproc/remoteproc_internal.h
-+++ b/drivers/remoteproc/remoteproc_internal.h
-@@ -125,4 +125,7 @@ struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
- 
- extern const struct rproc_fw_ops rproc_elf_fw_ops;
- 
-+/* from remoteproc_elf_loader.c */
-+u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
-+
- #endif /* REMOTEPROC_INTERNAL_H */
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+These three are required, not optimal?
+
+> +- phy-handle: phandle to select child phy
+> +
+> +Optional properties:
+> +- use-jumbo: Boolean property to suggest if jumbo packets should be used or not
+> +
+> +For the child phy
+> +
+> +- compatible "ethernet-phy-ieee802.3-c22" is needed
+
+This is normally considered optional. Why require it?
+
+     Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
