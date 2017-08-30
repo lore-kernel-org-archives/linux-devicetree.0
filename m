@@ -1,127 +1,33 @@
-From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: device-tree issue: .probe never called
-Date: Wed, 30 Aug 2017 08:32:10 +0200
-Message-ID: <CA+7wUsztRN9TWritCLE70qhtpG=WeqkbhJfp2jVNPVq03VKH0g@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: r8a77995: update PFC node name to
+ pin-controller
+Date: Wed, 30 Aug 2017 08:44:48 +0200
+Message-ID: <20170830064447.GC10398@verge.net.au>
+References: <1503992159-16354-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdVdZg4x6xEcP=h0anrXTMc=9eLN9vJAeaYSj2ci9t9TcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVdZg4x6xEcP=h0anrXTMc=9eLN9vJAeaYSj2ci9t9TcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Aug 29, 2017 at 09:47:51AM +0200, Geert Uytterhoeven wrote:
+> On Tue, Aug 29, 2017 at 9:35 AM, Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> > This patch changes the name from from e6060000.pfc and pfc@e6060000 to
+> > e6060000.pin-controller and pin-controller@e6060000 like other Renesas
+> > SoCs.
+> >
+> > Reported-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> 
+> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-I am trying to test the following patch series (1) & (2). I am
-reproducing the context here (fixed the minor typo "ingenic,jz480-rng"
--> "ingenic,jz4780-rng"):
-
-  cgu: jz4780-cgu@10000000 {
-- compatible = "ingenic,jz4780-cgu";
-+ compatible = "ingenic,jz4780-cgu", "syscon";
-  reg = <0x10000000 0x100>;
-
-  clocks = <&ext>, <&rtc>;
-  clock-names = "ext", "rtc";
-
-  #clock-cells = <1>;
-+
-+ rng: rng@d8 {
-+ compatible = "ingenic,jz4780-rng";
-+ };
-  };
-
-and
-
-+static const struct of_device_id jz4780_rng_dt_match[] = {
-+ {
-+ .compatible = "ingenic,jz4780-rng",
-+ },
-+ { },
-+};
-+MODULE_DEVICE_TABLE(of, jz4780_rng_dt_match);
-+
-+static struct platform_driver jz4780_rng_driver = {
-+ .driver = {
-+ .name = "jz4780-rng",
-+ .of_match_table = jz4780_rng_dt_match,
-+ },
-+ .probe = jz4780_rng_probe,
-+ .remove = jz4780_rng_remove,
-+};
-
-
-
-However even after fixing the small typo, I cannot get the probe
-function to ever be called (I added a dev_err message).
-
-How should I proceed to track this issue of module not being loaded ?
-
->From my running system, I see:
-
-ci20@ci20:/$ find /sys/bus/*/drivers/  | grep jz4780-rng
-/sys/bus/platform/drivers/jz4780-rng
-/sys/bus/platform/drivers/jz4780-rng/bind
-/sys/bus/platform/drivers/jz4780-rng/unbind
-/sys/bus/platform/drivers/jz4780-rng/uevent
-
-and
-
-ci20@ci20:/$ find /sys/firmware/devicetree/base/ | grep jz
-/sys/firmware/devicetree/base/jz4780-cgu@10000000
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/compatible
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/clocks
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/rng@d8
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/rng@d8/compatible
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/rng@d8/name
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/clock-names
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/#clock-cells
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/phandle
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/reg
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/linux,phandle
-/sys/firmware/devicetree/base/jz4780-cgu@10000000/name
-
-
-Where:
-
-$ cat /sys/firmware/devicetree/base/jz4780-cgu@10000000/rng@d8
-ingenic,jz4780-rng
-$ cat /sys/firmware/devicetree/base/jz4780-cgu@10000000/rng@d8/name
-rng
-
-But crypto framework does not see the new rng:
-
-ci20@ci20:/$ cat /proc/crypto | grep driver
-driver       : jitterentropy_rng
-driver       : drbg_nopr_hmac_sha256
-driver       : drbg_nopr_hmac_sha512
-driver       : drbg_nopr_hmac_sha384
-driver       : drbg_nopr_hmac_sha1
-driver       : drbg_pr_hmac_sha256
-driver       : drbg_pr_hmac_sha512
-driver       : drbg_pr_hmac_sha384
-driver       : drbg_pr_hmac_sha1
-driver       : lzo-generic
-driver       : crc32c-generic
-driver       : deflate-generic
-driver       : aes-generic
-driver       : sha224-generic
-driver       : sha256-generic
-driver       : sha1-generic
-driver       : md5-generic
-driver       : digest_null-generic
-driver       : compress_null-generic
-driver       : ecb-cipher_null
-driver       : cipher_null-generic
-
-
-What should I try next ?
-
-Thanks,
-
-
-(1) https://patchwork.kernel.org/patch/9916499/
-(2) https://patchwork.kernel.org/patch/9916501/
+Thanks, applied.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
