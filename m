@@ -1,59 +1,69 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Devicetree at Linux Plumbers Conference 2017
-Date: Wed, 30 Aug 2017 11:41:34 +0100
-Message-ID: <CACxGe6vOMsL=5tRzAyOoW-Rh5CjvJcvnn_Zv34L3g_tQVGfK4A@mail.gmail.com>
-References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
- <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
- <CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com>
- <CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ@mail.gmail.com> <CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og@mail.gmail.com>
+From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
+Date: Wed, 30 Aug 2017 11:54:14 +0100
+Message-ID: <20170830105414.GB1310@e110455-lin.cambridge.arm.com>
+References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
+ <20170726102748.GM31807@n2100.armlinux.org.uk>
+ <20170728152311.GA970@e110455-lin.cambridge.arm.com>
+ <20170728155827.GV31807@n2100.armlinux.org.uk>
+ <20170829133351.GK10796@e110455-lin.cambridge.arm.com>
+ <20170829164824.GH20805@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Warren <SWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof.johansson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170829164824.GH20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 28, 2017 at 1:30 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Thu, Aug 10, 2017 at 8:23 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> On Wed, Aug 2, 2017 at 2:19 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>>> A number of people have asked about holding this at ELCE instead of
->>>> Linux Plumbers, so I'd like some feedback. Here's a quick survey.
->>>> Please reply ASAP if your interested in a Devicetree miniconference
->>>> this year:
->>>>
->>>> https://docs.google.com/forms/d/e/1FAIpQLSe0k9L597egFfOwZoDwq0Og-hRt8IAEPtp-JpvoH9nw2njx0g/viewform?usp=sf_link
->>>
->>> Last call for survey responses.
->>>
->>> I've had 10 responses so far, and the concensus it to hold it at ELCE.
->>> Ted thinks he'd be able to give us a 1/2 day on Thursday 26 October
->>> (ELCE runs 23-25, and KSummit 24-26). Unless someone makes a strong
->>> argument otherwise, I'm going to choose locating with ELCE/Ksummit.
->>
->> I've received 11 responses and by far the preference to hold the
->> miniconference at ELCE/KSummit, so I'm going with that. I proposed it
->> as a Ksummit workshop on ksummit-discuss. I've had a few private
->> replies, but there hasn't been any on-list traffic yet. If you're
->> planning to attend, it will help if you reply on ksummit-discuss
->> saying that you would like to be there.
->>
->> https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2017-August/004708.html
->
-> I owe all of you an update. Unfortunately I don't have any new
-> information yet. I've still got a proposal in to hold a devicetree
-> workshop at Kernel Summit, and if it does get accepted, then /most
-> likely/ it will happen on Thursday afternoon. Don't make any travel
-> plans based on that.
->
-> As soon as I hear something either way I'll reply to this thread with
-> the new information.
+On Tue, Aug 29, 2017 at 05:48:24PM +0100, Russell King - ARM Linux wrote:
+> On Tue, Aug 29, 2017 at 02:33:52PM +0100, Liviu Dudau wrote:
+> > I've worked with Vladimir Murzin inside ARM to try to sort out problems
+> > on the board like the one that you have. He's got to a point where the HDLCD
+> > starts correctly after adding a non-fixed pxlclk source, but then the rest of
+> > the setup is semi-useless without a working IRQ because DRM atomic calls
+> > will give you a vblank timeout splat everytime you invoke them. So I'm
+> > not sure how you want to progress with this patch, as not having an IRQ
+> > line means you will not get any vblank interrupts and you can't use the
+> > driver with userspace that calls DRM API.
+> > 
+> > The RTL guys are apparently working on a fix, but I have no ETA or
+> > details on when they are going to do.
+> 
+> It sounds then like this patch doesn't make sense - so I'm happy
+> for it to be dropped.  It's something to bear in mind in the future
+> when folk decide whether to adopt fbdev or DRM support for hardware
+> that gets used in MMU-less hardware...
 
-Confirmed! The Devicetree Workshop will be Thursday 26 October in the
-afternoon. Anyone registered for OSS will be able to attend. I don't
-know yet if there are any other consessions for registration. I'm
-finding out now and will update as soon as I know.
+I don't think this has anything to do with the presence of a MMU or not.
 
-Cheers,
-g.
+If you don't have a way of signaling back to userspace when a vblank event
+has occured then the driver needs to have additional code to reject ioctls
+that depend on that functionality. So your patch is not wrong, it just needs
+more code to be really useful.
+
+Best regards,
+Liviu
+
+> 
+> -- 
+> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+> According to speedtest.net: 8.21Mbps down 510kbps up
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
