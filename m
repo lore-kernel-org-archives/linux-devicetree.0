@@ -1,167 +1,207 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 08/17] ARM: dts: Add missing hsi node for omap4
-Date: Wed, 30 Aug 2017 13:25:20 -0700
-Message-ID: <20170830202519.GI6008@atomide.com>
-References: <20170830151953.30856-1-tony@atomide.com>
- <20170830151953.30856-9-tony@atomide.com>
- <20170830193745.ygotb3nuyfmdlaaf@earth>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm: dts: exynos: add exynos5420 cpu
+ capacity-dmips-mhz information
+Date: Wed, 30 Aug 2017 22:26:50 +0200
+Message-ID: <20170830202650.mdlxy2c3uwuq5vde@kozik-lap>
+References: <20170830144120.9312-1-dietmar.eggemann@arm.com>
+ <20170830144120.9312-3-dietmar.eggemann@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170830193745.ygotb3nuyfmdlaaf@earth>
+In-Reply-To: <20170830144120.9312-3-dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Dietmar Eggemann <dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170830 12:38]:
-> On Wed, Aug 30, 2017 at 08:19:44AM -0700, Tony Lindgren wrote:
-> Maybe change the leading text:
+On Wed, Aug 30, 2017 at 03:41:18PM +0100, Dietmar Eggemann wrote:
+> The following 'capacity-dmips-mhz' dt property values are used:
 > 
-> OMAP3's Synchronous Serial Interface (SSI) controller implements a
-> legacy variant of MIPI's High Speed Synchronous Serial Interface (HSI),
-> while the controller found inside OMAP4 is supposed to be fully compliant
-> with the HSI standard.
-
-OK
-
-> >  Required properties:
-> > -- compatible:		Should include "ti,omap3-ssi".
-> > +- compatible:		Should include "ti,omap3-ssi" or "ti,omap4-hsi"
-> >  - reg-names:		Contains the values "sys" and "gdd" (in this order).
-> >  - reg:			Contains a matching register specifier for each entry
-> >  			in reg-names.
-> > @@ -27,6 +27,7 @@ Each port is represented as a sub-node of the ti,omap3-ssi device.
-> >  Required Port sub-node properties:
-> >  - compatible:		Should be set to the following value
-> >  			ti,omap3-ssi-port (applicable to OMAP34xx devices)
-> > +			ti,omap4-ssi-port (applicable to OMAP44xx devices)
->                      ^^^
+> Cortex-A15: 1024, Cortex-A7: 539
 > 
-> this should be hsi.
-
-Oops fixed.
-
-> otherwise:
+> They have been derived from the cpu_efficiency values:
 > 
-> Reviewed-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cortex-A15: 3891, Cortex-A7: 2048
+> 
+> by scaling them so that the Cortex-A15s (big cores) use 1024.
+> 
+> The cpu_efficiency values were originally derived from the "Big.LITTLE
+> Processing with ARM Cortex™-A15 & Cortex-A7" white paper
+> (http://www.cl.cam.ac.uk/~rdm34/big.LITTLE.pdf). Table 1 lists 1.9x
+> (3891/2048) as the Cortex-A15 vs Cortex-A7 performance ratio for the
+> Dhrystone benchmark.
+> 
+> The following platforms are affected once cpu-invariant accounting
+> support is re-connected to the task scheduler:
+> 
+> arndale-octa, peach-pi, peach-pit, smdk5420
+> 
+> The patch has been tested on Samsung Chromebook 2 13" (peach-pi, Exynos
+> 5800).
+> 
+> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+> 1024
+> 1024
+> 1024
+> 1024
+> 389
+> 389
+> 389
+> 389
 
-Thanks, updated patch below.
+I am missing something... shouldn't this be 539? Or is it scaled with
+the clock-frequency (1 GHz) value?
 
-Regards,
 
-Tony
+Best regards,
+Krzysztof
 
-8< --------------------
->From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Wed, 30 Aug 2017 08:07:51 -0700
-Subject: [PATCH] ARM: dts: Add missing hsi node for omap4
 
-On omap4 we're missing the hsi node with it's related "ti,hwmods"
-property that the SoC interconnect code needs.
-
-Note that this will only show up as a bug with "doesn't have
-mpu register target base" boot errors when the legacy platform
-data is removed.
-
-Let's also update the binding accrodingly while at it.
-
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/hsi/omap-ssi.txt | 13 +++++++--
- arch/arm/boot/dts/omap4.dtsi                       | 34 ++++++++++++++++++++++
- 2 files changed, 44 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/hsi/omap-ssi.txt b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
---- a/Documentation/devicetree/bindings/hsi/omap-ssi.txt
-+++ b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
-@@ -1,10 +1,12 @@
- OMAP SSI controller bindings
- 
--OMAP Synchronous Serial Interface (SSI) controller implements a legacy
--variant of MIPI's High Speed Synchronous Serial Interface (HSI).
-+OMAP3's Synchronous Serial Interface (SSI) controller implements a
-+legacy variant of MIPI's High Speed Synchronous Serial Interface (HSI),
-+while the controller found inside OMAP4 is supposed to be fully compliant
-+with the HSI standard.
- 
- Required properties:
--- compatible:		Should include "ti,omap3-ssi".
-+- compatible:		Should include "ti,omap3-ssi" or "ti,omap4-hsi"
- - reg-names:		Contains the values "sys" and "gdd" (in this order).
- - reg:			Contains a matching register specifier for each entry
- 			in reg-names.
-@@ -27,6 +29,7 @@ Each port is represented as a sub-node of the ti,omap3-ssi device.
- Required Port sub-node properties:
- - compatible:		Should be set to the following value
- 			ti,omap3-ssi-port (applicable to OMAP34xx devices)
-+			ti,omap4-hsi-port (applicable to OMAP44xx devices)
- - reg-names:		Contains the values "tx" and "rx" (in this order).
- - reg:			Contains a matching register specifier for each entry
- 			in reg-names.
-@@ -38,6 +41,10 @@ Required Port sub-node properties:
- 			property. If it's missing the port will not be
- 			enabled.
- 
-+Optional properties:
-+- ti,hwmods:		Shall contain TI interconnect module name if needed
-+			by the SoC
-+
- Example for Nokia N900:
- 
- ssi-controller@48058000 {
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -632,6 +632,40 @@
- 			dma-names = "tx", "rx";
- 		};
- 
-+		hsi: hsi@4a058000 {
-+			compatible = "ti,omap4-hsi";
-+			reg = <0x4a058000 0x4000>,
-+			      <0x4a05c000 0x1000>;
-+			reg-names = "sys", "gdd";
-+			ti,hwmods = "hsi";
-+
-+			clocks = <&hsi_fck>;
-+			clock-names = "hsi_fck";
-+
-+			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "gdd_mpu";
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x4a058000 0x4000>;
-+
-+			hsi_port1: hsi-port@2000 {
-+				compatible = "ti,omap4-hsi-port";
-+				reg = <0x2000 0x800>,
-+				      <0x2800 0x800>;
-+				reg-names = "tx", "rx";
-+				interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			hsi_port2: hsi-port@3000 {
-+				compatible = "ti,omap4-hsi-port";
-+				reg = <0x3000 0x800>,
-+				      <0x3800 0x800>;
-+				reg-names = "tx", "rx";
-+				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		mmu_dsp: mmu@4a066000 {
- 			compatible = "ti,omap4-iommu";
- 			reg = <0x4a066000 0x100>;
--- 
-2.14.1
+> 
+> The Cortex-A15 vs Cortex-A7 performance ratio is 1024/389 = 2.63.
+> 
+> The values derived with the 'cpu_efficiency/clock-frequency dt property'
+> solution are:
+> 
+> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+> 1535
+> 1535
+> 1535
+> 1535
+> 448
+> 448
+> 448
+> 448
+> 
+> The Cortex-A15 vs Cortex-A7 performance ratio is 1535/448 = 3.43.
+> 
+> The discrepancy between 2.63 and 3.43 is due to the false assumption
+> when using the 'cpu_efficiency/clock-frequency dt property' solution
+> that the max cpu frequency of the little cpus is 1 GHZ and not 1.3 GHz.
+> The Cortex-A7 cluster runs with a max cpu frequency of 1.3 GHZ whereas
+> the 'clock-frequency' property value is set to 1 GHz.
+> 
+> 3.43/1.3 = 2.64
+> 
+> $ cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
+> 1800000
+> 1800000
+> 1800000
+> 1800000
+> 1300000 <-- max cpu frequency of the Cortex-A7s (little cores)
+> 1300000
+> 1300000
+> 1300000
+> 
+> Running another benchmark (single-threaded sysbench affine to the
+> individual cpus) with performance cpufreq governor on the Samsung
+> Chromebook 2 13" showed the following numbers:
+> 
+> $ for i in `seq 0 7`; do taskset -c $i sysbench --test=cpu
+>   --num-threads=1 --max-time=10 run | grep "total number of events:";
+>   done
+> 
+> total number of events: 1083
+> total number of events: 1085
+> total number of events: 1085
+> total number of events: 1085
+> total number of events: 454
+> total number of events: 454
+> total number of events: 454
+> total number of events: 454
+> 
+> The Cortex-A15 vs Cortex-A7 performance ratio is 2.39, i.e. very close
+> to the one derived from the Dhrystone based one of the "Big.LITTLE
+> Processing with ARM Cortex™-A15 & Cortex-A7" white paper (2.63).
+> 
+> We don't aim for exact values for the cpu capacity values. Besides the
+> CPI (Cycles Per Instruction), the instruction mix and whether the system
+> runs cpu-bound or memory-bound has an impact on the cpu capacity values
+> derived from these benchmark results.
+> 
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos5420-cpus.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+> index 5c052d7ff554..d7d703aa1699 100644
+> --- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+> @@ -36,6 +36,7 @@
+>  			cooling-min-level = <0>;
+>  			cooling-max-level = <11>;
+>  			#cooling-cells = <2>; /* min followed by max */
+> +			capacity-dmips-mhz = <1024>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> @@ -48,6 +49,7 @@
+>  			cooling-min-level = <0>;
+>  			cooling-max-level = <11>;
+>  			#cooling-cells = <2>; /* min followed by max */
+> +			capacity-dmips-mhz = <1024>;
+>  		};
+>  
+>  		cpu2: cpu@2 {
+> @@ -60,6 +62,7 @@
+>  			cooling-min-level = <0>;
+>  			cooling-max-level = <11>;
+>  			#cooling-cells = <2>; /* min followed by max */
+> +			capacity-dmips-mhz = <1024>;
+>  		};
+>  
+>  		cpu3: cpu@3 {
+> @@ -72,6 +75,7 @@
+>  			cooling-min-level = <0>;
+>  			cooling-max-level = <11>;
+>  			#cooling-cells = <2>; /* min followed by max */
+> +			capacity-dmips-mhz = <1024>;
+>  		};
+>  
+>  		cpu4: cpu@100 {
+> @@ -85,6 +89,7 @@
+>  			cooling-min-level = <0>;
+>  			cooling-max-level = <7>;
+>  			#cooling-cells = <2>; /* min followed by max */
+> +			capacity-dmips-mhz = <539>;
+>  		};
+>  
+>  		cpu5: cpu@101 {
+> @@ -97,6 +102,7 @@
+>  			cooling-min-level = <0>;
+>  			cooling-max-level = <7>;
+>  			#cooling-cells = <2>; /* min followed by max */
+> +			capacity-dmips-mhz = <539>;
+>  		};
+>  
+>  		cpu6: cpu@102 {
+> @@ -109,6 +115,7 @@
+>  			cooling-min-level = <0>;
+>  			cooling-max-level = <7>;
+>  			#cooling-cells = <2>; /* min followed by max */
+> +			capacity-dmips-mhz = <539>;
+>  		};
+>  
+>  		cpu7: cpu@103 {
+> @@ -121,6 +128,7 @@
+>  			cooling-min-level = <0>;
+>  			cooling-max-level = <7>;
+>  			#cooling-cells = <2>; /* min followed by max */
+> +			capacity-dmips-mhz = <539>;
+>  		};
+>  	};
+>  };
+> -- 
+> 2.11.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
