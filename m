@@ -1,60 +1,82 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH RESEND v2 3/3] dt-bindings: mt8173-mtu3: add generic
- compatible and rename file
-Date: Wed, 30 Aug 2017 11:38:53 +0800
-Message-ID: <1504064333.17567.9.camel@mhfsdcap03>
-References: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1503998338.git.chunfeng.yun@mediatek.com>
-         <61060035e057b13f43d383645c53c8726b7e67ab.1503998339.git.chunfeng.yun@mediatek.com>
-         <1a489dcc-e95c-bfe3-8e2a-fe2591fe86d8@cogentembedded.com>
+From: "Mohandass, Divagar" <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v2 1/3] dt-bindings: add eeprom "size" property
+Date: Wed, 30 Aug 2017 03:57:13 +0000
+Message-ID: <7B8CE47BD58441468D2BB13285B50E6031DE5F7A@BGSMSX107.gar.corp.intel.com>
+References: <1502736119-32084-1-git-send-email-divagar.mohandass@intel.com>
+ <1502736119-32084-2-git-send-email-divagar.mohandass@intel.com>
+ <20170822091107.uubxhwilkutduou7@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1a489dcc-e95c-bfe3-8e2a-fe2591fe86d8@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170822091107.uubxhwilkutduou7-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-29 at 13:08 +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 8/29/2017 12:20 PM, Chunfeng Yun wrote:
-> 
-> > The mt8173-mtu3.txt actually holds the bindings for all mediatek
-> > SoCs with usb3 DRD IP, so add a generic compatible and change the
-> > name to mediatek,mtu3.txt.
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> >   .../usb/{mt8173-mtu3.txt => mediatek,mtu3.txt}     |    6 +++++-
-> >   1 file changed, 5 insertions(+), 1 deletion(-)
-> >   rename Documentation/devicetree/bindings/usb/{mt8173-mtu3.txt => mediatek,mtu3.txt} (92%)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > similarity index 92%
-> > rename from Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-> > rename to Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > index b8ea394..722a029 100644
-> > --- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-> > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> > @@ -1,7 +1,11 @@
-> >   The device node for Mediatek USB3.0 DRD controller
-> >   
-> >   Required properties:
-> > - - compatible : should be "mediatek,mt8173-mtu3"
-> > + - compatible : should be "mediatek,soc-model-mtu3", "mediatek,mtu3",
-> 
->     Worth enclosing soc-model in <>.
-Ok, I'll modify it, thanks
-> 
-> > +	soc-model is the name of SoC, such as mt8173, mt2712 etc,
-> > +	when using "mediatek,mtu3" compatible string, you need SoC specific
-> > +	ones in addition, one of:
-> > +	- "mediatek,mt8173-mtu3"
-> >    - reg : specifies physical base address and size of the registers
-> >    - reg-names: should be "mac" for device IP and "ippc" for IP port control
-> >    - interrupts : interrupt used by the device IP
-> 
-> MBR, Sergei
+Hi Sakari,
+
+Thanks for your review comments. Will address it in next patch version.
+
+---
+^Divagar
+
+>-----Original Message-----
+>From: Sakari Ailus [mailto:sakari.ailus-X3B1VOXEql0@public.gmane.org]
+>Sent: Tuesday, August 22, 2017 2:41 PM
+>To: Mohandass, Divagar <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org;
+>devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+>kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mani, Rajmohan <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>Subject: Re: [PATCH v2 1/3] dt-bindings: add eeprom "size" property
+>
+>Hi Divagar,
+>
+>On Tue, Aug 15, 2017 at 12:11:57AM +0530, Divagar Mohandass wrote:
+>> This adds eeprom "size" as optional property for i2c eeproms.
+>>
+>> "size" should be mentioned in byte and it should refer to the eeprom
+>> size. This will be read by the driver and used to calculating the
+>> number of bytes in read/write calls.
+>
+>Instead of the three lines above, how about:
+>
+>The "size" property allows explicitly specifying the size of the EEPROM chip in
+>bytes.
+>
+>>
+>> Signed-off-by: Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>> b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>> index 5696eb5..1436569 100644
+>> --- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>> @@ -32,6 +32,8 @@ Optional properties:
+>>
+>>    - read-only: this parameterless property disables writes to the
+>> eeprom
+>>
+>> +  - size: total eeprom size in bytes
+>> +
+>>  Example:
+>>
+>>  eeprom@52 {
+>> --
+>> 1.9.1
+>>
+>
+>--
+>Regards,
+>
+>Sakari Ailus
+>e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
