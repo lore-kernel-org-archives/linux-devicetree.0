@@ -1,38 +1,33 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 0/4] fixes for latest bq27xxx driver and OpenPandora DT nodes
-Date: Thu, 31 Aug 2017 08:59:49 +0200
-Message-ID: <cover.1504162792.git.hns@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: afd@ti.com, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, gta04-owner@goldelico.com, marek@goldelico.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm: dts: mt7623: add display related nodes
+Date: Thu, 31 Aug 2017 09:12:13 +0200
+Message-ID: <CACRpkdZi1o6Vj=WoZBhS5DCW5=ctsCHu35jHBvHQMhFkQKB_Og@mail.gmail.com>
+References: <9c4a8be621ac76594fad303d5d49ed32bd530605.1503222289.git.ryder.lee@mediatek.com>
+ <42a9db86b49834188bd680d0144e639c98aafaa2.1503222289.git.ryder.lee@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <42a9db86b49834188bd680d0144e639c98aafaa2.1503222289.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Latest bq27xxx drivers allow to write RAM/NVRAM parameters
-of the fuel gauge chip from values defined in board specific
-device tree.
+On Sun, Aug 20, 2017 at 11:46 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 
-This allows to specify the battery properties of a standard
-battery.
+> This patch adds the device nodes for the display function block.
+> Also, we add some missing pin macros in mt7623-pinfunc.h.
+>
+> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> CC: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This patch set enables this for two chips where I have tested
-it on real devices:
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-bq27421: Pyra handheld prototype
-bq27500: OpenPandora 600 Mhz standard device
+Please take this through the ARM SoC tree.
 
-Since the Pyra DT is not yet mainlined, there are only DT
-patches for the OpenPandora.
-
-H. Nikolaus Schaller (4):
-  power: supply: bq27xxx: enable writing capacity values for bq27421
-  power: supply: bq27xxx: enable writing capacity values for bq27500
-  DT: OpenPandora: add battery node to describe OpenPandora battery
-  DT: OpenPandora: fix for configuration of bq27500 fuel gauge
-
- arch/arm/boot/dts/omap3-pandora-common.dtsi | 11 ++++++++++-
- drivers/power/supply/bq27xxx_battery.c      |  8 --------
- 2 files changed, 10 insertions(+), 9 deletions(-)
-
--- 
-2.12.2
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
