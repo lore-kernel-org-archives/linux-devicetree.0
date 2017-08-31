@@ -1,91 +1,79 @@
-From: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: sun7i: Fix A20-OLinuXino-MICRO dts for
- LAN8710
-Date: Thu, 31 Aug 2017 08:20:18 +0300
-Message-ID: <e7e61776-b8d7-c42f-4e9e-04da835374a9@gmail.com>
-References: <1503901963-9457-1-git-send-email-stefan@olimex.com>
- <1503901963-9457-2-git-send-email-stefan@olimex.com>
- <20170830143728.friajjequvioqjpu@flea.lan>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] arm64: dts: mediatek: Add cpuidle support for MT2712
+Date: Thu, 31 Aug 2017 13:44:00 +0800
+Message-ID: <1504158240-12639-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170830143728.friajjequvioqjpu-ZC1Zs529Oq4@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2017 05:37 PM, Maxime Ripard wrote:
-> Hi,
->
-> On Mon, Aug 28, 2017 at 09:32:42AM +0300, Stefan Mavrodiev wrote:
->>  From revision J the board uses new phy chip LAN8710. Compared
->> with RTL8201, RA17 pin is TXERR. It has pullup which causes phy
->> not to work. To fix this PA17 is muxed with GMAC function. This
->> makes the pin output-low.
->>
->> This patch is compatible with earlier board revisions, since this
->> pin wasn't connected to phy.
->>
->> Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 7 ++++++-
->>   1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
->> index 0b7403e..cb1b081 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
->> @@ -102,7 +102,7 @@
->>   
->>   &gmac {
->>   	pinctrl-names = "default";
->> -	pinctrl-0 = <&gmac_pins_mii_a>;
->> +	pinctrl-0 = <&gmac_pins_mii_a>,<&gmac_txerr>;
->>   	phy = <&phy1>;
->>   	phy-mode = "mii";
->>   	status = "okay";
->> @@ -229,6 +229,11 @@
->>   };
->>   
->>   &pio {
->> +	gmac_txerr: gmac_txerr@0 {
->> +		pins = "PA17";
->> +		function = "gmac";
->> +	};
->> +
-> The patch looks fine, I still have one question though.
->
-> Can a PHY operate without this signal? My real question is, would it
-> make sense to mux that pin for all the users, or is it an optional
-> signal that each board designer can choose to use or not?
->
-> Thanks!
-> Maxime
->
-This phy (LAN8710) cannot work without this pin. Part of the problem is in that we've replaced
-without paying attention to this signal.
+Add CPU idle state nodes to enable C1/C2 idle states.
 
-RTL8201 has no TXERR pin. The pin PA17 is used as reset signal and therefore is pulled up with
-resistor. However on old revisions this option (there is jumper pad between SOC and PHY).
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+This patch bases on latest Matthias v4.13-next/dts64 branch [1],
+add CPU idle states for MT2712.
 
-As I said, LAN8710 cannot work without this signal. In the datasheet is written:
-	...
-	The controller drives TXER high when a transmit error is detected.
-	...
+[1] https://github.com/mbgg/linux-mediatek.git
 
-In the current variant of the dts, all data is threated as error.
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-So to answer you question. This is feature only on our board and highly depends on the chosen PHY.
-I don't think this should be muxed for all users.
-
-
-
-Best regards,
-Stefan Mavrodiev,
-Olimex Ltd.
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+index 57d0396..5d4e406 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -39,6 +39,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a35";
+ 			reg = <0x000>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -46,6 +47,7 @@
+ 			compatible = "arm,cortex-a35";
+ 			reg = <0x001>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+ 		};
+ 
+ 		cpu2: cpu@200 {
+@@ -53,6 +55,29 @@
+ 			compatible = "arm,cortex-a72";
+ 			reg = <0x200>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		};
++
++		idle-states {
++			entry-method = "arm,psci";
++
++			CPU_SLEEP_0: cpu-sleep-0 {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				entry-latency-us = <100>;
++				exit-latency-us = <80>;
++				min-residency-us = <2000>;
++				arm,psci-suspend-param = <0x0010000>;
++			};
++
++			CLUSTER_SLEEP_0: cluster-sleep-0 {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				entry-latency-us = <350>;
++				exit-latency-us = <80>;
++				min-residency-us = <3000>;
++				arm,psci-suspend-param = <0x1010000>;
++			};
+ 		};
+ 	};
+ 
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
