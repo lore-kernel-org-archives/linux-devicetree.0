@@ -1,57 +1,75 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv4 2/5] cec-ioc-dqevent.rst: document new CEC_EVENT_PIN_HPD_LOW/HIGH events
-Date: Thu, 31 Aug 2017 13:01:53 +0200
-Message-ID: <20170831110156.11018-3-hverkuil@xs4all.nl>
-References: <20170831110156.11018-1-hverkuil@xs4all.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170831110156.11018-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv4 0/5] cec-gpio: add HDMI CEC GPIO-based driver
+Date: Thu, 31 Aug 2017 13:01:51 +0200
+Message-ID: <20170831110156.11018-1-hverkuil@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-
-Document these new CEC events.
-
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
----
- Documentation/media/uapi/cec/cec-ioc-dqevent.rst | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/Documentation/media/uapi/cec/cec-ioc-dqevent.rst b/Documentation/media/uapi/cec/cec-ioc-dqevent.rst
-index db615e3405c0..32b47763f5a6 100644
---- a/Documentation/media/uapi/cec/cec-ioc-dqevent.rst
-+++ b/Documentation/media/uapi/cec/cec-ioc-dqevent.rst
-@@ -160,6 +160,24 @@ it is guaranteed that the state did change in between the two events.
-       - Generated if the CEC pin goes from a low voltage to a high voltage.
-         Only applies to adapters that have the ``CEC_CAP_MONITOR_PIN``
- 	capability set.
-+    * .. _`CEC-EVENT-PIN-HPD-LOW`:
-+
-+      - ``CEC_EVENT_PIN_HPD_LOW``
-+      - 5
-+      - Generated if the HPD pin goes from a high voltage to a low voltage.
-+        Only applies to adapters that have the ``CEC_CAP_MONITOR_PIN``
-+	capability set. When open() is called, the HPD pin can be read and
-+	the HPD is low, then an initial event will be generated for that
-+	filehandle.
-+    * .. _`CEC-EVENT-PIN-HPD-HIGH`:
-+
-+      - ``CEC_EVENT_PIN_HPD_HIGH``
-+      - 6
-+      - Generated if the HPD pin goes from a low voltage to a high voltage.
-+        Only applies to adapters that have the ``CEC_CAP_MONITOR_PIN``
-+	capability set. When open() is called, the HPD pin can be read and
-+	the HPD is high, then an initial event will be generated for that
-+	filehandle.
- 
- 
- .. tabularcolumns:: |p{6.0cm}|p{0.6cm}|p{10.9cm}|
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKVGhpcyBkcml2ZXIg
+YWRkcyBzdXBwb3J0IGZvciBDRUMgaW1wbGVtZW50YXRpb25zIHRoYXQgdXNlIGEgcHVsbC11cApH
+UElPIGxpbmUuIFdoaWxlIFNvQ3MgZXhpc3QgdGhhdCBkbyB0aGlzLCB0aGUgcHJpbWFyeSB1c2Ut
+Y2FzZSBpcyB0bwp0dXJuIGEgc2luZ2xlLWJvYXJkIGNvbXB1dGVyIGludG8gYSBjaGVhcCBDRUMg
+ZGVidWdnZXIuCgpUb2dldGhlciB3aXRoICdjZWMtY3RsIC0tbW9uaXRvci1waW4nIHlvdSBjYW4g
+ZG8gbG93LWxldmVsIENFQyBidXMKbW9uaXRvcmluZyBhbmQgZG8gcHJvdG9jb2wgYW5hbHlzaXMu
+IEFuZCBlcnJvciBpbmplY3Rpb24gaXMgYWxzbwpwbGFubmVkIGZvciB0aGUgZnV0dXJlLgoKSGVy
+ZSBpcyBhbiBleGFtcGxlIHVzaW5nIHRoZSBSYXNwYmVycnkgUGkgMzoKCmh0dHBzOi8vaHZlcmt1
+aWwuaG9tZS54czRhbGwubmwvcnBpMy1jZWMuanBnCgpXaGlsZSB0aGlzIGV4YW1wbGUgaXMgZm9y
+IHRoZSBScGksIHRoaXMgZHJpdmVyIHdpbGwgd29yayBmb3IgYW55ClNvQyB3aXRoIGEgcHVsbC11
+cCBHUElPIGxpbmUuCgpJbiBhZGRpdGlvbiB0aGUgY2VjLWdwaW8gZHJpdmVyIGNhbiBvcHRpb25h
+bGx5IG1vbml0b3IgdGhlIEhQRCBsaW5lLgpUaGUgc3RhdGUgb2YgdGhlIEhQRCBsaW5lIGluZmx1
+ZW5jZXMgdGhlIENFQyBiZWhhdmlvciBzbyBpdCBpcyB2ZXJ5CnVzZWZ1bCB0byBiZSBhYmxlIHRv
+IG1vbml0b3IgYm90aC4KCkFuZCBzb21lIEhETUkgc2lua3MgYXJlIGtub3duIHRvIHF1aWNrbHkg
+dG9nZ2xlIHRoZSBIUEQgd2hlbiBlLmcuCnN3aXRjaGluZyBiZXR3ZWVuIGlucHV0cy4gU28gaXQg
+aXMgdXNlZnVsIHRvIGJlIGFibGUgdG8gc2VlIGFuIGV2ZW50CndoZW4gdGhlIEhQRCBjaGFuZ2Vz
+IHZhbHVlLgoKVGhlIGZpcnN0IHR3byBwYXRjaGVzIGFkZCBzdXBwb3J0IGZvciB0aGUgbmV3IEhQ
+RCBldmVudHMuIFRoZSBsYXN0CnRocmVlIHBhdGNoZXMgYXJlIGZvciB0aGUgY2VjLWdwaW8gZHJp
+dmVyIGl0c2VsZi4KClJlZ2FyZHMsCgogICAgICAgIEhhbnMKCkNoYW5nZXMgc2luY2UgdjM6Cgot
+IGNlYy1ncGlvLnR4dDogcmVmZXIgdG8gbGluZXMgaW5zdGVhZCBvZiBwaW5zIGFuZCB1c2UgT1BF
+Tl9EUkFJTgogIGluIHRoZSBleGFtcGxlLgotIEtjb25maWc6IGFkZCBzZWxlY3QgR1BJT0xJQgot
+IGNlYy1ncGlvLmM6IHN3aXRjaCB0byBncGlvZC4KLSBjZWMtY29yZS5jOiBpbml0aWFsaXplIHRo
+ZSBkZXZub2RlIG11dGV4L2xpc3QgaW4gYWxsb2NhdGVfYWRhcHRlci4KICBEb2luZyB0aGlzIGlu
+IHJlZ2lzdGVyX2FkYXB0ZXIgaXMgdG9vIGxhdGUgaWYgdGhlIEhQRCBpcyBoaWdoLgoKQ2hhbmdl
+cyBzaW5jZSB2MjoKCi0gQWRkIHN1cHBvcnQgZm9yIEhQRCBldmVudHMuCi0gU3dpdGNoIGZyb20g
+cGluIEJDTTQgdG8gcGluIEJDTTcgaW4gdGhlIGJpbmRpbmdzIGV4YW1wbGUKCkNoYW5nZXMgc2lu
+Y2UgdjE6CgotIFVwZGF0ZWQgdGhlIGJpbmRpbmdzIGRvYyB0byBub3QgcmVmZXIgdG8gdGhlIGRy
+aXZlciwgaW5zdGVhZAogIHJlZmVyIHRvIHRoZSBoYXJkd2FyZS4KCgpIYW5zIFZlcmt1aWwgKDUp
+OgogIGNlYzogYWRkIENFQ19FVkVOVF9QSU5fSFBEX0xPVy9ISUdIIGV2ZW50cwogIGNlYy1pb2Mt
+ZHFldmVudC5yc3Q6IGRvY3VtZW50IG5ldyBDRUNfRVZFTlRfUElOX0hQRF9MT1cvSElHSCBldmVu
+dHMKICBkdC1iaW5kaW5nczogZG9jdW1lbnQgdGhlIENFQyBHUElPIGJpbmRpbmdzCiAgY2VjLWdw
+aW86IGFkZCBIRE1JIENFQyBHUElPIGRyaXZlcgogIE1BSU5UQUlORVJTOiBhZGQgY2VjLWdwaW8g
+ZW50cnkKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZWMtZ3Bpby50eHQgICAgICAg
+ICB8ICAyMiArKwogRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL2NlYy9jZWMtaW9jLWRxZXZlbnQu
+cnN0ICAgfCAgMTggKysKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvbWVkaWEvY2VjL2NlYy1hZGFwLmMgICAgICAgICAg
+ICAgICAgICAgICAgIHwgIDE4ICstCiBkcml2ZXJzL21lZGlhL2NlYy9jZWMtYXBpLmMgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAxOCArLQogZHJpdmVycy9tZWRpYS9jZWMvY2VjLWNvcmUuYyAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDggKy0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICAgIHwgIDEwICsKIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvbWVkaWEvcGxhdGZv
+cm0vY2VjLWdwaW8vTWFrZWZpbGUgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvbWVkaWEvcGxh
+dGZvcm0vY2VjLWdwaW8vY2VjLWdwaW8uYyAgICAgICAgIHwgMjM2ICsrKysrKysrKysrKysrKysr
+KysrKwogaW5jbHVkZS9tZWRpYS9jZWMtcGluLmggICAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgIDQgKwogaW5jbHVkZS9tZWRpYS9jZWMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgMTIgKy0KIGluY2x1ZGUvdWFwaS9saW51eC9jZWMuaCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgICAyICsKIDEzIGZpbGVzIGNoYW5nZWQsIDM1MCBpbnNlcnRpb25zKCspLCAxMCBk
+ZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWVkaWEvY2VjLWdwaW8udHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9t
+ZWRpYS9wbGF0Zm9ybS9jZWMtZ3Bpby9NYWtlZmlsZQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvbWVkaWEvcGxhdGZvcm0vY2VjLWdwaW8vY2VjLWdwaW8uYwoKLS0gCjIuMTQuMQoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
