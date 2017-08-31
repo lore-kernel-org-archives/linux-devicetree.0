@@ -1,57 +1,51 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: Applied "regulator: pbias: Select voltage table based on
- max-voltage" to the regulator tree
-Date: Thu, 31 Aug 2017 17:37:34 +0530
-Message-ID: <64d9c623-456c-9142-9c5b-a94593628643@ti.com>
-References: <E1dnO3z-0000tI-7K@debutante>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH v2 0/2] add Silicon Image SiI9234 driver
+Date: Thu, 31 Aug 2017 14:27:12 +0200
+Message-ID: <1504182434-8201-1-git-send-email-m.purski@samsung.com>
+References: <CGME20170831122739eucas1p28d982b573367f22209c926a57351e69a@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E1dnO3z-0000tI-7K@debutante>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Ravikumar Kattekola <rk@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, linux-mmc@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: mark.rutland@arm.com, b.zolnierkie@samsung.com, krzk@kernel.org, Maciej Purski <m.purski@samsung.com>, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Thursday 31 August 2017 05:25 PM, Mark Brown wrote:
-> The patch
-> 
->    regulator: pbias: Select voltage table based on max-voltage
-> 
-> has been applied to the regulator tree at
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-> 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.  
-> 
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
-> 
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
-> 
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
-
-This patch should be merged along with the 1st patch of the series "mmc: host:
-omap_hsmmc: Remove setting PBIAS voltage". Or else it'll break MMC with
-omap_hsmmc driver.
-
-Thanks
-Kishon
+SGkgZXZlcnlvbmUsCgpUaGVzZSBwYXRjaGVzIGFyZSBhIGNvbnRpbnVhdGlvbiBvZiB3b3JrIGJ5
+IFRvbWFzeiBTdGFuaXNsYXdza2kgb24gc2lpOTMyNCBkcml2ZXIsIHdoaWNoIHdhcyBkZXNjcmli
+ZWQKaW4gdGggZm9sbG93aW5nIGxldHRlcjoKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+YXJjaGl2ZXMvZHJpLWRldmVsLzIwMTQtQXByaWwvMDU3NDgxLmh0bWwKClRoZSBtYWluIGRpZmZl
+cmVuY2VzIGZyb20gdGhlIHByZXZpb3VzIGNvZGUgYXJlOgoqIGRyaXZlciBtb3ZlZCB0byAvZ3B1
+L2RybS9icmlkZ2UvIGFuZCBpbnRlZ3JhdGVkIHdpdGggZHJtL2JyaWRnZSBzdWJzeXN0ZW0KKiBh
+ZGRlZCBmaWx0ZXJpbmctb3V0IHVuc3VwcG9ydGVkIGRpc3BsYXkgbW9kZXMKKiBjaGFuZ2VkIGdw
+aW8gaW50ZXJmYWNlIHRvIHVwLXRvLWRhdGUKKiBjaGFuZ2VkIGludGVycnVwdCBoYW5kbGluZwoq
+IGltcHJvdmUgY29kZSBzdHlsZQoqIGFkZCBoZG1pIGFuZCBzaWk5MzI0IHRvIGV4eW5vczQ0MTIt
+dHJhdHMyIGRldmljZSB0cmVlCgpBbGwgY29tbWVudHMgYXJlIHdlbGNvbWUuCgpSZWdhcmRzLApN
+YWNpZWogUHVyc2tpCgpDaGFuZ2VzIGluIHYyOgotIHJlZ3VsYXRvcnMgdXNlZCBpbiBkcml2ZXIg
+bm93IG1vZGVsIGFsbCBwaHlzaWNhbCByZWd1bGF0b3JzCiAgdXNlZCBieSB0aGUgZGV2aWNlCi0g
+c3Vic3RpdHV0ZSBzb21lIG9mIHRoZSBtYWdpYyB2YWx1ZXMgd2l0aCBtYWNyb3MKLSBpbXByb3Zl
+IGNvZGluZyBzdHlsZQotIGltcHJvdmUgZXJyb3IgaGFuZGxpbmcgaW4gc2lpOTIzNF9wcm9iZSgp
+Ci0gZml4IGNvbW1pdCBtZXNzYWdlCgpNYWNpZWogUHVyc2tpICgyKToKICBkcm0vYnJpZGdlOiBh
+ZGQgU2lsaWNvbiBJbWFnZSBTaUk5MjM0IGRyaXZlcgogIEFSTTogZHRzOiBleHlub3M6IEFkZCBI
+RE1JIGFuZCBTaWw5MjM0IHRvIFRyYXRzMiBib2FyZAoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3NpaTkyMzQudHh0IHwgIDM0ICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2V4
+eW5vczQ0MTItdHJhdHMyLmR0cyAgICAgICAgICAgIHwgMTExICsrKwogZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwogZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9zaWk5MjM0LmMgICAgICAgICAgICAgICAgICAgfCA5OTMgKysrKysrKysr
+KysrKysrKysrKysrCiA1IGZpbGVzIGNoYW5nZWQsIDExNDcgaW5zZXJ0aW9ucygrKQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS9zaWk5MjM0LnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2Uvc2lpOTIzNC5jCgotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
