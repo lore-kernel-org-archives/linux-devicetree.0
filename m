@@ -1,31 +1,41 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: msm: GP clock for pinctrl-apq8064 binding
-Date: Thu, 31 Aug 2017 11:31:14 +0200
-Message-ID: <CACRpkdYDWfCgjebckX=8qd8tOMTtaWj=hxBmCB934-AXL7W0Cw@mail.gmail.com>
-References: <1502434516-9056-1-git-send-email-simhavcs@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] RM64: dts: ls208xa: Add iommu-map property for pci
+Date: Thu, 31 Aug 2017 10:32:09 +0100
+Message-ID: <06c57ca4-edaa-df26-b1d9-1906141c5065@arm.com>
+References: <1504171424-15536-1-git-send-email-Bharat.Bhushan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502434516-9056-1-git-send-email-simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:PIN CONTROLLER - QUALCOMM" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504171424-15536-1-git-send-email-Bharat.Bhushan@nxp.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bharat Bhushan <Bharat.Bhushan@nxp.com>, robh+dt@kernel.org, ark.rutland@arm.com, will.deacon@arm.com, oss@buserror.net, Gang.Liu@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 11, 2017 at 8:55 AM, Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 31/08/17 10:23, Bharat Bhushan wrote:
+> This patch adds iommu-map property for PCIe, which enables
+> SMMU for these devices on LS208xA devices.
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> index 94cdd30..67cf605 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> @@ -606,6 +606,7 @@
+>  			num-lanes = <4>;
+>  			bus-range = <0x0 0xff>;
+>  			msi-parent = <&its>;
+> +			iommu-map = <0 &smmu 0 1>;	/* This is fixed-up by u-boot */
 
-> DT binding documentation for qcom,apq8064-pinctrl driver
-> for general purpose (GP) clocks.
->
-> Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+What does this do when your version of u-boot doesn't fill this in for you?
 
-Patch applied with Rob's ACK.
-I don't think Bj=C3=B6rn will mind.
+Thanks,
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	M.
+-- 
+Jazz is not dead. It just smells funny...
