@@ -1,57 +1,46 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v3 6/9] ARM64: dts: meson-gxl: libretech-cc: enable high speed
- modes
-Date: Thu, 31 Aug 2017 15:52:23 +0200
-Message-ID: <20170831135226.19784-7-jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 5/9] ARM64: dts: meson-gxl: libretech-cc: add card regulator settle times
+Date: Thu, 31 Aug 2017 15:52:22 +0200
+Message-ID: <20170831135226.19784-6-jbrunet@baylibre.com>
 References: <20170831135226.19784-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170831135226.19784-1-jbrunet@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170831135226.19784-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable sdcard UHS modes up to SDR50. Unfortunately, it seems the PCB of
-the libretech-cc cannot handle SDR104 at 200Mhz reliably.
-Also enable eMMC DDR52 mode.
+Changing the card voltage on the cc is not instantaneous, especially
+when switching from 3.3v to 1.8v.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+It take at least 30ms for the regulator to go from 3.3v to 1.8v. Add
+margin to that to make sure we don't upset the sdcard during the voltage
+switch
+
+Fixes: 61ff2af9b278 ("ARM64: dts: fixup libretech cc definition")
+Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 7d252168c2fa..64c54c92e214 100644
+index a014c052241e..7d252168c2fa 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -205,6 +205,9 @@
+@@ -91,6 +91,9 @@
  
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
- 	max-frequency = <100000000>;
- 	disable-wp;
+ 		states = <3300000 0>,
+ 			 <1800000 1>;
++
++		regulator-settling-time-up-us = <200>;
++		regulator-settling-time-down-us = <50000>;
+ 	};
  
-@@ -224,6 +227,7 @@
- 
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-+	mmc-ddr-3_3v;
- 	max-frequency = <50000000>;
- 	non-removable;
- 	disable-wp;
+ 	vddio_boot: regulator-vddio_boot {
 -- 
 2.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
