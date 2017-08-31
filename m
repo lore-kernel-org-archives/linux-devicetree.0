@@ -1,70 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/7] dt-bindings: PM / OPP: add clocks per OPP node
- support
-Date: Thu, 31 Aug 2017 12:39:20 -0500
-Message-ID: <20170831173920.4emtr5vkgvjcx6ac@rob-hp-laptop>
-References: <1503504610-12880-1-git-send-email-aisheng.dong@nxp.com>
- <1503504610-12880-3-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH/RFC 1/3] dt-bindings: i2c: i2c-gpio: Add support for
+ named gpios
+Date: Thu, 31 Aug 2017 12:55:29 -0500
+Message-ID: <20170831175529.vuchpgvi2aigz2r5@rob-hp-laptop>
+References: <1503566474-5335-1-git-send-email-geert+renesas@glider.be>
+ <1503566474-5335-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503504610-12880-3-git-send-email-aisheng.dong@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, vireshk@kernel.org, nm@ti.com, rjw@rjwysocki.net, shawnguo@kernel.org, Anson.Huang@nxp.com, ping.bai@nxp.com, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+In-Reply-To: <1503566474-5335-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 12:10:05AM +0800, Dong Aisheng wrote:
-> It's used for platforms where different OPPs may use different clocks.
-> With this extended binding, user could specify the correct clock for each
-> OPP node.
+On Thu, Aug 24, 2017 at 11:21:12AM +0200, Geert Uytterhoeven wrote:
+> The current i2c-gpio DT bindings use a single unnamed "gpios" property
+> to refer to the SDA and SCL signal lines by index.  This is error-prone
+> for the casual DT writer and reviewer, as one has to look up the order
+> in the DT bindings.
 > 
-> Cc: Viresh Kumar <vireshk@kernel.org>
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Fix this by amending the DT bindings to use two separate named gpios
+> properties, and deprecate the old unnamed variant.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  Documentation/devicetree/bindings/opp/opp.txt | 52 +++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
+>  Documentation/devicetree/bindings/i2c/i2c-gpio.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index e36d261..40a4340 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -152,6 +152,11 @@ Optional properties:
->    hierarchy can be contained in multiple 32 bit values. i.e. <X Y Z1 Z2> in the
->    above example, Z1 & Z2 refer to the version hierarchy Z.
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+> index 4f8ec947c6bd9cad..61033f73577dd70e 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+> @@ -2,8 +2,9 @@ Device-Tree bindings for i2c gpio driver
 >  
-> +- clocks: Clock phandle and specifier used for this opp.
-> +
-> +- clock-names: clock names for this opp. The valid clock names are platform
-> +	       specific.
-
-You don't need -names if there's only 1 clock. But then how long until 
-we have a list of any random clocks some how associated with an OPP.
-
-I think this should really be solved within the clock framework. What 
-you really need is "set my parent clock to the source that can provide X 
-Hz". Could the assigned-clocks property work here (in the OPP nodes 
-rather than the cpu nodes)?
-
-> +
->  - status: Marks the node enabled/disabled.
+>  Required properties:
+>  	- compatible = "i2c-gpio";
+> -	- gpios: sda and scl gpio
+> -
+> +	- sda-gpios: gpio used for the sda signal
+> +	- scl-gpios: gpio used for the scl signal
+> +	- gpios: sda and scl gpio, alternative for {sda,scl}-gpios (deprecated)
 >  
->  Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
-> @@ -528,3 +533,50 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
->  		};
->  	};
->  };
-> +
-> +Example 7: Single core ARM cortex A7, switch separate clocks for each OPP:
+>  Optional properties:
+>  	- i2c-gpio,sda-open-drain: sda as open drain
 
-Can't you add this to an existing example? We don't need to enumerate 
-every possible option.
+Well, if we're going to change things, we should drop these open-drain 
+properties. We have open-drain flags in gpio cells, so we don't need 
+these I think.
 
 Rob
