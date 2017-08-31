@@ -1,17 +1,17 @@
 Return-Path: <SRS0=VjFt=AB=gmail.com=s.abhisit@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20170830182100.9311-1-s.abhisit@gmail.com>
-References: <20170830182100.9311-1-s.abhisit@gmail.com>
+In-Reply-To: <20170830181409.8903-1-s.abhisit@gmail.com>
+References: <20170830181409.8903-1-s.abhisit@gmail.com>
 From: Abhisit Sangjan <s.abhisit@gmail.com>
-Date: Thu, 31 Aug 2017 13:30:44 +0700
-Message-ID: <CAMV_pUbeKEYuLpSXZwXL9+vqs-PK89_rJGtg=5uuVqfXxmcosQ@mail.gmail.com>
-Subject: Fwd: [PATCH 4/5] lmp92001: mfd: gpio: Add support LMP92001
-Content-Type: multipart/alternative; boundary="f403045ec3c2bbdca5055806c895"
+Date: Thu, 31 Aug 2017 13:28:54 +0700
+Message-ID: <CAMV_pUZA7EFLpKrts0ik0Puy6aGGNqt40w3BFak7vVM=Y5uDAw@mail.gmail.com>
+Subject: Fwd: [PATCH 2/5] lmp92001: mfd: iio: adc: Add support LMP92001
+Content-Type: multipart/alternative; boundary="001a1140221e3a8569055806c22e"
 To: Lee Jones <lee.jones@linaro.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, jmondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>
 Cc: knaack.h@gmx.de, lars@metafoo.de, fabrice.gasnier@st.com, Rob Herring <robh@kernel.org>, Akinobu Mita <akinobu.mita@gmail.com>, marek.vasut+renesas@gmail.com, jacopo+renesas@jmondi.org, mike.looijmans@topic.nl, peda@axentia.se, =?UTF-8?Q?Jean=2DFran=C3=A7ois_Dagenais?= <jeff.dagenais@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, lukas@wunner.de, Adriana Reus <adi.reus@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---f403045ec3c2bbdca5055806c895
+--001a1140221e3a8569055806c22e
 Content-Type: text/plain; charset="UTF-8"
 
 Send all parts to all cc'd people to save your time tracking down all
@@ -19,12 +19,14 @@ patches of this.
 
 ---------- Forwarded message ----------
 From: <s.abhisit@gmail.com>
-Date: Thu, Aug 31, 2017 at 1:21 AM
-Subject: [PATCH 4/5] lmp92001: mfd: gpio: Add support LMP92001
-To: linus.walleij@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-pmeerw@pmeerw.net, Jonathan.Cameron@huawei.com, jacopo@jmondi.org,
-lars@metafoo.de, Abhisit Sangjan <s.abhisit@gmail.com>
+Date: Thu, Aug 31, 2017 at 1:14 AM
+Subject: [PATCH 2/5] lmp92001: mfd: iio: adc: Add support LMP92001
+To: Jonathan.Cameron@huawei.com, pmeerw@pmeerw.net, jacopo@jmondi.org
+Cc: knaack.h@gmx.de, lars@metafoo.de, fabrice.gasnier@st.com,
+lee.jones@linaro.org, robh@kernel.org, akinobu.mita@gmail.com,
+marek.vasut+renesas@gmail.com, jacopo+renesas@jmondi.org,
+linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, lukas@wunner.de,
+adi.reus@gmail.com, Abhisit Sangjan <s.abhisit@gmail.com>
 
 
 From: Abhisit Sangjan <s.abhisit@gmail.com>
@@ -47,59 +49,61 @@ ADC's referance voltage selectable for Internal/External.
 
 Signed-off-by: Abhisit Sangjan <s.abhisit@gmail.com>
 ---
- drivers/gpio/Kconfig         |   7 ++
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-lmp92001.c | 202 ++++++++++++++++++++++++++++++
-+++++++++++++
- 3 files changed, 210 insertions(+)
- create mode 100644 drivers/gpio/gpio-lmp92001.c
+ drivers/iio/adc/Kconfig        |  10 +
+ drivers/iio/adc/Makefile       |   1 +
+ drivers/iio/adc/lmp92001-adc.c | 476 ++++++++++++++++++++++++++++++
++++++++++++
+ 3 files changed, 487 insertions(+)
+ create mode 100644 drivers/iio/adc/lmp92001-adc.c
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 461d6fc3688b..5962ea0d6745 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -948,6 +948,13 @@ config GPIO_KEMPLD
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 614fa41559b1..2adeba543ac7 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -331,6 +331,16 @@ config IMX7D_ADC
           This driver can also be built as a module. If so, the module will
 be
-          called gpio-kempld.
+          called imx7d_adc.
 
-+config GPIO_LMP92001
-+       tristate "LMP92001 GPIOs"
++config LMP92001_ADC
++       tristate "TI LMP92001 ADC Driver"
 +       depends on MFD_LMP92001
 +       help
-+         Say yes here to access the GPIO signals of TI LMP92001 Analog
-System
-+         Monitor and Controller.
++         If you say yes here you get support for TI LMP92001 ADCs
++         conversion.
 +
- config GPIO_LP3943
-        tristate "TI/National Semiconductor LP3943 GPIO expander"
-        depends on MFD_LP3943
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index a9fda6c55113..560d59c67758 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -62,6 +62,7 @@ obj-$(CONFIG_GPIO_JANZ_TTL)   += gpio-janz-ttl.o
- obj-$(CONFIG_GPIO_KEMPLD)      += gpio-kempld.o
- obj-$(CONFIG_ARCH_KS8695)      += gpio-ks8695.o
- obj-$(CONFIG_GPIO_INTEL_MID)   += gpio-intel-mid.o
-+obj-$(CONFIG_GPIO_LMP92001)    += gpio-lmp92001.o
- obj-$(CONFIG_GPIO_LOONGSON)    += gpio-loongson.o
- obj-$(CONFIG_GPIO_LP3943)      += gpio-lp3943.o
- obj-$(CONFIG_GPIO_LPC18XX)     += gpio-lpc18xx.o
-diff --git a/drivers/gpio/gpio-lmp92001.c b/drivers/gpio/gpio-lmp92001.c
++         This driver can also be built as a module. If so, the module will
++         be called lmp92001_adc.
++
+ config LP8788_ADC
+        tristate "LP8788 ADC driver"
+        depends on MFD_LP8788
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index b546736a5541..2ed89862090b 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -31,6 +31,7 @@ obj-$(CONFIG_HI8435) += hi8435.o
+ obj-$(CONFIG_HX711) += hx711.o
+ obj-$(CONFIG_IMX7D_ADC) += imx7d_adc.o
+ obj-$(CONFIG_INA2XX_ADC) += ina2xx-adc.o
++obj-$(CONFIG_LMP92001_ADC) += lmp92001-adc.o
+ obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+ obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
+ obj-$(CONFIG_LPC32XX_ADC) += lpc32xx_adc.o
+diff --git a/drivers/iio/adc/lmp92001-adc.c b/drivers/iio/adc/lmp92001-adc.c
 new file mode 100644
-index 000000000000..4079e362e9b3
+index 000000000000..f706a364337d
 --- /dev/null
-+++ b/drivers/gpio/gpio-lmp92001.c
-@@ -0,0 +1,202 @@
++++ b/drivers/iio/adc/lmp92001-adc.c
+@@ -0,0 +1,476 @@
 +/*
-+ * gpio-lmp92001.c - Support for TI LMP92001 GPIOs
++ * lmp92001-adc.c - Support for TI LMP92001 ADCs
 + *
 + * Copyright 2016-2017 Celestica Ltd.
 + *
 + * Author: Abhisit Sangjan <s.abhisit@gmail.com>
 + *
-+ * Inspired by wm831x driver.
++ * Inspired by wm831x and ad5064 drivers.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -112,199 +116,477 @@ index 000000000000..4079e362e9b3
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/bitops.h>
-+#include <linux/gpio/driver.h>
++#include <linux/iio/iio.h>
++#include <linux/interrupt.h>
 +#include <linux/kernel.h>
++#include <linux/mfd/core.h>
 +#include <linux/module.h>
++#include <linux/platform_device.h>
 +
 +#include <linux/mfd/lmp92001/core.h>
 +
-+struct lmp92001_gpio {
-+       struct lmp92001 *lmp92001;
-+       struct gpio_chip gpio_chip;
-+};
-+
-+static int lmp92001_gpio_get_direction(struct gpio_chip *chip, unsigned
-offset)
++static int lmp92001_read_raw(struct iio_dev *indio_dev,
++       struct iio_chan_spec const *channel, int *val, int *val2, long mask)
 +{
-+       struct lmp92001_gpio *lmp92001_gpio = gpiochip_get_data(chip);
-+       struct lmp92001 *lmp92001 = lmp92001_gpio->lmp92001;
-+       unsigned int val;
++       struct lmp92001 *lmp92001 = iio_device_get_drvdata(indio_dev);
++       unsigned int code, cgen, sgen, try;
 +       int ret;
 +
-+       ret = regmap_read(lmp92001->regmap, LMP92001_CGPO, &val);
++       mutex_lock(&lmp92001->adc_lock);
++
++       ret = regmap_read(lmp92001->regmap, LMP92001_CGEN, &cgen);
 +       if (ret < 0)
-+               return ret;
-+
-+       return !!(val & BIT(offset));
-+}
-+
-+static int lmp92001_gpio_direction_in(struct gpio_chip *chip, unsigned
-offset)
-+{
-+       struct lmp92001_gpio *lmp92001_gpio = gpiochip_get_data(chip);
-+       struct lmp92001 *lmp92001 = lmp92001_gpio->lmp92001;
-+
-+       return regmap_update_bits(lmp92001->regmap, LMP92001_CGPO,
-BIT(offset),
-+                                       BIT(offset));
-+}
-+
-+static int lmp92001_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+       struct lmp92001_gpio *lmp92001_gpio = gpiochip_get_data(chip);
-+       struct lmp92001 *lmp92001 = lmp92001_gpio->lmp92001;
-+       unsigned int val, sgen;
++               goto exit;
 +
 +       /*
-+        * Does the GPIO input mode?
-+        * Does the GPIO set?
-+        * Reading indicated logic level.
-+        * Clear indicated logic level.
++        * Is not continuous conversion?
++        * Lock the HW registers (if needed).
++        * Triggering single-short conversion.
++        * Waiting for conversion successful.
 +        */
-+       regmap_read(lmp92001->regmap, LMP92001_CGPO, &val);
-+       if ((val >> offset) & BIT(0)) {
-+               regmap_read(lmp92001->regmap, LMP92001_SGEN, &sgen);
-+               if (sgen & SGEN_GPI) {
-+                       regmap_read(lmp92001->regmap, LMP92001_SGPI, &val);
-+                       regmap_update_bits(lmp92001->regmap, LMP92001_CGPO,
-+                                               0xFF, val);
++       if (!(cgen & CGEN_STRT)) {
++               if (!(cgen & CGEN_LCK)) {
++                       ret = regmap_update_bits(lmp92001->regmap,
++                                       LMP92001_CGEN, CGEN_LCK, CGEN_LCK);
++                       if (ret < 0)
++                               goto exit;
++               }
++
++               /* Writing any value to trigger Single-Shot conversion. */
++               ret = regmap_write(lmp92001->regmap, LMP92001_CTRIG, 1);
++               if (ret < 0)
++                       goto exit;
++
++               /* In case of conversion is in-progress, repeat for 10
+times. */
++               try = 10;
++               do {
++                       ret = regmap_read(lmp92001->regmap,
++                                               LMP92001_SGEN, &sgen);
++                       if (ret < 0)
++                               goto exit;
++               } while ((sgen & CGEN_RST) && (--try > 0));
++
++               if (!try) {
++                       ret = -ETIME;
++                       goto exit;
 +               }
 +       }
 +
-+       return !!(val & BIT(offset));
-+}
++       ret = regmap_read(lmp92001->regmap, 0x1F + channel->channel, &code);
++       if (ret < 0)
++               goto exit;
 +
-+static int lmp92001_gpio_direction_out(struct gpio_chip *chip, unsigned
-offset,
-+       int value)
-+{
-+       struct lmp92001_gpio *lmp92001_gpio = gpiochip_get_data(chip);
-+       struct lmp92001 *lmp92001 = lmp92001_gpio->lmp92001;
-+
-+       return regmap_update_bits(lmp92001->regmap, LMP92001_CGPO,
-BIT(offset),
-+                                       0 /* 0 << offset */);
-+}
-+
-+static void lmp92001_gpio_set(struct gpio_chip *chip, unsigned offset,
-+       int value)
-+{
-+       struct lmp92001_gpio *lmp92001_gpio = gpiochip_get_data(chip);
-+       struct lmp92001 *lmp92001 = lmp92001_gpio->lmp92001;
-+
-+       regmap_update_bits(lmp92001->regmap, LMP92001_CGPO, BIT(offset),
-+                               value << offset);
-+}
-+
-+#ifdef CONFIG_DEBUG_FS
-+static void lmp92001_gpio_dbg_show(struct seq_file *s, struct gpio_chip
-*chip)
-+{
-+       struct lmp92001_gpio *lmp92001_gpio = gpiochip_get_data(chip);
-+       struct lmp92001 *lmp92001 = lmp92001_gpio->lmp92001;
-+       int i, gpio;
-+       unsigned int cgpo;
-+       const char *label, *dir, *logic;
-+
-+       for (i = 0; i < chip->ngpio; i++) {
-+               gpio = i + chip->base;
-+
-+               label = gpiochip_is_requested(chip, i);
-+               if (!label)
-+                       continue;
-+
-+               regmap_read(lmp92001->regmap, LMP92001_CGPO, &cgpo);
-+               if ((cgpo >> i) & BIT(0))
-+                       dir = "in";
-+               else
-+                       dir = "out";
-+
-+               if (lmp92001_gpio_get(chip, i))
-+                       logic = "hi";
-+               else
-+                       logic = "lo";
-+
-+               seq_printf(s, " gpio-%-3d (%-20.20s) %-3.3s %-2.2s\n",
-+                               gpio, label, dir, logic);
-+       }
-+}
-+#else
-+#define lmp92001_gpio_dbg_show NULL
-+#endif
-+
-+static struct gpio_chip lmp92001_gpio_chip = {
-+       .label                  = "lmp92001",
-+       .owner                  = THIS_MODULE,
-+       .get_direction          = lmp92001_gpio_get_direction,
-+       .direction_input        = lmp92001_gpio_direction_in,
-+       .get                    = lmp92001_gpio_get,
-+       .direction_output       = lmp92001_gpio_direction_out,
-+       .set                    = lmp92001_gpio_set,
-+       .dbg_show               = lmp92001_gpio_dbg_show,
-+};
-+
-+static int lmp92001_gpio_probe(struct platform_device *pdev)
-+{
-+       struct lmp92001 *lmp92001 = dev_get_drvdata(pdev->dev.parent);
-+       struct lmp92001_gpio *lmp92001_gpio;
-+       int ret;
-+
-+       lmp92001_gpio = devm_kzalloc(&pdev->dev, sizeof(*lmp92001_gpio),
-+                                       GFP_KERNEL);
-+       if (!lmp92001_gpio)
-+               return -ENOMEM;
-+
-+       lmp92001_gpio->lmp92001 = lmp92001;
-+       lmp92001_gpio->gpio_chip = lmp92001_gpio_chip;
-+       lmp92001_gpio->gpio_chip.ngpio = 8;
-+       lmp92001_gpio->gpio_chip.parent = &pdev->dev;
-+       lmp92001_gpio->gpio_chip.base = -1;
-+
-+       ret = devm_gpiochip_add_data(&pdev->dev, &lmp92001_gpio->gpio_chip,
-+                                       lmp92001_gpio);
-+       if (ret < 0) {
-+               dev_err(&pdev->dev, "could not register gpiochip, %d\n",
-ret);
-+               return ret;
++       switch (mask) {
++       case IIO_CHAN_INFO_RAW:
++               switch (channel->type) {
++               case IIO_VOLTAGE:
++               case IIO_TEMP:
++                       *val = code;
++                       ret = IIO_VAL_INT;
++                       goto exit;
++               default:
++                       break;
++               }
++               break;
++       default:
++               break;
 +       }
 +
-+       platform_set_drvdata(pdev, lmp92001_gpio);
++       /* In case of no match channel info/type is return here. */
++       ret = -EINVAL;
++
++exit:
++       mutex_unlock(&lmp92001->adc_lock);
 +
 +       return ret;
 +}
 +
-+static int lmp92001_gpio_remove(struct platform_device *pdev)
++static const struct iio_info lmp92001_info = {
++       .read_raw = lmp92001_read_raw,
++       .driver_module = THIS_MODULE,
++};
++
++static ssize_t lmp92001_avref_read(struct iio_dev *indio_dev,
++       uintptr_t private, struct iio_chan_spec const *channel, char *buf)
 +{
++       struct lmp92001 *lmp92001 = iio_device_get_drvdata(indio_dev);
++       unsigned int cref;
++       int ret;
++
++       ret = regmap_read(lmp92001->regmap, LMP92001_CREF, &cref);
++       if (ret < 0)
++               return ret;
++
++       return sprintf(buf, "%s\n", (cref & CREF_AEXT) ? "external" :
+"internal");
++}
++
++static ssize_t lmp92001_avref_write(struct iio_dev *indio_dev,
++       uintptr_t private, struct iio_chan_spec const *channel,
++       const char *buf, size_t len)
++{
++       struct lmp92001 *lmp92001 = iio_device_get_drvdata(indio_dev);
++       unsigned int cref;
++       int ret;
++
++       if (strncmp("external", buf, 8) == 0)
++               cref = 2;
++       else if (strncmp("internal", buf, 8) == 0)
++               cref = 0;
++       else
++               return -EINVAL;
++
++       ret = regmap_update_bits(lmp92001->regmap, LMP92001_CREF, CREF_AEXT,
++                                       cref);
++       if (ret < 0)
++               return ret;
++
++       return len;
++}
++
++static ssize_t lmp92001_enable_read(struct iio_dev *indio_dev,
++       uintptr_t private, struct iio_chan_spec const *channel, char *buf)
++{
++       struct lmp92001 *lmp92001 = iio_device_get_drvdata(indio_dev);
++       unsigned int reg, cad;
++       int ret;
++
++       switch (channel->channel) {
++       case 1 ... 8:
++               reg = LMP92001_CAD1;
++               break;
++       case 9 ... 16:
++               reg = LMP92001_CAD2;
++               break;
++       case 17:
++               reg = LMP92001_CAD3;
++               break;
++       default:
++               return -EINVAL;
++       }
++
++       ret = regmap_read(lmp92001->regmap, reg, &cad);
++       if (ret < 0)
++               return ret;
++
++       if (channel->channel <= 8)
++               cad >>= channel->channel - 1;
++       else if (channel->channel > 8)
++               cad >>= channel->channel - 9;
++       else if (channel->channel > 16)
++               cad >>= channel->channel - 17;
++       else
++               return -EINVAL;
++
++       return sprintf(buf, "%s\n", cad & BIT(0) ? "enable" : "disable");
++}
++
++static ssize_t lmp92001_enable_write(struct iio_dev *indio_dev,
++       uintptr_t private, struct iio_chan_spec const *channel,
++       const char *buf, size_t len)
++{
++       struct lmp92001 *lmp92001 = iio_device_get_drvdata(indio_dev);
++       unsigned int reg, enable, shif, mask;
++       int ret;
++
++       switch (channel->channel) {
++       case 1 ... 8:
++               reg = LMP92001_CAD1;
++               shif = (channel->channel - 1);
++               break;
++       case 9 ... 16:
++               reg = LMP92001_CAD2;
++               shif = (channel->channel - 9);
++               break;
++       case 17:
++               reg = LMP92001_CAD3;
++               shif = (channel->channel - 17);
++               break;
++       default:
++               return -EINVAL;
++       }
++
++       if (strncmp("enable", buf, 6) == 0)
++               enable = 1;
++       else if (strncmp("disable", buf, 7) == 0)
++               enable = 0;
++       else
++               return -EINVAL;
++
++       enable <<= shif;
++       mask = 1 << shif;
++
++       ret = regmap_update_bits(lmp92001->regmap, reg, mask, enable);
++       if (ret < 0)
++               return ret;
++
++       return len;
++}
++
++static ssize_t lmp92001_mode_read(struct iio_dev *indio_dev,
++       uintptr_t private, struct iio_chan_spec const *channel, char *buf)
++{
++       struct lmp92001 *lmp92001 = iio_device_get_drvdata(indio_dev);
++       unsigned int cgen;
++       int ret;
++
++       ret = regmap_read(lmp92001->regmap, LMP92001_CGEN, &cgen);
++       if (ret < 0)
++               return ret;
++
++       return sprintf(buf, "%s\n",
++                       cgen & BIT(0) ? "continuous" : "single-shot");
++}
++
++static ssize_t lmp92001_mode_write(struct iio_dev *indio_dev,
++       uintptr_t private, struct iio_chan_spec const *channel,
++       const char *buf, size_t len)
++{
++       struct lmp92001 *lmp92001 = iio_device_get_drvdata(indio_dev);
++       unsigned int cgen;
++       int ret;
++
++       if (strncmp("continuous", buf, 10) == 0)
++               cgen = 1;
++       else if (strncmp("single-shot", buf, 11) == 0)
++               cgen = 0;
++       else
++               return -EINVAL;
++
++       mutex_lock(&lmp92001->adc_lock);
++
++       /*
++        * Unlock the HW registers.
++        * Set conversion mode.
++        * Lock the HW registers.
++        */
++       ret = regmap_update_bits(lmp92001->regmap, LMP92001_CGEN, CGEN_LCK,
+0);
++       if (ret < 0)
++               goto exit;
++
++       ret = regmap_update_bits(lmp92001->regmap, LMP92001_CGEN, CGEN_STRT,
++                                       cgen);
++       if (ret < 0)
++               goto exit;
++
++       ret = regmap_update_bits(lmp92001->regmap, LMP92001_CGEN, CGEN_LCK,
++                                       CGEN_LCK);
++       if (ret < 0)
++               goto exit;
++
++       return len;
++
++exit:
++       mutex_unlock(&lmp92001->adc_lock);
++
++       return ret;
++}
++
++static const struct iio_chan_spec_ext_info lmp92001_ext_info[] = {
++       {
++               .name = "vref",
++               .read = lmp92001_avref_read,
++               .write = lmp92001_avref_write,
++               .shared = IIO_SHARED_BY_ALL,
++       }, {
++               .name = "en",
++               .read = lmp92001_enable_read,
++               .write = lmp92001_enable_write,
++               .shared = IIO_SEPARATE,
++       }, {
++               .name = "mode",
++               .read = lmp92001_mode_read,
++               .write = lmp92001_mode_write,
++               .shared = IIO_SHARED_BY_ALL,
++       }, { },
++};
++
++static const struct iio_event_spec lmp92001_events[] = {
++       {
++               .type = IIO_EV_TYPE_THRESH,
++               .dir = IIO_EV_DIR_RISING,
++               .mask_separate = BIT(IIO_EV_INFO_ENABLE) |
++                       BIT(IIO_EV_INFO_VALUE),
++       }, {
++               .type = IIO_EV_TYPE_THRESH,
++               .dir = IIO_EV_DIR_FALLING,
++               .mask_separate = BIT(IIO_EV_INFO_ENABLE) |
++                       BIT(IIO_EV_INFO_VALUE),
++       }, { },
++};
++
++#define LMP92001_CHAN_SPEC(_ch, _type, _event, _nevent) \
++{ \
++       .channel = _ch, \
++       .type = _type, \
++       .indexed = 1, \
++       .info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
++               BIT(IIO_CHAN_INFO_SCALE), \
++       .event_spec = _event, \
++       .num_event_specs = _nevent, \
++       .ext_info = lmp92001_ext_info, \
++}
++
++static const struct iio_chan_spec lmp92001_adc_channels[] = {
++       LMP92001_CHAN_SPEC(1, IIO_VOLTAGE, lmp92001_events,
++                       ARRAY_SIZE(lmp92001_events)),
++       LMP92001_CHAN_SPEC(2, IIO_VOLTAGE, lmp92001_events,
++                       ARRAY_SIZE(lmp92001_events)),
++       LMP92001_CHAN_SPEC(3, IIO_VOLTAGE, lmp92001_events,
++                       ARRAY_SIZE(lmp92001_events)),
++       LMP92001_CHAN_SPEC(4, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(5, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(6, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(7, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(8, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(9, IIO_VOLTAGE, lmp92001_events,
++                       ARRAY_SIZE(lmp92001_events)),
++       LMP92001_CHAN_SPEC(10, IIO_VOLTAGE, lmp92001_events,
++                       ARRAY_SIZE(lmp92001_events)),
++       LMP92001_CHAN_SPEC(11, IIO_VOLTAGE, lmp92001_events,
++                       ARRAY_SIZE(lmp92001_events)),
++       LMP92001_CHAN_SPEC(12, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(13, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(14, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(15, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(16, IIO_VOLTAGE, NULL, 0),
++       LMP92001_CHAN_SPEC(17,    IIO_TEMP, NULL, 0),
++};
++
++static int lmp92001_adc_probe(struct platform_device *pdev)
++{
++       struct lmp92001 *lmp92001 = dev_get_drvdata(pdev->dev.parent);
++       struct iio_dev *indio_dev;
++       struct device_node *np = pdev->dev.of_node;
++       unsigned int cgen = 0, cad1, cad2, cad3;
++       u32 mask;
++       int ret;
++
++       indio_dev = devm_iio_device_alloc(&pdev->dev, 0);
++       if (!indio_dev)
++               return -ENOMEM;
++
++       iio_device_set_drvdata(indio_dev, lmp92001);
++
++       mutex_init(&lmp92001->adc_lock);
++
++       indio_dev->name = pdev->name;
++       indio_dev->dev.parent = &pdev->dev;
++       indio_dev->modes = INDIO_DIRECT_MODE;
++       indio_dev->info = &lmp92001_info;
++       indio_dev->channels = lmp92001_adc_channels;
++       indio_dev->num_channels = ARRAY_SIZE(lmp92001_adc_channels);
++
++       ret = regmap_update_bits(lmp92001->regmap, LMP92001_CGEN,
++                                       CGEN_RST, CGEN_RST);
++       if (ret < 0) {
++               dev_err(&pdev->dev, "failed to self reset all registers\n");
++               return ret;
++       }
++
++       /*
++        * Turn on all of them, if you are pretty sure they are must be
++        * real-time update or specify which channel is needed to be used to
++        * save conversion time for a cycle.
++        */
++       ret = of_property_read_u32(np, "ti,lmp92001-adc-mask", &mask);
++       if (ret < 0) {
++               cad1 = cad2 = cad3 = 0xFF;
++               dev_info(&pdev->dev, "turn on all of channels by
+default\n");
++       } else {
++               cad1 = mask & 0xFF;
++               cad2 = (mask >> 8) & 0xFF;
++               cad3 = (mask >> 16) & 0xFF;
++       }
++
++       ret = regmap_update_bits(lmp92001->regmap, LMP92001_CAD1, 0xFF,
+cad1);
++       if (ret < 0) {
++               dev_err(&pdev->dev, "failed to enable/disable channels
+1-8\n");
++               return ret;
++       }
++
++       ret = regmap_update_bits(lmp92001->regmap, LMP92001_CAD2, 0xFF,
+cad2);
++       if (ret < 0) {
++               dev_err(&pdev->dev, "failed to enable/disable channels
+9-16\n");
++               return ret;
++       }
++
++       ret = regmap_update_bits(lmp92001->regmap, LMP92001_CAD3, BIT(0),
+cad3);
++       if (ret < 0) {
++               dev_err(&pdev->dev,
++                       "failed to enable/disable channel 17
+(temperature)\n");
++               return ret;
++       }
++
++       cgen |= 1; /* Continuous conversion is default. */
++
++       /* Lock the HW registers and set conversion mode. */
++       ret = regmap_update_bits(lmp92001->regmap,
++                                       LMP92001_CGEN, CGEN_LCK | CGEN_STRT,
++                                       cgen | CGEN_LCK);
++       if (ret < 0)
++               return ret;
++
++       platform_set_drvdata(pdev, indio_dev);
++
++       return devm_iio_device_register(&pdev->dev, indio_dev);
++}
++
++static int lmp92001_adc_remove(struct platform_device *pdev)
++{
++       struct iio_dev *indio_dev = platform_get_drvdata(pdev);
++       struct lmp92001 *lmp92001 = iio_device_get_drvdata(indio_dev);
++
++       /*
++        * To stop ADC conversion to save power
++        *
++        * Unlock the HW registers.
++        * Set conversion mode to single-shot.
++        * Lock the HW registers.
++        */
++       regmap_update_bits(lmp92001->regmap, LMP92001_CGEN, CGEN_LCK, 0);
++       regmap_update_bits(lmp92001->regmap, LMP92001_CGEN, CGEN_STRT, 0);
++       regmap_update_bits(lmp92001->regmap, LMP92001_CGEN, CGEN_LCK,
+CGEN_LCK);
++
 +       return 0;
 +}
 +
-+static struct platform_driver lmp92001_gpio_driver = {
-+       .driver.name    = "lmp92001-gpio",
-+       .probe          = lmp92001_gpio_probe,
-+       .remove         = lmp92001_gpio_remove,
++static struct platform_driver lmp92001_adc_driver = {
++       .driver.name    = "lmp92001-adc",
++       .probe          = lmp92001_adc_probe,
++       .remove         = lmp92001_adc_remove,
 +};
 +
-+static int __init lmp92001_gpio_init(void)
++static int __init lmp92001_adc_init(void)
 +{
-+       return platform_driver_register(&lmp92001_gpio_driver);
++       return platform_driver_register(&lmp92001_adc_driver);
 +}
-+subsys_initcall(lmp92001_gpio_init);
++subsys_initcall(lmp92001_adc_init);
 +
-+static void __exit lmp92001_gpio_exit(void)
++static void __exit lmp92001_adc_exit(void)
 +{
-+       platform_driver_unregister(&lmp92001_gpio_driver);
++       platform_driver_unregister(&lmp92001_adc_driver);
 +}
-+module_exit(lmp92001_gpio_exit);
++module_exit(lmp92001_adc_exit);
 +
 +MODULE_AUTHOR("Abhisit Sangjan <s.abhisit@gmail.com>");
-+MODULE_DESCRIPTION("GPIO interface for TI LMP92001");
++MODULE_DESCRIPTION("IIO ADC interface for TI LMP92001");
 +MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:lmp92001-gpio");
++MODULE_ALIAS("platform:lmp92001-adc");
 --
 2.13.0
 
---f403045ec3c2bbdca5055806c895
+--001a1140221e3a8569055806c22e
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -314,17 +596,24 @@ Content-Transfer-Encoding: quoted-printable
 8px"><br></span><div class=3D"gmail_quote">---------- Forwarded message ---=
 -------<br>From: <b class=3D"gmail_sendername"></b> <span dir=3D"ltr">&lt;<=
 a href=3D"mailto:s.abhisit@gmail.com">s.abhisit@gmail.com</a>&gt;</span><br=
->Date: Thu, Aug 31, 2017 at 1:21 AM<br>Subject: [PATCH 4/5] lmp92001: mfd: =
-gpio: Add support LMP92001<br>To: <a href=3D"mailto:linus.walleij@linaro.or=
-g">linus.walleij@linaro.org</a><br>Cc: <a href=3D"mailto:linux-kernel@vger.=
-kernel.org">linux-kernel@vger.kernel.org</a>, <a href=3D"mailto:linux-gpio@=
-vger.kernel.org">linux-gpio@vger.kernel.org</a>, <a href=3D"mailto:pmeerw@p=
-meerw.net">pmeerw@pmeerw.net</a>, <a href=3D"mailto:Jonathan.Cameron@huawei=
-.com">Jonathan.Cameron@huawei.com</a>, <a href=3D"mailto:jacopo@jmondi.org"=
->jacopo@jmondi.org</a>, <a href=3D"mailto:lars@metafoo.de">lars@metafoo.de<=
-/a>, Abhisit Sangjan &lt;<a href=3D"mailto:s.abhisit@gmail.com">s.abhisit@g=
-mail.com</a>&gt;<br><br><br>From: Abhisit Sangjan &lt;<a href=3D"mailto:s.a=
-bhisit@gmail.com">s.abhisit@gmail.com</a>&gt;<br>
+>Date: Thu, Aug 31, 2017 at 1:14 AM<br>Subject: [PATCH 2/5] lmp92001: mfd: =
+iio: adc: Add support LMP92001<br>To: <a href=3D"mailto:Jonathan.Cameron@hu=
+awei.com">Jonathan.Cameron@huawei.com</a>, <a href=3D"mailto:pmeerw@pmeerw.=
+net">pmeerw@pmeerw.net</a>, <a href=3D"mailto:jacopo@jmondi.org">jacopo@jmo=
+ndi.org</a><br>Cc: <a href=3D"mailto:knaack.h@gmx.de">knaack.h@gmx.de</a>, =
+<a href=3D"mailto:lars@metafoo.de">lars@metafoo.de</a>, <a href=3D"mailto:f=
+abrice.gasnier@st.com">fabrice.gasnier@st.com</a>, <a href=3D"mailto:lee.jo=
+nes@linaro.org">lee.jones@linaro.org</a>, <a href=3D"mailto:robh@kernel.org=
+">robh@kernel.org</a>, <a href=3D"mailto:akinobu.mita@gmail.com">akinobu.mi=
+ta@gmail.com</a>, <a href=3D"mailto:marek.vasut%2Brenesas@gmail.com">marek.=
+vasut+renesas@gmail.com</a>, <a href=3D"mailto:jacopo%2Brenesas@jmondi.org"=
+>jacopo+renesas@jmondi.org</a>, <a href=3D"mailto:linux-kernel@vger.kernel.=
+org">linux-kernel@vger.kernel.org</a>, <a href=3D"mailto:linux-iio@vger.ker=
+nel.org">linux-iio@vger.kernel.org</a>, <a href=3D"mailto:lukas@wunner.de">=
+lukas@wunner.de</a>, <a href=3D"mailto:adi.reus@gmail.com">adi.reus@gmail.c=
+om</a>, Abhisit Sangjan &lt;<a href=3D"mailto:s.abhisit@gmail.com">s.abhisi=
+t@gmail.com</a>&gt;<br><br><br>From: Abhisit Sangjan &lt;<a href=3D"mailto:=
+s.abhisit@gmail.com">s.abhisit@gmail.com</a>&gt;<br>
 <br>
 TI LMP92001 Analog System Monitor and Controller<br>
 <br>
@@ -345,65 +634,66 @@ ADC&#39;s referance voltage selectable for Internal/External.<br>
 Signed-off-by: Abhisit Sangjan &lt;<a href=3D"mailto:s.abhisit@gmail.com">s=
 .abhisit@gmail.com</a>&gt;<br>
 ---<br>
-=C2=A0drivers/gpio/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A07=
- ++<br>
-=C2=A0drivers/gpio/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A01 +<br=
->
-=C2=A0drivers/gpio/gpio-lmp92001.c | 202 ++++++++++++++++++++++++++++++<wbr=
->+++++++++++++<br>
-=C2=A03 files changed, 210 insertions(+)<br>
-=C2=A0create mode 100644 drivers/gpio/gpio-lmp92001.c<br>
+=C2=A0drivers/iio/adc/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 10 +<br>
+=C2=A0drivers/iio/adc/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A01 +<=
+br>
+=C2=A0drivers/iio/adc/lmp92001-adc.c | 476 ++++++++++++++++++++++++++++++<w=
+br>+++++++++++<br>
+=C2=A03 files changed, 487 insertions(+)<br>
+=C2=A0create mode 100644 drivers/iio/adc/lmp92001-adc.c<br>
 <br>
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig<br>
-index 461d6fc3688b..5962ea0d6745 100644<br>
---- a/drivers/gpio/Kconfig<br>
-+++ b/drivers/gpio/Kconfig<br>
-@@ -948,6 +948,13 @@ config GPIO_KEMPLD<br>
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig<br>
+index 614fa41559b1..2adeba543ac7 100644<br>
+--- a/drivers/iio/adc/Kconfig<br>
++++ b/drivers/iio/adc/Kconfig<br>
+@@ -331,6 +331,16 @@ config IMX7D_ADC<br>
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 This driver can also be built as a modul=
 e. If so, the module will be<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 called gpio-kempld.<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 called imx7d_adc.<br>
 <br>
-+config GPIO_LMP92001<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0tristate &quot;LMP92001 GPIOs&quot;<br>
++config LMP92001_ADC<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0tristate &quot;TI LMP92001 ADC Driver&quot;<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0depends on MFD_LMP92001<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0help<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Say yes here to access the GPIO signals =
-of TI LMP92001 Analog System<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Monitor and Controller.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0If you say yes here you get support for =
+TI LMP92001 ADCs<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0conversion.<br>
 +<br>
-=C2=A0config GPIO_LP3943<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 tristate &quot;TI/National Semiconductor LP3943=
- GPIO expander&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 depends on MFD_LP3943<br>
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile<br>
-index a9fda6c55113..560d59c67758 100644<br>
---- a/drivers/gpio/Makefile<br>
-+++ b/drivers/gpio/Makefile<br>
-@@ -62,6 +62,7 @@ obj-$(CONFIG_GPIO_JANZ_TTL)=C2=A0 =C2=A0+=3D gpio-janz-tt=
-l.o<br>
-=C2=A0obj-$(CONFIG_GPIO_KEMPLD)=C2=A0 =C2=A0 =C2=A0 +=3D gpio-kempld.o<br>
-=C2=A0obj-$(CONFIG_ARCH_KS8695)=C2=A0 =C2=A0 =C2=A0 +=3D gpio-ks8695.o<br>
-=C2=A0obj-$(CONFIG_GPIO_INTEL_MID)=C2=A0 =C2=A0+=3D gpio-intel-mid.o<br>
-+obj-$(CONFIG_GPIO_LMP92001)=C2=A0 =C2=A0 +=3D gpio-lmp92001.o<br>
-=C2=A0obj-$(CONFIG_GPIO_LOONGSON)=C2=A0 =C2=A0 +=3D gpio-loongson.o<br>
-=C2=A0obj-$(CONFIG_GPIO_LP3943)=C2=A0 =C2=A0 =C2=A0 +=3D gpio-lp3943.o<br>
-=C2=A0obj-$(CONFIG_GPIO_LPC18XX)=C2=A0 =C2=A0 =C2=A0+=3D gpio-lpc18xx.o<br>
-diff --git a/drivers/gpio/gpio-lmp92001.c b/drivers/gpio/gpio-lmp92001.c<br=
->
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0This driver can also be built as a modul=
+e. If so, the module will<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0be called lmp92001_adc.<br>
++<br>
+=C2=A0config LP8788_ADC<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 tristate &quot;LP8788 ADC driver&quot;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 depends on MFD_LP8788<br>
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile<br>
+index b546736a5541..2ed89862090b 100644<br>
+--- a/drivers/iio/adc/Makefile<br>
++++ b/drivers/iio/adc/Makefile<br>
+@@ -31,6 +31,7 @@ obj-$(CONFIG_HI8435) +=3D hi8435.o<br>
+=C2=A0obj-$(CONFIG_HX711) +=3D hx711.o<br>
+=C2=A0obj-$(CONFIG_IMX7D_ADC) +=3D imx7d_adc.o<br>
+=C2=A0obj-$(CONFIG_INA2XX_ADC) +=3D ina2xx-adc.o<br>
++obj-$(CONFIG_LMP92001_ADC) +=3D lmp92001-adc.o<br>
+=C2=A0obj-$(CONFIG_LP8788_ADC) +=3D lp8788_adc.o<br>
+=C2=A0obj-$(CONFIG_LPC18XX_ADC) +=3D lpc18xx_adc.o<br>
+=C2=A0obj-$(CONFIG_LPC32XX_ADC) +=3D lpc32xx_adc.o<br>
+diff --git a/drivers/iio/adc/lmp92001-<wbr>adc.c b/drivers/iio/adc/lmp92001=
+-<wbr>adc.c<br>
 new file mode 100644<br>
-index 000000000000..4079e362e9b3<br>
+index 000000000000..f706a364337d<br>
 --- /dev/null<br>
-+++ b/drivers/gpio/gpio-lmp92001.c<br>
-@@ -0,0 +1,202 @@<br>
++++ b/drivers/iio/adc/lmp92001-<wbr>adc.c<br>
+@@ -0,0 +1,476 @@<br>
 +/*<br>
-+ * gpio-lmp92001.c - Support for TI LMP92001 GPIOs<br>
++ * lmp92001-adc.c - Support for TI LMP92001 ADCs<br>
 + *<br>
 + * Copyright 2016-2017 Celestica Ltd.<br>
 + *<br>
 + * Author: Abhisit Sangjan &lt;<a href=3D"mailto:s.abhisit@gmail.com">s.ab=
 hisit@gmail.com</a>&gt;<br>
 + *<br>
-+ * Inspired by wm831x driver.<br>
++ * Inspired by wm831x and ad5064 drivers.<br>
 + *<br>
 + * This program is free software; you can redistribute it and/or modify<br=
 >
@@ -418,260 +708,639 @@ hisit@gmail.com</a>&gt;<br>
 + * GNU General Public License for more details.<br>
 + */<br>
 +<br>
-+#include &lt;linux/bitops.h&gt;<br>
-+#include &lt;linux/gpio/driver.h&gt;<br>
++#include &lt;linux/iio/iio.h&gt;<br>
++#include &lt;linux/interrupt.h&gt;<br>
 +#include &lt;linux/kernel.h&gt;<br>
++#include &lt;linux/mfd/core.h&gt;<br>
 +#include &lt;linux/module.h&gt;<br>
++#include &lt;linux/platform_device.h&gt;<br>
 +<br>
 +#include &lt;linux/mfd/lmp92001/core.h&gt;<br>
 +<br>
-+struct lmp92001_gpio {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct gpio_chip gpio_chip;<br>
-+};<br>
-+<br>
-+static int lmp92001_gpio_get_direction(<wbr>struct gpio_chip *chip, unsign=
-ed offset)<br>
++static int lmp92001_read_raw(struct iio_dev *indio_dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct iio_chan_spec const *channel, int *val, =
+int *val2, long mask)<br>
 +{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001_gpio *lmp92001_gpio =3D gpiochi=
-p_get_data(chip);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D lmp92001_gpio-&gt=
-;lmp92001;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int val;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D iio_device_get_dr=
+vdata(indio_<wbr>dev);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int code, cgen, sgen, try;<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
 +<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_lock(&amp;lmp92001-&gt;adc_<wbr>lock);<br=
+>
++<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_read(lmp92001-&gt;regmap, LMP920=
-01_CGPO, &amp;val);<br>
+01_CGEN, &amp;cgen);<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0return !!(val &amp; BIT(offset));<br>
-+}<br>
-+<br>
-+static int lmp92001_gpio_direction_in(<wbr>struct gpio_chip *chip, unsigne=
-d offset)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001_gpio *lmp92001_gpio =3D gpiochi=
-p_get_data(chip);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D lmp92001_gpio-&gt=
-;lmp92001;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0return regmap_update_bits(lmp92001-&gt;<wbr>reg=
-map, LMP92001_CGPO, BIT(offset),<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0BIT(offse=
-t));<br>
-+}<br>
-+<br>
-+static int lmp92001_gpio_get(struct gpio_chip *chip, unsigned offset)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001_gpio *lmp92001_gpio =3D gpiochi=
-p_get_data(chip);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D lmp92001_gpio-&gt=
-;lmp92001;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int val, sgen;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;<br>
 +<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Does the GPIO input mode?<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Does the GPIO set?<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Reading indicated logic level.<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Clear indicated logic level.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Is not continuous conversion?<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Lock the HW registers (if needed).<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Triggering single-short conversion.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Waiting for conversion successful.<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 */<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0regmap_read(lmp92001-&gt;regmap, LMP92001_CGPO,=
- &amp;val);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0if ((val &gt;&gt; offset) &amp; BIT(0)) {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regmap_read(lmp9200=
-1-&gt;regmap, LMP92001_SGEN, &amp;sgen);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (sgen &amp; SGEN=
-_GPI) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!(cgen &amp; CGEN_STRT)) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (!(cgen &amp; CG=
+EN_LCK)) {<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0regmap_read(lmp92001-&gt;regmap, LMP92001_SGPI, &amp;val);<br>
+=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>regmap,<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0regmap_update_bits(lmp92001-&gt;<wbr>regmap, LMP92001_CGPO,<br>
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_=
+CGEN, CGEN_LCK, CGEN_LCK);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/* Writing any valu=
+e to trigger Single-Shot conversion. */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_writ=
+e(lmp92001-&gt;regmap, LMP92001_CTRIG, 1);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0goto exit;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/* In case of conve=
+rsion is in-progress, repeat for 10 times. */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0try =3D 10;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0do {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0ret =3D regmap_read(lmp92001-&gt;regmap,<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A00xFF, val);<br>
+=C2=A0 =C2=A0 =C2=A0LMP92001_SGEN, &amp;sgen);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0} while ((sgen &amp=
+; CGEN_RST) &amp;&amp; (--try &gt; 0));<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (!try) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0ret =3D -ETIME;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0goto exit;<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
 +<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0return !!(val &amp; BIT(offset));<br>
-+}<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_read(lmp92001-&gt;regmap, 0x1F +=
+ channel-&gt;channel, &amp;code);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;<br>
 +<br>
-+static int lmp92001_gpio_direction_out(<wbr>struct gpio_chip *chip, unsign=
-ed offset,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0int value)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001_gpio *lmp92001_gpio =3D gpiochi=
-p_get_data(chip);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D lmp92001_gpio-&gt=
-;lmp92001;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0return regmap_update_bits(lmp92001-&gt;<wbr>reg=
-map, LMP92001_CGPO, BIT(offset),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0switch (mask) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0case IIO_CHAN_INFO_RAW:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0switch (channel-&gt=
+;type) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0case IIO_VOLTAGE:<b=
+r>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0case IIO_TEMP:<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00 /* 0 &l=
-t;&lt; offset */);<br>
-+}<br>
-+<br>
-+static void lmp92001_gpio_set(struct gpio_chip *chip, unsigned offset,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0int value)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001_gpio *lmp92001_gpio =3D gpiochi=
-p_get_data(chip);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D lmp92001_gpio-&gt=
-;lmp92001;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0regmap_update_bits(lmp92001-&gt;<wbr>regmap, LM=
-P92001_CGPO, BIT(offset),<br>
+=A0 =C2=A0*val =3D code;<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0value &lt;&lt; offset);<br>
-+}<br>
-+<br>
-+#ifdef CONFIG_DEBUG_FS<br>
-+static void lmp92001_gpio_dbg_show(struct seq_file *s, struct gpio_chip *c=
-hip)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001_gpio *lmp92001_gpio =3D gpiochi=
-p_get_data(chip);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D lmp92001_gpio-&gt=
-;lmp92001;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0int i, gpio;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int cgpo;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0const char *label, *dir, *logic;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0for (i =3D 0; i &lt; chip-&gt;ngpio; i++) {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0gpio =3D i + chip-&=
-gt;base;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0label =3D gpiochip_=
-is_requested(chip, i);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (!label)<br>
+=A0 =C2=A0ret =3D IIO_VAL_INT;<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0continue;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regmap_read(lmp9200=
-1-&gt;regmap, LMP92001_CGPO, &amp;cgpo);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if ((cgpo &gt;&gt; =
-i) &amp; BIT(0))<br>
+=A0 =C2=A0goto exit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0default:<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0dir =3D &quot;in&quot;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0dir =3D &quot;out&quot;;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (lmp92001_gpio_g=
-et(chip, i))<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0logic =3D &quot;hi&quot;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0logic =3D &quot;lo&quot;;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0seq_printf(s, &quot=
-; gpio-%-3d (%-20.20s) %-3.3s %-2.2s\n&quot;,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0gpio, label, dir, logic);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-+}<br>
-+#else<br>
-+#define lmp92001_gpio_dbg_show NULL<br>
-+#endif<br>
-+<br>
-+static struct gpio_chip lmp92001_gpio_chip =3D {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0.label=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =3D &quot;lmp92001&quot;,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0.owner=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =3D THIS_MODULE,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0.get_direction=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =3D lmp92001_gpio_get_direction,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0.direction_input=C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D=
- lmp92001_gpio_direction_in,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0.get=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D lmp92001_gpio_get,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0.direction_output=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D=
- lmp92001_gpio_direction_out,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0.set=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D lmp92001_gpio_set,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0.dbg_show=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0=3D lmp92001_gpio_dbg_show,<br>
-+};<br>
-+<br>
-+static int lmp92001_gpio_probe(struct platform_device *pdev)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D dev_get_drvdata(p=
-dev-&gt;dev.<wbr>parent);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001_gpio *lmp92001_gpio;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0lmp92001_gpio =3D devm_kzalloc(&amp;pdev-&gt;de=
-v, sizeof(*lmp92001_gpio),<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0GFP_KERNE=
-L);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!lmp92001_gpio)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENOMEM;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0lmp92001_gpio-&gt;lmp92001 =3D lmp92001;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0lmp92001_gpio-&gt;gpio_chip =3D lmp92001_gpio_c=
-hip;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0lmp92001_gpio-&gt;gpio_chip.ngpio =3D 8;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0lmp92001_gpio-&gt;gpio_chip.<wbr>parent =3D &am=
-p;pdev-&gt;dev;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0lmp92001_gpio-&gt;gpio_chip.base =3D -1;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D devm_gpiochip_add_data(&amp;pdev-&gt;<w=
-br>dev, &amp;lmp92001_gpio-&gt;gpio_chip,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0lmp92001_=
-gpio);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0) {<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(&amp;pdev-&=
-gt;dev, &quot;could not register gpiochip, %d\n&quot;, ret);<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
+=A0 =C2=A0break;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0default:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
 +<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0platform_set_drvdata(pdev, lmp92001_gpio);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0/* In case of no match channel info/type is ret=
+urn here. */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D -EINVAL;<br>
++<br>
++exit:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_unlock(&amp;lmp92001-&gt;adc_<wbr>lock);<=
+br>
 +<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
 +}<br>
 +<br>
-+static int lmp92001_gpio_remove(struct platform_device *pdev)<br>
++static const struct iio_info lmp92001_info =3D {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.read_raw =3D lmp92001_read_raw,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.driver_module =3D THIS_MODULE,<br>
++};<br>
++<br>
++static ssize_t lmp92001_avref_read(struct iio_dev *indio_dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0uintptr_t private, struct iio_chan_spec const *=
+channel, char *buf)<br>
 +{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D iio_device_get_dr=
+vdata(indio_<wbr>dev);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int cref;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_read(lmp92001-&gt;regmap, LMP920=
+01_CREF, &amp;cref);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return sprintf(buf, &quot;%s\n&quot;, (cref &am=
+p; CREF_AEXT) ? &quot;external&quot; : &quot;internal&quot;);<br>
++}<br>
++<br>
++static ssize_t lmp92001_avref_write(struct iio_dev *indio_dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0uintptr_t private, struct iio_chan_spec const *=
+channel,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0const char *buf, size_t len)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D iio_device_get_dr=
+vdata(indio_<wbr>dev);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int cref;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (strncmp(&quot;external&quot;, buf, 8) =3D=
+=3D 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cref =3D 2;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else if (strncmp(&quot;internal&quot;, buf, 8) =
+=3D=3D 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cref =3D 0;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, LMP92001_CREF, CREF_AEXT,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cref);<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return len;<br>
++}<br>
++<br>
++static ssize_t lmp92001_enable_read(struct iio_dev *indio_dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0uintptr_t private, struct iio_chan_spec const *=
+channel, char *buf)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D iio_device_get_dr=
+vdata(indio_<wbr>dev);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int reg, cad;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0switch (channel-&gt;channel) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0case 1 ... 8:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D LMP92001_CA=
+D1;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0case 9 ... 16:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D LMP92001_CA=
+D2;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0case 17:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D LMP92001_CA=
+D3;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0default:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_read(lmp92001-&gt;regmap, reg, &=
+amp;cad);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (channel-&gt;channel &lt;=3D 8)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cad &gt;&gt;=3D cha=
+nnel-&gt;channel - 1;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else if (channel-&gt;channel &gt; 8)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cad &gt;&gt;=3D cha=
+nnel-&gt;channel - 9;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else if (channel-&gt;channel &gt; 16)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cad &gt;&gt;=3D cha=
+nnel-&gt;channel - 17;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return sprintf(buf, &quot;%s\n&quot;, cad &amp;=
+ BIT(0) ? &quot;enable&quot; : &quot;disable&quot;);<br>
++}<br>
++<br>
++static ssize_t lmp92001_enable_write(struct iio_dev *indio_dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0uintptr_t private, struct iio_chan_spec const *=
+channel,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0const char *buf, size_t len)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D iio_device_get_dr=
+vdata(indio_<wbr>dev);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int reg, enable, shif, mask;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0switch (channel-&gt;channel) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0case 1 ... 8:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D LMP92001_CA=
+D1;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0shif =3D (channel-&=
+gt;channel - 1);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0case 9 ... 16:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D LMP92001_CA=
+D2;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0shif =3D (channel-&=
+gt;channel - 9);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0case 17:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D LMP92001_CA=
+D3;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0shif =3D (channel-&=
+gt;channel - 17);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0default:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (strncmp(&quot;enable&quot;, buf, 6) =3D=3D =
+0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0enable =3D 1;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else if (strncmp(&quot;disable&quot;, buf, 7) =
+=3D=3D 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0enable =3D 0;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0enable &lt;&lt;=3D shif;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mask =3D 1 &lt;&lt; shif;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, reg, mask, enable);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return len;<br>
++}<br>
++<br>
++static ssize_t lmp92001_mode_read(struct iio_dev *indio_dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0uintptr_t private, struct iio_chan_spec const *=
+channel, char *buf)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D iio_device_get_dr=
+vdata(indio_<wbr>dev);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int cgen;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_read(lmp92001-&gt;regmap, LMP920=
+01_CGEN, &amp;cgen);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return sprintf(buf, &quot;%s\n&quot;,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0cgen &amp; BIT(0) ? &quot;continuous&quot; : &quot;single-shot&qu=
+ot;);<br>
++}<br>
++<br>
++static ssize_t lmp92001_mode_write(struct iio_dev *indio_dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0uintptr_t private, struct iio_chan_spec const *=
+channel,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0const char *buf, size_t len)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D iio_device_get_dr=
+vdata(indio_<wbr>dev);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int cgen;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (strncmp(&quot;continuous&quot;, buf, 10) =
+=3D=3D 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cgen =3D 1;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else if (strncmp(&quot;single-shot&quot;, buf, =
+11) =3D=3D 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cgen =3D 0;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0else<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_lock(&amp;lmp92001-&gt;adc_<wbr>lock);<br=
+>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Unlock the HW registers.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Set conversion mode.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Lock the HW registers.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, LMP92001_CGEN, CGEN_LCK, 0);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, LMP92001_CGEN, CGEN_STRT,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cgen);<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, LMP92001_CGEN, CGEN_LCK,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0CGEN_LCK)=
+;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return len;<br>
++<br>
++exit:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_unlock(&amp;lmp92001-&gt;adc_<wbr>lock);<=
+br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++}<br>
++<br>
++static const struct iio_chan_spec_ext_info lmp92001_ext_info[] =3D {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name =3D &quot;vre=
+f&quot;,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.read =3D lmp92001_=
+avref_read,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.write =3D lmp92001=
+_avref_write,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.shared =3D IIO_SHA=
+RED_BY_ALL,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}, {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name =3D &quot;en&=
+quot;,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.read =3D lmp92001_=
+enable_read,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.write =3D lmp92001=
+_enable_write,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.shared =3D IIO_SEP=
+ARATE,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}, {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name =3D &quot;mod=
+e&quot;,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.read =3D lmp92001_=
+mode_read,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.write =3D lmp92001=
+_mode_write,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.shared =3D IIO_SHA=
+RED_BY_ALL,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}, { },<br>
++};<br>
++<br>
++static const struct iio_event_spec lmp92001_events[] =3D {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.type =3D IIO_EV_TY=
+PE_THRESH,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.dir =3D IIO_EV_DIR=
+_RISING,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.mask_separate =3D =
+BIT(IIO_EV_INFO_ENABLE) |<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(IIO_EV_INFO_VALUE),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}, {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.type =3D IIO_EV_TY=
+PE_THRESH,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.dir =3D IIO_EV_DIR=
+_FALLING,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.mask_separate =3D =
+BIT(IIO_EV_INFO_ENABLE) |<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(IIO_EV_INFO_VALUE),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}, { },<br>
++};<br>
++<br>
++#define LMP92001_CHAN_SPEC(_ch, _type, _event, _nevent) \<br>
++{ \<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.channel =3D _ch, \<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.type =3D _type, \<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.indexed =3D 1, \<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) =
+| \<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0BIT(IIO_CHAN_INFO_S=
+CALE), \<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.event_spec =3D _event, \<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.num_event_specs =3D _nevent, \<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0.ext_info =3D lmp92001_ext_info, \<br>
++}<br>
++<br>
++static const struct iio_chan_spec lmp92001_adc_channels[] =3D {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(1, IIO_VOLTAGE, lmp92001_eve=
+nts,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0ARRAY_SIZE(lmp92001_events)),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(2, IIO_VOLTAGE, lmp92001_eve=
+nts,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0ARRAY_SIZE(lmp92001_events)),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(3, IIO_VOLTAGE, lmp92001_eve=
+nts,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0ARRAY_SIZE(lmp92001_events)),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(4, IIO_VOLTAGE, NULL, 0),<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(5, IIO_VOLTAGE, NULL, 0),<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(6, IIO_VOLTAGE, NULL, 0),<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(7, IIO_VOLTAGE, NULL, 0),<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(8, IIO_VOLTAGE, NULL, 0),<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(9, IIO_VOLTAGE, lmp92001_eve=
+nts,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0ARRAY_SIZE(lmp92001_events)),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(10, IIO_VOLTAGE, lmp92001_ev=
+ents,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0ARRAY_SIZE(lmp92001_events)),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(11, IIO_VOLTAGE, lmp92001_ev=
+ents,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0ARRAY_SIZE(lmp92001_events)),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(12, IIO_VOLTAGE, NULL, 0),<b=
+r>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(13, IIO_VOLTAGE, NULL, 0),<b=
+r>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(14, IIO_VOLTAGE, NULL, 0),<b=
+r>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(15, IIO_VOLTAGE, NULL, 0),<b=
+r>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(16, IIO_VOLTAGE, NULL, 0),<b=
+r>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_CHAN_SPEC(17,=C2=A0 =C2=A0 IIO_TEMP, N=
+ULL, 0),<br>
++};<br>
++<br>
++static int lmp92001_adc_probe(struct platform_device *pdev)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D dev_get_drvdata(p=
+dev-&gt;dev.<wbr>parent);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct iio_dev *indio_dev;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct device_node *np =3D pdev-&gt;dev.of_node=
+;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int cgen =3D 0, cad1, cad2, cad3;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 mask;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0indio_dev =3D devm_iio_device_alloc(&amp;pdev-&=
+gt;<wbr>dev, 0);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!indio_dev)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENOMEM;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0iio_device_set_drvdata(indio_<wbr>dev, lmp92001=
+);<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mutex_init(&amp;lmp92001-&gt;adc_<wbr>lock);<br=
+>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0indio_dev-&gt;name =3D pdev-&gt;name;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0indio_dev-&gt;dev.parent =3D &amp;pdev-&gt;dev;=
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0indio_dev-&gt;modes =3D INDIO_DIRECT_MODE;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0indio_dev-&gt;info =3D &amp;lmp92001_info;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0indio_dev-&gt;channels =3D lmp92001_adc_channel=
+s;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0indio_dev-&gt;num_channels =3D ARRAY_SIZE(lmp92=
+001_adc_<wbr>channels);<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, LMP92001_CGEN,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0CGEN_RST,=
+ CGEN_RST);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(&amp;pdev-&=
+gt;dev, &quot;failed to self reset all registers\n&quot;);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Turn on all of them, if you are pretty sure =
+they are must be<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * real-time update or specify which channel is=
+ needed to be used to<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * save conversion time for a cycle.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D of_property_read_u32(np, &quot;ti,lmp92=
+001-adc-mask&quot;, &amp;mask);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cad1 =3D cad2 =3D c=
+ad3 =3D 0xFF;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_info(&amp;pdev-=
+&gt;dev, &quot;turn on all of channels by default\n&quot;);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0} else {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cad1 =3D mask &amp;=
+ 0xFF;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cad2 =3D (mask &gt;=
+&gt; 8) &amp; 0xFF;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cad3 =3D (mask &gt;=
+&gt; 16) &amp; 0xFF;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, LMP92001_CAD1, 0xFF, cad1);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(&amp;pdev-&=
+gt;dev, &quot;failed to enable/disable channels 1-8\n&quot;);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, LMP92001_CAD2, 0xFF, cad2);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(&amp;pdev-&=
+gt;dev, &quot;failed to enable/disable channels 9-16\n&quot;);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap, LMP92001_CAD3, BIT(0), cad3);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(&amp;pdev-&=
+gt;dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0&quot;failed to enable/disable channel 17 (temperature)\n&quot;);=
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0cgen |=3D 1; /* Continuous conversion is defaul=
+t. */<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0/* Lock the HW registers and set conversion mod=
+e. */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D regmap_update_bits(lmp92001-&gt;<wbr>re=
+gmap,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0LMP92001_=
+CGEN, CGEN_LCK | CGEN_STRT,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cgen | CG=
+EN_LCK);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &lt; 0)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0platform_set_drvdata(pdev, indio_dev);<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return devm_iio_device_register(&amp;<wbr>pdev-=
+&gt;dev, indio_dev);<br>
++}<br>
++<br>
++static int lmp92001_adc_remove(struct platform_device *pdev)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct iio_dev *indio_dev =3D platform_get_drvd=
+ata(pdev);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct lmp92001 *lmp92001 =3D iio_device_get_dr=
+vdata(indio_<wbr>dev);<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * To stop ADC conversion to save power<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 *<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Unlock the HW registers.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Set conversion mode to single-shot.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Lock the HW registers.<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 */<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0regmap_update_bits(lmp92001-&gt;<wbr>regmap, LM=
+P92001_CGEN, CGEN_LCK, 0);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0regmap_update_bits(lmp92001-&gt;<wbr>regmap, LM=
+P92001_CGEN, CGEN_STRT, 0);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0regmap_update_bits(lmp92001-&gt;<wbr>regmap, LM=
+P92001_CGEN, CGEN_LCK, CGEN_LCK);<br>
++<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;<br>
 +}<br>
 +<br>
-+static struct platform_driver lmp92001_gpio_driver =3D {<br>
++static struct platform_driver lmp92001_adc_driver =3D {<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0.<a href=3D"http://driver.name" rel=3D"noreferr=
-er" target=3D"_blank">driver.name</a>=C2=A0 =C2=A0 =3D &quot;lmp92001-gpio&=
-quot;,<br>
+er" target=3D"_blank">driver.name</a>=C2=A0 =C2=A0 =3D &quot;lmp92001-adc&q=
+uot;,<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0.probe=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D lm=
-p92001_gpio_probe,<br>
+p92001_adc_probe,<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0.remove=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D lm=
-p92001_gpio_remove,<br>
+p92001_adc_remove,<br>
 +};<br>
 +<br>
-+static int __init lmp92001_gpio_init(void)<br>
++static int __init lmp92001_adc_init(void)<br>
 +{<br>
 +=C2=A0 =C2=A0 =C2=A0 =C2=A0return platform_driver_register(&amp;<wbr>lmp92=
-001_gpio_driver);<br>
+001_adc_driver);<br>
 +}<br>
-+subsys_initcall(lmp92001_<wbr>gpio_init);<br>
++subsys_initcall(lmp92001_adc_<wbr>init);<br>
 +<br>
-+static void __exit lmp92001_gpio_exit(void)<br>
++static void __exit lmp92001_adc_exit(void)<br>
 +{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0platform_driver_unregister(&amp;<wbr>lmp92001_g=
-pio_driver);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0platform_driver_unregister(&amp;<wbr>lmp92001_a=
+dc_driver);<br>
 +}<br>
-+module_exit(lmp92001_gpio_<wbr>exit);<br>
++module_exit(lmp92001_adc_<wbr>exit);<br>
 +<br>
 +MODULE_AUTHOR(&quot;Abhisit Sangjan &lt;<a href=3D"mailto:s.abhisit@gmail.=
 com">s.abhisit@gmail.com</a>&gt;&quot;);<br>
-+MODULE_DESCRIPTION(&quot;GPIO interface for TI LMP92001&quot;);<br>
++MODULE_DESCRIPTION(&quot;IIO ADC interface for TI LMP92001&quot;);<br>
 +MODULE_LICENSE(&quot;GPL&quot;);<br>
-+MODULE_ALIAS(&quot;platform:<wbr>lmp92001-gpio&quot;);<br>
++MODULE_ALIAS(&quot;platform:<wbr>lmp92001-adc&quot;);<br>
 <span class=3D"gmail-HOEnZb"><font color=3D"#888888">--<br>
 2.13.0<br>
 <br>
 </font></span></div><br></div></div>
 
---f403045ec3c2bbdca5055806c895--
+--001a1140221e3a8569055806c22e--
