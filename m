@@ -1,96 +1,37 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: Document the hi3660 thermal sensor
- bindings
-Date: Thu, 31 Aug 2017 20:24:23 +0200
-Message-ID: <d56428a6-ef27-4424-3ce5-4610fef3ac15@linaro.org>
-References: <e313015d-11d5-91b8-aa64-37e9410cb882@hisilicon.com>
- <1503994666-13954-1-git-send-email-kevin.wangtao@hisilicon.com>
- <1503994666-13954-2-git-send-email-kevin.wangtao@hisilicon.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 09/10] dt-bindings: exynos5433-decon: remove
+ i80-if-timings property
+Date: Thu, 31 Aug 2017 13:40:46 -0500
+Message-ID: <20170831184046.k2lv3cgbasiyku66@rob-hp-laptop>
+References: <1503581639-580-1-git-send-email-a.hajda@samsung.com>
+ <CGME20170824133411eucas1p2ea8efac5afa8d33d3497829f9bc0b314@eucas1p2.samsung.com>
+ <1503581639-580-10-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503994666-13954-2-git-send-email-kevin.wangtao@hisilicon.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tao Wang <kevin.wangtao@hisilicon.com>, rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: leo.yan@linaro.org, kevin.wangtao@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sunzhaosheng@hisilicon.com, gengyanping@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1503581639-580-10-git-send-email-a.hajda@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/2017 10:17, Tao Wang wrote:
-> From: Tao Wang <kevin.wangtao@linaro.org>
-> 
-> This adds documentation of device tree bindings for the
-> thermal sensor controller of hi3660 SoC.
-> 
-> Signed-off-by: Tao Wang <kevin.wangtao@linaro.org>
-> ---
->  .../devicetree/bindings/thermal/hisi-tsensor.txt   | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/hisi-tsensor.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/hisi-tsensor.txt b/Documentation/devicetree/bindings/thermal/hisi-tsensor.txt
-> new file mode 100644
-> index 0000000..4643dbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/hisi-tsensor.txt
-> @@ -0,0 +1,37 @@
-> +* Temperature Sensor on hisilicon SoC
-> +
-> +Hisilicon SoC supplies temperature sensor feature, each CPU cluster and G3D
-> +area contains a temperture sensor. The temperture sensor produces an output
-> +value which has a linear relationship with the temperture of the area.
-> +
-
-s/temperture/temperature/
-
-> +for Hi3660,
-> +sensor0 monitors the temperture of A53;
-> +sensor1 monitors the temperture of A72;
-> +sensor2 monitors the temperture of GPU;
-> +sensor3 is a virtual sensor, which produces the maximum value of all sensors;
-> +sensor4 is a virtual sensor, which produces the average value of all sensors.
-
-I don't think we need to escribe the virtual sensors in the DT bindings.
-
-> +** Required properties :
-> +- compatible: "hisilicon,thermal-tsensor".
-> +- reg: physical reg address of thermal sensor and length of memory mapped
-> +  region.
-> +- hisi,tsensors: number of hardware tsensors
-> +- hisi,coef:	An array of integers (one signed cell) containing
-> +		coefficients to turn adc value to temperture.
-> +- hisi,adc-range: adc value range, minimum value is followed by maximum value.
-> +- #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
-> +
-> +Example :
-> +Hi3660:
-> +tsensor: tsensor@fff30000 {
-> +	compatible = "hisilicon,hi3660-tsensor";
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +	reg = <0x0 0xfff3001c 0x0 0x4>,
-> +		<0x0 0xfff3005c 0x0 0x4>,
-> +		<0x0 0xfff3009c 0x0 0x4>;
-> +	hisi,tsensors = <HISI_MAX_TSENSORS>;
-> +	hisi,coef = <165000 (-40000)>;
-> +	hisi,adc-range = <0x74 0x39A>;
-
-Do we really need max sensors, coef and adc range to be specified in the DT?
-
-Can't we assume the hi3660-tsensor has 3 sensors, and hard-code the
-coef, adc, in the driver itself?
-
-Can't this binding be merged with the hisilicon-thermal.txt?
-
-Thanks.
-
-  -- Daniel
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+T24gVGh1LCBBdWcgMjQsIDIwMTcgYXQgMDM6MzM6NThQTSArMDIwMCwgQW5kcnplaiBIYWpkYSB3
+cm90ZToKPiBTaW5jZSBpODAvY29tbWFuZCBtb2RlIGlzIGRldGVybWluZWQgaW4gcnVudGltZSBi
+eSBwcm9wYWdhdGluZyBpbmZvCj4gZnJvbSBwYW5lbCB0aGlzIHByb3BlcnR5IGNhbiBiZSByZW1v
+dmVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5j
+b20+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9zL2V4eW5v
+czU0MzMtZGVjb24udHh0ICB8IDEyIC0tLS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTIg
+ZGVsZXRpb25zKC0pCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
