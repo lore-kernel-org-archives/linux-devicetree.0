@@ -1,47 +1,42 @@
-From: =?UTF-8?Q?Fr=c3=a9d=c3=a9ric_Danis?= <frederic.danis.oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: net: bluetooth: Add
- broadcom-bluetooth
-Date: Thu, 31 Aug 2017 21:32:56 +0200
-Message-ID: <cbd8f439-0575-593e-80d7-8c5d74188236@gmail.com>
-References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
- <20170822074726.e424lflqxn6mb4xd@flea.lan>
- <f2fcf522-cd1e-e748-0ee7-ad28bbf8ae5d@i2se.com>
- <4c23bcb6-1b90-c41e-6e47-7d8315e760ae@gmail.com>
- <9BD5C644-6B89-496C-B442-F276D7A99102@holtmann.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: exynos: Add HDMI and Sil9234 to Trats2
+ board
+Date: Thu, 31 Aug 2017 21:36:35 +0200
+Message-ID: <20170831193635.wuw7vdanhj3vu46y@kozik-lap>
+References: <1504182434-8201-1-git-send-email-m.purski@samsung.com>
+ <CGME20170831122749eucas1p2c6712236398e8c19a5eb24641bb0020b@eucas1p2.samsung.com>
+ <1504182434-8201-3-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9BD5C644-6B89-496C-B442-F276D7A99102-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1504182434-8201-3-git-send-email-m.purski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcel and Loïc,
+On Thu, Aug 31, 2017 at 02:27:14PM +0200, Maciej Purski wrote:
+> Add HDMI and Sil9234 MHL converter to Trats2 board.
+> Following in SoC devices have been enabled:
+> - HDMI (HDMI signal encoder),
+> - Mixer (video buffer scanout device),
+> - I2C_5 bus (used for HDMI DDC)
+> - I2C_8 bus (used for HDMI_PHY control).
+> 
+> Based on previous work by:
+> Tomasz Stanislawski <t.stanislaws@samsung.com>
+> 
+> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+> ---
+> Changes in v2:
+> - fix commit message
+> - add regulators nodes to model actual physical connections
+> ---
+>  arch/arm/boot/dts/exynos4412-trats2.dts | 111 ++++++++++++++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
 
-Le 23/08/2017 à 16:19, Marcel Holtmann a écrit :
->> This is already partially supported in the hci_bcm driver.
->> Today this driver registers a platform_driver(legacy/ACPI) and a
->> serdev_device_driver (new/DT).
->>
->> The platform driver retrieves the gpios and mainly uses them in pm ops.
->> Once the ACPI for serdev will be supported, this plat driver should be
->> removed.
->>
->> The serdev driver does no support this yet because I used the RPi3
->> as dev platform. But this is something we want to have as well.
-> Making ACPI serdev aware and turning BTH0 into serdev nodes is really the next step. That would allow us to simplify the drivers and remove duplicate code. Do you still have access to ACPI based tablets with Broadcom chips? It would be great if you can take a stab at this.
+I think all of my previous comments were missed...
 
-I have access to an Asus T100TA with Broadcom chipset and I recently 
-started to work on the ACPI part of SerDev.
-I hope to send patches for it soon.
-
-Regards,
-
-Frédéric Danis
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
