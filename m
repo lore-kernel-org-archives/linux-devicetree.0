@@ -1,69 +1,45 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [net-next PATCHv6 1/2] dt-bindings: net: Add DT bindings for
- Socionext Netsec
-Date: Thu, 31 Aug 2017 08:43:03 +0530
-Message-ID: <CABb+yY1+oOvWS5aBHvQQmjPOQEEKfWFguCW1-SQeG339fKfBpw@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [net-next PATCHv6 0/2] net: ethernet: Socionext Netsec
+Date: Wed, 30 Aug 2017 21:06:25 -0700
+Message-ID: <27A7C5A5-AFF4-49F3-B0DF-7F53283EC2A4@gmail.com>
 References: <1504088657-6102-1-git-send-email-jaswinder.singh@linaro.org>
- <1504088752-6204-1-git-send-email-jaswinder.singh@linaro.org> <20170830151942.GB22289@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170830151942.GB22289-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1504088657-6102-1-git-send-email-jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Green <andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy-/Zus8d0mwwtBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 8:49 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-> On Wed, Aug 30, 2017 at 03:55:52PM +0530, Jassi Brar wrote:
->> This patch adds documentation for Device-Tree bindings for the
->> Socionext NetSec Controller driver.
->>
->> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/net/socionext-netsec.txt   | 46 ++++++++++++++++++++++
->>  1 file changed, 46 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
->> new file mode 100644
->> index 0000000..12d596c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
->> @@ -0,0 +1,46 @@
->> +* Socionext NetSec Ethernet Controller IP
->> +
->> +Required properties:
->> +- compatible: Should be "socionext,netsecv5"
->> +- reg: Address and length of the register sets, the first is the main
->> +     registers, then the rdlar and tdlar regions for the SoC
->> +- interrupts: Should contain ethernet controller interrupt
->> +- clocks: phandle to any clocks to be switched by runtime_pm
->> +- phy-mode: See ethernet.txt file in the same directory
+On August 30, 2017 3:24:17 AM PDT, Jassi Brar <jassisinghbrar@gmail=2Ecom> =
+wrote:
+>Hello,
 >
->> +- max-speed: See ethernet.txt file in the same directory
->> +- max-frame-size: See ethernet.txt file in the same directory, if 9000 or
->> +     above jumbo frames are enabled
->> +- local-mac-address: See ethernet.txt file in the same directory
+>The OGMA/Netsec controller is used in latest SoC from
+>Socionext/Fujitsu=2E
 >
-> These three are required, not optimal?
+>I am refreshing the patchset by basically using official name of the IP
+>from 'OGMA' to 'Netsec'=2E And the company is renamed too, from Fujitsu
+>to Socionext to better reflect the reality=2E
 >
-optional :)
+> I have addressed comments (that could be) on the last revision -->
+>https://patchwork=2Ekernel=2Eorg/patch/4540651/
+>
+> Of course, I have scanned changes to the drivers/net/ethernet since
+>last submission and integrated whichever applicable and rebased the
+>driver on top of last rc=2E
 
->> +- phy-handle: phandle to select child phy
->> +
->> +Optional properties:
->> +- use-jumbo: Boolean property to suggest if jumbo packets should be used or not
->> +
->> +For the child phy
->> +
->> +- compatible "ethernet-phy-ieee802.3-c22" is needed
->
-> This is normally considered optional. Why require it?
->
-Yes, will do.
+It does not appear to be at first glance, but I will just ask anyways, thi=
+s is not yet another variant of stmmac glued just a little bit differently =
+into the SoC right?
 
-Thanks.
+Will take a closer look at the register set and driver tomorrow=2E Thanks
+
+--=20
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
