@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v3 4/9] ARM64: dts: meson-gxbb: nanopi-k2: add card regulator settle times
-Date: Thu, 31 Aug 2017 15:52:21 +0200
-Message-ID: <20170831135226.19784-5-jbrunet@baylibre.com>
+Subject: [PATCH v3 9/9] ARM64: dts: meson-gxbb: nanopi-k2: enable sdr104 mode
+Date: Thu, 31 Aug 2017 15:52:26 +0200
+Message-ID: <20170831135226.19784-10-jbrunet@baylibre.com>
 References: <20170831135226.19784-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170831135226.19784-1-jbrunet@baylibre.com>
@@ -10,32 +10,26 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Changing the card voltage on the nanopi-k2 is not instantaneous,
-especially when switching from 3.3v to 1.8v.
+SDR104 seems to be OK on the nanopi-k2 SBC so enable it
 
-It take at least 3ms for the regulator to go from 3.3v to 1.8v. Add
-margin to that to make sure we don't upset the sdcard during the voltage
-switch
-
-Fixes: 9bc7ffb08daf ("arm64: dts: amlogic: Add NanoPi K2")
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index 60d5f2da6916..acb6797756e5 100644
+index 4c1320a93fef..4b17a76959b2 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -107,6 +107,9 @@
+@@ -288,7 +288,8 @@
+ 	sd-uhs-sdr12;
+ 	sd-uhs-sdr25;
+ 	sd-uhs-sdr50;
+-	max-frequency = <100000000>;
++	sd-uhs-sdr104;
++	max-frequency = <200000000>;
+ 	disable-wp;
  
- 		states = <3300000 0>,
- 		         <1800000 1>;
-+
-+		regulator-settling-time-up-us = <100>;
-+		regulator-settling-time-down-us = <5000>;
- 	};
- 
- 	wifi_32k: wifi-32k {
+ 	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
 -- 
 2.9.5
