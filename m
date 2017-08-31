@@ -1,29 +1,37 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm: dts: mt7623: add display related nodes
-Date: Thu, 31 Aug 2017 09:12:13 +0200
-Message-ID: <CACRpkdZi1o6Vj=WoZBhS5DCW5=ctsCHu35jHBvHQMhFkQKB_Og@mail.gmail.com>
-References: <9c4a8be621ac76594fad303d5d49ed32bd530605.1503222289.git.ryder.lee@mediatek.com>
- <42a9db86b49834188bd680d0144e639c98aafaa2.1503222289.git.ryder.lee@mediatek.com>
+Subject: Re: [RESEND PATCH v5 1/3] pinctrl: Add sleep related state to
+ indicate sleep related configs
+Date: Thu, 31 Aug 2017 09:16:28 +0200
+Message-ID: <CACRpkdZPeRpBSWFe88NA0NkV_Thiq7FSrwiCSyado7xBhEAhgg@mail.gmail.com>
+References: <eb7925c9642efb8a1ee5804a9b06f06d9f082089.1500018536.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <42a9db86b49834188bd680d0144e639c98aafaa2.1503222289.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <eb7925c9642efb8a1ee5804a9b06f06d9f082089.1500018536.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 20, 2017 at 11:46 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+On Thu, Aug 17, 2017 at 8:50 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
 
-> This patch adds the device nodes for the display function block.
-> Also, we add some missing pin macros in mt7623-pinfunc.h.
+> In some scenarios, we should set some pins as input/output/pullup/pulldown
+> when the specified system goes into deep sleep mode, then when the system
+> goes into deep sleep mode, these pins will be set automatically by hardware.
 >
-> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> CC: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> That means some pins are not controlled by any specific driver in the OS, but
+> need to be controlled when entering sleep mode. Thus we introduce one sleep
+> state config into pinconf-generic for users to configure.
+>
+> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> ---
+> Changes since v4:
+>  - Add sleep-hardware-state config to indicate sleep related configs.
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+No reactions and I can certainly not think of anything better (I even
+suggested this) so patch applied.
 
-Please take this through the ARM SoC tree.
+Sorry for taking so long to look at this, I've been choked :/
 
 Yours,
 Linus Walleij
