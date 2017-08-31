@@ -1,53 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH/RFC 1/3] dt-bindings: i2c: i2c-gpio: Add support for
- named gpios
-Date: Thu, 31 Aug 2017 12:55:29 -0500
-Message-ID: <20170831175529.vuchpgvi2aigz2r5@rob-hp-laptop>
-References: <1503566474-5335-1-git-send-email-geert+renesas@glider.be>
- <1503566474-5335-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH ] phy: rcar-gen2: Add r8a7743/5 support
+Date: Thu, 31 Aug 2017 12:57:27 -0500
+Message-ID: <20170831175727.tjncwk2c2gvzmlzb@rob-hp-laptop>
+References: <1503568773-41410-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503566474-5335-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1503568773-41410-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 11:21:12AM +0200, Geert Uytterhoeven wrote:
-> The current i2c-gpio DT bindings use a single unnamed "gpios" property
-> to refer to the SDA and SCL signal lines by index.  This is error-prone
-> for the casual DT writer and reviewer, as one has to look up the order
-> in the DT bindings.
+On Thu, Aug 24, 2017 at 10:59:33AM +0100, Biju Das wrote:
+> Add USB PHY support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5)
+> USB PHY is identical to the R-Car Gen2 family.
 > 
-> Fix this by amending the DT bindings to use two separate named gpios
-> properties, and deprecate the old unnamed variant.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-gpio.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> This patch is tested against Linux next tag next-20170824 and 
+> renesas-dev branch renesas-devel-20170822-v4.13-rc6. 
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-> index 4f8ec947c6bd9cad..61033f73577dd70e 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-> @@ -2,8 +2,9 @@ Device-Tree bindings for i2c gpio driver
->  
->  Required properties:
->  	- compatible = "i2c-gpio";
-> -	- gpios: sda and scl gpio
-> -
-> +	- sda-gpios: gpio used for the sda signal
-> +	- scl-gpios: gpio used for the scl signal
-> +	- gpios: sda and scl gpio, alternative for {sda,scl}-gpios (deprecated)
->  
->  Optional properties:
->  	- i2c-gpio,sda-open-drain: sda as open drain
+>  Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
-Well, if we're going to change things, we should drop these open-drain 
-properties. We have open-drain flags in gpio cells, so we don't need 
-these I think.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
