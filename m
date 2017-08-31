@@ -1,69 +1,381 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for Allwinner A64
-Date: Thu, 31 Aug 2017 16:52:46 +0200
-Message-ID: <20170831145246.p4k3uakbn67na3pv@flea.lan>
-References: <20170830233609.13855-1-stefan.bruens@rwth-aachen.de>
- <20170830233609.13855-4-stefan.bruens@rwth-aachen.de>
+Subject: Re: [PATCH v5] arm64: allwinner: h5: add support for
+ NanoPi NEO Plus2
+Date: Thu, 31 Aug 2017 16:58:59 +0200
+Message-ID: <20170831145859.rief3fqo36ns23rm@flea>
+References: <20170824231716.2623-1-antony@phenome.org>
+ <20170830125057.38529-1-antony@phenome.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="q6ijb5qpgbsb6jtp"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rhe3huqp3kdurwsx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBP6IUDGQKGQEMTOES5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170830233609.13855-4-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170830125057.38529-1-antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---q6ijb5qpgbsb6jtp
-Content-Type: text/plain; charset=iso-8859-1
+--rhe3huqp3kdurwsx
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 31, 2017 at 01:36:09AM +0200, Stefan Br=FCns wrote:
-> The A64 SoC has the same dma engine as the H3 (sun8i), with a
-> reduced amount of physical channels. Add the proper config data
-> and compatible string to support it.
->=20
-> Signed-off-by: Stefan Br=FCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Hi,
+
+On Wed, Aug 30, 2017 at 02:50:57PM +0200, Antony Antony wrote:
+> 	Add initial DT support for NanoPi NEO Plus2 by FriendlyARM
+> 		Allwinner quad core H5 Cortex A53 with an ARM Mali-450MP GPU
+> 		1 GB DDR3 RAM
+> 		8GB eMMC flash (Samsung KLM8G1WEPD-B031)
+> 		micro SD card slot
+> 		Gigabit Ethernet (external RTL8211E-VB-CG chip)
+> 		802.11 b/g/n WiFi, Bluetooth 4.0 (Ampak AP6212A module)
+> 		2x USB 2.0 host ports & 2x USB via headers
+
+This indendation is weird
+
+>     The DTS is based on OrangePi PC 2, sun50i-h5-orangepi-pc2
+>     Added dwmac-sun8i Gigabit Ethernet support based on
+>     Nano Pi Neo2 DT and the schematics.
+
+And that's outdated.
+
+> Signed-off-by: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 4 ++++
->  drivers/dma/sun6i-dma.c                       | 7 +++++++
->  2 files changed, 11 insertions(+)
+>  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+>  .../dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts   | 262 +++++++++++++++++++++
+>  2 files changed, 263 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
+> 
+> ---
+> Changes
+> v1 -> v2
+>  add wifi power controller,  mmc1, mmc2
+>  remove reg_usb0_vbus
+> v2 -> v3
+> fix typo s/orangepi/nanopi/, s/pus/plus/
+>  usb_otg set to host mode
+>  wifi fix, based on commit 442e1f7e brcm,bcm43xx-fmac.txt
+>  remove functions on header pins: spi, ir, ehci 1&2, ohci 1&2, uart 1&2
+>  remove hdmi, de2, r-gpio-keys, mixer - not supported the board
+> v3->v4 update WiFi chip compatible to bcm43430-fmac
+> v4->v5 back to bcm4329-fmac bcm43430-fmac is the wrong way.
+>  
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> index 108f12c..e6810c8 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo-plus2.dtb
+>  
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
+> new file mode 100644
+> index 0000000..a6687db
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
+> @@ -0,0 +1,262 @@
+> +/*
+> + * Copyright (C) 2017 Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+> + * Copyright (C) 2016 ARM Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun50i-h5.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+> +
+> +/ {
+> +	model = "FriendlyARM NanoPi NEO Plus2";
+> +	compatible = "friendlyarm,nanopi-neo-plus2", "allwinner,sun50i-h5";
+> +
+> +	reg_vcc3v3: vcc3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	aliases {
+> +		ethernet0 = &emac;
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		pwr {
+> +			label = "nanopi:green:pwr";
+> +			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +
+> +		status {
+> +			label = "nanopi:red:status";
+> +			gpios = <&pio 0 20 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	reg_gmac_3v3: gmac-3v3 {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&gmac_power_pin_nanopi>;
+> +		regulator-name = "gmac-3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		startup-delay-us = <100000>;
+> +		enable-active-high;
+> +		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	vdd_cpux: gpio-regulator {
+> +		compatible = "regulator-gpio";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vdd_cpux_r_npi>;
+> +
+> +		regulator-name = "vdd-cpux";
+> +		regulator-type = "voltage";
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +		regulator-min-microvolt = <1100000>;
+> +		regulator-max-microvolt = <1300000>;
+> +		regulator-ramp-delay = <50>; /* 4ms */
+> +
+> +		gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>;
+> +		gpios-states = <0x1>;
+> +		states = <1100000 0x0
+> +			  1300000 0x1>;
+> +	};
+> +
+> +	wifi_pwrseq: wifi_pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wifi_en_npi>;
+> +		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+> +		post-power-on-delay-ms = <200>;
+> +	};
 
-With what device did you test this? As far as I know, the SPI driver
-doesn't use DMA at all.
+You should order these nodes alphabetically.
+
+> +&codec {
+> +	allwinner,audio-routing =
+> +		"Line Out", "LINEOUT",
+> +		"MIC1", "Mic",
+> +		"Mic",  "MBIAS";
+> +	status = "okay";
+> +};
+> +
+> +&ehci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ehci3 {
+> +	status = "okay";
+> +};
+> +
+> +&emac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emac_rgmii_pins>;
+> +	phy-supply = <&reg_gmac_3v3>;
+> +	phy-handle = <&ext_rgmii_phy>;
+> +	phy-mode = "rgmii";
+> +	status = "okay";
+> +};
+> +
+> +&mdio {
+> +	ext_rgmii_phy: ethernet-phy@7 {
+> +		compatible = "ethernet-phy-ieee802.3-c22";
+> +		reg = <7>;
+> +	};
+> +};
+
+This will not compile.
+
+> +&mmc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+> +	status = "okay";
+> +};
+> +
+> +&mmc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc1_pins_a>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	vqmmc-supply = <&reg_vcc3v3>;
+> +	mmc-pwrseq = <&wifi_pwrseq>;
+> +	bus-width = <4>;
+> +	non-removable;
+> +	boot_device = <0>;
+
+This property is not documented anywhere, I'm not sure what it's here
+for.
+
+> +	status = "okay";
+> +
+> +	/*
+> +	 * AMPAK AP6212A WiFi module with BCM43430, rev=1 inside
+> +	 * sdio vendor ID: 0x02d0, sdio device ID: 0xa9a6
+> +	 * There is no specific Documentation: dt-binding for BCM43430
+> +	 * brcm,bcm4329-fmac compatible can initialize this module
+> +	 */
+
+This is not really relevant.
+
+> +	brcmf: wifi@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +	};
+> +};
+> +
+> +&mmc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc2_8bit_pins>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	cap-mmc-hw-reset;
+> +	boot_device = <0>;
+> +	status = "okay";
+> +};
+> +
+> +&mmc2_8bit_pins {
+> +	/* Increase drive strength for DDR modes */
+> +	drive-strength = <40>;
+
+It's very likely that you actually don't need 40mA
+
+> +	/* eMMC is missing pull-ups */
+> +	bias-pull-up;
+> +};
+
+And that one is already here by default.
+
+> +&ohci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci3 {
+> +	status = "okay";
+> +};
+> +
+> +&pio {
+> +	leds_npi: led_pins@0 {
+> +		pins = "PA10";
+> +		function = "gpio_out";
+> +	};
+> +	gmac_power_pin_nanopi: gmac_power_pin@0 {
+> +			pins = "PD6";
+> +			function = "gpio_out";
+> +	};
+> +};
+
+You don't need these nodes
+
+> +
+> +&r_pio {
+> +	leds_r_npi: led_pins@0 {
+> +		pins = "PL10";
+> +		function = "gpio_out";
+> +	};
+> +
+> +	vdd_cpux_r_npi: regulator_pins@0 {
+> +		allwinner,pins = "PL6";
+> +		allwinner,function = "gpio_out";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +	};
+> +
+> +	wifi_en_npi: wifi_en_pin {
+> +		pins = "PL7";
+> +		function = "gpio_out";
+> +	};
+> +};
+
+Or those.
+
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&usb_otg {
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	/* USB Type-A ports' VBUS is always on */
+> +	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+
+If it has an ID-detect pin, then it's not a host-only USB OTG
+controller. dr_mode should be set to otg.
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---q6ijb5qpgbsb6jtp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZqCK+AAoJEBx+YmzsjxAgwfoQAIdOg/nUV1PYfAl+tCh3A5Vn
-AMUbwL+sL4YZi2DQKVqrwxItlSpyB1QZMdjx2M7XAM7m9rDpKDJ3kISSiKel2fXv
-P0ob4uR2bZeDtMqSDOJuCDUI7y4U9zsiN7Dcxlczjs8URGwjx5f337sYpVKe+HSH
-HEs4hDg2YZGIoKm1N2CLe1RrLKJMG5ZKhh5jy9lO9nUwDTbXVljfOlSbvOcRM9Bj
-2CJOdGOlezKW5pYiALSrqez7Piak2WdjdZclkJncdIf9R7UKIEebQax25w9U/PoX
-z1i2IZpPhp5nRL1wIS86GqrvDEIf0Vi9fjcY/R0yXgXAG1RN62KBj4C+P52lEwrb
-CYiCSb9dv/PEUtqlKmTW9xUl0HkGPSVHsozxQV/FmpwTwZwQdL8Ls+hqrgHOuBUy
-kELbgKMkpO5Xuk+hn6qJgk9DUaX4eGxab1wvy9axagSpGJdB/hx5RtJWfCOHtfVj
-W+kymYFHelSRUxXkTGLkBt2cCyu4+hhuNN7j1Qu8zjf+E3sA97AkDIo7ryrK9vtl
-fXf45cSsDjJ9VfjOliygX3I9QmyaPGZwsxena+tTKI1Gq1AkMZeWyzMnnfE3DRDn
-cWepaSuP0FwxURuq5c8mza4T8eQT4nr/ZT201doCY2kfEmkGJzBrhbSA9m/KInTn
-hPqmr6t4NHs7Uvkmc6Mg
-=yZ8V
------END PGP SIGNATURE-----
-
---q6ijb5qpgbsb6jtp--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--rhe3huqp3kdurwsx--
