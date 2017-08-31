@@ -1,76 +1,70 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3 v8] ARC: hsdk: initial port for HSDK board
-Date: Thu, 31 Aug 2017 10:38:17 -0700
-Message-ID: <c689523e-3fb9-8763-c3ec-83815cadbfd4@synopsys.com>
-References: <20170712094023.23226-1-Eugeniy.Paltsev@synopsys.com>
- <20170712094023.23226-4-Eugeniy.Paltsev@synopsys.com>
- <20170717173823.lklxhoyylhdxjawa@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/7] dt-bindings: PM / OPP: add clocks per OPP node
+ support
+Date: Thu, 31 Aug 2017 12:39:20 -0500
+Message-ID: <20170831173920.4emtr5vkgvjcx6ac@rob-hp-laptop>
+References: <1503504610-12880-1-git-send-email-aisheng.dong@nxp.com>
+ <1503504610-12880-3-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717173823.lklxhoyylhdxjawa@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: arcml <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1503504610-12880-3-git-send-email-aisheng.dong@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, vireshk@kernel.org, nm@ti.com, rjw@rjwysocki.net, shawnguo@kernel.org, Anson.Huang@nxp.com, ping.bai@nxp.com, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 07/17/2017 10:38 AM, Rob Herring wrote:
-> On Wed, Jul 12, 2017 at 12:40:23PM +0300, Eugeniy Paltsev wrote:
->> From: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>
->> This initial port adds support of ARC HS Development Kit board with some
->> basic features such serial port, USB, SD/MMC and Ethernet.
->>
->> Essentially we run Linux kernel on all 4 cores (i.e. utilize SMP) and
->> heavily use IO Coherency for speeding-up DMA-aware peripherals.
->>
->> Note as opposed to other ARC boards we link Linux kernel to
->> 0x9000_0000 intentionally because cores 1 and 3 configured with DCCM
->> situated at our more usual link base 0x8000_0000. We still can use
->> memory region starting at 0x8000_0000 as we reallocate DCCM in our
->> platform code.
->>
->> Note that PAE remapping for DMA clients does not work due to an RTL bug,
->> so CREG_PAE register must be programmed to all zeroes, otherwise it will
->> cause problems with DMA to/from peripherals even if PAE40 is not used.
->>
->> Signed-off-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> ---
->> Changes v7 -> v8:
->>   * DTS: move cpu_intc, idu_intc, arcpct, timer, gfrc nodes to root
->>     level and out of the cpus node.
->>   * DTS: add vendor-specific compatible for ohci and ehci nodes.
->>   * DTS: style fixes
+On Thu, Aug 24, 2017 at 12:10:05AM +0800, Dong Aisheng wrote:
+> It's used for platforms where different OPPs may use different clocks.
+> With this extended binding, user could specify the correct clock for each
+> OPP node.
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>
+> Cc: Viresh Kumar <vireshk@kernel.org>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt | 52 +++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
 > 
->> +		ohci@60000 {
->> +			compatible = "snps,hsdk-v1.0-ohci", "generic-ohci";
->> +			reg = <0x60000 0x100>;
->> +			interrupts = <15>;
->> +		};
->> +
->> +		ehci@40000 {
->> +			compatible = "snps,hsdk-v1.0-ehci", "generic-ehci";
->> +			reg = <0x40000 0x100>;
->> +			interrupts = <15>;
->> +		};
-> 
-> Of course, now these compatibles need to be documented. You can do that
-> in a separate follow-up patch.
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index e36d261..40a4340 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -152,6 +152,11 @@ Optional properties:
+>    hierarchy can be contained in multiple 32 bit values. i.e. <X Y Z1 Z2> in the
+>    above example, Z1 & Z2 refer to the version hierarchy Z.
+>  
+> +- clocks: Clock phandle and specifier used for this opp.
+> +
+> +- clock-names: clock names for this opp. The valid clock names are platform
+> +	       specific.
 
+You don't need -names if there's only 1 clock. But then how long until 
+we have a list of any random clocks some how associated with an OPP.
 
-Are these v1 suffixes really needed. We don't envision any change to usb IP even 
-if we were to ever do a respin of the board !
+I think this should really be solved within the clock framework. What 
+you really need is "set my parent clock to the source that can provide X 
+Hz". Could the assigned-clocks property work here (in the OPP nodes 
+rather than the cpu nodes)?
 
-Thx,
--Vineet
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+>  - status: Marks the node enabled/disabled.
+>  
+>  Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+> @@ -528,3 +533,50 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
+>  		};
+>  	};
+>  };
+> +
+> +Example 7: Single core ARM cortex A7, switch separate clocks for each OPP:
+
+Can't you add this to an existing example? We don't need to enumerate 
+every possible option.
+
+Rob
