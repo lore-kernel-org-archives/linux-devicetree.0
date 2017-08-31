@@ -1,89 +1,44 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] ASoC: tlv320aic3x: Support for OCMV
-	configuration
-Date: Thu, 31 Aug 2017 11:06:05 +0300
-Message-ID: <ca5e6705-47e7-12bd-6391-b22156aa31d7@ti.com>
-References: <20170831080045.28999-1-peter.ujfalusi@ti.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [RESEND PATCH v5 1/3] pinctrl: Add sleep related state to
+ indicate sleep related configs
+Date: Thu, 31 Aug 2017 16:07:01 +0800
+Message-ID: <CAMz4kuJqbL3Mao9UCGCvhbZeAnubLNrddz699ywVfZm2scbr3w@mail.gmail.com>
+References: <eb7925c9642efb8a1ee5804a9b06f06d9f082089.1500018536.git.baolin.wang@spreadtrum.com>
+ <CACRpkdZPeRpBSWFe88NA0NkV_Thiq7FSrwiCSyado7xBhEAhgg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170831080045.28999-1-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZPeRpBSWFe88NA0NkV_Thiq7FSrwiCSyado7xBhEAhgg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-77u/CgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAx
-ODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2Ev
-RG9taWNpbGU6IEhlbHNpbmtpCgpPbiAyMDE3LTA4LTMxIDExOjAwLCBQZXRlciBVamZhbHVzaSB3
-cm90ZToKPiBJbiBhaWMzeCBjbGFzcyBvZiBkZXZpY2VzIE91dHB1dCBDb21tb24tTW9kZSBWb2x0
-YWdlIGNhbiBiZSBjb25maWd1cmVkIGZvcgo+IGJldHRlciBhbmFsb2cgcGVyZm9ybWFuY2UuCj4g
-VGhlIE9DTVYgdmFsdWUgZGVwZW5kcyBvbiB0aGUgQW5hbG9nIGFuZCBkaWdpdGFsIGRvbWFpbiBw
-b3dlciBzdXBwbHkKPiB2b2x0YWdlIGNvbmZpZ3VyYXRpb24uCj4gCj4gVGhlIGRlZmF1bHQgT0NN
-ViBvZiAxLjM1ViBnaXZlcyBiZXN0IHBlcmZvcm1hbmNlIHdoZW4gQVZERCBpcyBhcm91bmQgMi43
-Vgo+IGFuZCBEVkREIGlzIDEuNTI1ViwgYnV0IGZvciBoaWdoZXIgQVZERC9EVkREIGhpZ2hlciBP
-Q01WIHNldHRpbmcgaXMKPiByZWNvbW1lbmRlZC4KPiAKPiBUaGUgcGF0Y2ggZ2l2ZXMgYW4gYXV0
-b21hdGljIHdheSBvZiBndWVzc2luZyB0aGUgYmVzdCBPQ01WIHdoaWNoIGNhbiBiZQo+IG92ZXJ3
-cml0dGVuIGJ5IGEgRFQgcGFyYW1ldGVyIGlmIG5lZWRlZC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQ
-ZXRlciBVamZhbHVzaSA8cGV0ZXIudWpmYWx1c2lAdGkuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9zb3VuZC90bHYzMjBhaWMzeC50eHQgICAgICB8ICA1ICsrKwo+ICBzb3Vu
-ZC9zb2MvY29kZWNzL3RsdjMyMGFpYzN4LmMgICAgICAgICAgICAgICAgICAgICB8IDQ1ICsrKysr
-KysrKysrKysrKysrKysrKysKPiAgc291bmQvc29jL2NvZGVjcy90bHYzMjBhaWMzeC5oICAgICAg
-ICAgICAgICAgICAgICAgfCAgOCArKysrCj4gIDMgZmlsZXMgY2hhbmdlZCwgNTggaW5zZXJ0aW9u
-cygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-c291bmQvdGx2MzIwYWljM3gudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NvdW5kL3RsdjMyMGFpYzN4LnR4dAo+ICtzdGF0aWMgdm9pZCBhaWMzeF9jb25maWd1cmVfb2Nt
-dihzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQo+ICt7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km5wID0gY2xpZW50LT5kZXYub2Zfbm9kZTsKPiArCXN0cnVjdCBhaWMzeF9wcml2ICphaWMzeCA9
-IGkyY19nZXRfY2xpZW50ZGF0YShjbGllbnQpOwo+ICsJdTMyIHZhbHVlOwo+ICsJaW50IGR2ZGQs
-IGF2ZGQ7Cj4gKwo+ICsJaWYgKG5wICYmICFvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImFpM3gt
-b2NtdiIsICZ2YWx1ZSkpIHsKPiArCQkvKiBPQ01WIHNldHRpbmcgaXMgZm9yY2VkIGJ5IERUICov
-Cj4gKwkJaWYgKHZhbHVlIDw9IDMpIHsKPiArCQkJYWljM3gtPm9jbXYgPSB2YWx1ZTsKPiArCQkJ
-cmV0dXJuOwo+ICsJCX0KPiArCX0KPiArCj4gKwlkdmRkID0gcmVndWxhdG9yX2dldF92b2x0YWdl
-KGFpYzN4LT5zdXBwbGllc1sxXS5jb25zdW1lcik7Cj4gKwlhdmRkID0gcmVndWxhdG9yX2dldF92
-b2x0YWdlKGFpYzN4LT5zdXBwbGllc1syXS5jb25zdW1lcik7Cj4gKwo+ICsJaWYgKGF2ZGQgPiAz
-NjAwMDAwIHx8IGR2ZGQgPiAxOTUwMDAwKSB7Cj4gKwkJZGV2X3dhcm4oJmNsaWVudC0+ZGV2LAo+
-ICsJCQkgIlRvbyBoaWdoIHN1cHBseSB2b2x0YWdlKHMpIEFWREQ6ICVkLCBEVkREOiAlZFxuIiwK
-PiArCQkJIGF2ZGQsIGR2ZGQpOwo+ICsJfSBlbHNlIGlmIChhdmRkID09IDM2MDAwMDAgJiYgZHZk
-ZCA9PSAxOTUwMDAwKSB7Cj4gKwkJYWljM3gtPm9jbXYgPSBIUE9VVF9TQ19PQ01WXzFfOFY7Cj4g
-Kwl9IGVsc2UgaWYgKGF2ZGQgPiAzMzAwMDAwICYmIGR2ZGQgPiAxODAwMDAwKSB7Cj4gKwkJYWlj
-M3gtPm9jbXYgPSBIUE9VVF9TQ19PQ01WXzFfNjVWOwo+ICsJfSBlbHNlIGlmIChhdmRkID4gMzAw
-MDAwMCAmJiBkdmRkID4gMTY1MDAwMCkgewo+ICsJCWFpYzN4LT5vY212ID0gSFBPVVRfU0NfT0NN
-Vl8xXzVWOwo+ICsJfSBlbHNlIGlmIChhdmRkID4gMjcwMDAwMCAmJiBkdmRkID4gMTUyNTAwMCkg
-ewoKdGhpcyBzaG91bGQgaGF2ZSBiZWVuOgp9IGVsc2UgaWYgKGF2ZGQgPj0gMjcwMDAwMCAmJiBk
-dmRkID49IDE1MjUwMDApIHsKCmFzIEFWREQgMi43ViBhbmQgRFZERCAxLjUyNVYgaXMgdGhlIGxv
-d2VzdCBzdXBwb3J0ZWQgc3VwcGx5IHZvbHRhZ2VzLgoKPiArCQlhaWMzeC0+b2NtdiA9IEhQT1VU
-X1NDX09DTVZfMV8zNVY7Cj4gKwl9IGVsc2Ugewo+ICsJCWRldl93YXJuKCZjbGllbnQtPmRldiwK
-PiArCQkJICJJbnZhbGlkIHN1cHBseSB2b2x0YWdlKHMpIEFWREQ6ICVkLCBEVkREOiAlZFxuIiwK
-PiArCQkJIGF2ZGQsIGR2ZGQpOwo+ICsJfQo+ICt9Cj4gKwo+ICAvKgo+ICAgKiBBSUMzWCAyIHdp
-cmUgYWRkcmVzcyBjYW4gYmUgdXAgdG8gNCBkZXZpY2VzIHdpdGggZGV2aWNlIGFkZHJlc3Nlcwo+
-ICAgKiAweDE4LCAweDE5LCAweDFBLCAweDFCCj4gQEAgLTE4MTYsNiArMTg1OSw4IEBAIHN0YXRp
-YyBpbnQgYWljM3hfaTJjX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICppMmMsCj4gIAkJZ290byBl
-cnJfZ3BpbzsKPiAgCX0KPiAgCj4gKwlhaWMzeF9jb25maWd1cmVfb2NtdihpMmMpOwo+ICsKPiAg
-CWlmIChhaWMzeC0+bW9kZWwgPT0gQUlDM1hfTU9ERUxfMzAwNykgewo+ICAJCXJldCA9IHJlZ21h
-cF9yZWdpc3Rlcl9wYXRjaChhaWMzeC0+cmVnbWFwLCBhaWMzMDA3X2NsYXNzX2QsCj4gIAkJCQkJ
-ICAgIEFSUkFZX1NJWkUoYWljMzAwN19jbGFzc19kKSk7Cj4gZGlmZiAtLWdpdCBhL3NvdW5kL3Nv
-Yy9jb2RlY3MvdGx2MzIwYWljM3guaCBiL3NvdW5kL3NvYy9jb2RlY3MvdGx2MzIwYWljM3guaAo+
-IGluZGV4IDg5ZmE2OTJkZjIwNi4uMzRjMzUxOTZhYTBkIDEwMDY0NAo+IC0tLSBhL3NvdW5kL3Nv
-Yy9jb2RlY3MvdGx2MzIwYWljM3guaAo+ICsrKyBiL3NvdW5kL3NvYy9jb2RlY3MvdGx2MzIwYWlj
-M3guaAo+IEBAIC0yNDMsNiArMjQzLDE0IEBACj4gICNkZWZpbmUgTUlDQklBU19MRVZFTF9TSElG
-VAkoNikKPiAgI2RlZmluZSBNSUNCSUFTX0xFVkVMX01BU0sJKDMgPDwgNikKPiAgCj4gKy8qIEhQ
-T1VUX1NDICovCj4gKyNkZWZpbmUgSFBPVVRfU0NfT0NNVl9NQVNLCSgzIDw8IDYpCj4gKyNkZWZp
-bmUgSFBPVVRfU0NfT0NNVl9TSElGVAkoNikKPiArI2RlZmluZSBIUE9VVF9TQ19PQ01WXzFfMzVW
-CTAKPiArI2RlZmluZSBIUE9VVF9TQ19PQ01WXzFfNVYJMQo+ICsjZGVmaW5lIEhQT1VUX1NDX09D
-TVZfMV82NVYJMgo+ICsjZGVmaW5lIEhQT1VUX1NDX09DTVZfMV84VgkzCj4gKwo+ICAvKiBoZWFk
-c2V0IGRldGVjdGlvbiAvIGJ1dHRvbiBBUEkgKi8KPiAgCj4gIC8qIFRoZSBBSUMzeCBzdXBwb3J0
-cyBkZXRlY3Rpb24gb2Ygc3RlcmVvIGhlYWRzZXRzIChHTkQgKyBsZWZ0ICsgcmlnaHQgc2lnbmFs
-KQo+IAoKLSBQw6l0ZXIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9y
-ZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1k
-ZXZlbAo=
+Hi,
+
+On 31 August 2017 at 15:16, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Aug 17, 2017 at 8:50 AM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
+>
+>> In some scenarios, we should set some pins as input/output/pullup/pulldown
+>> when the specified system goes into deep sleep mode, then when the system
+>> goes into deep sleep mode, these pins will be set automatically by hardware.
+>>
+>> That means some pins are not controlled by any specific driver in the OS, but
+>> need to be controlled when entering sleep mode. Thus we introduce one sleep
+>> state config into pinconf-generic for users to configure.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+>> ---
+>> Changes since v4:
+>>  - Add sleep-hardware-state config to indicate sleep related configs.
+>
+> No reactions and I can certainly not think of anything better (I even
+> suggested this) so patch applied.
+>
+> Sorry for taking so long to look at this, I've been choked :/
+
+I can understand you are so busy :), thanks for your help.
+
+-- 
+Baolin.wang
+Best Regards
