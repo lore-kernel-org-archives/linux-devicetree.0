@@ -1,39 +1,37 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 4/5] mmc: sdhci-omap: Add OMAP SDHCI driver
-Date: Thu, 31 Aug 2017 16:02:23 +0300
-Message-ID: <dfe1b4e2-bcb5-c969-efe6-7cddd0eb0bf9@intel.com>
-References: <20170821074132.4622-1-kishon@ti.com>
- <20170821074132.4622-5-kishon@ti.com>
- <4f0a7225-1843-b353-1a2a-9adcb49554d3@intel.com>
- <c7972f00-ef62-1736-822f-ebf6822b6d33@ti.com>
+From: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] thermal: imx: Add nvmem-cells binding on imx6sx
+Date: Thu, 31 Aug 2017 21:11:23 +0800
+Message-ID: <1504185083.2749.2.camel@intel.com>
+References: <cover.1500041281.git.leonard.crestez@nxp.com>
+         <20170831084817.GC3787@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c7972f00-ef62-1736-822f-ebf6822b6d33@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170831084817.GC3787@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/08/17 16:53, Kishon Vijay Abraham I wrote:
-> On Monday 28 August 2017 02:36 PM, Adrian Hunter wrote:
->> On 21/08/17 10:41, Kishon Vijay Abraham I wrote:
->>> +
->>> +static void sdhci_omap_set_clock(struct sdhci_host *host, unsigned int clock)
->>> +{
->>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
->>> +	unsigned long clkdiv;
->>> +
->>> +	if (!clock)
->>> +		return;
->>
->> Are you sure you don't want to stop the clock.
+On Thu, 2017-08-31 at 16:48 +0800, Shawn Guo wrote:
+> On Fri, Jul 14, 2017 at 05:11:05PM +0300, Leonard Crestez wrote:
+> > 
+> > Leonard Crestez (5):
+> >   thermal: imx: Add nvmem-cells alternate binding for OCOTP access
+> >   nvmem: core: Add nvmem_cell_read_u32
+> >   thermal: imx: Add support for reading OCOTP through nvmem
+> >   ARM: dts: imx6sx: Use nvmem-cells for tempmon
+> >   ARM: dts: imx6ul: Add imx6ul-tempmon
+> For last two dts patches,
 > 
-> There is never a case where the MMC core sends a request to stop the clock.
-> Maybe this check is not required at all.
+> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-It does when voltage switching e.g. mmc_set_uhs_voltage(), but host drivers
-should support the possibility anyway.
+thanks.
+I will push patch 1,3,4,5 after patch 2/5 merged.
+
+-rui
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
