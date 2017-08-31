@@ -1,109 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv3 4/5] cec-gpio: add HDMI CEC GPIO driver
-Date: Thu, 31 Aug 2017 10:28:49 +0200
-Message-ID: <CACRpkdbuBhbq8tiuUjYfJc9UCGM8LRGc017ecLxW93QwTW3CVQ@mail.gmail.com>
-References: <20170830161044.26571-1-hverkuil@xs4all.nl>
- <20170830161044.26571-5-hverkuil@xs4all.nl>
+From: Yisheng Xie <xieyisheng1@huawei.com>
+Subject: [RFC PATCH 1/6] dt-bindings: document stall and PASID properties for IOMMU masters
+Date: Thu, 31 Aug 2017 16:20:37 +0800
+Message-ID: <1504167642-14922-2-git-send-email-xieyisheng1@huawei.com>
+References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170830161044.26571-5-hverkuil@xs4all.nl>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: jean-philippe.brucker@arm.com
+Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, robert.moore@intel.com, lv.zheng@intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@acpica.org, liubo95@huawei.com, chenjiankang1@huawei.com, xieyisheng@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMzAsIDIwMTcgYXQgNjoxMCBQTSwgSGFucyBWZXJrdWlsIDxodmVya3VpbEB4
-czRhbGwubmw+IHdyb3RlOgoKPiBGcm9tOiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNj
-by5jb20+Cj4KPiBBZGQgYSBzaW1wbGUgSERNSSBDRUMgR1BJTyBkcml2ZXIgdGhhdCBzaXRzIG9u
-IHRvcCBvZiB0aGUgY2VjLXBpbiBmcmFtZXdvcmsuCj4KPiBXaGlsZSBJIGhhdmUgaGVhcmQgb2Yg
-U29DcyB0aGF0IHVzZSB0aGUgR1BJTyBwaW4gZm9yIENFQyAoYXBwYXJlbnRseSBhbgo+IGVhcmx5
-IFJvY2tDaGlwIFNvQyB1c2VkIHRoYXQpLCB0aGUgbWFpbiB1c2UtY2FzZSBvZiB0aGlzIGRyaXZl
-ciBpcyB0bwo+IGZ1bmN0aW9uIGFzIGEgZGVidWdnaW5nIHRvb2wuCj4KPiBCeSBjb25uZWN0aW5n
-IHRoZSBDRUMgbGluZSB0byBhIEdQSU8gcGluIG9uIGEgUmFzcGJlcnJ5IFBpIDMgZm9yIGV4YW1w
-bGUKPiBpdCB0dXJucyBpdCBpbnRvIGEgQ0VDIGRlYnVnZ2VyIGFuZCBwcm90b2NvbCBhbmFseXpl
-ci4KPgo+IFdpdGggJ2NlYy1jdGwgLS1tb25pdG9yLXBpbicgdGhlIENFQyB0cmFmZmljIGNhbiBi
-ZSBhbmFseXplZC4KPgo+IEJ1dCBvZiBjb3Vyc2UgaXQgY2FuIGFsc28gYmUgdXNlZCB3aXRoIGFu
-eSBoYXJkd2FyZSBwcm9qZWN0IHdoZXJlIHRoZQo+IEhETUkgQ0VDIHBpbiBpcyBob29rZWQgdXAg
-dG8gYSBwdWxsLXVwIGdwaW8gcGluLgo+Cj4gSW4gYWRkaXRpb24gdGhpcyBoYXMgKG9wdGlvbmFs
-KSBzdXBwb3J0IGZvciB0cmFjaW5nIEhQRCBjaGFuZ2VzIGlmIHRoZQo+IEhQRCBpcyBjb25uZWN0
-ZWQgdG8gYSBHUElPLgo+Cj4gU2lnbmVkLW9mZi1ieTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1
-aWxAY2lzY28uY29tPgoKUHJldHR5IGNvb2wgc3R1ZmYhCgo+ICtjb25maWcgQ0VDX0dQSU8KPiAr
-ICAgICAgIHRyaXN0YXRlICJHZW5lcmljIEdQSU8tYmFzZWQgQ0VDIGRyaXZlciIKPiArICAgICAg
-IGRlcGVuZHMgb24gUFJFRU1QVAoKZGVwZW5kcyBvbiBHUElPTElCCgpvcgoKc2VsZWN0IEdQSU9M
-SUIKCnlvdXIgcGljay4KCj4gKyNpbmNsdWRlIDxsaW51eC9ncGlvLmg+CgpUaGlzIHNob3VsZCBu
-b3QgYmUgbmVlZGVkIGluIG5ldyBjb2RlLgoKPiArI2luY2x1ZGUgPGxpbnV4L2dwaW8vY29uc3Vt
-ZXIuaD4KClRoaXMgc2hvdWxkIGJlIGVub3VnaC4KCj4gKyNpbmNsdWRlIDxsaW51eC9vZl9ncGlv
-Lmg+CgpZb3VyIHNob3VsZCBub3QgbmVlZCB0aGlzIGVpdGhlci4KCj4gK3N0cnVjdCBjZWNfZ3Bp
-byB7Cj4gKyAgICAgICBzdHJ1Y3QgY2VjX2FkYXB0ZXIgICAgICAqYWRhcDsKPiArICAgICAgIHN0
-cnVjdCBkZXZpY2UgICAgICAgICAgICpkZXY7Cj4gKyAgICAgICBpbnQgICAgICAgICAgICAgICAg
-ICAgICBncGlvOwo+ICsgICAgICAgaW50ICAgICAgICAgICAgICAgICAgICAgaHBkX2dwaW87CgpU
-aGluayB0aGlzIHNob3VsZCBiZToKCnN0cnVjdCBncGlvX2Rlc2MgKmdwaW87CnN0cnVjdCBncGlv
-X2Rlc2MgKmhwZF9ncGlvOwoKPiArICAgICAgIGludCAgICAgICAgICAgICAgICAgICAgIGlycTsK
-PiArICAgICAgIGludCAgICAgICAgICAgICAgICAgICAgIGhwZF9pcnE7Cj4gKyAgICAgICBib29s
-ICAgICAgICAgICAgICAgICAgICBocGRfaXNfaGlnaDsKPiArICAgICAgIGt0aW1lX3QgICAgICAg
-ICAgICAgICAgIGhwZF90czsKPiArICAgICAgIGJvb2wgICAgICAgICAgICAgICAgICAgIGlzX2xv
-dzsKPiArICAgICAgIGJvb2wgICAgICAgICAgICAgICAgICAgIGhhdmVfaXJxOwo+ICt9Owo+ICsK
-PiArc3RhdGljIGJvb2wgY2VjX2dwaW9fcmVhZChzdHJ1Y3QgY2VjX2FkYXB0ZXIgKmFkYXApCj4g
-K3sKPiArICAgICAgIHN0cnVjdCBjZWNfZ3BpbyAqY2VjID0gY2VjX2dldF9kcnZkYXRhKGFkYXAp
-Owo+ICsKPiArICAgICAgIGlmIChjZWMtPmlzX2xvdykKPiArICAgICAgICAgICAgICAgcmV0dXJu
-IGZhbHNlOwo+ICsgICAgICAgcmV0dXJuIGdwaW9fZ2V0X3ZhbHVlKGNlYy0+Z3Bpbyk7CgpVc2Ug
-ZGVzY3JpcHRvciBhY2Nlc3NvcnMKCmdwaW9kX2dldF92YWx1ZSgpCgo+ICtzdGF0aWMgdm9pZCBj
-ZWNfZ3Bpb19oaWdoKHN0cnVjdCBjZWNfYWRhcHRlciAqYWRhcCkKPiArewo+ICsgICAgICAgc3Ry
-dWN0IGNlY19ncGlvICpjZWMgPSBjZWNfZ2V0X2RydmRhdGEoYWRhcCk7Cj4gKwo+ICsgICAgICAg
-aWYgKCFjZWMtPmlzX2xvdykKPiArICAgICAgICAgICAgICAgcmV0dXJuOwo+ICsgICAgICAgY2Vj
-LT5pc19sb3cgPSBmYWxzZTsKPiArICAgICAgIGdwaW9fZGlyZWN0aW9uX2lucHV0KGNlYy0+Z3Bp
-byk7CgpBcmUgeW91IHNldHRpbmcgdGhlIEdQSU8gaGlnaCBieSBzZXR0aW5nIGl0IGFzIGlucHV0
-PwpUaGF0IHNvdW5kcyBsaWtlIHlvdSBzaG91bGQgYmUgcmVxdWVzdGluZyBpdCBhcwpvcGVuIGRy
-YWluIGluIHRoZSBEVFMgZmlsZSwgc2VlCkRvY3VtZW50YXRpb24vZ3Bpby9kcml2ZXIudHh0CmZv
-ciBkZXRhaWxzIGFib3V0IG9wZW4gZHJhaW4sIGFuZCB1c2UKR1BJT19MSU5FX09QRU5fRFJBSU4K
-ZnJvbSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+Cgo+ICtzdGF0aWMgdm9pZCBjZWNfZ3Bpb19s
-b3coc3RydWN0IGNlY19hZGFwdGVyICphZGFwKQo+ICt7Cj4gKyAgICAgICBzdHJ1Y3QgY2VjX2dw
-aW8gKmNlYyA9IGNlY19nZXRfZHJ2ZGF0YShhZGFwKTsKPiArCj4gKyAgICAgICBpZiAoY2VjLT5p
-c19sb3cpCj4gKyAgICAgICAgICAgICAgIHJldHVybjsKPiArICAgICAgIGlmIChXQVJOX09OX09O
-Q0UoY2VjLT5oYXZlX2lycSkpCj4gKyAgICAgICAgICAgICAgIGZyZWVfaXJxKGNlYy0+aXJxLCBj
-ZWMpOwo+ICsgICAgICAgY2VjLT5oYXZlX2lycSA9IGZhbHNlOwo+ICsgICAgICAgY2VjLT5pc19s
-b3cgPSB0cnVlOwo+ICsgICAgICAgZ3Bpb19kaXJlY3Rpb25fb3V0cHV0KGNlYy0+Z3BpbywgMCk7
-CgpZZWFoIHRoaXMgbG9va3MgbGlrZSB5b3UncmUgZG9pbmcgb3BlbiBkcmFpbi4KZ3Bpb2RfZGly
-ZWN0aW9uX291dHB1dCgpIGV0Yy4KCj4gK3N0YXRpYyBpbnQgY2VjX2dwaW9fcmVhZF9ocGQoc3Ry
-dWN0IGNlY19hZGFwdGVyICphZGFwKQo+ICt7Cj4gKyAgICAgICBzdHJ1Y3QgY2VjX2dwaW8gKmNl
-YyA9IGNlY19nZXRfZHJ2ZGF0YShhZGFwKTsKPiArCj4gKyAgICAgICBpZiAoY2VjLT5ocGRfZ3Bp
-byA8IDApCj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PVFRZOwo+ICsgICAgICAgcmV0dXJu
-IGdwaW9fZ2V0X3ZhbHVlKGNlYy0+aHBkX2dwaW8pOwoKZ3Bpb2RfZ2V0X3ZhbHVlKCkKCgo+ICtz
-dGF0aWMgaW50IGNlY19ncGlvX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4g
-K3sKPiArICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4gKyAgICAgICBl
-bnVtIG9mX2dwaW9fZmxhZ3MgaHBkX2dwaW9fZmxhZ3M7Cj4gKyAgICAgICBzdHJ1Y3QgY2VjX2dw
-aW8gKmNlYzsKPiArICAgICAgIGludCByZXQ7Cj4gKwo+ICsgICAgICAgY2VjID0gZGV2bV9remFs
-bG9jKGRldiwgc2l6ZW9mKCpjZWMpLCBHRlBfS0VSTkVMKTsKPiArICAgICAgIGlmICghY2VjKQo+
-ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsKPiArCj4gKyAgICAgICBjZWMtPmdwaW8g
-PSBvZl9nZXRfbmFtZWRfZ3Bpb19mbGFncyhkZXYtPm9mX25vZGUsCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiY2VjLWdwaW8iLCAwLCAmaHBkX2dwaW9fZmxh
-Z3MpOwo+ICsgICAgICAgaWYgKGNlYy0+Z3BpbyA8IDApCj4gKyAgICAgICAgICAgICAgIHJldHVy
-biBjZWMtPmdwaW87Cj4gKwo+ICsgICAgICAgY2VjLT5ocGRfZ3BpbyA9IG9mX2dldF9uYW1lZF9n
-cGlvX2ZsYWdzKGRldi0+b2Zfbm9kZSwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICJocGQtZ3BpbyIsIDAsICZocGRfZ3Bpb19mbGFncyk7CgpUaGlzIGlzIGEg
-cHJvcGVyIGRldmljZSBzbyBkb24ndCB1c2UgYWxsIHRoaXMgdHJvdWJsZS4KCmNlYy0+Z3BpbyA9
-IGdwaW9kX2dldChkZXYsICJjZWMtZ3BpbyIsIEdQSU9EX0lOKTsKCm9yIHNpbWlsYXIgKGdyZXAg
-Zm9yIGV4YW1wbGVzISkKClNhbWUgZm9yIGhkcF9ncGlvLgoKPiArICAgICAgIGNlYy0+aXJxID0g
-Z3Bpb190b19pcnEoY2VjLT5ncGlvKTsKCmdwaW9kX3RvX2lycSgpCgo+ICsgICAgICAgZ3Bpb19k
-aXJlY3Rpb25faW5wdXQoY2VjLT5ncGlvKTsKClRoaXMgaXMgbm90IG5lZWRlZCB3aXRoIHRoZSBh
-Ym92ZSBJTiBmbGFnLgoKQnV0IGFzIHNhaWQgYWJvdmUsIG1heWJlIHlvdSBhcmUgbG9va2luZyBm
-b3IgYW4gb3BlbiBkcmFpbgpvdXRwdXQgYWN0dWFsbHkuCgo+ICsgICAgICAgaWYgKGNlYy0+aHBk
-X2dwaW8gPj0gMCkgewo+ICsgICAgICAgICAgICAgICBjZWMtPmhwZF9pcnEgPSBncGlvX3RvX2ly
-cShjZWMtPmhwZF9ncGlvKTsKPiArICAgICAgICAgICAgICAgZ3Bpb19kaXJlY3Rpb25faW5wdXQo
-Y2VjLT5ocGRfZ3Bpbyk7CgpBbHJlYWR5IGRvbmUgaWYgeW91IHBhc3MgdGhlIHJpZ2h0IGZsYWcu
-IFRoaXMgc2hvdWxkIGJlIElOIGZvciBzdXJlLgoKVXNlIGdwaW9kX3RvX2lycSgpLgoKUGxlYXNl
-IGluY2x1ZGUgbWUgb24gc3Vic2VxdWVudCBwb3N0cywgSSB3YW50IHRvIHRyeSB0byB1c2UKZGVz
-Y3JpcHRvcnMgYXMgbXVjaCBhcyBwb3NzaWJsZSBmb3IgbmV3IGRyaXZlcnMuCgpZb3VycywKTGlu
-dXMgV2FsbGVpagpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+
+Document the bindings for stall and PASID capable platform devices.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+---
+ Documentation/devicetree/bindings/iommu/iommu.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
+index 5a8b462..7355d7f 100644
+--- a/Documentation/devicetree/bindings/iommu/iommu.txt
++++ b/Documentation/devicetree/bindings/iommu/iommu.txt
+@@ -86,6 +86,19 @@ have a means to turn off translation. But it is invalid in such cases to
+ disable the IOMMU's device tree node in the first place because it would
+ prevent any driver from properly setting up the translations.
+ 
++Optional properties:
++--------------------
++- dma-can-stall: When present, the master can wait for a DMA transaction
++  to be handled by the IOMMU and can recover from a fault. For example, if
++  the page accessed by the DMA transaction isn't mapped, some IOMMUs are
++  able to stall the transaction and let the OS populate the page tables.
++  The IOMMU then performs the transaction if the fault was successfully
++  handled, or aborts the transaction otherwise.
++
++- pasid-bits: Some masters support multiple address spaces for DMA. By
++  tagging DMA transactions with an address space identifier. By default,
++  this is 0, which means that the device only has one address space.
++
+ 
+ Notes:
+ ======
+-- 
+1.7.12.4
+
