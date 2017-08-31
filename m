@@ -1,39 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: rockchip: Add rk3288 vyasa board
-Date: Thu, 31 Aug 2017 16:04:21 -0500
-Message-ID: <20170831210421.l2zmpexisagoxdks@rob-hp-laptop>
-References: <1503742164-3926-1-git-send-email-jteki@openedev.com>
+From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Subject: Re: more pedantic proofing of DTSpec version 0.1
+Date: Thu, 31 Aug 2017 17:09:54 -0400 (EDT)
+Message-ID: <alpine.LFD.2.21.1708311709040.15727@localhost.localdomain>
+References: <alpine.LFD.2.20.1708210705090.28188@localhost.localdomain> <20170831205659.67fvxjdgggbifuy6@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1503742164-3926-1-git-send-email-jteki@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagannadh.teki@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170831205659.67fvxjdgggbifuy6@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 26, 2017 at 03:39:24PM +0530, Jagan Teki wrote:
-> From: Jagan Teki <jagan@amarulasolutions.com>
-> 
-> This patch adds initial support for rk3288 based
-> Vyasa board, which is made by Amarula Solutions.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v2:
-> - Added entry in Documentation/devicetree/bindings/arm/rockchip.txt
-> 
->  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
->  arch/arm/boot/dts/Makefile                         |   3 +-
->  arch/arm/boot/dts/rk3288-vyasa.dts                 | 312 +++++++++++++++++++++
->  3 files changed, 318 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/rk3288-vyasa.dts
+On Thu, 31 Aug 2017, Rob Herring wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> On Sat, Aug 26, 2017 at 10:50:46AM -0400, Robert P. J. Day wrote:
+> >
+> >   a few more notes on more of the 0.1 DTSpec; all page numbers refer
+> > to the current PDF doc. lots of nitpickery, feel free to ignore any or
+> > all.
+>
+> Can you send patches at least for ones you know what the correction
+> should be. I'm happy to apply. Less likely to go fix them myself.
 
-I assume the regulator node names are consistent with other platforms, 
-but at some point please fix them to be lowercase and not use '_'. IOW, 
-build the dtbs with "W=2" and fix the warnings.
+  can i post patches to this list? is that acceptable? i'll try to
+bundle aesthetic fixes into a single patch.
 
-Rob
+rday
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
