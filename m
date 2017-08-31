@@ -1,59 +1,52 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: fix '%zx' warning
-Date: Thu, 31 Aug 2017 10:58:12 -0500
-Message-ID: <CAL_JsqKiM_T-ftd8NvHmzcRsirRWTe34jZRjZ=3NGSgb4HGncQ@mail.gmail.com>
-References: <E1da2Z7-0008GG-AV@rmk-PC.armlinux.org.uk> <20170726013004.GJ8978@umbus.fritz.box>
- <20170808112818.GC20805@n2100.armlinux.org.uk> <20170809040642.GG13670@umbus.fritz.box>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 2/4] usb: xhci-mtk: add generic compatible string
+Date: Thu, 31 Aug 2017 18:03:43 +0200
+Message-ID: <20170831160343.GA11200@kroah.com>
+References: <670f9ce1ecaec5859006b6f02b45cfc72c3cca2c.1502854628.git.chunfeng.yun@mediatek.com>
+ <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1502854628.git.chunfeng.yun@mediatek.com>
+ <1503443673.17567.8.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170809040642.GG13670-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1503443673.17567.8.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 8, 2017 at 11:06 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Tue, Aug 08, 2017 at 12:28:19PM +0100, Russell King - ARM Linux wrote:
->> On Wed, Jul 26, 2017 at 11:30:04AM +1000, David Gibson wrote:
->> > On Tue, Jul 25, 2017 at 05:20:09PM +0100, Russell King wrote:
->> > > dtc uses an incorrect format specifier for printing a uint64_t value.
->> > > uint64_t may be either 'unsigned long' or 'unsigned long long' depending
->> > > on the host architecture.
->> > >
->> > > Fix this by using %llx and casting to unsigned long long, which ensures
->> > > that we always have a wide enough variable to print 64 bits of hex.
->> > >
->> > >   HOSTCC  scripts/dtc/checks.o
->> > > scripts/dtc/checks.c: In function 'check_simple_bus_reg':
->> > > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
->> > >   snprintf(unit_addr, sizeof(unit_addr), "%zx", reg);
->> > >   ^
->> > > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
->> > >
->> > > Fixes: 828d4cdd012c ("dtc: check.c fix compile error")
->> > > Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
->> >
->> > This (embarrassing) error is already fixed in upstream dtc.
->>
->> It remains unfixed in 4.13-rc4.  How do we get this fixed in the
->> kernel's dtc?  From what I can see, sending a patch to fix stuff
->> doesn't work.
+On Wed, Aug 23, 2017 at 07:14:33AM +0800, Chunfeng Yun wrote:
+> Hi, Mathias
+> 
+> On Wed, 2017-08-16 at 14:08 +0800, Chunfeng Yun wrote:
+> > The xhci-mtk driver is a generic driver for MediaTek xHCI IP, add
+> > a generic compatible to avoid confusion when support new SoCs but
+> > use a compatible with specific SoC's name "mt8173".
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >  drivers/usb/host/xhci-mtk.c |    1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> > index 67d5dc7..8fb6065 100644
+> > --- a/drivers/usb/host/xhci-mtk.c
+> > +++ b/drivers/usb/host/xhci-mtk.c
+> > @@ -795,6 +795,7 @@ static int __maybe_unused xhci_mtk_resume(struct device *dev)
+> >  #ifdef CONFIG_OF
+> >  static const struct of_device_id mtk_xhci_of_match[] = {
+> >  	{ .compatible = "mediatek,mt8173-xhci"},
+> > +	{ .compatible = "mediatek,mtk-xhci"},
+> >  	{ },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, mtk_xhci_of_match);
+> 
+> Do you have any comment about this patch?
+> Thanks.
 
-Sorry, didn't see this until Andrew M picked it up.
+We need an ack from the device-tree maintainers before we can take
+them...
 
-> Um.. I don't know.  I haven't been the person doing updates of the
-> kernel dtc to match upstream dtc for ages.
+thanks,
 
-The flow is submit a patch to upstream dtc on
-devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org and then bug me to cherry-pick or
-sync dtc.
-
-I will cherry-pick the upstream version.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
