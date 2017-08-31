@@ -1,384 +1,124 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v2 2/3] arm: dts: add Nuvoton NPCM750 device tree
-Date: Thu, 31 Aug 2017 15:53:59 -0700
-Message-ID: <20170831225400.19756-3-brendanhiggins@google.com>
-References: <20170831225400.19756-1-brendanhiggins@google.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: gpio: Add optional
+ retain-state-shutdown property
+Date: Fri, 01 Sep 2017 08:32:16 +0930
+Message-ID: <1504220536.5933.32.camel@aj.id.au>
+References: <20170828001711.19662-1-andrew@aj.id.au>
+         <20170828001711.19662-2-andrew@aj.id.au>
+         <20170831212840.ecr2p4nra52xvzrz@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-eP7A03YBeSElujE3UVdG"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170831225400.19756-1-brendanhiggins@google.com>
+In-Reply-To: <20170831212840.ecr2p4nra52xvzrz@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, Brendan Higgins <brendanhiggins@google.com>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-leds@vger.kernel.org, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add a common device tree for all Nuvoton NPCM750 BMCs and a board
-specific device tree for the NPCM750 (Poleg) evaluation board.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- .../arm/cpu-enable-method/nuvoton,npcm7xx-smp      |  42 +++++
- .../devicetree/bindings/arm/npcm/npcm.txt          |   6 +
- arch/arm/boot/dts/nuvoton-npcm750-evb.dts          |  59 +++++++
- arch/arm/boot/dts/nuvoton-npcm750.dtsi             | 177 +++++++++++++++++++++
- include/dt-bindings/clock/nuvoton,npcm7xx-clks.h   |  39 +++++
- 5 files changed, 323 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp
- create mode 100644 Documentation/devicetree/bindings/arm/npcm/npcm.txt
- create mode 100644 arch/arm/boot/dts/nuvoton-npcm750-evb.dts
- create mode 100644 arch/arm/boot/dts/nuvoton-npcm750.dtsi
- create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
+--=-eP7A03YBeSElujE3UVdG
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp
-new file mode 100644
-index 000000000000..e81f85b400cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp
-@@ -0,0 +1,42 @@
-+=========================================================
-+Secondary CPU enable-method "nuvoton,npcm7xx-smp" binding
-+=========================================================
-+
-+To apply to all CPUs, a single "nuvoton,npcm7xx-smp" enable method should be
-+defined in the "cpus" node.
-+
-+Enable method name:	"nuvoton,npcm7xx-smp"
-+Compatible machines:	"nuvoton,npcm750"
-+Compatible CPUs:	"arm,cortex-a9"
-+Related properties:	(none)
-+
-+Note:
-+This enable method needs valid nodes compatible with "arm,cortex-a9-scu" and
-+"nuvoton,npcm750-gcr".
-+
-+Example:
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "nuvoton,npcm7xx-smp";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			clocks = <&clk NPCM7XX_CLK_CPU>;
-+			clock-names = "clk_cpu";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			clocks = <&clk NPCM7XX_CLK_CPU>;
-+			clock-names = "clk_cpu";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+		};
-+	};
-+
-diff --git a/Documentation/devicetree/bindings/arm/npcm/npcm.txt b/Documentation/devicetree/bindings/arm/npcm/npcm.txt
-new file mode 100644
-index 000000000000..2d87d9ecea85
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/npcm/npcm.txt
-@@ -0,0 +1,6 @@
-+NPCM Platforms Device Tree Bindings
-+-----------------------------------
-+NPCM750 SoC
-+Required root node properties:
-+	- compatible = "nuvoton,npcm750";
-+
-diff --git a/arch/arm/boot/dts/nuvoton-npcm750-evb.dts b/arch/arm/boot/dts/nuvoton-npcm750-evb.dts
-new file mode 100644
-index 000000000000..54df32cff21b
---- /dev/null
-+++ b/arch/arm/boot/dts/nuvoton-npcm750-evb.dts
-@@ -0,0 +1,59 @@
-+/*
-+ * DTS file for all NPCM750 SoCs
-+ *
-+ * Copyright 2012 Tomer Maimon <tomer.maimon@nuvoton.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include "nuvoton-npcm750.dtsi"
-+
-+/ {
-+	model = "Nuvoton npcm750 Development Board (Device Tree)";
-+	compatible = "nuvoton,npcm750";
-+
-+	chosen {
-+		stdout-path = &serial3;
-+		bootargs = "earlyprintk=serial,serial3,115200";
-+	};
-+
-+	memory {
-+		reg = <0 0x40000000>;
-+	};
-+
-+	cpus {
-+		enable-method = "nuvoton,npcm7xx-smp";
-+	};
-+
-+	clk: clock-controller@f0801000 {
-+		status = "okay";
-+	};
-+
-+	apb {
-+		watchdog1: watchdog@f0009000 {
-+			status = "okay";
-+		};
-+
-+		serial0: serial0@f0001000 {
-+			status = "okay";
-+		};
-+
-+		serial1: serial1@f0002000 {
-+			status = "okay";
-+		};
-+
-+		serial2: serial2@f0003000 {
-+			status = "okay";
-+		};
-+
-+		serial3: serial3@f0004000 {
-+			status = "okay";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/nuvoton-npcm750.dtsi b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
-new file mode 100644
-index 000000000000..bca96b3ae9d3
---- /dev/null
-+++ b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
-@@ -0,0 +1,177 @@
-+/*
-+ * DTSi file for the NPCM750 SoC
-+ *
-+ * Copyright 2012 Tomer Maimon <tomer.maimon@nuvoton.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include "skeleton.dtsi"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/nuvoton,npcm7xx-clks.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			clocks = <&clk NPCM7XX_CLK_CPU>;
-+			clock-names = "clk_cpu";
-+			reg = <0>;
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			clocks = <&clk NPCM7XX_CLK_CPU>;
-+			clock-names = "clk_cpu";
-+			reg = <1>;
-+			next-level-cache = <&l2>;
-+		};
-+	};
-+
-+	gcr: gcr@f0800000 {
-+		compatible = "nuvoton,npcm750-gcr", "syscon",
-+			"simple-mfd";
-+		reg = <0xf0800000 0x1000>;
-+	};
-+
-+	scu: scu@f03fe000 {
-+		compatible = "arm,cortex-a9-scu";
-+		reg = <0xf03fe000 0x1000>;
-+	};
-+
-+	l2: l2-cache@f03fc000 {
-+		compatible = "arm,pl310-cache";
-+		reg = <0xf03fc000 0x1000>;
-+		interrupts = <0 21 4>;
-+		cache-unified;
-+		cache-level = <2>;
-+		clocks = <&clk NPCM7XX_CLK_AXI>;
-+	};
-+
-+	gic: interrupt-controller@f03ff000 {
-+		compatible = "arm,cortex-a9-gic";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0xf03ff000 0x1000>,
-+		    <0xf03fe100 0x100>;
-+	};
-+
-+	clk: clock-controller@f0801000 {
-+		compatible = "nuvoton,npcm750-clk";
-+		#clock-cells = <1>;
-+		reg = <0xf0801000 0x1000>;
-+	};
-+
-+	/* external clock signal rg1refck, supplied by the phy */
-+	clk-rg1refck {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+	};
-+
-+	/* external clock signal rg2refck, supplied by the phy */
-+	clk-rg2refck {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+	};
-+
-+	clk-xin {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <50000000>;
-+	};
-+
-+	timer@f03fe600 {
-+		compatible = "arm,cortex-a9-twd-timer";
-+		reg = <0xf03fe600 0x20>;
-+		interrupts = <1 13 0x304>;
-+		clocks = <&clk NPCM7XX_CLK_TIMER>;
-+	};
-+
-+	apb {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		ranges;
-+
-+		timer0: timer@f0000000 {
-+			compatible = "nuvoton,npcm750-timer";
-+			interrupts = <0 32 4>;
-+			reg = <0xf0000000 0x1000>;
-+			clocks = <&clk NPCM7XX_CLK_TIMER>;
-+		};
-+
-+		watchdog0: watchdog@f0008000 {
-+			compatible = "nuvoton,npcm750-wdt";
-+			interrupts = <0 47 4>;
-+			reg = <0xf0008000 0x1000>;
-+			status = "disabled";
-+			clocks = <&clk NPCM7XX_CLK_TIMER>;
-+		};
-+
-+		watchdog1: watchdog@f0009000 {
-+			compatible = "nuvoton,npcm750-wdt";
-+			interrupts = <0 48 4>;
-+			reg = <0xf0009000 0x1000>;
-+			status = "disabled";
-+			clocks = <&clk NPCM7XX_CLK_TIMER>;
-+		};
-+
-+		watchdog2: watchdog@f000a000 {
-+			compatible = "nuvoton,npcm750-wdt";
-+			interrupts = <0 49 4>;
-+			reg = <0xf000a000 0x1000>;
-+			status = "disabled";
-+			clocks = <&clk NPCM7XX_CLK_TIMER>;
-+		};
-+
-+		serial0: serial0@f0001000 {
-+			compatible = "nuvoton,npcm750-uart";
-+			reg = <0xf0001000 0x1000>;
-+			clocks = <&clk NPCM7XX_CLK_UART_CORE>;
-+			interrupts = <0 2 4>;
-+			status = "disabled";
-+		};
-+
-+		serial1: serial1@f0002000 {
-+			compatible = "nuvoton,npcm750-uart";
-+			reg = <0xf0002000 0x1000>;
-+			clocks = <&clk NPCM7XX_CLK_UART_CORE>;
-+			interrupts = <0 3 4>;
-+			status = "disabled";
-+		};
-+
-+		serial2: serial2@f0003000 {
-+			compatible = "nuvoton,npcm750-uart";
-+			reg = <0xf0003000 0x1000>;
-+			clocks = <&clk NPCM7XX_CLK_UART_CORE>;
-+			interrupts = <0 4 4>;
-+			status = "disabled";
-+		};
-+
-+		serial3: serial3@f0004000 {
-+			compatible = "nuvoton,npcm750-uart";
-+			reg = <0xf0004000 0x1000>;
-+			clocks = <&clk NPCM7XX_CLK_UART_CORE>;
-+			interrupts = <0 5 4>;
-+			status = "disabled";
-+		};
-+	};
-+};
-diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
-new file mode 100644
-index 000000000000..c69d3bbf7e42
---- /dev/null
-+++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
-@@ -0,0 +1,39 @@
-+/*
-+ * Copyright (C) 2016 Nuvoton Technologies,  tali.perry@nuvoton.com
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_NPCM7XX_H
-+#define _DT_BINDINGS_CLK_NPCM7XX_H
-+
-+#define NPCM7XX_CLK_PLL0	0
-+#define NPCM7XX_CLK_PLL1	1
-+#define NPCM7XX_CLK_PLL2	2
-+#define NPCM7XX_CLK_GFX		3
-+#define NPCM7XX_CLK_APB1	4
-+#define NPCM7XX_CLK_APB2	5
-+#define NPCM7XX_CLK_APB3	6
-+#define NPCM7XX_CLK_APB4	7
-+#define NPCM7XX_CLK_APB5	8
-+#define NPCM7XX_CLK_MC		9
-+#define NPCM7XX_CLK_CPU		10
-+#define NPCM7XX_CLK_SPI0	11
-+#define NPCM7XX_CLK_SPI3	12
-+#define NPCM7XX_CLK_SPIX	13
-+#define NPCM7XX_CLK_UART_CORE	14
-+#define NPCM7XX_CLK_TIMER	15
-+#define NPCM7XX_CLK_HOST_UART	16
-+#define NPCM7XX_CLK_MMC		17
-+#define NPCM7XX_CLK_SDHC	18
-+#define NPCM7XX_CLK_ADC		19
-+#define NPCM7XX_CLK_GFX_MEM	20
-+#define NPCM7XX_CLK_USB_BRIDGE	21
-+#define NPCM7XX_CLK_AXI		22
-+#define NPCM7XX_CLK_AHB		23
-+#define NPCM7XX_CLK_EMC		24
-+#define NPCM7XX_CLK_GMAC	25
-+
-+#endif
--- 
-2.14.1.581.gf28d330327-goog
+Hi Rob,
+
+On Thu, 2017-08-31 at 16:28 -0500, Rob Herring wrote:
+> On Mon, Aug 28, 2017 at 09:47:10AM +0930, Andrew Jeffery wrote:
+> > On Baseboard Management Controller (BMC) systems it's sometimes
+> > necessary for a LED to retain its state across a BMC reset (which is
+> > independent of the host system state). Add a devicetree property to
+> > describe this behaviour. The property would typically be used in
+> > conjunction with 'default-state =3D "keep"'.
+>=C2=A0
+> A bit quick on the applying of this...
+>=C2=A0
+> I don't understand how this works. The BMC usecase is interesting but=C2=
+=A0
+> that's fairly irrelevant to the binding. How do you know the GPIO state=
+=C2=A0
+> thru a reset?
+
+The answer to that is a property of the system design in my opinion.
+
+> You're doing a core reset, but not reseting the GPIO=C2=A0
+> controller?
+
+Well, in my specific case, the GPIO controller in question isn't on the SoC=
+,
+it's off-chip behind an I2C bus. Powering off a BMC doesn't necessarily mea=
+n
+removing power from its peripherals, so in this case the their state is
+maintained.
+
+Alternatively, and again in my specific (Aspeed) case, the on-SoC GPIO
+controller can be selectively reset with respect to the rest of the SoC, or
+individual GPIO lines can be marked as reset-tolerant. This gives the same
+capability and is what you've suggested above.
+
+>=C2=A0
+> When you use 'default-state =3D "keep"' but not this property? Seems like=
+=C2=A0 the
+> same thing to me.
+
+Is that not also true of retain-state-suspend?
+
+The existing behaviour of leds-gpio was to turn the managed LEDs off in the
+remove() path. To me this was unexpected behaviour, but it is what it is. M=
+y
+first pass at the patch (before I sent it out) was to do as you suggest and
+only turn it off in the absence of 'default-state =3D "keep"'.=C2=A0=C2=A0H=
+owever there
+were quite a number of users of that configuration, and this could be an
+unexpected change of behaviour. Given retain-state-suspend was already defi=
+ned,
+it seemed that the non-breaking way to get the behaviour I desired was to
+introduce retain-state-shutdown.
+
+Sure, this is dealing with problems in the driver and not describing hardwa=
+re,
+but at this point the behaviour is already in place and people might be rel=
+ying
+on it.
+
+> Presumably the bootloader would just distinguish=C2=A0 between a
+> warm and cold reset to decide whether to re-init the state.
+>=C2=A0
+> Finally, if we do have this property, why is it GPIO specific. You could=
+=C2=A0
+> just as easily have a LED controller IC and want to do the same thing.
+
+I don't think we're precluded from making it more general even if it's
+submitted as specific to leds-gpio? I don't have anything against making it
+more generic. I was tossing up about doing so, but went for the specific ca=
+se
+first because we could make it more generic without problems. Going the oth=
+er
+way is harder.
+
+Cheers,
+
+Andrew
+--=-eP7A03YBeSElujE3UVdG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCgAGBQJZqJV4AAoJEJ0dnzgO5LT5mF4P/0egTA7vdWrGTQhuNK+zv017
+ms8+ioro5fatH1hywcEUCTciyq+lIBtzMIswqcTa9WazyP0COh3k5kK30vYNrz6Q
+44HOTFDKYUieohf9SMsuakcHhzYyB/+fgM60zGQ7Nbe8COtEFPutLUUjT3GvSiFt
+Y/iSaP6r5/xcK0ZvcV8YKhq1ZUgN77yiSIk2r5rBwlMYFY1pj5Ue7IKvsSjlRMTs
+CWe0YrGqu+KrytzzmlJToBnko2qUSumxmBKWPOD5etFPGuK3B7WfBRPGmucBr7mS
+OtE6GR3iAiYYXZ+xUUFX/XWq9SohhM1V4Fl9/181HMiZnccTNfiji8xKW8+lRnOQ
+e+K3k9ErwIU3ZG8FIixjjwMEwQN2URiHTQytVSaoNd8jhoI+P30Gc9wKdKQhniaH
+xA/zku7+dtRBqcASWLBTUm464ZQOq214lrCVVWiOqW8ZQzZ+msc3ZfkFh/Flq9Lc
+K0LxsD8E1wgOXLR//NYon0xsMtj7CHI+W9S5Z+CC5Rc9PMkHCmJPkW8VWIPvPWUp
+vC687X/iN2mXSpwMZXEn6mXeB6xXrQS4qFPB7iCs89saiC9074pO5/KuTKBy3YkJ
+JWjr5X85+2w6/oRS5GkFt1KPD+ynlQ0Q/75HwuZscFh2OnM/0ulcY2mHQH8TwEnf
+3mcJgnsjTmZIRf7g7ZhW
+=PgUn
+-----END PGP SIGNATURE-----
+
+--=-eP7A03YBeSElujE3UVdG--
