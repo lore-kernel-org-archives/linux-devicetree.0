@@ -1,87 +1,59 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v3 2/2] dt-bindings: drm/bridge: Document Cadence DSI bridge
- bindings
-Date: Thu, 31 Aug 2017 17:55:19 +0200
-Message-ID: <20170831155519.3704-2-boris.brezillon@free-electrons.com>
-References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: fix '%zx' warning
+Date: Thu, 31 Aug 2017 10:58:12 -0500
+Message-ID: <CAL_JsqKiM_T-ftd8NvHmzcRsirRWTe34jZRjZ=3NGSgb4HGncQ@mail.gmail.com>
+References: <E1da2Z7-0008GG-AV@rmk-PC.armlinux.org.uk> <20170726013004.GJ8978@umbus.fritz.box>
+ <20170808112818.GC20805@n2100.armlinux.org.uk> <20170809040642.GG13670@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Sproul <sproul@cadence.com>, Neil Webb <neilw@cadence.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170809040642.GG13670-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIGJpbmRpbmdzIHVzZWQgZm9yIHRoZSBDYWRlbmNlIERTSSBicmlkZ2UuCgpT
-aWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0
-cm9ucy5jb20+Ci0tLQpDaGFuZ2VzIGluIHYzOgotIEZpeCBjbG9jayBuYW1lcyBpbiB0aGUgZXhh
-bXBsZQotIERvY3VtZW50IGhvdyB0byByZXByZXNlbnQgRFNJIGRldmljZXMgdGhhdCBhcmUgY29u
-dHJvbGxlciB0aHJvdWdoCiAgYW4gZXh0ZXJuYWwgYnVzIGxpa2UgSTJDIG9yIFNQSQoKQ2hhbmdl
-cyBpbiB2MjoKLSBOb25lCi0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsZHNp
-LnR4dCAgICAgICAgICAgfCAxMDkgKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
-ZCwgMTA5IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxkc2kudHh0CgpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMs
-ZHNpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
-ZS9jZG5zLGRzaS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5j
-NzAwMDhiZDhjMGQKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxkc2kudHh0CkBAIC0wLDAgKzEsMTA5IEBACitD
-YWRlbmNlIERTSSBicmlkZ2UKKz09PT09PT09PT09PT09PT09PQorCitUaGUgQ2FkZW5jZSBEU0kg
-YnJpZGdlIGlzIGEgRFBJIHRvIERTSSBicmlkZ2Ugc3VwcG9ydGluZyB1cCB0byA0IERTSSBsYW5l
-cy4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlIHNldCB0
-byAiY2Rucyxkc2ktMS4zLjEiLgorLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVu
-Z3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgorLSBpbnRlcnJ1cHRzOiBpbnRlcnJ1
-cHQgbGluZSBjb25uZWN0ZWQgdG8gdGhlIERTSSBicmlkZ2UuCistIGNsb2NrczogRFNJIGJyaWRn
-ZSBjbG9ja3MuCistIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4gInBjbGsiIGFuZCAic3lzY2xr
-Ii4KKy0gcGh5czogcGhhbmRsZSBsaW5rIHRvIHRoZSBNSVBJIEQtUEhZIGNvbnRyb2xsZXIuCist
-IHBoeS1uYW1lczogbXVzdCBjb250YWluICJkcGh5Ii4KKy0gI2FkZHJlc3MtY2VsbHM6IG11c3Qg
-YmUgc2V0IHRvIDEuCistICNzaXplLWNlbGxzOiBtdXN0IGJlIHNldCB0byAwLgorCitSZXF1aXJl
-ZCBzdWJub2RlczoKKy0gcG9ydHM6IFBvcnRzIGFzIGRlc2NyaWJlZCBpbiBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0LgorICAyIHBvcnRzIGFyZSBhdmFpbGFibGU6
-CisgICogcG9ydCAwOiB0aGlzIHBvcnQgaXMgb25seSBuZWVkZWQgaWYgc29tZSBvZiB5b3VyIERT
-SSBkZXZpY2VzIGFyZQorCSAgICBjb250cm9sbGVkIHRocm91Z2ggIGFuIGV4dGVybmFsIGJ1cyBs
-aWtlIEkyQyBvciBTUEkuIENhbiBoYXZlIGF0CisJICAgIG1vc3QgNCBlbmRwb2ludHMuIFRoZSBl
-bmRwb2ludCBudW1iZXIgaXMgZGlyZWN0bHkgZW5jb2RpbmcgdGhlCisJICAgIERTSSB2aXJ0dWFs
-IGNoYW5uZWwgdXNlZCBieSB0aGlzIGRldmljZS4KKyAgKiBwb3J0IDE6IHJlcHJlc2VudHMgdGhl
-IERQSSBpbnB1dC4KKyAgT3RoZXIgcG9ydHMgd2lsbCBiZSBhZGRlZCBsYXRlciB0byBzdXBwb3J0
-IHRoZSBuZXcga2luZCBvZiBpbnB1dHMuCisKKy0gb25lIHN1Ym5vZGUgcGVyIERTSSBkZXZpY2Ug
-Y29ubmVjdGVkIG9uIHRoZSBEU0kgYnVzLiBFYWNoIERTSSBkZXZpY2Ugc2hvdWxkCisgIGNvbnRh
-aW4gYSByZWcgcHJvcGVydHkgZW5jb2RpbmcgaXRzIHZpcnR1YWwgY2hhbm5lbC4KKworRXhhbXBs
-ZToKKworCWRzaTA6IGRzaUBmZDBjMDAwMCB7CisJCWNvbXBhdGlibGUgPSAiY2Rucyxkc2ktMS4z
-LjEiOworCQlyZWcgPSA8MHgwIDB4ZmQwYzAwMDAgMHgwIDB4MTAwMD47CisJCWNsb2NrcyA9IDwm
-cGNsaz4sIDwmc3lzY2xrPjsKKwkJY2xvY2stbmFtZXMgPSAicGNsayIsICJzeXNjbGsiOworCQlp
-bnRlcnJ1cHRzID0gPDE+OworCQlwaHlzID0gPCZkcGh5MT47CisJCXBoeS1uYW1lcyA9ICJkcGh5
-IjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJCXBv
-cnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MD47CisK
-KwkJCXBvcnRAMSB7CisJCQkJcmVnID0gPDE+OworCQkJCWRzaTBfZHBpX2lucHV0OiBlbmRwb2lu
-dCB7CisJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmeHh4X2RwaV9vdXRwdXQ+OworCQkJCX07CisJ
-CQl9OworCQl9OworCisJCXBhbmVsOiBkc2ktZGV2QDAgeworCQkJY29tcGF0aWJsZSA9ICI8dmVu
-ZG9yLHBhbmVsPiI7CisJCQlyZWcgPSA8MD47CisJCX07CisJfTsKKworb3IKKworCWRzaTA6IGRz
-aUBmZDBjMDAwMCB7CisJCWNvbXBhdGlibGUgPSAiY2Rucyxkc2kiOworCQlyZWcgPSA8MHgwIDB4
-ZmQwYzAwMDAgMHgwIDB4MTAwMD47CisJCWNsb2NrcyA9IDwmcGNsaz4sIDwmc3lzY2xrPjsKKwkJ
-Y2xvY2stbmFtZXMgPSAicGNsayIsICJzeXNjbGsiOworCQlpbnRlcnJ1cHRzID0gPDE+OworCQlw
-aHlzID0gPCZkcGh5MT47CisJCXBoeS1uYW1lcyA9ICJkcGh5IjsKKwkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNl
-bGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJCQkJcmVn
-ID0gPDA+OworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDA+
-OworCisJCQkJZHNpMF9vdXRwdXQ6IGVuZHBvaW50QDAgeworCQkJCQlyZWcgPSA8MD47CisJCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX3BhbmVsX2lucHV0PjsKKwkJCQl9OworCQkJfTsKKwor
-CQkJcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisJCQkJZHNpMF9kcGlfaW5wdXQ6IGVuZHBvaW50
-IHsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ4eHhfZHBpX291dHB1dD47CisJCQkJfTsKKwkJ
-CX07CisJCX07CisJfTsKKworCWkyY0B4eHggeworCQlwYW5lbDogcGFuZWxANTkgeworCQkJY29t
-cGF0aWJsZSA9ICI8dmVuZG9yLHBhbmVsPiI7CisJCQlyZWcgPSA8MHg1OT47CisKKwkJCXBvcnQg
-eworCQkJCWRzaV9wYW5lbF9pbnB1dDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQg
-PSA8JmRzaTBfb3V0cHV0PjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OwotLSAKMi4xMS4wCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Aug 8, 2017 at 11:06 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Tue, Aug 08, 2017 at 12:28:19PM +0100, Russell King - ARM Linux wrote:
+>> On Wed, Jul 26, 2017 at 11:30:04AM +1000, David Gibson wrote:
+>> > On Tue, Jul 25, 2017 at 05:20:09PM +0100, Russell King wrote:
+>> > > dtc uses an incorrect format specifier for printing a uint64_t value.
+>> > > uint64_t may be either 'unsigned long' or 'unsigned long long' depending
+>> > > on the host architecture.
+>> > >
+>> > > Fix this by using %llx and casting to unsigned long long, which ensures
+>> > > that we always have a wide enough variable to print 64 bits of hex.
+>> > >
+>> > >   HOSTCC  scripts/dtc/checks.o
+>> > > scripts/dtc/checks.c: In function 'check_simple_bus_reg':
+>> > > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
+>> > >   snprintf(unit_addr, sizeof(unit_addr), "%zx", reg);
+>> > >   ^
+>> > > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
+>> > >
+>> > > Fixes: 828d4cdd012c ("dtc: check.c fix compile error")
+>> > > Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+>> >
+>> > This (embarrassing) error is already fixed in upstream dtc.
+>>
+>> It remains unfixed in 4.13-rc4.  How do we get this fixed in the
+>> kernel's dtc?  From what I can see, sending a patch to fix stuff
+>> doesn't work.
+
+Sorry, didn't see this until Andrew M picked it up.
+
+> Um.. I don't know.  I haven't been the person doing updates of the
+> kernel dtc to match upstream dtc for ages.
+
+The flow is submit a patch to upstream dtc on
+devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org and then bug me to cherry-pick or
+sync dtc.
+
+I will cherry-pick the upstream version.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
