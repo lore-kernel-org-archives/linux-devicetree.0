@@ -1,51 +1,46 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: Add the CLCD controller to Cygnus.
-Date: Thu, 31 Aug 2017 11:54:15 -0700
-Message-ID: <20170831185416.8181-1-eric@anholt.net>
+From: =?UTF-8?Q?Fr=c3=a9d=c3=a9ric_Danis?= <frederic.danis.oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: net: bluetooth: Add
+ broadcom-bluetooth
+Date: Thu, 31 Aug 2017 21:32:56 +0200
+Message-ID: <cbd8f439-0575-593e-80d7-8c5d74188236@gmail.com>
+References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
+ <20170822074726.e424lflqxn6mb4xd@flea.lan>
+ <f2fcf522-cd1e-e748-0ee7-ad28bbf8ae5d@i2se.com>
+ <4c23bcb6-1b90-c41e-6e47-7d8315e760ae@gmail.com>
+ <9BD5C644-6B89-496C-B442-F276D7A99102@holtmann.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9BD5C644-6B89-496C-B442-F276D7A99102-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This doesn't yet enable it on any particular platform, as we still
-need a panel driver for bcm911360_entphn.
+Hi Marcel and Loïc,
 
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
----
+Le 23/08/2017 à 16:19, Marcel Holtmann a écrit :
+>> This is already partially supported in the hci_bcm driver.
+>> Today this driver registers a platform_driver(legacy/ACPI) and a
+>> serdev_device_driver (new/DT).
+>>
+>> The platform driver retrieves the gpios and mainly uses them in pm ops.
+>> Once the ACPI for serdev will be supported, this plat driver should be
+>> removed.
+>>
+>> The serdev driver does no support this yet because I used the RPi3
+>> as dev platform. But this is something we want to have as well.
+> Making ACPI serdev aware and turning BTH0 into serdev nodes is really the next step. That would allow us to simplify the drivers and remove duplicate code. Do you still have access to ACPI based tablets with Broadcom chips? It would be great if you can take a stab at this.
 
-These bits are just carving off a little bit of my 911360_entphn panel
-series, to reduce conflicts when rebasing (which I just did for
-testing pl111 changes for cygnus regressions).  I'm waiting to get my
-current RPi panel driver in before working on the 911360 panel again.
+I have access to an Asus T100TA with Broadcom chipset and I recently 
+started to work on the ACPI part of SerDev.
+I hope to send patches for it soon.
 
- arch/arm/boot/dts/bcm-cygnus.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Regards,
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 7c957ea06c66..74f73ff24aec 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -575,6 +575,16 @@
- 			status = "disabled";
- 		};
- 
-+		clcd: clcd@180a0000 {
-+			compatible = "arm,pl111", "arm,primecell";
-+			reg = <0x180a0000 0x1000>;
-+			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "combined";
-+			clocks = <&axi41_clk>, <&apb_clk>;
-+			clock-names = "clcdclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+
- 		keypad: keypad@180ac000 {
- 			compatible = "brcm,bcm-keypad";
- 			reg = <0x180ac000 0x14c>;
--- 
-2.14.1
-
+Frédéric Danis
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
