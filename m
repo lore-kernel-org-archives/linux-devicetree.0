@@ -1,74 +1,215 @@
-From: Bharat Bhushan <bharat.bhushan@nxp.com>
-Subject: RE: [PATCH] RM64: dts: ls208xa: Add iommu-map property for pci
-Date: Thu, 31 Aug 2017 11:22:31 +0000
-Message-ID: <AM5PR0401MB2545043022CAE0CDECA6267E9A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-References: <1504171424-15536-1-git-send-email-Bharat.Bhushan@nxp.com>
- <06c57ca4-edaa-df26-b1d9-1906141c5065@arm.com>
- <AM5PR0401MB2545B7C55F634D7B9CABAE629A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <10be1849-8071-64fc-5ee2-b6e429c64b9e@arm.com>
+From: "Mohandass, Divagar" <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v4 3/3] eeprom: at24: enable runtime pm support
+Date: Thu, 31 Aug 2017 11:24:38 +0000
+Message-ID: <7B8CE47BD58441468D2BB13285B50E6031DE6BFC@BGSMSX107.gar.corp.intel.com>
+References: <1504112740-14072-1-git-send-email-divagar.mohandass@intel.com>
+ <1504112740-14072-4-git-send-email-divagar.mohandass@intel.com>
+ <20170830211938.3m4xdwlfq5yozymq@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <10be1849-8071-64fc-5ee2-b6e429c64b9e@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170830211938.3m4xdwlfq5yozymq-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "oss@buserror.net" <oss@buserror.net>, Gang Liu <gang.liu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyYyBaeW5naWVyIFtt
-YWlsdG86bWFyYy56eW5naWVyQGFybS5jb21dDQo+IFNlbnQ6IFRodXJzZGF5LCBBdWd1c3QgMzEs
-IDIwMTcgNDoyMCBQTQ0KPiBUbzogQmhhcmF0IEJodXNoYW4gPGJoYXJhdC5iaHVzaGFuQG54cC5j
-b20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFy
-bS5jb20+OyB3aWxsLmRlYWNvbkBhcm0uY29tOw0KPiBvc3NAYnVzZXJyb3IubmV0OyBHYW5nIExp
-dSA8Z2FuZy5saXVAbnhwLmNvbT47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENI
-XSBSTTY0OiBkdHM6IGxzMjA4eGE6IEFkZCBpb21tdS1tYXAgcHJvcGVydHkgZm9yIHBjaQ0KPiAN
-Cj4gW0ZpeGluZyBNYXJrJ3MgYWRkcmVzcy4uLl0NCj4gDQo+IE9uIDMxLzA4LzE3IDExOjQxLCBC
-aGFyYXQgQmh1c2hhbiB3cm90ZToNCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
-LQ0KPiA+PiBGcm9tOiBNYXJjIFp5bmdpZXIgW21haWx0bzptYXJjLnp5bmdpZXJAYXJtLmNvbV0N
-Cj4gPj4gU2VudDogVGh1cnNkYXksIEF1Z3VzdCAzMSwgMjAxNyAzOjAyIFBNDQo+ID4+IFRvOiBC
-aGFyYXQgQmh1c2hhbiA8YmhhcmF0LmJodXNoYW5AbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9y
-ZzsNCj4gPj4gYXJrLnJ1dGxhbmRAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgb3NzQGJ1
-c2Vycm9yLm5ldDsgR2FuZw0KPiBMaXUNCj4gPj4gPGdhbmcubGl1QG54cC5jb20+OyBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+PiBrZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPj4gY2F0YWxpbi5tYXJp
-bmFzQGFybS5jb20NCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSF0gUk02NDogZHRzOiBsczIwOHhh
-OiBBZGQgaW9tbXUtbWFwIHByb3BlcnR5IGZvcg0KPiA+PiBwY2kNCj4gPj4NCj4gPj4gT24gMzEv
-MDgvMTcgMTA6MjMsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+Pj4gVGhpcyBwYXRjaCBhZGRz
-IGlvbW11LW1hcCBwcm9wZXJ0eSBmb3IgUENJZSwgd2hpY2ggZW5hYmxlcyBTTU1VIGZvcg0KPiA+
-Pj4gdGhlc2UgZGV2aWNlcyBvbiBMUzIwOHhBIGRldmljZXMuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVk
-LW9mZi1ieTogQmhhcmF0IEJodXNoYW4gPEJoYXJhdC5CaHVzaGFuQG54cC5jb20+DQo+ID4+PiAt
-LS0NCj4gPj4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNp
-IHwgNCArKysrDQo+ID4+PiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPiA+Pj4N
-Cj4gPj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMy
-MDh4YS5kdHNpDQo+ID4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIw
-OHhhLmR0c2kNCj4gPj4+IGluZGV4IDk0Y2RkMzAuLjY3Y2Y2MDUgMTAwNjQ0DQo+ID4+PiAtLS0g
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpDQo+ID4+PiAr
-KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpDQo+ID4+
-PiBAQCAtNjA2LDYgKzYwNiw3IEBADQo+ID4+PiAgCQkJbnVtLWxhbmVzID0gPDQ+Ow0KPiA+Pj4g
-IAkJCWJ1cy1yYW5nZSA9IDwweDAgMHhmZj47DQo+ID4+PiAgCQkJbXNpLXBhcmVudCA9IDwmaXRz
-PjsNCj4gPj4+ICsJCQlpb21tdS1tYXAgPSA8MCAmc21tdSAwIDE+OwkvKiBUaGlzIGlzIGZpeGVk
-LXVwIGJ5DQo+ID4+IHUtYm9vdCAqLw0KPiA+Pg0KPiA+PiBXaGF0IGRvZXMgdGhpcyBkbyB3aGVu
-IHlvdXIgdmVyc2lvbiBvZiB1LWJvb3QgZG9lc24ndCBmaWxsIHRoaXMgaW4gZm9yIHlvdT8NCj4g
-Pg0KPiA+IEdvb2QgcXVlc3Rpb24sIGZyYW5rbHkgSSBoYXZlIG5vdCB0aG91Z2h0IG9mIHRoaXMg
-Y2FzZSBiZWZvcmUuDQo+ID4gQnV0IGlmIHdlIHBhc3MgbGVuZ3RoID0gMCBpbiBhYm92ZSBwcm9w
-ZXJ0eSB0aGVuIG5vIGZpeHVwIGhhcHBlbiB3aXRoDQo+ID4gaGFwcGVuIHdpdGggb2xkZXIgdS1i
-b290LiBJbiB0aGlzIGNhc2Ugb2ZfaW9tbXVfY29uZmlndXJlKCkgd2lsbA0KPiA+IHJldHVybiBO
-VUxMIGlvbW11LW9wcyBhbmQgaXQgc3dpdGNoIHRvIHN3aW8tdGxiLiBXaWxsIHRoYXQgd29yaz8N
-Cj4gSSByZWFsbHkgZG9uJ3QgbGlrZSB0aGlzLiBZb3UgcmVseSBvbiBoYXZpbmcgaW52YWxpZCBk
-YXRhIGluIHRoZSBEVCwgYW5kIHRoYXQNCj4gc2VlbXMganVzdCB3cm9uZy4NCj4gDQo+IFdoeSBj
-YW4ndCB1LWJvb3QganVzdCBnZW5lcmF0ZSB0aGF0IHByb3BlcnR5LCBhbmQgd2UgbGVhdmUgdGhl
-IERUIGFsb25lPw0KDQpXZSBkbyBub3QgaGF2ZSBzbW11IHBoYW5kbGUgYWxsb3dpbmcgdWJvb3Qg
-dG8gZ2VuZXJhdGUgdGhpcy4NCg0KPiBPciBldmVuIGJldHRlciwgeW91IHByb3ZpZGUgdGhlIHJp
-Z2h0IGluZm9ybWF0aW9uIGZvciB0aGUgZmV3IGJvYXJkcyB0aGF0IGFyZQ0KPiBiYXNlZCBvbiB0
-aGlzIFNvQywgbm90IHJlbHlpbmcgb24gdS1ib290IGZvciBhbnl0aGluZyB0aGF0IGlzIGluIHRo
-ZSBrZXJuZWwNCj4gdHJlZT8NCg0KT24gb3VyIHBsYXRmb3JtcyB3ZSBoYXZlIGEgaC93IHRhYmxl
-IHdoaWNoIGNvbnZlcnRzIFJJRC0+RGV2aWNlLUlkLiBJIHdpbGwgY2hlY2sgd2hhdCB3aWxsIGhh
-cHBlbiBpZiB0aGF0IHRhYmxlIGlzIG5vdCBpbml0aWFsaXplZCwgY2FuIFJJRCBiZSBlcXVhbCB0
-byBkZXZpY2UtaWQgaXMgdGhhdCBjYXNlLg0KSWYgdGhhdCB3aWxsIGJlIGFsbG93ZWQgdGhhbiB3
-ZSBjYW4gZ2l2ZSByaWdodCBpbmZvcm1hdGlvbiB0aGF0IHdpbGwgd29yayB3aXRoIHUtYm9vdCBu
-b3QgdXBkYXRpbmcgdGhpcyBwcm9wZXJ0eS4NCg0KV2lsbCByZXZlcnQgYWZ0ZXIgY29uZmlybWlu
-ZyB0aGlzLg0KDQpUaGFua3MNCi1CaGFyYXQNCj4gDQo+IFRoYW5rcywNCj4gDQo+IE0uDQo+IC0t
-DQo+IEphenogaXMgbm90IGRlYWQuIEl0IGp1c3Qgc21lbGxzIGZ1bm55Li4uDQo=
+Hi Sakari,
+
+Thanks for the review.
+My comments below.
+
+---
+^Divagar
+
+>-----Original Message-----
+>From: Sakari Ailus [mailto:sakari.ailus-X3B1VOXEql0@public.gmane.org]
+>Sent: Thursday, August 31, 2017 2:50 AM
+>To: Mohandass, Divagar <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org;
+>devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+>kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mani, Rajmohan <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>Subject: Re: [PATCH v4 3/3] eeprom: at24: enable runtime pm support
+>
+>Hi Divagar,
+>
+>Thanks for the update.
+>
+>On Wed, Aug 30, 2017 at 10:35:40PM +0530, Divagar Mohandass wrote:
+>> Currently the device is kept in D0, there is an opportunity to save
+>> power by enabling runtime pm.
+>>
+>> Device can be daisy chained from PMIC and we can't rely on I2C core
+>> for auto resume/suspend. Driver will decide when to resume/suspend.
+>>
+>> Signed-off-by: Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/misc/eeprom/at24.c | 40
+>> ++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 40 insertions(+)
+>>
+>> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+>> index 2199c42..65a7d83 100644
+>> --- a/drivers/misc/eeprom/at24.c
+>> +++ b/drivers/misc/eeprom/at24.c
+>> @@ -24,6 +24,7 @@
+>>  #include <linux/i2c.h>
+>>  #include <linux/nvmem-provider.h>
+>>  #include <linux/platform_data/at24.h>
+>> +#include <linux/pm_runtime.h>
+>>
+>>  /*
+>>   * I2C EEPROMs from most vendors are inexpensive and mostly
+>interchangeable.
+>> @@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct
+>> at24_data *at24, const char *buf,  static int at24_read(void *priv,
+>> unsigned int off, void *val, size_t count)  {
+>>  	struct at24_data *at24 = priv;
+>> +	struct i2c_client *client;
+>>  	char *buf = val;
+>> +	int ret;
+>>
+>>  	if (unlikely(!count))
+>>  		return count;
+>>
+>> +	client = at24_translate_offset(at24, &off);
+>> +
+>> +	ret = pm_runtime_get_sync(&client->dev);
+>> +	if (ret < 0) {
+>> +		pm_runtime_put_noidle(&client->dev);
+>> +		return ret;
+>> +	}
+>> +
+>>  	/*
+>>  	 * Read data from chip, protecting against concurrent updates
+>>  	 * from this host, but not from other I2C masters.
+>> @@ -518,6 +529,7 @@ static int at24_read(void *priv, unsigned int off,
+>void *val, size_t count)
+>>  		status = at24->read_func(at24, buf, off, count);
+>>  		if (status < 0) {
+>>  			mutex_unlock(&at24->lock);
+>> +			pm_runtime_put(&client->dev);
+>>  			return status;
+>>  		}
+>>  		buf += status;
+>> @@ -527,17 +539,29 @@ static int at24_read(void *priv, unsigned int
+>> off, void *val, size_t count)
+>>
+>>  	mutex_unlock(&at24->lock);
+>>
+>> +	pm_runtime_put(&client->dev);
+>> +
+>>  	return 0;
+>>  }
+>>
+>>  static int at24_write(void *priv, unsigned int off, void *val, size_t
+>> count)  {
+>>  	struct at24_data *at24 = priv;
+>> +	struct i2c_client *client;
+>>  	char *buf = val;
+>> +	int ret;
+>>
+>>  	if (unlikely(!count))
+>>  		return -EINVAL;
+>>
+>> +	client = at24_translate_offset(at24, &off);
+>> +
+>> +	ret = pm_runtime_get_sync(&client->dev);
+>> +	if (ret < 0) {
+>> +		pm_runtime_put_noidle(&client->dev);
+>> +		return ret;
+>> +	}
+>> +
+>>  	/*
+>>  	 * Write data to chip, protecting against concurrent updates
+>>  	 * from this host, but not from other I2C masters.
+>> @@ -550,6 +574,7 @@ static int at24_write(void *priv, unsigned int off,
+>void *val, size_t count)
+>>  		status = at24->write_func(at24, buf, off, count);
+>>  		if (status < 0) {
+>>  			mutex_unlock(&at24->lock);
+>> +			pm_runtime_put(&client->dev);
+>>  			return status;
+>>  		}
+>>  		buf += status;
+>> @@ -559,6 +584,8 @@ static int at24_write(void *priv, unsigned int
+>> off, void *val, size_t count)
+>>
+>>  	mutex_unlock(&at24->lock);
+>>
+>> +	pm_runtime_put(&client->dev);
+>> +
+>>  	return 0;
+>>  }
+>>
+>> @@ -743,6 +770,14 @@ static int at24_probe(struct i2c_client *client,
+>> const struct i2c_device_id *id)
+>>
+>>  	i2c_set_clientdata(client, at24);
+>>
+>> +	/* enable runtime pm */
+>> +	pm_runtime_get_noresume(&client->dev);
+>> +	err = pm_runtime_set_active(&client->dev);
+>> +	if (err < 0)
+>> +		goto err_clients;
+>
+>Btw. I don't think pm_runtime_set_active() can fail here. In other words it'd be
+>fine to ignore the return value.
+>
+
+Ack
+
+
+>> +
+>> +	pm_runtime_enable(&client->dev);
+>> +
+>>  	/*
+>>  	 * Perform a one-byte test read to verify that the
+>>  	 * chip is functional.
+>> @@ -753,6 +788,8 @@ static int at24_probe(struct i2c_client *client, const
+>struct i2c_device_id *id)
+>>  		goto err_clients;
+>
+>I suppose the runtime PM state is re-initialised for a device when a driver is
+>probed, but it'd still be nice to decrement the use count if this fails.
+
+Ack
+
+>You should also disable PM runtime if probe fails and set the device
+>suspended again.
+>
+>Same for other error cases. I think you'll need a new label.
+>
+
+Can I disable PM runtime and set suspend in the 'err_clients' label itself ?
+
+>>  	}
+>>
+>> +	pm_runtime_put(&client->dev);
+>> +
+>>  	at24->nvmem_config.name = dev_name(&client->dev);
+>>  	at24->nvmem_config.dev = &client->dev;
+>>  	at24->nvmem_config.read_only = !writable; @@ -810,6 +847,9 @@
+>static
+>> int at24_remove(struct i2c_client *client)
+>>  	for (i = 1; i < at24->num_addresses; i++)
+>>  		i2c_unregister_device(at24->client[i]);
+>>
+>> +	pm_runtime_disable(&client->dev);
+>> +	pm_runtime_set_suspended(&client->dev);
+>> +
+>>  	return 0;
+>>  }
+>>
+>
+>--
+>Regards,
+>
+>Sakari Ailus
+>e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
