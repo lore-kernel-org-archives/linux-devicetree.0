@@ -1,202 +1,182 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv4 1/5] cec: add CEC_EVENT_PIN_HPD_LOW/HIGH events
-Date: Thu, 31 Aug 2017 13:01:52 +0200
-Message-ID: <20170831110156.11018-2-hverkuil@xs4all.nl>
+Subject: [PATCHv4 4/5] cec-gpio: add HDMI CEC GPIO driver
+Date: Thu, 31 Aug 2017 13:01:55 +0200
+Message-ID: <20170831110156.11018-5-hverkuil@xs4all.nl>
 References: <20170831110156.11018-1-hverkuil@xs4all.nl>
-Return-path: <linux-media-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20170831110156.11018-1-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
-
-Add support for two new low-level events: PIN_HPD_LOW and PIN_HPD_HIGH.
-
-This is specifically meant for use with the upcoming cec-gpio driver
-and makes it possible to trace when the HPD pin changes. Some HDMI
-sinks do strange things with the HPD and this makes it easy to debug
-this.
-
-Note that this also moves the initialization of a devnode mutex and
-list to the allocate_adapter function: if the HPD is high, then as
-soon as the HPD interrupt is created an interrupt occurs and
-cec_queue_pin_hpd_event() is called which requires that the devnode
-mutex and list are initialized.
-
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
----
- drivers/media/cec/cec-adap.c | 18 +++++++++++++++++-
- drivers/media/cec/cec-api.c  | 18 ++++++++++++++----
- drivers/media/cec/cec-core.c |  8 ++++----
- include/media/cec-pin.h      |  4 ++++
- include/media/cec.h          | 12 +++++++++++-
- include/uapi/linux/cec.h     |  2 ++
- 6 files changed, 52 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-index dd769e40416f..eb904a71609a 100644
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -86,7 +86,7 @@ void cec_queue_event_fh(struct cec_fh *fh,
- 			const struct cec_event *new_ev, u64 ts)
- {
- 	static const u8 max_events[CEC_NUM_EVENTS] = {
--		1, 1, 64, 64,
-+		1, 1, 64, 64, 8, 8,
- 	};
- 	struct cec_event_entry *entry;
- 	unsigned int ev_idx = new_ev->event - 1;
-@@ -170,6 +170,22 @@ void cec_queue_pin_cec_event(struct cec_adapter *adap, bool is_high, ktime_t ts)
- }
- EXPORT_SYMBOL_GPL(cec_queue_pin_cec_event);
- 
-+/* Notify userspace that the HPD pin changed state at the given time. */
-+void cec_queue_pin_hpd_event(struct cec_adapter *adap, bool is_high, ktime_t ts)
-+{
-+	struct cec_event ev = {
-+		.event = is_high ? CEC_EVENT_PIN_HPD_HIGH :
-+				   CEC_EVENT_PIN_HPD_LOW,
-+	};
-+	struct cec_fh *fh;
-+
-+	mutex_lock(&adap->devnode.lock);
-+	list_for_each_entry(fh, &adap->devnode.fhs, list)
-+		cec_queue_event_fh(fh, &ev, ktime_to_ns(ts));
-+	mutex_unlock(&adap->devnode.lock);
-+}
-+EXPORT_SYMBOL_GPL(cec_queue_pin_hpd_event);
-+
- /*
-  * Queue a new message for this filehandle.
-  *
-diff --git a/drivers/media/cec/cec-api.c b/drivers/media/cec/cec-api.c
-index a079f7fe018c..465bb3ec21f6 100644
---- a/drivers/media/cec/cec-api.c
-+++ b/drivers/media/cec/cec-api.c
-@@ -529,7 +529,7 @@ static int cec_open(struct inode *inode, struct file *filp)
- 	 * Initial events that are automatically sent when the cec device is
- 	 * opened.
- 	 */
--	struct cec_event ev_state = {
-+	struct cec_event ev = {
- 		.event = CEC_EVENT_STATE_CHANGE,
- 		.flags = CEC_EVENT_FL_INITIAL_STATE,
- 	};
-@@ -569,9 +569,19 @@ static int cec_open(struct inode *inode, struct file *filp)
- 	filp->private_data = fh;
- 
- 	/* Queue up initial state events */
--	ev_state.state_change.phys_addr = adap->phys_addr;
--	ev_state.state_change.log_addr_mask = adap->log_addrs.log_addr_mask;
--	cec_queue_event_fh(fh, &ev_state, 0);
-+	ev.state_change.phys_addr = adap->phys_addr;
-+	ev.state_change.log_addr_mask = adap->log_addrs.log_addr_mask;
-+	cec_queue_event_fh(fh, &ev, 0);
-+#ifdef CONFIG_CEC_PIN
-+	if (adap->pin && adap->pin->ops->read_hpd) {
-+		err = adap->pin->ops->read_hpd(adap);
-+		if (err >= 0) {
-+			ev.event = err ? CEC_EVENT_PIN_HPD_HIGH :
-+					 CEC_EVENT_PIN_HPD_LOW;
-+			cec_queue_event_fh(fh, &ev, 0);
-+		}
-+	}
-+#endif
- 
- 	list_add(&fh->list, &devnode->fhs);
- 	mutex_unlock(&devnode->lock);
-diff --git a/drivers/media/cec/cec-core.c b/drivers/media/cec/cec-core.c
-index 648136e552d5..e3a1fb6d6690 100644
---- a/drivers/media/cec/cec-core.c
-+++ b/drivers/media/cec/cec-core.c
-@@ -112,10 +112,6 @@ static int __must_check cec_devnode_register(struct cec_devnode *devnode,
- 	int minor;
- 	int ret;
- 
--	/* Initialization */
--	INIT_LIST_HEAD(&devnode->fhs);
--	mutex_init(&devnode->lock);
--
- 	/* Part 1: Find a free minor number */
- 	mutex_lock(&cec_devnode_lock);
- 	minor = find_next_zero_bit(cec_devnode_nums, CEC_NUM_DEVICES, 0);
-@@ -242,6 +238,10 @@ struct cec_adapter *cec_allocate_adapter(const struct cec_adap_ops *ops,
- 	INIT_LIST_HEAD(&adap->wait_queue);
- 	init_waitqueue_head(&adap->kthread_waitq);
- 
-+	/* adap->devnode initialization */
-+	INIT_LIST_HEAD(&adap->devnode.fhs);
-+	mutex_init(&adap->devnode.lock);
-+
- 	adap->kthread = kthread_run(cec_thread_func, adap, "cec-%s", name);
- 	if (IS_ERR(adap->kthread)) {
- 		pr_err("cec-%s: kernel_thread() failed\n", name);
-diff --git a/include/media/cec-pin.h b/include/media/cec-pin.h
-index f09cc9579d53..ea84b9c9e0c3 100644
---- a/include/media/cec-pin.h
-+++ b/include/media/cec-pin.h
-@@ -97,6 +97,9 @@ enum cec_pin_state {
-  * @free:	optional. Free any allocated resources. Called when the
-  *		adapter is deleted.
-  * @status:	optional, log status information.
-+ * @read_hpd:	read the HPD pin. Return true if high, false if low or
-+ *		an error if negative. If NULL or -ENOTTY is returned,
-+ *		then this is not supported.
-  *
-  * These operations are used by the cec pin framework to manipulate
-  * the CEC pin.
-@@ -109,6 +112,7 @@ struct cec_pin_ops {
- 	void (*disable_irq)(struct cec_adapter *adap);
- 	void (*free)(struct cec_adapter *adap);
- 	void (*status)(struct cec_adapter *adap, struct seq_file *file);
-+	int  (*read_hpd)(struct cec_adapter *adap);
- };
- 
- #define CEC_NUM_PIN_EVENTS 128
-diff --git a/include/media/cec.h b/include/media/cec.h
-index df6b3bd31284..9d0f983faea9 100644
---- a/include/media/cec.h
-+++ b/include/media/cec.h
-@@ -91,7 +91,7 @@ struct cec_event_entry {
- };
- 
- #define CEC_NUM_CORE_EVENTS 2
--#define CEC_NUM_EVENTS CEC_EVENT_PIN_CEC_HIGH
-+#define CEC_NUM_EVENTS CEC_EVENT_PIN_HPD_HIGH
- 
- struct cec_fh {
- 	struct list_head	list;
-@@ -296,6 +296,16 @@ static inline void cec_received_msg(struct cec_adapter *adap,
- void cec_queue_pin_cec_event(struct cec_adapter *adap,
- 			     bool is_high, ktime_t ts);
- 
-+/**
-+ * cec_queue_pin_hpd_event() - queue a pin event with a given timestamp.
-+ *
-+ * @adap:	pointer to the cec adapter
-+ * @is_high:	when true the HPD pin is high, otherwise it is low
-+ * @ts:		the timestamp for this event
-+ *
-+ */
-+void cec_queue_pin_hpd_event(struct cec_adapter *adap, bool is_high, ktime_t ts);
-+
- /**
-  * cec_get_edid_phys_addr() - find and return the physical address
-  *
-diff --git a/include/uapi/linux/cec.h b/include/uapi/linux/cec.h
-index 4351c3481aea..b9f8df3a0477 100644
---- a/include/uapi/linux/cec.h
-+++ b/include/uapi/linux/cec.h
-@@ -410,6 +410,8 @@ struct cec_log_addrs {
- #define CEC_EVENT_LOST_MSGS		2
- #define CEC_EVENT_PIN_CEC_LOW		3
- #define CEC_EVENT_PIN_CEC_HIGH		4
-+#define CEC_EVENT_PIN_HPD_LOW		5
-+#define CEC_EVENT_PIN_HPD_HIGH		6
- 
- #define CEC_EVENT_FL_INITIAL_STATE	(1 << 0)
- #define CEC_EVENT_FL_DROPPED_EVENTS	(1 << 1)
--- 
-2.14.1
+RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKQWRkIGEgc2ltcGxl
+IEhETUkgQ0VDIEdQSU8gZHJpdmVyIHRoYXQgc2l0cyBvbiB0b3Agb2YgdGhlIGNlYy1waW4gZnJh
+bWV3b3JrLgoKV2hpbGUgSSBoYXZlIGhlYXJkIG9mIFNvQ3MgdGhhdCB1c2UgdGhlIEdQSU8gcGlu
+IGZvciBDRUMgKGFwcGFyZW50bHkgYW4KZWFybHkgUm9ja0NoaXAgU29DIHVzZWQgdGhhdCksIHRo
+ZSBtYWluIHVzZS1jYXNlIG9mIHRoaXMgZHJpdmVyIGlzIHRvCmZ1bmN0aW9uIGFzIGEgZGVidWdn
+aW5nIHRvb2wuCgpCeSBjb25uZWN0aW5nIHRoZSBDRUMgbGluZSB0byBhIEdQSU8gcGluIG9uIGEg
+UmFzcGJlcnJ5IFBpIDMgZm9yIGV4YW1wbGUKaXQgdHVybnMgaXQgaW50byBhIENFQyBkZWJ1Z2dl
+ciBhbmQgcHJvdG9jb2wgYW5hbHl6ZXIuCgpXaXRoICdjZWMtY3RsIC0tbW9uaXRvci1waW4nIHRo
+ZSBDRUMgdHJhZmZpYyBjYW4gYmUgYW5hbHl6ZWQuCgpCdXQgb2YgY291cnNlIGl0IGNhbiBhbHNv
+IGJlIHVzZWQgd2l0aCBhbnkgaGFyZHdhcmUgcHJvamVjdCB3aGVyZSB0aGUKSERNSSBDRUMgbGlu
+ZSBpcyBob29rZWQgdXAgdG8gYSBwdWxsLXVwIGdwaW8gbGluZS4KCkluIGFkZGl0aW9uIHRoaXMg
+aGFzIChvcHRpb25hbCkgc3VwcG9ydCBmb3IgdHJhY2luZyBIUEQgY2hhbmdlcyBpZiB0aGUKSFBE
+IGlzIGNvbm5lY3RlZCB0byBhIEdQSU8uCgpTaWduZWQtb2ZmLWJ5OiBIYW5zIFZlcmt1aWwgPGhh
+bnMudmVya3VpbEBjaXNjby5jb20+Ci0tLQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9LY29uZmln
+ICAgICAgICAgICAgIHwgIDEwICsrCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL01ha2VmaWxlICAg
+ICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9jZWMtZ3Bpby9NYWtlZmls
+ZSAgIHwgICAxICsKIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vY2VjLWdwaW8vY2VjLWdwaW8uYyB8
+IDIzNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogNCBmaWxlcyBjaGFuZ2VkLCAyNDkg
+aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+Y2VjLWdwaW8vTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL3BsYXRm
+b3JtL2NlYy1ncGlvL2NlYy1ncGlvLmMKCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRm
+b3JtL0tjb25maWcgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25maWcKaW5kZXggN2U3Y2M0
+OWI4Njc0Li5lNGM4OWExNmEzZTcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+S2NvbmZpZworKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25maWcKQEAgLTU1Myw2ICs1
+NTMsMTYgQEAgY29uZmlnIFZJREVPX01FU09OX0FPX0NFQwogCSAgVGhpcyBpcyBhIGRyaXZlciBm
+b3IgQW1sb2dpYyBNZXNvbiBTb0NzIEFPIENFQyBpbnRlcmZhY2UuIEl0IHVzZXMgdGhlCiAJICBn
+ZW5lcmljIENFQyBmcmFtZXdvcmsgaW50ZXJmYWNlLgogCSAgQ0VDIGJ1cyBpcyBwcmVzZW50IGlu
+IHRoZSBIRE1JIGNvbm5lY3RvciBhbmQgZW5hYmxlcyBjb21tdW5pY2F0aW9uCisKK2NvbmZpZyBD
+RUNfR1BJTworCXRyaXN0YXRlICJHZW5lcmljIEdQSU8tYmFzZWQgQ0VDIGRyaXZlciIKKwlkZXBl
+bmRzIG9uIFBSRUVNUFQKKwlzZWxlY3QgQ0VDX0NPUkUKKwlzZWxlY3QgQ0VDX1BJTgorCXNlbGVj
+dCBHUElPTElCCisJLS0taGVscC0tLQorCSAgVGhpcyBpcyBhIGdlbmVyaWMgR1BJTy1iYXNlZCBD
+RUMgZHJpdmVyLgorCSAgVGhlIENFQyBidXMgaXMgcHJlc2VudCBpbiB0aGUgSERNSSBjb25uZWN0
+b3IgYW5kIGVuYWJsZXMgY29tbXVuaWNhdGlvbgogCSAgYmV0d2VlbiBjb21wYXRpYmxlIGRldmlj
+ZXMuCiAKIGNvbmZpZyBWSURFT19TQU1TVU5HX1M1UF9DRUMKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+bWVkaWEvcGxhdGZvcm0vTWFrZWZpbGUgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL01ha2VmaWxl
+CmluZGV4IGMxZWY5NDZiZjAzMi4uOWJmNDhmMTE4NTM3IDEwMDY0NAotLS0gYS9kcml2ZXJzL21l
+ZGlhL3BsYXRmb3JtL01ha2VmaWxlCisrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vTWFrZWZp
+bGUKQEAgLTI2LDYgKzI2LDggQEAgb2JqLSQoQ09ORklHX1ZJREVPX0NPREEpIAkJKz0gY29kYS8K
+IAogb2JqLSQoQ09ORklHX1ZJREVPX1NIX1ZFVSkJCSs9IHNoX3ZldS5vCiAKK29iai0kKENPTkZJ
+R19DRUNfR1BJTykJCQkrPSBjZWMtZ3Bpby8KKwogb2JqLSQoQ09ORklHX1ZJREVPX01FTTJNRU1f
+REVJTlRFUkxBQ0UpCSs9IG0ybS1kZWludGVybGFjZS5vCiAKIG9iai0kKENPTkZJR19WSURFT19N
+VVgpCQkJKz0gdmlkZW8tbXV4Lm8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+Y2VjLWdwaW8vTWFrZWZpbGUgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL2NlYy1ncGlvL01ha2Vm
+aWxlCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uZTgyYjI1OGFmYTU1
+Ci0tLSAvZGV2L251bGwKKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9jZWMtZ3Bpby9NYWtl
+ZmlsZQpAQCAtMCwwICsxIEBACitvYmotJChDT05GSUdfQ0VDX0dQSU8pICs9IGNlYy1ncGlvLm8K
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vY2VjLWdwaW8vY2VjLWdwaW8uYyBi
+L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vY2VjLWdwaW8vY2VjLWdwaW8uYwpuZXcgZmlsZSBtb2Rl
+IDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLmViOTgyYmNlOTlmYwotLS0gL2Rldi9udWxsCisr
+KyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vY2VjLWdwaW8vY2VjLWdwaW8uYwpAQCAtMCwwICsx
+LDIzNiBAQAorLyoKKyAqIENvcHlyaWdodCAyMDE3IENpc2NvIFN5c3RlbXMsIEluYy4gYW5kL29y
+IGl0cyBhZmZpbGlhdGVzLiBBbGwgcmlnaHRzIHJlc2VydmVkLgorICoKKyAqIFRoaXMgcHJvZ3Jh
+bSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgbWF5IHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5
+CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNl
+IGFzIHB1Ymxpc2hlZCBieQorICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgdmVyc2lv
+biAyIG9mIHRoZSBMaWNlbnNlLgorICoKKyAqIFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMg
+SVMiLCBXSVRIT1VUIFdBUlJBTlRZIE9GIEFOWSBLSU5ELAorICogRVhQUkVTUyBPUiBJTVBMSUVE
+LCBJTkNMVURJTkcgQlVUIE5PVCBMSU1JVEVEIFRPIFRIRSBXQVJSQU5USUVTIE9GCisgKiBNRVJD
+SEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFIEFORAorICogTk9O
+SU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZUklHSFQg
+SE9MREVSUworICogQkUgTElBQkxFIEZPUiBBTlkgQ0xBSU0sIERBTUFHRVMgT1IgT1RIRVIgTElB
+QklMSVRZLCBXSEVUSEVSIElOIEFOCisgKiBBQ1RJT04gT0YgQ09OVFJBQ1QsIFRPUlQgT1IgT1RI
+RVJXSVNFLCBBUklTSU5HIEZST00sIE9VVCBPRiBPUiBJTgorICogQ09OTkVDVElPTiBXSVRIIFRI
+RSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SIE9USEVSIERFQUxJTkdTIElOIFRIRQorICogU09GVFdB
+UkUuCisgKi8KKworI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgorI2luY2x1ZGUgPGxpbnV4L2lu
+dGVycnVwdC5oPgorI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+CisjaW5jbHVkZSA8bGludXgvcGxh
+dGZvcm1fZGV2aWNlLmg+CisjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25zdW1lci5oPgorI2luY2x1
+ZGUgPG1lZGlhL2NlYy1waW4uaD4KKworc3RydWN0IGNlY19ncGlvIHsKKwlzdHJ1Y3QgY2VjX2Fk
+YXB0ZXIJKmFkYXA7CisJc3RydWN0IGRldmljZQkJKmRldjsKKworCXN0cnVjdCBncGlvX2Rlc2MJ
+KmNlY19ncGlvOworCWludAkJCWNlY19pcnE7CisJYm9vbAkJCWNlY19pc19sb3c7CisJYm9vbAkJ
+CWNlY19oYXZlX2lycTsKKworCXN0cnVjdCBncGlvX2Rlc2MJKmhwZF9ncGlvOworCWludAkJCWhw
+ZF9pcnE7CisJYm9vbAkJCWhwZF9pc19oaWdoOworCWt0aW1lX3QJCQlocGRfdHM7Cit9OworCitz
+dGF0aWMgYm9vbCBjZWNfZ3Bpb19yZWFkKHN0cnVjdCBjZWNfYWRhcHRlciAqYWRhcCkKK3sKKwlz
+dHJ1Y3QgY2VjX2dwaW8gKmNlYyA9IGNlY19nZXRfZHJ2ZGF0YShhZGFwKTsKKworCWlmIChjZWMt
+PmNlY19pc19sb3cpCisJCXJldHVybiBmYWxzZTsKKwlyZXR1cm4gZ3Bpb2RfZ2V0X3ZhbHVlKGNl
+Yy0+Y2VjX2dwaW8pOworfQorCitzdGF0aWMgdm9pZCBjZWNfZ3Bpb19oaWdoKHN0cnVjdCBjZWNf
+YWRhcHRlciAqYWRhcCkKK3sKKwlzdHJ1Y3QgY2VjX2dwaW8gKmNlYyA9IGNlY19nZXRfZHJ2ZGF0
+YShhZGFwKTsKKworCWlmICghY2VjLT5jZWNfaXNfbG93KQorCQlyZXR1cm47CisJY2VjLT5jZWNf
+aXNfbG93ID0gZmFsc2U7CisJZ3Bpb2Rfc2V0X3ZhbHVlKGNlYy0+Y2VjX2dwaW8sIDEpOworfQor
+CitzdGF0aWMgdm9pZCBjZWNfZ3Bpb19sb3coc3RydWN0IGNlY19hZGFwdGVyICphZGFwKQorewor
+CXN0cnVjdCBjZWNfZ3BpbyAqY2VjID0gY2VjX2dldF9kcnZkYXRhKGFkYXApOworCisJaWYgKGNl
+Yy0+Y2VjX2lzX2xvdykKKwkJcmV0dXJuOworCWlmIChXQVJOX09OX09OQ0UoY2VjLT5jZWNfaGF2
+ZV9pcnEpKQorCQlmcmVlX2lycShjZWMtPmNlY19pcnEsIGNlYyk7CisJY2VjLT5jZWNfaGF2ZV9p
+cnEgPSBmYWxzZTsKKwljZWMtPmNlY19pc19sb3cgPSB0cnVlOworCWdwaW9kX3NldF92YWx1ZShj
+ZWMtPmNlY19ncGlvLCAwKTsKK30KKworc3RhdGljIGlycXJldHVybl90IGNlY19ocGRfZ3Bpb19p
+cnFfaGFuZGxlcl90aHJlYWQoaW50IGlycSwgdm9pZCAqcHJpdikKK3sKKwlzdHJ1Y3QgY2VjX2dw
+aW8gKmNlYyA9IHByaXY7CisKKwljZWNfcXVldWVfcGluX2hwZF9ldmVudChjZWMtPmFkYXAsIGNl
+Yy0+aHBkX2lzX2hpZ2gsIGNlYy0+aHBkX3RzKTsKKwlyZXR1cm4gSVJRX0hBTkRMRUQ7Cit9CisK
+K3N0YXRpYyBpcnFyZXR1cm5fdCBjZWNfaHBkX2dwaW9faXJxX2hhbmRsZXIoaW50IGlycSwgdm9p
+ZCAqcHJpdikKK3sKKwlzdHJ1Y3QgY2VjX2dwaW8gKmNlYyA9IHByaXY7CisKKwljZWMtPmhwZF90
+cyA9IGt0aW1lX2dldCgpOworCWNlYy0+aHBkX2lzX2hpZ2ggPSBncGlvZF9nZXRfdmFsdWUoY2Vj
+LT5ocGRfZ3Bpbyk7CisJcmV0dXJuIElSUV9XQUtFX1RIUkVBRDsKK30KKworc3RhdGljIGlycXJl
+dHVybl90IGNlY19ncGlvX2lycV9oYW5kbGVyKGludCBpcnEsIHZvaWQgKnByaXYpCit7CisJc3Ry
+dWN0IGNlY19ncGlvICpjZWMgPSBwcml2OworCisJY2VjX3Bpbl9jaGFuZ2VkKGNlYy0+YWRhcCwg
+Z3Bpb2RfZ2V0X3ZhbHVlKGNlYy0+Y2VjX2dwaW8pKTsKKwlyZXR1cm4gSVJRX0hBTkRMRUQ7Cit9
+CisKK3N0YXRpYyBib29sIGNlY19ncGlvX2VuYWJsZV9pcnEoc3RydWN0IGNlY19hZGFwdGVyICph
+ZGFwKQoreworCXN0cnVjdCBjZWNfZ3BpbyAqY2VjID0gY2VjX2dldF9kcnZkYXRhKGFkYXApOwor
+CisJaWYgKGNlYy0+Y2VjX2hhdmVfaXJxKQorCQlyZXR1cm4gdHJ1ZTsKKworCWlmIChyZXF1ZXN0
+X2lycShjZWMtPmNlY19pcnEsIGNlY19ncGlvX2lycV9oYW5kbGVyLAorCQkJSVJRRl9UUklHR0VS
+X1JJU0lORyB8IElSUUZfVFJJR0dFUl9GQUxMSU5HLAorCQkJYWRhcC0+bmFtZSwgY2VjKSkKKwkJ
+cmV0dXJuIGZhbHNlOworCWNlYy0+Y2VjX2hhdmVfaXJxID0gdHJ1ZTsKKwlyZXR1cm4gdHJ1ZTsK
+K30KKworc3RhdGljIHZvaWQgY2VjX2dwaW9fZGlzYWJsZV9pcnEoc3RydWN0IGNlY19hZGFwdGVy
+ICphZGFwKQoreworCXN0cnVjdCBjZWNfZ3BpbyAqY2VjID0gY2VjX2dldF9kcnZkYXRhKGFkYXAp
+OworCisJaWYgKGNlYy0+Y2VjX2hhdmVfaXJxKQorCQlmcmVlX2lycShjZWMtPmNlY19pcnEsIGNl
+Yyk7CisJY2VjLT5jZWNfaGF2ZV9pcnEgPSBmYWxzZTsKK30KKworc3RhdGljIHZvaWQgY2VjX2dw
+aW9fc3RhdHVzKHN0cnVjdCBjZWNfYWRhcHRlciAqYWRhcCwgc3RydWN0IHNlcV9maWxlICpmaWxl
+KQoreworCXN0cnVjdCBjZWNfZ3BpbyAqY2VjID0gY2VjX2dldF9kcnZkYXRhKGFkYXApOworCisJ
+c2VxX3ByaW50ZihmaWxlLCAibW9kZTogJXNcbiIsIGNlYy0+Y2VjX2lzX2xvdyA/ICJsb3ctZHJp
+dmUiIDogInJlYWQiKTsKKwlpZiAoY2VjLT5jZWNfaGF2ZV9pcnEpCisJCXNlcV9wcmludGYoZmls
+ZSwgInVzaW5nIGlycTogJWRcbiIsIGNlYy0+Y2VjX2lycSk7CisJaWYgKGNlYy0+aHBkX2dwaW8p
+CisJCXNlcV9wcmludGYoZmlsZSwgImhwZDogJXNcbiIsCisJCQkgICBjZWMtPmhwZF9pc19oaWdo
+ID8gImhpZ2giIDogImxvdyIpOworfQorCitzdGF0aWMgaW50IGNlY19ncGlvX3JlYWRfaHBkKHN0
+cnVjdCBjZWNfYWRhcHRlciAqYWRhcCkKK3sKKwlzdHJ1Y3QgY2VjX2dwaW8gKmNlYyA9IGNlY19n
+ZXRfZHJ2ZGF0YShhZGFwKTsKKworCWlmICghY2VjLT5ocGRfZ3BpbykKKwkJcmV0dXJuIC1FTk9U
+VFk7CisJcmV0dXJuIGdwaW9kX2dldF92YWx1ZShjZWMtPmhwZF9ncGlvKTsKK30KKworc3RhdGlj
+IHZvaWQgY2VjX2dwaW9fZnJlZShzdHJ1Y3QgY2VjX2FkYXB0ZXIgKmFkYXApCit7CisJY2VjX2dw
+aW9fZGlzYWJsZV9pcnEoYWRhcCk7Cit9CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgY2VjX3Bpbl9v
+cHMgY2VjX2dwaW9fcGluX29wcyA9IHsKKwkucmVhZCA9IGNlY19ncGlvX3JlYWQsCisJLmxvdyA9
+IGNlY19ncGlvX2xvdywKKwkuaGlnaCA9IGNlY19ncGlvX2hpZ2gsCisJLmVuYWJsZV9pcnEgPSBj
+ZWNfZ3Bpb19lbmFibGVfaXJxLAorCS5kaXNhYmxlX2lycSA9IGNlY19ncGlvX2Rpc2FibGVfaXJx
+LAorCS5zdGF0dXMgPSBjZWNfZ3Bpb19zdGF0dXMsCisJLmZyZWUgPSBjZWNfZ3Bpb19mcmVlLAor
+CS5yZWFkX2hwZCA9IGNlY19ncGlvX3JlYWRfaHBkLAorfTsKKworc3RhdGljIGludCBjZWNfZ3Bp
+b19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQoreworCXN0cnVjdCBkZXZpY2Ug
+KmRldiA9ICZwZGV2LT5kZXY7CisJc3RydWN0IGNlY19ncGlvICpjZWM7CisJaW50IHJldDsKKwor
+CWNlYyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqY2VjKSwgR0ZQX0tFUk5FTCk7CisJaWYg
+KCFjZWMpCisJCXJldHVybiAtRU5PTUVNOworCisJY2VjLT5kZXYgPSBkZXY7CisKKwljZWMtPmNl
+Y19ncGlvID0gZGV2bV9ncGlvZF9nZXQoZGV2LCAiY2VjIiwgR1BJT0RfSU4pOworCWlmIChJU19F
+UlIoY2VjLT5jZWNfZ3BpbykpCisJCXJldHVybiBQVFJfRVJSKGNlYy0+Y2VjX2dwaW8pOworCWNl
+Yy0+Y2VjX2lycSA9IGdwaW9kX3RvX2lycShjZWMtPmNlY19ncGlvKTsKKworCWNlYy0+aHBkX2dw
+aW8gPSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbChkZXYsICJocGQiLCBHUElPRF9JTik7CisJaWYg
+KElTX0VSUihjZWMtPmhwZF9ncGlvKSkKKwkJcmV0dXJuIFBUUl9FUlIoY2VjLT5ocGRfZ3Bpbyk7
+CisKKwljZWMtPmFkYXAgPSBjZWNfcGluX2FsbG9jYXRlX2FkYXB0ZXIoJmNlY19ncGlvX3Bpbl9v
+cHMsCisJCWNlYywgcGRldi0+bmFtZSwgQ0VDX0NBUF9ERUZBVUxUUyB8IENFQ19DQVBfUEhZU19B
+RERSIHwKKwkJCQkgQ0VDX0NBUF9NT05JVE9SX0FMTCB8IENFQ19DQVBfTU9OSVRPUl9QSU4pOwor
+CWlmIChJU19FUlIoY2VjLT5hZGFwKSkKKwkJcmV0dXJuIFBUUl9FUlIoY2VjLT5hZGFwKTsKKwor
+CWlmIChjZWMtPmhwZF9ncGlvKSB7CisJCWNlYy0+aHBkX2lycSA9IGdwaW9kX3RvX2lycShjZWMt
+PmhwZF9ncGlvKTsKKwkJcmV0ID0gZGV2bV9yZXF1ZXN0X3RocmVhZGVkX2lycShkZXYsIGNlYy0+
+aHBkX2lycSwKKwkJCWNlY19ocGRfZ3Bpb19pcnFfaGFuZGxlciwKKwkJCWNlY19ocGRfZ3Bpb19p
+cnFfaGFuZGxlcl90aHJlYWQsCisJCQlJUlFGX09ORVNIT1QgfAorCQkJSVJRRl9UUklHR0VSX0ZB
+TExJTkcgfCBJUlFGX1RSSUdHRVJfUklTSU5HLAorCQkJImhwZC1ncGlvIiwgY2VjKTsKKwkJaWYg
+KHJldCkKKwkJCXJldHVybiByZXQ7CisJfQorCisJcmV0ID0gY2VjX3JlZ2lzdGVyX2FkYXB0ZXIo
+Y2VjLT5hZGFwLCAmcGRldi0+ZGV2KTsKKwlpZiAocmV0KSB7CisJCWNlY19kZWxldGVfYWRhcHRl
+cihjZWMtPmFkYXApOworCQlyZXR1cm4gcmV0OworCX0KKworCXBsYXRmb3JtX3NldF9kcnZkYXRh
+KHBkZXYsIGNlYyk7CisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBpbnQgY2VjX2dwaW9fcmVtb3Zl
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCit7CisJc3RydWN0IGNlY19ncGlvICpjZWMg
+PSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsKKworCWNlY191bnJlZ2lzdGVyX2FkYXB0ZXIo
+Y2VjLT5hZGFwKTsKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZp
+Y2VfaWQgY2VjX2dwaW9fbWF0Y2hbXSA9IHsKKwl7CisJCS5jb21wYXRpYmxlCT0gImNlYy1ncGlv
+IiwKKwl9LAorCXt9LAorfTsKK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGNlY19ncGlvX21hdGNo
+KTsKKworc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgY2VjX2dwaW9fcGRydiA9IHsKKwku
+cHJvYmUJPSBjZWNfZ3Bpb19wcm9iZSwKKwkucmVtb3ZlID0gY2VjX2dwaW9fcmVtb3ZlLAorCS5k
+cml2ZXIgPSB7CisJCS5uYW1lCQk9ICJjZWMtZ3BpbyIsCisJCS5vZl9tYXRjaF90YWJsZQk9IGNl
+Y19ncGlvX21hdGNoLAorCX0sCit9OworCittb2R1bGVfcGxhdGZvcm1fZHJpdmVyKGNlY19ncGlv
+X3BkcnYpOworCitNT0RVTEVfQVVUSE9SKCJIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNj
+by5jb20+Iik7CitNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7CitNT0RVTEVfREVTQ1JJUFRJT04o
+IkNFQyBHUElPIGRyaXZlciIpOwotLSAKMi4xNC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
