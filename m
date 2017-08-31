@@ -1,64 +1,67 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH 3/3] dmaengine: sun6i: Add support for
- Allwinner A64
-Date: Thu, 31 Aug 2017 18:35:43 +0200
-Message-ID: <CAEKpxBkKAVV0wnQq7YD8MpPM31DGindVgHDstTc082HiUSSd=g@mail.gmail.com>
-References: <20170830233609.13855-1-stefan.bruens@rwth-aachen.de>
- <20170830233609.13855-4-stefan.bruens@rwth-aachen.de> <20170831145246.p4k3uakbn67na3pv@flea.lan>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 0/3] PCI hotplug feature
+Date: Thu, 31 Aug 2017 22:29:01 +0530
+Message-ID: <CAK1A=4wznHsh=drYNrEEhaaJQrksWjkB8K_mOutgxFPh1CVdPg@mail.gmail.com>
+References: <1504155029-24729-1-git-send-email-oza.oza@broadcom.com> <20170831133951.GA8154@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBYHVUDGQKGQE3OMBODY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170831145246.p4k3uakbn67na3pv-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?UTF-8?Q?Stefan_Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170831133951.GA8154-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Andy Gospodarek <gospo-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 31 August 2017 at 16:52, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Aug 31, 2017 at 01:36:09AM +0200, Stefan Br=C3=BCns wrote:
->> The A64 SoC has the same dma engine as the H3 (sun8i), with a
->> reduced amount of physical channels. Add the proper config data
->> and compatible string to support it.
+On Thu, Aug 31, 2017 at 7:09 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Aug 31, 2017 at 10:20:26AM +0530, Oza Pawandeep wrote:
+>> These patches bring in PCI hotplug support for iproc family chipsets.
 >>
->> Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 4 ++++
->>  drivers/dma/sun6i-dma.c                       | 7 +++++++
->>  2 files changed, 11 insertions(+)
+>> It includes DT binding documentation and, the implementation in
+>> iproc pcie RC driver.
+>>
+>> Changes since v5:
+>> [RESEND]
 >
-> With what device did you test this? As far as I know, the SPI driver
-> doesn't use DMA at all.
->
-Hi Maxime,
-I've tested this on spdif and i2s on the Pine64.
-BR,
-CK
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+> Not sure what the point of resending this as v6 was, since v5 was
+> posted 6 minutes earlier and you don't mention any changes in v6?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+My apologies,
+It looked to me that v5 went out twice, might be confusing.
+
+Hence sent out v6.
+
+Regards,
+Oza.
+>
+>> Changes since v4:
+>> Rebased to pci-next
+>> Added; Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> Changes since v3:
+>> Resend. just to be in sync previous in-flight patches.
+>>
+>> Changes since v2:
+>> Addressed Rob Herring's comments.
+>> Changed subject to "dt-bindings: PCI:..."
+>> Made generic PCI hotplug properties 'slot-pluggable' and 'prsnt-gpios'
+>> Rebased the patches on top of Lorenzo's patches.
+>>
+>> Oza Pawandeep (3):
+>>   dt-bindings: PCI: Add PCI hotplug property
+>>   dt-bindings: PCI iproc: Implement optional property prsnt-gpios
+>>   PCI: iproc: Implement PCI hotplug support
+>>
+>>  .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  14 ++
+>>  Documentation/devicetree/bindings/pci/pci.txt      |  15 ++
+>>  drivers/pci/host/pcie-iproc-platform.c             |   3 +
+>>  drivers/pci/host/pcie-iproc.c                      | 166 ++++++++++++++++++---
+>>  drivers/pci/host/pcie-iproc.h                      |   7 +
+>>  5 files changed, 187 insertions(+), 18 deletions(-)
+>>
+>> --
+>> 1.9.1
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
