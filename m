@@ -1,104 +1,55 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] drm/bridge: add Silicon Image SiI9234 driver
-Date: Thu, 31 Aug 2017 16:30:22 +0300
-Message-ID: <2326944.Wi9TMObRze@avalon>
-References: <1504182434-8201-1-git-send-email-m.purski@samsung.com> <CGME20170831122745eucas1p27a178da2e30023292c57653a8dc45813@eucas1p2.samsung.com> <1504182434-8201-2-git-send-email-m.purski@samsung.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v6 0/3] PCI hotplug feature
+Date: Thu, 31 Aug 2017 08:39:52 -0500
+Message-ID: <20170831133951.GA8154@bhelgaas-glaptop.roam.corp.google.com>
+References: <1504155029-24729-1-git-send-email-oza.oza@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1504182434-8201-2-git-send-email-m.purski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Maciej Purski <m.purski@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1504155029-24729-1-git-send-email-oza.oza@broadcom.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Oza Pawandeep <oza.oza@broadcom.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maciej,
-
-Thank you for the patch.
-
-On Thursday, 31 August 2017 15:27:13 EEST Maciej Purski wrote:
-> SiI9234 transmitter converts eTMDS/HDMI signal to MHL 1.0.
-> It is controlled via I2C bus. Its interaction with other
-> devices in video pipeline is performed mainly on HW level.
-> The only interaction it does on device driver level is
-> filtering-out unsupported video modes, it exposes drm_bridge
-> interface to perform this operation.
+On Thu, Aug 31, 2017 at 10:20:26AM +0530, Oza Pawandeep wrote:
+> These patches bring in PCI hotplug support for iproc family chipsets.
 > 
-> This patch is based on the code refactored by Tomasz Stanislawski
-> <t.stanislaws@samsung.com>, which was initially developed by:
-> Adam Hampson <ahampson@sta.samsung.com>
-> Erik Gilling <konkers@android.com>
-> Shankar Bandal <shankar.b@samsung.com>
-> Dharam Kumar <dharam.kr@samsung.com>
+> It includes DT binding documentation and, the implementation in
+> iproc pcie RC driver.
 > 
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
-> Changes in v2:
-> - use bulk_requlators instead of single one
-> - substitute some of the magic values with macros
-> - improve coding style
-> - improved error handling in sii9234_probe()
-> ---
->  .../devicetree/bindings/display/bridge/sii9234.txt |  34 +
->  drivers/gpu/drm/bridge/Kconfig                     |   8 +
->  drivers/gpu/drm/bridge/Makefile                    |   1 +
->  drivers/gpu/drm/bridge/sii9234.c                   | 993 ++++++++++++++++++
->  4 files changed, 1036 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/display/bridge/sii9234.txt create mode
-> 100644 drivers/gpu/drm/bridge/sii9234.c
+> Changes since v5:
+> [RESEND]
+
+Not sure what the point of resending this as v6 was, since v5 was
+posted 6 minutes earlier and you don't mention any changes in v6?
+
+> Changes since v4:
+> Rebased to pci-next
+> Added; Acked-by: Rob Herring <robh@kernel.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/sii9234.txt
-> b/Documentation/devicetree/bindings/display/bridge/sii9234.txt new file
-> mode 100644
-> index 0000000..3ce7413
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/sii9234.txt
-> @@ -0,0 +1,34 @@
-> +Silicon Image SiI9234 HDMI/MHL bridge bindings
-> +
-> +Required properties:
-> +	- compatible : "sil,sii9234".
-> +	- reg : I2C address for TPI interface, use 0x39
-> +	- avcc33-supply : MHL/USB Switch Supply Voltage (3.3V)
-> +	- iovcc18-supply : I/O Supply Voltage (1.8V)
-> +	- avcc12-supply : TMDS Analog Supply Voltage (1.2V)
-> +	- cvcc12-supply : Digital Core Supply Voltage (1.2V)
-> +	- interrupts, interrupt-parent: interrupt specifier of INT pin
-> +	- reset-gpios: gpio specifier of RESET pin (active low)
-> +	- video interfaces: Device node can contain video interface port
-> +			    node for HDMI encoder according to [1].
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-
-Doesn't this chip have two ports, one input connected to the SoC and one 
-output connected to an HDMI connector ? If so there should be two ports in DT 
-too.
-
-> +Example:
-> +	sii9234@39 {
-> +		compatible = "sil,sii9234";
-> +		reg = <0x39>;
-> +		avcc33-supply = <&vcc33mhl>;
-> +		iovcc18-supply = <&vcc18mhl>;
-> +		avcc12-supply = <&vsil12>;
-> +		cvcc12-supply = <&vsil12>;
-> +		reset-gpios = <&gpf3 4 GPIO_ACTIVE_LOW>;
-> +		interrupt-parent = <&gpf3>;
-> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		port {
-> +			mhl_to_hdmi: endpoint {
-> +				remote-endpoint = <&hdmi_to_mhl>;
-
-It would be useful to include the remote DT nodes in the example too.
-
-> +			};
-> +		};
-> +	};
-
--- 
-Regards,
-
-Laurent Pinchart
+> Changes since v3:
+> Resend. just to be in sync previous in-flight patches.
+> 
+> Changes since v2:
+> Addressed Rob Herring's comments.
+> Changed subject to "dt-bindings: PCI:..."
+> Made generic PCI hotplug properties 'slot-pluggable' and 'prsnt-gpios'
+> Rebased the patches on top of Lorenzo's patches.
+> 
+> Oza Pawandeep (3):
+>   dt-bindings: PCI: Add PCI hotplug property
+>   dt-bindings: PCI iproc: Implement optional property prsnt-gpios
+>   PCI: iproc: Implement PCI hotplug support
+> 
+>  .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  14 ++
+>  Documentation/devicetree/bindings/pci/pci.txt      |  15 ++
+>  drivers/pci/host/pcie-iproc-platform.c             |   3 +
+>  drivers/pci/host/pcie-iproc.c                      | 166 ++++++++++++++++++---
+>  drivers/pci/host/pcie-iproc.h                      |   7 +
+>  5 files changed, 187 insertions(+), 18 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
