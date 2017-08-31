@@ -1,66 +1,60 @@
-From: Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] PCI hotplug feature
-Date: Thu, 31 Aug 2017 22:29:01 +0530
-Message-ID: <CAK1A=4wznHsh=drYNrEEhaaJQrksWjkB8K_mOutgxFPh1CVdPg@mail.gmail.com>
-References: <1504155029-24729-1-git-send-email-oza.oza@broadcom.com> <20170831133951.GA8154@bhelgaas-glaptop.roam.corp.google.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: fix '%zx' warning
+Date: Thu, 31 Aug 2017 12:01:40 -0500
+Message-ID: <CAL_Jsq+1gMR2MCEXA6UOiK+4NpxT4k71YGqWzW7hZNCWnRg0hw@mail.gmail.com>
+References: <E1da2Z7-0008GG-AV@rmk-PC.armlinux.org.uk> <20170726013004.GJ8978@umbus.fritz.box>
+ <20170808112818.GC20805@n2100.armlinux.org.uk> <20170809040642.GG13670@umbus.fritz.box>
+ <CAL_JsqKiM_T-ftd8NvHmzcRsirRWTe34jZRjZ=3NGSgb4HGncQ@mail.gmail.com> <20170831161611.GT20805@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170831133951.GA8154-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20170831161611.GT20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Andy Gospodarek <gospo-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 7:09 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Aug 31, 2017 at 10:20:26AM +0530, Oza Pawandeep wrote:
->> These patches bring in PCI hotplug support for iproc family chipsets.
+On Thu, Aug 31, 2017 at 11:16 AM, Russell King - ARM Linux
+<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> On Thu, Aug 31, 2017 at 10:58:12AM -0500, Rob Herring wrote:
+>> On Tue, Aug 8, 2017 at 11:06 PM, David Gibson
+>> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> > On Tue, Aug 08, 2017 at 12:28:19PM +0100, Russell King - ARM Linux wrote:
+>> >> On Wed, Jul 26, 2017 at 11:30:04AM +1000, David Gibson wrote:
+>> >> > On Tue, Jul 25, 2017 at 05:20:09PM +0100, Russell King wrote:
+>> >> > > dtc uses an incorrect format specifier for printing a uint64_t value.
+>> >> > > uint64_t may be either 'unsigned long' or 'unsigned long long' depending
+>> >> > > on the host architecture.
+>> >> > >
+>> >> > > Fix this by using %llx and casting to unsigned long long, which ensures
+>> >> > > that we always have a wide enough variable to print 64 bits of hex.
+>> >> > >
+>> >> > >   HOSTCC  scripts/dtc/checks.o
+>> >> > > scripts/dtc/checks.c: In function 'check_simple_bus_reg':
+>> >> > > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
+>> >> > >   snprintf(unit_addr, sizeof(unit_addr), "%zx", reg);
+>> >> > >   ^
+>> >> > > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
+>> >> > >
+>> >> > > Fixes: 828d4cdd012c ("dtc: check.c fix compile error")
+>> >> > > Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+>> >> >
+>> >> > This (embarrassing) error is already fixed in upstream dtc.
+>> >>
+>> >> It remains unfixed in 4.13-rc4.  How do we get this fixed in the
+>> >> kernel's dtc?  From what I can see, sending a patch to fix stuff
+>> >> doesn't work.
 >>
->> It includes DT binding documentation and, the implementation in
->> iproc pcie RC driver.
->>
->> Changes since v5:
->> [RESEND]
+>> Sorry, didn't see this until Andrew M picked it up.
 >
-> Not sure what the point of resending this as v6 was, since v5 was
-> posted 6 minutes earlier and you don't mention any changes in v6?
+> How do we know whether whatever is in upstream dtc fixes the problem
+> that I'm seeing?
 
-My apologies,
-It looked to me that v5 went out twice, might be confusing.
+Build upstream dtc or here's a branch[1] with the cherry-picked fix.
 
-Hence sent out v6.
+Rob
 
-Regards,
-Oza.
->
->> Changes since v4:
->> Rebased to pci-next
->> Added; Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> Changes since v3:
->> Resend. just to be in sync previous in-flight patches.
->>
->> Changes since v2:
->> Addressed Rob Herring's comments.
->> Changed subject to "dt-bindings: PCI:..."
->> Made generic PCI hotplug properties 'slot-pluggable' and 'prsnt-gpios'
->> Rebased the patches on top of Lorenzo's patches.
->>
->> Oza Pawandeep (3):
->>   dt-bindings: PCI: Add PCI hotplug property
->>   dt-bindings: PCI iproc: Implement optional property prsnt-gpios
->>   PCI: iproc: Implement PCI hotplug support
->>
->>  .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  14 ++
->>  Documentation/devicetree/bindings/pci/pci.txt      |  15 ++
->>  drivers/pci/host/pcie-iproc-platform.c             |   3 +
->>  drivers/pci/host/pcie-iproc.c                      | 166 ++++++++++++++++++---
->>  drivers/pci/host/pcie-iproc.h                      |   7 +
->>  5 files changed, 187 insertions(+), 18 deletions(-)
->>
->> --
->> 1.9.1
->>
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt/testing
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
