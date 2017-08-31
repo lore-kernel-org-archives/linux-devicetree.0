@@ -1,52 +1,28 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCHv4 4/5] cec-gpio: add HDMI CEC GPIO driver
-Date: Thu, 31 Aug 2017 16:19:17 +0200
-Message-ID: <7a7ad8d3-a52a-de47-4f50-62cd64aa52e3@xs4all.nl>
-References: <20170831110156.11018-1-hverkuil@xs4all.nl>
- <20170831110156.11018-5-hverkuil@xs4all.nl>
- <CACRpkdYQSYMQHgrOimV6iVRdrjhAXvXdzsfnNr8abykOyZP8yw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: designware: add binding for
+ Designware PCIe in ECAM mode
+Date: Thu, 31 Aug 2017 09:23:29 -0500
+Message-ID: <CAL_Jsq+SE_+yAaPT_bYj-s6yyc22s0n-KzZtmzp8muKnb_iANw@mail.gmail.com>
+References: <20170828180437.2646-1-ard.biesheuvel@linaro.org> <20170828180437.2646-3-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYQSYMQHgrOimV6iVRdrjhAXvXdzsfnNr8abykOyZP8yw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170828180437.2646-3-ard.biesheuvel@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31/08/17 16:10, Linus Walleij wrote:
-> On Thu, Aug 31, 2017 at 1:01 PM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
-> 
->> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->>
->> Add a simple HDMI CEC GPIO driver that sits on top of the cec-pin framework.
->>
->> While I have heard of SoCs that use the GPIO pin for CEC (apparently an
->> early RockChip SoC used that), the main use-case of this driver is to
->> function as a debugging tool.
->>
->> By connecting the CEC line to a GPIO pin on a Raspberry Pi 3 for example
->> it turns it into a CEC debugger and protocol analyzer.
->>
->> With 'cec-ctl --monitor-pin' the CEC traffic can be analyzed.
->>
->> But of course it can also be used with any hardware project where the
->> HDMI CEC line is hooked up to a pull-up gpio line.
->>
->> In addition this has (optional) support for tracing HPD changes if the
->> HPD is connected to a GPIO.
->>
->> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> 
-> This looks nice!
-> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Mon, Aug 28, 2017 at 1:04 PM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> Describe the binding for firmware-configured instances of the Synopsys
+> Designware PCIe controller in RC mode, that are almost but not quite
+> ECAM compliant.
+>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt | 42 ++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
 
-Thank you for the gpio crash course! :-)
-
-	Hans
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
