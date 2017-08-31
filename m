@@ -1,86 +1,88 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v3 2/4] power: supply: bq27xxx: enable writing capacity
- values for bq27500
-Date: Thu, 31 Aug 2017 10:38:10 +0200
-Message-ID: <20170831083810.pk7d2qqetwc356rs@earth>
-References: <cover.1504162792.git.hns@goldelico.com>
- <af9c1a4e95640e744a104780bfed269d0a6c63cb.1504162792.git.hns@goldelico.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH ] ARM: dts: iwg22d-sodimm: Add Ethernet AVB support
+Date: Thu, 31 Aug 2017 10:45:34 +0200
+Message-ID: <20170831084534.GF29946@verge.net.au>
+References: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="plyamg76nvk3t7m6"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <af9c1a4e95640e744a104780bfed269d0a6c63cb.1504162792.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: afd@ti.com, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, gta04-owner@goldelico.com, marek@goldelico.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---plyamg76nvk3t7m6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Aug 31, 2017 at 08:59:51AM +0200, H. Nikolaus Schaller wrote:
-> Tested on OpenPandora with bq27500.
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+On Wed, Aug 30, 2017 at 04:17:14PM +0100, Biju Das wrote:
+> Define the iWave RainboW-G22D board dependent part of the Ethernet
+> AVB device node.
+> 
+> On some older versions of the platform (before R4.0) the phy address
+> may be 1 or 3. The address is fixed to 3 for R4.0 onwards (which
+> will be the first mainstream release), hence using 3 in the dts.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
 > ---
-
-Thanks, queued.
-
--- Sebastian
-
->  drivers/power/supply/bq27xxx_battery.c | 4 ----
->  1 file changed, 4 deletions(-)
->=20
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/suppl=
-y/bq27xxx_battery.c
-> index e80571cf7be1..5562f998330f 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -653,15 +653,11 @@ enum bq27xxx_dm_reg_id {
->  #define bq2751x_dm_regs 0
->  #define bq2752x_dm_regs 0
-> =20
-> -#if 0 /* not yet tested */
->  static struct bq27xxx_dm_reg bq27500_dm_regs[] =3D {
->  	[BQ27XXX_DM_DESIGN_CAPACITY]   =3D { 48, 10, 2,    0, 65535 },
->  	[BQ27XXX_DM_DESIGN_ENERGY]     =3D { }, /* missing on chip */
->  	[BQ27XXX_DM_TERMINATE_VOLTAGE] =3D { 80, 48, 2, 1000, 32767 },
+> This patch is tested against renesas-dev tag 20170830-v4.13-rc7
+> 
+>  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> index 442a5cb..aac84c6 100644
+> --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> @@ -17,9 +17,11 @@
+>  
+>  	aliases {
+>  		serial0 = &scif4;
+> +		ethernet0 = &avb;
+>  	};
+>  
+>  	chosen {
+> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+>  		stdout-path = "serial0:115200n8";
+>  	};
 >  };
-> -#else
-> -#define bq27500_dm_regs 0
-> -#endif
-> =20
->  /* todo create data memory definitions from datasheets and test on chips=
- */
->  #define bq27510g1_dm_regs 0
-> --=20
-> 2.12.2
->=20
+> @@ -29,6 +31,11 @@
+>  		groups = "scif4_data_b";
+>  		function = "scif4";
+>  	};
+> +
+> +	avb_pins: avb {
+> +		groups = "avb_mdio", "avb_gmii";
+> +		function = "avb";
+> +	};
+>  };
+>  
+>  &scif4 {
+> @@ -37,3 +44,22 @@
+>  
+>  	status = "okay";
+>  };
+> +
+> +&avb {
+> +	pinctrl-0 = <&avb_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	phy-handle = <&phy3>;
+> +	phy-mode = "gmii";
+> +	renesas,no-ether-link;
+> +	status = "okay";
+> +
+> +	phy3: ethernet-phy@3 {
+> +	/*
+> +	 * On some older versions of the platform (before R4.0) the phy address
+> +	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
+> +	 */
+> +		reg = <3>;
+> +		micrel,led-mode = <1>;
 
---plyamg76nvk3t7m6
-Content-Type: application/pgp-signature; name="signature.asc"
+Does the phy have an interrupt?
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmnyvIACgkQ2O7X88g7
-+ppLlQ//XoR0Hs7BnqgbBgNIkqfaC4abz+cCQ9TYCFrqyKJa/W75mL4bhjcXu8ZN
-f4WBubWJ0tR7HjxP7cHvzgYkDpZykdC4JznB5McKrndCLGyDrxd+Jpw72WdWWAMN
-RlOQ4O5FNyXHVHbiztqeRUdJ/25JI304SD5RIEE/vZ6RzJ1Kc5FQNR/PhH4lxfI3
-uG+Iek7N7l0guV/yHxBKzZtAiXf4uBpYZRNpSk7EJKiPnEPxW1qYjidKQbFPGjQg
-3IG7RVArlm3nDjZFpmM81IWVtrlTevq7IQi9ievREYAzf3NRaJvqFzsqJzN+hw9F
-n/yf/8kyTx7EaUYr+QAGEknlU/V8w8E0mSyuTNliB8ZkfXsOL6TRZh2U+cOC8SlP
-iK5xHVFOTvxyVRzWyVWu5hUM292hIQ12kFt6CPSfu2EGNL+YtQnmBK2KA0lN2X14
-4Sxxozm/KaWfa5Zelts9/a8r8Az//mGjiPfy+4XwokWnMc9ZU/4dO6dCK7wnjf0i
-C7QDveRdDMDqhiD6ZEgDXJG2lqUCQGxE1PryzqXoVTXHxpoqkh1Sd8eZXb3crNir
-UKij0FHbjC758Szg8OFpJhKJKzDet5Z3ePRxsdHefrL+BZk68UGXXvazKhXZneyR
-JiTRZpTsQYUnQXOEuJsZkpOefZ5rWWlQ8s+nLSzkr7zpefXcR4U=
-=VpbH
------END PGP SIGNATURE-----
-
---plyamg76nvk3t7m6--
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
