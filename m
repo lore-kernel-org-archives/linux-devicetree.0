@@ -1,81 +1,73 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v3 1/9] ARM64: dts: meson-gx: Use correct mmc clock source 0
-Date: Thu, 31 Aug 2017 15:52:18 +0200
-Message-ID: <20170831135226.19784-2-jbrunet@baylibre.com>
-References: <20170831135226.19784-1-jbrunet@baylibre.com>
+Subject: [PATCH v3 0/9] ARM64: dts: meson: update around mmc
+Date: Thu, 31 Aug 2017 15:52:17 +0200
+Message-ID: <20170831135226.19784-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170831135226.19784-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the clock source 0 is properly described in the CCF, use it
-instead of assuming the default value (xtal)
+This patchset feature updates around mmc. It is linked to this series [0]
+but does not strictly depends on it. It adds:
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 +++---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+* The regulator settling times for the gpio regulator of nanopi-k2 and
+  the libretech-cc.
+* UHS modes for the p20x, nanopi-k2 and the libretech-cc
+* clk-gate pins: these are the pinmuxes used for the clk-stop work
+  around explained here [1]
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 52f1687e7a09..8f0c0cb02157 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -661,21 +661,21 @@
- 
- &sd_emmc_a {
- 	clocks = <&clkc CLKID_SD_EMMC_A>,
--		 <&xtal>,
-+		 <&clkc CLKID_SD_EMMC_A_CLK0>,
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
- 
- &sd_emmc_b {
- 	clocks = <&clkc CLKID_SD_EMMC_B>,
--		 <&xtal>,
-+		 <&clkc CLKID_SD_EMMC_B_CLK0>,
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
- 
- &sd_emmc_c {
- 	clocks = <&clkc CLKID_SD_EMMC_C>,
--		 <&xtal>,
-+		 <&clkc CLKID_SD_EMMC_C_CLK0>,
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index d6876e64979e..829d84db5fc5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -603,21 +603,21 @@
- 
- &sd_emmc_a {
- 	clocks = <&clkc CLKID_SD_EMMC_A>,
--		 <&xtal>,
-+		 <&clkc CLKID_SD_EMMC_A_CLK0>,
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
- 
- &sd_emmc_b {
- 	clocks = <&clkc CLKID_SD_EMMC_B>,
--		 <&xtal>,
-+		 <&clkc CLKID_SD_EMMC_B_CLK0>,
- 		 <&clkc CLKID_FCLK_DIV2>;
-        clock-names = "core", "clkin0", "clkin1";
- };
- 
- &sd_emmc_c {
- 	clocks = <&clkc CLKID_SD_EMMC_C>,
--		 <&xtal>,
-+		 <&clkc CLKID_SD_EMMC_C_CLK0>,
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
+It also removes cap-sd-highspeed from eMMC nodes.
+
+Special note on SDR104:
+While the PCB of the p200 and the libretech-cc does not seems to handle
+SDR104 completely, the nanopi-k2 seems to be handling it correctly.
+
+The patch enabling this mode on the nanopi-k2 is the last one of this
+series. It should propabably be left out until more people can test
+sdr104 on the nanopi-k2
+
+This series has been tested on the gxbb-200, the gxbb-nanopi-k2 and the
+gxl-s905x-libretech-cc
+
+Changes since v2 [3]:
+* Rebase on Kevin's v4.14/dt64 branch
+
+Changes since v1 [2]:
+* Reorder patches to put fixes first, then enhancements
+* Fix error in the SDIO clk_gate pins (GPIOX_5 instead GPIOX_4)
+
+[0]: https://lkml.kernel.org/r/20170828142915.27020-1-jbrunet@baylibre.com
+[1]: https://lkml.kernel.org/r/20170821160301.21899-11-jbrunet@baylibre.com
+[2]: https://lkml.kernel.org/r/20170804180816.18737-1-jbrunet@baylibre.com
+[3]: https://lkml.kernel.org/r/20170821160637.22456-1-jbrunet@baylibre.com
+
+Jerome Brunet (9):
+  ARM64: dts: meson-gx: Use correct mmc clock source 0
+  ARM64: dts: meson: remove cap-sd-highspeed from emmc nodes
+  ARM64: dts: meson: add mmc clk gate pins
+  ARM64: dts: meson-gxbb: nanopi-k2: add card regulator settle times
+  ARM64: dts: meson-gxl: libretech-cc: add card regulator settle times
+  ARM64: dts: meson-gxl: libretech-cc: enable high speed modes
+  ARM64: dts: meson-gxbb: p20x: enable sdcard UHS modes
+  ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
+  ARM64: dts: meson-gxbb: nanopi-k2: enable sdr104 mode
+
+ .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 10 +++---
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts      | 19 ++++++++---
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 12 ++++---
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  9 ++---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   | 13 +++++---
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 10 +++---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 39 ++++++++++++++++++++--
+ .../dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts |  7 ++--
+ .../dts/amlogic/meson-gxl-s905x-libretech-cc.dts   | 13 ++++++--
+ .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 10 +++---
+ .../boot/dts/amlogic/meson-gxl-s905x-p212.dtsi     | 10 +++---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         | 39 ++++++++++++++++++++--
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  7 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts |  1 -
+ 14 files changed, 150 insertions(+), 49 deletions(-)
+
 -- 
 2.9.5
