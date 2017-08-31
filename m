@@ -1,307 +1,282 @@
-From: Oza Pawandeep <oza.oza@broadcom.com>
-Subject: [PATCH v6 3/3] PCI: iproc: Implement PCI hotplug support
-Date: Thu, 31 Aug 2017 10:20:29 +0530
-Message-ID: <1504155029-24729-4-git-send-email-oza.oza@broadcom.com>
-References: <1504155029-24729-1-git-send-email-oza.oza@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504155029-24729-1-git-send-email-oza.oza@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.oza@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Oza Pawandeep <oza.pawandeep@gmail.com>
+From: Sriram Dash <sriram.dash-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] arm64: dts: Add support for NXP's LX2160A SoC
+Date: Thu, 31 Aug 2017 05:16:09 +0000
+Message-ID: <DB5PR04MB1207827A3BC47E422B4B7CA1F59D0@DB5PR04MB1207.eurprd04.prod.outlook.com>
+References: <1503053736-18232-1-git-send-email-sriram.dash@nxp.com>
+ <20170823001414.ovvgwqhwvisuqea2@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170823001414.ovvgwqhwvisuqea2@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch implements PCI hotplug support for iproc family chipsets.
-
-iproc based SOC (e.g. Stingray) does not have hotplug controller
-integrated.
-Hence, standard PCI hotplug framework hooks can-not be used.
-e.g. controlled power up/down of slot.
-
-The mechanism, for e.g. Stingray has adopted for PCI hotplug is as follows:
-PCI present lines are input to GPIOs depending on the type of
-connector (x2, x4, x8).
-
-GPIO array needs to be present if hotplug is supported.
-HW implementation is SOC/Board specific, and also it depends on how
-add-in card is designed
-(e.g. how many present pins are implemented).
-
-If x8 card is connected, then it might be possible that all the
-3 present pins could go low, or at least one pin goes low.
-If x4 card is connected, then it might be possible that 2 present
-pins go low, or at least one pin goes low.
-
-The implementation essentially takes care of following:
-> Initializing hotplug irq thread.
-> Detecting the endpoint device based on link state.
-> Handling PERST and detecting the plugged devices.
-> Ordered Hot plug-out, where User is expected
-  to write 1 to /sys/bus/pci/devices/<pci_dev>/remove
-> Handling spurious interrupt
-> Handling multiple interrupts and makes sure that card is
-  enumerated only once.
-
-Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-
-diff --git a/drivers/pci/host/pcie-iproc-platform.c b/drivers/pci/host/pcie-iproc-platform.c
-index a5073a9..6287a43 100644
---- a/drivers/pci/host/pcie-iproc-platform.c
-+++ b/drivers/pci/host/pcie-iproc-platform.c
-@@ -92,6 +92,9 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
- 		pcie->need_ob_cfg = true;
- 	}
- 
-+	if (of_property_read_bool(np, "slot-pluggable"))
-+		pcie->enable_hotplug = true;
-+
- 	/* PHY use is optional */
- 	pcie->phy = devm_phy_get(dev, "pcie-phy");
- 	if (IS_ERR(pcie->phy)) {
-diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
-index 8bd5e54..2b4d830 100644
---- a/drivers/pci/host/pcie-iproc.c
-+++ b/drivers/pci/host/pcie-iproc.c
-@@ -28,6 +28,7 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/phy/phy.h>
-+#include <linux/gpio.h>
- 
- #include "pcie-iproc.h"
- 
-@@ -65,6 +66,17 @@
- #define PCIE_DL_ACTIVE_SHIFT         2
- #define PCIE_DL_ACTIVE               BIT(PCIE_DL_ACTIVE_SHIFT)
- 
-+#define CFG_RC_LTSSM                 0x1cf8
-+#define CFG_RC_PHY_CTL               0x1804
-+#define CFG_RC_LTSSM_TIMEOUT         1000
-+#define CFG_RC_LTSSM_STATE_MASK      0xff
-+#define CFG_RC_LTSSM_STATE_L1        0x1
-+
-+#define CFG_RC_CLR_LTSSM_HIST_SHIFT  29
-+#define CFG_RC_CLR_LTSSM_HIST_MASK   BIT(CFG_RC_CLR_LTSSM_HIST_SHIFT)
-+#define CFG_RC_CLR_RECOV_HIST_SHIFT  31
-+#define CFG_RC_CLR_RECOV_HIST_MASK   BIT(CFG_RC_CLR_RECOV_HIST_SHIFT)
-+
- #define APB_ERR_EN_SHIFT             0
- #define APB_ERR_EN                   BIT(APB_ERR_EN_SHIFT)
- 
-@@ -1354,13 +1366,107 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
- 	return 0;
- }
- 
-+static bool iproc_pci_hp_check_ltssm(struct iproc_pcie *pcie)
-+{
-+	struct pci_bus *bus = pcie->root_bus;
-+	u32 val, timeout = CFG_RC_LTSSM_TIMEOUT;
-+
-+	/* Clear LTSSM history. */
-+	pci_bus_read_config_dword(pcie->root_bus, 0,
-+				  CFG_RC_PHY_CTL, &val);
-+	pci_bus_write_config_dword(bus, 0, CFG_RC_PHY_CTL,
-+				   val | CFG_RC_CLR_RECOV_HIST_MASK |
-+				   CFG_RC_CLR_LTSSM_HIST_MASK);
-+	/* write back the origional value. */
-+	pci_bus_write_config_dword(bus, 0, CFG_RC_PHY_CTL, val);
-+
-+	do {
-+		pci_bus_read_config_dword(pcie->root_bus, 0,
-+					  CFG_RC_LTSSM, &val);
-+		/* check link state to see if link moved to L1 state. */
-+		if ((val & CFG_RC_LTSSM_STATE_MASK) ==
-+		     CFG_RC_LTSSM_STATE_L1)
-+			return true;
-+		timeout--;
-+		usleep_range(500, 1000);
-+	} while (timeout);
-+
-+	return false;
-+}
-+
-+static irqreturn_t iproc_pci_hotplug_thread(int irq, void *data)
-+{
-+	struct iproc_pcie *pcie = data;
-+	struct pci_bus *bus = pcie->root_bus, *child;
-+	bool link_status;
-+
-+	iproc_pcie_perst_ctrl(pcie, true);
-+	iproc_pcie_perst_ctrl(pcie, false);
-+
-+	link_status = iproc_pci_hp_check_ltssm(pcie);
-+
-+	if (link_status &&
-+	    !iproc_pcie_check_link(pcie) &&
-+	    !pcie->ep_is_present) {
-+		pci_rescan_bus(bus);
-+		list_for_each_entry(child, &bus->children, node)
-+			pcie_bus_configure_settings(child);
-+		pcie->ep_is_present = true;
-+		dev_info(pcie->dev,
-+			 "PCI Hotplug: <device detected and enumerated>\n");
-+	} else if (link_status && pcie->ep_is_present)
-+		/*
-+		 * ep_is_present makes sure, enumuration done only once.
-+		 * So it can handle spurious intrrupts, and also if we
-+		 * get multiple interrupts for all the implemented pins,
-+		 * we handle it only once.
-+		 */
-+		dev_info(pcie->dev,
-+			 "PCI Hotplug: <device already present>\n");
-+	else {
-+		iproc_pcie_perst_ctrl(pcie, true);
-+		pcie->ep_is_present = false;
-+		dev_info(pcie->dev,
-+			 "PCI Hotplug: <device removed>\n");
-+	}
-+	return IRQ_HANDLED;
-+}
-+
-+static int iproc_pci_hp_gpio_irq_get(struct iproc_pcie *pcie)
-+{
-+	struct gpio_descs *hp_gpiod;
-+	struct device *dev = pcie->dev;
-+	int i;
-+
-+	hp_gpiod = devm_gpiod_get_array(dev, "prsnt", GPIOD_IN);
-+	if (PTR_ERR(hp_gpiod) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	if (!IS_ERR(hp_gpiod) && (hp_gpiod->ndescs > 0)) {
-+		for (i = 0; i < hp_gpiod->ndescs; ++i) {
-+			gpiod_direction_input(hp_gpiod->desc[i]);
-+			if (request_threaded_irq(gpiod_to_irq
-+						 (hp_gpiod->desc[i]),
-+						 NULL, iproc_pci_hotplug_thread,
-+						 IRQF_TRIGGER_FALLING,
-+						 "PCI-hotplug", pcie))
-+				dev_err(dev,
-+					"PCI hotplug prsnt: request irq failed\n");
-+			}
-+	}
-+	pcie->ep_is_present = false;
-+
-+	return 0;
-+}
-+
- int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
- {
- 	struct device *dev;
- 	int ret;
- 	void *sysdata;
--	struct pci_bus *child;
-+	struct pci_bus *bus, *child;
- 	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-+	bool link_not_active;
- 
- 	dev = pcie->dev;
- 
-@@ -1386,6 +1492,12 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
- 		goto err_exit_phy;
- 	}
- 
-+	if (pcie->enable_hotplug) {
-+		ret = iproc_pci_hp_gpio_irq_get(pcie);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	iproc_pcie_perst_ctrl(pcie, true);
- 	iproc_pcie_perst_ctrl(pcie, false);
- 
-@@ -1408,8 +1520,16 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
- 	sysdata = pcie;
- #endif
- 
--	ret = iproc_pcie_check_link(pcie);
--	if (ret) {
-+	link_not_active = iproc_pcie_check_link(pcie);
-+	if (link_not_active && pcie->enable_hotplug) {
-+		/*
-+		 * When link is not active and PCI hotplug
-+		 * is supported, do not turn off phy, let probe
-+		 * go ahead.
-+		 */
-+		dev_err(dev, "no PCIe EP device detected\n");
-+		iproc_pcie_perst_ctrl(pcie, true);
-+	} else if (link_not_active) {
- 		dev_err(dev, "no PCIe EP device detected\n");
- 		goto err_power_off_phy;
- 	}
-@@ -1420,24 +1540,34 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
- 		if (iproc_pcie_msi_enable(pcie))
- 			dev_info(dev, "not using iProc MSI\n");
- 
--	list_splice_init(res, &host->windows);
--	host->busnr = 0;
--	host->dev.parent = dev;
--	host->ops = &iproc_pcie_ops;
--	host->sysdata = sysdata;
--	host->map_irq = pcie->map_irq;
--	host->swizzle_irq = pci_common_swizzle;
-+	if (!link_not_active) {
-+		list_splice_init(res, &host->windows);
-+		host->busnr = 0;
-+		host->dev.parent = dev;
-+		host->ops = &iproc_pcie_ops;
-+		host->sysdata = sysdata;
-+		host->map_irq = pcie->map_irq;
-+		host->swizzle_irq = pci_common_swizzle;
-+
-+		ret = pci_scan_root_bus_bridge(host);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to scan host: %d\n", ret);
-+			goto err_power_off_phy;
-+		}
- 
--	ret = pci_scan_root_bus_bridge(host);
--	if (ret < 0) {
--		dev_err(dev, "failed to scan host: %d\n", ret);
--		goto err_power_off_phy;
-+		pci_assign_unassigned_bus_resources(host->bus);
-+		pcie->root_bus = host->bus;
-+	} else {
-+		bus = pci_create_root_bus(dev, 0,
-+					  &iproc_pcie_ops, sysdata, res);
-+		if (!bus) {
-+			dev_err(dev, "unable to create PCI root bus\n");
-+			ret = -ENOMEM;
-+			goto err_power_off_phy;
-+		}
-+		pcie->root_bus = bus;
- 	}
- 
--	pci_assign_unassigned_bus_resources(host->bus);
--
--	pcie->root_bus = host->bus;
--
- 	list_for_each_entry(child, &host->bus->children, node)
- 		pcie_bus_configure_settings(child);
- 
-diff --git a/drivers/pci/host/pcie-iproc.h b/drivers/pci/host/pcie-iproc.h
-index a6b55ce..e5d0cd4 100644
---- a/drivers/pci/host/pcie-iproc.h
-+++ b/drivers/pci/host/pcie-iproc.h
-@@ -77,6 +77,10 @@ struct iproc_pcie_ib {
-  * @ib: inbound mapping related parameters
-  * @ib_map: outbound mapping region related parameters
-  *
-+ * @enable_hotplug: indicates PCI hotplug feature is enabled
-+ * @ep_is_present: when PCIe hotplug is enabled, this flag is used to
-+ * indicate whether or not the endpoint device is present
-+ *
-  * @need_msi_steer: indicates additional configuration of the iProc PCIe
-  * controller is required to steer MSI writes to external interrupt controller
-  * @msi: MSI data
-@@ -104,6 +108,9 @@ struct iproc_pcie {
- 	struct iproc_pcie_ib ib;
- 	const struct iproc_pcie_ib_map *ib_map;
- 
-+	bool enable_hotplug;
-+	bool ep_is_present;
-+
- 	bool need_msi_steer;
- 	struct iproc_msi *msi;
- };
--- 
-1.9.1
+PkZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPlN1YmplY3Q6IFJl
+OiBbUEFUQ0hdIGFybTY0OiBkdHM6IEFkZCBzdXBwb3J0IGZvciBOWFAncyBMWDIxNjBBIFNvQw0K
+Pg0KPk9uIEZyaSwgQXVnIDE4LCAyMDE3IGF0IDA0OjI1OjM2UE0gKzA1MzAsIFNyaXJhbSBEYXNo
+IHdyb3RlOg0KPj4gVGhlIFFvcklRIExYMjE2MEEgcHJvY2Vzc29yIGlzIGJ1aWx0IGluIHRoZSAx
+NkZGQyBwcm9jZXNzIG9uIHRoZQ0KPj4gTGF5ZXJzY2FwZSBhcmNoaXRlY3R1cmUgY29tYmluaW5n
+IHNpeHRlZW4gQVJNIEE3MiBwcm9jZXNzb3IgY29yZXMgd2l0aA0KPj4gYWR2YW5jZWQsIGhpZ2gt
+cGVyZm9ybWFuY2UgZGF0YXBhdGggYWNjZWxlcmF0aW9uIGFuZCBuZXR3b3JrLA0KPj4gcGVyaXBo
+ZXJhbCBpbnRlcmZhY2VzIHJlcXVpcmVkIGZvciBuZXR3b3JraW5nLCB3aXJlbGVzcw0KPj4gaW5m
+cmFzdHJ1Y3R1cmUsIHN0b3JhZ2UsIGFuZCBnZW5lcmFsLXB1cnBvc2UgZW1iZWRkZWQgYXBwbGlj
+YXRpb25zLg0KPj4NCj4+IEZlYXR1cmVzIHN1bW1hcnk6DQo+PiAgICAgLSBTaXh0ZWVuIDMyLWJp
+dCAvIDY0LWJpdCBBUk0gdjggQTcyIENQVXMNCj4+ICAgICAtIENhY2hlIENvaGVyZW50IEludGVy
+Y29ubmVjdCBGYWJyaWMgKENDTjUwOCBha2Eg4oCcRWxpb3TigJ0pDQo+PiAgICAgLSBUd28gNjQt
+Yml0IDMuMkdUL3MgRERSNCBTRFJBTSBtZW1vcnkgY29udHJvbGxlcnMgd2l0aCBFQ0MuDQo+PiAg
+ICAgLSBEYXRhIHBhdGggYWNjZWxlcmF0aW9uIGFyY2hpdGVjdHVyZSAoRFBBQTIpDQo+PiAgICAg
+LSAyNCBTZXJkZXMgbGFuZXMgYXQgdXAgdG8gMjUgR0h6DQo+PiAgICAgLSBFdGhlcm5ldCBpbnRl
+cmZhY2VzDQo+PiAgICAgICBTaW5nbGUgV1JJT1AgdGlsZSBzdXBwb3J0aW5nIDEzMEdicHMgdXNp
+bmcgMTggTUFDcw0KPj4gICAgICAgU3VwcG9ydCBmb3IgMTBHLVNYR01JSSAoYWthIFVTWEdNSUkp
+Lg0KPj4gICAgICAgU3VwcG9ydCBmb3IgU0dNSUkgKGFuZCAxMDAwQmFzZS1LWCkNCj4+ICAgICAg
+IFN1cHBvcnQgZm9yIFhGSSAoYW5kIDEwR0Jhc2UtS1IpDQo+PiAgICAgICBTdXBwb3J0IGZvciBD
+QVVJNCAoMTAwRyk7IENBVUkyICg1MEcpIGFuZCAyNUctQVVJKDI1RykuDQo+PiAgICAgICBTdXBw
+b3J0IGZvciBYTEFVSTQgKGFuZCA0MEdCYXNlLUtSNCkgZm9yIDQwRy4NCj4+ICAgICAgIFN1cHBv
+cnQgZm9yIHR3byBSR01JSSBwYXJhbGxlbCBpbnRlcmZhY2VzLg0KPj4gICAgICAgRW5lcmd5IGVm
+ZmljaWVudCBFdGhlcm5ldCBzdXBwb3J0ICg4MDIuM2F6KQ0KPj4gICAgICAgSUVFRSAxNTg4IHN1
+cHBvcnQuDQo+PiAgICAgLSBIaWdoLXNwZWVkIHBlcmlwaGVyYWwgaW50ZXJmYWNlcw0KPj4gICAg
+ICAgVHdvIFBDSWUgR2VuIDQuMCA4LWxhbmUgY29udHJvbGxlcnMgc3VwcG9ydGluZyBTUi1JT1Ys
+DQo+PiAgICAgICBGb3VyIFBDSWUgR2VuIDQuMCA0LWxhbmUgY29udHJvbGxlcnMuDQo+PiAgICAg
+ICBGb3VyIHNlcmlhbCBBVEEgKFNBVEEgMy4wKSBjb250cm9sbGVycy4NCj4+ICAgICAgIFR3byBV
+U0IgMy4wIGNvbnRyb2xsZXJzIHdpdGggaW50ZWdyYXRlZCBQSFkNCj4+ICAgICAgIFR3byBFbmhh
+bmNlZCBzZWN1cmUgZGlnaXRhbCBob3N0IGNvbnRyb2xsZXJzDQo+PiAgICAgICBUd28gQ29udHJv
+bGxlciBBcmVhIE5ldHdvcmsgKENBTikgbW9kdWxlcw0KPj4gICAgICAgRmxleGlibGUgU2VyaWFs
+IHBlcmlwaGVyYWwgaW50ZXJmYWNlIChGbGV4U1BJKSBjb250cm9sbGVyLg0KPj4gICAgICAgVGhy
+ZWUgU2VyaWFsIHBlcmlwaGVyYWwgaW50ZXJmYWNlIChTUEkpIGNvbnRyb2xsZXJzLg0KPj4gICAg
+ICAgTmluZSBJMkMgQ29udHJvbGxlcnMuDQo+PiAgICAgICBGb3VyIFVBUlRzIHN1cHBvcnRpbmcg
+dHdvIDQtcGluIFVBUlQgcG9ydHMgb3IgZm91ciAyLXBpbiBVQVJUIHBvcnRzLg0KPj4gICAgICAg
+R2VuZXJhbCBQdXJwb3NlIElPIChHUElPKQ0KPj4gICAgIC0gU3VwcG9ydCBmb3IgaGFyZHdhcmUg
+dmlydHVhbGl6YXRpb24gYW5kIHBhcnRpdGlvbmluZyAoQVJNIE1NVS01MDApDQo+PiAgICAgLSBT
+dXBwb3J0IGZvciBHSUMgKEFSTSBHSUMtNTAwKQ0KPj4gICAgIC0gUW9ySVEgcGxhdGZvcm0gVHJ1
+c3QgQXJjaGl0ZWN0dXJlIDMuMA0KPj4gICAgIC0gT25lIFNlY3VyZSBXYXRjaERvZyB0aW1lciBh
+bmQgb25lIE5vbi1TZWN1cmUgV2F0Y2hkb2cgdGltZXIuDQo+PiAgICAgLSBBUk0gR2VuZXJpYyBU
+aW1lcg0KPj4gICAgIC0gVHdvIEZsZXh0aW1lcnMNCj4+ICAgICAtIERlYnVnIHN1cHBvcnRpbmcg
+cnVuIGNvbnRyb2wsIGRhdGEgYWNxdWlzaXRpb24sIGhpZ2gtc3BlZWQgdHJhY2UsDQo+PiAgICAg
+ICBwZXJmb3JtYW5jZS9ldmVudCBtb25pdG9yaW5nDQo+PiAgICAgLSBUaGVybWFsIE1vbml0b3Ig
+VW5pdCAoVE1VKSB3aXRoICsvLSAyQyBhY2N1cmFjeQ0KPj4gICAgIC0gU3VwcG9ydCBmb3IgVm9s
+dGFnZSBJRCAoVklEKSBmb3IgeWllbGQgaW1wcm92ZW1lbnQNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5
+OiBTcmlyYW0gRGFzaCA8c3JpcmFtLmRhc2hAbnhwLmNvbT4NCj4+IC0tLQ0KPj4gIERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnR4dCAgfCAgIDggKw0KPj4gIGFyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL01ha2VmaWxlICAgICAgICAgfCAgIDEgKw0KPj4gIGFy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDIxNjBhLmR0c2kgfCAyNDANCj4+ICsr
+KysrKysrKysrKysrKysrKysrKysrKysNCj4+IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
+L2ZzbC1seDJxZHMxLmR0cyAgfCAgNTQgKysrKysrDQo+PiAgNCBmaWxlcyBjaGFuZ2VkLCAzMDMg
+aW5zZXJ0aW9ucygrKQ0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9mc2wtbHgyMTYwYS5kdHNpDQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDJxZHMxLmR0cw0KPj4NCj4+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC50eHQNCj4+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wudHh0DQo+PiBpbmRleCBj
+ZGI5ZGQ3Li42MDY5NDM0IDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9mc2wudHh0DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvYXJtL2ZzbC50eHQNCj4+IEBAIC0yMTgsMyArMjE4LDExIEBAIFJlcXVpcmVkIHJv
+b3Qgbm9kZSBwcm9wZXJ0aWVzOg0KPj4gIExTMjA4OEEgQVJNdjggYmFzZWQgUkRCIEJvYXJkDQo+
+PiAgUmVxdWlyZWQgcm9vdCBub2RlIHByb3BlcnRpZXM6DQo+PiAgICAgIC0gY29tcGF0aWJsZSA9
+ICJmc2wsbHMyMDg4YS1yZGIiLCAiZnNsLGxzMjA4OGEiOw0KPj4gKw0KPj4gK0xYMjE2MEEgU29D
+DQo+PiArUmVxdWlyZWQgcm9vdCBub2RlIHByb3BlcnRpZXM6DQo+PiArICAgIC0gY29tcGF0aWJs
+ZSA9ICJmc2wsbHgyMTYwYSI7DQo+PiArDQo+PiArTFgyMTYwQSBBUk12OCBiYXNlZCBRRFMgQm9h
+cmQNCj4+ICtSZXF1aXJlZCByb290IG5vZGUgcHJvcGVydGllczoNCj4+ICsgICAgLSBjb21wYXRp
+YmxlID0gImZzbCxseDJxZHMxIiwgImZzbCxseDIxNjBhIjsNCj4+IGRpZmYgLS1naXQgYS9hcmNo
+L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZQ0KPj4gYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZQ0KPj4gaW5kZXggNzJjNGI1Mi4uNjM0ZjZkNCAxMDA2NDQN
+Cj4+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL01ha2VmaWxlDQo+PiArKysg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZQ0KPj4gQEAgLTEyLDYgKzEy
+LDcgQEAgZHRiLSQoQ09ORklHX0FSQ0hfTEFZRVJTQ0FQRSkgKz0gZnNsLWxzMjA4MGEtcmRiLmR0
+Yg0KPj4gIGR0Yi0kKENPTkZJR19BUkNIX0xBWUVSU0NBUEUpICs9IGZzbC1sczIwODBhLXNpbXUu
+ZHRiDQo+PiAgZHRiLSQoQ09ORklHX0FSQ0hfTEFZRVJTQ0FQRSkgKz0gZnNsLWxzMjA4OGEtcWRz
+LmR0Yg0KPj4gIGR0Yi0kKENPTkZJR19BUkNIX0xBWUVSU0NBUEUpICs9IGZzbC1sczIwODhhLXJk
+Yi5kdGINCj4+ICtkdGItJChDT05GSUdfQVJDSF9MQVlFUlNDQVBFKSArPSBmc2wtbHgycWRzMS5k
+dGINCj4+DQo+PiAgYWx3YXlzCQk6PSAkKGR0Yi15KQ0KPj4gIHN1YmRpci15CTo9ICQoZHRzLWRp
+cnMpDQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4
+MjE2MGEuZHRzaQ0KPj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgyMTYw
+YS5kdHNpDQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMC4uNDg4NzRj
+Zg0KPj4gLS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
+bGUvZnNsLWx4MjE2MGEuZHRzaQ0KPj4gQEAgLTAsMCArMSwyNDAgQEANCj4+ICsvKg0KPj4gKyAq
+IERldmljZSBUcmVlIEluY2x1ZGUgZmlsZSBmb3IgTGF5ZXJzY2FwZS1MWDIxNjBBIGZhbWlseSBT
+b0MuDQo+PiArICoNCj4+ICsgKiBDb3B5cmlnaHQgMjAxNyBOWFANCj4+ICsgKg0KPj4gKyAqIFNy
+aXJhbSBEYXNoIDxzcmlyYW0uZGFzaEBueHAuY29tPg0KPj4gKyAqDQo+PiArICogVGhpcyBmaWxl
+IGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBjYW4gdXNlIGl0IGVpdGhlciB1bmRlciB0aGUgdGVybXMN
+Cj4+ICsgKiBvZiB0aGUgR1BMdjIgb3IgdGhlIFgxMSBsaWNlbnNlLCBhdCB5b3VyIG9wdGlvbi4g
+Tm90ZSB0aGF0IHRoaXMNCj4+ICtkdWFsDQo+PiArICogbGljZW5zaW5nIG9ubHkgYXBwbGllcyB0
+byB0aGlzIGZpbGUsIGFuZCBub3QgdGhpcyBwcm9qZWN0IGFzIGENCj4+ICsgKiB3aG9sZS4NCj4+
+ICsgKg0KPj4gKyAqICBhKSBUaGlzIGxpYnJhcnkgaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiBy
+ZWRpc3RyaWJ1dGUgaXQgYW5kL29yDQo+PiArICogICAgIG1vZGlmeSBpdCB1bmRlciB0aGUgdGVy
+bXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzDQo+PiArICogICAgIHB1Ymxp
+c2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9m
+IHRoZQ0KPj4gKyAqICAgICBMaWNlbnNlLCBvciAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2
+ZXJzaW9uLg0KPj4gKyAqDQo+PiArICogICAgIFRoaXMgbGlicmFyeSBpcyBkaXN0cmlidXRlZCBp
+biB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLA0KPj4gKyAqICAgICBidXQgV0lUSE9V
+VCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZg0KPj4g
+KyAqICAgICBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBP
+U0UuICBTZWUgdGhlDQo+PiArICogICAgIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBt
+b3JlIGRldGFpbHMuDQo+PiArICoNCj4+ICsgKiBPciwgYWx0ZXJuYXRpdmVseSwNCj4+ICsgKg0K
+Pj4gKyAqICBiKSBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBmcmVlIG9mIGNoYXJnZSwg
+dG8gYW55IHBlcnNvbg0KPj4gKyAqICAgICBvYnRhaW5pbmcgYSBjb3B5IG9mIHRoaXMgc29mdHdh
+cmUgYW5kIGFzc29jaWF0ZWQgZG9jdW1lbnRhdGlvbg0KPj4gKyAqICAgICBmaWxlcyAodGhlICJT
+b2Z0d2FyZSIpLCB0byBkZWFsIGluIHRoZSBTb2Z0d2FyZSB3aXRob3V0DQo+PiArICogICAgIHJl
+c3RyaWN0aW9uLCBpbmNsdWRpbmcgd2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMgdG8gdXNl
+LA0KPj4gKyAqICAgICBjb3B5LCBtb2RpZnksIG1lcmdlLCBwdWJsaXNoLCBkaXN0cmlidXRlLCBz
+dWJsaWNlbnNlLCBhbmQvb3INCj4+ICsgKiAgICAgc2VsbCBjb3BpZXMgb2YgdGhlIFNvZnR3YXJl
+LCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUNCj4+ICsgKiAgICAgU29mdHdhcmUg
+aXMgZnVybmlzaGVkIHRvIGRvIHNvLCBzdWJqZWN0IHRvIHRoZSBmb2xsb3dpbmcNCj4+ICsgKiAg
+ICAgY29uZGl0aW9uczoNCj4+ICsgKg0KPj4gKyAqICAgICBUaGUgYWJvdmUgY29weXJpZ2h0IG5v
+dGljZSBhbmQgdGhpcyBwZXJtaXNzaW9uIG5vdGljZSBzaGFsbCBiZQ0KPj4gKyAqICAgICBpbmNs
+dWRlZCBpbiBhbGwgY29waWVzIG9yIHN1YnN0YW50aWFsIHBvcnRpb25zIG9mIHRoZSBTb2Z0d2Fy
+ZS4NCj4+ICsgKg0KPj4gKyAqICAgICBUSEUgU09GVFdBUkUgSVMgUFJPVklERUQgIkFTIElTIiwg
+V0lUSE9VVCBXQVJSQU5UWSBPRiBBTlkgS0lORCwNCj4+ICsgKiAgICAgRVhQUkVTUyBPUiBJTVBM
+SUVELCBJTkNMVURJTkcgQlVUIE5PVCBMSU1JVEVEIFRPIFRIRSBXQVJSQU5USUVTDQo+PiArICog
+ICAgIE9GIE1FUkNIQU5UQUJJTElUWSwgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0Ug
+QU5EDQo+PiArICogICAgIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQgU0hBTEwgVEhFIEFV
+VEhPUlMgT1IgQ09QWVJJR0hUDQo+PiArICogICAgIEhPTERFUlMgQkUgTElBQkxFIEZPUiBBTlkg
+Q0xBSU0sIERBTUFHRVMgT1IgT1RIRVIgTElBQklMSVRZLA0KPj4gKyAqICAgICBXSEVUSEVSIElO
+IEFOIEFDVElPTiBPRiBDT05UUkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJTkcNCj4+ICsg
+KiAgICAgRlJPTSwgT1VUIE9GIE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1Ig
+VEhFIFVTRSBPUg0KPj4gKyAqICAgICBPVEhFUiBERUFMSU5HUyBJTiBUSEUgU09GVFdBUkUuDQo+
+PiArICovDQo+PiArDQo+PiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9s
+bGVyL2FybS1naWMuaD4NCj4+ICsNCj4+ICsvbWVtcmVzZXJ2ZS8gMHg4MDAwMDAwMCAweDAwMDEw
+MDAwOw0KPj4gKw0KPj4gKy8gew0KPj4gKwljb21wYXRpYmxlID0gImZzbCxseDIxNjBhIjsNCj4+
+ICsJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4+ICsJI2FkZHJlc3MtY2VsbHMgPSA8Mj47
+DQo+PiArCSNzaXplLWNlbGxzID0gPDI+Ow0KPj4gKw0KPj4gKwljcHVzIHsNCj4+ICsJCSNhZGRy
+ZXNzLWNlbGxzID0gPDE+Ow0KPj4gKwkJI3NpemUtY2VsbHMgPSA8MD47DQo+PiArDQo+PiArCQkv
+KiBXZSBoYXZlIDggY2x1c3RlcnMgaGF2aW5nIDIgQ29ydGV4LUE3MiBjb3JlcyBlYWNoICovDQo+
+PiArCQljcHVAMCB7DQo+PiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4+ICsJCQljb21wYXRp
+YmxlID0gImFybSxjb3J0ZXgtYTcyIjsNCj4+ICsJCQlyZWcgPSA8MHgwPjsNCj4+ICsJCX07DQo+
+PiArDQo+PiArCQljcHVAMSB7DQo+PiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4+ICsJCQlj
+b21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTcyIjsNCj4+ICsJCQlyZWcgPSA8MHgxPjsNCj4+ICsJ
+CX07DQo+PiArDQo+PiArCQljcHVAMTAwIHsNCj4+ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0K
+Pj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNzIiOw0KPj4gKwkJCXJlZyA9IDwweDEw
+MD47DQo+PiArCQl9Ow0KPj4gKw0KPj4gKwkJY3B1QDEwMSB7DQo+PiArCQkJZGV2aWNlX3R5cGUg
+PSAiY3B1IjsNCj4+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTcyIjsNCj4+ICsJCQly
+ZWcgPSA8MHgxMDE+Ow0KPj4gKwkJfTsNCj4+ICsNCj4+ICsJCWNwdUAyMDAgew0KPj4gKwkJCWRl
+dmljZV90eXBlID0gImNwdSI7DQo+PiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3MiI7
+DQo+PiArCQkJcmVnID0gPDB4MjAwPjsNCj4+ICsJCX07DQo+PiArDQo+PiArCQljcHVAMjAxIHsN
+Cj4+ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KPj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNv
+cnRleC1hNzIiOw0KPj4gKwkJCXJlZyA9IDwweDIwMT47DQo+PiArCQl9Ow0KPj4gKw0KPj4gKwkJ
+Y3B1QDMwMCB7DQo+PiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4+ICsJCQljb21wYXRpYmxl
+ID0gImFybSxjb3J0ZXgtYTcyIjsNCj4+ICsJCQlyZWcgPSA8MHgzMDA+Ow0KPj4gKwkJfTsNCj4+
+ICsNCj4+ICsJCWNwdUAzMDEgew0KPj4gKwkJCWRldmljZV90eXBlID0gImNwdSI7DQo+PiArCQkJ
+Y29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3MiI7DQo+PiArCQkJcmVnID0gPDB4MzAxPjsNCj4+
+ICsJCX07DQo+PiArDQo+PiArCQljcHVANDAwIHsNCj4+ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUi
+Ow0KPj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNzIiOw0KPj4gKwkJCXJlZyA9IDww
+eDQwMD47DQo+PiArCQl9Ow0KPj4gKw0KPj4gKwkJY3B1QDQwMSB7DQo+PiArCQkJZGV2aWNlX3R5
+cGUgPSAiY3B1IjsNCj4+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTcyIjsNCj4+ICsJ
+CQlyZWcgPSA8MHg0MDE+Ow0KPj4gKwkJfTsNCj4+ICsNCj4+ICsJCWNwdUA1MDAgew0KPj4gKwkJ
+CWRldmljZV90eXBlID0gImNwdSI7DQo+PiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3
+MiI7DQo+PiArCQkJcmVnID0gPDB4NTAwPjsNCj4+ICsJCX07DQo+PiArDQo+PiArCQljcHVANTAx
+IHsNCj4+ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KPj4gKwkJCWNvbXBhdGlibGUgPSAiYXJt
+LGNvcnRleC1hNzIiOw0KPj4gKwkJCXJlZyA9IDwweDUwMT47DQo+PiArCQl9Ow0KPj4gKw0KPj4g
+KwkJY3B1QDYwMCB7DQo+PiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4+ICsJCQljb21wYXRp
+YmxlID0gImFybSxjb3J0ZXgtYTcyIjsNCj4+ICsJCQlyZWcgPSA8MHg2MDA+Ow0KPj4gKwkJfTsN
+Cj4+ICsNCj4+ICsJCWNwdUA2MDEgew0KPj4gKwkJCWRldmljZV90eXBlID0gImNwdSI7DQo+PiAr
+CQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3MiI7DQo+PiArCQkJcmVnID0gPDB4NjAxPjsN
+Cj4+ICsJCX07DQo+PiArDQo+PiArCQljcHVANzAwIHsNCj4+ICsJCQlkZXZpY2VfdHlwZSA9ICJj
+cHUiOw0KPj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNzIiOw0KPj4gKwkJCXJlZyA9
+IDwweDcwMD47DQo+PiArCQl9Ow0KPj4gKw0KPj4gKwkJY3B1QDcwMSB7DQo+PiArCQkJZGV2aWNl
+X3R5cGUgPSAiY3B1IjsNCj4+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTcyIjsNCj4+
+ICsJCQlyZWcgPSA8MHg3MDE+Ow0KPj4gKwkJfTsNCj4+ICsNCj4+ICsJfTsNCj4+ICsNCj4+ICsJ
+bWVtb3J5QDgwMDAwMDAwIHsNCj4+ICsJCWRldmljZV90eXBlID0gIm1lbW9yeSI7DQo+PiArCQly
+ZWcgPSA8MHgwMDAwMDAwMCAweDgwMDAwMDAwIDAgMHg4MDAwMDAwMD47DQo+PiArCQkgICAgICAv
+KiBEUkFNIHNwYWNlIC0gMSwgc2l6ZSA6IDIgR0IgRFJBTSAqLw0KPj4gKwl9Ow0KPj4gKw0KPj4g
+KwlzeXNjbGs6IHN5c2NsayB7DQo+PiArCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsNCj4+
+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9IDwxMDAwMDAw
+MDA+Ow0KPj4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gInN5c2NsayI7DQo+PiArCX07DQo+PiAr
+DQo+PiArCWdpYzogaW50ZXJydXB0LWNvbnRyb2xsZXJANjAwMDAwMCB7DQo+PiArCQljb21wYXRp
+YmxlID0gImFybSxnaWMtdjMiOw0KPj4gKwkJcmVnID0gPDB4MCAweDA2MDAwMDAwIDAgMHgxMDAw
+MD4sIC8qIEdJQyBEaXN0ICovDQo+PiArCQkgICAgICA8MHgwIDB4MDYyMDAwMDAgMCAweDIwMDAw
+MD4sIC8qR0lDUihSRF9iYXNlICsgU0dJX2Jhc2UpKi8NCj4+ICsJCSAgICAgIDwweDAgMHgwYzBj
+MDAwMCAwIDB4MjAwMD4sIC8qIEdJQ0MgKi8NCj4+ICsJCSAgICAgIDwweDAgMHgwYzBkMDAwMCAw
+IDB4MTAwMD4sIC8qIEdJQ0ggKi8NCj4+ICsJCSAgICAgIDwweDAgMHgwYzBlMDAwMCAwIDB4MjAw
+MDA+OyAvKiBHSUNWICovDQo+PiArCQkjaW50ZXJydXB0LWNlbGxzID0gPDM+Ow0KPj4gKwkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8Mj47DQo+PiArCQkjc2l6ZS1jZWxscyA9IDwyPjsNCj4NCj5Cb3RoIG9m
+IHRoZXNlIGNhbiBiZSAxLg0KPg0KDQpPay4gV2lsbCB1cGRhdGUgaW4gbmV4dCByZXYuDQoNCj4+
+ICsJCXJhbmdlczsNCj4NCj5JdCdzIHByZWZlcnJlZCB0byBoYXZlIGEgdmFsdWUgaGVyZS4NCj4N
+Cj4+ICsJCWludGVycnVwdC1jb250cm9sbGVyOw0KPj4gKwkJaW50ZXJydXB0cyA9IDwxIDkgMHg0
+PjsNCj4+ICsNCj4+ICsJCWl0czogZ2ljLWl0c0A2MDIwMDAwIHsNCj4+ICsJCQljb21wYXRpYmxl
+ID0gImFybSxnaWMtdjMtaXRzIjsNCj4+ICsJCQltc2ktY29udHJvbGxlcjsNCj4+ICsJCQlyZWcg
+PSA8MHgwIDB4NjAyMDAwMCAwIDB4MjAwMDA+Ow0KPj4gKwkJfTsNCj4+ICsJfTsNCj4+ICsNCj4+
+ICsJdGltZXIgew0KPj4gKwkJY29tcGF0aWJsZSA9ICJhcm0sYXJtdjgtdGltZXIiOw0KPj4gKwkJ
+aW50ZXJydXB0cyA9IDwxIDEzIDQ+LCAvKiBQaHlzaWNhbCBTZWN1cmUgUFBJLCBhY3RpdmUtbG93
+ICovDQo+PiArCQkJICAgICA8MSAxNCA0PiwgLyogUGh5c2ljYWwgTm9uLVNlY3VyZSBQUEksIGFj
+dGl2ZS1sb3cgKi8NCj4+ICsJCQkgICAgIDwxIDExIDQ+LCAvKiBWaXJ0dWFsIFBQSSwgYWN0aXZl
+LWxvdyAqLw0KPj4gKwkJCSAgICAgPDEgMTAgND47IC8qIEh5cGVydmlzb3IgUFBJLCBhY3RpdmUt
+bG93ICovDQo+PiArCX07DQo+PiArDQo+PiArCXNvYyB7DQo+PiArCQljb21wYXRpYmxlID0gInNp
+bXBsZS1idXMiOw0KPj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8Mj47DQo+PiArCQkjc2l6ZS1jZWxs
+cyA9IDwyPjsNCj4NCj5UaGVzZSBjYW4gYmUgMSBpZiB0aGUgSS9PIGRldmljZXMgZml0IGludG8g
+NEdCIHNwYWNlLg0KPg0KDQpPay4gSSBjaGVja2VkLCBpdCBjYW4gYmUgYmUgMS4gV2lsbCB1cGRh
+dGUgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+PiArCQlyYW5nZXM7DQo+PiArDQo+PiArCQl1YXJ0MDog
+c2VyaWFsQDIxYzAwMDAgew0KPj4gKwkJCWRldmljZV90eXBlID0gInNlcmlhbCI7DQo+PiArCQkJ
+Y29tcGF0aWJsZSA9ICJhcm0scGwwMTEiLCJhcm0sc2JzYS11YXJ0IjsNCj4+ICsJCQlyZWcgPSA8
+MHgwIDB4MjFjMDAwMCAweDAgMHgxMDAwPjsNCj4+ICsJCQlpbnRlcnJ1cHRzID0gPDAgMzIgMHg0
+PjsNCj4+ICsJCQljdXJyZW50LXNwZWVkID0gPDExNTIwMD47DQo+PiArCQl9Ow0KPj4gKw0KPj4g
+KwkJdWFydDE6IHNlcmlhbEAyMWQwMDAwIHsNCj4+ICsJCQlkZXZpY2VfdHlwZSA9ICJzZXJpYWwi
+Ow0KPj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLHBsMDExIiwiYXJtLHNic2EtdWFydCI7DQo+PiAr
+CQkJcmVnID0gPDB4MCAweDIxZDAwMDAgMHgwIDB4MTAwMD47DQo+PiArCQkJaW50ZXJydXB0cyA9
+IDwwIDMzIDB4ND47DQo+PiArCQkJY3VycmVudC1zcGVlZCA9IDwxMTUyMDA+Ow0KPj4gKwkJfTsN
+Cj4+ICsNCj4+ICsJCXVhcnQyOiBzZXJpYWxAMjFlMDAwMCB7DQo+PiArCQkJZGV2aWNlX3R5cGUg
+PSAic2VyaWFsIjsNCj4+ICsJCQljb21wYXRpYmxlID0gImFybSxwbDAxMSIsImFybSxzYnNhLXVh
+cnQiOw0KPj4gKwkJCXJlZyA9IDwweDAgMHgyMWUwMDAwIDB4MCAweDEwMDA+Ow0KPj4gKwkJCWlu
+dGVycnVwdHMgPSA8MCA3MiAweDQ+Ow0KPj4gKwkJCWN1cnJlbnQtc3BlZWQgPSA8MTE1MjAwPjsN
+Cj4+ICsJCX07DQo+PiArDQo+PiArCQl1YXJ0Mzogc2VyaWFsQDIxZjAwMDAgew0KPj4gKwkJCWRl
+dmljZV90eXBlID0gInNlcmlhbCI7DQo+PiArCQkJY29tcGF0aWJsZSA9ICJhcm0scGwwMTEiLCJh
+cm0sc2JzYS11YXJ0IjsNCj4+ICsJCQlyZWcgPSA8MHgwIDB4MjFmMDAwMCAweDAgMHgxMDAwPjsN
+Cj4+ICsJCQlpbnRlcnJ1cHRzID0gPDAgNzMgMHg0PjsNCj4+ICsJCQljdXJyZW50LXNwZWVkID0g
+PDExNTIwMD47DQo+PiArCQl9Ow0KPj4gKwl9Ow0KPj4gK307DQo+PiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MnFkczEuZHRzDQo+PiBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDJxZHMxLmR0cw0KPj4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4+IGluZGV4IDAwMDAwMDAuLjBhOGY1MjUNCj4+IC0tLSAvZGV2L251bGwNCj4+ICsr
+KyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDJxZHMxLmR0cw0KPj4gQEAg
+LTAsMCArMSw1NCBAQA0KPj4gKy8qDQo+PiArICogRGV2aWNlIFRyZWUgZmlsZSBmb3IgTFgyIFFE
+UzEgQm9hcmQNCj4+ICsgKg0KPj4gKyAqIENvcHlyaWdodCAyMDE3IE5YUA0KPj4gKyAqDQo+PiAr
+ICogU3JpcmFtIERhc2ggPHNyaXJhbS5kYXNoQG54cC5jb20+DQo+PiArICoNCj4+ICsgKiBUaGlz
+IGZpbGUgaXMgZHVhbC1saWNlbnNlZDogeW91IGNhbiB1c2UgaXQgZWl0aGVyIHVuZGVyIHRoZSB0
+ZXJtcw0KPj4gKyAqIG9mIHRoZSBHUEwgb3IgdGhlIFgxMSBsaWNlbnNlLCBhdCB5b3VyIG9wdGlv
+bi4gTm90ZSB0aGF0IHRoaXMgZHVhbA0KPj4gKyAqIGxpY2Vuc2luZyBvbmx5IGFwcGxpZXMgdG8g
+dGhpcyBmaWxlLCBhbmQgbm90IHRoaXMgcHJvamVjdCBhcyBhDQo+PiArICogd2hvbGUuDQo+PiAr
+ICoNCj4+ICsgKiAgYSkgVGhpcyBsaWJyYXJ5IGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVk
+aXN0cmlidXRlIGl0IGFuZC9vcg0KPj4gKyAqICAgICBtb2RpZnkgaXQgdW5kZXIgdGhlIHRlcm1z
+IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcw0KPj4gKyAqICAgICBwdWJsaXNo
+ZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVyIHZlcnNpb24gMiBvZiB0
+aGUNCj4+ICsgKiAgICAgTGljZW5zZSwgb3IgKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVy
+c2lvbi4NCj4+ICsgKg0KPj4gKyAqICAgICBUaGlzIGxpYnJhcnkgaXMgZGlzdHJpYnV0ZWQgaW4g
+dGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwNCj4+ICsgKiAgICAgYnV0IFdJVEhPVVQg
+QU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YNCj4+ICsg
+KiAgICAgTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NF
+LiAgU2VlIHRoZQ0KPj4gKyAqICAgICBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9y
+ZSBkZXRhaWxzLg0KPj4gKyAqDQo+PiArICogT3IsIGFsdGVybmF0aXZlbHksDQo+PiArICoNCj4+
+ICsgKiAgYikgUGVybWlzc2lvbiBpcyBoZXJlYnkgZ3JhbnRlZCwgZnJlZSBvZiBjaGFyZ2UsIHRv
+IGFueSBwZXJzb24NCj4+ICsgKiAgICAgb2J0YWluaW5nIGEgY29weSBvZiB0aGlzIHNvZnR3YXJl
+IGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24NCj4+ICsgKiAgICAgZmlsZXMgKHRoZSAiU29m
+dHdhcmUiKSwgdG8gZGVhbCBpbiB0aGUgU29mdHdhcmUgd2l0aG91dA0KPj4gKyAqICAgICByZXN0
+cmljdGlvbiwgaW5jbHVkaW5nIHdpdGhvdXQgbGltaXRhdGlvbiB0aGUgcmlnaHRzIHRvIHVzZSwN
+Cj4+ICsgKiAgICAgY29weSwgbW9kaWZ5LCBtZXJnZSwgcHVibGlzaCwgZGlzdHJpYnV0ZSwgc3Vi
+bGljZW5zZSwgYW5kL29yDQo+PiArICogICAgIHNlbGwgY29waWVzIG9mIHRoZSBTb2Z0d2FyZSwg
+YW5kIHRvIHBlcm1pdCBwZXJzb25zIHRvIHdob20gdGhlDQo+PiArICogICAgIFNvZnR3YXJlIGlz
+IGZ1cm5pc2hlZCB0byBkbyBzbywgc3ViamVjdCB0byB0aGUgZm9sbG93aW5nDQo+PiArICogICAg
+IGNvbmRpdGlvbnM6DQo+PiArICoNCj4+ICsgKiAgICAgVGhlIGFib3ZlIGNvcHlyaWdodCBub3Rp
+Y2UgYW5kIHRoaXMgcGVybWlzc2lvbiBub3RpY2Ugc2hhbGwgYmUNCj4+ICsgKiAgICAgaW5jbHVk
+ZWQgaW4gYWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9ucyBvZiB0aGUgU29mdHdhcmUu
+DQo+PiArICoNCj4+ICsgKiAgICAgVEhFIFNPRlRXQVJFIElTIFBST1ZJREVEICJBUyBJUyIsIFdJ
+VEhPVVQgV0FSUkFOVFkgT0YgQU5ZIEtJTkQsDQo+PiArICogICAgIEVYUFJFU1MgT1IgSU1QTElF
+RCwgSU5DTFVESU5HIEJVVCBOT1QgTElNSVRFRCBUTyBUSEUgV0FSUkFOVElFUw0KPj4gKyAqICAg
+ICBPRiBNRVJDSEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFIEFO
+RA0KPj4gKyAqICAgICBOT05JTkZSSU5HRU1FTlQuIElOIE5PIEVWRU5UIFNIQUxMIFRIRSBBVVRI
+T1JTIE9SIENPUFlSSUdIVA0KPj4gKyAqICAgICBIT0xERVJTIEJFIExJQUJMRSBGT1IgQU5ZIENM
+QUlNLCBEQU1BR0VTIE9SIE9USEVSIExJQUJJTElUWSwNCj4+ICsgKiAgICAgV0hFVEhFUiBJTiBB
+TiBBQ1RJT04gT0YgQ09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HDQo+PiArICog
+ICAgIEZST00sIE9VVCBPRiBPUiBJTiBDT05ORUNUSU9OIFdJVEggVEhFIFNPRlRXQVJFIE9SIFRI
+RSBVU0UgT1INCj4+ICsgKiAgICAgT1RIRVIgREVBTElOR1MgSU4gVEhFIFNPRlRXQVJFLg0KPj4g
+KyAqLw0KPj4gKw0KPj4gKy9kdHMtdjEvOw0KPj4gKw0KPj4gKyNpbmNsdWRlICJmc2wtbHgyMTYw
+YS5kdHNpIg0KPj4gKw0KPj4gKy8gew0KPj4gKwltb2RlbCA9ICJOWFAgTGF5ZXJzY2FwZSBMWDIg
+UURTMSBCb2FyZCI7DQo+PiArCWNvbXBhdGlibGUgPSAiZnNsLGx4MnFkczEiLCAiZnNsLGx4MjE2
+MGEiOyB9Ow0KPj4gLS0NCj4+IDEuOS4xDQo+Pg0KPj4gLS0NCj4+IFRvIHVuc3Vic2NyaWJlIGZy
+b20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIg0KPj4g
+aW4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcgTW9y
+ZSBtYWpvcmRvbW8NCj4+IGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21v
+LWluZm8uaHRtbA0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
