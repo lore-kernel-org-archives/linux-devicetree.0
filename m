@@ -1,214 +1,76 @@
-From: "Mohandass, Divagar" <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v4 3/3] eeprom: at24: enable runtime pm support
-Date: Thu, 31 Aug 2017 11:24:38 +0000
-Message-ID: <7B8CE47BD58441468D2BB13285B50E6031DE6BFC@BGSMSX107.gar.corp.intel.com>
-References: <1504112740-14072-1-git-send-email-divagar.mohandass@intel.com>
- <1504112740-14072-4-git-send-email-divagar.mohandass@intel.com>
- <20170830211938.3m4xdwlfq5yozymq@valkosipuli.retiisi.org.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] RM64: dts: ls208xa: Add iommu-map property for pci
+Date: Thu, 31 Aug 2017 12:30:39 +0100
+Message-ID: <20170831113039.GF15031@leverpostej>
+References: <1504171424-15536-1-git-send-email-Bharat.Bhushan@nxp.com>
+ <06c57ca4-edaa-df26-b1d9-1906141c5065@arm.com>
+ <AM5PR0401MB2545B7C55F634D7B9CABAE629A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+ <10be1849-8071-64fc-5ee2-b6e429c64b9e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170830211938.3m4xdwlfq5yozymq-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <10be1849-8071-64fc-5ee2-b6e429c64b9e-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Gang Liu <gang.liu-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Thu, Aug 31, 2017 at 11:49:37AM +0100, Marc Zyngier wrote:
+> [Fixing Mark's address...]
 
-Thanks for the review.
-My comments below.
+Thanks!
 
----
-^Divagar
+> On 31/08/17 11:41, Bharat Bhushan wrote:
+> > 
+> >> -----Original Message-----
+> >> From: Marc Zyngier [mailto:marc.zyngier-5wv7dgnIgG8@public.gmane.org]
+> >> Sent: Thursday, August 31, 2017 3:02 PM
+> >> To: Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> >> ark.rutland-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org; Gang Liu
+> >> <gang.liu-3arQi8VN3Tc@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> >> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> >> catalin.marinas-5wv7dgnIgG8@public.gmane.org
+> >> Subject: Re: [PATCH] RM64: dts: ls208xa: Add iommu-map property for pci
+> >>
+> >> On 31/08/17 10:23, Bharat Bhushan wrote:
+> >>> This patch adds iommu-map property for PCIe, which enables SMMU for
+> >>> these devices on LS208xA devices.
+> >>>
+> >>> Signed-off-by: Bharat Bhushan <Bharat.Bhushan-3arQi8VN3Tc@public.gmane.org>
+> >>> ---
+> >>>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 4 ++++
+> >>>  1 file changed, 4 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> >>> b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> >>> index 94cdd30..67cf605 100644
+> >>> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> >>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> >>> @@ -606,6 +606,7 @@
+> >>>  			num-lanes = <4>;
+> >>>  			bus-range = <0x0 0xff>;
+> >>>  			msi-parent = <&its>;
+> >>> +			iommu-map = <0 &smmu 0 1>;	/* This is fixed-up by
+> >> u-boot */
+> >>
+> >> What does this do when your version of u-boot doesn't fill this in for you?
+> > 
+> > Good question, frankly I have not thought of this case before.
+> > But if we pass length = 0 in above property then no fixup happen with
+> > happen with older u-boot. In this case of_iommu_configure() will
+> > return NULL iommu-ops and it switch to swio-tlb. Will that work?
+> I really don't like this. You rely on having invalid data in the DT, and
+> that seems just wrong.
 
->-----Original Message-----
->From: Sakari Ailus [mailto:sakari.ailus-X3B1VOXEql0@public.gmane.org]
->Sent: Thursday, August 31, 2017 2:50 AM
->To: Mohandass, Divagar <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org;
->devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
->kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mani, Rajmohan <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->Subject: Re: [PATCH v4 3/3] eeprom: at24: enable runtime pm support
->
->Hi Divagar,
->
->Thanks for the update.
->
->On Wed, Aug 30, 2017 at 10:35:40PM +0530, Divagar Mohandass wrote:
->> Currently the device is kept in D0, there is an opportunity to save
->> power by enabling runtime pm.
->>
->> Device can be daisy chained from PMIC and we can't rely on I2C core
->> for auto resume/suspend. Driver will decide when to resume/suspend.
->>
->> Signed-off-by: Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/misc/eeprom/at24.c | 40
->> ++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 40 insertions(+)
->>
->> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
->> index 2199c42..65a7d83 100644
->> --- a/drivers/misc/eeprom/at24.c
->> +++ b/drivers/misc/eeprom/at24.c
->> @@ -24,6 +24,7 @@
->>  #include <linux/i2c.h>
->>  #include <linux/nvmem-provider.h>
->>  #include <linux/platform_data/at24.h>
->> +#include <linux/pm_runtime.h>
->>
->>  /*
->>   * I2C EEPROMs from most vendors are inexpensive and mostly
->interchangeable.
->> @@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct
->> at24_data *at24, const char *buf,  static int at24_read(void *priv,
->> unsigned int off, void *val, size_t count)  {
->>  	struct at24_data *at24 = priv;
->> +	struct i2c_client *client;
->>  	char *buf = val;
->> +	int ret;
->>
->>  	if (unlikely(!count))
->>  		return count;
->>
->> +	client = at24_translate_offset(at24, &off);
->> +
->> +	ret = pm_runtime_get_sync(&client->dev);
->> +	if (ret < 0) {
->> +		pm_runtime_put_noidle(&client->dev);
->> +		return ret;
->> +	}
->> +
->>  	/*
->>  	 * Read data from chip, protecting against concurrent updates
->>  	 * from this host, but not from other I2C masters.
->> @@ -518,6 +529,7 @@ static int at24_read(void *priv, unsigned int off,
->void *val, size_t count)
->>  		status = at24->read_func(at24, buf, off, count);
->>  		if (status < 0) {
->>  			mutex_unlock(&at24->lock);
->> +			pm_runtime_put(&client->dev);
->>  			return status;
->>  		}
->>  		buf += status;
->> @@ -527,17 +539,29 @@ static int at24_read(void *priv, unsigned int
->> off, void *val, size_t count)
->>
->>  	mutex_unlock(&at24->lock);
->>
->> +	pm_runtime_put(&client->dev);
->> +
->>  	return 0;
->>  }
->>
->>  static int at24_write(void *priv, unsigned int off, void *val, size_t
->> count)  {
->>  	struct at24_data *at24 = priv;
->> +	struct i2c_client *client;
->>  	char *buf = val;
->> +	int ret;
->>
->>  	if (unlikely(!count))
->>  		return -EINVAL;
->>
->> +	client = at24_translate_offset(at24, &off);
->> +
->> +	ret = pm_runtime_get_sync(&client->dev);
->> +	if (ret < 0) {
->> +		pm_runtime_put_noidle(&client->dev);
->> +		return ret;
->> +	}
->> +
->>  	/*
->>  	 * Write data to chip, protecting against concurrent updates
->>  	 * from this host, but not from other I2C masters.
->> @@ -550,6 +574,7 @@ static int at24_write(void *priv, unsigned int off,
->void *val, size_t count)
->>  		status = at24->write_func(at24, buf, off, count);
->>  		if (status < 0) {
->>  			mutex_unlock(&at24->lock);
->> +			pm_runtime_put(&client->dev);
->>  			return status;
->>  		}
->>  		buf += status;
->> @@ -559,6 +584,8 @@ static int at24_write(void *priv, unsigned int
->> off, void *val, size_t count)
->>
->>  	mutex_unlock(&at24->lock);
->>
->> +	pm_runtime_put(&client->dev);
->> +
->>  	return 0;
->>  }
->>
->> @@ -743,6 +770,14 @@ static int at24_probe(struct i2c_client *client,
->> const struct i2c_device_id *id)
->>
->>  	i2c_set_clientdata(client, at24);
->>
->> +	/* enable runtime pm */
->> +	pm_runtime_get_noresume(&client->dev);
->> +	err = pm_runtime_set_active(&client->dev);
->> +	if (err < 0)
->> +		goto err_clients;
->
->Btw. I don't think pm_runtime_set_active() can fail here. In other words it'd be
->fine to ignore the return value.
->
+Indeed.
 
-Ack
+Either the property should be valid (and correctly representing the HW),
+or it shouldn't be present. Relying on kernel implementation details is
+*not* OK.
 
-
->> +
->> +	pm_runtime_enable(&client->dev);
->> +
->>  	/*
->>  	 * Perform a one-byte test read to verify that the
->>  	 * chip is functional.
->> @@ -753,6 +788,8 @@ static int at24_probe(struct i2c_client *client, const
->struct i2c_device_id *id)
->>  		goto err_clients;
->
->I suppose the runtime PM state is re-initialised for a device when a driver is
->probed, but it'd still be nice to decrement the use count if this fails.
-
-Ack
-
->You should also disable PM runtime if probe fails and set the device
->suspended again.
->
->Same for other error cases. I think you'll need a new label.
->
-
-Can I disable PM runtime and set suspend in the 'err_clients' label itself ?
-
->>  	}
->>
->> +	pm_runtime_put(&client->dev);
->> +
->>  	at24->nvmem_config.name = dev_name(&client->dev);
->>  	at24->nvmem_config.dev = &client->dev;
->>  	at24->nvmem_config.read_only = !writable; @@ -810,6 +847,9 @@
->static
->> int at24_remove(struct i2c_client *client)
->>  	for (i = 1; i < at24->num_addresses; i++)
->>  		i2c_unregister_device(at24->client[i]);
->>
->> +	pm_runtime_disable(&client->dev);
->> +	pm_runtime_set_suspended(&client->dev);
->> +
->>  	return 0;
->>  }
->>
->
->--
->Regards,
->
->Sakari Ailus
->e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
