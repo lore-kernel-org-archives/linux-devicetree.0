@@ -1,74 +1,47 @@
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH 2/4] arm: dts: exynos: add exynos5420 cpu
- capacity-dmips-mhz information
-Date: Thu, 31 Aug 2017 11:36:07 +0100
-Message-ID: <94c1d6c6-655a-2a63-1f01-06ac45990388@arm.com>
-References: <20170830144120.9312-1-dietmar.eggemann@arm.com>
- <20170830144120.9312-3-dietmar.eggemann@arm.com>
- <20170830202650.mdlxy2c3uwuq5vde@kozik-lap>
+From: Bharat Bhushan <bharat.bhushan@nxp.com>
+Subject: RE: [PATCH] RM64: dts: ls208xa: Add iommu-map property for pci
+Date: Thu, 31 Aug 2017 10:41:38 +0000
+Message-ID: <AM5PR0401MB2545B7C55F634D7B9CABAE629A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+References: <1504171424-15536-1-git-send-email-Bharat.Bhushan@nxp.com>
+ <06c57ca4-edaa-df26-b1d9-1906141c5065@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20170830202650.mdlxy2c3uwuq5vde@kozik-lap>
-Content-Language: en-GB
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <06c57ca4-edaa-df26-b1d9-1906141c5065@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ark.rutland@arm.com" <ark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "oss@buserror.net" <oss@buserror.net>, Gang Liu <gang.liu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30/08/17 21:26, Krzysztof Kozlowski wrote:
-> On Wed, Aug 30, 2017 at 03:41:18PM +0100, Dietmar Eggemann wrote:
->> The following 'capacity-dmips-mhz' dt property values are used:
->>
->> Cortex-A15: 1024, Cortex-A7: 539
->>
->> They have been derived from the cpu_efficiency values:
->>
->> Cortex-A15: 3891, Cortex-A7: 2048
->>
->> by scaling them so that the Cortex-A15s (big cores) use 1024.
->>
->> The cpu_efficiency values were originally derived from the "Big.LITTLE
->> Processing with ARM Cortex™-A15 & Cortex-A7" white paper
->> (http://www.cl.cam.ac.uk/~rdm34/big.LITTLE.pdf). Table 1 lists 1.9x
->> (3891/2048) as the Cortex-A15 vs Cortex-A7 performance ratio for the
->> Dhrystone benchmark.
->>
->> The following platforms are affected once cpu-invariant accounting
->> support is re-connected to the task scheduler:
->>
->> arndale-octa, peach-pi, peach-pit, smdk5420
->>
->> The patch has been tested on Samsung Chromebook 2 13" (peach-pi, Exynos
->> 5800).
->>
->> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
->> 1024
->> 1024
->> 1024
->> 1024
->> 389
->> 389
->> 389
->> 389
-> 
-> I am missing something... shouldn't this be 539? Or is it scaled with
-> the clock-frequency (1 GHz) value?
-
-Yeah, the capacity-dmips-mhz dt value of 539 for the little cpus is
-scaled by 1.3/1.8 (max cpu capacity/ system wide max cpu capacity):
-
-539 * 1.3/1.8 = 389
-
-This max cpu capacity scaling is part of both solutions, the 'cpu
-capacity-dmips-mhz' and the 'cpu_efficiency/clock-frequency dt property'
-one.
-
-The (original*) cpu capacity on a heterogeneous platform expresses uArch
-and max cpu frequency differences between the (logical) cpus of the
-system.
-
-* not further reduced by rt and/or irq pressure.
-
-[...]
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgWnluZ2llciBbbWFp
+bHRvOm1hcmMuenluZ2llckBhcm0uY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgQXVndXN0IDMxLCAy
+MDE3IDM6MDIgUE0NCj4gVG86IEJoYXJhdCBCaHVzaGFuIDxiaGFyYXQuYmh1c2hhbkBueHAuY29t
+Pjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBhcmsucnV0bGFuZEBhcm0uY29tOyB3aWxsLmRlYWNv
+bkBhcm0uY29tOyBvc3NAYnVzZXJyb3IubmV0OyBHYW5nIExpdQ0KPiA8Z2FuZy5saXVAbnhwLmNv
+bT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBjYXRhbGlu
+Lm1hcmluYXNAYXJtLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBSTTY0OiBkdHM6IGxzMjA4
+eGE6IEFkZCBpb21tdS1tYXAgcHJvcGVydHkgZm9yIHBjaQ0KPiANCj4gT24gMzEvMDgvMTcgMTA6
+MjMsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBpb21tdS1tYXAg
+cHJvcGVydHkgZm9yIFBDSWUsIHdoaWNoIGVuYWJsZXMgU01NVSBmb3INCj4gPiB0aGVzZSBkZXZp
+Y2VzIG9uIExTMjA4eEEgZGV2aWNlcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJoYXJhdCBC
+aHVzaGFuIDxCaGFyYXQuQmh1c2hhbkBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpIHwgNCArKysrDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpDQo+ID4gaW5kZXggOTRjZGQzMC4u
+NjdjZjYwNSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
+c2wtbHMyMDh4YS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
+ZnNsLWxzMjA4eGEuZHRzaQ0KPiA+IEBAIC02MDYsNiArNjA2LDcgQEANCj4gPiAgCQkJbnVtLWxh
+bmVzID0gPDQ+Ow0KPiA+ICAJCQlidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+Ow0KPiA+ICAJCQltc2kt
+cGFyZW50ID0gPCZpdHM+Ow0KPiA+ICsJCQlpb21tdS1tYXAgPSA8MCAmc21tdSAwIDE+OwkvKiBU
+aGlzIGlzIGZpeGVkLXVwIGJ5DQo+IHUtYm9vdCAqLw0KPiANCj4gV2hhdCBkb2VzIHRoaXMgZG8g
+d2hlbiB5b3VyIHZlcnNpb24gb2YgdS1ib290IGRvZXNuJ3QgZmlsbCB0aGlzIGluIGZvciB5b3U/
+DQoNCkdvb2QgcXVlc3Rpb24sIGZyYW5rbHkgSSBoYXZlIG5vdCB0aG91Z2h0IG9mIHRoaXMgY2Fz
+ZSBiZWZvcmUuDQpCdXQgaWYgd2UgcGFzcyBsZW5ndGggPSAwIGluIGFib3ZlIHByb3BlcnR5IHRo
+ZW4gbm8gZml4dXAgaGFwcGVuIHdpdGggaGFwcGVuIHdpdGggb2xkZXIgdS1ib290LiBJbiB0aGlz
+IGNhc2Ugb2ZfaW9tbXVfY29uZmlndXJlKCkgd2lsbCByZXR1cm4gTlVMTCBpb21tdS1vcHMgYW5k
+IGl0IHN3aXRjaCB0byBzd2lvLXRsYi4gV2lsbCB0aGF0IHdvcms/DQoNClRoYW5rcw0KLUJoYXJh
+dA0KDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAJTS4NCj4gLS0NCj4gSmF6eiBpcyBub3QgZGVhZC4g
+SXQganVzdCBzbWVsbHMgZnVubnkuLi4NCg==
