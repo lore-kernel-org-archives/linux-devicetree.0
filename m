@@ -1,28 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH ] phy: rcar-gen2: Add r8a7743/5 support
-Date: Thu, 31 Aug 2017 12:57:27 -0500
-Message-ID: <20170831175727.tjncwk2c2gvzmlzb@rob-hp-laptop>
-References: <1503568773-41410-1-git-send-email-biju.das@bp.renesas.com>
+Subject: Re: [PATCH 1/5] dt-bindings: rockchip-thermal: Support the RV1108
+ SoC compatible
+Date: Thu, 31 Aug 2017 12:57:50 -0500
+Message-ID: <20170831175750.ypsnrktdet3uarr7@rob-hp-laptop>
+References: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
+ <1503570475-7850-2-git-send-email-rocky.hao@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503568773-41410-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1503570475-7850-2-git-send-email-rocky.hao@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rocky Hao <rocky.hao@rock-chips.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 10:59:33AM +0100, Biju Das wrote:
-> Add USB PHY support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5)
-> USB PHY is identical to the R-Car Gen2 family.
+On Thu, Aug 24, 2017 at 06:27:51PM +0800, Rocky Hao wrote:
+> Add a new compatible for thermal founding on RV1108 SoCs.
 > 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
 > ---
-> This patch is tested against Linux next tag next-20170824 and 
-> renesas-dev branch renesas-devel-20170822-v4.13-rc6. 
-> 
->  Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
