@@ -1,88 +1,44 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH ] ARM: dts: iwg22d-sodimm: Add Ethernet AVB support
-Date: Thu, 31 Aug 2017 10:45:34 +0200
-Message-ID: <20170831084534.GF29946@verge.net.au>
-References: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v5 3/3] pinctrl: sprd: Add Spreadtrum pin control driver
+Date: Thu, 31 Aug 2017 16:46:52 +0800
+Message-ID: <CAMz4kuKgU1zO4Vqk3qcJu2oYtDr1o=L6yJ_VZqKLExn9fOw4zg@mail.gmail.com>
+References: <eb7925c9642efb8a1ee5804a9b06f06d9f082089.1500018536.git.baolin.wang@spreadtrum.com>
+ <f41270ddc53d11b746c2cc7c66b323e11381938f.1500018536.git.baolin.wang@spreadtrum.com>
+ <CACRpkdZ=mHqGX0sdjWaOOvib9O-bW5tJoO1fJ4_-hxKODBusjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZ=mHqGX0sdjWaOOvib9O-bW5tJoO1fJ4_-hxKODBusjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 04:17:14PM +0100, Biju Das wrote:
-> Define the iWave RainboW-G22D board dependent part of the Ethernet
-> AVB device node.
-> 
-> On some older versions of the platform (before R4.0) the phy address
-> may be 1 or 3. The address is fixed to 3 for R4.0 onwards (which
-> will be the first mainstream release), hence using 3 in the dts.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-> ---
-> This patch is tested against renesas-dev tag 20170830-v4.13-rc7
-> 
->  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> index 442a5cb..aac84c6 100644
-> --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> @@ -17,9 +17,11 @@
->  
->  	aliases {
->  		serial0 = &scif4;
-> +		ethernet0 = &avb;
->  	};
->  
->  	chosen {
-> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
->  		stdout-path = "serial0:115200n8";
->  	};
->  };
-> @@ -29,6 +31,11 @@
->  		groups = "scif4_data_b";
->  		function = "scif4";
->  	};
-> +
-> +	avb_pins: avb {
-> +		groups = "avb_mdio", "avb_gmii";
-> +		function = "avb";
-> +	};
->  };
->  
->  &scif4 {
-> @@ -37,3 +44,22 @@
->  
->  	status = "okay";
->  };
-> +
-> +&avb {
-> +	pinctrl-0 = <&avb_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	phy-handle = <&phy3>;
-> +	phy-mode = "gmii";
-> +	renesas,no-ether-link;
-> +	status = "okay";
-> +
-> +	phy3: ethernet-phy@3 {
-> +	/*
-> +	 * On some older versions of the platform (before R4.0) the phy address
-> +	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
-> +	 */
-> +		reg = <3>;
-> +		micrel,led-mode = <1>;
+Hi Linusw,
 
-Does the phy have an interrupt?
+On 31 August 2017 at 15:25, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Aug 17, 2017 at 8:50 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+>
+>> This patch adds the pin control driver for Spreadtrum SC9860 platform.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> ---
+>> Changes since v4:
+>>  - Remove sleep configs.
+>>  - Use one standard sleep hardware state config to indicate sleep configs.
+>
+> Patch applied.
+>
+> AFAICT this is a fine driver and you did a good job.
+>
+> Thanks for standing out to my slowness.
 
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+Thanks.
+
+-- 
+Baolin.wang
+Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
