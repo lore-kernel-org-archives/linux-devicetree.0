@@ -1,131 +1,74 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2] of: Restrict DMA configuration
-Date: Thu, 31 Aug 2017 11:32:54 +0100
-Message-ID: <5fc6930c9645c934de2586179ca3f80a055689cb.1504175330.git.robin.murphy@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hch-jcswGhMUV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH 2/4] arm: dts: exynos: add exynos5420 cpu
+ capacity-dmips-mhz information
+Date: Thu, 31 Aug 2017 11:36:07 +0100
+Message-ID: <94c1d6c6-655a-2a63-1f01-06ac45990388@arm.com>
+References: <20170830144120.9312-1-dietmar.eggemann@arm.com>
+ <20170830144120.9312-3-dietmar.eggemann@arm.com>
+ <20170830202650.mdlxy2c3uwuq5vde@kozik-lap>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20170830202650.mdlxy2c3uwuq5vde@kozik-lap>
+Content-Language: en-GB
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Moving DMA configuration to happen later at driver probe time had the
-unnoticed side-effect that we now perform DMA configuration for *every*
-device represented in DT, rather than only those explicitly created by
-the of_platform and PCI code.
+On 30/08/17 21:26, Krzysztof Kozlowski wrote:
+> On Wed, Aug 30, 2017 at 03:41:18PM +0100, Dietmar Eggemann wrote:
+>> The following 'capacity-dmips-mhz' dt property values are used:
+>>
+>> Cortex-A15: 1024, Cortex-A7: 539
+>>
+>> They have been derived from the cpu_efficiency values:
+>>
+>> Cortex-A15: 3891, Cortex-A7: 2048
+>>
+>> by scaling them so that the Cortex-A15s (big cores) use 1024.
+>>
+>> The cpu_efficiency values were originally derived from the "Big.LITTLE
+>> Processing with ARM Cortex™-A15 & Cortex-A7" white paper
+>> (http://www.cl.cam.ac.uk/~rdm34/big.LITTLE.pdf). Table 1 lists 1.9x
+>> (3891/2048) as the Cortex-A15 vs Cortex-A7 performance ratio for the
+>> Dhrystone benchmark.
+>>
+>> The following platforms are affected once cpu-invariant accounting
+>> support is re-connected to the task scheduler:
+>>
+>> arndale-octa, peach-pi, peach-pit, smdk5420
+>>
+>> The patch has been tested on Samsung Chromebook 2 13" (peach-pi, Exynos
+>> 5800).
+>>
+>> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+>> 1024
+>> 1024
+>> 1024
+>> 1024
+>> 389
+>> 389
+>> 389
+>> 389
+> 
+> I am missing something... shouldn't this be 539? Or is it scaled with
+> the clock-frequency (1 GHz) value?
 
-As Christoph points out, this is not really the best thing to do. Whilst
-there may well be other DMA-capable buses that can benefit from having
-their children automatically configured after the bridge has probed,
-there are also plenty of others like USB, MDIO, etc. that definitely do
-not support DMA and should not be indiscriminately processed.
+Yeah, the capacity-dmips-mhz dt value of 539 for the little cpus is
+scaled by 1.3/1.8 (max cpu capacity/ system wide max cpu capacity):
 
-The good news is that in most cases the DT "dma-ranges" property serves
-as an appropriate indicator - per a strict interpretation of the spec,
-anything lacking a "dma-ranges" property should be considered not to
-have a mapping of DMA address space from its children to its parent,
-thus anything for which of_dma_get_range() does not succeed does not
-need DMA configuration. Certain bus types have a general expectation of
-DMA capability and carry a well-established precedent that an absent
-"dma-ranges" implies the same as the empty property, so we automatically
-opt those in to DMA configuration regardless, to avoid regressing most
-existing platforms.
+539 * 1.3/1.8 = 389
 
-Fixes: 09515ef5ddad ("of/acpi: Configure dma operations at probe time for platform/amba/pci bus devices")
-Reported-by: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
+This max cpu capacity scaling is part of both solutions, the 'cpu
+capacity-dmips-mhz' and the 'cpu_efficiency/clock-frequency dt property'
+one.
 
-v2: Updated commit message to be more reasonable
+The (original*) cpu capacity on a heterogeneous platform expresses uArch
+and max cpu frequency differences between the (logical) cpus of the
+system.
 
- drivers/of/device.c | 48 ++++++++++++++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 16 deletions(-)
+* not further reduced by rt and/or irq pressure.
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index e0a28ea341fe..04c4c952dc57 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -9,6 +9,9 @@
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
- #include <linux/slab.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/amba/bus.h>
- 
- #include <asm/errno.h>
- #include "of_private.h"
-@@ -84,31 +87,28 @@ int of_device_add(struct platform_device *ofdev)
-  */
- int of_dma_configure(struct device *dev, struct device_node *np)
- {
--	u64 dma_addr, paddr, size;
-+	u64 dma_addr, paddr, size = 0;
- 	int ret;
- 	bool coherent;
- 	unsigned long offset;
- 	const struct iommu_ops *iommu;
- 	u64 mask;
- 
--	/*
--	 * Set default coherent_dma_mask to 32 bit.  Drivers are expected to
--	 * setup the correct supported mask.
--	 */
--	if (!dev->coherent_dma_mask)
--		dev->coherent_dma_mask = DMA_BIT_MASK(32);
--
--	/*
--	 * Set it to coherent_dma_mask by default if the architecture
--	 * code has not set it.
--	 */
--	if (!dev->dma_mask)
--		dev->dma_mask = &dev->coherent_dma_mask;
--
- 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
- 	if (ret < 0) {
-+		/*
-+		 * For legacy reasons, we have to assume some devices need
-+		 * DMA configuration regardless of whether "dma-ranges" is
-+		 * correctly specified or not.
-+		 */
-+		if (!dev_is_pci(dev) &&
-+#ifdef CONFIG_ARM_AMBA
-+		    dev->bus != &amba_bustype &&
-+#endif
-+		    dev->bus != &platform_bus_type)
-+			return ret == -ENODEV ? 0 : ret;
-+
- 		dma_addr = offset = 0;
--		size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
- 	} else {
- 		offset = PFN_DOWN(paddr - dma_addr);
- 
-@@ -129,6 +129,22 @@ int of_dma_configure(struct device *dev, struct device_node *np)
- 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
- 	}
- 
-+	/*
-+	 * Set default coherent_dma_mask to 32 bit.  Drivers are expected to
-+	 * setup the correct supported mask.
-+	 */
-+	if (!dev->coherent_dma_mask)
-+		dev->coherent_dma_mask = DMA_BIT_MASK(32);
-+	/*
-+	 * Set it to coherent_dma_mask by default if the architecture
-+	 * code has not set it.
-+	 */
-+	if (!dev->dma_mask)
-+		dev->dma_mask = &dev->coherent_dma_mask;
-+
-+	if (!size)
-+		size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
-+
- 	dev->dma_pfn_offset = offset;
- 
- 	/*
--- 
-2.13.4.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
