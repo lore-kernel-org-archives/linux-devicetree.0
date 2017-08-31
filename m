@@ -1,93 +1,56 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] power: supply: bq27xxx: enable writing capacity
- values for bq27421
-Date: Thu, 31 Aug 2017 10:37:36 +0200
-Message-ID: <20170831083736.7vb576hu4ygub57k@earth>
-References: <cover.1504162792.git.hns@goldelico.com>
- <8d323718d7d1dcd7633da236abcd782f88200113.1504162792.git.hns@goldelico.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2] spmi: pmic-arb: Enforce the ownership check optionally
+Date: Thu, 31 Aug 2017 16:37:29 +0800
+Message-ID: <20170831083727.GA3787@dragon>
+References: <1503070110-15018-1-git-send-email-kgunda@codeaurora.org>
+ <e0af96c3-208b-abfc-8b2a-4ea1cc810ec7@codeaurora.org>
+ <20170822085541.GB3685@dragon>
+ <20170822203132.GC21656@codeaurora.org>
+ <20170824121818.GE3685@dragon>
+ <20170824183701.GN21656@codeaurora.org>
+ <20170825074324.GF3685@dragon>
+ <20170825231818.GP21656@codeaurora.org>
+ <20170826034636.GG3685@dragon>
+ <20170830210203.GS21656@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ojeyvbusc3s4kfco"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8d323718d7d1dcd7633da236abcd782f88200113.1504162792.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: afd-l0cyMroinI0@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170830210203.GS21656@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Kiran Gunda <kgunda@codeaurora.org>, gregkh@linuxfoundation.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Abhijeet Dharmapurikar <adharmap@codeaurora.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 30, 2017 at 02:02:03PM -0700, Stephen Boyd wrote:
+> On 08/26, Shawn Guo wrote:
+> > On Fri, Aug 25, 2017 at 04:18:18PM -0700, Stephen Boyd wrote:
+> > > 
+> > > Right. Does the GPIO work? If so, it sounds like the read/write
+> > > access checks in spmi pmic arb don't work properly.
+> > 
+> > The check works.  With the check in there, PM8916 GPIO doesn't work.
+> > However, the consequence is that not only user3 but all GPIO leds under
+> > 'leds' node will fail to register, because any GPIO led's failing on
+> > create_gpio_led() makes leds-gpio driver probe fail as a while.  That's
+> > how leds-gpio driver works.
+> > 
+> > Also, per schematics, PM8916 GPIO1 is indeed routed to user3 LED on
+> > db410c board.  Why do you think apq8016-sbc device tree shouldn't use
+> > the GPIO for that at all?  Isn't it firmware's fault that the ownership
+> > of the peripheral is not properly configured?
+> 
+> If the ownership was not properly configured in the firmware,
+> then I imagine it would mean that we can't control the GPIO for
+> the LED. But that doesn't seem to be true. I can see on my board
+> that I get impermissible write failures on the GPIO when
+> controlling the GPIO brightness, but it doesn't actually matter
+> because the led still lights up. So the checks for write/read
+> permission seem incorrect, or they're not being enforced.
 
---ojeyvbusc3s4kfco
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm not sure what is happening on your side.  As I said above, with the
+4.13-rc series, leds-gpio driver doesn't probe at all, due to the
+impermissible write to PM8916 GPIO in function create_gpio_led(), and
+none of the LEDs lights up on my board.
 
-Hi,
-
-On Thu, Aug 31, 2017 at 08:59:50AM +0200, H. Nikolaus Schaller wrote:
-> Tested on Pyra prototype with bq27421.
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> ---
-
-Thanks, queued.
-
--- Sebastian
-
->  drivers/power/supply/bq27xxx_battery.c | 4 ----
->  1 file changed, 4 deletions(-)
->=20
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/suppl=
-y/bq27xxx_battery.c
-> index ad876a3abe01..e80571cf7be1 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -688,15 +688,11 @@ static struct bq27xxx_dm_reg bq27545_dm_regs[] =3D {
->  #define bq27545_dm_regs 0
->  #endif
-> =20
-> -#if 0 /* not yet tested */
->  static struct bq27xxx_dm_reg bq27421_dm_regs[] =3D {
->  	[BQ27XXX_DM_DESIGN_CAPACITY]   =3D { 82, 10, 2,    0,  8000 },
->  	[BQ27XXX_DM_DESIGN_ENERGY]     =3D { 82, 12, 2,    0, 32767 },
->  	[BQ27XXX_DM_TERMINATE_VOLTAGE] =3D { 82, 16, 2, 2500,  3700 },
->  };
-> -#else
-> -#define bq27421_dm_regs 0
-> -#endif
-> =20
->  static struct bq27xxx_dm_reg bq27425_dm_regs[] =3D {
->  	[BQ27XXX_DM_DESIGN_CAPACITY]   =3D { 82, 12, 2,    0, 32767 },
-> --=20
-> 2.12.2
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
---ojeyvbusc3s4kfco
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmnys0ACgkQ2O7X88g7
-+prr/RAAlHRjwOT/Be6Ozna8MIhcAgkmp/pBw8/9nfpEYCObFE83hBxyVYuJn8yY
-b0d0Ze8blJTNAvZdWD7dcdLabnvQzEeUezxLHVyxbsmvj5TdMhZbSZObgFmsbpBF
-KeB5LNqUq8YB6sgjS4kvwOeKy97zx2Sq0xiAkPZ9F8bRDAAnnETFpgXSt3IYqftB
-cIGI92D6RMWdF5776+FuaHwJLoZpajSztRqU9V7aydCGkWoV+1l69k+X/jpUZrfP
-jiqEWmTOcvK/8Xk0YiQboJ6gBzuy/WB7/TVceurM5xj1UiuitUUHVoLRHWMg46LC
-FDouRxtwCMDlYx5/0s0c2qCjarUXMM0850PtZdLsbbWI6EyUsbIPKAugca608olB
-/RyxyIAOJwNSOW/t+Ti5w0p6GgDOS5S7GIg/4sxBN7CDwZsaA1NGY4X6ca573HYB
-VgZiceWrbSPPaHGEEZ3gmB09UiBA6sw1hf0c8K20t6Qr13XQSX/uDvLdWht8siZj
-Sjb7v5T2wYS1O/9pNF2uQsmvKC3WBSfF4MrNNt34KI/7/sjgCnIV1Vs8DHfibIZS
-92zD/2sngsBUw875YUMbpXFod5tdUsZnDo+xypByWg+lWbSKbnIlNQi5tTU6JKF1
-SuGXYVY9R4PcDxXYG1+5v64PxEpBZ7lOabJqIt2S3bX/45t2gWY=
-=80LP
------END PGP SIGNATURE-----
-
---ojeyvbusc3s4kfco--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
