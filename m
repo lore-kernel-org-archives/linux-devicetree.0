@@ -1,59 +1,31 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 2/2] memory: ti-emif-sram: introduce relocatable
- suspend/resume handlers
-Date: Thu, 31 Aug 2017 15:03:32 +0100
-Message-ID: <20170831140332.GD23750@n2100.armlinux.org.uk>
-References: <20170724212454.27574-1-d-gerlach@ti.com>
- <20170724212454.27574-3-d-gerlach@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv4 3/5] dt-bindings: document the CEC GPIO bindings
+Date: Thu, 31 Aug 2017 16:07:35 +0200
+Message-ID: <CACRpkdbpJ08t3XkzUsQUFZwvzCY5m1AYZ1f84LDmn-=tEV4U+A@mail.gmail.com>
+References: <20170831110156.11018-1-hverkuil@xs4all.nl> <20170831110156.11018-4-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170724212454.27574-3-d-gerlach@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Keerthy J <j-keerthy@ti.com>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170831110156.11018-4-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 04:24:54PM -0500, Dave Gerlach wrote:
-> diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
-> index 608008229c7d..46a7a6c41db7 100644
-> --- a/arch/arm/kernel/asm-offsets.c
-> +++ b/arch/arm/kernel/asm-offsets.c
-> @@ -28,6 +28,7 @@
->  #include <asm/vdso_datapage.h>
->  #include <asm/hardware/cache-l2x0.h>
->  #include <linux/kbuild.h>
-> +#include <linux/ti-emif-sram.h>
->  
->  /*
->   * Make sure that the compiler and target are compatible.
-> @@ -183,5 +184,8 @@ int main(void)
->  #ifdef CONFIG_VDSO
->    DEFINE(VDSO_DATA_SIZE,	sizeof(union vdso_data_store));
->  #endif
-> +  BLANK();
-> +  ti_emif_offsets();
-> +
->    return 0; 
->  }
+On Thu, Aug 31, 2017 at 1:01 PM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
 
-This doesn't make me happy - I've been thinking about this for some time,
-and I think it's completely wrong for drivers to hook into asm-offsets.
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>
+> Document the bindings for the cec-gpio module for hardware where the
+> CEC line and optionally the HPD line are connected to GPIO lines.
+>
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Looking at the top-level Kbuild file, it looks like it would be easy
-for emif to auto-generate its own offsets.h header - it looks like it's
-a matter of using linux/kbuild.h to get the definitions, compiling to
-assembly (using $(call if_changed_dep,cc_s_c)) and then converting the
-assembly to the header file format ( using
-$(call filechk,offsets,__ASM_OFFSETS_H__), replacing __ASM_OFFSETS_H__
-with a more appropriate symbol.)
+Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Could you please check whether this is possible, so we don't end up
-needing to hook lots of driver-specific assembly offsets stuff into
-the arch files?
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
