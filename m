@@ -1,80 +1,51 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: input: Add document bindings for
- mtk-pmic-keys
-Date: Thu, 31 Aug 2017 14:52:39 -0500
-Message-ID: <20170831195239.b2litxbu7smhkkjl@rob-hp-laptop>
-References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
- <1503642753-12385-3-git-send-email-chen.zhong@mediatek.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] of: Restrict DMA configuration
+Date: Thu, 31 Aug 2017 15:04:45 -0500
+Message-ID: <CAL_JsqKC6w_RH6bu3=he28NJn74JO_XLxQPfRLg15k9eSWsiuQ@mail.gmail.com>
+References: <5fc6930c9645c934de2586179ca3f80a055689cb.1504175330.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1503642753-12385-3-git-send-email-chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <5fc6930c9645c934de2586179ca3f80a055689cb.1504175330.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 25, 2017 at 02:32:30PM +0800, Chen Zhong wrote:
-> This patch adds the device tree binding documentation for the MediaTek
-> pmic keys found on PMIC MT6397/MT6323.
-> 
-> Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Thu, Aug 31, 2017 at 5:32 AM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> Moving DMA configuration to happen later at driver probe time had the
+> unnoticed side-effect that we now perform DMA configuration for *every*
+> device represented in DT, rather than only those explicitly created by
+> the of_platform and PCI code.
+>
+> As Christoph points out, this is not really the best thing to do. Whilst
+> there may well be other DMA-capable buses that can benefit from having
+> their children automatically configured after the bridge has probed,
+> there are also plenty of others like USB, MDIO, etc. that definitely do
+> not support DMA and should not be indiscriminately processed.
+>
+> The good news is that in most cases the DT "dma-ranges" property serves
+> as an appropriate indicator - per a strict interpretation of the spec,
+> anything lacking a "dma-ranges" property should be considered not to
+> have a mapping of DMA address space from its children to its parent,
+> thus anything for which of_dma_get_range() does not succeed does not
+> need DMA configuration. Certain bus types have a general expectation of
+> DMA capability and carry a well-established precedent that an absent
+> "dma-ranges" implies the same as the empty property, so we automatically
+> opt those in to DMA configuration regardless, to avoid regressing most
+> existing platforms.
+>
+> Fixes: 09515ef5ddad ("of/acpi: Configure dma operations at probe time for platform/amba/pci bus devices")
+> Reported-by: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 > ---
->  .../devicetree/bindings/input/mtk-pmic-keys.txt    |   38 ++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> new file mode 100644
-> index 0000000..100ec44
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> @@ -0,0 +1,38 @@
-> +MediaTek MT6397/MT6323 PMIC Keys Device Driver
-> +
-> +There are two key functions provided by MT6397/MT6323 PMIC, pwrkey
-> +and homekey. The key functions are defined as the subnode of the function
-> +node provided by MT6397/MT6323 PMIC that is being defined as one kind
-> +of Muti-Function Device (MFD)
-> +
-> +For MT6397/MT6323 MFD bindings see:
-> +Documentation/devicetree/bindings/mfd/mt6397.txt
-> +
-> +Required properties:
-> +- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
-> +- linux,keycodes: Specifies the numeric keycode values to
-> +	be used for reporting keys presses. The array can
-> +	contain up to 2 entries.
-> +
-> +Optional Properties:
-> +- wakeup-source: each key can be used as a wakeup source.
+>
+> v2: Updated commit message to be more reasonable
+>
+>  drivers/of/device.c | 48 ++++++++++++++++++++++++++++++++----------------
+>  1 file changed, 32 insertions(+), 16 deletions(-)
 
-wakeup-source is defined as a boolean.
-
-> +- mediatek,long-press-mode: Long press key shutdown setting, 1 for
-> +	pwrkey only, 2 for pwrkey/homekey together, others for disabled.
-> +- debounce-interval: Long press key shutdown debouncing interval time
-> +	in seconds. 0/1/2/3 for 8/11/14/5 seconds. If not specified defaults to 0.
-> +
-> +Example:
-> +
-> +	pmic: mt6397 {
-> +		compatible = "mediatek,mt6397";
-> +
-> +		...
-> +
-> +		mt6397keys: mt6397keys {
-> +			compatible = "mediatek,mt6397-keys";
-> +			linux,keycodes = <KEY_POWER>, <KEY_VOLUMEDOWN>;
-> +			wakeup-source = <1>, <0>;
-> +			mediatek,long-press-mode = <1>;
-> +			debounce-interval = <0>;
-> +		};
-> +	};
-> -- 
-> 1.7.9.5
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
