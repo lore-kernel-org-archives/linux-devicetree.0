@@ -1,44 +1,26 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v5 3/3] pinctrl: sprd: Add Spreadtrum pin control driver
-Date: Thu, 31 Aug 2017 16:46:52 +0800
-Message-ID: <CAMz4kuKgU1zO4Vqk3qcJu2oYtDr1o=L6yJ_VZqKLExn9fOw4zg@mail.gmail.com>
-References: <eb7925c9642efb8a1ee5804a9b06f06d9f082089.1500018536.git.baolin.wang@spreadtrum.com>
- <f41270ddc53d11b746c2cc7c66b323e11381938f.1500018536.git.baolin.wang@spreadtrum.com>
- <CACRpkdZ=mHqGX0sdjWaOOvib9O-bW5tJoO1fJ4_-hxKODBusjw@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 0/5] thermal: imx: Add nvmem-cells binding on imx6sx
+Date: Thu, 31 Aug 2017 16:48:18 +0800
+Message-ID: <20170831084817.GC3787@dragon>
+References: <cover.1500041281.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZ=mHqGX0sdjWaOOvib9O-bW5tJoO1fJ4_-hxKODBusjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1500041281.git.leonard.crestez@nxp.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Dong Aisheng <aisheng.dong@nxp.com>, Bai Ping <ping.bai@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linusw,
+On Fri, Jul 14, 2017 at 05:11:05PM +0300, Leonard Crestez wrote:
+> Leonard Crestez (5):
+>   thermal: imx: Add nvmem-cells alternate binding for OCOTP access
+>   nvmem: core: Add nvmem_cell_read_u32
+>   thermal: imx: Add support for reading OCOTP through nvmem
+>   ARM: dts: imx6sx: Use nvmem-cells for tempmon
+>   ARM: dts: imx6ul: Add imx6ul-tempmon
 
-On 31 August 2017 at 15:25, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Aug 17, 2017 at 8:50 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
->
->> This patch adds the pin control driver for Spreadtrum SC9860 platform.
->>
->> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->> ---
->> Changes since v4:
->>  - Remove sleep configs.
->>  - Use one standard sleep hardware state config to indicate sleep configs.
->
-> Patch applied.
->
-> AFAICT this is a fine driver and you did a good job.
->
-> Thanks for standing out to my slowness.
+For last two dts patches,
 
-Thanks.
-
--- 
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Shawn Guo <shawnguo@kernel.org>
