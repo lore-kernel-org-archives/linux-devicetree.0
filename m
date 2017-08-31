@@ -1,103 +1,42 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: [PATCH] Aesthetic fixes to DTSpec 0.1, Acknowledgements and Chapter
- 1
-Date: Thu, 31 Aug 2017 17:50:47 -0400 (EDT)
-Message-ID: <alpine.LFD.2.21.1708311747500.16833@localhost.localdomain>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: Add vendor prefix for Amarula Solutions
+Date: Thu, 31 Aug 2017 23:54:03 +0200
+Message-ID: <1633009.GLYYEVNxi7@phil>
+References: <1503730303-11422-1-git-send-email-jteki@openedev.com> <20170831200855.db654hikvddf7prz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170831200855.db654hikvddf7prz@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
-Some aesthetic tweaks to DTSpec 0.1, including
+Am Donnerstag, 31. August 2017, 15:08:55 CEST schrieb Rob Herring:
+> On Sat, Aug 26, 2017 at 12:21:42PM +0530, Jagan Teki wrote:
+> > From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > 
+> > Added 'amarula' as a vendor prefix for Amarula Solutions,
+> > specialist in Embedded and Opensource solutions.
+> > 
+> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
- * grammar fixes
- * font fixes
+just to clarify ... you did apply the last vendor-prefixes yourself
+to prevent conflicts. From the Ack, I assume I should merge that
+with the devicetree itself, right?
 
-Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+I'm fine with it either way.
 
----
 
-  i'll do a chunk at a time, to avoid having a sizable submission
-getting hung up on a single issue.
-
-commit 10d4ba9bb1ad5baab5d9bff4e2dac643166f9356
-Author: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Date:   Thu Aug 31 17:46:29 2017 -0400
-
-    Ack and chapter 1.
-
-diff --git a/source/acknowledgements.rst b/source/acknowledgements.rst
-index 3e49046..a02e0aa 100644
---- a/source/acknowledgements.rst
-+++ b/source/acknowledgements.rst
-@@ -2,7 +2,7 @@
-
- The devicetree.org Technical Steering Committee would like to
- thank the many individuals and companies that contributed to the
--development this specification through writing, technical discussions
-+development of this specification through writing, technical discussions
- and reviews.
-
- We want to thank the power.org Platform Architecture Technical Subcommittee who
-diff --git a/source/introduction.rst b/source/introduction.rst
-index 30ba3d9..d7dc2fc 100644
---- a/source/introduction.rst
-+++ b/source/introduction.rst
-@@ -13,10 +13,10 @@ hardware before passing control to software such as an operating system,
- bootloader, or hypervisor. Bootloaders and hypervisors can, in turn,
- load and transfer control to operating systems. Standard, consistent
- interfaces and conventions facilitate the interactions between these
--software components.  In this document the term boot program is used to
-+software components.  In this document the term *boot program* is used to
- generically refer to a software component that initializes the system
- state and executes another software component referred to as a *client
--program*. Examples of a boot programs include: firmware, bootloaders, and
-+program*. Examples of a boot program include: firmware, bootloaders, and
- hypervisors. Examples of a client program include: bootloaders,
- hypervisors, operating systems, and special purpose programs. A piece of
- software may be both a client program and a boot program  (e.g. a hypervisor).
-@@ -101,14 +101,14 @@ IEEE 1275 specification that are omitted from the |spec| include:
- * FCode debugging
- * Operating system debugging
-
--What is retained from IEEE-1275 are concepts from the devicetree
-+What is retained from IEEE 1275 are concepts from the devicetree
- architecture by which a boot program can describe and communicate system
- hardware information to client program, thus eliminating the need for
- the client program to have hard-coded descriptions of system hardware.
-
- This specification partially supersedes the |epapr| [EPAPR] specification.
--|epapr| documents how devicetree is used by the PowerISA, and covers both
--general concepts, as well as PowerISA specific bindings.
-+|epapr| documents how devicetree is used by the Power ISA, and covers both
-+general concepts, as well as Power ISA specific bindings.
- The text of this document was derived from |epapr|, but either removes architecture specific bindings, or moves them into an appendix.
-
- 32-bit and 64-bit Support
-@@ -141,7 +141,7 @@ Definition of Terms
-    boot program
-        Used to generically refer to a software component that initializes
-        the system state and executes another software component referred to
--       as a client program. Examples of a boot programs include: firmware,
-+       as a client program. Examples of a boot program include: firmware,
-        bootloaders, and hypervisors.
-
-    client program
-
-rday
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
