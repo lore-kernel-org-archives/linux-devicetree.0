@@ -1,65 +1,91 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 3/3] eeprom: at24: enable runtime pm support
-Date: Thu, 31 Aug 2017 18:37:02 +0300
-Message-ID: <20170831153702.eeilqwdxsoy4e3vt@valkosipuli.retiisi.org.uk>
-References: <1504112740-14072-1-git-send-email-divagar.mohandass@intel.com>
- <1504112740-14072-4-git-send-email-divagar.mohandass@intel.com>
- <20170830211938.3m4xdwlfq5yozymq@valkosipuli.retiisi.org.uk>
- <7B8CE47BD58441468D2BB13285B50E6031DE6BFC@BGSMSX107.gar.corp.intel.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Fri, 1 Sep 2017 00:36:27 +0900
+Message-ID: <CAK7LNAQz_mGUo71-FvchPrp_B6+A+74t=LDaZdGE7Bzxpeh9Mg@mail.gmail.com>
+References: <1503418601-9728-1-git-send-email-yamada.masahiro@socionext.com> <CACRpkdYG3BFhhpouwAkQN+x0YpC5EhsVhTkqyuNdRd26Ne-r9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7B8CE47BD58441468D2BB13285B50E6031DE6BFC@BGSMSX107.gar.corp.intel.com>
+In-Reply-To: <CACRpkdYG3BFhhpouwAkQN+x0YpC5EhsVhTkqyuNdRd26Ne-r9A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Mohandass, Divagar" <divagar.mohandass@intel.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mani, Rajmohan" <rajmohan.mani@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 11:24:38AM +0000, Mohandass, Divagar wrote:
-> >> @@ -743,6 +770,14 @@ static int at24_probe(struct i2c_client *client,
-> >> const struct i2c_device_id *id)
-> >>
-> >>  	i2c_set_clientdata(client, at24);
-> >>
-> >> +	/* enable runtime pm */
-> >> +	pm_runtime_get_noresume(&client->dev);
-> >> +	err = pm_runtime_set_active(&client->dev);
-> >> +	if (err < 0)
-> >> +		goto err_clients;
-> >
-> >Btw. I don't think pm_runtime_set_active() can fail here. In other words it'd be
-> >fine to ignore the return value.
-> >
-> 
-> Ack
-> 
-> 
-> >> +
-> >> +	pm_runtime_enable(&client->dev);
-> >> +
-> >>  	/*
-> >>  	 * Perform a one-byte test read to verify that the
-> >>  	 * chip is functional.
-> >> @@ -753,6 +788,8 @@ static int at24_probe(struct i2c_client *client, const
-> >struct i2c_device_id *id)
-> >>  		goto err_clients;
-> >
-> >I suppose the runtime PM state is re-initialised for a device when a driver is
-> >probed, but it'd still be nice to decrement the use count if this fails.
-> 
-> Ack
-> 
-> >You should also disable PM runtime if probe fails and set the device
-> >suspended again.
-> >
-> >Same for other error cases. I think you'll need a new label.
-> >
-> 
-> Can I disable PM runtime and set suspend in the 'err_clients' label itself ?
+Hi Linus,
 
-Disable, yes, but the get and put calls need to be balanced.
+
+2017-08-31 22:41 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Tue, Aug 22, 2017 at 6:16 PM, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>
+>> This GPIO controller device is used on UniPhier SoCs.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> ---
+>>
+>> Changes in v3:
+>>   - Add .irq_set_affinity() hook
+>>   - Use irq_domain_create_hierarchy() instead of legacy
+>>     irq_domain_add_hierarchy().
+>
+> This is getting better and better.
+>
+>> +static const u32 uniphier_gpio_irq_parent_hwirqs[] = {
+>> +       48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+>> +       154, 155, 156, 157, 158, 217, 218, 219,
+>> +};
+>
+> This array which is used when allocating the hierarchical domain
+> looks like configuration data. Why is it not in the device tree?
+
+
+The same comment as in v1.
+
+There is no systematic way to map hwirqs to the parent
+for irqdomain hierarchy:
+https://lkml.org/lkml/2017/7/6/758
+
+
+
+If you see irqchip drivers using domain hierarchy,
+many drivers hard-code
+
+    parent_fwspec.param_count = 3;
+
+without parsing #interrupt-cells property of the parent.
+
+It is hard-coded configuration data, isn't it?
+
+
+
+The array of parent hwirqs is more or less SoC specific data.
+
+
+This is just a matter of taste, but
+if you like, I can move the array to the SoC data associated
+with compatible.
+
+
+.ngpio is already associated with compatible,
+so adding more data would not hurt...
+
+
+static const u32 uniphier_pxs2_gpio_irqs[] = {
+        48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+        154, 155, 156, 157, 158, 217, 218, 219,
+};
+
+static const struct uniphier_gpio_socdata uniphier_pxs2_gpio_data = {
+        .ngpio = 232,
+        .irqs = uniphier_pxs2_gpio_irqs,
+        .nirqs = ARRAY_SIZE(uniphier_pxs2_gpio_irqs),
+};
+
+
+
+
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Best Regards
+Masahiro Yamada
