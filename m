@@ -1,260 +1,83 @@
-From: Stafford Horne <shorne@gmail.com>
-Subject: Re: [PATCH 05/13] irqchip: add initial support for ompic
-Date: Fri, 1 Sep 2017 22:59:24 +0900
-Message-ID: <20170901135924.GK2609@lianli.shorne-pla.net>
-References: <cover.1504129273.git.shorne@gmail.com>
- <538699c64b5601e8800b77da29f7951bf23f57ce.1504129273.git.shorne@gmail.com>
- <20170831105940.GE15031@leverpostej>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 4/5] net: stmmac: dwmac-sun8i: choose internal PHY via phy-is-integrated
+Date: Fri, 1 Sep 2017 09:04:46 -0500
+Message-ID: <CAL_JsqJMZG-X7erY_87mS7N+RfPLdL2VPBaAMBhVYxNCGhbrrA@mail.gmail.com>
+References: <20170826073311.25612-1-clabbe.montjoie@gmail.com>
+ <20170826073311.25612-5-clabbe.montjoie@gmail.com> <20170826212051.GA10418@lunn.ch>
+ <20170831201803.x6vwftfcllrfpk6q@rob-hp-laptop> <20170831205928.GS22289@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170831105940.GE15031@leverpostej>
+In-Reply-To: <20170831205928.GS22289@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Openrisc <openrisc@lists.librecores.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Jonas Bonn <jonas@southpole.se>, devicetree@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Florian Fainelli <f.fainelli@gmail.com>, Icenowy Zheng <icenowy@aosc.io>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 11:59:40AM +0100, Mark Rutland wrote:
-> On Thu, Aug 31, 2017 at 06:58:36AM +0900, Stafford Horne wrote:
-> > From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-> > 
-> > IPI driver for OpenRISC Multicore programmable interrupt controller as
-> > described in the Multicore support section of the OpenRISC 1.2
-> > proposed architecture specification:
-> > 
-> >   https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
-> > 
-> > Each OpenRISC core contains a full interrupt controller which is used in
-> > the SMP architecture for interrupt balancing.  This IPI device is the
-> > only external device required for enabling SMP on OpenRISC.
-> 
-> I'm a little confused. Is this device the whole "ompic", a sub-device
-> thereof, or an independent IP block connected to it?
+On Thu, Aug 31, 2017 at 3:59 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> On Thu, Aug 31, 2017 at 03:18:03PM -0500, Rob Herring wrote:
+>> On Sat, Aug 26, 2017 at 11:20:51PM +0200, Andrew Lunn wrote:
+>> > Hi Corentin
+>> >
+>> > I think we have now all agreed this is an mdio-mux, plus it is also an
+>> > MII mux. We should represent that in device tree. This patchset does
+>> > this. However, as it is now, the mux structure in DT is ignored. All
+>> > it does is search for the phy-is-integrated flags and goes on that.
+>> >
+>> > I made the comment that the device tree representation cannot be
+>> > implemented using an MDIO mux driver, because of driver loading
+>> > issues.  However, the core of the MDIO mux code is just a library,
+>> > symbols exported as GPL, free for anything to use.
+>> >
+>> > What i think should happen is the mdio-mux is implemented inside the
+>> > MAC driver, using the mux-core as a library. The device tree structure
+>> > of a mix is then reflected within Linux. The mux switch callback is
+>> > implemented within the MAC driver. So it can reset the MAC when the
+>> > mux is switched. The 'phy-is-integrated' property is then no longer
+>> > needed.
+>> >
+>> > I would suggest a binding something like:
+>>
+>> This is looks better to me, but...
+>>
+>> > emac: ethernet@1c0b000 {
+>> >         compatible = "allwinner,sun8i-h3-emac";
+>> >         syscon = <&syscon>;
+>> >         reg = <0x01c0b000 0x104>;
+>> >         interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+>> >         interrupt-names = "macirq";
+>> >         resets = <&ccu RST_BUS_EMAC>;
+>> >         reset-names = "stmmaceth";
+>> >         clocks = <&ccu CLK_BUS_EMAC>;
+>> >         clock-names = "stmmaceth";
+>> >         #address-cells = <1>;
+>> >         #size-cells = <0>;
+>> >
+>> >         phy-handle = <&int_mii_phy>;
+>> >         phy-mode = "mii";
+>> >         allwinner,leds-active-low;
+>> >
+>> >         mdio: mdio {
+>> >                 #address-cells = <1>;
+>> >                 #size-cells = <0>;
+>> >     }
+>>
+>> Why do you need this node still?
+>
+> Hi Rob
+>
+> It might not be needed, depending on how it is implemented. But:
+>
+> Documentation/devicetree/bindings/net/mdio-mux.txt
+>
+> It is normal for an mdio bus mux to have a phandle back to the parent
+> mdio bus.  Also, i think the stmmac driver will only instantiate the
+> mdio bus if there is a node for it in the device tree.
 
-This device *is* the ompic, it currently just handles IPI communication,
-but was originally thought it should do more, i.e. distribute device
-interrupts, hence the name.  For now, the ompic device only handles IPI.
+You don't have a phandle to the parent mdio bus though.
 
-Perhaps we can change the name?  If you think that's needed I can discuss
-with Stefan (the creator).
+I think we should allow for both case. The mux could be within the bus
+hierarchy. Depends where the controls are. Another alternative someone
+will try sooner or later is using the new mux control binding.
 
-This is documented in the pdf, but here is an ascii diagram to help.
-
-Notes
-
- o The ompic generates a level interrupt to the CPU PIC when a message is
-   ready.  Messages are delivered via the memory bus.
- o The ompic does not have any interrupt input lines.
- o The ompic must be wired to the same irq line on each core.
- o Devices must be wired to the same irq line on each core.
- o This seems strange, but in the end very little extra hardware is needed
-   to enable smp.
-
-  +---------+                         +---------+
-  | CPU     |                         | CPU     |
-  |  Core 0 |<==\ (memory access) /==>|  Core 1 |
-  |  [ PIC ]|   |                 |   |  [ PIC ]|
-  +----^-^--+   |                 |   +----^-^--+
-       | |      v                 v        | |
-  <====|=|=================================|=|==> (memory bus)
-       | |      ^                  ^       | |
- (ipi  | +------|---------+--------|-------|-+ (device irq)
-  irq  |        |         |        |       |
- core0)| +------|---------|--------|-------+ (ipi irq core1)
-       | |      |         |        |
-  +----o-o-+    |    +--------+    |
-  | ompic  |<===/    | Device |<===/
-  |  IPI   |         +--------+
-  +--------+
-
-> > Pending ops are stored in a memory bit mask which can allow multiple
-> > pending operations to be set and serviced at a time. This is mostly
-> > borrowed from the alpha IPI implementation.
-> > 
-> > Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-> > [shorne@gmail.com: converted ops to bitmask, wrote commit message]
-> > Signed-off-by: Stafford Horne <shorne@gmail.com>
-> > ---
-> >  .../bindings/interrupt-controller/ompic.txt        |  22 ++++
-> >  arch/openrisc/Kconfig                              |   1 +
-> >  drivers/irqchip/Kconfig                            |   4 +
-> >  drivers/irqchip/Makefile                           |   1 +
-> >  drivers/irqchip/irq-ompic.c                        | 117 +++++++++++++++++++++
-> >  5 files changed, 145 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ompic.txt
-> >  create mode 100644 drivers/irqchip/irq-ompic.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/ompic.txt
-> > new file mode 100644
-> > index 000000000000..4176ecc3366d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/ompic.txt
-> > @@ -0,0 +1,22 @@
-> > +OpenRISC Multicore Programmable Interrupt Controller
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : This should be "ompic"
-> 
-> This needs a vendor prefix.
-> 
-> Presumably, this should be "opencores,ompic"? (pending whether this is
-> actually the whole ompic, as above).
-
-As discussed above this is the ompic.
-
-In terms of vendor, this and further openrisc development is no longer
-associated with opencores, that company just hosts the old opencores.org
-website but is not assisting in openrisc development any longer.  Perhaps
-"openrisc,ompic" or "openrisc,ipi".
-
-This also I would like to get final say from Stefan, but any suggestions
-are welcome.
-
-> > +- reg : Specifies base physical address and size of the register space. The
-> > +  size can be arbitrary based on the number of cores the controller has
-> > +  been configured to handle, typically 8 bytes per core.
-> 
-> How are those regions correlated with CPUs?
-> 
-> e.g. is there a fixed relationship with a physical CPU id, or some
-> mechanism by which the relationship can be probed dynamically?
-
-There should only be one region.
-
-core id 0 is associated with registers at address 0x0 and 0x4
-core id 1 is associated with registers at address 0x8 and 0xc
-etc.
-
-This is can't be probed.  Should this be documented here?  That seems more
-of something that is internal to the driver. I think the only thing some
-one would want to set in TD is the register space size which should be be 8
-x number-of-cores.
-
-> > +- interrupt-controller : Identifies the node as an interrupt controller
-> > +- #interrupt-cells : Specifies the number of cells needed to encode an
-> > +  interrupt source. The value shall be 1.
-> 
-> No flags? Does this not need edge/level configuration or active high/low
-> configuration?
-
-No flags, this maybe I am confused on, the ompic does not receive any
-interrupts.  The input to the ompic are register writes which raise/clear
-interrupts on the target CPUs.  So maybe it should not define an
-'interrupt-controller' or '#interrupt-cells' tag.  But then should it be an
-irqchip?  Since its facilitates the IPI I think this is the right place.
-
-> > +- interrupts : Specifies the interrupt line to which the ompic is wired.
-> 
-> What is this interrupt used for?
-> 
-> Is this some percpu interrupt used to proxy the IPI? It feels very odd
-> to assume such a thing from the parent irqchip. Surely this is
-> intimately coupled with that?
-
-This represents which IRQ line on each cpu the IPI is connected to (it must
-be connected to the same IRQ line on each CPU.
-
-i.e.
- interrupt-parent = <&pic>;
-
-> > +
-> > +Example:
-> > +
-> > +ompic: ompic {
-> > +	compatible = "ompic";
-> > +	reg = <0x98000000 16>;
-> > +	#interrupt-cells = <1>;
-> > +	interrupt-controller;
-> > +	interrupts = <1>;
-> > +};
-> 
-> [...]
-> 
-> > +static struct {
-> > +	unsigned long ops;
-> > +} ipi_data[NR_CPUS];
-> > +
-> > +static void __iomem *ompic_base;
-> 
-> Is there guaranteed to only be one of these system-wide?
-
-Yes, that should be guaranteed, but I can look for moving this into a per
-device structure.
-
-> [...]
-> 
-> > +void ompic_raise_softirq(const struct cpumask *mask, unsigned int irq)
-> > +{
-> > +	unsigned int dst_cpu;
-> > +	unsigned int src_cpu = smp_processor_id();
-> > +
-> > +	for_each_cpu(dst_cpu, mask) {
-> > +		set_bit(irq, &ipi_data[dst_cpu].ops);
-> > +
-> > +		ompic_writereg(ompic_base, OMPIC_IPI_CTRL(src_cpu),
-> > +			       OMPIC_IPI_CTRL_IRQ_GEN |
-> > +			       OMPIC_IPI_CTRL_DST(dst_cpu) |
-> > +			       OMPIC_IPI_DATA(1));
-> > +	}
-> 
-> Here you assume that the mapping is big enough to cover these registers,
-> but the ompic_of_init() function didn't sanity-check the size, so this
-> is not guaranteed.
-
-OK, I will add some sanity checking.
-
-> [...]
-> 
-> > +int __init ompic_of_init(struct device_node *node, struct device_node *parent)
-> > +{
-> > +	int irq;
-> > +
-> > +	if (WARN_ON(!node))
-> > +		return -ENODEV;
-> 
-> Given this function is only invoked if the kernel found a node with a
-> matching compatible string, how can this possibly happen?
-
-Right, I think now.  Will fix.
-
-> > +	memset(ipi_data, 0, sizeof(ipi_data));
-> 
-> As ipi_data was static, it is already zeroed.
-
-Right, will fix.
-
-> > +
-> > +	ompic_base = of_iomap(node, 0);
-> 
-> What if this failed?
-
-Right will fix.
-
-> > +
-> > +	irq = irq_of_parse_and_map(node, 0);
-> 
-> What if this is missing?
-
-OK, I will do some error checking.
-
-> 
-> > +	setup_irq(irq, &ompi_ipi_irqaction);
-> 
-> As covered earlier, I;m confused by this. I'd expect that your root
-> irqchip would handle the IPIs, and hence need to probe nothing from the
-> DT for those.
-> 
-> Here we're assuming the IRQ is wired up to some per-cpu interrupt that
-> we can treat as an IPI, and that the parent irqchip handles that
-> appropriately, which seems very odd.
-
-I hope the comments above help to clarify this.  By appropriately you mean
-level/edge active high/low?  The ompic and openrisc internal pic have been
-designed to be compatible.
-
-Thanks for the review.  Between this and the comments from Marc I have a
-bit of work to do.  Please let me know if you have any further questions.
-
--Stafford
+Rob
