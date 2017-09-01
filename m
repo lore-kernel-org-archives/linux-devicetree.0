@@ -1,173 +1,178 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: [PATCH] Aesthetic tweaks to devicenodes.rst chapter, 0.1 DT spec.
-Date: Fri, 1 Sep 2017 02:07:56 -0400 (EDT)
-Message-ID: <alpine.LFD.2.21.1709010205210.21695@localhost.localdomain>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
+Date: Fri, 1 Sep 2017 08:20:16 +0200
+Message-ID: <20170901082016.3b5e445e@bbrezillon>
+References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
+ <87k21jzn38.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1835193447-1504246079=:21695"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <87k21jzn38.fsf@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, dri-devel@lists.freedesktop.org, Richard Sproul <sproul@cadence.com>, Rob Herring <robh+dt@kernel.org>, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Neil Webb <neilw@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1835193447-1504246079=:21695
-Content-Type: text/plain; charset=ISO-8859-7
-Content-Transfer-Encoding: 8BIT
-
-
-Aesthetic fixups to devicenodes.rst chapter of DT spec, including:
-
- * font changes
- * define "PIR" acronym when first used
-
-Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-
----
-
-diff --git a/source/devicenodes.rst b/source/devicenodes.rst
-index 78b5bdb..bf82114 100644
---- a/source/devicenodes.rst
-+++ b/source/devicenodes.rst
-@@ -7,14 +7,14 @@ Base Device Node Types
- ----------------------
-
- The sections that follow specify the requirements for the base set of
--device nodes required in an |spec|-compliant devicetree.
-+device nodes required in a |spec|-compliant devicetree.
-
- All devicetrees shall have a root node and the following nodes shall be
- present at the root of all devicetrees:
-
- *  One ``/cpus`` node
-
--*  At least one ``memory`` node
-+*  At least one ``/memory`` node
-
- Root node
- ---------
-@@ -65,7 +65,7 @@ and have the node name ``/aliases``.
- Each property of the ``/aliases`` node defines an alias. The property name
- specifies the alias name. The property value specifies the full path to
- a node in the devicetree. For example, the property serial0 =
--``"/simple-bus@fe000000/serial@llc500"`` defines the alias serial0.
-+``"/simple-bus@fe000000/serial@llc500"`` defines the alias ``serial0``.
-
- Alias names shall be a lowercase text strings of 1 to 31 characters from
- the following set of characters.
-@@ -98,7 +98,7 @@ considering a string as a device path, shall detect and use the alias.
-         ethernet0 = "/simple-bus@fe000000/ethernet@31c000";
-     };
-
--Given the alias serial0, a client program can look at the aliases node
-+Given the alias ``serial0``, a client program can look at the ``/aliases`` node
- and determine the alias refers to the device path
- ``/simple-bus@fe000000/serial@llc500``.
-
-@@ -110,8 +110,8 @@ physical memory layout for the system. If a system has multiple ranges
- of memory, multiple memory nodes can be created, or the ranges can be
- specified in the *reg* property of a single memory node.
-
--The name component of the node name (see section :ref:`sect-node-names`)
--shall be memory.
-+The *unit-name* component of the node name (see section :ref:`sect-node-names`)
-+shall be ``memory``.
-
- The client program may access memory not covered by any memory
- reservations (see section :ref:`sect-fdt-memory-reservation-block`)
-@@ -241,16 +241,16 @@ time. It shall be a child of the root node.
-     };
-
- Older versions of devicetrees may be encountered that contain a
--deprecated form of the stdout-path property called linux,stdout-path.
-+deprecated form of the *stdout-path* property called *linux,stdout-path*.
- For compatibility, a client program might want to support
--linux,stdout-path if a stdout-path property is not present. The meaning
-+*linux,stdout-path* if a *stdout-path* property is not present. The meaning
- and use of the two properties is identical.
-
- ``/cpus`` Node Properties
- -------------------------
-
--A cpus node is required for all devicetrees. It does not represent a
--real device in the system, but acts as a container for child cpu nodes
-+A ``/cpus`` node is required for all devicetrees. It does not represent a
-+real device in the system, but acts as a container for child ``cpu`` nodes
- which represent the systems CPUs.
-
- .. tabularcolumns:: | l c l J |
-@@ -272,7 +272,7 @@ which represent the systems CPUs.
-    :ref:`sect-standard-properties`) are allowed but are optional.
-
-
--The cpus node may contain properties that are common across CPU nodes.
-+The ``/cpus`` node may contain properties that are common across ``cpu`` nodes.
- See section :ref:`sect-cpus-cpu-node-properties` for details.
-
- For an example, see section :ref:`sect-cpu-node-example`.
-@@ -282,12 +282,12 @@ For an example, see section :ref:`sect-cpu-node-example`.
- ``/cpus/cpu*`` Node Properties
- ------------------------------
-
--A cpu node represents a hardware execution block that is sufficiently
-+A ``cpu`` node represents a hardware execution block that is sufficiently
- independent that it is capable of running an operating system without
- interfering with other CPUs possibly running other operating systems.
-
- Hardware threads that share an MMU would generally be represented under
--one cpu node. If other more complex CPU topographies are designed, the
-+one ``cpu`` node. If other more complex CPU topographies are designed, the
- binding for the CPU must describe the topography (e.g. threads that
- don¢t share an MMU).
-
-@@ -295,18 +295,18 @@ CPUs and threads are numbered through a unified number-space that should
- match as closely as possible the interrupt controller¢s numbering of
- CPUs/threads.
-
--Properties that have identical values across CPU nodes may be placed in
--the cpus node instead. A client program must first examine a specific
--CPU node, but if an expected property is not found then it should look
--at the parent cpus node. This results in a less verbose representation
-+Properties that have identical values across ``cpu`` nodes may be placed in
-+the ``/cpus`` node instead. A client program must first examine a specific
-+``cpu`` node, but if an expected property is not found then it should look
-+at the parent ``/cpus`` node. This results in a less verbose representation
- of properties which are identical across all CPUs.
-
--The node name for every cpu node should be ``cpu``.
-+The node name for every CPU node should be ``cpu``.
-
- General Properties of ``/cpus/cpu*`` nodes
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
--The following table describes the general properties of CPU nodes. Some
-+The following table describes the general properties of ``cpu`` nodes. Some
- of the properties described in :numref:`table-cpu-node-props` are select
- standard properties with specific applicable detail.
-
-@@ -342,7 +342,8 @@ standard properties with specific applicable detail.
-                                                    and out of bounds of the range addressed by
-                                                    the interrupt controller
-
--                                                   If a CPU/thread's PIR is modifiable, a client
-+                                                   If a CPU/thread's PIR (pending interrupt register)
-+                                                   is modifiable, a client
-                                                    program should modify PIR to match the *reg*
-                                                    property value. If PIR cannot be modified and
-                                                    the PIR value is distinct from the interrupt
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
---8323328-1835193447-1504246079=:21695--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRXJpYywKCk9uIFRodSwgMzEgQXVnIDIwMTcgMTA6MDM6MjMgLTA3MDAKRXJpYyBBbmhvbHQg
+PGVyaWNAYW5ob2x0Lm5ldD4gd3JvdGU6Cgo+IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemls
+bG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JpdGVzOgo+IAo+ID4gQWRkIGEgZHJpdmVyIGZvciBD
+YWRlbmNlIERQSSAtPiBEU0kgYnJpZGdlLgo+ID4KPiA+IFRoaXMgZHJpdmVyIG9ubHkgc3VwcG9y
+dCBhIHN1YnNldCBvZiBDYWRlbmNlIERTSSBicmlkZ2UgY2FwYWJpbGl0aWVzLgo+ID4KPiA+IEhl
+cmUgaXMgYSBub24tZXhoYXVzdGl2ZSBsaXN0IG9mIG1pc3NpbmcgZmVhdHVyZXM6Cj4gPiAgKiBi
+dXJzdCBtb2RlCj4gPiAgKiBkeW5hbWljIGNvbmZpZ3VyYXRpb24gb2YgdGhlIERQSFkgYmFzZWQg
+b24gdGhlCj4gPiAgKiBzdXBwb3J0IGZvciBhZGRpdGlvbmFsIGlucHV0IGludGVyZmFjZXMgKFNE
+SSBpbnB1dCkKPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJy
+ZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gPiAtLS0KPiA+IENoYW5nZXMgaW4gdjM6Cj4g
+PiAtIHJlcGxhY2UgbWFnaWMgdmFsdWVzIGJ5IHJlYWwgdGltaW5nIGNhbGN1bGF0aW9uLiBUaGUg
+RFBIWSBQTEwgY2xvY2sKPiA+ICAgaXMgc3RpbGwgaGFyZGNvZGVkIHNpbmNlIHdlIGRvbid0IGhh
+dmUgYSB3b3JraW5nIERQSFkgYmxvY2sgeWV0LCBhbmQKPiA+ICAgdGhpcyBpcyB0aGUgcGllY2Ug
+b2YgSFcgd2UgbmVlZCB0byBkeW5hbWljYWxseSBjb25maWd1cmUgdGhlIFBMTAo+ID4gICByYXRl
+IGJhc2VkIG9uIHRoZSBkaXNwbGF5IHJlZnJlc2ggcmF0ZSBhbmQgdGhlIHJlc29sdXRpb24uCj4g
+PiAtIHBhcnNlIERTSSBkZXZpY2VzIHJlcHJlc2VudGVkIHdpdGggdGhlIE9GLWdyYXBoLiBUaGlz
+IGlzIG5lZWRlZCB0bwo+ID4gICBzdXBwb3J0IERTSSBkZXZpY2VzIGNvbnRyb2xsZWQgdGhyb3Vn
+aCBhbiBleHRlcm5hbCBidXMgbGlrZSBJMkMgb3IKPiA+ICAgU1BJLgo+ID4gLSB1c2UgdGhlIERS
+TSBwYW5lbC1icmlkZ2UgaW5mcmFzdHJ1Y3R1cmUgdG8gc2ltcGxpZnkgdGhlIERSTSBwYW5lbAo+
+ID4gICBsb2dpYyAgCj4gCj4gSnVzdCBhIGZldyBjb21tZW50cyBmcm9tIG1lLiAgV2l0aCB0aGUg
+ZmV3IHN0cmFpZ2h0Zm9yd2FyZCBuaXRwaWNrcwo+IGZpeGVkLCBpdCBnZXRzIG15Ogo+IAo+IEFj
+a2VkLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+IAo+ID4gK3N0YXRpYyBlbnVt
+IGRybV9tb2RlX3N0YXR1cwo+ID4gK2NkbnNfZHNpX2JyaWRnZV9tb2RlX3ZhbGlkKHN0cnVjdCBk
+cm1fYnJpZGdlICpicmlkZ2UsCj4gPiArCQkJICAgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21v
+ZGUgKm1vZGUpCj4gPiArewo+ID4gKwlzdHJ1Y3QgY2Ruc19kc2lfaW5wdXQgKmlucHV0ID0gYnJp
+ZGdlX3RvX2NkbnNfZHNpX2lucHV0KGJyaWRnZSk7Cj4gPiArCXN0cnVjdCBjZG5zX2RzaSAqZHNp
+ID0gaW5wdXRfdG9fZHNpKGlucHV0KTsKPiA+ICsJc3RydWN0IGNkbnNfZHNpX291dHB1dCAqb3V0
+cHV0ID0gJmRzaS0+b3V0cHV0Owo+ID4gKwlpbnQgYnBwOwo+ID4gKwo+ID4gKwkvKgo+ID4gKwkg
+KiBWRlBfRFNJIHNob3VsZCBiZSBsZXNzIHRoYW4gVkZQX0RQSSBhbmQgVkZQX0RTSSBzaG91bGQg
+YmUgYXQKPiA+ICsJICogbGVhc3QgMS4KPiA+ICsJICovCj4gPiArCWlmIChtb2RlLT52dG90YWwg
+LSBtb2RlLT52c3luY19lbmQgPCAyKQo+ID4gKwkJcmV0dXJuIE1PREVfVl9JTExFR0FMOwo+ID4g
+Kwo+ID4gKwkvKiBWU0FfRFNJID0gVlNBX0RQSSBhbmQgbXVzdCBiZSBhdCBsZWFzdCAyLiAqLwo+
+ID4gKwlpZiAobW9kZS0+dnN5bmNfZW5kIC0gbW9kZS0+dnN5bmNfc3RhcnQgPCAyKQo+ID4gKwkJ
+cmV0dXJuIE1PREVfVl9JTExFR0FMOwo+ID4gKwo+ID4gKwkvKiBIQUNUIG11c3QgYmUgYSAzMi1i
+aXRzIGFsaWduZWQuICovICAKPiAKPiBzL2EgLwo+IAo+ID4gKwlicHAgPSBtaXBpX2RzaV9waXhl
+bF9mb3JtYXRfdG9fYnBwKG91dHB1dC0+ZGV2LT5mb3JtYXQpOwo+ID4gKwlpZiAoKG1vZGUtPmhk
+aXNwbGF5ICogYnBwKSAlIDMyKQo+ID4gKwkJcmV0dXJuIE1PREVfSF9JTExFR0FMOwo+ID4gKwo+
+ID4gKwlyZXR1cm4gTU9ERV9PSzsKPiA+ICt9ICAKPiAKPiAKPiA+ICtzdGF0aWMgdm9pZCBjZG5z
+X2RzaV9icmlkZ2VfZW5hYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gPiArewo+ID4g
+KwlzdHJ1Y3QgY2Ruc19kc2lfaW5wdXQgKmlucHV0ID0gYnJpZGdlX3RvX2NkbnNfZHNpX2lucHV0
+KGJyaWRnZSk7Cj4gPiArCXN0cnVjdCBjZG5zX2RzaSAqZHNpID0gaW5wdXRfdG9fZHNpKGlucHV0
+KTsKPiA+ICsJc3RydWN0IGNkbnNfZHNpX291dHB1dCAqb3V0cHV0ID0gJmRzaS0+b3V0cHV0Owo+
+ID4gKwl1MzIgaHNpemUwLCBoc2EsIGhsaW5lLCB0bXAsIHJlZ193YWtldXAsIGRpdjsKPiA+ICsJ
+dW5zaWduZWQgbG9uZyBkcGh5X3BsbF9wZXJpb2QsIHR4X2J5dGVfcGVyaW9kOwo+ID4gKwlzdHJ1
+Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZTsKPiA+ICsJaW50IGJwcCwgbmxhbmVzOwo+ID4gKwo+
+ID4gKwltb2RlID0gJmJyaWRnZS0+ZW5jb2Rlci0+Y3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGU7
+Cj4gPiArCWJwcCA9IG1pcGlfZHNpX3BpeGVsX2Zvcm1hdF90b19icHAob3V0cHV0LT5kZXYtPmZv
+cm1hdCk7Cj4gPiArCW5sYW5lcyA9IG91dHB1dC0+ZGV2LT5sYW5lczsKPiA+ICsKPiA+ICsJaWYg
+KG91dHB1dC0+ZGV2LT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9ERV9WSURFT19TWU5DX1BVTFNF
+KQo+ID4gKwkJdG1wID0gbW9kZS0+Y3J0Y19odG90YWwgLSBtb2RlLT5jcnRjX2hzeW5jX2VuZDsK
+PiA+ICsJZWxzZQo+ID4gKwkJdG1wID0gbW9kZS0+Y3J0Y19odG90YWwgLSBtb2RlLT5jcnRjX2hz
+eW5jX3N0YXJ0Owo+ID4gKwl0bXAgPSAodG1wICogYnBwKSAvIDg7Cj4gPiArCXRtcCA9IHRtcCA8
+IERTSV9IQlBfRlJBTUVfT1ZFUkhFQUQgPyAwIDogdG1wIC0gRFNJX0hCUF9GUkFNRV9PVkVSSEVB
+RDsKPiA+ICsJaHNpemUwID0gSEJQX0xFTih0bXApOwo+ID4gKwo+ID4gKwl0bXAgPSBtb2RlLT5j
+cnRjX2hzeW5jX3N0YXJ0IC0gbW9kZS0+Y3J0Y19oZGlzcGxheTsKPiA+ICsJdG1wID0gKHRtcCAq
+IGJwcCkgLyA4OyAgCj4gCj4gSG93IGlzIHRoaXMgc2NhbGluZyBzdXBwb3NlZCB0byB3b3JrIHdo
+ZW4geW91IGhhdmUgUkdCNjY2X1BBQ0tFRCAoYnBwID0KPiAxOCk/ICBJdCBzZWVtcyBsaWtlIHRo
+ZXJlIHdvdWxkIGJlIGJhZCByb3VuZGluZyBpc3N1ZXMuCgpUaGF0J3MgYSBnb29kIHF1ZXN0aW9u
+LiBUaGUgc3BlYyBkb2VzIG5vdCBzYXkgYW55dGhpbmcgYWJvdXQgcm91bmRpbmcsCmJ1dCBJIGd1
+ZXNzIHJvdW5kaW5nIHVwIGlzIHNhZmVyLiBSaWNoYXJkLCBhbnkgb3BpbmlvbiBvbiB0aGF0PwoK
+PiAKPiA+ICsJdG1wID0gdG1wIDwgRFNJX0hGUF9GUkFNRV9PVkVSSEVBRCA/IDAgOiB0bXAgLSBE
+U0lfSEZQX0ZSQU1FX09WRVJIRUFEOwo+ID4gKwloc2l6ZTAgfD0gSEZQX0xFTih0bXApOwo+ID4g
+Kwo+ID4gKwlpZiAob3V0cHV0LT5kZXYtPm1vZGVfZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJREVP
+X1NZTkNfUFVMU0UpCj4gPiArCQl0bXAgPSBtb2RlLT5jcnRjX2hzeW5jX2VuZCAtIG1vZGUtPmNy
+dGNfaHN5bmNfc3RhcnQ7Cj4gPiArCWVsc2UKPiA+ICsJCXRtcCA9IDA7Cj4gPiArCXRtcCA9ICh0
+bXAgKiA4KSAvIGJwcDsgIAo+IAo+IFRoaXMgc2NhbGluZyBpcyBzdXNwaWNpb3VzbHkgZGlmZmVy
+ZW50IGZyb20gdGhlIG90aGVycyBhcm91bmQgaXQuICBEaWQKPiB5b3UgbWVhbiB0aGlzPwoKSXQn
+cyBhIG1pc3Rha2UsIEknbGwgZml4IHRoYXQuCgo+IAo+ID4gKwl0bXAgPSB0bXAgPCBEU0lfSFNB
+X0ZSQU1FX09WRVJIRUFEID8gMCA6IHRtcCAtIERTSV9IU0FfRlJBTUVfT1ZFUkhFQUQ7Cj4gPiAr
+CWhzYSA9IHRtcDsKPiA+ICsJaHNpemUwIHw9IEhTQV9MRU4odG1wKTsKPiA+ICsKPiA+ICsJd3Jp
+dGVsKGhzaXplMCwgZHNpLT5yZWdzICsgVklEX0hTSVpFMSk7Cj4gPiArCXdyaXRlbCgobW9kZS0+
+Y3J0Y19oZGlzcGxheSAqIGJwcCkgLyA4LCBkc2ktPnJlZ3MgKyBWSURfSFNJWkUyKTsKPiA+ICsK
+PiA+ICsJd3JpdGVsKFZCUF9MRU4obW9kZS0+Y3J0Y192dG90YWwgLSBtb2RlLT5jcnRjX3ZzeW5j
+X2VuZCAtIDEpIHwKPiA+ICsJICAgICAgIFZGUF9MRU4obW9kZS0+Y3J0Y192c3luY19zdGFydCAt
+IG1vZGUtPmNydGNfdmRpc3BsYXkpIHwKPiA+ICsJICAgICAgIFZTQV9MRU4obW9kZS0+Y3J0Y192
+c3luY19lbmQgLSBtb2RlLT5jcnRjX3ZzeW5jX3N0YXJ0KSwKPiA+ICsJICAgICAgIGRzaS0+cmVn
+cyArIFZJRF9WU0laRTEpOwo+ID4gKwl3cml0ZWwobW9kZS0+Y3J0Y192ZGlzcGxheSwgZHNpLT5y
+ZWdzICsgVklEX1ZTSVpFMik7Cj4gPiArCj4gPiArCWhsaW5lID0gKG1vZGUtPmNydGNfaHRvdGFs
+ICogYnBwKSAvIDg7Cj4gPiArCXRtcCA9IGhsaW5lIC0gRFNJX0hTQV9GUkFNRV9PVkVSSEVBRDsK
+PiA+ICsJaWYgKG91dHB1dC0+ZGV2LT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9ERV9WSURFT19T
+WU5DX1BVTFNFKQo+ID4gKwkJdG1wIC09IGhzYSArIERTSV9IU0FfRlJBTUVfT1ZFUkhFQUQ7Cj4g
+PiArCj4gPiArCXdyaXRlbChCTEtfTElORV9QVUxTRV9QS1RfTEVOKHRtcCksIGRzaS0+cmVncyAr
+IFZJRF9CTEtTSVpFMik7Cj4gPiArCWlmIChvdXRwdXQtPmRldi0+bW9kZV9mbGFncyAmIE1JUElf
+RFNJX01PREVfVklERU9fU1lOQ19QVUxTRSkKPiA+ICsJCXdyaXRlbChNQVhfTElORV9MSU1JVCh0
+bXAgLSBEU0lfTlVMTF9GUkFNRV9PVkVSSEVBRCksCj4gPiArCQkgICAgICAgZHNpLT5yZWdzICsg
+VklEX1ZDQV9TRVRUSU5HMik7Cj4gPiArCj4gPiArCXRtcCA9IGhsaW5lIC0KPiA+ICsJICAgICAg
+KERTSV9IU1NfVlNTX1ZTRV9GUkFNRV9PVkVSSEVBRCArIERTSV9CTEFOS0lOR19GUkFNRV9PVkVS
+SEVBRCk7Cj4gPiArCXdyaXRlbChCTEtfTElORV9FVkVOVF9QS1RfTEVOKHRtcCksIGRzaS0+cmVn
+cyArIFZJRF9CTEtTSVpFMSk7Cj4gPiArCWlmICghKG91dHB1dC0+ZGV2LT5tb2RlX2ZsYWdzICYg
+TUlQSV9EU0lfTU9ERV9WSURFT19TWU5DX1BVTFNFKSkKPiA+ICsJCXdyaXRlbChNQVhfTElORV9M
+SU1JVCh0bXAgLSBEU0lfTlVMTF9GUkFNRV9PVkVSSEVBRCksCj4gPiArCQkgICAgICAgZHNpLT5y
+ZWdzICsgVklEX1ZDQV9TRVRUSU5HMik7Cj4gPiArCj4gPiArCXRtcCA9IERJVl9ST1VORF9VUCho
+bGluZSwgbmxhbmVzKSAtIERJVl9ST1VORF9VUChoc2EsIG5sYW5lcyk7Cj4gPiArCj4gPiArCWlm
+ICghKG91dHB1dC0+ZGV2LT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9ERV9FT1RfUEFDS0VUKSkK
+PiA+ICsJCXRtcCAtPSBESVZfUk9VTkRfVVAoRFNJX0VPVF9QS1RfU0laRSwgbmxhbmVzKTsKPiA+
+ICsKPiA+ICsJZHBoeV9wbGxfcGVyaW9kID0gTlNFQ19QRVJfU0VDIC8gRFBIWV9QTExfUkFURV9I
+WjsKPiA+ICsJdHhfYnl0ZV9wZXJpb2QgPSAoZHBoeV9wbGxfcGVyaW9kICogMikgLyA4Owo+ID4g
+KwlyZWdfd2FrZXVwID0gUkVHX1dBS0VVUF9USU1FX05TIC8gZHBoeV9wbGxfcGVyaW9kOwo+ID4g
+Kwl3cml0ZWwoUkVHX1dBS0VVUF9USU1FKHJlZ193YWtldXApIHwgUkVHX0xJTkVfRFVSQVRJT04o
+dG1wKSwKPiA+ICsJICAgICAgIGRzaS0+cmVncyArIFZJRF9EUEhZX1RJTUUpOwo+ID4gKwo+ID4g
+KwkvKgo+ID4gKwkgKiBIU1RYIGFuZCBMUFJYIHRpbWVvdXRzIGFyZSBib3RoIGV4cHJlc3NlZCBp
+biBUWCBieXRlIGNsayBjeWNsZXMgYW5kCj4gPiArCSAqIGJvdGggc2hvdWxkIGJlIHNldCB0byBh
+dCBsZWFzdCB0aGUgdGltZSBpdCB0YWtlcyB0byB0cmFuc21pdCBhCj4gPiArCSAqIGZyYW1lLgo+
+ID4gKwkgKi8KPiA+ICsJdG1wID0gTlNFQ19QRVJfU0VDIC8gbW9kZS0+dnJlZnJlc2g7ICAKPiAK
+PiB2cmVmcmVzaCBpcyBhIHJlYWxseSByb3VnaCBhcHByb3hpbWF0aW9uIG9mIHRoZSByZWZyZXNo
+LiAgWW91IG1heSBuZWVkCj4gc29tZSBwYWRkaW5nIHNvIHRoYXQgSFNUWF9USU1FT1VUIGRvZXNu
+J3QgZW5kIHVwIGJlaW5nIGp1c3QgYSBsaXR0bGUKPiBzaG9ydCBvZiBhIGZyYW1lLiAgKEFsc28s
+IG1vZGVzIHRoYXQgdXNlcnNwYWNlIGNyZWF0ZXMgbGlrZWx5IGRvbid0IGhhdmUKPiB0aGUgZmll
+bGQgaW5pdGlhbGl6ZWQgYXQgYWxsLCBzbyB5b3UnZCBuZWVkIGRybV9tb2RlX3ZyZWZyZXNoKCkg
+YW55d2F5KQoKT2theSwgSSdsbCB1c2UgZHJtX21vZGVfdnJlZnJlc2goKSwgdGhhbmtzIGZvciB0
+aGUgaGludC4KCj4gCj4gPiArCXRtcCAvPSB0eF9ieXRlX3BlcmlvZDsKPiA+ICsKPiA+ICsJZm9y
+IChkaXYgPSAwOyBkaXYgPD0gQ0xLX0RJVl9NQVg7IGRpdisrKSB7Cj4gPiArCQlpZiAodG1wIDw9
+IEhTVFhfVElNRU9VVF9NQVgpCj4gPiArCQkJYnJlYWs7Cj4gPiArCj4gPiArCQl0bXAgPj49IDE7
+Cj4gPiArCX0KPiA+ICsKPiA+ICsJaWYgKHRtcCA+IEhTVFhfVElNRU9VVF9NQVgpCj4gPiArCQl0
+bXAgPSBIU1RYX1RJTUVPVVRfTUFYOwo+ID4gKwo+ID4gKwl3cml0ZWwoQ0xLX0RJVihkaXYpIHwg
+SFNUWF9USU1FT1VUKHRtcCksCj4gPiArCSAgICAgICBkc2ktPnJlZ3MgKyBNQ1RMX0RQSFlfVElN
+RU9VVDEpOwo+ID4gKwo+ID4gKwl3cml0ZWwoTFBSWF9USU1FT1VUKHRtcCksIGRzaS0+cmVncyAr
+IE1DVExfRFBIWV9USU1FT1VUMik7Cj4gPiArCj4gPiArCWlmIChvdXRwdXQtPmRldi0+bW9kZV9m
+bGFncyAmIE1JUElfRFNJX01PREVfVklERU8pIHsKPiA+ICsJCXN3aXRjaCAob3V0cHV0LT5kZXYt
+PmZvcm1hdCkgewo+ID4gKwkJY2FzZSBNSVBJX0RTSV9GTVRfUkdCODg4Ogo+ID4gKwkJCXRtcCA9
+IFZJRF9QSVhFTF9NT0RFX1JHQjg4OCB8Cj4gPiArCQkJICAgICAgVklEX0RBVEFUWVBFKE1JUElf
+RFNJX1BBQ0tFRF9QSVhFTF9TVFJFQU1fMjQpOwo+ID4gKwkJCWJyZWFrOwo+ID4gKwo+ID4gKwkJ
+Y2FzZSBNSVBJX0RTSV9GTVRfUkdCNjY2Ogo+ID4gKwkJCXRtcCA9IFZJRF9QSVhFTF9NT0RFX1JH
+QjY2NiB8Cj4gPiArCQkJICAgICAgVklEX0RBVEFUWVBFKE1JUElfRFNJX1BJWEVMX1NUUkVBTV8z
+QllURV8xOCk7Cj4gPiArCQkJYnJlYWs7Cj4gPiArCj4gPiArCQljYXNlIE1JUElfRFNJX0ZNVF9S
+R0I2NjZfUEFDS0VEOgo+ID4gKwkJCXRtcCA9IFZJRF9QSVhFTF9NT0RFX1JHQjY2Nl9QQUNLRUQg
+fAo+ID4gKwkJCSAgICAgIFZJRF9EQVRBVFlQRShNSVBJX0RTSV9QQUNLRURfUElYRUxfU1RSRUFN
+XzE4KTsKPiA+ICsJCQlicmVhazsKPiA+ICsKPiA+ICsJCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjU2
+NToKPiA+ICsJCQl0bXAgPSBWSURfUElYRUxfTU9ERV9SR0I2NjZfUEFDS0VEIHwgIAo+IAo+IEkg
+dGhpbmsgeW91IG1lYW4gVklEX1BJWEVMX01PREVfUkdCNTY1PwoKSSdsbCBmaXggdGhhdCBhcyB3
+ZWxsLgoKPiAKPiA+ICsJCQkgICAgICBWSURfREFUQVRZUEUoTUlQSV9EU0lfUEFDS0VEX1BJWEVM
+X1NUUkVBTV8xNik7Cj4gPiArCQkJYnJlYWs7Cj4gPiArCj4gPiArCQlkZWZhdWx0Ogo+ID4gKwkJ
+CWRldl9lcnIoZHNpLT5iYXNlLmRldiwgIlVuc3VwcG9ydGVkIERTSSBmb3JtYXRcbiIpOwo+ID4g
+KwkJCXJldHVybjsKPiA+ICsJCX0gIAo+IAo+ID4gK3N0YXRpYyBpcnFyZXR1cm5fdCBjZG5zX2Rz
+aV9pbnRlcnJ1cHQoaW50IGlycSwgdm9pZCAqZGF0YSkKPiA+ICt7Cj4gPiArCXN0cnVjdCBjZG5z
+X2RzaSAqZHNpID0gZGF0YTsKPiA+ICsJaXJxcmV0dXJuX3QgcmV0ID0gSVJRX05PTkU7Cj4gPiAr
+CXUzMiBmbGFnLCBjdGw7Cj4gPiArCj4gPiArCWZsYWcgPSByZWFkbChkc2ktPnJlZ3MgKyBESVJF
+Q1RfQ01EX1NUU19GTEFHKTsKPiA+ICsJaWYgKGZsYWcpIHsKPiA+ICsJCWN0bCA9IHJlYWRsKGRz
+aS0+cmVncyArIERJUkVDVF9DTURfU1RTX0NUTCk7Cj4gPiArCQljdGwgJj0gfmZsYWc7Cj4gPiAr
+CQl3cml0ZWwoY3RsLCBkc2ktPnJlZ3MgKyBESVJFQ1RfQ01EX1NUU19DVEwpOyAgCj4gCj4gQXJl
+IHlvdSBtZWFudCB0byBqdXN0IHdyaXRlIGZsYWcgdG8gRElSRUNUX0NNRF9TVFNfQ0xFQVIsIG1h
+eWJlPwoKQWN0dWFsbHksIEkgd2FudCB0byBrZWVwIHRoZSBzdGF0dXMgZmxhZyB1bnRvdWNoZWQs
+IEknbSBqdXN0IG1hc2tpbmcgdGhlCmludGVycnVwdCB0byBub3QgYmUgaW50ZXJydXB0ZWQgdW50
+aWwgdGhlIHdhaXRlciBoYXMgY2xlYXJlZCB0aGUKc3RhdHVzIGZsYWdzLgoKSSdtIGRvaW5nIHRo
+YXQgYmVjYXVzZSB0aGUgdXNlciBtYXkgd2FudCB0byB3YWl0IGZvciBzZXZlcmFsIGRpZmZlcmVu
+dApldmVudHMgKGVycm9yLCBkb25lLCB0aW1lb3V0LCAuLi4pLCBhbmQgSSdtIG5vdCBkb2luZyB0
+aGUgY2hlY2sgaW4gdGhlCmludGVycnVwdCBoYW5kbGVyLiBJbnN0ZWFkLCBJJ20ganVzdCB3YWtp
+bmcgdXAgdGhlIHdhaXRlciBhbmQgbGV0IGhpbQpjaGVjayB0aGUgc3RhdHVzIGZsYWcgaGltc2Vs
+Zi4KCj4gTmVlZGluZyBhIFJNVyBoZXJlIHNlZW1zIG9kZC4KPiAKPiA+ICsJCWNvbXBsZXRlKCZk
+c2ktPmRpcmVjdF9jbWRfY29tcCk7Cj4gPiArCQlyZXQgPSBJUlFfSEFORExFRDsKPiA+ICsJfQo+
+ID4gKwo+ID4gKwlyZXR1cm4gcmV0Owo+ID4gK30gIAoKVGhhbmtzIGZvciB5b3VyIHJldmlldy4K
+CkJvcmlzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
