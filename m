@@ -1,178 +1,263 @@
-From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Subject: [PATCH v1 2/3] nvmem: uniphier: add UniPhier eFuse driver
-Date: Fri,  1 Sep 2017 08:20:19 +0900
-Message-ID: <1504221620-358-3-git-send-email-hayashibara.keiji@socionext.com>
-References: <1504221620-358-1-git-send-email-hayashibara.keiji@socionext.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 15/18] clk: add support for clocks provided by SCMI
+Date: Thu, 31 Aug 2017 17:19:01 -0700
+Message-ID: <20170901001901.GJ21656@codeaurora.org>
+References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
+ <1501857104-11279-16-git-send-email-sudeep.holla@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504221620-358-1-git-send-email-hayashibara.keiji@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <1501857104-11279-16-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, yamada.masahiro@socionext.com, hayashi.kunihiko@socionext.com, owada.kiyoshi@socionext.com, Keiji Hayashibara <hayashibara.keiji@socionext.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add eFuse driver for Socionext UniPhier series SoC.
-Note that eFuse device is under soc-glue and this register
-implements as read only.
+On 08/04, Sudeep Holla wrote:
+> diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+> new file mode 100644
+> index 000000000000..37f98a6439a0
+> --- /dev/null
+> +++ b/drivers/clk/clk-scmi.c
+> @@ -0,0 +1,216 @@
+> +/*
+> + * System Control and Power Interface (SCMI) Protocol based clock driver
+> + *
+> + * Copyright (C) 2017 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
 
-Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
----
- arch/arm64/configs/defconfig   |  1 +
- drivers/nvmem/Kconfig          | 11 +++++
- drivers/nvmem/Makefile         |  2 +
- drivers/nvmem/uniphier-efuse.c | 98 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 112 insertions(+)
- create mode 100644 drivers/nvmem/uniphier-efuse.c
+Is this include used?
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6c7d147..5c38b4a 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -514,6 +514,7 @@ CONFIG_PHY_XGENE=y
- CONFIG_PHY_TEGRA_XUSB=y
- CONFIG_QCOM_L2_PMU=y
- CONFIG_QCOM_L3_PMU=y
-+CONFIG_UNIPHIER_EFUSE=y
- CONFIG_ARM_SCPI_PROTOCOL=y
- CONFIG_RASPBERRYPI_FIRMWARE=y
- CONFIG_EFI_CAPSULE_LOADER=y
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 101ced4..aaeaebe 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -123,6 +123,17 @@ config NVMEM_SUNXI_SID
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem_sunxi_sid.
- 
-+config UNIPHIER_EFUSE
-+	tristate "UniPhier SoCs eFuse support"
-+	depends on ARCH_UNIPHIER || COMPILE_TEST
-+	depends on OF && MFD_SYSCON
-+	help
-+	  This is a simple drive to dump specified values of UniPhier SoC
-+	  from eFuse.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called nvmem_uniphier-efuse.
-+
- config NVMEM_VF610_OCOTP
- 	tristate "VF610 SoC OCOTP support"
- 	depends on SOC_VF610 || COMPILE_TEST
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index 1731406..f5277c3 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -26,6 +26,8 @@ obj-$(CONFIG_ROCKCHIP_EFUSE)	+= nvmem_rockchip_efuse.o
- nvmem_rockchip_efuse-y		:= rockchip-efuse.o
- obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
- nvmem_sunxi_sid-y		:= sunxi_sid.o
-+obj-$(CONFIG_UNIPHIER_EFUSE)	+= nvmem_uniphier-efuse.o
-+nvmem_uniphier-efuse-y		:= uniphier-efuse.o
- obj-$(CONFIG_NVMEM_VF610_OCOTP)	+= nvmem-vf610-ocotp.o
- nvmem-vf610-ocotp-y		:= vf610-ocotp.o
- obj-$(CONFIG_MESON_EFUSE)	+= nvmem_meson_efuse.o
-diff --git a/drivers/nvmem/uniphier-efuse.c b/drivers/nvmem/uniphier-efuse.c
-new file mode 100644
-index 0000000..d553fa3
---- /dev/null
-+++ b/drivers/nvmem/uniphier-efuse.c
-@@ -0,0 +1,98 @@
-+/*
-+ * UniPhier eFuse driver
-+ *
-+ * Copyright (C) 2017 Socionext Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define UNIPHIER_EFUSE_WORD_SIZE	4
-+#define UNIPHIER_EFUSE_STRIDE		4
-+
-+static int uniphier_reg_read(void *context,
-+			     unsigned int offset, void *val, size_t bytes)
-+{
-+	int words = bytes / UNIPHIER_EFUSE_WORD_SIZE;
-+
-+	return regmap_bulk_read(context, offset, val, words);
-+}
-+
-+static struct nvmem_config econfig = {
-+	.name = "uniphier-efuse",
-+	.owner = THIS_MODULE,
-+	.read_only = true,
-+	.reg_read = uniphier_reg_read,
-+	.word_size = UNIPHIER_EFUSE_WORD_SIZE,
-+	.stride = UNIPHIER_EFUSE_STRIDE,
-+};
-+
-+static int uniphier_efuse_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct nvmem_device *nvmem;
-+	struct regmap *regmap;
-+	struct resource res;
-+	int ret;
-+
-+	ret = of_address_to_resource(dev->of_node, 0, &res);
-+	if (ret)
-+		return ret;
-+
-+	regmap = syscon_node_to_regmap(dev->of_node);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	econfig.size = resource_size(&res);
-+	econfig.priv = regmap;
-+	econfig.dev = dev;
-+
-+	nvmem = nvmem_register(&econfig);
-+	if (IS_ERR(nvmem))
-+		return PTR_ERR(nvmem);
-+
-+	platform_set_drvdata(pdev, nvmem);
-+
-+	return 0;
-+}
-+
-+static int uniphier_efuse_remove(struct platform_device *pdev)
-+{
-+	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-+
-+	return nvmem_unregister(nvmem);
-+}
-+
-+static const struct of_device_id uniphier_efuse_of_match[] = {
-+	{ .compatible = "socionext,uniphier-efuse",},
-+	{/* sentinel */},
-+};
-+MODULE_DEVICE_TABLE(of, uniphier_efuse_of_match);
-+
-+static struct platform_driver uniphier_efuse_driver = {
-+	.probe = uniphier_efuse_probe,
-+	.remove = uniphier_efuse_remove,
-+	.driver = {
-+		.name = "uniphier-efuse",
-+		.of_match_table = uniphier_efuse_of_match,
-+	},
-+};
-+module_platform_driver(uniphier_efuse_driver);
-+
-+MODULE_AUTHOR("Keiji Hayashibara <hayashibara.keiji@socionext.com>");
-+MODULE_DESCRIPTION("UniPhier eFuse driver");
-+MODULE_LICENSE("GPL v2");
+> +#include <linux/platform_device.h>
+> +#include <linux/scmi_protocol.h>
+> +
+> +struct scmi_clk {
+> +	u32 id;
+> +	struct clk_hw hw;
+> +	const struct scmi_clock_info *info;
+> +	const struct scmi_handle *handle;
+> +};
+> +
+> +#define to_scmi_clk(clk) container_of(clk, struct scmi_clk, hw)
+> +
+> +static unsigned long scmi_clk_recalc_rate(struct clk_hw *hw,
+> +					  unsigned long parent_rate)
+> +{
+> +	int ret;
+> +	u64 rate;
+> +	struct scmi_clk *clk = to_scmi_clk(hw);
+> +
+> +	ret = clk->handle->clk_ops->rate_get(clk->handle, clk->id, &rate);
+> +	if (ret)
+> +		return 0;
+> +	return rate;
+> +}
+> +
+> +static long scmi_clk_round_rate(struct clk_hw *hw, unsigned long rate,
+> +				unsigned long *parent_rate)
+> +{
+> +	u64 fmin, fmax, ftmp;
+> +	struct scmi_clk *clk = to_scmi_clk(hw);
+> +
+> +	/*
+> +	 * We can't figure out what rate it will be, so just return the
+> +	 * rate back to the caller. scmi_clk_recalc_rate() will be called
+> +	 * after the rate is set and we'll know what rate the clock is
+> +	 * running at then.
+> +	 */
+> +	if (clk->info->rate_discrete)
+> +		return rate;
+> +
+> +	fmin = clk->info->range.min_rate;
+> +	fmax = clk->info->range.max_rate;
+> +	for (ftmp = fmin; ftmp <= fmax; ftmp += clk->info->range.step_size) {
+> +		if (ftmp >= rate) {
+> +			if (ftmp <= fmax)
+> +				fmax = ftmp;
+> +			break;
+> +		} else if (ftmp >= fmin) {
+> +			fmin = ftmp;
+> +		}
+> +	}
+
+Are the max_rate and min_rate potentially unaligned with the
+step_size? Do any of these things change at runtime? It seems
+like we could do some simple math instead of this for loop unless
+I missed something.
+
+> +	return fmax != clk->info->range.max_rate ? fmax : fmin;
+> +}
+> +
+> +static int scmi_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+> +			     unsigned long parent_rate)
+> +{
+> +	struct scmi_clk *clk = to_scmi_clk(hw);
+> +
+> +	return clk->handle->clk_ops->rate_set(clk->handle, clk->id, 0, rate);
+> +}
+> +
+> +static int scmi_clk_enable(struct clk_hw *hw)
+> +{
+> +	struct scmi_clk *clk = to_scmi_clk(hw);
+> +
+> +	return clk->handle->clk_ops->enable(clk->handle, clk->id);
+> +}
+> +
+> +static void scmi_clk_disable(struct clk_hw *hw)
+> +{
+> +	struct scmi_clk *clk = to_scmi_clk(hw);
+> +
+> +	clk->handle->clk_ops->disable(clk->handle, clk->id);
+> +}
+> +
+> +static const struct clk_ops scmi_clk_ops = {
+> +	.recalc_rate = scmi_clk_recalc_rate,
+> +	.round_rate = scmi_clk_round_rate,
+> +	.set_rate = scmi_clk_set_rate,
+> +	/*
+> +	 * We can't provide enable/disable callback as we can't perform the same
+> +	 * in atomic context. Since the clock framework provides standard API
+> +	 * clk_prepare_enable that helps cases using clk_enable in non-atomic
+> +	 * context, it should be fine providing prepare/unprepare.
+> +	 */
+> +	.prepare = scmi_clk_enable,
+> +	.unprepare = scmi_clk_disable,
+> +};
+> +
+> +static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+> +{
+> +	int ret;
+> +	struct clk_init_data init;
+
+Best to do = { } here in case we add something else to the init
+structure in future.
+
+> +
+> +	init.flags = CLK_GET_RATE_NOCACHE;
+> +	init.num_parents = 0;
+> +	init.ops = &scmi_clk_ops;
+> +	init.name = sclk->info->name;
+> +	sclk->hw.init = &init;
+> +
+> +	ret = devm_clk_hw_register(dev, &sclk->hw);
+> +	if (!ret)
+> +		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
+> +				      sclk->info->range.max_rate);
+> +	return ret;
+> +}
+> +
+> +static int scmi_clk_add(struct device *dev, struct device_node *np,
+> +			const struct scmi_handle *handle)
+> +{
+> +	int idx, count, err;
+> +	struct clk_hw **hws;
+> +	struct clk_hw_onecell_data *clk_data;
+> +
+> +	count = handle->clk_ops->count_get(handle);
+> +	if (count < 0) {
+> +		dev_err(dev, "%s: invalid clock output count\n", np->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	clk_data = devm_kzalloc(dev, sizeof(*clk_data) +
+> +				sizeof(*clk_data->hws) * count, GFP_KERNEL);
+> +	if (!clk_data)
+> +		return -ENOMEM;
+> +
+> +	clk_data->num = count;
+> +	hws = clk_data->hws;
+> +
+> +	for (idx = 0; idx < count; idx++) {
+> +		struct scmi_clk *sclk;
+> +
+> +		sclk = devm_kzalloc(dev, sizeof(*sclk), GFP_KERNEL);
+> +		if (!sclk)
+> +			return -ENOMEM;
+> +
+> +		sclk->info = handle->clk_ops->info_get(handle, idx);
+> +		if (!sclk->info) {
+> +			dev_dbg(dev, "invalid clock info for idx %d\n", idx);
+> +			continue;
+> +		}
+> +
+> +		sclk->id = idx;
+> +		sclk->handle = handle;
+> +
+> +		err = scmi_clk_ops_init(dev, sclk);
+> +		if (err) {
+> +			dev_err(dev, "failed to register clock %d\n", idx);
+> +			devm_kfree(dev, sclk);
+> +			hws[idx] = NULL;
+> +		} else {
+> +			dev_dbg(dev, "Registered clock:%s\n", sclk->info->name);
+> +			hws[idx] = &sclk->hw;
+> +		}
+> +	}
+> +
+> +	return of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
+> +}
+> +
+> +static int scmi_clocks_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +
+> +	of_clk_del_provider(np);
+> +	return 0;
+> +}
+> +
+> +static int scmi_clocks_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	const struct scmi_handle *handle = devm_scmi_handle_get(dev);
+> +
+> +	if (IS_ERR_OR_NULL(handle) || !handle->clk_ops)
+> +		return -EPROBE_DEFER;
+> +
+> +	return scmi_clk_add(dev, np, handle);
+
+Why the function? We support more than just platform devices?
+Just fold scmi_clk_add() into this function instead please.
+
+> +}
+> +
+> +static struct platform_driver scmi_clocks_driver = {
+> +	.driver	= {
+> +		.name = "scmi-clocks",
+> +	},
+> +	.probe = scmi_clocks_probe,
+> +	.remove = scmi_clocks_remove,
+> +};
+> +module_platform_driver(scmi_clocks_driver);
+> +
+> +MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
+> +MODULE_DESCRIPTION("ARM SCMI clock driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
+> 
+
 -- 
-2.7.4
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
