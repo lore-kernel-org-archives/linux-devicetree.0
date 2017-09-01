@@ -1,94 +1,56 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
-Date: Fri, 1 Sep 2017 10:09:55 +0200
-Message-ID: <20170901100955.4e7295a0@bbrezillon>
-References: <CGME20170831155543epcas2p3003246c8d124c032c513a5fed2792992@epcas2p3.samsung.com>
-        <20170831155519.3704-1-boris.brezillon@free-electrons.com>
-        <6404fb07-9c42-78bf-f76e-e7aa1abf5549@samsung.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH ] ARM: dts: iwg22d-sodimm: Add Ethernet AVB support
+Date: Fri, 1 Sep 2017 10:49:23 +0200
+Message-ID: <20170901084923.GC14918@verge.net.au>
+References: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
+ <20170831084534.GF29946@verge.net.au>
+ <KL1PR06MB170280A3D466C9B35AF73939B89D0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+ <TY1PR06MB07029D315FC6EE500D1EEA55B79D0@TY1PR06MB0702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6404fb07-9c42-78bf-f76e-e7aa1abf5549-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <TY1PR06MB07029D315FC6EE500D1EEA55B79D0-/PRLmSCtZ14u2TXDOttQZW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+To: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 01 Sep 2017 09:51:59 +0200
-Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-
-> On 31.08.2017 17:55, Boris Brezillon wrote:
-> > Add a driver for Cadence DPI -> DSI bridge.
-> >
-> > This driver only support a subset of Cadence DSI bridge capabilities.
-> >
-> > Here is a non-exhaustive list of missing features:
-> >  * burst mode
-> >  * dynamic configuration of the DPHY based on the
-> >  * support for additional input interfaces (SDI input)
-> >
-> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> > Changes in v3:
-> > - replace magic values by real timing calculation. The DPHY PLL clock
-> >   is still hardcoded since we don't have a working DPHY block yet, and
-> >   this is the piece of HW we need to dynamically configure the PLL
-> >   rate based on the display refresh rate and the resolution.
-> > - parse DSI devices represented with the OF-graph. This is needed to
-> >   support DSI devices controlled through an external bus like I2C or
-> >   SPI.
-> > - use the DRM panel-bridge infrastructure to simplify the DRM panel
-> >   logic
-> >
-> > Changes in v2:
-> > - rebase on v4.12-rc1 and adapt to driver to the drm_bridge API changes
-> > - return the correct error when devm_clk_get(sysclk) fails
-> > - add missing depends on OF and select DRM_PANEL in the Kconfig entry
-> > ---
-> >  drivers/gpu/drm/bridge/Kconfig    |    9 +
-> >  drivers/gpu/drm/bridge/Makefile   |    1 +
-> >  drivers/gpu/drm/bridge/cdns-dsi.c | 1090 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 1100 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/bridge/cdns-dsi.c
-> >
-> > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> > index adf9ae0e0b7c..88c324b12e16 100644
-> > --- a/drivers/gpu/drm/bridge/Kconfig
-> > +++ b/drivers/gpu/drm/bridge/Kconfig
-> > @@ -25,6 +25,15 @@ config DRM_ANALOGIX_ANX78XX
-> >  	  the HDMI output of an application processor to MyDP
-> >  	  or DisplayPort.
-> >  
-> > +config DRM_CDNS_DSI
-> > +	tristate "Cadence DPI/DSI bridge"
-> > +	select DRM_KMS_HELPER
-> > +	select DRM_MIPI_DSI
-> > +	select DRM_PANEL  
+On Thu, Aug 31, 2017 at 09:32:25AM +0000, Chris Paterson wrote:
+> Hello,
 > 
-> what about:
-> select DRM_PANEL_BRIDGE
-
-Oops, indeed. I'll add this dependency.
-
-[...]
-
-> > +
-> > +static const struct of_device_id cdns_dsi_of_match[] = {
-> > +	{ .compatible = "cdns,dsi-1.3.1" },  
+> > From: Biju Das
+> > Sent: 31 August 2017 10:24
+> > 
+> > > From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
+> > > Sent: 31 August 2017 09:46
 > 
-> Do you really need version here? Wouldn't be enough checking ID_REG?
-> This is only suggestion, no strong feelings.
-
-You're right, I'll drop the version number.
-
+> <snip>
 > 
-> The rest looks OK, so with Eric's comments addressed you can add:
-> Reviewed-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > > > +	phy3: ethernet-phy@3 {
+> > > > +	/*
+> > > > +	 * On some older versions of the platform (before R4.0) the phy
+> > > address
+> > > > +	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
+> > > > +	 */
+> > > > +		reg = <3>;
+> > > > +		micrel,led-mode = <1>;
+> > >
+> > > Does the phy have an interrupt?
+> > 
+> > The current board doesn't support interrupt . But there is a plan to support this
+> > in future board variants through (GPIO3_28).
+> 
+> Actually, the plan has recently changed and at the moment interrupt support will not be added in the production version of the board.
+> 
+> If in the end the plan changes again and the actual hardware does add interrupt support we'll submit a new patch accordingly.
 
-Thanks for your review.
+Thanks for following-up on this. I'm still surprised there is no interrupt
+- does link speed renegotiation initiated by the other end of the link work
+in a timely manner? - but if its not there and my wishful thinking won't
+make it so.
 
-Boris
+I have applied this patch for v4.15.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
