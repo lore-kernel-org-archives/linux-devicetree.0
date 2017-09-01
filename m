@@ -1,26 +1,109 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2] dmaengine: rcar-dmac: document R8A77970 bindings
-Date: Fri, 1 Sep 2017 11:02:12 +0200
-Message-ID: <20170901090212.GF14918@verge.net.au>
-References: <20170831205936.865765713@cogentembedded.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v5 4/5] v4l: fwnode: Support generic parsing of graph
+ endpoints in a device
+Date: Fri, 1 Sep 2017 12:04:35 +0300
+Message-ID: <20170901090434.5xyjz5ooswbx2kt2@paasikivi.fi.intel.com>
+References: <20170829110313.19538-1-sakari.ailus@linux.intel.com>
+ <2739432.dQ1BSg1MPy@avalon>
+ <20170829143121.6sjdx3lgcoxm6mva@valkosipuli.retiisi.org.uk>
+ <4764194.MvKE5XMHvq@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170831205936.865765713-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <4764194.MvKE5XMHvq@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 11:59:24PM +0300, Sergei Shtylyov wrote:
-> Renesas R-Car V3M (R8A77970) SoC also has the R-Car gen2/3 compatible DMA
-> controllers, so document the SoC specific binding.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Hi Laurent,
 
-Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Sep 01, 2017 at 11:55:43AM +0300, Laurent Pinchart wrote:
+...
+> > >> +static int parse_endpoint(
+> > >> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> > >> +	struct fwnode_handle *endpoint, unsigned int asd_struct_size,
+> > >> +	int (*parse_single)(struct device *dev,
+> > >> +			    struct v4l2_fwnode_endpoint *vep,
+> > >> +			    struct v4l2_async_subdev *asd))
+> > >> +{
+> > >> +	struct v4l2_async_subdev *asd;
+> > >> +	struct v4l2_fwnode_endpoint *vep;
+> > >> +	int ret = 0;
+> > >> +
+> > >> +	asd = kzalloc(asd_struct_size, GFP_KERNEL);
+> > >> +	if (!asd)
+> > >> +		return -ENOMEM;
+> > >> +
+> > >> +	asd->match.fwnode.fwnode =
+> > >> +		fwnode_graph_get_remote_port_parent(endpoint);
+> > >> +	if (!asd->match.fwnode.fwnode) {
+> > >> +		dev_warn(dev, "bad remote port parent\n");
+> > >> +		ret = -EINVAL;
+> > >> +		goto out_err;
+> > >> +	}
+> > >> +
+> > >> +	/* Ignore endpoints the parsing of which failed. */
+> > > 
+> > > You don't ignore them anymore, the comment should be updated.
+> > 
+> > Hmm. I actually intended to do something else about this. :-) As there's a
+> > single error code, handling that would need to be done a little bit
+> > differently right now.
+> > 
+> > I'd print a warning and proceed. What do you think?
+> > 
+> > Even if there's a bad DT endpoint, that shouldn't prevent the rest from
+> > working, right?
+> 
+> I think it should, to make sure we catch DT issues. We both know how many 
+> vendors don't care about warnings, so I'd rather fail completely to ensure DT 
+> will be fixed (and even ten I wouldn't be surprised if some vendors patched 
+> the code to remove the check instead of fixing their DT ;-)).
+
+If they test the DTS, they should find out that the device does not work.
+
+If they do not, some devices will work even if others fail.
+
+Therefore I don't see why everything should fail when a part of faulty.
+Extending that a little, you should also halt the system to make sure the
+problem will be noticed. :-)
+
+> > >> @@ -121,6 +122,21 @@ int v4l2_async_notifier_register(struct v4l2_device
+> > >> *v4l2_dev, void v4l2_async_notifier_unregister(struct
+> > >> v4l2_async_notifier *notifier);
+> > >> 
+> > >>  /**
+> > >> + * v4l2_async_notifier_release - release notifier resources
+> > >> + * @notifier: pointer to &struct v4l2_async_notifier
+> > > 
+> > > That's quite obvious given the type of the argument. It would be much more
+> > > useful to tell which notifier pointer this function expects (although in
+> > > this case it should be obvious too): "(pointer to )?the notifier whose
+> > > resources will be released".
+> > 
+> > This fully matches to the documentation elsewhere in the same file. :-)
+> 
+> Feel free to fix the rest of the file :-)
+
+That's out of scope of this patch.
+
+> > > "The function can be called multiple times to populate the same notifier
+> > > from endpoints of different @dev devices before registering the notifier.
+> > > It can't be called anymore once the notifier has been registered."
+> > 
+> > I don't think there's really a use case for calling this for more than one
+> > device, is there?
+> 
+> I don't have one in mind, but I was wondering. If there isn't then you don't 
+> need notifier_realloc(), which could be moved to the next patch.
+
+I don't think there's even benefit from moving it to the next patch, it
+just adds to the reviewable code, nothing else.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
