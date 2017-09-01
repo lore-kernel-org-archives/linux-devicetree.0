@@ -1,246 +1,96 @@
-From: Florian Eckert <fe@dev.tdt.de>
-Subject: [PATCH v3 1/2] hwmon: (ltq-cputemp) add cpu temp sensor driver
-Date: Fri,  1 Sep 2017 08:58:17 +0200
-Message-ID: <20170901065818.2037-1-fe@dev.tdt.de>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: drm/bridge: Document Cadence DSI
+ bridge bindings
+Date: Fri, 1 Sep 2017 09:06:54 +0200
+Message-ID: <20170901090654.343c7853@bbrezillon>
+References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
+        <CGME20170831155542epcas1p386204b629825977fbd824ca195d47e59@epcas1p3.samsung.com>
+        <20170831155519.3704-2-boris.brezillon@free-electrons.com>
+        <3371dbd2-9539-d746-0982-71112d5d98a0@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3371dbd2-9539-d746-0982-71112d5d98a0-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the lantiq cpu temperature sensor support for xrx200.
+Hi Andrzej,
 
-Signed-off-by: Florian Eckert <fe@dev.tdt.de>
----
-v2:
-- remove default in Makefile
-- fix spelling
-- removing first read delay, because temperature value is not read during boot
-  anymore
-- change calculation, compiler should to the optimization
-- remove unnecessary initialization
-- use new devm_hwmon_device_register_with_info API
-- use module_platform_driver function
+On Fri, 01 Sep 2017 08:28:13 +0200
+Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
 
-v3:
-- sort includes in alphabetic order
-- add missing linux/bitops.h include
-- fix alignment
-- fix switch case indentation
-- use octal file permission instead of S_IRUGO
-- set hwmon device name to "ltq_cputemp"
-- enable temperature chip before hwmon registration
-- remove release function registrate ltq_cputemp_disable()
-  with devm_add_action
-- remove init_ltq_cputemp and clean_ltq_cputemp not used
-  overlooked it on v2
+> On 31.08.2017 17:55, Boris Brezillon wrote:
+> > Document the bindings used for the Cadence DSI bridge.
+> >
+> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> > Changes in v3:
+> > - Fix clock names in the example
+> > - Document how to represent DSI devices that are controller through
+> >   an external bus like I2C or SPI
+> >
+> > Changes in v2:
+> > - None
+> > ---
+> >  .../bindings/display/bridge/cdns,dsi.txt           | 109 +++++++++++++++++++++
+> >  1 file changed, 109 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+> > new file mode 100644
+> > index 000000000000..c70008bd8c0d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+> > @@ -0,0 +1,109 @@
+> > +Cadence DSI bridge
+> > +==================
+> > +
+> > +The Cadence DSI bridge is a DPI to DSI bridge supporting up to 4 DSI lanes.
+> > +
+> > +Required properties:
+> > +- compatible: should be set to "cdns,dsi-1.3.1".
+> > +- reg: physical base address and length of the controller's registers.
+> > +- interrupts: interrupt line connected to the DSI bridge.
+> > +- clocks: DSI bridge clocks.
+> > +- clock-names: must contain "pclk" and "sysclk".
+> > +- phys: phandle link to the MIPI D-PHY controller.
+> > +- phy-names: must contain "dphy".
+> > +- #address-cells: must be set to 1.
+> > +- #size-cells: must be set to 0.
+> > +
+> > +Required subnodes:
+> > +- ports: Ports as described in Documentation/devicetree/bindings/graph.txt.
+> > +  2 ports are available:
+> > +  * port 0: this port is only needed if some of your DSI devices are
+> > +	    controlled through  an external bus like I2C or SPI. Can have at
+> > +	    most 4 endpoints. The endpoint number is directly encoding the
+> > +	    DSI virtual channel used by this device.
+> > +  * port 1: represents the DPI input.
+> > +  Other ports will be added later to support the new kind of inputs.  
+> 
+> I think usual practice is to use lower numbers for input ports, higher
+> for output ports.
+> Is there a reason to do it this way?
 
- drivers/hwmon/Kconfig       |   7 ++
- drivers/hwmon/Makefile      |   1 +
- drivers/hwmon/ltq-cputemp.c | 163 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 171 insertions(+)
- create mode 100644 drivers/hwmon/ltq-cputemp.c
+The main reason I did that is because we only have one output port and
+can have 1, 2 or 3 input ports: one is the DPI and the 2 others are
+called SDI (some kind of serial input). I thought it would be better to
+have all inputs using contiguous port numbers, and if we put inputs
+first that means having a hole between the input and output port (port 0
+would be the DPI input and port 3 the DSI output).
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 5ef2814345ef..218332f0e913 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -790,6 +790,13 @@ config SENSORS_LTC4261
- 	  This driver can also be built as a module. If so, the module will
- 	  be called ltc4261.
- 
-+config SENSORS_LTQ_CPUTEMP
-+	bool "Lantiq cpu temperature sensor driver"
-+	depends on LANTIQ
-+	help
-+	  If you say yes here you get support for the temperature
-+	  sensor inside your CPU.
-+
- config SENSORS_MAX1111
- 	tristate "Maxim MAX1111 Serial 8-bit ADC chip and compatibles"
- 	depends on SPI_MASTER
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index d4641a9f16c1..c84d9784be98 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -110,6 +110,7 @@ obj-$(CONFIG_SENSORS_LTC4222)	+= ltc4222.o
- obj-$(CONFIG_SENSORS_LTC4245)	+= ltc4245.o
- obj-$(CONFIG_SENSORS_LTC4260)	+= ltc4260.o
- obj-$(CONFIG_SENSORS_LTC4261)	+= ltc4261.o
-+obj-$(CONFIG_SENSORS_LTQ_CPUTEMP) += ltq-cputemp.o
- obj-$(CONFIG_SENSORS_MAX1111)	+= max1111.o
- obj-$(CONFIG_SENSORS_MAX16065)	+= max16065.o
- obj-$(CONFIG_SENSORS_MAX1619)	+= max1619.o
-diff --git a/drivers/hwmon/ltq-cputemp.c b/drivers/hwmon/ltq-cputemp.c
-new file mode 100644
-index 000000000000..1d33f94594c1
---- /dev/null
-+++ b/drivers/hwmon/ltq-cputemp.c
-@@ -0,0 +1,163 @@
-+/* Lantiq cpu temperature sensor driver
-+ *
-+ * Copyright (C) 2017 Florian Eckert <fe@dev.tdt.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version
-+ *
-+ * This program is distributed in the hope that it will be useful
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+
-+#include <lantiq_soc.h>
-+
-+/* gphy1 configuration register contains cpu temperature */
-+#define CGU_GPHY1_CR   0x0040
-+#define CGU_TEMP_PD    BIT(19)
-+
-+static void ltq_cputemp_enable(void)
-+{
-+	ltq_cgu_w32(ltq_cgu_r32(CGU_GPHY1_CR) | CGU_TEMP_PD, CGU_GPHY1_CR);
-+}
-+
-+static void ltq_cputemp_disable(void *data)
-+{
-+	ltq_cgu_w32(ltq_cgu_r32(CGU_GPHY1_CR) & ~CGU_TEMP_PD, CGU_GPHY1_CR);
-+}
-+
-+static int ltq_read(struct device *dev, enum hwmon_sensor_types type,
-+		    u32 attr, int channel, long *temp)
-+{
-+	int value;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		/* get the temperature including one decimal place */
-+		value = (ltq_cgu_r32(CGU_GPHY1_CR) >> 9) & 0x01FF;
-+		value = value * 5;
-+		/* range -38 to +154 °C, register value zero is -38.0 °C */
-+		value -= 380;
-+		/* scale temp to millidegree */
-+		value = value * 100;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	*temp = value;
-+	return 0;
-+}
-+
-+static umode_t ltq_is_visible(const void *_data, enum hwmon_sensor_types type,
-+			      u32 attr, int channel)
-+{
-+	if (type != hwmon_temp)
-+		return 0;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		return 0444;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static const u32 ltq_chip_config[] = {
-+	HWMON_C_REGISTER_TZ,
-+	0
-+};
-+
-+static const struct hwmon_channel_info ltq_chip = {
-+	.type = hwmon_chip,
-+	.config = ltq_chip_config,
-+};
-+
-+static const u32 ltq_temp_config[] = {
-+	HWMON_T_INPUT,
-+	0
-+};
-+
-+static const struct hwmon_channel_info ltq_temp = {
-+	.type = hwmon_temp,
-+	.config = ltq_temp_config,
-+};
-+
-+static const struct hwmon_channel_info *ltq_info[] = {
-+	&ltq_chip,
-+	&ltq_temp,
-+	NULL
-+};
-+
-+static const struct hwmon_ops ltq_hwmon_ops = {
-+	.is_visible = ltq_is_visible,
-+	.read = ltq_read,
-+};
-+
-+static const struct hwmon_chip_info ltq_chip_info = {
-+	.ops = &ltq_hwmon_ops,
-+	.info = ltq_info,
-+};
-+
-+static int ltq_cputemp_probe(struct platform_device *pdev)
-+{
-+	struct device *hwmon_dev;
-+	int err = 0;
-+
-+	/* available on vr9 v1.2 SoCs only */
-+	if (ltq_soc_type() != SOC_TYPE_VR9_2)
-+		return -ENODEV;
-+
-+	err = devm_add_action(&pdev->dev, ltq_cputemp_disable, NULL);
-+	if (err)
-+		return err;
-+
-+	ltq_cputemp_enable();
-+
-+	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-+							 "ltq_cputemp",
-+							 NULL,
-+							 &ltq_chip_info,
-+							 NULL);
-+
-+	if (IS_ERR(hwmon_dev)) {
-+		dev_err(&pdev->dev, "Failed to register as hwmon device");
-+		return PTR_ERR(hwmon_dev);
-+	}
-+
-+	return 0;
-+}
-+
-+const struct of_device_id ltq_cputemp_match[] = {
-+	{ .compatible = "lantiq,cputemp" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ltq_cputemp_match);
-+
-+static struct platform_driver ltq_cputemp_driver = {
-+	.probe = ltq_cputemp_probe,
-+	.driver = {
-+		.name = "ltq-cputemp",
-+		.of_match_table = ltq_cputemp_match,
-+	},
-+};
-+
-+module_platform_driver(ltq_cputemp_driver);
-+
-+MODULE_AUTHOR("Florian Eckert <fe@dev.tdt.de>");
-+MODULE_DESCRIPTION("Lantiq cpu temperature sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.11.0
+Honestly, that's just a detail, so if you prefer to have the input
+ports start at 0 I'm fine with that.
+
+Regards,
+
+Boris
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
