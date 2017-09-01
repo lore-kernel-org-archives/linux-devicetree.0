@@ -1,101 +1,164 @@
-From: Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH] RM64: dts: ls208xa: Add iommu-map property for pci
-Date: Fri, 1 Sep 2017 10:13:40 +0000
-Message-ID: <AM5PR0401MB2545BB069D90520FFE9CD3499A920@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-References: <1504171424-15536-1-git-send-email-Bharat.Bhushan@nxp.com>
- <06c57ca4-edaa-df26-b1d9-1906141c5065@arm.com>
- <AM5PR0401MB2545B7C55F634D7B9CABAE629A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <10be1849-8071-64fc-5ee2-b6e429c64b9e@arm.com>
- <AM5PR0401MB2545043022CAE0CDECA6267E9A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] memory: ti-emif-sram: introduce relocatable
+ suspend/resume handlers
+Date: Fri, 1 Sep 2017 12:26:46 +0200
+Message-ID: <20170901102646.GQ20634@localhost>
+References: <20170724212454.27574-1-d-gerlach@ti.com>
+ <20170724212454.27574-3-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM5PR0401MB2545043022CAE0CDECA6267E9A9D0-oQ3wXcTHOqrg6d/1FbYcvI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170724212454.27574-3-d-gerlach-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Gang Liu <gang.liu-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgta2VybmVsLW93
-bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LWtlcm5lbC0NCj4gb3duZXJAdmdlci5r
-ZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgQmhhcmF0IEJodXNoYW4NCj4gU2VudDogVGh1cnNkYXks
-IEF1Z3VzdCAzMSwgMjAxNyA0OjUzIFBNDQo+IFRvOiBNYXJjIFp5bmdpZXIgPG1hcmMuenluZ2ll
-ckBhcm0uY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBNYXJrDQo+IFJ1dGxhbmQgPG1hcmsucnV0
-bGFuZEBhcm0uY29tPjsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gb3NzQGJ1c2Vycm9yLm5ldDsg
-R2FuZyBMaXUgPGdhbmcubGl1QG54cC5jb20+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb20NCj4gU3ViamVjdDogUkU6
-IFtQQVRDSF0gUk02NDogZHRzOiBsczIwOHhhOiBBZGQgaW9tbXUtbWFwIHByb3BlcnR5IGZvciBw
-Y2kNCj4gDQo+IA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206
-IE1hcmMgWnluZ2llciBbbWFpbHRvOm1hcmMuenluZ2llckBhcm0uY29tXQ0KPiA+IFNlbnQ6IFRo
-dXJzZGF5LCBBdWd1c3QgMzEsIDIwMTcgNDoyMCBQTQ0KPiA+IFRvOiBCaGFyYXQgQmh1c2hhbiA8
-YmhhcmF0LmJodXNoYW5AbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gTWFyaw0KPiA+
-IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4g
-b3NzQGJ1c2Vycm9yLm5ldDsNCj4gPiBHYW5nIExpdSA8Z2FuZy5saXVAbnhwLmNvbT47IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsgbGludXgtIGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gY2F0YWxpbi5tYXJp
-bmFzQGFybS5jb20NCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBSTTY0OiBkdHM6IGxzMjA4eGE6
-IEFkZCBpb21tdS1tYXAgcHJvcGVydHkgZm9yDQo+ID4gcGNpDQo+ID4NCj4gPiBbRml4aW5nIE1h
-cmsncyBhZGRyZXNzLi4uXQ0KPiA+DQo+ID4gT24gMzEvMDgvMTcgMTE6NDEsIEJoYXJhdCBCaHVz
-aGFuIHdyb3RlOg0KPiA+ID4NCj4gPiA+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
-ID4+IEZyb206IE1hcmMgWnluZ2llciBbbWFpbHRvOm1hcmMuenluZ2llckBhcm0uY29tXQ0KPiA+
-ID4+IFNlbnQ6IFRodXJzZGF5LCBBdWd1c3QgMzEsIDIwMTcgMzowMiBQTQ0KPiA+ID4+IFRvOiBC
-aGFyYXQgQmh1c2hhbiA8YmhhcmF0LmJodXNoYW5AbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9y
-ZzsNCj4gPiA+PiBhcmsucnV0bGFuZEBhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOyBvc3NA
-YnVzZXJyb3IubmV0OyBHYW5nDQo+ID4gTGl1DQo+ID4gPj4gPGdhbmcubGl1QG54cC5jb20+OyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+ID4+IGtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4+IGNh
-dGFsaW4ubWFyaW5hc0Bhcm0uY29tDQo+ID4gPj4gU3ViamVjdDogUmU6IFtQQVRDSF0gUk02NDog
-ZHRzOiBsczIwOHhhOiBBZGQgaW9tbXUtbWFwIHByb3BlcnR5IGZvcg0KPiA+ID4+IHBjaQ0KPiA+
-ID4+DQo+ID4gPj4gT24gMzEvMDgvMTcgMTA6MjMsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+
-ID4+PiBUaGlzIHBhdGNoIGFkZHMgaW9tbXUtbWFwIHByb3BlcnR5IGZvciBQQ0llLCB3aGljaCBl
-bmFibGVzIFNNTVUNCj4gPiA+Pj4gZm9yIHRoZXNlIGRldmljZXMgb24gTFMyMDh4QSBkZXZpY2Vz
-Lg0KPiA+ID4+Pg0KPiA+ID4+PiBTaWduZWQtb2ZmLWJ5OiBCaGFyYXQgQmh1c2hhbiA8QmhhcmF0
-LkJodXNoYW5AbnhwLmNvbT4NCj4gPiA+Pj4gLS0tDQo+ID4gPj4+ICBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpIHwgNCArKysrDQo+ID4gPj4+ICAxIGZpbGUg
-Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+ID4gPj4+DQo+ID4gPj4+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpDQo+ID4gPj4+IGIv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4eGEuZHRzaQ0KPiA+ID4+PiBp
-bmRleCA5NGNkZDMwLi42N2NmNjA1IDEwMDY0NA0KPiA+ID4+PiAtLS0gYS9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpDQo+ID4gPj4+ICsrKyBiL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwOHhhLmR0c2kNCj4gPiA+Pj4gQEAgLTYwNiw2
-ICs2MDYsNyBAQA0KPiA+ID4+PiAgCQkJbnVtLWxhbmVzID0gPDQ+Ow0KPiA+ID4+PiAgCQkJYnVz
-LXJhbmdlID0gPDB4MCAweGZmPjsNCj4gPiA+Pj4gIAkJCW1zaS1wYXJlbnQgPSA8Jml0cz47DQo+
-ID4gPj4+ICsJCQlpb21tdS1tYXAgPSA8MCAmc21tdSAwIDE+OwkvKiBUaGlzIGlzIGZpeGVkLXVw
-IGJ5DQo+ID4gPj4gdS1ib290ICovDQo+ID4gPj4NCj4gPiA+PiBXaGF0IGRvZXMgdGhpcyBkbyB3
-aGVuIHlvdXIgdmVyc2lvbiBvZiB1LWJvb3QgZG9lc24ndCBmaWxsIHRoaXMgaW4gZm9yDQo+IHlv
-dT8NCj4gPiA+DQo+ID4gPiBHb29kIHF1ZXN0aW9uLCBmcmFua2x5IEkgaGF2ZSBub3QgdGhvdWdo
-dCBvZiB0aGlzIGNhc2UgYmVmb3JlLg0KPiA+ID4gQnV0IGlmIHdlIHBhc3MgbGVuZ3RoID0gMCBp
-biBhYm92ZSBwcm9wZXJ0eSB0aGVuIG5vIGZpeHVwIGhhcHBlbg0KPiA+ID4gd2l0aCBoYXBwZW4g
-d2l0aCBvbGRlciB1LWJvb3QuIEluIHRoaXMgY2FzZSBvZl9pb21tdV9jb25maWd1cmUoKQ0KPiA+
-ID4gd2lsbCByZXR1cm4gTlVMTCBpb21tdS1vcHMgYW5kIGl0IHN3aXRjaCB0byBzd2lvLXRsYi4g
-V2lsbCB0aGF0IHdvcms/DQo+ID4gSSByZWFsbHkgZG9uJ3QgbGlrZSB0aGlzLiBZb3UgcmVseSBv
-biBoYXZpbmcgaW52YWxpZCBkYXRhIGluIHRoZSBEVCwNCj4gPiBhbmQgdGhhdCBzZWVtcyBqdXN0
-IHdyb25nLg0KPiA+DQo+ID4gV2h5IGNhbid0IHUtYm9vdCBqdXN0IGdlbmVyYXRlIHRoYXQgcHJv
-cGVydHksIGFuZCB3ZSBsZWF2ZSB0aGUgRFQgYWxvbmU/DQo+IA0KPiBXZSBkbyBub3QgaGF2ZSBz
-bW11IHBoYW5kbGUgYWxsb3dpbmcgdWJvb3QgdG8gZ2VuZXJhdGUgdGhpcy4NCj4gDQo+ID4gT3Ig
-ZXZlbiBiZXR0ZXIsIHlvdSBwcm92aWRlIHRoZSByaWdodCBpbmZvcm1hdGlvbiBmb3IgdGhlIGZl
-dyBib2FyZHMNCj4gPiB0aGF0IGFyZSBiYXNlZCBvbiB0aGlzIFNvQywgbm90IHJlbHlpbmcgb24g
-dS1ib290IGZvciBhbnl0aGluZyB0aGF0IGlzDQo+ID4gaW4gdGhlIGtlcm5lbCB0cmVlPw0KPiAN
-Cj4gT24gb3VyIHBsYXRmb3JtcyB3ZSBoYXZlIGEgaC93IHRhYmxlIHdoaWNoIGNvbnZlcnRzIFJJ
-RC0+RGV2aWNlLUlkLiBJIHdpbGwNCj4gY2hlY2sgd2hhdCB3aWxsIGhhcHBlbiBpZiB0aGF0IHRh
-YmxlIGlzIG5vdCBpbml0aWFsaXplZCwgY2FuIFJJRCBiZSBlcXVhbCB0bw0KPiBkZXZpY2UtaWQg
-aXMgdGhhdCBjYXNlLg0KPiBJZiB0aGF0IHdpbGwgYmUgYWxsb3dlZCB0aGFuIHdlIGNhbiBnaXZl
-IHJpZ2h0IGluZm9ybWF0aW9uIHRoYXQgd2lsbCB3b3JrIHdpdGgNCj4gdS1ib290IG5vdCB1cGRh
-dGluZyB0aGlzIHByb3BlcnR5Lg0KDQpVLWJvb3QgdXNlcyBhIHN0cmVhbS1pZCBhbGxvY2F0b3Ig
-YW5kIHByb2dyYW1zIHRoZSBoL3cgbWFwcGluZyB0YWJsZSAocmlkIHRvIHNpZCBtYXBwaW5nIHRh
-YmxlKS4gQWxzbyBpdCB1cGRhdGVzIGlvbW11LW1hcCBwcm9wZXJ0eSBhY2NvcmRpbmdseS4NCkJ1
-dCBJZiB1LWJvb3QgZG9lcyBub3QgdXBkYXRlIGlvbW11LW1hcCB0aGFuIHdlIGNhbm5vdCBoYXZl
-IGEgdmFsaWQgZnVsbCBwcm9vZiBzb2x1dGlvbiBhcyBzdHJlYW0taWQgYWxsb2NhdGlvbiBjYW4g
-Y2hhbmdlIGluIHUtYm9vdC4gDQoNClNvIHRoZSBvdGhlciBvcHRpb24gb2YgdS1ib290IGdlbmVy
-YXRpbmcgdGhpcyBlbnRyeSBzZWVtcyBjb3JyZWN0IHNvbHV0aW9uLiBUaGlzIHJlcXVpcmVzIHUt
-Ym9vdCB0byBrbm93IGlvbW11LXBoYW5kbGUsIHNvbWV0aGluZyBzaW1pbGFyIHRvICJtc2ktcGFy
-ZW50IiB1c2VkIGZvciAibXNpLW1hcCINCkRldmljZS10cmVlIGJpbmRpbmcgbmVlZCBjaGFuZ2Ug
-dG8gYWRkIGlvbW11LXBoYW5kbGUvaW9tbXUtcGFyZW50IGZvciB0aGlzLiANCg0KVGhhbmtzDQot
-QmhhcmF0DQoNCj4gDQo+IFdpbGwgcmV2ZXJ0IGFmdGVyIGNvbmZpcm1pbmcgdGhpcy4NCj4gDQo+
-IFRoYW5rcw0KPiAtQmhhcmF0DQo+ID4NCj4gPiBUaGFua3MsDQo+ID4NCj4gPiBNLg0KPiA+IC0t
-DQo+ID4gSmF6eiBpcyBub3QgZGVhZC4gSXQganVzdCBzbWVsbHMgZnVubnkuLi4NCg==
+On Mon, Jul 24, 2017 at 04:24:54PM -0500, Dave Gerlach wrote:
+> Certain SoCs like Texas Instruments AM335x and AM437x require parts
+> of the EMIF PM code to run late in the suspend sequence from SRAM,
+> such as saving and restoring the EMIF context and placing the memory
+> into self-refresh.
+> 
+> One requirement for these SoCs to suspend and enter its lowest power
+> mode, called DeepSleep0, is that the PER power domain must be shut off.
+> Because the EMIF (DDR Controller) resides within this power domain, it
+> will lose context during a suspend operation, so we must save it so we
+> can restore once we resume. However, we cannot execute this code from
+> external memory, as it is not available at this point, so the code must
+> be executed late in the suspend path from SRAM.
+> 
+> This patch introduces a ti-emif-sram driver that includes several
+> functions written in ARM ASM that are relocatable so the PM SRAM
+> code can use them. It also allocates a region of writable SRAM to
+> be used by the code running in the executable region of SRAM to save
+> and restore the EMIF context. It can export a table containing the
+> absolute addresses of the available PM functions so that other SRAM
+> code can branch to them. This code is required for suspend/resume on
+> AM335x and AM437x to work.
+> 
+> In addition to this, to be able to share data structures between C and
+> the ti-emif-sram-pm assembly code, we can automatically generate all of
+> the C struct member offsets and sizes as macros by making use of the ARM
+> asm-offsets file. In the same header that we define our data structures
+> in we also define all the macros in an inline function and by adding a
+> call to this in the asm_offsets file all macros are properly generated
+> and available to the assembly code without cluttering up the asm-offsets
+> file.
+> 
+> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> ---
+> v2->v3:
+> * Move all static vars into common struct and instead point to one static
+>   instance of this struct and pass this struct around for internal calls.
+> * Rename ti_emif_prepare_push_sram to ti_emif_alloc_sram
+> * Clean up probe path to avoid leftover vairable values from being used
+>   after probe defer or failure.
+> * Fix mistake in ASM code that stored EMIF_POWER_MANAGEMENT_CONTROL into
+>   location for shadow register.
+> * Avoid extern definition for asm-offsets definition and use a stub instead
+>   of defining out in asm-offsets.
+> * A few general fixups to code.
+
+Just got back from my vacation this week, so sorry about the late reply.
+
+It indeed looks like you've addressed my comments on v2, but I still
+have few comments below. Just minor nits.
+
+> +	/* Save physical address to calculate resume offset during pm init */
+> +	emif_data->ti_emif_sram_data_phys =
+> +		gen_pool_virt_to_phys(emif_data->sram_pool_data,
+
+I try to indent continuation lines at least two tabs further (at least
+when not matching open parentheses) which tends to improve readability
+and conforms better to the coding standard.
+
+> +				      emif_data->ti_emif_sram_data_virt);
+
+> +/**
+> + * ti_emif_copy_pm_function_table - copy mapping of pm funcs in sram
+> + * @sram_pool: pointer to struct gen_pool where dst resides
+> + * @dst: void * to address that table should be copied
+> + *
+> + * Returns 0 if success other error code if table is not available
+> + */
+> +int ti_emif_copy_pm_function_table(struct gen_pool *sram_pool, void *dst)
+> +{
+> +	void *copy_addr;
+> +
+> +	if (!(emif_instance && emif_instance->ti_emif_sram_virt))
+> +		return -EINVAL;
+
+Perhaps this can now be simplified as 
+
+	if (!emif_instance)
+		return -EINVAL;
+
+since when the driver has been successfully bound all fields would have
+been initialised.
+
+Use -ENODEV for consistency?
+
+> +
+> +	copy_addr = sram_exec_copy(sram_pool, dst,
+> +				   &emif_instance->pm_functions,
+> +				   sizeof(emif_instance->pm_functions));
+> +	if (!copy_addr)
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ti_emif_copy_pm_function_table);
+> +
+> +/**
+> + * ti_emif_get_mem_type - return type for memory type in use
+> + *
+> + * Returns memory type value read from EMIF or error code if fails
+> + */
+> +int ti_emif_get_mem_type(void)
+> +{
+> +	unsigned long temp;
+> +
+> +	if (!(emif_instance &&
+> +	      !IS_ERR_OR_NULL(emif_instance->pm_data.ti_emif_base_addr_virt)))
+
+And this would also be more readable as simply !emif_instance.
+
+> +		return -ENODEV;
+> +
+> +	temp = readl(emif_instance->pm_data.ti_emif_base_addr_virt +
+> +		     EMIF_SDRAM_CONFIG);
+> +
+> +	temp = (temp & SDRAM_TYPE_MASK) >> SDRAM_TYPE_SHIFT;
+> +	return temp;
+> +}
+> +EXPORT_SYMBOL_GPL(ti_emif_get_mem_type);
+
+> +static int ti_emif_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +
+> +	pm_runtime_put_sync(dev);
+> +	pm_runtime_disable(dev);
+> +
+> +	ti_emif_free_sram(emif_instance);
+> +
+> +	emif_instance = NULL;
+
+Nothing is of course preventing the remove() callback from racing with
+the global functions above, but I'd still prefer to reset emif_instance
+before releasing the memory.
+
+In fact, given the register access in ti_emif_get_mem_type() you may
+even want to clear emif_instance before the pm_runtime_put_sync().
+
+> +
+> +	return 0;
+> +}
+
+Thanks,
+Johan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
