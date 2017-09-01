@@ -1,100 +1,55 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v6 5/5] v4l: fwnode: Support generic parsing of graph
- endpoints in a single port
-Date: Sat, 2 Sep 2017 01:57:48 +0300
-Message-ID: <20170901225748.ygk35gzmt6vrtetw@valkosipuli.retiisi.org.uk>
-References: <20170830114946.17743-1-sakari.ailus@linux.intel.com>
- <20170830114946.17743-6-sakari.ailus@linux.intel.com>
- <95945222-3562-a330-609f-ad1a64034dd3@xs4all.nl>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC/PATCH] drivers/of/platform: Add powerpc 4xx embedded
+ busses to default list
+Date: Sat, 02 Sep 2017 09:47:52 +1000
+Message-ID: <1504309672.4974.93.camel@kernel.crashing.org>
+References: <1504237861.4974.59.camel@kernel.crashing.org>
+         <CAL_JsqLYMeV6XsBOtZKJHFbC2+_cG+gF7L+LurH5keTtzp2wVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <95945222-3562-a330-609f-ad1a64034dd3-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <CAL_JsqLYMeV6XsBOtZKJHFbC2+_cG+gF7L+LurH5keTtzp2wVQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-Thanks for the review.
-
-On Fri, Sep 01, 2017 at 01:28:40PM +0200, Hans Verkuil wrote:
-> > diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-> > index d063ab4ff67b..dd13604178b4 100644
-> > --- a/include/media/v4l2-fwnode.h
-> > +++ b/include/media/v4l2-fwnode.h
-> > @@ -249,4 +249,53 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
-> >  			    struct v4l2_fwnode_endpoint *vep,
-> >  			    struct v4l2_async_subdev *asd));
-> >  
-> > +/**
-> > + * v4l2_async_notifier_parse_fwnode_endpoint - Set up async notifier for an
-> > + *					       fwnode based sub-device
-> > + * @dev: @struct device pointer
-> > + * @notifier: pointer to &struct v4l2_async_notifier
-> > + * @port_id: port number
-> > + * @endpoint_id: endpoint number
-> > + * @asd_struct_size: size of the driver's async sub-device struct, including
-> > + *		     sizeof(struct v4l2_async_subdev). The &struct
-> > + *		     v4l2_async_subdev shall be the first member of
-> > + *		     the driver's async sub-device struct, i.e. both
-> > + *		     begin at the same memory address.
-> > + * @parse_single: driver's callback function called on each V4L2 fwnode endpoint
-> > + *
-> > + * Parse the fwnode endpoint of the @dev device corresponding to the given port
-> > + * and endpoint numbres and populate the async sub- devices array of the
+On Fri, 2017-09-01 at 10:24 -0500, Rob Herring wrote:
+> On Thu, Aug 31, 2017 at 10:51 PM, Benjamin Herrenschmidt
+> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> > This allow to (slowly) migrate those embedded platforms
+> > to of_platform_default_populate()
+> > 
+> > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> > ---
+> > 
+> > I'm here to collect acks (or comments :-) I'd like this to go via
+> > the powerpc tree along with the patches converting some of the
+> > platforms. I'll be adding more bus types if/when I start tackling
+> > other powerpc embedded families but for now I'm dealing with 4xx.
 > 
-> numbers
-> no space after sub-
-> 
-> > + * notifier. The @parse_endpoint callback function is called for the endpoint
-> 
-> parse_single, but (as in the previous patch) I actually prefer parse_endpoint.
-> 
-> > + * with the corresponding async sub-device pointer to let the caller initialize
-> > + * the driver-specific part of the async sub-device structure.
-> > + *
-> > + * The notifier memory shall be zeroed before this function is called on the
-> > + * notifier.
-> 
-> Should it? Doesn't this add additional subdevs?
-> 
-> I'm lost. What's the relationship between v4l2_async_notifier_parse_fwnode_endpoints
-> and this function? When do you use which? When you should zero the notifier?
+> Glad to see it.
 
-I thought there would be advantages in this approach as it lets you to
-choose which endpoints specifically you want to parse. That said, the
-expectation is that the device has no endpoints that aren't supported in
-hardware either.
+So my end game is to remove the #ifndef CONFIG_PPC around
+of_platform_default_populate_init(void). However, for that
+to work, I need to add a way to disable that on some platforms.
 
-Some drivers currently iterate over all the endpoints and then validate
-them whereas others poke for some endpoints only (port 0, endpoint 0, for
-the rcar-vin driver, for instance). In DT binding documentation the
-endpoint numbers are currently not specified nor drivers have checked them.
-Common sense tells to use zero if there's no reason to do otherwise, but
-still this hasn't been documented nor validated in the past. So if we add
-that now, there could be a chance of breaking something.
+However, it might take time, especially when it comes to dealing
+with the old Macs or some more obscure embedded platforms.
 
-Additionally, specifying the endpoints to parse explicitly has been seen
-beneficial (or even necessary) in parsing endpoints for devices that have
-both input and output interfaces. Perhaps Niklas can comment on that.
+So in the meantime, I'm thinking adding some kind of runtime way
+of disabling this default populate. Would you be ok with that ?
 
-What I though was to introduce a specific error code (EPERM, better
-suggestions are taken) for the driver callback function (parse_endpoint) to
-silently skip endpoints the driver doesn't like for reason or another. This
-lets drivers to use the endpoint parser function added by the previous
-patch and still maintain the old behaviour, i.e. ignore endpoints that
-aren't explicitly recognised by the driver.
+Something like:
 
-I'll drop this patch from the next version.
+	bool arch_wants_of_platform_defaults(void)
 
--- 
-Regards,
+With a weak implementation returning true.
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+Cheers,
+Ben.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
