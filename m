@@ -1,52 +1,66 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/2] clk: sunxi-ng: Provide a default reset hook
-Date: Fri, 1 Sep 2017 13:30:36 -0700
-Message-ID: <20170901203036.GA21656@codeaurora.org>
-References: <20170825094953.3247-1-maxime.ripard@free-electrons.com>
- <CAPDyKFonXp4Uqi=DLxKf=1ecOx-2E5mUkEXqnqJPE-J57xXQcw@mail.gmail.com>
- <20170830123624.vurdnh6bojbtrjal@flea.lan>
- <CAPDyKFqw7PNs_GQXmbJx8doo-tGW6PsKSffJhzVgU3cX3-wvsg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqw7PNs_GQXmbJx8doo-tGW6PsKSffJhzVgU3cX3-wvsg@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+From: Leon Luo <leonl@leopardimaging.com>
+Subject: [PATCH v4 1/2] media:imx274 device tree binding file
+Date: Fri,  1 Sep 2017 13:32:42 -0700
+Message-ID: <20170901203243.25694-1-leonl@leopardimaging.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leonl@leopardimaging.com, soren.brinkmann@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/30, Ulf Hansson wrote:
-> On 30 August 2017 at 14:36, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > Hi Ulf,
-> >
-> > On Wed, Aug 30, 2017 at 02:29:24PM +0200, Ulf Hansson wrote:
-> >> On 25 August 2017 at 11:49, Maxime Ripard
-> >> <maxime.ripard@free-electrons.com> wrote:
-> >> > The reset hook was left implemented. Provide a dumb implementation so that
-> >> > client drivers can depend on it.
-> >> >
-> >> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> >>
-> >> Do you want me to pick this up via my mmc tree? If so, is that okay by
-> >> the clock maintainers?
-> >
-> > I also happen to be the maintainer of that part of the kernel
-> > (reporting to Mike and Stephen of course). We don't have anything
-> > touching that file in next, so unless they feel like it should go
-> > through their tree, it would be easier to keep the two changes
-> > together and merge them through your tree.
-> 
-> Alright, I have picked it up for next!
-> 
+The binding file for imx274 CMOS sensor V4l2 driver
 
-Thanks!
+Signed-off-by: Leon Luo <leonl@leopardimaging.com>
+---
+v4:
+ - no changes
+v3:
+ - remove redundant properties and references
+ - document 'reg' property
+v2:
+ - no changes
+---
+ .../devicetree/bindings/media/i2c/imx274.txt       | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx274.txt
 
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-
-if that helps.
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+new file mode 100644
+index 000000000000..1f03256b35db
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+@@ -0,0 +1,32 @@
++* Sony 1/2.5-Inch 8.51Mp CMOS Digital Image Sensor
++
++The Sony imx274 is a 1/2.5-inch CMOS active pixel digital image sensor with
++an active array size of 3864H x 2202V. It is programmable through I2C
++interface. The I2C address is fixed to 0x1a as per sensor data sheet.
++Image data is sent through MIPI CSI-2, which is configured as 4 lanes
++at 1440 Mbps.
++
++
++Required Properties:
++- compatible: value should be "sony,imx274" for imx274 sensor
++- reg: I2C bus address of the device
++
++Optional Properties:
++- reset-gpios: Sensor reset GPIO
++
++For further reading on port node refer to
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++	sensor@1a {
++		compatible = "sony,imx274";
++		reg = <0x1a>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reset-gpios = <&gpio_sensor 0 0>;
++		port {
++			sensor_out: endpoint {
++				remote-endpoint = <&csiss_in>;
++			};
++		};
++	};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.14.1.145.gb3622a4
