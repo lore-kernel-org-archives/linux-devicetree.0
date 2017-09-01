@@ -1,84 +1,83 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 10/11] staging: typec: fusb302: Hook up mux support using
- tcpc_gen_mux support
-Date: Fri,  1 Sep 2017 23:48:44 +0200
-Message-ID: <20170901214845.7153-11-hdegoede@redhat.com>
-References: <20170901214845.7153-1-hdegoede@redhat.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Aesthetic fixes to DTSpec 0.1, Acknowledgements and
+ Chapter 1
+Date: Fri, 1 Sep 2017 17:00:21 -0500
+Message-ID: <CAL_JsqJE75jKCk81ULKnG+4PkK5CLDuKTqsTPt3VfRKv+=u-Pg@mail.gmail.com>
+References: <alpine.LFD.2.21.1708311747500.16833@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170901214845.7153-1-hdegoede@redhat.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: devel@driverdev.osuosl.org, Mark Rutland <mark.rutland@arm.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.21.1708311747500.16833-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
-to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
+On Thu, Aug 31, 2017 at 4:50 PM, Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org> wrote:
+>
+> Some aesthetic tweaks to DTSpec 0.1, including
+>
+>  * grammar fixes
+>  * font fixes
+>
+> Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+>
+> ---
+>
+>   i'll do a chunk at a time, to avoid having a sizable submission
+> getting hung up on a single issue.
+>
+> commit 10d4ba9bb1ad5baab5d9bff4e2dac643166f9356
+> Author: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+> Date:   Thu Aug 31 17:46:29 2017 -0400
+>
+>     Ack and chapter 1.
 
-Also document the mux-names used by the generic tcpc_mux_dev code in
-our devicetree bindings.
+Your header here is a bit messed up, but git-am seemed to apply it okay.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
- drivers/staging/typec/fusb302/fusb302.c               | 11 ++++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/source/acknowledgements.rst b/source/acknowledgements.rst
+> index 3e49046..a02e0aa 100644
+> --- a/source/acknowledgements.rst
+> +++ b/source/acknowledgements.rst
+> @@ -2,7 +2,7 @@
+>
+>  The devicetree.org Technical Steering Committee would like to
+>  thank the many individuals and companies that contributed to the
+> -development this specification through writing, technical discussions
+> +development of this specification through writing, technical discussions
+>  and reviews.
+>
+>  We want to thank the power.org Platform Architecture Technical Subcommittee who
+> diff --git a/source/introduction.rst b/source/introduction.rst
+> index 30ba3d9..d7dc2fc 100644
+> --- a/source/introduction.rst
+> +++ b/source/introduction.rst
+> @@ -13,10 +13,10 @@ hardware before passing control to software such as an operating system,
+>  bootloader, or hypervisor. Bootloaders and hypervisors can, in turn,
+>  load and transfer control to operating systems. Standard, consistent
+>  interfaces and conventions facilitate the interactions between these
+> -software components.  In this document the term boot program is used to
+> +software components.  In this document the term *boot program* is used to
+>  generically refer to a software component that initializes the system
+>  state and executes another software component referred to as a *client
+> -program*. Examples of a boot programs include: firmware, bootloaders, and
+> +program*. Examples of a boot program include: firmware, bootloaders, and
+>  hypervisors. Examples of a client program include: bootloaders,
+>  hypervisors, operating systems, and special purpose programs. A piece of
+>  software may be both a client program and a boot program  (e.g. a hypervisor).
+> @@ -101,14 +101,14 @@ IEEE 1275 specification that are omitted from the |spec| include:
+>  * FCode debugging
+>  * Operating system debugging
+>
+> -What is retained from IEEE-1275 are concepts from the devicetree
+> +What is retained from IEEE 1275 are concepts from the devicetree
 
-diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-index 472facfa5a71..63d639eadacd 100644
---- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-+++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-@@ -6,6 +6,9 @@ Required properties :
- - interrupts             : Interrupt specifier
- 
- Optional properties :
-+- mux-controls           : List of mux-ctrl-specifiers containing 1 or 2 muxes
-+- mux-names              : "type-c-mode-mux" when using 1 mux, or
-+                           "type-c-mode-mux", "usb-role-mux" when using 2 muxes
- - fcs,max-sink-microvolt : Maximum voltage to negotiate when configured as sink
- - fcs,max-sink-microamp  : Maximum current to negotiate when configured as sink
- - fcs,max-sink-microwatt : Maximum power to negotiate when configured as sink
-diff --git a/drivers/staging/typec/fusb302/fusb302.c b/drivers/staging/typec/fusb302/fusb302.c
-index cf6355f59cd9..00d045d0246b 100644
---- a/drivers/staging/typec/fusb302/fusb302.c
-+++ b/drivers/staging/typec/fusb302/fusb302.c
-@@ -1259,7 +1259,6 @@ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
- 	fusb302_tcpc_dev->set_roles = tcpm_set_roles;
- 	fusb302_tcpc_dev->start_drp_toggling = tcpm_start_drp_toggling;
- 	fusb302_tcpc_dev->pd_transmit = tcpm_pd_transmit;
--	fusb302_tcpc_dev->mux = NULL;
- }
- 
- static const char * const cc_polarity_name[] = {
-@@ -1817,6 +1816,16 @@ static int fusb302_probe(struct i2c_client *client,
- 			return -EPROBE_DEFER;
- 	}
- 
-+	chip->tcpc_dev.mux = devm_tcpc_gen_mux_create(dev);
-+	if (IS_ERR(chip->tcpc_dev.mux)) {
-+		ret = PTR_ERR(chip->tcpc_dev.mux);
-+		/* Use of a mux is optional (for now?), ignore -ENODEV errors */
-+		if (ret == -ENODEV)
-+			chip->tcpc_dev.mux = NULL;
-+		else
-+			return ret;
-+	}
-+
- 	cfg.drv_data = chip;
- 	chip->psy = devm_power_supply_register(dev, &fusb302_psy_desc, &cfg);
- 	if (IS_ERR(chip->psy)) {
--- 
-2.13.5
+I still see a mixture in the document. For things like this, better to
+do a search and replace for the whole document as 1 commit.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
