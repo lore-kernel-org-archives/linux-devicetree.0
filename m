@@ -1,165 +1,115 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: drm/bridge: Document Cadence DSI
- bridge bindings
-Date: Fri, 01 Sep 2017 08:28:13 +0200
-Message-ID: <3371dbd2-9539-d746-0982-71112d5d98a0@samsung.com>
-References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
-        <CGME20170831155542epcas1p386204b629825977fbd824ca195d47e59@epcas1p3.samsung.com>
-        <20170831155519.3704-2-boris.brezillon@free-electrons.com>
+From: Sandy Huang <hjc@rock-chips.com>
+Subject: Re: [PATCH v7 1/3] dt-bindings: display: Add Document for Rockchip
+ Soc LVDS
+Date: Fri, 1 Sep 2017 14:49:16 +0800
+Message-ID: <8578950f-74a9-6fa7-5530-70f4b41a5a8f@rock-chips.com>
+References: <1503469615-39406-1-git-send-email-hjc@rock-chips.com>
+ <1503469622-39462-1-git-send-email-hjc@rock-chips.com>
+ <59A53F27.2010308@rock-chips.com> <150421032.ptNih2SRiG@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20170831155519.3704-2-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <150421032.ptNih2SRiG@phil>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, Mark yao <mark.yao@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 31.08.2017 17:55, Boris Brezillon wrote:
-> Document the bindings used for the Cadence DSI bridge.
->
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> Changes in v3:
-> - Fix clock names in the example
-> - Document how to represent DSI devices that are controller through
->   an external bus like I2C or SPI
->
-> Changes in v2:
-> - None
-> ---
->  .../bindings/display/bridge/cdns,dsi.txt           | 109 +++++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
-> new file mode 100644
-> index 000000000000..c70008bd8c0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
-> @@ -0,0 +1,109 @@
-> +Cadence DSI bridge
-> +==================
-> +
-> +The Cadence DSI bridge is a DPI to DSI bridge supporting up to 4 DSI lanes.
-> +
-> +Required properties:
-> +- compatible: should be set to "cdns,dsi-1.3.1".
-> +- reg: physical base address and length of the controller's registers.
-> +- interrupts: interrupt line connected to the DSI bridge.
-> +- clocks: DSI bridge clocks.
-> +- clock-names: must contain "pclk" and "sysclk".
-> +- phys: phandle link to the MIPI D-PHY controller.
-> +- phy-names: must contain "dphy".
-> +- #address-cells: must be set to 1.
-> +- #size-cells: must be set to 0.
-> +
-> +Required subnodes:
-> +- ports: Ports as described in Documentation/devicetree/bindings/graph.txt.
-> +  2 ports are available:
-> +  * port 0: this port is only needed if some of your DSI devices are
-> +	    controlled through  an external bus like I2C or SPI. Can have at
-> +	    most 4 endpoints. The endpoint number is directly encoding the
-> +	    DSI virtual channel used by this device.
-> +  * port 1: represents the DPI input.
-> +  Other ports will be added later to support the new kind of inputs.
-
-I think usual practice is to use lower numbers for input ports, higher
-for output ports.
-Is there a reason to do it this way?
-
-Regards
-Andrzej
-
-> +
-> +- one subnode per DSI device connected on the DSI bus. Each DSI device should
-> +  contain a reg property encoding its virtual channel.
-> +
-> +Example:
-> +
-> +	dsi0: dsi@fd0c0000 {
-> +		compatible = "cdns,dsi-1.3.1";
-> +		reg = <0x0 0xfd0c0000 0x0 0x1000>;
-> +		clocks = <&pclk>, <&sysclk>;
-> +		clock-names = "pclk", "sysclk";
-> +		interrupts = <1>;
-> +		phys = <&dphy1>;
-> +		phy-names = "dphy";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				dsi0_dpi_input: endpoint {
-> +					remote-endpoint = <&xxx_dpi_output>;
-> +				};
-> +			};
-> +		};
-> +
-> +		panel: dsi-dev@0 {
-> +			compatible = "<vendor,panel>";
-> +			reg = <0>;
-> +		};
-> +	};
-> +
-> +or
-> +
-> +	dsi0: dsi@fd0c0000 {
-> +		compatible = "cdns,dsi";
-> +		reg = <0x0 0xfd0c0000 0x0 0x1000>;
-> +		clocks = <&pclk>, <&sysclk>;
-> +		clock-names = "pclk", "sysclk";
-> +		interrupts = <1>;
-> +		phys = <&dphy1>;
-> +		phy-names = "dphy";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				dsi0_output: endpoint@0 {
-> +					reg = <0>;
-> +					remote-endpoint = <&dsi_panel_input>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				dsi0_dpi_input: endpoint {
-> +					remote-endpoint = <&xxx_dpi_output>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	i2c@xxx {
-> +		panel: panel@59 {
-> +			compatible = "<vendor,panel>";
-> +			reg = <0x59>;
-> +
-> +			port {
-> +				dsi_panel_input: endpoint {
-> +					remote-endpoint = <&dsi0_output>;
-> +				};
-> +			};
-> +		};
-> +	};
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgaGVpa28sCgrlnKggMjAxNy84LzI5IDE4OjI5LCBIZWlrbyBTdHVlYm5lciDlhpnpgZM6Cj4g
+QW0gRGllbnN0YWcsIDI5LiBBdWd1c3QgMjAxNywgMTg6MTc6MTEgQ0VTVCBzY2hyaWViIE1hcmsg
+eWFvOgo+PiBPbiAyMDE35bm0MDjmnIgyM+aXpSAxNDoyNiwgU2FuZHkgSHVhbmcgd3JvdGU6Cj4+
+PiBUaGlzIHBhdGNoIGFkZCBEb2N1bWVudCBmb3IgUm9ja2NoaXAgU29jIFJLMzI4OCBMVkRTLAo+
+Pj4gVGhpcyBiYXNlZCBvbiB0aGUgcGF0Y2hlcyBmcm9tIE1hcmsgeWFvIGFuZCBIZWlrbyBTdHVl
+Ym5lci4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBTYW5keSBIdWFuZyA8aGpjQHJvY2stY2hpcHMu
+Y29tPgo+Pj4gU2lnbmVkLW9mZi1ieTogTWFyayB5YW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29t
+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPj4+
+IC0tLQo+PiBMb29rcyBnb29kIGZvciBtZToKPj4KPj4gUmV2aWV3ZWQtYnk6IE1hcmsgWWFvIDxt
+YXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KPiAKPiBTaWduZWQtb2ZmIG9yZGVyaW5nIGlzIHdyb25n
+IHRob3VnaCAuLi4geW91IGFkZCBhIFNpZ25lZC1vZmYgYmVsb3cKPiBhbGwgb3RoZXJzIGFuZCB5
+b3UgY291bGQgYWxzbyBkcm9wIHRoZSBvbmUgZnJvbSBtZSwgYXMgSSBkb24ndAo+IHRoaW5rIEkg
+ZGlkIHByb3ZpZGUgdG8gbXVjaCB2YWx1ZSBiZXR3ZWVuIE1hcmsncyBhbmQgU2FuZHkncyB2YXJp
+YW50Cj4gb2YgdGhlIHBhdGNoZXMgOi0pCj4gCj4gCj4gSGVpa28KPiAKPiAKSSB3aWxsIGNoYW5n
+ZSB0aGUgU2luZ2VkIG9mZiBvcmRlciBhcyBiZWxsb3cgYXQgbmV4dCB2ZXJzaW9uLgoKU2lnbmVk
+LW9mZi1ieTogTWFyayB5YW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29tPgpTaWduZWQtb2ZmLWJ5
+OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgpTaWduZWQtb2ZmLWJ5OiBTYW5keSBI
+dWFuZyA8aGpjQHJvY2stY2hpcHMuY29tPgoKPj4+IENoYW5nZXMgYWNjb3JkaW5nIHRvIFJvYiBI
+ZXJyaW5nJ3MgcmV2aWV3Lgo+Pj4KPj4+ICAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlw
+L3JvY2tjaGlwLWx2ZHMudHh0ICAgIHwgOTkgKysrKysrKysrKysrKysrKysrKysrKwo+Pj4gICAg
+MSBmaWxlIGNoYW5nZWQsIDk5IGluc2VydGlvbnMoKykKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2Nr
+Y2hpcC1sdmRzLnR4dAo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dCBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMu
+dHh0Cj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4gaW5kZXggMDAwMDAwMC4uZGE2OTM5ZQo+
+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtbHZkcy50eHQKPj4+IEBAIC0wLDAgKzEsOTkg
+QEAKPj4+ICtSb2NrY2hpcCBSSzMyODggTFZEUyBpbnRlcmZhY2UKPj4+ICs9PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PQo+Pj4gKwo+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+PiAr
+LSBjb21wYXRpYmxlOiBtYXRjaGluZyB0aGUgc29jIHR5cGUsIG9uZSBvZgo+Pj4gKwktICJyb2Nr
+Y2hpcCxyazMyODgtbHZkcyI7Cj4+PiArCj4+PiArLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVz
+cyBvZiB0aGUgY29udHJvbGxlciBhbmQgbGVuZ3RoCj4+PiArCW9mIG1lbW9yeSBtYXBwZWQgcmVn
+aW9uLgo+Pj4gKy0gY2xvY2tzOiBtdXN0IGluY2x1ZGUgY2xvY2sgc3BlY2lmaWVycyBjb3JyZXNw
+b25kaW5nIHRvIGVudHJpZXMgaW4gdGhlCj4+PiArCWNsb2NrLW5hbWVzIHByb3BlcnR5Lgo+Pj4g
+Ky0gY2xvY2stbmFtZXM6IG11c3QgY29udGFpbiAicGNsa19sdmRzIgo+Pj4gKwo+Pj4gKy0gYXZk
+ZDF2MC1zdXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAxLjBWIGFuYWxvZyBwb3dlcgo+Pj4g
+Ky0gYXZkZDF2OC1zdXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAxLjhWIGFuYWxvZyBwb3dl
+cgo+Pj4gKy0gYXZkZDN2My1zdXBwbHk6IHJlZ3VsYXRvciBwaGFuZGxlIGZvciAzLjNWIGFuYWxv
+ZyBwb3dlcgo+Pj4gKwo+Pj4gKy0gcm9ja2NoaXAsZ3JmOiBwaGFuZGxlIHRvIHRoZSBnZW5lcmFs
+IHJlZ2lzdGVyIGZpbGVzIHN5c2Nvbgo+Pj4gKy0gcm9ja2NoaXAsb3V0cHV0OiAicmdiIiwgImx2
+ZHMiIG9yICJkdWFsbHZkcyIsIFRoaXMgZGVzY3JpYmVzIHRoZSBvdXRwdXQgaW50ZXJmYWNlCj4+
+PiArCj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4+ICstIHBpbmN0cmwtbmFtZXM6IG11c3Qg
+Y29udGFpbiBhICJsY2RjIiBlbnRyeS4KPj4+ICstIHBpbmN0cmwtMDogcGluIGNvbnRyb2wgZ3Jv
+dXAgdG8gYmUgdXNlZCBmb3IgdGhpcyBjb250cm9sbGVyLgo+Pj4gKwo+Pj4gK1JlcXVpcmVkIG5v
+ZGVzOgo+Pj4gKwo+Pj4gK1RoZSBsdmRzIGhhcyB0d28gdmlkZW8gcG9ydHMgYXMgZGVzY3JpYmVk
+IGJ5Cj4+PiArCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1p
+bnRlcmZhY2VzLnR4dAo+Pj4gK1RoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGVkIHVzaW5nIHRo
+ZSBPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4KPj4+ICsJRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPj4+ICsKPj4+ICstIHZpZGVvIHBvcnQgMCBmb3Ig
+dGhlIFZPUCBpbnB1dCwgdGhlIHJlbW90ZSBlbmRwb2ludCBtYXliZSB2b3BiIG9yIHZvcGwKPj4+
+ICstIHZpZGVvIHBvcnQgMSBmb3IgZWl0aGVyIGEgcGFuZWwgb3Igc3Vic2VxdWVudCBlbmNvZGVy
+Cj4+PiArCj4+PiArdGhlIGx2ZHMgcGFuZWwgZGVzY3JpYmVkIGJ5Cj4+PiArCURvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPj4+
+ICsKPj4+ICtQYW5lbCByZXF1aXJlZCBwcm9wZXJ0aWVzOgo+Pj4gKy0gcG9ydHMgZm9yIHJlbW90
+ZSBMVkRTIG91dHB1dAo+Pj4gKwo+Pj4gK1BhbmVsIG9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+PiAr
+LSBkYXRhLW1hcHBpbmc6IHNob3VsZCBiZSAidmVzYS0yNCIsImplaWRhLTI0IiBvciAiamVpZGEt
+MTgiLgo+Pj4gK1RoaXMgZGVzY3JpYmVzIGRlY3JpYmVkIGJ5Ogo+Pj4gKwlEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1sdmRzLnR4dAo+Pj4gKwo+
+Pj4gK0V4YW1wbGU6Cj4+PiArCj4+PiArbHZkc19wYW5lbDogbHZkcy1wYW5lbCB7Cj4+PiArCWNv
+bXBhdGlibGUgPSAiYXVvLGIxMDFlYW4wMSI7Cj4+PiArCWVuYWJsZS1ncGlvcyA9IDwmZ3Bpbzcg
+MjEgR1BJT19BQ1RJVkVfSElHSD47Cj4+PiArCWRhdGEtbWFwcGluZyA9ICJqZWlkYS0yNCI7Cj4+
+PiArCj4+PiArCXBvcnRzIHsKPj4+ICsJCXBhbmVsX2luX2x2ZHM6IGVuZHBvaW50IHsKPj4+ICsJ
+CQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHNfb3V0X3BhbmVsPjsKPj4+ICsJCX07Cj4+PiArCX07
+Cj4+PiArfTsKPj4+ICsKPj4+ICtGb3IgUm9ja2NoaXAgUkszMjg4Ogo+Pj4gKwo+Pj4gKwlsdmRz
+OiBsdmRzQGZmOTZjMDAwIHsKPj4+ICsJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMjg4LWx2
+ZHMiOwo+Pj4gKwkJcm9ja2NoaXAsZ3JmID0gPCZncmY+Owo+Pj4gKwkJcmVnID0gPDB4ZmY5NmMw
+MDAgMHg0MDAwPjsKPj4+ICsJCWNsb2NrcyA9IDwmY3J1IFBDTEtfTFZEU19QSFk+Owo+Pj4gKwkJ
+Y2xvY2stbmFtZXMgPSAicGNsa19sdmRzIjsKPj4+ICsJCXBpbmN0cmwtbmFtZXMgPSAibGNkYyI7
+Cj4+PiArCQlwaW5jdHJsLTAgPSA8JmxjZGNfY3RsPjsKPj4+ICsJCWF2ZGQxdjAtc3VwcGx5ID0g
+PCZ2ZGQxMF9sY2Q+Owo+Pj4gKwkJYXZkZDF2OC1zdXBwbHkgPSA8JnZjYzE4X2xjZD47Cj4+PiAr
+CQlhdmRkM3YzLXN1cHBseSA9IDwmdmNjYV8zMz47Cj4+PiArCQlyb2NrY2hpcCxvdXRwdXQgPSAi
+cmdiIjsKPj4+ICsJCXBvcnRzIHsKPj4+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+ICsJ
+CQkjc2l6ZS1jZWxscyA9IDwwPjsKPj4+ICsKPj4+ICsJCQlsdmRzX2luOiBwb3J0QDAgewo+Pj4g
+KwkJCQlyZWcgPSA8MD47Cj4+PiArCj4+PiArCQkJCWx2ZHNfaW5fdm9wYjogZW5kcG9pbnRAMCB7
+Cj4+PiArCQkJCQlyZWcgPSA8MD47Cj4+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGJf
+b3V0X2x2ZHM+Owo+Pj4gKwkJCQl9Owo+Pj4gKwkJCQlsdmRzX2luX3ZvcGw6IGVuZHBvaW50QDEg
+ewo+Pj4gKwkJCQkJcmVnID0gPDE+Owo+Pj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2b3Bs
+X291dF9sdmRzPjsKPj4+ICsJCQkJfTsKPj4+ICsJCQl9Owo+Pj4gKwo+Pj4gKwkJCWx2ZHNfb3V0
+OiBwb3J0QDEgewo+Pj4gKwkJCQlyZWcgPSA8MT47Cj4+PiArCj4+PiArCQkJCWx2ZHNfb3V0X3Bh
+bmVsOiBlbmRwb2ludCB7Cj4+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luX2x2
+ZHM+Owo+Pj4gKwkJCQl9Owo+Pj4gKwkJCX07Cj4+PiArCQl9Owo+Pj4gKwl9Owo+Pgo+Pgo+Pgo+
+IAo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Cj4gTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Cj4gTGludXgtcm9ja2NoaXBAbGlzdHMuaW5m
+cmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtcm9ja2NoaXAKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
