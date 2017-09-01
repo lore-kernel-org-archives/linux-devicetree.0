@@ -1,52 +1,40 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] drm: bridge: Add bindings for TI THS8134
-Date: Fri,  1 Sep 2017 11:40:37 +0200
-Message-ID: <20170901094038.4312-1-linus.walleij@linaro.org>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v3 1/3] usb: xhci-mtk: add generic compatible string
+Date: Fri, 1 Sep 2017 13:00:03 +0300
+Message-ID: <59A92FA3.5090105@linux.intel.com>
+References: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1504092763.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1504092763.git.chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgVGV4YXMgSW5zdHJ1bWVudHMK
-VEhTODEzNEEgYW5kIFRIUzgxMzRCIFZHQSBEQUNzIGJ5IGV4dGVuZGluZyBhbmQgcmVuYW1pbmcg
-dGhlCmV4aXN0aW5nIGJpbmRpbmdzIGZvciBUSFM4MTM1LgoKVGhlc2UgREFDcyBhcmUgdXNlZCBm
-b3IgdGhlIFZHQSBvdXRwdXRzIG9uIHRoZSBBUk0gcmVmZXJlbmNlCmRlc2lnbnMgc3VjaCBhcyBJ
-bnRlZ3JhdG9yLCBWZXJzYXRpbGUgYW5kIFJlYWxWaWV3LgoKQ2M6IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnCkNjOiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUu
-Y29tPgpTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5v
-cmc+Ci0tLQogLi4uL2Rpc3BsYXkvYnJpZGdlL3t0aSx0aHM4MTM1LnR4dCA9PiB0aSx0aHM4MTN4
-LnR4dH0gICAgICAgIHwgMTIgKysrKysrKystLS0tCiAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRp
-b25zKCspLCA0IGRlbGV0aW9ucygtKQogcmVuYW1lIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS97dGksdGhzODEzNS50eHQgPT4gdGksdGhzODEzeC50eHR9
-ICg3MyUpCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3RpLHRoczgxMzUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxM3gudHh0CnNpbWlsYXJpdHkgaW5kZXggNzMl
-CnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS90aSx0aHM4MTM1LnR4dApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxM3gudHh0CmluZGV4IDZlYzFhODgwYWMxOC4u
-NjA4NDM1ZjA0Nzk2IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvdGksdGhzODEzNS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxM3gudHh0CkBAIC0xLDExICsx
-LDE1IEBACi1USFM4MTM1IFZpZGVvIERBQwotLS0tLS0tLS0tLS0tLS0tLS0KK1RIUzgxMzQgYW5k
-IFRIUzgxMzUgVmlkZW8gREFDCistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogCi1UaGlz
-IGlzIHRoZSBiaW5kaW5nIGZvciBUZXhhcyBJbnN0cnVtZW50cyBUSFM4MTM1IFZpZGVvIERBQyBi
-cmlkZ2UuCitUaGlzIGlzIHRoZSBiaW5kaW5nIGZvciBUZXhhcyBJbnN0cnVtZW50cyBUSFM4MTM0
-QSwgVEhTODEzNEIgYW5kIFRIUzgxMzUKK1ZpZGVvIERBQyBicmlkZ2UuCiAKIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6CiAKLS0gY29tcGF0aWJsZTogTXVzdCBiZSAidGksdGhzODEzNSIKKy0gY29tcGF0
-aWJsZTogTXVzdCBiZSBvbmUgb2YKKyAgInRpLHRoczgxMzRhIgorICAidGksdGhzODEzNGIiCisg
-ICJ0aSx0aHM4MTM1IgogCiBSZXF1aXJlZCBub2RlczoKIAotLSAKMi4xMy41CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 30.08.2017 14:34, Chunfeng Yun wrote:
+> The xhci-mtk driver is a generic driver for MediaTek xHCI IP, add
+> a generic compatible to avoid confusion when support new SoCs but
+> use a compatible with specific SoC's name "mt8173".
+>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>   drivers/usb/host/xhci-mtk.c |    1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> index 67d5dc7..8fb6065 100644
+> --- a/drivers/usb/host/xhci-mtk.c
+> +++ b/drivers/usb/host/xhci-mtk.c
+> @@ -795,6 +795,7 @@ static int __maybe_unused xhci_mtk_resume(struct device *dev)
+>   #ifdef CONFIG_OF
+>   static const struct of_device_id mtk_xhci_of_match[] = {
+>   	{ .compatible = "mediatek,mt8173-xhci"},
+> +	{ .compatible = "mediatek,mtk-xhci"},
+>   	{ },
+>   };
+>   MODULE_DEVICE_TABLE(of, mtk_xhci_of_match);
+>
+
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
