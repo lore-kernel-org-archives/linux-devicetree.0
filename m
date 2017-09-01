@@ -1,89 +1,277 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "spi: spi-falcon: drop check of boot select" to the spi tree
-Date: Fri, 01 Sep 2017 11:47:26 +0100
-Message-ID: <E1dnjTy-0006AD-Ox@debutante>
-References: <20170417192942.32219-4-hauke@hauke-m.de>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170417192942.32219-4-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgMark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Antony Antony <antony@phenome.org>
+Subject: Re: [PATCH v5] arm64: allwinner: h5: add support for NanoPi NEO Plus2
+Date: Fri, 1 Sep 2017 12:53:13 +0200
+Message-ID: <20170901105313.m26y2re3ulskua43@AntonyAntony.local>
+References: <20170824231716.2623-1-antony@phenome.org>
+ <20170830125057.38529-1-antony@phenome.org>
+ <20170831145859.rief3fqo36ns23rm@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170831145859.rief3fqo36ns23rm@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Antony Antony <antony@phenome.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Maxime
 
-   spi: spi-falcon: drop check of boot select
+Thanks for the review. I will send a PATCH v6 soon.
 
-has been applied to the spi tree at
+On Thu, Aug 31, 2017 at 04:58:59PM +0200, Maxime Ripard wrote:
+> Hi,
+> 
+> On Wed, Aug 30, 2017 at 02:50:57PM +0200, Antony Antony wrote:
+> > 	Add initial DT support for NanoPi NEO Plus2 by FriendlyARM
+> > 		Allwinner quad core H5 Cortex A53 with an ARM Mali-450MP GPU
+> > 		1 GB DDR3 RAM
+> > 		8GB eMMC flash (Samsung KLM8G1WEPD-B031)
+> > 		micro SD card slot
+> > 		Gigabit Ethernet (external RTL8211E-VB-CG chip)
+> > 		802.11 b/g/n WiFi, Bluetooth 4.0 (Ampak AP6212A module)
+> > 		2x USB 2.0 host ports & 2x USB via headers
+> 
+> This indendation is weird
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+I will fix it.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> >     The DTS is based on OrangePi PC 2, sun50i-h5-orangepi-pc2
+> >     Added dwmac-sun8i Gigabit Ethernet support based on
+> >     Nano Pi Neo2 DT and the schematics.
+> 
+> And that's outdated.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Now I am glad to delete it.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> > +	wifi_pwrseq: wifi_pwrseq {
+> > +		compatible = "mmc-pwrseq-simple";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&wifi_en_npi>;
+> > +		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+> > +		post-power-on-delay-ms = <200>;
+> > +	};
+> 
+> You should order these nodes alphabetically.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+good point I did.
 
-Thanks,
-Mark
+> > +&codec {
+> > +	allwinner,audio-routing =
+> > +		"Line Out", "LINEOUT",
+> > +		"MIC1", "Mic",
+> > +		"Mic",  "MBIAS";
+> > +	status = "okay";
+> > +};
+> > +
+> > +&ehci0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&ehci3 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&emac {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&emac_rgmii_pins>;
+> > +	phy-supply = <&reg_gmac_3v3>;
+> > +	phy-handle = <&ext_rgmii_phy>;
+> > +	phy-mode = "rgmii";
+> > +	status = "okay";
+> > +};
+> > +
+> > +&mdio {
+> > +	ext_rgmii_phy: ethernet-phy@7 {
+> > +		compatible = "ethernet-phy-ieee802.3-c22";
+> > +		reg = <7>;
+> > +	};
+> > +};
+> 
+> This will not compile.
 
->From 1a41aa1376df9e24d0c760df1a6f59765316c457 Mon Sep 17 00:00:00 2001
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Date: Sun, 20 Aug 2017 00:18:10 +0200
-Subject: [PATCH] spi: spi-falcon: drop check of boot select
+I don't understand you, because, v5 file compiled for me. Here is output 
+from running system, just the relevant part.  using dtc -I fs 
+/proc/device-tree
 
-Do not check which flash type the SoC was booted from before
-using this driver. Assume that the device tree is correct and use this
-driver when it was added to device tree. This also removes a build
-dependency to the SoC code.
+ext_rgmii_phy = "/soc/ethernet@1c30000/mdio/ethernet-phy@7";
 
-All device trees I am aware of only have one correct flash device entry
-in it. The device tree is anyway bundled with the kernel in all systems
-using device tree I know of.
+ethernet@1c30000 {
+	mdio {
+	..
+		ethernet-phy@7 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			phandle = <0x1c>;
+			reg = <0x7>;
+			linux,phandle = <0x1c>;
+		};
+};
 
-The boot mode can be specified with some pin straps and will select the
-flash type the rom code will boot from. One SPI, NOR or NAND flash chip
-can be connect to the EBU and used to load the first stage boot loader
-from.
+Is this what you expect?
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/spi/spi-falcon.c | 5 -----
- 1 file changed, 5 deletions(-)
+> > +&mmc1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&mmc1_pins_a>;
+> > +	vmmc-supply = <&reg_vcc3v3>;
+> > +	vqmmc-supply = <&reg_vcc3v3>;
+> > +	mmc-pwrseq = <&wifi_pwrseq>;
+> > +	bus-width = <4>;
+> > +	non-removable;
+> > +	boot_device = <0>;
+> 
+> This property is not documented anywhere, I'm not sure what it's here
+> for.
 
-diff --git a/drivers/spi/spi-falcon.c b/drivers/spi/spi-falcon.c
-index 286b2c81fc6b..f8638e82e5db 100644
---- a/drivers/spi/spi-falcon.c
-+++ b/drivers/spi/spi-falcon.c
-@@ -395,11 +395,6 @@ static int falcon_sflash_probe(struct platform_device *pdev)
- 	struct spi_master *master;
- 	int ret;
+boot_device is deleted. A u-boot property got mixed up in kernel DT.
  
--	if (ltq_boot_select() != BS_SPI) {
--		dev_err(&pdev->dev, "invalid bootstrap options\n");
--		return -ENODEV;
--	}
--
- 	master = spi_alloc_master(&pdev->dev, sizeof(*priv));
- 	if (!master)
- 		return -ENOMEM;
--- 
-2.14.1
+> > +	status = "okay";
+> > +
+> > +	/*
+> > +	 * AMPAK AP6212A WiFi module with BCM43430, rev=1 inside
+> > +	 * sdio vendor ID: 0x02d0, sdio device ID: 0xa9a6
+> > +	 * There is no specific Documentation: dt-binding for BCM43430
+> > +	 * brcm,bcm4329-fmac compatible can initialize this module
+> > +	 */
+> 
+> This is not really relevant.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+would you prefer no comment or a rewrite? How does this look?
+
+/*
+ * AMPAK AP6212A WiFi module with BCM43430, rev=1 inside
+ * sdio vendor ID: 0x02d0, sdio device ID: 0xa9a6
+ */
+
+I am afraid a casual reader would think "brcm,bcm4329-fmac" is wrong, 
+because that is not the actual chip inside the module.
+
+> > +	brcmf: wifi@1 {
+> > +		reg = <1>;
+> > +		compatible = "brcm,bcm4329-fmac";
+> > +	};
+> > +};
+> > +
+
+> > +&mmc2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&mmc2_8bit_pins>;
+> > +	vmmc-supply = <&reg_vcc3v3>;
+> > +	bus-width = <8>;
+> > +	non-removable;
+> > +	cap-mmc-hw-reset;
+> > +	boot_device = <0>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&mmc2_8bit_pins {
+> > +	/* Increase drive strength for DDR modes */
+> > +	drive-strength = <40>;
+> 
+> It's very likely that you actually don't need 40mA
+
+drive-strength and the node mmc2_8bit_pins are gone. When I removed it 
+drive-strength = <0x1e>;  seems the default. And eMMC seems to work when 
+booting from Micro SD.
+
+NOTE: the  40mA came from a vresion of vendor's old dts file and I also 
+noticed the same value is used in other dts in kernel e.g 
+sun8i-h3-orangepi-plus.dts, sun9i-a80-cubieboard4.dts
+It could be a copy paste error or those boards need it. Anyway I removed it.
+
+> > +	/* eMMC is missing pull-ups */
+> > +	bias-pull-up;
+> > +};
+> 
+> And that one is already here by default.
+
+good, deleteed.
+
+> 
+> > +&ohci0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&ohci3 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pio {
+> > +	leds_npi: led_pins@0 {
+> > +		pins = "PA10";
+> > +		function = "gpio_out";
+> > +	};
+> > +	gmac_power_pin_nanopi: gmac_power_pin@0 {
+> > +			pins = "PD6";
+> > +			function = "gpio_out";
+> > +	};
+> > +};
+> 
+> You don't need these nodes
+
+
+&pio { } and gmac_power_pin_nanopi{} are deleted.
+along with
+pinctrl-0 = <&gmac_power_pin_nanopi>; 
+
+> > +
+> > +&r_pio {
+> > +	leds_r_npi: led_pins@0 {
+> > +		pins = "PL10";
+> > +		function = "gpio_out";
+> > +	};
+> > +
+> > +	vdd_cpux_r_npi: regulator_pins@0 {
+> > +		allwinner,pins = "PL6";
+> > +		allwinner,function = "gpio_out";
+> > +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> > +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> > +	};
+> > +
+> > +	wifi_en_npi: wifi_en_pin {
+> > +		pins = "PL7";
+> > +		function = "gpio_out";
+> > +	};
+> > +};
+> 
+> Or those.
+
+deleted wifi_en_npi.
+> 
+> > +
+> > +&uart0 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&uart0_pins_a>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usb_otg {
+> > +	dr_mode = "host";
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usbphy {
+> > +	/* USB Type-A ports' VBUS is always on */
+> > +	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+> 
+> If it has an ID-detect pin, then it's not a host-only USB OTG
+> controller. dr_mode should be set to otga 
+
+good point. I don't see an ID-detect connected in the schematic. The 
+previous generation had. 
+
+I will leave 
+&usb_otg {
+  dr_mode = "host";
+  status = "okay";
+};
+
+&usbphy {
+	/* USB Type-A ports' VBUS is always on */
+	status = "okay";
+};
+
+Wow, a nice cleanup.
+
+I am surprised defaults works well and thanks for pointing these out.
+
+-antony
