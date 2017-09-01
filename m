@@ -1,37 +1,40 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/2] Add support for Hi6220 coresight
-Date: Fri,  1 Sep 2017 08:47:13 +0800
-Message-ID: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH 1/2] clk: hi6220: mark clock cs_atb_syspll as critical
+Date: Fri,  1 Sep 2017 08:47:14 +0800
+Message-ID: <1504226835-2115-2-git-send-email-leo.yan@linaro.org>
+References: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Li Pengcheng <lipengcheng8@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Leo Yan <leo.yan@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for coresight on Hi6220; the first patch
-is to fix coresight PLL so can avoid system hang after we enable
-coresight, the second patch is to add DT binding according to coresight
-topology.
+Clock cs_atb_syspll is pll used for coresight trace bus; when clock
+cs_atb_syspll is disabled and operates its child clock node cs_atb
+results in system hang. So mark clock cs_atb_syspll as critical to
+keep it enabled.
 
-The patch has been tested on Hikey; By using OpenCSD snapshot mode, it
-can successfully decode ETF and ETB trace data.
+Cc: Guodong Xu <guodong.xu@linaro.org>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ drivers/clk/hisilicon/clk-hi6220.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Leo Yan (1):
-  clk: hi6220: mark clock cs_atb_syspll as critical
-
-Li Pengcheng (1):
-  arm64: dts: hi6220: add coresight binding
-
- .../arm64/boot/dts/hisilicon/hi6220-coresight.dtsi | 379 +++++++++++++++++++++
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |   2 +
- drivers/clk/hisilicon/clk-hi6220.c                 |   2 +-
- 3 files changed, 382 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-
+diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/clk-hi6220.c
+index 4181b68..4742e8f 100644
+--- a/drivers/clk/hisilicon/clk-hi6220.c
++++ b/drivers/clk/hisilicon/clk-hi6220.c
+@@ -145,7 +145,7 @@ static struct hisi_gate_clock hi6220_separated_gate_clks_sys[] __initdata = {
+ 	{ HI6220_BBPPLL_SEL,    "bbppll_sel",    "pll0_bbp_gate",  CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x270, 9,  0, },
+ 	{ HI6220_MEDIA_PLL_SRC, "media_pll_src", "pll_media_gate", CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x270, 10, 0, },
+ 	{ HI6220_MMC2_SEL,      "mmc2_sel",      "mmc2_mux1",      CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x270, 11, 0, },
+-	{ HI6220_CS_ATB_SYSPLL, "cs_atb_syspll", "syspll",         CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x270, 12, 0, },
++	{ HI6220_CS_ATB_SYSPLL, "cs_atb_syspll", "syspll",         CLK_SET_RATE_PARENT|CLK_IS_CRITICAL,   0x270, 12, 0, },
+ };
+ 
+ static struct hisi_mux_clock hi6220_mux_clks_sys[] __initdata = {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
