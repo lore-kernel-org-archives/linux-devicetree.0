@@ -1,139 +1,169 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 2/2 v2] PCI: v3-semi: Add a V3 Semiconductor PCI host
- driver
-Date: Fri, 1 Sep 2017 17:17:39 -0500
-Message-ID: <20170901221739.GA8970@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170809141455.22220-1-linus.walleij@linaro.org>
- <20170809141455.22220-2-linus.walleij@linaro.org>
- <20170822190137.GB6948@bhelgaas-glaptop.roam.corp.google.com>
- <CACRpkdbMqZpZT9te1oAw49t48XC3DRuXd4VRrUCCDDn9nD1maA@mail.gmail.com>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for Allwinner A64
+Date: Fri, 1 Sep 2017 23:32:50 +0100
+Message-ID: <d397d87b-5004-c8af-e590-037befc9b2b6@arm.com>
+References: <20170830233609.13855-4-stefan.bruens@rwth-aachen.de>
+ <20170901003135.10058-1-andre.przywara@arm.com>
+ <1837534.s5pz9jWHnV@pebbles.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbMqZpZT9te1oAw49t48XC3DRuXd4VRrUCCDDn9nD1maA@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1837534.s5pz9jWHnV@pebbles.site>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Bruens <stefan.bruens@rwth-aachen.de>
+Cc: linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[+cc Rob, Frank, devicetree list to make sure I got the config space
-part right]
+Hi,
 
-On Fri, Sep 01, 2017 at 05:49:28PM +0200, Linus Walleij wrote:
-> On Tue, Aug 22, 2017 at 9:01 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+On 01/09/17 02:19, Stefan Bruens wrote:
+> On Freitag, 1. September 2017 02:31:35 CEST Andre Przywara wrote:
+>> Hi,
+>>
+>> On 31/08/17 00:36, Stefan Brüns wrote:
+>>> The A64 SoC has the same dma engine as the H3 (sun8i), with a
+>>> reduced amount of physical channels. Add the proper config data
+>>> and compatible string to support it.
+>>
+>> ...
+>>
+>>> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+>>> index 5f4eee4513e5..6a17c5d63582 100644
+>>> --- a/drivers/dma/sun6i-dma.c
+>>> +++ b/drivers/dma/sun6i-dma.c
+>>> @@ -1068,6 +1068,12 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg = {
+>>>
+>>>  	.nr_max_vchans   = 34,
+>>>  	.dmac_variant    = DMAC_VARIANT_H3,
+>>>  
+>>>  };
+>>>
+>>> +
+>>> +static struct sun6i_dma_config sun50i_a64_dma_cfg = {
+>>> +	.nr_max_channels = 8,
+>>> +	.nr_max_requests = 27,
+>>> +	.nr_max_vchans   = 38,
+>>> +	.dmac_variant    = DMAC_VARIANT_H3,
+>>>
+>>>  };
+>>>  
+>>>  static const struct of_device_id sun6i_dma_match[] = {
+>>>
+>>> @@ -1075,6 +1081,7 @@ static const struct of_device_id sun6i_dma_match[] =
+>>> {> 
+>>>  	{ .compatible = "allwinner,sun8i-a23-dma", .data = &sun8i_a23_dma_cfg 
+> },
+>>>  	{ .compatible = "allwinner,sun8i-a83t-dma", .data = &sun8i_a83t_dma_cfg
+>>>  	},
+>>>  	{ .compatible = "allwinner,sun8i-h3-dma", .data = &sun8i_h3_dma_cfg },
+>>>
+>>> +	{ .compatible = "allwinner,sun50i-a64-dma", .data = &sun50i_a64_dma_cfg
+>>> },> 
+>>>  	{ /* sentinel */ }
+>>>  
+>>>  };
+>>>  MODULE_DEVICE_TABLE(of, sun6i_dma_match);
+>>
+>> I was wondering if should use the opportunity to expose those values as
+>> DT properties instead of hard-wiring them to a compatible string in the
+>> driver every time we add support for a new SoC?
+>> We could introduce a new compatible string (say: "allwinner,sunxi-dma"),
+>> then describe properties for the number of channels and requests and
+>> vchans and parse those from the DT at probe time.
+>> With this we might be able to support future SoCs without Linux *driver*
+>> changes, by just providing the right DT. This would have worked already
+>> for instance for the A83T support, which just changed those values.
+>>
+>> For instance with this quick patch below (just compile tested, and without
+>> your refactoring).
+>> The DT node would then read something like:
+>> 	dma: dma-controller@01c02000 {
+>> 		compatible = "allwinner,sun50i-a64-dma",
+>> 			     "allwinner,sunxi-dma";
+>> 		reg = <0x01c02000 0x1000>;
+>> 		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+>> 		clocks = <&ccu CLK_BUS_DMA>;
+>> 		resets = <&ccu RST_BUS_DMA>;
+>> 		#dma-cells = <1>;
+>> 		allwinner,max_channels = <8>;
+>> 		allwinner,max_requests = <27>;
+>> 		allwinner,max_vchans = <38>;
+>> 	};
 > 
-> > On Wed, Aug 09, 2017 at 04:14:55PM +0200, Linus Walleij wrote:
+> For these 3 properties it likely is a good idea, but we would IMHO still have 
+> to care for the differences in the register settings:
 > 
-> >> OF: PCI: host bridge /pciv3@62000000 ranges:
-> >> OF: PCI:   No bus range found for /pciv3@62000000, using [bus 00-ff]
-> >> OF: PCI:   err 0x61000000..0x61ffffff -> 0x61000000
-> 
-> Yeah it is called "err"
-> 
-> >> OF: PCI:    IO 0x60000000..0x600fffff -> 0x00000000
-> >> OF: PCI:   MEM 0x40000000..0x4fffffff -> 0x00000000
-> >> OF: PCI:   MEM 0x50000000..0x5fffffff -> 0x10000000
-> >> pci-v3-semi 62000000.pciv3: BUS 0
-> >> pci-v3-semi 62000000.pciv3: CONFIG SPACE window
-> >>   start 61000000, size 01000000 (offset = 00000000, bus addr = 61000000)
-> 
-> But as it says here it is config space.
-> 
-> >> pci-v3-semi 62000000.pciv3: I/O window
-> >>   start 00000000, bus addr 00000000, size 00100000
-> >> pci-v3-semi 62000000.pciv3: NON-PREFETCHABLE MEM window
-> >>   start 40000000, bus addr 00000000, size 10000000
-> >> pci-v3-semi 62000000.pciv3: PREFETCHABLE MEM window
-> >>   start 50000000, bus addr 10000000, size 10000000
-> >> pci-v3-semi 62000000.pciv3: FIFO_CFG: 0000  FIFO_PRIO: 0000
-> >> pci-v3-semi 62000000.pciv3: initialized PCI V3 Integrator/AP integration
-> >> pci-v3-semi 62000000.pciv3: PCI host bridge to bus 0000:00
-> >> pci_bus 0000:00: root bus resource [bus 00-ff]
-> >> pci_bus 0000:00: root bus resource [??? 0x61000000-0x61ffffff flags 0x0]
-> >
-> > I think this is wrong.  Looks like this might be memory-mapped config
-> > space (e.g., MMCONFIG or ECAM-like space), which is not a window and
-> > shouldn't be added to the root bus resources.
-> 
-> So it comes from ranges, and I take it that actually the device
-> tree is wrong because it looks like this:
-> 
-> reg = <0x62000000 0x10000>;
-> ranges = <0x00000000 0 0x61000000 /* config space */
->         0x61000000 0 0x01000000 /* 16 MiB @ 61000000 */
->         0x01000000 0 0x0 /* I/O space */
->         0x60000000 0 0x00100000 /* 16 MiB @ 60000000 */
->         0x02000000 0 0x00000000 /* non-prefectable memory */
->         0x40000000 0 0x10000000 /* 256 MiB @ 40000000 */
->         0x42000000 0 0x10000000 /* prefetchable memory */
->         0x50000000 0 0x10000000>; /* 256 MiB @ 50000000 */
-> 
-> So what you're saying is that the config space should not be in the
-> ranges but in the reg = <> property (second register range) so that
-> the reg and ranges looks like this:
-> 
-> reg = <0x62000000 0x10000>, <0x61000000 0x01000000>;
+> - A31 does not have a clock autogating register
+> - A23 and A83t does have one at offset 0x20
+> - A64, H3, H5 and R40 have it at offset 0x28
 
-Yes.  Documentation/devicetree/bindings/pci/designware-pcie.txt has a
-little text about the typical way to do this.  Maybe this should be copied
-or moved to pci.txt.
+Fair enough - I didn't look too closely at your new changes, especially
+why it apparently worked before.
+But as your list shows, we would only need one compatible string per
+line - in the driver - to cover all SoCs (and possibly future SoCs!),
+and do the rest via the properties.
+We can't use the existing h3 compatible string or touch the already
+existing SoCs and compatible strings, of course, but I guess
+the A64, R40 and future SoCs could make use of a new (generic?) string.
 
-> ranges = <0x00000000 0 0x61000000 /* config space */
->         0x60000000 0 0x00100000 /* 16 MiB @ 60000000 */
->         0x02000000 0 0x00000000 /* non-prefectable memory */
->         0x40000000 0 0x10000000 /* 256 MiB @ 40000000 */
->         0x42000000 0 0x10000000 /* prefetchable memory */
->         0x50000000 0 0x10000000>; /* 256 MiB @ 50000000 */
+> There are also the incompatibilities in the "DMA channel configuration 
+> register" (burst length; burst width; burst length field offset).
 > 
-> So there is only a range for mapping the physical address
-> 0x61000000 to PCI address 0x00000000.
+> We can either have 3 different compatible strings, or another property for the 
+> register model.
 
-I don't understand this; maybe a typo?  IIUC, the 16 MiB @ 61000000
-region is essentially bridge register space: it is decoded by the
-bridge, which then generates PCI config transactions with bus/dev/fn
-determined by the register address.
+The latter is usually frowned upon, using separate compatible strings
+for each group of SoCs is the way to go here.
 
-> I don't mind altering the device trees, we don't have it deployed
-> in flash or anything. I think we simply got this thing wrong when
-> I first converted it over.
+> For the aw,max_requests and aw,max_vchans, maybe a bitmask per direction is a 
+> better option - it can encode the allowed DRQ numbers much better (e.g. for 
+> H3, the highest source DRQ is 24). The DRQ field in the channel configuration 
+> register is 5 bits, so the hightest port/DRQ number is 31.
 
-incidental: s/prefectable/prefetchable/ above
+So looking more closely at the manual and the code my understanding is
+that nr_max_requests is more or less some rough molly guard to prevent
+wrong settings? Derived from the DRQ table in the manual?
+So that trying to program port 28 on an H3 would fail?
+But source port 25 or dest port 26 wouldn't be caught by this check,
+though they would still be "illegal" according to the manual. (Which we
+are not sure of, I guess, it may just not be documented)
+So I wonder if this nr_max_requests is useful at all, and we should just
+check that it fits into 5 bits and assume that the DT has superior
+knowledge of what's allowed and what not.
+Now I see what you mean with the bitmask (to cover those gaps), but I am
+bit sceptical if that is actually useful. After all the DRQ number would
+be coming from the DT, which we can surely trust.
 
-> > The driver still needs it internally, of course, and maybe could print
-> > something similar to what we do for ECAM:
-> >
-> >   dev_info(dev, "ECAM at %pR for %pR\n", &cfg->res, &cfg->busr)
-> >
-> > (I don't know if this is actually identical to ECAM, so maybe there's
-> > a better internally-used name for the region, but we could print the
-> > memory and bus resources similarly.)
-> 
-> Sure, we just need to figure out if it should be in reg
-> or ranges first.
+And nr_max_vchans seems to describe the sum of documented DRQs, to just
+limit the memory allocation? So this could become just 64 to cover all
+possible cases without SoC specific configuration at all?
 
-> >> +     list_splice_init(&res, &host->windows);
-> >> +     ret = pci_scan_root_bus_bridge(host);
-> >> +     if (ret) {
-> >> +             dev_err(dev, "failed to register host: %d\n", ret);
-> >> +             return ret;
-> >> +     }
-> >> +     v3->bus = host->bus;
-> >> +
-> >> +     pci_bus_assign_resources(v3->bus);
-> >> +     pci_bus_add_devices(v3->bus);
-> >> +     pci_free_resource_list(&res);
-> >
-> > I think pci_free_resource_list() should be called only if an error
-> > occurs, shouldn't it?
-> 
-> I'm not sure. I was under the impression that list_splice_init() makes
-> a copy of it into host->windows and then we should discard it after
-> use.
+> For aw,max_channels my first thought is - why max? is it variable? is there a 
+> min_channels? My suggestion would be (in order of preference): "aw,channels", 
+> "aw,dma_channels", "aw,available_channels".
 
-I don't think list_splice_init() does any copying.  In the non-error
-case, we call pci_free_resource_list() from pci_free_host_bridge()
-if/when the host bridge is removed.  The other callers of
-pci_free_resource_list() are all in error handling paths.
+Sure, actually looking at Documentation/devicetree/bindings/dma/dma.txt
+I think we can even use the generic "dma-channels" property described
+there. And possibly the same with "dma-requests", should we keep this.
 
-Bjorn
+So summarizing this:
+- We create a new compatible string, which drives an H3 compatible DMA
+(clock autogating at 0x28, 64-bit data width capable). This name could
+either be generic, or actually "allwinner,sun50i-a64-dma".
+- This one sets nr_max_requests to 31 and nr_max_vchans to 64.
+- Alternatively we expose those values in the DT as properties.
+- We take the number of DMA channels from the (now required)
+"dma-channels" property.
+- We let the A64 (and R40?) use this new binding.
+- Any future SoC which is close enough can then just piggy-back on this.
+- Any future *changes* in the Allwinner DMA device which require driver
+changes create a new compatible string, but still keep the above
+semantics. Chances are that there are more than one SoC using this kind
+of new DMA device, so they would work out of the box.
+
+Does that make sense?
+I am happy to provide the code for that, based on your H3 rework.
+
+Cheers,
+Andre.
