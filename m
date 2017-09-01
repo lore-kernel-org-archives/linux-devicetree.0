@@ -1,68 +1,51 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt-binding: net: wireless: add
- bcm43430-fmac
-Date: Fri, 1 Sep 2017 11:49:11 -0500
-Message-ID: <20170901164911.aiu5ej5u546z5kow@rob-hp-laptop>
-References: <20170829214309.34466-1-antony@phenome.org>
- <CAGb2v66=JvS9wHkUNBwd+vHwx4NAQsaWyhx1OyEokSZizo+7-g@mail.gmail.com>
- <20170830120218.ms3xuhp4qsibistv@AntonyAntony.local>
+From: Jagan Teki <jagannadh.teki@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: rockchip: Add rk3288 vyasa board
+Date: Fri, 1 Sep 2017 22:36:08 +0530
+Message-ID: <CAD6G_RSR35sX2x8xpdht0XUbnjeEBML9bxwCqtHYC7oM5fazEA@mail.gmail.com>
+References: <1503742164-3926-1-git-send-email-jteki@openedev.com> <20170831210421.l2zmpexisagoxdks@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170830120218.ms3xuhp4qsibistv-sIi4olfLYEDaK4aX9S0K76zUEOm+Xw19@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170831210421.l2zmpexisagoxdks@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, linux-rockchip@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 02:02:18PM +0200, Antony Antony wrote:
-> hi,
-> 
-> On Wed, Aug 30, 2017 at 10:28:20AM +0800, Chen-Yu Tsai wrote:
-> > On Wed, Aug 30, 2017 at 5:43 AM, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org> wrote:
-> 
-> > > a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> > > +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> > > @@ -6,7 +6,9 @@ connects the device to the system.
-> > >
-> > >  Required properties:
-> > >
-> > > - - compatible : Should be "brcm,bcm4329-fmac".
-> > > + - compatible : should be one of the following:
-> > > +       * "brcm,bcm4329-fmac"
-> > > +       * "brcm,bcm43430-fmac"
-> > 
-> > You updated the bindings, but not the driver. So it's not actually
-> > going to work. More specifically, OOB interrupts won't work.
-> >
-> 
-> understood, ignore this patch for now. Thanks Chen-Yu.
-> 
-> > IIRC, The compatible string for this particular case, as it was
-> > originally proposed, only serves as a placeholder for the driver
-> > to check against. None of the instances in sunxi device trees
-> > match the actual chip model. Actual model matching is done
-> > through SDIO, as you've already seen.
-> 
-> yes it seems SDIO driveer code is smarter, once it initialize 
-> brcm,bcm4329-fmac it ignore the DT info and read the chip details to locate 
-> firmware file.
-> 
-> I also noticed other boards using bcm4329-fmac in similar situations.
-> https://patchwork.kernel.org/patch/9739181/
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts?h=v4.13-rc7
-> 
-> I will resend "NanoPi NEO Plus2" dts with "brcm,bcm4329-fmac" and see where 
-> it goes. 
+On Fri, Sep 1, 2017 at 2:34 AM, Rob Herring <robh@kernel.org> wrote:
+> On Sat, Aug 26, 2017 at 03:39:24PM +0530, Jagan Teki wrote:
+>> From: Jagan Teki <jagan@amarulasolutions.com>
+>>
+>> This patch adds initial support for rk3288 based
+>> Vyasa board, which is made by Amarula Solutions.
+>>
+>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>> ---
+>> Changes for v2:
+>> - Added entry in Documentation/devicetree/bindings/arm/rockchip.txt
+>>
+>>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>>  arch/arm/boot/dts/Makefile                         |   3 +-
+>>  arch/arm/boot/dts/rk3288-vyasa.dts                 | 312 +++++++++++++++++++++
+>>  3 files changed, 318 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/rk3288-vyasa.dts
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+> I assume the regulator node names are consistent with other platforms,
+> but at some point please fix them to be lowercase and not use '_'. IOW,
+> build the dtbs with "W=2" and fix the warnings.
 
-Adding the compatible or instead of? The former would be better. You 
-should still have the actual chip in case you do have some difference to 
-handle.
+Out-off these [1], only /i2c@ff650000 and  /memory are related to this
+dts and these are consistent across rk3288 dts node name, so there is
+nothing that I can fix here. If not please let me know if you find
+any.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://paste.ubuntu.com/25445917/
+
+thanks!
+-- 
+Jagan Teki
+Free Software Engineer | www.openedev.com
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
