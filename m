@@ -1,49 +1,31 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2]  ARM: dts: sun7i: Fix
- A20-OLinuXino-MICRO dts for LAN8710
-Date: Fri, 1 Sep 2017 15:08:54 +0200
-Message-ID: <20170901130854.iasjz4eqsvkt6r6z@flea>
-References: <1503901963-9457-1-git-send-email-stefan@olimex.com>
- <1503901963-9457-2-git-send-email-stefan@olimex.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: Applied "regulator: pbias: Select voltage table based on
+ max-voltage" to the regulator tree
+Date: Fri, 1 Sep 2017 15:18:03 +0200
+Message-ID: <CAPDyKFo=UdnVhFU7k+K1=N0e-1sniC+WZjZ4dZKSF8mXhM43Uw@mail.gmail.com>
+References: <E1dnO3z-0000tI-7K@debutante> <64d9c623-456c-9142-9c5b-a94593628643@ti.com>
+ <20170831135050.adiek6iqqzhndgci@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="d5ih6vido2sbny3d"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4NXUXGQKGQEWHBVLBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1503901963-9457-2-git-send-email-stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170831135050.adiek6iqqzhndgci@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Ravikumar Kattekola <rk@ti.com>, Sekhar Nori <nsekhar@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 31 August 2017 at 15:50, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Aug 31, 2017 at 05:37:34PM +0530, Kishon Vijay Abraham I wrote:
+>
+>> This patch should be merged along with the 1st patch of the series "mmc: host:
+>> omap_hsmmc: Remove setting PBIAS voltage". Or else it'll break MMC with
+>> omap_hsmmc driver.
+>
+> I can sign a tag if it's needed for a cross tree merge.
 
---d5ih6vido2sbny3d
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Easier if you could drop it and instead just provide an ack.
 
-On Mon, Aug 28, 2017 at 09:32:42AM +0300, Stefan Mavrodiev wrote:
-> From revision J the board uses new phy chip LAN8710. Compared
-> with RTL8201, RA17 pin is TXERR. It has pullup which causes phy
-> not to work. To fix this PA17 is muxed with GMAC function. This
-> makes the pin output-low.
-> 
-> This patch is compatible with earlier board revisions, since this
-> pin wasn't connected to phy.
-> 
-> Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+Unless you believes there may conflict in your regulator tree?
 
-Applied for 4.15, thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---d5ih6vido2sbny3d--
+Kind regards
+Uffe
