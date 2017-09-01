@@ -1,61 +1,52 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH ] ARM: dts: iwg22d-sodimm: Add Ethernet AVB support
-Date: Fri, 1 Sep 2017 11:30:33 +0200
-Message-ID: <CAMuHMdXFO+oirricuB2prtm2ca1AyMLDgx6ib5cVNRK0=7T+5g@mail.gmail.com>
-References: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
- <20170831084534.GF29946@verge.net.au> <KL1PR06MB170280A3D466C9B35AF73939B89D0@KL1PR06MB1702.apcprd06.prod.outlook.com>
- <TY1PR06MB07029D315FC6EE500D1EEA55B79D0@TY1PR06MB0702.apcprd06.prod.outlook.com>
- <20170901084923.GC14918@verge.net.au>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2] drm: bridge: Add bindings for TI THS8134
+Date: Fri,  1 Sep 2017 11:40:37 +0200
+Message-ID: <20170901094038.4312-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170901084923.GC14918@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Fri, Sep 1, 2017 at 10:49 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Thu, Aug 31, 2017 at 09:32:25AM +0000, Chris Paterson wrote:
->> > From: Biju Das
->> > > From: Simon Horman [mailto:horms@verge.net.au]
->> > > > +       phy3: ethernet-phy@3 {
->> > > > +       /*
->> > > > +        * On some older versions of the platform (before R4.0) the phy
->> > > address
->> > > > +        * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
->> > > > +        */
->> > > > +               reg = <3>;
->> > > > +               micrel,led-mode = <1>;
->> > >
->> > > Does the phy have an interrupt?
->> >
->> > The current board doesn't support interrupt . But there is a plan to support this
->> > in future board variants through (GPIO3_28).
->>
->> Actually, the plan has recently changed and at the moment interrupt support will not be added in the production version of the board.
->>
->> If in the end the plan changes again and the actual hardware does add interrupt support we'll submit a new patch accordingly.
->
-> Thanks for following-up on this. I'm still surprised there is no interrupt
-> - does link speed renegotiation initiated by the other end of the link work
-> in a timely manner? - but if its not there and my wishful thinking won't
-> make it so.
-
-I guess it behaves similar to Koelsch using the new CPG/MSSR driver, and
-without the probe deferral fix for of_mdio, where it also falls back to polling.
-Cfr. the figures in
-https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg17422.html
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgVGV4YXMgSW5zdHJ1bWVudHMK
+VEhTODEzNEEgYW5kIFRIUzgxMzRCIFZHQSBEQUNzIGJ5IGV4dGVuZGluZyBhbmQgcmVuYW1pbmcg
+dGhlCmV4aXN0aW5nIGJpbmRpbmdzIGZvciBUSFM4MTM1LgoKVGhlc2UgREFDcyBhcmUgdXNlZCBm
+b3IgdGhlIFZHQSBvdXRwdXRzIG9uIHRoZSBBUk0gcmVmZXJlbmNlCmRlc2lnbnMgc3VjaCBhcyBJ
+bnRlZ3JhdG9yLCBWZXJzYXRpbGUgYW5kIFJlYWxWaWV3LgoKQ2M6IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnCkNjOiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUu
+Y29tPgpTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5v
+cmc+Ci0tLQogLi4uL2Rpc3BsYXkvYnJpZGdlL3t0aSx0aHM4MTM1LnR4dCA9PiB0aSx0aHM4MTN4
+LnR4dH0gICAgICAgIHwgMTIgKysrKysrKystLS0tCiAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRp
+b25zKCspLCA0IGRlbGV0aW9ucygtKQogcmVuYW1lIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS97dGksdGhzODEzNS50eHQgPT4gdGksdGhzODEzeC50eHR9
+ICg3MyUpCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL3RpLHRoczgxMzUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxM3gudHh0CnNpbWlsYXJpdHkgaW5kZXggNzMl
+CnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS90aSx0aHM4MTM1LnR4dApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxM3gudHh0CmluZGV4IDZlYzFhODgwYWMxOC4u
+NjA4NDM1ZjA0Nzk2IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2UvdGksdGhzODEzNS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxM3gudHh0CkBAIC0xLDExICsx
+LDE1IEBACi1USFM4MTM1IFZpZGVvIERBQwotLS0tLS0tLS0tLS0tLS0tLS0KK1RIUzgxMzQgYW5k
+IFRIUzgxMzUgVmlkZW8gREFDCistLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogCi1UaGlz
+IGlzIHRoZSBiaW5kaW5nIGZvciBUZXhhcyBJbnN0cnVtZW50cyBUSFM4MTM1IFZpZGVvIERBQyBi
+cmlkZ2UuCitUaGlzIGlzIHRoZSBiaW5kaW5nIGZvciBUZXhhcyBJbnN0cnVtZW50cyBUSFM4MTM0
+QSwgVEhTODEzNEIgYW5kIFRIUzgxMzUKK1ZpZGVvIERBQyBicmlkZ2UuCiAKIFJlcXVpcmVkIHBy
+b3BlcnRpZXM6CiAKLS0gY29tcGF0aWJsZTogTXVzdCBiZSAidGksdGhzODEzNSIKKy0gY29tcGF0
+aWJsZTogTXVzdCBiZSBvbmUgb2YKKyAgInRpLHRoczgxMzRhIgorICAidGksdGhzODEzNGIiCisg
+ICJ0aSx0aHM4MTM1IgogCiBSZXF1aXJlZCBub2RlczoKIAotLSAKMi4xMy41CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
