@@ -1,132 +1,126 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 3/3] drm/exynos/gsc: Add rotation hardware limits of
- gscaler
-Date: Fri, 01 Sep 2017 09:31:46 +0200
-Message-ID: <10747c31-55fc-6464-eb00-99da6d66fca6@samsung.com>
-References: <1504230476-1878-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170901014758epcas2p13ae73e7dcac72a1a28c9324164efbd6d@epcas2p1.samsung.com>
- <1504230476-1878-4-git-send-email-hoegeun.kwon@samsung.com>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [RESEND PATCH v3 2/5] i2c: i2c-stm32f4: use generic definition of speed enum
+Date: Fri, 1 Sep 2017 09:34:12 +0200
+Message-ID: <1504251255-20469-3-git-send-email-pierre-yves.mordret@st.com>
+References: <1504251255-20469-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1504230476-1878-4-git-send-email-hoegeun.kwon@samsung.com>
-Content-language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504251255-20469-1-git-send-email-pierre-yves.mordret@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSG9lZ2V1biwKCk9uIDIwMTctMDktMDEgMDM6NDcsIEhvZWdldW4gS3dvbiB3cm90ZToKPiBU
-aGUgZ3NjYWxlciBoYXMgaGFyZHdhcmUgcm90YXRpb24gbGltaXRzIHRoYXQgbmVlZCB0byBiZSBp
-bXBvcnRlZCBmcm9tCj4gZHRzLiBQYXJzZSB0aGVtIGFuZCBhZGQgdGhlbSB0byB0aGUgcHJvcGVy
-dHkgbGlzdC4KPgo+IFRoZSByb3RhdGlvbiBoYXJkd2FyZSBsaW1pdHMgYXJlIHJlbGF0ZWQgdG8g
-dGhlIGNyb3BwZWQgc291cmNlIHNpemUuCj4gV2hlbiBzd2FwIG9jY3VycywgdXNlIHJvdF9tYXgg
-c2l6ZSBpbnN0ZWFkIG9mIGNyb3BfbWF4IHNpemUuCj4KPiBBbHNvIHRoZSBzY2FsaW5nIGxpbWl0
-cyBhcmUgcmVsYXRlZCB0byBwb3N0IHNpemUsIHVzZSBwb3Mgc2l6ZSB0bwo+IGNoZWNrIHRoZSBs
-aW1pdHMuCj4KPiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1z
-dW5nLmNvbT4KPiAtLS0KPiAgIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9nc2Mu
-YyB8IDYzICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLQo+ICAgaW5jbHVkZS91YXBp
-L2RybS9leHlub3NfZHJtLmggICAgICAgICAgIHwgIDIgKysKPiAgIDIgZmlsZXMgY2hhbmdlZCwg
-NDIgaW5zZXJ0aW9ucygrKSwgMjMgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2dzYy5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5v
-cy9leHlub3NfZHJtX2dzYy5jCj4gaW5kZXggMDUwNmIyYi4uZGQ5YjA1NyAxMDA2NDQKPiAtLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZ3NjLmMKPiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZ3NjLmMKPiBAQCAtMTQwMSw2ICsxNDAxLDIzIEBA
-IHN0YXRpYyBpbnQgZ3NjX2lwcGRydl9jaGVja19wcm9wZXJ0eShzdHJ1Y3QgZGV2aWNlICpkZXYs
-Cj4gICAJYm9vbCBzd2FwOwo+ICAgCWludCBpOwo+ICAgCj4gKwljb25maWcgPSAmcHJvcGVydHkt
-PmNvbmZpZ1tFWFlOT1NfRFJNX09QU19EU1RdOwo+ICsKPiArCS8qIGNoZWNrIGZvciBkZWdyZWUg
-Ki8KPiArCXN3aXRjaCAoY29uZmlnLT5kZWdyZWUpIHsKPiArCWNhc2UgRVhZTk9TX0RSTV9ERUdS
-RUVfOTA6Cj4gKwljYXNlIEVYWU5PU19EUk1fREVHUkVFXzI3MDoKPiArCQlzd2FwID0gdHJ1ZTsK
-PiArCQlicmVhazsKPiArCWNhc2UgRVhZTk9TX0RSTV9ERUdSRUVfMDoKPiArCWNhc2UgRVhZTk9T
-X0RSTV9ERUdSRUVfMTgwOgo+ICsJCXN3YXAgPSBmYWxzZTsKPiArCQlicmVhazsKPiArCWRlZmF1
-bHQ6Cj4gKwkJRFJNX0VSUk9SKCJpbnZhbGlkIGRlZ3JlZS5cbiIpOwo+ICsJCWdvdG8gZXJyX3By
-b3BlcnR5Owo+ICsJfQo+ICsKPiAgIAlmb3JfZWFjaF9pcHBfb3BzKGkpIHsKPiAgIAkJaWYgKChp
-ID09IEVYWU5PU19EUk1fT1BTX1NSQykgJiYKPiAgIAkJCShwcm9wZXJ0eS0+Y21kID09IElQUF9D
-TURfV0IpKQo+IEBAIC0xNDE2LDIxICsxNDMzLDYgQEAgc3RhdGljIGludCBnc2NfaXBwZHJ2X2No
-ZWNrX3Byb3BlcnR5KHN0cnVjdCBkZXZpY2UgKmRldiwKPiAgIAkJCWdvdG8gZXJyX3Byb3BlcnR5
-Owo+ICAgCQl9Cj4gICAKPiAtCQkvKiBjaGVjayBmb3IgZGVncmVlICovCj4gLQkJc3dpdGNoIChj
-b25maWctPmRlZ3JlZSkgewo+IC0JCWNhc2UgRVhZTk9TX0RSTV9ERUdSRUVfOTA6Cj4gLQkJY2Fz
-ZSBFWFlOT1NfRFJNX0RFR1JFRV8yNzA6Cj4gLQkJCXN3YXAgPSB0cnVlOwo+IC0JCQlicmVhazsK
-PiAtCQljYXNlIEVYWU5PU19EUk1fREVHUkVFXzA6Cj4gLQkJY2FzZSBFWFlOT1NfRFJNX0RFR1JF
-RV8xODA6Cj4gLQkJCXN3YXAgPSBmYWxzZTsKPiAtCQkJYnJlYWs7Cj4gLQkJZGVmYXVsdDoKPiAt
-CQkJRFJNX0VSUk9SKCJpbnZhbGlkIGRlZ3JlZS5cbiIpOwo+IC0JCQlnb3RvIGVycl9wcm9wZXJ0
-eTsKPiAtCQl9Cj4gLQo+ICAgCQkvKiBjaGVjayBmb3IgYnVmZmVyIGJvdW5kICovCj4gICAJCWlm
-ICgocG9zLT54ICsgcG9zLT53ID4gc3otPmhzaXplKSB8fAo+ICAgCQkJKHBvcy0+eSArIHBvcy0+
-aCA+IHN6LT52c2l6ZSkpIHsKPiBAQCAtMTQzOCwyMSArMTQ0MCwyNyBAQCBzdGF0aWMgaW50IGdz
-Y19pcHBkcnZfY2hlY2tfcHJvcGVydHkoc3RydWN0IGRldmljZSAqZGV2LAo+ICAgCQkJZ290byBl
-cnJfcHJvcGVydHk7Cj4gICAJCX0KPiAgIAo+ICsJCS8qCj4gKwkJICogVGhlIHJvdGF0aW9uIGhh
-cmR3YXJlIGxpbWl0cyBhcmUgcmVsYXRlZCB0byB0aGUgY3JvcHBlZAo+ICsJCSAqIHNvdXJjZSBz
-aXplLiBTbyB1c2Ugcm90X21heCBzaXplIHRvIGNoZWNrIHRoZSBsaW1pdHMgd2hlbgo+ICsJCSAq
-IHN3YXAgaGFwcGVucy4gQW5kIGFsc28gdGhlIHNjYWxpbmcgbGltaXRzIGFyZSByZWxhdGVkIHRv
-IHBvcwo+ICsJCSAqIHNpemUsIHVzZSBwb3Mgc2l6ZSB0byBjaGVjayB0aGUgbGltaXRzLgo+ICsJ
-CSAqLwo+ICAgCQkvKiBjaGVjayBmb3IgY3JvcCAqLwo+ICAgCQlpZiAoKGkgPT0gRVhZTk9TX0RS
-TV9PUFNfU1JDKSAmJiAocHAtPmNyb3ApKSB7Cj4gICAJCQlpZiAoc3dhcCkgewo+ICAgCQkJCWlm
-ICgocG9zLT5oIDwgcHAtPmNyb3BfbWluLmhzaXplKSB8fAo+IC0JCQkJCShzei0+dnNpemUgPiBw
-cC0+Y3JvcF9tYXguaHNpemUpIHx8Cj4gKwkJCQkJKHBvcy0+aCA+IHBwLT5yb3RfbWF4LmhzaXpl
-KSB8fAo+ICAgCQkJCQkocG9zLT53IDwgcHAtPmNyb3BfbWluLnZzaXplKSB8fAo+IC0JCQkJCShz
-ei0+aHNpemUgPiBwcC0+Y3JvcF9tYXgudnNpemUpKSB7Cj4gKwkJCQkJKHBvcy0+dyA+IHBwLT5y
-b3RfbWF4LnZzaXplKSkgewo+ICAgCQkJCQlEUk1fRVJST1IoIm91dCBvZiBjcm9wIHNpemUuXG4i
-KTsKPiAgIAkJCQkJZ290byBlcnJfcHJvcGVydHk7Cj4gICAJCQkJfQo+ICAgCQkJfSBlbHNlIHsK
-PiAgIAkJCQlpZiAoKHBvcy0+dyA8IHBwLT5jcm9wX21pbi5oc2l6ZSkgfHwKPiAtCQkJCQkoc3ot
-PmhzaXplID4gcHAtPmNyb3BfbWF4LmhzaXplKSB8fAo+ICsJCQkJCShwb3MtPncgPiBwcC0+Y3Jv
-cF9tYXguaHNpemUpIHx8Cj4gICAJCQkJCShwb3MtPmggPCBwcC0+Y3JvcF9taW4udnNpemUpIHx8
-Cj4gLQkJCQkJKHN6LT52c2l6ZSA+IHBwLT5jcm9wX21heC52c2l6ZSkpIHsKPiArCQkJCQkocG9z
-LT5oID4gcHAtPmNyb3BfbWF4LnZzaXplKSkgewo+ICAgCQkJCQlEUk1fRVJST1IoIm91dCBvZiBj
-cm9wIHNpemUuXG4iKTsKPiAgIAkJCQkJZ290byBlcnJfcHJvcGVydHk7Cj4gICAJCQkJfQo+IEBA
-IC0xNDYzLDE3ICsxNDcxLDE3IEBAIHN0YXRpYyBpbnQgZ3NjX2lwcGRydl9jaGVja19wcm9wZXJ0
-eShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gICAJCWlmICgoaSA9PSBFWFlOT1NfRFJNX09QU19EU1Qp
-ICYmIChwcC0+c2NhbGUpKSB7Cj4gICAJCQlpZiAoc3dhcCkgewo+ICAgCQkJCWlmICgocG9zLT5o
-IDwgcHAtPnNjYWxlX21pbi5oc2l6ZSkgfHwKPiAtCQkJCQkoc3otPnZzaXplID4gcHAtPnNjYWxl
-X21heC5oc2l6ZSkgfHwKPiArCQkJCQkocG9zLT5oID4gcHAtPnNjYWxlX21heC5oc2l6ZSkgfHwK
-PiAgIAkJCQkJKHBvcy0+dyA8IHBwLT5zY2FsZV9taW4udnNpemUpIHx8Cj4gLQkJCQkJKHN6LT5o
-c2l6ZSA+IHBwLT5zY2FsZV9tYXgudnNpemUpKSB7Cj4gKwkJCQkJKHBvcy0+dyA+IHBwLT5zY2Fs
-ZV9tYXgudnNpemUpKSB7Cj4gICAJCQkJCURSTV9FUlJPUigib3V0IG9mIHNjYWxlIHNpemUuXG4i
-KTsKPiAgIAkJCQkJZ290byBlcnJfcHJvcGVydHk7Cj4gICAJCQkJfQo+ICAgCQkJfSBlbHNlIHsK
-PiAgIAkJCQlpZiAoKHBvcy0+dyA8IHBwLT5zY2FsZV9taW4uaHNpemUpIHx8Cj4gLQkJCQkJKHN6
-LT5oc2l6ZSA+IHBwLT5zY2FsZV9tYXguaHNpemUpIHx8Cj4gKwkJCQkJKHBvcy0+dyA+IHBwLT5z
-Y2FsZV9tYXguaHNpemUpIHx8Cj4gICAJCQkJCShwb3MtPmggPCBwcC0+c2NhbGVfbWluLnZzaXpl
-KSB8fAo+IC0JCQkJCShzei0+dnNpemUgPiBwcC0+c2NhbGVfbWF4LnZzaXplKSkgewo+ICsJCQkJ
-CShwb3MtPmggPiBwcC0+c2NhbGVfbWF4LnZzaXplKSkgewo+ICAgCQkJCQlEUk1fRVJST1IoIm91
-dCBvZiBzY2FsZSBzaXplLlxuIik7Cj4gICAJCQkJCWdvdG8gZXJyX3Byb3BlcnR5Owo+ICAgCQkJ
-CX0KPiBAQCAtMTY3Niw2ICsxNjg0LDE1IEBAIHN0YXRpYyBpbnQgZ3NjX3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gICAJCQlkZXZfd2FybihkZXYsICJmYWlsZWQgdG8gZ2V0
-IHN5c3RlbSByZWdpc3Rlci5cbiIpOwo+ICAgCQkJY3R4LT5zeXNyZWcgPSBOVUxMOwo+ICAgCQl9
-Cj4gKwo+ICsJCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9kZSwgInJvdC1t
-YXgtaHNpemUiLAo+ICsJCQkJJmN0eC0+aXBwZHJ2LnByb3BfbGlzdC5yb3RfbWF4LmhzaXplKTsK
-PiArCQlyZXQgfD0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCAicm90LW1heC12
-c2l6ZSIsCj4gKwkJCQkmY3R4LT5pcHBkcnYucHJvcF9saXN0LnJvdF9tYXgudnNpemUpOwo+ICsJ
-CWlmIChyZXQpIHsKPiArCQkJZGV2X2VycihkZXYsICJyb3QtbWF4IHByb3BlcnR5IHNob3VsZCBi
-ZSBwcm92aWRlZCBieSBkZXZpY2UgdHJlZS5cbiIpOwo+ICsJCQlyZXR1cm4gLUVJTlZBTDsKPiAr
-CQl9Cj4gICAJfQo+ICAgCj4gICAJLyogY2xvY2sgY29udHJvbCAqLwo+IGRpZmYgLS1naXQgYS9p
-bmNsdWRlL3VhcGkvZHJtL2V4eW5vc19kcm0uaCBiL2luY2x1ZGUvdWFwaS9kcm0vZXh5bm9zX2Ry
-bS5oCj4gaW5kZXggY2IzZTlmOS4uZDVkNTUxOCAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL3VhcGkv
-ZHJtL2V4eW5vc19kcm0uaAo+ICsrKyBiL2luY2x1ZGUvdWFwaS9kcm0vZXh5bm9zX2RybS5oCj4g
-QEAgLTE5Miw2ICsxOTIsNyBAQCBlbnVtIGRybV9leHlub3NfcGxhbmVyIHsKPiAgICAqIEBjcm9w
-X21heDogY3JvcCBtYXggcmVzb2x1dGlvbi4KPiAgICAqIEBzY2FsZV9taW46IHNjYWxlIG1pbiBy
-ZXNvbHV0aW9uLgo+ICAgICogQHNjYWxlX21heDogc2NhbGUgbWF4IHJlc29sdXRpb24uCj4gKyAq
-IEByb3RfbWF4OiByb3RhdGlvbiBtYXggcmVzb2x1dGlvbi4KPiAgICAqLwo+ICAgc3RydWN0IGRy
-bV9leHlub3NfaXBwX3Byb3BfbGlzdCB7Cj4gICAJX191MzIJdmVyc2lvbjsKPiBAQCAtMjEwLDYg
-KzIxMSw3IEBAIHN0cnVjdCBkcm1fZXh5bm9zX2lwcF9wcm9wX2xpc3Qgewo+ICAgCXN0cnVjdCBk
-cm1fZXh5bm9zX3N6CWNyb3BfbWF4Owo+ICAgCXN0cnVjdCBkcm1fZXh5bm9zX3N6CXNjYWxlX21p
-bjsKPiAgIAlzdHJ1Y3QgZHJtX2V4eW5vc19zeglzY2FsZV9tYXg7Cj4gKwlzdHJ1Y3QgZHJtX2V4
-eW5vc19zeglyb3RfbWF4Owo+ICAgfTsKPiAgIAo+ICAgLyoqCgpJTU8gbWF4aW11bSBzdXBwb3J0
-ZWQgcGljdHVyZSBzaXplIHNob3VsZCBiZSBoYXJkY29kZWQgaW50byBkcml2ZXIsIHRoZXJlCmlz
-IG5vIG5lZWQgdG8gYWRkIGRldmljZSB0cmVlIHByb3BlcnRpZXMgZm9yIHRoYXQuIFBsZWFzZSBh
-bHNvIGNoZWNrIHY0bDIKZHJpdmVyIGZvciBFeHlub3MgR1NDLgoKQ3VycmVudGx5IGl0IHVzZXMg
-b25seSBvbmUgY29tcGF0aWJsZSAtICJleHlub3M1LWdzYyIsIGJ1dCBpbWhvIFlvdSBzaG91bGQK
-c2ltcGx5IHJlcGxhY2UgaXQgd2l0aCAiZXh5bm9zNTI1MC1nc2MiIGFuZCAiZXh5bm9zNTQyMC1n
-c2MiLCBhbmQgYWRkIHRob3NlCnZhcmlhbnRzIHdpdGggcHJvcGVyIG1heGltdW0gc3VwcG9ydGVk
-IHNpemUgKDIwNDcgYW5kIDIwMTYgcmVzcGVjdGl2ZWx5KS4KCkJlc3QgcmVnYXJkcwotLSAKTWFy
-ZWsgU3p5cHJvd3NraSwgUGhEClNhbXN1bmcgUiZEIEluc3RpdHV0ZSBQb2xhbmQKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patch uses a more generic definition of speed enum for i2c-stm32f4
+driver.
+
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
+---
+ Version history:
+    v3:
+    v2:
+        * None
+---
+---
+ drivers/i2c/busses/i2c-stm32.h   | 20 ++++++++++++++++++++
+ drivers/i2c/busses/i2c-stm32f4.c | 18 +++++++-----------
+ 2 files changed, 27 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-stm32.h
+
+diff --git a/drivers/i2c/busses/i2c-stm32.h b/drivers/i2c/busses/i2c-stm32.h
+new file mode 100644
+index 0000000..dab5176
+--- /dev/null
++++ b/drivers/i2c/busses/i2c-stm32.h
+@@ -0,0 +1,20 @@
++/*
++ * i2c-stm32.h
++ *
++ * Copyright (C) M'boumba Cedric Madianga 2017
++ * Author: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
++ *
++ * License terms:  GNU General Public License (GPL), version 2
++ */
++
++#ifndef _I2C_STM32_H
++#define _I2C_STM32_H
++
++enum stm32_i2c_speed {
++	STM32_I2C_SPEED_STANDARD, /* 100 kHz */
++	STM32_I2C_SPEED_FAST, /* 400 kHz */
++	STM32_I2C_SPEED_FAST_PLUS, /* 1 MHz */
++	STM32_I2C_SPEED_END,
++};
++
++#endif /* _I2C_STM32_H */
+diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
+index f9dd7e8..b81557d 100644
+--- a/drivers/i2c/busses/i2c-stm32f4.c
++++ b/drivers/i2c/busses/i2c-stm32f4.c
+@@ -27,6 +27,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+ 
++#include "i2c-stm32.h"
++
+ /* STM32F4 I2C offset registers */
+ #define STM32F4_I2C_CR1			0x00
+ #define STM32F4_I2C_CR2			0x04
+@@ -90,12 +92,6 @@
+ #define STM32F4_I2C_MAX_FREQ		46U
+ #define HZ_TO_MHZ			1000000
+ 
+-enum stm32f4_i2c_speed {
+-	STM32F4_I2C_SPEED_STANDARD, /* 100 kHz */
+-	STM32F4_I2C_SPEED_FAST, /* 400 kHz */
+-	STM32F4_I2C_SPEED_END,
+-};
+-
+ /**
+  * struct stm32f4_i2c_msg - client specific data
+  * @addr: 8-bit slave addr, including r/w bit
+@@ -159,7 +155,7 @@ static int stm32f4_i2c_set_periph_clk_freq(struct stm32f4_i2c_dev *i2c_dev)
+ 	i2c_dev->parent_rate = clk_get_rate(i2c_dev->clk);
+ 	freq = DIV_ROUND_UP(i2c_dev->parent_rate, HZ_TO_MHZ);
+ 
+-	if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD) {
++	if (i2c_dev->speed == STM32_I2C_SPEED_STANDARD) {
+ 		/*
+ 		 * To reach 100 kHz, the parent clk frequency should be between
+ 		 * a minimum value of 2 MHz and a maximum value of 46 MHz due
+@@ -216,7 +212,7 @@ static void stm32f4_i2c_set_rise_time(struct stm32f4_i2c_dev *i2c_dev)
+ 	 * is not higher than 46 MHz . As a result trise is at most 4 bits wide
+ 	 * and so fits into the TRISE bits [5:0].
+ 	 */
+-	if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD)
++	if (i2c_dev->speed == STM32_I2C_SPEED_STANDARD)
+ 		trise = freq + 1;
+ 	else
+ 		trise = freq * 3 / 10 + 1;
+@@ -230,7 +226,7 @@ static void stm32f4_i2c_set_speed_mode(struct stm32f4_i2c_dev *i2c_dev)
+ 	u32 val;
+ 	u32 ccr = 0;
+ 
+-	if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD) {
++	if (i2c_dev->speed == STM32_I2C_SPEED_STANDARD) {
+ 		/*
+ 		 * In standard mode:
+ 		 * t_scl_high = t_scl_low = CCR * I2C parent clk period
+@@ -808,10 +804,10 @@ static int stm32f4_i2c_probe(struct platform_device *pdev)
+ 	udelay(2);
+ 	reset_control_deassert(rst);
+ 
+-	i2c_dev->speed = STM32F4_I2C_SPEED_STANDARD;
++	i2c_dev->speed = STM32_I2C_SPEED_STANDARD;
+ 	ret = of_property_read_u32(np, "clock-frequency", &clk_rate);
+ 	if (!ret && clk_rate >= 400000)
+-		i2c_dev->speed = STM32F4_I2C_SPEED_FAST;
++		i2c_dev->speed = STM32_I2C_SPEED_FAST;
+ 
+ 	i2c_dev->dev = &pdev->dev;
+ 
+-- 
+2.7.4
