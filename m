@@ -1,47 +1,135 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 3/5] docs-rst: v4l: Include Qualcomm CAMSS in
- documentation build
-Date: Fri, 1 Sep 2017 12:46:18 +0200
-Message-ID: <7fdb19c5-331e-39f3-adb4-3c6fdeafbbda@xs4all.nl>
-References: <20170830114946.17743-1-sakari.ailus@linux.intel.com>
- <20170830114946.17743-4-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170830114946.17743-4-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: cs43130: Add devicetree bindings for CS43130" to the asoc tree
+Date: Fri, 01 Sep 2017 11:47:05 +0100
+Message-ID: <E1dnjTd-0005zm-E4@debutante>
+References: <65594a37-aecf-4be2-bc5e-f392b4d9a129@EX3.ad.cirrus.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <65594a37-aecf-4be2-bc5e-f392b4d9a129-XU/xxMRwCJnfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/08/17 13:49, Sakari Ailus wrote:
-> Qualcomm CAMSS was left out from documentation build. Fix this.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+The patch
 
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+   ASoC: cs43130: Add devicetree bindings for CS43130
 
-Regards,
+has been applied to the asoc tree at
 
-	Hans
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> ---
->  Documentation/media/v4l-drivers/index.rst | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-> index 10f2ce42ece2..5c202e23616b 100644
-> --- a/Documentation/media/v4l-drivers/index.rst
-> +++ b/Documentation/media/v4l-drivers/index.rst
-> @@ -50,6 +50,7 @@ For more details see the file COPYING in the source distribution of Linux.
->  	philips
->  	pvrusb2
->  	pxa_camera
-> +	qcom_camss
->  	radiotrack
->  	rcar-fdp1
->  	saa7134
-> 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 465c925695593b43695e2396f7279879a72275eb Mon Sep 17 00:00:00 2001
+From: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Date: Fri, 18 Aug 2017 11:00:20 -0500
+Subject: [PATCH] ASoC: cs43130: Add devicetree bindings for CS43130
+
+Add devicetree bindings documentation file for Cirrus
+Logic CS43130 codec.
+
+Signed-off-by: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/sound/cs43130.txt          | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs43130.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/cs43130.txt b/Documentation/devicetree/bindings/sound/cs43130.txt
+new file mode 100644
+index 000000000000..8b1dd5aeb004
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs43130.txt
+@@ -0,0 +1,67 @@
++CS43130 DAC
++
++Required properties:
++
++  - compatible : "cirrus,cs43130", "cirrus,cs4399", "cirrus,cs43131",
++                 "cirrus,cs43198"
++
++  - reg : the I2C address of the device for I2C
++
++  - VA-supply, VP-supply, VL-supply, VCP-supply, VD-supply:
++	power supplies for the device, as covered in
++	Documentation/devicetree/bindings/regulator/regulator.txt.
++
++
++Optional properties:
++
++  - reset-gpios : Active low GPIO used to reset the device
++
++  - cirrus,xtal-ibias:
++   When external MCLK is generated by external crystal
++   oscillator, CS43130 can be used to provide bias current
++   for external crystal.  Amount of bias current sent is
++   set as:
++   1 = 7.5uA
++   2 = 12.5uA
++   3 = 15uA
++
++  - cirrus,dc-measure:
++   Boolean, define to enable headphone DC impedance measurement.
++
++  - cirrus,ac-measure:
++   Boolean, define to enable headphone AC impedance measurement.
++   DC impedance must also be enabled for AC impedance measurement.
++
++  - cirrus,dc-threshold:
++   Define 2 DC impedance thresholds in ohms for HP output control.
++   Default values are 50 and 120 Ohms.
++
++  - cirrus,ac-freq:
++   Define the frequencies at which to measure HP AC impedance.
++   Only used if "cirrus,dc-measure" is defined.
++   Exactly 10 frequencies must be defined.
++   If this properties is undefined, by default,
++   following frequencies are used:
++   <24 43 93 200 431 928 2000 4309 9283 20000>
++   The above frequencies are logarithmically equally spaced.
++   Log base is 10.
++
++Example:
++
++cs43130: audio-codec@30 {
++   compatible = "cirrus,cs43130";
++   reg = <0x30>;
++   reset-gpios = <&axi_gpio 54 0>;
++   VA-supply = <&dummy_vreg>;
++   VP-supply = <&dummy_vreg>;
++   VL-supply = <&dummy_vreg>;
++   VCP-supply = <&dummy_vreg>;
++   VD-supply = <&dummy_vreg>;
++   cirrus,xtal-ibias = <2>;
++   interrupt-parent = <&gpio0>;
++   interrupts = <55 8>;
++   cirrus,dc-measure;
++   cirrus,ac-measure;
++   cirrus,dc-threshold = /bits/ 16 <20 100>;
++   cirrus,ac-freq = /bits/ 16 <24 43 93 200 431 928 2000 4309 9283 20000>;
++};
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
