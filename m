@@ -1,28 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: realtek: Add watchdog node for RTD1295
-Date: Fri, 1 Sep 2017 09:31:29 -0500
-Message-ID: <20170901143129.b3rzi7waqc3sz32j@rob-hp-laptop>
-References: <20170828113532.32627-1-afaerber@suse.de>
- <20170828113532.32627-4-afaerber@suse.de>
+Subject: Re: [PATCH 3/4] nvmem: rockchip: add support for RK3368
+Date: Fri, 1 Sep 2017 09:32:58 -0500
+Message-ID: <20170901143258.ccto72dhc5hd34ou@rob-hp-laptop>
+References: <20170828121604.15968-1-romain.perier@collabora.com>
+ <20170828121604.15968-4-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170828113532.32627-4-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?utf-8?B?6JKL5Li955C0?= <jiang.liqin@geniatech.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20170828121604.15968-4-romain.perier@collabora.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Romain Perier <romain.perier@collabora.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 28, 2017 at 01:35:31PM +0200, Andreas Färber wrote:
-> Add the watchdog node to the RTD1295 Device Tree.
+On Mon, Aug 28, 2017 at 02:16:03PM +0200, Romain Perier wrote:
+> This adds the necessary functions and data for handling support on RK3368
+> SoCs.
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Signed-off-by: Romain Perier <romain.perier@collabora.com>
 > ---
->  Depends on the pending clock nodes patch.
->  
->  arch/arm64/boot/dts/realtek/rtd1295.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../devicetree/bindings/nvmem/rockchip-efuse.txt   |  1 +
+
+For the binding only:
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/nvmem/rockchip-efuse.c                     | 80 ++++++++++++++++++++++
+>  2 files changed, 81 insertions(+)
