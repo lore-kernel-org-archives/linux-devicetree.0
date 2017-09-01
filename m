@@ -1,66 +1,77 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: sun8i: h3: Improved Wifi
- bindings on Bananapi M2 Plus
-Date: Fri,  1 Sep 2017 18:30:01 +0200
-Message-ID: <1504283401-4263-3-git-send-email-embed3d@gmail.com>
-References: <1504283401-4263-1-git-send-email-embed3d@gmail.com>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Applied "spi: spi-falcon: drop check of boot select" to the spi
+ tree
+Date: Fri, 1 Sep 2017 17:39:54 +0100
+Message-ID: <20170901163954.zj2kpqhag7vakucp@sirena.org.uk>
+References: <20170417192942.32219-4-hauke@hauke-m.de>
+ <E1dnjTy-0006AD-Ox@debutante>
+ <20170901142355.GB31297@linux-mips.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBLUWU3GQKGQEZZVMP6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1504283401-4263-1-git-send-email-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yz2qmbdgrt2zqrtv"
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170901142355.GB31297-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-* vqmmc is in this case not needed
-* no need for pincontrol nodes when the pin is set to a GPIO
+--yz2qmbdgrt2zqrtv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 7 -------
- 1 file changed, 7 deletions(-)
+On Fri, Sep 01, 2017 at 04:23:55PM +0200, Ralf Baechle wrote:
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-index d756ff8..f7e5d8a 100644
---- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-@@ -98,7 +98,6 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&wifi_en_bpi_m2p>;
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
- 	};
- };
-@@ -153,7 +152,6 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
--	vqmmc-supply = <&reg_vcc3v3>;
- 	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
-@@ -200,11 +198,6 @@
- 		pins = "PL3";
- 		function = "gpio_in";
- 	};
--
--	wifi_en_bpi_m2p: wifi_en_pin {
--		pins = "PL7";
--		function = "gpio_out";
--	};
- };
- 
- &reg_usb0_vbus {
--- 
-2.7.4
+> Thanks Mark - but there are some ordering dependencies in Hauke's
+> patch series so it would be great if I could have an Acked-by to merge
+> this patch through the MIPS tree along with the rest of Hauke's series.
+
+Ah, I see - I wasn't copied on the cover letter so I didn't know about
+this.  Here's a pull request:
+
+The following changes since commit 5771a8c08880cdca3bfb4a3fc6d309d6bba20877:
+
+  Linux v4.13-rc1 (2017-07-15 15:22:10 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-falcon-no-board-check
+
+for you to fetch changes up to 1a41aa1376df9e24d0c760df1a6f59765316c457:
+
+  spi: spi-falcon: drop check of boot select (2017-09-01 11:33:22 +0100)
+
+----------------------------------------------------------------
+spi: Remove board check from the Falcon driver
+
+MIPS is removing this board check so support a cross tree merge.
+
+----------------------------------------------------------------
+Hauke Mehrtens (1):
+      spi: spi-falcon: drop check of boot select
+
+ drivers/spi/spi-falcon.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+--yz2qmbdgrt2zqrtv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmpjVoACgkQJNaLcl1U
+h9BV1gf7Bb/eqetoXini9Wo2ec8W/Faq3iyNLJsm5sq6kdEmyfgg45y+VPDzER/s
+S2zaLpkahr6nOhFZVCc+ZuJ0/ONB3j1zKeCul8E0Jquh8R2UhNSIxla2VRnDHDxG
+NlCM9pk0eI6NJ4ad78DcIf8q7eeikuFchw66pMIzeZj02AWurYj6Vf15iZxwv/Im
+PxAT5C5XG8roa3FRCXNjI+m0sT1jBkjHNFpINm6mj9tUQ3nWW14vjKDjAbyH0ymR
+bqLmqWA/TKhZX8Ek4BgQRIcAc8qPPs4atb07cDvahDjvZUZEREik5qe9Vh0wtLXi
+D09hfGioArLwS0+IGC2PQ3K95sr7VA==
+=Yz51
+-----END PGP SIGNATURE-----
+
+--yz2qmbdgrt2zqrtv--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
