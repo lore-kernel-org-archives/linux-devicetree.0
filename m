@@ -1,138 +1,173 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for
- Allwinner A64
-Date: Fri, 1 Sep 2017 08:04:45 +0200
-Message-ID: <20170901060445.vboici7qxfkztp3s@flea>
-References: <20170830233609.13855-4-stefan.bruens@rwth-aachen.de>
- <20170901003135.10058-1-andre.przywara@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Subject: [PATCH] Aesthetic tweaks to devicenodes.rst chapter, 0.1 DT spec.
+Date: Fri, 1 Sep 2017 02:07:56 -0400 (EDT)
+Message-ID: <alpine.LFD.2.21.1709010205210.21695@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vpmdrrlv5hiemtst"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7XQUPGQKGQEF6S2L6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170901003135.10058-1-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="8323328-1835193447-1504246079=:21695"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---vpmdrrlv5hiemtst
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--8323328-1835193447-1504246079=:21695
+Content-Type: text/plain; charset=ISO-8859-7
+Content-Transfer-Encoding: 8BIT
 
-On Fri, Sep 01, 2017 at 01:31:35AM +0100, Andre Przywara wrote:
-> Hi,
->=20
-> On 31/08/17 00:36, Stefan Br=C3=BCns wrote:
-> > The A64 SoC has the same dma engine as the H3 (sun8i), with a
-> > reduced amount of physical channels. Add the proper config data
-> > and compatible string to support it.
->=20
-> ...
->=20
-> > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> > index 5f4eee4513e5..6a17c5d63582 100644
-> > --- a/drivers/dma/sun6i-dma.c
-> > +++ b/drivers/dma/sun6i-dma.c
-> > @@ -1068,6 +1068,12 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =
-=3D {
-> >  	.nr_max_vchans   =3D 34,
-> >  	.dmac_variant    =3D DMAC_VARIANT_H3,
-> >  };
-> > +
-> > +static struct sun6i_dma_config sun50i_a64_dma_cfg =3D {
-> > +	.nr_max_channels =3D 8,
-> > +	.nr_max_requests =3D 27,
-> > +	.nr_max_vchans   =3D 38,
-> > +	.dmac_variant    =3D DMAC_VARIANT_H3,
-> >  };
-> > =20
-> >  static const struct of_device_id sun6i_dma_match[] =3D {
-> > @@ -1075,6 +1081,7 @@ static const struct of_device_id sun6i_dma_match[=
-] =3D {
-> >  	{ .compatible =3D "allwinner,sun8i-a23-dma", .data =3D &sun8i_a23_dma=
-_cfg },
-> >  	{ .compatible =3D "allwinner,sun8i-a83t-dma", .data =3D &sun8i_a83t_d=
-ma_cfg },
-> >  	{ .compatible =3D "allwinner,sun8i-h3-dma", .data =3D &sun8i_h3_dma_c=
-fg },
-> > +	{ .compatible =3D "allwinner,sun50i-a64-dma", .data =3D &sun50i_a64_d=
-ma_cfg },
-> >  	{ /* sentinel */ }
-> >  };
-> >  MODULE_DEVICE_TABLE(of, sun6i_dma_match);
->=20
-> I was wondering if should use the opportunity to expose those values as
-> DT properties instead of hard-wiring them to a compatible string in the
-> driver every time we add support for a new SoC?
-> We could introduce a new compatible string (say: "allwinner,sunxi-dma"),
-> then describe properties for the number of channels and requests and
-> vchans and parse those from the DT at probe time.
-> With this we might be able to support future SoCs without Linux *driver*
-> changes, by just providing the right DT. This would have worked already
-> for instance for the A83T support, which just changed those values.
->=20
-> For instance with this quick patch below (just compile tested, and withou=
-t
-> your refactoring).
-> The DT node would then read something like:
-> 	dma: dma-controller@01c02000 {
-> 		compatible =3D "allwinner,sun50i-a64-dma",
-> 			     "allwinner,sunxi-dma";
-> 		reg =3D <0x01c02000 0x1000>;
-> 		interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> 		clocks =3D <&ccu CLK_BUS_DMA>;
-> 		resets =3D <&ccu RST_BUS_DMA>;
-> 		#dma-cells =3D <1>;
-> 		allwinner,max_channels =3D <8>;
-> 		allwinner,max_requests =3D <27>;
-> 		allwinner,max_vchans =3D <38>;
-> 	};
 
-We're still going to need a different compatible anyway, so it's not
-really like it would change anything.
+Aesthetic fixups to devicenodes.rst chapter of DT spec, including:
 
-Maxime
+ * font changes
+ * define "PIR" acronym when first used
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+---
 
---vpmdrrlv5hiemtst
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/source/devicenodes.rst b/source/devicenodes.rst
+index 78b5bdb..bf82114 100644
+--- a/source/devicenodes.rst
++++ b/source/devicenodes.rst
+@@ -7,14 +7,14 @@ Base Device Node Types
+ ----------------------
 
------BEGIN PGP SIGNATURE-----
+ The sections that follow specify the requirements for the base set of
+-device nodes required in an |spec|-compliant devicetree.
++device nodes required in a |spec|-compliant devicetree.
 
-iQIcBAEBAgAGBQJZqPh9AAoJEBx+YmzsjxAgdsIP/jNnKflxaeLhDEL3k/HXbxMv
-FELEKhYj/ezV9Idd3/vKics9EnIc6O5xjdTycYhnYtbgcQcCY6LgKvwRs1cL3f5M
-16al3yYQUeEfFjiW6ml53mh5jFa1YwbgW2IkAsQ29TbL+8hJEfWKP41AXRhN2UR/
-oPTOXvQu40Ec6etz0EjhERe8HhDaQeV75H7BS5h2VvojYlDvnIm+vXx0ZA2r1hP2
-q1mRc93K8DAXfZiShSJKPdnq6p/SkO0hGviqDLzeepvwXvUwiUwTZ/Q0I5Rcl00+
-+bXrRLLcu0HFG2lbJi5d9gTJ6hEu/XJvtlbr9Ap6JACawU5+dcRVB4qsbuDkYZS5
-OsIG/HHTzGL6psOiN9PeGt8pPwNnsFK4F+B4V9dKvnrRZkIRzP0VXES28tk1ipX9
-Te1pRN5+zPaGUmgz0WokErX+8YaaWS6BQRbef0gKTd55IjgSdSPYQCm7deUD3t4O
-JOv28sPSxWJ57QRwBNb5U7PThwvsCVdfVIvrfcRTcfv7pwGrL9cOswr0Ben4GmCh
-0ZyJ7MGnmppbMakqDK35sHpYwQX7PuU11GKR0m34qxGzfDAS1w7riKkC3zC3QF28
-MYJICzi5hfleQEdP/mjKWn9CwrVWHUAzSB9XWKpjuP0ixMObgaBrdxSdYt/19YR1
-QA9QJnzIqTCoZnYaOgLF
-=gUmU
------END PGP SIGNATURE-----
+ All devicetrees shall have a root node and the following nodes shall be
+ present at the root of all devicetrees:
 
---vpmdrrlv5hiemtst--
+ *  One ``/cpus`` node
+
+-*  At least one ``memory`` node
++*  At least one ``/memory`` node
+
+ Root node
+ ---------
+@@ -65,7 +65,7 @@ and have the node name ``/aliases``.
+ Each property of the ``/aliases`` node defines an alias. The property name
+ specifies the alias name. The property value specifies the full path to
+ a node in the devicetree. For example, the property serial0 =
+-``"/simple-bus@fe000000/serial@llc500"`` defines the alias serial0.
++``"/simple-bus@fe000000/serial@llc500"`` defines the alias ``serial0``.
+
+ Alias names shall be a lowercase text strings of 1 to 31 characters from
+ the following set of characters.
+@@ -98,7 +98,7 @@ considering a string as a device path, shall detect and use the alias.
+         ethernet0 = "/simple-bus@fe000000/ethernet@31c000";
+     };
+
+-Given the alias serial0, a client program can look at the aliases node
++Given the alias ``serial0``, a client program can look at the ``/aliases`` node
+ and determine the alias refers to the device path
+ ``/simple-bus@fe000000/serial@llc500``.
+
+@@ -110,8 +110,8 @@ physical memory layout for the system. If a system has multiple ranges
+ of memory, multiple memory nodes can be created, or the ranges can be
+ specified in the *reg* property of a single memory node.
+
+-The name component of the node name (see section :ref:`sect-node-names`)
+-shall be memory.
++The *unit-name* component of the node name (see section :ref:`sect-node-names`)
++shall be ``memory``.
+
+ The client program may access memory not covered by any memory
+ reservations (see section :ref:`sect-fdt-memory-reservation-block`)
+@@ -241,16 +241,16 @@ time. It shall be a child of the root node.
+     };
+
+ Older versions of devicetrees may be encountered that contain a
+-deprecated form of the stdout-path property called linux,stdout-path.
++deprecated form of the *stdout-path* property called *linux,stdout-path*.
+ For compatibility, a client program might want to support
+-linux,stdout-path if a stdout-path property is not present. The meaning
++*linux,stdout-path* if a *stdout-path* property is not present. The meaning
+ and use of the two properties is identical.
+
+ ``/cpus`` Node Properties
+ -------------------------
+
+-A cpus node is required for all devicetrees. It does not represent a
+-real device in the system, but acts as a container for child cpu nodes
++A ``/cpus`` node is required for all devicetrees. It does not represent a
++real device in the system, but acts as a container for child ``cpu`` nodes
+ which represent the systems CPUs.
+
+ .. tabularcolumns:: | l c l J |
+@@ -272,7 +272,7 @@ which represent the systems CPUs.
+    :ref:`sect-standard-properties`) are allowed but are optional.
+
+
+-The cpus node may contain properties that are common across CPU nodes.
++The ``/cpus`` node may contain properties that are common across ``cpu`` nodes.
+ See section :ref:`sect-cpus-cpu-node-properties` for details.
+
+ For an example, see section :ref:`sect-cpu-node-example`.
+@@ -282,12 +282,12 @@ For an example, see section :ref:`sect-cpu-node-example`.
+ ``/cpus/cpu*`` Node Properties
+ ------------------------------
+
+-A cpu node represents a hardware execution block that is sufficiently
++A ``cpu`` node represents a hardware execution block that is sufficiently
+ independent that it is capable of running an operating system without
+ interfering with other CPUs possibly running other operating systems.
+
+ Hardware threads that share an MMU would generally be represented under
+-one cpu node. If other more complex CPU topographies are designed, the
++one ``cpu`` node. If other more complex CPU topographies are designed, the
+ binding for the CPU must describe the topography (e.g. threads that
+ don¢t share an MMU).
+
+@@ -295,18 +295,18 @@ CPUs and threads are numbered through a unified number-space that should
+ match as closely as possible the interrupt controller¢s numbering of
+ CPUs/threads.
+
+-Properties that have identical values across CPU nodes may be placed in
+-the cpus node instead. A client program must first examine a specific
+-CPU node, but if an expected property is not found then it should look
+-at the parent cpus node. This results in a less verbose representation
++Properties that have identical values across ``cpu`` nodes may be placed in
++the ``/cpus`` node instead. A client program must first examine a specific
++``cpu`` node, but if an expected property is not found then it should look
++at the parent ``/cpus`` node. This results in a less verbose representation
+ of properties which are identical across all CPUs.
+
+-The node name for every cpu node should be ``cpu``.
++The node name for every CPU node should be ``cpu``.
+
+ General Properties of ``/cpus/cpu*`` nodes
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-The following table describes the general properties of CPU nodes. Some
++The following table describes the general properties of ``cpu`` nodes. Some
+ of the properties described in :numref:`table-cpu-node-props` are select
+ standard properties with specific applicable detail.
+
+@@ -342,7 +342,8 @@ standard properties with specific applicable detail.
+                                                    and out of bounds of the range addressed by
+                                                    the interrupt controller
+
+-                                                   If a CPU/thread's PIR is modifiable, a client
++                                                   If a CPU/thread's PIR (pending interrupt register)
++                                                   is modifiable, a client
+                                                    program should modify PIR to match the *reg*
+                                                    property value. If PIR cannot be modified and
+                                                    the PIR value is distinct from the interrupt
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
+--8323328-1835193447-1504246079=:21695--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
