@@ -1,109 +1,61 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v5 4/5] v4l: fwnode: Support generic parsing of graph
- endpoints in a device
-Date: Fri, 1 Sep 2017 12:04:35 +0300
-Message-ID: <20170901090434.5xyjz5ooswbx2kt2@paasikivi.fi.intel.com>
-References: <20170829110313.19538-1-sakari.ailus@linux.intel.com>
- <2739432.dQ1BSg1MPy@avalon>
- <20170829143121.6sjdx3lgcoxm6mva@valkosipuli.retiisi.org.uk>
- <4764194.MvKE5XMHvq@avalon>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH ] ARM: dts: iwg22d-sodimm: Add Ethernet AVB support
+Date: Fri, 1 Sep 2017 11:30:33 +0200
+Message-ID: <CAMuHMdXFO+oirricuB2prtm2ca1AyMLDgx6ib5cVNRK0=7T+5g@mail.gmail.com>
+References: <1504106234-41450-1-git-send-email-biju.das@bp.renesas.com>
+ <20170831084534.GF29946@verge.net.au> <KL1PR06MB170280A3D466C9B35AF73939B89D0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+ <TY1PR06MB07029D315FC6EE500D1EEA55B79D0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+ <20170901084923.GC14918@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4764194.MvKE5XMHvq@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170901084923.GC14918@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Simon,
 
-On Fri, Sep 01, 2017 at 11:55:43AM +0300, Laurent Pinchart wrote:
-...
-> > >> +static int parse_endpoint(
-> > >> +	struct device *dev, struct v4l2_async_notifier *notifier,
-> > >> +	struct fwnode_handle *endpoint, unsigned int asd_struct_size,
-> > >> +	int (*parse_single)(struct device *dev,
-> > >> +			    struct v4l2_fwnode_endpoint *vep,
-> > >> +			    struct v4l2_async_subdev *asd))
-> > >> +{
-> > >> +	struct v4l2_async_subdev *asd;
-> > >> +	struct v4l2_fwnode_endpoint *vep;
-> > >> +	int ret = 0;
-> > >> +
-> > >> +	asd = kzalloc(asd_struct_size, GFP_KERNEL);
-> > >> +	if (!asd)
-> > >> +		return -ENOMEM;
-> > >> +
-> > >> +	asd->match.fwnode.fwnode =
-> > >> +		fwnode_graph_get_remote_port_parent(endpoint);
-> > >> +	if (!asd->match.fwnode.fwnode) {
-> > >> +		dev_warn(dev, "bad remote port parent\n");
-> > >> +		ret = -EINVAL;
-> > >> +		goto out_err;
-> > >> +	}
-> > >> +
-> > >> +	/* Ignore endpoints the parsing of which failed. */
-> > > 
-> > > You don't ignore them anymore, the comment should be updated.
-> > 
-> > Hmm. I actually intended to do something else about this. :-) As there's a
-> > single error code, handling that would need to be done a little bit
-> > differently right now.
-> > 
-> > I'd print a warning and proceed. What do you think?
-> > 
-> > Even if there's a bad DT endpoint, that shouldn't prevent the rest from
-> > working, right?
-> 
-> I think it should, to make sure we catch DT issues. We both know how many 
-> vendors don't care about warnings, so I'd rather fail completely to ensure DT 
-> will be fixed (and even ten I wouldn't be surprised if some vendors patched 
-> the code to remove the check instead of fixing their DT ;-)).
+On Fri, Sep 1, 2017 at 10:49 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Aug 31, 2017 at 09:32:25AM +0000, Chris Paterson wrote:
+>> > From: Biju Das
+>> > > From: Simon Horman [mailto:horms@verge.net.au]
+>> > > > +       phy3: ethernet-phy@3 {
+>> > > > +       /*
+>> > > > +        * On some older versions of the platform (before R4.0) the phy
+>> > > address
+>> > > > +        * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
+>> > > > +        */
+>> > > > +               reg = <3>;
+>> > > > +               micrel,led-mode = <1>;
+>> > >
+>> > > Does the phy have an interrupt?
+>> >
+>> > The current board doesn't support interrupt . But there is a plan to support this
+>> > in future board variants through (GPIO3_28).
+>>
+>> Actually, the plan has recently changed and at the moment interrupt support will not be added in the production version of the board.
+>>
+>> If in the end the plan changes again and the actual hardware does add interrupt support we'll submit a new patch accordingly.
+>
+> Thanks for following-up on this. I'm still surprised there is no interrupt
+> - does link speed renegotiation initiated by the other end of the link work
+> in a timely manner? - but if its not there and my wishful thinking won't
+> make it so.
 
-If they test the DTS, they should find out that the device does not work.
+I guess it behaves similar to Koelsch using the new CPG/MSSR driver, and
+without the probe deferral fix for of_mdio, where it also falls back to polling.
+Cfr. the figures in
+https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg17422.html
 
-If they do not, some devices will work even if others fail.
+Gr{oetje,eeting}s,
 
-Therefore I don't see why everything should fail when a part of faulty.
-Extending that a little, you should also halt the system to make sure the
-problem will be noticed. :-)
+                        Geert
 
-> > >> @@ -121,6 +122,21 @@ int v4l2_async_notifier_register(struct v4l2_device
-> > >> *v4l2_dev, void v4l2_async_notifier_unregister(struct
-> > >> v4l2_async_notifier *notifier);
-> > >> 
-> > >>  /**
-> > >> + * v4l2_async_notifier_release - release notifier resources
-> > >> + * @notifier: pointer to &struct v4l2_async_notifier
-> > > 
-> > > That's quite obvious given the type of the argument. It would be much more
-> > > useful to tell which notifier pointer this function expects (although in
-> > > this case it should be obvious too): "(pointer to )?the notifier whose
-> > > resources will be released".
-> > 
-> > This fully matches to the documentation elsewhere in the same file. :-)
-> 
-> Feel free to fix the rest of the file :-)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-That's out of scope of this patch.
-
-> > > "The function can be called multiple times to populate the same notifier
-> > > from endpoints of different @dev devices before registering the notifier.
-> > > It can't be called anymore once the notifier has been registered."
-> > 
-> > I don't think there's really a use case for calling this for more than one
-> > device, is there?
-> 
-> I don't have one in mind, but I was wondering. If there isn't then you don't 
-> need notifier_realloc(), which could be moved to the next patch.
-
-I don't think there's even benefit from moving it to the next patch, it
-just adds to the reviewable code, nothing else.
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
