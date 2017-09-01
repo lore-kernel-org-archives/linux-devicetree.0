@@ -1,48 +1,101 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 3/7] clk: at91: add audio pll clock drivers
-Date: Fri, 1 Sep 2017 15:55:14 -0700
-Message-ID: <20170901225514.GE21656@codeaurora.org>
-References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
- <f1c7acbfec384c2c33bf340464a98b731dac8c0c.1502346448.git-series.quentin.schulz@free-electrons.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v6 5/5] v4l: fwnode: Support generic parsing of graph
+ endpoints in a single port
+Date: Sat, 2 Sep 2017 01:57:48 +0300
+Message-ID: <20170901225748.ygk35gzmt6vrtetw@valkosipuli.retiisi.org.uk>
+References: <20170830114946.17743-1-sakari.ailus@linux.intel.com>
+ <20170830114946.17743-6-sakari.ailus@linux.intel.com>
+ <95945222-3562-a330-609f-ad1a64034dd3@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <f1c7acbfec384c2c33bf340464a98b731dac8c0c.1502346448.git-series.quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, alsa-devel@alsa-project.org, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, Nicolas Ferre <nicolas.ferre@atmel.com>, lgirdwood@gmail.com, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, broonie@kernel.org, cyrille.pitchen@wedev4u.fr, linux@armlinux.org.uk, perex@perex.cz, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <95945222-3562-a330-609f-ad1a64034dd3-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/10, Quentin Schulz wrote:
-> This new clock driver set allows to have a fractional divided clock that
-> would generate a precise clock particularly suitable for audio
-> applications.
-> 
-> The main audio pll clock has two children clocks: one that is connected
-> to the PMC, the other that can directly drive a pad. As these two routes
-> have different enable bits and different dividers and divider formulas,
-> they are handled by two different drivers. Each of them could modify the
-> rate of the main audio pll parent.
-> 
-> The main audio pll clock can output 620MHz to 700MHz.
-> 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> ---
+Hi Hans,
 
-Applied to clk-next
+Thanks for the review.
+
+On Fri, Sep 01, 2017 at 01:28:40PM +0200, Hans Verkuil wrote:
+> > diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> > index d063ab4ff67b..dd13604178b4 100644
+> > --- a/include/media/v4l2-fwnode.h
+> > +++ b/include/media/v4l2-fwnode.h
+> > @@ -249,4 +249,53 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
+> >  			    struct v4l2_fwnode_endpoint *vep,
+> >  			    struct v4l2_async_subdev *asd));
+> >  
+> > +/**
+> > + * v4l2_async_notifier_parse_fwnode_endpoint - Set up async notifier for an
+> > + *					       fwnode based sub-device
+> > + * @dev: @struct device pointer
+> > + * @notifier: pointer to &struct v4l2_async_notifier
+> > + * @port_id: port number
+> > + * @endpoint_id: endpoint number
+> > + * @asd_struct_size: size of the driver's async sub-device struct, including
+> > + *		     sizeof(struct v4l2_async_subdev). The &struct
+> > + *		     v4l2_async_subdev shall be the first member of
+> > + *		     the driver's async sub-device struct, i.e. both
+> > + *		     begin at the same memory address.
+> > + * @parse_single: driver's callback function called on each V4L2 fwnode endpoint
+> > + *
+> > + * Parse the fwnode endpoint of the @dev device corresponding to the given port
+> > + * and endpoint numbres and populate the async sub- devices array of the
+> 
+> numbers
+> no space after sub-
+> 
+> > + * notifier. The @parse_endpoint callback function is called for the endpoint
+> 
+> parse_single, but (as in the previous patch) I actually prefer parse_endpoint.
+> 
+> > + * with the corresponding async sub-device pointer to let the caller initialize
+> > + * the driver-specific part of the async sub-device structure.
+> > + *
+> > + * The notifier memory shall be zeroed before this function is called on the
+> > + * notifier.
+> 
+> Should it? Doesn't this add additional subdevs?
+> 
+> I'm lost. What's the relationship between v4l2_async_notifier_parse_fwnode_endpoints
+> and this function? When do you use which? When you should zero the notifier?
+
+I thought there would be advantages in this approach as it lets you to
+choose which endpoints specifically you want to parse. That said, the
+expectation is that the device has no endpoints that aren't supported in
+hardware either.
+
+Some drivers currently iterate over all the endpoints and then validate
+them whereas others poke for some endpoints only (port 0, endpoint 0, for
+the rcar-vin driver, for instance). In DT binding documentation the
+endpoint numbers are currently not specified nor drivers have checked them.
+Common sense tells to use zero if there's no reason to do otherwise, but
+still this hasn't been documented nor validated in the past. So if we add
+that now, there could be a chance of breaking something.
+
+Additionally, specifying the endpoints to parse explicitly has been seen
+beneficial (or even necessary) in parsing endpoints for devices that have
+both input and output interfaces. Perhaps Niklas can comment on that.
+
+What I though was to introduce a specific error code (EPERM, better
+suggestions are taken) for the driver callback function (parse_endpoint) to
+silently skip endpoints the driver doesn't like for reason or another. This
+lets drivers to use the endpoint parser function added by the previous
+patch and still maintain the old behaviour, i.e. ignore endpoints that
+aren't explicitly recognised by the driver.
+
+I'll drop this patch from the next version.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
