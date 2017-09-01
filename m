@@ -1,104 +1,77 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
-Date: Fri, 01 Sep 2017 11:32:32 -0700
-Message-ID: <87efrql16n.fsf@anholt.net>
-References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
- <87k21jzn38.fsf@anholt.net> <20170901082016.3b5e445e@bbrezillon>
+From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt-binding: net: wireless: add
+ bcm43430-fmac
+Date: Fri, 1 Sep 2017 21:10:41 +0200
+Message-ID: <bb53a79e-8045-3c9b-8c98-8d4815c3b57a@broadcom.com>
+References: <20170829214309.34466-1-antony@phenome.org>
+ <CAGb2v66=JvS9wHkUNBwd+vHwx4NAQsaWyhx1OyEokSZizo+7-g@mail.gmail.com>
+ <20170830120218.ms3xuhp4qsibistv@AntonyAntony.local>
+ <20170901164911.aiu5ej5u546z5kow@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1901422477=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170901082016.3b5e445e@bbrezillon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, dri-devel@lists.freedesktop.org, Richard Sproul <sproul@cadence.com>, Rob Herring <robh+dt@kernel.org>, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Neil Webb <neilw@cadence.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170901164911.aiu5ej5u546z5kow@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============1901422477==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On 01-09-17 18:49, Rob Herring wrote:
+> On Wed, Aug 30, 2017 at 02:02:18PM +0200, Antony Antony wrote:
+>> hi,
+>>
+>> On Wed, Aug 30, 2017 at 10:28:20AM +0800, Chen-Yu Tsai wrote:
+>>> On Wed, Aug 30, 2017 at 5:43 AM, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org> wrote:
+>>
+>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>> @@ -6,7 +6,9 @@ connects the device to the system.
+>>>>
+>>>>   Required properties:
+>>>>
+>>>> - - compatible : Should be "brcm,bcm4329-fmac".
+>>>> + - compatible : should be one of the following:
+>>>> +       * "brcm,bcm4329-fmac"
+>>>> +       * "brcm,bcm43430-fmac"
+>>>
+>>> You updated the bindings, but not the driver. So it's not actually
+>>> going to work. More specifically, OOB interrupts won't work.
+>>>
+>>
+>> understood, ignore this patch for now. Thanks Chen-Yu.
+>>
+>>> IIRC, The compatible string for this particular case, as it was
+>>> originally proposed, only serves as a placeholder for the driver
+>>> to check against. None of the instances in sunxi device trees
+>>> match the actual chip model. Actual model matching is done
+>>> through SDIO, as you've already seen.
+>>
+>> yes it seems SDIO driveer code is smarter, once it initialize
+>> brcm,bcm4329-fmac it ignore the DT info and read the chip details to locate
+>> firmware file.
+>>
+>> I also noticed other boards using bcm4329-fmac in similar situations.
+>> https://patchwork.kernel.org/patch/9739181/
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts?h=v4.13-rc7
+>>
+>> I will resend "NanoPi NEO Plus2" dts with "brcm,bcm4329-fmac" and see where
+>> it goes.
+> 
+> Adding the compatible or instead of? The former would be better. You
+> should still have the actual chip in case you do have some difference to
+> handle.
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Rob,
 
-Boris Brezillon <boris.brezillon@free-electrons.com> writes:
+Actually the Broadcom wifi chips themselves are discoverable. So once 
+the driver has access to the register space of the device it can 
+determine the actual chip, its revision, and exactly what cores (and 
+their revision) are present in the chip. Hence there is a single 
+compatible string as there is no need to convey the same information 
+through device tree data.
 
-> Hi Eric,
->
-> On Thu, 31 Aug 2017 10:03:23 -0700
-> Eric Anholt <eric@anholt.net> wrote:
->
->> Boris Brezillon <boris.brezillon@free-electrons.com> writes:
->> > +			      VID_DATATYPE(MIPI_DSI_PACKED_PIXEL_STREAM_16);
->> > +			break;
->> > +
->> > +		default:
->> > +			dev_err(dsi->base.dev, "Unsupported DSI format\n");
->> > +			return;
->> > +		}=20=20
->>=20
->> > +static irqreturn_t cdns_dsi_interrupt(int irq, void *data)
->> > +{
->> > +	struct cdns_dsi *dsi =3D data;
->> > +	irqreturn_t ret =3D IRQ_NONE;
->> > +	u32 flag, ctl;
->> > +
->> > +	flag =3D readl(dsi->regs + DIRECT_CMD_STS_FLAG);
->> > +	if (flag) {
->> > +		ctl =3D readl(dsi->regs + DIRECT_CMD_STS_CTL);
->> > +		ctl &=3D ~flag;
->> > +		writel(ctl, dsi->regs + DIRECT_CMD_STS_CTL);=20=20
->>=20
->> Are you meant to just write flag to DIRECT_CMD_STS_CLEAR, maybe?
->
-> Actually, I want to keep the status flag untouched, I'm just masking the
-> interrupt to not be interrupted until the waiter has cleared the
-> status flags.
->
-> I'm doing that because the user may want to wait for several different
-> events (error, done, timeout, ...), and I'm not doing the check in the
-> interrupt handler. Instead, I'm just waking up the waiter and let him
-> check the status flag himself.
-
-Oh, OK.  That sounds good.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlmpp8AACgkQtdYpNtH8
-nuhGHxAAhY2Ij/UA7dKB+TxvPxk1WTl/RECpI5odZ+w38fS5okvLFZkQJlbgHuuN
-Yn0PJzCEiPb1eby/TjCuRwNReUrgzbHRV+zM8gs6SZu9xwAgRMeTL4sKfTHbmx8t
-+JUwu2ySXY31i3MIjVaj+n/8p6BRD2X0DzXHF2qeJeaslJWV4vRH9zEsw2oNFp3Y
-725E/TfmNkLKZ9LO3iSmC4CLAWOrv9m/vLOu+8crgYcGfr3hyU3s0wCIww+b8ngF
-1EqMLmK+B4MlexfSiigOa5Wf+P0aHy/iAjJSft9I4isw0K3HAIrkVRPCwZNrapJl
-NxojIyk5lQk7Optxn0Nclc3NfDY4ahOhcbgeLboTRm5tFGYriDjq0ljQsnyfcgkt
-b+l6aXfjU51nc1eUvonZTG1dz1J5DOMPAmDSPmWaTQ+mmj9UQr+6BISrMtnFPwJo
-wvonD/Hb58jSvOiATgPFhc/fW9/nO1S0MXH71IPhok0a4aGw3eRGF1wjj9OSSjAX
-z5rf6/D79gwUBOqcXUzWrACapQoD7OKNE9jckBqANYJORRUl71/vgcTUg/E8AzVv
-K5pZYu4hKxF7O7nt9rZkMNuoWBs3ttO2gDFuttSkMkULHq9Bi5k608LAw3XsxQFB
-LHpdQYZ3WP7AV7DLgRpOICxsaJqini735vKdn6/479QaFmaHajQ=
-=685d
------END PGP SIGNATURE-----
---=-=-=--
-
---===============1901422477==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1901422477==--
+Regards,
+Arend
