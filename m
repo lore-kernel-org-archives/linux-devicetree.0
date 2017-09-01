@@ -1,88 +1,307 @@
-From: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt-binding: net: wireless: add
- bcm43430-fmac
-Date: Fri, 1 Sep 2017 22:40:30 +0200
-Message-ID: <20170901204030.2zpsoa4i53tdegs3@AntonyAntony.local>
-References: <20170829214309.34466-1-antony@phenome.org>
- <CAGb2v66=JvS9wHkUNBwd+vHwx4NAQsaWyhx1OyEokSZizo+7-g@mail.gmail.com>
- <20170830120218.ms3xuhp4qsibistv@AntonyAntony.local>
- <20170901164911.aiu5ej5u546z5kow@rob-hp-laptop>
- <bb53a79e-8045-3c9b-8c98-8d4815c3b57a@broadcom.com>
+From: Antony Antony <antony@phenome.org>
+Subject: [PATCH v7] arm64: allwinner: h5: add NanoPi NEO Plus2 DT support
+Date: Fri,  1 Sep 2017 22:45:01 +0200
+Message-ID: <20170901204501.99644-1-antony@phenome.org>
+References: <20170824231716.2623-1-antony@phenome.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <bb53a79e-8045-3c9b-8c98-8d4815c3b57a-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170824231716.2623-1-antony@phenome.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, Antony Antony <antony@phenome.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 01, 2017 at 09:10:41PM +0200, Arend van Spriel wrote:
-> On 01-09-17 18:49, Rob Herring wrote:
-> > On Wed, Aug 30, 2017 at 02:02:18PM +0200, Antony Antony wrote:
-> > > hi,
-> > > 
-> > > On Wed, Aug 30, 2017 at 10:28:20AM +0800, Chen-Yu Tsai wrote:
-> > > > On Wed, Aug 30, 2017 at 5:43 AM, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org> wrote:
-> > > 
-> > > > > a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> > > > > +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> > > > > @@ -6,7 +6,9 @@ connects the device to the system.
-> > > > > 
-> > > > >   Required properties:
-> > > > > 
-> > > > > - - compatible : Should be "brcm,bcm4329-fmac".
-> > > > > + - compatible : should be one of the following:
-> > > > > +       * "brcm,bcm4329-fmac"
-> > > > > +       * "brcm,bcm43430-fmac"
-> > > > 
-> > > > You updated the bindings, but not the driver. So it's not actually
-> > > > going to work. More specifically, OOB interrupts won't work.
-> > > > 
-> > > 
-> > > understood, ignore this patch for now. Thanks Chen-Yu.
-> > > 
-> > > > IIRC, The compatible string for this particular case, as it was
-> > > > originally proposed, only serves as a placeholder for the driver
-> > > > to check against. None of the instances in sunxi device trees
-> > > > match the actual chip model. Actual model matching is done
-> > > > through SDIO, as you've already seen.
-> > > 
-> > > yes it seems SDIO driveer code is smarter, once it initialize
-> > > brcm,bcm4329-fmac it ignore the DT info and read the chip details to locate
-> > > firmware file.
-> > > 
-> > > I also noticed other boards using bcm4329-fmac in similar situations.
-> > > https://patchwork.kernel.org/patch/9739181/
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts?h=v4.13-rc7
-> > > 
-> > > I will resend "NanoPi NEO Plus2" dts with "brcm,bcm4329-fmac" and see where
-> > > it goes.
-> > 
-> > Adding the compatible or instead of? The former would be better. You
-> > should still have the actual chip in case you do have some difference to
-> > handle.
-> 
-> Hi Rob,
-> 
-> Actually the Broadcom wifi chips themselves are discoverable. So once the
-> driver has access to the register space of the device it can determine the
-> actual chip, its revision, and exactly what cores (and their revision) are
-> present in the chip. Hence there is a single compatible string as there is
-> no need to convey the same information through device tree data.
+Add initial DT for NanoPi NEO Plus2 by FriendlyARM
+- Allwinner quad core H5 Cortex A53 with an ARM Mali-450MP GPU
+- 1 GB DDR3 RAM
+- 8GB eMMC flash (Samsung KLM8G1WEPD-B031)
+- micro SD card slot
+- Gigabit Ethernet (external RTL8211E-VB-CG chip)
+- 802.11 b/g/n WiFi, Bluetooth 4.0 (Ampak AP6212A module)
+- 2x USB 2.0 host ports & 2x USB via headers
 
-In my expereince this how it seems to work.
+Signed-off-by: Antony Antony <antony@phenome.org>
+---
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts   | 229 +++++++++++++++++++++
+ 2 files changed, 230 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
+---
+Changes
+v1 -> v2
+ add wifi power controller,  mmc1, mmc2
+ remove reg_usb0_vbus
+v2 -> v3
+fix typo s/orangepi/nanopi/, s/pus/plus/
+ usb_otg set to host mode
+ wifi fix, based on commit 442e1f7e brcm,bcm43xx-fmac.txt
+ remove functions on header pins: spi, ir, ehci 1&2, ohci 1&2, uart 1&2
+ remove hdmi, de2, r-gpio-keys, mixer - not supported the board
+v3->v4 update WiFi chip compatible to bcm43430-fmac
+v4->v5 back to bcm4329-fmac bcm43430-fmac is the wrong way.
+v5-->v6
+  sorted nodes
+  removed usb0_id_det-gpios,boot_device, drive-strength = <40>; boot_device
+  delete nodes which are same as the defaults.
+v6->v7
+  s/brcm,bcm4329-fmac/brcm/
 
-I jsut discovered s/brcm,bcm4329-fmac/brcm/ can load the broadcom driver.
-
-brcmf: wifi@1 {
-	reg = <1>;
-	compatible = "brcm";
-}; 
-
-This looks better to me. Maxime, Would this work? 
-
-regards,
--antony
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index 108f12c..e6810c8 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo-plus2.dtb
+ 
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
+new file mode 100644
+index 0000000..abea712
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
+@@ -0,0 +1,229 @@
++/*
++ * Copyright (C) 2017 Antony Antony <antony@phenome.org>
++ * Copyright (C) 2016 ARM Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun50i-h5.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "FriendlyARM NanoPi NEO Plus2";
++	compatible = "friendlyarm,nanopi-neo-plus2", "allwinner,sun50i-h5";
++
++	aliases {
++		ethernet0 = &emac;
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		pwr {
++			label = "nanopi:green:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		status {
++			label = "nanopi:red:status";
++			gpios = <&pio 0 20 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		regulator-name = "gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
++	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vdd_cpux: gpio-regulator {
++		compatible = "regulator-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&vdd_cpux_r_npi>;
++		regulator-name = "vdd-cpux";
++		regulator-type = "voltage";
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-min-microvolt = <1100000>;
++		regulator-max-microvolt = <1300000>;
++		regulator-ramp-delay = <50>; /* 4ms */
++		gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>;
++		gpios-states = <0x1>;
++		states = <1100000 0x0
++			  1300000 0x1>;
++	};
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++		post-power-on-delay-ms = <200>;
++	};
++};
++
++&codec {
++	allwinner,audio-routing =
++		"Line Out", "LINEOUT",
++		"MIC1", "Mic",
++		"Mic",  "MBIAS";
++	status = "okay";
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci3 {
++	status = "okay";
++};
++
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emac_rgmii_pins>;
++	phy-supply = <&reg_gmac_3v3>;
++	phy-handle = <&ext_rgmii_phy>;
++	phy-mode = "rgmii";
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@7 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <7>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	vqmmc-supply = <&reg_vcc3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++	/*
++	 * AMPAK AP6212A WiFi module with BCM43430, rev=1 inside
++	 * sdio vendor ID: 0x02d0, sdio device ID: 0xa9a6
++	 */
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm";
++	};
++};
++
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_8bit_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <8>;
++	non-removable;
++	cap-mmc-hw-reset;
++	boot_device = <0>;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci3 {
++	status = "okay";
++};
++
++&r_pio {
++	leds_r_npi: led_pins@0 {
++		pins = "PL10";
++		function = "gpio_out";
++	};
++
++	vdd_cpux_r_npi: regulator_pins@0 {
++		allwinner,pins = "PL6";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbphy {
++	/* USB Type-A ports' VBUS is always on */
++	status = "okay";
++};
+-- 
+2.9.3
