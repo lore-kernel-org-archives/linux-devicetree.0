@@ -1,36 +1,258 @@
-From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: Applied "spi: spi-falcon: drop check of boot select" to the spi
- tree
-Date: Fri, 1 Sep 2017 16:23:55 +0200
-Message-ID: <20170901142355.GB31297@linux-mips.org>
-References: <20170417192942.32219-4-hauke@hauke-m.de>
- <E1dnjTy-0006AD-Ox@debutante>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 1/2] hwmon: (ltq-cputemp) add cpu temp sensor driver
+Date: Fri, 1 Sep 2017 07:24:44 -0700
+Message-ID: <20170901142444.GB599@roeck-us.net>
+References: <20170901065818.2037-1-fe@dev.tdt.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <E1dnjTy-0006AD-Ox@debutante>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+In-Reply-To: <20170901065818.2037-1-fe@dev.tdt.de>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Florian Eckert <fe@dev.tdt.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, jdelvare@suse.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 01, 2017 at 11:47:26AM +0100, Mark Brown wrote:
-
-> The patch
+On Fri, Sep 01, 2017 at 08:58:17AM +0200, Florian Eckert wrote:
+> Add the lantiq cpu temperature sensor support for xrx200.
 > 
->    spi: spi-falcon: drop check of boot select
-> 
-> has been applied to the spi tree at
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+> Signed-off-by: Florian Eckert <fe@dev.tdt.de>
 
-Thanks Mark - but there are some ordering dependencies in Hauke's
-patch series so it would be great if I could have an Acked-by to merge
-this patch through the MIPS tree along with the rest of Hauke's series.
+Applied to hwmon-next.
 
-  Ralf
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Guenter
+
+> ---
+> v2:
+> - remove default in Makefile
+> - fix spelling
+> - removing first read delay, because temperature value is not read during boot
+>   anymore
+> - change calculation, compiler should to the optimization
+> - remove unnecessary initialization
+> - use new devm_hwmon_device_register_with_info API
+> - use module_platform_driver function
+> 
+> v3:
+> - sort includes in alphabetic order
+> - add missing linux/bitops.h include
+> - fix alignment
+> - fix switch case indentation
+> - use octal file permission instead of S_IRUGO
+> - set hwmon device name to "ltq_cputemp"
+> - enable temperature chip before hwmon registration
+> - remove release function registrate ltq_cputemp_disable()
+>   with devm_add_action
+> - remove init_ltq_cputemp and clean_ltq_cputemp not used
+>   overlooked it on v2
+> 
+>  drivers/hwmon/Kconfig       |   7 ++
+>  drivers/hwmon/Makefile      |   1 +
+>  drivers/hwmon/ltq-cputemp.c | 163 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 171 insertions(+)
+>  create mode 100644 drivers/hwmon/ltq-cputemp.c
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 5ef2814345ef..218332f0e913 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -790,6 +790,13 @@ config SENSORS_LTC4261
+>  	  This driver can also be built as a module. If so, the module will
+>  	  be called ltc4261.
+>  
+> +config SENSORS_LTQ_CPUTEMP
+> +	bool "Lantiq cpu temperature sensor driver"
+> +	depends on LANTIQ
+> +	help
+> +	  If you say yes here you get support for the temperature
+> +	  sensor inside your CPU.
+> +
+>  config SENSORS_MAX1111
+>  	tristate "Maxim MAX1111 Serial 8-bit ADC chip and compatibles"
+>  	depends on SPI_MASTER
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index d4641a9f16c1..c84d9784be98 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -110,6 +110,7 @@ obj-$(CONFIG_SENSORS_LTC4222)	+= ltc4222.o
+>  obj-$(CONFIG_SENSORS_LTC4245)	+= ltc4245.o
+>  obj-$(CONFIG_SENSORS_LTC4260)	+= ltc4260.o
+>  obj-$(CONFIG_SENSORS_LTC4261)	+= ltc4261.o
+> +obj-$(CONFIG_SENSORS_LTQ_CPUTEMP) += ltq-cputemp.o
+>  obj-$(CONFIG_SENSORS_MAX1111)	+= max1111.o
+>  obj-$(CONFIG_SENSORS_MAX16065)	+= max16065.o
+>  obj-$(CONFIG_SENSORS_MAX1619)	+= max1619.o
+> diff --git a/drivers/hwmon/ltq-cputemp.c b/drivers/hwmon/ltq-cputemp.c
+> new file mode 100644
+> index 000000000000..1d33f94594c1
+> --- /dev/null
+> +++ b/drivers/hwmon/ltq-cputemp.c
+> @@ -0,0 +1,163 @@
+> +/* Lantiq cpu temperature sensor driver
+> + *
+> + * Copyright (C) 2017 Florian Eckert <fe@dev.tdt.de>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version
+> + *
+> + * This program is distributed in the hope that it will be useful
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, see <http://www.gnu.org/licenses/>
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +
+> +#include <lantiq_soc.h>
+> +
+> +/* gphy1 configuration register contains cpu temperature */
+> +#define CGU_GPHY1_CR   0x0040
+> +#define CGU_TEMP_PD    BIT(19)
+> +
+> +static void ltq_cputemp_enable(void)
+> +{
+> +	ltq_cgu_w32(ltq_cgu_r32(CGU_GPHY1_CR) | CGU_TEMP_PD, CGU_GPHY1_CR);
+> +}
+> +
+> +static void ltq_cputemp_disable(void *data)
+> +{
+> +	ltq_cgu_w32(ltq_cgu_r32(CGU_GPHY1_CR) & ~CGU_TEMP_PD, CGU_GPHY1_CR);
+> +}
+> +
+> +static int ltq_read(struct device *dev, enum hwmon_sensor_types type,
+> +		    u32 attr, int channel, long *temp)
+> +{
+> +	int value;
+> +
+> +	switch (attr) {
+> +	case hwmon_temp_input:
+> +		/* get the temperature including one decimal place */
+> +		value = (ltq_cgu_r32(CGU_GPHY1_CR) >> 9) & 0x01FF;
+> +		value = value * 5;
+> +		/* range -38 to +154 °C, register value zero is -38.0 °C */
+> +		value -= 380;
+> +		/* scale temp to millidegree */
+> +		value = value * 100;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	*temp = value;
+> +	return 0;
+> +}
+> +
+> +static umode_t ltq_is_visible(const void *_data, enum hwmon_sensor_types type,
+> +			      u32 attr, int channel)
+> +{
+> +	if (type != hwmon_temp)
+> +		return 0;
+> +
+> +	switch (attr) {
+> +	case hwmon_temp_input:
+> +		return 0444;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static const u32 ltq_chip_config[] = {
+> +	HWMON_C_REGISTER_TZ,
+> +	0
+> +};
+> +
+> +static const struct hwmon_channel_info ltq_chip = {
+> +	.type = hwmon_chip,
+> +	.config = ltq_chip_config,
+> +};
+> +
+> +static const u32 ltq_temp_config[] = {
+> +	HWMON_T_INPUT,
+> +	0
+> +};
+> +
+> +static const struct hwmon_channel_info ltq_temp = {
+> +	.type = hwmon_temp,
+> +	.config = ltq_temp_config,
+> +};
+> +
+> +static const struct hwmon_channel_info *ltq_info[] = {
+> +	&ltq_chip,
+> +	&ltq_temp,
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops ltq_hwmon_ops = {
+> +	.is_visible = ltq_is_visible,
+> +	.read = ltq_read,
+> +};
+> +
+> +static const struct hwmon_chip_info ltq_chip_info = {
+> +	.ops = &ltq_hwmon_ops,
+> +	.info = ltq_info,
+> +};
+> +
+> +static int ltq_cputemp_probe(struct platform_device *pdev)
+> +{
+> +	struct device *hwmon_dev;
+> +	int err = 0;
+> +
+> +	/* available on vr9 v1.2 SoCs only */
+> +	if (ltq_soc_type() != SOC_TYPE_VR9_2)
+> +		return -ENODEV;
+> +
+> +	err = devm_add_action(&pdev->dev, ltq_cputemp_disable, NULL);
+> +	if (err)
+> +		return err;
+> +
+> +	ltq_cputemp_enable();
+> +
+> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+> +							 "ltq_cputemp",
+> +							 NULL,
+> +							 &ltq_chip_info,
+> +							 NULL);
+> +
+> +	if (IS_ERR(hwmon_dev)) {
+> +		dev_err(&pdev->dev, "Failed to register as hwmon device");
+> +		return PTR_ERR(hwmon_dev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +const struct of_device_id ltq_cputemp_match[] = {
+> +	{ .compatible = "lantiq,cputemp" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ltq_cputemp_match);
+> +
+> +static struct platform_driver ltq_cputemp_driver = {
+> +	.probe = ltq_cputemp_probe,
+> +	.driver = {
+> +		.name = "ltq-cputemp",
+> +		.of_match_table = ltq_cputemp_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(ltq_cputemp_driver);
+> +
+> +MODULE_AUTHOR("Florian Eckert <fe@dev.tdt.de>");
+> +MODULE_DESCRIPTION("Lantiq cpu temperature sensor driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.11.0
+> 
