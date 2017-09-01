@@ -1,42 +1,85 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/8] pinctrl: meson: clean pin offsets
-Date: Sat, 30 Sep 2017 22:33:59 +0200
-Message-ID: <7hmv5cdiyw.fsf@baylibre.com>
-References: <20170920133927.17390-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Carlo Caione <carlo@caione.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=65H/=AC=probox2.com=support@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20170831211427.7pmjdd5n4baes3d4@rob-hp-laptop>
+References: <20170827125425.3400-1-afaerber@suse.de> <20170827125425.3400-2-afaerber@suse.de>
+ <20170831211427.7pmjdd5n4baes3d4@rob-hp-laptop>
+From: PROBOX2-CS <support@probox2.com>
+Date: Fri, 1 Sep 2017 10:11:09 +0800
+Message-ID: <CAD4Jqzs=SHBGOrACbGiURxsz8OEcp9NpUZV-vkkLqXtBV97XoQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for ProBox2
+Content-Type: multipart/alternative; boundary="001a11404f4c44e3870558174637"
+To: Rob Herring <robh@kernel.org>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+--001a11404f4c44e3870558174637
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> The initial goal of this series was move to TEST_N pin from the EE
-> controller to AO controller, where it belongs. This meant modify the
-> EE_OFF value.
+Hi Rob,
+
+For the company of the brand is W2COMP COMPANY LIMITED or you can write
+PROBOX2.
+
+thanks,
+Wilson
+PROBOX2
+
+
+
+On Fri, Sep 1, 2017 at 5:14 AM, Rob Herring <robh@kernel.org> wrote:
+
+> On Sun, Aug 27, 2017 at 02:54:23PM +0200, Andreas F=C3=A4rber wrote:
+> > PROBOX2 is a Hong Kong based manufacturer of TV boxes.
+> >
+> > Cc: support@probox2.com
+> > Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> > ---
+> >  I did not find a fully spelled out company name for this brand.
+> >
+> >  http://probox2.com/contact-us/
+> >  https://www.facebook.com/pg/probox2/about/
+> >
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >  1 file changed, 1 insertion(+)
 >
-> This offset is a quirk we brought from the vendor driver when it was
-> initially merged. There no reason to keep this around and we could simply
-> let pinctrl figure the pin base value.
+> Acked-by: Rob Herring <robh@kernel.org>
 >
-> Removing this offset, while simple, ends up being quite a patch bomb.
-> This is why I split the change over 5 first patches, so the important
-> change, patch #1 remains visible. Of course, to avoid breaking bisect,
-> these first 5 patches should be squashed into one. (If you prefer that I
-> squash it myself, I may have to send you a PR as the patch would exceed
-> VGER 100000 characters limit)
->
-> The last change is this series, while not directly related, also requires
-> to adjust the gpio-line-names property in DT. Having these changes going
-> together would make it easier to coordinate the DTS changes.
->
-> This was changeset has been test on gxbb P200, gxl libretech-cc.  It was
-> also boot tested on meson8 (Thx Martin!)
 
-Really nice cleanup, thanks!
+--001a11404f4c44e3870558174637
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+<div dir=3D"ltr">Hi Rob,<div><br></div><div>For the company of the brand is=
+ W2COMP COMPANY LIMITED or you can write PROBOX2.</div><div><br></div><div>=
+thanks,</div><div>Wilson</div><div>PROBOX2</div><div><br></div><div><br></d=
+iv><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On Fri, Sep 1,=
+ 2017 at 5:14 AM, Rob Herring <span dir=3D"ltr">&lt;<a href=3D"mailto:robh@=
+kernel.org" target=3D"_blank">robh@kernel.org</a>&gt;</span> wrote:<br><blo=
+ckquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #c=
+cc solid;padding-left:1ex">On Sun, Aug 27, 2017 at 02:54:23PM +0200, Andrea=
+s F=C3=A4rber wrote:<br>
+&gt; PROBOX2 is a Hong Kong based manufacturer of TV boxes.<br>
+&gt;<br>
+&gt; Cc: <a href=3D"mailto:support@probox2.com">support@probox2.com</a><br>
+&gt; Signed-off-by: Andreas F=C3=A4rber &lt;<a href=3D"mailto:afaerber@suse=
+.de">afaerber@suse.de</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 I did not find a fully spelled out company name for this brand.<=
+br>
+&gt;<br>
+&gt;=C2=A0 <a href=3D"http://probox2.com/contact-us/" rel=3D"noreferrer" ta=
+rget=3D"_blank">http://probox2.com/contact-us/</a><br>
+&gt;=C2=A0 <a href=3D"https://www.facebook.com/pg/probox2/about/" rel=3D"no=
+referrer" target=3D"_blank">https://www.facebook.com/pg/<wbr>probox2/about/=
+</a><br>
+&gt;<br>
+&gt;=C2=A0 Documentation/devicetree/<wbr>bindings/vendor-prefixes.txt | 1 +=
+<br>
+&gt;=C2=A0 1 file changed, 1 insertion(+)<br>
+<br>
+Acked-by: Rob Herring &lt;<a href=3D"mailto:robh@kernel.org">robh@kernel.or=
+g</a>&gt;<br>
+</blockquote></div><br></div></div>
 
-Kevin
+--001a11404f4c44e3870558174637--
