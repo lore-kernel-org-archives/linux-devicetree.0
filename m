@@ -1,39 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for Amarula Solutions
-Date: Fri, 1 Sep 2017 07:23:38 -0500
-Message-ID: <CAL_Jsq+4cnY_4O_QVdkF=ZL8Ty1k_2cTBhb7uoVVxwM8QkcLUQ@mail.gmail.com>
-References: <1503730303-11422-1-git-send-email-jteki@openedev.com>
- <20170831200855.db654hikvddf7prz@rob-hp-laptop> <1633009.GLYYEVNxi7@phil>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 6/7] ARM: dts: sun8i: h3: Adding UART3 RTS and CTS Pins
+Date: Fri, 1 Sep 2017 14:59:11 +0200
+Message-ID: <20170901125911.cyyyq36s5dx5fz6k@flea>
+References: <1504062070-13523-1-git-send-email-embed3d@gmail.com>
+ <1504062070-13523-7-git-send-email-embed3d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3vdk2jqfsvs4pv5t"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1633009.GLYYEVNxi7@phil>
+Content-Disposition: inline
+In-Reply-To: <1504062070-13523-7-git-send-email-embed3d@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Jagan Teki <jagannadh.teki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jagan Teki <jagan@amarulasolutions.com>
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 4:54 PM, Heiko Stuebner <heiko@sntech.de> wrote:
-> Hi Rob,
->
-> Am Donnerstag, 31. August 2017, 15:08:55 CEST schrieb Rob Herring:
->> On Sat, Aug 26, 2017 at 12:21:42PM +0530, Jagan Teki wrote:
->> > From: Jagan Teki <jagan@amarulasolutions.com>
->> >
->> > Added 'amarula' as a vendor prefix for Amarula Solutions,
->> > specialist in Embedded and Opensource solutions.
->> >
->> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->> > ---
->> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->> >  1 file changed, 1 insertion(+)
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->
-> just to clarify ... you did apply the last vendor-prefixes yourself
-> to prevent conflicts. From the Ack, I assume I should merge that
-> with the devicetree itself, right?
 
-I have not applied. You can apply it.
+--3vdk2jqfsvs4pv5t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Wed, Aug 30, 2017 at 05:01:09AM +0200, Philipp Rossak wrote:
+> From: Philipp Rossak <embed3d@gmail.com>
+>=20
+> This node adds the definition for the UART3 RTS and CTS Pins
+>=20
+> That makes it able to use UART3 with RTS and CTS.
+>=20
+> Signed-off-by: Philipp Rossak <embed3d@gmail.com>
+
+Queued for 4.15, thanks
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--3vdk2jqfsvs4pv5t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZqVmfAAoJEBx+YmzsjxAgmS4P/iujBZl6p7FfbNO5bY+5P749
+SMGoruckbg2uKyEpRW3FKTRkSdbkzb7CdWmgcHuu7oof+9eBQgCDKwPfGG3MUF3R
+fvkHkRhzO3K62iFqqGpMzPuVr1X/RwmaDUqyu8vxUY1htQPbUjeIrwVsbaID+wgq
+cWWrNPUHrRVhZ6cuM54mPFnLsHM570CbH3b2WNalA/1x0nEmGcy3J4wlFrvi5kO1
+jdP5YDxT75e3RyX9GlLYuFADMIDCLVlQFAXkLeXcjSCRvCkGVx3RqIwmcB+p6oKk
+H7SlVjNnhgaCrnBxbi34V5Omh033KagstYGXJoZrF64wxLVN7UhhzaVp+XA6z+rR
+gZk/PGUBfqnB+nS7IkZ3Sn4O06919UV0MbNa54h9R0Fh4VYuKJTxTEfRMNHqQBL5
+sn8UgHpseZFA86Qg2psGJP6DnR4qa+zaipaKMzwYkyu1G8QmulbPYHRVm+oTH8MJ
+h7wVgpsm+8TlWTjgj5kedqEu9bvJyagqK4BV0LARYHx0v3iVnE7/9IGTS0cOsZ0K
+3mzvLFMTE/gM3cWvVmLvnPFg2QOUr4kFVp4rmHIhWi1t2KCY4lF0g0VSrikQzYSa
+mMvp4ZyaQJudXmBRdEa6KRZCm1/y+09kDy5ucSnMFPODLw/zhbiPkta1i5t1kzMu
+R983H7fAYOPNrDggLs6j
+=9rnJ
+-----END PGP SIGNATURE-----
+
+--3vdk2jqfsvs4pv5t--
