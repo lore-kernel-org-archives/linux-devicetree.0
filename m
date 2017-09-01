@@ -1,27 +1,27 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v6 2/5] v4l: async: Add V4L2 async documentation to the
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 3/5] docs-rst: v4l: Include Qualcomm CAMSS in
  documentation build
-Date: Fri, 1 Sep 2017 12:46:05 +0200
-Message-ID: <19202cd6-c2fd-36c9-ae04-7cdee541c5f7@xs4all.nl>
+Date: Fri, 1 Sep 2017 12:46:18 +0200
+Message-ID: <7fdb19c5-331e-39f3-adb4-3c6fdeafbbda@xs4all.nl>
 References: <20170830114946.17743-1-sakari.ailus@linux.intel.com>
- <20170830114946.17743-3-sakari.ailus@linux.intel.com>
+ <20170830114946.17743-4-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170830114946.17743-3-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170830114946.17743-4-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 30/08/17 13:49, Sakari Ailus wrote:
-> The V4L2 async wasn't part of the documentation build. Fix this.
+> Qualcomm CAMSS was left out from documentation build. Fix this.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 
 Regards,
 
@@ -29,35 +29,19 @@ Regards,
 
 
 > ---
->  Documentation/media/kapi/v4l2-async.rst | 3 +++
->  Documentation/media/kapi/v4l2-core.rst  | 1 +
->  2 files changed, 4 insertions(+)
->  create mode 100644 Documentation/media/kapi/v4l2-async.rst
+>  Documentation/media/v4l-drivers/index.rst | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/media/kapi/v4l2-async.rst b/Documentation/media/kapi/v4l2-async.rst
-> new file mode 100644
-> index 000000000000..523ff9eb09a0
-> --- /dev/null
-> +++ b/Documentation/media/kapi/v4l2-async.rst
-> @@ -0,0 +1,3 @@
-> +V4L2 async kAPI
-> +^^^^^^^^^^^^^^^
-> +.. kernel-doc:: include/media/v4l2-async.h
-> diff --git a/Documentation/media/kapi/v4l2-core.rst b/Documentation/media/kapi/v4l2-core.rst
-> index c7434f38fd9c..5cf292037a48 100644
-> --- a/Documentation/media/kapi/v4l2-core.rst
-> +++ b/Documentation/media/kapi/v4l2-core.rst
-> @@ -19,6 +19,7 @@ Video4Linux devices
->      v4l2-mc
->      v4l2-mediabus
->      v4l2-mem2mem
-> +    v4l2-async
->      v4l2-fwnode
->      v4l2-rect
->      v4l2-tuner
+> diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
+> index 10f2ce42ece2..5c202e23616b 100644
+> --- a/Documentation/media/v4l-drivers/index.rst
+> +++ b/Documentation/media/v4l-drivers/index.rst
+> @@ -50,6 +50,7 @@ For more details see the file COPYING in the source distribution of Linux.
+>  	philips
+>  	pvrusb2
+>  	pxa_camera
+> +	qcom_camss
+>  	radiotrack
+>  	rcar-fdp1
+>  	saa7134
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
