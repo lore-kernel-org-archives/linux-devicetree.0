@@ -1,83 +1,107 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Aesthetic fixes to DTSpec 0.1, Acknowledgements and
- Chapter 1
-Date: Fri, 1 Sep 2017 17:00:21 -0500
-Message-ID: <CAL_JsqJE75jKCk81ULKnG+4PkK5CLDuKTqsTPt3VfRKv+=u-Pg@mail.gmail.com>
-References: <alpine.LFD.2.21.1708311747500.16833@localhost.localdomain>
+From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt-binding: net: wireless: add
+ bcm43430-fmac
+Date: Sat, 2 Sep 2017 00:01:43 +0200
+Message-ID: <73188868-3809-b94e-d08b-56b83b981558@broadcom.com>
+References: <20170829214309.34466-1-antony@phenome.org>
+ <CAGb2v66=JvS9wHkUNBwd+vHwx4NAQsaWyhx1OyEokSZizo+7-g@mail.gmail.com>
+ <20170830120218.ms3xuhp4qsibistv@AntonyAntony.local>
+ <20170901164911.aiu5ej5u546z5kow@rob-hp-laptop>
+ <bb53a79e-8045-3c9b-8c98-8d4815c3b57a@broadcom.com>
+ <CAL_JsqLsnXYfyix3KLkEYguWAe-Wqcb9Nd22jM8HM2dnw4Frog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.21.1708311747500.16833-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLsnXYfyix3KLkEYguWAe-Wqcb9Nd22jM8HM2dnw4Frog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 4:50 PM, Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org> wrote:
->
-> Some aesthetic tweaks to DTSpec 0.1, including
->
->  * grammar fixes
->  * font fixes
->
-> Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
->
-> ---
->
->   i'll do a chunk at a time, to avoid having a sizable submission
-> getting hung up on a single issue.
->
-> commit 10d4ba9bb1ad5baab5d9bff4e2dac643166f9356
-> Author: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-> Date:   Thu Aug 31 17:46:29 2017 -0400
->
->     Ack and chapter 1.
 
-Your header here is a bit messed up, but git-am seemed to apply it okay.
 
->
-> diff --git a/source/acknowledgements.rst b/source/acknowledgements.rst
-> index 3e49046..a02e0aa 100644
-> --- a/source/acknowledgements.rst
-> +++ b/source/acknowledgements.rst
-> @@ -2,7 +2,7 @@
->
->  The devicetree.org Technical Steering Committee would like to
->  thank the many individuals and companies that contributed to the
-> -development this specification through writing, technical discussions
-> +development of this specification through writing, technical discussions
->  and reviews.
->
->  We want to thank the power.org Platform Architecture Technical Subcommittee who
-> diff --git a/source/introduction.rst b/source/introduction.rst
-> index 30ba3d9..d7dc2fc 100644
-> --- a/source/introduction.rst
-> +++ b/source/introduction.rst
-> @@ -13,10 +13,10 @@ hardware before passing control to software such as an operating system,
->  bootloader, or hypervisor. Bootloaders and hypervisors can, in turn,
->  load and transfer control to operating systems. Standard, consistent
->  interfaces and conventions facilitate the interactions between these
-> -software components.  In this document the term boot program is used to
-> +software components.  In this document the term *boot program* is used to
->  generically refer to a software component that initializes the system
->  state and executes another software component referred to as a *client
-> -program*. Examples of a boot programs include: firmware, bootloaders, and
-> +program*. Examples of a boot program include: firmware, bootloaders, and
->  hypervisors. Examples of a client program include: bootloaders,
->  hypervisors, operating systems, and special purpose programs. A piece of
->  software may be both a client program and a boot program  (e.g. a hypervisor).
-> @@ -101,14 +101,14 @@ IEEE 1275 specification that are omitted from the |spec| include:
->  * FCode debugging
->  * Operating system debugging
->
-> -What is retained from IEEE-1275 are concepts from the devicetree
-> +What is retained from IEEE 1275 are concepts from the devicetree
+On 01-09-17 23:38, Rob Herring wrote:
+> On Fri, Sep 1, 2017 at 2:10 PM, Arend van Spriel
+> <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> On 01-09-17 18:49, Rob Herring wrote:
+>>>
+>>> On Wed, Aug 30, 2017 at 02:02:18PM +0200, Antony Antony wrote:
+>>>>
+>>>> hi,
+>>>>
+>>>> On Wed, Aug 30, 2017 at 10:28:20AM +0800, Chen-Yu Tsai wrote:
+>>>>>
+>>>>> On Wed, Aug 30, 2017 at 5:43 AM, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+>>>>> wrote:
+>>>>
+>>>>
+>>>>>> a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>>>> +++
+>>>>>> b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>>>> @@ -6,7 +6,9 @@ connects the device to the system.
+>>>>>>
+>>>>>>    Required properties:
+>>>>>>
+>>>>>> - - compatible : Should be "brcm,bcm4329-fmac".
+>>>>>> + - compatible : should be one of the following:
+>>>>>> +       * "brcm,bcm4329-fmac"
+>>>>>> +       * "brcm,bcm43430-fmac"
+>>>>>
+>>>>>
+>>>>> You updated the bindings, but not the driver. So it's not actually
+>>>>> going to work. More specifically, OOB interrupts won't work.
+>>>>>
+>>>>
+>>>> understood, ignore this patch for now. Thanks Chen-Yu.
+>>>>
+>>>>> IIRC, The compatible string for this particular case, as it was
+>>>>> originally proposed, only serves as a placeholder for the driver
+>>>>> to check against. None of the instances in sunxi device trees
+>>>>> match the actual chip model. Actual model matching is done
+>>>>> through SDIO, as you've already seen.
+>>>>
+>>>>
+>>>> yes it seems SDIO driveer code is smarter, once it initialize
+>>>> brcm,bcm4329-fmac it ignore the DT info and read the chip details to
+>>>> locate
+>>>> firmware file.
+>>>>
+>>>> I also noticed other boards using bcm4329-fmac in similar situations.
+>>>> https://patchwork.kernel.org/patch/9739181/
+>>>>
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts?h=v4.13-rc7
+>>>>
+>>>> I will resend "NanoPi NEO Plus2" dts with "brcm,bcm4329-fmac" and see
+>>>> where
+>>>> it goes.
+>>>
+>>>
+>>> Adding the compatible or instead of? The former would be better. You
+>>> should still have the actual chip in case you do have some difference to
+>>> handle.
+>>
+>>
+>> Hi Rob,
+>>
+>> Actually the Broadcom wifi chips themselves are discoverable. So once the
+>> driver has access to the register space of the device it can determine the
+>> actual chip, its revision, and exactly what cores (and their revision) are
+>> present in the chip. Hence there is a single compatible string as there is
+>> no need to convey the same information through device tree data.
+> 
+> So if a chip has different power on/off sequencing you can discover that?
+> 
+> I realize that most often you don't need it, but a more specific
+> compatible is there in case you do and so it doesn't require a DTB
+> update to handle some difference. But you can keep using one
+> compatible because I can't really enforce any of that.
 
-I still see a mixture in the document. For things like this, better to
-do a search and replace for the whole document as 1 commit.
+For SDIO chips the power sequencing is defined by power-seq-* in 
+bindings/mmc and handled by the MMC stack itself. So the wifi driver is 
+not dealing with that.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Arend
