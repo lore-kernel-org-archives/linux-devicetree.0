@@ -1,670 +1,141 @@
-Return-Path: <SRS0=e4lG=AH=gmail.com=avifishman70@kernel.org>
+Return-Path: <SRS0=V8YN=AC=gmail.com=taskboxtester@kernel.org>
+Date: Fri, 01 Sep 2017 10:51:15 -0400
+Subject: Re: [PATCH 1/3] dmaengine: sun6i: Correct DMA support on H3
+Message-ID: <fe30bd7b-cca0-476a-8320-e65fc807ffb8@gmail.com>
+In-Reply-To: <5722405.lpx0YHbn2k@sbruens-linux>
+References: <20170830233609.13855-1-stefan.bruens@rwth-aachen.de>
+ <a649f98d4ac44abc873c5110ce9363e5@rwthex-w2-b.rwth-ad.de>
+ <20170901133549.cr2ivmfr5mnrdujg@flea> <5722405.lpx0YHbn2k@sbruens-linux>
+From: taskboxtester@gmail.com
 MIME-Version: 1.0
-In-Reply-To: <20170906080751.6773-2-brendanhiggins@google.com>
-References: <20170906080751.6773-1-brendanhiggins@google.com> <20170906080751.6773-2-brendanhiggins@google.com>
-From: Avi Fishman <avifishman70@gmail.com>
-Date: Wed, 6 Sep 2017 23:27:56 +0300
-Message-ID: <CAKKbWA7GUxbMaHsk4-42zE-ony6TSzv-960QWroK8yFrCB1atA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] arm: npcm: add basic support for Nuvoton BMCs
-Content-Type: multipart/alternative; boundary="001a113f5b90e3503605588b2de1"
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, tmaimon77@gmail.com, raltherr@google.com, f.fainelli@gmail.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="--_com.boxer.email_150203612764223"
+To: =?ISO-8859-1?Q?Br=FCns=2C_Stefan?= <Stefan.Bruens@rwth-aachen.de>
+Cc: linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, vinod.koul@intel.com, dmaengine@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113f5b90e3503605588b2de1
-Content-Type: text/plain; charset="UTF-8"
+----_com.boxer.email_150203612764223
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-2017-09-06 11:07 GMT+03:00 Brendan Higgins <brendanhiggins@google.com>:
+dGFza2JveHRlc3RlckBnbWFpbC5jb20gbGlrZWQgeW91ciBtZXNzYWdlIHdpdGggQm94ZXIgZm9y
+IEFuZHJvaWQuCgoKT24gU2VwIDEsIDIwMTcgMTA6NDUgQU0sICJCcsO8bnMsIFN0ZWZhbiIgPFN0
+ZWZhbi5CcnVlbnNAcnd0aC1hYWNoZW4uZGU+IHdyb3RlOgoKT24gRnJlaXRhZywgMS4gU2VwdGVt
+YmVyIDIwMTcgMTU6MzU6NDkgQ0VTVCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+IE9uIEZyaSwgU2Vw
+IDAxLCAyMDE3IGF0IDA1OjA0OjU0QU0gKzAyMDAsIFN0ZWZhbiBCcnVlbnMgd3JvdGU6Cj4gPiBP
+biBEb25uZXJzdGFnLCAzMS4gQXVndXN0IDIwMTcgMTY6NTE6MzUgQ0VTVCBNYXhpbWUgUmlwYXJk
+IHdyb3RlOgo+ID4gPiBIaSwKPiA+ID4gCj4gPiA+IE9uIFRodSwgQXVnIDMxLCAyMDE3IGF0IDAx
+OjM2OjA3QU0gKzAyMDAsIFN0ZWZhbiBCcsO8bnMgd3JvdGU6Cj4gPiA+ID4gKy8qIEJldHdlZW4g
+U29DIGdlbmVyYXRpb25zLCB0aGVyZSBhcmUgc29tZSBzaWduaWZpY2FudCBkaWZmZXJlbmNlczoK
+PiA+ID4gPiArICogLSBBMjMgYWRkZWQgYSBjbG9jayBnYXRlIHJlZ2lzdGVyCj4gPiA+ID4gKyAq
+IC0gdGhlIEgzIGJ1cnN0IGxlbmd0aCBmaWVsZCBoYXMgYSBkaWZmZXJlbnQgb2Zmc2V0Cj4gPiA+
+ID4gKyAqLwo+ID4gPiAKPiA+ID4gVGhpcyBpcyBub3QgdGhlIHByb3BlciBjb21tZW50IHN0eWxl
+Lgo+ID4gPiAKPiA+ID4gPiArZW51bSBkbWFjX3ZhcmlhbnQgewo+ID4gPiA+ICtETUFDX1ZBUklB
+TlRfQTMxLAo+ID4gPiA+ICtETUFDX1ZBUklBTlRfQTIzLAo+ID4gPiA+ICtETUFDX1ZBUklBTlRf
+SDMsCj4gPiA+ID4gK307Cj4gPiA+ID4gKwo+ID4gPiAKPiA+ID4gQW5kIHRoaXMgaXMgcmVkdW5k
+YW50IHdpdGggd2hhdCB3ZSBhbHJlYWR5IGhhdmUgaW4gb3VyIHN0cnVjdHVyZXMuCj4gPiAKPiA+
+IEFjdHVhbGx5LCBpdHMgbm90LiBGb3IgSDMsIHRoZXJlIGFyZSBjdXJyZW50bHkgYXQgbGVhc3Qg
+MyByZWdpc3Rlcgo+ID4gY29tcGF0aWJsZSBTb0NzOiBINSBpcyBpZGVudGljYWwsIFI0MCBoYXMg
+MTYgZG1hIGNoYW5uZWxzLCBBNjQgaGFzIDgKPiA+IGNoYW5uZWxzLiBTbyBpZiB0aGUgY3VycmVu
+dCBjb25maWcgc3RydWN0dXJlIGlzIGtlcHQsIHdlIG5lZWQgMyBkaWZmZXJlbnQKPiA+IGNvbXBh
+dGlibGUgc3RyaW5ncy4gU2FtZSBmb3IgdGhlIEEyMywgd2hpY2ggaXMgcmVnaXN0ZXIgY29tcGF0
+aWJsZSB0bwo+ID4gZS5nLiBBODN0IGFuZCBWM3MsIGJ1dCB3aXRoIGRpZmZlcmVudCBudW1iZXJz
+IG9mIERNQSBjaGFubmVscy4KPiA+IAo+ID4gU28gZWl0aGVyIHlvdSBkZWNvcmF0ZSB0aGUgY29k
+ZSB3aXRoIGEgY2FzY2FkZSBvZgo+ID4gCj4gPiBpZiAoKG9mX2lzX2NvbXBhdGlibGUoLi5BMjMu
+LikgfHwgb2ZfaXNfY29tcGF0aWJsZSguLkE4M1QuLikgfHwgLi4uKSB7Cj4gPiB9IGVsc2UgaWYg
+KChvZl9pc19jb21wYXRpYmxlKC4uSDMuLikgfHwgb2ZfaXNfY29tcGF0aWJsZSguLkE2NC4uKSB8
+fCAuLi4pCj4gPiB7Cj4gPiB9IGVsc2UgeyAvKiBBMzEgKi8KPiA+IH0KPiA+IAo+ID4gaW4gYSBu
+dW1iZXIgb2YgcGxhY2VzLCBvciB5b3UgZG8gaXQganVzdCBvbmNlLgo+IAo+IFRoYXQncyBub3Qg
+aG93IHlvdSByZXRyaWV2ZSB0aGUgc3RydWN0dXJlcy4gVGhleSBhcmUgYWxyZWFkeQo+IGFzc29j
+aWF0ZWQgdG8gdGhlIGNvbXBhdGlibGUsIGFuZCB5b3UgbmVlZCB0byBkbyBhIHNpbmdsZSBsb29r
+dXAgdG8KPiBnZXQgdGhlbS4gU28gdGhhdCdzIG5vd2hlcmUgbmVhciB3aGF0IHlvdSdyZSBzdWdn
+ZXN0aW5nLiBZb3UgY2FuIGhhdmUKPiBhIGxvb2sgYXQgdGhlIG9mX21hdGNoX2RldmljZSBpbiB0
+aGUgcHJvYmUgZnVuY3Rpb24uCj4gCgoKUGxlYXNlIGhhdmUgYSBsb29rIGF0IHRoZSBjdXJyZW50
+IGltcGxlbWVudGF0aW9uIG9mIGhvdyB0aGUgY2xvY2sgYXV0b2dhdGluZyAKaW4gdGhlIHByb2Jl
+IGZ1bmN0aW9uIGlzIGRvbmUgLSBpdCBtYXRjaGVzIHdpdGggdGhlIGNvbXBhdGlibGUgc3RyaW5n
+LgoKT2YgY291cnNlIHdlIGNhbiByZXBsYWNlIHRoaXMgd2l0aCBhIG1hdGNoIGJldHdlZW4gc2Rl
+di0+Y29uZmlnIGFuZCB0aGUgCnZhcmlvdXMgc3VuNmlfZG1hX2NvbmZpZyBpbnN0YW5jZXMsIGJ1
+dCB3ZSB3b3VsZCBzdGlsbCBoYXZlIHRvIGRvIDMgbWF0Y2hlcyAKZm9yIHRoZSBBMjMgcmVnaXN0
+ZXIgY29uZmlndXJhdGlvbiAoQTIzIHx8IEE4M1QgfHwgVjNzKSBhbmQgMyBtYXRjaGVzIGZvciB0
+aGUgCkgzIHJlZ2lzdGVyIGNvbmZpZ3VyYXRpb24gKEgzIHx8IFI0MCB8fCBBNjQpLiBUaGVyZSBh
+cmUgY3VycmVudGx5ICo3KiAKZGlmZmVyZW50IGNvbmZpZ3MgKFYzcywgUjQwIGFuZCBBNjQgdGFr
+ZW4gaW50byBhY2NvdW50KSwgYnV0IG9ubHkgMyBkaWZmZXJlbnQgCnJlZ2lzdGVyIHZhcmlhbnRz
+LgoKVGhpcyBpcyB0aGUgc2FtZSByYXRpb25hbGUgYXMgdGhlICJnYXRlX25lZWRlZCIgYm9vbGVh
+biBwcm9wZXJ0eSBwcm9wb3NlZCBieSAKSWNlbm93eSBaaGVuZyBpbiB0aGUgIkFsbHdpbm5lciBW
+M3MgRE1BIHN1cHBvcnQiIHBhdGNoIHNlcmllcy4gT2J2aW91c2x5IHdlIApkb24ndCBuZWVkIGEg
+Ym9vbGVhbiwgYnV0IGEgdGVybmFyeSBvcHRpb24gdG8gY2F0ZXIgZm9yIHRoZSBnYXRlX25lZWRl
+ZCAKZGlmZmVyZW5jZXMgLSAiTk9fR0FURSIsICJBMjNfU1RZTEVfR0FURSIsICJIM19TVFlMRV9H
+QVRFIi4KCktpbmQgcmVnYXJkcywKClN0ZWZhbgoKCgo=
+----_com.boxer.email_150203612764223
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
 
-> Adds basic support for the Nuvoton NPCM750 BMC.
->
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
->  arch/arm/Kconfig             |  2 +
->  arch/arm/Makefile            |  1 +
->  arch/arm/mach-npcm/Kconfig   | 50 +++++++++++++++++++++++++
->  arch/arm/mach-npcm/Makefile  |  3 ++
->  arch/arm/mach-npcm/headsmp.S | 17 +++++++++
->  arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
->  arch/arm/mach-npcm/platsmp.c | 89 ++++++++++++++++++++++++++++++
-> ++++++++++++++
->  7 files changed, 196 insertions(+)
->  create mode 100644 arch/arm/mach-npcm/Kconfig
->  create mode 100644 arch/arm/mach-npcm/Makefile
->  create mode 100644 arch/arm/mach-npcm/headsmp.S
->  create mode 100644 arch/arm/mach-npcm/npcm7xx.c
->  create mode 100644 arch/arm/mach-npcm/platsmp.c
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 61a0cb15067e..05543f1cfbde 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -782,6 +782,8 @@ source "arch/arm/mach-netx/Kconfig"
->
->  source "arch/arm/mach-nomadik/Kconfig"
->
-> +source "arch/arm/mach-npcm/Kconfig"
-> +
->  source "arch/arm/mach-nspire/Kconfig"
->
->  source "arch/arm/plat-omap/Kconfig"
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 47d3a1ab08d2..60ca50c7d762 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -191,6 +191,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)             +=
-> mediatek
->  machine-$(CONFIG_ARCH_MXS)             += mxs
->  machine-$(CONFIG_ARCH_NETX)            += netx
->  machine-$(CONFIG_ARCH_NOMADIK)         += nomadik
-> +machine-$(CONFIG_ARCH_NPCM)            += npcm
->  machine-$(CONFIG_ARCH_NSPIRE)          += nspire
->  machine-$(CONFIG_ARCH_OXNAS)           += oxnas
->  machine-$(CONFIG_ARCH_OMAP1)           += omap1
-> diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
-> new file mode 100644
-> index 000000000000..d47061855439
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/Kconfig
-> @@ -0,0 +1,50 @@
-> +menuconfig ARCH_NPCM
-> +       bool "Nuvoton NPCM Architecture"
-> +       select ARCH_REQUIRE_GPIOLIB
-> +       select USE_OF
-> +       select PINCTRL
-> +       select PINCTRL_NPCM7XX
-> +
-> +if ARCH_NPCM
-> +
-> +comment "NPCMX50 CPU type"
-> +
-> +config CPU_NPCM750
-> +       depends on ARCH_NPCM && ARCH_MULTI_V7
-> +       bool "Support for NPCM750 BMC CPU (Poleg)"
-> +       select CACHE_L2X0
-> +       select CPU_V7
-> +       select ARM_GIC
-> +       select HAVE_SMP
-> +       select SMP
-> +       select SMP_ON_UP
-> +       select HAVE_ARM_SCU
-> +       select HAVE_ARM_TWD if SMP
-> +       select ARM_ERRATA_458693
-> +       select ARM_ERRATA_720789
-> +       select ARM_ERRATA_742231
-> +       select ARM_ERRATA_754322
-> +       select ARM_ERRATA_764369
-> +       select ARM_ERRATA_794072
-> +       select PL310_ERRATA_588369
-> +       select PL310_ERRATA_727915
-> +       select USB_EHCI_ROOT_HUB_TT
-> +       select USB_ARCH_HAS_HCD
-> +       select USB_ARCH_HAS_EHCI
-> +       select USB_EHCI_HCD
-> +       select USB_ARCH_HAS_OHCI
-> +       select USB_OHCI_HCD
-> +       select USB
-> +       select FIQ
-> +       select CPU_USE_DOMAINS
-> +       select GENERIC_CLOCKEVENTS
-> +       select CLKDEV_LOOKUP
-> +       select COMMON_CLK if OF
-> +       select NPCM750_TIMER
-> +       select MFD_SYSCON
-> +       help
-> +         Support for NPCM750 BMC CPU (Poleg).
-> +
-> +         Nuvoton NPCM750 BMC based on the Cortex A9.
-> +
-> +endif
-> diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
-> new file mode 100644
-> index 000000000000..78416055b854
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/Makefile
-> @@ -0,0 +1,3 @@
-> +AFLAGS_headsmp.o               += -march=armv7-a
-> +
-> +obj-$(CONFIG_CPU_NPCM750)      += npcm7xx.o platsmp.o headsmp.o
-> diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
-> new file mode 100644
-> index 000000000000..9fccbbd49ed4
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/headsmp.S
-> @@ -0,0 +1,17 @@
-> +/*
-> + * Copyright 2017 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/linkage.h>
-> +#include <linux/init.h>
-> +#include <asm/assembler.h>
-> +
-> +ENTRY(npcm7xx_secondary_startup)
-> +       safe_svcmode_maskall r0
->
-
-I saw you  answered to Florian Fainelli that the BootRom is not starting
-the secondary CPU in SVC mode. Are you sure? In our engineering npcm7xx
-revision, Z1, the BootRom indeed started to run it in IRQ mode but we fixed
-it in the production version, A1, (quite long time ago), I hope you didn't
-get an EB with Z1 you can check that in BootBlock console print:
-> ADC CLK is set to 25000000
->Last reset was CORST
->vgaioen=1 and mux gspi.
->A1 <<====== this is what you should see, if you see Z1 we need to replace
-your EB
-
-+
-> +       b       secondary_startup
-> +ENDPROC(npcm7xx_secondary_startup)
-> diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
-> new file mode 100644
-> index 000000000000..132e9d587857
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/npcm7xx.c
-> @@ -0,0 +1,34 @@
-> +/*
-> + * Copyright (c) 2017 Nuvoton Technology corporation.
-> + * Copyright 2017 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/types.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach-types.h>
-> +#include <asm/mach/map.h>
-> +#include <asm/hardware/cache-l2x0.h>
-> +
-> +#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |
->              \
-> +                        L310_AUX_CTRL_DATA_PREFETCH |
->      \
-> +                        L310_AUX_CTRL_NS_LOCKDOWN |
->      \
-> +                        L310_AUX_CTRL_CACHE_REPLACE_RR |
->     \
-> +                        L2C_AUX_CTRL_SHARED_OVERRIDE |
->     \
-> +                        L310_AUX_CTRL_FULL_LINE_ZERO)
-> +
-> +static const char *const npcm7xx_dt_match[] = {
-> +       "nuvoton,npcm750",
-> +       NULL
-> +};
-> +
-> +DT_MACHINE_START(NPCM7XX_DT, "NPCMX50 Chip family")
-> +       .atag_offset    = 0x100,
-> +       .dt_compat      = npcm7xx_dt_match,
-> +       .l2c_aux_val    = NPCM7XX_AUX_VAL,
-> +       .l2c_aux_mask   = ~NPCM7XX_AUX_VAL,
-> +MACHINE_END
-> diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
-> new file mode 100644
-> index 000000000000..144e3e7ec7e6
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/platsmp.c
-> @@ -0,0 +1,89 @@
-> +/*
-> + * Copyright 2017 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#define pr_fmt(fmt) "PLATSMP: " fmt
-> +
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/smp.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/smp.h>
-> +#include <asm/smp_plat.h>
-> +#include <asm/smp_scu.h>
-> +
-> +#define NPCM7XX_SCRPAD_REG 0x13c
-> +
-> +extern void npcm7xx_secondary_startup(void);
-> +
-> +static int npcm7xx_smp_boot_secondary(unsigned int cpu,
-> +                                     struct task_struct *idle)
-> +{
-> +       struct device_node *gcr_np;
-> +       void __iomem *gcr_base;
-> +       int ret = 0;
-> +
-> +       gcr_np = of_find_compatible_node(NULL, NULL,
-> "nuvoton,npcm750-gcr");
-> +       if (!gcr_np) {
-> +               pr_err("no gcr device node\n");
-> +               ret = -EFAULT;
-> +               goto out;
-> +       }
-> +       gcr_base = of_iomap(gcr_np, 0);
-> +       if (!gcr_base) {
-> +               pr_err("could not iomap gcr at: 0x%llx\n", gcr_base);
-> +               ret = -EFAULT;
-> +               goto out;
-> +       }
-> +
-> +       /* give boot ROM kernel start address. */
-> +       iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
-> +                 NPCM7XX_SCRPAD_REG);
-> +       /* make sure npcm7xx_secondary_startup is seen by all observers. */
-> +       smp_wmb();
-> +       dsb_sev();
-> +       /* make sure write buffer is drained */
-> +       mb();
-> +
-> +out:
-> +       iounmap(gcr_base);
-> +       return ret;
-> +}
-> +
-> +static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +       struct device_node *scu_np;
-> +       void __iomem *scu_base;
-> +
-> +       scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
-> +       if (!scu_np) {
-> +               pr_err("no scu device node\n");
-> +               return;
-> +       }
-> +       scu_base = of_iomap(scu_np, 0);
-> +       if (!scu_base) {
-> +               pr_err("could not iomap scu at: 0x%llx\n", scu_base);
-> +               return;
-> +       }
-> +
-> +       scu_enable(scu_base);
-> +
-> +out:
-> +       iounmap(scu_base);
-> +}
-> +
-> +static struct smp_operations npcm7xx_smp_ops __initdata = {
-> +       .smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
-> +       .smp_boot_secondary = npcm7xx_smp_boot_secondary,
-> +};
-> +
-> +CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm7xx-smp",
-> &npcm7xx_smp_ops);
-> --
-> 2.14.1.581.gf28d330327-goog
->
->
-
---001a113f5b90e3503605588b2de1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"rtl"><div style=3D"text-align:left" dir=3D"ltr"><br></div><div =
-class=3D"gmail_extra" dir=3D"ltr"><div style=3D"text-align:left"><br></div>=
-<div class=3D"gmail_quote"><div>2017-09-06 11:07 GMT+03:00 Brendan Higgins =
-<span dir=3D"ltr">&lt;<a href=3D"mailto:brendanhiggins@google.com" target=
-=3D"_blank">brendanhiggins@google.com</a>&gt;</span>:</div><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid r=
-gb(204,204,204);padding-left:1ex"><div style=3D"text-align:left">Adds basic=
- support for the Nuvoton NPCM750 BMC.</div><span class=3D"gmail-"><div styl=
-e=3D"text-align:left"><br></div>
-<div style=3D"text-align:left">Signed-off-by: Brendan Higgins &lt;<a href=
-=3D"mailto:brendanhiggins@google.com">brendanhiggins@google.com</a>&gt;</di=
-v><div style=3D"text-align:left">---</div><div style=3D"text-align:left">=
-=C2=A0arch/arm/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=
-=A0 2 +</div><div style=3D"text-align:left">=C2=A0arch/arm/Makefile=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 1 +</div>
-</span><div style=3D"text-align:left">=C2=A0arch/arm/mach-npcm/Kconfig=C2=
-=A0 =C2=A0| 50 +++++++++++++++++++++++++</div><div style=3D"text-align:left=
-">=C2=A0arch/arm/mach-npcm/Makefile=C2=A0 |=C2=A0 3 ++</div><div style=3D"t=
-ext-align:left">=C2=A0arch/arm/mach-npcm/headsmp.S | 17 +++++++++</div><div=
- style=3D"text-align:left">=C2=A0arch/arm/mach-npcm/npcm7xx.c | 34 ++++++++=
-+++++++++</div><div style=3D"text-align:left">=C2=A0arch/arm/mach-npcm/plat=
-smp.c | 89 ++++++++++++++++++++++++++++++<wbr>++++++++++++++</div><div styl=
-e=3D"text-align:left">=C2=A07 files changed, 196 insertions(+)</div>
-<div><div class=3D"gmail-h5"><div style=3D"text-align:left">=C2=A0create mo=
-de 100644 arch/arm/mach-npcm/Kconfig</div><div style=3D"text-align:left">=
-=C2=A0create mode 100644 arch/arm/mach-npcm/Makefile</div><div style=3D"tex=
-t-align:left">=C2=A0create mode 100644 arch/arm/mach-npcm/headsmp.S</div><d=
-iv style=3D"text-align:left">=C2=A0create mode 100644 arch/arm/mach-npcm/np=
-cm7xx.c</div><div style=3D"text-align:left">=C2=A0create mode 100644 arch/a=
-rm/mach-npcm/platsmp.c</div>
-<div style=3D"text-align:left"><br></div><div style=3D"text-align:left">dif=
-f --git a/arch/arm/Kconfig b/arch/arm/Kconfig</div><div style=3D"text-align=
-:left">index 61a0cb15067e..05543f1cfbde 100644</div><div style=3D"text-alig=
-n:left">--- a/arch/arm/Kconfig</div><div style=3D"text-align:left">+++ b/ar=
-ch/arm/Kconfig</div><div style=3D"text-align:left">@@ -782,6 +782,8 @@ sour=
-ce &quot;arch/arm/mach-netx/Kconfig&quot;</div>
-<div style=3D"text-align:left"><br></div><div style=3D"text-align:left">=C2=
-=A0source &quot;arch/arm/mach-nomadik/<wbr>Kconfig&quot;</div>
-<div style=3D"text-align:left"><br></div><div style=3D"text-align:left">+so=
-urce &quot;arch/arm/mach-npcm/Kconfig&quot;</div><div style=3D"text-align:l=
-eft">+</div><div style=3D"text-align:left">=C2=A0source &quot;arch/arm/mach=
--nspire/Kconfig&quot;</div>
-<div style=3D"text-align:left"><br></div><div style=3D"text-align:left">=C2=
-=A0source &quot;arch/arm/plat-omap/Kconfig&quot;</div><div style=3D"text-al=
-ign:left">diff --git a/arch/arm/Makefile b/arch/arm/Makefile</div><div styl=
-e=3D"text-align:left">index 47d3a1ab08d2..60ca50c7d762 100644</div><div sty=
-le=3D"text-align:left">--- a/arch/arm/Makefile</div><div style=3D"text-alig=
-n:left">+++ b/arch/arm/Makefile</div><div style=3D"text-align:left">@@ -191=
-,6 +191,7 @@ machine-$(CONFIG_ARCH_<wbr>MEDIATEK)=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0+=3D mediatek</div><div style=3D"text-align:left">=
-=C2=A0machine-$(CONFIG_ARCH_MXS)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0+=3D mxs</div><div style=3D"text-align:left">=C2=A0machine-$(CONFIG_A=
-RCH_NETX)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 +=3D netx</div><div styl=
-e=3D"text-align:left">=C2=A0machine-$(CONFIG_ARCH_NOMADIK)=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0+=3D nomadik</div><div style=3D"text-align:left">+machine-=
-$(CONFIG_ARCH_NPCM)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 +=3D npcm</div=
-><div style=3D"text-align:left">=C2=A0machine-$(CONFIG_ARCH_NSPIRE)=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=3D nspire</div><div style=3D"text-align:left"=
->=C2=A0machine-$(CONFIG_ARCH_OXNAS)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0+=3D oxnas</div><div style=3D"text-align:left">=C2=A0machine-$(CONFIG_AR=
-CH_OMAP1)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0+=3D omap1</div><div styl=
-e=3D"text-align:left">diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/ma=
-ch-npcm/Kconfig</div><div style=3D"text-align:left">new file mode 100644</d=
-iv>
-</div></div><div style=3D"text-align:left">index 000000000000..d47061855439=
-</div><div style=3D"text-align:left">--- /dev/null</div><div style=3D"text-=
-align:left">+++ b/arch/arm/mach-npcm/Kconfig</div><div style=3D"text-align:=
-left">@@ -0,0 +1,50 @@</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+menuconfig ARCH_NPCM=
-</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0bool &quot=
-;Nuvoton NPCM Architecture&quot;</div><div style=3D"text-align:left">+=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0select ARCH_REQUIRE_GPIOLIB</div><div style=3D"text=
--align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select USE_OF</div><div style=3D"t=
-ext-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select PINCTRL</div><div style=
-=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select PINCTRL_NPCM7XX</di=
-v><div style=3D"text-align:left">+</div><div style=3D"text-align:left">+if =
-ARCH_NPCM</div><div style=3D"text-align:left">+</div><div style=3D"text-ali=
-gn:left">+comment &quot;NPCMX50 CPU type&quot;</div><div style=3D"text-alig=
-n:left">+</div><div style=3D"text-align:left">+config CPU_NPCM750</div><div=
- style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0depends on ARCH_NPCM=
- &amp;&amp; ARCH_MULTI_V7</div>
-</span><span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0=
- =C2=A0 =C2=A0bool &quot;Support for NPCM750 BMC CPU (Poleg)&quot;</div><di=
-v style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select CACHE_L2X0</=
-div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select CPU_V=
-7</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select AR=
-M_GIC</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select HA=
-VE_SMP</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0sele=
-ct SMP</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0sele=
-ct SMP_ON_UP</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0select HAVE_ARM_SCU</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0=
- =C2=A0select HAVE_ARM_TWD if SMP</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select AR=
-M_ERRATA_458693</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0select ARM_ERRATA_720789</div><div style=3D"text-align:left">+=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0select ARM_ERRATA_742231</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0=
- =C2=A0select ARM_ERRATA_754322</div><div style=3D"text-align:left">+=C2=A0=
- =C2=A0 =C2=A0 =C2=A0select ARM_ERRATA_764369</div>
-</span><span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0=
- =C2=A0 =C2=A0select ARM_ERRATA_794072</div><div style=3D"text-align:left">=
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0select PL310_ERRATA_588369</div><div style=3D"t=
-ext-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select PL310_ERRATA_727915</div=
->
-</span><span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0=
- =C2=A0 =C2=A0select USB_EHCI_ROOT_HUB_TT</div><div style=3D"text-align:lef=
-t">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select USB_ARCH_HAS_HCD</div><div style=3D"t=
-ext-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select USB_ARCH_HAS_EHCI</div><=
-div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select USB_EHCI_H=
-CD</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select U=
-SB_ARCH_HAS_OHCI</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0select USB_OHCI_HCD</div><div style=3D"text-align:left">+=C2=A0 =C2=
-=A0 =C2=A0 =C2=A0select USB</div><div style=3D"text-align:left">+=C2=A0 =C2=
-=A0 =C2=A0 =C2=A0select FIQ</div><div style=3D"text-align:left">+=C2=A0 =C2=
-=A0 =C2=A0 =C2=A0select CPU_USE_DOMAINS</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0select GE=
-NERIC_CLOCKEVENTS</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0=
- =C2=A0select CLKDEV_LOOKUP</div><div style=3D"text-align:left">+=C2=A0 =C2=
-=A0 =C2=A0 =C2=A0select COMMON_CLK if OF</div>
-</span><span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0=
- =C2=A0 =C2=A0select NPCM750_TIMER</div><div style=3D"text-align:left">+=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0select MFD_SYSCON</div><div style=3D"text-align:lef=
-t">+=C2=A0 =C2=A0 =C2=A0 =C2=A0help</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Su=
-pport for NPCM750 BMC CPU (Poleg).</div><div style=3D"text-align:left">+</d=
-iv><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Nuvoto=
-n NPCM750 BMC based on the Cortex A9.</div><div style=3D"text-align:left">+=
-</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+endif</div><div styl=
-e=3D"text-align:left">diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/m=
-ach-npcm/Makefile</div>
-</span><div style=3D"text-align:left">new file mode 100644</div><div style=
-=3D"text-align:left">index 000000000000..78416055b854</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">--- /dev/null</div><d=
-iv style=3D"text-align:left">+++ b/arch/arm/mach-npcm/Makefile</div><div st=
-yle=3D"text-align:left">@@ -0,0 +1,3 @@</div>
-</span><div style=3D"text-align:left">+AFLAGS_headsmp.o=C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0+=3D -march=3Darmv7-a</div><div style=3D=
-"text-align:left">+</div><div style=3D"text-align:left">+obj-$(CONFIG_CPU_N=
-PCM750)=C2=A0 =C2=A0 =C2=A0 +=3D npcm7xx.o platsmp.o headsmp.o</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">diff --git a/arch/arm=
-/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S</div><div style=3D"text=
--align:left">new file mode 100644</div>
-</span><div style=3D"text-align:left">index 000000000000..9fccbbd49ed4</div=
-><div style=3D"text-align:left">--- /dev/null</div><div style=3D"text-align=
-:left">+++ b/arch/arm/mach-npcm/headsmp.S</div><div style=3D"text-align:lef=
-t">@@ -0,0 +1,17 @@</div><div style=3D"text-align:left">+/*</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+ * Copyright 2017 Go=
-ogle, Inc.</div><div style=3D"text-align:left">+ *</div><div style=3D"text-=
-align:left">+ * This program is free software; you can redistribute it and/=
-or modify</div>
-</span><span class=3D"gmail-"><div style=3D"text-align:left">+ * it under t=
-he terms of the GNU General Public License version 2 as</div><div style=3D"=
-text-align:left">+ * published by the Free Software Foundation.</div><div s=
-tyle=3D"text-align:left">+ */</div><div style=3D"text-align:left">+</div><d=
-iv style=3D"text-align:left">+#include &lt;linux/linkage.h&gt;</div><div st=
-yle=3D"text-align:left">+#include &lt;linux/init.h&gt;</div>
-</span><div style=3D"text-align:left">+#include &lt;asm/assembler.h&gt;</di=
-v><div style=3D"text-align:left">+</div><div style=3D"text-align:left">+ENT=
-RY(npcm7xx_secondary_<wbr>startup)</div><div style=3D"text-align:left">+=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0safe_svcmode_maskall r0</div></blockquote><div><br>=
-</div><div>I saw you =C2=A0answered to Florian Fainelli that the BootRom is=
- not starting the secondary CPU in SVC mode. Are you sure? In our engineeri=
-ng npcm7xx revision, Z1, the BootRom indeed started to run it in IRQ mode b=
-ut we fixed it in the production version, A1, (quite long time ago), I hope=
- you didn&#39;t get an EB with Z1 you can check that in BootBlock console p=
-rint:</div><div><div>&gt; ADC CLK is set to 25000000</div><div>&gt;Last res=
-et was CORST</div><div>&gt;vgaioen=3D1 and mux gspi.</div><div>&gt;A1 &lt;&=
-lt;=3D=3D=3D=3D=3D=3D this is what you should see, if you see Z1 we need to=
- replace your EB</div></div><div><br></div><blockquote class=3D"gmail_quote=
-" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);=
-padding-left:1ex"><div style=3D"text-align:left">+</div><div style=3D"text-=
-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0b=C2=A0 =C2=A0 =C2=A0 =C2=A0seconda=
-ry_startup</div><div style=3D"text-align:left">+ENDPROC(npcm7xx_secondary_<=
-wbr>startup)</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">diff --git a/arch/arm=
-/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c</div><div style=3D"text=
--align:left">new file mode 100644</div>
-</span><div style=3D"text-align:left">index 000000000000..132e9d587857</div=
->
-<span class=3D"gmail-"><div style=3D"text-align:left">--- /dev/null</div><d=
-iv style=3D"text-align:left">+++ b/arch/arm/mach-npcm/npcm7xx.c</div><div s=
-tyle=3D"text-align:left">@@ -0,0 +1,34 @@</div><div style=3D"text-align:lef=
-t">+/*</div>
-</span><div style=3D"text-align:left">+ * Copyright (c) 2017 Nuvoton Techno=
-logy corporation.</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+ * Copyright 2017 Go=
-ogle, Inc.</div><div style=3D"text-align:left">+ *</div><div style=3D"text-=
-align:left">+ * This program is free software; you can redistribute it and/=
-or modify</div>
-</span><span class=3D"gmail-"><div style=3D"text-align:left">+ * it under t=
-he terms of the GNU General Public License version 2 as</div><div style=3D"=
-text-align:left">+ * published by the Free Software Foundation.</div><div s=
-tyle=3D"text-align:left">+ */</div><div style=3D"text-align:left">+</div>
-</span><div><div class=3D"gmail-h5"><div style=3D"text-align:left">+#includ=
-e &lt;linux/kernel.h&gt;</div><div style=3D"text-align:left">+#include &lt;=
-linux/types.h&gt;</div><div style=3D"text-align:left">+#include &lt;asm/mac=
-h/arch.h&gt;</div><div style=3D"text-align:left">+#include &lt;asm/mach-typ=
-es.h&gt;</div><div style=3D"text-align:left">+#include &lt;asm/mach/map.h&g=
-t;</div><div style=3D"text-align:left">+#include &lt;asm/hardware/cache-l2x=
-0.h&gt;</div><div style=3D"text-align:left">+</div><div style=3D"text-align=
-:left">+#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |=C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0\</div><div style=3D"text-align:left">+=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 L310_AUX_CTRL_DATA_PREFETCH |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0\</div><div style=3D"text-a=
-lign:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 L310_AUX_CTRL_NS_LOCKDOWN |=C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0\</di=
-v><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 L310_AUX_CTRL_CACHE_REPLACE_RR |=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 \</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 L2C_AUX_CTRL_SHARED_OV=
-ERRIDE |=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 \</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 L310_AUX=
-_CTRL_FULL_LINE_ZERO)</div><div style=3D"text-align:left">+</div><div style=
-=3D"text-align:left">+static const char *const npcm7xx_dt_match[] =3D {</di=
-v><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;nuvoton,=
-npcm750&quot;,</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0NULL</div><div style=3D"text-align:left">+};</div><div style=3D"text-=
-align:left">+</div><div style=3D"text-align:left">+DT_MACHINE_START(NPCM7XX=
-_DT, &quot;NPCMX50 Chip family&quot;)</div><div style=3D"text-align:left">+=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0.atag_offset=C2=A0 =C2=A0 =3D 0x100,</div><div s=
-tyle=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0.dt_compat=C2=A0 =C2=
-=A0 =C2=A0 =3D npcm7xx_dt_match,</div><div style=3D"text-align:left">+=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0.l2c_aux_val=C2=A0 =C2=A0 =3D NPCM7XX_AUX_VAL,</div=
-><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0.l2c_aux_mask=
-=C2=A0 =C2=A0=3D ~NPCM7XX_AUX_VAL,</div><div style=3D"text-align:left">+MAC=
-HINE_END</div><div style=3D"text-align:left">diff --git a/arch/arm/mach-npc=
-m/platsmp.c b/arch/arm/mach-npcm/platsmp.c</div><div style=3D"text-align:le=
-ft">new file mode 100644</div>
-</div></div><div style=3D"text-align:left">index 000000000000..144e3e7ec7e6=
-</div><div style=3D"text-align:left">--- /dev/null</div><div style=3D"text-=
-align:left">+++ b/arch/arm/mach-npcm/platsmp.c</div><div style=3D"text-alig=
-n:left">@@ -0,0 +1,89 @@</div><div style=3D"text-align:left">+/*</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+ * Copyright 2017 Go=
-ogle, Inc.</div><div style=3D"text-align:left">+ *</div><div style=3D"text-=
-align:left">+ * This program is free software; you can redistribute it and/=
-or modify</div>
-</span><span class=3D"gmail-"><div style=3D"text-align:left">+ * it under t=
-he terms of the GNU General Public License version 2 as</div><div style=3D"=
-text-align:left">+ * published by the Free Software Foundation.</div><div s=
-tyle=3D"text-align:left">+ */</div><div style=3D"text-align:left">+</div><d=
-iv style=3D"text-align:left">+#define pr_fmt(fmt) &quot;PLATSMP: &quot; fmt=
-</div><div style=3D"text-align:left">+</div><div style=3D"text-align:left">=
-+#include &lt;linux/delay.h&gt;</div><div style=3D"text-align:left">+#inclu=
-de &lt;linux/device.h&gt;</div><div style=3D"text-align:left">+#include &lt=
-;linux/smp.h&gt;</div><div style=3D"text-align:left">+#include &lt;linux/io=
-.h&gt;</div><div style=3D"text-align:left">+#include &lt;linux/of.h&gt;</di=
-v><div style=3D"text-align:left">+#include &lt;linux/of_device.h&gt;</div><=
-div style=3D"text-align:left">+#include &lt;linux/of_platform.h&gt;</div><d=
-iv style=3D"text-align:left">+#include &lt;linux/of_address.h&gt;</div><div=
- style=3D"text-align:left">+#include &lt;asm/cacheflush.h&gt;</div><div sty=
-le=3D"text-align:left">+#include &lt;asm/smp.h&gt;</div><div style=3D"text-=
-align:left">+#include &lt;asm/smp_plat.h&gt;</div><div style=3D"text-align:=
-left">+#include &lt;asm/smp_scu.h&gt;</div><div style=3D"text-align:left">+=
-</div><div style=3D"text-align:left">+#define NPCM7XX_SCRPAD_REG 0x13c</div=
-><div style=3D"text-align:left">+</div>
-</span><div style=3D"text-align:left">+extern void npcm7xx_secondary_startu=
-p(<wbr>void);</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+</div><div style=3D"=
-text-align:left">+static int npcm7xx_smp_boot_secondary(<wbr>unsigned int c=
-pu,</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0struct task_struct *idle)</div><div style=3D"text-a=
-lign:left">+{</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0struct device_node *gcr_np;</div><div style=3D"text-align:left">+=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0void __iomem *gcr_base;</div><div style=3D"text-align:l=
-eft">+=C2=A0 =C2=A0 =C2=A0 =C2=A0int ret =3D 0;</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+</div><div style=3D"=
-text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0gcr_np =3D of_find_compatible_=
-node(NULL, NULL, &quot;nuvoton,npcm750-gcr&quot;);</div><div style=3D"text-=
-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!gcr_np) {</div><div style=3D"t=
-ext-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_=
-err(&quot;no gcr device node\n&quot;);</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0ret =3D -EFAULT;</div><div style=3D"text-align:left">+=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto out;</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0=
- =C2=A0}</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0gc=
-r_base =3D of_iomap(gcr_np, 0);</div><div style=3D"text-align:left">+=C2=A0=
- =C2=A0 =C2=A0 =C2=A0if (!gcr_base) {</div><div style=3D"text-align:left">+=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_err(&quot;could n=
-ot iomap gcr at: 0x%llx\n&quot;, gcr_base);</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0ret =3D -EFAULT;</div><div style=3D"text-align:left">+=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto out;</div><div =
-style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0}</div><div style=3D"=
-text-align:left">+</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0/* give boot ROM kernel start address. */</div><div style=3D"text=
--align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0iowrite32(__pa_symbol(npcm7xx_<wbr=
->secondary_startup), gcr_base +</div><div style=3D"text-align:left">+=C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0NPCM7XX_SCRPAD_REG)=
-;</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0=
- =C2=A0/* make sure npcm7xx_secondary_startup is seen by all observers. */<=
-/div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0smp_wmb();<=
-/div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0dsb_sev();<=
-/div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0/* make sur=
-e write buffer is drained */</div><div style=3D"text-align:left">+=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0mb();</div><div style=3D"text-align:left">+</div>
-</span><div style=3D"text-align:left">+out:</div><div style=3D"text-align:l=
-eft">+=C2=A0 =C2=A0 =C2=A0 =C2=A0iounmap(gcr_base);</div><div style=3D"text=
--align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+}</div><div style=3D=
-"text-align:left">+</div><div style=3D"text-align:left">+static void __init=
- npcm7xx_smp_prepare_cpus(<wbr>unsigned int max_cpus)</div><div style=3D"te=
-xt-align:left">+{</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct de=
-vice_node *scu_np;</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0void __iomem *scu_base;</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+</div><div style=3D"=
-text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0scu_np =3D of_find_compatible_=
-node(NULL, NULL, &quot;arm,cortex-a9-scu&quot;);</div><div style=3D"text-al=
-ign:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!scu_np) {</div><div style=3D"tex=
-t-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_er=
-r(&quot;no scu device node\n&quot;);</div><div style=3D"text-align:left">+=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return;</div><div st=
-yle=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0}</div><div style=3D"te=
-xt-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0scu_base =3D of_iomap(scu_np, 0)=
-;</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!scu_=
-base) {</div>
-</span><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0pr_err(&quot;could not iomap scu at: 0x%llx\n&quot;, sc=
-u_base);</div>
-<span class=3D"gmail-"><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return;</div><div style=3D"text-align:le=
-ft">+=C2=A0 =C2=A0 =C2=A0 =C2=A0}</div><div style=3D"text-align:left">+</di=
-v><div style=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0scu_enable(scu=
-_base);</div><div style=3D"text-align:left">+</div>
-</span><div style=3D"text-align:left">+out:</div><div style=3D"text-align:l=
-eft">+=C2=A0 =C2=A0 =C2=A0 =C2=A0iounmap(scu_base);</div>
-<span class=3D"gmail-im gmail-HOEnZb"><div style=3D"text-align:left">+}</di=
-v><div style=3D"text-align:left">+</div><div style=3D"text-align:left">+sta=
-tic struct smp_operations npcm7xx_smp_ops __initdata =3D {</div><div style=
-=3D"text-align:left">+=C2=A0 =C2=A0 =C2=A0 =C2=A0.smp_prepare_cpus =3D npcm=
-7xx_smp_prepare_cpus,</div><div style=3D"text-align:left">+=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0.smp_boot_secondary =3D npcm7xx_smp_boot_secondary,</div>
-</span><div class=3D"gmail-HOEnZb"><div class=3D"gmail-h5"><div style=3D"te=
-xt-align:left">+};</div><div style=3D"text-align:left">+</div><div style=3D=
-"text-align:left">+CPU_METHOD_OF_DECLARE(<wbr>npcm7xx_smp, &quot;nuvoton,np=
-cm7xx-smp&quot;, &amp;npcm7xx_smp_ops);</div><div style=3D"text-align:left"=
->--</div><div style=3D"text-align:left">2.14.1.581.gf28d330327-goog</div>
-<div style=3D"text-align:left"><br></div>
-</div></div></blockquote></div><div style=3D"text-align:left"><br></div></d=
-iv></div>
-
---001a113f5b90e3503605588b2de1--
+PGh0bWw+PGJvZHk+PHA+dGFza2JveHRlc3RlckBnbWFpbC5jb20gbGlrZWQgeW91ciBtZXNzYWdl
+IHdpdGggPGEgaHJlZj1odHRwOi8vYnhyLmlvL1BCSUdVPkJveGVyIGZvciBBbmRyb2lkPC9hPi48
+L3A+PC9ib2R5PjwvaHRtbD48YnIvPjxkaXYgY2xhc3M9InF1b3RlIj5PbiBTZXAgMSwgMjAxNyAx
+MDo0NSBBTSwgJnF1b3Q7QnLDvG5zLCBTdGVmYW4mcXVvdDsgJmx0O1N0ZWZhbi5CcnVlbnNAcnd0
+aC1hYWNoZW4uZGUmZ3Q7IHdyb3RlOjxiciB0eXBlPSdhdHRyaWJ1dGlvbic+PGJsb2NrcXVvdGUg
+Y2xhc3M9InF1b3RlIiBzdHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7Ym9yZGVyLWxlZnQ6MXB4ICNj
+Y2Mgc29saWQ7cGFkZGluZy1sZWZ0OjFleCI+PHAgZGlyPSJsdHIiPk9uIEZyZWl0YWcsIDEuIFNl
+cHRlbWJlciAyMDE3IDE1OjM1OjQ5IENFU1QgTWF4aW1lIFJpcGFyZCB3cm90ZTomIzEzOzxicj4K
+Jmd0OyBPbiBGcmksIFNlcCAwMSwgMjAxNyBhdCAwNTowNDo1NEFNICswMjAwLCBTdGVmYW4gQnJ1
+ZW5zIHdyb3RlOiYjMTM7PGJyPgomZ3Q7ICZndDsgT24gRG9ubmVyc3RhZywgMzEuIEF1Z3VzdCAy
+MDE3IDE2OjUxOjM1IENFU1QgTWF4aW1lIFJpcGFyZCB3cm90ZTomIzEzOzxicj4KJmd0OyAmZ3Q7
+ICZndDsgSGksJiMxMzs8YnI+CiZndDsgJmd0OyAmZ3Q7ICYjMTM7PGJyPgomZ3Q7ICZndDsgJmd0
+OyBPbiBUaHUsIEF1ZyAzMSwgMjAxNyBhdCAwMTozNjowN0FNICswMjAwLCBTdGVmYW4gQnImIzI1
+MjtucyB3cm90ZTomIzEzOzxicj4KJmd0OyAmZ3Q7ICZndDsgJmd0OyArLyogQmV0d2VlbiBTb0Mg
+Z2VuZXJhdGlvbnMsIHRoZXJlIGFyZSBzb21lIHNpZ25pZmljYW50IGRpZmZlcmVuY2VzOiYjMTM7
+PGJyPgomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsgKiAtIEEyMyBhZGRlZCBhIGNsb2NrIGdhdGUgcmVn
+aXN0ZXImIzEzOzxicj4KJmd0OyAmZ3Q7ICZndDsgJmd0OyArICogLSB0aGUgSDMgYnVyc3QgbGVu
+Z3RoIGZpZWxkIGhhcyBhIGRpZmZlcmVudCBvZmZzZXQmIzEzOzxicj4KJmd0OyAmZ3Q7ICZndDsg
+Jmd0OyArICovJiMxMzs8YnI+CiZndDsgJmd0OyAmZ3Q7ICYjMTM7PGJyPgomZ3Q7ICZndDsgJmd0
+OyBUaGlzIGlzIG5vdCB0aGUgcHJvcGVyIGNvbW1lbnQgc3R5bGUuJiMxMzs8YnI+CiZndDsgJmd0
+OyAmZ3Q7ICYjMTM7PGJyPgomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICtlbnVtIGRtYWNfdmFyaWFudCB7
+JiMxMzs8YnI+CiZndDsgJmd0OyAmZ3Q7ICZndDsgKyYjOTtETUFDX1ZBUklBTlRfQTMxLCYjMTM7
+PGJyPgomZ3Q7ICZndDsgJmd0OyAmZ3Q7ICsmIzk7RE1BQ19WQVJJQU5UX0EyMywmIzEzOzxicj4K
+Jmd0OyAmZ3Q7ICZndDsgJmd0OyArJiM5O0RNQUNfVkFSSUFOVF9IMywmIzEzOzxicj4KJmd0OyAm
+Z3Q7ICZndDsgJmd0OyArfTsmIzEzOzxicj4KJmd0OyAmZ3Q7ICZndDsgJmd0OyArJiMxMzs8YnI+
+CiZndDsgJmd0OyAmZ3Q7ICYjMTM7PGJyPgomZ3Q7ICZndDsgJmd0OyBBbmQgdGhpcyBpcyByZWR1
+bmRhbnQgd2l0aCB3aGF0IHdlIGFscmVhZHkgaGF2ZSBpbiBvdXIgc3RydWN0dXJlcy4mIzEzOzxi
+cj4KJmd0OyAmZ3Q7ICYjMTM7PGJyPgomZ3Q7ICZndDsgQWN0dWFsbHksIGl0cyBub3QuIEZvciBI
+MywgdGhlcmUgYXJlIGN1cnJlbnRseSBhdCBsZWFzdCAzIHJlZ2lzdGVyJiMxMzs8YnI+CiZndDsg
+Jmd0OyBjb21wYXRpYmxlIFNvQ3M6IEg1IGlzIGlkZW50aWNhbCwgUjQwIGhhcyAxNiBkbWEgY2hh
+bm5lbHMsIEE2NCBoYXMgOCYjMTM7PGJyPgomZ3Q7ICZndDsgY2hhbm5lbHMuIFNvIGlmIHRoZSBj
+dXJyZW50IGNvbmZpZyBzdHJ1Y3R1cmUgaXMga2VwdCwgd2UgbmVlZCAzIGRpZmZlcmVudCYjMTM7
+PGJyPgomZ3Q7ICZndDsgY29tcGF0aWJsZSBzdHJpbmdzLiBTYW1lIGZvciB0aGUgQTIzLCB3aGlj
+aCBpcyByZWdpc3RlciBjb21wYXRpYmxlIHRvJiMxMzs8YnI+CiZndDsgJmd0OyBlLmcuIEE4M3Qg
+YW5kIFYzcywgYnV0IHdpdGggZGlmZmVyZW50IG51bWJlcnMgb2YgRE1BIGNoYW5uZWxzLiYjMTM7
+PGJyPgomZ3Q7ICZndDsgJiMxMzs8YnI+CiZndDsgJmd0OyBTbyBlaXRoZXIgeW91IGRlY29yYXRl
+IHRoZSBjb2RlIHdpdGggYSBjYXNjYWRlIG9mJiMxMzs8YnI+CiZndDsgJmd0OyAmIzEzOzxicj4K
+Jmd0OyAmZ3Q7IGlmICgob2ZfaXNfY29tcGF0aWJsZSguLkEyMy4uKSB8fCBvZl9pc19jb21wYXRp
+YmxlKC4uQTgzVC4uKSB8fCAuLi4pIHsmIzEzOzxicj4KJmd0OyAmZ3Q7IH0gZWxzZSBpZiAoKG9m
+X2lzX2NvbXBhdGlibGUoLi5IMy4uKSB8fCBvZl9pc19jb21wYXRpYmxlKC4uQTY0Li4pIHx8IC4u
+LikmIzEzOzxicj4KJmd0OyAmZ3Q7IHsmIzEzOzxicj4KJmd0OyAmZ3Q7IH0gZWxzZSB7IC8qIEEz
+MSAqLyYjMTM7PGJyPgomZ3Q7ICZndDsgfSYjMTM7PGJyPgomZ3Q7ICZndDsgJiMxMzs8YnI+CiZn
+dDsgJmd0OyBpbiBhIG51bWJlciBvZiBwbGFjZXMsIG9yIHlvdSBkbyBpdCBqdXN0IG9uY2UuJiMx
+Mzs8YnI+CiZndDsgJiMxMzs8YnI+CiZndDsgVGhhdCdzIG5vdCBob3cgeW91IHJldHJpZXZlIHRo
+ZSBzdHJ1Y3R1cmVzLiBUaGV5IGFyZSBhbHJlYWR5JiMxMzs8YnI+CiZndDsgYXNzb2NpYXRlZCB0
+byB0aGUgY29tcGF0aWJsZSwgYW5kIHlvdSBuZWVkIHRvIGRvIGEgc2luZ2xlIGxvb2t1cCB0byYj
+MTM7PGJyPgomZ3Q7IGdldCB0aGVtLiBTbyB0aGF0J3Mgbm93aGVyZSBuZWFyIHdoYXQgeW91J3Jl
+IHN1Z2dlc3RpbmcuIFlvdSBjYW4gaGF2ZSYjMTM7PGJyPgomZ3Q7IGEgbG9vayBhdCB0aGUgb2Zf
+bWF0Y2hfZGV2aWNlIGluIHRoZSBwcm9iZSBmdW5jdGlvbi4mIzEzOzxicj4KJmd0OyAmIzEzOzxi
+cj4KJiMxMzs8YnI+CiYjMTM7PGJyPgpQbGVhc2UgaGF2ZSBhIGxvb2sgYXQgdGhlIGN1cnJlbnQg
+aW1wbGVtZW50YXRpb24gb2YgaG93IHRoZSBjbG9jayBhdXRvZ2F0aW5nICYjMTM7PGJyPgppbiB0
+aGUgcHJvYmUgZnVuY3Rpb24gaXMgZG9uZSAtIGl0IG1hdGNoZXMgd2l0aCB0aGUgY29tcGF0aWJs
+ZSBzdHJpbmcuJiMxMzs8YnI+CiYjMTM7PGJyPgpPZiBjb3Vyc2Ugd2UgY2FuIHJlcGxhY2UgdGhp
+cyB3aXRoIGEgbWF0Y2ggYmV0d2VlbiBzZGV2LSZndDtjb25maWcgYW5kIHRoZSAmIzEzOzxicj4K
+dmFyaW91cyBzdW42aV9kbWFfY29uZmlnIGluc3RhbmNlcywgYnV0IHdlIHdvdWxkIHN0aWxsIGhh
+dmUgdG8gZG8gMyBtYXRjaGVzICYjMTM7PGJyPgpmb3IgdGhlIEEyMyByZWdpc3RlciBjb25maWd1
+cmF0aW9uIChBMjMgfHwgQTgzVCB8fCBWM3MpIGFuZCAzIG1hdGNoZXMgZm9yIHRoZSAmIzEzOzxi
+cj4KSDMgcmVnaXN0ZXIgY29uZmlndXJhdGlvbiAoSDMgfHwgUjQwIHx8IEE2NCkuIFRoZXJlIGFy
+ZSBjdXJyZW50bHkgKjcqICYjMTM7PGJyPgpkaWZmZXJlbnQgY29uZmlncyAoVjNzLCBSNDAgYW5k
+IEE2NCB0YWtlbiBpbnRvIGFjY291bnQpLCBidXQgb25seSAzIGRpZmZlcmVudCAmIzEzOzxicj4K
+cmVnaXN0ZXIgdmFyaWFudHMuJiMxMzs8YnI+CiYjMTM7PGJyPgpUaGlzIGlzIHRoZSBzYW1lIHJh
+dGlvbmFsZSBhcyB0aGUgImdhdGVfbmVlZGVkIiBib29sZWFuIHByb3BlcnR5IHByb3Bvc2VkIGJ5
+ICYjMTM7PGJyPgpJY2Vub3d5IFpoZW5nIGluIHRoZSAiQWxsd2lubmVyIFYzcyBETUEgc3VwcG9y
+dCIgcGF0Y2ggc2VyaWVzLiBPYnZpb3VzbHkgd2UgJiMxMzs8YnI+CmRvbid0IG5lZWQgYSBib29s
+ZWFuLCBidXQgYSB0ZXJuYXJ5IG9wdGlvbiB0byBjYXRlciBmb3IgdGhlIGdhdGVfbmVlZGVkICYj
+MTM7PGJyPgpkaWZmZXJlbmNlcyAtICJOT19HQVRFIiwgIkEyM19TVFlMRV9HQVRFIiwgIkgzX1NU
+WUxFX0dBVEUiLiYjMTM7PGJyPgomIzEzOzxicj4KS2luZCByZWdhcmRzLCYjMTM7PGJyPgomIzEz
+Ozxicj4KU3RlZmFuJiMxMzs8YnI+CiYjMTM7PGJyPgomIzEzOzxicj4KJiMxMzs8YnI+CjwvcD4K
+PC9ibG9ja3F1b3RlPjwvZGl2Pg==
+----_com.boxer.email_150203612764223--
