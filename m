@@ -1,120 +1,109 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v6.1 4/5] v4l: fwnode: Support generic parsing of graph endpoints in a device
-Date: Sat, 02 Sep 2017 12:42:57 +0300
-Message-ID: <1974101.An4ZKHrJMZ@avalon>
-References: <20170830114946.17743-5-sakari.ailus@linux.intel.com> <20170830124530.26176-1-sakari.ailus@linux.intel.com> <b707062c-d8df-5fb5-8099-8460f0dd7d5d@xs4all.nl>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 5/5] v4l: fwnode: Support generic parsing of graph endpoints in a single port
+Date: Sat, 02 Sep 2017 12:52:47 +0300
+Message-ID: <1981884.TcuAFemERJ@avalon>
+References: <20170830114946.17743-1-sakari.ailus@linux.intel.com> <95945222-3562-a330-609f-ad1a64034dd3@xs4all.nl> <20170901225748.ygk35gzmt6vrtetw@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b707062c-d8df-5fb5-8099-8460f0dd7d5d-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170901225748.ygk35gzmt6vrtetw@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Sakari,
 
-On Friday, 1 September 2017 14:18:55 EEST Hans Verkuil wrote:
-> On 30/08/17 14:45, Sakari Ailus wrote:
-> > The current practice is that drivers iterate over their endpoints and
-> > parse each endpoint separately. This is very similar in a number of
-> > drivers, implement a generic function for the job. Driver specific matters
-> > can be taken into account in the driver specific callback.
+On Saturday, 2 September 2017 01:57:48 EEST Sakari Ailus wrote:
+> On Fri, Sep 01, 2017 at 01:28:40PM +0200, Hans Verkuil wrote:
+> >> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> >> index d063ab4ff67b..dd13604178b4 100644
+> >> --- a/include/media/v4l2-fwnode.h
+> >> +++ b/include/media/v4l2-fwnode.h
+> >> @@ -249,4 +249,53 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
+> >>  			    struct v4l2_fwnode_endpoint *vep,
+> >>  			    struct v4l2_async_subdev *asd));
+> >> 
+> >> +/**
+> >> + * v4l2_async_notifier_parse_fwnode_endpoint - Set up async notifier
+> >> for an
+> >> + *					       fwnode based sub-device
+> >> + * @dev: @struct device pointer
+> >> + * @notifier: pointer to &struct v4l2_async_notifier
+> >> + * @port_id: port number
+> >> + * @endpoint_id: endpoint number
+> >> + * @asd_struct_size: size of the driver's async sub-device struct,
+> >> including
+> >> + *		     sizeof(struct v4l2_async_subdev). The &struct
+> >> + *		     v4l2_async_subdev shall be the first member of
+> >> + *		     the driver's async sub-device struct, i.e. both
+> >> + *		     begin at the same memory address.
+> >> + * @parse_single: driver's callback function called on each V4L2 fwnode
+> >> endpoint
+> >> + *
+> >> + * Parse the fwnode endpoint of the @dev device corresponding to the
+> >> given port
+> >> + * and endpoint numbres and populate the async sub- devices array of
+> >> the
 > > 
-> > Convert the omap3isp as an example.
-> 
-> It would be much easier to review if the omap3isp conversion was done in a
-> separate patch. Ditto for the rcar conversion, and I prefer to have both
-> at the end of the patch series, after the core code patches.
-> 
-> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > ---
-> > since v6:
+> > numbers
+> > no space after sub-
 > > 
-> > - Set notifier->subdevs NULL and notifier->num_subdevs 0 in
+> > > + * notifier. The @parse_endpoint callback function is called for the
+> > > endpoint
 > > 
-> >   v4l2_async_notifier_release().
-> >  
-> >  drivers/media/platform/omap3isp/isp.c | 115 ++++++++++-------------------
-> >  drivers/media/platform/omap3isp/isp.h |   5 +-
-> >  drivers/media/v4l2-core/v4l2-async.c  |  16 +++++
-> >  drivers/media/v4l2-core/v4l2-fwnode.c | 131 +++++++++++++++++++++++++++++
-> >  include/media/v4l2-async.h            |  24 ++++++-
-> >  include/media/v4l2-fwnode.h           |  48 +++++++++++++
-> >  6 files changed, 254 insertions(+), 85 deletions(-)
-
-[snip]
-
-> > diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-> > index c69d8c8a66d0..cf13c7311a1c 100644
-> > --- a/include/media/v4l2-async.h
-> > +++ b/include/media/v4l2-async.h
-> > @@ -18,7 +18,6 @@ struct device;
-> >  struct device_node;
-> >  struct v4l2_device;
-> >  struct v4l2_subdev;
-> > -struct v4l2_async_notifier;
+> > parse_single, but (as in the previous patch) I actually prefer
+> > parse_endpoint.
 > > 
-> >  /* A random max subdevice number, used to allocate an array on stack */
-> >  #define V4L2_MAX_SUBDEVS 128U
-> > @@ -50,6 +49,10 @@ enum v4l2_async_match_type {
-> >   * @match:	union of per-bus type matching data sets
-> >   * @list:	used to link struct v4l2_async_subdev objects, waiting to be
-> >   *		probed, to a notifier->waiting list
-> > + *
-> > + * When the struct is used as the first member of a driver specific
+> >> + * with the corresponding async sub-device pointer to let the caller
+> >> initialize
+> >> + * the driver-specific part of the async sub-device structure.
+> >> + *
+> >> + * The notifier memory shall be zeroed before this function is called
+> >> on the
+> >> + * notifier.
+> > 
+> > Should it? Doesn't this add additional subdevs?
+> > 
+> > I'm lost. What's the relationship between
+> > v4l2_async_notifier_parse_fwnode_endpoints and this function? When do you
+> > use which? When you should zero the notifier?
+> I thought there would be advantages in this approach as it lets you to
+> choose which endpoints specifically you want to parse. That said, the
+> expectation is that the device has no endpoints that aren't supported in
+> hardware either.
 > 
-> Just replace "the first member" by "part"...
-
-I'd say "When the structure is embedded in a driver-specific structure, ...".
-
-> > + * struct, the driver specific struct shall contain the @struct
-> > + * v4l2_async_subdev as its first member.
+> Some drivers currently iterate over all the endpoints and then validate
+> them whereas others poke for some endpoints only (port 0, endpoint 0, for
+> the rcar-vin driver, for instance). In DT binding documentation the
+> endpoint numbers are currently not specified nor drivers have checked them.
+> Common sense tells to use zero if there's no reason to do otherwise, but
+> still this hasn't been documented nor validated in the past. So if we add
+> that now, there could be a chance of breaking something.
 > 
-> ...since you mention in the second part that it has to be the first member.
-> No need to mention that twice.
+> Additionally, specifying the endpoints to parse explicitly has been seen
+> beneficial (or even necessary) in parsing endpoints for devices that have
+> both input and output interfaces. Perhaps Niklas can comment on that.
 > 
-> >   */
+> What I though was to introduce a specific error code (EPERM, better
+> suggestions are taken)
 
-[snip]
+Maybe ENOTCONN ?
 
-> >  /**
-> > + * v4l2_async_notifier_release - release notifier resources
-> > + * @notifier: the notifier the resources of which are to be released
+> for the driver callback function (parse_endpoint) to silently skip endpoints
+> the driver doesn't like for reason or another. This lets drivers to use the
+> endpoint parser function added by the previous patch and still maintain the
+> old behaviour, i.e. ignore endpoints that aren't explicitly recognised by
+> the driver.
 > 
-> Just say: @notifier: pointer to &struct v4l2_async_notifier
+> I'll drop this patch from the next version.
 
-I asked Sakari to be more explicit. Documenting an argument as "pointer to 
-struct foo" is quite pointless, C is a typed language so it's evident from the 
-function declaration. What pointer to pass to the function is a much more 
-useful piece of information. This specific case is pretty trivial anyway, but 
-in other cases, such as the dev pointer passed to the parse function, we need 
-more than just documenting the variable type.
-
-> > + *
-> > + * Release memory resources related to a notifier, including the async
-> 
-> s/a/the/
-> 
-> > + * sub-devices allocated for the purposes of the notifier. The user is
-> > + * responsible for releasing the notifier's resources after calling
-> > + * @v4l2_async_notifier_parse_fwnode_endpoints.
-> > + *
-> > + * There is no harm from calling v4l2_async_notifier_release in other
-> > + * cases as long as its memory has been zeroed after it has been
-> > + * allocated.
-> > + */
-> > +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier);
-
-[snip]
+Parsing a specific endpoint of a specific port is probably indeed a bit too 
+fine-grained, but I think there are use cases for parsing at the port level 
+instead of parsing all ports.
 
 -- 
 Regards,
 
 Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
