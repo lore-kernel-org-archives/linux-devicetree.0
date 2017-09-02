@@ -1,109 +1,90 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 5/5] v4l: fwnode: Support generic parsing of graph endpoints in a single port
-Date: Sat, 02 Sep 2017 12:52:47 +0300
-Message-ID: <1981884.TcuAFemERJ@avalon>
-References: <20170830114946.17743-1-sakari.ailus@linux.intel.com> <95945222-3562-a330-609f-ad1a64034dd3@xs4all.nl> <20170901225748.ygk35gzmt6vrtetw@valkosipuli.retiisi.org.uk>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for ProBox2
+Date: Sat, 2 Sep 2017 12:08:31 +0200
+Message-ID: <7c7224a9-b0a6-caa4-483a-d9613af48d13@suse.de>
+References: <20170827125425.3400-1-afaerber@suse.de>
+ <20170827125425.3400-2-afaerber@suse.de>
+ <20170831211427.7pmjdd5n4baes3d4@rob-hp-laptop>
+ <CAD4Jqzs=SHBGOrACbGiURxsz8OEcp9NpUZV-vkkLqXtBV97XoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170901225748.ygk35gzmt6vrtetw@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD4Jqzs=SHBGOrACbGiURxsz8OEcp9NpUZV-vkkLqXtBV97XoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PROBOX2-CS <support-UNCqqGnNuERBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Probox2 <sales-UNCqqGnNuERBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi Wilson,
 
-On Saturday, 2 September 2017 01:57:48 EEST Sakari Ailus wrote:
-> On Fri, Sep 01, 2017 at 01:28:40PM +0200, Hans Verkuil wrote:
-> >> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-> >> index d063ab4ff67b..dd13604178b4 100644
-> >> --- a/include/media/v4l2-fwnode.h
-> >> +++ b/include/media/v4l2-fwnode.h
-> >> @@ -249,4 +249,53 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
-> >>  			    struct v4l2_fwnode_endpoint *vep,
-> >>  			    struct v4l2_async_subdev *asd));
-> >> 
-> >> +/**
-> >> + * v4l2_async_notifier_parse_fwnode_endpoint - Set up async notifier
-> >> for an
-> >> + *					       fwnode based sub-device
-> >> + * @dev: @struct device pointer
-> >> + * @notifier: pointer to &struct v4l2_async_notifier
-> >> + * @port_id: port number
-> >> + * @endpoint_id: endpoint number
-> >> + * @asd_struct_size: size of the driver's async sub-device struct,
-> >> including
-> >> + *		     sizeof(struct v4l2_async_subdev). The &struct
-> >> + *		     v4l2_async_subdev shall be the first member of
-> >> + *		     the driver's async sub-device struct, i.e. both
-> >> + *		     begin at the same memory address.
-> >> + * @parse_single: driver's callback function called on each V4L2 fwnode
-> >> endpoint
-> >> + *
-> >> + * Parse the fwnode endpoint of the @dev device corresponding to the
-> >> given port
-> >> + * and endpoint numbres and populate the async sub- devices array of
-> >> the
-> > 
-> > numbers
-> > no space after sub-
-> > 
-> > > + * notifier. The @parse_endpoint callback function is called for the
-> > > endpoint
-> > 
-> > parse_single, but (as in the previous patch) I actually prefer
-> > parse_endpoint.
-> > 
-> >> + * with the corresponding async sub-device pointer to let the caller
-> >> initialize
-> >> + * the driver-specific part of the async sub-device structure.
-> >> + *
-> >> + * The notifier memory shall be zeroed before this function is called
-> >> on the
-> >> + * notifier.
-> > 
-> > Should it? Doesn't this add additional subdevs?
-> > 
-> > I'm lost. What's the relationship between
-> > v4l2_async_notifier_parse_fwnode_endpoints and this function? When do you
-> > use which? When you should zero the notifier?
-> I thought there would be advantages in this approach as it lets you to
-> choose which endpoints specifically you want to parse. That said, the
-> expectation is that the device has no endpoints that aren't supported in
-> hardware either.
-> 
-> Some drivers currently iterate over all the endpoints and then validate
-> them whereas others poke for some endpoints only (port 0, endpoint 0, for
-> the rcar-vin driver, for instance). In DT binding documentation the
-> endpoint numbers are currently not specified nor drivers have checked them.
-> Common sense tells to use zero if there's no reason to do otherwise, but
-> still this hasn't been documented nor validated in the past. So if we add
-> that now, there could be a chance of breaking something.
-> 
-> Additionally, specifying the endpoints to parse explicitly has been seen
-> beneficial (or even necessary) in parsing endpoints for devices that have
-> both input and output interfaces. Perhaps Niklas can comment on that.
-> 
-> What I though was to introduce a specific error code (EPERM, better
-> suggestions are taken)
+Please note that HTML-format mails are not permitted on most Linux
+mailing lists, so your below message did not arrive for the other reviewers.
 
-Maybe ENOTCONN ?
-
-> for the driver callback function (parse_endpoint) to silently skip endpoints
-> the driver doesn't like for reason or another. This lets drivers to use the
-> endpoint parser function added by the previous patch and still maintain the
-> old behaviour, i.e. ignore endpoints that aren't explicitly recognised by
-> the driver.
+Am 01.09.2017 um 04:11 schrieb PROBOX2-CS:
+> Hi Rob,
 > 
-> I'll drop this patch from the next version.
+> For the company of the brand is W2COMP COMPANY LIMITED or you can write
+> PROBOX2.
 
-Parsing a specific endpoint of a specific port is probably indeed a bit too 
-fine-grained, but I think there are use cases for parsing at the port level 
-instead of parsing all ports.
+My updated proposal is:
+
+probox2         PROBOX2 (by W2COMP Co., Ltd.)
+
+Rationale: Repeating the same name with just different casing on the
+right does not provide additional information to a reader wondering whom
+this prefix belongs to and whether to use it for new compatible strings.
+
+If that proposal is okay with you, we still need to figure out how to
+describe your company in the commit message below.
+
+> thanks,
+> Wilson
+> PROBOX2
+> 
+> On Fri, Sep 1, 2017 at 5:14 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> <mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>> wrote:
+> 
+>     On Sun, Aug 27, 2017 at 02:54:23PM +0200, Andreas Färber wrote:
+>     > PROBOX2 is a Hong Kong based manufacturer of TV boxes.
+
+W2COMP describes itself as an "online reseller", and PROBOX2 does not
+have any About Us page to derive a fair description from - "reseller"
+appears to contradict my above description as "manufacturer".
+Therefore my (unanswered) off-list inquiry from Aug 28, when you first
+mentioned W2COMP to me.
+
+So what about: "PROBOX2 is a TV box brand by Hong Kong based online
+reseller W2COMP Company Limited."?
+
+CC'ing William.
+
+Thanks,
+Andreas
+
+
+>     >
+>     > Cc: support-UNCqqGnNuERBDgjK7y7TUQ@public.gmane.org <mailto:support-UNCqqGnNuERBDgjK7y7TUQ@public.gmane.org>
+>     > Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org
+>     <mailto:afaerber-l3A5Bk7waGM@public.gmane.org>>
+>     > ---
+>     >  I did not find a fully spelled out company name for this brand.
+>     >
+>     >  http://probox2.com/contact-us/
+>     >  https://www.facebook.com/pg/probox2/about/
+>     <https://www.facebook.com/pg/probox2/about/>
+>     >
+>     >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>     >  1 file changed, 1 insertion(+)
+> 
+>     Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org <mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>>
 
 -- 
-Regards,
-
-Laurent Pinchart
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
