@@ -1,70 +1,76 @@
-From: Stefan Bruens <stefan.bruens@rwth-aachen.de>
-Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for Allwinner A64
-Date: Sat, 2 Sep 2017 04:02:12 +0200
-Message-ID: <2607878.Us0MSlEf6n@pebbles.site>
-References: <20170830233609.13855-4-stefan.bruens@rwth-aachen.de> <1837534.s5pz9jWHnV@pebbles.site> <d397d87b-5004-c8af-e590-037befc9b2b6@arm.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Add the CLCD controller to Cygnus.
+Date: Fri, 1 Sep 2017 19:10:24 -0700
+Message-ID: <2e66788a-228a-b32d-eb31-24fab776ee21@gmail.com>
+References: <20170831185416.8181-1-eric@anholt.net>
+ <3a947d06-53cc-bb28-86de-0ddb5c6b853c@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d397d87b-5004-c8af-e590-037befc9b2b6@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
-Cc: linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3a947d06-53cc-bb28-86de-0ddb5c6b853c-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Samstag, 2. September 2017 00:32:50 CEST André Przywara wrote:
-> Hi,
+
+
+On 08/31/2017 01:16 PM, Scott Branden wrote:
+> Hi Eric,
 > 
-> On 01/09/17 02:19, Stefan Bruens wrote:
-> > On Freitag, 1. September 2017 02:31:35 CEST Andre Przywara wrote:
-> >> Hi,
-> >> 
-> >> On 31/08/17 00:36, Stefan Brüns wrote:
-> >>> The A64 SoC has the same dma engine as the H3 (sun8i), with a
-> >>> reduced amount of physical channels. Add the proper config data
-> >>> and compatible string to support it.
-> >> 
-> >> ...
-> >> 
-> >>> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> >>> index 5f4eee4513e5..6a17c5d63582 100644
-> >>> --- a/drivers/dma/sun6i-dma.c
-> >>> +++ b/drivers/dma/sun6i-dma.c
-> >>> @@ -1068,6 +1068,12 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =
-> >>> {
-> >>> 
-> >>>  	.nr_max_vchans   = 34,
-> >>>  	.dmac_variant    = DMAC_VARIANT_H3,
-> >>>  
-> >>>  };
-> >>> 
-> >>> +
-> >>> +static struct sun6i_dma_config sun50i_a64_dma_cfg = {
-> >>> +	.nr_max_channels = 8,
-> >>> +	.nr_max_requests = 27,
-> >>> +	.nr_max_vchans   = 38,
-> >>> +	.dmac_variant    = DMAC_VARIANT_H3,
-> >>> 
-> >>>  };
-> >>>  
-[...]
-> > There are also the incompatibilities in the "DMA channel configuration
-> > register" (burst length; burst width; burst length field offset).
-> > 
-> > We can either have 3 different compatible strings, or another property for
-> > the register model.
+> mode is correct, location in file needs to be moved.
 > 
-> The latter is usually frowned upon, using separate compatible strings
-> for each group of SoCs is the way to go here.
+> 
+> On 17-08-31 11:54 AM, Eric Anholt wrote:
+>> This doesn't yet enable it on any particular platform, as we still
+>> need a panel driver for bcm911360_entphn.
+>>
+>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> ---
+>>
+>> These bits are just carving off a little bit of my 911360_entphn panel
+>> series, to reduce conflicts when rebasing (which I just did for
+>> testing pl111 changes for cygnus regressions).  I'm waiting to get my
+>> current RPi panel driver in before working on the 911360 panel again.
+>>
+>>   arch/arm/boot/dts/bcm-cygnus.dtsi | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi
+>> b/arch/arm/boot/dts/bcm-cygnus.dtsi
+>> index 7c957ea06c66..74f73ff24aec 100644
+>> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+>> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+>> @@ -575,6 +575,16 @@
+>>               status = "disabled";
+>>           };
+>>   +        clcd: clcd@180a0000 {
+> please place in correct address ordered location in file
 
-Just for clarification, I was not talking about a property in the devicetree, 
-but about a struct member in the config data, i.e. the .dmac_variant above.
+I moved it right above the v3d node to keep the nodes ordered by unit
+address, please check the result here:
 
-Kind regards,
+https://github.com/Broadcom/stblinux/commit/4d1e42c6b9d28ce7b74d92258435f9d16834ae75
 
-Stefan
+>> +            compatible = "arm,pl111", "arm,primecell";
+>> +            reg = <0x180a0000 0x1000>;
+>> +            interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
+>> +            interrupt-names = "combined";
+>> +            clocks = <&axi41_clk>, <&apb_clk>;
+>> +            clock-names = "clcdclk", "apb_pclk";
+>> +            status = "disabled";
+>> +        };
+>> +
+>>           keypad: keypad@180ac000 {
+>>               compatible = "brcm,bcm-keypad";
+>>               reg = <0x180ac000 0x14c>;
+> 
 
 -- 
-Stefan Brüns  /  Bergstraße 21  /  52062 Aachen
-home: +49 241 53809034     mobile: +49 151 50412019
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
