@@ -1,139 +1,119 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: [PATCH] devicetree: Remove remaining references/tests for
- "chosen@0"
-Date: Sat, 2 Sep 2017 04:43:00 -0400 (EDT)
-Message-ID: <alpine.LFD.2.21.1709020416130.13598@localhost.localdomain>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v6.1 4/5] v4l: fwnode: Support generic parsing of graph endpoints in a device
+Date: Sat, 02 Sep 2017 12:42:57 +0300
+Message-ID: <1974101.An4ZKHrJMZ@avalon>
+References: <20170830114946.17743-5-sakari.ailus@linux.intel.com> <20170830124530.26176-1-sakari.ailus@linux.intel.com> <b707062c-d8df-5fb5-8099-8460f0dd7d5d@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b707062c-d8df-5fb5-8099-8460f0dd7d5d-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Linux PPC Mailing List <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans,
 
-Since, according to a recent devicetree ML posting by Rob Herring,
-the node "/chosen@0" is most likely for real Open Firmware and does
-not apply to DTSpec, remove all remaining tests and references for
-that node, of which there are very few left:
+On Friday, 1 September 2017 14:18:55 EEST Hans Verkuil wrote:
+> On 30/08/17 14:45, Sakari Ailus wrote:
+> > The current practice is that drivers iterate over their endpoints and
+> > parse each endpoint separately. This is very similar in a number of
+> > drivers, implement a generic function for the job. Driver specific matters
+> > can be taken into account in the driver specific callback.
+> > 
+> > Convert the omap3isp as an example.
+> 
+> It would be much easier to review if the omap3isp conversion was done in a
+> separate patch. Ditto for the rcar conversion, and I prefer to have both
+> at the end of the patch series, after the core code patches.
+> 
+> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > ---
+> > since v6:
+> > 
+> > - Set notifier->subdevs NULL and notifier->num_subdevs 0 in
+> > 
+> >   v4l2_async_notifier_release().
+> >  
+> >  drivers/media/platform/omap3isp/isp.c | 115 ++++++++++-------------------
+> >  drivers/media/platform/omap3isp/isp.h |   5 +-
+> >  drivers/media/v4l2-core/v4l2-async.c  |  16 +++++
+> >  drivers/media/v4l2-core/v4l2-fwnode.c | 131 +++++++++++++++++++++++++++++
+> >  include/media/v4l2-async.h            |  24 ++++++-
+> >  include/media/v4l2-fwnode.h           |  48 +++++++++++++
+> >  6 files changed, 254 insertions(+), 85 deletions(-)
 
- arch/microblaze/kernel/prom.c | 3 +--
- arch/mips/generic/yamon-dt.c  | 4 ----
- arch/powerpc/boot/oflib.c     | 7 ++-----
- drivers/of/base.c             | 2 --
- drivers/of/fdt.c              | 5 +----
- 5 files changed, 4 insertions(+), 17 deletions(-)
+[snip]
 
-This should be innocuous as, in all of the three arch/ files above,
-there is a test for "chosen" immediately before the test for
-"chosen@0", so nothing should change.
+> > diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+> > index c69d8c8a66d0..cf13c7311a1c 100644
+> > --- a/include/media/v4l2-async.h
+> > +++ b/include/media/v4l2-async.h
+> > @@ -18,7 +18,6 @@ struct device;
+> >  struct device_node;
+> >  struct v4l2_device;
+> >  struct v4l2_subdev;
+> > -struct v4l2_async_notifier;
+> > 
+> >  /* A random max subdevice number, used to allocate an array on stack */
+> >  #define V4L2_MAX_SUBDEVS 128U
+> > @@ -50,6 +49,10 @@ enum v4l2_async_match_type {
+> >   * @match:	union of per-bus type matching data sets
+> >   * @list:	used to link struct v4l2_async_subdev objects, waiting to be
+> >   *		probed, to a notifier->waiting list
+> > + *
+> > + * When the struct is used as the first member of a driver specific
+> 
+> Just replace "the first member" by "part"...
 
-Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+I'd say "When the structure is embedded in a driver-specific structure, ...".
 
----
+> > + * struct, the driver specific struct shall contain the @struct
+> > + * v4l2_async_subdev as its first member.
+> 
+> ...since you mention in the second part that it has to be the first member.
+> No need to mention that twice.
+> 
+> >   */
 
-  if this patch is premature, then just ignore it, thanks.
+[snip]
 
-diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-index 68f0999..c81bfd7 100644
---- a/arch/microblaze/kernel/prom.c
-+++ b/arch/microblaze/kernel/prom.c
-@@ -53,8 +53,7 @@ static int __init early_init_dt_scan_chosen_serial(unsigned long node,
+> >  /**
+> > + * v4l2_async_notifier_release - release notifier resources
+> > + * @notifier: the notifier the resources of which are to be released
+> 
+> Just say: @notifier: pointer to &struct v4l2_async_notifier
 
- 	pr_debug("%s: depth: %d, uname: %s\n", __func__, depth, uname);
+I asked Sakari to be more explicit. Documenting an argument as "pointer to 
+struct foo" is quite pointless, C is a typed language so it's evident from the 
+function declaration. What pointer to pass to the function is a much more 
+useful piece of information. This specific case is pretty trivial anyway, but 
+in other cases, such as the dev pointer passed to the parse function, we need 
+more than just documenting the variable type.
 
--	if (depth == 1 && (strcmp(uname, "chosen") == 0 ||
--				strcmp(uname, "chosen@0") == 0)) {
-+	if (depth == 1 && (strcmp(uname, "chosen") == 0)) {
- 		p = of_get_flat_dt_prop(node, "linux,stdout-path", &l);
- 		if (p != NULL && l > 0)
- 			stdout = p; /* store pointer to stdout-path */
-diff --git a/arch/mips/generic/yamon-dt.c b/arch/mips/generic/yamon-dt.c
-index 6077bca..3a241b2 100644
---- a/arch/mips/generic/yamon-dt.c
-+++ b/arch/mips/generic/yamon-dt.c
-@@ -28,8 +28,6 @@ __init int yamon_dt_append_cmdline(void *fdt)
- 	/* find or add chosen node */
- 	chosen_off = fdt_path_offset(fdt, "/chosen");
- 	if (chosen_off == -FDT_ERR_NOTFOUND)
--		chosen_off = fdt_path_offset(fdt, "/chosen@0");
--	if (chosen_off == -FDT_ERR_NOTFOUND)
- 		chosen_off = fdt_add_subnode(fdt, 0, "chosen");
- 	if (chosen_off < 0) {
- 		pr_err("Unable to find or add DT chosen node: %d\n",
-@@ -221,8 +219,6 @@ __init int yamon_dt_serial_config(void *fdt)
- 	/* find or add chosen node */
- 	chosen_off = fdt_path_offset(fdt, "/chosen");
- 	if (chosen_off == -FDT_ERR_NOTFOUND)
--		chosen_off = fdt_path_offset(fdt, "/chosen@0");
--	if (chosen_off == -FDT_ERR_NOTFOUND)
- 		chosen_off = fdt_add_subnode(fdt, 0, "chosen");
- 	if (chosen_off < 0) {
- 		pr_err("Unable to find or add DT chosen node: %d\n",
-diff --git a/arch/powerpc/boot/oflib.c b/arch/powerpc/boot/oflib.c
-index 46c98a4..a01471f 100644
---- a/arch/powerpc/boot/oflib.c
-+++ b/arch/powerpc/boot/oflib.c
-@@ -131,11 +131,8 @@ static int check_of_version(void)
- 		return 0;
- 	chosen = of_finddevice("/chosen");
- 	if (chosen == (phandle) -1) {
--		chosen = of_finddevice("/chosen@0");
--		if (chosen == (phandle) -1) {
--			printf("no chosen\n");
--			return 0;
--		}
-+		printf("no chosen\n");
-+		return 0;
- 	}
- 	if (of_getprop(chosen, "mmu", &chosen_mmu, sizeof(chosen_mmu)) <= 0) {
- 		printf("no mmu\n");
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 686628d..e0f636d 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1659,8 +1659,6 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+> > + *
+> > + * Release memory resources related to a notifier, including the async
+> 
+> s/a/the/
+> 
+> > + * sub-devices allocated for the purposes of the notifier. The user is
+> > + * responsible for releasing the notifier's resources after calling
+> > + * @v4l2_async_notifier_parse_fwnode_endpoints.
+> > + *
+> > + * There is no harm from calling v4l2_async_notifier_release in other
+> > + * cases as long as its memory has been zeroed after it has been
+> > + * allocated.
+> > + */
+> > +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier);
 
- 	of_aliases = of_find_node_by_path("/aliases");
- 	of_chosen = of_find_node_by_path("/chosen");
--	if (of_chosen == NULL)
--		of_chosen = of_find_node_by_path("/chosen@0");
-
- 	if (of_chosen) {
- 		/* linux,stdout-path and /aliases/stdout are for legacy compatibility */
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index ce30c9a..0b0a709 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -980,8 +980,6 @@ int __init early_init_dt_scan_chosen_stdout(void)
-
- 	offset = fdt_path_offset(fdt, "/chosen");
- 	if (offset < 0)
--		offset = fdt_path_offset(fdt, "/chosen@0");
--	if (offset < 0)
- 		return -ENOENT;
-
- 	p = fdt_getprop(fdt, offset, "stdout-path", &l);
-@@ -1117,8 +1115,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
-
- 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
-
--	if (depth != 1 || !data ||
--	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
-+	if (depth != 1 || !data || (strcmp(uname, "chosen") != 0))
- 		return 0;
-
- 	early_init_dt_check_for_initrd(node);
+[snip]
 
 -- 
+Regards,
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
+Laurent Pinchart
 
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
