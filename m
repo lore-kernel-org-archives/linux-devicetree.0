@@ -1,38 +1,125 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Remove remaining references/tests for
- "chosen@0"
-Date: Sun, 03 Sep 2017 08:20:54 +1000
-Message-ID: <1504390854.4974.108.camel@kernel.crashing.org>
-References: <alpine.LFD.2.21.1709020416130.13598@localhost.localdomain>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6 5/5] v4l: fwnode: Support generic parsing of graph
+ endpoints in a single port
+Date: Sun, 3 Sep 2017 10:43:39 +0300
+Message-ID: <20170903074339.vswbczv2lfxykssq@valkosipuli.retiisi.org.uk>
+References: <20170830114946.17743-1-sakari.ailus@linux.intel.com>
+ <95945222-3562-a330-609f-ad1a64034dd3@xs4all.nl>
+ <20170901225748.ygk35gzmt6vrtetw@valkosipuli.retiisi.org.uk>
+ <1981884.TcuAFemERJ@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.21.1709020416130.13598-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Linux PPC Mailing List <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1981884.TcuAFemERJ@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-09-02 at 04:43 -0400, Robert P. J. Day wrote:
-> Since, according to a recent devicetree ML posting by Rob Herring,
-> the node "/chosen@0" is most likely for real Open Firmware and does
-> not apply to DTSpec, remove all remaining tests and references for
-> that node, of which there are very few left:
+Hi Laurent,
 
-Technically that would break Open Firmware systems where the node is
-really called chosen@0
+On Sat, Sep 02, 2017 at 12:52:47PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Saturday, 2 September 2017 01:57:48 EEST Sakari Ailus wrote:
+> > On Fri, Sep 01, 2017 at 01:28:40PM +0200, Hans Verkuil wrote:
+> > >> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> > >> index d063ab4ff67b..dd13604178b4 100644
+> > >> --- a/include/media/v4l2-fwnode.h
+> > >> +++ b/include/media/v4l2-fwnode.h
+> > >> @@ -249,4 +249,53 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
+> > >>  			    struct v4l2_fwnode_endpoint *vep,
+> > >>  			    struct v4l2_async_subdev *asd));
+> > >> 
+> > >> +/**
+> > >> + * v4l2_async_notifier_parse_fwnode_endpoint - Set up async notifier
+> > >> for an
+> > >> + *					       fwnode based sub-device
+> > >> + * @dev: @struct device pointer
+> > >> + * @notifier: pointer to &struct v4l2_async_notifier
+> > >> + * @port_id: port number
+> > >> + * @endpoint_id: endpoint number
+> > >> + * @asd_struct_size: size of the driver's async sub-device struct,
+> > >> including
+> > >> + *		     sizeof(struct v4l2_async_subdev). The &struct
+> > >> + *		     v4l2_async_subdev shall be the first member of
+> > >> + *		     the driver's async sub-device struct, i.e. both
+> > >> + *		     begin at the same memory address.
+> > >> + * @parse_single: driver's callback function called on each V4L2 fwnode
+> > >> endpoint
+> > >> + *
+> > >> + * Parse the fwnode endpoint of the @dev device corresponding to the
+> > >> given port
+> > >> + * and endpoint numbres and populate the async sub- devices array of
+> > >> the
+> > > 
+> > > numbers
+> > > no space after sub-
+> > > 
+> > > > + * notifier. The @parse_endpoint callback function is called for the
+> > > > endpoint
+> > > 
+> > > parse_single, but (as in the previous patch) I actually prefer
+> > > parse_endpoint.
+> > > 
+> > >> + * with the corresponding async sub-device pointer to let the caller
+> > >> initialize
+> > >> + * the driver-specific part of the async sub-device structure.
+> > >> + *
+> > >> + * The notifier memory shall be zeroed before this function is called
+> > >> on the
+> > >> + * notifier.
+> > > 
+> > > Should it? Doesn't this add additional subdevs?
+> > > 
+> > > I'm lost. What's the relationship between
+> > > v4l2_async_notifier_parse_fwnode_endpoints and this function? When do you
+> > > use which? When you should zero the notifier?
+> > I thought there would be advantages in this approach as it lets you to
+> > choose which endpoints specifically you want to parse. That said, the
+> > expectation is that the device has no endpoints that aren't supported in
+> > hardware either.
+> > 
+> > Some drivers currently iterate over all the endpoints and then validate
+> > them whereas others poke for some endpoints only (port 0, endpoint 0, for
+> > the rcar-vin driver, for instance). In DT binding documentation the
+> > endpoint numbers are currently not specified nor drivers have checked them.
+> > Common sense tells to use zero if there's no reason to do otherwise, but
+> > still this hasn't been documented nor validated in the past. So if we add
+> > that now, there could be a chance of breaking something.
+> > 
+> > Additionally, specifying the endpoints to parse explicitly has been seen
+> > beneficial (or even necessary) in parsing endpoints for devices that have
+> > both input and output interfaces. Perhaps Niklas can comment on that.
+> > 
+> > What I though was to introduce a specific error code (EPERM, better
+> > suggestions are taken)
+> 
+> Maybe ENOTCONN ?
 
-Now I'm not sure such a thing actually exist however.
+Sounds good to me.
 
-My collection of DTs don't seem to have one, except in the ancient html
-variants that were extracted by the pengionppc folks for the original
-PowerMac 8600 but I wonder if that's a bug in the extraction script
-since they also have @0 on /packages etc...
+> 
+> > for the driver callback function (parse_endpoint) to silently skip endpoints
+> > the driver doesn't like for reason or another. This lets drivers to use the
+> > endpoint parser function added by the previous patch and still maintain the
+> > old behaviour, i.e. ignore endpoints that aren't explicitly recognised by
+> > the driver.
+> > 
+> > I'll drop this patch from the next version.
+> 
+> Parsing a specific endpoint of a specific port is probably indeed a bit too 
+> fine-grained, but I think there are use cases for parsing at the port level 
+> instead of parsing all ports.
 
-Ben.
+Could you elaborate?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If a driver would be interested in skipping endpoints in a subset of ports,
+in which case only a single port would be excluded from this?
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
