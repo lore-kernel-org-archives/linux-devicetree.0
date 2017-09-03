@@ -1,45 +1,72 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v7 11/18] v4l: async: Register sub-devices before calling bound callback
-Date: Sun,  3 Sep 2017 20:49:51 +0300
-Message-ID: <20170903174958.27058-12-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v7 18/18] arm: dts: omap3: N9/N950: Add flash references to the camera
+Date: Sun,  3 Sep 2017 20:49:58 +0300
+Message-ID: <20170903174958.27058-19-sakari.ailus@linux.intel.com>
 References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170903174958.27058-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Register the sub-device before calling the notifier's bound callback.
-Doing this the other way around is problematic as the struct v4l2_device
-has not assigned for the sub-device yet and may be required by the bound
-callback.
+Add flash and indicator LED phandles to the sensor node.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-async.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/omap3-n9.dts       | 1 +
+ arch/arm/boot/dts/omap3-n950-n9.dtsi | 4 ++--
+ arch/arm/boot/dts/omap3-n950.dts     | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 91d04f00b4e4..70d02378b48f 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -107,13 +107,13 @@ static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
- {
- 	int ret;
- 
--	ret = v4l2_async_notifier_call_int_op(notifier, bound, sd, asd);
-+	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
- 	if (ret < 0)
- 		return ret;
- 
--	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
-+	ret = v4l2_async_notifier_call_int_op(notifier, bound, sd, asd);
- 	if (ret < 0) {
--		v4l2_async_notifier_call_void_op(notifier, unbind, sd, asd);
-+		v4l2_device_unregister_subdev(sd);
- 		return ret;
- 	}
- 
+diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
+index b9e58c536afd..a2944010f62f 100644
+--- a/arch/arm/boot/dts/omap3-n9.dts
++++ b/arch/arm/boot/dts/omap3-n9.dts
+@@ -26,6 +26,7 @@
+ 		clocks = <&isp 0>;
+ 		clock-frequency = <9600000>;
+ 		nokia,nvm-size = <(16 * 64)>;
++		flash = <&as3645a_flash &as3645a_indicator>;
+ 		port {
+ 			smia_1_1: endpoint {
+ 				link-frequencies = /bits/ 64 <199200000 210000000 499200000>;
+diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+index cb47ae79a5f9..92c1a1da28d3 100644
+--- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
++++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+@@ -269,13 +269,13 @@
+ 	as3645a@30 {
+ 		reg = <0x30>;
+ 		compatible = "ams,as3645a";
+-		flash {
++		as3645a_flash: flash {
+ 			flash-timeout-us = <150000>;
+ 			flash-max-microamp = <320000>;
+ 			led-max-microamp = <60000>;
+ 			peak-current-limit = <1750000>;
+ 		};
+-		indicator {
++		as3645a_indicator: indicator {
+ 			led-max-microamp = <10000>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
+index 646601a3ebd8..bba5c5a6950c 100644
+--- a/arch/arm/boot/dts/omap3-n950.dts
++++ b/arch/arm/boot/dts/omap3-n950.dts
+@@ -60,6 +60,7 @@
+ 		clocks = <&isp 0>;
+ 		clock-frequency = <9600000>;
+ 		nokia,nvm-size = <(16 * 64)>;
++		flash = <&as3645a_flash &as3645a_indicator>;
+ 		port {
+ 			smia_1_1: endpoint {
+ 				link-frequencies = /bits/ 64 <210000000 333600000 398400000>;
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
