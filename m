@@ -1,370 +1,331 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v7 06/18] rcar-vin: Use generic parser for parsing fwnode endpoints
-Date: Sun,  3 Sep 2017 20:49:46 +0300
-Message-ID: <20170903174958.27058-7-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v7 12/18] v4l: async: Allow binding notifiers to sub-devices
+Date: Sun,  3 Sep 2017 20:49:52 +0300
+Message-ID: <20170903174958.27058-13-sakari.ailus@linux.intel.com>
 References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170903174958.27058-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of using driver implementation, use
-v4l2_async_notifier_parse_fwnode_endpoints() to parse the fwnode endpoints
-of the device.
+Registering a notifier has required the knowledge of struct v4l2_device
+for the reason that sub-devices generally are registered to the
+v4l2_device (as well as the media device, also available through
+v4l2_device).
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+This information is not available for sub-device drivers at probe time.
+
+What this patch does is that it allows registering notifiers without
+having v4l2_device around. Instead the sub-device pointer is stored to the
+notifier. Once the sub-device of the driver that registered the notifier
+is registered, the notifier will gain the knowledge of the v4l2_device,
+and the binding of async sub-devices from the sub-device driver's notifier
+may proceed.
+
+The master notifier's complete callback is only called when all sub-device
+notifiers are completed.
+
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 ---
- drivers/media/platform/rcar-vin/rcar-core.c | 112 +++++++++-------------------
- drivers/media/platform/rcar-vin/rcar-dma.c  |  10 +--
- drivers/media/platform/rcar-vin/rcar-v4l2.c |  14 ++--
- drivers/media/platform/rcar-vin/rcar-vin.h  |   4 +-
- 4 files changed, 48 insertions(+), 92 deletions(-)
+ drivers/media/v4l2-core/v4l2-async.c | 153 +++++++++++++++++++++++++++++------
+ include/media/v4l2-async.h           |  19 ++++-
+ 2 files changed, 146 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-index 142de447aaaa..bd551f0be213 100644
---- a/drivers/media/platform/rcar-vin/rcar-core.c
-+++ b/drivers/media/platform/rcar-vin/rcar-core.c
-@@ -21,6 +21,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- 
-+#include <media/v4l2-async.h>
+diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+index 70d02378b48f..55d7886103d2 100644
+--- a/drivers/media/v4l2-core/v4l2-async.c
++++ b/drivers/media/v4l2-core/v4l2-async.c
+@@ -25,6 +25,10 @@
  #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-subdev.h>
  
- #include "rcar-vin.h"
-@@ -77,14 +78,14 @@ static int rvin_digital_notify_complete(struct v4l2_async_notifier *notifier)
- 	int ret;
- 
- 	/* Verify subdevices mbus format */
--	if (!rvin_mbus_supported(&vin->digital)) {
-+	if (!rvin_mbus_supported(vin->digital)) {
- 		vin_err(vin, "Unsupported media bus format for %s\n",
--			vin->digital.subdev->name);
-+			vin->digital->subdev->name);
- 		return -EINVAL;
- 	}
- 
- 	vin_dbg(vin, "Found media bus format for %s: %d\n",
--		vin->digital.subdev->name, vin->digital.code);
-+		vin->digital->subdev->name, vin->digital->code);
- 
- 	ret = v4l2_device_register_subdev_nodes(&vin->v4l2_dev);
- 	if (ret < 0) {
-@@ -103,7 +104,7 @@ static void rvin_digital_notify_unbind(struct v4l2_async_notifier *notifier,
- 
- 	vin_dbg(vin, "unbind digital subdev %s\n", subdev->name);
- 	rvin_v4l2_remove(vin);
--	vin->digital.subdev = NULL;
-+	vin->digital->subdev = NULL;
- }
- 
- static int rvin_digital_notify_bound(struct v4l2_async_notifier *notifier,
-@@ -120,117 +121,70 @@ static int rvin_digital_notify_bound(struct v4l2_async_notifier *notifier,
- 	ret = rvin_find_pad(subdev, MEDIA_PAD_FL_SOURCE);
- 	if (ret < 0)
- 		return ret;
--	vin->digital.source_pad = ret;
-+	vin->digital->source_pad = ret;
- 
- 	ret = rvin_find_pad(subdev, MEDIA_PAD_FL_SINK);
--	vin->digital.sink_pad = ret < 0 ? 0 : ret;
-+	vin->digital->sink_pad = ret < 0 ? 0 : ret;
- 
--	vin->digital.subdev = subdev;
-+	vin->digital->subdev = subdev;
- 
- 	vin_dbg(vin, "bound subdev %s source pad: %u sink pad: %u\n",
--		subdev->name, vin->digital.source_pad,
--		vin->digital.sink_pad);
-+		subdev->name, vin->digital->source_pad,
-+		vin->digital->sink_pad);
- 
- 	return 0;
- }
- 
--static int rvin_digitial_parse_v4l2(struct rvin_dev *vin,
--				    struct device_node *ep,
--				    struct v4l2_mbus_config *mbus_cfg)
-+static int rvin_digital_parse_v4l2(struct device *dev,
-+				   struct v4l2_fwnode_endpoint *vep,
-+				   struct v4l2_async_subdev *asd)
- {
--	struct v4l2_fwnode_endpoint v4l2_ep;
--	int ret;
-+	struct rvin_dev *vin = dev_get_drvdata(dev);
-+	struct rvin_graph_entity *rvge =
-+		container_of(asd, struct rvin_graph_entity, asd);
- 
--	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
--	if (ret) {
--		vin_err(vin, "Could not parse v4l2 endpoint\n");
--		return -EINVAL;
--	}
-+	if (vep->base.port || vep->base.id)
-+		return -EPERM;
- 
--	mbus_cfg->type = v4l2_ep.bus_type;
-+	rvge->mbus_cfg.type = vep->bus_type;
- 
--	switch (mbus_cfg->type) {
-+	switch (rvge->mbus_cfg.type) {
- 	case V4L2_MBUS_PARALLEL:
- 		vin_dbg(vin, "Found PARALLEL media bus\n");
--		mbus_cfg->flags = v4l2_ep.bus.parallel.flags;
-+		rvge->mbus_cfg.flags = vep->bus.parallel.flags;
- 		break;
- 	case V4L2_MBUS_BT656:
- 		vin_dbg(vin, "Found BT656 media bus\n");
--		mbus_cfg->flags = 0;
-+		rvge->mbus_cfg.flags = 0;
- 		break;
- 	default:
- 		vin_err(vin, "Unknown media bus type\n");
- 		return -EINVAL;
- 	}
- 
--	return 0;
--}
--
--static int rvin_digital_graph_parse(struct rvin_dev *vin)
--{
--	struct device_node *ep, *np;
--	int ret;
--
--	vin->digital.asd.match.fwnode.fwnode = NULL;
--	vin->digital.subdev = NULL;
--
--	/*
--	 * Port 0 id 0 is local digital input, try to get it.
--	 * Not all instances can or will have this, that is OK
--	 */
--	ep = of_graph_get_endpoint_by_regs(vin->dev->of_node, 0, 0);
--	if (!ep)
--		return 0;
--
--	np = of_graph_get_remote_port_parent(ep);
--	if (!np) {
--		vin_err(vin, "No remote parent for digital input\n");
--		of_node_put(ep);
--		return -EINVAL;
--	}
--	of_node_put(np);
--
--	ret = rvin_digitial_parse_v4l2(vin, ep, &vin->digital.mbus_cfg);
--	of_node_put(ep);
--	if (ret)
--		return ret;
--
--	vin->digital.asd.match.fwnode.fwnode = of_fwnode_handle(np);
--	vin->digital.asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
-+	vin->digital = rvge;
- 
- 	return 0;
- }
- 
- static int rvin_digital_graph_init(struct rvin_dev *vin)
- {
--	struct v4l2_async_subdev **subdevs = NULL;
- 	int ret;
- 
--	ret = rvin_digital_graph_parse(vin);
-+	ret = v4l2_async_notifier_parse_fwnode_endpoints(
-+		vin->dev, &vin->notifier,
-+		sizeof(struct rvin_graph_entity), rvin_digital_parse_v4l2);
- 	if (ret)
- 		return ret;
- 
--	if (!vin->digital.asd.match.fwnode.fwnode) {
--		vin_dbg(vin, "No digital subdevice found\n");
--		return -ENODEV;
--	}
--
--	/* Register the subdevices notifier. */
--	subdevs = devm_kzalloc(vin->dev, sizeof(*subdevs), GFP_KERNEL);
--	if (subdevs == NULL)
--		return -ENOMEM;
--
--	subdevs[0] = &vin->digital.asd;
--
--	vin_dbg(vin, "Found digital subdevice %pOF\n",
--		to_of_node(subdevs[0]->match.fwnode.fwnode));
-+	if (vin->notifier.num_subdevs > 0)
-+		vin_dbg(vin, "Found digital subdevice %pOF\n",
-+			to_of_node(
-+				vin->notifier.subdevs[0]->match.fwnode.fwnode));
- 
--	vin->notifier.num_subdevs = 1;
--	vin->notifier.subdevs = subdevs;
- 	vin->notifier.bound = rvin_digital_notify_bound;
- 	vin->notifier.unbind = rvin_digital_notify_unbind;
- 	vin->notifier.complete = rvin_digital_notify_complete;
--
- 	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
- 	if (ret < 0) {
- 		vin_err(vin, "Notifier registration failed\n");
-@@ -290,6 +244,8 @@ static int rcar_vin_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	platform_set_drvdata(pdev, vin);
++static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
++				  struct v4l2_subdev *sd,
++				  struct v4l2_async_subdev *asd);
 +
- 	ret = rvin_digital_graph_init(vin);
- 	if (ret < 0)
- 		goto error;
-@@ -297,11 +253,10 @@ static int rcar_vin_probe(struct platform_device *pdev)
- 	pm_suspend_ignore_children(&pdev->dev, true);
- 	pm_runtime_enable(&pdev->dev);
- 
--	platform_set_drvdata(pdev, vin);
--
- 	return 0;
- error:
- 	rvin_dma_remove(vin);
-+	v4l2_async_notifier_release(&vin->notifier);
- 
- 	return ret;
+ static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+ {
+ #if IS_ENABLED(CONFIG_I2C)
+@@ -101,14 +105,69 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
+ 	return NULL;
  }
-@@ -313,6 +268,7 @@ static int rcar_vin_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
  
- 	v4l2_async_notifier_unregister(&vin->notifier);
-+	v4l2_async_notifier_release(&vin->notifier);
- 
- 	rvin_dma_remove(vin);
- 
-diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-index b136844499f6..23fdff7a7370 100644
---- a/drivers/media/platform/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-@@ -183,7 +183,7 @@ static int rvin_setup(struct rvin_dev *vin)
- 	/*
- 	 * Input interface
- 	 */
--	switch (vin->digital.code) {
-+	switch (vin->digital->code) {
- 	case MEDIA_BUS_FMT_YUYV8_1X16:
- 		/* BT.601/BT.1358 16bit YCbCr422 */
- 		vnmc |= VNMC_INF_YUV16;
-@@ -191,7 +191,7 @@ static int rvin_setup(struct rvin_dev *vin)
- 		break;
- 	case MEDIA_BUS_FMT_UYVY8_2X8:
- 		/* BT.656 8bit YCbCr422 or BT.601 8bit YCbCr422 */
--		vnmc |= vin->digital.mbus_cfg.type == V4L2_MBUS_BT656 ?
-+		vnmc |= vin->digital->mbus_cfg.type == V4L2_MBUS_BT656 ?
- 			VNMC_INF_YUV8_BT656 : VNMC_INF_YUV8_BT601;
- 		input_is_yuv = true;
- 		break;
-@@ -200,7 +200,7 @@ static int rvin_setup(struct rvin_dev *vin)
- 		break;
- 	case MEDIA_BUS_FMT_UYVY10_2X10:
- 		/* BT.656 10bit YCbCr422 or BT.601 10bit YCbCr422 */
--		vnmc |= vin->digital.mbus_cfg.type == V4L2_MBUS_BT656 ?
-+		vnmc |= vin->digital->mbus_cfg.type == V4L2_MBUS_BT656 ?
- 			VNMC_INF_YUV10_BT656 : VNMC_INF_YUV10_BT601;
- 		input_is_yuv = true;
- 		break;
-@@ -212,11 +212,11 @@ static int rvin_setup(struct rvin_dev *vin)
- 	dmr2 = VNDMR2_FTEV | VNDMR2_VLV(1);
- 
- 	/* Hsync Signal Polarity Select */
--	if (!(vin->digital.mbus_cfg.flags & V4L2_MBUS_HSYNC_ACTIVE_LOW))
-+	if (!(vin->digital->mbus_cfg.flags & V4L2_MBUS_HSYNC_ACTIVE_LOW))
- 		dmr2 |= VNDMR2_HPS;
- 
- 	/* Vsync Signal Polarity Select */
--	if (!(vin->digital.mbus_cfg.flags & V4L2_MBUS_VSYNC_ACTIVE_LOW))
-+	if (!(vin->digital->mbus_cfg.flags & V4L2_MBUS_VSYNC_ACTIVE_LOW))
- 		dmr2 |= VNDMR2_VPS;
- 
- 	/*
-diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-index dd37ea811680..b479b882da12 100644
---- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-@@ -111,7 +111,7 @@ static int rvin_reset_format(struct rvin_dev *vin)
- 	struct v4l2_mbus_framefmt *mf = &fmt.format;
++static bool v4l2_async_subdev_notifiers_complete(
++	struct v4l2_async_notifier *notifier)
++{
++	struct v4l2_async_notifier *n;
++
++	list_for_each_entry(n, &notifier->notifiers, notifiers) {
++		if (!n->master)
++			return false;
++	}
++
++	return true;
++}
++
++#define notifier_v4l2_dev(n) \
++	(!!(n)->v4l2_dev ? (n)->v4l2_dev : \
++	 !!(n)->master ? (n)->master->v4l2_dev : NULL)
++
++static struct v4l2_async_notifier *v4l2_async_get_subdev_notifier(
++	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
++{
++	struct v4l2_async_notifier *n;
++
++	list_for_each_entry(n, &notifier_list, list) {
++		if (n->sd == sd)
++			return n;
++	}
++
++	return NULL;
++}
++
++static int v4l2_async_notifier_test_all_subdevs(
++	struct v4l2_async_notifier *notifier)
++{
++	struct v4l2_subdev *sd, *tmp;
++
++	if (!notifier_v4l2_dev(notifier))
++		return 0;
++
++	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
++		struct v4l2_async_subdev *asd;
++		int ret;
++
++		asd = v4l2_async_belongs(notifier, sd);
++		if (!asd)
++			continue;
++
++		ret = v4l2_async_test_notify(notifier, sd, asd);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
+ 				  struct v4l2_subdev *sd,
+ 				  struct v4l2_async_subdev *asd)
+ {
++	struct v4l2_async_notifier *subdev_notifier;
  	int ret;
  
--	fmt.pad = vin->digital.source_pad;
-+	fmt.pad = vin->digital->source_pad;
+-	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
+-	if (ret < 0)
++	ret = v4l2_device_register_subdev(notifier_v4l2_dev(notifier), sd);
++	if (ret)
+ 		return ret;
  
- 	ret = v4l2_subdev_call(vin_to_source(vin), pad, get_fmt, NULL, &fmt);
- 	if (ret)
-@@ -172,13 +172,13 @@ static int __rvin_try_format_source(struct rvin_dev *vin,
+ 	ret = v4l2_async_notifier_call_int_op(notifier, bound, sd, asd);
+@@ -125,8 +184,26 @@ static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
+ 	/* Move from the global subdevice list to notifier's done */
+ 	list_move(&sd->async_list, &notifier->done);
  
- 	sd = vin_to_source(vin);
+-	if (list_empty(&notifier->waiting) && notifier->ops->complete)
+-		return v4l2_async_notifier_call_int_op(notifier, complete);
++	subdev_notifier = v4l2_async_get_subdev_notifier(notifier, sd);
++	if (subdev_notifier && !subdev_notifier->master) {
++		subdev_notifier->master = notifier;
++		list_add(&subdev_notifier->notifiers, &notifier->notifiers);
++		ret = v4l2_async_notifier_test_all_subdevs(subdev_notifier);
++		if (ret)
++			return ret;
++	}
++
++	if (list_empty(&notifier->waiting) &&
++	    v4l2_async_subdev_notifiers_complete(notifier)) {
++		ret = v4l2_async_notifier_call_int_op(notifier, complete);
++		if (ret)
++			return ret;
++	}
++
++	if (notifier->master && list_empty(&notifier->master->waiting) &&
++	    v4l2_async_subdev_notifiers_complete(notifier->master))
++		return v4l2_async_notifier_call_int_op(notifier->master,
++						       complete);
  
--	v4l2_fill_mbus_format(&format.format, pix, vin->digital.code);
-+	v4l2_fill_mbus_format(&format.format, pix, vin->digital->code);
+ 	return 0;
+ }
+@@ -140,18 +217,17 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
+ 	sd->dev = NULL;
+ }
  
- 	pad_cfg = v4l2_subdev_alloc_pad_config(sd);
- 	if (pad_cfg == NULL)
- 		return -ENOMEM;
+-int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+-				 struct v4l2_async_notifier *notifier)
++static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+ {
+-	struct v4l2_subdev *sd, *tmp;
+ 	struct v4l2_async_subdev *asd;
++	int ret;
+ 	int i;
  
--	format.pad = vin->digital.source_pad;
-+	format.pad = vin->digital->source_pad;
- 
- 	field = pix->field;
- 
-@@ -555,7 +555,7 @@ static int rvin_enum_dv_timings(struct file *file, void *priv_fh,
- 	if (timings->pad)
+-	if (!v4l2_dev || !notifier->num_subdevs ||
++	if (!!notifier->v4l2_dev == !!notifier->sd || !notifier->num_subdevs ||
+ 	    notifier->num_subdevs > V4L2_MAX_SUBDEVS)
  		return -EINVAL;
  
--	timings->pad = vin->digital.sink_pad;
-+	timings->pad = vin->digital->sink_pad;
+-	notifier->v4l2_dev = v4l2_dev;
++	INIT_LIST_HEAD(&notifier->notifiers);
+ 	INIT_LIST_HEAD(&notifier->waiting);
+ 	INIT_LIST_HEAD(&notifier->done);
  
- 	ret = v4l2_subdev_call(sd, pad, enum_dv_timings, timings);
+@@ -175,18 +251,10 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
  
-@@ -607,7 +607,7 @@ static int rvin_dv_timings_cap(struct file *file, void *priv_fh,
- 	if (cap->pad)
- 		return -EINVAL;
+ 	mutex_lock(&list_lock);
  
--	cap->pad = vin->digital.sink_pad;
-+	cap->pad = vin->digital->sink_pad;
+-	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
+-		int ret;
+-
+-		asd = v4l2_async_belongs(notifier, sd);
+-		if (!asd)
+-			continue;
+-
+-		ret = v4l2_async_test_notify(notifier, sd, asd);
+-		if (ret < 0) {
+-			mutex_unlock(&list_lock);
+-			return ret;
+-		}
++	ret = v4l2_async_notifier_test_all_subdevs(notifier);
++	if (ret) {
++		mutex_unlock(&list_lock);
++		return ret;
+ 	}
  
- 	ret = v4l2_subdev_call(sd, pad, dv_timings_cap, cap);
+ 	/* Keep also completed notifiers on the list */
+@@ -196,27 +264,62 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
  
-@@ -625,7 +625,7 @@ static int rvin_g_edid(struct file *file, void *fh, struct v4l2_edid *edid)
- 	if (edid->pad)
- 		return -EINVAL;
+ 	return 0;
+ }
++
++int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
++				 struct v4l2_async_notifier *notifier)
++{
++	notifier->v4l2_dev = v4l2_dev;
++
++	return __v4l2_async_notifier_register(notifier);
++}
+ EXPORT_SYMBOL(v4l2_async_notifier_register);
  
--	edid->pad = vin->digital.sink_pad;
-+	edid->pad = vin->digital->sink_pad;
++int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
++					struct v4l2_async_notifier *notifier)
++{
++	notifier->sd = sd;
++
++	return __v4l2_async_notifier_register(notifier);
++}
++EXPORT_SYMBOL(v4l2_async_subdev_notifier_register);
++
+ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+ {
++	struct v4l2_async_notifier *notifier_iter, *notifier_tmp;
+ 	struct v4l2_subdev *sd, *tmp;
+ 	unsigned int notif_n_subdev = notifier->num_subdevs;
+ 	unsigned int n_subdev = min(notif_n_subdev, V4L2_MAX_SUBDEVS);
+ 	struct device **dev;
+ 	int i = 0;
  
- 	ret = v4l2_subdev_call(sd, pad, get_edid, edid);
+-	if (!notifier->v4l2_dev)
++	if (!notifier->v4l2_dev && !notifier->sd)
+ 		return;
  
-@@ -643,7 +643,7 @@ static int rvin_s_edid(struct file *file, void *fh, struct v4l2_edid *edid)
- 	if (edid->pad)
- 		return -EINVAL;
+ 	dev = kvmalloc_array(n_subdev, sizeof(*dev), GFP_KERNEL);
+ 	if (!dev) {
+-		dev_err(notifier->v4l2_dev->dev,
++		dev_err(notifier->v4l2_dev ?
++			notifier->v4l2_dev->dev : notifier->sd->dev,
+ 			"Failed to allocate device cache!\n");
+ 	}
  
--	edid->pad = vin->digital.sink_pad;
-+	edid->pad = vin->digital->sink_pad;
+ 	mutex_lock(&list_lock);
  
- 	ret = v4l2_subdev_call(sd, pad, set_edid, edid);
++	if (notifier->v4l2_dev) {
++		/* Remove all subdev notifiers from the master's list */
++		list_for_each_entry_safe(notifier_iter, notifier_tmp,
++					 &notifier->notifiers, notifiers) {
++			list_del_init(&notifier_iter->notifiers);
++			WARN_ON(notifier_iter->master != notifier);
++			notifier_iter->master = NULL;
++		}
++		notifier->v4l2_dev = NULL;
++	} else {
++		/* Remove subdev notifier from the master's list */
++		list_del_init(&notifier->notifiers);
++		notifier->master = NULL;
++		notifier->sd = NULL;
++	}
++
+ 	list_del(&notifier->list);
  
-diff --git a/drivers/media/platform/rcar-vin/rcar-vin.h b/drivers/media/platform/rcar-vin/rcar-vin.h
-index 9bfb5a7c4dc4..5382078143fb 100644
---- a/drivers/media/platform/rcar-vin/rcar-vin.h
-+++ b/drivers/media/platform/rcar-vin/rcar-vin.h
-@@ -126,7 +126,7 @@ struct rvin_dev {
- 	struct v4l2_device v4l2_dev;
- 	struct v4l2_ctrl_handler ctrl_handler;
- 	struct v4l2_async_notifier notifier;
--	struct rvin_graph_entity digital;
-+	struct rvin_graph_entity *digital;
+ 	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
+@@ -266,8 +369,6 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+ 	}
+ 	kvfree(dev);
  
- 	struct mutex lock;
- 	struct vb2_queue queue;
-@@ -145,7 +145,7 @@ struct rvin_dev {
- 	struct v4l2_rect compose;
- };
+-	notifier->v4l2_dev = NULL;
+-
+ 	/*
+ 	 * Don't care about the waiting list, it is initialised and populated
+ 	 * upon notifier registration.
+@@ -287,6 +388,8 @@ void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier)
  
--#define vin_to_source(vin)		vin->digital.subdev
-+#define vin_to_source(vin)		((vin)->digital->subdev)
+ 	kvfree(notifier->subdevs);
+ 	notifier->subdevs = NULL;
++
++	WARN_ON(!list_empty(&notifier->notifiers));
+ }
+ EXPORT_SYMBOL_GPL(v4l2_async_notifier_release);
  
- /* Debug */
- #define vin_dbg(d, fmt, arg...)		dev_dbg(d->dev, fmt, ##arg)
+diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+index c3e001e0d1f1..a5c123ac2873 100644
+--- a/include/media/v4l2-async.h
++++ b/include/media/v4l2-async.h
+@@ -110,7 +110,11 @@ struct v4l2_async_notifier_operations {
+  * @num_subdevs: number of subdevices used in the subdevs array
+  * @max_subdevs: number of subdevices allocated in the subdevs array
+  * @subdevs:	array of pointers to subdevice descriptors
+- * @v4l2_dev:	pointer to struct v4l2_device
++ * @v4l2_dev:	v4l2_device of the master, for subdev notifiers NULL
++ * @sd:		sub-device that registered the notifier, NULL otherwise
++ * @notifiers:	list of struct v4l2_async_notifier, notifiers linked to this
++ *		notifier
++ * @master:	master notifier carrying @v4l2_dev
+  * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
+  * @done:	list of struct v4l2_subdev, already probed
+  * @list:	member in a global list of notifiers
+@@ -121,6 +125,9 @@ struct v4l2_async_notifier {
+ 	unsigned int max_subdevs;
+ 	struct v4l2_async_subdev **subdevs;
+ 	struct v4l2_device *v4l2_dev;
++	struct v4l2_subdev *sd;
++	struct list_head notifiers;
++	struct v4l2_async_notifier *master;
+ 	struct list_head waiting;
+ 	struct list_head done;
+ 	struct list_head list;
+@@ -136,6 +143,16 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+ 				 struct v4l2_async_notifier *notifier);
+ 
+ /**
++ * v4l2_async_subdev_notifier_register - registers a subdevice asynchronous
++ *					 notifier for a sub-device
++ *
++ * @sd: pointer to &struct v4l2_subdev
++ * @notifier: pointer to &struct v4l2_async_notifier
++ */
++int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
++					struct v4l2_async_notifier *notifier);
++
++/**
+  * v4l2_async_notifier_unregister - unregisters a subdevice asynchronous notifier
+  *
+  * @notifier: pointer to &struct v4l2_async_notifier
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
