@@ -1,82 +1,133 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v7 16/18] v4l2-fwnode: Add convenience function for parsing common external refs
-Date: Sun,  3 Sep 2017 20:49:56 +0300
-Message-ID: <20170903174958.27058-17-sakari.ailus@linux.intel.com>
-References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170903174958.27058-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: adc: mcp320x: Update for
+ mcp3550/1/3
+Date: Sun, 3 Sep 2017 20:20:46 +0200
+Message-ID: <20170903182046.GA1511@wunner.de>
+References: <cover.1503407738.git.lukas@wunner.de>
+ <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas@wunner.de>
+ <20170825195941.iylf4w5hitjwniio@rob-hp-laptop>
+ <20170827153405.GA13399@wunner.de>
+ <CABjU8GvCB61envBiR0ei3gHEPadd5VDZ7FGysDjhCrJcQrEXDg@mail.gmail.com>
+ <20170903143429.749be480@archlinux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170903143429.749be480@archlinux>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Adriana Reus <adi.reus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add v4l2_fwnode_parse_reference_sensor_common for parsing common
-sensor properties that refer to adjacent devices such as flash or lens
-driver chips.
+On Sun, Sep 03, 2017 at 02:37:49PM +0100, Jonathan Cameron wrote:
+> On Tue, Aug 22, 2017 at 03:33:00PM +0200, Lukas Wunner wrote:  
+> > --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> > +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> > +Optional properties:
+> > +   - microchip,continuous-conversion (boolean):
+> > +           Only applicable to MCP3550/1/3:  These ADCs have long
+> > +           conversion times and therefore support "continuous
+> > +           conversion mode" to allow retrieval of conversions
+> > +           at any time without observing a delay.  The mode is
+> > +           enabled by permanently driving CS low, e.g. by wiring
+> > +           it to ground.  
+> 
+> hmm.  This is odd.  We probably need to make the SPI subsystem aware
+> of this. It is possible to ask for exclusive use of an SPI bus and
+> I think we should be doing this here.  It may be wired low on your
+> board, but it may be wired to a controllable chip select on other
+> boards and we can still force it low to trigger this mode if it makes
+> sense for the current application.
+> 
+> So I'd argue what we actually need to represent here is that the CS line
+> is not controllable.  What this means to the driver should be handled
+> in the driver - ideally also dealing with the case where it is controllable
+> appropriately (via exclusive bus usage).  Spi devices have the SPI_NO_CS
+> bit in the mode member of the spi device but I'm not sure about bindings.
+[...]
+> The one case where we normally want to flip to continuous modes is when
+> we have a chardev access going on to the device.  In IIO that reflects
+> the fact we are in a push mode rather than userspace polling for new data.
 
-As this is an association only, there's little a regular driver needs to
-know about these devices as such.
+It seems there is no DT binding so far to set SPI_NO_CS.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 27 +++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           |  3 +++
- 2 files changed, 30 insertions(+)
+Conceivably, continuous mode could be used even with multiple devices
+on the bus if CLK and MISO is AND-gated with the CS signal coming from
+the SPI master.  (And the CS of the ADC is pulled low.)  In that case,
+the notion that "continuous mode == CS not controllable" would be
+incorrect, hence the approach I've chosen.
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 24f8020caf28..f28be3b751d3 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -530,6 +530,33 @@ int v4l2_fwnode_reference_parse(
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_reference_parse);
- 
-+int v4l2_fwnode_reference_parse_sensor_common(
-+	struct device *dev, struct v4l2_async_notifier *notifier)
-+{
-+	static const struct {
-+		char *name;
-+		char *cells;
-+		unsigned int nr_cells;
-+	} props[] = {
-+		{ "flash", NULL, 0 },
-+		{ "lens-focus", NULL, 0 },
-+	};
-+	unsigned int i;
-+	int rval;
-+
-+	for (i = 0; i < ARRAY_SIZE(props); i++) {
-+		rval = v4l2_fwnode_reference_parse(
-+			dev, notifier, props[i].name, props[i].cells,
-+			props[i].nr_cells, sizeof(struct v4l2_async_subdev),
-+			NULL);
-+		if (rval < 0 && rval != -ENOENT)
-+			return rval;
-+	}
-+
-+	return rval;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_reference_parse_sensor_common);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 52f528162818..fd14f1d38966 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -282,4 +282,7 @@ int v4l2_fwnode_reference_parse(
- 			    struct fwnode_reference_args *args,
- 			    struct v4l2_async_subdev *asd));
- 
-+int v4l2_fwnode_reference_parse_sensor_common(
-+	struct device *dev, struct v4l2_async_notifier *notifier);
-+
- #endif /* _V4L2_FWNODE_H */
--- 
-2.11.0
+On the Revolution Pi we don't use continuous mode.  I merely included
+it in the driver for completeness.  If it is too controversial I'd be
+inclined to drop the feature.
 
+On-demand switching to continuous mode by keeping CS low would be
+possible by setting the cs_change bit of struct mcp320x ->transfer[1],
+but that might not work if there are other devices on the bus.
+
+
+> Personally I don't think we are in a position yet to make this a generic
+> property - this is the first device where it is actually to do with the
+> physical circuit (and arguably it isn't really - see above).
+
+Okay.
+
+
+> Reference voltages are an oddity as the supply naming typically should match
+> that on the datasheet. It's 'fairly' consistent but some devices
+> have a set of relatively obscure references to different parts of the
+> input circuitry.  We can document it as a 'default' assuming nothing
+> strange is going on though.  This is why we have the vagueness below
+> on VDD and VCC.
+
+That is new to me, I believe it's not documented or am I missing something?
+I'd be happy to respin the below patch without the "Continuous mode"
+portion if you want?  (Amended with the info you gave above.)
+Do you think iio-bindings.txt is the right place to put this or would
+a separate common.txt be more appropriate? (See e.g. leds/common.txt)
+
+Thanks,
+
+Lukas
+
+> -- >8 --  
+> Subject: [PATCH] dt-bindings: iio: Document common properties
+>
+> It's about time we standardize on common names for frequently used IIO
+> properties.  For starters, document "vref-supply" and "continuous".
+>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/iio/iio-bindings.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> index 68d6f8c..c3e87e15 100644
+> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> @@ -95,3 +95,18 @@ vdd channel is connected to output 0 of the &ref device.
+>                 io-channels = <&adc 10>, <&adc 11>;
+>                 io-channel-names = "adc1", "adc2";
+>         };
+> +
+> +==Common IIO properties==
+> +
+> +Reference voltage:
+> +ADCs, DACs and several other IIO devices require a reference voltage.
+> +By convention the property specifying this regulator is named "vref-supply".
+> +If the chip lacks a dedicated Vref pin and instead uses its own power supply
+> +as reference, the property specifying the regulator is commonly named
+> +"vdd-supply" or "vcc-supply".
+> +
+> +Continuous mode:
+> +Some sensors can be configured to perform continuous (versus one-shot)
+> +measurements.  Continuous mode may require more energy in return for faster
+> +or more reliable measurements.  A boolean property named "continuous"
+> +signifies that the device is configured for this mode.
+> --
+> 2.11.0  
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
