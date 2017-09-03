@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v4 2/3] usb: host: add a generic platform USB roothub driver
-Date: Sun,  3 Sep 2017 23:38:28 +0200
-Message-ID: <20170903213829.6589-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v4 1/3] dt-bindings: usb: add the documentation for USB root-hub
+Date: Sun,  3 Sep 2017 23:38:27 +0200
+Message-ID: <20170903213829.6589-2-martin.blumenstingl@googlemail.com>
 References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170903213829.6589-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -10,269 +10,90 @@ To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsb
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Many SoC platforms have separate devices for the USB PHY which are
-registered through the generic PHY framework. These PHYs have to be
-enabled to make the USB controller actually work. They also have to be
-disabled again on shutdown/suspend.
-
-Currently (at least) the following HCI platform drivers are using custom
-code to obtain all PHYs via devicetree for the roothub/controller and
-disable/enable them when required:
-- ehci-platform.c has ehci_platform_power_{on,off}
-- xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
-- ohci-platform.c has ohci_platform_power_{on,off}
-
-These drivers are not using the generic devicetree USB device bindings
-yet which were only introduced recently (documentation is available in
-devicetree/bindings/usb/usb-device.txt).
-With this new driver the usb2-phy and usb3-phy can be specified directly
-in the child-node of the corresponding port of the roothub via
-devicetree. This can be extended by not just parsing PHYs (some of the
-other drivers listed above are for example also parsing a list of clocks
-as well) when required.
+A USB root-hub may have several PHYs which need to be configured before
+the root-hub starts working.
+This adds the documentation for such a USB root-hub as well as a hint
+regarding the child-nodes on XHCI controllers which can include the
+roothub.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/usb/host/Kconfig            |   3 +
- drivers/usb/host/Makefile           |   2 +
- drivers/usb/host/platform-roothub.c | 180 ++++++++++++++++++++++++++++++++++++
- drivers/usb/host/platform-roothub.h |  12 +++
- 4 files changed, 197 insertions(+)
- create mode 100644 drivers/usb/host/platform-roothub.c
- create mode 100644 drivers/usb/host/platform-roothub.h
+ .../devicetree/bindings/usb/usb-roothub.txt        | 46 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |  7 ++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index fa5692dec832..b8b05c786b2a 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -805,6 +805,9 @@ config USB_HCD_SSB
- 
- 	  If unsure, say N.
- 
-+config USB_PLATFORM_ROOTHUB
-+	bool
-+
- config USB_HCD_TEST_MODE
- 	bool "HCD test mode support"
- 	---help---
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index cf2691fffcc0..dc817f82d632 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
- 
- obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
- 
-+obj-$(CONFIG_USB_PLATFORM_ROOTHUB)	+= platform-roothub.o
-+
- obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
- obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
- obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
-diff --git a/drivers/usb/host/platform-roothub.c b/drivers/usb/host/platform-roothub.c
+diff --git a/Documentation/devicetree/bindings/usb/usb-roothub.txt b/Documentation/devicetree/bindings/usb/usb-roothub.txt
 new file mode 100644
-index 000000000000..70d2d97aa8b2
+index 000000000000..fc0797d7cee9
 --- /dev/null
-+++ b/drivers/usb/host/platform-roothub.c
-@@ -0,0 +1,180 @@
-+/*
-+ * platform roothub driver - a virtual PHY device which passes all phy_*
-+ * function calls to multiple (actual) PHY devices. This is comes handy when
-+ * initializing all PHYs on a root-hub (to keep them all in the same state).
-+ *
-+ * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
++++ b/Documentation/devicetree/bindings/usb/usb-roothub.txt
+@@ -0,0 +1,46 @@
++Generic USB root-hub Properties
 +
-+#include <linux/device.h>
-+#include <linux/list.h>
-+#include <linux/phy/phy.h>
-+#include <linux/of.h>
-+#include <linux/usb/of.h>
++similar to the USB device bindings (documented in usb-device.txt from the
++current directory) this provides support for configuring the root-hub.
 +
-+#include "platform-roothub.h"
++Required properties:
++- compatible: should be at least one of "usb1d6b,3", "usb1d6b,2"
++- reg: must be 0.
++- address-cells: must be 1
++- size-cells: must be 0
 +
-+#define ROOTHUB_PORTNUM		0
++Required sub-nodes:
++a sub-node per actual USB port is required. each sub-node supports the
++following properties:
++  Required properties:
++    - reg: the port number on the root-hub (mandatory)
++  Optional properties:
++    - phys: optional, from the *Generic PHY* bindings (mandatory needed
++      when phy-names is given)
++    - phy-names: optional, from the *Generic PHY* bindings; supported names
++      are "usb2-phy" or "usb3-phy"
 +
-+struct platform_roothub {
-+	struct phy		*phy;
-+	struct list_head	list;
-+};
++Example:
++	&usb1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+static struct platform_roothub *platform_roothub_alloc(struct device *dev)
-+{
-+	struct platform_roothub *roothub_entry;
++		roothub@0 {
++			compatible = "usb1d6b,3", "usb1d6b,2";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
 +
-+	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
-+	if (!roothub_entry)
-+		return ERR_PTR(-ENOMEM);
++			port@1 {
++				reg = <1>;
++				phys = <&usb2_phy1>, <&usb3_phy1>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
 +
-+	INIT_LIST_HEAD(&roothub_entry->list);
-+
-+	return roothub_entry;
-+}
-+
-+static int platform_roothub_add_phy(struct device *dev,
-+				    struct device_node *port_np,
-+				    const char *con_id, struct list_head *list)
-+{
-+	struct platform_roothub *roothub_entry;
-+	struct phy *phy = devm_of_phy_get(dev, port_np, con_id);
-+
-+	if (IS_ERR_OR_NULL(phy)) {
-+		if (!phy || PTR_ERR(phy) == -ENODEV)
-+			return 0;
-+		else
-+			return PTR_ERR(phy);
++			port@2 {
++				reg = <2>;
++				phys = <&usb2_phy2>, <&usb3_phy2>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++		};
 +	}
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 2d80b60eeabe..31b4f681e9ca 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -29,6 +29,13 @@ Optional properties:
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+ 
++sub-nodes:
++- optionally there can be a node for the root-hub, see usb-roothub.txt in the
++  current directory
++- one or more nodes with reg 1-31 for each port to which a device is connected.
++  See usb-device.txt in the current directory for more information.
 +
-+	roothub_entry = platform_roothub_alloc(dev);
-+	if (IS_ERR(roothub_entry))
-+		return PTR_ERR(roothub_entry);
 +
-+	roothub_entry->phy = phy;
-+
-+	list_add_tail(&roothub_entry->list, list);
-+
-+	return 0;
-+}
-+
-+struct platform_roothub *platform_roothub_init(struct device *dev)
-+{
-+	struct device_node *roothub_np, *port_np;
-+	struct platform_roothub *plat_roothub;
-+	struct platform_roothub *roothub_entry;
-+	struct list_head *head;
-+	int err;
-+
-+	roothub_np = usb_of_get_child_node(dev->of_node, ROOTHUB_PORTNUM);
-+	if (!of_device_is_available(roothub_np))
-+		return NULL;
-+
-+	plat_roothub = platform_roothub_alloc(dev);
-+	if (IS_ERR(plat_roothub))
-+		return plat_roothub;
-+
-+	for_each_available_child_of_node(roothub_np, port_np) {
-+		err = platform_roothub_add_phy(dev, port_np, "usb2-phy",
-+					       &plat_roothub->list);
-+		if (err)
-+			goto err_out;
-+
-+		err = platform_roothub_add_phy(dev, port_np, "usb3-phy",
-+					       &plat_roothub->list);
-+		if (err)
-+			goto err_out;
-+	}
-+
-+	head = &plat_roothub->list;
-+
-+	list_for_each_entry(roothub_entry, head, list) {
-+		err = phy_init(roothub_entry->phy);
-+		if (err)
-+			goto err_exit_phys;
-+	}
-+
-+	return plat_roothub;
-+
-+err_exit_phys:
-+	list_for_each_entry_continue_reverse(roothub_entry, head, list)
-+		phy_exit(roothub_entry->phy);
-+
-+err_out:
-+	return ERR_PTR(err);
-+}
-+EXPORT_SYMBOL_GPL(platform_roothub_init);
-+
-+int platform_roothub_exit(struct platform_roothub *plat_roothub)
-+{
-+	struct platform_roothub *roothub_entry;
-+	struct list_head *head;
-+	int err, ret = 0;
-+
-+	if (!plat_roothub)
-+		return 0;
-+
-+	head = &plat_roothub->list;
-+
-+	list_for_each_entry(roothub_entry, head, list) {
-+		err = phy_exit(roothub_entry->phy);
-+		if (err)
-+			ret = ret;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(platform_roothub_exit);
-+
-+int platform_roothub_power_on(struct platform_roothub *plat_roothub)
-+{
-+	struct platform_roothub *roothub_entry;
-+	struct list_head *head;
-+	int err;
-+
-+	if (!plat_roothub)
-+		return 0;
-+
-+	head = &plat_roothub->list;
-+
-+	list_for_each_entry(roothub_entry, head, list) {
-+		err = phy_power_on(roothub_entry->phy);
-+		if (err)
-+			goto err_out;
-+	}
-+
-+	return 0;
-+
-+err_out:
-+	list_for_each_entry_continue_reverse(roothub_entry, head, list)
-+		phy_power_off(roothub_entry->phy);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(platform_roothub_power_on);
-+
-+int platform_roothub_power_off(struct platform_roothub *plat_roothub)
-+{
-+	struct platform_roothub *roothub_entry;
-+	int err, ret = 0;
-+
-+	if (!plat_roothub)
-+		return 0;
-+
-+	list_for_each_entry_reverse(roothub_entry, &plat_roothub->list, list) {
-+		err = phy_power_off(roothub_entry->phy);
-+		if (err)
-+			ret = err;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(platform_roothub_power_off);
-diff --git a/drivers/usb/host/platform-roothub.h b/drivers/usb/host/platform-roothub.h
-new file mode 100644
-index 000000000000..0b801da66918
---- /dev/null
-+++ b/drivers/usb/host/platform-roothub.h
-@@ -0,0 +1,12 @@
-+#ifndef USB_HOST_PLATFORM_ROOTHUB_H
-+#define USB_HOST_PLATFORM_ROOTHUB_H
-+
-+struct platform_roothub;
-+
-+struct platform_roothub *platform_roothub_init(struct device *dev);
-+int platform_roothub_exit(struct platform_roothub *plat_roothub);
-+
-+int platform_roothub_power_on(struct platform_roothub *plat_roothub);
-+int platform_roothub_power_off(struct platform_roothub *plat_roothub);
-+
-+#endif /* USB_HOST_PLATFORM_ROOTHUB_H */
+ Example:
+ 	usb@f0931000 {
+ 		compatible = "generic-xhci";
 -- 
 2.14.1
 
