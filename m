@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
-Subject: [PATCH 02/10] dmaengine: sun6i: Correct burst length field offsets for H3
-Date: Mon, 4 Sep 2017 00:40:53 +0200
-Message-ID: <20170903224100.17893-3-stefan.bruens@rwth-aachen.de>
+Subject: [PATCH 07/10] dmaengine: sun6i: Retrieve channel count/max request from devicetree
+Date: Mon, 4 Sep 2017 00:40:58 +0200
+Message-ID: <20170903224100.17893-8-stefan.bruens@rwth-aachen.de>
 References: <20170903224100.17893-1-stefan.bruens@rwth-aachen.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -13,80 +13,77 @@ To: linux-sunxi@googlegroups.com
 Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Code Kipper <codekipper@gmail.com>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-For the H3, the burst lengths field offsets in the channel configuration
-register differs from earlier SoC generations.
+To avoid introduction of a new compatible for each small SoC/DMA controller
+variation, move the definition of the channel count to the devicetree.
 
-Using the A31 register macros actually configured the H3 controller
-do to bursts of length 1 always, which although working leads to higher
-bus utilisation.
+The number of vchans is no longer explicit, but limited by the highest
+port/DMA request number. The result is a slight overallocation for SoCs
+with a sparse port mapping.
 
 Signed-off-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
 ---
- drivers/dma/sun6i-dma.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ drivers/dma/sun6i-dma.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index 1d9b3be30d22..f1a139f0102f 100644
+index c69dadb853d2..bd4c2e4a759b 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -68,13 +68,15 @@
- #define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & 0x1f)
+@@ -42,6 +42,9 @@
+ 
+ #define DMA_STAT		0x30
+ 
++/* Offset between DMA_IRQ_EN and DMA_IRQ_STAT limits number of channels */
++#define DMA_MAX_CHANNELS	(DMA_IRQ_CHAN_NR * 0x10 / 4)
++
+ /*
+  * sun8i specific registers
+  */
+@@ -65,7 +68,8 @@
+ #define DMA_CHAN_LLI_ADDR	0x08
+ 
+ #define DMA_CHAN_CUR_CFG	0x0c
+-#define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & 0x1f)
++#define DMA_CHAN_MAX_DRQ		0x1f
++#define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & DMA_CHAN_MAX_DRQ)
  #define DMA_CHAN_CFG_SRC_IO_MODE	BIT(5)
  #define DMA_CHAN_CFG_SRC_LINEAR_MODE	(0 << 5)
--#define DMA_CHAN_CFG_SRC_BURST(x)	(((x) & 0x3) << 7)
-+#define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
-+#define DMA_CHAN_CFG_SRC_BURST_H3(x)	(((x) & 0x3) << 6)
- #define DMA_CHAN_CFG_SRC_WIDTH(x)	(((x) & 0x3) << 9)
+ #define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
+@@ -1173,6 +1177,35 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 	sdc->num_vchans = sdc->cfg->nr_max_vchans;
+ 	sdc->max_request = sdc->cfg->nr_max_requests;
  
- #define DMA_CHAN_CFG_DST_DRQ(x)		(DMA_CHAN_CFG_SRC_DRQ(x) << 16)
- #define DMA_CHAN_CFG_DST_IO_MODE	(DMA_CHAN_CFG_SRC_IO_MODE << 16)
- #define DMA_CHAN_CFG_DST_LINEAR_MODE	(DMA_CHAN_CFG_SRC_LINEAR_MODE << 16)
--#define DMA_CHAN_CFG_DST_BURST(x)	(DMA_CHAN_CFG_SRC_BURST(x) << 16)
-+#define DMA_CHAN_CFG_DST_BURST_A31(x)	(DMA_CHAN_CFG_SRC_BURST_A31(x) << 16)
-+#define DMA_CHAN_CFG_DST_BURST_H3(x)	(DMA_CHAN_CFG_SRC_BURST_H3(x) << 16)
- #define DMA_CHAN_CFG_DST_WIDTH(x)	(DMA_CHAN_CFG_SRC_WIDTH(x) << 16)
- 
- #define DMA_CHAN_CUR_SRC	0x10
-@@ -554,11 +556,17 @@ static int set_config(struct sun6i_dma_dev *sdev,
- 	if (dst_width < 0)
- 		return dst_width;
- 
--	*p_cfg = DMA_CHAN_CFG_SRC_BURST(src_burst) |
--		DMA_CHAN_CFG_SRC_WIDTH(src_width) |
--		DMA_CHAN_CFG_DST_BURST(dst_burst) |
-+	*p_cfg = DMA_CHAN_CFG_SRC_WIDTH(src_width) |
- 		DMA_CHAN_CFG_DST_WIDTH(dst_width);
- 
-+	if (sdev->cfg->dmac_variant == DMAC_VARIANT_H3) {
-+		*p_cfg |= DMA_CHAN_CFG_SRC_BURST_H3(src_burst) |
-+			  DMA_CHAN_CFG_DST_BURST_H3(dst_burst);
-+	} else {
-+		*p_cfg |= DMA_CHAN_CFG_SRC_BURST_A31(src_burst) |
-+			  DMA_CHAN_CFG_DST_BURST_A31(dst_burst);
++	ret = of_property_read_u32(np, "dma-channels", &sdc->num_pchans);
++	if (ret && !sdc->num_pchans) {
++		dev_err(&pdev->dev, "Can't get dma-channels.\n");
++		return ret;
 +	}
 +
- 	return 0;
- }
- 
-@@ -601,11 +609,17 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_memcpy(
- 		DMA_CHAN_CFG_DST_DRQ(DRQ_SDRAM) |
- 		DMA_CHAN_CFG_DST_LINEAR_MODE |
- 		DMA_CHAN_CFG_SRC_LINEAR_MODE |
--		DMA_CHAN_CFG_SRC_BURST(burst) |
- 		DMA_CHAN_CFG_SRC_WIDTH(width) |
--		DMA_CHAN_CFG_DST_BURST(burst) |
- 		DMA_CHAN_CFG_DST_WIDTH(width);
- 
-+	if (sdev->cfg->dmac_variant == DMAC_VARIANT_H3) {
-+		v_lli->cfg |= DMA_CHAN_CFG_SRC_BURST_H3(burst) |
-+			      DMA_CHAN_CFG_DST_BURST_H3(burst);
-+	} else {
-+		v_lli->cfg |= DMA_CHAN_CFG_SRC_BURST_A31(burst) |
-+			      DMA_CHAN_CFG_DST_BURST_A31(burst);
++	if (sdc->num_pchans > DMA_MAX_CHANNELS) {
++		dev_err(&pdev->dev, "Number of dma-channels out of range.\n");
++		return -EINVAL;
 +	}
 +
- 	sun6i_dma_lli_add(NULL, v_lli, p_lli, txd);
- 
- 	sun6i_dma_dump_lli(vchan, v_lli);
++	ret = of_property_read_u32(np, "dma-requests", &sdc->max_request);
++	if (ret && !sdc->max_request) {
++		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
++			 DMA_CHAN_MAX_DRQ);
++	}
++
++	if (sdc->max_request > DMA_CHAN_MAX_DRQ) {
++		dev_err(&pdev->dev, "Value of dma-requests out of range.\n");
++		return -EINVAL;
++	}
++
++	/*
++	 * If the number of vchans is not specified, derive it from the
++	 * highest port number, at most one channel per port and direction.
++	 */
++	if (!sdc->num_vchans)
++		sdc->num_vchans = 2 * (sdc->max_request + 1);
++
+ 	sdc->pchans = devm_kcalloc(&pdev->dev, sdc->num_pchans,
+ 				   sizeof(struct sun6i_pchan), GFP_KERNEL);
+ 	if (!sdc->pchans)
 -- 
 2.14.1
