@@ -1,8 +1,11 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v7 07/18] omap3isp: Fix check for our own sub-devices
-Date: Sun,  3 Sep 2017 20:49:47 +0300
-Message-ID: <20170903174958.27058-8-sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 02/18] v4l: async: Add V4L2 async documentation to the documentation build
+Date: Sun,  3 Sep 2017 20:49:42 +0300
+Message-ID: <20170903174958.27058-3-sakari.ailus@linux.intel.com>
 References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
 Sender: linux-media-owner@vger.kernel.org
@@ -10,27 +13,37 @@ To: linux-media@vger.kernel.org
 Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We only want to link sub-devices that were bound to the async notifier the
-isp driver registered but there may be other sub-devices in the
-v4l2_device as well. Check for the correct async notifier.
+The V4L2 async wasn't part of the documentation build. Fix this.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/media/platform/omap3isp/isp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/media/kapi/v4l2-async.rst | 3 +++
+ Documentation/media/kapi/v4l2-core.rst  | 1 +
+ 2 files changed, 4 insertions(+)
+ create mode 100644 Documentation/media/kapi/v4l2-async.rst
 
-diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-index a546cf774d40..3b1a9cd0e591 100644
---- a/drivers/media/platform/omap3isp/isp.c
-+++ b/drivers/media/platform/omap3isp/isp.c
-@@ -2155,7 +2155,7 @@ static int isp_subdev_notifier_complete(struct v4l2_async_notifier *async)
- 		return ret;
- 
- 	list_for_each_entry(sd, &v4l2_dev->subdevs, list) {
--		if (!sd->asd)
-+		if (sd->notifier != &isp->notifier)
- 			continue;
- 
- 		ret = isp_link_entity(isp, &sd->entity,
+diff --git a/Documentation/media/kapi/v4l2-async.rst b/Documentation/media/kapi/v4l2-async.rst
+new file mode 100644
+index 000000000000..523ff9eb09a0
+--- /dev/null
++++ b/Documentation/media/kapi/v4l2-async.rst
+@@ -0,0 +1,3 @@
++V4L2 async kAPI
++^^^^^^^^^^^^^^^
++.. kernel-doc:: include/media/v4l2-async.h
+diff --git a/Documentation/media/kapi/v4l2-core.rst b/Documentation/media/kapi/v4l2-core.rst
+index c7434f38fd9c..5cf292037a48 100644
+--- a/Documentation/media/kapi/v4l2-core.rst
++++ b/Documentation/media/kapi/v4l2-core.rst
+@@ -19,6 +19,7 @@ Video4Linux devices
+     v4l2-mc
+     v4l2-mediabus
+     v4l2-mem2mem
++    v4l2-async
+     v4l2-fwnode
+     v4l2-rect
+     v4l2-tuner
 -- 
 2.11.0
