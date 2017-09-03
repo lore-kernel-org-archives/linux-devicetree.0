@@ -1,133 +1,82 @@
-From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] dt-bindings: iio: adc: mcp320x: Update for
- mcp3550/1/3
-Date: Sun, 3 Sep 2017 20:20:46 +0200
-Message-ID: <20170903182046.GA1511@wunner.de>
-References: <cover.1503407738.git.lukas@wunner.de>
- <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas@wunner.de>
- <20170825195941.iylf4w5hitjwniio@rob-hp-laptop>
- <20170827153405.GA13399@wunner.de>
- <CABjU8GvCB61envBiR0ei3gHEPadd5VDZ7FGysDjhCrJcQrEXDg@mail.gmail.com>
- <20170903143429.749be480@archlinux>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/4] arm: dts: exynos: add exynos5420 cpu
+ capacity-dmips-mhz information
+Date: Sun, 3 Sep 2017 21:56:14 +0200
+Message-ID: <20170903195614.iwe7v6g3xsg7p6nf@kozik-lap>
+References: <20170830144120.9312-1-dietmar.eggemann@arm.com>
+ <20170830144120.9312-3-dietmar.eggemann@arm.com>
+ <20170830202650.mdlxy2c3uwuq5vde@kozik-lap>
+ <94c1d6c6-655a-2a63-1f01-06ac45990388@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170903143429.749be480@archlinux>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Adriana Reus <adi.reus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <94c1d6c6-655a-2a63-1f01-06ac45990388@arm.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 03, 2017 at 02:37:49PM +0100, Jonathan Cameron wrote:
-> On Tue, Aug 22, 2017 at 03:33:00PM +0200, Lukas Wunner wrote:  
-> > --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
-> > +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
-> > +Optional properties:
-> > +   - microchip,continuous-conversion (boolean):
-> > +           Only applicable to MCP3550/1/3:  These ADCs have long
-> > +           conversion times and therefore support "continuous
-> > +           conversion mode" to allow retrieval of conversions
-> > +           at any time without observing a delay.  The mode is
-> > +           enabled by permanently driving CS low, e.g. by wiring
-> > +           it to ground.  
+On Thu, Aug 31, 2017 at 11:36:07AM +0100, Dietmar Eggemann wrote:
+> On 30/08/17 21:26, Krzysztof Kozlowski wrote:
+> > On Wed, Aug 30, 2017 at 03:41:18PM +0100, Dietmar Eggemann wrote:
+> >> The following 'capacity-dmips-mhz' dt property values are used:
+> >>
+> >> Cortex-A15: 1024, Cortex-A7: 539
+> >>
+> >> They have been derived from the cpu_efficiency values:
+> >>
+> >> Cortex-A15: 3891, Cortex-A7: 2048
+> >>
+> >> by scaling them so that the Cortex-A15s (big cores) use 1024.
+> >>
+> >> The cpu_efficiency values were originally derived from the "Big.LITTLE
+> >> Processing with ARM Cortex™-A15 & Cortex-A7" white paper
+> >> (http://www.cl.cam.ac.uk/~rdm34/big.LITTLE.pdf). Table 1 lists 1.9x
+> >> (3891/2048) as the Cortex-A15 vs Cortex-A7 performance ratio for the
+> >> Dhrystone benchmark.
+> >>
+> >> The following platforms are affected once cpu-invariant accounting
+> >> support is re-connected to the task scheduler:
+> >>
+> >> arndale-octa, peach-pi, peach-pit, smdk5420
+> >>
+> >> The patch has been tested on Samsung Chromebook 2 13" (peach-pi, Exynos
+> >> 5800).
+> >>
+> >> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+> >> 1024
+> >> 1024
+> >> 1024
+> >> 1024
+> >> 389
+> >> 389
+> >> 389
+> >> 389
+> > 
+> > I am missing something... shouldn't this be 539? Or is it scaled with
+> > the clock-frequency (1 GHz) value?
 > 
-> hmm.  This is odd.  We probably need to make the SPI subsystem aware
-> of this. It is possible to ask for exclusive use of an SPI bus and
-> I think we should be doing this here.  It may be wired low on your
-> board, but it may be wired to a controllable chip select on other
-> boards and we can still force it low to trigger this mode if it makes
-> sense for the current application.
+> Yeah, the capacity-dmips-mhz dt value of 539 for the little cpus is
+> scaled by 1.3/1.8 (max cpu capacity/ system wide max cpu capacity):
 > 
-> So I'd argue what we actually need to represent here is that the CS line
-> is not controllable.  What this means to the driver should be handled
-> in the driver - ideally also dealing with the case where it is controllable
-> appropriately (via exclusive bus usage).  Spi devices have the SPI_NO_CS
-> bit in the mode member of the spi device but I'm not sure about bindings.
-[...]
-> The one case where we normally want to flip to continuous modes is when
-> we have a chardev access going on to the device.  In IIO that reflects
-> the fact we are in a push mode rather than userspace polling for new data.
+> 539 * 1.3/1.8 = 389
+> 
+> This max cpu capacity scaling is part of both solutions, the 'cpu
+> capacity-dmips-mhz' and the 'cpu_efficiency/clock-frequency dt property'
+> one.
+> 
+> The (original*) cpu capacity on a heterogeneous platform expresses uArch
+> and max cpu frequency differences between the (logical) cpus of the
+> system.
+> 
+> * not further reduced by rt and/or irq pressure.
+> 
+> [...]
 
-It seems there is no DT binding so far to set SPI_NO_CS.
+Thanks for explanation, looks fine for me. I'll take it after merge
+window.
 
-Conceivably, continuous mode could be used even with multiple devices
-on the bus if CLK and MISO is AND-gated with the CS signal coming from
-the SPI master.  (And the CS of the ADC is pulled low.)  In that case,
-the notion that "continuous mode == CS not controllable" would be
-incorrect, hence the approach I've chosen.
-
-On the Revolution Pi we don't use continuous mode.  I merely included
-it in the driver for completeness.  If it is too controversial I'd be
-inclined to drop the feature.
-
-On-demand switching to continuous mode by keeping CS low would be
-possible by setting the cs_change bit of struct mcp320x ->transfer[1],
-but that might not work if there are other devices on the bus.
-
-
-> Personally I don't think we are in a position yet to make this a generic
-> property - this is the first device where it is actually to do with the
-> physical circuit (and arguably it isn't really - see above).
-
-Okay.
-
-
-> Reference voltages are an oddity as the supply naming typically should match
-> that on the datasheet. It's 'fairly' consistent but some devices
-> have a set of relatively obscure references to different parts of the
-> input circuitry.  We can document it as a 'default' assuming nothing
-> strange is going on though.  This is why we have the vagueness below
-> on VDD and VCC.
-
-That is new to me, I believe it's not documented or am I missing something?
-I'd be happy to respin the below patch without the "Continuous mode"
-portion if you want?  (Amended with the info you gave above.)
-Do you think iio-bindings.txt is the right place to put this or would
-a separate common.txt be more appropriate? (See e.g. leds/common.txt)
-
-Thanks,
-
-Lukas
-
-> -- >8 --  
-> Subject: [PATCH] dt-bindings: iio: Document common properties
->
-> It's about time we standardize on common names for frequently used IIO
-> properties.  For starters, document "vref-supply" and "continuous".
->
-> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/iio/iio-bindings.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> index 68d6f8c..c3e87e15 100644
-> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> @@ -95,3 +95,18 @@ vdd channel is connected to output 0 of the &ref device.
->                 io-channels = <&adc 10>, <&adc 11>;
->                 io-channel-names = "adc1", "adc2";
->         };
-> +
-> +==Common IIO properties==
-> +
-> +Reference voltage:
-> +ADCs, DACs and several other IIO devices require a reference voltage.
-> +By convention the property specifying this regulator is named "vref-supply".
-> +If the chip lacks a dedicated Vref pin and instead uses its own power supply
-> +as reference, the property specifying the regulator is commonly named
-> +"vdd-supply" or "vcc-supply".
-> +
-> +Continuous mode:
-> +Some sensors can be configured to perform continuous (versus one-shot)
-> +measurements.  Continuous mode may require more energy in return for faster
-> +or more reliable measurements.  A boolean property named "continuous"
-> +signifies that the device is configured for this mode.
-> --
-> 2.11.0  
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
