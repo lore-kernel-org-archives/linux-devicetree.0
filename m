@@ -1,47 +1,43 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Remove remaining references/tests for
- "chosen@0"
-Date: Sun, 03 Sep 2017 22:02:34 +1000
-Message-ID: <1504440154.2250.1.camel@kernel.crashing.org>
-References: <alpine.LFD.2.21.1709020416130.13598@localhost.localdomain>
-         <1504390854.4974.108.camel@kernel.crashing.org>
-         <alpine.LFD.2.21.1709030637090.24875@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: [PATCH v3 3/3] net: phy: sfp: rename the rate-select property
+Date: Sun,  3 Sep 2017 15:31:14 +0300
+Message-ID: <6e146ceca74603414c92d6094129255c136b7767.1504441874.git.baruch@tkos.co.il>
+References: <c2a27566a8eb358ee2566a213c385d0bf3d64307.1504441874.git.baruch@tkos.co.il>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.21.1709030637090.24875-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+In-Reply-To: <c2a27566a8eb358ee2566a213c385d0bf3d64307.1504441874.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Linux PPC Mailing List <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2017-09-03 at 06:43 -0400, Robert P. J. Day wrote:
->   however, given the diff stat of the change to remove every single
-> reference to that node name in the current kernel source:
-> 
->  arch/microblaze/kernel/prom.c | 3 +--
->  arch/mips/generic/yamon-dt.c  | 4 ----
->  arch/powerpc/boot/oflib.c     | 7 ++-----
->  drivers/of/base.c             | 2 --
->  drivers/of/fdt.c              | 5 +----
->  5 files changed, 4 insertions(+), 17 deletions(-)
-> 
-> it seems inconsistent that three architectures would be testing for
-> that node, but none of the rest. consistency suggests that every
-> architecture should take it into account, or none should.
-> 
->   anyway, not a big deal, i'm fine with any decision.
+Make the Rx rate select control gpio property name match the documented
+binding. This would make the addition of 'rate-select1-gpios' for SFP+
+support more natural.
 
-powerpc is the only one of the 3 who has an actual open firmware
-implementation afaik.
+Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+---
+v3: No change
 
-In any case, I think you can probably remove from microblaze and
-possibly mips but I'm a bit worried about the generic case and powerpc
-boot.
+v2: New patch in this series
+---
+ drivers/net/phy/sfp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Ben.
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index fb2cf4342f48..b44c0e296662 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -62,7 +62,7 @@ static const char *gpio_of_names[] = {
+ 	"los",
+ 	"tx-fault",
+ 	"tx-disable",
+-	"rate-select",
++	"rate-select0",
+ };
+ 
+ static const enum gpiod_flags gpio_flags[] = {
+-- 
+2.14.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
