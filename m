@@ -1,91 +1,68 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: h3/h5 :Add DAI nodes
-Date: Sun, 03 Sep 2017 18:35:06 +0200
-Message-ID: <2581170.20QKPVRcId@jernej-laptop>
-References: <20170903150806.3451-1-codekipper@gmail.com>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Add support to LIS2DW12 accel sensor
+Date: Sun, 3 Sep 2017 17:52:22 +0100
+Message-ID: <20170903175210.231b90a8@archlinux>
+References: <20170830115043.3738-1-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBQG6WDGQKGQEW3CJBWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170903150806.3451-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170830115043.3738-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcus!
+On Wed, 30 Aug 2017 13:50:38 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Dne nedelja, 03. september 2017 ob 17:08:06 CEST je codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org 
-napisal(a):
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Modify management of drdy line and status register in order to support
+> LIS2DW12 device
 > 
-> Add the new DAI blocks to the device tree. I2S0 and I2S1 are for
-> connecting to an external codec whereas I2S2 is used for HDMI
-> audio.
+> Changes since v2:
+> - swap status register patch (3rd in v2) with irq{1,2} definition one
+>   (1st in v2)
+> - patchset rebased onto 'fix drdy line configuration for LIS3MDL' patch
+> Changes since v1:
+> - remove drdy_irq parameter from LPS001WP settings since the sensor
+> does not support data-ready interrupts
 > 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 39
-> ++++++++++++++++++++++++++++++++++++++ 1 file changed, 39 insertions(+)
+> Lorenzo Bianconi (5):
+>   iio: st_sensors: add register mask for status register
+>   iio: st_sensors: decouple irq1 configuration parameters from the irq2
+>     ones
+>   iio: st_sensors: do not always write enable_axis register
+>   iio: accel: add support to LIS2DW12
+>   dt-bindings: iio: accel: add LIS2DW12 sensor device binding
 > 
-> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> b/arch/arm/boot/dts/sunxi-h3-h5.dtsi index 11240a8313c2..cf6fcc857324
-> 100644
-> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> @@ -450,6 +450,45 @@
->  			status = "disabled";
->  		};
+>  .../devicetree/bindings/iio/st-sensors.txt         |   1 +
+>  drivers/iio/accel/st_accel.h                       |   2 +
+>  drivers/iio/accel/st_accel_core.c                  | 180 +++++++++++++++++----
+>  drivers/iio/accel/st_accel_i2c.c                   |   5 +
+>  drivers/iio/accel/st_accel_spi.c                   |   5 +
+>  drivers/iio/common/st_sensors/st_sensors_core.c    |  35 ++--
+>  drivers/iio/common/st_sensors/st_sensors_trigger.c |  16 +-
+>  drivers/iio/gyro/st_gyro_core.c                    |  33 ++--
+>  drivers/iio/magnetometer/st_magn_core.c            |  16 +-
+>  drivers/iio/pressure/st_pressure_core.c            |  46 ++++--
+>  include/linux/iio/common/st_sensors.h              |  23 ++-
+>  11 files changed, 270 insertions(+), 92 deletions(-)
 > 
-> +		i2s0: i2s@01c22000 {
-> +			#sound-dai-cells = <0>;
-> +			compatible = "allwinner,sun8i-h3-i2s";
-> +			reg = <0x01c22000 0x400>;
-> +			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2S0>, <&ccu CLK_I2S0>;
-> +			clock-names = "apb", "mod";
-> +			dmas = <&dma 3>, <&dma 3>;
-> +			resets = <&ccu RST_BUS_I2S0>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-> +
-> +		i2s1: i2s@01c22400 {
-> +			#sound-dai-cells = <0>;
-> +			compatible = "allwinner,sun8i-h3-i2s";
-> +			reg = <0x01c22400 0x400>;
-> +			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2S1>, <&ccu CLK_I2S1>;
-> +			clock-names = "apb", "mod";
-> +			dmas = <&dma 4>, <&dma 4>;
-> +			resets = <&ccu RST_BUS_I2S1>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-> +
-> +		i2s2: i2s@01c22800 {
-> +			#sound-dai-cells = <0>;
-> +			compatible = "allwinner,sun8i-h3-i2s";
-> +			reg = <0x01c22800 0x400>;
-> +			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2S2>, <&ccu CLK_I2S2>;
-> +			clock-names = "apb", "mod";
-> +			dmas = <&dma 5>, <&dma 5>;
-> +			resets = <&ccu RST_BUS_I2S2>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-> +
 
-I don't want to be a pain, but shouldn't we skip this one for now? It is only 
-for HDMI and has different capabilities (8 channels supported and slighlty 
-different formula to calculate oversample rate.
+I'm happy with the whole series, however it doesn't currently apply
+due to various fixes working their way through the fixes branches
+of the iio git tree.  I'll try to pick it up once those have unwound.
+There is too much going on with this code at the moment to do this
+cleanly now.
 
-Best regards,
-Jernej
+Give me a bump if I look like I have forgotten it once it will
+apply cleanly to the togreg branch of iio.git.
+
+If I was being really fussy  this should have had a dependency list
+for everything it was dependant on that wasn't currently in mainline.
+
+Jonathan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
