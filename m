@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v7 15/18] v4l2-fwnode: Add convenience function for parsing generic references
-Date: Sun,  3 Sep 2017 20:49:55 +0300
-Message-ID: <20170903174958.27058-16-sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 14/18] dt: bindings: Add lens-focus binding for image sensors
+Date: Sun,  3 Sep 2017 20:49:54 +0300
+Message-ID: <20170903174958.27058-15-sakari.ailus@linux.intel.com>
 References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170903174958.27058-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
@@ -10,152 +10,31 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add function v4l2_fwnode_reference_count() for counting external
-references and v4l2_fwnode_reference_parse() for parsing them as async
-sub-devices.
-
-This can be done on e.g. flash or lens async sub-devices that are not part
-of but are associated with a sensor.
-
-struct v4l2_async_notifier.max_subdevs field is added to contain the
-maximum number of sub-devices in a notifier to reflect the memory
-allocated for the subdevs array.
+The lens-focus property contains a phandle to the lens voice coil driver
+that is associated to the sensor; typically both are contained in the same
+camera module.
 
 Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 81 +++++++++++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           | 28 ++++++++++++
- 2 files changed, 109 insertions(+)
+ Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index f8c7a9bc6a58..24f8020caf28 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -449,6 +449,87 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
- }
- EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index fee73cf2a714..73d045127dcf 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -74,6 +74,8 @@ Optional properties
+ - flash: An array of phandles referring to the flash LED, a sub-node
+   of the LED driver device node.
  
-+static void v4l2_fwnode_print_args(struct fwnode_reference_args *args)
-+{
-+	unsigned int i;
++- lens-focus: A phandle to the node of the focus lens controller.
 +
-+	for (i = 0; i < args->nargs; i++) {
-+		pr_cont(" %u", args->args[i]);
-+		if (i + 1 < args->nargs)
-+			pr_cont(",");
-+	}
-+}
-+
-+int v4l2_fwnode_reference_parse(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	const char *prop, const char *nargs_prop, unsigned int nargs,
-+	size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct fwnode_reference_args *args,
-+			    struct v4l2_async_subdev *asd))
-+{
-+	struct fwnode_reference_args args;
-+	unsigned int index = 0;
-+	int ret = -ENOENT;
-+
-+	if (asd_struct_size < sizeof(struct v4l2_async_subdev))
-+		return -EINVAL;
-+
-+	for (; !fwnode_property_get_reference_args(
-+		     dev_fwnode(dev), prop, nargs_prop, nargs,
-+		     index, &args); index++)
-+		fwnode_handle_put(args.fwnode);
-+
-+	ret = v4l2_async_notifier_realloc(notifier,
-+					  notifier->num_subdevs + index);
-+	if (ret)
-+		return -ENOMEM;
-+
-+	for (ret = -ENOENT, index = 0; !fwnode_property_get_reference_args(
-+		     dev_fwnode(dev), prop, nargs_prop, nargs,
-+		     index, &args); index++) {
-+		struct v4l2_async_subdev *asd;
-+
-+		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs))
-+			break;
-+
-+		asd = kzalloc(asd_struct_size, GFP_KERNEL);
-+		if (!asd) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		ret = parse_single ? parse_single(dev, &args, asd) : 0;
-+		if (ret == -ENOTCONN) {
-+			dev_dbg(dev,
-+				"ignoring reference prop \"%s\", nargs_prop \"%s\", nargs %u, index %u",
-+				prop, nargs_prop, nargs, index);
-+			v4l2_fwnode_print_args(&args);
-+			pr_cont("\n");
-+			continue;
-+		} else if (ret < 0) {
-+			dev_warn(dev,
-+				 "driver could not parse reference prop \"%s\", nargs_prop \"%s\", nargs %u, index %u",
-+				 prop, nargs_prop, nargs, index);
-+			v4l2_fwnode_print_args(&args);
-+			pr_cont("\n");
-+			goto error;
-+		}
-+
-+		notifier->subdevs[notifier->num_subdevs] = asd;
-+		asd->match.fwnode.fwnode = args.fwnode;
-+		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-+		notifier->num_subdevs++;
-+	}
-+
-+	return 0;
-+
-+error:
-+	fwnode_handle_put(args.fwnode);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_reference_parse);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 6d125f26ec84..52f528162818 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -254,4 +254,32 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
- 			      struct v4l2_fwnode_endpoint *vep,
- 			      struct v4l2_async_subdev *asd));
  
-+/**
-+ * v4l2_fwnode_reference_parse - parse references for async sub-devices
-+ * @dev: the device node the properties of which are parsed for references
-+ * @notifier: the async notifier where the async subdevs will be added
-+ * @prop: the name of the property
-+ * @nargs_prop: the name of the property in the remote node that specifies the
-+ *		number of integer arguments (may be NULL, in that case nargs
-+ *		will be used).
-+ * @nargs: the number of integer arguments after the reference
-+ * @asd_struct_size: the size of the driver's async sub-device struct, including
-+ *		     @struct v4l2_async_subdev
-+ * @parse_single: Driver's callback function for parsing a reference. Optional.
-+ *		  Return: 0 on success
-+ *			  %-ENOTCONN if the reference is to be skipped but this
-+ *				     should not be considered as an error
-+ *
-+ * Return: 0 on success
-+ *	   -ENOMEM if memory allocation failed
-+ *	   -EINVAL if property parsing failed
-+ */
-+int v4l2_fwnode_reference_parse(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	const char *prop, const char *nargs_prop, unsigned int nargs,
-+	size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct fwnode_reference_args *args,
-+			    struct v4l2_async_subdev *asd));
-+
- #endif /* _V4L2_FWNODE_H */
+ Optional endpoint properties
+ ----------------------------
 -- 
 2.11.0
 
