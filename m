@@ -1,150 +1,92 @@
-From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH 01/10] dmaengine: sun6i: Correct setting of
- clock autogating register for A83T/H3
-Date: Mon, 4 Sep 2017 00:40:52 +0200
-Message-ID: <20170903224100.17893-2-stefan.bruens@rwth-aachen.de>
+From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
+Subject: [PATCH 02/10] dmaengine: sun6i: Correct burst length field offsets for H3
+Date: Mon, 4 Sep 2017 00:40:53 +0200
+Message-ID: <20170903224100.17893-3-stefan.bruens@rwth-aachen.de>
 References: <20170903224100.17893-1-stefan.bruens@rwth-aachen.de>
-Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDIYL7P2SAMRBBEKWLGQKGQEE5AKFWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170903224100.17893-1-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170903224100.17893-1-stefan.bruens@rwth-aachen.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-sunxi@googlegroups.com
+Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Code Kipper <codekipper@gmail.com>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The H83T uses a compatible string different from the A23, but requires
-the same clock autogating register setting.
+For the H3, the burst lengths field offsets in the channel configuration
+register differs from earlier SoC generations.
 
-The H3 also requires setting the clock autogating register, but has
-the register at a different offset.
+Using the A31 register macros actually configured the H3 controller
+do to bursts of length 1 always, which although working leads to higher
+bus utilisation.
 
-Some currently available SoCs not yet supported by the sun6i-dma driver
-will require new compatible strings. These SoCs either follow the A23
-register model (e.g. V3s) or the H3 register model (A64, R40), so a new
-variable is added to the config struct to group SoCs with common register
-models.
-
-Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Signed-off-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
 ---
- drivers/dma/sun6i-dma.c | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+ drivers/dma/sun6i-dma.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index a2358780ab2c..1d9b3be30d22 100644
+index 1d9b3be30d22..f1a139f0102f 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -48,6 +48,9 @@
- #define SUN8I_DMA_GATE		0x20
- #define SUN8I_DMA_GATE_ENABLE	0x4
-=20
-+#define SUNXI_H3_SECURITE_REG		0x20
-+#define SUNXI_H3_DMA_GATE		0x28
-+#define SUNXI_H3_DMA_GATE_ENABLE	0x4
- /*
-  * Channels specific registers
-  */
-@@ -90,6 +93,21 @@
- #define NORMAL_WAIT	8
- #define DRQ_SDRAM	1
-=20
-+/*
-+ * DMA Controller generations
-+ *
-+ * Newer SoC generations changed or added some register definitions:
-+ * - A23 added a clock gate register
-+ * - H3 has a different offset for the clock gating register,
-+ *   the burst length field has a different offset in the channel
-+ *   configuration register, also additional burst lengths/widths.
-+ */
-+enum dmac_variant {
-+	DMAC_VARIANT_A31,
-+	DMAC_VARIANT_A23,
-+	DMAC_VARIANT_H3,
-+};
+@@ -68,13 +68,15 @@
+ #define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & 0x1f)
+ #define DMA_CHAN_CFG_SRC_IO_MODE	BIT(5)
+ #define DMA_CHAN_CFG_SRC_LINEAR_MODE	(0 << 5)
+-#define DMA_CHAN_CFG_SRC_BURST(x)	(((x) & 0x3) << 7)
++#define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
++#define DMA_CHAN_CFG_SRC_BURST_H3(x)	(((x) & 0x3) << 6)
+ #define DMA_CHAN_CFG_SRC_WIDTH(x)	(((x) & 0x3) << 9)
+ 
+ #define DMA_CHAN_CFG_DST_DRQ(x)		(DMA_CHAN_CFG_SRC_DRQ(x) << 16)
+ #define DMA_CHAN_CFG_DST_IO_MODE	(DMA_CHAN_CFG_SRC_IO_MODE << 16)
+ #define DMA_CHAN_CFG_DST_LINEAR_MODE	(DMA_CHAN_CFG_SRC_LINEAR_MODE << 16)
+-#define DMA_CHAN_CFG_DST_BURST(x)	(DMA_CHAN_CFG_SRC_BURST(x) << 16)
++#define DMA_CHAN_CFG_DST_BURST_A31(x)	(DMA_CHAN_CFG_SRC_BURST_A31(x) << 16)
++#define DMA_CHAN_CFG_DST_BURST_H3(x)	(DMA_CHAN_CFG_SRC_BURST_H3(x) << 16)
+ #define DMA_CHAN_CFG_DST_WIDTH(x)	(DMA_CHAN_CFG_SRC_WIDTH(x) << 16)
+ 
+ #define DMA_CHAN_CUR_SRC	0x10
+@@ -554,11 +556,17 @@ static int set_config(struct sun6i_dma_dev *sdev,
+ 	if (dst_width < 0)
+ 		return dst_width;
+ 
+-	*p_cfg = DMA_CHAN_CFG_SRC_BURST(src_burst) |
+-		DMA_CHAN_CFG_SRC_WIDTH(src_width) |
+-		DMA_CHAN_CFG_DST_BURST(dst_burst) |
++	*p_cfg = DMA_CHAN_CFG_SRC_WIDTH(src_width) |
+ 		DMA_CHAN_CFG_DST_WIDTH(dst_width);
+ 
++	if (sdev->cfg->dmac_variant == DMAC_VARIANT_H3) {
++		*p_cfg |= DMA_CHAN_CFG_SRC_BURST_H3(src_burst) |
++			  DMA_CHAN_CFG_DST_BURST_H3(dst_burst);
++	} else {
++		*p_cfg |= DMA_CHAN_CFG_SRC_BURST_A31(src_burst) |
++			  DMA_CHAN_CFG_DST_BURST_A31(dst_burst);
++	}
 +
- /*
-  * Hardware channels / ports representation
-  *
-@@ -101,6 +119,7 @@ struct sun6i_dma_config {
- 	u32 nr_max_channels;
- 	u32 nr_max_requests;
- 	u32 nr_max_vchans;
-+	enum dmac_variant dmac_variant;
- };
-=20
- /*
-@@ -998,6 +1017,7 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg =3D {
- 	.nr_max_channels =3D 16,
- 	.nr_max_requests =3D 30,
- 	.nr_max_vchans   =3D 53,
-+	.dmac_variant    =3D DMAC_VARIANT_A31,
- };
-=20
- /*
-@@ -1009,23 +1029,29 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =
-=3D {
- 	.nr_max_channels =3D 8,
- 	.nr_max_requests =3D 24,
- 	.nr_max_vchans   =3D 37,
-+	.dmac_variant    =3D DMAC_VARIANT_A23,
- };
-=20
- static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
- 	.nr_max_channels =3D 8,
- 	.nr_max_requests =3D 28,
- 	.nr_max_vchans   =3D 39,
-+	.dmac_variant    =3D DMAC_VARIANT_A23,
- };
-=20
- /*
-  * The H3 has 12 physical channels, a maximum DRQ port id of 27,
-  * and a total of 34 usable source and destination endpoints.
-+ * It also supports additional burst lengths and bus widths,
-+ * and the burst length fields have different offsets.
-  */
-=20
- static struct sun6i_dma_config sun8i_h3_dma_cfg =3D {
- 	.nr_max_channels =3D 12,
- 	.nr_max_requests =3D 27,
- 	.nr_max_vchans   =3D 34,
-+	.dmac_variant    =3D DMAC_VARIANT_H3,
-+};
- };
-=20
- static const struct of_device_id sun6i_dma_match[] =3D {
-@@ -1177,11 +1203,13 @@ static int sun6i_dma_probe(struct platform_device *=
-pdev)
- 	/*
- 	 * sun8i variant requires us to toggle a dma gating register,
- 	 * as seen in Allwinner's SDK. This register is not documented
--	 * in the A23 user manual.
-+	 * in the A23 user manual, but appears in e.g. the H83T manual.
-+	 * For the H3, H5 and A64, the register has a different location
- 	 */
--	if (of_device_is_compatible(pdev->dev.of_node,
--				    "allwinner,sun8i-a23-dma"))
-+	if (sdc->cfg->dmac_variant =3D=3D DMAC_VARIANT_A23)
- 		writel(SUN8I_DMA_GATE_ENABLE, sdc->base + SUN8I_DMA_GATE);
-+	else if (sdc->cfg->dmac_variant =3D=3D DMAC_VARIANT_H3)
-+		writel(SUNXI_H3_DMA_GATE_ENABLE, sdc->base + SUNXI_H3_DMA_GATE);
-=20
  	return 0;
-=20
---=20
+ }
+ 
+@@ -601,11 +609,17 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_memcpy(
+ 		DMA_CHAN_CFG_DST_DRQ(DRQ_SDRAM) |
+ 		DMA_CHAN_CFG_DST_LINEAR_MODE |
+ 		DMA_CHAN_CFG_SRC_LINEAR_MODE |
+-		DMA_CHAN_CFG_SRC_BURST(burst) |
+ 		DMA_CHAN_CFG_SRC_WIDTH(width) |
+-		DMA_CHAN_CFG_DST_BURST(burst) |
+ 		DMA_CHAN_CFG_DST_WIDTH(width);
+ 
++	if (sdev->cfg->dmac_variant == DMAC_VARIANT_H3) {
++		v_lli->cfg |= DMA_CHAN_CFG_SRC_BURST_H3(burst) |
++			      DMA_CHAN_CFG_DST_BURST_H3(burst);
++	} else {
++		v_lli->cfg |= DMA_CHAN_CFG_SRC_BURST_A31(burst) |
++			      DMA_CHAN_CFG_DST_BURST_A31(burst);
++	}
++
+ 	sun6i_dma_lli_add(NULL, v_lli, p_lli, txd);
+ 
+ 	sun6i_dma_dump_lli(vchan, v_lli);
+-- 
 2.14.1
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
