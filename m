@@ -1,85 +1,94 @@
-From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH 08/10] dmaengine: sun6i: Add support for
- Allwinner A64 and compatibles
-Date: Mon, 4 Sep 2017 00:40:59 +0200
-Message-ID: <20170903224100.17893-9-stefan.bruens@rwth-aachen.de>
-References: <20170903224100.17893-1-stefan.bruens@rwth-aachen.de>
-Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for Allwinner A64
+Date: Mon, 4 Sep 2017 00:14:22 +0100
+Message-ID: <de04a144-ba07-00df-c684-d7db8956a94f@arm.com>
+References: <20170830233609.13855-4-stefan.bruens@rwth-aachen.de>
+ <1837534.s5pz9jWHnV@pebbles.site>
+ <d397d87b-5004-c8af-e590-037befc9b2b6@arm.com>
+ <2607878.Us0MSlEf6n@pebbles.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDIYL7P2SAMRBCUKWLGQKGQEXXHRX2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170903224100.17893-1-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2607878.Us0MSlEf6n-KVr1ISHqF63jSbz6xCtQhw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Bruens <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The A64 SoC has the same dma engine as the H3 (sun8i), with a
-reduced amount of physical channels. To allow future reuse of the
-compatible, leave the channel count etc. in the config data blank
-and retrieve it from the devicetree.
+On 02/09/17 03:02, Stefan Bruens wrote:
+> On Samstag, 2. September 2017 00:32:50 CEST André Przywara wrote:
+>> Hi,
+>>
+>> On 01/09/17 02:19, Stefan Bruens wrote:
+>>> On Freitag, 1. September 2017 02:31:35 CEST Andre Przywara wrote:
+>>>> Hi,
+>>>>
+>>>> On 31/08/17 00:36, Stefan Brüns wrote:
+>>>>> The A64 SoC has the same dma engine as the H3 (sun8i), with a
+>>>>> reduced amount of physical channels. Add the proper config data
+>>>>> and compatible string to support it.
+>>>>
+>>>> ...
+>>>>
+>>>>> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+>>>>> index 5f4eee4513e5..6a17c5d63582 100644
+>>>>> --- a/drivers/dma/sun6i-dma.c
+>>>>> +++ b/drivers/dma/sun6i-dma.c
+>>>>> @@ -1068,6 +1068,12 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =
+>>>>> {
+>>>>>
+>>>>>  	.nr_max_vchans   = 34,
+>>>>>  	.dmac_variant    = DMAC_VARIANT_H3,
+>>>>>  
+>>>>>  };
+>>>>>
+>>>>> +
+>>>>> +static struct sun6i_dma_config sun50i_a64_dma_cfg = {
+>>>>> +	.nr_max_channels = 8,
+>>>>> +	.nr_max_requests = 27,
+>>>>> +	.nr_max_vchans   = 38,
+>>>>> +	.dmac_variant    = DMAC_VARIANT_H3,
+>>>>>
+>>>>>  };
+>>>>>  
+> [...]
+>>> There are also the incompatibilities in the "DMA channel configuration
+>>> register" (burst length; burst width; burst length field offset).
+>>>
+>>> We can either have 3 different compatible strings, or another property for
+>>> the register model.
+>>
+>> The latter is usually frowned upon, using separate compatible strings
+>> for each group of SoCs is the way to go here.
+> 
+> Just for clarification, I was not talking about a property in the devicetree, 
+> but about a struct member in the config data, i.e. the .dmac_variant above.
 
-Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
----
- drivers/dma/sun6i-dma.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Ah, I see. I was indeed talking about device tree nodes.
 
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index bd4c2e4a759b..4fae7ffad549 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -1076,6 +1076,16 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D =
-{
- 	.nr_max_vchans   =3D 34,
- 	.dmac_variant    =3D DMAC_VARIANT_H3,
- };
-+
-+/*
-+ * The A64 binding uses the number of dma channels from the
-+ * device tree node.
-+ */
-+static struct sun6i_dma_config sun50i_a64_dma_cfg =3D {
-+	.nr_max_channels =3D 0,
-+	.nr_max_requests =3D 0,
-+	.nr_max_vchans   =3D 0,
-+	.dmac_variant    =3D DMAC_VARIANT_H3,
- };
-=20
- static const struct of_device_id sun6i_dma_match[] =3D {
-@@ -1083,6 +1093,7 @@ static const struct of_device_id sun6i_dma_match[] =
-=3D {
- 	{ .compatible =3D "allwinner,sun8i-a23-dma", .data =3D &sun8i_a23_dma_cfg=
- },
- 	{ .compatible =3D "allwinner,sun8i-a83t-dma", .data =3D &sun8i_a83t_dma_c=
-fg },
- 	{ .compatible =3D "allwinner,sun8i-h3-dma", .data =3D &sun8i_h3_dma_cfg }=
-,
-+	{ .compatible =3D "allwinner,sun50i-a64-dma", .data =3D &sun50i_a64_dma_c=
-fg },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, sun6i_dma_match);
-@@ -1090,6 +1101,7 @@ MODULE_DEVICE_TABLE(of, sun6i_dma_match);
- static int sun6i_dma_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *device;
-+	struct device_node *np =3D pdev->dev.of_node;
- 	struct sun6i_dma_dev *sdc;
- 	struct resource *res;
- 	int ret, i;
---=20
-2.14.1
+So in this case I would lean towards mapping the actual properties to
+member names in struct sun6i_dma_config, in this case something like:
+	.auto_clock_gate = 0x28;
+	.max_burst_width = 16;
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+This looks more flexible to me and avoids hard to read code where
+property A is used in SoC X and Y, but property B in SoC X and Z, for
+instance.
+In the auto clock gate case this would result in an easy-to-read:
+	writel(SUN8I_DMA_GATE_ENABLE,
+	       sdc->base + sdc->cfg->auto_clock_gate);
+(possibly guarded somehow to catch that A31 case)
+
+Sorry for the delay in this answer, I see that you kept the
+DMAC_VARIANT_ style for your new post, and the end result doesn't look
+too bad. But maybe still changing this is not too hard now that you have
+more fine grained patches?
+
+Cheers,
+Andre.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
