@@ -1,82 +1,53 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i: h3: Improved Wifi bindings on
- Bananapi M2 Plus
-Date: Mon, 4 Sep 2017 15:52:36 +0200
-Message-ID: <db2d8aed-b3da-7766-1fe5-6ef5d6c5578b@gmail.com>
-References: <1504283401-4263-1-git-send-email-embed3d@gmail.com>
- <1504283401-4263-3-git-send-email-embed3d@gmail.com>
- <20170904080519.mec6ypjei7uvo5k7@flea>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: aspeed-scu: Add clock and reset
+ properties
+Date: Mon, 4 Sep 2017 14:52:47 +0100
+Message-ID: <20170904135247.cekcungzxig2r7tf@dell>
+References: <20170823060957.31167-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170904080519.mec6ypjei7uvo5k7@flea>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170823060957.31167-1-joel@jms.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, Rick Altherr <raltherr@google.com>, Ryan Chen <ryan_chen@aspeedtech.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime
+On Wed, 23 Aug 2017, Joel Stanley wrote:
 
-Am 04.09.2017 um 10:05 schrieb Maxime Ripard:
-> Hi Philipp,
-> 
-> On Fri, Sep 01, 2017 at 06:30:01PM +0200, Philipp Rossak wrote:
->> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> * vqmmc is in this case not needed
->> * no need for pincontrol nodes when the pin is set to a GPIO
->>
->> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 7 -------
->>   1 file changed, 7 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
->> index d756ff8..f7e5d8a 100644
->> --- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
->> +++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
->> @@ -98,7 +98,6 @@
->>   	wifi_pwrseq: wifi_pwrseq {
->>   		compatible = "mmc-pwrseq-simple";
->>   		pinctrl-names = "default";
->> -		pinctrl-0 = <&wifi_en_bpi_m2p>;
->>   		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
->>   	};
->>   };
->> @@ -153,7 +152,6 @@
->>   	pinctrl-names = "default";
->>   	pinctrl-0 = <&mmc1_pins_a>;
->>   	vmmc-supply = <&reg_vcc3v3>;
->> -	vqmmc-supply = <&reg_vcc3v3>;
-> 
-> So we actually need this one.
-> 
->>   	mmc-pwrseq = <&wifi_pwrseq>;
->>   	bus-width = <4>;
->>   	non-removable;
->> @@ -200,11 +198,6 @@
->>   		pins = "PL3";
->>   		function = "gpio_in";
->>   	};
->> -
->> -	wifi_en_bpi_m2p: wifi_en_pin {
->> -		pins = "PL7";
->> -		function = "gpio_out";
->> -	};
-> 
-> And there's also other GPIO pins here, I'd prefer if you could tackle
-> them all at once.
-> 
-> Thanks!
-> Maxime
-> 
-Thanks for the feedback!
-I will fix that with a new single Patch in the next Days.
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  Documentation/devicetree/bindings/mfd/aspeed-scu.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Philipp
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied for v4.15.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+> index 4fc5b83726d6..ce8cf0ec6279 100644
+> --- a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+> @@ -9,10 +9,16 @@ Required properties:
+>  		"aspeed,g5-scu", "syscon", "simple-mfd"
+>  
+>  - reg:		contains the offset and length of the SCU memory region
+> +- #clock-cells: should be set to <1> - the system controller is also a
+> +	clock provider
+> +- #reset-cells: should be set to <1> - the system controller is also a
+> +	reset line provider
+>  
+>  Example:
+>  
+>  syscon: syscon@1e6e2000 {
+>  	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+>  	reg = <0x1e6e2000 0x1a8>;
+> +	#clock-cells = <1>;
+> +	#reset-cells = <1>;
+>  };
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
