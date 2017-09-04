@@ -1,53 +1,51 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v7 07/18] omap3isp: Fix check for our own sub-devices
-Date: Mon, 4 Sep 2017 15:28:04 +0200
-Message-ID: <f8a4ba8c-f749-26ab-0897-c929b3f23e9f@xs4all.nl>
-References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
- <20170903174958.27058-8-sakari.ailus@linux.intel.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 15/18] clk: add support for clocks provided by SCMI
+Date: Mon, 4 Sep 2017 14:37:14 +0100
+Message-ID: <51391c6f-2c20-119e-f8d4-cc4800c79124@arm.com>
+References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
+ <1501857104-11279-16-git-send-email-sudeep.holla@arm.com>
+ <20170901001901.GJ21656@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170903174958.27058-8-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170901001901.GJ21656@codeaurora.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/2017 07:49 PM, Sakari Ailus wrote:
-> We only want to link sub-devices that were bound to the async notifier the
-> isp driver registered but there may be other sub-devices in the
-> v4l2_device as well. Check for the correct async notifier.
 
-Just to be sure I understand this correctly: the original code wasn't wrong as such,
-but this new test is just more precise.
 
-Right?
+On 01/09/17 01:19, Stephen Boyd wrote:
+> On 08/04, Sudeep Holla wrote:
+>> diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+>> new file mode 100644
+>> index 000000000000..37f98a6439a0
+>> --- /dev/null
+>> +++ b/drivers/clk/clk-scmi.c
 
-	Hans
+[...]
 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  drivers/media/platform/omap3isp/isp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>> +static int scmi_clocks_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	const struct scmi_handle *handle = devm_scmi_handle_get(dev);
+>> +
+>> +	if (IS_ERR_OR_NULL(handle) || !handle->clk_ops)
+>> +		return -EPROBE_DEFER;
+>> +
+>> +	return scmi_clk_add(dev, np, handle);
 > 
-> diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-> index a546cf774d40..3b1a9cd0e591 100644
-> --- a/drivers/media/platform/omap3isp/isp.c
-> +++ b/drivers/media/platform/omap3isp/isp.c
-> @@ -2155,7 +2155,7 @@ static int isp_subdev_notifier_complete(struct v4l2_async_notifier *async)
->  		return ret;
->  
->  	list_for_each_entry(sd, &v4l2_dev->subdevs, list) {
-> -		if (!sd->asd)
-> +		if (sd->notifier != &isp->notifier)
->  			continue;
->  
->  		ret = isp_link_entity(isp, &sd->entity,
+> Why the function? We support more than just platform devices?
+> Just fold scmi_clk_add() into this function instead please.
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All valid points. Fixed locally now, will post as part of next posting
+of the series.
+
+-- 
+Regards,
+Sudeep
