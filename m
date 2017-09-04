@@ -1,124 +1,206 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v3 2/3] dt-binding: net: sfp binding documentation
-Date: Mon, 4 Sep 2017 08:55:12 +0300
-Message-ID: <20170904055512.f34afju4crd2ciu6@sapphire.tkos.co.il>
-References: <c2a27566a8eb358ee2566a213c385d0bf3d64307.1504441874.git.baruch@tkos.co.il>
- <01ae7bc45d68322669d18a4feeaeef733ba888d7.1504441874.git.baruch@tkos.co.il>
- <20170903204634.GZ20805@n2100.armlinux.org.uk>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH 3/3] drm/exynos/gsc: Add rotation hardware limits of
+ gscaler
+Date: Mon, 04 Sep 2017 15:19:55 +0900
+Message-ID: <7e628ff8-82be-a295-90fa-8f547a541cb3@samsung.com>
+References: <1504230476-1878-1-git-send-email-hoegeun.kwon@samsung.com>
+        <CGME20170901014758epcas2p13ae73e7dcac72a1a28c9324164efbd6d@epcas2p1.samsung.com>
+        <1504230476-1878-4-git-send-email-hoegeun.kwon@samsung.com>
+        <10747c31-55fc-6464-eb00-99da6d66fca6@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170903204634.GZ20805@n2100.armlinux.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <10747c31-55fc-6464-eb00-99da6d66fca6@samsung.com>
+Content-language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Inki Dae <inki.dae@samsung.com>, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.orgkrzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+On 09/01/2017 04:31 PM, Marek Szyprowski wrote:
+> Hi Hoegeun,
+>
+> On 2017-09-01 03:47, Hoegeun Kwon wrote:
+>> The gscaler has hardware rotation limits that need to be imported from
+>> dts. Parse them and add them to the property list.
+>>
+>> The rotation hardware limits are related to the cropped source size.
+>> When swap occurs, use rot_max size instead of crop_max size.
+>>
+>> Also the scaling limits are related to post size, use pos size to
+>> check the limits.
+>>
+>> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+>> ---
+>>   drivers/gpu/drm/exynos/exynos_drm_gsc.c | 63 
+>> +++++++++++++++++++++------------
+>>   include/uapi/drm/exynos_drm.h           |  2 ++
+>>   2 files changed, 42 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_gsc.c 
+>> b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+>> index 0506b2b..dd9b057 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+>> @@ -1401,6 +1401,23 @@ static int gsc_ippdrv_check_property(struct 
+>> device *dev,
+>>       bool swap;
+>>       int i;
+>>   +    config = &property->config[EXYNOS_DRM_OPS_DST];
+>> +
+>> +    /* check for degree */
+>> +    switch (config->degree) {
+>> +    case EXYNOS_DRM_DEGREE_90:
+>> +    case EXYNOS_DRM_DEGREE_270:
+>> +        swap = true;
+>> +        break;
+>> +    case EXYNOS_DRM_DEGREE_0:
+>> +    case EXYNOS_DRM_DEGREE_180:
+>> +        swap = false;
+>> +        break;
+>> +    default:
+>> +        DRM_ERROR("invalid degree.\n");
+>> +        goto err_property;
+>> +    }
+>> +
+>>       for_each_ipp_ops(i) {
+>>           if ((i == EXYNOS_DRM_OPS_SRC) &&
+>>               (property->cmd == IPP_CMD_WB))
+>> @@ -1416,21 +1433,6 @@ static int gsc_ippdrv_check_property(struct 
+>> device *dev,
+>>               goto err_property;
+>>           }
+>>   -        /* check for degree */
+>> -        switch (config->degree) {
+>> -        case EXYNOS_DRM_DEGREE_90:
+>> -        case EXYNOS_DRM_DEGREE_270:
+>> -            swap = true;
+>> -            break;
+>> -        case EXYNOS_DRM_DEGREE_0:
+>> -        case EXYNOS_DRM_DEGREE_180:
+>> -            swap = false;
+>> -            break;
+>> -        default:
+>> -            DRM_ERROR("invalid degree.\n");
+>> -            goto err_property;
+>> -        }
+>> -
+>>           /* check for buffer bound */
+>>           if ((pos->x + pos->w > sz->hsize) ||
+>>               (pos->y + pos->h > sz->vsize)) {
+>> @@ -1438,21 +1440,27 @@ static int gsc_ippdrv_check_property(struct 
+>> device *dev,
+>>               goto err_property;
+>>           }
+>>   +        /*
+>> +         * The rotation hardware limits are related to the cropped
+>> +         * source size. So use rot_max size to check the limits when
+>> +         * swap happens. And also the scaling limits are related to pos
+>> +         * size, use pos size to check the limits.
+>> +         */
+>>           /* check for crop */
+>>           if ((i == EXYNOS_DRM_OPS_SRC) && (pp->crop)) {
+>>               if (swap) {
+>>                   if ((pos->h < pp->crop_min.hsize) ||
+>> -                    (sz->vsize > pp->crop_max.hsize) ||
+>> +                    (pos->h > pp->rot_max.hsize) ||
+>>                       (pos->w < pp->crop_min.vsize) ||
+>> -                    (sz->hsize > pp->crop_max.vsize)) {
+>> +                    (pos->w > pp->rot_max.vsize)) {
+>>                       DRM_ERROR("out of crop size.\n");
+>>                       goto err_property;
+>>                   }
+>>               } else {
+>>                   if ((pos->w < pp->crop_min.hsize) ||
+>> -                    (sz->hsize > pp->crop_max.hsize) ||
+>> +                    (pos->w > pp->crop_max.hsize) ||
+>>                       (pos->h < pp->crop_min.vsize) ||
+>> -                    (sz->vsize > pp->crop_max.vsize)) {
+>> +                    (pos->h > pp->crop_max.vsize)) {
+>>                       DRM_ERROR("out of crop size.\n");
+>>                       goto err_property;
+>>                   }
+>> @@ -1463,17 +1471,17 @@ static int gsc_ippdrv_check_property(struct 
+>> device *dev,
+>>           if ((i == EXYNOS_DRM_OPS_DST) && (pp->scale)) {
+>>               if (swap) {
+>>                   if ((pos->h < pp->scale_min.hsize) ||
+>> -                    (sz->vsize > pp->scale_max.hsize) ||
+>> +                    (pos->h > pp->scale_max.hsize) ||
+>>                       (pos->w < pp->scale_min.vsize) ||
+>> -                    (sz->hsize > pp->scale_max.vsize)) {
+>> +                    (pos->w > pp->scale_max.vsize)) {
+>>                       DRM_ERROR("out of scale size.\n");
+>>                       goto err_property;
+>>                   }
+>>               } else {
+>>                   if ((pos->w < pp->scale_min.hsize) ||
+>> -                    (sz->hsize > pp->scale_max.hsize) ||
+>> +                    (pos->w > pp->scale_max.hsize) ||
+>>                       (pos->h < pp->scale_min.vsize) ||
+>> -                    (sz->vsize > pp->scale_max.vsize)) {
+>> +                    (pos->h > pp->scale_max.vsize)) {
+>>                       DRM_ERROR("out of scale size.\n");
+>>                       goto err_property;
+>>                   }
+>> @@ -1676,6 +1684,15 @@ static int gsc_probe(struct platform_device 
+>> *pdev)
+>>               dev_warn(dev, "failed to get system register.\n");
+>>               ctx->sysreg = NULL;
+>>           }
+>> +
+>> +        ret = of_property_read_u32(dev->of_node, "rot-max-hsize",
+>> +                &ctx->ippdrv.prop_list.rot_max.hsize);
+>> +        ret |= of_property_read_u32(dev->of_node, "rot-max-vsize",
+>> +                &ctx->ippdrv.prop_list.rot_max.vsize);
+>> +        if (ret) {
+>> +            dev_err(dev, "rot-max property should be provided by 
+>> device tree.\n");
+>> +            return -EINVAL;
+>> +        }
+>>       }
+>>         /* clock control */
+>> diff --git a/include/uapi/drm/exynos_drm.h 
+>> b/include/uapi/drm/exynos_drm.h
+>> index cb3e9f9..d5d5518 100644
+>> --- a/include/uapi/drm/exynos_drm.h
+>> +++ b/include/uapi/drm/exynos_drm.h
+>> @@ -192,6 +192,7 @@ enum drm_exynos_planer {
+>>    * @crop_max: crop max resolution.
+>>    * @scale_min: scale min resolution.
+>>    * @scale_max: scale max resolution.
+>> + * @rot_max: rotation max resolution.
+>>    */
+>>   struct drm_exynos_ipp_prop_list {
+>>       __u32    version;
+>> @@ -210,6 +211,7 @@ struct drm_exynos_ipp_prop_list {
+>>       struct drm_exynos_sz    crop_max;
+>>       struct drm_exynos_sz    scale_min;
+>>       struct drm_exynos_sz    scale_max;
+>> +    struct drm_exynos_sz    rot_max;
+>>   };
+>>     /**
+>
+> IMO maximum supported picture size should be hardcoded into driver, there
+> is no need to add device tree properties for that. Please also check v4l2
+> driver for Exynos GSC.
+>
+> Currently it uses only one compatible - "exynos5-gsc", but imho You 
+> should
+> simply replace it with "exynos5250-gsc" and "exynos5420-gsc", and add 
+> those
+> variants with proper maximum supported size (2047 and 2016 respectively).
+>
+> Best regards
 
-On Sun, Sep 03, 2017 at 09:46:35PM +0100, Russell King - ARM Linux wrote:
-> On Sun, Sep 03, 2017 at 03:31:13PM +0300, Baruch Siach wrote:
-> > Add device-tree binding documentation SFP transceivers. Support for SFP
-> > transceivers has been recently introduced (drivers/net/phy/sfp.c).
-> > 
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > ---
-> > v3:
-> >   Mention gpios phandle and specifier
-> >   Mention the polarity of each gpio
-> >   Fix example property names
-> > 
-> > v2:
-> >   Rename -gpio properties to -gpios
-> >   Rename the rate-select-gpio property to rate-select0-gpios
-> >   Add the rate-select1-gpios property
-> >   Add examples
-> > ---
-> >  Documentation/devicetree/bindings/net/sff,sfp.txt | 78 +++++++++++++++++++++++
-> >  1 file changed, 78 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/sff,sfp.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/sff,sfp.txt b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> > new file mode 100644
-> > index 000000000000..b98ee5945265
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> > @@ -0,0 +1,78 @@
-> > +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
-> > +Transceiver
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : must be "sff,sfp"
-> > +
-> > +Optional Properties:
-> > +
-> > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-> > +  interface
-> > +
-> > +- moddef0-gpios : GPIO phandle and a single specifier of the MOD-DEF0 (AKA
-> > +  Mod_ABS) module presence input gpio signal, active (module absent) high
-> > +
-> > +- los-gpios : GPIO phandle and a single specifier of the Receiver Loss of
-> > +  Signal Indication input gpio signal, active (signal lost) high
-> > +
-> > +- tx-fault-gpios : GPIO phandle and a single specifier of the Module
-> > +  Transmitter Fault input gpio signal, active (fault condition) high
-> > +
-> > +- tx-disable-gpios : GPIO phandle and a single specifier of the Transmitter
-> > +  Disable output gpio signal, active (Tx disable) high
-> > +
-> > +- rate-select0-gpios : GPIO phandle and a single specifier of the Rx Signaling
-> > +  Rate Select (AKA RS0) output gpio signal, low: low Rx rate, high: high Rx
-> > +  rate
-> > +
-> > +- rate-select1-gpios : GPIO phandle and a single specifier of the Tx Signaling
-> > +  Rate Select (AKA RS1) output gpio signal (SFP+ only), low: low Tx rate,
-> > +  high: high Tx rate
-> > +
-> > +Example #1: Direct serdes to SFP connection
-> > +
-> > +sfp_eth3: sfp-eth3 {
-> > +	compatible = "sff,sfp";
-> > +	i2c-bus = <&sfp_1g_i2c>;
-> > +	los-gpios = <&cpm_gpio2 22 GPIO_ACTIVE_HIGH>;
-> > +	moddef0-gpios = <&cpm_gpio2 21 GPIO_ACTIVE_LOW>;
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&cpm_sfp_1g_pins &cps_sfp_1g_pins>;
-> > +	tx-disable-gpios = <&cps_gpio1 24 GPIO_ACTIVE_HIGH>;
-> > +	tx-fault-gpios = <&cpm_gpio2 19 GPIO_ACTIVE_HIGH>;
-> > +};
-> > +
-> > +&cps_emac3 {
-> > +	phy-mode = "sgmii";
-> > +	phy-names = "comphy";
-> > +	phys = <&cps_comphy 5 COMPHY_SGMII2>;
-> 
-> I don't like this level of example - SGMII is Cisco SGMII which is not
-> the same as 1000Base-X - the two are incompatible.  Fibre SFP modules
-> only work with 1000Base-X.
-> 
-> The SFP/phylink takes care of informing the MAC which mode it should
-> be in, and the MAC must configure itself appropriately in response to
-> that, otherwise the module can't be supported.
+Hi Krzysztof and Marek,
 
-So, if I understand you correctly, the PHY mode should not be coded in the DT 
-since the mode is run-time configurable, and depends on the SFP module. Is 
-that correct?
+Thanks Krzysztof and Marek reviews.
 
-How about the following then:
+As Marek says, rot_max size will be hardcoded into driver,
+then it will not break the ABI. And also,
+I will check the v4l2 driver for Exynos GSC.
 
-&cps_emac3 {
-        phy-names = "comphy";
-        phys = <&cps_comphy 5>;
-        sfp = <&sfp_eth3>;
-};
-
-Thanks,
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+Best regards,
+Hoegeun
