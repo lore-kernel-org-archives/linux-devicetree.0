@@ -1,79 +1,78 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-binding: net: sfp binding documentation
-Date: Tue, 5 Sep 2017 00:11:21 +0300
-Message-ID: <20170904211121.hl2gnwxiizli5brd@tarshish>
-References: <c2a27566a8eb358ee2566a213c385d0bf3d64307.1504441874.git.baruch@tkos.co.il>
- <01ae7bc45d68322669d18a4feeaeef733ba888d7.1504441874.git.baruch@tkos.co.il>
- <5df7f2f5-04f7-85b1-4a53-935360001b7c@gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] arm64: Initial Realtek RTD1295 enablement
+Date: Tue, 5 Sep 2017 00:09:10 +0200
+Message-ID: <068148b5-7add-96e5-dc6d-4597527a6c35@suse.de>
+References: <20170514022429.11555-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5df7f2f5-04f7-85b1-4a53-935360001b7c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170514022429.11555-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?UTF-8?B?6JKL5Li955C0?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+Hi,
 
-On Mon, Sep 04, 2017 at 01:16:26PM -0700, Florian Fainelli wrote:
-> Le 09/03/17 � 05:31, Baruch Siach a �crit : 
+Am 14.05.2017 um 04:24 schrieb Andreas Färber:
+> This mini-series adds initial support for the Realtek RTD1295 SoC and
+> the Zidoo X9S TV box.
+> 
+> v3 changes #address-cells, #size-cells and ranges.
+> 
+> With these patches CPU0 can be booted with earlycon.
+> 
+> PSCI doesn't work despite present in the vendor device tree; as enable-method
+> it instead used a custom "rtk-spin-table" that I sadly have no source code of.
+
+Synology has now published source code for RTD1293/1296. This has
+allowed me to narrow the RTD1295 CPU1..3 issue down to two changes in
+arch/arm64/kernel/smp_spin_table.c:smp_spin_table_cpu_prepare():
+
+1) writel_relaxed() instead of writeq_relaxed()
+2) ioremap() instead of ioremap_cache()
+
+Without those changes it hangs in earlycon after this line:
+[    0.043674] Mountpoint-cache hash table entries: 4096 (order: 3,
+32768 bytes)
+
+The size difference sounds easy enough - we could introduce an optional
+cpu-release-size property to handle this or derive a "spin-table-32bit"
+enable-method to that effect.
+
+The second one appears to be caused by PROT_NORMAL vs.
+PROT_DEVICE_nGnRE. Is there any simple check we could do on
+cpu-release-addr to choose which MT to use?
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?id=113954c6463d1d80a206e91627ae49711f8b47cd
+
+Any other ideas?
 
 [...]
-
-> > diff --git a/Documentation/devicetree/bindings/net/sff,sfp.txt b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> > new file mode 100644
-> > index 000000000000..b98ee5945265
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> > @@ -0,0 +1,78 @@
-> > +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
-> > +Transceiver
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : must be "sff,sfp"
-> > +
-> > +Optional Properties:
-> > +
-> > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-> > +  interface
-> > +
-> > +- moddef0-gpios : GPIO phandle and a single specifier of the MOD-DEF0 (AKA
-> > +  Mod_ABS) module presence input gpio signal, active (module absent) high
+> The boot process is slightly twisted: The files need to be loaded from a
+> 32-bit U-Boot, then boot into 64-bit U-Boot where the kernel can be booted.
+> Similar to my previous Amlogic S905 work, the TEXT_OFFSET poses a problem, so
+> a uImage needs to be used (or the kernel patched) for load address 0x00280000.
+> I haven't succeeded loading an initrd via bootm/booti; but as quick workaround
+> initrd=$rootfs_loadaddr,0x$filesize can manually be specified in $bootargs.
 > 
-> Sorry for nitpicking on this, why are not we naming this mod-def0-gpios
-> which would be consistent with how other GPIOs are named?
+> Cf. https://en.opensuse.org/HCL:Zidoo_X9S
+> 
+> More experimental patches at:
+> https://github.com/afaerber/linux/commits/rtd1295-next
+[snip]
 
-I'm fine with that as well. It only requires changing the implementation to 
-match.
+My above branch includes the above spin-table hack for now.
 
-> > +
-> > +- los-gpios : GPIO phandle and a single specifier of the Receiver Loss of
-> > +  Signal Indication input gpio signal, active (signal lost) high
-> > +
-> > +- tx-fault-gpios : GPIO phandle and a single specifier of the Module
-> > +  Transmitter Fault input gpio signal, active (fault condition) high
-> > +
-> > +- tx-disable-gpios : GPIO phandle and a single specifier of the Transmitter
-> > +  Disable output gpio signal, active (Tx disable) high
-> > +
-> > +- rate-select0-gpios : GPIO phandle and a single specifier of the Rx Signaling
-> > +  Rate Select (AKA RS0) output gpio signal, low: low Rx rate, high: high Rx
-> > +  rate
-> > +
-> > +- rate-select1-gpios : GPIO phandle and a single specifier of the Tx Signaling
-> > +  Rate Select (AKA RS1) output gpio signal (SFP+ only), low: low Tx rate,
-> > +  high: high Tx rate
-
-baruch
+Regards,
+Andreas
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
