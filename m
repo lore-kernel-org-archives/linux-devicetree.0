@@ -1,51 +1,51 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 15/18] clk: add support for clocks provided by SCMI
-Date: Mon, 4 Sep 2017 14:37:14 +0100
-Message-ID: <51391c6f-2c20-119e-f8d4-cc4800c79124@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-16-git-send-email-sudeep.holla@arm.com>
- <20170901001901.GJ21656@codeaurora.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 2/9] mfd: Add STM32 LPTimer driver
+Date: Mon, 4 Sep 2017 14:46:20 +0100
+Message-ID: <20170904134620.gdabswhptjbgweqk@dell>
+References: <1503914654-19963-1-git-send-email-fabrice.gasnier@st.com>
+ <1503914654-19963-3-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170901001901.GJ21656@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1503914654-19963-3-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 28 Aug 2017, Fabrice Gasnier wrote:
 
-
-On 01/09/17 01:19, Stephen Boyd wrote:
-> On 08/04, Sudeep Holla wrote:
->> diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
->> new file mode 100644
->> index 000000000000..37f98a6439a0
->> --- /dev/null
->> +++ b/drivers/clk/clk-scmi.c
-
-[...]
-
->> +static int scmi_clocks_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *np = dev->of_node;
->> +	const struct scmi_handle *handle = devm_scmi_handle_get(dev);
->> +
->> +	if (IS_ERR_OR_NULL(handle) || !handle->clk_ops)
->> +		return -EPROBE_DEFER;
->> +
->> +	return scmi_clk_add(dev, np, handle);
+> STM32 Low-Power Timer hardware block can be used for:
+> - PWM generation
+> - IIO trigger (in sync with PWM)
+> - IIO quadrature encoder counter
+> PWM and IIO timer configuration are mixed in the same registers so
+> we need a multi fonction driver to be able to share those registers.
 > 
-> Why the function? We support more than just platform devices?
-> Just fold scmi_clk_add() into this function instead please.
-> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> ---
+> Changes in v2:
+> - Lee's remarks: various comments, max register define, s/Low Power/Low-Power,
+>   clock name, removed reset, add kernel doc for stm32_lptimer struct
+> ---
+>  drivers/mfd/Kconfig               |  14 +++++
+>  drivers/mfd/Makefile              |   1 +
+>  drivers/mfd/stm32-lptimer.c       | 107 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/stm32-lptimer.h |  62 ++++++++++++++++++++++
+>  4 files changed, 184 insertions(+)
+>  create mode 100644 drivers/mfd/stm32-lptimer.c
+>  create mode 100644 include/linux/mfd/stm32-lptimer.h
 
-All valid points. Fixed locally now, will post as part of next posting
-of the series.
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 -- 
-Regards,
-Sudeep
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
