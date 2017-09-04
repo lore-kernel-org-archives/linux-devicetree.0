@@ -1,87 +1,127 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i: h3: Improved Wifi
- bindings on Bananapi M2 Plus
-Date: Mon, 4 Sep 2017 10:05:19 +0200
-Message-ID: <20170904080519.mec6ypjei7uvo5k7@flea>
-References: <1504283401-4263-1-git-send-email-embed3d@gmail.com>
- <1504283401-4263-3-git-send-email-embed3d@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: "Wangtao (Kevin, Kirin)" <kevin.wangtao@hisilicon.com>
+Subject: Re: [PATCH v4 3/3] arm64: dts: register Hi3660's thermal sensor
+Date: Mon, 4 Sep 2017 16:11:12 +0800
+Message-ID: <c7b85592-1bca-6a31-c652-011ac6f86a2a@hisilicon.com>
+References: <e313015d-11d5-91b8-aa64-37e9410cb882@hisilicon.com>
+ <1503994666-13954-1-git-send-email-kevin.wangtao@hisilicon.com>
+ <1503994666-13954-4-git-send-email-kevin.wangtao@hisilicon.com>
+ <4e819928-9544-e7a1-b8ff-09ebee07f32b@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="m2x3r73jxsrlo2md"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSUSWTGQKGQED25CNHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1504283401-4263-3-git-send-email-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4e819928-9544-e7a1-b8ff-09ebee07f32b@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: leo.yan@linaro.org, kevin.wangtao@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sunzhaosheng@hisilicon.com, gengyanping@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
 
---m2x3r73jxsrlo2md
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-Hi Philipp,
-
-On Fri, Sep 01, 2017 at 06:30:01PM +0200, Philipp Rossak wrote:
-> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+在 2017/9/1 5:13, Daniel Lezcano 写道:
+> On 29/08/2017 10:17, Tao Wang wrote:
+>> From: Tao Wang <kevin.wangtao@linaro.org>
+>>
+>> Bind thermal sensor driver for Hi3660.
 > 
-> * vqmmc is in this case not needed
-> * no need for pincontrol nodes when the pin is set to a GPIO
+> The description is a bit light :)
+All right
 > 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 7 -------
->  1 file changed, 7 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-> index d756ff8..f7e5d8a 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-> @@ -98,7 +98,6 @@
->  	wifi_pwrseq: wifi_pwrseq {
->  		compatible = "mmc-pwrseq-simple";
->  		pinctrl-names = "default";
-> -		pinctrl-0 = <&wifi_en_bpi_m2p>;
->  		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
->  	};
->  };
-> @@ -153,7 +152,6 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&mmc1_pins_a>;
->  	vmmc-supply = <&reg_vcc3v3>;
-> -	vqmmc-supply = <&reg_vcc3v3>;
-
-So we actually need this one.
-
->  	mmc-pwrseq = <&wifi_pwrseq>;
->  	bus-width = <4>;
->  	non-removable;
-> @@ -200,11 +198,6 @@
->  		pins = "PL3";
->  		function = "gpio_in";
->  	};
-> -
-> -	wifi_en_bpi_m2p: wifi_en_pin {
-> -		pins = "PL7";
-> -		function = "gpio_out";
-> -	};
-
-And there's also other GPIO pins here, I'd prefer if you could tackle
-them all at once.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---m2x3r73jxsrlo2md--
+>> Signed-off-by: Tao Wang <kevin.wangtao@linaro.org>
+>> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+>> ---
+>>   arch/arm64/boot/dts/hisilicon/hi3660.dtsi    | 14 +++++++++++++
+>>   include/dt-bindings/thermal/hi3660-thermal.h | 31 ++++++++++++++++++++++++++++
+>>   2 files changed, 45 insertions(+)
+>>   create mode 100644 include/dt-bindings/thermal/hi3660-thermal.h
+>>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> index c6a1961..1ee6084 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>> @@ -6,6 +6,7 @@
+>>   
+>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>   #include <dt-bindings/clock/hi3660-clock.h>
+>> +#include <dt-bindings/thermal/hi3660-thermal.h>
+>>   
+>>   / {
+>>   	compatible = "hisilicon,hi3660";
+>> @@ -848,5 +849,18 @@
+>>   				     &sdio_cfg_func>;
+>>   			status = "disabled";
+>>   		};
+>> +
+>> +		tsensor: tsensor@fff30000 {
+>> +			compatible = "hisilicon,hi3660-tsensor";
+>> +			#address-cells = <2>;
+>> +			#size-cells = <2>;
+>> +			reg = <0x0 0xfff3001c 0x0 0x4>,
+>> +				<0x0 0xfff3005c 0x0 0x4>,
+>> +				<0x0 0xfff3009c 0x0 0x4>;
+>> +			hisi,tsensors = <HISI_MAX_TSENSORS>;
+>> +			hisi,coef = <165000 (-40000)>;
+>> +			hisi,adc-range = <0x74 0x39A>;
+>> +			#thermal-sensor-cells = <1>;
+>> +		};
+>>   	};
+>>   };
+>> diff --git a/include/dt-bindings/thermal/hi3660-thermal.h b/include/dt-bindings/thermal/hi3660-thermal.h
+>> new file mode 100644
+>> index 0000000..d9d9b6a
+>> --- /dev/null
+>> +++ b/include/dt-bindings/thermal/hi3660-thermal.h
+>> @@ -0,0 +1,31 @@
+>> +/*
+>> + *  Copyright (c) 2017 Hisilicon Limited.
+>> + *  Copyright (c) 2017 Linaro Limited.
+>> + *
+>> + *  This program is free software; you can redistribute it and/or modify
+>> + *  it under the terms of the GNU General Public License as published by
+>> + *  the Free Software Foundation; version 2 of the License.
+>> + *
+>> + *  This program is distributed in the hope that it will be useful,
+>> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *  GNU General Public License for more details.
+>> + *
+>> + *  You should have received a copy of the GNU General Public License
+>> + *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#ifndef __DTS_HI3660_THERMAL_H
+>> +#define __DTS_HI3660_THERMAL_H
+>> +
+>> +/* sensor id */
+>> +#define LITTLE_CPU_TEMP		0
+>> +#define BIG_CPU_TEMP		1
+>> +#define GPU_TEMP		2
+> 
+> Is it possible to stick to the sensor description?
+OK
+> 
+> eg.
+> 
+> #define HI3660_A53_TEMP	0
+> #define HI3660_A72_TEMP 1
+> #define HI3660_GPU_TEMP 2
+> 
+>> +#define MAX_TEMP		3
+>> +#define AVG_TEMP		4
+> 
+> It does not make sense to define AVG and MAX, they describe how is
+> computed the temperature. It makes more sense to define the group eg.
+> SOC_TEMP and add an attribute to the virtual sensor telling how you want
+> the temperature to be computed. That will make the code in the driver
+> much more simple, clear and clean.
+You inspired me, actually the thermal zone just want the SoC temp, my driver only need to offer one virtual sensor, we don't need the sensor id any more
+> 
+>> +#define HISI_MAX_TSENSORS		3> +#define THERMAL_NO_LIMIT		(~0)
+> 
+> Already defined in dt-bindings/thermal.h
+> 
+>> +#endif
+> 
+> 
+> 
