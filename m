@@ -1,94 +1,106 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v7 16/18] v4l2-fwnode: Add convenience function for
- parsing common external refs
-Date: Mon, 4 Sep 2017 16:58:13 +0200
-Message-ID: <4900fc41-1b57-deb6-2041-26a6333f2033@xs4all.nl>
-References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
- <20170903174958.27058-17-sakari.ailus@linux.intel.com>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] thermal: hisilicon: add thermal sensor driver for
+ Hi3660
+Date: Mon, 4 Sep 2017 23:06:21 +0800
+Message-ID: <20170904150621.GC24156@leoy-ThinkPad-T440>
+References: <e313015d-11d5-91b8-aa64-37e9410cb882@hisilicon.com>
+ <1503994666-13954-1-git-send-email-kevin.wangtao@hisilicon.com>
+ <1503994666-13954-3-git-send-email-kevin.wangtao@hisilicon.com>
+ <77ceb395-57bb-8de7-7b1a-3218baa5d5f3@linaro.org>
+ <b884f2ca-86e1-0df3-0cbf-99b13232ee03@hisilicon.com>
+ <8fe3ad22-59db-40c6-18db-7b6859f05a95@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170903174958.27058-17-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <8fe3ad22-59db-40c6-18db-7b6859f05a95-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Wangtao (Kevin, Kirin)" <kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gengyanping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/2017 07:49 PM, Sakari Ailus wrote:
-> Add v4l2_fwnode_parse_reference_sensor_common for parsing common
-> sensor properties that refer to adjacent devices such as flash or lens
-> driver chips.
+On Mon, Sep 04, 2017 at 01:06:39PM +0200, Daniel Lezcano wrote:
 > 
-> As this is an association only, there's little a regular driver needs to
-> know about these devices as such.
+> Hi Kevin,
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-
-Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-
-Regards,
-
-	Hans
-
-> ---
->  drivers/media/v4l2-core/v4l2-fwnode.c | 27 +++++++++++++++++++++++++++
->  include/media/v4l2-fwnode.h           |  3 +++
->  2 files changed, 30 insertions(+)
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index 24f8020caf28..f28be3b751d3 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -530,6 +530,33 @@ int v4l2_fwnode_reference_parse(
->  }
->  EXPORT_SYMBOL_GPL(v4l2_fwnode_reference_parse);
->  
-> +int v4l2_fwnode_reference_parse_sensor_common(
-> +	struct device *dev, struct v4l2_async_notifier *notifier)
-> +{
-> +	static const struct {
-> +		char *name;
-> +		char *cells;
-> +		unsigned int nr_cells;
-> +	} props[] = {
-> +		{ "flash", NULL, 0 },
-> +		{ "lens-focus", NULL, 0 },
-> +	};
-> +	unsigned int i;
-> +	int rval;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(props); i++) {
-> +		rval = v4l2_fwnode_reference_parse(
-> +			dev, notifier, props[i].name, props[i].cells,
-> +			props[i].nr_cells, sizeof(struct v4l2_async_subdev),
-> +			NULL);
-> +		if (rval < 0 && rval != -ENOENT)
-> +			return rval;
-> +	}
-> +
-> +	return rval;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_fwnode_reference_parse_sensor_common);
-> +
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
->  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-> index 52f528162818..fd14f1d38966 100644
-> --- a/include/media/v4l2-fwnode.h
-> +++ b/include/media/v4l2-fwnode.h
-> @@ -282,4 +282,7 @@ int v4l2_fwnode_reference_parse(
->  			    struct fwnode_reference_args *args,
->  			    struct v4l2_async_subdev *asd));
->  
-> +int v4l2_fwnode_reference_parse_sensor_common(
-> +	struct device *dev, struct v4l2_async_notifier *notifier);
-> +
->  #endif /* _V4L2_FWNODE_H */
+> On 04/09/2017 09:56, Wangtao (Kevin, Kirin) wrote:
+> > 
+> > 
+> > 在 2017/9/1 5:17, Daniel Lezcano 写道:
+> >>
+> >> Hi Kevin,
+> >>
+> >>
+> >> On 29/08/2017 10:17, Tao Wang wrote:
+> >>> From: Tao Wang <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>>
+> >>> This patch adds the support for thermal sensor of Hi3660 SoC.
+> >>
+> >> for the Hi3660 SoC thermal sensor.
+> >>
+> >>> this will register sensors for thermal framework and use device
+> >>> tree to bind cooling device.
+> >>
+> >> Is it possible to give a pointer to some documentation or to describe
+> >> the hardware?
+> > Yes, there used to be on patch V3, I removed it on V4.
+> >>
+> >> An explanation of the adc min max coef[] range[] conversion would be
+> >> nice.
+> > OK
+> >>
+> >> In addition, having the rational behind the average and the max would be
+> >> nice. Do we really need both avg and max as virtual sensor?
+> > We only need max currently.
+> >>
+> >>> Signed-off-by: Tao Wang <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>> ---
+> >>>   drivers/thermal/Kconfig        |  13 +++
+> >>>   drivers/thermal/Makefile       |   1 +
+> >>>   drivers/thermal/hisi_tsensor.c | 209
+> >>> +++++++++++++++++++++++++++++++++++++++++
+> >>
+> >>
+> >> IMO, we don't need a new file, but merge this code with the current
+> >> hisi_thermal.c driver. BTW, the hi6220 has also a tsensor which is
+> >> different from this one.
+> >>
+> >> I suggest to base the hi3660 thermal driver on top of the cleanup I sent
+> >> for the hi6220.
+> > The tsensor of hi3660 is a different one, merging the code with hi6220
+> > will need a lot of change.
 > 
+> Have a look at the hisi_thermal.c at:
+> 
+> https://git.linaro.org/people/daniel.lezcano/linux.git/tree/drivers/thermal/hisi_thermal.c?h=thermal/hikey-4.14
+> 
+> after the cleanup I recently sent.
+> 
+> I'm pretty sure, with a little effort, we can merge both.
+> 
+> Especially if the virtual things is separated.
+> 
+> At the end, what do we do ? Read a register.
 
+Just more input at here. I agree currently Hi3660 thermal driver
+is quite similiar with Hi6220, before we wrote a dedicated Hi3660
+thermal driver due we used mailbox method rather than shared
+memory mode.
+
+If we merge two thermal drivers, this means Hi3660 register layout
+should be adjusted as same with Hi6220; I am not sure if this is
+feasible and need Kevin to confirm for this.
+
+And does this mean we need provide interrupt mode for Hi3660? Or
+we can extend the driver to only support pollig mode?
+
+[...]
+
+Thanks,
+Leo Yan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
