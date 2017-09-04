@@ -1,90 +1,79 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-binding: net: sfp binding documentation
-Date: Mon, 4 Sep 2017 12:59:29 +0300
-Message-ID: <d7eb151f-0967-7ffb-91a1-5e27f9db4050@cogentembedded.com>
-References: <c2a27566a8eb358ee2566a213c385d0bf3d64307.1504441874.git.baruch@tkos.co.il>
- <01ae7bc45d68322669d18a4feeaeef733ba888d7.1504441874.git.baruch@tkos.co.il>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 5/5] v4l: fwnode: Support generic parsing of graph endpoints in a single port
+Date: Mon, 04 Sep 2017 13:05:52 +0300
+Message-ID: <41798047.7Eux7kmorh@avalon>
+References: <20170830114946.17743-1-sakari.ailus@linux.intel.com> <1981884.TcuAFemERJ@avalon> <20170903074339.vswbczv2lfxykssq@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <01ae7bc45d68322669d18a4feeaeef733ba888d7.1504441874.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170903074339.vswbczv2lfxykssq@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Hi Sakari,
 
-On 9/3/2017 3:31 PM, Baruch Siach wrote:
+On Sunday, 3 September 2017 10:43:39 EEST Sakari Ailus wrote:
+> On Sat, Sep 02, 2017 at 12:52:47PM +0300, Laurent Pinchart wrote:
+> > On Saturday, 2 September 2017 01:57:48 EEST Sakari Ailus wrote:
+> >> On Fri, Sep 01, 2017 at 01:28:40PM +0200, Hans Verkuil wrote:
 
-> Add device-tree binding documentation SFP transceivers. Support for SFP
-> transceivers has been recently introduced (drivers/net/phy/sfp.c).
+[sinp]
+
+> >>> I'm lost. What's the relationship between
+> >>> v4l2_async_notifier_parse_fwnode_endpoints and this function? When do
+> >>> you use which? When you should zero the notifier?
+> >> 
+> >> I thought there would be advantages in this approach as it lets you to
+> >> choose which endpoints specifically you want to parse. That said, the
+> >> expectation is that the device has no endpoints that aren't supported in
+> >> hardware either.
+> >> 
+> >> Some drivers currently iterate over all the endpoints and then validate
+> >> them whereas others poke for some endpoints only (port 0, endpoint 0,
+> >> for the rcar-vin driver, for instance). In DT binding documentation the
+> >> endpoint numbers are currently not specified nor drivers have checked
+> >> them. Common sense tells to use zero if there's no reason to do
+> >> otherwise, but still this hasn't been documented nor validated in the
+> >> past. So if we add that now, there could be a chance of breaking
+> >> something.
+> >> 
+> >> Additionally, specifying the endpoints to parse explicitly has been seen
+> >> beneficial (or even necessary) in parsing endpoints for devices that
+> >> have both input and output interfaces. Perhaps Niklas can comment on
+> >> that.
+> >> 
+> >> What I though was to introduce a specific error code (EPERM, better
+> >> suggestions are taken)
+> > 
+> > Maybe ENOTCONN ?
 > 
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-[...]
-> diff --git a/Documentation/devicetree/bindings/net/sff,sfp.txt b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> new file mode 100644
-> index 000000000000..b98ee5945265
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> @@ -0,0 +1,78 @@
-> +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
-> +Transceiver
-> +
-> +Required properties:
-> +
-> +- compatible : must be "sff,sfp"
-> +
-> +Optional Properties:
-> +
-> +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-> +  interface
-> +
-> +- moddef0-gpios : GPIO phandle and a single specifier of the MOD-DEF0 (AKA
+> Sounds good to me.
+> 
+> >> for the driver callback function (parse_endpoint) to silently skip
+> >> endpoints the driver doesn't like for reason or another. This lets
+> >> drivers to use the endpoint parser function added by the previous patch
+> >> and still maintain the old behaviour, i.e. ignore endpoints that aren't
+> >> explicitly recognised by the driver.
+> >> 
+> >> I'll drop this patch from the next version.
+> > 
+> > Parsing a specific endpoint of a specific port is probably indeed a bit
+> > too fine-grained, but I think there are use cases for parsing at the port
+> > level instead of parsing all ports.
+> 
+> Could you elaborate?
+> 
+> If a driver would be interested in skipping endpoints in a subset of ports,
+> in which case only a single port would be excluded from this?
 
-    There's always a single specifier following a phandle, tho it may have 
-different # of cells, no need to spell that out.
+I meant that I see use cases for parsing specific ports only (for instance in 
+the R-Car case parsing only the sink ports in a CSI-2 receiver DT node), but 
+not really for parsing specific endpoints only.
 
-> +  Mod_ABS) module presence input gpio signal, active (module absent) high
-> +
-> +- los-gpios : GPIO phandle and a single specifier of the Receiver Loss of
+-- 
+Regards,
 
-    Same here.
-
-> +  Signal Indication input gpio signal, active (signal lost) high
-> +
-> +- tx-fault-gpios : GPIO phandle and a single specifier of the Module
-
-    And here.
-
-> +  Transmitter Fault input gpio signal, active (fault condition) high
-> +
-> +- tx-disable-gpios : GPIO phandle and a single specifier of the Transmitter
-
-    And here.
-
-> +  Disable output gpio signal, active (Tx disable) high
-> +
-> +- rate-select0-gpios : GPIO phandle and a single specifier of the Rx Signaling
-
-    Here too.
-
-> +  Rate Select (AKA RS0) output gpio signal, low: low Rx rate, high: high Rx
-> +  rate
-> +
-> +- rate-select1-gpios : GPIO phandle and a single specifier of the Tx Signaling
-
-    Here ass well.
-
-> +  Rate Select (AKA RS1) output gpio signal (SFP+ only), low: low Tx rate,
-> +  high: high Tx rate
-> +
-[...]
-
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
