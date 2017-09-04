@@ -1,80 +1,45 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: uniphier: add nodes of thermal monitor and thermal zone for LD20
-Date: Mon, 04 Sep 2017 13:43:48 +0900
-Message-ID: <20170904134347.9FF0.4A936039@socionext.com>
-References: <1499255595-31805-3-git-send-email-hayashi.kunihiko@socionext.com> <CAK7LNAS38+GDnhC3Hgymt1gg6QCPG-q5SJo27Qsc3ErZv5RsnA@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: Applied "regulator: pbias: Select voltage table based on
+ max-voltage" to the regulator tree
+Date: Mon, 4 Sep 2017 11:16:54 +0530
+Message-ID: <f50319d6-9b18-0538-4eb1-6ff4226cac02@ti.com>
+References: <E1dnO3z-0000tI-7K@debutante>
+ <64d9c623-456c-9142-9c5b-a94593628643@ti.com>
+ <20170831135050.adiek6iqqzhndgci@sirena.org.uk>
+ <CAPDyKFo=UdnVhFU7k+K1=N0e-1sniC+WZjZ4dZKSF8mXhM43Uw@mail.gmail.com>
+ <20170901162322.xrjnim4khn3wfslj@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAS38+GDnhC3Hgymt1gg6QCPG-q5SJo27Qsc3ErZv5RsnA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170901162322.xrjnim4khn3wfslj-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ravikumar Kattekola <rk-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Yamada-san,
+Hi Mark,
 
-On Thu, 10 Aug 2017 19:48:22 +0900 <yamada.masahiro@socionext.com> wrote:
+On Friday 01 September 2017 09:53 PM, Mark Brown wrote:
+> On Fri, Sep 01, 2017 at 03:18:03PM +0200, Ulf Hansson wrote:
+>> On 31 August 2017 at 15:50, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Thu, Aug 31, 2017 at 05:37:34PM +0530, Kishon Vijay Abraham I wrote:
+> 
+>>>> This patch should be merged along with the 1st patch of the series "mmc: host:
+>>>> omap_hsmmc: Remove setting PBIAS voltage". Or else it'll break MMC with
+>>>> omap_hsmmc driver.
+> 
+> Hang on, how can this break anything?  If it breaks things shouldn't
+> there be bugfixes for incorrect constraints somewhere?
 
-> Hi Hayashi-san,
-> 
-> 
-> 2017-07-05 20:53 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
-> > Add nodes of thermal monitor and thermal zone for UniPhier LD20 SoC.
-> > The thermal monitor is included in sysctrl.
-> >
-> > Furthermore, since the reference board doesn't have a calibrated value of
-> > thermal monitor, this patch gives the default value for LD20 reference
-> > board.
-> >
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > ---
-> >  .../arm64/boot/dts/socionext/uniphier-ld20-ref.dts |  4 +++
-> >  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 40 ++++++++++++++++++++++
-> >  2 files changed, 44 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-> > index 609162a..d7f6b39 100644
-> > --- a/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-> > +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-> > @@ -86,3 +86,7 @@
-> >  &i2c0 {
-> >         status = "okay";
-> >  };
-> > +
-> > +&pvtctl {
-> > +       socionext,tmod-calibration = <0x0f22 0x68ee>;
-> > +};
-> 
-> 
-> I think this calib value is shared among all boards
-> (ref and global).
-> 
-> 
-> Please move it to the SoC dtsi.
+omap_hsmmc sets the pbias voltage to 3V. But here we program the volt table to
+support either 1.8V or 3.3V (Initially the volt table was programmed to support
+3V because of a bug in TRM). So set_voltage of pbias voltage in omap_hsmmc will
+fail.
 
-I see. I'll move it.
-
-> > +                       cooling-maps {
-> > +                               map0 {
-> > +                                       trip = <&cpu_alert>;
-> > +                                       cooling-device = <&cpu0 (-1) (-1)>;
-> > +                               };
-> > +                               map1 {
-> > +                                       trip = <&cpu_alert>;
-> > +                                       cooling-device = <&cpu2 (-1) (-1)>;
-> > +                               };
-> > +                       };
-> > +               };
-> > +       };
-> > +
-> 
-> After all, I decided to use dt-bindings headers.
-> Could you use THERMAL_NO_LIMIT for clarification?
-
-Okay, I'll replace '(-1)' to THERMAL_NO_LIMIT and add the '#include' directive.
-
----
-Best Regards,
-Kunihiko Hayashi
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
