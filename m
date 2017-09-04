@@ -1,7 +1,7 @@
 From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [RESEND PATCH v4 2/2] arm64: dts: uniphier: add nodes of thermal monitor and thermal zone for LD20
-Date: Mon,  4 Sep 2017 15:58:37 +0900
-Message-ID: <1504508317-12076-3-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [RESEND PATCH v4 1/2] ARM: dts: uniphier: add nodes of thermal monitor and thermal zone for PXs2
+Date: Mon,  4 Sep 2017 15:58:36 +0900
+Message-ID: <1504508317-12076-2-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1504508317-12076-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1504508317-12076-1-git-send-email-hayashi.kunihiko@socionext.com>
@@ -10,47 +10,72 @@ To: yamada.masahiro@socionext.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Add nodes of thermal monitor and thermal zone for UniPhier LD20 SoC.
+Add nodes of thermal monitor and thermal zone for UniPhier PXs2 SoC.
 The thermal monitor node is included in sysctrl. Since the efuse might not
 have a calibrated value of thermal monitor, this patch gives the default
-value for LD20.
+value for PXs2.
+
+Furthermore, add cpuN labels for reference in cooling-device property.
 
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 45 ++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ arch/arm/boot/dts/uniphier-pxs2.dtsi | 47 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 43 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index a29c279..59e5ae6 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+index 90b020c..f2dfebe 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
++++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
 @@ -7,6 +7,8 @@
   * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
   */
  
 +#include <dt-bindings/thermal/thermal.h>
 +
- /memreserve/ 0x80000000 0x02000000;
- 
  / {
-@@ -46,6 +48,7 @@
- 			clocks = <&sys_clk 32>;
+ 	compatible = "socionext,uniphier-pxs2";
+ 	#address-cells = <1>;
+@@ -16,7 +18,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
+@@ -24,9 +26,10 @@
  			enable-method = "psci";
- 			operating-points-v2 = <&cluster0_opp>;
+ 			next-level-cache = <&l2>;
+ 			operating-points-v2 = <&cpu_opp>;
 +			#cooling-cells = <2>;
  		};
  
- 		cpu1: cpu@1 {
-@@ -64,6 +67,7 @@
- 			clocks = <&sys_clk 33>;
- 			enable-method = "psci";
- 			operating-points-v2 = <&cluster1_opp>;
-+			#cooling-cells = <2>;
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
+@@ -36,7 +39,7 @@
+ 			operating-points-v2 = <&cpu_opp>;
  		};
  
- 		cpu3: cpu@101 {
-@@ -173,6 +177,40 @@
- 			     <1 10 4>;
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <2>;
+@@ -46,7 +49,7 @@
+ 			operating-points-v2 = <&cpu_opp>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <3>;
+@@ -114,6 +117,35 @@
+ 		};
  	};
  
 +	thermal-zones {
@@ -61,45 +86,40 @@ index a29c279..59e5ae6 100644
 +
 +			trips {
 +				cpu_crit: cpu_crit {
-+					temperature = <110000>;	/* 110C */
++					temperature = <95000>;	/* 95C */
 +					hysteresis = <2000>;
 +					type = "critical";
 +				};
 +				cpu_alert: cpu_alert {
-+					temperature = <100000>;	/* 100C */
++					temperature = <85000>;	/* 85C */
 +					hysteresis = <2000>;
 +					type = "passive";
 +				};
 +			};
 +
 +			cooling-maps {
-+				map0 {
++				map {
 +					trip = <&cpu_alert>;
 +					cooling-device = <&cpu0
-+					    THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu_alert>;
-+					cooling-device = <&cpu2
 +					    THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +				};
 +			};
 +		};
 +	};
 +
- 	soc@0 {
+ 	soc {
  		compatible = "simple-bus";
  		#address-cells = <1>;
-@@ -410,6 +448,13 @@
- 			watchdog {
- 				compatible = "socionext,uniphier-wdt";
+@@ -358,6 +390,13 @@
+ 				compatible = "socionext,uniphier-pxs2-reset";
+ 				#reset-cells = <1>;
  			};
 +
 +			pvtctl: pvtctl {
-+				compatible = "socionext,uniphier-ld20-thermal";
++				compatible = "socionext,uniphier-pxs2-thermal";
 +				interrupts = <0 3 4>;
 +				#thermal-sensor-cells = <0>;
-+				socionext,tmod-calibration = <0x0f22 0x68ee>;
++				socionext,tmod-calibration = <0x0f86 0x6844>;
 +			};
  		};
  
