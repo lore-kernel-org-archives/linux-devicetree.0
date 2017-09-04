@@ -1,71 +1,55 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v4 0/3] arm64: Realtek RTD1295 RTC
-Date: Tue,  5 Sep 2017 00:53:21 +0200
-Message-ID: <20170904225324.29138-1-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v4 3/3] arm64: dts: realtek: Add RTD1295 RTC node
+Date: Tue,  5 Sep 2017 00:53:24 +0200
+Message-ID: <20170904225324.29138-4-afaerber@suse.de>
+References: <20170904225324.29138-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170904225324.29138-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add RTC node to the Realtek RTD1295 Device Tree.
 
-This series adds the RTC for the Realtek RTD1295 SoC.
-Based on my RTD1295 clk series.
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ v3 -> v4: Unchanged
+ 
+ v2 -> v3:
+ * Rebased to no longer depend on reset controller series
+ 
+ v1 -> v2: Unchanged
+ 
+ Depends on the pending clock bindings.
+ 
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-There being no public source code for RTD1295, the implementation is based on
-register offsets seen in the vendor DT, as well as older mach-rtk119x code
-published by QNAP.
-
-v4 adds a missing clk_put().
-
-The DT node depends on the clk series for clock index and header.
-
-More experimental patches at:
-https://github.com/afaerber/linux/commits/rtd1295-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-v3 -> v4:
-* Added clk_put() (Alexandre)
-
-v2 -> v3:
-* Dropped spinlock (Andrew)
-* Improved year_days vs. days_in_year readability
-
-v1 -> v2:
-* Updated rtc driver to no longer use open/release (Alexandre)
-* Cleaned up debug output (Andrew)
-* Avoided COMPILE_TEST division errors (kbuild)
-* Various cleanups and extensions
-
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: linux-rtc@vger.kernel.org
-Cc: Roc He <hepeng@zidoo.tv>
-Cc: 蒋丽琴 <jiang.liqin@geniatech.com>
-Cc: devicetree@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>
-
-Andreas Färber (3):
-  dt-bindings: rtc: Add Realtek RTD1295
-  rtc: Add Realtek RTD1295
-  arm64: dts: realtek: Add RTD1295 RTC node
-
- .../devicetree/bindings/rtc/realtek,rtd119x.txt    |  16 ++
- arch/arm64/boot/dts/realtek/rtd1295.dtsi           |   6 +
- drivers/rtc/Kconfig                                |   8 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-rtd119x.c                          | 242 +++++++++++++++++++++
- 5 files changed, 273 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
- create mode 100644 drivers/rtc/rtc-rtd119x.c
-
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+index ab72255f843f..fbbd6456079e 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+@@ -164,6 +164,12 @@
+ 			status = "disabled";
+ 		};
+ 
++		rtc@9801b600 {
++			compatible = "realtek,rtd1295-rtc";
++			reg = <0x9801b600 0x100>;
++			clocks = <&clkc RTD1295_CLK_EN_MISC_RTC>;
++		};
++
+ 		gic: interrupt-controller@ff011000 {
+ 			compatible = "arm,gic-400";
+ 			reg = <0xff011000 0x1000>,
 -- 
 2.13.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
