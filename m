@@ -1,75 +1,52 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+From: <hayashi.kunihiko@socionext.com>
 Subject: Re: [PATCH v4 0/2] add thermal nodes for UniPhier SoCs
-Date: Mon, 4 Sep 2017 11:09:51 +0900
-Message-ID: <CAK7LNARpzTVBZEzy5pxT+oOgJQK0RFgDeYzxZLp+Fy5xDPuRqQ@mail.gmail.com>
+Date: Mon, 4 Sep 2017 03:55:03 +0000
+Message-ID: <20170904125502.9FE8.4A936039@socionext.com>
 References: <1504487791-20582-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAK7LNARpzTVBZEzy5pxT+oOgJQK0RFgDeYzxZLp+Fy5xDPuRqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504487791-20582-1-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNARpzTVBZEzy5pxT+oOgJQK0RFgDeYzxZLp+Fy5xDPuRqQ@mail.gmail.com>
+Content-Language: ja-JP
+Content-ID: <7C2F897150D0E3429A8AF2A61690733C@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yamada.masahiro@socionext.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi.
-
-
-
-2017-09-04 10:16 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> This series adds thermal nodes for UniPhier PXs2 and LD20 SoCs.
->
-> Changes since v3:
-> - rebase on top of linux-next
-
-
-This repost is a spam.
-
-I left some comments in v3,
-but no response from you
-nothing was reflected in v4.
-
-
-
-
-> Changes since v2:
-> - add the calibration value to device tree for LD20 reference board
->
-> Changes since v1:
-> - separate from driver's patchset[1]
-> - add cooling-maps nodes on the device tree
-> - fix an interrupt trigger to set 'level-triggered' according to
->   hardware specification
-> - bring up threshold temperature for LD20 according to the spec sheet
-> - add cpuN labels for reference in cooling-device property on PXs2 dts
->
-> [1] https://lkml.org/lkml/2017/6/28/170
->
-> Kunihiko Hayashi (2):
->   ARM: dts: uniphier: add nodes of thermal monitor and thermal zone for
->     PXs2
->   arm64: dts: uniphier: add nodes of thermal monitor and thermal zone
->     for LD20
->
->  arch/arm/boot/dts/uniphier-pxs2.dtsi               | 43 ++++++++++++++++++++--
->  .../arm64/boot/dts/socionext/uniphier-ld20-ref.dts |  4 ++
->  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 40 ++++++++++++++++++++
->  3 files changed, 83 insertions(+), 4 deletions(-)
->
-> --
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQpPbiBNb24sIDQgU2VwIDIwMTcgMTE6MDk6NTEgKzA5MDAgPHlhbWFkYS5tYXNhaGlyb0Bzb2Np
+b25leHQuY29tPiB3cm90ZToNCg0KPiBIaS4NCj4gDQo+IA0KPiANCj4gMjAxNy0wOS0wNCAxMDox
+NiBHTVQrMDk6MDAgS3VuaWhpa28gSGF5YXNoaSA8aGF5YXNoaS5rdW5paGlrb0Bzb2Npb25leHQu
+Y29tPjoNCj4gPiBUaGlzIHNlcmllcyBhZGRzIHRoZXJtYWwgbm9kZXMgZm9yIFVuaVBoaWVyIFBY
+czIgYW5kIExEMjAgU29Dcy4NCj4gPg0KPiA+IENoYW5nZXMgc2luY2UgdjM6DQo+ID4gLSByZWJh
+c2Ugb24gdG9wIG9mIGxpbnV4LW5leHQNCj4gDQo+IA0KPiBUaGlzIHJlcG9zdCBpcyBhIHNwYW0u
+DQo+IA0KPiBJIGxlZnQgc29tZSBjb21tZW50cyBpbiB2MywNCj4gYnV0IG5vIHJlc3BvbnNlIGZy
+b20geW91DQo+IG5vdGhpbmcgd2FzIHJlZmxlY3RlZCBpbiB2NC4NCg0KU29ycnkgSSBtaXNzZWQg
+dGhlbS4gSSdsbCByZWZsZWN0IHlvdXIgY29tbWVudHMgYW5kIHJlcG9zdCB0aGVtLg0KDQpUaGFu
+ayB5b3UsDQoNCj4gDQo+IA0KPiANCj4gDQo+ID4gQ2hhbmdlcyBzaW5jZSB2MjoNCj4gPiAtIGFk
+ZCB0aGUgY2FsaWJyYXRpb24gdmFsdWUgdG8gZGV2aWNlIHRyZWUgZm9yIExEMjAgcmVmZXJlbmNl
+IGJvYXJkDQo+ID4NCj4gPiBDaGFuZ2VzIHNpbmNlIHYxOg0KPiA+IC0gc2VwYXJhdGUgZnJvbSBk
+cml2ZXIncyBwYXRjaHNldFsxXQ0KPiA+IC0gYWRkIGNvb2xpbmctbWFwcyBub2RlcyBvbiB0aGUg
+ZGV2aWNlIHRyZWUNCj4gPiAtIGZpeCBhbiBpbnRlcnJ1cHQgdHJpZ2dlciB0byBzZXQgJ2xldmVs
+LXRyaWdnZXJlZCcgYWNjb3JkaW5nIHRvDQo+ID4gICBoYXJkd2FyZSBzcGVjaWZpY2F0aW9uDQo+
+ID4gLSBicmluZyB1cCB0aHJlc2hvbGQgdGVtcGVyYXR1cmUgZm9yIExEMjAgYWNjb3JkaW5nIHRv
+IHRoZSBzcGVjIHNoZWV0DQo+ID4gLSBhZGQgY3B1TiBsYWJlbHMgZm9yIHJlZmVyZW5jZSBpbiBj
+b29saW5nLWRldmljZSBwcm9wZXJ0eSBvbiBQWHMyIGR0cw0KPiA+DQo+ID4gWzFdIGh0dHBzOi8v
+bGttbC5vcmcvbGttbC8yMDE3LzYvMjgvMTcwDQo+ID4NCj4gPiBLdW5paGlrbyBIYXlhc2hpICgy
+KToNCj4gPiAgIEFSTTogZHRzOiB1bmlwaGllcjogYWRkIG5vZGVzIG9mIHRoZXJtYWwgbW9uaXRv
+ciBhbmQgdGhlcm1hbCB6b25lIGZvcg0KPiA+ICAgICBQWHMyDQo+ID4gICBhcm02NDogZHRzOiB1
+bmlwaGllcjogYWRkIG5vZGVzIG9mIHRoZXJtYWwgbW9uaXRvciBhbmQgdGhlcm1hbCB6b25lDQo+
+ID4gICAgIGZvciBMRDIwDQo+ID4NCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvdW5pcGhpZXItcHhz
+Mi5kdHNpICAgICAgICAgICAgICAgfCA0MyArKysrKysrKysrKysrKysrKysrKy0tDQo+ID4gIC4u
+Li9hcm02NC9ib290L2R0cy9zb2Npb25leHQvdW5pcGhpZXItbGQyMC1yZWYuZHRzIHwgIDQgKysN
+Cj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9zb2Npb25leHQvdW5pcGhpZXItbGQyMC5kdHNpICAg
+fCA0MCArKysrKysrKysrKysrKysrKysrKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDgzIGluc2Vy
+dGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCj4g
+PiAtLQ0KPiA+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1
+bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbg0KPiA+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBt
+YWpvcmRvbW9Admdlci5rZXJuZWwub3JnDQo+ID4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0
+cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sDQo+IA0KPiANCj4gDQo+IC0t
+IA0KPiBCZXN0IFJlZ2FyZHMNCj4gTWFzYWhpcm8gWWFtYWRhDQoNCi0tLQ0KS3VuaWhpa28gSGF5
+YXNoaQ0KOiBoYXlhc2hpLmt1bmloaWtvQHNvY2lvbmV4dC5jb20NCg==
