@@ -1,62 +1,47 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [linux-sunxi][PATCH] ARM: dts: sun6i: a31: Add DAI nodes
-Date: Mon, 4 Sep 2017 08:26:50 +0200
-Message-ID: <20170904062650.we6sczux7gp4qitt@flea>
-References: <20170903150852.3548-1-codekipper@gmail.com>
+Subject: Re: [PATCH 0/3] ARM: dts: sunxi: Use defines for ccu
+ clock indices
+Date: Mon, 4 Sep 2017 08:28:30 +0200
+Message-ID: <20170904062830.6r3wwil235e2xoll@flea>
+References: <cover.28f5be8e511ad74e9ae3f573891882e62bebdb7b.1504446535.git-series.plaes@plaes.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vhla7iqtvb3ejx2e"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="y2p423zuyaqwrb7j"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBD7FWPGQKGQEKKPH3OI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170903150852.3548-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.28f5be8e511ad74e9ae3f573891882e62bebdb7b.1504446535.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---vhla7iqtvb3ejx2e
-Content-Type: text/plain; charset=us-ascii
+--y2p423zuyaqwrb7j
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 03, 2017 at 05:08:52PM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> Add the new DAI blocks to the device tree.
->=20
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Sun, Sep 03, 2017 at 04:50:15PM +0300, Priit Laes wrote:
+> This is a follow-up commit for sun{4,7}i ccu conversion. Now that
+> all the relevant pieces have been merged we can use dt-binding headers
+> again.
+> 
+> Also included is additional patch to add i2s0 block to sun4i dtsi header.
 
-Applied for 4.15, thanks!
+The last one could have been sent separately, but I applied all of
+them.
+
+Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---vhla7iqtvb3ejx2e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZrPIqAAoJEBx+YmzsjxAgcBUP/1IKUPHos51Nwfsuj0KaXIUO
-sT6mycpm7WAuROj8xWYmpuE/XqM4wkjVtcb1s7WFQi6EUsb1dmxqDKe3OvrbFA41
-8obcu6HoKgKNKvyXRFKU0EyRgZo95tOOlqZlEI38+2QqRjcefGLP5MfT8OvFWAW7
-O7gugwf+puDICahMBSFeKZuTdfyM8AzgtGcQCQDymZ4njj+/zx++MihPiqw0UH+9
-K2kcAN7ctrOMQtX0VQELf/V+UKoCWKAmtVJoIP2sGLp/Jypmyh7uoujlDF13IsHY
-ufsZfqh1lYXc1yGRB0zGK68Cqn7NnWVWMCzkimN5LC/TcOWWK+VOuasuvGtGr4l7
-/DoR9sC1fmBkZC6x7ICDpS/svZ4NgzxIy8fCZ3fd+H7iKq5TXxUrf/PJOEwHsBoj
-QjkS+K9pwd2IZSzakj2L2dRPEur2/voPfHVB7spc9VpckeTOkSiIKiJVTdkQIrqa
-zi3fFHQQhmvXCC+T01jKFOOQPuaq1/mglhumjCy/D+MzjUvFZRbeyyzfH5bDQcTJ
-uS/gvmScZ1rRLSHUFBtPijq9GNSUpVPNJJ7N+kAKBydT34eqELzj/OnTCMND8Sfs
-8IDROKtElFiMgNELamv87rTW9bORPLreSVpoVdBrAEHvdXOa8a11sXvXBHA2D7Hq
-QFRn3wkOjdjzXfG3s5Xt
-=xTPc
------END PGP SIGNATURE-----
-
---vhla7iqtvb3ejx2e--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--y2p423zuyaqwrb7j--
