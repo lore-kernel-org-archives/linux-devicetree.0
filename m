@@ -1,53 +1,51 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 1/3] dt-bindings: add "size" property.
-Date: Mon, 4 Sep 2017 10:57:39 +0200
-Message-ID: <20170904085738.vzp3cwvpema5oxvz@ninjato>
-References: <1501173789-25959-1-git-send-email-divagar.mohandass@intel.com>
- <1501173789-25959-2-git-send-email-divagar.mohandass@intel.com>
- <20170803202734.rqyoiqhqvonvvtca@rob-hp-laptop>
- <7B8CE47BD58441468D2BB13285B50E6031DB615E@BGSMSX107.gar.corp.intel.com>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH 2/2] arm64: dts: hi6220: enable watchdog
+Date: Mon, 4 Sep 2017 10:21:00 +0100
+Message-ID: <59AD1AFC.8060600@hisilicon.com>
+References: <1503993518-24428-1-git-send-email-leo.yan@linaro.org>
+ <1503993518-24428-2-git-send-email-leo.yan@linaro.org>
+ <20170901013233.GL21656@codeaurora.org> <59A937E7.2060303@hisilicon.com>
+ <20170901202816.GZ21656@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4pdkikykskjg3mpa"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7B8CE47BD58441468D2BB13285B50E6031DB615E@BGSMSX107.gar.corp.intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: "Mohandass, Divagar" <divagar.mohandass@intel.com>
-Cc: Rob Herring <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170901202816.GZ21656@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Stephen,
 
---4pdkikykskjg3mpa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2017/9/1 21:28, Stephen Boyd wrote:
+> On 09/01, Wei Xu wrote:
+>> Hi Stephen,
+>>
+>> On 2017/9/1 2:32, Stephen Boyd wrote:
+>>> On 08/29, Leo Yan wrote:
+>>>> From: Dmitry Shmidt <dimitrysh@google.com>
+>>>>
+>>>> This patch is to add watchdog binding for Hi6220 on Hikey board.
+>>>>
+>>>> Signed-off-by: Dmitry Shmidt <dimitrysh@google.com>
+>>>> ---
+>>>
+>>> This will go through arm-soc?
+>>>
+>>
+>> Can you pick up it for v4.14?
+>> Otherwise I am fine to pick up it and queue for v4.15.
+> 
+> Sounds like it will go for v4.15. Otherwise, you can send it to
+> arm-soc with the raw number instead of #define number and then
+> fix it up to use the #define later.
+> 
 
+I did not get your meaning.
+Do you mean the "HI6220_WDT0/1/2_PCLK" in the patch 1 that
+we need to replace with raw number?
+They are already in the mainline.
 
-> If you want to use an existing ID for an eeprom for a different size,
-> there is no way to override it currently.=20
-
-Can you give an example for that?
-
-
---4pdkikykskjg3mpa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmtFX4ACgkQFA3kzBSg
-KbZzIBAAkAyryIgMRdhZvWbkgzJ0Ilx/v/mlr+wtu53b+vkHGLzVUsiQUvhV28JS
-Jzvtd8YrPn9wLxQZ+v7saaje2zzs8b7YHBUE0JGtHabtF59IVpPIooLgj19U+lqG
-f5Bvlw1Ef66U5JdzXxpF1C9HAKF19paAlvF+ol6yBkf7kANQtQ0lgnyGH2lRSs6H
-94XURrRMkPgiqGO+5iOr6IhjWksTXlhWurVmPdeSCzY+PIHqYMxiRWmJUC9LVPei
-2U/SNRYqmsDbN1OEDlw5ofxXxq7dvfBxenVvYGY1on/8HHpoSuMSCRTsAJXnjetv
-INbhcGyHCKSVvoXJLmNteS/dVpFTiyoYhW4L2UnMdTT6lemJEaPI/EwehXBolFN2
-HzS5XSvB8Bsd/RJbP++H36QxVnTjeGNo6iClWX/NKVxyGOg/nS+e66K48Mpur68f
-dKtvl/3QI21iR586ZCR5m4GN6kNoFGan21SeccaqFN4pcGcfyKfe2hOqPAa9mHcc
-5SVOB+m4YqTVv5QSztU6DwEdcj3Q0LyiNH1hjgN+i2DrO5QjE5EGUdtclICr9nMr
-/OPFalN2KwiXMsMyrpyzMuV5GPOJTHZFH4/luLLQRNMpbD0Bwy5QZOpym6Sm7C/k
-eBtXHMih9ujgtMauPJJR6+SHp6whV0vsWfqfXsiIzTMhhEbLJGA=
-=7fwT
------END PGP SIGNATURE-----
-
---4pdkikykskjg3mpa--
+Best Regards,
+Wei
