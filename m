@@ -1,58 +1,52 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v7 10/18] v4l: async: Introduce macros for calling async
- ops callbacks
-Date: Mon, 4 Sep 2017 19:09:00 +0300
-Message-ID: <20170904160900.n7itc23b4xydrdn5@valkosipuli.retiisi.org.uk>
+Subject: Re: [PATCH v7 13/18] dt: bindings: Add a binding for flash devices
+ associated to a sensor
+Date: Mon, 4 Sep 2017 19:27:05 +0300
+Message-ID: <20170904162705.thujzc7xw6hgjau3@valkosipuli.retiisi.org.uk>
 References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
- <20170903174958.27058-11-sakari.ailus@linux.intel.com>
- <96c4a9cf-1231-b6c4-bc2b-a431f4bea7a4@xs4all.nl>
+ <20170903174958.27058-14-sakari.ailus@linux.intel.com>
+ <9a68a9a6-0949-f1c2-f029-8045d7d688b0@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <96c4a9cf-1231-b6c4-bc2b-a431f4bea7a4@xs4all.nl>
+In-Reply-To: <9a68a9a6-0949-f1c2-f029-8045d7d688b0@xs4all.nl>
 Sender: linux-media-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On Mon, Sep 04, 2017 at 03:50:52PM +0200, Hans Verkuil wrote:
+On Mon, Sep 04, 2017 at 04:31:51PM +0200, Hans Verkuil wrote:
 > On 09/03/2017 07:49 PM, Sakari Ailus wrote:
-> > Add two macros to call async operations callbacks. Besides simplifying
-> > callbacks, this allows async notifiers to have no ops set, i.e. it can be
-> > left NULL.
+> > Camera flash drivers (and LEDs) are separate from the sensor devices in
+> > DT. In order to make an association between the two, provide the
+> > association information to the software.
 > > 
 > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
 > > ---
-> >  drivers/media/v4l2-core/v4l2-async.c | 19 +++++++------------
-> >  include/media/v4l2-async.h           |  8 ++++++++
-> >  2 files changed, 15 insertions(+), 12 deletions(-)
+> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
 > > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> > index 810f5e0273dc..91d04f00b4e4 100644
-> > --- a/drivers/media/v4l2-core/v4l2-async.c
-> > +++ b/drivers/media/v4l2-core/v4l2-async.c
-> > @@ -107,16 +107,13 @@ static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
-> >  {
-> >  	int ret;
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > index 852041a7480c..fee73cf2a714 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -67,6 +67,14 @@ are required in a relevant parent node:
+> >  		    identifier, should be 1.
+> >   - #size-cells    : should be zero.
 > >  
-> > -	if (notifier->ops->bound) {
-> > -		ret = notifier->ops->bound(notifier, sd, asd);
-> > -		if (ret < 0)
-> > -			return ret;
-> > -	}
-> > +	ret = v4l2_async_notifier_call_int_op(notifier, bound, sd, asd);
+> > +
+> > +Optional properties
+> > +-------------------
+> > +
+> > +- flash: An array of phandles referring to the flash LED, a sub-node
+> > +  of the LED driver device node.
 > 
-> Hmm, I think this is rather ugly. We only have three ops, so why not make
-> three macros:
-> 
-> 	v4l2_async_notifier_call_bound/unbind/complete?
-> 
-> Much cleaner than _int_op(...bound...).
+> If it is an array, then I guess it should say: "An array of phandles, each referring to
+> a flash LED,"
 
-Works for me.
+Sounds good, I'll use that in v8.
 
 -- 
 Sakari Ailus
