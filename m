@@ -1,136 +1,155 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [linux-sunxi][PATCH] ARM: dts: sunxi: h3/h5 :Add DAI nodes
-Date: Mon, 4 Sep 2017 13:40:59 +0200
-Message-ID: <20170904114059.cqvs4kh4esrzfxo5@flea>
-References: <20170903150806.3451-1-codekipper@gmail.com>
- <2581170.20QKPVRcId@jernej-laptop>
- <CAEKpxB=MF-8BPS_Jc=qgj9sTCfn9EKWxdtJQD4goRGSv0xnHMw@mail.gmail.com>
+From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: adc: mcp320x: Update for
+ mcp3550/1/3
+Date: Mon, 4 Sep 2017 13:36:43 +0100
+Message-ID: <20170904133643.00004c84@huawei.com>
+References: <cover.1503407738.git.lukas@wunner.de>
+        <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas@wunner.de>
+        <20170825195941.iylf4w5hitjwniio@rob-hp-laptop>
+        <20170827153405.GA13399@wunner.de>
+        <CABjU8GvCB61envBiR0ei3gHEPadd5VDZ7FGysDjhCrJcQrEXDg@mail.gmail.com>
+        <20170903143429.749be480@archlinux>
+        <20170903182046.GA1511@wunner.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="kop7f3a3cmwenhcm"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAEKpxB=MF-8BPS_Jc=qgj9sTCfn9EKWxdtJQD4goRGSv0xnHMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170903182046.GA1511-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adriana Reus <adi.reus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, 3 Sep 2017 20:20:46 +0200
+Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
 
---kop7f3a3cmwenhcm
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Sun, Sep 03, 2017 at 02:37:49PM +0100, Jonathan Cameron wrote:
+> > On Tue, Aug 22, 2017 at 03:33:00PM +0200, Lukas Wunner wrote:    
+> > > --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> > > +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> > > +Optional properties:
+> > > +   - microchip,continuous-conversion (boolean):
+> > > +           Only applicable to MCP3550/1/3:  These ADCs have long
+> > > +           conversion times and therefore support "continuous
+> > > +           conversion mode" to allow retrieval of conversions
+> > > +           at any time without observing a delay.  The mode is
+> > > +           enabled by permanently driving CS low, e.g. by wiring
+> > > +           it to ground.    
+> > 
+> > hmm.  This is odd.  We probably need to make the SPI subsystem aware
+> > of this. It is possible to ask for exclusive use of an SPI bus and
+> > I think we should be doing this here.  It may be wired low on your
+> > board, but it may be wired to a controllable chip select on other
+> > boards and we can still force it low to trigger this mode if it makes
+> > sense for the current application.
+> > 
+> > So I'd argue what we actually need to represent here is that the CS line
+> > is not controllable.  What this means to the driver should be handled
+> > in the driver - ideally also dealing with the case where it is controllable
+> > appropriately (via exclusive bus usage).  Spi devices have the SPI_NO_CS
+> > bit in the mode member of the spi device but I'm not sure about bindings.  
+> [...]
+> > The one case where we normally want to flip to continuous modes is when
+> > we have a chardev access going on to the device.  In IIO that reflects
+> > the fact we are in a push mode rather than userspace polling for new data.  
+> 
+> It seems there is no DT binding so far to set SPI_NO_CS.
 
-On Mon, Sep 04, 2017 at 12:51:38PM +0200, Code Kipper wrote:
-> On 3 September 2017 at 18:35, Jernej =C5=A0krabec <jernej.skrabec-ix9DCk4F938@public.gmane.org=
-t> wrote:
-> > Hi Marcus!
+Time to add one perhaps ;)
+
+> 
+> Conceivably, continuous mode could be used even with multiple devices
+> on the bus if CLK and MISO is AND-gated with the CS signal coming from
+> the SPI master.  (And the CS of the ADC is pulled low.)  In that case,
+> the notion that "continuous mode == CS not controllable" would be
+> incorrect, hence the approach I've chosen.
+> 
+> On the Revolution Pi we don't use continuous mode.  I merely included
+> it in the driver for completeness.  If it is too controversial I'd be
+> inclined to drop the feature.
+> 
+> On-demand switching to continuous mode by keeping CS low would be
+> possible by setting the cs_change bit of struct mcp320x ->transfer[1],
+> but that might not work if there are other devices on the bus.
+> 
+
+spi has exclusive bus access functions.  Doing this sort of thing isn't
+that unusual.  Some devices require that the cs is held low whilst they
+take a single reading, but provide an interrupt for when they are done.
+For those we have to hold it for some time.
+
+> 
+> > Personally I don't think we are in a position yet to make this a generic
+> > property - this is the first device where it is actually to do with the
+> > physical circuit (and arguably it isn't really - see above).  
+> 
+> Okay.
+> 
+> 
+> > Reference voltages are an oddity as the supply naming typically should match
+> > that on the datasheet. It's 'fairly' consistent but some devices
+> > have a set of relatively obscure references to different parts of the
+> > input circuitry.  We can document it as a 'default' assuming nothing
+> > strange is going on though.  This is why we have the vagueness below
+> > on VDD and VCC.  
+> 
+> That is new to me, I believe it's not documented or am I missing something?
+> I'd be happy to respin the below patch without the "Continuous mode"
+> portion if you want?  (Amended with the info you gave above.)
+
+It might make sense to drop continuous mode with the intent to add it
+as a follow up patch.  Lets see what Mark and co come back with on how
+to support the hard wired cs on the spi.
+
+> Do you think iio-bindings.txt is the right place to put this or would
+> a separate common.txt be more appropriate? (See e.g. leds/common.txt)
+
+Perhaps a question best directed to the devicetree binding maintainers.
+I can't say that I personally care either way ;)
+
+> 
+> Thanks,
+> 
+> Lukas
+> 
+> > -- >8 --    
+> > Subject: [PATCH] dt-bindings: iio: Document common properties
 > >
-> > Dne nedelja, 03. september 2017 ob 17:08:06 CEST je codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> > napisal(a):
-> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>
-> >> Add the new DAI blocks to the device tree. I2S0 and I2S1 are for
-> >> connecting to an external codec whereas I2S2 is used for HDMI
-> >> audio.
-> >>
-> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 39
-> >> ++++++++++++++++++++++++++++++++++++++ 1 file changed, 39 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> b/arch/arm/boot/dts/sunxi-h3-h5.dtsi index 11240a8313c2..cf6fcc857324
-> >> 100644
-> >> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> >> @@ -450,6 +450,45 @@
-> >>                       status =3D "disabled";
-> >>               };
-> >>
-> >> +             i2s0: i2s@01c22000 {
-> >> +                     #sound-dai-cells =3D <0>;
-> >> +                     compatible =3D "allwinner,sun8i-h3-i2s";
-> >> +                     reg =3D <0x01c22000 0x400>;
-> >> +                     interrupts =3D <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                     clocks =3D <&ccu CLK_BUS_I2S0>, <&ccu CLK_I2S0>;
-> >> +                     clock-names =3D "apb", "mod";
-> >> +                     dmas =3D <&dma 3>, <&dma 3>;
-> >> +                     resets =3D <&ccu RST_BUS_I2S0>;
-> >> +                     dma-names =3D "rx", "tx";
-> >> +                     status =3D "disabled";
-> >> +             };
-> >> +
-> >> +             i2s1: i2s@01c22400 {
-> >> +                     #sound-dai-cells =3D <0>;
-> >> +                     compatible =3D "allwinner,sun8i-h3-i2s";
-> >> +                     reg =3D <0x01c22400 0x400>;
-> >> +                     interrupts =3D <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                     clocks =3D <&ccu CLK_BUS_I2S1>, <&ccu CLK_I2S1>;
-> >> +                     clock-names =3D "apb", "mod";
-> >> +                     dmas =3D <&dma 4>, <&dma 4>;
-> >> +                     resets =3D <&ccu RST_BUS_I2S1>;
-> >> +                     dma-names =3D "rx", "tx";
-> >> +                     status =3D "disabled";
-> >> +             };
-> >> +
-> >> +             i2s2: i2s@01c22800 {
-> >> +                     #sound-dai-cells =3D <0>;
-> >> +                     compatible =3D "allwinner,sun8i-h3-i2s";
-> >> +                     reg =3D <0x01c22800 0x400>;
-> >> +                     interrupts =3D <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                     clocks =3D <&ccu CLK_BUS_I2S2>, <&ccu CLK_I2S2>;
-> >> +                     clock-names =3D "apb", "mod";
-> >> +                     dmas =3D <&dma 5>, <&dma 5>;
-> >> +                     resets =3D <&ccu RST_BUS_I2S2>;
-> >> +                     dma-names =3D "rx", "tx";
-> >> +                     status =3D "disabled";
-> >> +             };
-> >> +
+> > It's about time we standardize on common names for frequently used IIO
+> > properties.  For starters, document "vref-supply" and "continuous".
 > >
-> > I don't want to be a pain, but shouldn't we skip this one for now? It i=
-s only
-> > for HDMI and has different capabilities (8 channels supported and sligh=
-lty
-> > different formula to calculate oversample rate.
-> I'll have a look into this..maybe this can be handled by the
-> simple-audio-card binding that we use. The other thing with the
-> padding which you mentioned I can add a field for. Maxime, what's your
-> thoughts on this?..I can re-submit without i2s2.
-
-Yes, please do so.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---kop7f3a3cmwenhcm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZrTvLAAoJEBx+YmzsjxAgRAoP/iPbDmP9VxuXiWc4s3HUsTC0
-wV5OmtGkBf1mWo79BFey+42l3WGIrNchCt8e7uDjHtk95RFOrZ/Ft5istM4nt64A
-/T1HULNBxe9TdUCgfbY01ef8hAsA6UBfGkhKqENdkAf9A948vmZ0tLzQCSoFeKFP
-Dx6x5Kzo6Ofa9vNt2s3wTUvZhNXspFDwMk5mERi/wFChjIONtgNgaIVAvWYSbXVC
-XuWpYmsS218kaFCidwwYqYmiXc68riGftGVh7n6WN6qR41FNiJS/QtDWY3dwbygi
-6sjqK4JCYV/gDVUDXO9SjSu5uNQBk/RsBfb7OnQqrrQvTn0KMC2gRb86nqsDGjha
-LpK45m+lMO8sHaQUltMq/+mOdLI6VP8OFPVmSmlsKWluZ2kBQmdUIgM8JUXaczEZ
-nWpM+NXvJPsEL/Y2HLfuClcqrOZUjIf/OG1dTqPr4C8JkNmR7seoHcerH6r1EPGZ
-1Jw6TPyxOgtLiDoJYLM3UcIH47CO5fzlHVbKUEn8EfxCtcVMfCgaQQuz99uy840D
-M3lPwRv+zJ7ynnur6kSTdaK6gN7dxOjlHz9my9q2zWLC8iGY7wgl7zNCIslZ7/dh
-VNSY+G04keKc0Hp2JNBM1eEjdeJ0cUCanaUSMq5K/A9X6NZDImyNasIrliQouewV
-R5LdgQC95cCb0HRlpA2V
-=m2yD
------END PGP SIGNATURE-----
-
---kop7f3a3cmwenhcm--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/iio/iio-bindings.txt | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > index 68d6f8c..c3e87e15 100644
+> > --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > @@ -95,3 +95,18 @@ vdd channel is connected to output 0 of the &ref device.
+> >                 io-channels = <&adc 10>, <&adc 11>;
+> >                 io-channel-names = "adc1", "adc2";
+> >         };
+> > +
+> > +==Common IIO properties==
+> > +
+> > +Reference voltage:
+> > +ADCs, DACs and several other IIO devices require a reference voltage.
+> > +By convention the property specifying this regulator is named "vref-supply".
+> > +If the chip lacks a dedicated Vref pin and instead uses its own power supply
+> > +as reference, the property specifying the regulator is commonly named
+> > +"vdd-supply" or "vcc-supply".
+> > +
+> > +Continuous mode:
+> > +Some sensors can be configured to perform continuous (versus one-shot)
+> > +measurements.  Continuous mode may require more energy in return for faster
+> > +or more reliable measurements.  A boolean property named "continuous"
+> > +signifies that the device is configured for this mode.
+> > --
+> > 2.11.0    
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
