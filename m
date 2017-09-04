@@ -1,87 +1,48 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 11/17] ARM: dts: Add missing mcasp node for omap4
-Date: Mon, 4 Sep 2017 09:55:48 +0300
-Message-ID: <6e1f8163-d457-22f1-4d96-9f278c22144c@ti.com>
-References: <20170828211918.11573-1-tony@atomide.com>
- <20170828211918.11573-12-tony@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [RESEND PATCH v4 0/2] add thermal nodes for UniPhier SoCs
+Date: Mon,  4 Sep 2017 15:58:35 +0900
+Message-ID: <1504508317-12076-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170828211918.11573-12-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=EF=BB=BF
+This series adds thermal nodes for UniPhier PXs2 and LD20 SoCs.
 
+Resending the patches to apply the missing comments,
+please ignore previous v4.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Bu=
-siness ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Changes since v3:
+- use the dt-bindings header to replace the limit values with THERMAL_NO_LIMIT
+- add the calibration value to uniphier-pxs2.dtsi
+- move the calibration value to uniphier-ld20.dtsi
 
-On 2017-08-29 00:19, Tony Lindgren wrote:
-> On omap4 we're missing the mcasp node with it's related "ti,hwmods"
-> property that the SoC interconnect code needs.
->=20
-> Note that this will only show up as a bug with "doesn't have
-> mpu register target base" boot errors when the legacy platform
-> data is removed.
->=20
-> Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt | 1 +
->  arch/arm/boot/dts/omap4.dtsi                                    | 9 ++++=
-+++++
->  2 files changed, 10 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.=
-txt b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-> --- a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-> +++ b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-> @@ -6,6 +6,7 @@ Required properties:
->  	"ti,da830-mcasp-audio"	: for both DA830 & DA850 platforms
->  	"ti,am33xx-mcasp-audio"	: for AM33xx platforms (AM33xx, AM43xx, TI81xx)
->  	"ti,dra7-mcasp-audio"	: for DRA7xx platforms
-> +	"ti,omap4-mcasp-audio"	: for OMAP4 platforms
-> =20
->  - reg : Should contain reg specifiers for the entries in the reg-names p=
-roperty.
->  - reg-names : Should contain:
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -750,6 +750,15 @@
->  			status =3D "disabled";
->  		};
-> =20
-> +		mcasp: mcasp@40128000 {
-> +			compatible =3D "ti,omap4-mcasp-audio";
-> +			reg =3D <0x40128000 0x400>, /* MPU private access */
-> +			      <0x49028000 0x400>; /* L3 Interconnect */
-> +			reg-names =3D "mpu", "dma";
-> +			interrupts =3D <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+Changes since v2:
+- add the calibration value to device tree for LD20 reference board
 
-interrupt-names =3D "tx";
+Changes since v1:
+- separate from driver's patchset[1]
+- add cooling-maps nodes on the device tree
+- fix an interrupt trigger to set 'level-triggered' according to
+  hardware specification
+- bring up threshold temperature for LD20 according to the spec sheet
+- add cpuN labels for reference in cooling-device property on PXs2 dts
 
-Can you add the DMA as well:
-dmas =3D <&sdma 8>;
-dma-names =3D "tx";
+[1] https://lkml.org/lkml/2017/6/28/170
 
-The RX of McASP is disabled, no RX DMA request.
+Kunihiko Hayashi (2):
+  ARM: dts: uniphier: add nodes of thermal monitor and thermal zone for
+    PXs2
+  arm64: dts: uniphier: add nodes of thermal monitor and thermal zone
+    for LD20
 
-> +			ti,hwmods =3D "mcasp";
-> +		};
-> +
->  		slimbus1: slimbus@4012c000 {
->  			compatible =3D "ti,omap4-slimbus";
->  			reg =3D <0x4012c000 0x400>, /* MPU private access */
->=20
+ arch/arm/boot/dts/uniphier-pxs2.dtsi             | 47 ++++++++++++++++++++++--
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 45 +++++++++++++++++++++++
+ 2 files changed, 88 insertions(+), 4 deletions(-)
 
-- P=C3=A9ter
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
