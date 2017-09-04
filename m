@@ -1,75 +1,57 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 05/13] irqchip: add initial support for ompic
-Date: Mon, 4 Sep 2017 08:35:19 +0100
-Message-ID: <aaf3a8dc-bd10-7c93-8293-0d9b79a7c4af@arm.com>
-References: <cover.1504129273.git.shorne@gmail.com>
- <538699c64b5601e8800b77da29f7951bf23f57ce.1504129273.git.shorne@gmail.com>
- <1b062d84-7335-8553-39c7-2e60973b4396@arm.com>
- <20170901012449.GG2609@lianli.shorne-pla.net>
- <97879c84-3ce8-b2bf-d438-679a69b60774@arm.com>
- <20170903221236.GM2609@lianli.shorne-pla.net>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v5 3/3] eeprom: at24: enable runtime pm support
+Date: Mon, 4 Sep 2017 10:38:51 +0300
+Message-ID: <20170904073850.i77nk36k5extin56@valkosipuli.retiisi.org.uk>
+References: <1504507245-12902-1-git-send-email-divagar.mohandass@intel.com>
+ <1504507245-12902-4-git-send-email-divagar.mohandass@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170903221236.GM2609-Uk7Bhu+bUQgm0WYXfsLZQReHL2rgt/dS@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1504507245-12902-4-git-send-email-divagar.mohandass@intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Divagar Mohandass <divagar.mohandass@intel.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, rajmohan.mani@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/17 23:12, Stafford Horne wrote:
-> On Fri, Sep 01, 2017 at 06:25:01PM +0100, Marc Zyngier wrote:
->> On 01/09/17 02:24, Stafford Horne wrote:
->>> On Thu, Aug 31, 2017 at 10:28:01AM +0100, Marc Zyngier wrote:
->>>> On 30/08/17 22:58, Stafford Horne wrote:
->>>>> From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+Hi Divagar,
 
-[...]
-
->>>>> +	unsigned int dst_cpu;
->>>>> +	unsigned int src_cpu = smp_processor_id();
->>>>> +
->>>>> +	for_each_cpu(dst_cpu, mask) {
->>>>> +		set_bit(irq, &ipi_data[dst_cpu].ops);
->>>>> +
->>>>> +		ompic_writereg(ompic_base, OMPIC_IPI_CTRL(src_cpu),
->>>>> +			       OMPIC_IPI_CTRL_IRQ_GEN |
->>>>> +			       OMPIC_IPI_CTRL_DST(dst_cpu) |
->>>>> +			       OMPIC_IPI_DATA(1));
->>>>
->>>> What guarantees that the action of set_bit can be observed by the target
->>>> CPU? set-bit gives you atomicity, but no barrier.
->>>
->>> The bit will not be read by target CPUs until after the ompic_writereg()
->>> which will trigger the target CPU interrupt to be raised.  OpenRISC stores
->>> are ordered.
->>
->> Are they really ordered irrespective of the memory type (one is
->> cacheable RAM, the other is a device...)?
->>
->> And assuming they are (which I find a bit odd), that doesn't necessarily
->> guarantee that the interrupt will only be delivered once the effect of
->> set_bit can be seen on the target CPU...
+On Mon, Sep 04, 2017 at 12:10:45PM +0530, Divagar Mohandass wrote:
+> Currently the device is kept in D0, there is an opportunity
+> to save power by enabling runtime pm.
 > 
-> OpenRISC might be a bit odd here, but I think this is correct.  On OpenRISC
-> the atomic instructions also imply a pipeline flush for stores and loads
-> (l.swa/l.lwa).  This is highlighted in the architecture spec section 7.3 [0].
+> Device can be daisy chained from PMIC and we can't rely on I2C core
+> for auto resume/suspend. Driver will decide when to resume/suspend.
+> 
+> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
+> ---
+>  drivers/misc/eeprom/at24.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> index 2199c42..03f5cb7 100644
+> --- a/drivers/misc/eeprom/at24.c
+> +++ b/drivers/misc/eeprom/at24.c
+> @@ -750,9 +782,12 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  	err = at24_read(at24, 0, &test_byte, 1);
 
-OK, fair enough. This is quite unusual (and I'm prepared to bet that
-this will be relaxed in future evolutions of the architecture), but
-that's indeed the gospel.
+You do pm_runtime_put()s here and drop the ones below as it's needed
+unconditionally. Then I think we're done.
 
-Please add a comment between set_bit and writereg so that we know we've
-been through this discussion already.
+>  	if (err) {
+>  		err = -ENODEV;
+> +		pm_runtime_put(&client->dev);
+>  		goto err_clients;
+>  	}
+>  
+> +	pm_runtime_put(&client->dev);
+> +
+>  	at24->nvmem_config.name = dev_name(&client->dev);
+>  	at24->nvmem_config.dev = &client->dev;
+>  	at24->nvmem_config.read_only = !writable;
 
-Thanks,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
