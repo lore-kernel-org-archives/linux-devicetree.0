@@ -1,429 +1,59 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v7 12/18] v4l: async: Allow binding notifiers to
- sub-devices
-Date: Mon, 4 Sep 2017 19:42:02 +0300
-Message-ID: <20170904164201.7rycyycvrukiusjz@valkosipuli.retiisi.org.uk>
-References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
- <20170903174958.27058-13-sakari.ailus@linux.intel.com>
- <60db0a4b-0560-9591-f41f-1d055a50ba12@xs4all.nl>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Applied "regulator: pbias: Select voltage table based on
+ max-voltage" to the regulator tree
+Date: Mon, 4 Sep 2017 17:48:09 +0100
+Message-ID: <20170904164809.5coe6vhgyc7iwy6q@sirena.org.uk>
+References: <E1dnO3z-0000tI-7K@debutante>
+ <64d9c623-456c-9142-9c5b-a94593628643@ti.com>
+ <20170831135050.adiek6iqqzhndgci@sirena.org.uk>
+ <CAPDyKFo=UdnVhFU7k+K1=N0e-1sniC+WZjZ4dZKSF8mXhM43Uw@mail.gmail.com>
+ <20170901162322.xrjnim4khn3wfslj@sirena.org.uk>
+ <f50319d6-9b18-0538-4eb1-6ff4226cac02@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r5bvgvhkxf5hn5ix"
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <60db0a4b-0560-9591-f41f-1d055a50ba12-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <f50319d6-9b18-0538-4eb1-6ff4226cac02@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Ravikumar Kattekola <rk@ti.com>, Sekhar Nori <nsekhar@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
 
-On Mon, Sep 04, 2017 at 04:56:29PM +0200, Hans Verkuil wrote:
-> On 09/03/2017 07:49 PM, Sakari Ailus wrote:
-> > Registering a notifier has required the knowledge of struct v4l2_device
-> > for the reason that sub-devices generally are registered to the
-> > v4l2_device (as well as the media device, also available through
-> > v4l2_device).
-> > 
-> > This information is not available for sub-device drivers at probe time.
-> > 
-> > What this patch does is that it allows registering notifiers without
-> > having v4l2_device around. Instead the sub-device pointer is stored to the
-> > notifier. Once the sub-device of the driver that registered the notifier
-> > is registered, the notifier will gain the knowledge of the v4l2_device,
-> > and the binding of async sub-devices from the sub-device driver's notifier
-> > may proceed.
-> > 
-> > The master notifier's complete callback is only called when all sub-device
-> > notifiers are completed.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-async.c | 153 +++++++++++++++++++++++++++++------
-> >  include/media/v4l2-async.h           |  19 ++++-
-> >  2 files changed, 146 insertions(+), 26 deletions(-)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> > index 70d02378b48f..55d7886103d2 100644
-> > --- a/drivers/media/v4l2-core/v4l2-async.c
-> > +++ b/drivers/media/v4l2-core/v4l2-async.c
-> > @@ -25,6 +25,10 @@
-> >  #include <media/v4l2-fwnode.h>
-> >  #include <media/v4l2-subdev.h>
-> >  
-> > +static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
-> > +				  struct v4l2_subdev *sd,
-> > +				  struct v4l2_async_subdev *asd);
-> > +
-> >  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
-> >  {
-> >  #if IS_ENABLED(CONFIG_I2C)
-> > @@ -101,14 +105,69 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
-> >  	return NULL;
-> >  }
-> >  
-> > +static bool v4l2_async_subdev_notifiers_complete(
-> > +	struct v4l2_async_notifier *notifier)
-> > +{
-> > +	struct v4l2_async_notifier *n;
-> > +
-> > +	list_for_each_entry(n, &notifier->notifiers, notifiers) {
-> > +		if (!n->master)
-> > +			return false;
-> > +	}
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +#define notifier_v4l2_dev(n) \
-> > +	(!!(n)->v4l2_dev ? (n)->v4l2_dev : \
-> > +	 !!(n)->master ? (n)->master->v4l2_dev : NULL)
-> 
-> Why '!!'?
+--r5bvgvhkxf5hn5ix
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I've since replaced this by a function.
+On Mon, Sep 04, 2017 at 11:16:54AM +0530, Kishon Vijay Abraham I wrote:
+> On Friday 01 September 2017 09:53 PM, Mark Brown wrote:
 
-My understanding is GCC 7 doesn't like a ? x : y construct where a is a
-non-boolean. This will be effectively the same, but a boolean.
+> > Hang on, how can this break anything?  If it breaks things shouldn't
+> > there be bugfixes for incorrect constraints somewhere?
 
-See e.g.
+> omap_hsmmc sets the pbias voltage to 3V. But here we program the volt table to
+> support either 1.8V or 3.3V (Initially the volt table was programmed to support
+> 3V because of a bug in TRM). So set_voltage of pbias voltage in omap_hsmmc will
+> fail.
 
-commit da48c948c263c9d87dfc64566b3373a858cc8aa2
-Author: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Date:   Wed Jul 19 15:23:27 2017 -0400
+Oh, that's appauling.  I guess this is some voltage that doesn't get
+presented to cards because otherwise I'm surprised nobody noticed.
+Anyway I've dropped the commit from my pull request for now, it'll not
+go for v4.14, but the pull request is still there.
 
-    media: fix warning on v4l2_subdev_call() result interpreted as bool
-    
-    v4l2_subdev_call is a macro returning whatever the callback return
-    type is, usually 'int'. With gcc-7 and ccache, this can lead to
-    many wanings like:
-    
-    media/platform/pxa_camera.c: In function 'pxa_mbus_build_fmts_xlate':
-    media/platform/pxa_camera.c:766:27: error: ?: using integer constants in boolean context [-Werror=int-in-bool-context]
-      while (!v4l2_subdev_call(subdev, pad, enum_mbus_code, NULL, &code)) {
-    media/atomisp/pci/atomisp2/atomisp_cmd.c: In function 'atomisp_s_ae_window':
-    media/atomisp/pci/atomisp2/atomisp_cmd.c:6414:52: error: ?: using integer constants in boolean context [-Werror=int-in-bool-context]
-      if (v4l2_subdev_call(isp->inputs[asd->input_curr].camera,
-    
-    The problem here is that after preprocessing, we the compiler
-    sees a variation of
-    
-            if (a ? 0 : 2)
-    
-    that it thinks is suspicious.
-    
-    This replaces the ?: operator with an different expression that
-    does the same thing in a more easily readable way that cannot
-    tigger the warning
-    
-    Link: https://lkml.org/lkml/2017/7/14/156
-    
-    Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-    Signed-off-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+--r5bvgvhkxf5hn5ix
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> > +
-> > +static struct v4l2_async_notifier *v4l2_async_get_subdev_notifier(
-> > +	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
-> > +{
-> > +	struct v4l2_async_notifier *n;
-> > +
-> > +	list_for_each_entry(n, &notifier_list, list) {
-> > +		if (n->sd == sd)
-> > +			return n;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> > +
-> > +static int v4l2_async_notifier_test_all_subdevs(
-> > +	struct v4l2_async_notifier *notifier)
-> > +{
-> > +	struct v4l2_subdev *sd, *tmp;
-> > +
-> > +	if (!notifier_v4l2_dev(notifier))
-> > +		return 0;
-> > +
-> > +	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
-> > +		struct v4l2_async_subdev *asd;
-> > +		int ret;
-> > +
-> > +		asd = v4l2_async_belongs(notifier, sd);
-> > +		if (!asd)
-> > +			continue;
-> > +
-> > +		ret = v4l2_async_test_notify(notifier, sd, asd);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
-> >  				  struct v4l2_subdev *sd,
-> >  				  struct v4l2_async_subdev *asd)
-> 
-> A general note (not specific to this patch series): I really don't like
-> this function name. v4l2_async_match_notify is a much better name.
-> 
-> With 'test' I get association with 'testing something' and not that it is
-> a match.
-> 
-> I have a similar problem with v4l2_async_belongs: v4l2_async_find_match
-> makes a lot more sense.
+-----BEGIN PGP SIGNATURE-----
 
-I can prepend the set with a patch renaming them.
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmtg8gACgkQJNaLcl1U
+h9B5Zgf/TDLrsvs7hGxL/iwhRobHGhAMdZYWPpy8z1g4OC2XUYp95pT50Ebw6JS2
+R/3Rv6EDJzUHgcA77yWLVqgC9w906a3bbTigKaRY2s+c0I90LwxkXgzOXujlIgQh
+rzebytXHdAEj2EYRu/XdlNtXhsuIcS/OF/28nt5qsFslIp0ZIkh2M4ycXHp5ktn1
+jNu08aZ0mOVH6woHS7w8ZmjCqYXvudIja/4/Rw8GHWAdkAxe147mL9zqx3R0oCe9
+d5Qe1AE0b8Z9l9pmHzARNAcoXfQhSUNYc0e+ZE+LgUk8idE7HhI9i3YSyS7kIv02
+3DBD60YtXVzCrLTCI0XD3UNHvITAQg==
+=PRU/
+-----END PGP SIGNATURE-----
 
-> 
-> >  {
-> > +	struct v4l2_async_notifier *subdev_notifier;
-> >  	int ret;
-> >  
-> > -	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
-> > -	if (ret < 0)
-> > +	ret = v4l2_device_register_subdev(notifier_v4l2_dev(notifier), sd);
-> > +	if (ret)
-> >  		return ret;
-> >  
-> >  	ret = v4l2_async_notifier_call_int_op(notifier, bound, sd, asd);
-> > @@ -125,8 +184,26 @@ static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
-> >  	/* Move from the global subdevice list to notifier's done */
-> >  	list_move(&sd->async_list, &notifier->done);
-> >  
-> > -	if (list_empty(&notifier->waiting) && notifier->ops->complete)
-> > -		return v4l2_async_notifier_call_int_op(notifier, complete);
-> > +	subdev_notifier = v4l2_async_get_subdev_notifier(notifier, sd);
-> > +	if (subdev_notifier && !subdev_notifier->master) {
-> > +		subdev_notifier->master = notifier;
-> > +		list_add(&subdev_notifier->notifiers, &notifier->notifiers);
-> > +		ret = v4l2_async_notifier_test_all_subdevs(subdev_notifier);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	if (list_empty(&notifier->waiting) &&
-> > +	    v4l2_async_subdev_notifiers_complete(notifier)) {
-> > +		ret = v4l2_async_notifier_call_int_op(notifier, complete);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	if (notifier->master && list_empty(&notifier->master->waiting) &&
-> > +	    v4l2_async_subdev_notifiers_complete(notifier->master))
-> > +		return v4l2_async_notifier_call_int_op(notifier->master,
-> > +						       complete);
-> >  
-> >  	return 0;
-> >  }
-> > @@ -140,18 +217,17 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
-> >  	sd->dev = NULL;
-> >  }
-> >  
-> > -int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-> > -				 struct v4l2_async_notifier *notifier)
-> > +static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
-> >  {
-> > -	struct v4l2_subdev *sd, *tmp;
-> >  	struct v4l2_async_subdev *asd;
-> > +	int ret;
-> >  	int i;
-> >  
-> > -	if (!v4l2_dev || !notifier->num_subdevs ||
-> > +	if (!!notifier->v4l2_dev == !!notifier->sd || !notifier->num_subdevs ||
-> 
-> '!!notifier->v4l2_dev == !!notifier->sd'???
-> 
-> This is '(notifier->v4l2_dev && notifier->sd) || (!notifier->v4l2_dev && !notifier->sd)'
-> but it took me a bit of time to parse that.
-> 
-> A 10 for creativity, but not so much for readability :-)
-
-:-D
-
-> 
-> I suspect it can be simplified as well, or some of these tests can be moved to
-> the two functions that call this one. I think that might be best, in fact.
-
-A single ! would be actually enough. What would you think of that? A bit
-less too loud? :-) It should be easies to grasp: both cannot be NULL or
-non-NULL.
-
-I've moved the check for v4l2_dev or sd to the appropriate functions. Still
-it could be worth checking for this just in case.
-
-> 
-> >  	    notifier->num_subdevs > V4L2_MAX_SUBDEVS)
-> >  		return -EINVAL;
-> >  
-> > -	notifier->v4l2_dev = v4l2_dev;
-> > +	INIT_LIST_HEAD(&notifier->notifiers);
-> >  	INIT_LIST_HEAD(&notifier->waiting);
-> >  	INIT_LIST_HEAD(&notifier->done);
-> >  
-> > @@ -175,18 +251,10 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-> >  
-> >  	mutex_lock(&list_lock);
-> >  
-> > -	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
-> > -		int ret;
-> > -
-> > -		asd = v4l2_async_belongs(notifier, sd);
-> > -		if (!asd)
-> > -			continue;
-> > -
-> > -		ret = v4l2_async_test_notify(notifier, sd, asd);
-> > -		if (ret < 0) {
-> > -			mutex_unlock(&list_lock);
-> > -			return ret;
-> > -		}
-> > +	ret = v4l2_async_notifier_test_all_subdevs(notifier);
-> > +	if (ret) {
-> > +		mutex_unlock(&list_lock);
-> > +		return ret;
-> >  	}
-> >  
-> >  	/* Keep also completed notifiers on the list */
-> > @@ -196,27 +264,62 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-> >  
-> >  	return 0;
-> >  }
-> > +
-> > +int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-> > +				 struct v4l2_async_notifier *notifier)
-> > +{
-> > +	notifier->v4l2_dev = v4l2_dev;
-> > +
-> > +	return __v4l2_async_notifier_register(notifier);
-> > +}
-> >  EXPORT_SYMBOL(v4l2_async_notifier_register);
-> >  
-> > +int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
-> > +					struct v4l2_async_notifier *notifier)
-> > +{
-> > +	notifier->sd = sd;
-> > +
-> > +	return __v4l2_async_notifier_register(notifier);
-> > +}
-> > +EXPORT_SYMBOL(v4l2_async_subdev_notifier_register);
-> > +
-> >  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
-> >  {
-> > +	struct v4l2_async_notifier *notifier_iter, *notifier_tmp;
-> >  	struct v4l2_subdev *sd, *tmp;
-> >  	unsigned int notif_n_subdev = notifier->num_subdevs;
-> >  	unsigned int n_subdev = min(notif_n_subdev, V4L2_MAX_SUBDEVS);
-> >  	struct device **dev;
-> >  	int i = 0;
-> >  
-> > -	if (!notifier->v4l2_dev)
-> > +	if (!notifier->v4l2_dev && !notifier->sd)
-> >  		return;
-> >  
-> >  	dev = kvmalloc_array(n_subdev, sizeof(*dev), GFP_KERNEL);
-> >  	if (!dev) {
-> > -		dev_err(notifier->v4l2_dev->dev,
-> > +		dev_err(notifier->v4l2_dev ?
-> > +			notifier->v4l2_dev->dev : notifier->sd->dev,
-> >  			"Failed to allocate device cache!\n");
-> >  	}
-> >  
-> >  	mutex_lock(&list_lock);
-> >  
-> > +	if (notifier->v4l2_dev) {
-> > +		/* Remove all subdev notifiers from the master's list */
-> > +		list_for_each_entry_safe(notifier_iter, notifier_tmp,
-> > +					 &notifier->notifiers, notifiers) {
-> > +			list_del_init(&notifier_iter->notifiers);
-> > +			WARN_ON(notifier_iter->master != notifier);
-> > +			notifier_iter->master = NULL;
-> > +		}
-> > +		notifier->v4l2_dev = NULL;
-> > +	} else {
-> > +		/* Remove subdev notifier from the master's list */
-> > +		list_del_init(&notifier->notifiers);
-> > +		notifier->master = NULL;
-> > +		notifier->sd = NULL;
-> > +	}
-> > +
-> >  	list_del(&notifier->list);
-> >  
-> >  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
-> > @@ -266,8 +369,6 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
-> >  	}
-> >  	kvfree(dev);
-> >  
-> > -	notifier->v4l2_dev = NULL;
-> > -
-> >  	/*
-> >  	 * Don't care about the waiting list, it is initialised and populated
-> >  	 * upon notifier registration.
-> > @@ -287,6 +388,8 @@ void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier)
-> >  
-> >  	kvfree(notifier->subdevs);
-> >  	notifier->subdevs = NULL;
-> > +
-> > +	WARN_ON(!list_empty(&notifier->notifiers));
-> >  }
-> >  EXPORT_SYMBOL_GPL(v4l2_async_notifier_release);
-> >  
-> > diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-> > index c3e001e0d1f1..a5c123ac2873 100644
-> > --- a/include/media/v4l2-async.h
-> > +++ b/include/media/v4l2-async.h
-> > @@ -110,7 +110,11 @@ struct v4l2_async_notifier_operations {
-> >   * @num_subdevs: number of subdevices used in the subdevs array
-> >   * @max_subdevs: number of subdevices allocated in the subdevs array
-> >   * @subdevs:	array of pointers to subdevice descriptors
-> > - * @v4l2_dev:	pointer to struct v4l2_device
-> > + * @v4l2_dev:	v4l2_device of the master, for subdev notifiers NULL
-> > + * @sd:		sub-device that registered the notifier, NULL otherwise
-> > + * @notifiers:	list of struct v4l2_async_notifier, notifiers linked to this
-> > + *		notifier
-> > + * @master:	master notifier carrying @v4l2_dev
-> >   * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
-> >   * @done:	list of struct v4l2_subdev, already probed
-> >   * @list:	member in a global list of notifiers
-> > @@ -121,6 +125,9 @@ struct v4l2_async_notifier {
-> >  	unsigned int max_subdevs;
-> >  	struct v4l2_async_subdev **subdevs;
-> >  	struct v4l2_device *v4l2_dev;
-> > +	struct v4l2_subdev *sd;
-> > +	struct list_head notifiers;
-> > +	struct v4l2_async_notifier *master;
-> >  	struct list_head waiting;
-> >  	struct list_head done;
-> >  	struct list_head list;
-> > @@ -136,6 +143,16 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-> >  				 struct v4l2_async_notifier *notifier);
-> >  
-> >  /**
-> > + * v4l2_async_subdev_notifier_register - registers a subdevice asynchronous
-> > + *					 notifier for a sub-device
-> > + *
-> > + * @sd: pointer to &struct v4l2_subdev
-> > + * @notifier: pointer to &struct v4l2_async_notifier
-> > + */
-> > +int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
-> > +					struct v4l2_async_notifier *notifier);
-> > +
-> > +/**
-> >   * v4l2_async_notifier_unregister - unregisters a subdevice asynchronous notifier
-> >   *
-> >   * @notifier: pointer to &struct v4l2_async_notifier
-> > 
-> 
-> Do you have a git tree with this patch series? I think I need to look at this
-> in the final version, not just the patch.
-
-I'll upload the patches after making the latest changes.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--r5bvgvhkxf5hn5ix--
