@@ -1,106 +1,84 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] thermal: hisilicon: add thermal sensor driver for
- Hi3660
-Date: Mon, 4 Sep 2017 23:06:21 +0800
-Message-ID: <20170904150621.GC24156@leoy-ThinkPad-T440>
-References: <e313015d-11d5-91b8-aa64-37e9410cb882@hisilicon.com>
- <1503994666-13954-1-git-send-email-kevin.wangtao@hisilicon.com>
- <1503994666-13954-3-git-send-email-kevin.wangtao@hisilicon.com>
- <77ceb395-57bb-8de7-7b1a-3218baa5d5f3@linaro.org>
- <b884f2ca-86e1-0df3-0cbf-99b13232ee03@hisilicon.com>
- <8fe3ad22-59db-40c6-18db-7b6859f05a95@linaro.org>
+From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Subject: Re: [PATCH] arm: boot: dts: artpec6: Remove unnecessary
+ interrupt-parent property from sub-nodes
+Date: Mon, 4 Sep 2017 17:23:55 +0200
+Message-ID: <5310134e-c371-d43f-175f-a3a9cdc5b657@axis.com>
+References: <1498565735-8208-1-git-send-email-surenderp@techveda.org>
+ <d582c742-4bf9-c658-d105-572d180222a4@axis.com>
+ <8475266d-de55-0760-7ae4-9fcafead36e4@techveda.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8fe3ad22-59db-40c6-18db-7b6859f05a95-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <8475266d-de55-0760-7ae4-9fcafead36e4-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Wangtao (Kevin, Kirin)" <kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gengyanping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>, jespern-VrBV9hrLPhE@public.gmane.org, larper-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 04, 2017 at 01:06:39PM +0200, Daniel Lezcano wrote:
+On 08/11/2017 09:56 AM, Surender Polsani wrote:
+> On Tuesday 27 June 2017 05:57 PM, Niklas Cassel wrote:
+>> Acked-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
 > 
-> Hi Kevin,
-> 
-> 
-> On 04/09/2017 09:56, Wangtao (Kevin, Kirin) wrote:
-> > 
-> > 
-> > 在 2017/9/1 5:17, Daniel Lezcano 写道:
-> >>
-> >> Hi Kevin,
-> >>
-> >>
-> >> On 29/08/2017 10:17, Tao Wang wrote:
-> >>> From: Tao Wang <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>>
-> >>> This patch adds the support for thermal sensor of Hi3660 SoC.
-> >>
-> >> for the Hi3660 SoC thermal sensor.
-> >>
-> >>> this will register sensors for thermal framework and use device
-> >>> tree to bind cooling device.
-> >>
-> >> Is it possible to give a pointer to some documentation or to describe
-> >> the hardware?
-> > Yes, there used to be on patch V3, I removed it on V4.
-> >>
-> >> An explanation of the adc min max coef[] range[] conversion would be
-> >> nice.
-> > OK
-> >>
-> >> In addition, having the rational behind the average and the max would be
-> >> nice. Do we really need both avg and max as virtual sensor?
-> > We only need max currently.
-> >>
-> >>> Signed-off-by: Tao Wang <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> ---
-> >>>   drivers/thermal/Kconfig        |  13 +++
-> >>>   drivers/thermal/Makefile       |   1 +
-> >>>   drivers/thermal/hisi_tsensor.c | 209
-> >>> +++++++++++++++++++++++++++++++++++++++++
-> >>
-> >>
-> >> IMO, we don't need a new file, but merge this code with the current
-> >> hisi_thermal.c driver. BTW, the hi6220 has also a tsensor which is
-> >> different from this one.
-> >>
-> >> I suggest to base the hi3660 thermal driver on top of the cleanup I sent
-> >> for the hi6220.
-> > The tsensor of hi3660 is a different one, merging the code with hi6220
-> > will need a lot of change.
-> 
-> Have a look at the hisi_thermal.c at:
-> 
-> https://git.linaro.org/people/daniel.lezcano/linux.git/tree/drivers/thermal/hisi_thermal.c?h=thermal/hikey-4.14
-> 
-> after the cleanup I recently sent.
-> 
-> I'm pretty sure, with a little effort, we can merge both.
-> 
-> Especially if the virtual things is separated.
-> 
-> At the end, what do we do ? Read a register.
+> Hi Nik, This patch has been Acknowledged but is not getting added / applied to the
+> respective git source tree. Please let me know if there is any problem.
 
-Just more input at here. I agree currently Hi3660 thermal driver
-is quite similiar with Hi6220, before we wrote a dedicated Hi3660
-thermal driver due we used mailbox method rather than shared
-memory mode.
+Hello Surender,
 
-If we merge two thermal drivers, this means Hi3660 register layout
-should be adjusted as same with Hi6220; I am not sure if this is
-feasible and need Kevin to confirm for this.
+Sorry for the delay.
 
-And does this mean we need provide interrupt mode for Hi3660? Or
-we can extend the driver to only support pollig mode?
+Could you please resend your patch,
+add "To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org", together with my Ack.
 
-[...]
+Best regards,
+Niklas
 
-Thanks,
-Leo Yan
+> 
+> Thanks
+> Surender
+>>
+>> On 06/27/2017 02:15 PM, surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org wrote:
+>>> From: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+>>>
+>>> "interrupt-parent" property is declared in root node, so it is global
+>>> to all nodes. This property is re-declared in few sub-nodes. To avoid
+>>> duplication this property is removed from following sub-nodes:
+>>> pmu, amba@0, amba@0/ethernet.
+>>>
+>>> Signed-off-by: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/artpec6.dtsi | 3 ---
+>>>   1 file changed, 3 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
+>>> index 767cbe8..2ed1177 100644
+>>> --- a/arch/arm/boot/dts/artpec6.dtsi
+>>> +++ b/arch/arm/boot/dts/artpec6.dtsi
+>>> @@ -151,7 +151,6 @@
+>>>           interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+>>>               <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>>>           interrupt-affinity = <&cpu0>, <&cpu1>;
+>>> -        interrupt-parent = <&intc>;
+>>>       };
+>>>         pcie: pcie@f8050000 {
+>>> @@ -185,7 +184,6 @@
+>>>           compatible = "simple-bus";
+>>>           #address-cells = <0x1>;
+>>>           #size-cells = <0x1>;
+>>> -        interrupt-parent = <&intc>;
+>>>           ranges;
+>>>           dma-ranges = <0x80000000 0x00000000 0x40000000>;
+>>>           dma-coherent;
+>>> @@ -195,7 +193,6 @@
+>>>               clocks = <&eth_phy_ref_clk>,
+>>>                   <&clkctrl ARTPEC6_CLK_ETH_ACLK>;
+>>>               compatible = "snps,dwc-qos-ethernet-4.10";
+>>> -            interrupt-parent = <&intc>;
+>>>               interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+>>>               reg = <0xf8010000 0x4000>;
+>>>  
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
