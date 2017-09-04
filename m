@@ -1,44 +1,71 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [RESENT PATCH v7 3/7] arm64: dts: rockchip: Update rt5514 devices' compatible for Gru
-Date: Tue, 05 Sep 2017 00:33:47 +0200
-Message-ID: <3717071.LIWpZa6hqd@diego>
-References: <20170824045227.15504-1-jeffy.chen@rock-chips.com> <1649093.IvC24TsujL@diego> <59A6EF3C.5090308@rock-chips.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v4 0/3] arm64: Realtek RTD1295 RTC
+Date: Tue,  5 Sep 2017 00:53:21 +0200
+Message-ID: <20170904225324.29138-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59A6EF3C.5090308-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 31. August 2017, 01:00:44 CEST schrieb jeffy:
-> On 08/30/2017 09:30 PM, Heiko St�bner wrote:
-> >> >-		compatible = "realtek,rt5514";
-> >> >+		compatible = "realtek,rt5514", "realtek,rt5514-i2c";
-> > 
-> > the rt5514-i2c and -spi compatibles should be documented in the
-> > binding-txt
-> > of the chip, but I haven't found any mention of this.
-> > 
-> > 
-> > Heiko
-> 
-> these compatibles are only used for our snd driver to detect rt5514 i2c
-> driver and rt5514 spi driver, suggested by Matthias at
-> https://patchwork.kernel.org/patch/9904731/
-> 
-> should i add it in the rockchip,rk3399-gru-sound.txt or rt5514 binding
-> document?
+Hello,
 
-You're introducing new bindings for the codec, so they should of course
-part of the rt5514 binding.
+This series adds the RTC for the Realtek RTD1295 SoC.
+Based on my RTD1295 clk series.
 
+There being no public source code for RTD1295, the implementation is based on
+register offsets seen in the vendor DT, as well as older mach-rtk119x code
+published by QNAP.
 
-Heiko
+v4 adds a missing clk_put().
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The DT node depends on the clk series for clock index and header.
+
+More experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+v3 -> v4:
+* Added clk_put() (Alexandre)
+
+v2 -> v3:
+* Dropped spinlock (Andrew)
+* Improved year_days vs. days_in_year readability
+
+v1 -> v2:
+* Updated rtc driver to no longer use open/release (Alexandre)
+* Cleaned up debug output (Andrew)
+* Avoided COMPILE_TEST division errors (kbuild)
+* Various cleanups and extensions
+
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-rtc@vger.kernel.org
+Cc: Roc He <hepeng@zidoo.tv>
+Cc: 蒋丽琴 <jiang.liqin@geniatech.com>
+Cc: devicetree@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>
+
+Andreas Färber (3):
+  dt-bindings: rtc: Add Realtek RTD1295
+  rtc: Add Realtek RTD1295
+  arm64: dts: realtek: Add RTD1295 RTC node
+
+ .../devicetree/bindings/rtc/realtek,rtd119x.txt    |  16 ++
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi           |   6 +
+ drivers/rtc/Kconfig                                |   8 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-rtd119x.c                          | 242 +++++++++++++++++++++
+ 5 files changed, 273 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/realtek,rtd119x.txt
+ create mode 100644 drivers/rtc/rtc-rtd119x.c
+
+-- 
+2.13.5
