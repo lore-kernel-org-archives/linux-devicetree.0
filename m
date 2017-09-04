@@ -1,141 +1,71 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v10 07/16] Documentation: DT: MIPS: lantiq: Add docs for
- the RCU bindings
-Date: Mon, 4 Sep 2017 19:40:52 +0200
-Message-ID: <CAFBinCD_q4=x-HB1rnLkGt_x+2dgUqhUe6t1a+PVt41hZGPhAQ@mail.gmail.com>
-References: <20170819221823.13850-1-hauke@hauke-m.de> <20170819221823.13850-8-hauke@hauke-m.de>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2] ARM: dts: sunxi: h3/h5 :Add DAI nodes
+Date: Mon,  4 Sep 2017 19:47:21 +0200
+Message-ID: <20170904174721.21985-1-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170819221823.13850-8-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBLFDW3GQKGQE27DTKVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 20, 2017 at 12:18 AM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
-> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->
-> This adds the initial documentation for the RCU module (a MFD device
-> which provides USB PHYs, reset controllers and more).
->
-> The RCU register range is used for multiple purposes. Mostly one device
-> uses one or multiple register exclusively, but for some registers some
-> bits are for one driver and some other bits are for a different driver.
-> With this patch all accesses to the RCU registers will go through
-> syscon.
->
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-thank you Hauke for pushing this!
+Add the new DAI blocks to the device tree. I2S0 and I2S1 are for
+connecting to an external codec.
 
-> ---
->  .../devicetree/bindings/mips/lantiq/rcu.txt        | 90 ++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu.txt
->
-> diff --git a/Documentation/devicetree/bindings/mips/lantiq/rcu.txt b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
-> new file mode 100644
-> index 000000000000..7b9be2d13c53
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
-> @@ -0,0 +1,90 @@
-> +Lantiq XWAY SoC RCU binding
-> +===========================
-> +
-> +This binding describes the RCU (reset controller unit) multifunction device,
-> +where each sub-device has it's own set of registers.
-> +
-> +The RCU register range is used for multiple purposes. Mostly one device
-> +uses one or multiple register exclusively, but for some registers some
-> +bits are for one driver and some other bits are for a different driver.
-> +With this patch all accesses to the RCU registers will go through
-> +syscon.
-> +
-> +
-> +-------------------------------------------------------------------------------
-> +Required properties:
-> +- compatible   : The first and second values must be:
-> +                 "lantiq,xrx200-rcu", "simple-mfd", "syscon"
-> +- reg          : The address and length of the system control registers
-> +
-> +
-> +-------------------------------------------------------------------------------
-> +Example of the RCU bindings on a xRX200 SoC:
-> +       rcu0: rcu@203000 {
-> +               compatible = "lantiq,xrx200-rcu", "simple-mfd", "syscon";
-> +               reg = <0x203000 0x100>;
-> +               ranges = <0x0 0x203000 0x100>;
-> +               big-endian;
-> +
-> +               gphy0: gphy@20 {
-> +                       compatible = "lantiq,xrx200a2x-gphy";
-> +                       reg = <0x20 0x4>;
-> +
-> +                       resets = <&reset0 31 30>, <&reset1 7 7>;
-> +                       reset-names = "gphy", "gphy2";
-> +                       lantiq,gphy-mode = <GPHY_MODE_GE>;
-> +               };
-> +
-> +               gphy1: gphy@68 {
-> +                       compatible = "lantiq,xrx200a2x-gphy";
-> +                       reg = <0x68 0x4>;
-> +
-> +                       resets = <&reset0 29 28>, <&reset1 6 6>;
-> +                       reset-names = "gphy", "gphy2";
-> +                       lantiq,gphy-mode = <GPHY_MODE_GE>;
-> +               };
-> +
-> +               reset0: reset-controller@10 {
-> +                       compatible = "lantiq,xrx200-reset";
-> +                       reg = <0x10 4>, <0x14 4>;
-> +
-> +                       #reset-cells = <2>;
-> +               };
-> +
-> +               reset1: reset-controller@48 {
-> +                       compatible = "lantiq,xrx200-reset";
-> +                       reg = <0x48 4>, <0x24 4>;
-> +
-> +                       #reset-cells = <2>;
-> +               };
-> +
-> +               usb_phy0: usb2-phy@18 {
-> +                       compatible = "lantiq,xrx200-usb2-phy";
-> +                       reg = <0x18 4>, <0x38 4>;
-> +                       status = "disabled";
-> +
-> +                       resets = <&reset1 4 4>, <&reset0 4 4>;
-> +                       reset-names = "phy", "ctrl";
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               usb_phy1: usb2-phy@34 {
-> +                       compatible = "lantiq,xrx200-usb2-phy";
-> +                       reg = <0x34 4>, <0x3C 4>;
-> +                       status = "disabled";
-> +
-> +                       resets = <&reset1 5 4>, <&reset0 4 4>;
-> +                       reset-names = "phy", "ctrl";
-> +                       #phy-cells = <0>;
-> +               };
-> +
-> +               reboot@10 {
-> +                       compatible = "syscon-reboot";
-> +                       reg = <0x10 4>;
-> +
-> +                       regmap = <&rcu0>;
-> +                       offset = <0x10>;
-> +                       mask = <0x40000000>;
-> +               };
-> +       };
-> +
-> --
-> 2.11.0
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+v2 changes compared to v1 are:
+- removed i2s2 which is used for HDMI audio
+---
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 11240a8313c2..ef87d29036d9 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -450,6 +450,32 @@
+ 			status = "disabled";
+ 		};
+ 
++		i2s0: i2s@01c22000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun8i-h3-i2s";
++			reg = <0x01c22000 0x400>;
++			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2S0>, <&ccu CLK_I2S0>;
++			clock-names = "apb", "mod";
++			dmas = <&dma 3>, <&dma 3>;
++			resets = <&ccu RST_BUS_I2S0>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
++		i2s1: i2s@01c22400 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun8i-h3-i2s";
++			reg = <0x01c22400 0x400>;
++			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2S1>, <&ccu CLK_I2S1>;
++			clock-names = "apb", "mod";
++			dmas = <&dma 4>, <&dma 4>;
++			resets = <&ccu RST_BUS_I2S1>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
+ 		codec: codec@01c22c00 {
+ 			#sound-dai-cells = <0>;
+ 			compatible = "allwinner,sun8i-h3-codec";
+-- 
+2.14.1
