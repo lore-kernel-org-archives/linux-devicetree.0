@@ -1,79 +1,77 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 5/5] v4l: fwnode: Support generic parsing of graph endpoints in a single port
-Date: Mon, 04 Sep 2017 13:05:52 +0300
-Message-ID: <41798047.7Eux7kmorh@avalon>
-References: <20170830114946.17743-1-sakari.ailus@linux.intel.com> <1981884.TcuAFemERJ@avalon> <20170903074339.vswbczv2lfxykssq@valkosipuli.retiisi.org.uk>
+From: "Mohandass, Divagar" <divagar.mohandass@intel.com>
+Subject: RE: [PATCH v5 3/3] eeprom: at24: enable runtime pm support
+Date: Mon, 4 Sep 2017 10:27:26 +0000
+Message-ID: <7B8CE47BD58441468D2BB13285B50E6031DE80FF@BGSMSX107.gar.corp.intel.com>
+References: <1504507245-12902-1-git-send-email-divagar.mohandass@intel.com>
+ <1504507245-12902-4-git-send-email-divagar.mohandass@intel.com>
+ <20170904073850.i77nk36k5extin56@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170903074339.vswbczv2lfxykssq@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170904073850.i77nk36k5extin56@valkosipuli.retiisi.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
 To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, devicetree@vger.kernel.org
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mani, Rajmohan" <rajmohan.mani@intel.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Sakari,
 
-On Sunday, 3 September 2017 10:43:39 EEST Sakari Ailus wrote:
-> On Sat, Sep 02, 2017 at 12:52:47PM +0300, Laurent Pinchart wrote:
-> > On Saturday, 2 September 2017 01:57:48 EEST Sakari Ailus wrote:
-> >> On Fri, Sep 01, 2017 at 01:28:40PM +0200, Hans Verkuil wrote:
+Thanks, I will fix this and send the patch v6.
 
-[sinp]
+---
+^Divagar
 
-> >>> I'm lost. What's the relationship between
-> >>> v4l2_async_notifier_parse_fwnode_endpoints and this function? When do
-> >>> you use which? When you should zero the notifier?
-> >> 
-> >> I thought there would be advantages in this approach as it lets you to
-> >> choose which endpoints specifically you want to parse. That said, the
-> >> expectation is that the device has no endpoints that aren't supported in
-> >> hardware either.
-> >> 
-> >> Some drivers currently iterate over all the endpoints and then validate
-> >> them whereas others poke for some endpoints only (port 0, endpoint 0,
-> >> for the rcar-vin driver, for instance). In DT binding documentation the
-> >> endpoint numbers are currently not specified nor drivers have checked
-> >> them. Common sense tells to use zero if there's no reason to do
-> >> otherwise, but still this hasn't been documented nor validated in the
-> >> past. So if we add that now, there could be a chance of breaking
-> >> something.
-> >> 
-> >> Additionally, specifying the endpoints to parse explicitly has been seen
-> >> beneficial (or even necessary) in parsing endpoints for devices that
-> >> have both input and output interfaces. Perhaps Niklas can comment on
-> >> that.
-> >> 
-> >> What I though was to introduce a specific error code (EPERM, better
-> >> suggestions are taken)
-> > 
-> > Maybe ENOTCONN ?
-> 
-> Sounds good to me.
-> 
-> >> for the driver callback function (parse_endpoint) to silently skip
-> >> endpoints the driver doesn't like for reason or another. This lets
-> >> drivers to use the endpoint parser function added by the previous patch
-> >> and still maintain the old behaviour, i.e. ignore endpoints that aren't
-> >> explicitly recognised by the driver.
-> >> 
-> >> I'll drop this patch from the next version.
-> > 
-> > Parsing a specific endpoint of a specific port is probably indeed a bit
-> > too fine-grained, but I think there are use cases for parsing at the port
-> > level instead of parsing all ports.
-> 
-> Could you elaborate?
-> 
-> If a driver would be interested in skipping endpoints in a subset of ports,
-> in which case only a single port would be excluded from this?
-
-I meant that I see use cases for parsing specific ports only (for instance in 
-the R-Car case parsing only the sink ports in a CSI-2 receiver DT node), but 
-not really for parsing specific endpoints only.
-
--- 
-Regards,
-
-Laurent Pinchart
+>-----Original Message-----
+>From: Sakari Ailus [mailto:sakari.ailus@iki.fi]
+>Sent: Monday, September 04, 2017 1:09 PM
+>To: Mohandass, Divagar <divagar.mohandass@intel.com>
+>Cc: robh+dt@kernel.org; mark.rutland@arm.com; wsa@the-dreams.de;
+>devicetree@vger.kernel.org; linux-i2c@vger.kernel.org; linux-
+>kernel@vger.kernel.org; Mani, Rajmohan <rajmohan.mani@intel.com>
+>Subject: Re: [PATCH v5 3/3] eeprom: at24: enable runtime pm support
+>
+>Hi Divagar,
+>
+>On Mon, Sep 04, 2017 at 12:10:45PM +0530, Divagar Mohandass wrote:
+>> Currently the device is kept in D0, there is an opportunity to save
+>> power by enabling runtime pm.
+>>
+>> Device can be daisy chained from PMIC and we can't rely on I2C core
+>> for auto resume/suspend. Driver will decide when to resume/suspend.
+>>
+>> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
+>> ---
+>>  drivers/misc/eeprom/at24.c | 40
+>> ++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 40 insertions(+)
+>>
+>> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+>> index 2199c42..03f5cb7 100644
+>> --- a/drivers/misc/eeprom/at24.c
+>> +++ b/drivers/misc/eeprom/at24.c
+>> @@ -750,9 +782,12 @@ static int at24_probe(struct i2c_client *client,
+>const struct i2c_device_id *id)
+>>  	err = at24_read(at24, 0, &test_byte, 1);
+>
+>You do pm_runtime_put()s here and drop the ones below as it's needed
+>unconditionally. Then I think we're done.
+>
+>>  	if (err) {
+>>  		err = -ENODEV;
+>> +		pm_runtime_put(&client->dev);
+>>  		goto err_clients;
+>>  	}
+>>
+>> +	pm_runtime_put(&client->dev);
+>> +
+>>  	at24->nvmem_config.name = dev_name(&client->dev);
+>>  	at24->nvmem_config.dev = &client->dev;
+>>  	at24->nvmem_config.read_only = !writable;
+>
+>--
+>Kind regards,
+>
+>Sakari Ailus
+>e-mail: sakari.ailus@iki.fi
