@@ -1,46 +1,48 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: mfd: Add bindings for ZII RAVE
- devices
-Date: Mon, 4 Sep 2017 08:52:54 +0100
-Message-ID: <20170904075254.4suzcv6gson34ipn@dell>
-References: <20170828163131.24815-1-andrew.smirnov@gmail.com>
- <20170828163131.24815-3-andrew.smirnov@gmail.com>
+Subject: Re: [GIT PULL] Immutable branch between MFD and HWMON due for the
+ v4.14 merge window
+Date: Mon, 4 Sep 2017 08:54:34 +0100
+Message-ID: <20170904075434.gk2t4xbn3wkh65bo@dell>
+References: <20170821145404.18902-1-sebastian.reichel@collabora.co.uk>
+ <20170822074741.jjynyudbfgzsl7ju@dell>
+ <20170829125113.g74twfnahomtdr2x@earth>
+ <a61ad063-07a2-c24c-45b8-c3bdfe630a0c@roeck-us.net>
+ <20170829141913.ieujukwf4xxed3ez@earth>
+ <706b6632-dffc-ec94-1258-5ddc030a7ca2@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170828163131.24815-3-andrew.smirnov@gmail.com>
+In-Reply-To: <706b6632-dffc-ec94-1258-5ddc030a7ca2@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Aug 2017, Andrey Smirnov wrote:
+On Tue, 29 Aug 2017, Guenter Roeck wrote:
 
-> Add Device Tree bindings for RAVE Supervisory Processor, an MCU
-> implementing varoius bits of housekeeping functionality (watchdoging,
-> backlight control, LED control, etc) on RAVE family of products by
-> Zodiac Inflight Innovations.
+> On 08/29/2017 07:19 AM, Sebastian Reichel wrote:
+> > Hi Guenter,
+> > 
+> > On Tue, Aug 29, 2017 at 06:34:39AM -0700, Guenter Roeck wrote:
+> > > On 08/29/2017 05:51 AM, Sebastian Reichel wrote:
+> > > > Hi Lee,
+> > > > 
+> > > > I noticed, that you did not yet push out your for-mfd-next branch,
+> > > > so the patches did not yet appear in linux-next. Was this
+> > > > intentional?
+> > > > 
+> > > The immutable branch referenced below doesn't exist either.
+> > 
+> > The immutable branch looks ok for me:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=ib-mfd-hwmon-v4.14
+> > 
 > 
-> Cc: cphealy@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Acked-by: Rob Herring <robh+dt@kernel.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
->  .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> Hmm, yes, I must be blind.
 
-Applied, thanks.
+:)
 
 -- 
 Lee Jones
