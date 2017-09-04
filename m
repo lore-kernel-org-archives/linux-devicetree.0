@@ -1,267 +1,138 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v1 2/3] nvmem: uniphier: add UniPhier eFuse driver
-Date: Mon, 4 Sep 2017 21:58:03 +0900
-Message-ID: <CAK7LNAQc_xJ9qCQw=taeO24-2kzXW4pQHXfJ5+FhsO4-aXG4zQ@mail.gmail.com>
-References: <1504221620-358-1-git-send-email-hayashibara.keiji@socionext.com> <1504221620-358-3-git-send-email-hayashibara.keiji@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504221620-358-3-git-send-email-hayashibara.keiji@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Kiyoshi Owada <owada.kiyoshi@socionext.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Mon,  4 Sep 2017 15:03:34 +0200
+Message-ID: <20170904130335.23280-2-maxime.ripard@free-electrons.com>
+References: <20170904130335.23280-1-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170904130335.23280-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-09-01 8:20 GMT+09:00 Keiji Hayashibara <hayashibara.keiji@socionext.com>:
-> Add eFuse driver for Socionext UniPhier series SoC.
-> Note that eFuse device is under soc-glue and this register
-> implements as read only.
->
-> Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-> ---
->  arch/arm64/configs/defconfig   |  1 +
->  drivers/nvmem/Kconfig          | 11 +++++
->  drivers/nvmem/Makefile         |  2 +
->  drivers/nvmem/uniphier-efuse.c | 98 ++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 112 insertions(+)
->  create mode 100644 drivers/nvmem/uniphier-efuse.c
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 6c7d147..5c38b4a 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -514,6 +514,7 @@ CONFIG_PHY_XGENE=y
->  CONFIG_PHY_TEGRA_XUSB=y
->  CONFIG_QCOM_L2_PMU=y
->  CONFIG_QCOM_L3_PMU=y
-> +CONFIG_UNIPHIER_EFUSE=y
->  CONFIG_ARM_SCPI_PROTOCOL=y
->  CONFIG_RASPBERRYPI_FIRMWARE=y
->  CONFIG_EFI_CAPSULE_LOADER=y
+The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
+4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
+the hardware implementation.
 
+It can operate with an external D-PHY, an internal one or no D-PHY at all
+in some configurations.
 
-You need to send this separately
-(after this driver is accepted)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../devicetree/bindings/media/cdns-csi2rx.txt      | 98 ++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns-csi2rx.txt
 
-
-
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index 101ced4..aaeaebe 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -123,6 +123,17 @@ config NVMEM_SUNXI_SID
->           This driver can also be built as a module. If so, the module
->           will be called nvmem_sunxi_sid.
->
-> +config UNIPHIER_EFUSE
-> +       tristate "UniPhier SoCs eFuse support"
-> +       depends on ARCH_UNIPHIER || COMPILE_TEST
-> +       depends on OF && MFD_SYSCON
-> +       help
-> +         This is a simple drive to dump specified values of UniPhier SoC
-> +         from eFuse.
-
-
-s/drive/driver/
-
-
-I see the same typo in ROCKCHIP_EFUSE.
-
-You copied it verbatim.
-
-
-
-
-> +         This driver can also be built as a module. If so, the module
-> +         will be called nvmem_uniphier-efuse.
-
-
-I do not like a mixture of '_' and '-' though...
-
-
-
-
-
->  config NVMEM_VF610_OCOTP
->         tristate "VF610 SoC OCOTP support"
->         depends on SOC_VF610 || COMPILE_TEST
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 1731406..f5277c3 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -26,6 +26,8 @@ obj-$(CONFIG_ROCKCHIP_EFUSE)  += nvmem_rockchip_efuse.o
->  nvmem_rockchip_efuse-y         := rockchip-efuse.o
->  obj-$(CONFIG_NVMEM_SUNXI_SID)  += nvmem_sunxi_sid.o
->  nvmem_sunxi_sid-y              := sunxi_sid.o
-> +obj-$(CONFIG_UNIPHIER_EFUSE)   += nvmem_uniphier-efuse.o
-> +nvmem_uniphier-efuse-y         := uniphier-efuse.o
->  obj-$(CONFIG_NVMEM_VF610_OCOTP)        += nvmem-vf610-ocotp.o
->  nvmem-vf610-ocotp-y            := vf610-ocotp.o
->  obj-$(CONFIG_MESON_EFUSE)      += nvmem_meson_efuse.o
-> diff --git a/drivers/nvmem/uniphier-efuse.c b/drivers/nvmem/uniphier-efuse.c
-> new file mode 100644
-> index 0000000..d553fa3
-> --- /dev/null
-> +++ b/drivers/nvmem/uniphier-efuse.c
-> @@ -0,0 +1,98 @@
-> +/*
-> + * UniPhier eFuse driver
-> + *
-> + * Copyright (C) 2017 Socionext Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define UNIPHIER_EFUSE_WORD_SIZE       4
-> +#define UNIPHIER_EFUSE_STRIDE          4
-> +
-> +static int uniphier_reg_read(void *context,
-> +                            unsigned int offset, void *val, size_t bytes)
-> +{
-> +       int words = bytes / UNIPHIER_EFUSE_WORD_SIZE;
-> +
-> +       return regmap_bulk_read(context, offset, val, words);
-> +}
-> +
-> +static struct nvmem_config econfig = {
-> +       .name = "uniphier-efuse",
-> +       .owner = THIS_MODULE,
-> +       .read_only = true,
-> +       .reg_read = uniphier_reg_read,
-> +       .word_size = UNIPHIER_EFUSE_WORD_SIZE,
-> +       .stride = UNIPHIER_EFUSE_STRIDE,
-> +};
-
-
-
-"struct nvmem_config" exists for the purpose of containing
-driver-specific parameters.
-Do you still want to use
-UNIPHIER_EFUSE_WORD_SIZE / UNIPHIER_EFUSE_STRIDE macros here?
-
-
-
-
-static struct nvmem_config econfig = {
-       .name = "uniphier-efuse",
-       .owner = THIS_MODULE,
-       .read_only = true,
-       .reg_read = uniphier_reg_read,
-       .word_size = 4,
-       .stride = 4,
-};
-
-looks nicer in my taste.
-
-
-
-BTW, is there really no possibility
-where the unphier_efuse_probe() is run concurrently?
-
-Many other drivers pass statically allocated memory
-to nvmem_register() like this...
-
-
-
-
-> +static int uniphier_efuse_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct nvmem_device *nvmem;
-> +       struct regmap *regmap;
-> +       struct resource res;
-> +       int ret;
-> +
-> +       ret = of_address_to_resource(dev->of_node, 0, &res);
-> +       if (ret)
-> +               return ret;
-> +
-> +       regmap = syscon_node_to_regmap(dev->of_node);
-> +       if (IS_ERR(regmap))
-> +               return PTR_ERR(regmap);
-
-
-In my understanding,
-syscon_node_to_regmap() is generally useful
-to get regmap of another node,
-i.e. it is often used together with of_get_parent / of_parse_phandle etc.
-
-You can use devm_regmap_init_mmio()
-to init regmap for itself.
-
-
-BTW, what is your motivation of using regmap?
-
-
-I think what you want to do is
-the same as mtk-efuse.c, right?
-(and qfprom.c is similar, the difference is just register width)
-
-
-
-
-
-
-> +       econfig.size = resource_size(&res);
-> +       econfig.priv = regmap;
-> +       econfig.dev = dev;
-> +
-> +       nvmem = nvmem_register(&econfig);
-> +       if (IS_ERR(nvmem))
-> +               return PTR_ERR(nvmem);
-> +
-> +       platform_set_drvdata(pdev, nvmem);
-> +
-> +       return 0;
-> +}
-> +
-> +static int uniphier_efuse_remove(struct platform_device *pdev)
-> +{
-> +       struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-> +
-> +       return nvmem_unregister(nvmem);
-> +}
-> +
-> +static const struct of_device_id uniphier_efuse_of_match[] = {
-> +       { .compatible = "socionext,uniphier-efuse",},
-> +       {/* sentinel */},
-> +};
-> +MODULE_DEVICE_TABLE(of, uniphier_efuse_of_match);
-> +
-> +static struct platform_driver uniphier_efuse_driver = {
-> +       .probe = uniphier_efuse_probe,
-> +       .remove = uniphier_efuse_remove,
-> +       .driver = {
-> +               .name = "uniphier-efuse",
-> +               .of_match_table = uniphier_efuse_of_match,
-> +       },
-> +};
-> +module_platform_driver(uniphier_efuse_driver);
-> +
-> +MODULE_AUTHOR("Keiji Hayashibara <hayashibara.keiji@socionext.com>");
-> +MODULE_DESCRIPTION("UniPhier eFuse driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.7.4
->
-
-
-
+diff --git a/Documentation/devicetree/bindings/media/cdns-csi2rx.txt b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+new file mode 100644
+index 000000000000..2395030d8c72
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+@@ -0,0 +1,98 @@
++Cadence MIPI-CSI2 RX controller
++===============================
++
++The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
++lanes in input, and 4 different pixel streams in output.
++
++Required properties:
++  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
++  - reg: base address and size of the memory mapped region
++  - clocks: phandles to the clocks driving the controller
++  - clock-names: must contain:
++    * sys_clk: main clock
++    * p_clk: register bank clock
++    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
++                         implemented in hardware, between 0 and 3
++
++Optional properties:
++  - phys: phandle to the external D-PHY, phy-names must be provided
++  - phy-names: must contain dphy, if the implementation uses an
++               external D-PHY
++
++Required subnodes:
++  - ports: A ports node with endpoint definitions as defined in
++           Documentation/devicetree/bindings/media/video-interfaces.txt. The
++           first port subnode should be the input endpoint, the next ones the
++           output, one for each stream supported by the CSI2-RX controller.
++           The ports ID must be the stream output number used in the
++           implementation, plus 1.
++
++Example:
++
++csi2rx: csi-bridge@0d060000 {
++	compatible = "cdns,csi2rx";
++	reg = <0x0d060000 0x1000>;
++	clocks = <&byteclock>, <&byteclock>
++		 <&coreclock>, <&coreclock>,
++		 <&coreclock>, <&coreclock>;
++	clock-names = "sys_clk", "p_clk",
++		      "pixel_if0_clk", "pixel_if1_clk",
++		      "pixel_if2_clk", "pixel_if3_clk";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			csi2rx_in_sensor: endpoint {
++				remote-endpoint = <&sensor_out_csi2rx>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++
++		port@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			csi2rx_out_grabber0: endpoint {
++				remote-endpoint = <&grabber0_in_csi2rx>;
++			};
++		};
++
++		port@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++
++			csi2rx_out_grabber1: endpoint {
++				remote-endpoint = <&grabber1_in_csi2rx>;
++			};
++		};
++
++		port@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++
++			csi2rx_out_grabber2: endpoint {
++				remote-endpoint = <&grabber2_in_csi2rx>;
++			};
++		};
++
++		port@4 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <4>;
++
++			csi2rx_out_grabber3: endpoint {
++				remote-endpoint = <&grabber3_in_csi2rx>;
++			};
++		};
++	};
++};
 -- 
-Best Regards
-Masahiro Yamada
+2.13.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
