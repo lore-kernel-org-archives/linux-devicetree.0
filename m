@@ -1,59 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: Applied "regulator: pbias: Select voltage table based on
- max-voltage" to the regulator tree
-Date: Mon, 4 Sep 2017 17:48:09 +0100
-Message-ID: <20170904164809.5coe6vhgyc7iwy6q@sirena.org.uk>
-References: <E1dnO3z-0000tI-7K@debutante>
- <64d9c623-456c-9142-9c5b-a94593628643@ti.com>
- <20170831135050.adiek6iqqzhndgci@sirena.org.uk>
- <CAPDyKFo=UdnVhFU7k+K1=N0e-1sniC+WZjZ4dZKSF8mXhM43Uw@mail.gmail.com>
- <20170901162322.xrjnim4khn3wfslj@sirena.org.uk>
- <f50319d6-9b18-0538-4eb1-6ff4226cac02@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: adc: mcp320x: Update for
+ mcp3550/1/3
+Date: Mon, 4 Sep 2017 18:22:21 +0100
+Message-ID: <20170904172221.47si6swykixnb5of@sirena.org.uk>
+References: <cover.1503407738.git.lukas@wunner.de>
+ <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas@wunner.de>
+ <20170825195941.iylf4w5hitjwniio@rob-hp-laptop>
+ <20170827153405.GA13399@wunner.de>
+ <CABjU8GvCB61envBiR0ei3gHEPadd5VDZ7FGysDjhCrJcQrEXDg@mail.gmail.com>
+ <20170903143429.749be480@archlinux>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="r5bvgvhkxf5hn5ix"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="bsr3zvrgovkc3mgy"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <f50319d6-9b18-0538-4eb1-6ff4226cac02@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Ravikumar Kattekola <rk@ti.com>, Sekhar Nori <nsekhar@ti.com>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20170903143429.749be480@archlinux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Adriana Reus <adi.reus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---r5bvgvhkxf5hn5ix
+--bsr3zvrgovkc3mgy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 04, 2017 at 11:16:54AM +0530, Kishon Vijay Abraham I wrote:
-> On Friday 01 September 2017 09:53 PM, Mark Brown wrote:
+On Sun, Sep 03, 2017 at 02:37:49PM +0100, Jonathan Cameron wrote:
 
-> > Hang on, how can this break anything?  If it breaks things shouldn't
-> > there be bugfixes for incorrect constraints somewhere?
+> +cc Mark Brown and linux-spi to address question about how to represent
+> a hardwired chip select.  See below for why I think that is what we should
+> be representing rather than the fact it puts it in 'continuous mode'.
 
-> omap_hsmmc sets the pbias voltage to 3V. But here we program the volt table to
-> support either 1.8V or 3.3V (Initially the volt table was programmed to support
-> 3V because of a bug in TRM). So set_voltage of pbias voltage in omap_hsmmc will
-> fail.
+There's a good chance that if you just send me mail with a not obviously
+related subject line it might get discarded unread, people CC me on lots
+of things that are of questionable relevance.
 
-Oh, that's appauling.  I guess this is some voltage that doesn't get
-presented to cards because otherwise I'm surprised nobody noticed.
-Anyway I've dropped the commit from my pull request for now, it'll not
-go for v4.14, but the pull request is still there.
+> > >> > +   - microchip,continuous-conversion (boolean):
+> > >> > +                   Only applicable to MCP3550/1/3:  These ADCs ha=
+ve long
+> > >> > +                   conversion times and therefore support "contin=
+uous
+> > >> > +                   conversion mode" to allow retrieval of convers=
+ions
+> > >> > +                   at any time without observing a delay.  The mo=
+de is
+> > >> > +                   enabled by permanently driving CS low, e.g. by=
+ wiring
+> > >> > +                   it to ground. =20
 
---r5bvgvhkxf5hn5ix
+> hmm.  This is odd.  We probably need to make the SPI subsystem aware of t=
+his.
+> It is possible to ask for exclusive use of an SPI bus and I think we shou=
+ld
+> be doing this here.  It may be wired low on your board, but it may be wir=
+ed to
+
+This sounds like SPI_NO_CS, though it's vanishingly rare for it to be
+implemented as there's a lot of ways for it to go wrong electrically -
+it's a lot simpler to just have a chip select and minimise the number of
+times it gets asserted.
+
+--bsr3zvrgovkc3mgy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmtg8gACgkQJNaLcl1U
-h9B5Zgf/TDLrsvs7hGxL/iwhRobHGhAMdZYWPpy8z1g4OC2XUYp95pT50Ebw6JS2
-R/3Rv6EDJzUHgcA77yWLVqgC9w906a3bbTigKaRY2s+c0I90LwxkXgzOXujlIgQh
-rzebytXHdAEj2EYRu/XdlNtXhsuIcS/OF/28nt5qsFslIp0ZIkh2M4ycXHp5ktn1
-jNu08aZ0mOVH6woHS7w8ZmjCqYXvudIja/4/Rw8GHWAdkAxe147mL9zqx3R0oCe9
-d5Qe1AE0b8Z9l9pmHzARNAcoXfQhSUNYc0e+ZE+LgUk8idE7HhI9i3YSyS7kIv02
-3DBD60YtXVzCrLTCI0XD3UNHvITAQg==
-=PRU/
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmti8wACgkQJNaLcl1U
+h9Aq9Af/b1NCeLEaQqSlsNVHTUjtqf5yQsJq4swner+plCt02XhEkrSfHoSWFMNj
+/FvMl5zXzFEcn8wS4qI5URErG7vJ4QvWdg32PljkMgEGeulU0pQyJS5aTBlOoWkV
+V9X3iWwEcZ2AD8uMAUWCrlzS6WMC9dEwkvFREP7GEo4IrgQJ3n/WXtz+yIXa3EUN
+jMJuho9M4MdmNxCnKviWfAYEszCEt/lSz/Eh93RekuJKs04UxxE/ol8NIDvpP7nZ
+jhGiMRFSc7TVqUMcstoDfRRY+xmt98y8OMHYdu/d8nSYW3mVXV1KVcBG7OWOxFkh
+GABeQ033vRkdl+2TrHISzPtxs3qkjw==
+=EeAB
 -----END PGP SIGNATURE-----
 
---r5bvgvhkxf5hn5ix--
+--bsr3zvrgovkc3mgy--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
