@@ -1,349 +1,131 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4 2/3] Input: pwm-vibra: new driver
-Date: Mon, 4 Sep 2017 12:16:39 -0700
-Message-ID: <20170904191639.GA31131@dtor-ws>
-References: <20170714100151.31234-1-sebastian.reichel@collabora.co.uk>
- <20170714100151.31234-3-sebastian.reichel@collabora.co.uk>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 2/3] dt-binding: net: sfp binding documentation
+Date: Mon, 4 Sep 2017 13:16:26 -0700
+Message-ID: <5df7f2f5-04f7-85b1-4a53-935360001b7c@gmail.com>
+References: <c2a27566a8eb358ee2566a213c385d0bf3d64307.1504441874.git.baruch@tkos.co.il>
+ <01ae7bc45d68322669d18a4feeaeef733ba888d7.1504441874.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170714100151.31234-3-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <01ae7bc45d68322669d18a4feeaeef733ba888d7.1504441874.git.baruch@tkos.co.il>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 14, 2017 at 12:01:50PM +0200, Sebastian Reichel wrote:
-> Provide a simple driver for PWM controllable vibrators.
-> It will be used by Motorola Droid 4.
+Le 09/03/17 à 05:31, Baruch Siach a écrit :
+> Add device-tree binding documentation SFP transceivers. Support for SFP
+> transceivers has been recently introduced (drivers/net/phy/sfp.c).
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-
-Applied, thank you.
-
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 > ---
->  drivers/input/misc/Kconfig     |  12 ++
->  drivers/input/misc/Makefile    |   1 +
->  drivers/input/misc/pwm-vibra.c | 267 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 280 insertions(+)
->  create mode 100644 drivers/input/misc/pwm-vibra.c
+> v3:
+>   Mention gpios phandle and specifier
+>   Mention the polarity of each gpio
+>   Fix example property names
 > 
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index 3872488c3fd7..7bb7285c4722 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -581,6 +581,18 @@ config INPUT_PWM_BEEPER
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called pwm-beeper.
->  
-> +config INPUT_PWM_VIBRA
-> +	tristate "PWM vibrator support"
-> +	depends on PWM
-> +	depends on INPUT_FF_MEMLESS
-> +	help
-> +	  Say Y here to get support for PWM based vibrator devices.
-> +
-> +	  If unsure, say N.
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called pwm-vibra.
-> +
->  config INPUT_GPIO_ROTARY_ENCODER
->  	tristate "Rotary encoders connected to GPIO pins"
->  	depends on GPIOLIB || COMPILE_TEST
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index b923a9828c88..36ea14997b40 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -59,6 +59,7 @@ obj-$(CONFIG_INPUT_PM8XXX_VIBRATOR)	+= pm8xxx-vibrator.o
->  obj-$(CONFIG_INPUT_PMIC8XXX_PWRKEY)	+= pmic8xxx-pwrkey.o
->  obj-$(CONFIG_INPUT_POWERMATE)		+= powermate.o
->  obj-$(CONFIG_INPUT_PWM_BEEPER)		+= pwm-beeper.o
-> +obj-$(CONFIG_INPUT_PWM_VIBRA)		+= pwm-vibra.o
->  obj-$(CONFIG_INPUT_RB532_BUTTON)	+= rb532_button.o
->  obj-$(CONFIG_INPUT_REGULATOR_HAPTIC)	+= regulator-haptic.o
->  obj-$(CONFIG_INPUT_RETU_PWRBUTTON)	+= retu-pwrbutton.o
-> diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
+> v2:
+>   Rename -gpio properties to -gpios
+>   Rename the rate-select-gpio property to rate-select0-gpios
+>   Add the rate-select1-gpios property
+>   Add examples
+> ---
+>  Documentation/devicetree/bindings/net/sff,sfp.txt | 78 +++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/sff,sfp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/sff,sfp.txt b/Documentation/devicetree/bindings/net/sff,sfp.txt
 > new file mode 100644
-> index 000000000000..55da191ae550
+> index 000000000000..b98ee5945265
 > --- /dev/null
-> +++ b/drivers/input/misc/pwm-vibra.c
-> @@ -0,0 +1,267 @@
-> +/*
-> + *  PWM vibrator driver
-> + *
-> + *  Copyright (C) 2017 Collabora Ltd.
-> + *
-> + *  Based on previous work from:
-> + *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + *  Based on PWM beeper driver:
-> + *  Copyright (C) 2010, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> + *
-> + *  This program is free software; you can redistribute it and/or modify it
-> + *  under  the terms of the GNU General  Public License as published by the
-> + *  Free Software Foundation;  either version 2 of the License, or (at your
-> + *  option) any later version.
-> + */
+> +++ b/Documentation/devicetree/bindings/net/sff,sfp.txt
+> @@ -0,0 +1,78 @@
+> +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
+> +Transceiver
 > +
-> +#include <linux/input.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
+> +Required properties:
 > +
-> +struct pwm_vibrator {
-> +	struct input_dev *input;
-> +	struct pwm_device *pwm;
-> +	struct pwm_device *pwm_dir;
-> +	struct regulator *vcc;
+> +- compatible : must be "sff,sfp"
 > +
-> +	struct work_struct play_work;
-> +	u16 level;
-> +	u32 direction_duty_cycle;
+> +Optional Properties:
+> +
+> +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
+> +  interface
+> +
+> +- moddef0-gpios : GPIO phandle and a single specifier of the MOD-DEF0 (AKA
+> +  Mod_ABS) module presence input gpio signal, active (module absent) high
+
+Sorry for nitpicking on this, why are not we naming this mod-def0-gpios
+which would be consistent with how other GPIOs are named?
+
+> +
+> +- los-gpios : GPIO phandle and a single specifier of the Receiver Loss of
+> +  Signal Indication input gpio signal, active (signal lost) high
+> +
+> +- tx-fault-gpios : GPIO phandle and a single specifier of the Module
+> +  Transmitter Fault input gpio signal, active (fault condition) high
+> +
+> +- tx-disable-gpios : GPIO phandle and a single specifier of the Transmitter
+> +  Disable output gpio signal, active (Tx disable) high
+> +
+> +- rate-select0-gpios : GPIO phandle and a single specifier of the Rx Signaling
+> +  Rate Select (AKA RS0) output gpio signal, low: low Rx rate, high: high Rx
+> +  rate
+> +
+> +- rate-select1-gpios : GPIO phandle and a single specifier of the Tx Signaling
+> +  Rate Select (AKA RS1) output gpio signal (SFP+ only), low: low Tx rate,
+> +  high: high Tx rate
+> +
+> +Example #1: Direct serdes to SFP connection
+> +
+> +sfp_eth3: sfp-eth3 {
+> +	compatible = "sff,sfp";
+> +	i2c-bus = <&sfp_1g_i2c>;
+> +	los-gpios = <&cpm_gpio2 22 GPIO_ACTIVE_HIGH>;
+> +	moddef0-gpios = <&cpm_gpio2 21 GPIO_ACTIVE_LOW>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&cpm_sfp_1g_pins &cps_sfp_1g_pins>;
+> +	tx-disable-gpios = <&cps_gpio1 24 GPIO_ACTIVE_HIGH>;
+> +	tx-fault-gpios = <&cpm_gpio2 19 GPIO_ACTIVE_HIGH>;
 > +};
 > +
-> +static int pwm_vibrator_start(struct pwm_vibrator *vibrator)
-> +{
-> +	struct device *pdev = vibrator->input->dev.parent;
-> +	struct pwm_state state;
-> +	int err;
-> +
-> +	err = regulator_enable(vibrator->vcc);
-> +	if (err) {
-> +		dev_err(pdev, "failed to enable regulator: %d", err);
-> +		return err;
-> +	}
-> +
-> +	pwm_get_state(vibrator->pwm, &state);
-> +	pwm_set_relative_duty_cycle(&state, vibrator->level, 0xffff);
-> +	state.enabled = true;
-> +
-> +	err = pwm_apply_state(vibrator->pwm, &state);
-> +	if (err) {
-> +		dev_err(pdev, "failed to apply pwm state: %d", err);
-> +		return err;
-> +	}
-> +
-> +	if (vibrator->pwm_dir) {
-> +		pwm_get_state(vibrator->pwm_dir, &state);
-> +		state.duty_cycle = vibrator->direction_duty_cycle;
-> +		state.enabled = true;
-> +
-> +		err = pwm_apply_state(vibrator->pwm_dir, &state);
-> +		if (err) {
-> +			dev_err(pdev, "failed to apply dir-pwm state: %d", err);
-> +			pwm_disable(vibrator->pwm);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void pwm_vibrator_stop(struct pwm_vibrator *vibrator)
-> +{
-> +	regulator_disable(vibrator->vcc);
-> +
-> +	if (vibrator->pwm_dir)
-> +		pwm_disable(vibrator->pwm_dir);
-> +	pwm_disable(vibrator->pwm);
-> +}
-> +
-> +static void pwm_vibrator_play_work(struct work_struct *work)
-> +{
-> +	struct pwm_vibrator *vibrator = container_of(work,
-> +					struct pwm_vibrator, play_work);
-> +
-> +	if (vibrator->level)
-> +		pwm_vibrator_start(vibrator);
-> +	else
-> +		pwm_vibrator_stop(vibrator);
-> +}
-> +
-> +static int pwm_vibrator_play_effect(struct input_dev *dev, void *data,
-> +				    struct ff_effect *effect)
-> +{
-> +	struct pwm_vibrator *vibrator = input_get_drvdata(dev);
-> +
-> +	vibrator->level = effect->u.rumble.strong_magnitude;
-> +	if (!vibrator->level)
-> +		vibrator->level = effect->u.rumble.weak_magnitude;
-> +
-> +	schedule_work(&vibrator->play_work);
-> +
-> +	return 0;
-> +}
-> +
-> +static void pwm_vibrator_close(struct input_dev *input)
-> +{
-> +	struct pwm_vibrator *vibrator = input_get_drvdata(input);
-> +
-> +	cancel_work_sync(&vibrator->play_work);
-> +	pwm_vibrator_stop(vibrator);
-> +}
-> +
-> +static int pwm_vibrator_probe(struct platform_device *pdev)
-> +{
-> +	struct pwm_vibrator *vibrator;
-> +	struct pwm_state state;
-> +	int err;
-> +
-> +	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
-> +	if (!vibrator)
-> +		return -ENOMEM;
-> +
-> +	vibrator->input = devm_input_allocate_device(&pdev->dev);
-> +	if (!vibrator->input)
-> +		return -ENOMEM;
-> +
-> +	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> +	err = PTR_ERR_OR_ZERO(vibrator->vcc);
-> +	if (err) {
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to request regulator: %d",
-> +				err);
-> +		return err;
-> +	}
-> +
-> +	vibrator->pwm = devm_pwm_get(&pdev->dev, "enable");
-> +	err = PTR_ERR_OR_ZERO(vibrator->pwm);
-> +	if (err) {
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to request main pwm: %d",
-> +				err);
-> +		return err;
-> +	}
-> +
-> +	INIT_WORK(&vibrator->play_work, pwm_vibrator_play_work);
-> +
-> +	/* Sync up PWM state and ensure it is off. */
-> +	pwm_init_state(vibrator->pwm, &state);
-> +	state.enabled = false;
-> +	err = pwm_apply_state(vibrator->pwm, &state);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "failed to apply initial PWM state: %d",
-> +			err);
-> +		return err;
-> +	}
-> +
-> +	vibrator->pwm_dir = devm_pwm_get(&pdev->dev, "direction");
-> +	err = PTR_ERR_OR_ZERO(vibrator->pwm_dir);
-> +	switch (err) {
-> +	case 0:
-> +		/* Sync up PWM state and ensure it is off. */
-> +		pwm_init_state(vibrator->pwm_dir, &state);
-> +		state.enabled = false;
-> +		err = pwm_apply_state(vibrator->pwm_dir, &state);
-> +		if (err) {
-> +			dev_err(&pdev->dev, "failed to apply initial PWM state: %d",
-> +				err);
-> +			return err;
-> +		}
-> +
-> +		vibrator->direction_duty_cycle =
-> +			pwm_get_period(vibrator->pwm_dir) / 2;
-> +		device_property_read_u32(&pdev->dev, "direction-duty-cycle-ns",
-> +					 &vibrator->direction_duty_cycle);
-> +		break;
-> +
-> +	case -ENODATA:
-> +		/* Direction PWM is optional */
-> +		vibrator->pwm_dir = NULL;
-> +		break;
-> +
-> +	default:
-> +		dev_err(&pdev->dev, "Failed to request direction pwm: %d", err);
-> +		/* Fall through */
-> +
-> +	case -EPROBE_DEFER:
-> +		return err;
-> +	}
-> +
-> +	vibrator->input->name = "pwm-vibrator";
-> +	vibrator->input->id.bustype = BUS_HOST;
-> +	vibrator->input->dev.parent = &pdev->dev;
-> +	vibrator->input->close = pwm_vibrator_close;
-> +
-> +	input_set_drvdata(vibrator->input, vibrator);
-> +	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-> +
-> +	err = input_ff_create_memless(vibrator->input, NULL,
-> +				      pwm_vibrator_play_effect);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
-> +		return err;
-> +	}
-> +
-> +	err = input_register_device(vibrator->input);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Couldn't register input dev: %d", err);
-> +		return err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused pwm_vibrator_suspend(struct device *dev)
-> +{
-> +	struct pwm_vibrator *vibrator = dev_get_drvdata(dev);
-> +
-> +	cancel_work_sync(&vibrator->play_work);
-> +	if (vibrator->level)
-> +		pwm_vibrator_stop(vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused pwm_vibrator_resume(struct device *dev)
-> +{
-> +	struct pwm_vibrator *vibrator = dev_get_drvdata(dev);
-> +
-> +	if (vibrator->level)
-> +		pwm_vibrator_start(vibrator);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(pwm_vibrator_pm_ops,
-> +			 pwm_vibrator_suspend, pwm_vibrator_resume);
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id pwm_vibra_dt_match_table[] = {
-> +	{ .compatible = "pwm-vibrator" },
-> +	{},
+> +&cps_emac3 {
+> +	phy-mode = "sgmii";
+> +	phy-names = "comphy";
+> +	phys = <&cps_comphy 5 COMPHY_SGMII2>;
+> +	sfp = <&sfp_eth3>;
 > +};
-> +MODULE_DEVICE_TABLE(of, pwm_vibra_dt_match_table);
-> +#endif
 > +
-> +static struct platform_driver pwm_vibrator_driver = {
-> +	.probe	= pwm_vibrator_probe,
-> +	.driver	= {
-> +		.name	= "pwm-vibrator",
-> +		.pm	= &pwm_vibrator_pm_ops,
-> +		.of_match_table = of_match_ptr(pwm_vibra_dt_match_table),
-> +	},
+> +Example #2: Serdes to PHY to SFP connection
+> +
+> +sfp_eth0: sfp-eth0 {
+> +	compatible = "sff,sfp+";
+> +	i2c-bus = <&sfpp0_i2c>;
+> +	los-gpios = <&cps_gpio1 28 GPIO_ACTIVE_HIGH>;
+> +	moddef0-gpios = <&cps_gpio1 27 GPIO_ACTIVE_LOW>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&cps_sfpp0_pins>;
+> +	tx-disable-gpios = <&cps_gpio1 29 GPIO_ACTIVE_HIGH>;
+> +	tx-fault-gpios  = <&cps_gpio1 26 GPIO_ACTIVE_HIGH>;
 > +};
-> +module_platform_driver(pwm_vibrator_driver);
 > +
-> +MODULE_AUTHOR("Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
-> +MODULE_DESCRIPTION("PWM vibrator driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:pwm-vibrator");
-> -- 
-> 2.13.2
+> +p0_phy: ethernet-phy@0 {
+> +	compatible = "ethernet-phy-ieee802.3-c45";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&cpm_phy0_pins &cps_phy0_pins>;
+> +	reg = <0>;
+> +	interrupt = <&cpm_gpio2 18 IRQ_TYPE_EDGE_FALLING>;
+> +	sfp = <&sfp_eth0>;
+> +};
+> +
+> +&cpm_eth0 {
+> +	phy = <&p0_phy>;
+> +	phy-mode = "10gbase-kr";
+> +};
 > 
+
 
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
