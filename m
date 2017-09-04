@@ -1,78 +1,43 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] arm64: Initial Realtek RTD1295 enablement
-Date: Tue, 5 Sep 2017 00:09:10 +0200
-Message-ID: <068148b5-7add-96e5-dc6d-4597527a6c35@suse.de>
-References: <20170514022429.11555-1-afaerber@suse.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [RESENT PATCH v7 3/7] arm64: dts: rockchip: Update rt5514 devices' compatible for Gru
+Date: Tue, 05 Sep 2017 00:33:47 +0200
+Message-ID: <3717071.LIWpZa6hqd@diego>
+References: <20170824045227.15504-1-jeffy.chen@rock-chips.com> <1649093.IvC24TsujL@diego> <59A6EF3C.5090308@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170514022429.11555-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <59A6EF3C.5090308-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?UTF-8?B?6JKL5Li955C0?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+To: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Am 14.05.2017 um 04:24 schrieb Andreas Färber:
-> This mini-series adds initial support for the Realtek RTD1295 SoC and
-> the Zidoo X9S TV box.
+Am Donnerstag, 31. August 2017, 01:00:44 CEST schrieb jeffy:
+> On 08/30/2017 09:30 PM, Heiko St�bner wrote:
+> >> >-		compatible = "realtek,rt5514";
+> >> >+		compatible = "realtek,rt5514", "realtek,rt5514-i2c";
+> > 
+> > the rt5514-i2c and -spi compatibles should be documented in the
+> > binding-txt
+> > of the chip, but I haven't found any mention of this.
+> > 
+> > 
+> > Heiko
 > 
-> v3 changes #address-cells, #size-cells and ranges.
+> these compatibles are only used for our snd driver to detect rt5514 i2c
+> driver and rt5514 spi driver, suggested by Matthias at
+> https://patchwork.kernel.org/patch/9904731/
 > 
-> With these patches CPU0 can be booted with earlycon.
-> 
-> PSCI doesn't work despite present in the vendor device tree; as enable-method
-> it instead used a custom "rtk-spin-table" that I sadly have no source code of.
+> should i add it in the rockchip,rk3399-gru-sound.txt or rt5514 binding
+> document?
 
-Synology has now published source code for RTD1293/1296. This has
-allowed me to narrow the RTD1295 CPU1..3 issue down to two changes in
-arch/arm64/kernel/smp_spin_table.c:smp_spin_table_cpu_prepare():
+You're introducing new bindings for the codec, so they should of course
+part of the rt5514 binding.
 
-1) writel_relaxed() instead of writeq_relaxed()
-2) ioremap() instead of ioremap_cache()
 
-Without those changes it hangs in earlycon after this line:
-[    0.043674] Mountpoint-cache hash table entries: 4096 (order: 3,
-32768 bytes)
+Heiko
 
-The size difference sounds easy enough - we could introduce an optional
-cpu-release-size property to handle this or derive a "spin-table-32bit"
-enable-method to that effect.
-
-The second one appears to be caused by PROT_NORMAL vs.
-PROT_DEVICE_nGnRE. Is there any simple check we could do on
-cpu-release-addr to choose which MT to use?
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?id=113954c6463d1d80a206e91627ae49711f8b47cd
-
-Any other ideas?
-
-[...]
-> The boot process is slightly twisted: The files need to be loaded from a
-> 32-bit U-Boot, then boot into 64-bit U-Boot where the kernel can be booted.
-> Similar to my previous Amlogic S905 work, the TEXT_OFFSET poses a problem, so
-> a uImage needs to be used (or the kernel patched) for load address 0x00280000.
-> I haven't succeeded loading an initrd via bootm/booti; but as quick workaround
-> initrd=$rootfs_loadaddr,0x$filesize can manually be specified in $bootargs.
-> 
-> Cf. https://en.opensuse.org/HCL:Zidoo_X9S
-> 
-> More experimental patches at:
-> https://github.com/afaerber/linux/commits/rtd1295-next
-[snip]
-
-My above branch includes the above spin-table hack for now.
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
