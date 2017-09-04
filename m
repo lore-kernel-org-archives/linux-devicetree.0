@@ -1,115 +1,88 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v7 10/18] v4l: async: Introduce macros for calling async
- ops callbacks
-Date: Mon, 4 Sep 2017 15:50:52 +0200
-Message-ID: <96c4a9cf-1231-b6c4-bc2b-a431f4bea7a4@xs4all.nl>
-References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
- <20170903174958.27058-11-sakari.ailus@linux.intel.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [GIT PULL] Immutable branch between MFD, IIO and PWM due for the
+ v4.14 merge window
+Date: Mon, 4 Sep 2017 14:51:39 +0100
+Message-ID: <20170904135139.mfsoh5k4kifrhldq@dell>
+References: <1503914654-19963-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170903174958.27058-11-sakari.ailus@linux.intel.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1503914654-19963-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/2017 07:49 PM, Sakari Ailus wrote:
-> Add two macros to call async operations callbacks. Besides simplifying
-> callbacks, this allows async notifiers to have no ops set, i.e. it can be
-> left NULL.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 19 +++++++------------
->  include/media/v4l2-async.h           |  8 ++++++++
->  2 files changed, 15 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 810f5e0273dc..91d04f00b4e4 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -107,16 +107,13 @@ static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
->  {
->  	int ret;
->  
-> -	if (notifier->ops->bound) {
-> -		ret = notifier->ops->bound(notifier, sd, asd);
-> -		if (ret < 0)
-> -			return ret;
-> -	}
-> +	ret = v4l2_async_notifier_call_int_op(notifier, bound, sd, asd);
+Enjoy!
 
-Hmm, I think this is rather ugly. We only have three ops, so why not make
-three macros:
+The following changes since commit 569dbb88e80deb68974ef6fdd6a13edb9d686261:
 
-	v4l2_async_notifier_call_bound/unbind/complete?
+  Linux 4.13 (2017-09-03 13:56:17 -0700)
 
-Much cleaner than _int_op(...bound...).
+are available in the git repository at:
 
-Regards,
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-iio-pwm-v4.14
 
-	Hans
+for you to fetch changes up to f0b638a7f6dba2eb6bf99fc648eab77f7ad5e59f:
 
-> +	if (ret < 0)
-> +		return ret;
->  
->  	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
->  	if (ret < 0) {
-> -		if (notifier->ops->unbind)
-> -			notifier->ops->unbind(notifier, sd, asd);
-> +		v4l2_async_notifier_call_void_op(notifier, unbind, sd, asd);
->  		return ret;
->  	}
->  
-> @@ -129,7 +126,7 @@ static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
->  	list_move(&sd->async_list, &notifier->done);
->  
->  	if (list_empty(&notifier->waiting) && notifier->ops->complete)
-> -		return notifier->ops->complete(notifier);
-> +		return v4l2_async_notifier_call_int_op(notifier, complete);
->  
->  	return 0;
->  }
-> @@ -232,8 +229,7 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
->  		/* If we handled USB devices, we'd have to lock the parent too */
->  		device_release_driver(d);
->  
-> -		if (notifier->ops->unbind)
-> -			notifier->ops->unbind(notifier, sd, sd->asd);
-> +		v4l2_async_notifier_call_void_op(notifier, unbind, sd, sd->asd);
->  
->  		/*
->  		 * Store device at the device cache, in order to call
-> @@ -344,8 +340,7 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
->  
->  	v4l2_async_cleanup(sd);
->  
-> -	if (notifier->ops->unbind)
-> -		notifier->ops->unbind(notifier, sd, sd->asd);
-> +	v4l2_async_notifier_call_void_op(notifier, unbind, sd, sd->asd);
->  
->  	mutex_unlock(&list_lock);
->  }
-> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-> index 3c48f8b66d12..c3e001e0d1f1 100644
-> --- a/include/media/v4l2-async.h
-> +++ b/include/media/v4l2-async.h
-> @@ -95,6 +95,14 @@ struct v4l2_async_notifier_operations {
->  		       struct v4l2_async_subdev *asd);
->  };
->  
-> +#define v4l2_async_notifier_call_int_op(n, op, ...)			\
-> +	(((n)->ops && (n)->ops->op) ? (n)->ops->op(n, ## __VA_ARGS__) : 0)
-> +#define v4l2_async_notifier_call_void_op(n, op, ...)	 \
-> +	do {						 \
-> +		if ((n)->ops && (n)->ops->op)		 \
-> +			(n)->ops->op(n, ## __VA_ARGS__); \
-> +	} while (false)
-> +
->  /**
->   * struct v4l2_async_notifier - v4l2_device notifier data
->   *
-> 
+  iio: adc: stm32: add support for lptimer triggers (2017-09-04 14:49:34 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, IIO and PWM due for the v4.14 merge window
+
+----------------------------------------------------------------
+Fabrice Gasnier (9):
+      dt-bindings: mfd: Add STM32 LPTimer binding
+      mfd: Add STM32 LPTimer driver
+      pwm: Add STM32 LPTimer PWM driver
+      dt-bindings: pwm: Add STM32 LPTimer PWM binding
+      dt-bindings: iio: Add STM32 LPTimer trigger binding
+      iio: trigger: Add STM32 LPTimer trigger driver
+      dt-bindings: iio: Add STM32 LPTimer quadrature encoder and counter
+      iio: counter: Add support for STM32 LPTimer
+      iio: adc: stm32: add support for lptimer triggers
+
+ .../ABI/testing/sysfs-bus-iio-lptimer-stm32        |  57 +++
+ .../bindings/iio/counter/stm32-lptimer-cnt.txt     |  27 ++
+ .../bindings/iio/timer/stm32-lptimer-trigger.txt   |  23 ++
+ .../devicetree/bindings/mfd/stm32-lptimer.txt      |  48 +++
+ .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  24 ++
+ drivers/iio/adc/stm32-adc.c                        |  14 +-
+ drivers/iio/counter/Kconfig                        |   9 +
+ drivers/iio/counter/Makefile                       |   1 +
+ drivers/iio/counter/stm32-lptimer-cnt.c            | 383 +++++++++++++++++++++
+ drivers/iio/trigger/Kconfig                        |  11 +
+ drivers/iio/trigger/Makefile                       |   1 +
+ drivers/iio/trigger/stm32-lptimer-trigger.c        | 118 +++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/stm32-lptimer.c                        | 107 ++++++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-stm32-lp.c                         | 246 +++++++++++++
+ include/linux/iio/timer/stm32-lptim-trigger.h      |  27 ++
+ include/linux/mfd/stm32-lptimer.h                  |  62 ++++
+ 20 files changed, 1182 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-lptimer-stm32
+ create mode 100644 Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+ create mode 100644 drivers/iio/counter/stm32-lptimer-cnt.c
+ create mode 100644 drivers/iio/trigger/stm32-lptimer-trigger.c
+ create mode 100644 drivers/mfd/stm32-lptimer.c
+ create mode 100644 drivers/pwm/pwm-stm32-lp.c
+ create mode 100644 include/linux/iio/timer/stm32-lptim-trigger.h
+ create mode 100644 include/linux/mfd/stm32-lptimer.h
+ 
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
