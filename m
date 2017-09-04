@@ -1,149 +1,182 @@
-From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for Allwinner A64
-Date: Mon, 4 Sep 2017 09:14:52 +0100
-Message-ID: <d3d32839-12a8-71fa-cfec-03055d64388d@arm.com>
-References: <20170830233609.13855-4-stefan.bruens@rwth-aachen.de>
- <20170901003135.10058-1-andre.przywara@arm.com>
- <20170901060445.vboici7qxfkztp3s@flea>
- <743ae23a-372a-762b-c345-b914f09fd718@arm.com>
- <20170904070415.e6nclz5n23bo7f4v@flea>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5] arm64: allwinner: h5: add support for NanoPi NEO Plus2
+Date: Mon, 4 Sep 2017 10:27:32 +0200
+Message-ID: <20170904082732.g2q2tjd6qlvhaea7@flea>
+References: <20170824231716.2623-1-antony@phenome.org>
+ <20170830125057.38529-1-antony@phenome.org>
+ <20170831145859.rief3fqo36ns23rm@flea>
+ <20170901105313.m26y2re3ulskua43@AntonyAntony.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170904070415.e6nclz5n23bo7f4v@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: =?UTF-8?Q?Stefan_Br=c3=bcns?= <stefan.bruens@rwth-aachen.de>, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hx3j53k22auftwjx"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170901105313.m26y2re3ulskua43-sIi4olfLYEDaK4aX9S0K76zUEOm+Xw19@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Salut,
 
-On 04/09/17 08:04, Maxime Ripard wrote:
-> On Fri, Sep 01, 2017 at 11:35:40PM +0100, André Przywara wrote:
->> On 01/09/17 07:04, Maxime Ripard wrote:
->>> On Fri, Sep 01, 2017 at 01:31:35AM +0100, Andre Przywara wrote:
->>>> Hi,
->>>>
->>>> On 31/08/17 00:36, Stefan Brüns wrote:
->>>>> The A64 SoC has the same dma engine as the H3 (sun8i), with a
->>>>> reduced amount of physical channels. Add the proper config data
->>>>> and compatible string to support it.
->>>>
->>>> ...
->>>>
->>>>> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
->>>>> index 5f4eee4513e5..6a17c5d63582 100644
->>>>> --- a/drivers/dma/sun6i-dma.c
->>>>> +++ b/drivers/dma/sun6i-dma.c
->>>>> @@ -1068,6 +1068,12 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg = {
->>>>>  	.nr_max_vchans   = 34,
->>>>>  	.dmac_variant    = DMAC_VARIANT_H3,
->>>>>  };
->>>>> +
->>>>> +static struct sun6i_dma_config sun50i_a64_dma_cfg = {
->>>>> +	.nr_max_channels = 8,
->>>>> +	.nr_max_requests = 27,
->>>>> +	.nr_max_vchans   = 38,
->>>>> +	.dmac_variant    = DMAC_VARIANT_H3,
->>>>>  };
->>>>>  
->>>>>  static const struct of_device_id sun6i_dma_match[] = {
->>>>> @@ -1075,6 +1081,7 @@ static const struct of_device_id sun6i_dma_match[] = {
->>>>>  	{ .compatible = "allwinner,sun8i-a23-dma", .data = &sun8i_a23_dma_cfg },
->>>>>  	{ .compatible = "allwinner,sun8i-a83t-dma", .data = &sun8i_a83t_dma_cfg },
->>>>>  	{ .compatible = "allwinner,sun8i-h3-dma", .data = &sun8i_h3_dma_cfg },
->>>>> +	{ .compatible = "allwinner,sun50i-a64-dma", .data = &sun50i_a64_dma_cfg },
->>>>>  	{ /* sentinel */ }
->>>>>  };
->>>>>  MODULE_DEVICE_TABLE(of, sun6i_dma_match);
->>>>
->>>> I was wondering if should use the opportunity to expose those values as
->>>> DT properties instead of hard-wiring them to a compatible string in the
->>>> driver every time we add support for a new SoC?
->>>> We could introduce a new compatible string (say: "allwinner,sunxi-dma"),
->>>> then describe properties for the number of channels and requests and
->>>> vchans and parse those from the DT at probe time.
->>>> With this we might be able to support future SoCs without Linux *driver*
->>>> changes, by just providing the right DT. This would have worked already
->>>> for instance for the A83T support, which just changed those values.
->>>>
->>>> For instance with this quick patch below (just compile tested, and without
->>>> your refactoring).
->>>> The DT node would then read something like:
->>>> 	dma: dma-controller@01c02000 {
->>>> 		compatible = "allwinner,sun50i-a64-dma",
->>>> 			     "allwinner,sunxi-dma";
->>>> 		reg = <0x01c02000 0x1000>;
->>>> 		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
->>>> 		clocks = <&ccu CLK_BUS_DMA>;
->>>> 		resets = <&ccu RST_BUS_DMA>;
->>>> 		#dma-cells = <1>;
->>>> 		allwinner,max_channels = <8>;
->>>> 		allwinner,max_requests = <27>;
->>>> 		allwinner,max_vchans = <38>;
->>>> 	};
->>>
->>> We're still going to need a different compatible anyway, so it's not
->>> really like it would change anything.
->>
->> Well, not for now, but possibly in the future. And we should start with
->> this at one point. If we would have had this type of binding already for
->> H3, we could have added the A64 support without driver changes just by a
->> DT change.
-> 
-> That's not true. As usual with these kinds of generic binding
-> arguments (it's definitely not personal, you're far from the only one
-> making them), it completely ignores the fact that the IP itself might
-> change from one revision to another, and its behaviour might too.
+--hx3j53k22auftwjx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Not arguing that, and I totally see that those cases indeed require a
-new compatible string.
+Hi Antony,
 
-> The A64 for example moved at least one register off, and has a
-> different set of burst size / width.
+On Fri, Sep 01, 2017 at 12:53:13PM +0200, Antony Antony wrote:
+> > > +&emac {
+> > > +	pinctrl-names =3D "default";
+> > > +	pinctrl-0 =3D <&emac_rgmii_pins>;
+> > > +	phy-supply =3D <&reg_gmac_3v3>;
+> > > +	phy-handle =3D <&ext_rgmii_phy>;
+> > > +	phy-mode =3D "rgmii";
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > > +&mdio {
+> > > +	ext_rgmii_phy: ethernet-phy@7 {
+> > > +		compatible =3D "ethernet-phy-ieee802.3-c22";
+> > > +		reg =3D <7>;
+> > > +	};
+> > > +};
+> >=20
+> > This will not compile.
+>=20
+> I don't understand you, because, v5 file compiled for me. Here is output=
+=20
+> from running system, just the relevant part.  using dtc -I fs=20
+> /proc/device-tree
+>=20
+> ext_rgmii_phy =3D "/soc/ethernet@1c30000/mdio/ethernet-phy@7";
+>=20
+> ethernet@1c30000 {
+> 	mdio {
+> 	..
+> 		ethernet-phy@7 {
+> 			compatible =3D "ethernet-phy-ieee802.3-c22";
+> 			phandle =3D <0x1c>;
+> 			reg =3D <0x7>;
+> 			linux,phandle =3D <0x1c>;
+> 		};
+> };
+>=20
+> Is this what you expect?
 
-But that is only compared to the original A23/A31 model? AFAICT compared
-to the H3 DMA it's really only the number of supported DMA channels that
-has changed. For which we don't even need to invent a property name.
-My point was that as the driver is *at the moment* all those different
-compatible strings behaved the same (apart from the missing A23 clock
-gating), see commits f008db8c00c1 and 3a03ea763a67. The differences we
-coded in struct sun6i_dma_config were more or less artificial.
-Now thanks to Stefan we learned that the H3 is more different than we
-thought, so this argument doesn't hold anymore (but see below).
+The bindings have been reverted recently, so if you based your work on
+a version between 4.13-rc1 and 4.13-rc6 it will work, but anything
+more recent will not compile anymore.
 
-> It's something you can't account for when you initially define the
-> binding, unless you describe all the registers, plus all their
-> parameters and the way you interact with them, which isn't going to
-> happen if you want to keep your sanity.
+> > > +	status =3D "okay";
+> > > +
+> > > +	/*
+> > > +	 * AMPAK AP6212A WiFi module with BCM43430, rev=3D1 inside
+> > > +	 * sdio vendor ID: 0x02d0, sdio device ID: 0xa9a6
+> > > +	 * There is no specific Documentation: dt-binding for BCM43430
+> > > +	 * brcm,bcm4329-fmac compatible can initialize this module
+> > > +	 */
+> >=20
+> > This is not really relevant.
+>=20
+> would you prefer no comment or a rewrite? How does this look?
+>=20
+> /*
+>  * AMPAK AP6212A WiFi module with BCM43430, rev=3D1 inside
+>  * sdio vendor ID: 0x02d0, sdio device ID: 0xa9a6
+>  */
+>=20
+> I am afraid a casual reader would think "brcm,bcm4329-fmac" is wrong,=20
+> because that is not the actual chip inside the module.
 
-I agree on that.
+No comment is fine, and I'm not sure the casual reader will ever read
+this :)
 
-> And obviously, while maintaining the stability of the binding of those
-> hundreds properties.
-> 
-> Or, you can base all this on the compatible, and be done with it once
-> and for all.
+> > > +&mmc2_8bit_pins {
+> > > +	/* Increase drive strength for DDR modes */
+> > > +	drive-strength =3D <40>;
+> >=20
+> > It's very likely that you actually don't need 40mA
+>=20
+> drive-strength and the node mmc2_8bit_pins are gone. When I removed it=20
+> drive-strength =3D <0x1e>;  seems the default. And eMMC seems to work whe=
+n=20
+> booting from Micro SD.
 
-What I am after is to cover SoCs which *don't* have differences in their
-register layout, for instance A83T, H3, A64, R40.
-In an ideal world we could have reused the H3 compatible string,
-adjusting the number of channels for each SoC in the DT.
+Yes, we set the specs default in the DTSI. 40mA is above what the spec
+requires, so not a big deal, but useless.
 
-So I see that having a generic compatible name will not fly, as we now
-have differences which should not be modelled by DT properties.
-But I still think we should try to cover those non-register differences
-(number of channels) with a DT property, to allow reusing the existing
-driver code whenever possible. As is stands with this series, the R40
-support should just be a matter of:
-	compatible = "allwinner,sun8i-r40-dma",
-		     "allwinner,sun50i-a64-dma";
+> NOTE: the  40mA came from a vresion of vendor's old dts file and I also=
+=20
+> noticed the same value is used in other dts in kernel e.g=20
+> sun8i-h3-orangepi-plus.dts, sun9i-a80-cubieboard4.dts
+> It could be a copy paste error or those boards need it. Anyway I removed =
+it.
 
-I am aware that future SoCs might require new compatibles (I actually
-hope that they introduce 64-bit memory addresses at some point), but
-having the "dma-channels" DT parsing code in should then reduce the
-frequency of driver changes (for SoCs just copying existing DMA IP).
+And we used to let that in before yes, so there might be some places
+where it's left.
 
-Cheers,
-Andre.
+Feel free to clean them up if you feel bored :)
+
+> > > +&usb_otg {
+> > > +	dr_mode =3D "host";
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > > +&usbphy {
+> > > +	/* USB Type-A ports' VBUS is always on */
+> > > +	usb0_id_det-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+> >=20
+> > If it has an ID-detect pin, then it's not a host-only USB OTG
+> > controller. dr_mode should be set to otga=20
+>=20
+> good point. I don't see an ID-detect connected in the schematic. The=20
+> previous generation had.=20
+>=20
+> I will leave=20
+> &usb_otg {
+>   dr_mode =3D "host";
+>   status =3D "okay";
+> };
+>=20
+> &usbphy {
+> 	/* USB Type-A ports' VBUS is always on */
+> 	status =3D "okay";
+> };
+
+Looking at the schematics, it seems that the micro USB isn't even
+wired to a bus but is only used to power the board. If so, you can
+even remove the usb_otg node.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--hx3j53k22auftwjx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZrQ50AAoJEBx+YmzsjxAghJ8QAKoLRSetzxmZU/VHM66UW9Ty
+jaw85VUHmNexQF+M1UpU2LtMr92rILdcY4MhjrpFfRW1Qgbki02CqS4kTSdLPMSt
+r4ZEOVJqqbDp+KvbRJQazvKqRKigOWHzIpIkvZYkM2lvIjIyAqtnYWPWD0D9dp/w
+RmBGudVE1CwLgV0FuArLoy4xke9hLulCjCB2DwyQdu521MwBg5zgcwG5heOvr5/4
+CFGdc0XKyRrQSPcT/MaVG6EGxehEHcD9BhzvB+lxk5JQsS5TyDAVcd94CXpaOMG3
+30ZKVqzqLpHSEu8+cfvL9Y0KTJKuavicB9FKp9PJ2YAXMcubgH7VPm3t2GEL1DJr
+985NqQeXAfVM74jRVlfpRINGKVMOAzHk9I+w7010WZAhxStIsvSZT4OLCqDpQkVb
+pn3bEy5/Y6CZ0eIYEd9d9YcDTgOca6shvVPPXrvoJHLwY6Mr+xY2oEnv8jTfUBUH
+88J/nBlDahRZxHQm58G9KIXg6hfNJJTendce88EtIyMOXt1zr6OFHsPKs2jN1ns0
+HpVYkte3IPkuspN3l8TIoaewLNtPLM/wtnqa2/7G6PSHlO5h4iff7sDUEfDbug2A
+5OyGwfnFt8C9pWhTiIM36qbmvXvzjaaLhO7rGS5I1OtqBvURn2blpyY/uRiIZ4BY
+fbkZmulj/s+zqp/edjjR
+=sHYo
+-----END PGP SIGNATURE-----
+
+--hx3j53k22auftwjx--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
