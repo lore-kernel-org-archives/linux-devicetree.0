@@ -1,97 +1,64 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH 3/7] ASoC: arizona: Add audio device tree bindings
-Date: Mon, 4 Sep 2017 16:41:50 +0100
-Message-ID: <20170904154154.4395-4-ckeepax@opensource.cirrus.com>
-References: <20170904154154.4395-1-ckeepax@opensource.cirrus.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v7 01/18] v4l: fwnode: Move KernelDoc documentation to
+ the header
+Date: Mon, 4 Sep 2017 17:49:40 +0200
+Message-ID: <20170904154940.GA19484@amd>
+References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
+ <20170903174958.27058-2-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170904154154.4395-1-ckeepax@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, lee.jones@linaro.org
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170903174958.27058-2-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In keeping with the style of the rest of this drivers device tree
-bindings split the audio device tree bindings into their own document.
-It should be noted this patch makes no change to the binding itself
-just moves the documentation into a specific file for the audio
-binding. For easy of merging a separate patch removes the current
-documentation from the MFD binding documentation.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- .../devicetree/bindings/sound/wlf,arizona.txt      | 49 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/wlf,arizona.txt
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/sound/wlf,arizona.txt b/Documentation/devicetree/bindings/sound/wlf,arizona.txt
-new file mode 100644
-index 000000000000..4e67224488d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/wlf,arizona.txt
-@@ -0,0 +1,49 @@
-+Cirrus Logic Arizona class audio SoCs
-+
-+These devices are audio SoCs with extensive digital capabilities and a range
-+of analogue I/O.
-+
-+This document lists sound specific bindings, see the primary binding
-+document:
-+  ../mfd/arizona.txt
-+
-+Optional properties:
-+
-+  - wlf,inmode : A list of INn_MODE register values, where n is the number
-+    of input signals. Valid values are 0 (Differential), 1 (Single-ended) and
-+    2 (Digital Microphone). If absent, INn_MODE registers set to 0 by default.
-+    If present, values must be specified less than or equal to the number of
-+    input signals. If values less than the number of input signals, elements
-+    that have not been specified are set to 0 by default. Entries are:
-+    <IN1, IN2, IN3, IN4> (wm5102, wm5110, wm8280, wm8997)
-+    <IN1A, IN2A, IN1B, IN2B> (wm8998, wm1814)
-+  - wlf,out-mono : A list of boolean values indicating whether each output is
-+    mono or stereo. Position within the list indicates the output affected
-+    (eg. First entry in the list corresponds to output 1). A non-zero value
-+    indicates a mono output. If present, the number of values should be less
-+    than or equal to the number of outputs, if less values are supplied the
-+    additional outputs will be treated as stereo.
-+
-+  - wlf,dmic-ref : DMIC reference voltage source for each input, can be
-+    selected from either MICVDD or one of the MICBIAS's, defines
-+    (ARIZONA_DMIC_xxxx) are provided in <dt-bindings/mfd/arizona.txt>. If
-+    present, the number of values should be less than or equal to the
-+    number of inputs, unspecified inputs will use the chip default.
-+
-+  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
-+    each AIF, useful for I2S systems with multiple data lines being mastered.
-+    Specify one cell for each AIF to be configured, specify zero for AIFs that
-+    should be handled normally.
-+    If present, number of cells must be less than or equal to the number of
-+    AIFs. If less than the number of AIFs, for cells that have not been
-+    specified the corresponding AIFs will be treated as default setting.
-+
-+  - wlf,spk-fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
-+    See the datasheet for values.
-+    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
-+      wm8998, wm1814)
-+
-+  - wlf,spk-mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
-+    See the datasheet for values.
-+    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
-+    wm8998, wm1814)
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1c3feffb1c1c..9018b9584b1b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14288,6 +14288,7 @@ F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
- F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
- F:	Documentation/devicetree/bindings/mfd/arizona.txt
- F:	Documentation/devicetree/bindings/mfd/wm831x.txt
-+F:	Documentation/devicetree/bindings/sound/wlf,arizona.txt
- F:	arch/arm/mach-s3c64xx/mach-crag6410*
- F:	drivers/clk/clk-wm83*.c
- F:	drivers/extcon/extcon-arizona.c
--- 
-2.11.0
+On Sun 2017-09-03 20:49:41, Sakari Ailus wrote:
+> In V4L2 the practice is to have the KernelDoc documentation in the header
+> and not in .c source code files. This consequientally makes the V4L2
+
+consequientally: spelling?
+
+> fwnode function documentation part of the Media documentation build.
+>=20
+> Also correct the link related function and argument naming in
+> documentation.
+>=20
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+
+Something funny going on with utf-8 here.
+
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmtdhQACgkQMOfwapXb+vLaIwCeOPrJsSUSKtY1Z/guQjHpjW+R
+uREAoKP9bKses/ZucaZ3e/C2dMBIo/2f
+=ZfIc
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
