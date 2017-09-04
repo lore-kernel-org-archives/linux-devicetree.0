@@ -1,73 +1,80 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v7 04/18] v4l: fwnode: Support generic parsing of graph
- endpoints in a device
-Date: Mon, 4 Sep 2017 23:30:37 +0300
-Message-ID: <20170904203036.aeyz335w7eypxj4m@valkosipuli.retiisi.org.uk>
-References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
- <20170903174958.27058-5-sakari.ailus@linux.intel.com>
- <e07f9b4d-e8dc-5598-98ee-3c69e3100b81@xs4all.nl>
- <20170904155415.nak4dofd2k6ytupa@valkosipuli.retiisi.org.uk>
- <cad608c6-93b6-d791-a14a-a5b38fe6e1bf@xs4all.nl>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] dt-binding: net: sfp binding documentation
+Date: Tue, 5 Sep 2017 00:11:21 +0300
+Message-ID: <20170904211121.hl2gnwxiizli5brd@tarshish>
+References: <c2a27566a8eb358ee2566a213c385d0bf3d64307.1504441874.git.baruch@tkos.co.il>
+ <01ae7bc45d68322669d18a4feeaeef733ba888d7.1504441874.git.baruch@tkos.co.il>
+ <5df7f2f5-04f7-85b1-4a53-935360001b7c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cad608c6-93b6-d791-a14a-a5b38fe6e1bf@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+In-Reply-To: <5df7f2f5-04f7-85b1-4a53-935360001b7c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 04, 2017 at 07:37:09PM +0200, Hans Verkuil wrote:
-> On 09/04/2017 05:54 PM, Sakari Ailus wrote:
-> >>> +/**
-> >>> + * v4l2_async_notifier_parse_fwnode_endpoints - Parse V4L2 fwnode endpoints in a
-> >>> + *						device node
-> >>> + * @dev: the device the endpoints of which are to be parsed
-> >>> + * @notifier: notifier for @dev
-> >>> + * @asd_struct_size: size of the driver's async sub-device struct, including
-> >>> + *		     sizeof(struct v4l2_async_subdev). The &struct
-> >>> + *		     v4l2_async_subdev shall be the first member of
-> >>> + *		     the driver's async sub-device struct, i.e. both
-> >>> + *		     begin at the same memory address.
-> >>> + * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
-> >>> + *		    endpoint. Optional.
-> >>> + *		    Return: %0 on success
-> >>> + *			    %-ENOTCONN if the endpoint is to be skipped but this
-> >>> + *				       should not be considered as an error
-> >>> + *			    %-EINVAL if the endpoint configuration is invalid
-> >>> + *
-> >>> + * Parse the fwnode endpoints of the @dev device and populate the async sub-
-> >>> + * devices array of the notifier. The @parse_endpoint callback function is
-> >>> + * called for each endpoint with the corresponding async sub-device pointer to
-> >>> + * let the caller initialize the driver-specific part of the async sub-device
-> >>> + * structure.
-> >>> + *
-> >>> + * The notifier memory shall be zeroed before this function is called on the
-> >>> + * notifier.
-> >>> + *
-> >>> + * This function may not be called on a registered notifier and may be called on
-> >>> + * a notifier only once. When using this function, the user may not access the
-> >>> + * notifier's subdevs array nor change notifier's num_subdevs field, these are
-> >>> + * reserved for the framework's internal use only.
-> >>
-> >> I don't think the sentence "When using...only" makes any sense. How would you
-> >> even be able to access any of the notifier fields? You don't have access to it
-> >> from the parse_endpoint callback.
-> > 
-> > Not from the parse_endpoint callback. The notifier is first set up by the
-> > driver, and this text applies to that --- whether or not parse_endpoint is
-> > given.
+Hi Florian,
+
+On Mon, Sep 04, 2017 at 01:16:26PM -0700, Florian Fainelli wrote:
+> Le 09/03/17 à 05:31, Baruch Siach a écrit : 
+
+[...]
+
+> > diff --git a/Documentation/devicetree/bindings/net/sff,sfp.txt b/Documentation/devicetree/bindings/net/sff,sfp.txt
+> > new file mode 100644
+> > index 000000000000..b98ee5945265
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/sff,sfp.txt
+> > @@ -0,0 +1,78 @@
+> > +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
+> > +Transceiver
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : must be "sff,sfp"
+> > +
+> > +Optional Properties:
+> > +
+> > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
+> > +  interface
+> > +
+> > +- moddef0-gpios : GPIO phandle and a single specifier of the MOD-DEF0 (AKA
+> > +  Mod_ABS) module presence input gpio signal, active (module absent) high
 > 
-> What you mean is "After calling this function..." since v4l2_async_notifier_release()
-> needs this to release all the memory.
+> Sorry for nitpicking on this, why are not we naming this mod-def0-gpios
+> which would be consistent with how other GPIOs are named?
 
-Right, that's a good point.
+I'm fine with that as well. It only requires changing the implementation to 
+match.
 
-notifier->subdevs may be allocated by the driver as well, so
-v4l2_async_notifier_release() must take that into account.
-notifier->max_subdevs should be good for that.
+> > +
+> > +- los-gpios : GPIO phandle and a single specifier of the Receiver Loss of
+> > +  Signal Indication input gpio signal, active (signal lost) high
+> > +
+> > +- tx-fault-gpios : GPIO phandle and a single specifier of the Module
+> > +  Transmitter Fault input gpio signal, active (fault condition) high
+> > +
+> > +- tx-disable-gpios : GPIO phandle and a single specifier of the Transmitter
+> > +  Disable output gpio signal, active (Tx disable) high
+> > +
+> > +- rate-select0-gpios : GPIO phandle and a single specifier of the Rx Signaling
+> > +  Rate Select (AKA RS0) output gpio signal, low: low Rx rate, high: high Rx
+> > +  rate
+> > +
+> > +- rate-select1-gpios : GPIO phandle and a single specifier of the Tx Signaling
+> > +  Rate Select (AKA RS1) output gpio signal (SFP+ only), low: low Tx rate,
+> > +  high: high Tx rate
+
+baruch
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
