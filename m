@@ -1,51 +1,71 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH 2/2] arm64: dts: hi6220: enable watchdog
-Date: Mon, 4 Sep 2017 10:21:00 +0100
-Message-ID: <59AD1AFC.8060600@hisilicon.com>
-References: <1503993518-24428-1-git-send-email-leo.yan@linaro.org>
- <1503993518-24428-2-git-send-email-leo.yan@linaro.org>
- <20170901013233.GL21656@codeaurora.org> <59A937E7.2060303@hisilicon.com>
- <20170901202816.GZ21656@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170901202816.GZ21656@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARC: HSDK: Add core pll node to DT to manage cpu clk
+Date: Mon,  4 Sep 2017 12:48:43 +0300
+Message-ID: <20170904094843.32207-1-Eugeniy.Paltsev@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Add core pll node (core_clk) to manage cpu frequency.
+core_clk node represents pll itself.
+input_clk node represents clock signal source (basically xtal)
+which comes to pll input.
 
-On 2017/9/1 21:28, Stephen Boyd wrote:
-> On 09/01, Wei Xu wrote:
->> Hi Stephen,
->>
->> On 2017/9/1 2:32, Stephen Boyd wrote:
->>> On 08/29, Leo Yan wrote:
->>>> From: Dmitry Shmidt <dimitrysh@google.com>
->>>>
->>>> This patch is to add watchdog binding for Hi6220 on Hikey board.
->>>>
->>>> Signed-off-by: Dmitry Shmidt <dimitrysh@google.com>
->>>> ---
->>>
->>> This will go through arm-soc?
->>>
->>
->> Can you pick up it for v4.14?
->> Otherwise I am fine to pick up it and queue for v4.15.
-> 
-> Sounds like it will go for v4.15. Otherwise, you can send it to
-> arm-soc with the raw number instead of #define number and then
-> fix it up to use the #define later.
-> 
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ arch/arc/boot/dts/hsdk.dts      | 11 +++++++++--
+ arch/arc/configs/hsdk_defconfig |  1 +
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-I did not get your meaning.
-Do you mean the "HI6220_WDT0/1/2_PCLK" in the patch 1 that
-we need to replace with raw number?
-They are already in the mainline.
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 229d13a..8412669 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -57,10 +57,10 @@
+ 		};
+ 	};
+ 
+-	core_clk: core-clk {
++	input_clk: input-clk {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+-		clock-frequency = <500000000>;
++		clock-frequency = <33333333>;
+ 	};
+ 
+ 	cpu_intc: cpu-interrupt-controller {
+@@ -102,6 +102,13 @@
+ 
+ 		ranges = <0x00000000 0xf0000000 0x10000000>;
+ 
++		core_clk: core-clk@0 {
++			compatible = "snps,hsdk-core-pll-clock";
++			reg = <0x00 0x10>, <0x14B8 0x4>;
++			#clock-cells = <0>;
++			clocks = <&input_clk>;
++		};
++
+ 		serial: serial@5000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x5000 0x100>;
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index a7114cd..3f35f52 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -62,6 +62,7 @@ CONFIG_MMC=y
+ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_DW=y
++CONFIG_CLK_HSDK=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_EXT3_FS=y
+ CONFIG_VFAT_FS=y
+-- 
+2.9.3
 
-Best Regards,
-Wei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
