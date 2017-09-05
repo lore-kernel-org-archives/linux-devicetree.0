@@ -1,660 +1,100 @@
 From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
-Subject: [PATCHv7 3/3] ARM:drm ivip Intel FPGA Video and Image Processing Suite
-Date: Tue,  5 Sep 2017 15:12:32 +0800
-Message-ID: <1504595552-9209-4-git-send-email-hean.loong.ong@intel.com>
+Subject: [PATCHv7] ARM:dt-bindings:display Intel FPGA Video and Image
+ Processing Suite
+Date: Tue,  5 Sep 2017 15:12:30 +0800
+Message-ID: <1504595552-9209-2-git-send-email-hean.loong.ong@intel.com>
 References: <1504595552-9209-1-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1504595552-9209-1-git-send-email-hean.loong.ong@intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Randy Dunlap <rdunlap@infradead.org>
-Cc: hean.loong.ong@intel.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, hean.loong.ong@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Ong@freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ong Hean Loong <hean.loong.ong@intel.com>
-
-Driver for Intel FPGA Video and Image Processing Suite Frame Buffer II.
-The driver only supports the Intel Arria10 devkit and its variants.
-This driver can be either loaded staticlly or in modules.
-The OF device tree binding is located at:
-Documentation/devicetree/bindings/display/altr,vip-fb2.txt
-
-Signed-off-by: Ong Hean Loong <hean.loong.ong@intel.com>
----
-V7:
-*Fix Comments. Fix indentation in Makefile
-
-V6:
-*Fix Comments. Commit comments need to be discriptive
-
-V5:
-*Fix Comments. Remove dem_kfree and bits per symbol
-
-V4:
-*No fixes.
-
-V3:
-*Changes to fixing drm_simple_pipe
-*Used drm_fb_cma_get_gem_addr
-
-V2:
-*Adding drm_simple_display_pipe_init
-
----
----
- drivers/gpu/drm/Kconfig               |   2 +
- drivers/gpu/drm/Makefile              |   1 +
- drivers/gpu/drm/ivip/Kconfig          |  14 +++
- drivers/gpu/drm/ivip/Makefile         |   9 ++
- drivers/gpu/drm/ivip/intel_vip_conn.c |  96 +++++++++++++++++
- drivers/gpu/drm/ivip/intel_vip_core.c | 162 ++++++++++++++++++++++++++++
- drivers/gpu/drm/ivip/intel_vip_drv.h  |  52 +++++++++
- drivers/gpu/drm/ivip/intel_vip_of.c   | 194 ++++++++++++++++++++++++++++++++++
- 8 files changed, 530 insertions(+)
- create mode 100644 drivers/gpu/drm/ivip/Kconfig
- create mode 100644 drivers/gpu/drm/ivip/Makefile
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_core.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_of.c
-
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 83cb2a8..38a184d 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -195,6 +195,8 @@ source "drivers/gpu/drm/nouveau/Kconfig"
- 
- source "drivers/gpu/drm/i915/Kconfig"
- 
-+source "drivers/gpu/drm/ivip/Kconfig"
-+
- config DRM_VGEM
- 	tristate "Virtual GEM provider"
- 	depends on DRM
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 24a066e..4162a0e 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -58,6 +58,7 @@ obj-$(CONFIG_DRM_AMDGPU)+= amd/amdgpu/
- obj-$(CONFIG_DRM_MGA)	+= mga/
- obj-$(CONFIG_DRM_I810)	+= i810/
- obj-$(CONFIG_DRM_I915)	+= i915/
-+obj-$(CONFIG_DRM_IVIP) += ivip/
- obj-$(CONFIG_DRM_MGAG200) += mgag200/
- obj-$(CONFIG_DRM_VC4)  += vc4/
- obj-$(CONFIG_DRM_CIRRUS_QEMU) += cirrus/
-diff --git a/drivers/gpu/drm/ivip/Kconfig b/drivers/gpu/drm/ivip/Kconfig
-new file mode 100644
-index 0000000..bf2d995
---- /dev/null
-+++ b/drivers/gpu/drm/ivip/Kconfig
-@@ -0,0 +1,14 @@
-+config DRM_IVIP
-+        tristate "Intel FGPA Video and Image Processing"
-+        depends on DRM && OF
-+        select DRM_GEM_CMA_HELPER
-+        select DRM_KMS_HELPER
-+        select DRM_KMS_FB_HELPER
-+        select DRM_KMS_CMA_HELPER
-+        help
-+		  Choose this option if you have an Intel FPGA Arria 10 system
-+		  and above with an Intel Display Port IP. This does not support
-+		  legacy Intel FPGA Cyclone V display port. Currently only single
-+		  frame buffer is supported. Note that ACPI and X_86 architecture
-+		  is not supported for Arria10. If M is selected the module will be
-+		  called ivip.
-diff --git a/drivers/gpu/drm/ivip/Makefile b/drivers/gpu/drm/ivip/Makefile
-new file mode 100644
-index 0000000..cc55b04
---- /dev/null
-+++ b/drivers/gpu/drm/ivip/Makefile
-@@ -0,0 +1,9 @@
-+#
-+# Makefile for the drm device driver.  This driver provides support for the
-+# Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
-+
-+ccflags-y := -Iinclude/drm
-+
-+obj-$(CONFIG_DRM_IVIP) += ivip.o
-+ivip-objs := intel_vip_of.o intel_vip_core.o \
-+	intel_vip_conn.o
-diff --git a/drivers/gpu/drm/ivip/intel_vip_conn.c b/drivers/gpu/drm/ivip/intel_vip_conn.c
-new file mode 100644
-index 0000000..c88df23
---- /dev/null
-+++ b/drivers/gpu/drm/ivip/intel_vip_conn.c
-@@ -0,0 +1,96 @@
-+/*
-+ * intel_vip_conn.c -- Intel Video and Image Processing(VIP)
-+ * Frame Buffer II driver
-+ *
-+ * This driver supports the Intel VIP Frame Reader component.
-+ * More info on the hardware can be found in the Intel Video
-+ * and Image Processing Suite User Guide at this address
-+ * http://www.altera.com/literature/ug/ug_vip.pdf.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * Authors:
-+ * Ong, Hean-Loong <hean.loong.ong@intel.com>
-+ *
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_encoder_slave.h>
-+#include <drm/drm_plane_helper.h>
-+
-+static enum drm_connector_status
-+intelvipfb_drm_connector_detect(struct drm_connector *connector, bool force)
-+{
-+	return connector_status_connected;
-+}
-+
-+static void intelvipfb_drm_connector_destroy(struct drm_connector *connector)
-+{
-+	drm_connector_unregister(connector);
-+	drm_connector_cleanup(connector);
-+}
-+
-+static const struct drm_connector_funcs intelvipfb_drm_connector_funcs = {
-+	.dpms = drm_atomic_helper_connector_dpms,
-+	.reset = drm_atomic_helper_connector_reset,
-+	.detect = intelvipfb_drm_connector_detect,
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.destroy = intelvipfb_drm_connector_destroy,
-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+};
-+
-+static int intelvipfb_drm_connector_get_modes(struct drm_connector *connector)
-+{
-+	struct drm_device *drm = connector->dev;
-+	int count;
-+
-+	count = drm_add_modes_noedid(connector, drm->mode_config.max_width,
-+			drm->mode_config.max_height);
-+	drm_set_preferred_mode(connector, drm->mode_config.max_width,
-+			drm->mode_config.max_height);
-+	return count;
-+}
-+
-+static const struct drm_connector_helper_funcs
-+intelvipfb_drm_connector_helper_funcs = {
-+	.get_modes = intelvipfb_drm_connector_get_modes,
-+};
-+
-+struct drm_connector *
-+intelvipfb_conn_setup(struct drm_device *drm)
-+{
-+	struct drm_connector *conn;
-+	int ret;
-+
-+	conn = devm_kzalloc(drm->dev, sizeof(*conn), GFP_KERNEL);
-+	if (IS_ERR(conn))
-+		return NULL;
-+
-+	ret = drm_connector_init(drm, conn, &intelvipfb_drm_connector_funcs,
-+			DRM_MODE_CONNECTOR_DisplayPort);
-+	if (ret < 0) {
-+		dev_err(drm->dev, "failed to initialize drm connector\n");
-+		ret = -ENOMEM;
-+		goto error_connector_cleanup;
-+	}
-+
-+	drm_connector_helper_add(conn, &intelvipfb_drm_connector_helper_funcs);
-+
-+	return conn;
-+
-+error_connector_cleanup:
-+	drm_connector_cleanup(conn);
-+
-+	return NULL;
-+}
-diff --git a/drivers/gpu/drm/ivip/intel_vip_core.c b/drivers/gpu/drm/ivip/intel_vip_core.c
-new file mode 100644
-index 0000000..6b43c13
---- /dev/null
-+++ b/drivers/gpu/drm/ivip/intel_vip_core.c
-@@ -0,0 +1,162 @@
-+/*
-+ * intel_vip_core.c -- Intel Video and Image Processing(VIP)
-+ * Frame Buffer II driver
-+ *
-+ * This driver supports the Intel VIP Frame Reader component.
-+ * More info on the hardware can be found in the Intel Video
-+ * and Image Processing Suite User Guide at this address
-+ * http://www.altera.com/literature/ug/ug_vip.pdf.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * Authors:
-+ * Ong, Hean-Loong <hean.loong.ong@intel.com>
-+ *
-+ */
-+
-+#include <drm/drmP.h>
-+#include <drm/drm_atomic.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_fb_helper.h>
-+#include <drm/drm_fb_cma_helper.h>
-+#include <drm/drm_gem_cma_helper.h>
-+#include <drm/drm_plane_helper.h>
-+#include <drm/drm_simple_kms_helper.h>
-+
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+
-+#include "intel_vip_drv.h"
-+
-+static void intelvipfb_enable(struct drm_simple_display_pipe *pipe,
-+	       struct drm_crtc_state *crtc_state)
-+{
-+	/*
-+	 * The frameinfo variable has to correspond to the size of the VIP Suite
-+	 * Frame Reader register 7 which will determine the maximum size used
-+	 * in this frameinfo
-+	 */
-+
-+	u32 frameinfo;
-+	struct intelvipfb_priv *priv = pipe->plane.dev->dev_private;
-+	void __iomem *base = priv->base;
-+	struct drm_plane_state *state = pipe->plane.state;
-+	dma_addr_t addr;
-+
-+	addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
-+
-+	dev_info(pipe->plane.dev->dev, "Address 0x%x\n", addr);
-+
-+	frameinfo =
-+		readl(base + INTELVIPFB_FRAME_READER) & 0x00ffffff;
-+	writel(frameinfo, base + INTELVIPFB_FRAME_INFO);
-+	writel(addr, base + INTELVIPFB_FRAME_START);
-+	/* Finally set the control register to 1 to start streaming */
-+	writel(1, base + INTELVIPFB_CONTROL);
-+}
-+
-+static void intelvipfb_disable(struct drm_simple_display_pipe *pipe)
-+{
-+	struct intelvipfb_priv *priv = pipe->plane.dev->dev_private;
-+	void __iomem *base = priv->base;
-+	/* set the control register to 0 to stop streaming */
-+	writel(0, base + INTELVIPFB_CONTROL);
-+}
-+
-+static const struct drm_mode_config_funcs intelvipfb_mode_config_funcs = {
-+	.fb_create = drm_fb_cma_create,
-+	.atomic_check = drm_atomic_helper_check,
-+	.atomic_commit = drm_atomic_helper_commit,
-+};
-+
-+static void intelvipfb_setup_mode_config(struct drm_device *drm)
-+{
-+	drm_mode_config_init(drm);
-+	drm->mode_config.funcs = &intelvipfb_mode_config_funcs;
-+}
-+
-+static int intelvipfb_pipe_prepare_fb(struct drm_simple_display_pipe *pipe,
-+					struct drm_plane_state *plane_state)
-+{
-+	return drm_fb_cma_prepare_fb(&pipe->plane, plane_state);
-+}
-+
-+
-+static struct drm_simple_display_pipe_funcs fbpriv_funcs = {
-+	.prepare_fb = intelvipfb_pipe_prepare_fb,
-+	.enable = intelvipfb_enable,
-+	.disable = intelvipfb_disable
-+};
-+
-+int intelvipfb_probe(struct device *dev)
-+{
-+	int retval;
-+	struct drm_device *drm;
-+	struct intelvipfb_priv *fbpriv = dev_get_drvdata(dev);
-+	struct drm_connector *connector;
-+	u32 formats[] = {DRM_FORMAT_XRGB8888};
-+
-+	drm = fbpriv->drm;
-+
-+	drm->dev_private = fbpriv;
-+
-+	intelvipfb_setup_mode_config(drm);
-+
-+	connector = intelvipfb_conn_setup(drm);
-+	if (!connector) {
-+		dev_err(drm->dev, "Connector setup failed\n");
-+		goto err_mode_config;
-+	}
-+
-+	retval = drm_simple_display_pipe_init(drm, &fbpriv->pipe,
-+			&fbpriv_funcs, formats,
-+			ARRAY_SIZE(formats), connector);
-+	if (retval < 0) {
-+		dev_err(drm->dev, "Cannot setup simple display pipe\n");
-+		goto err_mode_config;
-+	}
-+
-+	fbpriv->fbcma = drm_fbdev_cma_init(drm,
-+			drm->mode_config.preferred_depth,
-+			drm->mode_config.num_connector);
-+
-+	drm_mode_config_reset(drm);
-+
-+	drm_dev_register(drm, 0);
-+
-+	return retval;
-+
-+err_mode_config:
-+
-+	drm_mode_config_cleanup(drm);
-+	return -ENODEV;
-+}
-+
-+int intelvipfb_remove(struct device *dev)
-+{
-+	struct intelvipfb_priv *fbpriv = dev_get_drvdata(dev);
-+	struct drm_device *drm =  fbpriv->drm;
-+
-+	drm_dev_unregister(drm);
-+
-+	if (fbpriv->fbcma)
-+		drm_fbdev_cma_fini(fbpriv->fbcma);
-+
-+	drm_mode_config_cleanup(drm);
-+	drm_dev_unref(drm);
-+
-+	return 0;
-+}
-+
-+MODULE_AUTHOR("Ong, Hean-Loong <hean.loong.ong@intel.com>");
-+MODULE_DESCRIPTION("Intel VIP Frame Buffer II driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/gpu/drm/ivip/intel_vip_drv.h b/drivers/gpu/drm/ivip/intel_vip_drv.h
-new file mode 100644
-index 0000000..0a3555d
---- /dev/null
-+++ b/drivers/gpu/drm/ivip/intel_vip_drv.h
-@@ -0,0 +1,52 @@
-+/*
-+ * Copyright (C) 2017 Intel Corporation.
-+ *
-+ * Intel Video and Image Processing(VIP) Frame Buffer II driver.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Authors:
-+ * Ong, Hean-Loong <hean.loong.ong@intel.com>
-+ *
-+ */
-+#ifndef _INTEL_VIP_DRV_H
-+#define _INTEL_VIP_DRV_H
-+
-+#define DRIVER_NAME    "intelvipfb"
-+#define BYTES_PER_PIXEL	 4
-+#define CRTC_NUM	        1
-+#define CONN_NUM	        1
-+
-+/* control registers */
-+#define INTELVIPFB_CONTROL	      0
-+#define INTELVIPFB_STATUS	       0x4
-+#define INTELVIPFB_INTERRUPT	    0x8
-+#define INTELVIPFB_FRAME_COUNTER	0xC
-+#define INTELVIPFB_FRAME_DROP	   0x10
-+#define INTELVIPFB_FRAME_INFO	   0x14
-+#define INTELVIPFB_FRAME_START	  0x18
-+#define INTELVIPFB_FRAME_READER	         0x1C
-+
-+int intelvipfb_probe(struct device *dev);
-+int intelvipfb_remove(struct device *dev);
-+int intelvipfb_setup_crtc(struct drm_device *drm);
-+struct drm_connector *intelvipfb_conn_setup(struct drm_device *drm);
-+
-+struct intelvipfb_priv {
-+	struct drm_simple_display_pipe pipe;
-+	struct drm_fbdev_cma *fbcma;
-+	struct drm_device *drm;
-+	void    __iomem *base;
-+};
-+
-+#endif
-diff --git a/drivers/gpu/drm/ivip/intel_vip_of.c b/drivers/gpu/drm/ivip/intel_vip_of.c
-new file mode 100644
-index 0000000..b46f789
---- /dev/null
-+++ b/drivers/gpu/drm/ivip/intel_vip_of.c
-@@ -0,0 +1,194 @@
-+/*
-+ * intel_vip_of.c -- Intel Video and Image Processing(VIP)
-+ * Frame Buffer II driver
-+ *
-+ * This driver supports the Intel VIP Frame Reader component.
-+ * More info on the hardware can be found in the Intel Video
-+ * and Image Processing Suite User Guide at this address
-+ * http://www.altera.com/literature/ug/ug_vip.pdf.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * Authors:
-+ * Ong, Hean-Loong <hean.loong.ong@intel.com>
-+ *
-+ */
-+#include <drm/drm_fb_helper.h>
-+#include <drm/drm_fb_cma_helper.h>
-+#include <drm/drm_gem_cma_helper.h>
-+#include <drm/drm_of.h>
-+#include <drm/drm_simple_kms_helper.h>
-+
-+#include <linux/component.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include "intel_vip_drv.h"
-+
-+DEFINE_DRM_GEM_CMA_FOPS(drm_fops);
-+
-+static void intelvipfb_lastclose(struct drm_device *drm)
-+{
-+	struct intelvipfb_priv *priv = drm->dev_private;
-+
-+	drm_fbdev_cma_restore_mode(priv->fbcma);
-+}
-+
-+static struct drm_driver intelvipfb_drm = {
-+	.driver_features =
-+			DRIVER_MODESET | DRIVER_GEM |
-+			DRIVER_PRIME | DRIVER_ATOMIC,
-+	.gem_free_object_unlocked = drm_gem_cma_free_object,
-+	.gem_vm_ops = &drm_gem_cma_vm_ops,
-+	.dumb_create = drm_gem_cma_dumb_create,
-+	.dumb_map_offset = drm_gem_cma_dumb_map_offset,
-+	.dumb_destroy = drm_gem_dumb_destroy,
-+	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
-+	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
-+	.gem_prime_export = drm_gem_prime_export,
-+	.gem_prime_import = drm_gem_prime_import,
-+	.gem_prime_get_sg_table = drm_gem_cma_prime_get_sg_table,
-+	.gem_prime_import_sg_table = drm_gem_cma_prime_import_sg_table,
-+	.gem_prime_vmap = drm_gem_cma_prime_vmap,
-+	.gem_prime_vunmap = drm_gem_cma_prime_vunmap,
-+	.gem_prime_mmap = drm_gem_cma_prime_mmap,
-+	.lastclose = intelvipfb_lastclose,
-+	.name = DRIVER_NAME,
-+	.date = "20170729",
-+	.desc = "Intel FPGA VIP SUITE",
-+	.major = 1,
-+	.minor = 0,
-+	.ioctls = NULL,
-+	.patchlevel = 0,
-+	.fops = &drm_fops,
-+};
-+
-+/*
-+ * Setting up information derived from OF Device Tree Nodes
-+ * max-width, max-height, bits per pixel, memory port width
-+ */
-+
-+static int intelvipfb_drm_setup(struct device *dev,
-+					struct intelvipfb_priv *fbpriv)
-+{
-+	struct drm_device *drm = fbpriv->drm;
-+	struct device_node *np = dev->of_node;
-+	int mem_word_width;
-+	int max_h, max_w;
-+	int ret;
-+
-+	ret = of_property_read_u32(np, "altr,max-width", &max_w);
-+	if (ret) {
-+		dev_err(dev,
-+			"Missing required parameter 'altr,max-width'");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(np, "altr,max-height", &max_h);
-+	if (ret) {
-+		dev_err(dev,
-+			"Missing required parameter 'altr,max-height'");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(np, "altr,mem-port-width", &mem_word_width);
-+	if (ret) {
-+		dev_err(dev, "Missing required parameter 'altr,mem-port-width '");
-+		return ret;
-+	}
-+
-+	if (!(mem_word_width >= 32 && mem_word_width % 32 == 0)) {
-+		dev_err(dev,
-+			"mem-word-width is set to %i. must be >= 32 and multiple of 32.",
-+			 mem_word_width);
-+		return -ENODEV;
-+	}
-+
-+	drm->mode_config.min_width = 640;
-+	drm->mode_config.min_height = 480;
-+	drm->mode_config.max_width = max_w;
-+	drm->mode_config.max_height = max_h;
-+	drm->mode_config.preferred_depth = 32;
-+
-+	return 0;
-+}
-+
-+static int intelvipfb_of_probe(struct platform_device *pdev)
-+{
-+	int retval;
-+	struct resource *reg_res;
-+	struct intelvipfb_priv *fbpriv;
-+	struct device *dev = &pdev->dev;
-+	struct drm_device *drm;
-+
-+	fbpriv = devm_kzalloc(dev, sizeof(*fbpriv), GFP_KERNEL);
-+	if (!fbpriv)
-+		return -ENOMEM;
-+
-+	/*setup DRM */
-+	drm = drm_dev_alloc(&intelvipfb_drm, dev);
-+	if (IS_ERR(drm))
-+		return PTR_ERR(drm);
-+
-+	retval = dma_set_mask_and_coherent(drm->dev, DMA_BIT_MASK(32));
-+	if (retval)
-+		return -ENODEV;
-+
-+	fbpriv->drm = drm;
-+
-+	reg_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!reg_res)
-+		return -ENOMEM;
-+
-+	fbpriv->base = devm_ioremap_resource(dev, reg_res);
-+
-+	if (IS_ERR(fbpriv->base)) {
-+		dev_err(dev, "devm_ioremap_resource failed\n");
-+		retval = PTR_ERR(fbpriv->base);
-+		return -ENOMEM;
-+	}
-+
-+	intelvipfb_drm_setup(dev, fbpriv);
-+
-+	dev_set_drvdata(dev, fbpriv);
-+
-+	return intelvipfb_probe(dev);
-+}
-+
-+static int intelvipfb_of_remove(struct platform_device *pdev)
-+{
-+	return intelvipfb_remove(&pdev->dev);
-+}
-+
-+/*
-+ * The name vip-frame-buffer-2.0 is derived from
-+ * http://www.altera.com/literature/ug/ug_vip.pdf
-+ * frame buffer IP cores section 14
-+ */
-+
-+static const struct of_device_id intelvipfb_of_match[] = {
-+	{ .compatible = "altr,vip-frame-buffer-2.0" },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, intelvipfb_of_match);
-+
-+static struct platform_driver intelvipfb_driver = {
-+	.probe = intelvipfb_of_probe,
-+	.remove = intelvipfb_of_remove,
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.of_match_table = intelvipfb_of_match,
-+	},
-+};
-+
-+module_platform_driver(intelvipfb_driver);
--- 
-2.7.4
+RnJvbTogT25nIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4KCkRldmljZSB0
+cmVlIGJpbmRpbmcgZm9yIEludGVsIEZQR0EgVmlkZW8gYW5kIEltYWdlClByb2Nlc3NpbmcgU3Vp
+dGUuIFRoZSBiaW5kaW5nIGludm9sdmVkIHdvdWxkIGJlIGdlbmVyYXRlZApmcm9tIHRoZSBBbHRl
+cmEgKEludGVsKSBRc3lzIHN5c3RlbS4gVGhlIGJpbmRpbmdzIHdvdWxkCnNldCB0aGUgbWF4IHdp
+ZHRoLCBtYXggaGVpZ2h0IGFuZCBtZW1vcnkgcG9ydCB3aWR0aC4KVGhlIGRldmljZSB0cmVlIGJp
+bmRpbmcgb25seSBzdXBwb3J0cyB0aGUgSW50ZWwgQXJyaWExMApkZXZraXQgYW5kIGl0cyB2YXJp
+YW50cy4gVmVuZG9yIG5hbWUgcmV0YWluZWQgYXMgYWx0ci4KClNpZ25lZC1vZmYtYnk6IE9uZywg
+SGVhbiBMb29uZyA8aGVhbi5sb29uZy5vbmdAaW50ZWwuY29tPgotLS0KClY3OgoqRml4IE9GIGdy
+YXBoIGZvciBiZXR0ZXIgZGVzY3JpcHRpb24KKkFkZCBkZXNjcmlwdGlvbiBmb3IgZW5jb2RlcgoK
+VjY6CipEZXNjcmlwdGlvbiBoYXZlIG5vdCBkZXNjcmliZSBEVCBkZXZpY2UgaW4gZ2VuZXJhbAoK
+VjU6CipyZW1vdmUgYmluZGluZ3MgZm9yIGJpdHMgcGVyIHN5bWJvbCBhcyBpdCBoYXMgb25seSBv
+bmUgdmFsdWUgd2hpY2ggaXMgOAoKVjQ6CipmaXggcHJvcGVydGllcyB0aGF0IGRvZXMgbm90IGRl
+c2NyaWJlIHRoZSB2YWx1ZXMKClYzOgoqT0YgZ3JhcGggbm90IGluIGFjY29yZGFuY2UgdG8gZ3Jh
+cGgudHh0CgpWMjoKKlJlbW92ZSBMaW51eCBkcml2ZXIgZGVzY3JpcHRpb24KClYxOgoqTWlzc2lu
+ZyB2ZW5kb3IgcHJlZml4CgotLS0KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2FsdHIsdmlwLWZiMi50eHQgICB8IDc0ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBj
+aGFuZ2VkLCA3NCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYWx0cix2aXAtZmIyLnR4dAoKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZi
+Mi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZp
+cC1mYjIudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmJmMDA1NWQKLS0t
+IC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9hbHRyLHZpcC1mYjIudHh0CkBAIC0wLDAgKzEsNzQgQEAKK0ludGVsIFZpZGVvIGFuZCBJbWFn
+ZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVmZmVyIElJIGJpbmRpbmdzCisKK1N1cHBvcnRlZCBo
+YXJkd2FyZTogSW50ZWwgRlBHQSBTb0MgQXJyaWExMCBhbmQgYWJvdmUgd2l0aCBkaXNwbGF5IHBv
+cnQgSVAKKworVGhlIFZpZGVvIEZyYW1lIEJ1ZmZlciBJSSBpbiBWaWRlbyBJbWFnZSBQcm9jZXNz
+aW5nIChWSVApIHN1aXRlIGlzIGFuIElQIGNvcmUKK3RoYXQgaW50ZXJmYWNlcyBiZXR3ZWVuIHN5
+c3RlbSBtZW1vcnkgYW5kIEF2YWxvbi1TVCB2aWRlbyBwb3J0cy4gVGhlIElQIGNvcmUKK2NhbiBi
+ZSBjb25maWd1cmVkIHRvIHN1cHBvcnQgdGhlIG1lbW9yeSByZWFkZXIgKGZyb20gbWVtb3J5IHRv
+IEF2YWxvbi1TVCkKK2FuZC9vciBtZW1vcnkgd3JpdGVyIChmcm9tIEF2YWxvbi1TVCB0byBtZW1v
+cnkpIGludGVyZmFjZXMuCisKK01vcmUgaW5mb3JtYXRpb24gdGhlIEZQR0EgdmlkZW8gSVAgY29t
+cG9uZW50IGNhbiBiZSBhY3F1aXJlZCBmcm9tCitodHRwczovL3d3dy5hbHRlcmEuY29tL2NvbnRl
+bnQvZGFtL2FsdGVyYS13d3cvZ2xvYmFsL2VuX1VTL3BkZnNcCisvbGl0ZXJhdHVyZS91Zy91Z192
+aXAucGRmCisKK0RULUJpbmRpbmdzOgorPT09PT09PT09PT09PQorUmVxdWlyZWQgcHJvcGVydGll
+czoKKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KKy0gY29tcGF0aWJsZTogImFsdHIsdmlw
+LWZyYW1lLWJ1ZmZlci0yLjAiCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5n
+dGggb2YgdGhlIGZyYW1lYnVmZmVyIGNvbnRyb2xsZXIncworCXJlZ2lzdGVycy4KKy0gYWx0cixt
+YXgtd2lkdGg6IFRoZSBtYXhpbXVtIHdpZHRoIG9mIHRoZSBmcmFtZWJ1ZmZlciBpbiBwaXhlbHMu
+CistIGFsdHIsbWF4LWhlaWdodDogVGhlIG1heGltdW0gaGVpZ2h0IG9mIHRoZSBmcmFtZWJ1ZmZl
+ciBpbiBwaXhlbHMuCistIGFsdHIsbWVtLXBvcnQtd2lkdGggPSB0aGUgYnVzIHdpZHRoIG9mIHRo
+ZSBhdmFsb24gbWFzdGVyIHBvcnQKKwlvbiB0aGUgZnJhbWUgcmVhZGVyCisKK0Nvbm5lY3Rpb25z
+IGJldHdlZW4gdGhlIEZyYW1lIEJ1ZmZlciBJSSBhbmQgb3RoZXIgdmlkZW8gSVAgY29yZXMgaW4g
+dGhlIHN5c3RlbQorYXJlIG1vZGVsbGVkIHVzaW5nIHRoZSBPRiBncmFwaCBEVCBiaW5kaW5ncy4g
+VGhlIEZyYW1lIEJ1ZmZlciBJSSBub2RlIGhhcyB1cAordG8gdHdvIE9GIGdyYXBoIHBvcnRzLiBX
+aGVuIHRoZSBtZW1vcnkgd3JpdGVyIGludGVyZmFjZSBpcyBlbmFibGVkLCBwb3J0IDAKK21hcHMg
+dG8gdGhlIEF2YWxvbi1TVCBJbnB1dCAoZGluKSBwb3J0LiBXaGVuIHRoZSBtZW1vcnkgcmVhZGVy
+IGludGVyZmFjZSBpcworZW5hYmxlZCwgcG9ydCAxIG1hcHMgdG8gdGhlIEF2YWxvbi1TVCBPdXRw
+dXQgKGRvdXQpIHBvcnQuCisKK1RoZSBlbmNvZGVyIGlzIGJ1aWx0IGludG8gdGhlIEZQR0EgSFcg
+ZGVzaWduIGFuZCB0aGVyZWZvcmUgd291bGQgbm90CitiZSBhY2Nlc3NpYmxlIGZyb20gdGhlIERE
+Ui4KKworCQlQb3J0IDAJCQkJUG9ydDEKKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQorQVJSSUExMCBBVkFMT05fU1QgKERJTikJCUFWQUxP
+Tl9TVCAoRE9VVCkKKworRXhhbXBsZToKKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KKwor
+ICAgICAgICAgICArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKworICAgICAgICAgICB8
+ICAgICAgICBGUEdBICAgICAgICAgICAgICAgICAgfCAgICArLS0tLS0tLS0tLS0tKworICAgICAg
+ICAgICArLS0tLS0tLS0tKyArLS0tLS0tLS0tLS0tLS0rICAgfCAgICB8ICBEUCAgICAgICAgfAor
+Ky0tLS0tKyAgICB8ICBWSVAgICAgfCB8IERQICAgICAgICAgICB8ICAgKy0tLS0+ICBDb25uZWN0
+b3IgfAorfCAgICAgfCAgICB8ICBGcmFtZSAgfCB8IENvbnRyb2xsZXIgICB8ICAgfCAgICB8ICAg
+ICAgICAgICAgfAorfCBEICAgKy0tLS0+ICBCdWZmZXIgfCArLS0tLS0tLS0tLS0tLS0rICAgfCAg
+ICArLS0tLS0tLS0tLS0tKworfCBEICAgfCAgICB8ICAgICAgICAgfCArLS0tLS0tLS0tLS0tLS0r
+ICAgfAorfCBSICAgfCAgICB8ICAgICAgICAgfCB8IERQICAgICAgICAgICB8ICAgfAorfCAgICAg
+fCAgICArLS0tLS0tLS0tKyB8IEVuY29kZXIgICAgICB8ICAgfAorfCAgICAgfCAgICB8ICAgICAg
+ICAgICArLS0tLS0tLS0tLS0tLS0rICAgfAorKy0tLS0tKyAgICArLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tKworCisKK2ZyYW1lYnVmZmVyQDEwMDAwMDI4MCB7CisgICAgICAgIGNvbXBh
+dGlibGUgPSAiYWx0cix2aXAtZnJhbWUtYnVmZmVyLTIuMCI7CisgICAgICAgIHJlZyA9IDwweDAw
+MDAwMDAxIDB4MDAwMDAyODAgMHgwMDAwMDA0MD47CisgICAgICAgIGFsdHIsbWF4LXdpZHRoID0g
+PDEyODA+OworICAgICAgICBhbHRyLG1heC1oZWlnaHQgPSA8NzIwPjsKKyAgICAgICAgYWx0cixt
+ZW0tcG9ydC13aWR0aCA9IDwxMjg+OworCisgICAgICAgIHBvcnRzIHsKKyAgICAgICAgICAgICAg
+ICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDww
+PjsKKworICAgICAgICAgICAgICAgIHBvcnRAMSB7CisgICAgICAgICAgICAgICAgICAgICAgICBy
+ZWcgPSA8MT47CisgICAgICAgICAgICAgICAgICAgICAgICBmYl9vdXRwdXQ6IGVuZHBvaW50IHsK
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZkcF9l
+bmNvZGVyX2lucHV0PjsKKyAgICAgICAgICAgICAgICAgICAgICAgIH07CisgICAgICAgICAgICAg
+ICAgfTsKKyAgICAgICAgfTsKK307CisKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
