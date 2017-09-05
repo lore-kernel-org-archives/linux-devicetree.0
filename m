@@ -1,47 +1,16 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v8 15/21] dt: bindings: Add a binding for flash devices associated to a sensor
-Date: Tue,  5 Sep 2017 16:05:47 +0300
-Message-ID: <20170905130553.1332-16-sakari.ailus@linux.intel.com>
-References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
+From: Ishmeal Camara <ekuieobiekulie1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: .KDLD
+Date: Tue, 5 Sep 2017 14:38:16 +0100
+Message-ID: <CANLvJpVACUR45BMgmopiB-YfqpJ789QtgUsY2mEjzXRGBGqMpg@mail.gmail.com>
+Reply-To: ishcamara2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170905130553.1332-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Camera flash drivers (and LEDs) are separate from the sensor devices in
-DT. In order to make an association between the two, provide the
-association information to the software.
-
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/media/video-interfaces.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index 852041a7480c..efc67161e389 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -67,6 +67,14 @@ are required in a relevant parent node:
- 		    identifier, should be 1.
-  - #size-cells    : should be zero.
- 
-+
-+Optional properties
-+-------------------
-+
-+- flash: An array of phandles, each referring to a flash LED, a sub-node
-+  of the LED driver device node.
-+
-+
- Optional endpoint properties
- ----------------------------
- 
--- 
-2.11.0
-
+Ishmeal Camara , presently working under the central bank of Togo, i
+have financier offer 2.5 M USD for both of us + 228 91678862
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
