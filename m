@@ -1,99 +1,37 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] drm/bridge: add Silicon Image SiI9234 driver
-Date: Tue, 05 Sep 2017 18:05:53 +0300
-Message-ID: <1569224.pDUtqo7azG@avalon>
-References: <1504182434-8201-1-git-send-email-m.purski@samsung.com>
- <2326944.Wi9TMObRze@avalon>
- <b8df49d4-4636-f52e-c974-699a8a81872a@samsung.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Adjust status "ok" -> "okay" under
+ drivers/of/
+Date: Tue, 5 Sep 2017 10:05:57 -0500
+Message-ID: <20170905150557.wxphjvtd2vz5ndqp@rob-hp-laptop>
+References: <alpine.LFD.2.21.1709020336290.12205@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <b8df49d4-4636-f52e-c974-699a8a81872a@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Purski <m.purski@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.1709020336290.12205-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFjaWVqLAoKT24gVHVlc2RheSwgNSBTZXB0ZW1iZXIgMjAxNyAxNjowMTo1NCBFRVNUIE1h
-Y2llaiBQdXJza2kgd3JvdGU6Cj4gSGkgTGF1cmVudCwKPiAKPiBUaGFuayB5b3UgZm9yIHlvdXIg
-cmVwbHkuIFRoZSBwcm9ibGVtIHdhcyBhbHJlYWR5IGRpc2N1c3NlZCB3aGVuIGFkZGluZwo+IHNp
-bDg2MjAgZHJpdmVyLiBJdCBjYW4gYmUgc29sdmVkIGxhdGVyLiBJJ20gQ0MtaW5nIEFuZHJ6ZWog
-SGFqZGEsIGFzIGhlCj4gdXNlZCB0byBkaXNjdXNzIGl0IHdpdGggeW91LgoKSSdtIGFmcmFpZCBp
-dCBjYW4ndCBiZSBzb2x2ZWQgbGF0ZXIuIERUIGJpbmRpbmdzIGFyZSBzdXBwb3NlZCB0byBiZSBh
-IHN0YWJsZSAKQUJJLCB3ZSBjYW4ndCBtZXJnZSBhIGJpbmRpbmcgdGhhdCB3ZSBhbHJlYWR5IGtu
-b3cgaXNuJ3QgY29ycmVjdC4KCj4gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Bh
-dGNoLzExNDIyNC8KPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmkt
-ZGV2ZWwvMjAxNS1EZWNlbWJlci8wOTY3NTYuaHRtbAo+IAo+IFJlZ2FyZHMsCj4gCj4gCU1hY2ll
-ago+IAo+IE9uIDMxLzA4LzE3IDE1OjMwLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4gSGkg
-TWFjaWVqLAo+ID4gCj4gPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KPiA+IAo+ID4gT24gVGh1
-cnNkYXksIDMxIEF1Z3VzdCAyMDE3IDE1OjI3OjEzIEVFU1QgTWFjaWVqIFB1cnNraSB3cm90ZToK
-PiA+PiBTaUk5MjM0IHRyYW5zbWl0dGVyIGNvbnZlcnRzIGVUTURTL0hETUkgc2lnbmFsIHRvIE1I
-TCAxLjAuCj4gPj4gSXQgaXMgY29udHJvbGxlZCB2aWEgSTJDIGJ1cy4gSXRzIGludGVyYWN0aW9u
-IHdpdGggb3RoZXIKPiA+PiBkZXZpY2VzIGluIHZpZGVvIHBpcGVsaW5lIGlzIHBlcmZvcm1lZCBt
-YWlubHkgb24gSFcgbGV2ZWwuCj4gPj4gVGhlIG9ubHkgaW50ZXJhY3Rpb24gaXQgZG9lcyBvbiBk
-ZXZpY2UgZHJpdmVyIGxldmVsIGlzCj4gPj4gZmlsdGVyaW5nLW91dCB1bnN1cHBvcnRlZCB2aWRl
-byBtb2RlcywgaXQgZXhwb3NlcyBkcm1fYnJpZGdlCj4gPj4gaW50ZXJmYWNlIHRvIHBlcmZvcm0g
-dGhpcyBvcGVyYXRpb24uCj4gPj4gCj4gPj4gVGhpcyBwYXRjaCBpcyBiYXNlZCBvbiB0aGUgY29k
-ZSByZWZhY3RvcmVkIGJ5IFRvbWFzeiBTdGFuaXNsYXdza2kKPiA+PiA8dC5zdGFuaXNsYXdzQHNh
-bXN1bmcuY29tPiwgd2hpY2ggd2FzIGluaXRpYWxseSBkZXZlbG9wZWQgYnk6Cj4gPj4gQWRhbSBI
-YW1wc29uIDxhaGFtcHNvbkBzdGEuc2Ftc3VuZy5jb20+Cj4gPj4gRXJpayBHaWxsaW5nIDxrb25r
-ZXJzQGFuZHJvaWQuY29tPgo+ID4+IFNoYW5rYXIgQmFuZGFsIDxzaGFua2FyLmJAc2Ftc3VuZy5j
-b20+Cj4gPj4gRGhhcmFtIEt1bWFyIDxkaGFyYW0ua3JAc2Ftc3VuZy5jb20+Cj4gPj4gCj4gPj4g
-U2lnbmVkLW9mZi1ieTogTWFjaWVqIFB1cnNraSA8bS5wdXJza2lAc2Ftc3VuZy5jb20+Cj4gPj4g
-LS0tCj4gPj4gQ2hhbmdlcyBpbiB2MjoKPiA+PiAtIHVzZSBidWxrX3JlcXVsYXRvcnMgaW5zdGVh
-ZCBvZiBzaW5nbGUgb25lCj4gPj4gLSBzdWJzdGl0dXRlIHNvbWUgb2YgdGhlIG1hZ2ljIHZhbHVl
-cyB3aXRoIG1hY3Jvcwo+ID4+IC0gaW1wcm92ZSBjb2Rpbmcgc3R5bGUKPiA+PiAtIGltcHJvdmVk
-IGVycm9yIGhhbmRsaW5nIGluIHNpaTkyMzRfcHJvYmUoKQo+ID4+IC0tLQo+ID4+IAo+ID4+ICAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQgfCAgMzQg
-Kwo+ID4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDggKwo+ID4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAg
-ICAgICAgICAgICAgfCAgIDEgKwo+ID4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MjM0
-LmMgICAgICAgICAgICAgICAgICAgfCA5OTMKPiA+PiAgICsrKysrKysrKysrKysrKysrKwo+ID4+
-ICAgNCBmaWxlcyBjaGFuZ2VkLCAxMDM2IGluc2VydGlvbnMoKykKPiA+PiAgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NAo+ID4+IAo+ID4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9zaWk5MjM0LnR4dCBjcmVhdGUgbW9kZQo+ID4+IDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL3NpaTkyMzQuYwo+ID4+IAo+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQKPiA+PiBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MjM0
-LnR4dCBuZXcgZmlsZQo+ID4+IG1vZGUgMTAwNjQ0Cj4gPj4gaW5kZXggMDAwMDAwMC4uM2NlNzQx
-Mwo+ID4+IC0tLSAvZGV2L251bGwKPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQKPiA+PiBAQCAtMCwwICsxLDM0IEBA
-Cj4gPj4gK1NpbGljb24gSW1hZ2UgU2lJOTIzNCBIRE1JL01ITCBicmlkZ2UgYmluZGluZ3MKPiA+
-PiArCj4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gKwktIGNvbXBhdGlibGUgOiAic2ls
-LHNpaTkyMzQiLgo+ID4+ICsJLSByZWcgOiBJMkMgYWRkcmVzcyBmb3IgVFBJIGludGVyZmFjZSwg
-dXNlIDB4MzkKPiA+PiArCS0gYXZjYzMzLXN1cHBseSA6IE1ITC9VU0IgU3dpdGNoIFN1cHBseSBW
-b2x0YWdlICgzLjNWKQo+ID4+ICsJLSBpb3ZjYzE4LXN1cHBseSA6IEkvTyBTdXBwbHkgVm9sdGFn
-ZSAoMS44VikKPiA+PiArCS0gYXZjYzEyLXN1cHBseSA6IFRNRFMgQW5hbG9nIFN1cHBseSBWb2x0
-YWdlICgxLjJWKQo+ID4+ICsJLSBjdmNjMTItc3VwcGx5IDogRGlnaXRhbCBDb3JlIFN1cHBseSBW
-b2x0YWdlICgxLjJWKQo+ID4+ICsJLSBpbnRlcnJ1cHRzLCBpbnRlcnJ1cHQtcGFyZW50OiBpbnRl
-cnJ1cHQgc3BlY2lmaWVyIG9mIElOVCBwaW4KPiA+PiArCS0gcmVzZXQtZ3Bpb3M6IGdwaW8gc3Bl
-Y2lmaWVyIG9mIFJFU0VUIHBpbiAoYWN0aXZlIGxvdykKPiA+PiArCS0gdmlkZW8gaW50ZXJmYWNl
-czogRGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJmYWNlIHBvcnQKPiA+PiArCQkJ
-ICAgIG5vZGUgZm9yIEhETUkgZW5jb2RlciBhY2NvcmRpbmcgdG8gWzFdLgo+ID4+ICsKPiA+PiAr
-WzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJm
-YWNlcy50eHQKPiA+IAo+ID4gRG9lc24ndCB0aGlzIGNoaXAgaGF2ZSB0d28gcG9ydHMsIG9uZSBp
-bnB1dCBjb25uZWN0ZWQgdG8gdGhlIFNvQyBhbmQgb25lCj4gPiBvdXRwdXQgY29ubmVjdGVkIHRv
-IGFuIEhETUkgY29ubmVjdG9yID8gSWYgc28gdGhlcmUgc2hvdWxkIGJlIHR3byBwb3J0cyBpbgo+
-ID4gRFQgdG9vLgo+ID4gCj4gPj4gK0V4YW1wbGU6Cj4gPj4gKwlzaWk5MjM0QDM5IHsKPiA+PiAr
-CQljb21wYXRpYmxlID0gInNpbCxzaWk5MjM0IjsKPiA+PiArCQlyZWcgPSA8MHgzOT47Cj4gPj4g
-KwkJYXZjYzMzLXN1cHBseSA9IDwmdmNjMzNtaGw+Owo+ID4+ICsJCWlvdmNjMTgtc3VwcGx5ID0g
-PCZ2Y2MxOG1obD47Cj4gPj4gKwkJYXZjYzEyLXN1cHBseSA9IDwmdnNpbDEyPjsKPiA+PiArCQlj
-dmNjMTItc3VwcGx5ID0gPCZ2c2lsMTI+Owo+ID4+ICsJCXJlc2V0LWdwaW9zID0gPCZncGYzIDQg
-R1BJT19BQ1RJVkVfTE9XPjsKPiA+PiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGYzPjsKPiA+
-PiArCQlpbnRlcnJ1cHRzID0gPDUgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPj4gKwo+ID4+ICsJ
-CXBvcnQgewo+ID4+ICsJCQltaGxfdG9faGRtaTogZW5kcG9pbnQgewo+ID4+ICsJCQkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZoZG1pX3RvX21obD47Cj4gPiAKPiA+IEl0IHdvdWxkIGJlIHVzZWZ1bCB0
-byBpbmNsdWRlIHRoZSByZW1vdGUgRFQgbm9kZXMgaW4gdGhlIGV4YW1wbGUgdG9vLgo+ID4gCj4g
-Pj4gKwkJCX07Cj4gPj4gKwkJfTsKPiA+PiArCX07CgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBp
-bmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Sat, Sep 02, 2017 at 03:44:07AM -0400, Robert P. J. Day wrote:
+> 
+> Tweak a small number of status "ok" lines in a single file under
+> /drivers/of/ to use the proper DTSpec 0.1 spelling of "okay".
+> 
+> Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+> 
+> ---
+> 
+>   since there was a single file under all of drivers/ that had this,
+> it seemed trivial to just patch it and be done with it. the vast
+> majority of "ok" spellings are under arch/arm*/, and i'm not going
+> near that.
+
+Applied, thanks.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
