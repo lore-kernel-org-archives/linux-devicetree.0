@@ -1,187 +1,52 @@
-From: "Keiji Hayashibara" <hayashibara.keiji@socionext.com>
-Subject: RE: [PATCH v1 1/3] dt-bindings: nvmem: add description for UniPhier eFuse
-Date: Tue, 5 Sep 2017 16:04:31 +0900
-Message-ID: <000001d32615$38e1b0c0$aaa51240$@socionext.com>
-References: <1504221620-358-1-git-send-email-hayashibara.keiji@socionext.com> <1504221620-358-2-git-send-email-hayashibara.keiji@socionext.com> <CAK7LNASLh4vYqZhM9g2AL1uUtieviAmmWOp_Mzoj0zG=Ejz0cA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
+Subject: [PATCHv7 0/3] Intel FPGA Video and Image Processing Suite
+Date: Tue,  5 Sep 2017 15:12:29 +0800
+Message-ID: <1504595552-9209-1-git-send-email-hean.loong.ong@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNASLh4vYqZhM9g2AL1uUtieviAmmWOp_Mzoj0zG=Ejz0cA@mail.gmail.com>
-Content-Language: ja
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Masahiro Yamada' <yamada.masahiro@socionext.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko@socionext.com>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi@socionext.com>
+To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Randy Dunlap <rdunlap@infradead.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Yamada-san,
+From: Ong Hean Loong <hean.loong.ong@intel.com>
 
-Thank you for your comment.
+The FPGA FrameBuffer Soft IP could be seen  as the GPU and
+the DRM driver patch here is allocating memory for
+information to be streamed from the ARM/Linux to the display port.
+Basically the driver just wraps the information such as the pixels to
+be drawn by the FPGA FrameBuffer 2.
 
-> From: Masahiro Yamada [mailto:yamada.masahiro@socionext.com]
-> Sent: Monday, September 4, 2017 9:56 PM
-> 
-> 2017-09-01 8:20 GMT+09:00 Keiji Hayashibara
-> <hayashibara.keiji@socionext.com>:
-> > Add uniphier-efuse dt-bindings documentation.
-> >
-> > Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-> > ---
-> >  .../devicetree/bindings/nvmem/uniphier-efuse.txt   | 45
-> ++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
-> > b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
-> > new file mode 100644
-> > index 0000000..09024a2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
-> > @@ -0,0 +1,45 @@
-> > += UniPhier eFuse device tree bindings =
-> > +
-> > +This UniPhier eFuse must be under soc-glue.
-> > +
-> > +Required properties:
-> > +- compatible: should be "socionext,uniphier-efuse"
-> > +- reg: should contain the register base and length
-> > +
-> > += Data cells =
-> > +Are child nodes of efuse, bindings of which as described in
-> > +bindings/nvmem/nvmem.txt
-> > +
-> > +Example:
-> > +
-> > +       soc-glue@5f900000 {
-> > +               compatible = "socionext,uniphier-ld20-soc-glue-debug",
-> > +                            "simple-mfd";
-> > +               #address-cells = <1>;
-> > +               #size-cells = <1>;
-> > +               ranges = <0x0 0x5f900000 0x2000>;
-> 
-> 
-> IMHO, I think an empty "ranges;" will clarify the code, but it is up to
-> your taste.
-> 
-> 
-> > +
-> > +               efuse {
-> > +                       compatible = "socionext,uniphier-efuse",
-> > +                                    "syscon";
-> 
-> 
-> You are adding a dedicated driver for "socionext,uniphier-efuse".
-> 
-> Then, "syscon" as well?
-> 
+The piece of hardware in discussion is the SoC FPGA where Linux runs
+on the ARM chip and the FGPA is driven by its NIOS soft core with its
+own proprietary firmware.
 
-Since I was using the syscon interface to implement the driver,
-I specified "syscon". It's interface is syscon_node_to_regmap().
+For example the application from the ARM Linux would have to write
+information on the /dev/fb0 with the information stored in the SDRAM
+to be fetched by the FPGA framebuffer IP and displayed on the Display
+Port Monitor.
 
-I will rethink this in v2.
+Ong Hean Loong (3):
+  ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
+  ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
+  ARM:drm ivip Intel FPGA Video and Image Processing Suite
 
-> 
-> 
-> > +                       reg = <0x100 0xf00>;
-> 
-> 
-> Not so many efuse registers exist on the SoC.
-> 
-> reg = <0x100 0x200>; will be enough.
-> 
-> 
-> Or if you want to be strict to the hw spec, you can write as follows:
-> 
->         soc-glue@5f900000 {
->                compatible = "socionext,uniphier-ld20-soc-glue-debug";
->                             "simple-mfd";
->                #address-cells = <1>;
->                #size-cells = <1>;
->                ranges = <0x0 0x5f900000 0x2000>;
-> 
->                efuse@100 {
->                            compatible = "socionext,uniphier-efuse";
->                            reg = <0x100 0x28>;
->                };
-> 
->                efuse@200 {
->                            compatible = "socionext,uniphier-efuse";
->                            reg = <0x200 0x68>;
->                };
->        };
-> 
-> 
-> 
-> 
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +
-> > +                       /* Data cells */
-> > +                       usb_mon: usb_mon {
-> > +                               reg = <0x154 0xc>;
-> > +                       };
-> 
-> 
-> This <0x154 0xc> represents 0x5f900254 in CPU address view.
-> (0x5f900000 + 0x100 + 0x154)
-> 
-> So many ranges conversion, and how error-prone..
-> 
+ .../devicetree/bindings/display/altr,vip-fb2.txt   |  84 +++++----
+ arch/arm/configs/socfpga_defconfig                 |   6 +
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/ivip/Kconfig                       |  14 ++
+ drivers/gpu/drm/ivip/Makefile                      |   9 +
+ drivers/gpu/drm/ivip/intel_vip_conn.c              |  96 ++++++++++
+ drivers/gpu/drm/ivip/intel_vip_core.c              | 162 +++++++++++++++++
+ drivers/gpu/drm/ivip/intel_vip_drv.h               |  52 ++++++
+ drivers/gpu/drm/ivip/intel_vip_of.c                | 194 +++++++++++++++++++++
+ 10 files changed, 587 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/gpu/drm/ivip/Kconfig
+ create mode 100644 drivers/gpu/drm/ivip/Makefile
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_core.c
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_of.c
 
-Yes, indeed...
-I will modify as below.
-
-        soc-glue@5f900000 {
-                compatible = "socionext,uniphier-ld20-soc-glue-debug",
-                             "simple-mfd";
-                #address-cells = <1>;
-                #size-cells = <1>;
-                ranges;
-
-                efuse@5f900100 {
-                        compatible = "socionext,uniphier-efuse";
-                        reg = <0x5f900100 0x28>;
-                };
-
-                efuse@5f900200 {
-                        compatible = "socionext,uniphier-efuse";
-                        reg = <0x5f900200 0x68>;
-                };
-        };
-
-
-> 
-> 
-> 
-> > +       };
-> > +
-> > += Data consumers =
-> > +Are device nodes which consume nvmem data cells.
-> > +
-> > +Example:
-> > +
-> > +       usb {
-> > +               ...
-> > +               nvmem-cells = <&usb_mon>;
-> > +               nvmem-cell-names = "usb_mon";
-> > +       }
-> > --
-> > 2.7.4
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree"
-> > in the body of a message to majordomo@vger.kernel.org More majordomo
-> > info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
-> --
-> Best Regards
-> Masahiro Yamada
-
-Best Regards,
-Keiji Hayashibara
+-- 
+2.7.4
