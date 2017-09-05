@@ -1,72 +1,100 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 10/11] staging: typec: fusb302: Hook up mux support using tcpc_gen_mux support
-Date: Tue,  5 Sep 2017 18:42:20 +0200
-Message-ID: <20170905164221.11266-11-hdegoede@redhat.com>
-References: <20170905164221.11266-1-hdegoede@redhat.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 3/5] dt-bindings: sdhci-omap: Add bindings for the
+ sdhci-omap controller
+Date: Tue, 5 Sep 2017 09:51:45 -0700
+Message-ID: <20170905165145.GC5024@atomide.com>
+References: <20170823054246.23927-1-kishon@ti.com>
+ <CAPDyKFp7gchVQ+JPNqv4LktvHRm2Lzx6KakOw85zEZxDEX0OhA@mail.gmail.com>
+ <c9342689-f09e-44af-0975-d43ef122a477@ti.com>
+ <CAPDyKFqCZFM7UmHyQCm=DwwZXJvzUde3pW0HqARKrsgfgxSuaw@mail.gmail.com>
+ <0c7e0705-d9c2-4499-54ba-cbd84589dc01@ti.com>
+ <20170829115050.3axlr5uysmqlhvd2@earth>
+ <20170829135822.GR6008@atomide.com>
+ <20170829170920.xpgk5ywlvfgrtbqi@rob-hp-laptop>
+ <20170829173913.GD6008@atomide.com>
+ <06199a7e-456d-708d-6f2f-81f6bbfea2ba@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170905164221.11266-1-hdegoede@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <06199a7e-456d-708d-6f2f-81f6bbfea2ba@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
-to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
+* Kishon Vijay Abraham I <kishon@ti.com> [170905 01:53]:
+> Hi,
+> 
+> On Tuesday 29 August 2017 11:09 PM, Tony Lindgren wrote:
+> > * Rob Herring <robh@kernel.org> [170829 10:09]:
+> >> On Tue, Aug 29, 2017 at 06:58:23AM -0700, Tony Lindgren wrote:
+> >>> * Sebastian Reichel <sebastian.reichel@collabora.co.uk> [170829 04:51]:
+> >>>> I would expect the conversion to look like the one done for UART,
+> >>>> see CONFIG_SERIAL_OMAP vs CONFIG_SERIAL_8250_OMAP. Both use the
+> >>>> same compatible value and you can choose using kernel configuration.
+> >>>
+> >>> That does not work unfortunately :( We are now stuck in a situation
+> >>> where two drivers are attempting to probe with the same compatible
+> >>> and we can't enable 8250_OMAP because of the user space breakage
+> >>> with the device names. And I'm actuallly thinking we should add a
+> >>> new compatible for 8250-omap to be able to start enabling it one
+> >>> board at a time.
+> >>
+> >> Is that the only problem? Presumably, the SD driver doesn't have a 
+> >> userspace facing issue.
+> > 
+> > No userspace issue with the sdhci-omap. But the sdhci-omap driver
+> > still has the issue of trying enable it for everything at once and
+> > expect everything to work. The sdhci-omap driver can already be
+> > used for boards that don't need power management for example, but
+> > will break things for devices running on batteries.
+> > 
+> >>> It's best to enable devices to use the new compatible as things are
+> >>> tested rather than hope for some magic "flag day" flip that might
+> >>> never happen. Having two days attempting to probe with the same
+> >>> binding just won't work.
+> >>
+> >> Aren't you just picking whether the flag day is in DT or the kernel? I 
+> >> guess you're assuming one kernel build and it would be switching all 
+> >> boards at one. 
+> > 
+> > Right, this would be risky and would take unnecessarily long
+> > to use the new driver on boards that can already use it. While
+> > power management won't work yet, I'd expect the sdhci-omap be
+> > faster on SoCs that can do ADMA.
+> > 
+> >>> So yeah, I agree with Kishon that we should stick with generic
+> >>> and sdhci bindings. And then we can start already using it for
+> >>> boards that can use it, then eventually when we're ready, start
+> >>> parsing also the legacy bindings and maybe drop the old driver.
+> >>
+> >> I assume there are some other common properties you would switch to in 
+> >> the transition?  You could make the legacy driver bail from probe based 
+> >> on presence or absence of other properties. Or you could just blacklist 
+> >> converted platforms in the legacy driver. The point is that the problems 
+> >> are solvable in the kernel.
+> > 
+> > Yes this could be done too. But let's enable it on per-board
+> > basis rather than attempt to flip it on at once.
+> > 
+> >> But if your really want a new compatible, I don't really care. It's 
+> >> only one device.
+> > 
+> > Both a new compatible or a check for some resource work just fine
+> > for me as long as the driver can be selected on per-board basis.
+> 
+> New compatible sounds simpler to me since it allows to select a driver per-MMC
+> instance. (SDIO support is not added/validated in sdhci-omap).
+> 
+> To summarize, we'll create new compatible and new bindings for sdhci-omap and
+> start enabling sdhci-omap on per-board basis. When all the TI platforms starts
+> to use sdhci-omap, omap-hsmmc will be removed at which point support for old
+> compatible and old dt bindings will be added to sdhci-omap.c. Does this sound
+> reasonable?
 
-Also document the mux-names used by the generic tcpc_mux_dev code in
-our devicetree bindings.
+Sounds like a plan to me.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
- drivers/staging/typec/fusb302/fusb302.c               | 11 ++++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-index 472facfa5a71..63d639eadacd 100644
---- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-+++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-@@ -6,6 +6,9 @@ Required properties :
- - interrupts             : Interrupt specifier
- 
- Optional properties :
-+- mux-controls           : List of mux-ctrl-specifiers containing 1 or 2 muxes
-+- mux-names              : "type-c-mode-mux" when using 1 mux, or
-+                           "type-c-mode-mux", "usb-role-mux" when using 2 muxes
- - fcs,max-sink-microvolt : Maximum voltage to negotiate when configured as sink
- - fcs,max-sink-microamp  : Maximum current to negotiate when configured as sink
- - fcs,max-sink-microwatt : Maximum power to negotiate when configured as sink
-diff --git a/drivers/staging/typec/fusb302/fusb302.c b/drivers/staging/typec/fusb302/fusb302.c
-index cf6355f59cd9..00d045d0246b 100644
---- a/drivers/staging/typec/fusb302/fusb302.c
-+++ b/drivers/staging/typec/fusb302/fusb302.c
-@@ -1259,7 +1259,6 @@ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
- 	fusb302_tcpc_dev->set_roles = tcpm_set_roles;
- 	fusb302_tcpc_dev->start_drp_toggling = tcpm_start_drp_toggling;
- 	fusb302_tcpc_dev->pd_transmit = tcpm_pd_transmit;
--	fusb302_tcpc_dev->mux = NULL;
- }
- 
- static const char * const cc_polarity_name[] = {
-@@ -1817,6 +1816,16 @@ static int fusb302_probe(struct i2c_client *client,
- 			return -EPROBE_DEFER;
- 	}
- 
-+	chip->tcpc_dev.mux = devm_tcpc_gen_mux_create(dev);
-+	if (IS_ERR(chip->tcpc_dev.mux)) {
-+		ret = PTR_ERR(chip->tcpc_dev.mux);
-+		/* Use of a mux is optional (for now?), ignore -ENODEV errors */
-+		if (ret == -ENODEV)
-+			chip->tcpc_dev.mux = NULL;
-+		else
-+			return ret;
-+	}
-+
- 	cfg.drv_data = chip;
- 	chip->psy = devm_power_supply_register(dev, &fusb302_psy_desc, &cfg);
- 	if (IS_ERR(chip->psy)) {
--- 
-2.13.5
+Tony
