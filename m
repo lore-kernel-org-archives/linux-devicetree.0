@@ -1,44 +1,107 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 3/4] dt-bindings: gpio: max3191x: Document new driver
-Date: Tue, 5 Sep 2017 10:16:24 +0200
-Message-ID: <20170905081624.GA15374@wunner.de>
-References: <cover.1503319573.git.lukas@wunner.de>
- <7fe7636eecba238d57ab6178cfa3f6b7deca98f1.1503319573.git.lukas@wunner.de>
- <20170823004847.jmkb53xtdmmn6vtf@rob-hp-laptop>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v7 12/18] v4l: async: Allow binding notifiers to
+ sub-devices
+Date: Tue, 5 Sep 2017 11:36:54 +0300
+Message-ID: <31d63a76-adab-2a04-12dc-4717b1512eaa@linux.intel.com>
+References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
+ <20170903174958.27058-13-sakari.ailus@linux.intel.com>
+ <6ad1c25a-e2a7-b73f-4d7c-6a5c071e6366@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170823004847.jmkb53xtdmmn6vtf@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mathias Duckeck <m.duckeck@kunbus.de>, Phil Elwell <phil@raspberrypi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <6ad1c25a-e2a7-b73f-4d7c-6a5c071e6366@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Hans,
 
-sorry to bother you again, one more question popped up regarding the
-MAX3191x DT bindings:
+Thanks for the review!
 
-On Tue, Aug 22, 2017 at 07:48:47PM -0500, Rob Herring wrote:
-> On Mon, Aug 21, 2017 at 03:12:00PM +0200, Lukas Wunner wrote:
-> > Add device tree bindings for Maxim MAX3191x industrial serializer.
-[snip]
-> > +Optional properties:
-> > + - maxim,nchips:	Number of chips in the daisy-chain (default is 1).
+On 09/05/17 09:49, Hans Verkuil wrote:
+> On 09/03/2017 07:49 PM, Sakari Ailus wrote:
+>> Registering a notifier has required the knowledge of struct v4l2_device
+>> for the reason that sub-devices generally are registered to the
+>> v4l2_device (as well as the media device, also available through
+>> v4l2_device).
+>>
+>> This information is not available for sub-device drivers at probe time.
+>>
+>> What this patch does is that it allows registering notifiers without
+>> having v4l2_device around. Instead the sub-device pointer is stored to the
+>> notifier. Once the sub-device of the driver that registered the notifier
+>> is registered, the notifier will gain the knowledge of the v4l2_device,
+>> and the binding of async sub-devices from the sub-device driver's notifier
+>> may proceed.
+>>
+>> The master notifier's complete callback is only called when all sub-device
+>> notifiers are completed.
+>>
+>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> ---
+>>  drivers/media/v4l2-core/v4l2-async.c | 153 +++++++++++++++++++++++++++++------
+>>  include/media/v4l2-async.h           |  19 ++++-
+>>  2 files changed, 146 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+>> index 70d02378b48f..55d7886103d2 100644
+>> --- a/drivers/media/v4l2-core/v4l2-async.c
+>> +++ b/drivers/media/v4l2-core/v4l2-async.c
+>> @@ -25,6 +25,10 @@
+>>  #include <media/v4l2-fwnode.h>
+>>  #include <media/v4l2-subdev.h>
+>>  
+>> +static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
+>> +				  struct v4l2_subdev *sd,
+>> +				  struct v4l2_async_subdev *asd);
+>> +
+>>  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+>>  {
+>>  #if IS_ENABLED(CONFIG_I2C)
+>> @@ -101,14 +105,69 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
+>>  	return NULL;
+>>  }
+>>  
+>> +static bool v4l2_async_subdev_notifiers_complete(
+>> +	struct v4l2_async_notifier *notifier)
+>> +{
+>> +	struct v4l2_async_notifier *n;
+>> +
+>> +	list_for_each_entry(n, &notifier->notifiers, notifiers) {
+>> +		if (!n->master)
+>> +			return false;
+>> +	}
+>> +
+>> +	return true;
+>> +}
+>> +
+>> +#define notifier_v4l2_dev(n) \
+>> +	(!!(n)->v4l2_dev ? (n)->v4l2_dev : \
+>> +	 !!(n)->master ? (n)->master->v4l2_dev : NULL)
+>> +
+>> +static struct v4l2_async_notifier *v4l2_async_get_subdev_notifier(
+>> +	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
+> 
+> Why pass the notifier argument when it is not actually used in the function?
+> 
+> Is this function needed at all? As far as I can see the sd always belongs to
+> the given notifier, otherwise the v4l2_async_belongs() call would fail.
+> And v4l2_async_belongs() is always called before v4l2_async_test_notify().
 
-Many I/O chips are daisy-chainable, so I've been wondering if a
-common property should be introduced?
+The function gets a notifier which the sub-device may have registered,
+it's not the same notifier that was used in registering the sub-device
+itself.
 
-The existing gpio-74x164.c uses "registers-number" to convey the number
-of chips in the daisy chain.  (Sans vendor prefix, multiple vendors sell
-compatible versions of this chip.)
+I'll remove the other argument as well.
 
-gpio-pisosr.c takes a different approach and calculates the number of
-chips in the daisy-chain by taking the common "ngpios" property
-(Documentation/devicetree/bindings/gpio/gpio.txt) and dividing it by 8
-(which assumes that each chip has 8 inputs).
+> 
+> This could all do with some more code comments. I'm having a difficult time
+> understanding it all.
 
-Thanks,
+Yes, I'm adding comments to v8.
 
-Lukas
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
