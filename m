@@ -1,78 +1,102 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [RFC 0/2] backlight: pwm_bl: support linear brightness to human
- eye
-Date: Tue, 5 Sep 2017 12:09:20 +0100
-Message-ID: <d9c90a1c-0fb6-db9e-f889-b4df0b5959ca@linaro.org>
-References: <20170904153504.27963-1-enric.balletbo@collabora.com>
- <239c9153-c0ea-319c-b554-3c727b75c8cd@linaro.org>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 0/6] Host1x and VIC support for Tegra186
+Date: Tue, 5 Sep 2017 13:10:31 +0200
+Message-ID: <20170905111031.u4damueklnuliqt4@phenom.ffwll.local>
+References: <20170905084306.19318-1-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <239c9153-c0ea-319c-b554-3c727b75c8cd@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@google.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170905084306.19318-1-mperttunen@nvidia.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mikko Perttunen <mperttunen@nvidia.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dnibade@nvidia.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jonathanh@nvidia.com, digetx@gmail.com, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, sgurrappadi@nvidia.com, amerilainen@nvidia.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/09/17 12:05, Daniel Thompson wrote:
-> On 04/09/17 16:35, Enric Balletbo i Serra wrote:
->> Dear all,
->>
->> This patch series is a first RFC to know your opinion about implement
->> support to create brightness levels tables dinamically. I tried to argue
->> in every patch the specific reasons we think this can be interesting, to
->> sumup, the idea behind these patches is be able to pass via device tree
->> two parameters to the driver so it can calculate the brightness levels
->> based on the CIE 1931 lightness formula, which is what actually describes
->> how we perceive light.
->>
->> I think that at least the maths involved can be improved, and I've still
->> some doubts. With current code if you create a table with a max PWM
->> value of 255 and 127 steps, the first numbers are repeated so I'm 
->> thinking > that maybe we should skip/remove the repeated values. i.e. 
->> have a table
->> like this,
->>
->> [0, 1, 2, 3  ...  235, 240, 245, 250, 255]
->>
->> instead of
->>
->> [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3  ...  235, 240, 245, 250, 255]
->>
->> Well, I know there are things to improve but lets see your feedback first
->> before dedicate more time on it. The patches were tested on a couple of
->> devices but I'll test on more devices meanwhile we discuss about it.
-> 
-> I'm not fully decided on this one but my initial reaction isn't to 
-> question the concept so much as to ask why the number of levels should 
-> go in the devicetree at all! We could just make brightness-levels 
-> optional and get the driver to pick sane curves by default.
-> 
-> I'm sure we can debate what "sane" means for a couple of e-mails yet but 
-> in principle, given it knows the PWM max counter value, the driver 
-> should be able to calculate the "right" number of steps too. If we have 
-> that your core code remains but we don't have to complexify the device
-
-... tree
-
-Sorry. ;-)
-
-
-Daniel.
-
-
-> 
-> <strawman>
-> Basically we prefer X (?100 like some of the Intel DRM drivers do for 
-> connector properties?) steps but we reduce the number of steps if the 
-> PWM is rather course and we can't get sufficiently different steps.
-> </strawman>
-> 
-> I guess the summary of what I'm saying is that if we can 
-> programmatically derive brightness curves then the number of steps is 
-> not really a property of the hardware and doesn't belong in devicetree.
-> 
-> 
-> Daniel.
+T24gVHVlLCBTZXAgMDUsIDIwMTcgYXQgMTE6NDM6MDBBTSArMDMwMCwgTWlra28gUGVydHR1bmVu
+IHdyb3RlOgo+IEhpLAo+IAo+IG5vdCBtYW55IGNoYW5nZXMgaW4gdjI6Cj4gCj4gQ2hhbmdlZCBh
+ZGRyZXNzLWNlbGxzIGFuZCBzaXplLWNlbGxzIGZvciB0aGUgSG9zdDF4IGRldmljZSB0cmVlIG5v
+ZGUKPiB0byBoYXZlIHZhbHVlIDEsIHNpbmNlIGFsbCBzdWJkZXZpY2VzIGZpdCBpbiB0aGUgbG93
+ZXIgNEcuIEFsc28gZHJvcHBlZAo+IHRoZSBpbmNvcnJlY3QgY2hhbmdlIGFib3V0IHRoaXMgZnJv
+bSB0aGUgZHQtYmluZGluZ3MgcGF0Y2guIFRoYW5rcyB0bwo+IFJvYiBmb3IgcG9pbnRpbmcgdGhp
+cyBvdXQuCj4gCj4gTWlra28KPiAKPiBOb3RlcyBmb3IgdjE6Cj4gCj4gSGkgZXZlcnlvbmUsCj4g
+Cj4gdGhpcyBzZXJpZXMgYWRkcyBiYXNpYyBzdXBwb3J0IGZvciB0aGUgSG9zdDF4IGNoYW5uZWwg
+ZW5naW5lIGFuZCB0aGUKPiBWSUMgMmQgY29tcG9zaXRvciB1bml0IG9uIFRlZ3JhMTg2LiBUaGUg
+Zmlyc3QgdGhyZWUgcGF0Y2hlcyBkbyB0aGUKPiByZXF1aXJlZCBkZXZpY2UgdHJlZSBjaGFuZ2Vz
+LCB0aGUgZm91cnRoIHBhdGNoIHVwZGF0ZXMgdGhlIGRldmljZSB0cmVlCj4gYmluZGluZyBkb2N1
+bWVudGF0aW9uLCBhbmQgdGhlIHR3byByZW1haW5pbmcgcGF0Y2hlcyBhZGQgdGhlIGFjdHVhbAo+
+IGltcGxlbWVudGF0aW9uLCBhbG1vc3QgYWxsIG9mIHdoaWNoIGlzIGluIEhvc3QxeCBpdHNlbGYu
+Cj4gCj4gVGhlIFRlZ3JhMTg2IEhvc3QxeCBpcyBhIHJlbGF0aXZlbHkgbGFyZ2UgdXBkYXRlIG92
+ZXIgcHJldmlvdXMKPiBnZW5lcmF0aW9ucywgd2hpY2ggY2FuIGJlIHNlZW4gaW4gdGhlIGRpZmZz
+dGF0LiBUaGUgYmlnZ2VzdCBjaGFuZ2UgaXMKPiB0aGF0IEhvc3QxeCBpcyBub3cgY29udGFpbnMg
+c2VwYXJhdGUgaHlwZXJ2aXNvciBhbmQgdm0gcmVnaXN0ZXIKPiBhcGVydHVyZXMgdG8gc3VwcG9y
+dCB2aXJ0dWFsaXphdGlvbiBhdCB0aGUgaGFyZHdhcmUgbGV2ZWwuIFRoaXMgZHJpdmVyLAo+IGhv
+d2V2ZXIsIGN1cnJlbnRseSBhc3N1bWVzIHRoYXQgdGhpcyBpbnN0YW5jZSBvZiBMaW51eCBpcyB0
+aGUgc29sZQo+IG9wZXJhdGluZyBzeXN0ZW0gaGF2aW5nIGFjY2VzcyB0byB0aGUgaGFyZHdhcmUu
+Cj4gCj4gVGhpcyBjb21iaW5lZCB3aXRoIGluY3JlYXNlZCBudW1iZXJzIG9mIHN1cHBvcnRlZCBj
+aGFubmVscyBhbmQKPiBzeW5jcG9pbnRzIGhhdmUgY2F1c2VkIGEgbnVtYmVyIG9mIHJlZ2lzdGVy
+IHNwYWNlIGNoYW5nZXMgdGhhdCBhcmUKPiByZXNwb25zaWJsZSBmb3IgbW9zdCBvZiB0aGUgdXBk
+YXRlZCBjb2RlLgo+IAo+IFRoZSBzZXJpZXMgaGFzIGJlZW4gdGVzdGVkIG9uIHRoZSBKZXRzb24g
+VFgxIChUMjEwKSBhbmQgVFgyIChUMTg2KQo+IHVzaW5nIHRoZSBob3N0MXhfdGVzdCB0ZXN0IHN1
+aXRlIGF2YWlsYWJsZSBhdAo+IAo+IGh0dHA6Ly9naXRodWIuY29tL2N5bmRpcy9ob3N0MXhfdGVz
+dAo+IAo+IFRoZSBzZXJpZXMgaXRzZWxmIGlzIGF2YWlsYWJsZSBhdAo+IAo+IGh0dHA6Ly9naXRo
+dWIuY29tL2N5bmRpcy9saW51eCwgYnJhbmNoIGhvc3QxeC10MTg2LTEKClNpbmNlIHRoaXMgaXMg
+bmV3IGh3IHN1cHBvcnQsIGlzIHRoZXJlIGFsc28gb3BlbiBzb3VyY2UgdXNlcnNwYWNlIHVzaW5n
+CmFsbCB0aGlzPwoKVGhhbmtzLCBEYW5pZWwKCj4gCj4gQ2hlZXJzLAo+IE1pa2tvCj4gCj4gTWlr
+a28gUGVydHR1bmVuICg2KToKPiAgIGFybTY0OiB0ZWdyYTogQWRkICNwb3dlci1kb21haW4tY2Vs
+bHMgZm9yIEJQTVAKPiAgIGFybTY0OiB0ZWdyYTogQWRkIGhvc3QxeCBvbiBUZWdyYTE4Ngo+ICAg
+YXJtNjQ6IHRlZ3JhOiBBZGQgVklDIG9uIFRlZ3JhMTg2Cj4gICBkdC1iaW5kaW5nczogaG9zdDF4
+OiBBZGQgVGVncmExODYgaW5mb3JtYXRpb24KPiAgIGdwdTogaG9zdDF4OiBBZGQgVGVncmExODYg
+c3VwcG9ydAo+ICAgZHJtL3RlZ3JhOiBBZGQgVGVncmExODYgc3VwcG9ydCBmb3IgVklDCj4gCj4g
+IC4uLi9kaXNwbGF5L3RlZ3JhL252aWRpYSx0ZWdyYTIwLWhvc3QxeC50eHQgICAgICAgIHwgICA0
+ICsKPiAgYXJjaC9hcm02NC9ib290L2R0cy9udmlkaWEvdGVncmExODYuZHRzaSAgICAgICAgICAg
+fCAgMzEgKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vdGVncmEvZHJtLmMgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS90ZWdyYS92aWMuYyAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgIDEwICsrCj4gIGRyaXZlcnMvZ3B1L2hvc3QxeC9NYWtlZmlsZSAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAzICstCj4gIGRyaXZlcnMvZ3B1L2hvc3QxeC9kZXYuYyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDYwICsrKysrKy0KPiAgZHJpdmVycy9ncHUvaG9z
+dDF4L2Rldi5oICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDQgKwo+ICBkcml2ZXJzL2dw
+dS9ob3N0MXgvaHcvY2RtYV9ody5jICAgICAgICAgICAgICAgICAgICB8ICA0OSArKystLS0KPiAg
+ZHJpdmVycy9ncHUvaG9zdDF4L2h3L2RlYnVnX2h3LmMgICAgICAgICAgICAgICAgICAgfCAxMzcg
+Ky0tLS0tLS0tLS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvZGVidWdfaHdfMXgwMS5j
+ICAgICAgICAgICAgICB8IDE1NCArKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvaG9z
+dDF4L2h3L2RlYnVnX2h3XzF4MDYuYyAgICAgICAgICAgICAgfCAxMzMgKysrKysrKysrKysrKysr
+Cj4gIGRyaXZlcnMvZ3B1L2hvc3QxeC9ody9ob3N0MXgwMS5jICAgICAgICAgICAgICAgICAgIHwg
+ICAyICsKPiAgZHJpdmVycy9ncHUvaG9zdDF4L2h3L2hvc3QxeDAyLmMgICAgICAgICAgICAgICAg
+ICAgfCAgIDIgKwo+ICBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvaG9zdDF4MDQuYyAgICAgICAgICAg
+ICAgICAgICB8ICAgMiArCj4gIGRyaXZlcnMvZ3B1L2hvc3QxeC9ody9ob3N0MXgwNS5jICAgICAg
+ICAgICAgICAgICAgIHwgICAyICsKPiAgZHJpdmVycy9ncHUvaG9zdDF4L2h3L2hvc3QxeDA2LmMg
+ICAgICAgICAgICAgICAgICAgfCAgNDQgKysrKysKPiAgZHJpdmVycy9ncHUvaG9zdDF4L2h3L2hv
+c3QxeDA2LmggICAgICAgICAgICAgICAgICAgfCAgMjYgKysrCj4gIGRyaXZlcnMvZ3B1L2hvc3Qx
+eC9ody9ob3N0MXgwNl9oYXJkd2FyZS5oICAgICAgICAgIHwgMTQyICsrKysrKysrKysrKysrKysK
+PiAgZHJpdmVycy9ncHUvaG9zdDF4L2h3L2h3X2hvc3QxeDA2X2h5cGVydmlzb3IuaCAgICAgfCAg
+MzIgKysrKwo+ICBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvaHdfaG9zdDF4MDZfdWNsYXNzLmggICAg
+ICAgICB8IDE4MSArKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvaG9zdDF4L2h3
+L2h3X2hvc3QxeDA2X3ZtLmggICAgICAgICAgICAgfCAgNDcgKysrKysrCj4gIGRyaXZlcnMvZ3B1
+L2hvc3QxeC9ody9pbnRyX2h3LmMgICAgICAgICAgICAgICAgICAgIHwgIDI5ICsrLS0KPiAgMjIg
+ZmlsZXMgY2hhbmdlZCwgOTI2IGluc2VydGlvbnMoKyksIDE2OSBkZWxldGlvbnMoLSkKPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2hvc3QxeC9ody9kZWJ1Z19od18xeDAxLmMKPiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2hvc3QxeC9ody9kZWJ1Z19od18xeDA2LmMK
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2hvc3QxeC9ody9ob3N0MXgwNi5jCj4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9ob3N0MXgvaHcvaG9zdDF4MDYuaAo+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvaG9zdDF4L2h3L2hvc3QxeDA2X2hhcmR3YXJl
+LmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2hvc3QxeC9ody9od19ob3N0MXgw
+Nl9oeXBlcnZpc29yLmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2hvc3QxeC9o
+dy9od19ob3N0MXgwNl91Y2xhc3MuaAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+aG9zdDF4L2h3L2h3X2hvc3QxeDA2X3ZtLmgKPiAKPiAtLSAKPiAyLjE0LjEKPiAKPiBfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKCi0tIApEYW5pZWwg
+VmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5m
+ZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
