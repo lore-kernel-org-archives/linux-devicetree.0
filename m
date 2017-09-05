@@ -1,78 +1,115 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/6] Add platform device SVM support for ARM SMMUv3
-Date: Tue, 5 Sep 2017 13:56:00 +0100
-Message-ID: <95d1a9e2-1816-ff7d-9a8d-98406a6c2c22@arm.com>
-References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: Re: [PATCH v2 1/2] drm/bridge: add Silicon Image SiI9234 driver
+Date: Tue, 05 Sep 2017 15:01:54 +0200
+Message-ID: <b8df49d4-4636-f52e-c974-699a8a81872a@samsung.com>
+References: <1504182434-8201-1-git-send-email-m.purski@samsung.com>
+        <CGME20170831122745eucas1p27a178da2e30023292c57653a8dc45813@eucas1p2.samsung.com>
+        <1504182434-8201-2-git-send-email-m.purski@samsung.com>
+        <2326944.Wi9TMObRze@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1504167642-14922-1-git-send-email-xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xieyisheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, chenjiankang1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <2326944.Wi9TMObRze@avalon>
+Content-language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31/08/17 09:20, Yisheng Xie wrote:
-> Jean-Philippe has post a patchset for Adding PCIe SVM support to ARM SMMUv3:
-> https://www.spinics.net/lists/arm-kernel/msg565155.html
-> 
-> But for some platform devices(aka on-chip integrated devices), there is also
-> SVM requirement, which works based on the SMMU stall mode.
-> Jean-Philippe has prepared a prototype patchset to support it:
-> git://linux-arm.org/linux-jpb.git svm/stall
+Hi Laurent,
 
-Only meant for testing at that point, and unfit even for an RFC.
+Thank you for your reply. The problem was already discussed when adding sil8620 driver.
+It can be solved later. I'm CC-ing Andrzej Hajda, as he used to discuss it with you.
 
-> We tested this patchset with some fixes on a on-chip integrated device. The
-> basic function is ok, so I just send them out for review, although this
-> patchset heavily depends on the former patchset (PCIe SVM support for ARM
-> SMMUv3), which is still under discussion.
-> 
-> Patch Overview:
-> *1 to 3 prepare for device tree or acpi get the device stall ability and pasid bits
-> *4 is to realise the SVM function for platform device
-> *5 is fix a bug when test SVM function while SMMU donnot support this feature
-> *6 avoid ILLEGAL setting of STE and CD entry about stall
-> 
-> Acctually here, I also have a question about SVM on SMMUv3:
-> 
-> 1. Why the SVM feature on SMMUv3 depends on BTM feature? when bind a task to device,
->    it will register a mmu_notify. Therefore, when a page range is invalid, we can
->    send TLBI or ATC invalid without BTM?
+https://patchwork.freedesktop.org/patch/114224/
+https://lists.freedesktop.org/archives/dri-devel/2015-December/096756.html
 
-We could, but the end goal for SVM is to perfectly mirror the CPU page
-tables. So for platform SVM we would like to get rid of MMU notifiers
-entirely.
+Regards,
 
-> 2. According to ACPI IORT spec, named component specific data has a node flags field
->    whoes bit0 is for Stall support. However, it do not have any field for pasid bit.
->    Can we use other 5 bits[5:1] for pasid bit numbers, so we can have 32 pasid bit for
->    a single platform device which should be enough, because SMMU only support 20 bit pasid
-> 
-> 3. Presently, the pasid is allocate for a task but not for a context, if a task is trying
->    to bind to 2 device A and B:
->      a) A support 5 pasid bits
->      b) B support 2 pasid bits
->      c) when the task bind to device A, it allocate pasid = 16
->      d) then it must be fail when trying to bind to task B, for its highest pasid is 4.
->    So it should allocate a single pasid for a context to avoid this?
+	Maciej
 
-Ideally yes, but the model chosen for the IOMMU API was one PASID per
-task, so I implemented this model (the PASID allocator will be common to
-IOMMU core in the future).
+On 31/08/17 15:30, Laurent Pinchart wrote:
 
-Therefore the PASID allocation will fail in your example, and there is no
-way around it. If you do (d) then (c), the task will have PASID 4.
-
-Thanks,
-Jean
+> Hi Maciej,
+>
+> Thank you for the patch.
+>
+> On Thursday, 31 August 2017 15:27:13 EEST Maciej Purski wrote:
+>> SiI9234 transmitter converts eTMDS/HDMI signal to MHL 1.0.
+>> It is controlled via I2C bus. Its interaction with other
+>> devices in video pipeline is performed mainly on HW level.
+>> The only interaction it does on device driver level is
+>> filtering-out unsupported video modes, it exposes drm_bridge
+>> interface to perform this operation.
+>>
+>> This patch is based on the code refactored by Tomasz Stanislawski
+>> <t.stanislaws@samsung.com>, which was initially developed by:
+>> Adam Hampson <ahampson@sta.samsung.com>
+>> Erik Gilling <konkers@android.com>
+>> Shankar Bandal <shankar.b@samsung.com>
+>> Dharam Kumar <dharam.kr@samsung.com>
+>>
+>> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+>> ---
+>> Changes in v2:
+>> - use bulk_requlators instead of single one
+>> - substitute some of the magic values with macros
+>> - improve coding style
+>> - improved error handling in sii9234_probe()
+>> ---
+>>   .../devicetree/bindings/display/bridge/sii9234.txt |  34 +
+>>   drivers/gpu/drm/bridge/Kconfig                     |   8 +
+>>   drivers/gpu/drm/bridge/Makefile                    |   1 +
+>>   drivers/gpu/drm/bridge/sii9234.c                   | 993 ++++++++++++++++++
+>>   4 files changed, 1036 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/display/bridge/sii9234.txt create mode
+>> 100644 drivers/gpu/drm/bridge/sii9234.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/bridge/sii9234.txt
+>> b/Documentation/devicetree/bindings/display/bridge/sii9234.txt new file
+>> mode 100644
+>> index 0000000..3ce7413
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/bridge/sii9234.txt
+>> @@ -0,0 +1,34 @@
+>> +Silicon Image SiI9234 HDMI/MHL bridge bindings
+>> +
+>> +Required properties:
+>> +	- compatible : "sil,sii9234".
+>> +	- reg : I2C address for TPI interface, use 0x39
+>> +	- avcc33-supply : MHL/USB Switch Supply Voltage (3.3V)
+>> +	- iovcc18-supply : I/O Supply Voltage (1.8V)
+>> +	- avcc12-supply : TMDS Analog Supply Voltage (1.2V)
+>> +	- cvcc12-supply : Digital Core Supply Voltage (1.2V)
+>> +	- interrupts, interrupt-parent: interrupt specifier of INT pin
+>> +	- reset-gpios: gpio specifier of RESET pin (active low)
+>> +	- video interfaces: Device node can contain video interface port
+>> +			    node for HDMI encoder according to [1].
+>> +
+>> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> Doesn't this chip have two ports, one input connected to the SoC and one
+> output connected to an HDMI connector ? If so there should be two ports in DT
+> too.
+>
+>> +Example:
+>> +	sii9234@39 {
+>> +		compatible = "sil,sii9234";
+>> +		reg = <0x39>;
+>> +		avcc33-supply = <&vcc33mhl>;
+>> +		iovcc18-supply = <&vcc18mhl>;
+>> +		avcc12-supply = <&vsil12>;
+>> +		cvcc12-supply = <&vsil12>;
+>> +		reset-gpios = <&gpf3 4 GPIO_ACTIVE_LOW>;
+>> +		interrupt-parent = <&gpf3>;
+>> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +		port {
+>> +			mhl_to_hdmi: endpoint {
+>> +				remote-endpoint = <&hdmi_to_mhl>;
+> It would be useful to include the remote DT nodes in the example too.
+>
+>> +			};
+>> +		};
+>> +	};
