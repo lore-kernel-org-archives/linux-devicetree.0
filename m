@@ -1,21 +1,23 @@
 From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2] dmaengine: rcar-dmac: document R8A77970 bindings
-Date: Tue, 5 Sep 2017 09:05:06 +0530
-Message-ID: <20170905033506.GL3053@localhost>
-References: <20170831205936.865765713@cogentembedded.com>
+Subject: Re: [PATCH RESEND 0/2] Allwinner V3s DMA support
+Date: Tue, 5 Sep 2017 09:07:36 +0530
+Message-ID: <20170905033736.GM3053@localhost>
+References: <20170829045127.19951-1-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170831205936.865765713@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20170829045127.19951-1-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 11:59:24PM +0300, Sergei Shtylyov wrote:
-> Renesas R-Car V3M (R8A77970) SoC also has the R-Car gen2/3 compatible DMA
-> controllers, so document the SoC specific binding.
+On Tue, Aug 29, 2017 at 12:51:25PM +0800, Icenowy Zheng wrote:
+> This is a dedicated patchset of Allwinner V3s DMA support, which used
+> to be part of the audio codec support patchset.
+> 
+> It's a derivation of the DMA part of v3 of the codec patchset.
 
 Applied, thanks
 
