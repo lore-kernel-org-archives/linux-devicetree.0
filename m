@@ -1,55 +1,62 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 4/5] mmc: sdhci-omap: Add OMAP SDHCI driver
-Date: Tue, 5 Sep 2017 14:27:05 +0530
-Message-ID: <3782edd2-af90-c6c9-1358-1721a1dae28f@ti.com>
-References: <20170821074132.4622-1-kishon@ti.com>
- <20170821074132.4622-5-kishon@ti.com>
- <4f0a7225-1843-b353-1a2a-9adcb49554d3@intel.com>
- <c7972f00-ef62-1736-822f-ebf6822b6d33@ti.com>
- <dfe1b4e2-bcb5-c969-efe6-7cddd0eb0bf9@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dfe1b4e2-bcb5-c969-efe6-7cddd0eb0bf9@intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, linux-mmc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ravikumar Kattekola <rk@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: iio: dac: ti-dac082s085: Document new driver
+Date: Tue, 5 Sep 2017 11:27:00 +0200
+Message-ID: <cceeb1a985343d36dc90d2708371f3e1a73264f6.1504602350.git.lukas@wunner.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add device tree bindings for Texas Instruments 8/10/12-bit 2/4-channel
+DAC driver.
 
-On Thursday 31 August 2017 06:32 PM, Adrian Hunter wrote:
-> On 30/08/17 16:53, Kishon Vijay Abraham I wrote:
->> On Monday 28 August 2017 02:36 PM, Adrian Hunter wrote:
->>> On 21/08/17 10:41, Kishon Vijay Abraham I wrote:
->>>> +
->>>> +static void sdhci_omap_set_clock(struct sdhci_host *host, unsigned int clock)
->>>> +{
->>>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>>> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
->>>> +	unsigned long clkdiv;
->>>> +
->>>> +	if (!clock)
->>>> +		return;
->>>
->>> Are you sure you don't want to stop the clock.
->>
->> There is never a case where the MMC core sends a request to stop the clock.
->> Maybe this check is not required at all.
-> 
-> It does when voltage switching e.g. mmc_set_uhs_voltage(), but host drivers
-> should support the possibility anyway.
+Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+---
+ .../devicetree/bindings/iio/dac/ti-dac082s085.txt  | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/ti-dac082s085.txt
 
-Indeed! Will fix it and send a new revision once everyone agrees on the dt binding.
-
-Thanks
-Kishon
+diff --git a/Documentation/devicetree/bindings/iio/dac/ti-dac082s085.txt b/Documentation/devicetree/bindings/iio/dac/ti-dac082s085.txt
+new file mode 100644
+index 000000000000..9cb0e10df704
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/ti-dac082s085.txt
+@@ -0,0 +1,34 @@
++Texas Instruments 8/10/12-bit 2/4-channel DAC driver
++
++Required properties:
++ - compatible:		Must be one of:
++			"ti,dac082s085"
++			"ti,dac102s085"
++			"ti,dac122s085"
++			"ti,dac084s085"
++			"ti,dac104s085"
++			"ti,dac124s085"
++ - reg: 		Chip select number.
++ - spi-cpha, spi-cpol:	SPI mode (0,1) or (1,0) must be used, so specify
++			either spi-cpha or spi-cpol (but not both).
++ - vref-supply: 	Phandle to the external reference voltage supply.
++
++For other required and optional properties of SPI slave nodes please refer to
++../../spi/spi-bus.txt.
++
++Example:
++	vref_2v5_reg: regulator-vref {
++		compatible = "regulator-fixed";
++		regulator-name = "2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-always-on;
++	};
++
++	dac@0 {
++		compatible = "ti,dac082s085";
++		reg = <0>;
++		spi-max-frequency = <40000000>;
++		spi-cpol;
++		vref-supply = <&vref_2v5_reg>;
++	};
+-- 
+2.11.0
