@@ -1,37 +1,64 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Adjust status "ok" -> "okay" under
- drivers/of/
-Date: Tue, 5 Sep 2017 10:05:57 -0500
-Message-ID: <20170905150557.wxphjvtd2vz5ndqp@rob-hp-laptop>
-References: <alpine.LFD.2.21.1709020336290.12205@localhost.localdomain>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Setting CPU clock frequency on early boot
+Date: Tue, 5 Sep 2017 15:37:48 +0000
+Message-ID: <1504625867.32565.34.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.21.1709020336290.12205-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Language: en-US
+Content-ID: <502EFEDE5E8D314D9F7452DCDCE7CC7E@internal.synopsys.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 02, 2017 at 03:44:07AM -0400, Robert P. J. Day wrote:
-> 
-> Tweak a small number of status "ok" lines in a single file under
-> /drivers/of/ to use the proper DTSpec 0.1 spelling of "okay".
-> 
-> Signed-off-by: Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-> 
-> ---
-> 
->   since there was a single file under all of drivers/ that had this,
-> it seemed trivial to just patch it and be done with it. the vast
-> majority of "ok" spellings are under arch/arm*/, and i'm not going
-> near that.
-
-Applied, thanks.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8sDQoNCkknZCBsaWtlIHRvIGdldCBzb21lIGZlZWRiYWNrIG9uIG91ciBpZGVhIGFzIHdl
+bGwgYXMgY2hlY2sNCmlmIHNvbWVib2R5IGZhY2VzIHNpbWlsYXIgc2l0dWF0aW9ucyBhbmQgaWYg
+c28gd2hhdCB3b3VsZCBiZSB0aGUgYmVzdA0Kd2F5IHRvIGltcGxlbWVudCBzb21lIGdlbmVyaWMg
+c29sdXRpb24gdGhhdCBzdWl0cyBldmVyeW9uZS4NCg0KU28gdGhhdCdzIG91ciBwcm9ibGVtOg0K
+MS4gT24gcG93ZXItb24gaGFyZHdhcmUgbWlnaHQgc3RhcnQgY2xvY2tpbmcgQ1BVIHdpdGggZWl0
+aGVyDQrCoCDCoHRvbyBoaWdoIGZyZXF1ZW5jeSAoc3VjaCB0aGF0IENQVSBtYXkgZ2V0IHN0dWNr
+IGF0IHNvbWUgcG9pbnQpDQrCoCDCoG9yIHRvbyBsb3cgZnJlcXVlbmN5Lg0KDQrCoCDCoFRoYXQg
+YWxsIHNvdW5kcyBzdHVwaWQgYnV0IGxldCBtZSBlbGFib3JhdGUgYSBiaXQgaGVyZS4NCsKgIMKg
+SSdtIHRhbGtpbmcgYWJvdXQgRlBHQS1iYXNlZCBkZXZib2FyZHMgZmlybXdhcmUgZm9yIHdoaWNo
+DQrCoCDCoChoZXJlIEkgbWVhbiBqdXN0IGltYWdlIGxvYWRlZCBpbiBGUEdBIHdpdGggQ1BVIGlt
+cGxlbWVudGF0aW9uDQrCoCDCoGJ1dCBub3Qgc29tZSBzb2Z0d2FyZSB5ZXQpIG1pZ2h0IG5vdCBi
+ZSBzdGFibGUgb3IgYmUgZXZlbiBleHBlcmltZW50YWwuDQoNCsKgIMKgRm9yIGV4YW1wbGUgd2Ug
+bWF5IGRlYWwgd2l0aCBkdWFsLWNvcmUgb3IgcXVhZC1jb3JlIGRlc2lnbnMuDQrCoCDCoEZvcm1l
+ciBtaWdodCBiZSBPSyBydW5uaW5nIEAxMDBNSHogYW5kIGxhdHRlciBpcyBvbmx5IHVzYWJsZQ0K
+wqAgwqBANzVNSHogYW5kIGxvd2VyLiBUaGUgc2ltcGxlc3Qgc29sdXRpb24gbWlnaHQgYmUgdG8g
+dXNlIHNvbWUgc2FmZQ0KwqAgwqB2YWx1ZSBiZWZvcmUgc29tZXRoaW5nIGxpa2UgQ1BVZnJlcSBr
+aWNrcyBpbi4gQnV0IHdlIGRvbid0IHlldCBoYXZlDQrCoCDCoENQVWZyZXEgZm9yIEFSQyAod2Ug
+ZG8gcGxhbiB0byBnZXQgaXQgd29ya2luZyBzb21ldGltZSBzb29uKSB3aGljaA0KwqAgwqBtZWFu
+cyBzaW1wbGUgY2hhbmdlIG9mIENQVSBmcmVxdWVuY3kgb25jZSB0aW1lLWtlZXBpbmcgaW5mcmFz
+dHJ1Y3R1cmUNCsKgIMKgd2FzIGJyb3VnaHQtdXAgaXMgbm90IGFuIG9wdGlvbi4uLiBJLmUuIHdl
+J2xsIGVuZCB1cCB3aXRoIHRoZSBzeXN0ZW0gcnVubmluZw0KwqAgwqBtdWNoIHNsb3dlciBjb21w
+YXJlZCB3aGF0IGNvdWxkIGhhdmUgYmVlbiBwb3NzaWJsZS4NCg0KMi4gVXAgdW50aWwgbm93IHdl
+IHVzZWQgdG8gZG8gZGlydHkgaGFja3MgaW4gZWFybHkgcGxhdGZvcm0gaW5pdCBjb2RlLg0KwqAg
+wqBOYW1lbHkgKHNlZcKgYXhzMTAzX2Vhcmx5X2luaXQoKSBpbsKgYXJjaC9hcmMvcGxhdC1heHMx
+MHgvYXhzMTB4LmMpOg0KwqAgwqAgMSkgUmVhZCBDUFUncyAiY2xvY2stZnJlcXVlbmN5IiBmcm9t
+IC5kdGIgKHJlbWVtYmVyIHdlJ3JlIG9uIHZlcnkgZWFybHkNCsKgIMKgIMKgIMKgYm9vdCBzdGFn
+ZSBzdGlsbCBzbyBubyBleHBhbmRlZCBEZXZUcmVlIHlldCBleGlzdHMpLg0KwqAgwqAgMikgQ2hl
+Y2sgaG93IG1hbnkgY29yZXMgd2UgaGF2ZSBhbmQgd2hpY2ggZnJlcSBpcyB1c2FibGUNCsKgIMKg
+IDMpIFVwZGF0ZSBQTEwgc2V0dGluZ3MgcmlnaHQgaW4gcGxhY2UgaWYgbmV3IGZyZXEgIT0gZXhp
+c3RpbmcgaW4gUExMLg0KDQrCoCDCoEV2ZW4gdGhvdWdoIGl0IGlzIHByb3ZlbiB0byB3b3JrIGJ1
+dCB3aXRoIG1vcmUgcGxhdGZvcm1zIGluIHRoZSBwaXBlbGluZQ0KwqAgwqB3ZSdsbCBuZWVkIHRv
+IGNvcHktcGFzdGUgcHJldHR5IG11Y2ggdGhlIHNhbWUgc3R1ZmYgYWNyb3NzIGFsbCBhZmZlY3Rl
+ZA0KwqAgwqBwbGF0cy4gV2hpY2ggaXMgbm90IG5pY2UuDQoNCsKgIMKgTW9yZW92ZXIgYmFjayBp
+biB0aGUgZGF5IHdlIGRpZG4ndCBoYXZlIGEgcHJvcGVyIGNsayBkcml2ZXIgZm9yIENQVSdzIFBM
+TC4NCsKgIMKgVGh1cyBhY3Rpbmcgb24gUExMIHJlZ2lzdGVycyByaWdodCBpbiBwbGFjZSB3YXMg
+dGhlIG9ubHkgdGhpbmcgd2Ugd2VyZSBhYmxlDQrCoCDCoHRvIGRvLiBOb3cgd2l0aCBpbnRyb2R1
+Y3Rpb24gb2Ygbm9ybWFsIGNsayBkcml2ZXINCsKgIMKgKHNlZcKgZHJpdmVycy9jbGsvYXhzMTB4
+L3BsbF9jbG9jay5jIGluIGxpbnV4LW5leHQpIHdlJ2QgbGlrZSB0byB1dGlsaXplDQrCoCDCoGl0
+IGFuZCBoYXZlIGEgY2xlYW5lciBhbmQgbW9yZSB1bml2ZXJzYWwgc29sdXRpb24gdG8gdGhlIHBy
+b2JsZW0uDQoNCsKgIMKgVGhhdCdzIGhvdyBpdCBjb3VsZCBiZSBkb25lIC3CoGh0dHA6Ly9wYXRj
+aHdvcmsub3psYWJzLm9yZy9wYXRjaC84MDEyNDAvDQrCoCDCoEJhc2ljYWxseSBpbiBhcmNoaXRl
+Y3R1cmUncyB0aW1lX2luaXQoKSB3ZSBjaGVjayBpZiB0aGVyZSdzIGV4cGxpY2l0bHkNCsKgIMKg
+c3BlY2lmaWVkICJjbG9jay1mcmVxdWVuY3kiIHBhcmFtZXRlciBpbiBjcHUncyBub2RlIGluIERl
+dmljZSBUcmVlIGFuZA0KwqAgwqBpZiB0aGVyZSdzIG9uZSB3ZSBzZXQgaXQgdmlhIGp1c3QgaW5z
+dGFudGlhdGVkIGNsayBkcml2ZXIuDQoNCldlIG1heSBpbmRlZWQgcHJvY2VlZCB3aXRoIG1lbnRp
+b25lZCBzb2x1dGlvbiBmb3IgQVJDIGJ1dCBpZiB0aGF0IG1ha2VzDQpzZW5zZSBmb3Igc29tZWJv
+ZHkgZWxzZSBpdCBtaWdodCB3b3J0aCBnZXR0aW5nIHNvbWV0aGluZyBzaW1pbGFyIGluIGdlbmVy
+aWMNCmluaXQgY29kZS4gQW55IHRob3VnaHRzPw0KDQpBbGwgY29tbWVudHMgYW5kIHN1Z2dlc3Rp
+b25zIGFyZSBtb3JlIHRoYW4gd2VsY29tZS4NCg0KLUFsZXhleQ==
