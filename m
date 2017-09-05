@@ -1,93 +1,73 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: gpio: Add optional
- retain-state-shutdown property
-Date: Tue, 5 Sep 2017 21:10:49 +0200
-Message-ID: <43133266-01c1-4ec7-893e-a7b0544f7720@gmail.com>
-References: <20170828001711.19662-1-andrew@aj.id.au>
- <20170828001711.19662-2-andrew@aj.id.au>
- <20170831212840.ecr2p4nra52xvzrz@rob-hp-laptop>
- <1504220536.5933.32.camel@aj.id.au>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] ARM64: dts: meson: update around mmc
+Date: Tue, 05 Sep 2017 12:18:41 -0700
+Message-ID: <7hlgltar8u.fsf@baylibre.com>
+References: <20170831135226.19784-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504220536.5933.32.camel@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh@kernel.org>
-Cc: linux-leds@vger.kernel.org, rpurdie@rpsys.net, pavel@ucw.cz, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170831135226.19784-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
+        message of "Thu, 31 Aug 2017 15:52:17 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew and Rob,
+Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-On 09/01/2017 01:02 AM, Andrew Jeffery wrote:
-> Hi Rob,
-> 
-> On Thu, 2017-08-31 at 16:28 -0500, Rob Herring wrote:
->> On Mon, Aug 28, 2017 at 09:47:10AM +0930, Andrew Jeffery wrote:
->>> On Baseboard Management Controller (BMC) systems it's sometimes
->>> necessary for a LED to retain its state across a BMC reset (which is
->>> independent of the host system state). Add a devicetree property to
->>> describe this behaviour. The property would typically be used in
->>> conjunction with 'default-state = "keep"'.
->>  
->> A bit quick on the applying of this...
->>  
->> I don't understand how this works. The BMC usecase is interesting but 
->> that's fairly irrelevant to the binding. How do you know the GPIO state 
->> thru a reset?
-> 
-> The answer to that is a property of the system design in my opinion.
-> 
->> You're doing a core reset, but not reseting the GPIO 
->> controller?
-> 
-> Well, in my specific case, the GPIO controller in question isn't on the SoC,
-> it's off-chip behind an I2C bus. Powering off a BMC doesn't necessarily mean
-> removing power from its peripherals, so in this case the their state is
-> maintained.
-> 
-> Alternatively, and again in my specific (Aspeed) case, the on-SoC GPIO
-> controller can be selectively reset with respect to the rest of the SoC, or
-> individual GPIO lines can be marked as reset-tolerant. This gives the same
-> capability and is what you've suggested above.
-> 
->>  
->> When you use 'default-state = "keep"' but not this property? Seems like  the
->> same thing to me.
-> 
-> Is that not also true of retain-state-suspend?
-> 
-> The existing behaviour of leds-gpio was to turn the managed LEDs off in the
-> remove() path. To me this was unexpected behaviour, but it is what it is. My
-> first pass at the patch (before I sent it out) was to do as you suggest and
-> only turn it off in the absence of 'default-state = "keep"'.  However there
-> were quite a number of users of that configuration, and this could be an
-> unexpected change of behaviour. Given retain-state-suspend was already defined,
-> it seemed that the non-breaking way to get the behaviour I desired was to
-> introduce retain-state-shutdown.
-> 
-> Sure, this is dealing with problems in the driver and not describing hardware,
-> but at this point the behaviour is already in place and people might be relying
-> on it.
-> 
->> Presumably the bootloader would just distinguish  between a
->> warm and cold reset to decide whether to re-init the state.
->>  
->> Finally, if we do have this property, why is it GPIO specific. You could 
->> just as easily have a LED controller IC and want to do the same thing.
-> 
-> I don't think we're precluded from making it more general even if it's
-> submitted as specific to leds-gpio? I don't have anything against making it
-> more generic. I was tossing up about doing so, but went for the specific case
-> first because we could make it more generic without problems. Going the other
-> way is harder.
+> This patchset feature updates around mmc. It is linked to this series [0]
+> but does not strictly depends on it. It adds:
+>
+> * The regulator settling times for the gpio regulator of nanopi-k2 and
+>   the libretech-cc.
+> * UHS modes for the p20x, nanopi-k2 and the libretech-cc
+> * clk-gate pins: these are the pinmuxes used for the clk-stop work
+>   around explained here [1]
+>
+> It also removes cap-sd-highspeed from eMMC nodes.
+>
+> Special note on SDR104:
+> While the PCB of the p200 and the libretech-cc does not seems to handle
+> SDR104 completely, the nanopi-k2 seems to be handling it correctly.
+>
+> The patch enabling this mode on the nanopi-k2 is the last one of this
+> series. It should propabably be left out until more people can test
+> sdr104 on the nanopi-k2
+>
+> This series has been tested on the gxbb-200, the gxbb-nanopi-k2 and the
+> gxl-s905x-libretech-cc
+>
+> Changes since v2 [3]:
+> * Rebase on Kevin's v4.14/dt64 branch
+>
+> Changes since v1 [2]:
+> * Reorder patches to put fixes first, then enhancements
+> * Fix error in the SDIO clk_gate pins (GPIOX_5 instead GPIOX_4)
+>
+> [0]: https://lkml.kernel.org/r/20170828142915.27020-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+> [1]: https://lkml.kernel.org/r/20170821160301.21899-11-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+> [2]: https://lkml.kernel.org/r/20170804180816.18737-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+> [3]: https://lkml.kernel.org/r/20170821160637.22456-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+>
+> Jerome Brunet (9):
+>   ARM64: dts: meson-gx: Use correct mmc clock source 0
+>   ARM64: dts: meson: remove cap-sd-highspeed from emmc nodes
+>   ARM64: dts: meson: add mmc clk gate pins
+>   ARM64: dts: meson-gxbb: nanopi-k2: add card regulator settle times
+>   ARM64: dts: meson-gxl: libretech-cc: add card regulator settle times
+>   ARM64: dts: meson-gxl: libretech-cc: enable high speed modes
+>   ARM64: dts: meson-gxbb: p20x: enable sdcard UHS modes
+>   ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
+>   ARM64: dts: meson-gxbb: nanopi-k2: enable sdr104 mode
 
-This explanation looks reasonable. I'll wait two more days before
-sending LED 4.14 updates upstream.
+Applied to v4.14/dt64, and submitted to arm-soc.  It may miss this merge
+window, but if it does, we can submit for the first round of fixes after
+-rc1 is out.
 
-It would be nice to have clear Rob's statement about this patch set -
-either ack or NACK.
+Thanks,
 
--- 
-Best regards,
-Jacek Anaszewski
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
