@@ -1,229 +1,99 @@
-From: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 05/18] firmware: arm_scmi: add initial support for
- performance protocol
-Date: Tue, 5 Sep 2017 16:04:53 +0100
-Message-ID: <2690239b-27a7-dce3-88a6-d53808e8e93c@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-6-git-send-email-sudeep.holla@arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/2] drm/bridge: add Silicon Image SiI9234 driver
+Date: Tue, 05 Sep 2017 18:05:53 +0300
+Message-ID: <1569224.pDUtqo7azG@avalon>
+References: <1504182434-8201-1-git-send-email-m.purski@samsung.com>
+ <2326944.Wi9TMObRze@avalon>
+ <b8df49d4-4636-f52e-c974-699a8a81872a@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501857104-11279-6-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <b8df49d4-4636-f52e-c974-699a8a81872a@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maciej Purski <m.purski@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
-
-On 04/08/17 15:31, Sudeep Holla wrote:
-> The performance protocol is intended for the performance management of
-> group(s) of device(s) that run in the same performance domain. It
-> includes even the CPUs. A performance domain is defined by a set of
-> devices that always have to run at the same performance level.
-> For example, a set of CPUs that share a voltage domain, and have a
-> common frequency control, is said to be in the same performance domain.
-> 
-> The commands in this protocol provide functionality to describe the
-> protocol version, describe various attribute flags, set and get the
-> performance level of a domain. It also supports discovery of the list
-> of performance levels supported by a performance domain, and the
-> properties of each performance level.
-> 
-> This patch adds basic support for the performance protocol.
-> 
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->   drivers/firmware/arm_scmi/Makefile |   2 +-
->   drivers/firmware/arm_scmi/common.h |   1 +
->   drivers/firmware/arm_scmi/perf.c   | 511 +++++++++++++++++++++++++++++++++++++
->   include/linux/scmi_protocol.h      |  31 +++
->   4 files changed, 544 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/firmware/arm_scmi/perf.c
-> 
-> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-> index 21d01d1d6b9c..159de726ee45 100644
-> --- a/drivers/firmware/arm_scmi/Makefile
-> +++ b/drivers/firmware/arm_scmi/Makefile
-> @@ -1,2 +1,2 @@
->   obj-$(CONFIG_ARM_SCMI_PROTOCOL)	= arm_scmi.o
-> -arm_scmi-y = base.o driver.o
-> +arm_scmi-y = base.o driver.o perf.o
-> diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-> index e3fe5d9acc82..7473dfcad4ee 100644
-> --- a/drivers/firmware/arm_scmi/common.h
-> +++ b/drivers/firmware/arm_scmi/common.h
-> @@ -30,6 +30,7 @@
->   #define PROTOCOL_REV_MAJOR(x)	((x) >> PROTOCOL_REV_MINOR_BITS)
->   #define PROTOCOL_REV_MINOR(x)	((x) & PROTOCOL_REV_MINOR_MASK)
->   #define MAX_PROTOCOLS_IMP	16
-> +#define MAX_OPPS		16
->   
->   enum scmi_std_protocol {
->   	SCMI_PROTOCOL_BASE = 0x10,
-> diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-> new file mode 100644
-> index 000000000000..13d84d829201
-> --- /dev/null
-> +++ b/drivers/firmware/arm_scmi/perf.c
-> @@ -0,0 +1,511 @@
-> +/*
-> + * System Control and Management Interface (SCMI) Performance Protocol
-> + *
-> + * Copyright (C) 2017 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
-> +#include <linux/sort.h>
-> +
-> +#include "common.h"
-> +
-> +enum scmi_performance_protocol_cmd {
-> +	PERF_DOMAIN_ATTRIBUTES = 0x3,
-> +	PERF_DESCRIBE_LEVELS = 0x4,
-> +	PERF_LIMITS_SET = 0x5,
-> +	PERF_LIMITS_GET = 0x6,
-> +	PERF_LEVEL_SET = 0x7,
-> +	PERF_LEVEL_GET = 0x8,
-> +	PERF_NOTIFY_LIMITS = 0x9,
-> +	PERF_NOTIFY_LEVEL = 0xa,
-> +};
-> +
-> +struct scmi_opp {
-> +	u32 perf;
-> +	u32 power;
-> +	u32 trans_latency_us;
-> +};
-> +
-> +struct scmi_msg_resp_perf_attributes {
-> +	__le16 num_domains;
-> +	__le16 flags;
-> +#define POWER_SCALE_IN_MILLIWATT(x)	((x) & BIT(0))
-> +	__le32 stats_addr_low;
-> +	__le32 stats_addr_high;
-> +	__le32 stats_size;
-> +};
-> +
-> +struct scmi_msg_resp_perf_domain_attributes {
-> +	__le32 flags;
-> +#define SUPPORTS_SET_LIMITS(x)		((x) & BIT(31))
-> +#define SUPPORTS_SET_PERF_LVL(x)	((x) & BIT(30))
-> +#define SUPPORTS_PERF_LIMIT_NOTIFY(x)	((x) & BIT(29))
-> +#define SUPPORTS_PERF_LEVEL_NOTIFY(x)	((x) & BIT(28))
-> +	__le32 rate_limit_us;
-> +	__le32 sustained_freq_khz;
-> +	__le32 sustained_perf_level;
-> +	    u8 name[SCMI_MAX_STR_SIZE];
-> +};
-> +
-> +struct scmi_msg_perf_describe_levels {
-> +	__le32 domain;
-> +	__le32 level_index;
-> +};
-> +
-> +struct scmi_perf_set_limits {
-> +	__le32 domain;
-> +	__le32 max_level;
-> +	__le32 min_level;
-> +};
-> +
-> +struct scmi_perf_get_limits {
-> +	__le32 max_level;
-> +	__le32 min_level;
-> +};
-> +
-> +struct scmi_perf_set_level {
-> +	__le32 domain;
-> +	__le32 level;
-> +};
-> +
-> +struct scmi_perf_notify_level_or_limits {
-> +	__le32 domain;
-> +	__le32 notify_enable;
-> +};
-> +
-> +struct scmi_msg_resp_perf_describe_levels {
-> +	__le16 num_returned;
-> +	__le16 num_remaining;
-> +	struct {
-> +		__le32 perf_val;
-> +		__le32 power;
-> +		__le16 transition_latency_us;
-> +		__le16 reserved;
-> +	} opp[0];
-> +};
-> +
-> +struct perf_dom_info {
-> +	bool set_limits;
-> +	bool set_perf;
-> +	bool perf_limit_notify;
-> +	bool perf_level_notify;
-> +	u32 opp_count;
-> +	u32 sustained_freq_khz;
-> +	u32 sustained_perf_level;
-> +	u32 mult_factor;
-> +	char name[SCMI_MAX_STR_SIZE];
-> +	struct scmi_opp opp[MAX_OPPS];
-> +};
-> +
-> +struct scmi_perf_info {
-> +	int num_domains;
-> +	bool power_scale_mw;
-> +	u64 stats_addr;
-> +	u32 stats_size;
-> +	struct perf_dom_info *dom_info;
-> +};
-> +
-> +static struct scmi_perf_info perf_info;
-> +
-> +static int scmi_perf_attributes_get(const struct scmi_handle *handle,
-> +				    struct scmi_perf_info *perf_info)
-> +{
-> +	int ret;
-> +	struct scmi_xfer *t;
-> +	struct scmi_msg_resp_perf_attributes *attr;
-> +
-> +	ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
-> +				 SCMI_PROTOCOL_PERF, 0, sizeof(*attr), &t);
-> +	if (ret)
-> +		return ret;
-> +
-> +	attr = t->rx.buf;
-> +
-> +	ret = scmi_do_xfer(handle, t);
-> +	if (!ret) {
-> +		u16 flags = le16_to_cpu(attr->flags);
-> +
-> +		perf_info->num_domains = le16_to_cpu(attr->num_domains);
-> +		perf_info->power_scale_mw = POWER_SCALE_IN_MILLIWATT(flags);
-> +		perf_info->stats_addr = le32_to_cpu(attr->stats_addr_low) |
-> +				(u64)le32_to_cpu(attr->stats_addr_high) << 32;
-
-This seems odd, shouldn't it be the following?
-le64_to_cpu(attr->stats_addr_low | (__le64)attr->stats_addr_high << 32)
-
-Cheers,
-
--- 
-Julien Thierry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTWFjaWVqLAoKT24gVHVlc2RheSwgNSBTZXB0ZW1iZXIgMjAxNyAxNjowMTo1NCBFRVNUIE1h
+Y2llaiBQdXJza2kgd3JvdGU6Cj4gSGkgTGF1cmVudCwKPiAKPiBUaGFuayB5b3UgZm9yIHlvdXIg
+cmVwbHkuIFRoZSBwcm9ibGVtIHdhcyBhbHJlYWR5IGRpc2N1c3NlZCB3aGVuIGFkZGluZwo+IHNp
+bDg2MjAgZHJpdmVyLiBJdCBjYW4gYmUgc29sdmVkIGxhdGVyLiBJJ20gQ0MtaW5nIEFuZHJ6ZWog
+SGFqZGEsIGFzIGhlCj4gdXNlZCB0byBkaXNjdXNzIGl0IHdpdGggeW91LgoKSSdtIGFmcmFpZCBp
+dCBjYW4ndCBiZSBzb2x2ZWQgbGF0ZXIuIERUIGJpbmRpbmdzIGFyZSBzdXBwb3NlZCB0byBiZSBh
+IHN0YWJsZSAKQUJJLCB3ZSBjYW4ndCBtZXJnZSBhIGJpbmRpbmcgdGhhdCB3ZSBhbHJlYWR5IGtu
+b3cgaXNuJ3QgY29ycmVjdC4KCj4gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Bh
+dGNoLzExNDIyNC8KPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmkt
+ZGV2ZWwvMjAxNS1EZWNlbWJlci8wOTY3NTYuaHRtbAo+IAo+IFJlZ2FyZHMsCj4gCj4gCU1hY2ll
+ago+IAo+IE9uIDMxLzA4LzE3IDE1OjMwLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4gSGkg
+TWFjaWVqLAo+ID4gCj4gPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KPiA+IAo+ID4gT24gVGh1
+cnNkYXksIDMxIEF1Z3VzdCAyMDE3IDE1OjI3OjEzIEVFU1QgTWFjaWVqIFB1cnNraSB3cm90ZToK
+PiA+PiBTaUk5MjM0IHRyYW5zbWl0dGVyIGNvbnZlcnRzIGVUTURTL0hETUkgc2lnbmFsIHRvIE1I
+TCAxLjAuCj4gPj4gSXQgaXMgY29udHJvbGxlZCB2aWEgSTJDIGJ1cy4gSXRzIGludGVyYWN0aW9u
+IHdpdGggb3RoZXIKPiA+PiBkZXZpY2VzIGluIHZpZGVvIHBpcGVsaW5lIGlzIHBlcmZvcm1lZCBt
+YWlubHkgb24gSFcgbGV2ZWwuCj4gPj4gVGhlIG9ubHkgaW50ZXJhY3Rpb24gaXQgZG9lcyBvbiBk
+ZXZpY2UgZHJpdmVyIGxldmVsIGlzCj4gPj4gZmlsdGVyaW5nLW91dCB1bnN1cHBvcnRlZCB2aWRl
+byBtb2RlcywgaXQgZXhwb3NlcyBkcm1fYnJpZGdlCj4gPj4gaW50ZXJmYWNlIHRvIHBlcmZvcm0g
+dGhpcyBvcGVyYXRpb24uCj4gPj4gCj4gPj4gVGhpcyBwYXRjaCBpcyBiYXNlZCBvbiB0aGUgY29k
+ZSByZWZhY3RvcmVkIGJ5IFRvbWFzeiBTdGFuaXNsYXdza2kKPiA+PiA8dC5zdGFuaXNsYXdzQHNh
+bXN1bmcuY29tPiwgd2hpY2ggd2FzIGluaXRpYWxseSBkZXZlbG9wZWQgYnk6Cj4gPj4gQWRhbSBI
+YW1wc29uIDxhaGFtcHNvbkBzdGEuc2Ftc3VuZy5jb20+Cj4gPj4gRXJpayBHaWxsaW5nIDxrb25r
+ZXJzQGFuZHJvaWQuY29tPgo+ID4+IFNoYW5rYXIgQmFuZGFsIDxzaGFua2FyLmJAc2Ftc3VuZy5j
+b20+Cj4gPj4gRGhhcmFtIEt1bWFyIDxkaGFyYW0ua3JAc2Ftc3VuZy5jb20+Cj4gPj4gCj4gPj4g
+U2lnbmVkLW9mZi1ieTogTWFjaWVqIFB1cnNraSA8bS5wdXJza2lAc2Ftc3VuZy5jb20+Cj4gPj4g
+LS0tCj4gPj4gQ2hhbmdlcyBpbiB2MjoKPiA+PiAtIHVzZSBidWxrX3JlcXVsYXRvcnMgaW5zdGVh
+ZCBvZiBzaW5nbGUgb25lCj4gPj4gLSBzdWJzdGl0dXRlIHNvbWUgb2YgdGhlIG1hZ2ljIHZhbHVl
+cyB3aXRoIG1hY3Jvcwo+ID4+IC0gaW1wcm92ZSBjb2Rpbmcgc3R5bGUKPiA+PiAtIGltcHJvdmVk
+IGVycm9yIGhhbmRsaW5nIGluIHNpaTkyMzRfcHJvYmUoKQo+ID4+IC0tLQo+ID4+IAo+ID4+ICAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQgfCAgMzQg
+Kwo+ID4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDggKwo+ID4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAg
+ICAgICAgICAgICAgfCAgIDEgKwo+ID4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MjM0
+LmMgICAgICAgICAgICAgICAgICAgfCA5OTMKPiA+PiAgICsrKysrKysrKysrKysrKysrKwo+ID4+
+ICAgNCBmaWxlcyBjaGFuZ2VkLCAxMDM2IGluc2VydGlvbnMoKykKPiA+PiAgIGNyZWF0ZSBtb2Rl
+IDEwMDY0NAo+ID4+IAo+ID4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9zaWk5MjM0LnR4dCBjcmVhdGUgbW9kZQo+ID4+IDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL3NpaTkyMzQuYwo+ID4+IAo+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQKPiA+PiBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MjM0
+LnR4dCBuZXcgZmlsZQo+ID4+IG1vZGUgMTAwNjQ0Cj4gPj4gaW5kZXggMDAwMDAwMC4uM2NlNzQx
+Mwo+ID4+IC0tLSAvZGV2L251bGwKPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQKPiA+PiBAQCAtMCwwICsxLDM0IEBA
+Cj4gPj4gK1NpbGljb24gSW1hZ2UgU2lJOTIzNCBIRE1JL01ITCBicmlkZ2UgYmluZGluZ3MKPiA+
+PiArCj4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gKwktIGNvbXBhdGlibGUgOiAic2ls
+LHNpaTkyMzQiLgo+ID4+ICsJLSByZWcgOiBJMkMgYWRkcmVzcyBmb3IgVFBJIGludGVyZmFjZSwg
+dXNlIDB4MzkKPiA+PiArCS0gYXZjYzMzLXN1cHBseSA6IE1ITC9VU0IgU3dpdGNoIFN1cHBseSBW
+b2x0YWdlICgzLjNWKQo+ID4+ICsJLSBpb3ZjYzE4LXN1cHBseSA6IEkvTyBTdXBwbHkgVm9sdGFn
+ZSAoMS44VikKPiA+PiArCS0gYXZjYzEyLXN1cHBseSA6IFRNRFMgQW5hbG9nIFN1cHBseSBWb2x0
+YWdlICgxLjJWKQo+ID4+ICsJLSBjdmNjMTItc3VwcGx5IDogRGlnaXRhbCBDb3JlIFN1cHBseSBW
+b2x0YWdlICgxLjJWKQo+ID4+ICsJLSBpbnRlcnJ1cHRzLCBpbnRlcnJ1cHQtcGFyZW50OiBpbnRl
+cnJ1cHQgc3BlY2lmaWVyIG9mIElOVCBwaW4KPiA+PiArCS0gcmVzZXQtZ3Bpb3M6IGdwaW8gc3Bl
+Y2lmaWVyIG9mIFJFU0VUIHBpbiAoYWN0aXZlIGxvdykKPiA+PiArCS0gdmlkZW8gaW50ZXJmYWNl
+czogRGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJmYWNlIHBvcnQKPiA+PiArCQkJ
+ICAgIG5vZGUgZm9yIEhETUkgZW5jb2RlciBhY2NvcmRpbmcgdG8gWzFdLgo+ID4+ICsKPiA+PiAr
+WzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJm
+YWNlcy50eHQKPiA+IAo+ID4gRG9lc24ndCB0aGlzIGNoaXAgaGF2ZSB0d28gcG9ydHMsIG9uZSBp
+bnB1dCBjb25uZWN0ZWQgdG8gdGhlIFNvQyBhbmQgb25lCj4gPiBvdXRwdXQgY29ubmVjdGVkIHRv
+IGFuIEhETUkgY29ubmVjdG9yID8gSWYgc28gdGhlcmUgc2hvdWxkIGJlIHR3byBwb3J0cyBpbgo+
+ID4gRFQgdG9vLgo+ID4gCj4gPj4gK0V4YW1wbGU6Cj4gPj4gKwlzaWk5MjM0QDM5IHsKPiA+PiAr
+CQljb21wYXRpYmxlID0gInNpbCxzaWk5MjM0IjsKPiA+PiArCQlyZWcgPSA8MHgzOT47Cj4gPj4g
+KwkJYXZjYzMzLXN1cHBseSA9IDwmdmNjMzNtaGw+Owo+ID4+ICsJCWlvdmNjMTgtc3VwcGx5ID0g
+PCZ2Y2MxOG1obD47Cj4gPj4gKwkJYXZjYzEyLXN1cHBseSA9IDwmdnNpbDEyPjsKPiA+PiArCQlj
+dmNjMTItc3VwcGx5ID0gPCZ2c2lsMTI+Owo+ID4+ICsJCXJlc2V0LWdwaW9zID0gPCZncGYzIDQg
+R1BJT19BQ1RJVkVfTE9XPjsKPiA+PiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGYzPjsKPiA+
+PiArCQlpbnRlcnJ1cHRzID0gPDUgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPj4gKwo+ID4+ICsJ
+CXBvcnQgewo+ID4+ICsJCQltaGxfdG9faGRtaTogZW5kcG9pbnQgewo+ID4+ICsJCQkJcmVtb3Rl
+LWVuZHBvaW50ID0gPCZoZG1pX3RvX21obD47Cj4gPiAKPiA+IEl0IHdvdWxkIGJlIHVzZWZ1bCB0
+byBpbmNsdWRlIHRoZSByZW1vdGUgRFQgbm9kZXMgaW4gdGhlIGV4YW1wbGUgdG9vLgo+ID4gCj4g
+Pj4gKwkJCX07Cj4gPj4gKwkJfTsKPiA+PiArCX07CgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBp
+bmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
