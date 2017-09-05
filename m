@@ -1,83 +1,34 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] Bluetooth: btqcomsmd: BD address setup
-Date: Tue, 5 Sep 2017 14:14:15 +0200
-Message-ID: <773E21D0-9E00-45B5-8454-3AFFAECCBFD7@holtmann.org>
-References: <1504607164-12645-1-git-send-email-loic.poulain@linaro.org>
- <1504607164-12645-2-git-send-email-loic.poulain@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504607164-12645-2-git-send-email-loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 1/6] dt-bindings: document stall and PASID properties
+ for IOMMU masters
+Date: Tue, 5 Sep 2017 13:52:47 +0100
+Message-ID: <81fe1ebd-4197-56ce-13c1-24bb2ce858c0@arm.com>
+References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
+ <1504167642-14922-2-git-send-email-xieyisheng1@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504167642-14922-2-git-send-email-xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, chenjiankang1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xieyisheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Loic,
+On 31/08/17 09:20, Yisheng Xie wrote:
+> From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+> 
+> Document the bindings for stall and PASID capable platform devices.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
 
-> This patch implements the hdev setup function.
-> wcnss-bt does not have persistent memory to store
-> an allocated BD address. The device is therefore
-> marked as unconfigured if no BD address has been
-> previously retrieved.
-> 
-> Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> v2: Set device as unconfigured if default address detected
->     Add warning if BD addr retrieved from DT
-> v3: if no addr retrieved from DT, unconditionally set
->     the invalid BD addr flag.
->     swap and set bdaddr in the platform probe
-> v4: Add dt-bindings documentation
->     split patch in two parts (setup, dt prop)
->     use local-bd-address name instead of local-mac-address
-> 
-> drivers/bluetooth/btqcomsmd.c | 25 +++++++++++++++++++++++++
-> 1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/btqcomsmd.c b/drivers/bluetooth/btqcomsmd.c
-> index ef730c173d4b..c70fae75c4ad 100644
-> --- a/drivers/bluetooth/btqcomsmd.c
-> +++ b/drivers/bluetooth/btqcomsmd.c
-> @@ -26,6 +26,7 @@
-> struct btqcomsmd {
-> 	struct hci_dev *hdev;
-> 
-> +	bdaddr_t bdaddr;
-> 	struct rpmsg_endpoint *acl_channel;
-> 	struct rpmsg_endpoint *cmd_channel;
-> };
-> @@ -100,6 +101,29 @@ static int btqcomsmd_close(struct hci_dev *hdev)
-> 	return 0;
-> }
-> 
-> +static int btqcomsmd_setup(struct hci_dev *hdev)
-> +{
-> +	struct btqcomsmd *btq = hci_get_drvdata(hdev);
-> +	struct sk_buff *skb;
-> +
-> +	skb = __hci_cmd_sync(hdev, HCI_OP_RESET, 0, NULL, HCI_INIT_TIMEOUT);
-> +	if (IS_ERR(skb))
-> +		return PTR_ERR(skb);
-> +	kfree_skb(skb);
-> +
-> +	/* Device does not have persistent storage for BD address.
-> +	 * Mark the device with invalid BD addr flag if no address
-> +	 * retrieved during probe.
-> +	 */
-> +	if (!bacmp(&btq->bdaddr, BDADDR_ANY)) {
-> +		bt_dev_info(hdev, "No BD address configured");
-> +		set_bit(HCI_QUIRK_INVALID_BDADDR, &hdev->quirks);
-> +		return 0;
-> +	}
-> +
-> +	return qca_set_bdaddr_rome(hdev, &btq->bdaddr);
-> +}
-> +
+Huh? No, I don't think I did. Please leave the patch as you found it, and
+ask me for a version I consider clean next time.
 
-actually I applied a modified version of your patch that also sets invalid BD address when changing the address fails. I think there is no good reason to fail ->setup(). Let them fix that in userspace since the device is actually functional.
-
-Regards
-
-Marcel
+Thanks,
+Jean
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
