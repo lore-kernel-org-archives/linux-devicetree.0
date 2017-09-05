@@ -1,169 +1,35 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v8 17/21] v4l: fwnode: Add convenience function for parsing generic references
-Date: Tue,  5 Sep 2017 16:05:49 +0300
-Message-ID: <20170905130553.1332-18-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v8 05/21] docs-rst: v4l: Include Qualcomm CAMSS in documentation build
+Date: Tue,  5 Sep 2017 16:05:37 +0300
+Message-ID: <20170905130553.1332-6-sakari.ailus@linux.intel.com>
 References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170905130553.1332-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add function v4l2_fwnode_reference_count() for counting external
-references and v4l2_fwnode_reference_parse() for parsing them as async
-sub-devices.
+Qualcomm CAMSS was left out from documentation build. Fix this.
 
-This can be done on e.g. flash or lens async sub-devices that are not part
-of but are associated with a sensor.
-
-struct v4l2_async_notifier.max_subdevs field is added to contain the
-maximum number of sub-devices in a notifier to reflect the memory
-allocated for the subdevs array.
-
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 85 +++++++++++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           | 28 ++++++++++++
- 2 files changed, 113 insertions(+)
+ Documentation/media/v4l-drivers/index.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index e6932d7d47b6..8c059a4217b4 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -453,6 +453,91 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
- }
- EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
- 
-+static void v4l2_fwnode_print_args(struct fwnode_reference_args *args)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < args->nargs; i++) {
-+		pr_cont(" %u", args->args[i]);
-+		if (i + 1 < args->nargs)
-+			pr_cont(",");
-+	}
-+}
-+
-+int v4l2_fwnode_reference_parse(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	const char *prop, const char *nargs_prop, unsigned int nargs,
-+	size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct fwnode_reference_args *args,
-+			    struct v4l2_async_subdev *asd))
-+{
-+	struct fwnode_reference_args args;
-+	unsigned int index = 0;
-+	int ret = -ENOENT;
-+
-+	if (asd_struct_size < sizeof(struct v4l2_async_subdev))
-+		return -EINVAL;
-+
-+	for (; !fwnode_property_get_reference_args(
-+		     dev_fwnode(dev), prop, nargs_prop, nargs,
-+		     index, &args); index++)
-+		fwnode_handle_put(args.fwnode);
-+
-+	ret = v4l2_async_notifier_realloc(notifier,
-+					  notifier->num_subdevs + index);
-+	if (ret)
-+		return -ENOMEM;
-+
-+	for (ret = -ENOENT, index = 0; !fwnode_property_get_reference_args(
-+		     dev_fwnode(dev), prop, nargs_prop, nargs,
-+		     index, &args); index++) {
-+		struct v4l2_async_subdev *asd;
-+
-+		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-+			ret = -EINVAL;
-+			goto error;
-+		}
-+
-+		asd = kzalloc(asd_struct_size, GFP_KERNEL);
-+		if (!asd) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		ret = parse_single ? parse_single(dev, &args, asd) : 0;
-+		if (ret < 0) {
-+			kfree(asd);
-+			if (ret == -ENOTCONN)
-+				dev_dbg(dev,
-+					"ignoring reference prop \"%s\", nargs_prop \"%s\", nargs %u, index %u",
-+					prop, nargs_prop, nargs, index);
-+			else
-+				dev_warn(dev,
-+					 "driver could not parse reference prop \"%s\", nargs_prop \"%s\", nargs %u, index %u",
-+					 prop, nargs_prop, nargs, index);
-+			v4l2_fwnode_print_args(&args);
-+			pr_cont("\n");
-+			if (ret == -ENOTCONN)
-+				continue;
-+			else
-+				goto error;
-+		}
-+
-+		notifier->subdevs[notifier->num_subdevs] = asd;
-+		asd->match.fwnode.fwnode = args.fwnode;
-+		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-+		notifier->num_subdevs++;
-+	}
-+
-+	return 0;
-+
-+error:
-+	fwnode_handle_put(args.fwnode);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_reference_parse);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 6d125f26ec84..3ad71241cb20 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -254,4 +254,32 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
- 			      struct v4l2_fwnode_endpoint *vep,
- 			      struct v4l2_async_subdev *asd));
- 
-+/**
-+ * v4l2_fwnode_reference_parse - parse references for async sub-devices
-+ * @dev: the device node the properties of which are parsed for references
-+ * @notifier: the async notifier where the async subdevs will be added
-+ * @prop: the name of the property
-+ * @nargs_prop: the name of the property in the remote node that specifies the
-+ *		number of integer arguments (may be NULL, in that case nargs
-+ *		will be used).
-+ * @nargs: the number of integer arguments after the reference
-+ * @asd_struct_size: the size of the driver's async sub-device struct, including
-+ *		     @struct v4l2_async_subdev
-+ * @parse_single: driver's callback function for parsing a reference. Optional.
-+ *		  Return: 0 on success
-+ *			  %-ENOTCONN if the reference is to be skipped. This
-+ *				     will not be considered as an error
-+ *
-+ * Return: 0 on success
-+ *	   -ENOMEM if memory allocation failed
-+ *	   -EINVAL if property parsing failed
-+ */
-+int v4l2_fwnode_reference_parse(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	const char *prop, const char *nargs_prop, unsigned int nargs,
-+	size_t asd_struct_size,
-+	int (*parse_single)(struct device *dev,
-+			    struct fwnode_reference_args *args,
-+			    struct v4l2_async_subdev *asd));
-+
- #endif /* _V4L2_FWNODE_H */
+diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
+index 10f2ce42ece2..5c202e23616b 100644
+--- a/Documentation/media/v4l-drivers/index.rst
++++ b/Documentation/media/v4l-drivers/index.rst
+@@ -50,6 +50,7 @@ For more details see the file COPYING in the source distribution of Linux.
+ 	philips
+ 	pvrusb2
+ 	pxa_camera
++	qcom_camss
+ 	radiotrack
+ 	rcar-fdp1
+ 	saa7134
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
