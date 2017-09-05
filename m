@@ -1,210 +1,49 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 03/18] firmware: arm_scmi: add basic driver
- infrastructure for SCMI
-Date: Tue, 5 Sep 2017 11:26:16 +0100
-Message-ID: <e566e6b9-fc0e-bafd-4549-beb03d17adf5@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-4-git-send-email-sudeep.holla@arm.com>
- <e05e75d4-e4ec-41b0-6983-63afeddd82f6@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e05e75d4-e4ec-41b0-6983-63afeddd82f6-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
+From: Loic Poulain <loic.poulain@linaro.org>
+Subject: [PATCH v4 1/3] dt-bindings: soc: qcom: Add local-bd-address property to WCNSS-BT
+Date: Tue,  5 Sep 2017 12:26:02 +0200
+Message-ID: <1504607164-12645-1-git-send-email-loic.poulain@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: marcel@holtmann.org, johan.hedberg@gmail.com, robh+dt@kernel.org
+Cc: linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org, Loic Poulain <loic.poulain@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Julien,
+Add optional local-bd-address property which is a 6-byte array
+storing the assigned BD address. Since having a unique BD address
+is critical, a per-device property value should be allocated.
+This property is usually added by the boot loader which has access
+to the provisioned data.
 
-Thanks for reviewing this.
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+---
+ v2: Set device as unconfigured if default address detected
+     Add warning if BD addr retrieved from DT
+ v3: if no addr retrieved from DT, unconditionally set
+     the invalid BD addr flag.
+     swap and set bdaddr in the platform probe
+ v4: Add dt-bindings documentation
+     split patch in two parts (setup, dt prop)
+     use local-bd-address name instead of local-mac-address
 
-On 05/09/17 11:03, Julien Thierry wrote:
-> Hi Sudeep,
-> 
-> I am not sure what the patch does is correct when having a big endian
-> kernel dealing with scmi_shared_mem. Unless there is a reason not to
-> have SCMI with big endian kernel, please see remarks below.
-> 
+ Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-No the intention at least is to have it working even with big endian
-kernel. I found couple of issues when testing after this was posted.
-They are already fixed in [1]
-
-
-[...]
-
->> +/**
->> + * scmi_rx_callback() - mailbox client callback for receive messages
->> + *
->> + * @cl: client pointer
->> + * @m: mailbox message
->> + *
->> + * Processes one received message to appropriate transfer information
->> and
->> + * signals completion of the transfer.
->> + *
->> + * NOTE: This function will be invoked in IRQ context, hence should be
->> + * as optimal as possible.
->> + */
->> +static void scmi_rx_callback(struct mbox_client *cl, void *m)
->> +{
->> +    u16 xfer_id;
->> +    struct scmi_xfer *xfer;
->> +    struct scmi_info *info = client_to_scmi_info(cl);
->> +    struct scmi_xfers_info *minfo = &info->minfo;
->> +    struct device *dev = info->dev;
->> +    struct scmi_shared_mem *mem = info->tx_payload;
->> +
->> +    xfer_id = MSG_XTRACT_TOKEN(mem->msg_header);
->> +
-> 
-> Don't we need to convert msg_header to cpu endian?
-> 
-
-Indeed, already fixed as mentioned above.
-
->> +    /*
->> +     * Are we even expecting this?
->> +     */
->> +    if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
->> +        dev_err(dev, "message for %d is not expected!\n", xfer_id);
->> +        return;
->> +    }
->> +
->> +    xfer = &minfo->xfer_block[xfer_id];
->> +
->> +    scmi_dump_header_dbg(dev, &xfer->hdr);
->> +    /* Is the message of valid length? */
->> +    if (xfer->rx.len > info->desc->max_msg_size) {
->> +        dev_err(dev, "unable to handle %zu xfer(max %d)\n",
->> +            xfer->rx.len, info->desc->max_msg_size);
->> +        return;
->> +    }
->> +
->> +    scmi_fetch_response(xfer, mem);
->> +    complete(&xfer->done);
->> +}
->> +
->> +/**
->> + * pack_scmi_header() - packs and returns 32-bit header
->> + *
->> + * @hdr: pointer to header containing all the information on message id,
->> + *    protocol id and sequence id.
->> + */
->> +static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
->> +{
->> +    return ((hdr->id & MSG_ID_MASK) << MSG_ID_SHIFT) |
->> +       ((hdr->seq & MSG_TOKEN_ID_MASK) << MSG_TOKEN_ID_SHIFT) |
->> +       ((hdr->protocol_id & MSG_PROTOCOL_ID_MASK) <<
->> MSG_PROTOCOL_ID_SHIFT);
->> +}
->> +
->> +/**
->> + * scmi_tx_prepare() - mailbox client callback to prepare for the
->> transfer
->> + *
->> + * @cl: client pointer
->> + * @m: mailbox message
->> + *
->> + * This function prepares the shared memory which contains the header
->> and the
->> + * payload.
->> + */
->> +static void scmi_tx_prepare(struct mbox_client *cl, void *m)
->> +{
->> +    struct scmi_xfer *t = m;
->> +    struct scmi_info *info = client_to_scmi_info(cl);
->> +    struct scmi_shared_mem *mem = info->tx_payload;
->> +
->> +    mem->channel_status = 0x0; /* Mark channel busy + clear error */
->> +    mem->flags = t->hdr.poll_completion ? 0 :
->> SCMI_SHMEM_FLAG_INTR_ENABLED;
->> +    mem->length = sizeof(mem->msg_header) + t->tx.len;
->> +    mem->msg_header = cpu_to_le32(pack_scmi_header(&t->hdr));
->> +    if (t->tx.buf)
->> +        memcpy_toio(mem->msg_payload, t->tx.buf, t->tx.len);
->> +}
-> 
-> I thought every member of scmi_shared_mem should be in le, not just the
-> header.
-> If that is the case, why do mem->length and mem->flags not get converted
-> to le?
-> If it is not the case, should they be of type __le32?
-> 
-> (same remark applies in scmi_fetch_response for mem->length)
-> 
-
-Agreed and already fixed, sorry for that. I am planning to repost after
-4.14-rc1. and hence waiting with fixes.
-
->> +
->> +/**
->> + * scmi_one_xfer_get() - Allocate one message
->> + *
->> + * @handle: SCMI entity handle
->> + *
->> + * Helper function which is used by various command functions that are
->> + * exposed to clients of this driver for allocating a message traffic
->> event.
->> + *
->> + * This function can sleep depending on pending requests already in
->> the system
->> + * for the SCMI entity. Further, this also holds a spinlock to maintain
->> + * integrity of internal data structures.
->> + *
->> + * Return: 0 if all went fine, else corresponding error.
->> + */
->> +static struct scmi_xfer *scmi_one_xfer_get(const struct scmi_handle
->> *handle)
->> +{
->> +    u16 xfer_id;
->> +    int ret, timeout;
->> +    struct scmi_xfer *xfer;
->> +    unsigned long flags, bit_pos;
->> +    struct scmi_info *info = handle_to_scmi_info(handle);
->> +    struct scmi_xfers_info *minfo = &info->minfo;
->> +
->> +    /*
->> +     * Ensure we have only controlled number of pending messages.
->> +     * Ideally, we might just have to wait a single message, be
->> +     * conservative and wait 5 times that..
->> +     */
->> +    timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms) * 5;
->> +    ret = down_timeout(&minfo->sem_xfer_count, timeout);
->> +    if (ret < 0)
->> +        return ERR_PTR(ret);
->> +
->> +    /* Keep the locked section as small as possible */
->> +    spin_lock_irqsave(&minfo->xfer_lock, flags);
->> +    bit_pos = find_first_zero_bit(minfo->xfer_alloc_table,
->> +                      info->desc->max_msg);
->> +    if (bit_pos == info->desc->max_msg) {
->> +        spin_unlock_irqrestore(&minfo->xfer_lock, flags);
->> +        return ERR_PTR(-ENOMEM);
->> +    }
->> +    set_bit(bit_pos, minfo->xfer_alloc_table);
->> +    spin_unlock_irqrestore(&minfo->xfer_lock, flags);
->> +
-> 
-> Is it needed to disable IRQs here? Since the callback called in IRQ
-> context only reads the xfer_alloc_table without modification nor taking
-> locks, can't we just do spin_lock/spin_unlock?
-> 
-
-Yes we can for now. I started adding notification support where we may
-need to allocate(i.e. assign from the pre-allocated buffer) in IRQ
-context. I left it as is though I removed notifications as I haven't
-tested it.
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+index 4ea39e9186a7..1edfcdc6e267 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+@@ -37,6 +37,12 @@ The following properties are defined to the bluetooth node:
+ 	Definition: must be:
+ 		    "qcom,wcnss-bt"
+ 
++- local-bd-address:
++	Usage: optional
++	Value type: <u8 array>
++	Definition: should specify the unique 6-byte BD address assigned to the
++		    BT controller. Usually added at runtime by the boot loader.
++
+ == WiFi
+ The following properties are defined to the WiFi node:
+ 
 -- 
-Regards,
-Sudeep
-
-[1] https://git.kernel.org/sudeep.holla/linux/h/for-list/arm_scmi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.0
