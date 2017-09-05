@@ -1,30 +1,62 @@
-From: Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] Host1x and VIC support for Tegra186
-Date: Tue, 5 Sep 2017 14:28:59 +0300
-Message-ID: <408624d4-9e69-661a-950f-b8d8386d6a27@kapsi.fi>
-References: <20170905084306.19318-1-mperttunen@nvidia.com>
- <20170905111031.u4damueklnuliqt4@phenom.ffwll.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170905111031.u4damueklnuliqt4-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dnibade-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sgurrappadi-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: soc: qcom: Add local-bd-address
+ property to WCNSS-BT
+Date: Tue, 5 Sep 2017 13:54:24 +0200
+Message-ID: <F3742D76-DDB2-4D25-B7BB-62BD18175C4E@holtmann.org>
+References: <1504607164-12645-1-git-send-email-loic.poulain@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504607164-12645-1-git-send-email-loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05.09.2017 14:10, Daniel Vetter wrote:
->
-> Since this is new hw support, is there also open source userspace using
-> all this?
+Hi Loic,
 
-The VIC HW in Tegra186 is backwards compatible with the one in Tegra210, 
-which has open userspace (https://github.com/cyndis/vaapi-tegra-driver), 
-so that userspace should remain compatible. The old firmware is not 
-compatible so we need a new compatibility string for that.
+> Add optional local-bd-address property which is a 6-byte array
+> storing the assigned BD address. Since having a unique BD address
+> is critical, a per-device property value should be allocated.
+> This property is usually added by the boot loader which has access
+> to the provisioned data.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> v2: Set device as unconfigured if default address detected
+>     Add warning if BD addr retrieved from DT
+> v3: if no addr retrieved from DT, unconditionally set
+>     the invalid BD addr flag.
+>     swap and set bdaddr in the platform probe
+> v4: Add dt-bindings documentation
+>     split patch in two parts (setup, dt prop)
+>     use local-bd-address name instead of local-mac-address
+> 
+> Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt | 6 ++++++
+> 1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+> index 4ea39e9186a7..1edfcdc6e267 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+> @@ -37,6 +37,12 @@ The following properties are defined to the bluetooth node:
+> 	Definition: must be:
+> 		    "qcom,wcnss-bt"
+> 
+> +- local-bd-address:
+> +	Usage: optional
+> +	Value type: <u8 array>
+> +	Definition: should specify the unique 6-byte BD address assigned to the
+> +		    BT controller. Usually added at runtime by the boot loader.
+> +
 
->
-> Thanks, Daniel
+as mentioned in my other email, I would really add an example on how to format this. Especially since these are formatted in little-endian order. So adding an example of “00:11:22:33:44:55” string representation on how it converts to [ 55 44 33 22 11 00 ] would be super helpful.
 
-Thanks,
-Mikko
+It might also be useful to create a generic bluetooth.txt similar to ethernet.txt. And then just reference it from here.
+
+Of course we need to have Rob sign off on this and also make sure the boot loader people get this done correctly.
+
+Regards
+
+Marcel
