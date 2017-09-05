@@ -1,445 +1,573 @@
-From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/2] iio: dac: Add Texas Instruments 8/10/12-bit 2/4-channel
- DAC driver
-Date: Tue, 5 Sep 2017 11:27:00 +0200
-Message-ID: <5d861035569248ac4ae971638ce7fd1e50947232.1504602350.git.lukas@wunner.de>
-References: <cceeb1a985343d36dc90d2708371f3e1a73264f6.1504602350.git.lukas@wunner.de>
+From: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 03/18] firmware: arm_scmi: add basic driver
+ infrastructure for SCMI
+Date: Tue, 5 Sep 2017 11:03:08 +0100
+Message-ID: <e05e75d4-e4ec-41b0-6983-63afeddd82f6@arm.com>
+References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
+ <1501857104-11279-4-git-send-email-sudeep.holla@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cceeb1a985343d36dc90d2708371f3e1a73264f6.1504602350.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1501857104-11279-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The DACrrcS085 (rr = 08/10/12, c = 2/4) family of SPI DACs was
-inherited by TI when they acquired National Semiconductor in 2011.
-This driver was developed for and tested with the DAC082S085 built into
-the Revolution Pi by KUNBUS, but should work with any of the other
-chips as they share the same programming interface.
+Hi Sudeep,
 
-There is also a family of I2C DACs with just a single channel called
-DACrr1C08x (rr = 08/10/12, x = 1/5).  Their programming interface is
-very similar and it should be possible to extend the driver for these
-chips with moderate effort.  Alternatively they could be integrated into
-ad5446.c.  (The AD5301/AD5311/AD5321 use different power-down modes but
-otherwise appear to be comparable.)
+I am not sure what the patch does is correct when having a big endian 
+kernel dealing with scmi_shared_mem. Unless there is a reason not to 
+have SCMI with big endian kernel, please see remarks below.
 
-Furthermore there is a family of 8-channel DACs called DACrr8S085
-(rr = 08/10/12) as well as two 16-bit DACs called DAC161Sxxx
-(xxx = 055/997).  These are more complicated devices with support for
-daisy-chaining and the ability to power down each channel separately.
-They could either be handled by a separate driver or integrated into the
-present driver with a larger effort.
+On 04/08/17 15:31, Sudeep Holla wrote:
+> The SCMI is intended to allow OSPM to manage various functions that are
+> provided by the hardware platform it is running on, including power and
+> performance functions. SCMI provides two levels of abstraction, protocols
+> and transports. Protocols define individual groups of system control and
+> management messages. A protocol specification describes the messages
+> that it supports. Transports describe the method by which protocol
+> messages are communicated between agents and the platform.
+> 
+> This patch adds basic infrastructure to manage the message allocation,
+> initialisation, packing/unpacking and shared memory management.
+> 
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>   drivers/firmware/Kconfig           |  21 +
+>   drivers/firmware/Makefile          |   1 +
+>   drivers/firmware/arm_scmi/Makefile |   2 +
+>   drivers/firmware/arm_scmi/common.h |  74 ++++
+>   drivers/firmware/arm_scmi/driver.c | 774 +++++++++++++++++++++++++++++++++++++
+>   include/linux/scmi_protocol.h      |  48 +++
+>   6 files changed, 920 insertions(+)
+>   create mode 100644 drivers/firmware/arm_scmi/Makefile
+>   create mode 100644 drivers/firmware/arm_scmi/common.h
+>   create mode 100644 drivers/firmware/arm_scmi/driver.c
+>   create mode 100644 include/linux/scmi_protocol.h
+> 
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index 6e4ed5a9c6fd..c3d1a12763ce 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -19,6 +19,27 @@ config ARM_PSCI_CHECKER
+>   	  on and off through hotplug, so for now torture tests and PSCI checker
+>   	  are mutually exclusive.
+>   
+> +config ARM_SCMI_PROTOCOL
+> +	tristate "ARM System Control and Management Interface (SCMI) Message Protocol"
+> +	depends on ARM || ARM64 || COMPILE_TEST
+> +	depends on MAILBOX
+> +	help
+> +	  ARM System Control and Management Interface (SCMI) protocol is a
+> +	  set of operating system-independent software interfaces that are
+> +	  used in system management. SCMI is extensible and currently provides
+> +	  interfaces for: Discovery and self-description of the interfaces
+> +	  it supports, Power domain management which is the ability to place
+> +	  a given device or domain into the various power-saving states that
+> +	  it supports, Performance management which is the ability to control
+> +	  the performance of a domain that is composed of compute engines
+> +	  such as application processors and other accelerators, Clock
+> +	  management which is the ability to set and inquire rates on platform
+> +	  managed clocks and Sensor management which is the ability to read
+> +	  sensor data, and be notified of sensor value.
+> +
+> +	  This protocol library provides interface for all the client drivers
+> +	  making use of the features offered by the SCMI.
+> +
+>   config ARM_SCPI_PROTOCOL
+>   	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+>   	depends on ARM || ARM64 || COMPILE_TEST
+> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+> index a37f12e8d137..91d3ff62c653 100644
+> --- a/drivers/firmware/Makefile
+> +++ b/drivers/firmware/Makefile
+> @@ -23,6 +23,7 @@ obj-$(CONFIG_QCOM_SCM_32)	+= qcom_scm-32.o
+>   CFLAGS_qcom_scm-32.o :=$(call as-instr,.arch armv7-a\n.arch_extension sec,-DREQUIRES_SEC=1) -march=armv7-a
+>   obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
+>   
+> +obj-$(CONFIG_ARM_SCMI_PROTOCOL)	+= arm_scmi/
+>   obj-y				+= broadcom/
+>   obj-y				+= meson/
+>   obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> new file mode 100644
+> index 000000000000..58e94c95e523
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -0,0 +1,2 @@
+> +obj-$(CONFIG_ARM_SCMI_PROTOCOL)	= arm_scmi.o
+> +arm_scmi-y = driver.o
+> diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+> new file mode 100644
+> index 000000000000..a6829afc17e3
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/common.h
+> @@ -0,0 +1,74 @@
+> +/*
+> + * System Control and Management Interface (SCMI) Message Protocol
+> + * driver common header file containing some definitions, structures
+> + * and function prototypes used in all the different SCMI protocols.
+> + *
+> + * Copyright (C) 2017 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/completion.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct scmi_msg_hdr - Message(Tx/Rx) header
+> + *
+> + * @id: The identifier of the command being sent
+> + * @protocol_id: The identifier of the protocol used to send @id command
+> + * @seq: The token to identify the message. when a message/command returns,
+> + *       the platform returns the whole message header unmodified including
+> + *	 the token.
+> + */
+> +struct scmi_msg_hdr {
+> +	u8 id;
+> +	u8 protocol_id;
+> +	u16 seq;
+> +	u32 status;
+> +	bool poll_completion;
+> +};
+> +
+> +/**
+> + * struct scmi_msg - Message(Tx/Rx) structure
+> + *
+> + * @buf: Buffer pointer
+> + * @len: Length of data in the Buffer
+> + */
+> +struct scmi_msg {
+> +	void *buf;
+> +	size_t len;
+> +};
+> +
+> +/**
+> + * struct scmi_xfer - Structure representing a message flow
+> + *
+> + * @hdr: Transmit message header
+> + * @tx: Transmit message
+> + * @rx: Receive message, the buffer should be pre-allocated to store
+> + *	message. If request-ACK protocol is used, we can reuse the same
+> + *	buffer for the rx path as we use for the tx path.
+> + * @done: completion event
+> + */
+> +
+> +struct scmi_xfer {
+> +	struct scmi_msg_hdr hdr;
+> +	struct scmi_msg tx;
+> +	struct scmi_msg rx;
+> +	struct completion done;
+> +};
+> +
+> +void scmi_one_xfer_put(const struct scmi_handle *h, struct scmi_xfer *xfer);
+> +int scmi_do_xfer(const struct scmi_handle *h, struct scmi_xfer *xfer);
+> +int scmi_one_xfer_init(const struct scmi_handle *h, u8 msg_id, u8 prot_id,
+> +		       size_t tx_size, size_t rx_size, struct scmi_xfer **p);
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> new file mode 100644
+> index 000000000000..139d6980f270
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -0,0 +1,774 @@
+> +/*
+> + * System Control and Management Interface (SCMI) Message Protocol driver
+> + *
+> + * SCMI Message Protocol is used between the System Control Processor(SCP)
+> + * and the Application Processors(AP). The Message Handling Unit(MHU)
+> + * provides a mechanism for inter-processor communication between SCP's
+> + * Cortex M3 and AP.
+> + *
+> + * SCP offers control and management of the core/cluster power states,
+> + * various power domain DVFS including the core/cluster, certain system
+> + * clocks configuration, thermal sensors and many others.
+> + *
+> + * Copyright (C) 2017 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/bitmap.h>
+> +#include <linux/export.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/semaphore.h>
+> +#include <linux/slab.h>
+> +
+> +#include "common.h"
+> +
+> +#define MSG_ID_SHIFT		0
+> +#define MSG_ID_MASK		0xff
+> +#define MSG_TYPE_SHIFT		8
+> +#define MSG_TYPE_MASK		0x3
+> +#define MSG_PROTOCOL_ID_SHIFT	10
+> +#define MSG_PROTOCOL_ID_MASK	0xff
+> +#define MSG_TOKEN_ID_SHIFT	18
+> +#define MSG_TOKEN_ID_MASK	0x3ff
+> +#define MSG_XTRACT_TOKEN(header)	\
+> +	(((header) >> MSG_TOKEN_ID_SHIFT) & MSG_TOKEN_ID_MASK)
+> +
+> +enum scmi_error_codes {
+> +	SCMI_SUCCESS = 0,	/* Success */
+> +	SCMI_ERR_SUPPORT = -1,	/* Not supported */
+> +	SCMI_ERR_PARAMS = -2,	/* Invalid Parameters */
+> +	SCMI_ERR_ACCESS = -3,	/* Invalid access/permission denied */
+> +	SCMI_ERR_ENTRY = -4,	/* Not found */
+> +	SCMI_ERR_RANGE = -5,	/* Value out of range */
+> +	SCMI_ERR_BUSY = -6,	/* Device busy */
+> +	SCMI_ERR_COMMS = -7,	/* Communication Error */
+> +	SCMI_ERR_GENERIC = -8,	/* Generic Error */
+> +	SCMI_ERR_HARDWARE = -9,	/* Hardware Error */
+> +	SCMI_ERR_PROTOCOL = -10,/* Protocol Error */
+> +	SCMI_ERR_MAX
+> +};
+> +
+> +/* List of all  SCMI devices active in system */
+> +static LIST_HEAD(scmi_list);
+> +/* Protection for the entire list */
+> +static DEFINE_MUTEX(scmi_list_mutex);
+> +
+> +/**
+> + * struct scmi_xfers_info - Structure to manage transfer information
+> + *
+> + * @sem_xfer_count: Counting Semaphore for managing max simultaneous
+> + *	Messages.
+> + * @xfer_block: Preallocated Message array
+> + * @xfer_alloc_table: Bitmap table for allocated messages.
+> + *	Index of this bitmap table is also used for message
+> + *	sequence identifier.
+> + * @xfer_lock: Protection for message allocation
+> + */
+> +struct scmi_xfers_info {
+> +	struct semaphore sem_xfer_count;
+> +	struct scmi_xfer *xfer_block;
+> +	unsigned long *xfer_alloc_table;
+> +	/* protect transfer allocation */
+> +	spinlock_t xfer_lock;
+> +};
+> +
+> +/**
+> + * struct scmi_desc - Description of SoC integration
+> + *
+> + * @max_rx_timeout_ms: Timeout for communication with SoC (in Milliseconds)
+> + * @max_msg: Maximum number of messages that can be pending
+> + *	simultaneously in the system
+> + * @max_msg_size: Maximum size of data per message that can be handled.
+> + */
+> +struct scmi_desc {
+> +	int max_rx_timeout_ms;
+> +	int max_msg;
+> +	int max_msg_size;
+> +};
+> +
+> +/**
+> + * struct scmi_info - Structure representing a  SCMI instance
+> + *
+> + * @dev: Device pointer
+> + * @desc: SoC description for this instance
+> + * @handle: Instance of SCMI handle to send to clients
+> + * @cl: Mailbox Client
+> + * @tx_chan: Transmit mailbox channel
+> + * @rx_chan: Receive mailbox channel
+> + * @tx_payload: Transmit mailbox channel payload area
+> + * @rx_payload: Receive mailbox channel payload area
+> + * @minfo: Message info
+> + * @node: list head
+> + * @users: Number of users of this instance
+> + */
+> +struct scmi_info {
+> +	struct device *dev;
+> +	const struct scmi_desc *desc;
+> +	struct scmi_handle handle;
+> +	struct mbox_client cl;
+> +	struct mbox_chan *tx_chan;
+> +	struct mbox_chan *rx_chan;
+> +	void __iomem *tx_payload;
+> +	void __iomem *rx_payload;
+> +	struct scmi_xfers_info minfo;
+> +	struct list_head node;
+> +	int users;
+> +};
+> +
+> +#define client_to_scmi_info(c)	container_of(c, struct scmi_info, cl)
+> +#define handle_to_scmi_info(h)	container_of(h, struct scmi_info, handle)
+> +
+> +/*
+> + * The SCP firmware providing SCM interface to OSPM and other agents must
+> + * execute only in little-endian mode as per SCMI specification, so any buffers
+> + * shared through SCMI should have their contents converted to little-endian
+> + */
+> +struct scmi_shared_mem {
+> +	__le32 reserved;
+> +	__le32 channel_status;
+> +#define SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR	BIT(1)
+> +#define SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE	BIT(0)
+> +	__le32 reserved1[2];
+> +	__le32 flags;
+> +#define SCMI_SHMEM_FLAG_INTR_ENABLED	BIT(0)
+> +	__le32 length;
+> +	__le32 msg_header;
+> +	u8 msg_payload[0];
+> +};
+> +
+> +static int scmi_linux_errmap[] = {
+> +	/* better than switch case as long as return value is continuous */
+> +	0,			/* SCMI_SUCCESS */
+> +	-EOPNOTSUPP,		/* SCMI_ERR_SUPPORT */
+> +	-EINVAL,		/* SCMI_ERR_PARAM */
+> +	-EACCES,		/* SCMI_ERR_ACCESS */
+> +	-ENOENT,		/* SCMI_ERR_ENTRY */
+> +	-ERANGE,		/* SCMI_ERR_RANGE */
+> +	-EBUSY,			/* SCMI_ERR_BUSY */
+> +	-ECOMM,			/* SCMI_ERR_COMMS */
+> +	-EIO,			/* SCMI_ERR_GENERIC */
+> +	-EREMOTEIO,		/* SCMI_ERR_HARDWARE */
+> +	-EPROTO,		/* SCMI_ERR_PROTOCOL */
+> +};
+> +
+> +static inline int scmi_to_linux_errno(int errno)
+> +{
+> +	if (errno < SCMI_SUCCESS && errno > SCMI_ERR_MAX)
+> +		return scmi_linux_errmap[-errno];
+> +	return -EIO;
+> +}
+> +
+> +/**
+> + * scmi_dump_header_dbg() - Helper to dump a message header.
+> + *
+> + * @dev: Device pointer corresponding to the SCMI entity
+> + * @hdr: pointer to header.
+> + */
+> +static inline void scmi_dump_header_dbg(struct device *dev,
+> +					struct scmi_msg_hdr *hdr)
+> +{
+> +	dev_dbg(dev, "Command ID: %x Sequence ID: %x Protocol: %x\n",
+> +		hdr->id, hdr->seq, hdr->protocol_id);
+> +}
+> +
+> +static void scmi_fetch_response(struct scmi_xfer *xfer,
+> +				struct scmi_shared_mem *mem)
+> +{
+> +	xfer->hdr.status = le32_to_cpu(*(__le32 *)mem->msg_payload);
+> +	/* Skip the length of header and statues in payload area i.e 8 bytes*/
+> +	xfer->rx.len = min_t(size_t, xfer->rx.len, mem->length - 8);
+> +
+> +	/* Take a copy to the rx buffer.. */
+> +	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
+> +}
+> +
+> +/**
+> + * scmi_rx_callback() - mailbox client callback for receive messages
+> + *
+> + * @cl: client pointer
+> + * @m: mailbox message
+> + *
+> + * Processes one received message to appropriate transfer information and
+> + * signals completion of the transfer.
+> + *
+> + * NOTE: This function will be invoked in IRQ context, hence should be
+> + * as optimal as possible.
+> + */
+> +static void scmi_rx_callback(struct mbox_client *cl, void *m)
+> +{
+> +	u16 xfer_id;
+> +	struct scmi_xfer *xfer;
+> +	struct scmi_info *info = client_to_scmi_info(cl);
+> +	struct scmi_xfers_info *minfo = &info->minfo;
+> +	struct device *dev = info->dev;
+> +	struct scmi_shared_mem *mem = info->tx_payload;
+> +
+> +	xfer_id = MSG_XTRACT_TOKEN(mem->msg_header);
+> +
 
-Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
-Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
----
- Documentation/ABI/testing/sysfs-bus-iio |   1 +
- drivers/iio/dac/Kconfig                 |  10 +
- drivers/iio/dac/Makefile                |   1 +
- drivers/iio/dac/ti-dac082s085.c         | 347 ++++++++++++++++++++++++++++++++
- 4 files changed, 359 insertions(+)
- create mode 100644 drivers/iio/dac/ti-dac082s085.c
+Don't we need to convert msg_header to cpu endian?
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 7eead5f97e02..407e4d1024ee 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -522,6 +522,7 @@ Description:
- 		Specifies the output powerdown mode.
- 		DAC output stage is disconnected from the amplifier and
- 		1kohm_to_gnd: connected to ground via an 1kOhm resistor,
-+		2.5kohm_to_gnd: connected to ground via a 2.5kOhm resistor,
- 		6kohm_to_gnd: connected to ground via a 6kOhm resistor,
- 		20kohm_to_gnd: connected to ground via a 20kOhm resistor,
- 		90kohm_to_gnd: connected to ground via a 90kOhm resistor,
-diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-index 25bed2d7d2b9..716fcb1610dd 100644
---- a/drivers/iio/dac/Kconfig
-+++ b/drivers/iio/dac/Kconfig
-@@ -300,6 +300,16 @@ config STM32_DAC
- config STM32_DAC_CORE
- 	tristate
- 
-+config TI_DAC082S085
-+	tristate "Texas Instruments 8/10/12-bit 2/4-channel DAC driver"
-+	depends on SPI_MASTER
-+	help
-+	  Driver for the Texas Instruments (formerly National Semiconductor)
-+	  DAC082S085, DAC102S085, DAC122S085, DAC084S085, DAC104S085 and
-+	  DAC124S085.
-+
-+	  If compiled as a module, it will be called ti-dac082s085.
-+
- config VF610_DAC
- 	tristate "Vybrid vf610 DAC driver"
- 	depends on OF
-diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
-index 603587cc2f07..1a2dd507b4d8 100644
---- a/drivers/iio/dac/Makefile
-+++ b/drivers/iio/dac/Makefile
-@@ -32,4 +32,5 @@ obj-$(CONFIG_MCP4725) += mcp4725.o
- obj-$(CONFIG_MCP4922) += mcp4922.o
- obj-$(CONFIG_STM32_DAC_CORE) += stm32-dac-core.o
- obj-$(CONFIG_STM32_DAC) += stm32-dac.o
-+obj-$(CONFIG_TI_DAC082S085) += ti-dac082s085.o
- obj-$(CONFIG_VF610_DAC) += vf610_dac.o
-diff --git a/drivers/iio/dac/ti-dac082s085.c b/drivers/iio/dac/ti-dac082s085.c
-new file mode 100644
-index 000000000000..22fdce512a09
---- /dev/null
-+++ b/drivers/iio/dac/ti-dac082s085.c
-@@ -0,0 +1,347 @@
-+/*
-+ * ti-dac082s085.c - Texas Instruments 8/10/12-bit 2/4-channel DAC driver
-+ *
-+ * Copyright (C) 2017 KUNBUS GmbH
-+ *
-+ * http://www.ti.com/lit/ds/symlink/dac082s085.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac102s085.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac122s085.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac084s085.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac104s085.pdf
-+ * http://www.ti.com/lit/ds/symlink/dac124s085.pdf
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License (version 2) as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spi/spi.h>
-+
-+/**
-+ * struct ti_dac_chip - TI DAC chip
-+ * @lock: protects write sequences
-+ * @vref: regulator generating Vref
-+ * @mesg: SPI message to perform a write
-+ * @xfer: SPI transfer used by @mesg
-+ * @buf: buffer for @xfer
-+ * @val: cached value of each output
-+ * @powerdown: whether the chip is powered down
-+ * @powerdown_mode: selected by the user
-+ * @resolution: resolution of the chip
-+ */
-+struct ti_dac_chip {
-+	struct mutex lock;
-+	struct regulator *vref;
-+	struct spi_message mesg;
-+	struct spi_transfer xfer;
-+	u8 buf[2] ____cacheline_aligned;
-+	u16 val[4];
-+	bool powerdown;
-+	u8 powerdown_mode;
-+	u8 resolution;
-+};
-+
-+#define WRITE_NOT_UPDATE(chan)	(0x00 | (chan) << 6)
-+#define WRITE_AND_UPDATE(chan)	(0x10 | (chan) << 6)
-+#define WRITE_ALL_UPDATE	 0x20
-+#define POWERDOWN(mode) 	(0x30 | ((mode) + 1) << 6)
-+
-+static int ti_dac_cmd(struct ti_dac_chip *ti_dac, u8 cmd, u16 val)
-+{
-+	u8 shift = 12 - ti_dac->resolution;
-+
-+	ti_dac->buf[0] = cmd | (val >> (8 - shift));
-+	ti_dac->buf[1] = (val << shift) & 0xff;
-+	return spi_sync(ti_dac->mesg.spi, &ti_dac->mesg);
-+}
-+
-+static const char * const ti_dac_powerdown_modes[] = {
-+	"2.5kohm_to_gnd", "100kohm_to_gnd", "three_state",
-+};
-+
-+static int ti_dac_get_powerdown_mode(struct iio_dev *indio_dev,
-+				     const struct iio_chan_spec *chan)
-+{
-+	struct ti_dac_chip *ti_dac = iio_priv(indio_dev);
-+
-+	return ti_dac->powerdown_mode;
-+}
-+
-+static int ti_dac_set_powerdown_mode(struct iio_dev *indio_dev,
-+				     const struct iio_chan_spec *chan,
-+				     unsigned int mode)
-+{
-+	struct ti_dac_chip *ti_dac = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (ti_dac->powerdown_mode == mode)
-+		return 0;
-+
-+	mutex_lock(&ti_dac->lock);
-+	if (ti_dac->powerdown) {
-+		ret = ti_dac_cmd(ti_dac, POWERDOWN(mode), 0);
-+		if (ret) {
-+			mutex_unlock(&ti_dac->lock);
-+			return ret;
-+		}
-+	}
-+	ti_dac->powerdown_mode = mode;
-+	mutex_unlock(&ti_dac->lock);
-+	return 0;
-+}
-+
-+static const struct iio_enum ti_dac_powerdown_mode = {
-+	.items = ti_dac_powerdown_modes,
-+	.num_items = ARRAY_SIZE(ti_dac_powerdown_modes),
-+	.get = ti_dac_get_powerdown_mode,
-+	.set = ti_dac_set_powerdown_mode,
-+};
-+
-+static ssize_t ti_dac_read_powerdown(struct iio_dev *indio_dev,
-+				     uintptr_t private,
-+				     const struct iio_chan_spec *chan,
-+				     char *buf)
-+{
-+	struct ti_dac_chip *ti_dac = iio_priv(indio_dev);
-+
-+	return sprintf(buf, "%d\n", ti_dac->powerdown);
-+}
-+
-+static ssize_t ti_dac_write_powerdown(struct iio_dev *indio_dev,
-+				      uintptr_t private,
-+				      const struct iio_chan_spec *chan,
-+				      const char *buf, size_t len)
-+{
-+	struct ti_dac_chip *ti_dac = iio_priv(indio_dev);
-+	bool powerdown;
-+	int ret;
-+
-+	ret = strtobool(buf, &powerdown);
-+	if (ret)
-+		return ret;
-+
-+	if (ti_dac->powerdown == powerdown)
-+		return len;
-+
-+	mutex_lock(&ti_dac->lock);
-+	if (powerdown)
-+		ret = ti_dac_cmd(ti_dac, POWERDOWN(ti_dac->powerdown_mode), 0);
-+	else
-+		ret = ti_dac_cmd(ti_dac, WRITE_AND_UPDATE(0), ti_dac->val[0]);
-+	if (!ret)
-+		ti_dac->powerdown = powerdown;
-+	mutex_unlock(&ti_dac->lock);
-+
-+	return ret ? ret : len;
-+}
-+
-+static const struct iio_chan_spec_ext_info ti_dac_ext_info[] = {
-+	{
-+		.name	   = "powerdown",
-+		.read	   = ti_dac_read_powerdown,
-+		.write	   = ti_dac_write_powerdown,
-+		.shared	   = IIO_SHARED_BY_TYPE,
-+	},
-+	IIO_ENUM("powerdown_mode", IIO_SHARED_BY_TYPE, &ti_dac_powerdown_mode),
-+	IIO_ENUM_AVAILABLE("powerdown_mode", &ti_dac_powerdown_mode),
-+	{ },
-+};
-+
-+#define TI_DAC_CHANNEL(chan) {					\
-+	.type = IIO_VOLTAGE,					\
-+	.channel = (chan),					\
-+	.address = (chan),					\
-+	.indexed = true,					\
-+	.output = true,						\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+	.ext_info = ti_dac_ext_info,				\
-+}
-+
-+static const struct iio_chan_spec ti_dac_channels[] = {
-+	TI_DAC_CHANNEL(0),
-+	TI_DAC_CHANNEL(1),
-+	TI_DAC_CHANNEL(2),
-+	TI_DAC_CHANNEL(3),
-+};
-+
-+static int ti_dac_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan,
-+			   int *val, int *val2, long mask)
-+{
-+	struct ti_dac_chip *ti_dac = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		*val = ti_dac->val[chan->channel];
-+		ret = IIO_VAL_INT;
-+		break;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = regulator_get_voltage(ti_dac->vref);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = ret / 1000;
-+		*val2 = ti_dac->resolution;
-+		ret = IIO_VAL_FRACTIONAL_LOG2;
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int ti_dac_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long mask)
-+{
-+	struct ti_dac_chip *ti_dac = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		if (ti_dac->val[chan->channel] == val)
-+			return 0;
-+
-+		if (val >= (1 << ti_dac->resolution) || val < 0)
-+			return -EINVAL;
-+
-+		if (ti_dac->powerdown)
-+			return -EHOSTDOWN;
-+
-+		mutex_lock(&ti_dac->lock);
-+		ret = ti_dac_cmd(ti_dac, WRITE_AND_UPDATE(chan->channel), val);
-+		if (!ret)
-+			ti_dac->val[chan->channel] = val;
-+		mutex_unlock(&ti_dac->lock);
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int ti_dac_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				    struct iio_chan_spec const *chan, long mask)
-+{
-+	return IIO_VAL_INT;
-+}
-+
-+static const struct iio_info ti_dac_info = {
-+	.read_raw	   = ti_dac_read_raw,
-+	.write_raw	   = ti_dac_write_raw,
-+	.write_raw_get_fmt = ti_dac_write_raw_get_fmt,
-+};
-+
-+static int ti_dac_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct ti_dac_chip *ti_dac;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*ti_dac));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &ti_dac_info;
-+	indio_dev->name = spi->modalias;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = ti_dac_channels;
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	ti_dac = iio_priv(indio_dev);
-+	ti_dac->xfer.tx_buf = &ti_dac->buf;
-+	ti_dac->xfer.len = sizeof(ti_dac->buf);
-+	spi_message_init_with_transfers(&ti_dac->mesg, &ti_dac->xfer, 1);
-+	ti_dac->mesg.spi = spi;
-+
-+	ret = sscanf(spi->modalias, "dac%2hhu%1d",
-+		     &ti_dac->resolution, &indio_dev->num_channels);
-+	WARN_ON(ret != 2);
-+
-+	ret = ti_dac_cmd(ti_dac, WRITE_ALL_UPDATE, 0);
-+	if (ret) {
-+		dev_err(dev, "failed to initialize outputs to 0\n");
-+		return ret;
-+	}
-+
-+	ti_dac->vref = devm_regulator_get(dev, "vref");
-+	if (IS_ERR(ti_dac->vref))
-+		return PTR_ERR(ti_dac->vref);
-+
-+	ret = regulator_enable(ti_dac->vref);
-+	if (ret < 0)
-+		return ret;
-+
-+	mutex_init(&ti_dac->lock);
-+	ret = iio_device_register(indio_dev);
-+	if (ret) {
-+		mutex_destroy(&ti_dac->lock);
-+		regulator_disable(ti_dac->vref);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ti_dac_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct ti_dac_chip *ti_dac = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	mutex_destroy(&ti_dac->lock);
-+	regulator_disable(ti_dac->vref);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id ti_dac_of_id[] = {
-+	{ .compatible = "ti,dac082s085" },
-+	{ .compatible = "ti,dac102s085" },
-+	{ .compatible = "ti,dac122s085" },
-+	{ .compatible = "ti,dac084s085" },
-+	{ .compatible = "ti,dac104s085" },
-+	{ .compatible = "ti,dac124s085" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ti_dac_of_id);
-+#endif
-+
-+static const struct spi_device_id ti_dac_spi_id[] = {
-+	{ "dac082s085" },
-+	{ "dac102s085" },
-+	{ "dac122s085" },
-+	{ "dac084s085" },
-+	{ "dac104s085" },
-+	{ "dac124s085" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, ti_dac_spi_id);
-+
-+static struct spi_driver ti_dac_driver = {
-+	.driver = {
-+		.name		= "ti-dac082s085",
-+		.of_match_table	= of_match_ptr(ti_dac_of_id),
-+	},
-+	.probe	  = ti_dac_probe,
-+	.remove   = ti_dac_remove,
-+	.id_table = ti_dac_spi_id,
-+};
-+module_spi_driver(ti_dac_driver);
-+
-+MODULE_AUTHOR("Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>");
-+MODULE_DESCRIPTION("Texas Instruments 8/10/12-bit 2/4-channel DAC driver");
-+MODULE_LICENSE("GPL v2");
+> +	/*
+> +	 * Are we even expecting this?
+> +	 */
+> +	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
+> +		dev_err(dev, "message for %d is not expected!\n", xfer_id);
+> +		return;
+> +	}
+> +
+> +	xfer = &minfo->xfer_block[xfer_id];
+> +
+> +	scmi_dump_header_dbg(dev, &xfer->hdr);
+> +	/* Is the message of valid length? */
+> +	if (xfer->rx.len > info->desc->max_msg_size) {
+> +		dev_err(dev, "unable to handle %zu xfer(max %d)\n",
+> +			xfer->rx.len, info->desc->max_msg_size);
+> +		return;
+> +	}
+> +
+> +	scmi_fetch_response(xfer, mem);
+> +	complete(&xfer->done);
+> +}
+> +
+> +/**
+> + * pack_scmi_header() - packs and returns 32-bit header
+> + *
+> + * @hdr: pointer to header containing all the information on message id,
+> + *	protocol id and sequence id.
+> + */
+> +static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
+> +{
+> +	return ((hdr->id & MSG_ID_MASK) << MSG_ID_SHIFT) |
+> +	   ((hdr->seq & MSG_TOKEN_ID_MASK) << MSG_TOKEN_ID_SHIFT) |
+> +	   ((hdr->protocol_id & MSG_PROTOCOL_ID_MASK) << MSG_PROTOCOL_ID_SHIFT);
+> +}
+> +
+> +/**
+> + * scmi_tx_prepare() - mailbox client callback to prepare for the transfer
+> + *
+> + * @cl: client pointer
+> + * @m: mailbox message
+> + *
+> + * This function prepares the shared memory which contains the header and the
+> + * payload.
+> + */
+> +static void scmi_tx_prepare(struct mbox_client *cl, void *m)
+> +{
+> +	struct scmi_xfer *t = m;
+> +	struct scmi_info *info = client_to_scmi_info(cl);
+> +	struct scmi_shared_mem *mem = info->tx_payload;
+> +
+> +	mem->channel_status = 0x0; /* Mark channel busy + clear error */
+> +	mem->flags = t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED;
+> +	mem->length = sizeof(mem->msg_header) + t->tx.len;
+> +	mem->msg_header = cpu_to_le32(pack_scmi_header(&t->hdr));
+> +	if (t->tx.buf)
+> +		memcpy_toio(mem->msg_payload, t->tx.buf, t->tx.len);
+> +}
+
+I thought every member of scmi_shared_mem should be in le, not just the 
+header.
+If that is the case, why do mem->length and mem->flags not get converted 
+to le?
+If it is not the case, should they be of type __le32?
+
+(same remark applies in scmi_fetch_response for mem->length)
+
+> +
+> +/**
+> + * scmi_one_xfer_get() - Allocate one message
+> + *
+> + * @handle: SCMI entity handle
+> + *
+> + * Helper function which is used by various command functions that are
+> + * exposed to clients of this driver for allocating a message traffic event.
+> + *
+> + * This function can sleep depending on pending requests already in the system
+> + * for the SCMI entity. Further, this also holds a spinlock to maintain
+> + * integrity of internal data structures.
+> + *
+> + * Return: 0 if all went fine, else corresponding error.
+> + */
+> +static struct scmi_xfer *scmi_one_xfer_get(const struct scmi_handle *handle)
+> +{
+> +	u16 xfer_id;
+> +	int ret, timeout;
+> +	struct scmi_xfer *xfer;
+> +	unsigned long flags, bit_pos;
+> +	struct scmi_info *info = handle_to_scmi_info(handle);
+> +	struct scmi_xfers_info *minfo = &info->minfo;
+> +
+> +	/*
+> +	 * Ensure we have only controlled number of pending messages.
+> +	 * Ideally, we might just have to wait a single message, be
+> +	 * conservative and wait 5 times that..
+> +	 */
+> +	timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms) * 5;
+> +	ret = down_timeout(&minfo->sem_xfer_count, timeout);
+> +	if (ret < 0)
+> +		return ERR_PTR(ret);
+> +
+> +	/* Keep the locked section as small as possible */
+> +	spin_lock_irqsave(&minfo->xfer_lock, flags);
+> +	bit_pos = find_first_zero_bit(minfo->xfer_alloc_table,
+> +				      info->desc->max_msg);
+> +	if (bit_pos == info->desc->max_msg) {
+> +		spin_unlock_irqrestore(&minfo->xfer_lock, flags);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +	set_bit(bit_pos, minfo->xfer_alloc_table);
+> +	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
+> +
+
+Is it needed to disable IRQs here? Since the callback called in IRQ 
+context only reads the xfer_alloc_table without modification nor taking 
+locks, can't we just do spin_lock/spin_unlock?
+
+> +	xfer_id = bit_pos;
+> +
+> +	xfer = &minfo->xfer_block[xfer_id];
+> +	xfer->hdr.seq = xfer_id;
+> +	reinit_completion(&xfer->done);
+> +
+> +	return xfer;
+> +}
+> +
+> +/**
+> + * scmi_one_xfer_put() - Release a message
+> + *
+> + * @minfo: transfer info pointer
+> + * @xfer: message that was reserved by scmi_one_xfer_get
+> + *
+> + * This holds a spinlock to maintain integrity of internal data structures.
+> + */
+> +void scmi_one_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+> +{
+> +	unsigned long flags;
+> +	struct scmi_info *info = handle_to_scmi_info(handle);
+> +	struct scmi_xfers_info *minfo = &info->minfo;
+> +
+> +	/*
+> +	 * Keep the locked section as small as possible
+> +	 * NOTE: we might escape with smp_mb and no lock here..
+> +	 * but just be conservative and symmetric.
+> +	 */
+> +	spin_lock_irqsave(&minfo->xfer_lock, flags);
+> +	clear_bit(xfer->hdr.seq, minfo->xfer_alloc_table);
+> +	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
+> +
+
+Same question as before.
+
+Cheer,
+
 -- 
-2.11.0
-
+Julien Thierry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
