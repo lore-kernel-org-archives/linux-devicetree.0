@@ -1,72 +1,93 @@
-From: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 3/3] Bluetooth: btqcomsmd: retieve BD address from DT
-Date: Tue,  5 Sep 2017 20:58:43 +0200
-Message-ID: <1504637923-21652-3-git-send-email-loic.poulain@linaro.org>
-References: <1504637923-21652-1-git-send-email-loic.poulain@linaro.org>
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504637923-21652-1-git-send-email-loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: gpio: Add optional
+ retain-state-shutdown property
+Date: Tue, 5 Sep 2017 21:10:49 +0200
+Message-ID: <43133266-01c1-4ec7-893e-a7b0544f7720@gmail.com>
+References: <20170828001711.19662-1-andrew@aj.id.au>
+ <20170828001711.19662-2-andrew@aj.id.au>
+ <20170831212840.ecr2p4nra52xvzrz@rob-hp-laptop>
+ <1504220536.5933.32.camel@aj.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504220536.5933.32.camel@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh@kernel.org>
+Cc: linux-leds@vger.kernel.org, rpurdie@rpsys.net, pavel@ucw.cz, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Retrieve BD address from the DT local-bd-address property.
-This address must be unique and is usually added in the DT
-by the bootloader which has access to the provisioned data.
+Hi Andrew and Rob,
 
-Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- v2: Set device as unconfigured if default address detected
-     Add warning if BD addr retrieved from DT
- v3: if no addr retrieved from DT, unconditionally set
-     the invalid BD addr flag.
-     swap and set bdaddr in the platform probe
- v4: Add dt-bindings documentation
-     split patch in two parts (setup, dt prop)
-     use local-bd-address name instead of local-mac-address
- v5: remove 2/3 merged in bluetooth-next tree
-     Add bluetooth.txt for common BT bindings
-     expect local-bd-address in little-endian format
+On 09/01/2017 01:02 AM, Andrew Jeffery wrote:
+> Hi Rob,
+> 
+> On Thu, 2017-08-31 at 16:28 -0500, Rob Herring wrote:
+>> On Mon, Aug 28, 2017 at 09:47:10AM +0930, Andrew Jeffery wrote:
+>>> On Baseboard Management Controller (BMC) systems it's sometimes
+>>> necessary for a LED to retain its state across a BMC reset (which is
+>>> independent of the host system state). Add a devicetree property to
+>>> describe this behaviour. The property would typically be used in
+>>> conjunction with 'default-state = "keep"'.
+>>  
+>> A bit quick on the applying of this...
+>>  
+>> I don't understand how this works. The BMC usecase is interesting but 
+>> that's fairly irrelevant to the binding. How do you know the GPIO state 
+>> thru a reset?
+> 
+> The answer to that is a property of the system design in my opinion.
+> 
+>> You're doing a core reset, but not reseting the GPIO 
+>> controller?
+> 
+> Well, in my specific case, the GPIO controller in question isn't on the SoC,
+> it's off-chip behind an I2C bus. Powering off a BMC doesn't necessarily mean
+> removing power from its peripherals, so in this case the their state is
+> maintained.
+> 
+> Alternatively, and again in my specific (Aspeed) case, the on-SoC GPIO
+> controller can be selectively reset with respect to the rest of the SoC, or
+> individual GPIO lines can be marked as reset-tolerant. This gives the same
+> capability and is what you've suggested above.
+> 
+>>  
+>> When you use 'default-state = "keep"' but not this property? Seems like  the
+>> same thing to me.
+> 
+> Is that not also true of retain-state-suspend?
+> 
+> The existing behaviour of leds-gpio was to turn the managed LEDs off in the
+> remove() path. To me this was unexpected behaviour, but it is what it is. My
+> first pass at the patch (before I sent it out) was to do as you suggest and
+> only turn it off in the absence of 'default-state = "keep"'.  However there
+> were quite a number of users of that configuration, and this could be an
+> unexpected change of behaviour. Given retain-state-suspend was already defined,
+> it seemed that the non-breaking way to get the behaviour I desired was to
+> introduce retain-state-shutdown.
+> 
+> Sure, this is dealing with problems in the driver and not describing hardware,
+> but at this point the behaviour is already in place and people might be relying
+> on it.
+> 
+>> Presumably the bootloader would just distinguish  between a
+>> warm and cold reset to decide whether to re-init the state.
+>>  
+>> Finally, if we do have this property, why is it GPIO specific. You could 
+>> just as easily have a LED controller IC and want to do the same thing.
+> 
+> I don't think we're precluded from making it more general even if it's
+> submitted as specific to leds-gpio? I don't have anything against making it
+> more generic. I was tossing up about doing so, but went for the specific case
+> first because we could make it more generic without problems. Going the other
+> way is harder.
 
- drivers/bluetooth/btqcomsmd.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+This explanation looks reasonable. I'll wait two more days before
+sending LED 4.14 updates upstream.
 
-diff --git a/drivers/bluetooth/btqcomsmd.c b/drivers/bluetooth/btqcomsmd.c
-index bd810d0..c6d3fd9 100644
---- a/drivers/bluetooth/btqcomsmd.c
-+++ b/drivers/bluetooth/btqcomsmd.c
-@@ -15,6 +15,8 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/rpmsg.h>
-+#include <linux/of.h>
-+
- #include <linux/soc/qcom/wcnss_ctrl.h>
- #include <linux/platform_device.h>
- 
-@@ -135,6 +137,7 @@ static int btqcomsmd_setup(struct hci_dev *hdev)
- 
- static int btqcomsmd_probe(struct platform_device *pdev)
- {
-+	const bdaddr_t *bdaddr;
- 	struct btqcomsmd *btq;
- 	struct hci_dev *hdev;
- 	void *wcnss;
-@@ -156,6 +159,15 @@ static int btqcomsmd_probe(struct platform_device *pdev)
- 	if (IS_ERR(btq->cmd_channel))
- 		return PTR_ERR(btq->cmd_channel);
- 
-+	/* The local-bd-address DT property is usually injected by the
-+	 * bootloader which has access to the allocated BD address.
-+	 */
-+	bdaddr = of_get_property(pdev->dev.of_node, "local-bd-address", &ret);
-+	if (bdaddr && ret == sizeof(bdaddr_t)) {
-+		BT_INFO("BD address %pMR retrieved from device-tree", bdaddr);
-+		bacpy(&btq->bdaddr, bdaddr);
-+	}
-+
- 	hdev = hci_alloc_dev();
- 	if (!hdev)
- 		return -ENOMEM;
+It would be nice to have clear Rob's statement about this patch set -
+either ack or NACK.
+
 -- 
-1.9.1
+Best regards,
+Jacek Anaszewski
