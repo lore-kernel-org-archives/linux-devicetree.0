@@ -1,132 +1,65 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5] arm64: allwinner: h5: add support for
- NanoPi NEO Plus2
-Date: Tue, 5 Sep 2017 13:04:52 +0200
-Message-ID: <20170905110452.fa6l6x3jrrdod7b7@flea>
-References: <20170824231716.2623-1-antony@phenome.org>
- <20170830125057.38529-1-antony@phenome.org>
- <20170831145859.rief3fqo36ns23rm@flea>
- <20170901105313.m26y2re3ulskua43@AntonyAntony.local>
- <20170904082732.g2q2tjd6qlvhaea7@flea>
- <20170904142619.zq4x2l2qwtpukdc7@AntonyAntony.local>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [RFC 0/2] backlight: pwm_bl: support linear brightness to human
+ eye
+Date: Tue, 5 Sep 2017 12:05:45 +0100
+Message-ID: <239c9153-c0ea-319c-b554-3c727b75c8cd@linaro.org>
+References: <20170904153504.27963-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6estbauo2z4lk3ai"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVMJXLGQKGQE6KVSWHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170904142619.zq4x2l2qwtpukdc7-sIi4olfLYEDaK4aX9S0K76zUEOm+Xw19@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170904153504.27963-1-enric.balletbo@collabora.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@google.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---6estbauo2z4lk3ai
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi Antony,
-
-On Mon, Sep 04, 2017 at 04:26:19PM +0200, Antony Antony wrote:
-> On Mon, Sep 04, 2017 at 10:27:32AM +0200, Maxime Ripard wrote:
-> > On Fri, Sep 01, 2017 at 12:53:13PM +0200, Antony Antony wrote:
-> > > > > +&emac {
-> > > > > +	pinctrl-names = "default";
-> > > > > +	pinctrl-0 = <&emac_rgmii_pins>;
-> > > > > +	phy-supply = <&reg_gmac_3v3>;
-> > > > > +	phy-handle = <&ext_rgmii_phy>;
-> > > > > +	phy-mode = "rgmii";
-> > > > > +	status = "okay";
-> > > > > +};
-> > > > > +
-> > > > > +&mdio {
-> > > > > +	ext_rgmii_phy: ethernet-phy@7 {
-> > > > > +		compatible = "ethernet-phy-ieee802.3-c22";
-> > > > > +		reg = <7>;
-> > > > > +	};
-> > > > > +};
-> > > > 
-> > > > This will not compile.
-> > > 
-> > > I don't understand you, because, v5 file compiled for me. Here is output 
-> > > from running system, just the relevant part.  using dtc -I fs 
-> > > /proc/device-tree
-> > > 
-> > > ext_rgmii_phy = "/soc/ethernet@1c30000/mdio/ethernet-phy@7";
-> > > 
-> > > ethernet@1c30000 {
-> > > 	mdio {
-> > > 	..
-> > > 		ethernet-phy@7 {
-> > > 			compatible = "ethernet-phy-ieee802.3-c22";
-> > > 			phandle = <0x1c>;
-> > > 			reg = <0x7>;
-> > > 			linux,phandle = <0x1c>;
-> > > 		};
-> > > };
-> > > 
-> > > Is this what you expect?
-> > 
-> > The bindings have been reverted recently, so if you based your work on
-> > a version between 4.13-rc1 and 4.13-rc6 it will work, but anything
-> > more recent will not compile anymore.
+On 04/09/17 16:35, Enric Balletbo i Serra wrote:
+> Dear all,
 > 
-> I deleted emc and related node.
-> I see. I hope stmmac: sun8i come back soon. It works well well on this 
-> board, running 4.13-rc6
-
-Yeah, I hope too. Unfortunately, the DT bindings were still under
-discussion after it's been merged, so we couldn't guarantee their
-stability in the future.
-
-> > > > > +&usb_otg {
-> > > > > +	dr_mode = "host";
-> > > > > +	status = "okay";
-> > > > > +};
-> > > > > +
-> > > > > +&usbphy {
-> > > > > +	/* USB Type-A ports' VBUS is always on */
-> > > > > +	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-> > > > 
-> > > > If it has an ID-detect pin, then it's not a host-only USB OTG
-> > > > controller. dr_mode should be set to otga 
-> > > 
-> > > good point. I don't see an ID-detect connected in the schematic. The 
-> > > previous generation had. 
-> > > 
-> > > I will leave 
-> > > &usb_otg {
-> > >   dr_mode = "host";
-> > >   status = "okay";
-> > > };
-> > > 
-> > > &usbphy {
-> > > 	/* USB Type-A ports' VBUS is always on */
-> > > 	status = "okay";
-> > > };
-> > 
-> > Looking at the schematics, it seems that the micro USB isn't even
-> > wired to a bus but is only used to power the board. If so, you can
-> > even remove the usb_otg node.
+> This patch series is a first RFC to know your opinion about implement
+> support to create brightness levels tables dinamically. I tried to argue
+> in every patch the specific reasons we think this can be interesting, to
+> sumup, the idea behind these patches is be able to pass via device tree
+> two parameters to the driver so it can calculate the brightness levels
+> based on the CIE 1931 lightness formula, which is what actually describes
+> how we perceive light.
 > 
-> Yes, the Micro USB data pins are not connected. However, it there is a 
-> second USB A port connected to the processor. If I remove &usb_otg node, in 
-> 4.13-rc6, the second port goes to disabled.
+> I think that at least the maths involved can be improved, and I've still
+> some doubts. With current code if you create a table with a max PWM
+> value of 255 and 127 steps, the first numbers are repeated so I'm thinking > that maybe we should skip/remove the repeated values. i.e. have a table
+> like this,
+> 
+> [0, 1, 2, 3  ...  235, 240, 245, 250, 255]
+> 
+> instead of
+> 
+> [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3  ...  235, 240, 245, 250, 255]
+> 
+> Well, I know there are things to improve but lets see your feedback first
+> before dedicate more time on it. The patches were tested on a couple of
+> devices but I'll test on more devices meanwhile we discuss about it.
 
-Ok, someone got creative :)
+I'm not fully decided on this one but my initial reaction isn't to 
+question the concept so much as to ask why the number of levels should 
+go in the devicetree at all! We could just make brightness-levels 
+optional and get the driver to pick sane curves by default.
 
-Thanks!
-Maxime
+I'm sure we can debate what "sane" means for a couple of e-mails yet but 
+in principle, given it knows the PWM max counter value, the driver 
+should be able to calculate the "right" number of steps too. If we have 
+that your core code remains but we don't have to complexify the device
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---6estbauo2z4lk3ai--
+<strawman>
+Basically we prefer X (?100 like some of the Intel DRM drivers do for 
+connector properties?) steps but we reduce the number of steps if the 
+PWM is rather course and we can't get sufficiently different steps.
+</strawman>
+
+I guess the summary of what I'm saying is that if we can 
+programmatically derive brightness curves then the number of steps is 
+not really a property of the hardware and doesn't belong in devicetree.
+
+
+Daniel.
