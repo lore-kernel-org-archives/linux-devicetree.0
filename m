@@ -1,20 +1,20 @@
-From: Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH v4 1/3] dt-bindings: soc: qcom: Add local-bd-address property to WCNSS-BT
-Date: Tue,  5 Sep 2017 12:26:02 +0200
-Message-ID: <1504607164-12645-1-git-send-email-loic.poulain@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com, robh+dt@kernel.org
-Cc: linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org, Loic Poulain <loic.poulain@linaro.org>
+From: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 3/3] Bluetooth: btqcomsmd: retieve BD address from DT
+Date: Tue,  5 Sep 2017 12:26:04 +0200
+Message-ID: <1504607164-12645-3-git-send-email-loic.poulain@linaro.org>
+References: <1504607164-12645-1-git-send-email-loic.poulain@linaro.org>
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504607164-12645-1-git-send-email-loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add optional local-bd-address property which is a 6-byte array
-storing the assigned BD address. Since having a unique BD address
-is critical, a per-device property value should be allocated.
-This property is usually added by the boot loader which has access
-to the provisioned data.
+Retrieve BD address from the DT local-bd-address property.
+This address must be unique and is usually added in the DT
+by the bootloader which has access to the provisioned data.
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
  v2: Set device as unconfigured if default address detected
      Add warning if BD addr retrieved from DT
@@ -25,25 +25,48 @@ Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
      split patch in two parts (setup, dt prop)
      use local-bd-address name instead of local-mac-address
 
- Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/bluetooth/btqcomsmd.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
-index 4ea39e9186a7..1edfcdc6e267 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
-@@ -37,6 +37,12 @@ The following properties are defined to the bluetooth node:
- 	Definition: must be:
- 		    "qcom,wcnss-bt"
- 
-+- local-bd-address:
-+	Usage: optional
-+	Value type: <u8 array>
-+	Definition: should specify the unique 6-byte BD address assigned to the
-+		    BT controller. Usually added at runtime by the boot loader.
+diff --git a/drivers/bluetooth/btqcomsmd.c b/drivers/bluetooth/btqcomsmd.c
+index c70fae75c4ad..08a83cb30af6 100644
+--- a/drivers/bluetooth/btqcomsmd.c
++++ b/drivers/bluetooth/btqcomsmd.c
+@@ -15,6 +15,8 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/rpmsg.h>
++#include <linux/of.h>
 +
- == WiFi
- The following properties are defined to the WiFi node:
+ #include <linux/soc/qcom/wcnss_ctrl.h>
+ #include <linux/platform_device.h>
  
+@@ -126,6 +128,7 @@ static int btqcomsmd_setup(struct hci_dev *hdev)
+ 
+ static int btqcomsmd_probe(struct platform_device *pdev)
+ {
++	const bdaddr_t *local_bd_addr;
+ 	struct btqcomsmd *btq;
+ 	struct hci_dev *hdev;
+ 	void *wcnss;
+@@ -147,6 +150,18 @@ static int btqcomsmd_probe(struct platform_device *pdev)
+ 	if (IS_ERR(btq->cmd_channel))
+ 		return PTR_ERR(btq->cmd_channel);
+ 
++	/* The local-bd-address DT property is usually injected by the
++	 * bootloader which has access to the allocated BD address.
++	 */
++	local_bd_addr = of_get_property(pdev->dev.of_node, "local-mac-address",
++					&ret);
++	if (local_bd_addr && ret == sizeof(bdaddr_t)) {
++		/* local-bd-address stored with most significant byte first */
++		baswap(&btq->bdaddr, local_bd_addr);
++		BT_INFO("BD address %pMR retrieved from device-tree",
++			&btq->bdaddr);
++	}
++
+ 	hdev = hci_alloc_dev();
+ 	if (!hdev)
+ 		return -ENOMEM;
 -- 
 2.13.0
