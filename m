@@ -1,107 +1,68 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v7 12/18] v4l: async: Allow binding notifiers to
- sub-devices
-Date: Tue, 5 Sep 2017 11:36:54 +0300
-Message-ID: <31d63a76-adab-2a04-12dc-4717b1512eaa@linux.intel.com>
-References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
- <20170903174958.27058-13-sakari.ailus@linux.intel.com>
- <6ad1c25a-e2a7-b73f-4d7c-6a5c071e6366@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <6ad1c25a-e2a7-b73f-4d7c-6a5c071e6366@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 6/6] drm/tegra: Add Tegra186 support for VIC
+Date: Tue,  5 Sep 2017 11:43:06 +0300
+Message-ID: <20170905084306.19318-7-mperttunen@nvidia.com>
+References: <20170905084306.19318-1-mperttunen@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170905084306.19318-1-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, dnibade-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sgurrappadi-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Add Tegra186 support for VIC - no changes are required except for new
+firmware and compatibility string.
 
-Thanks for the review!
+Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/gpu/drm/tegra/drm.c |  1 +
+ drivers/gpu/drm/tegra/vic.c | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
 
-On 09/05/17 09:49, Hans Verkuil wrote:
-> On 09/03/2017 07:49 PM, Sakari Ailus wrote:
->> Registering a notifier has required the knowledge of struct v4l2_device
->> for the reason that sub-devices generally are registered to the
->> v4l2_device (as well as the media device, also available through
->> v4l2_device).
->>
->> This information is not available for sub-device drivers at probe time.
->>
->> What this patch does is that it allows registering notifiers without
->> having v4l2_device around. Instead the sub-device pointer is stored to the
->> notifier. Once the sub-device of the driver that registered the notifier
->> is registered, the notifier will gain the knowledge of the v4l2_device,
->> and the binding of async sub-devices from the sub-device driver's notifier
->> may proceed.
->>
->> The master notifier's complete callback is only called when all sub-device
->> notifiers are completed.
->>
->> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> ---
->>  drivers/media/v4l2-core/v4l2-async.c | 153 +++++++++++++++++++++++++++++------
->>  include/media/v4l2-async.h           |  19 ++++-
->>  2 files changed, 146 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
->> index 70d02378b48f..55d7886103d2 100644
->> --- a/drivers/media/v4l2-core/v4l2-async.c
->> +++ b/drivers/media/v4l2-core/v4l2-async.c
->> @@ -25,6 +25,10 @@
->>  #include <media/v4l2-fwnode.h>
->>  #include <media/v4l2-subdev.h>
->>  
->> +static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
->> +				  struct v4l2_subdev *sd,
->> +				  struct v4l2_async_subdev *asd);
->> +
->>  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
->>  {
->>  #if IS_ENABLED(CONFIG_I2C)
->> @@ -101,14 +105,69 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
->>  	return NULL;
->>  }
->>  
->> +static bool v4l2_async_subdev_notifiers_complete(
->> +	struct v4l2_async_notifier *notifier)
->> +{
->> +	struct v4l2_async_notifier *n;
->> +
->> +	list_for_each_entry(n, &notifier->notifiers, notifiers) {
->> +		if (!n->master)
->> +			return false;
->> +	}
->> +
->> +	return true;
->> +}
->> +
->> +#define notifier_v4l2_dev(n) \
->> +	(!!(n)->v4l2_dev ? (n)->v4l2_dev : \
->> +	 !!(n)->master ? (n)->master->v4l2_dev : NULL)
->> +
->> +static struct v4l2_async_notifier *v4l2_async_get_subdev_notifier(
->> +	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
-> 
-> Why pass the notifier argument when it is not actually used in the function?
-> 
-> Is this function needed at all? As far as I can see the sd always belongs to
-> the given notifier, otherwise the v4l2_async_belongs() call would fail.
-> And v4l2_async_belongs() is always called before v4l2_async_test_notify().
-
-The function gets a notifier which the sub-device may have registered,
-it's not the same notifier that was used in registering the sub-device
-itself.
-
-I'll remove the other argument as well.
-
-> 
-> This could all do with some more code comments. I'm having a difficult time
-> understanding it all.
-
-Yes, I'm adding comments to v8.
-
+diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
+index 3ba659a5940d..e3331a2bc082 100644
+--- a/drivers/gpu/drm/tegra/drm.c
++++ b/drivers/gpu/drm/tegra/drm.c
+@@ -1281,6 +1281,7 @@ static const struct of_device_id host1x_drm_subdevs[] = {
+ 	{ .compatible = "nvidia,tegra210-sor", },
+ 	{ .compatible = "nvidia,tegra210-sor1", },
+ 	{ .compatible = "nvidia,tegra210-vic", },
++	{ .compatible = "nvidia,tegra186-vic", },
+ 	{ /* sentinel */ }
+ };
+ 
+diff --git a/drivers/gpu/drm/tegra/vic.c b/drivers/gpu/drm/tegra/vic.c
+index 2448229fa653..6697a21a250d 100644
+--- a/drivers/gpu/drm/tegra/vic.c
++++ b/drivers/gpu/drm/tegra/vic.c
+@@ -270,9 +270,16 @@ static const struct vic_config vic_t210_config = {
+ 	.firmware = NVIDIA_TEGRA_210_VIC_FIRMWARE,
+ };
+ 
++#define NVIDIA_TEGRA_186_VIC_FIRMWARE "nvidia/tegra186/vic04_ucode.bin"
++
++static const struct vic_config vic_t186_config = {
++	.firmware = NVIDIA_TEGRA_186_VIC_FIRMWARE,
++};
++
+ static const struct of_device_id vic_match[] = {
+ 	{ .compatible = "nvidia,tegra124-vic", .data = &vic_t124_config },
+ 	{ .compatible = "nvidia,tegra210-vic", .data = &vic_t210_config },
++	{ .compatible = "nvidia,tegra186-vic", .data = &vic_t186_config },
+ 	{ },
+ };
+ 
+@@ -405,3 +412,6 @@ MODULE_FIRMWARE(NVIDIA_TEGRA_124_VIC_FIRMWARE);
+ #if IS_ENABLED(CONFIG_ARCH_TEGRA_210_SOC)
+ MODULE_FIRMWARE(NVIDIA_TEGRA_210_VIC_FIRMWARE);
+ #endif
++#if IS_ENABLED(CONFIG_ARCH_TEGRA_186_SOC)
++MODULE_FIRMWARE(NVIDIA_TEGRA_186_VIC_FIRMWARE);
++#endif
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
