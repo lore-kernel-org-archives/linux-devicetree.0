@@ -1,79 +1,44 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Remove remaining references/tests for
- "chosen@0"
-Date: Tue, 5 Sep 2017 17:22:57 -0400 (EDT)
-Message-ID: <alpine.LFD.2.21.1709051720470.5346@localhost.localdomain>
-References: <alpine.LFD.2.21.1709020416130.13598@localhost.localdomain> <1504390854.4974.108.camel@kernel.crashing.org> <alpine.LFD.2.21.1709030637090.24875@localhost.localdomain> <CAL_JsqJNoWAAi3Nj5KxAf5ov73nfPVaGeT1RTNgzZGpdxZ7s=w@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v4 17/28] ARM64: dts: actions: s900-bubblegum-96: Add fake
+ uart5 clock
+Date: Tue, 5 Sep 2017 23:29:44 +0200
+Message-ID: <55e81df3-3b49-0037-1396-35e43eb89ce5@suse.de>
+References: <20170606005426.26446-1-afaerber@suse.de>
+ <20170606005426.26446-18-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJNoWAAi3Nj5KxAf5ov73nfPVaGeT1RTNgzZGpdxZ7s=w@mail.gmail.com>
+In-Reply-To: <20170606005426.26446-18-afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Linux PPC Mailing List <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 5 Sep 2017, Rob Herring wrote:
+Am 06.06.2017 um 02:54 schrieb Andreas Färber:
+> Give the serial driver a fixed-clock as input for baudrate 115200.
+> 
+> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
+>  v2 -> v3 -> v4: unchanged
+>  
+>  v2: new
+>  
+>  arch/arm64/boot/dts/actions/s900-bubblegum-96.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-> On Sun, Sep 3, 2017 at 5:43 AM, Robert P. J. Day <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org> wrote:
-> > On Sun, 3 Sep 2017, Benjamin Herrenschmidt wrote:
-> >
-> >> On Sat, 2017-09-02 at 04:43 -0400, Robert P. J. Day wrote:
-> >> > Since, according to a recent devicetree ML posting by Rob Herring,
-> >> > the node "/chosen@0" is most likely for real Open Firmware and
-> >> > does not apply to DTSpec, remove all remaining tests and
-> >> > references for that node, of which there are very few left:
-> >>
-> >> Technically that would break Open Firmware systems where the node is
-> >> really called chosen@0
-> >>
-> >> Now I'm not sure such a thing actually exist however.
-> >>
-> >> My collection of DTs don't seem to have one, except in the ancient
-> >> html variants that were extracted by the pengionppc folks for the
-> >> original PowerMac 8600 but I wonder if that's a bug in the
-> >> extraction script since they also have @0 on /packages etc...
-> >
-> >   obviously, this isn't a priority issue, i was just working off a
-> > comment by rob herring that "chosen@0" is not defined by the current
-> > DTSpec 0.1, so it seemed appropriate to toss it. if there's a reason
-> > to hang onto it, that's fine with me.
-> >
-> >   however, given the diff stat of the change to remove every single
-> > reference to that node name in the current kernel source:
-> >
-> >  arch/microblaze/kernel/prom.c | 3 +--
-> >  arch/mips/generic/yamon-dt.c  | 4 ----
-> >  arch/powerpc/boot/oflib.c     | 7 ++-----
-> >  drivers/of/base.c             | 2 --
-> >  drivers/of/fdt.c              | 5 +----
-> >  5 files changed, 4 insertions(+), 17 deletions(-)
-> >
-> > it seems inconsistent that three architectures would be testing for
-> > that node, but none of the rest. consistency suggests that every
-> > architecture should take it into account, or none should.
->
-> I generally agree and have moved various things from arch to
-> drivers/of/ to ensure that. But for legacy things, we have to allow
-> for exceptions. I agree with Ben and think that microblaze (they
-> generally just copied PPC), MIPS, and the FDT code in drivers/of/ can
-> be changed.
+Applied to v4.14/dt64:
 
-  i'm not quite sure what people have agreed on, so i'll just leave it
-in the hands of others here to submit patches for what they think is
-appropriate.
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.14/dt64
 
-rday
+Regards,
+Andreas
 
 -- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
