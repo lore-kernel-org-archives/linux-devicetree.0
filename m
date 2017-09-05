@@ -1,106 +1,187 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v7 12/18] v4l: async: Allow binding notifiers to
- sub-devices
-Date: Tue, 5 Sep 2017 08:49:43 +0200
-Message-ID: <6ad1c25a-e2a7-b73f-4d7c-6a5c071e6366@xs4all.nl>
-References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
- <20170903174958.27058-13-sakari.ailus@linux.intel.com>
+From: "Keiji Hayashibara" <hayashibara.keiji@socionext.com>
+Subject: RE: [PATCH v1 1/3] dt-bindings: nvmem: add description for UniPhier eFuse
+Date: Tue, 5 Sep 2017 16:04:31 +0900
+Message-ID: <000001d32615$38e1b0c0$aaa51240$@socionext.com>
+References: <1504221620-358-1-git-send-email-hayashibara.keiji@socionext.com> <1504221620-358-2-git-send-email-hayashibara.keiji@socionext.com> <CAK7LNASLh4vYqZhM9g2AL1uUtieviAmmWOp_Mzoj0zG=Ejz0cA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain;
+        charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170903174958.27058-13-sakari.ailus@linux.intel.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNASLh4vYqZhM9g2AL1uUtieviAmmWOp_Mzoj0zG=Ejz0cA@mail.gmail.com>
+Content-Language: ja
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Masahiro Yamada' <yamada.masahiro@socionext.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko@socionext.com>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/2017 07:49 PM, Sakari Ailus wrote:
-> Registering a notifier has required the knowledge of struct v4l2_device
-> for the reason that sub-devices generally are registered to the
-> v4l2_device (as well as the media device, also available through
-> v4l2_device).
+Hello Yamada-san,
+
+Thank you for your comment.
+
+> From: Masahiro Yamada [mailto:yamada.masahiro@socionext.com]
+> Sent: Monday, September 4, 2017 9:56 PM
 > 
-> This information is not available for sub-device drivers at probe time.
+> 2017-09-01 8:20 GMT+09:00 Keiji Hayashibara
+> <hayashibara.keiji@socionext.com>:
+> > Add uniphier-efuse dt-bindings documentation.
+> >
+> > Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+> > ---
+> >  .../devicetree/bindings/nvmem/uniphier-efuse.txt   | 45
+> ++++++++++++++++++++++
+> >  1 file changed, 45 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
+> > b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
+> > new file mode 100644
+> > index 0000000..09024a2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
+> > @@ -0,0 +1,45 @@
+> > += UniPhier eFuse device tree bindings =
+> > +
+> > +This UniPhier eFuse must be under soc-glue.
+> > +
+> > +Required properties:
+> > +- compatible: should be "socionext,uniphier-efuse"
+> > +- reg: should contain the register base and length
+> > +
+> > += Data cells =
+> > +Are child nodes of efuse, bindings of which as described in
+> > +bindings/nvmem/nvmem.txt
+> > +
+> > +Example:
+> > +
+> > +       soc-glue@5f900000 {
+> > +               compatible = "socionext,uniphier-ld20-soc-glue-debug",
+> > +                            "simple-mfd";
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               ranges = <0x0 0x5f900000 0x2000>;
 > 
-> What this patch does is that it allows registering notifiers without
-> having v4l2_device around. Instead the sub-device pointer is stored to the
-> notifier. Once the sub-device of the driver that registered the notifier
-> is registered, the notifier will gain the knowledge of the v4l2_device,
-> and the binding of async sub-devices from the sub-device driver's notifier
-> may proceed.
 > 
-> The master notifier's complete callback is only called when all sub-device
-> notifiers are completed.
+> IMHO, I think an empty "ranges;" will clarify the code, but it is up to
+> your taste.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 153 +++++++++++++++++++++++++++++------
->  include/media/v4l2-async.h           |  19 ++++-
->  2 files changed, 146 insertions(+), 26 deletions(-)
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 70d02378b48f..55d7886103d2 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -25,6 +25,10 @@
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
->  
-> +static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
-> +				  struct v4l2_subdev *sd,
-> +				  struct v4l2_async_subdev *asd);
-> +
->  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
->  {
->  #if IS_ENABLED(CONFIG_I2C)
-> @@ -101,14 +105,69 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
->  	return NULL;
->  }
->  
-> +static bool v4l2_async_subdev_notifiers_complete(
-> +	struct v4l2_async_notifier *notifier)
-> +{
-> +	struct v4l2_async_notifier *n;
-> +
-> +	list_for_each_entry(n, &notifier->notifiers, notifiers) {
-> +		if (!n->master)
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +#define notifier_v4l2_dev(n) \
-> +	(!!(n)->v4l2_dev ? (n)->v4l2_dev : \
-> +	 !!(n)->master ? (n)->master->v4l2_dev : NULL)
-> +
-> +static struct v4l2_async_notifier *v4l2_async_get_subdev_notifier(
-> +	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
+> > +
+> > +               efuse {
+> > +                       compatible = "socionext,uniphier-efuse",
+> > +                                    "syscon";
+> 
+> 
+> You are adding a dedicated driver for "socionext,uniphier-efuse".
+> 
+> Then, "syscon" as well?
+> 
 
-Why pass the notifier argument when it is not actually used in the function?
+Since I was using the syscon interface to implement the driver,
+I specified "syscon". It's interface is syscon_node_to_regmap().
 
-Is this function needed at all? As far as I can see the sd always belongs to
-the given notifier, otherwise the v4l2_async_belongs() call would fail.
-And v4l2_async_belongs() is always called before v4l2_async_test_notify().
+I will rethink this in v2.
 
-This could all do with some more code comments. I'm having a difficult time
-understanding it all.
+> 
+> 
+> > +                       reg = <0x100 0xf00>;
+> 
+> 
+> Not so many efuse registers exist on the SoC.
+> 
+> reg = <0x100 0x200>; will be enough.
+> 
+> 
+> Or if you want to be strict to the hw spec, you can write as follows:
+> 
+>         soc-glue@5f900000 {
+>                compatible = "socionext,uniphier-ld20-soc-glue-debug";
+>                             "simple-mfd";
+>                #address-cells = <1>;
+>                #size-cells = <1>;
+>                ranges = <0x0 0x5f900000 0x2000>;
+> 
+>                efuse@100 {
+>                            compatible = "socionext,uniphier-efuse";
+>                            reg = <0x100 0x28>;
+>                };
+> 
+>                efuse@200 {
+>                            compatible = "socionext,uniphier-efuse";
+>                            reg = <0x200 0x68>;
+>                };
+>        };
+> 
+> 
+> 
+> 
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +
+> > +                       /* Data cells */
+> > +                       usb_mon: usb_mon {
+> > +                               reg = <0x154 0xc>;
+> > +                       };
+> 
+> 
+> This <0x154 0xc> represents 0x5f900254 in CPU address view.
+> (0x5f900000 + 0x100 + 0x154)
+> 
+> So many ranges conversion, and how error-prone..
+> 
 
-I'll wait for v8 before continuing this.
+Yes, indeed...
+I will modify as below.
 
-Regards,
+        soc-glue@5f900000 {
+                compatible = "socionext,uniphier-ld20-soc-glue-debug",
+                             "simple-mfd";
+                #address-cells = <1>;
+                #size-cells = <1>;
+                ranges;
 
-	Hans
+                efuse@5f900100 {
+                        compatible = "socionext,uniphier-efuse";
+                        reg = <0x5f900100 0x28>;
+                };
 
-> +{
-> +	struct v4l2_async_notifier *n;
-> +
-> +	list_for_each_entry(n, &notifier_list, list) {
-> +		if (n->sd == sd)
-> +			return n;
-> +	}
-> +
-> +	return NULL;
-> +}
+                efuse@5f900200 {
+                        compatible = "socionext,uniphier-efuse";
+                        reg = <0x5f900200 0x68>;
+                };
+        };
+
+
+> 
+> 
+> 
+> > +       };
+> > +
+> > += Data consumers =
+> > +Are device nodes which consume nvmem data cells.
+> > +
+> > +Example:
+> > +
+> > +       usb {
+> > +               ...
+> > +               nvmem-cells = <&usb_mon>;
+> > +               nvmem-cell-names = "usb_mon";
+> > +       }
+> > --
+> > 2.7.4
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree"
+> > in the body of a message to majordomo@vger.kernel.org More majordomo
+> > info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
+> --
+> Best Regards
+> Masahiro Yamada
+
+Best Regards,
+Keiji Hayashibara
