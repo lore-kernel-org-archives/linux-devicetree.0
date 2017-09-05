@@ -1,126 +1,102 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v4 1/2] mfd: Add Mellanox regmap core driver
-Date: Tue, 5 Sep 2017 18:21:27 +0000
-Message-ID: <AM4PR05MB333091C928607B676067B325A2960@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <1504029616-192277-1-git-send-email-vadimp@mellanox.com>
- <1504029616-192277-2-git-send-email-vadimp@mellanox.com>
- <20170901161433.gpkrpjx53pjv4mid@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: iio: adc: mcp320x: Update for mcp3550/1/3
+Date: Tue, 5 Sep 2017 13:49:06 -0500
+Message-ID: <CAL_JsqK=Uq_i0dWhWA2gk7nryAUYAEZcG4EM04aWoYnVDswsmA@mail.gmail.com>
+References: <cover.1503407738.git.lukas@wunner.de> <87644503b0397248c06fbe0058f292955dd10f79.1503407738.git.lukas@wunner.de>
+ <20170825195941.iylf4w5hitjwniio@rob-hp-laptop> <20170827153405.GA13399@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <20170901161433.gpkrpjx53pjv4mid@rob-hp-laptop>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "lee.jones@linaro.org" <lee.jones@linaro.org>, "pavel@ucw.cz" <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "j.anaszewski@samsung.com" <j.anaszewski@samsung.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170827153405.GA13399-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adriana Reus <adi.reus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Aug 27, 2017 at 10:34 AM, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
+> On Fri, Aug 25, 2017 at 02:59:41PM -0500, Rob Herring wrote:
+>> On Tue, Aug 22, 2017 at 03:33:00PM +0200, Lukas Wunner wrote:
+>> > --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+>> > +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+>> > +Optional properties:
+>> > +   - microchip,continuous-conversion (boolean):
+>> > +                   Only applicable to MCP3550/1/3:  These ADCs have long
+>> > +                   conversion times and therefore support "continuous
+>> > +                   conversion mode" to allow retrieval of conversions
+>> > +                   at any time without observing a delay.  The mode is
+>> > +                   enabled by permanently driving CS low, e.g. by wiring
+>> > +                   it to ground.
+>>
+>> Second binding I have seen today with a continuous property. Make this
+>> common (or maybe we already have one).
+>
+> The other one was the TI LMP92001 ADC driver posted by Abhisit Sangjan
+> (cc), however looking at the datasheet of that chip reveals that
+> continuous versus one-shot mode is selected by flipping a bit in the
+> chip's register map.
+>
+> So it is configurable at run-time.  It's not something that's hardwired.
+> (Which is the case with the MCP3550 in my patch.)
 
+Couldn't you have CS tied to a GPIO line and then it is a run-time decision?
 
-> > folder;  Comments pointed out by Rob:
-> >  - Make a separate patch /devicetree/bindings/vendor-prefixes.txt;
-> >  - Add .txt to Documentation/devicetree/bindings/mfd/mellanox,mlxreg-
-> core
-> >    and send it within this series;
->=20
-> Why did you combine this? Bindings should be separate patches.
+> My understanding was that run-time configurable options should not be
+> listed in the device-tree at all, only hardware features.  If that is
+> correct then that device-tree property should be dropped from Abhisit
+> Sangjan's patch.  Configuring the feature via sysfs is fine I guess.
 
-Ack.
+It depends. The question who decides the mode. If an end-user would
+want to, then yes sysfs is the right place. If the h/w setup dictates
+what the configuration should be, then in DT is fine.
 
->=20
-> > +			spi_burn_bios_ci {
-> > +				reg =3D <0x32>;
-> > +				mask =3D <0xfe>;
-> > +				bit =3D <0x00>;
-> > +				phandles =3D <&spi2>;
-> > +			};
-> > +			spi_burn_ncsi {
-> > +				reg =3D <0x32>;
->=20
-> You can't have duplicate reg values. This will also generate warnings.
-> Build your dtb with "W=3D2".
+> However we do have another driver supporting continuous versus one-shot
+> mode and that is drivers/iio/light/us5182d.c by Adriana Reus (cc).
+> The feature was added with commit c3304c212326.  I'm not sure if it's
+> hardwired or runtime-configurable, the datasheet is gone from the
+> manufacturer's website.
+>
+> I agree that a common "continuous" property makes sense.  We haven't
+> defined any common IIO properties so far and that has already led to
+> inconsistencies.  E.g. most ADC/DAC drivers name the reference regulator
+> "vref-supply", but e.g. drivers/iio/dac/ad7303.c calls it "REF-supply".
+>
+> What do you think of this:
+>
+> -- >8 --
+> Subject: [PATCH] dt-bindings: iio: Document common properties
+>
+> It's about time we standardize on common names for frequently used IIO
+> properties.  For starters, document "vref-supply" and "continuous".
+>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/iio/iio-bindings.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> index 68d6f8c..c3e87e15 100644
+> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> @@ -95,3 +95,18 @@ vdd channel is connected to output 0 of the &ref device.
+>                 io-channels = <&adc 10>, <&adc 11>;
+>                 io-channel-names = "adc1", "adc2";
+>         };
+> +
+> +==Common IIO properties==
+> +
+> +Reference voltage:
+> +ADCs, DACs and several other IIO devices require a reference voltage.
+> +By convention the property specifying this regulator is named "vref-supply".
+> +If the chip lacks a dedicated Vref pin and instead uses its own power supply
+> +as reference, the property specifying the regulator is commonly named
+> +"vdd-supply" or "vcc-supply".
+> +
+> +Continuous mode:
+> +Some sensors can be configured to perform continuous (versus one-shot)
+> +measurements.  Continuous mode may require more energy in return for faster
+> +or more reliable measurements.  A boolean property named "continuous"
+> +signifies that the device is configured for this mode.
 
-Can I use some logical name for unit, like below?
-			spi_burn_bios_ci: mux@1 {
-				reg =3D <0x32>;
-				mask =3D <0xfe>;
-				bit =3D <0x00>;
-				hotplugs =3D <&spi2>;
-			};
-			spi_burn_ncsi: mux@2 {
-				reg =3D <0x32>;
-				mask =3D <0xfd>;
-				bit =3D <0x00>;
-				hotplugs =3D <&spi2>;
-			};
-
-I verified it with "W=3D2". Also I am running with CONFIG_OF_UNITTEST and
-I don't have unites issues.
-
->=20
-> Again, this all looks too low level to me. You described the high level
-> differences in terms of number of cards, fans, PSUs, etc., but I don't se=
-e that
-> here. This isn't reviewable for anyone not familiar with your systems.
-
-The below should describe signals, which triggers hotplugable device
-Insertion or removal.
-		pwr: hotplugs@1 {
-			aggr =3D <0x08>;
-			reg =3D <0x64>;
-			mask =3D <0x03>;
-			hotplugs =3D <&psu1_ctrl &psu2_ctrl>;
-		};
-
-		asic: hotplugs@3 {
-			aggr =3D <0x01>;
-			regs =3D <0x50>;
-			mask =3D <0x03>;
-			hotplugs =3D <&asic_thermal>;
-		};
-In DTS I have description for such devices in disabled state and they are
-Connected or disconnected dynamically:
-&i2c3 {
-...
-	psu1_ctrl: dps460@59 {
-		compatible =3D "dps460";
-		reg =3D <0x59>;
-		status =3D "disabled";
-	};
-''
-
-&i2c12 {
-...
-	asic_thermal: mlxsw_minimal@48 {
-		compatible =3D "mlxsw_minimal";
-		reg =3D <0x48>;
-		status =3D "disabled";
-             ...
-
-And the same way I'd like to add spine and leaf cards, but I still don't
-Have support for them in my drivers.
-
->=20
-> > +				mask =3D <0xfd>;
-> > +				bit =3D <0x00>;
-> > +				phandles =3D <&spi2>;
->=20
-> Not a good name other than giving type information. Name it for what
-> function is being provided (e.g. clocks, interrupts, gpios).
-
-Would it be OK if to use hotplugs instead of phandles?
-It could be f.e. FAN EEPROM, PSU controller, ASIC, spine or leaf card, all =
-these=20
-are hotplugable device, which could be inserted or removed.
-It could be remote flashes, which are getting available after mux selection=
-, like
-in the above example for spi_burn_bios_ci and spi_burn_ncsi.
-Or it could be some other device at the remote side, which is getting avail=
-able to
-BMC, only when remote side (f.e. COMEX) is getting power good.
-
-Thanks,
-Vadim.
-=20
-=20
+Seems file, but start with the property names rather than buried in
+the paragraph.
