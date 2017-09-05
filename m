@@ -1,81 +1,48 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v8 03/21] v4l: async: Use more intuitive names for internal functions
-Date: Tue,  5 Sep 2017 16:05:35 +0300
-Message-ID: <20170905130553.1332-4-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v8 15/21] dt: bindings: Add a binding for flash devices associated to a sensor
+Date: Tue,  5 Sep 2017 16:05:47 +0300
+Message-ID: <20170905130553.1332-16-sakari.ailus@linux.intel.com>
 References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170905130553.1332-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rename internal functions to make the names of the functions better
-describe what they do.
+Camera flash drivers (and LEDs) are separate from the sensor devices in
+DT. In order to make an association between the two, provide the
+association information to the software.
 
-	Old name			New name
-	v4l2_async_test_notify	v4l2_async_match_notify
-	v4l2_async_belongs	v4l2_async_find_match
-
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-async.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/media/video-interfaces.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index f50a82767863..3d81ff6a496f 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -65,8 +65,8 @@ static LIST_HEAD(subdev_list);
- static LIST_HEAD(notifier_list);
- static DEFINE_MUTEX(list_lock);
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index 852041a7480c..efc67161e389 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -67,6 +67,14 @@ are required in a relevant parent node:
+ 		    identifier, should be 1.
+  - #size-cells    : should be zero.
  
--static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *notifier,
--						    struct v4l2_subdev *sd)
-+static struct v4l2_async_subdev *v4l2_async_find_match(
-+	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
- {
- 	bool (*match)(struct v4l2_subdev *, struct v4l2_async_subdev *);
- 	struct v4l2_async_subdev *asd;
-@@ -100,9 +100,9 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
- 	return NULL;
- }
++
++Optional properties
++-------------------
++
++- flash: An array of phandles, each referring to a flash LED, a sub-node
++  of the LED driver device node.
++
++
+ Optional endpoint properties
+ ----------------------------
  
--static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
--				  struct v4l2_subdev *sd,
--				  struct v4l2_async_subdev *asd)
-+static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
-+				   struct v4l2_subdev *sd,
-+				   struct v4l2_async_subdev *asd)
- {
- 	int ret;
- 
-@@ -180,11 +180,11 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
- 	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
- 		int ret;
- 
--		asd = v4l2_async_belongs(notifier, sd);
-+		asd = v4l2_async_find_match(notifier, sd);
- 		if (!asd)
- 			continue;
- 
--		ret = v4l2_async_test_notify(notifier, sd, asd);
-+		ret = v4l2_async_match_notify(notifier, sd, asd);
- 		if (ret < 0) {
- 			mutex_unlock(&list_lock);
- 			return ret;
-@@ -241,9 +241,10 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
- 	INIT_LIST_HEAD(&sd->async_list);
- 
- 	list_for_each_entry(notifier, &notifier_list, list) {
--		struct v4l2_async_subdev *asd = v4l2_async_belongs(notifier, sd);
-+		struct v4l2_async_subdev *asd = v4l2_async_find_match(notifier,
-+								      sd);
- 		if (asd) {
--			int ret = v4l2_async_test_notify(notifier, sd, asd);
-+			int ret = v4l2_async_match_notify(notifier, sd, asd);
- 			mutex_unlock(&list_lock);
- 			return ret;
- 		}
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
