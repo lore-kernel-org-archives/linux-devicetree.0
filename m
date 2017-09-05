@@ -1,125 +1,119 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v8 12/21] v4l: async: Introduce helpers for calling async ops callbacks
-Date: Tue,  5 Sep 2017 16:05:44 +0300
-Message-ID: <20170905130553.1332-13-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v8 19/21] smiapp: Add support for flash and lens devices
+Date: Tue,  5 Sep 2017 16:05:51 +0300
+Message-ID: <20170905130553.1332-20-sakari.ailus@linux.intel.com>
 References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170905130553.1332-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add three helper functions to call async operations callbacks. Besides
-simplifying callbacks, this allows async notifiers to have no ops set,
-i.e. it can be left NULL.
+Parse async sub-devices by using
+v4l2_subdev_fwnode_reference_parse_sensor_common().
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+These types devices aren't directly related to the sensor, but are
+nevertheless handled by the smiapp driver due to the relationship of these
+component to the main part of the camera module --- the sensor.
+
+This does not yet address providing the user space with information on how
+to associate the sensor or lens devices but the kernel now has the
+necessary information to do that.
+
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-async.c | 49 ++++++++++++++++++++++++++----------
- include/media/v4l2-async.h           |  1 +
- 2 files changed, 37 insertions(+), 13 deletions(-)
+ drivers/media/i2c/smiapp/smiapp-core.c | 18 ++++++++++++++++--
+ drivers/media/i2c/smiapp/smiapp.h      |  4 +++-
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index f7eb3713207a..baee95eacbba 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -25,6 +25,34 @@
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index 700f433261d0..2a7cf430270c 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -31,7 +31,7 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
+ #include <linux/smiapp.h>
+-#include <linux/v4l2-mediabus.h>
++#include <media/v4l2-async.h>
  #include <media/v4l2-fwnode.h>
- #include <media/v4l2-subdev.h>
+ #include <media/v4l2-device.h>
  
-+static int v4l2_async_notifier_call_bound(struct v4l2_async_notifier *n,
-+					  struct v4l2_subdev *subdev,
-+					  struct v4l2_async_subdev *asd)
-+{
-+	if (!n->ops || !n->ops->bound)
-+		return 0;
-+
-+	return n->ops->bound(n, subdev, asd);
-+}
-+
-+static void v4l2_async_notifier_call_unbind(struct v4l2_async_notifier *n,
-+					    struct v4l2_subdev *subdev,
-+					    struct v4l2_async_subdev *asd)
-+{
-+	if (!n->ops || !n->ops->unbind)
-+		return;
-+
-+	n->ops->unbind(n, subdev, asd);
-+}
-+
-+static int v4l2_async_notifier_call_complete(struct v4l2_async_notifier *n)
-+{
-+	if (!n->ops || !n->ops->complete)
-+		return 0;
-+
-+	return n->ops->complete(n);
-+}
-+
- static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
- {
- #if IS_ENABLED(CONFIG_I2C)
-@@ -107,16 +135,13 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
- {
- 	int ret;
+@@ -2887,6 +2887,11 @@ static int smiapp_probe(struct i2c_client *client,
+ 	v4l2_i2c_subdev_init(&sensor->src->sd, client, &smiapp_ops);
+ 	sensor->src->sd.internal_ops = &smiapp_internal_src_ops;
  
--	if (notifier->ops->bound) {
--		ret = notifier->ops->bound(notifier, sd, asd);
--		if (ret < 0)
--			return ret;
--	}
-+	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
-+	if (ret < 0)
-+		return ret;
++	rval = v4l2_fwnode_reference_parse_sensor_common(
++		&client->dev, &sensor->notifier);
++	if (rval < 0 && rval != -ENOENT)
++		return rval;
++
+ 	sensor->vana = devm_regulator_get(&client->dev, "vana");
+ 	if (IS_ERR(sensor->vana)) {
+ 		dev_err(&client->dev, "could not get regulator for vana\n");
+@@ -3092,9 +3097,14 @@ static int smiapp_probe(struct i2c_client *client,
+ 	if (rval < 0)
+ 		goto out_media_entity_cleanup;
  
- 	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
- 	if (ret < 0) {
--		if (notifier->ops->unbind)
--			notifier->ops->unbind(notifier, sd, asd);
-+		v4l2_async_notifier_call_unbind(notifier, sd, asd);
- 		return ret;
- 	}
++	rval = v4l2_async_subdev_notifier_register(&sensor->src->sd,
++						   &sensor->notifier);
++	if (rval)
++		goto out_media_entity_cleanup;
++
+ 	rval = v4l2_async_register_subdev(&sensor->src->sd);
+ 	if (rval < 0)
+-		goto out_media_entity_cleanup;
++		goto out_unregister_async_notifier;
  
-@@ -128,8 +153,8 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
- 	/* Move from the global subdevice list to notifier's done */
- 	list_move(&sd->async_list, &notifier->done);
- 
--	if (list_empty(&notifier->waiting) && notifier->ops->complete)
--		return notifier->ops->complete(notifier);
-+	if (list_empty(&notifier->waiting))
-+		return v4l2_async_notifier_call_complete(notifier);
+ 	pm_runtime_set_active(&client->dev);
+ 	pm_runtime_get_noresume(&client->dev);
+@@ -3105,6 +3115,9 @@ static int smiapp_probe(struct i2c_client *client,
  
  	return 0;
- }
-@@ -215,8 +240,7 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
- 	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
- 		v4l2_async_cleanup(sd);
  
--		if (notifier->ops->unbind)
--			notifier->ops->unbind(notifier, sd, sd->asd);
-+		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
- 	}
- 
- 	mutex_unlock(&list_lock);
-@@ -294,8 +318,7 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
- 
- 	v4l2_async_cleanup(sd);
- 
--	if (notifier->ops->unbind)
--		notifier->ops->unbind(notifier, sd, sd->asd);
-+	v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
- 
- 	mutex_unlock(&list_lock);
- }
-diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-index 3c48f8b66d12..3bc8a7c0d83f 100644
---- a/include/media/v4l2-async.h
-+++ b/include/media/v4l2-async.h
-@@ -164,4 +164,5 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd);
-  * @sd: pointer to &struct v4l2_subdev
-  */
- void v4l2_async_unregister_subdev(struct v4l2_subdev *sd);
++out_unregister_async_notifier:
++	v4l2_async_notifier_unregister(&sensor->notifier);
 +
- #endif
+ out_media_entity_cleanup:
+ 	media_entity_cleanup(&sensor->src->sd.entity);
+ 
+@@ -3124,6 +3137,7 @@ static int smiapp_remove(struct i2c_client *client)
+ 	unsigned int i;
+ 
+ 	v4l2_async_unregister_subdev(subdev);
++	v4l2_async_notifier_unregister(&sensor->notifier);
+ 
+ 	pm_runtime_disable(&client->dev);
+ 	if (!pm_runtime_status_suspended(&client->dev))
+diff --git a/drivers/media/i2c/smiapp/smiapp.h b/drivers/media/i2c/smiapp/smiapp.h
+index f74d695018b9..be92cb5713f4 100644
+--- a/drivers/media/i2c/smiapp/smiapp.h
++++ b/drivers/media/i2c/smiapp/smiapp.h
+@@ -20,9 +20,10 @@
+ #define __SMIAPP_PRIV_H_
+ 
+ #include <linux/mutex.h>
++#include <media/i2c/smiapp.h>
++#include <media/v4l2-async.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-subdev.h>
+-#include <media/i2c/smiapp.h>
+ 
+ #include "smiapp-pll.h"
+ #include "smiapp-reg.h"
+@@ -172,6 +173,7 @@ struct smiapp_subdev {
+  * struct smiapp_sensor - Main device structure
+  */
+ struct smiapp_sensor {
++	struct v4l2_async_notifier notifier;
+ 	/*
+ 	 * "mutex" is used to serialise access to all fields here
+ 	 * except v4l2_ctrls at the end of the struct. "mutex" is also
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
