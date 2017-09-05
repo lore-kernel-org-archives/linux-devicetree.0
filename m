@@ -1,44 +1,106 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: h3/h5 :Add DAI nodes
-Date: Tue, 5 Sep 2017 08:41:26 +0200
-Message-ID: <20170905064126.5tpu5s7kuywofgvg@flea>
-References: <20170904174721.21985-1-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v7 12/18] v4l: async: Allow binding notifiers to
+ sub-devices
+Date: Tue, 5 Sep 2017 08:49:43 +0200
+Message-ID: <6ad1c25a-e2a7-b73f-4d7c-6a5c071e6366@xs4all.nl>
+References: <20170903174958.27058-1-sakari.ailus@linux.intel.com>
+ <20170903174958.27058-13-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="273ixn3nxuzmdtad"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIMOXHGQKGQECKRZMWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170904174721.21985-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170903174958.27058-13-sakari.ailus@linux.intel.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---273ixn3nxuzmdtad
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Sep 04, 2017 at 07:47:21PM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 09/03/2017 07:49 PM, Sakari Ailus wrote:
+> Registering a notifier has required the knowledge of struct v4l2_device
+> for the reason that sub-devices generally are registered to the
+> v4l2_device (as well as the media device, also available through
+> v4l2_device).
 > 
-> Add the new DAI blocks to the device tree. I2S0 and I2S1 are for
-> connecting to an external codec.
+> This information is not available for sub-device drivers at probe time.
 > 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> What this patch does is that it allows registering notifiers without
+> having v4l2_device around. Instead the sub-device pointer is stored to the
+> notifier. Once the sub-device of the driver that registered the notifier
+> is registered, the notifier will gain the knowledge of the v4l2_device,
+> and the binding of async sub-devices from the sub-device driver's notifier
+> may proceed.
+> 
+> The master notifier's complete callback is only called when all sub-device
+> notifiers are completed.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-async.c | 153 +++++++++++++++++++++++++++++------
+>  include/media/v4l2-async.h           |  19 ++++-
+>  2 files changed, 146 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 70d02378b48f..55d7886103d2 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -25,6 +25,10 @@
+>  #include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-subdev.h>
+>  
+> +static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
+> +				  struct v4l2_subdev *sd,
+> +				  struct v4l2_async_subdev *asd);
+> +
+>  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+>  {
+>  #if IS_ENABLED(CONFIG_I2C)
+> @@ -101,14 +105,69 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
+>  	return NULL;
+>  }
+>  
+> +static bool v4l2_async_subdev_notifiers_complete(
+> +	struct v4l2_async_notifier *notifier)
+> +{
+> +	struct v4l2_async_notifier *n;
+> +
+> +	list_for_each_entry(n, &notifier->notifiers, notifiers) {
+> +		if (!n->master)
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +#define notifier_v4l2_dev(n) \
+> +	(!!(n)->v4l2_dev ? (n)->v4l2_dev : \
+> +	 !!(n)->master ? (n)->master->v4l2_dev : NULL)
+> +
+> +static struct v4l2_async_notifier *v4l2_async_get_subdev_notifier(
+> +	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
 
-Applied, thanks!
-Maxime
+Why pass the notifier argument when it is not actually used in the function?
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---273ixn3nxuzmdtad--
+Is this function needed at all? As far as I can see the sd always belongs to
+the given notifier, otherwise the v4l2_async_belongs() call would fail.
+And v4l2_async_belongs() is always called before v4l2_async_test_notify().
+
+This could all do with some more code comments. I'm having a difficult time
+understanding it all.
+
+I'll wait for v8 before continuing this.
+
+Regards,
+
+	Hans
+
+> +{
+> +	struct v4l2_async_notifier *n;
+> +
+> +	list_for_each_entry(n, &notifier_list, list) {
+> +		if (n->sd == sd)
+> +			return n;
+> +	}
+> +
+> +	return NULL;
+> +}
