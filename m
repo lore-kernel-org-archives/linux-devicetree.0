@@ -1,246 +1,75 @@
-From: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 05/18] firmware: arm_scmi: add initial support for
- performance protocol
-Date: Tue, 5 Sep 2017 16:56:51 +0100
-Message-ID: <534bae20-9f80-e79b-42a5-93d838732720@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-6-git-send-email-sudeep.holla@arm.com>
- <2690239b-27a7-dce3-88a6-d53808e8e93c@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: input: Add document bindings for mtk-pmic-keys
+Date: Tue, 5 Sep 2017 11:05:27 -0500
+Message-ID: <CAL_JsqLe3o+iw0Wh=g5Ks93qM1BR1+S04Nv1R3FV17Z3dph1jg@mail.gmail.com>
+References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
+ <1503642753-12385-3-git-send-email-chen.zhong@mediatek.com>
+ <20170831195239.b2litxbu7smhkkjl@rob-hp-laptop> <1504318583.15359.12.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2690239b-27a7-dce3-88a6-d53808e8e93c-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504318583.15359.12.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen Zhong <chen.zhong@mediatek.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andi Shyti <andi.shyti@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Jaechul Lee <jcsing.lee@samsung.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/09/17 16:04, Julien Thierry wrote:
-> Hi Sudeep,
-> 
-> On 04/08/17 15:31, Sudeep Holla wrote:
->> The performance protocol is intended for the performance management of
->> group(s) of device(s) that run in the same performance domain. It
->> includes even the CPUs. A performance domain is defined by a set of
->> devices that always have to run at the same performance level.
->> For example, a set of CPUs that share a voltage domain, and have a
->> common frequency control, is said to be in the same performance domain.
+On Fri, Sep 1, 2017 at 9:16 PM, Chen Zhong <chen.zhong@mediatek.com> wrote:
+> On Thu, 2017-08-31 at 14:52 -0500, Rob Herring wrote:
+>> On Fri, Aug 25, 2017 at 02:32:30PM +0800, Chen Zhong wrote:
+>> > This patch adds the device tree binding documentation for the MediaTek
+>> > pmic keys found on PMIC MT6397/MT6323.
+>> >
+>> > Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+>> > ---
+>> >  .../devicetree/bindings/input/mtk-pmic-keys.txt    |   38 ++++++++++++++++++++
+>> >  1 file changed, 38 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+>> > new file mode 100644
+>> > index 0000000..100ec44
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+>> > @@ -0,0 +1,38 @@
+>> > +MediaTek MT6397/MT6323 PMIC Keys Device Driver
+>> > +
+>> > +There are two key functions provided by MT6397/MT6323 PMIC, pwrkey
+>> > +and homekey. The key functions are defined as the subnode of the function
+>> > +node provided by MT6397/MT6323 PMIC that is being defined as one kind
+>> > +of Muti-Function Device (MFD)
+>> > +
+>> > +For MT6397/MT6323 MFD bindings see:
+>> > +Documentation/devicetree/bindings/mfd/mt6397.txt
+>> > +
+>> > +Required properties:
+>> > +- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
+>> > +- linux,keycodes: Specifies the numeric keycode values to
+>> > +   be used for reporting keys presses. The array can
+>> > +   contain up to 2 entries.
+>> > +
+>> > +Optional Properties:
+>> > +- wakeup-source: each key can be used as a wakeup source.
 >>
->> The commands in this protocol provide functionality to describe the
->> protocol version, describe various attribute flags, set and get the
->> performance level of a domain. It also supports discovery of the list
->> of performance levels supported by a performance domain, and the
->> properties of each performance level.
->>
->> This patch adds basic support for the performance protocol.
->>
->> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>   drivers/firmware/arm_scmi/Makefile |   2 +-
->>   drivers/firmware/arm_scmi/common.h |   1 +
->>   drivers/firmware/arm_scmi/perf.c   | 511 
->> +++++++++++++++++++++++++++++++++++++
->>   include/linux/scmi_protocol.h      |  31 +++
->>   4 files changed, 544 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/firmware/arm_scmi/perf.c
->>
->> diff --git a/drivers/firmware/arm_scmi/Makefile 
->> b/drivers/firmware/arm_scmi/Makefile
->> index 21d01d1d6b9c..159de726ee45 100644
->> --- a/drivers/firmware/arm_scmi/Makefile
->> +++ b/drivers/firmware/arm_scmi/Makefile
->> @@ -1,2 +1,2 @@
->>   obj-$(CONFIG_ARM_SCMI_PROTOCOL)    = arm_scmi.o
->> -arm_scmi-y = base.o driver.o
->> +arm_scmi-y = base.o driver.o perf.o
->> diff --git a/drivers/firmware/arm_scmi/common.h 
->> b/drivers/firmware/arm_scmi/common.h
->> index e3fe5d9acc82..7473dfcad4ee 100644
->> --- a/drivers/firmware/arm_scmi/common.h
->> +++ b/drivers/firmware/arm_scmi/common.h
->> @@ -30,6 +30,7 @@
->>   #define PROTOCOL_REV_MAJOR(x)    ((x) >> PROTOCOL_REV_MINOR_BITS)
->>   #define PROTOCOL_REV_MINOR(x)    ((x) & PROTOCOL_REV_MINOR_MASK)
->>   #define MAX_PROTOCOLS_IMP    16
->> +#define MAX_OPPS        16
->>   enum scmi_std_protocol {
->>       SCMI_PROTOCOL_BASE = 0x10,
->> diff --git a/drivers/firmware/arm_scmi/perf.c 
->> b/drivers/firmware/arm_scmi/perf.c
->> new file mode 100644
->> index 000000000000..13d84d829201
->> --- /dev/null
->> +++ b/drivers/firmware/arm_scmi/perf.c
->> @@ -0,0 +1,511 @@
->> +/*
->> + * System Control and Management Interface (SCMI) Performance Protocol
->> + *
->> + * Copyright (C) 2017 ARM Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or 
->> modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but 
->> WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public 
->> License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License 
->> along
->> + * with this program. If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_opp.h>
->> +#include <linux/sort.h>
->> +
->> +#include "common.h"
->> +
->> +enum scmi_performance_protocol_cmd {
->> +    PERF_DOMAIN_ATTRIBUTES = 0x3,
->> +    PERF_DESCRIBE_LEVELS = 0x4,
->> +    PERF_LIMITS_SET = 0x5,
->> +    PERF_LIMITS_GET = 0x6,
->> +    PERF_LEVEL_SET = 0x7,
->> +    PERF_LEVEL_GET = 0x8,
->> +    PERF_NOTIFY_LIMITS = 0x9,
->> +    PERF_NOTIFY_LEVEL = 0xa,
->> +};
->> +
->> +struct scmi_opp {
->> +    u32 perf;
->> +    u32 power;
->> +    u32 trans_latency_us;
->> +};
->> +
->> +struct scmi_msg_resp_perf_attributes {
->> +    __le16 num_domains;
->> +    __le16 flags;
->> +#define POWER_SCALE_IN_MILLIWATT(x)    ((x) & BIT(0))
->> +    __le32 stats_addr_low;
->> +    __le32 stats_addr_high;
->> +    __le32 stats_size;
->> +};
->> +
->> +struct scmi_msg_resp_perf_domain_attributes {
->> +    __le32 flags;
->> +#define SUPPORTS_SET_LIMITS(x)        ((x) & BIT(31))
->> +#define SUPPORTS_SET_PERF_LVL(x)    ((x) & BIT(30))
->> +#define SUPPORTS_PERF_LIMIT_NOTIFY(x)    ((x) & BIT(29))
->> +#define SUPPORTS_PERF_LEVEL_NOTIFY(x)    ((x) & BIT(28))
->> +    __le32 rate_limit_us;
->> +    __le32 sustained_freq_khz;
->> +    __le32 sustained_perf_level;
->> +        u8 name[SCMI_MAX_STR_SIZE];
->> +};
->> +
->> +struct scmi_msg_perf_describe_levels {
->> +    __le32 domain;
->> +    __le32 level_index;
->> +};
->> +
->> +struct scmi_perf_set_limits {
->> +    __le32 domain;
->> +    __le32 max_level;
->> +    __le32 min_level;
->> +};
->> +
->> +struct scmi_perf_get_limits {
->> +    __le32 max_level;
->> +    __le32 min_level;
->> +};
->> +
->> +struct scmi_perf_set_level {
->> +    __le32 domain;
->> +    __le32 level;
->> +};
->> +
->> +struct scmi_perf_notify_level_or_limits {
->> +    __le32 domain;
->> +    __le32 notify_enable;
->> +};
->> +
->> +struct scmi_msg_resp_perf_describe_levels {
->> +    __le16 num_returned;
->> +    __le16 num_remaining;
->> +    struct {
->> +        __le32 perf_val;
->> +        __le32 power;
->> +        __le16 transition_latency_us;
->> +        __le16 reserved;
->> +    } opp[0];
->> +};
->> +
->> +struct perf_dom_info {
->> +    bool set_limits;
->> +    bool set_perf;
->> +    bool perf_limit_notify;
->> +    bool perf_level_notify;
->> +    u32 opp_count;
->> +    u32 sustained_freq_khz;
->> +    u32 sustained_perf_level;
->> +    u32 mult_factor;
->> +    char name[SCMI_MAX_STR_SIZE];
->> +    struct scmi_opp opp[MAX_OPPS];
->> +};
->> +
->> +struct scmi_perf_info {
->> +    int num_domains;
->> +    bool power_scale_mw;
->> +    u64 stats_addr;
->> +    u32 stats_size;
->> +    struct perf_dom_info *dom_info;
->> +};
->> +
->> +static struct scmi_perf_info perf_info;
->> +
->> +static int scmi_perf_attributes_get(const struct scmi_handle *handle,
->> +                    struct scmi_perf_info *perf_info)
->> +{
->> +    int ret;
->> +    struct scmi_xfer *t;
->> +    struct scmi_msg_resp_perf_attributes *attr;
->> +
->> +    ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
->> +                 SCMI_PROTOCOL_PERF, 0, sizeof(*attr), &t);
->> +    if (ret)
->> +        return ret;
->> +
->> +    attr = t->rx.buf;
->> +
->> +    ret = scmi_do_xfer(handle, t);
->> +    if (!ret) {
->> +        u16 flags = le16_to_cpu(attr->flags);
->> +
->> +        perf_info->num_domains = le16_to_cpu(attr->num_domains);
->> +        perf_info->power_scale_mw = POWER_SCALE_IN_MILLIWATT(flags);
->> +        perf_info->stats_addr = le32_to_cpu(attr->stats_addr_low) |
->> +                (u64)le32_to_cpu(attr->stats_addr_high) << 32;
-> 
-> This seems odd, shouldn't it be the following?
-> le64_to_cpu(attr->stats_addr_low | (__le64)attr->stats_addr_high << 32)
-> 
+>> wakeup-source is defined as a boolean.
+>
+> Hi Rob,
+>
+> Could I modify it as this?
+>
+> mediatek,wakeup-keys = <1>, <0>;
+> wakeup-source;
 
-After further reflexion, I think you are right. If I understood the 
-specification, the address seems to be split into upper and lower 32bits 
-and each one is stored as a uint32, which fits what you are doing to 
-obtain the address.
+What do the values and index signify? The power key is index 0 and the
+value 1 means enable wakeup? Or each value is the raw key (i.e.
+indexes in linux,keycode) that wakeup is enabled for?
 
-You can ignore my previous comment.
+I don't think this should be in DT really. It's really up to the user
+(i.e. userspace) to decide what keys cause wakeup (or maybe that's
+only suspend). If you default to the power key causes wakeup, do you
+really need to support different options?
 
--- 
-Julien Thierry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If we do put this in DT, then it should be a common binding to specify
+keys that cause wake-up.
+
+Rob
