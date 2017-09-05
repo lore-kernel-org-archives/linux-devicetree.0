@@ -1,73 +1,81 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] ARM64: dts: meson: update around mmc
-Date: Tue, 05 Sep 2017 12:18:41 -0700
-Message-ID: <7hlgltar8u.fsf@baylibre.com>
-References: <20170831135226.19784-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170831135226.19784-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
-        message of "Thu, 31 Aug 2017 15:52:17 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Philipp Rossak <embed3d@gmail.com>
+Subject: [PATCH v2] ARM: dts: sun8i: h3: Fix Pincrtl bindings on Bananapi M2 Plus
+Date: Tue,  5 Sep 2017 22:34:16 +0200
+Message-ID: <1504643656-4926-1-git-send-email-embed3d@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
+Cc: Philipp Rossak <embed3d@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+From: Philipp Rossak <embed3d@gmail.com>
 
-> This patchset feature updates around mmc. It is linked to this series [0]
-> but does not strictly depends on it. It adds:
->
-> * The regulator settling times for the gpio regulator of nanopi-k2 and
->   the libretech-cc.
-> * UHS modes for the p20x, nanopi-k2 and the libretech-cc
-> * clk-gate pins: these are the pinmuxes used for the clk-stop work
->   around explained here [1]
->
-> It also removes cap-sd-highspeed from eMMC nodes.
->
-> Special note on SDR104:
-> While the PCB of the p200 and the libretech-cc does not seems to handle
-> SDR104 completely, the nanopi-k2 seems to be handling it correctly.
->
-> The patch enabling this mode on the nanopi-k2 is the last one of this
-> series. It should propabably be left out until more people can test
-> sdr104 on the nanopi-k2
->
-> This series has been tested on the gxbb-200, the gxbb-nanopi-k2 and the
-> gxl-s905x-libretech-cc
->
-> Changes since v2 [3]:
-> * Rebase on Kevin's v4.14/dt64 branch
->
-> Changes since v1 [2]:
-> * Reorder patches to put fixes first, then enhancements
-> * Fix error in the SDIO clk_gate pins (GPIOX_5 instead GPIOX_4)
->
-> [0]: https://lkml.kernel.org/r/20170828142915.27020-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> [1]: https://lkml.kernel.org/r/20170821160301.21899-11-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> [2]: https://lkml.kernel.org/r/20170804180816.18737-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> [3]: https://lkml.kernel.org/r/20170821160637.22456-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
->
-> Jerome Brunet (9):
->   ARM64: dts: meson-gx: Use correct mmc clock source 0
->   ARM64: dts: meson: remove cap-sd-highspeed from emmc nodes
->   ARM64: dts: meson: add mmc clk gate pins
->   ARM64: dts: meson-gxbb: nanopi-k2: add card regulator settle times
->   ARM64: dts: meson-gxl: libretech-cc: add card regulator settle times
->   ARM64: dts: meson-gxl: libretech-cc: enable high speed modes
->   ARM64: dts: meson-gxbb: p20x: enable sdcard UHS modes
->   ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
->   ARM64: dts: meson-gxbb: nanopi-k2: enable sdr104 mode
+There is no need for pincontrol nodes when the pin is set to a GPIO
 
-Applied to v4.14/dt64, and submitted to arm-soc.  It may miss this merge
-window, but if it does, we can submit for the first round of fixes after
--rc1 is out.
+Signed-off-by: Philipp Rossak <embed3d@gmail.com>
+---
+This is Patch is a new version of the following patch:
+https://patchwork.kernel.org/patch/9934835/
 
-Thanks,
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+changes since version 1:
+* vqmmc-supply was added again
+* The pincontrolers for the leds and gpio_keys were removed
+
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 20 --------------------
+ 1 file changed, 20 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+index d756ff8..cc20d67 100644
+--- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+@@ -64,7 +64,6 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&pwr_led_bpi_m2p>;
+ 
+ 		pwr_led {
+ 			label = "bananapi-m2-plus:red:pwr";
+@@ -76,7 +75,6 @@
+ 	gpio_keys {
+ 		compatible = "gpio-keys";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&sw_r_bpi_m2p>;
+ 
+ 		sw4 {
+ 			label = "power";
+@@ -98,7 +96,6 @@
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&wifi_en_bpi_m2p>;
+ 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+ 	};
+ };
+@@ -190,23 +187,6 @@
+ 	status = "okay";
+ };
+ 
+-&r_pio {
+-	pwr_led_bpi_m2p: led_pins@0 {
+-		pins = "PL10";
+-		function = "gpio_out";
+-	};
+-
+-	sw_r_bpi_m2p: key_pins@0 {
+-		pins = "PL3";
+-		function = "gpio_in";
+-	};
+-
+-	wifi_en_bpi_m2p: wifi_en_pin {
+-		pins = "PL7";
+-		function = "gpio_out";
+-	};
+-};
+-
+ &reg_usb0_vbus {
+ 	gpio = <&pio 3 11 GPIO_ACTIVE_HIGH>; /* PD11 */
+ 	status = "okay";
+-- 
+2.7.4
