@@ -1,108 +1,126 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v8 1/2] ASoC: rt5514: Add devicetree bindings for
- rt5514-spi
-Date: Tue, 5 Sep 2017 10:55:33 -0700
-Message-ID: <20170905175532.GA9393@google.com>
-References: <20170905042500.25656-1-jeffy.chen@rock-chips.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [patch v4 1/2] mfd: Add Mellanox regmap core driver
+Date: Tue, 5 Sep 2017 18:21:27 +0000
+Message-ID: <AM4PR05MB333091C928607B676067B325A2960@AM4PR05MB3330.eurprd05.prod.outlook.com>
+References: <1504029616-192277-1-git-send-email-vadimp@mellanox.com>
+ <1504029616-192277-2-git-send-email-vadimp@mellanox.com>
+ <20170901161433.gpkrpjx53pjv4mid@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170905042500.25656-1-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+In-Reply-To: <20170901161433.gpkrpjx53pjv4mid@rob-hp-laptop>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "lee.jones@linaro.org" <lee.jones@linaro.org>, "pavel@ucw.cz" <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "j.anaszewski@samsung.com" <j.anaszewski@samsung.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 05, 2017 at 12:24:59PM +0800, Jeffy Chen wrote:
-> Add devicetree bindings documentation file for rt5514 spi dsp codec.
-> 
-> Also update rt5514 i2c dt-binding's compatible.
 
-You should probably describe *why*?
 
-> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
-> Changes in v8: None
-> 
->  .../devicetree/bindings/sound/rt5514-spi.txt       | 32 ++++++++++++++++++++++
->  Documentation/devicetree/bindings/sound/rt5514.txt |  2 +-
->  2 files changed, 33 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/rt5514-spi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/rt5514-spi.txt b/Documentation/devicetree/bindings/sound/rt5514-spi.txt
-> new file mode 100644
-> index 000000000000..8a63d9423dd9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/rt5514-spi.txt
-> @@ -0,0 +1,32 @@
-> +RT5514 SPI audio CODEC
-> +
-> +This device supports SPI only.
-> +
-> +Required properties:
-> +
-> +- compatible : "realtek,rt5514".
+> > folder;  Comments pointed out by Rob:
+> >  - Make a separate patch /devicetree/bindings/vendor-prefixes.txt;
+> >  - Add .txt to Documentation/devicetree/bindings/mfd/mellanox,mlxreg-
+> core
+> >    and send it within this series;
+>=20
+> Why did you combine this? Bindings should be separate patches.
 
-You list one string here, but there's 2 in the example. The point of
-this exercise was to document (not just in an Example) the strings
-you're using.
+Ack.
 
-> +
-> +- reg : The SPI address of the device.
-> +
-> +Optional properties:
-> +
-> +- interrupt-parent: Should be the phandle for the interrupt controller
-> +- interrupts: The interrupt number to the cpu. The interrupt specifier format
-> +	      depends on the interrupt controller.
-> +
-> +Example:
-> +
-> +codec: rt5514-spi@0 {
-> +	compatible = "realtek,rt5514", "realtek,rt5514-spi";
-> +	reg = <0>;
-> +
-> +        /* May run faster once verified. */
+>=20
+> > +			spi_burn_bios_ci {
+> > +				reg =3D <0x32>;
+> > +				mask =3D <0xfe>;
+> > +				bit =3D <0x00>;
+> > +				phandles =3D <&spi2>;
+> > +			};
+> > +			spi_burn_ncsi {
+> > +				reg =3D <0x32>;
+>=20
+> You can't have duplicate reg values. This will also generate warnings.
+> Build your dtb with "W=3D2".
 
-Really? That was barely useful in the rk3399-gru DTSI, but it's
-definitely not worth sticking in an example.
+Can I use some logical name for unit, like below?
+			spi_burn_bios_ci: mux@1 {
+				reg =3D <0x32>;
+				mask =3D <0xfe>;
+				bit =3D <0x00>;
+				hotplugs =3D <&spi2>;
+			};
+			spi_burn_ncsi: mux@2 {
+				reg =3D <0x32>;
+				mask =3D <0xfd>;
+				bit =3D <0x00>;
+				hotplugs =3D <&spi2>;
+			};
 
-Also, you switch between tabs and spaces for indentation. Please be
-consistent. (And as with C code, I think the right answer is tabs?)
+I verified it with "W=3D2". Also I am running with CONFIG_OF_UNITTEST and
+I don't have unites issues.
 
-> +        spi-max-frequency = <10000000>;
-> +
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&mic_int>;
-> +
-> +        interrupt-parent = <&gpio1>;
-> +        interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-> +        wakeup-source;
-> +};
-> diff --git a/Documentation/devicetree/bindings/sound/rt5514.txt b/Documentation/devicetree/bindings/sound/rt5514.txt
-> index 929ca6756b02..12a8c93a67cc 100644
-> --- a/Documentation/devicetree/bindings/sound/rt5514.txt
-> +++ b/Documentation/devicetree/bindings/sound/rt5514.txt
-> @@ -28,6 +28,6 @@ Pins on the device (for linking into audio routes) for RT5514:
->  Example:
->  
->  codec: rt5514@57 {
-> -	compatible = "realtek,rt5514";
-> +	compatible = "realtek,rt5514", "realtek,rt5514-i2c";
+>=20
+> Again, this all looks too low level to me. You described the high level
+> differences in terms of number of cards, fans, PSUs, etc., but I don't se=
+e that
+> here. This isn't reviewable for anyone not familiar with your systems.
 
-Example != Documentation. Please document the string properly.
+The below should describe signals, which triggers hotplugable device
+Insertion or removal.
+		pwr: hotplugs@1 {
+			aggr =3D <0x08>;
+			reg =3D <0x64>;
+			mask =3D <0x03>;
+			hotplugs =3D <&psu1_ctrl &psu2_ctrl>;
+		};
 
-Brian
+		asic: hotplugs@3 {
+			aggr =3D <0x01>;
+			regs =3D <0x50>;
+			mask =3D <0x03>;
+			hotplugs =3D <&asic_thermal>;
+		};
+In DTS I have description for such devices in disabled state and they are
+Connected or disconnected dynamically:
+&i2c3 {
+...
+	psu1_ctrl: dps460@59 {
+		compatible =3D "dps460";
+		reg =3D <0x59>;
+		status =3D "disabled";
+	};
+''
 
->  	reg = <0x57>;
->  };
-> -- 
-> 2.11.0
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+&i2c12 {
+...
+	asic_thermal: mlxsw_minimal@48 {
+		compatible =3D "mlxsw_minimal";
+		reg =3D <0x48>;
+		status =3D "disabled";
+             ...
+
+And the same way I'd like to add spine and leaf cards, but I still don't
+Have support for them in my drivers.
+
+>=20
+> > +				mask =3D <0xfd>;
+> > +				bit =3D <0x00>;
+> > +				phandles =3D <&spi2>;
+>=20
+> Not a good name other than giving type information. Name it for what
+> function is being provided (e.g. clocks, interrupts, gpios).
+
+Would it be OK if to use hotplugs instead of phandles?
+It could be f.e. FAN EEPROM, PSU controller, ASIC, spine or leaf card, all =
+these=20
+are hotplugable device, which could be inserted or removed.
+It could be remote flashes, which are getting available after mux selection=
+, like
+in the above example for spi_burn_bios_ci and spi_burn_ncsi.
+Or it could be some other device at the remote side, which is getting avail=
+able to
+BMC, only when remote side (f.e. COMEX) is getting power good.
+
+Thanks,
+Vadim.
+=20
+=20
