@@ -1,90 +1,78 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v8] arm64: allwinner: h5: add NanoPi NEO
- Plus2 DT support
-Date: Tue, 5 Sep 2017 13:09:17 +0200
-Message-ID: <20170905110917.pjf22akyqiytx3iu@flea>
-References: <20170824231716.2623-1-antony@phenome.org>
- <20170904143014.46904-1-antony@phenome.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [RFC 0/2] backlight: pwm_bl: support linear brightness to human
+ eye
+Date: Tue, 5 Sep 2017 12:09:20 +0100
+Message-ID: <d9c90a1c-0fb6-db9e-f889-b4df0b5959ca@linaro.org>
+References: <20170904153504.27963-1-enric.balletbo@collabora.com>
+ <239c9153-c0ea-319c-b554-3c727b75c8cd@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cvybrtc2rgscf7tr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXULXLGQKGQEOXAIQIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170904143014.46904-1-antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <239c9153-c0ea-319c-b554-3c727b75c8cd@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@google.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/09/17 12:05, Daniel Thompson wrote:
+> On 04/09/17 16:35, Enric Balletbo i Serra wrote:
+>> Dear all,
+>>
+>> This patch series is a first RFC to know your opinion about implement
+>> support to create brightness levels tables dinamically. I tried to argue
+>> in every patch the specific reasons we think this can be interesting, to
+>> sumup, the idea behind these patches is be able to pass via device tree
+>> two parameters to the driver so it can calculate the brightness levels
+>> based on the CIE 1931 lightness formula, which is what actually describes
+>> how we perceive light.
+>>
+>> I think that at least the maths involved can be improved, and I've still
+>> some doubts. With current code if you create a table with a max PWM
+>> value of 255 and 127 steps, the first numbers are repeated so I'm 
+>> thinking > that maybe we should skip/remove the repeated values. i.e. 
+>> have a table
+>> like this,
+>>
+>> [0, 1, 2, 3  ...  235, 240, 245, 250, 255]
+>>
+>> instead of
+>>
+>> [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3  ...  235, 240, 245, 250, 255]
+>>
+>> Well, I know there are things to improve but lets see your feedback first
+>> before dedicate more time on it. The patches were tested on a couple of
+>> devices but I'll test on more devices meanwhile we discuss about it.
+> 
+> I'm not fully decided on this one but my initial reaction isn't to 
+> question the concept so much as to ask why the number of levels should 
+> go in the devicetree at all! We could just make brightness-levels 
+> optional and get the driver to pick sane curves by default.
+> 
+> I'm sure we can debate what "sane" means for a couple of e-mails yet but 
+> in principle, given it knows the PWM max counter value, the driver 
+> should be able to calculate the "right" number of steps too. If we have 
+> that your core code remains but we don't have to complexify the device
 
---cvybrtc2rgscf7tr
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+... tree
 
-Hi Antony,
+Sorry. ;-)
 
-Almost good, I'm sorry I missed a few things before.
 
-On Mon, Sep 04, 2017 at 04:30:14PM +0200, Antony Antony wrote:
-> +&mmc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc1_pins_a>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	vqmmc-supply = <&reg_vcc3v3>;
-> +	mmc-pwrseq = <&wifi_pwrseq>;
-> +	bus-width = <4>;
-> +	non-removable;
-> +	status = "okay";
+Daniel.
 
-Please add a new line here.
 
-> +	brcmf: wifi@1 {
-> +		reg = <1>;
-> +		compatible = "brcm";
-
-This should be the actual compatible, not just the vendor.
-
-> +	};
-> +};
-> +
-> +&mmc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc2_8bit_pins>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	cap-mmc-hw-reset;
-> +	boot_device = <0>;
-
-that property should still be removed.
-
-> +&r_pio {
-> +	leds_r_npi: led_pins@0 {
-> +		pins = "PL10";
-> +		function = "gpio_out";
-> +	};
-> +
-> +	vdd_cpux_r_npi: regulator_pins@0 {
-> +		allwinner,pins = "PL6";
-> +		allwinner,function = "gpio_out";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
-> +};
-
-And these must be left out.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---cvybrtc2rgscf7tr--
+> 
+> <strawman>
+> Basically we prefer X (?100 like some of the Intel DRM drivers do for 
+> connector properties?) steps but we reduce the number of steps if the 
+> PWM is rather course and we can't get sufficiently different steps.
+> </strawman>
+> 
+> I guess the summary of what I'm saying is that if we can 
+> programmatically derive brightness curves then the number of steps is 
+> not really a property of the hardware and doesn't belong in devicetree.
+> 
+> 
+> Daniel.
