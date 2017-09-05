@@ -1,33 +1,42 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 4/7] mfd: arizona: Remove audio related device tree code
-Date: Tue, 5 Sep 2017 08:23:29 +0100
-Message-ID: <20170905072329.re7ucxued2ryx7uc@dell>
-References: <20170904154154.4395-1-ckeepax@opensource.cirrus.com>
- <20170904154154.4395-5-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v4] mfd: max77693: Add muic of_compatible in mfd_cell
+Date: Tue, 5 Sep 2017 08:27:42 +0100
+Message-ID: <20170905072742.7zownkamnasp7vv5@dell>
+References: <CGME20170823063057eucas1p18045ff589bef62e656594d0bcf6ec5b3@eucas1p1.samsung.com>
+ <1503469812-3668-1-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170904154154.4395-5-ckeepax@opensource.cirrus.com>
+In-Reply-To: <1503469812-3668-1-git-send-email-m.purski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+To: Maciej Purski <m.purski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cw00.choi@samsung.com, krzk@kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 04 Sep 2017, Charles Keepax wrote:
+On Wed, 23 Aug 2017, Maciej Purski wrote:
 
-> This code has now been moved to the audio subsystem so is no longer
-> required in the MFD code.
+> This patch adds muic of_compatible in order to use the muic device
+> driver in device tree.
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Signed-off-by: Maciej Purski <m.purski@samsung.com>
 > ---
->  drivers/mfd/arizona-core.c | 132 +--------------------------------------------
->  1 file changed, 1 insertion(+), 131 deletions(-)
+> v2:
+> - added muic to documentation
+> v3:
+> - removed duplication
+> v4:
+> - fixed commit message
+> 
+>  Documentation/devicetree/bindings/mfd/max77693.txt | 6 ++++++
+>  drivers/mfd/max77693.c                             | 5 ++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
 
-I will require pull-request for this patch, but:
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Please collect the Acks you have and submit a [RESEND].
 
 -- 
 Lee Jones
