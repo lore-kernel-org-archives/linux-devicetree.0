@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v8 21/21] arm: dts: omap3: N9/N950: Add flash references to the camera
-Date: Tue,  5 Sep 2017 16:05:53 +0300
-Message-ID: <20170905130553.1332-22-sakari.ailus@linux.intel.com>
+Subject: [PATCH v8 16/21] dt: bindings: Add lens-focus binding for image sensors
+Date: Tue,  5 Sep 2017 16:05:48 +0300
+Message-ID: <20170905130553.1332-17-sakari.ailus@linux.intel.com>
 References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
@@ -10,58 +10,30 @@ To: linux-media@vger.kernel.org
 Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add flash and indicator LED phandles to the sensor node.
+The lens-focus property contains a phandle to the lens voice coil driver
+that is associated to the sensor; typically both are contained in the same
+camera module.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/omap3-n9.dts       | 1 +
- arch/arm/boot/dts/omap3-n950-n9.dtsi | 4 ++--
- arch/arm/boot/dts/omap3-n950.dts     | 1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
-index b9e58c536afd..a2944010f62f 100644
---- a/arch/arm/boot/dts/omap3-n9.dts
-+++ b/arch/arm/boot/dts/omap3-n9.dts
-@@ -26,6 +26,7 @@
- 		clocks = <&isp 0>;
- 		clock-frequency = <9600000>;
- 		nokia,nvm-size = <(16 * 64)>;
-+		flash = <&as3645a_flash &as3645a_indicator>;
- 		port {
- 			smia_1_1: endpoint {
- 				link-frequencies = /bits/ 64 <199200000 210000000 499200000>;
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-index cb47ae79a5f9..92c1a1da28d3 100644
---- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -269,13 +269,13 @@
- 	as3645a@30 {
- 		reg = <0x30>;
- 		compatible = "ams,as3645a";
--		flash {
-+		as3645a_flash: flash {
- 			flash-timeout-us = <150000>;
- 			flash-max-microamp = <320000>;
- 			led-max-microamp = <60000>;
- 			peak-current-limit = <1750000>;
- 		};
--		indicator {
-+		as3645a_indicator: indicator {
- 			led-max-microamp = <10000>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
-index 646601a3ebd8..bba5c5a6950c 100644
---- a/arch/arm/boot/dts/omap3-n950.dts
-+++ b/arch/arm/boot/dts/omap3-n950.dts
-@@ -60,6 +60,7 @@
- 		clocks = <&isp 0>;
- 		clock-frequency = <9600000>;
- 		nokia,nvm-size = <(16 * 64)>;
-+		flash = <&as3645a_flash &as3645a_indicator>;
- 		port {
- 			smia_1_1: endpoint {
- 				link-frequencies = /bits/ 64 <210000000 333600000 398400000>;
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index efc67161e389..39b19d9d8426 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -74,6 +74,8 @@ Optional properties
+ - flash: An array of phandles, each referring to a flash LED, a sub-node
+   of the LED driver device node.
+ 
++- lens-focus: A phandle to the node of the focus lens controller.
++
+ 
+ Optional endpoint properties
+ ----------------------------
 -- 
 2.11.0
