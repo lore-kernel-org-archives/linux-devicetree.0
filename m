@@ -1,58 +1,177 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v8 16/21] dt: bindings: Add lens-focus binding for image
- sensors
-Date: Wed, 6 Sep 2017 10:48:10 +0200
-Message-ID: <2701f7b1-9e17-b5fd-f5ec-77ec8d557c66@xs4all.nl>
-References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
- <20170905130553.1332-17-sakari.ailus@linux.intel.com>
+From: Julien Thierry <julien.thierry@arm.com>
+Subject: Re: [PATCH v2 09/18] firmware: arm_scmi: probe and initialise all the
+ supported protocols
+Date: Wed, 6 Sep 2017 10:41:35 +0100
+Message-ID: <bc52d57a-156b-cef0-7560-63a9ed7e78b5@arm.com>
+References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
+ <1501857104-11279-10-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170905130553.1332-17-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501857104-11279-10-git-send-email-sudeep.holla@arm.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Cc: Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/2017 03:05 PM, Sakari Ailus wrote:
-> The lens-focus property contains a phandle to the lens voice coil driver
-> that is associated to the sensor; typically both are contained in the same
-> camera module.
+
+
+On 04/08/17 15:31, Sudeep Holla wrote:
+> Now that we have basic support for all the protocols in the
+> specification, let's probe them individually and initialise them.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
-Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-
-Regards,
-
-	Hans
-
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > ---
->  Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>   drivers/firmware/arm_scmi/common.h |  5 +++
+>   drivers/firmware/arm_scmi/driver.c | 80 +++++++++++++++++++++++++++++++++++++-
+>   2 files changed, 84 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index efc67161e389..39b19d9d8426 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -74,6 +74,8 @@ Optional properties
->  - flash: An array of phandles, each referring to a flash LED, a sub-node
->    of the LED driver device node.
->  
-> +- lens-focus: A phandle to the node of the focus lens controller.
-> +
->  
->  Optional endpoint properties
->  ----------------------------
-> 
+> diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+> index 7473dfcad4ee..d7c73a8d260b 100644
+> --- a/drivers/firmware/arm_scmi/common.h
+> +++ b/drivers/firmware/arm_scmi/common.h
+> @@ -118,4 +118,9 @@ int scmi_version_get(const struct scmi_handle *h, u8 protocol, u32 *version);
+>   void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
+>   				     u8 *prot_imp);
+>   
+> +typedef int (*scmi_init_fn_t)(struct scmi_handle *);
+>   int scmi_base_protocol_init(struct scmi_handle *h);
+> +int scmi_perf_protocol_init(struct scmi_handle *h);
+> +int scmi_sensors_protocol_init(struct scmi_handle *h);
+> +int scmi_power_protocol_init(struct scmi_handle *h);
+> +int scmi_clock_protocol_init(struct scmi_handle *h);
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index 601d0d7210d9..6f31761043e2 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -157,6 +157,12 @@ struct scmi_shared_mem {
+>   	u8 msg_payload[0];
+>   };
+>   
+> +struct scmi_protocol_match {
+> +	u8 protocol_id;
+> +	scmi_init_fn_t fn;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Could we call this "init" or "prot_init"?
+
+> +	char name[32];
+> +};
+> +
+>   static int scmi_linux_errmap[] = {
+>   	/* better than switch case as long as return value is continuous */
+>   	0,			/* SCMI_SUCCESS */
+> @@ -687,6 +693,41 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
+>   	return 0;
+>   }
+>   
+> +static const struct scmi_protocol_match scmi_protocols[] = {
+> +	{
+> +		.protocol_id = SCMI_PROTOCOL_PERF,
+> +		.fn = scmi_perf_protocol_init,
+> +		.name = "scmi-cpufreq",
+> +	}, {
+> +		.protocol_id = SCMI_PROTOCOL_CLOCK,
+> +		.fn = scmi_clock_protocol_init,
+> +		.name = "scmi-clocks",
+> +	}, {
+> +		.protocol_id = SCMI_PROTOCOL_POWER,
+> +		.fn = scmi_power_protocol_init,
+> +		.name = "scmi-power-domain",
+> +	}, {
+> +		.protocol_id = SCMI_PROTOCOL_SENSOR,
+> +		.fn = scmi_sensors_protocol_init,
+> +		.name = "scmi-hwmon",
+> +	},
+> +	{}
+> +};
+> +
+> +static const struct scmi_protocol_match *scmi_protocol_match_get(u8 protocol_id)
+> +{
+> +	int i;
+> +	const struct scmi_protocol_match *match = NULL, *loop = scmi_protocols;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(scmi_protocols); i++, loop++)
+> +		if (loop->protocol_id == protocol_id) {
+> +			match = loop;
+> +			break;
+> +		}
+> +
+> +	return match;
+> +}
+> +
+
+The "match" variable is not needed. We can just return "loop" in the if 
+branch and return NULL at the end of the function. Unless we are 
+following some coding standard that advises against that?
+
+>   static int scmi_mailbox_check(struct device_node *np)
+>   {
+>   	struct of_phandle_args arg;
+> @@ -778,7 +819,7 @@ static int scmi_probe(struct platform_device *pdev)
+>   	const struct scmi_desc *desc;
+>   	struct scmi_info *info;
+>   	struct device *dev = &pdev->dev;
+> -	struct device_node *np = dev->of_node;
+> +	struct device_node *child, *np = dev->of_node;
+>   
+>   	/* Only mailbox method supported, check for the presence of one */
+>   	if (scmi_mailbox_check(np)) {
+> @@ -817,6 +858,43 @@ static int scmi_probe(struct platform_device *pdev)
+>   		return ret;
+>   	}
+>   
+> +	for_each_available_child_of_node(np, child) {
+> +		int init_ret;
+> +		u32 prot_id;
+> +		const struct scmi_protocol_match *match;
+> +
+> +		if (of_property_read_u32(child, "reg", &prot_id))
+> +			continue;
+> +
+> +		prot_id &= MSG_PROTOCOL_ID_MASK;
+> +
+> +		if (!scmi_is_protocol_implemented(handle, prot_id)) {
+> +			dev_err(dev, "SCMI protocol %d not implemented\n",
+> +				prot_id);
+> +			continue;
+> +		}
+> +
+> +		match = scmi_protocol_match_get(prot_id);
+> +		if (match) {
+> +			struct platform_device *cdev;
+> +
+> +			cdev = of_platform_device_create(child, match->name,
+> +							 dev);
+> +			if (!cdev) {
+> +				dev_err(dev, "failed to create %s device\n",
+> +					match->name);
+> +				continue;
+> +			}
+> +
+> +			init_ret = match->fn(handle);
+> +			if (init_ret) {
+> +				dev_err(dev, "SCMI protocol %d init error %d\n",
+> +					prot_id, init_ret);
+> +				of_platform_device_destroy(&cdev->dev, NULL);
+> +			}
+> +		}
+> +	}
+> +
+
+For the code in the "if (match)" branch, would it be better to have an 
+inline function "scmi_create_protocol_device" or something with a name 
+that fits?
+
+Also I was wondering, what is the difference between the protocol being 
+implemented and finding the matching structure? Feels like there is a 
+bit of redundancy. If the protocol is implemented but doesn't have a 
+match structure does it just mean it doesn't need any specific 
+initialization?
+
+Thanks,
+
+-- 
+Julien Thierry
