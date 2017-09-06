@@ -1,177 +1,133 @@
-From: Julien Thierry <julien.thierry@arm.com>
-Subject: Re: [PATCH v2 09/18] firmware: arm_scmi: probe and initialise all the
- supported protocols
-Date: Wed, 6 Sep 2017 10:41:35 +0100
-Message-ID: <bc52d57a-156b-cef0-7560-63a9ed7e78b5@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-10-git-send-email-sudeep.holla@arm.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] MIPS: mt7620: Rename uartlite to serial
+Date: Wed, 6 Sep 2017 11:45:54 +0200
+Message-ID: <CAMuHMdULSM2SfMYxS_xBn=GaHe+u2UfhHtXvwpvBo+rM3akjYw@mail.gmail.com>
+References: <1504277584-37794-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501857104-11279-10-git-send-email-sudeep.holla@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504277584-37794-1-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Matt Redfearn <matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/08/17 15:31, Sudeep Holla wrote:
-> Now that we have basic support for all the protocols in the
-> specification, let's probe them individually and initialise them.
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+On Fri, Sep 1, 2017 at 4:53 PM, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> Previously, mt7620.c defined the clocks for uarts with the names
+> uartlite, uart1 and uart2. Rename them to serial{0,1,2} and update
+> the devicetree node names.
+>
+> Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->   drivers/firmware/arm_scmi/common.h |  5 +++
->   drivers/firmware/arm_scmi/driver.c | 80 +++++++++++++++++++++++++++++++++++++-
->   2 files changed, 84 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-> index 7473dfcad4ee..d7c73a8d260b 100644
-> --- a/drivers/firmware/arm_scmi/common.h
-> +++ b/drivers/firmware/arm_scmi/common.h
-> @@ -118,4 +118,9 @@ int scmi_version_get(const struct scmi_handle *h, u8 protocol, u32 *version);
->   void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
->   				     u8 *prot_imp);
->   
-> +typedef int (*scmi_init_fn_t)(struct scmi_handle *);
->   int scmi_base_protocol_init(struct scmi_handle *h);
-> +int scmi_perf_protocol_init(struct scmi_handle *h);
-> +int scmi_sensors_protocol_init(struct scmi_handle *h);
-> +int scmi_power_protocol_init(struct scmi_handle *h);
-> +int scmi_clock_protocol_init(struct scmi_handle *h);
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index 601d0d7210d9..6f31761043e2 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -157,6 +157,12 @@ struct scmi_shared_mem {
->   	u8 msg_payload[0];
->   };
->   
-> +struct scmi_protocol_match {
-> +	u8 protocol_id;
-> +	scmi_init_fn_t fn;
+>  arch/mips/boot/dts/ralink/mt7620a.dtsi |  2 +-
+>  arch/mips/boot/dts/ralink/mt7628a.dtsi |  6 +++---
+>  arch/mips/ralink/mt7620.c              | 14 +++++++-------
+>  3 files changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/arch/mips/boot/dts/ralink/mt7620a.dtsi b/arch/mips/boot/dts/ralink/mt7620a.dtsi
+> index 793c0c7..58bd002 100644
+> --- a/arch/mips/boot/dts/ralink/mt7620a.dtsi
+> +++ b/arch/mips/boot/dts/ralink/mt7620a.dtsi
+> @@ -45,7 +45,7 @@
+>                         reg = <0x300 0x100>;
+>                 };
+>
+> -               uartlite@c00 {
+> +               serial0@c00 {
 
-Could we call this "init" or "prot_init"?
+Device node names should use generic names and no numerical suffix
+=> "serial@c00"
 
-> +	char name[32];
-> +};
-> +
->   static int scmi_linux_errmap[] = {
->   	/* better than switch case as long as return value is continuous */
->   	0,			/* SCMI_SUCCESS */
-> @@ -687,6 +693,41 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
->   	return 0;
->   }
->   
-> +static const struct scmi_protocol_match scmi_protocols[] = {
-> +	{
-> +		.protocol_id = SCMI_PROTOCOL_PERF,
-> +		.fn = scmi_perf_protocol_init,
-> +		.name = "scmi-cpufreq",
-> +	}, {
-> +		.protocol_id = SCMI_PROTOCOL_CLOCK,
-> +		.fn = scmi_clock_protocol_init,
-> +		.name = "scmi-clocks",
-> +	}, {
-> +		.protocol_id = SCMI_PROTOCOL_POWER,
-> +		.fn = scmi_power_protocol_init,
-> +		.name = "scmi-power-domain",
-> +	}, {
-> +		.protocol_id = SCMI_PROTOCOL_SENSOR,
-> +		.fn = scmi_sensors_protocol_init,
-> +		.name = "scmi-hwmon",
-> +	},
-> +	{}
-> +};
-> +
-> +static const struct scmi_protocol_match *scmi_protocol_match_get(u8 protocol_id)
-> +{
-> +	int i;
-> +	const struct scmi_protocol_match *match = NULL, *loop = scmi_protocols;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(scmi_protocols); i++, loop++)
-> +		if (loop->protocol_id == protocol_id) {
-> +			match = loop;
-> +			break;
-> +		}
-> +
-> +	return match;
-> +}
-> +
+>                         compatible = "ralink,mt7620a-uart", "ralink,rt2880-uart", "ns16550a";
+>                         reg = <0xc00 0x100>;
+>
+> diff --git a/arch/mips/boot/dts/ralink/mt7628a.dtsi b/arch/mips/boot/dts/ralink/mt7628a.dtsi
+> index 9ff7e8f..fe3fe9a 100644
+> --- a/arch/mips/boot/dts/ralink/mt7628a.dtsi
+> +++ b/arch/mips/boot/dts/ralink/mt7628a.dtsi
+> @@ -62,7 +62,7 @@
+>                         reg = <0x300 0x100>;
+>                 };
+>
+> -               uart0: uartlite@c00 {
+> +               uart0: serial0@c00 {
 
-The "match" variable is not needed. We can just return "loop" in the if 
-branch and return NULL at the end of the function. Unless we are 
-following some coding standard that advises against that?
+uart0: serial@c00
 
->   static int scmi_mailbox_check(struct device_node *np)
->   {
->   	struct of_phandle_args arg;
-> @@ -778,7 +819,7 @@ static int scmi_probe(struct platform_device *pdev)
->   	const struct scmi_desc *desc;
->   	struct scmi_info *info;
->   	struct device *dev = &pdev->dev;
-> -	struct device_node *np = dev->of_node;
-> +	struct device_node *child, *np = dev->of_node;
->   
->   	/* Only mailbox method supported, check for the presence of one */
->   	if (scmi_mailbox_check(np)) {
-> @@ -817,6 +858,43 @@ static int scmi_probe(struct platform_device *pdev)
->   		return ret;
->   	}
->   
-> +	for_each_available_child_of_node(np, child) {
-> +		int init_ret;
-> +		u32 prot_id;
-> +		const struct scmi_protocol_match *match;
-> +
-> +		if (of_property_read_u32(child, "reg", &prot_id))
-> +			continue;
-> +
-> +		prot_id &= MSG_PROTOCOL_ID_MASK;
-> +
-> +		if (!scmi_is_protocol_implemented(handle, prot_id)) {
-> +			dev_err(dev, "SCMI protocol %d not implemented\n",
-> +				prot_id);
-> +			continue;
-> +		}
-> +
-> +		match = scmi_protocol_match_get(prot_id);
-> +		if (match) {
-> +			struct platform_device *cdev;
-> +
-> +			cdev = of_platform_device_create(child, match->name,
-> +							 dev);
-> +			if (!cdev) {
-> +				dev_err(dev, "failed to create %s device\n",
-> +					match->name);
-> +				continue;
-> +			}
-> +
-> +			init_ret = match->fn(handle);
-> +			if (init_ret) {
-> +				dev_err(dev, "SCMI protocol %d init error %d\n",
-> +					prot_id, init_ret);
-> +				of_platform_device_destroy(&cdev->dev, NULL);
-> +			}
-> +		}
-> +	}
-> +
+>                         compatible = "ns16550a";
+>                         reg = <0xc00 0x100>;
+>
+> @@ -75,7 +75,7 @@
+>                         reg-shift = <2>;
+>                 };
+>
+> -               uart1: uart1@d00 {
+> +               uart1: serial1@d00 {
 
-For the code in the "if (match)" branch, would it be better to have an 
-inline function "scmi_create_protocol_device" or something with a name 
-that fits?
+uart1: serial@d00
 
-Also I was wondering, what is the difference between the protocol being 
-implemented and finding the matching structure? Feels like there is a 
-bit of redundancy. If the protocol is implemented but doesn't have a 
-match structure does it just mean it doesn't need any specific 
-initialization?
+>                         compatible = "ns16550a";
+>                         reg = <0xd00 0x100>;
+>
+> @@ -88,7 +88,7 @@
+>                         reg-shift = <2>;
+>                 };
+>
+> -               uart2: uart2@e00 {
+> +               uart2: serial2@e00 {
 
-Thanks,
+uart2: serial@e00
 
--- 
-Julien Thierry
+>                         compatible = "ns16550a";
+>                         reg = <0xe00 0x100>;
+>
+> diff --git a/arch/mips/ralink/mt7620.c b/arch/mips/ralink/mt7620.c
+> index 9be8b08..f623ceb 100644
+> --- a/arch/mips/ralink/mt7620.c
+> +++ b/arch/mips/ralink/mt7620.c
+> @@ -54,7 +54,7 @@ static int dram_type;
+>
+>  static struct rt2880_pmx_func i2c_grp[] =  { FUNC("i2c", 0, 1, 2) };
+>  static struct rt2880_pmx_func spi_grp[] = { FUNC("spi", 0, 3, 4) };
+> -static struct rt2880_pmx_func uartlite_grp[] = { FUNC("uartlite", 0, 15, 2) };
+> +static struct rt2880_pmx_func serial_grp[] = { FUNC("serial", 0, 15, 2) };
+>  static struct rt2880_pmx_func mdio_grp[] = {
+>         FUNC("mdio", MT7620_GPIO_MODE_MDIO, 22, 2),
+>         FUNC("refclk", MT7620_GPIO_MODE_MDIO_REFCLK, 22, 2),
+> @@ -92,7 +92,7 @@ static struct rt2880_pmx_group mt7620a_pinmux_data[] = {
+>         GRP("uartf", uartf_grp, MT7620_GPIO_MODE_UART0_MASK,
+>                 MT7620_GPIO_MODE_UART0_SHIFT),
+>         GRP("spi", spi_grp, 1, MT7620_GPIO_MODE_SPI),
+> -       GRP("uartlite", uartlite_grp, 1, MT7620_GPIO_MODE_UART1),
+> +       GRP("serial", serial_grp, 1, MT7620_GPIO_MODE_UART1),
+>         GRP_G("wdt", wdt_grp, MT7620_GPIO_MODE_WDT_MASK,
+>                 MT7620_GPIO_MODE_WDT_GPIO, MT7620_GPIO_MODE_WDT_SHIFT),
+>         GRP_G("mdio", mdio_grp, MT7620_GPIO_MODE_MDIO_MASK,
+> @@ -530,8 +530,8 @@ void __init ralink_clk_init(void)
+>                 periph_rate = MHZ(40);
+>                 pcmi2s_rate = MHZ(480);
+>
+> -               ralink_clk_add("10000d00.uartlite", periph_rate);
+> -               ralink_clk_add("10000e00.uartlite", periph_rate);
+> +               ralink_clk_add("10000d00.serial0", periph_rate);
+> +               ralink_clk_add("10000e00.serial0", periph_rate);
+
+Ugh, you're relying on the actual node names in DT?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
