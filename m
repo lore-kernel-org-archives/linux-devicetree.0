@@ -1,46 +1,74 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 1/3] dt-bindings: sdhci-omap: Add bindings for the sdhci-omap controller
-Date: Wed, 6 Sep 2017 17:15:54 +0530
-Message-ID: <20170906114556.32532-2-kishon@ti.com>
-References: <20170906114556.32532-1-kishon@ti.com>
+From: Dietmar Eggemann <dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm: dts: exynos: add exynos5420 cpu
+ capacity-dmips-mhz information
+Date: Wed, 6 Sep 2017 12:47:21 +0100
+Message-ID: <247b2b4a-c57a-eed9-c16f-fc7f1ef9f64f@arm.com>
+References: <20170830144120.9312-1-dietmar.eggemann@arm.com>
+ <20170830144120.9312-3-dietmar.eggemann@arm.com>
+ <20170830202650.mdlxy2c3uwuq5vde@kozik-lap>
+ <94c1d6c6-655a-2a63-1f01-06ac45990388@arm.com>
+ <20170903195614.iwe7v6g3xsg7p6nf@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170906114556.32532-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kishon@ti.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170903195614.iwe7v6g3xsg7p6nf@kozik-lap>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding for the TI's sdhci-omap controller.
+On 03/09/17 20:56, Krzysztof Kozlowski wrote:
+> On Thu, Aug 31, 2017 at 11:36:07AM +0100, Dietmar Eggemann wrote:
+>> On 30/08/17 21:26, Krzysztof Kozlowski wrote:
+>>> On Wed, Aug 30, 2017 at 03:41:18PM +0100, Dietmar Eggemann wrote:
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/mmc/sdhci-omap.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+[...]
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
-new file mode 100644
-index 000000000000..51775a372c06
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
-@@ -0,0 +1,16 @@
-+* TI OMAP SDHCI Controller
-+
-+Refer to mmc.txt for standard MMC bindings.
-+
-+Required properties:
-+- compatible: Should be "ti,dra7-sdhci" for DRA7 and DRA72 controllers
-+- ti,hwmods: Must be "mmc<n>", <n> is controller instance starting 1
-+
-+Example:
-+	mmc1: mmc@4809c000 {
-+		compatible = "ti,dra7-sdhci";
-+		reg = <0x4809c000 0x400>;
-+		ti,hwmods = "mmc1";
-+		bus-width = <4>;
-+		vmmc-supply = <&vmmc>; /* phandle to regulator node */
-+	};
--- 
-2.11.0
+>>>> The patch has been tested on Samsung Chromebook 2 13" (peach-pi, Exynos
+>>>> 5800).
+>>>>
+>>>> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+>>>> 1024
+>>>> 1024
+>>>> 1024
+>>>> 1024
+>>>> 389
+>>>> 389
+>>>> 389
+>>>> 389
+>>>
+>>> I am missing something... shouldn't this be 539? Or is it scaled with
+>>> the clock-frequency (1 GHz) value?
+>>
+>> Yeah, the capacity-dmips-mhz dt value of 539 for the little cpus is
+>> scaled by 1.3/1.8 (max cpu capacity/ system wide max cpu capacity):
+>>
+>> 539 * 1.3/1.8 = 389
+>>
+>> This max cpu capacity scaling is part of both solutions, the 'cpu
+>> capacity-dmips-mhz' and the 'cpu_efficiency/clock-frequency dt property'
+>> one.
+>>
+>> The (original*) cpu capacity on a heterogeneous platform expresses uArch
+>> and max cpu frequency differences between the (logical) cpus of the
+>> system.
+>>
+>> * not further reduced by rt and/or irq pressure.
+>>
+>> [...]
+> 
+> Thanks for explanation, looks fine for me. I'll take it after merge
+> window.
+
+Nice, since the 'cpu capacity-dmips-mhz' is already supported for arm
+(and used by TC2 (vexpress-v2p-ca15_a7.dts)) this can be done
+independently of the actual removal of the
+'cpu_efficiency/clock-frequency dt property' solution in patch 1/4.
+
+[..]
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
