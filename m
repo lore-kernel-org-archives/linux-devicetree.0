@@ -1,91 +1,74 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: Setting CPU clock frequency on early boot
-Date: Wed, 6 Sep 2017 16:22:18 +0000
-Message-ID: <1504714938.3829.40.camel@synopsys.com>
-References: <1504625867.32565.34.camel@synopsys.com>
-         <CAL_JsqJ7c-raBnb0U+hL+hka7zN3XosX0pU1Sswoq16nbRFb+g@mail.gmail.com>
-         <b8f7f407-303a-2f3c-1a16-bfb385204930@synopsys.com>
-         <1504705881.3829.19.camel@synopsys.com>
-         <CAL_Jsq+B74keQ3N=8x6jx1URkLq8fa9gwsc5JAuiV86Wwczi9Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+B74keQ3N=8x6jx1URkLq8fa9gwsc5JAuiV86Wwczi9Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Content-ID: <FA05C3AF35AB1746B1185695E1D1192C-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH v6 3/3] Bluetooth: btqcomsmd: retrieve BD address from DT
+ property
+Date: Wed, 6 Sep 2017 19:24:37 +0200
+Message-ID: <AD664D12-31A5-456B-9971-4A76BDC32BA3@holtmann.org>
+References: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
+ <1504699898-28011-3-git-send-email-loic.poulain@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1504699898-28011-3-git-send-email-loic.poulain@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Loic Poulain <loic.poulain@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Bluez mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBXZWQsIDIwMTctMDktMDYgYXQgMTA6MjUgLTA1MDAsIFJvYiBIZXJyaW5n
-IHdyb3RlOg0KPiBPbiBXZWQsIFNlcCA2LCAyMDE3IGF0IDg6NTEgQU0sIEFsZXhleSBCcm9ka2lu
-DQo+IDxBbGV4ZXkuQnJvZGtpbkBzeW5vcHN5cy5jb20+IHdyb3RlOg0KPiA+IA0KPiA+IEhpIFZp
-bmVldCwgUm9iLA0KPiA+IA0KPiA+IE9uIFR1ZSwgMjAxNy0wOS0wNSBhdCAxNjo0MCAtMDcwMCwg
-VmluZWV0IEd1cHRhIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiBPbiAwOS8wNS8yMDE3IDAzOjA0IFBN
-LCBSb2IgSGVycmluZyB3cm90ZToNCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBPbiBUdWUs
-IFNlcCA1LCAyMDE3IGF0IDEwOjM3IEFNLCBBbGV4ZXkgQnJvZGtpbg0KPiA+ID4gPiA8QWxleGV5
-LkJyb2RraW5Ac3lub3BzeXMuY29tPiB3cm90ZToNCg0KW3NuaXBdDQoNCj4gPiBZZWFoLCB0aGF0
-J3MgYW4gaW50ZXJlc3RpbmcgcXVlc3Rpb24uIFdlIG1heSBpbmRlZWQgbW92ZSBtb3JlIHNtYXJ0
-cyB0byB0aGUgY2xvY2sgZHJpdmVyDQo+ID4gYnV0Og0KPiA+IMKgMS4gV2UnbGwgaGF2ZSBkdXBs
-aWNhdGUgY29kZSBpbiBkaWZmZXJlbnQgY2xvY2sgZHJpdmVycy4gRXZlbiB0b2RheSB0aGF0IGtp
-bmQgb2YgY2xvY2sNCj4gPiDCoMKgwqDCoHNldHVwIGlzIGFwcGxpY2FibGUgdG8gQVhTMTB4IGFu
-ZCBIU0RLIHBsYXRmb3JtcyAoYW5kIHRoZXkgdXNlIGRpZmZlcmVudCBjbG9jayBkcml2ZXJzKS4N
-Cj4gDQo+IE5vLCB5b3UgY291bGQgcHJvdmlkZSBhIGNvbW1vbiwgc2hhcmVkIGZ1bmN0aW9uIHRv
-IGNhbGwuIFRoZW4gZWFjaA0KPiBwbGF0Zm9ybSBjYW4gb3B0LWluLiBJZiB5b3UgY2FuIG1ha2Ug
-c29tZXRoaW5nIHRoYXQgYXBwbGllcyB0byBldmVyeQ0KPiBzaW5nbGUgcGxhdGZvcm0gbm93IG9y
-IGluIHRoZSBmdXR1cmUsIHRoZW4gSSdkIHB1dCBpdCBpbiBhcmNoLiBJZiB5b3UNCj4gaGF2ZSBw
-bGFucyB0byBkZWNvdXBsZSB0aGUgdGltZXIgYW5kIGNwdSBjbG9ja3MsIHRoZW4gc291bmRzIGxp
-a2UgeW91DQo+IGNhbid0Lg0KDQpSaWdodCBzbyB3ZSdsbCBpbXBsZW1lbnQgYSBmdW5jdGlvbiB3
-aGljaCBpcyBjYWxsZWQgYnkgYSBwbGF0Zm9ybSBpZiByZXF1aXJlZC4NClRoYXQgd2F5IHdlIGVz
-Y2FwZSBjb3B5LXBhc3Rpbmcgd2hpbGUga2VlcGluZyBlbm91Z2ggZmxleGliaWxpdHkgZm9yIGN1
-cnJlbnQNCmFuZCBmdXR1cmUgcGxhdGZvcm1zLg0KDQo+IElNTywgaWYgaXQncyBub3QgcGFydCBv
-ZiB0aGUgZGVmaW5lZCBDUFUgYXJjaGl0ZWN0dXJlLCB0aGVuIGRvbid0IHB1dA0KPiBpdCBpbiBh
-cmNoLy4gVGhhdCdzIGhvdyB3ZSBlbmQgdXAgd2l0aCBtdWx0aXBsZSBjb3BpZXMgb2YgdGhlIHNh
-bWUNCj4gdGhpbmcgZG9uZSBhcmJpdHJhcmlseSBkaWZmZXJlbnQgd2F5cyBiZWNhdXNlIGZldyBw
-ZW9wbGUgbG9vayBhY3Jvc3MNCj4gYXJjaGl0ZWN0dXJlcy4NCg0KU28gZG8geW91IHByb3Bvc2Ug
-dG8gaGF2ZSB0aGUgZnVuY3Rpb24gW3RoYXQgcmVhZHMgImNsb2NrLWZyZXF1ZW5jeSIgZnJvbSBz
-YXkNCkNQVSBub2RlIGFuZCBwYXNzZXMgaXRzIHZhbHVlIHRvIENQVSdzIHBhcmVudCBjbG9jayBk
-cml2ZXJdIGluIGdlbmVyaWMNCltpLmUuIGFyY2hpdGVjdHVyZSBhZ25vc3RpY10gY29kZSBzb21l
-d2hlcmUgaW4gImluaXQvbWFpbi5jIj8NCg0KPiA+IA0KPiA+IMKgMi4gUHJpbnQgb3V0IG9mIENQ
-VSBmcmVxdWVuY3kgd2hpY2ggaXMgdXNlZCBkdXJpbmcgYm9vdCBwcm9jZXNzIGZvciB1cyBpcyBp
-bXBvcnRhbnQgYXMgd2VsbA0KPiA+IMKgwqDCoMKgZXNwZWNpYWxseSBkdXJpbmcgYnJpbmctdXAg
-b2YgbmV3IEhXLg0KPiA+IA0KPiA+IMKgMy4gSWYgdGhlcmUncyBubyBkZWRpY2F0ZWQgImNsb2Nr
-LWZyZXF1ZW5jeSIgcGFyYW1ldGVyIGluIENQVSBub2RlIHdlIHdvbid0DQo+ID4gwqDCoMKgwqBj
-aGFuZ2UgYW55dGhpbmcgc28gdGhhdCBub24tYWZmZWN0ZWQgcGxhdGZvcm1zIHdpbGwgbGl2ZSBh
-cyB0aGV5IHVzZWQgdG8uDQo+ID4gDQo+ID4gVGhhdCBzYWlkIElNSE8gcHJvcG9zZWQgaW1wbGVt
-ZW50YXRpb24gaXMgd2hhdCB3ZSB3YW50IHRvIGtlcCBmb3Igbm93Lg0KPiA+IA0KPiA+ID4gDQo+
-ID4gPiBBbHNvIG5vdGUgdGhhdCB0aGlzIGNvZGUgaXMgdXNpbmcgYSBuZXcgLyBhZGhvYyBEVCBi
-aW5kaW5nIGNwdS1mcmVxIGluIGNvdSBub2RlIHRvDQo+ID4gPiBkbyB0aGUgb3ZlcnJpZGUgLSBp
-cyB0aGF0IGFjY2VwdGFibGUgPw0KPiANCj4gTm8sIEkgbWVhbnQgdG8gcG9pbnQgdGhhdCBvdXQu
-DQoNClNvcnJ5LCBidXQgZm9yIG1lIGl0J3Mgbm90IGNsZWFyIHdoYXQgZGlkIHlvdSBtZWFuIGhl
-cmUuDQpDYXJlIHRvIGVsYWJvcmF0ZSBhIGJpdCBtb3JlPw0KDQo+ID4gSSB0aGluayB3ZSdsbCBz
-d2l0Y2ggdG8gbW9yZSBjb21tb24gImNsb2NrLWZyZXF1ZW5jeSIgaW4gdGhlIG5leHQgcmVzcGlu
-Lg0KPiA+IEluZGVlZCAiY3B1LWZyZXEiIG1pZ2h0IGJlIGEgYml0IG1pc2xlYWRpbmcuDQo+IA0K
-PiBJZGVhbGx5LCB5b3UnZCB1c2UgdGhlIGNsb2NrIGJpbmRpbmcgZXZlbnR1YWxseS4NCg0KQWdh
-aW4gSSdtIHByb2JhYmx5IG1pc3Npbmcgc29tZXRoaW5nIDopDQoNCkkgbWVhbnQgd2Ugd2lsbCBo
-YXZlIGJvdGggY2xvY2sgcGhhbmRsZSBhbmQgImNsb2NrLWZyZXF1ZW5jeSIgYXQgdGhlIHNhbWUg
-dGltZS4NClNvbWV0aGluZyBsaWtlIHRoaXM6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLT44LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoJY3B1cyB7DQoJCSNhZGRyZXNzLWNl
-bGxzID0gPDE+Ow0KCQkjc2l6ZS1jZWxscyA9IDwwPjsNCg0KCQljcHVAMCB7DQoJCQlkZXZpY2Vf
-dHlwZSA9ICJjcHUiOw0KCQkJY29tcGF0aWJsZSA9ICJzbnBzLGFyY2hzMzgiOw0KCQkJcmVnID0g
-PDA+Ow0KCQkJY2xvY2tzID0gPCZjb3JlX2Nsaz47DQoJCQljbG9jay1mcmVxdWVuY3kgPSA8MTAw
-MDAwMDAwPjsgwqA8LS0gVGhhdCdzIHdoZXJlIHdlIHdhbnQgdG8gc2V0IGRlc2lyZWQgdmFsdWUN
-CgkJfTsNCgkuLi4NCgl9DQoNCgljb3JlX2NsazogY29yZS1jbGtAODAgew0KCQljb21wYXRpYmxl
-ID0gInNucHMsYXhzMTB4LWFyYy1wbGwtY2xvY2siOw0KCQlyZWcgPSA8MHg4MCAweDEwPiwgPDB4
-MTAwIDB4MTA+Ow0KCQkjY2xvY2stY2VsbHMgPSA8MD47DQoJCWNsb2NrcyA9IDwmaW5wdXRfY2xr
-PjsNCgl9Ow0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQ0KDQpPciBhbHRlcm5hdGl2ZWx5IHdlIG1heSBtb3ZlICJjbG9jay1mcmVx
-dWVuY3kiIHJpZ2h0IHRvIHRoZSBjbG9jaydzIG5vZGUgYW5kIGhhdmUNCml0IGxpa2UgdGhhdDoN
-Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPjgtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0NCgljb3JlX2NsazrCoGNvcmUtY2xrQDgwwqB7DQoJCWNvbXBhdGlibGUgPSAic25wcyxh
-eHMxMHgtYXJjLXBsbC1jbG9jayI7DQoJCXJlZyA9IDwweDgwIDB4MTA+LCA8MHgxMDAgMHgxMD47
-DQoJCQ0KI2Nsb2NrLWNlbGxzID0gPDA+Ow0KCQljbG9ja3MgPSA8JmlucHV0X2Nsaz47DQoJCWNs
-b2NrLWZyZXF1ZW5jeSA9IDwxMDAwMDAwMDA+OyDCoDwtLSBUaGF0J3Mgd2hlcmUgd2Ugd2FudCB0
-byBzZXQgZGVzaXJlZCB2YWx1ZQ0KCQ0KfTsNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tPjgtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0KLUFsZXhleQ==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Loic,
+
+> Retrieve BD address from the local-bd-address property.
+> This address must be unique and is usually added in the DT
+> by the bootloader which has access to the provisioned data.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+> ---
+> v2: Set device as unconfigured if default address detected
+>     Add warning if BD addr retrieved from DT
+> v3: if no addr retrieved from DT, unconditionally set
+>     the invalid BD addr flag.
+>     swap and set bdaddr in the platform probe
+> v4: Add dt-bindings documentation
+>     split patch in two parts (setup, dt prop)
+>     use local-bd-address name instead of local-mac-address
+> v5: remove 2/3 merged in bluetooth-next tree
+>     Add bluetooth.txt for common BT bindings
+>     expect local-bd-address in little-endian format
+> v6: use of_property_read_u8_array instead of of_get_property
+> 
+> drivers/bluetooth/btqcomsmd.c | 11 +++++++++++
+> 1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/btqcomsmd.c b/drivers/bluetooth/btqcomsmd.c
+> index bd810d0..b5716f0 100644
+> --- a/drivers/bluetooth/btqcomsmd.c
+> +++ b/drivers/bluetooth/btqcomsmd.c
+> @@ -15,6 +15,8 @@
+> #include <linux/module.h>
+> #include <linux/slab.h>
+> #include <linux/rpmsg.h>
+> +#include <linux/of.h>
+> +
+> #include <linux/soc/qcom/wcnss_ctrl.h>
+> #include <linux/platform_device.h>
+> 
+> @@ -156,6 +158,15 @@ static int btqcomsmd_probe(struct platform_device *pdev)
+> 	if (IS_ERR(btq->cmd_channel))
+> 		return PTR_ERR(btq->cmd_channel);
+> 
+> +	/* The local-bd-address property is usually injected by the
+> +	 * bootloader which has access to the allocated BD address.
+> +	 */
+> +	if (!of_property_read_u8_array(pdev->dev.of_node, "local-bd-address",
+> +				       (u8 *)&btq->bdaddr, sizeof(bdaddr_t))) {
+> +		BT_INFO("BD address %pMR retrieved from device-tree",
+> +			&btq->bdaddr);
+> +	}
+
+any reason you are not using bt_dev_info here? I think it would be important to print the device information prefix.
+
+Otherwise the patch set looks good to me. However I would prefer if we get an ack from Rob.
+
+Regards
+
+Marcel
