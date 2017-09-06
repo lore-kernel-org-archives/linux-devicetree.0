@@ -1,165 +1,428 @@
-From: Bharat Bhushan <bharat.bhushan@nxp.com>
-Subject: RE: [PATCH] RM64: dts: ls208xa: Add iommu-map property for pci
-Date: Wed, 6 Sep 2017 07:17:24 +0000
-Message-ID: <AM5PR0401MB2545129D07EE9263BA4D16DA9A970@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-References: <1504171424-15536-1-git-send-email-Bharat.Bhushan@nxp.com>
- <06c57ca4-edaa-df26-b1d9-1906141c5065@arm.com>
- <AM5PR0401MB2545B7C55F634D7B9CABAE629A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <10be1849-8071-64fc-5ee2-b6e429c64b9e@arm.com>
- <AM5PR0401MB2545043022CAE0CDECA6267E9A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <AM5PR0401MB2545BB069D90520FFE9CD3499A920@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <901dee07-d1ee-63cc-59a0-bdf37cd7d937@arm.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v8 06/21] v4l: fwnode: Support generic parsing of graph
+ endpoints in a device
+Date: Wed, 6 Sep 2017 09:41:40 +0200
+Message-ID: <dd3a2e55-8de0-c30e-04a7-cb26b519689c@xs4all.nl>
+References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
+ <20170905130553.1332-7-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <901dee07-d1ee-63cc-59a0-bdf37cd7d937@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170905130553.1332-7-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "oss@buserror.net" <oss@buserror.net>, Gang Liu <gang.liu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iaW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iaW4g
-TXVycGh5IFttYWlsdG86cm9iaW4ubXVycGh5QGFybS5jb21dDQo+IFNlbnQ6IEZyaWRheSwgU2Vw
-dGVtYmVyIDAxLCAyMDE3IDQ6MjkgUE0NCj4gVG86IEJoYXJhdCBCaHVzaGFuIDxiaGFyYXQuYmh1
-c2hhbkBueHAuY29tPjsgTWFyYyBaeW5naWVyDQo+IDxtYXJjLnp5bmdpZXJAYXJtLmNvbT47IHJv
-YmgrZHRAa2VybmVsLm9yZzsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47
-IHdpbGwuZGVhY29uQGFybS5jb207IG9zc0BidXNlcnJvci5uZXQ7IEdhbmcNCj4gTGl1IDxnYW5n
-LmxpdUBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4g
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFJNNjQ6
-IGR0czogbHMyMDh4YTogQWRkIGlvbW11LW1hcCBwcm9wZXJ0eSBmb3IgcGNpDQo+IA0KPiBPbiAw
-MS8wOS8xNyAxMToxMywgQmhhcmF0IEJodXNoYW4gd3JvdGU6DQo+ID4NCj4gPg0KPiA+PiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLSBGcm9tOiBsaW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJu
-ZWwub3JnDQo+ID4+IFttYWlsdG86bGludXgta2VybmVsLSBvd25lckB2Z2VyLmtlcm5lbC5vcmdd
-IE9uIEJlaGFsZiBPZiBCaGFyYXQNCj4gPj4gQmh1c2hhbiBTZW50OiBUaHVyc2RheSwgQXVndXN0
-IDMxLCAyMDE3IDQ6NTMgUE0gVG86IE1hcmMgWnluZ2llcg0KPiA+PiA8bWFyYy56eW5naWVyQGFy
-bS5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7IE1hcmsgUnV0bGFuZA0KPiA+PiA8bWFyay5ydXRs
-YW5kQGFybS5jb20+OyB3aWxsLmRlYWNvbkBhcm0uY29tOyBvc3NAYnVzZXJyb3IubmV0Ow0KPiBH
-YW5nDQo+ID4+IExpdSA8Z2FuZy5saXVAbnhwLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOw0KPiA+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LSBr
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+PiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbSBTdWJq
-ZWN0OiBSRToNCj4gPj4gW1BBVENIXSBSTTY0OiBkdHM6IGxzMjA4eGE6IEFkZCBpb21tdS1tYXAg
-cHJvcGVydHkgZm9yIHBjaQ0KPiA+Pg0KPiA+Pg0KPiA+Pg0KPiA+Pj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0gRnJvbTogTWFyYyBaeW5naWVyDQo+ID4+PiBbbWFpbHRvOm1hcmMuenluZ2ll
-ckBhcm0uY29tXSBTZW50OiBUaHVyc2RheSwgQXVndXN0IDMxLCAyMDE3DQo+ID4+PiA0OjIwIFBN
-IFRvOiBCaGFyYXQgQmh1c2hhbiA8YmhhcmF0LmJodXNoYW5AbnhwLmNvbT47DQo+ID4+PiByb2Jo
-K2R0QGtlcm5lbC5vcmc7DQo+ID4+IE1hcmsNCj4gPj4+IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBh
-cm0uY29tPjsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gPj4gb3NzQGJ1c2Vycm9yLm5ldDsNCj4g
-Pj4+IEdhbmcgTGl1IDxnYW5nLmxpdUBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7DQo+ID4+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LSBr
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+Pj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb20gU3Vi
-amVjdDogUmU6DQo+ID4+PiBbUEFUQ0hdIFJNNjQ6IGR0czogbHMyMDh4YTogQWRkIGlvbW11LW1h
-cCBwcm9wZXJ0eSBmb3IgcGNpDQo+ID4+Pg0KPiA+Pj4gW0ZpeGluZyBNYXJrJ3MgYWRkcmVzcy4u
-Ll0NCj4gPj4+DQo+ID4+PiBPbiAzMS8wOC8xNyAxMTo0MSwgQmhhcmF0IEJodXNoYW4gd3JvdGU6
-DQo+ID4+Pj4NCj4gPj4+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0gRnJvbTogTWFyYyBa
-eW5naWVyDQo+ID4+Pj4+IFttYWlsdG86bWFyYy56eW5naWVyQGFybS5jb21dIFNlbnQ6IFRodXJz
-ZGF5LCBBdWd1c3QgMzEsIDIwMTcNCj4gPj4+Pj4gMzowMiBQTSBUbzogQmhhcmF0IEJodXNoYW4g
-PGJoYXJhdC5iaHVzaGFuQG54cC5jb20+Ow0KPiA+Pj4+PiByb2JoK2R0QGtlcm5lbC5vcmc7IGFy
-ay5ydXRsYW5kQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207DQo+ID4+Pj4+IG9zc0BidXNl
-cnJvci5uZXQ7IEdhbmcNCj4gPj4+IExpdQ0KPiA+Pj4+PiA8Z2FuZy5saXVAbnhwLmNvbT47IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+ID4+Pj4+IGtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+Pj4+PiBj
-YXRhbGluLm1hcmluYXNAYXJtLmNvbSBTdWJqZWN0OiBSZTogW1BBVENIXSBSTTY0OiBkdHM6DQo+
-ID4+Pj4+IGxzMjA4eGE6IEFkZCBpb21tdS1tYXAgcHJvcGVydHkgZm9yIHBjaQ0KPiA+Pj4+Pg0K
-PiA+Pj4+PiBPbiAzMS8wOC8xNyAxMDoyMywgQmhhcmF0IEJodXNoYW4gd3JvdGU6DQo+ID4+Pj4+
-PiBUaGlzIHBhdGNoIGFkZHMgaW9tbXUtbWFwIHByb3BlcnR5IGZvciBQQ0llLCB3aGljaCBlbmFi
-bGVzDQo+IFNNTVUNCj4gPj4+Pj4+IGZvciB0aGVzZSBkZXZpY2VzIG9uIExTMjA4eEEgZGV2aWNl
-cy4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBCaGFyYXQgQmh1c2hhbiA8Qmhh
-cmF0LkJodXNoYW5AbnhwLmNvbT4gLS0tDQo+ID4+Pj4+PiBhcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpIHwgNCArKysrIDEgZmlsZQ0KPiA+Pj4+Pj4gY2hhbmdl
-ZCwgNCBpbnNlcnRpb25zKCspDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gZGlmZiAtLWdpdA0KPiA+Pj4+
-Pj4gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpDQo+ID4+
-Pj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwOHhhLmR0c2kgaW5k
-ZXgNCj4gPj4+Pj4+IDk0Y2RkMzAuLjY3Y2Y2MDUgMTAwNjQ0IC0tLQ0KPiA+Pj4+Pj4gYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpICsrKw0KPiA+Pj4+Pj4g
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpIEBAIC02MDYs
-Ng0KPiA+Pj4+Pj4gKzYwNiw3IEBAIG51bS1sYW5lcyA9IDw0PjsgYnVzLXJhbmdlID0gPDB4MCAw
-eGZmPjsNCj4gPj4+Pj4+IG1zaS1wYXJlbnQgPSA8Jml0cz47ICsJCQlpb21tdS1tYXAgPSA8MCAm
-c21tdSAwDQo+IDE+OwkvKiBUaGlzDQo+ID4+Pj4+PiBpcyBmaXhlZC11cCBieQ0KPiA+Pj4+PiB1
-LWJvb3QgKi8NCj4gPj4+Pj4NCj4gPj4+Pj4gV2hhdCBkb2VzIHRoaXMgZG8gd2hlbiB5b3VyIHZl
-cnNpb24gb2YgdS1ib290IGRvZXNuJ3QgZmlsbCB0aGlzIGluDQo+ID4+Pj4+IGZvcg0KPiA+PiB5
-b3U/DQo+ID4+Pj4NCj4gPj4+PiBHb29kIHF1ZXN0aW9uLCBmcmFua2x5IEkgaGF2ZSBub3QgdGhv
-dWdodCBvZiB0aGlzIGNhc2UgYmVmb3JlLg0KPiA+Pj4+IEJ1dCBpZiB3ZSBwYXNzIGxlbmd0aCA9
-IDAgaW4gYWJvdmUgcHJvcGVydHkgdGhlbiBubyBmaXh1cCBoYXBwZW4NCj4gPj4+PiB3aXRoIGhh
-cHBlbiB3aXRoIG9sZGVyIHUtYm9vdC4gSW4gdGhpcyBjYXNlDQo+ID4+Pj4gb2ZfaW9tbXVfY29u
-ZmlndXJlKCkgd2lsbCByZXR1cm4gTlVMTCBpb21tdS1vcHMgYW5kIGl0IHN3aXRjaCB0bw0KPiA+
-Pj4+IHN3aW8tdGxiLiBXaWxsIHRoYXQgd29yaz8NCj4gPj4+IEkgcmVhbGx5IGRvbid0IGxpa2Ug
-dGhpcy4gWW91IHJlbHkgb24gaGF2aW5nIGludmFsaWQgZGF0YSBpbiB0aGUgRFQsDQo+ID4+PiBh
-bmQgdGhhdCBzZWVtcyBqdXN0IHdyb25nLg0KPiA+Pj4NCj4gPj4+IFdoeSBjYW4ndCB1LWJvb3Qg
-anVzdCBnZW5lcmF0ZSB0aGF0IHByb3BlcnR5LCBhbmQgd2UgbGVhdmUgdGhlIERUDQo+ID4+PiBh
-bG9uZT8NCj4gPj4NCj4gPj4gV2UgZG8gbm90IGhhdmUgc21tdSBwaGFuZGxlIGFsbG93aW5nIHVi
-b290IHRvIGdlbmVyYXRlIHRoaXMuDQo+ID4+DQo+ID4+PiBPciBldmVuIGJldHRlciwgeW91IHBy
-b3ZpZGUgdGhlIHJpZ2h0IGluZm9ybWF0aW9uIGZvciB0aGUgZmV3IGJvYXJkcw0KPiA+Pj4gdGhh
-dCBhcmUgYmFzZWQgb24gdGhpcyBTb0MsIG5vdCByZWx5aW5nIG9uIHUtYm9vdCBmb3IgYW55dGhp
-bmcgdGhhdA0KPiA+Pj4gaXMgaW4gdGhlIGtlcm5lbCB0cmVlPw0KPiA+Pg0KPiA+PiBPbiBvdXIg
-cGxhdGZvcm1zIHdlIGhhdmUgYSBoL3cgdGFibGUgd2hpY2ggY29udmVydHMgUklELT5EZXZpY2Ut
-SWQuDQo+ID4+IEkgd2lsbCBjaGVjayB3aGF0IHdpbGwgaGFwcGVuIGlmIHRoYXQgdGFibGUgaXMg
-bm90IGluaXRpYWxpemVkLCBjYW4NCj4gPj4gUklEIGJlIGVxdWFsIHRvIGRldmljZS1pZCBpcyB0
-aGF0IGNhc2UuIElmIHRoYXQgd2lsbCBiZSBhbGxvd2VkIHRoYW4NCj4gPj4gd2UgY2FuIGdpdmUg
-cmlnaHQgaW5mb3JtYXRpb24gdGhhdCB3aWxsIHdvcmsgd2l0aCB1LWJvb3Qgbm90IHVwZGF0aW5n
-DQo+ID4+IHRoaXMgcHJvcGVydHkuDQo+ID4NCj4gPiBVLWJvb3QgdXNlcyBhIHN0cmVhbS1pZCBh
-bGxvY2F0b3IgYW5kIHByb2dyYW1zIHRoZSBoL3cgbWFwcGluZyB0YWJsZQ0KPiA+IChyaWQgdG8g
-c2lkIG1hcHBpbmcgdGFibGUpLiBBbHNvIGl0IHVwZGF0ZXMgaW9tbXUtbWFwIHByb3BlcnR5DQo+
-ID4gYWNjb3JkaW5nbHkuIEJ1dCBJZiB1LWJvb3QgZG9lcyBub3QgdXBkYXRlIGlvbW11LW1hcCB0
-aGFuIHdlIGNhbm5vdA0KPiA+IGhhdmUgYSB2YWxpZCBmdWxsIHByb29mIHNvbHV0aW9uIGFzIHN0
-cmVhbS1pZCBhbGxvY2F0aW9uIGNhbiBjaGFuZ2UgaW4NCj4gPiB1LWJvb3QuDQo+ID4NCj4gPiBT
-byB0aGUgb3RoZXIgb3B0aW9uIG9mIHUtYm9vdCBnZW5lcmF0aW5nIHRoaXMgZW50cnkgc2VlbXMg
-Y29ycmVjdA0KPiA+IHNvbHV0aW9uLiBUaGlzIHJlcXVpcmVzIHUtYm9vdCB0byBrbm93IGlvbW11
-LXBoYW5kbGUsIHNvbWV0aGluZw0KPiA+IHNpbWlsYXIgdG8gIm1zaS1wYXJlbnQiIHVzZWQgZm9y
-ICJtc2ktbWFwIiBEZXZpY2UtdHJlZSBiaW5kaW5nIG5lZWQNCj4gPiBjaGFuZ2UgdG8gYWRkIGlv
-bW11LXBoYW5kbGUvaW9tbXUtcGFyZW50IGZvciB0aGlzLg0KPiANCj4gRnJvbSB3aGF0IEkga25v
-dyBvZiB0aGlzIGhhcmR3YXJlLCBpdCdzIGdvaW5nIHRvIGJlIHJhdGhlciBkaWZmaWN1bHQgdG8g
-Y29uY29jdA0KPiBhIERUIHdoaWNoIHJlZmxlY3RzIHRoZSBpbml0aWFsIGhhcmR3YXJlIHN0YXRl
-IGFjY3VyYXRlbHkgKmFuZCogd29ya3MNCj4gY29ycmVjdGx5IHdpdGhvdXQgdXBkYXRpbmcgdS1i
-b290IGluIGxvY2tzdGVwLiBJSVJDLCBJIGJlbGlldmUgdGhlIGFjY3VyYXRlDQo+IGRlc2NyaXB0
-aW9uIGZvciBhbiB1bnByb2dyYW1tZWQgTFVUIHdvdWxkIGJlICJldmVyeXRoaW5nIGNvbWVzIG91
-dCBvbg0KPiB0aGUgZGVmYXVsdCBJRCwgd2hpY2ggZGVmYXVsdHMgdG8gMCIsIGkuZS46DQo+IA0K
-PiAJaW9tbXUtbWFwLW1hc2sgPSA8MHgwPjsNCj4gCWlvbW11LW1hcCA9IDwweDAgJnNtbXUgMHgw
-IDB4MT47DQoNClRoZXNlIGNoYW5nZXMgYXJlIG5vdCBlbm91Z2ggdG8gbWFrZSBQQ0kgZGV2aXNl
-IHdvcmtpbmcgd2l0aCBMVVQgZGlzYWJsZWQsIGFsc28gbmVlZGVkIG1zaS1tYXAgbWFwcyBhbGwg
-cmVxdWVzdGVyLWlkIHRvICIwIiwgdXNpbmcgIm1zaS1tYXAtbWFzayA9IDB4MCIuDQoNCldoeSB3
-ZSBhc3N1bWUgdGhhdCBubyAibXNpLW1hcCIgcHJvcGVydHkgbWVhbnMgdW50cmFuc2xhdGVkIHJl
-cXVlc3RlZC1pZCwgd2h5IG5vdCBjb25zaWRlciB0aGF0IHRyYW5zbGF0ZWQgdG8gIjAiLg0KDQo+
-IA0KPiAoYXNzdW1pbmcgdGhlIFNNTVUgaGFzIHN0cmVhbS1pZC1tYXNrIHNldCBhcHByb3ByaWF0
-ZWx5IHRvbykNCj4gDQo+IFRoYXQncyBPSyBleGNlcHQgaWYgdS1ib290IHVwZGF0ZXMgdGhlIG1h
-cCB3aXRob3V0IHJlbW92aW5nIHRoZSBtYXNrLA0KPiB3aGVyZXVwb24gdGhpbmdzIHdpbGwgZ28g
-d3JvbmcsIGFuZCBJIGd1ZXNzIHRoYXQgd291bGQgYmUgdGhlIGNhc2Ugd2l0aA0KPiBjdXJyZW50
-IHUtYm9vdCA6KA0KPiANCj4gSG93ZXZlciwgdGhlIGV4aXN0aW5nIE1TSSBkZXNjcmlwdGlvbiBp
-cyBhbHJlYWR5IGJvZ3VzIC0gaWYgdS1ib290IGRpZG4ndA0KPiBwcm9ncmFtIHRoZSBMVVQsIHRo
-ZSBJVFMgZHJpdmVyIHdvdWxkIHRyZWF0IHRoZSBpbnZhbGlkICJtc2ktcGFyZW50IiBwcm9wZXJ0
-eQ0KPiBhcyB0aGlzOg0KPiANCj4gCW1zaS1tYXAgPSA8MHgwICZpdHMgMHgwIDB4ZmZmZj47DQo+
-IA0KPiB3aGljaCBtZWFucyB0aGF0IG5vYm9keSBvdGhlciB0aGFuIDA6MC4wIGhhcyB3b3JraW5n
-IE1TSXMgYW55d2F5Lg0KDQpXZSBjYW4gaGF2ZSBmb2xsb3dpbmcgdmVyc2lvbiBvZiB1LWJvb3Q6
-DQogMSkgTm8gTFVUIHNldHVwLCBkb2VzIG5vdCBnZW5lcmF0ZSBtc2ktbWFwIGFuZCBkb2VzIG5v
-dCB1cGRhdGUvZ2VuZXJhdGUgaW9tbXUtbWFwIChvbGRlciB1LWJvb3QpDQoNCiAgICAgRm9yIHRo
-aXMgY2FzZSB0aGUgd29ya2luZyBkZXZpY2UgdHJlZSBjaGFuZ2VzIGNhbiBiZToNCiAgICAgICAg
-ICAgICAgICAgICAgICAgaW9tbXUtbWFwLW1hc2sgPSA8MD47DQogICAgICAgICAgICAgICAgICAg
-ICAgIGlvbW11LW1hcCA9IDwweDAgJnNtbXUgMCAweDE+OyANCiAgICAgICAgICAgICAgICAgICAg
-ICAgbXNpLW1hcC1tYXNrID0gPDB4MD47DQogICAgICAgICAgICAgICAgICAgICAgIG1zaS1tYXAg
-PSA8MHgwICZpdHMgMCAweDE+Ow0KDQogICAgIEJ1dCB0aGVzZSBjaGFuZ2VzIHdpbGwgbm90IHdv
-cmsgd2l0aCBjdXJyZW50IHZlcnNpb24gb2YgdS1ib290IChiZWxvdyAoMikpDQoNCjIpIExVVCBz
-ZXR1cCBhbmQgbXNpLW1hcCBnZW5lcmF0ZWQgYnV0IG5vIGlvbW11LW1hcCBnZW5lcmF0ZWQgKGN1
-cnJlbnQgY2FzZSkNCg0KICAgIEkgZG8gbm90IHNlZSB3ZSBjYW4gaGF2ZSBhIHdvcmtpbmcgZGV2
-aWNlIHRyZWUgZm9yIHRoaXMuDQogICAgUHJvYmFibHkgZ2VuZXJhdGluZyBpb21tdS1tYXAgaW4g
-dS1ib290IGlzIGJldHRlciwgd2l0aCB0aGF0IG1zaS1tYXAgYW5kIGlvbW11LW1hcCB3aWxsIGJl
-IGNvbnNpc3RlbnQgKGJlbG93ICg0KSkNCg0KMykgTFVUIHNldHVwLCAibXNpLW1hcCIgZ2VuZXJh
-dGVkIGFuZCBpb21tdS1tYXAgdXBkYXRlZA0KDQogICAgICBXZSBjYW4gaGF2ZSBiZWxvdyBjaGFu
-Z2UgaXMgZGV2aWNlIHRyZWUuDQogICAgICAgCSAgICAgICAgIGlvbW11LW1hcCA9IDwweDAgJnNt
-bXUgMCAweDE+Ow0KDQogICAgICAgQnV0IHRoaXMgY2hhbmdlIHdpbGwgbm90IHdvcmsgd2l0aCAo
-MSkgYW5kICgyKSBhYm92ZS4NCg0KNCkgTFVUIHNldHVwLCAibXNpLW1hcCIgZ2VuZXJhdGVkIGFu
-ZCBpb21tdS1tYXAgYWxzbyBnZW5lcmF0ZWQgYnkgdS1ib290Lg0KICAgIFRoZXJlIGlzIG5vIGlv
-bW11LW1hcCBlbnRyeSBuZWVkZWQgaW4gZGV2aWNlIHRyZWUgYnV0IHUtYm9vdCBuZWVkIHRvIGtu
-b3cgaW9tbXUgcGhhbmRsZS4NCiAgICBXaGlsZSBpb21tdXMgaXMgc3VwcG9zZWQgdG8gYmUgdXNl
-ZCBpbiBpb21tdS1ub2RlIGFuZCBub3QgaW4gcGNpIG5vZGUuDQoNCkxvb2tpbmcgZm9yIHN1Z2dl
-c3Rpb24NCg0KVGhhbmtzDQotQmhhcmF0DQoNCj4gDQo+IElmIHlvdSB3YW50IGFuIG9idmlvdXNs
-eS1pbnZhbGlkIHBsYWNlaG9sZGVyIGVxdWl2YWxlbnQgdG8gdGhlIHVzZSBvZiAibXNpLQ0KPiBw
-YXJlbnQiIHRoZW4gSSdkIHN1Z2dlc3QganVzdDoNCj4gDQo+IAlpb21tdXMgPSA8JnNtbXU+Ow0K
-PiANCj4gd2hpY2ggd291bGQgYmUgaWdub3JlZCBieSBMaW51eCBmb3IgUENJIGRldmljZXMsIHNv
-IHByb3ZpZGVkIHlvdSBkaWRuJ3QNCj4gZGlzYWJsZSBieXBhc3MgYXQgdGhlIFNNTVUgdGhpbmdz
-IG1pZ2h0IGluIHRoZW9yeSBzdGlsbCB3b3JrIGluIHRoZSAidS1ib290DQo+IGRvZXMgbm90aGlu
-ZyIgY2FzZS4gT3RoZXJ3aXNlLCB0aGUgaW1wbGllZCBpZGVudGl0eSBtYXAgaXMgcHJvYmFibHkg
-c2xpZ2h0bHkNCj4gcHJlZmVyYWJsZSB0byB0aGUgdW5pdC1sZW5ndGggbWFwLCBpLmUuOg0KPiAN
-Cj4gCWlvbW11LW1hcCA9IDwweDAgJnNtbXUgMHgwIDB4ZmZmZj47DQo+IA0KPiB3aGljaCBpcyBh
-dCBsZWFzdCBlcXVhbGx5IGJyb2tlbiBhcyBNU0lzIGluIHRoZSBzYW1lIHNpdHVhdGlvbi4NCj4g
-DQo+IFJvYmluLg0K
+On 09/05/2017 03:05 PM, Sakari Ailus wrote:
+> The current practice is that drivers iterate over their endpoints and
+> parse each endpoint separately. This is very similar in a number of
+> drivers, implement a generic function for the job. Driver specific matters
+> can be taken into account in the driver specific callback.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-async.c  |  19 +++++
+>  drivers/media/v4l2-core/v4l2-fwnode.c | 140 ++++++++++++++++++++++++++++++++++
+>  include/media/v4l2-async.h            |  24 +++++-
+>  include/media/v4l2-fwnode.h           |  53 +++++++++++++
+>  4 files changed, 234 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 3d81ff6a496f..7bd595c4094a 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -22,6 +22,7 @@
+>  
+>  #include <media/v4l2-async.h>
+>  #include <media/v4l2-device.h>
+> +#include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-subdev.h>
+>  
+>  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+> @@ -224,6 +225,24 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+>  }
+>  EXPORT_SYMBOL(v4l2_async_notifier_unregister);
+>  
+> +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier)
+> +{
+> +	unsigned int i;
+> +
+> +	if (!notifier->max_subdevs)
+> +		return;
+> +
+> +	for (i = 0; i < notifier->num_subdevs; i++)
+> +		kfree(notifier->subdevs[i]);
+> +
+> +	notifier->max_subdevs = 0;
+> +	notifier->num_subdevs = 0;
+> +
+> +	kvfree(notifier->subdevs);
+> +	notifier->subdevs = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_release);
+> +
+>  int v4l2_async_register_subdev(struct v4l2_subdev *sd)
+>  {
+>  	struct v4l2_async_notifier *notifier;
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> index 706f9e7b90f1..e6932d7d47b6 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -19,6 +19,7 @@
+>   */
+>  #include <linux/acpi.h>
+>  #include <linux/kernel.h>
+> +#include <linux/mm.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/property.h>
+> @@ -26,6 +27,7 @@
+>  #include <linux/string.h>
+>  #include <linux/types.h>
+>  
+> +#include <media/v4l2-async.h>
+>  #include <media/v4l2-fwnode.h>
+>  
+>  enum v4l2_fwnode_bus_type {
+> @@ -313,6 +315,144 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+>  
+> +static int v4l2_async_notifier_realloc(struct v4l2_async_notifier *notifier,
+> +				       unsigned int max_subdevs)
+> +{
+> +	struct v4l2_async_subdev **subdevs;
+> +
+> +	if (max_subdevs <= notifier->max_subdevs)
+> +		return 0;
+> +
+> +	subdevs = kvmalloc_array(
+> +		max_subdevs, sizeof(*notifier->subdevs),
+> +		GFP_KERNEL | __GFP_ZERO);
+> +	if (!subdevs)
+> +		return -ENOMEM;
+> +
+> +	if (notifier->subdevs) {
+> +		memcpy(subdevs, notifier->subdevs,
+> +		       sizeof(*subdevs) * notifier->num_subdevs);
+> +
+> +		kvfree(notifier->subdevs);
+> +	}
+> +
+> +	notifier->subdevs = subdevs;
+> +	notifier->max_subdevs = max_subdevs;
+> +
+> +	return 0;
+> +}
+> +
+> +static int v4l2_async_notifier_fwnode_parse_endpoint(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	struct fwnode_handle *endpoint, unsigned int asd_struct_size,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			    struct v4l2_fwnode_endpoint *vep,
+> +			    struct v4l2_async_subdev *asd))
+> +{
+> +	struct v4l2_async_subdev *asd;
+> +	struct v4l2_fwnode_endpoint *vep;
+> +	struct fwnode_endpoint ep;
+> +	int ret = 0;
+> +
+> +	asd = kzalloc(asd_struct_size, GFP_KERNEL);
+> +	if (!asd)
+> +		return -ENOMEM;
+> +
+> +	asd->match.fwnode.fwnode =
+> +		fwnode_graph_get_remote_port_parent(endpoint);
+> +	if (!asd->match.fwnode.fwnode) {
+> +		dev_warn(dev, "bad remote port parent\n");
+> +		ret = -EINVAL;
+> +		goto out_err;
+> +	}
+> +
+> +	/* Ignore endpoints the parsing of which failed. */
+> +	vep = v4l2_fwnode_endpoint_alloc_parse(endpoint);
+> +	if (IS_ERR(vep)) {
+> +		ret = PTR_ERR(vep);
+> +		dev_warn(dev, "unable to parse V4L2 fwnode endpoint (%d)\n",
+> +			 ret);
+> +		goto out_err;
+> +	}
+> +
+> +	ep = vep->base;
+> +
+> +	ret = parse_endpoint ? parse_endpoint(dev, vep, asd) : 0;
+> +	v4l2_fwnode_endpoint_free(vep);
+> +	if (ret == -ENOTCONN) {
+> +		dev_dbg(dev, "ignoring endpoint %u,%u\n", ep.port, ep.id);
+> +		kfree(asd);
+
+Shouldn't there be a call to fwnode_handle_put()?
+
+> +		return 0;
+> +	} else if (ret < 0) {
+> +		dev_warn(dev, "driver could not parse endpoint %u,%u (%d)\n",
+> +			 ep.port, ep.id, ret);
+> +		goto out_err;
+> +	}
+
+I think this would be better and it avoids the need for the ep local variable:
+
+	ret = parse_endpoint ? parse_endpoint(dev, vep, asd) : 0;
+	if (ret == -ENOTCONN)
+		dev_dbg(dev, "ignoring endpoint %u,%u\n", vep->base.port, vep->base.id);
+	else if (ret < 0)
+		dev_warn(dev, "driver could not parse endpoint %u,%u (%d)\n",
+			 vep->base.port, vep->base.id, ret);
+	v4l2_fwnode_endpoint_free(vep);
+	if (ret < 0)
+		goto out_err;
+
+And the 'return ret;' below would become:
+
+	return ret == -ENOTCONN ? 0 : ret;
+
+> +
+> +	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+> +	notifier->subdevs[notifier->num_subdevs] = asd;
+> +	notifier->num_subdevs++;
+> +
+> +	return 0;
+> +
+> +out_err:
+> +	fwnode_handle_put(asd->match.fwnode.fwnode);
+> +	kfree(asd);
+> +
+> +	return ret;
+> +}
+> +
+> +int v4l2_async_notifier_parse_fwnode_endpoints(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	size_t asd_struct_size,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			    struct v4l2_fwnode_endpoint *vep,
+> +			    struct v4l2_async_subdev *asd))
+> +{
+> +	struct fwnode_handle *fwnode = NULL;
+> +	unsigned int max_subdevs = notifier->max_subdevs;
+> +	int ret;
+> +
+> +	if (asd_struct_size < sizeof(struct v4l2_async_subdev))
+
+I think this can be a WARN_ON or a WARN_ON_ONCE. Up to you, though.
+
+> +		return -EINVAL;
+> +
+> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
+> +				     dev_fwnode(dev), fwnode)); )
+> +		if (fwnode_device_is_available(
+> +			    fwnode_graph_get_port_parent(fwnode)))
+> +			max_subdevs++;
+
+I think I would prefer this as a simple for (;;):
+
+	for (;;) {
+		fwnode = fwnode_graph_get_next_endpoint(dev_fwnode(dev), fwnode));
+		if (fwnode == NULL)
+			break;
+		...
+	}
+
+Or alternatively as a do...while:
+
+	do {
+		fwnode = fwnode_graph_get_next_endpoint(dev_fwnode(dev), fwnode));
+		if (fwnode && fwnode_device_is_available(
+			    fwnode_graph_get_port_parent(fwnode)))
+			max_subdevs++;
+	} while (fwnode);
+
+Both are IMHO a bit more readable. I leave it up to you, though.
+
+> +
+> +	/* No subdevs to add? Return here. */
+> +	if (max_subdevs == notifier->max_subdevs)
+> +		return 0;
+> +
+> +	ret = v4l2_async_notifier_realloc(notifier, max_subdevs);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
+> +				     dev_fwnode(dev), fwnode)); ) {
+
+Same comment as above.
+
+> +		if (!fwnode_device_is_available(
+> +			    fwnode_graph_get_port_parent(fwnode)))
+> +			continue;
+> +
+> +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		ret = v4l2_async_notifier_fwnode_parse_endpoint(
+> +			dev, notifier, fwnode, asd_struct_size, parse_endpoint);
+> +		if (ret < 0)
+> +			break;
+> +	}
+> +
+> +	fwnode_handle_put(fwnode);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
+> +
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+>  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+> index c69d8c8a66d0..96fa1afc00dd 100644
+> --- a/include/media/v4l2-async.h
+> +++ b/include/media/v4l2-async.h
+> @@ -18,7 +18,6 @@ struct device;
+>  struct device_node;
+>  struct v4l2_device;
+>  struct v4l2_subdev;
+> -struct v4l2_async_notifier;
+>  
+>  /* A random max subdevice number, used to allocate an array on stack */
+>  #define V4L2_MAX_SUBDEVS 128U
+> @@ -50,6 +49,10 @@ enum v4l2_async_match_type {
+>   * @match:	union of per-bus type matching data sets
+>   * @list:	used to link struct v4l2_async_subdev objects, waiting to be
+>   *		probed, to a notifier->waiting list
+> + *
+> + * When this struct is used as a member in a driver specific struct,
+> + * the driver specific struct shall contain the @struct
+> + * v4l2_async_subdev as its first member.
+>   */
+>  struct v4l2_async_subdev {
+>  	enum v4l2_async_match_type match_type;
+> @@ -78,7 +81,8 @@ struct v4l2_async_subdev {
+>  /**
+>   * struct v4l2_async_notifier - v4l2_device notifier data
+>   *
+> - * @num_subdevs: number of subdevices
+> + * @num_subdevs: number of subdevices used in the subdevs array
+> + * @max_subdevs: number of subdevices allocated in the subdevs array
+>   * @subdevs:	array of pointers to subdevice descriptors
+>   * @v4l2_dev:	pointer to struct v4l2_device
+>   * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
+> @@ -90,6 +94,7 @@ struct v4l2_async_subdev {
+>   */
+>  struct v4l2_async_notifier {
+>  	unsigned int num_subdevs;
+> +	unsigned int max_subdevs;
+>  	struct v4l2_async_subdev **subdevs;
+>  	struct v4l2_device *v4l2_dev;
+>  	struct list_head waiting;
+> @@ -121,6 +126,21 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+>  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier);
+>  
+>  /**
+> + * v4l2_async_notifier_release - release notifier resources
+> + * @notifier: the notifier the resources of which are to be released
+> + *
+> + * Release memory resources related to a notifier, including the async
+> + * sub-devices allocated for the purposes of the notifier. The user is
+> + * responsible for releasing the notifier's resources after calling
+> + * @v4l2_async_notifier_parse_fwnode_endpoints.
+> + *
+> + * There is no harm from calling v4l2_async_notifier_release in other
+> + * cases as long as its memory has been zeroed after it has been
+> + * allocated.
+> + */
+> +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier);
+> +
+> +/**
+>   * v4l2_async_register_subdev - registers a sub-device to the asynchronous
+>   * 	subdevice framework
+>   *
+> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> index 68eb22ba571b..6d125f26ec84 100644
+> --- a/include/media/v4l2-fwnode.h
+> +++ b/include/media/v4l2-fwnode.h
+> @@ -25,6 +25,8 @@
+>  #include <media/v4l2-mediabus.h>
+>  
+>  struct fwnode_handle;
+> +struct v4l2_async_notifier;
+> +struct v4l2_async_subdev;
+>  
+>  #define V4L2_FWNODE_CSI2_MAX_DATA_LANES	4
+>  
+> @@ -201,4 +203,55 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+>   */
+>  void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+>  
+> +/**
+> + * v4l2_async_notifier_parse_fwnode_endpoints - Parse V4L2 fwnode endpoints in a
+> + *						device node
+> + * @dev: the device the endpoints of which are to be parsed
+> + * @notifier: notifier for @dev
+> + * @asd_struct_size: size of the driver's async sub-device struct, including
+> + *		     sizeof(struct v4l2_async_subdev). The &struct
+> + *		     v4l2_async_subdev shall be the first member of
+> + *		     the driver's async sub-device struct, i.e. both
+> + *		     begin at the same memory address.
+> + * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
+> + *		    endpoint. Optional.
+> + *		    Return: %0 on success
+> + *			    %-ENOTCONN if the endpoint is to be skipped but this
+> + *				       should not be considered as an error
+> + *			    %-EINVAL if the endpoint configuration is invalid
+> + *
+> + * Parse the fwnode endpoints of the @dev device and populate the async sub-
+> + * devices array of the notifier. The @parse_endpoint callback function is
+> + * called for each endpoint with the corresponding async sub-device pointer to
+> + * let the caller initialize the driver-specific part of the async sub-device
+> + * structure.
+> + *
+> + * The notifier memory shall be zeroed before this function is called on the
+> + * notifier.
+> + *
+> + * This function may not be called on a registered notifier and may be called on
+> + * a notifier only once. When using this function, the user may not access the
+> + * notifier's subdevs array nor change notifier's num_subdevs field, these are
+> + * reserved for the framework's internal use only.
+
+The rvin_digital_graph_init() function accesses the subdevs array.
+
+I still don't like this sentence, and I still think it should be dropped. Either that
+or completely rewritten.
+
+> + *
+> + * The @struct v4l2_fwnode_endpoint passed to the callback function
+> + * @parse_endpoint is released once the function is finished. If there is a need
+> + * to retain that configuration, the user needs to allocate memory for it.
+> + *
+> + * Any notifier populated using this function must be released with a call to
+> + * v4l2_async_notifier_release() after it has been unregistered and the async
+> + * sub-devices are no longer in use.
+> + *
+> + * Return: %0 on success, including when no async sub-devices are found
+> + *	   %-ENOMEM if memory allocation failed
+> + *	   %-EINVAL if graph or endpoint parsing failed
+> + *	   Other error codes as returned by @parse_endpoint
+> + */
+> +int v4l2_async_notifier_parse_fwnode_endpoints(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	size_t asd_struct_size,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			      struct v4l2_fwnode_endpoint *vep,
+> +			      struct v4l2_async_subdev *asd));
+> +
+>  #endif /* _V4L2_FWNODE_H */
+> 
+
+Regards,
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
