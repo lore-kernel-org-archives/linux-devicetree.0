@@ -1,82 +1,128 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH] of: do not leak console options
-Date: Wed, 6 Sep 2017 14:40:33 +0200
-Message-ID: <20170906124033.GB3143@pathway.suse.cz>
-References: <20170825173647.1004-1-sergey.senozhatsky@gmail.com>
- <20170825223721.hilqpt5z4urevh6b@rob-hp-laptop>
- <20170827071910.GA581@tigerII.localdomain>
+From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH v5 00/17] Add support for Cirrus Logic CS47L35/L85/L90/L91 codecs
+Date: Wed, 6 Sep 2017 14:20:26 +0100
+Message-ID: <1504704043-8052-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170827071910.GA581@tigerII.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun 2017-08-27 16:19:10, Sergey Senozhatsky wrote:
-> Hello,
-> 
-> (Cc Andrew, Grant)
-> 
-> On (08/25/17 17:37), Rob Herring wrote:
-> > On Sat, Aug 26, 2017 at 02:36:47AM +0900, Sergey Senozhatsky wrote:
-> > > If add_preferred_console() returns error then we must free a
-> > > copy of `of_stdout_options' that we create right before the
-> > > console registration.
-> > > 
-> > > Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> > > ---
-> > >  drivers/of/base.c | 11 +++++++++--
-> > >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > > index 260d33c0f26c..9fcf7011d206 100644
-> > > --- a/drivers/of/base.c
-> > > +++ b/drivers/of/base.c
-> > > @@ -1779,10 +1779,17 @@ EXPORT_SYMBOL_GPL(of_alias_get_highest_id);
-> > >   */
-> > >  bool of_console_check(struct device_node *dn, char *name, int index)
-> > >  {
-> > > +	bool ret;
-> > > +	char *options;
-> > > +
-> > >  	if (!dn || dn != of_stdout || console_set_on_cmdline)
-> > >  		return false;
-> > > -	return !add_preferred_console(name, index,
-> > > -				      kstrdup(of_stdout_options, GFP_KERNEL));
-> > > +
-> > > +	options = kstrdup(of_stdout_options, GFP_KERNEL);
-> > 
-> > The real question is why are we doing the kstrdup in the first place. 
-> 
-> I wouldn't know :) let's find that out
-> 
-> the patch used to pass `of_stdout_options' in v1 and v2
-> https://patches.linaro.org/patch/41559/
-> 
-> starting from v3 options are kstrdup-ed
-> https://patchwork.kernel.org/patch/5398761/
+The Cirrus Logic CS47L35, CS47L85, CS47L90/91 codecs are complex audio SoC
+devices. In addition to the core audio capability they have onboard GPIO,
+regulators, DSPs and interrupt controller and a large register map space
+accessed over SPI or I2C. This family of codecs is based around common IP
+blocks and they are managed by a set of common drivers referred to as "Madera".
 
-I was curious. The const char * was suggested by Grant Likely,
-see https://lkml.kernel.org/r/CACxGe6tQ5rWzCUcS+_fFY+rjEyua2khApAoCVKpTuJAghU=N_w@mail.gmail.com
-I guess that the reason was to make the of_find_node_by_path()
-API clean.
+Summary of changes since V4:
+- Fixed review comments on MFD code
+- Fixed dependency error in core codec driver
+- minor bugfix to core codec driver
 
-> > AFAICT, the only reason is options within the console/printk code is a 
-> > char * and not a const char *. I can't imagine that options need 
-> > modifications?
-> 
-> as far as I can tell, ->match callback has side efects, sometimes.
+Richard Fitzgerald (17):
+  mfd: madera: Add register definitions for Cirrus Logic Madera codecs
+  mfd: madera: Add DT bindings for Cirrus Logic Madera codecs
+  mfd: madera: Add common support for Cirrus Logic Madera codecs
+  mfd: madera: Register map tables for Cirrus Logic CS47L35
+  mfd: madera: Register map tables for Cirrus Logic CS47L85
+  mfd: madera: Register map tables for Cirrus Logic CS47L90/91
+  regulator: arizona-micsupp: Add support for Cirrus Logic Madera codecs
+  regulator: arizona-ldo1: Add support for Cirrus Logic Madera codecs
+  irqchip: Add driver for Cirrus Logic Madera codecs
+  pinctrl: madera: Add DT bindings for Cirrus Logic Madera codecs
+  pinctrl: madera: Add driver for Cirrus Logic Madera codecs
+  gpio: madera: Support Cirrus Logic Madera class codecs
+  ASoC: madera: Add DT bindings for Cirrus Logic Madera codecs
+  ASoC: madera: Add common support for Cirrus Logic Madera codecs
+  ASoC: cs47l35: Add codec driver for Cirrus Logic CS47L35
+  ASoC: cs47l85: Add codec driver for Cirrus Logic CS47L85
+  ASoC: cs47l90: Add codec driver for Cirrus Logic CS47L90
 
-I hope that the match() callbacks does not have this kind of side
-effects. I think that they initialize some stuff, assign some values.
-But I hope that they do not modify given strings, like console
-name or options. At leats I am unable to find any place.
-But I am not 100% sure.
+ Documentation/devicetree/bindings/mfd/madera.txt   |  102 +
+ .../bindings/pinctrl/cirrus,madera-pinctrl.txt     |   99 +
+ .../bindings/regulator/arizona-regulator.txt       |    3 +-
+ Documentation/devicetree/bindings/sound/madera.txt |   67 +
+ MAINTAINERS                                        |   23 +
+ drivers/gpio/Kconfig                               |    6 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-madera.c                         |  196 +
+ drivers/irqchip/Kconfig                            |    3 +
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-madera.c                       |  301 ++
+ drivers/mfd/Kconfig                                |   48 +
+ drivers/mfd/Makefile                               |   13 +
+ drivers/mfd/cs47l35-tables.c                       | 1610 +++++++
+ drivers/mfd/cs47l85-tables.c                       | 3010 +++++++++++++
+ drivers/mfd/cs47l90-tables.c                       | 2675 ++++++++++++
+ drivers/mfd/madera-core.c                          |  599 +++
+ drivers/mfd/madera-i2c.c                           |  139 +
+ drivers/mfd/madera-spi.c                           |  138 +
+ drivers/mfd/madera.h                               |   44 +
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/cirrus/Kconfig                     |   15 +
+ drivers/pinctrl/cirrus/Makefile                    |   11 +
+ drivers/pinctrl/cirrus/pinctrl-cs47l35.c           |   46 +
+ drivers/pinctrl/cirrus/pinctrl-cs47l85.c           |   60 +
+ drivers/pinctrl/cirrus/pinctrl-cs47l90.c           |   58 +
+ drivers/pinctrl/cirrus/pinctrl-madera.c            | 1074 +++++
+ drivers/pinctrl/cirrus/pinctrl-madera.h            |   40 +
+ drivers/regulator/Kconfig                          |   15 +-
+ drivers/regulator/arizona-ldo1.c                   |   82 +-
+ drivers/regulator/arizona-micsupp.c                |   71 +-
+ include/dt-bindings/sound/madera.h                 |   27 +
+ include/linux/irqchip/irq-madera-pdata.h           |   23 +
+ include/linux/irqchip/irq-madera.h                 |   98 +
+ include/linux/mfd/madera/core.h                    |  196 +
+ include/linux/mfd/madera/pdata.h                   |   61 +
+ include/linux/mfd/madera/registers.h               | 3987 ++++++++++++++++++
+ include/sound/madera-pdata.h                       |   61 +
+ sound/soc/codecs/Kconfig                           |   23 +
+ sound/soc/codecs/Makefile                          |    8 +
+ sound/soc/codecs/cs47l35.c                         | 1748 ++++++++
+ sound/soc/codecs/cs47l85.c                         | 2722 ++++++++++++
+ sound/soc/codecs/cs47l90.c                         | 2661 ++++++++++++
+ sound/soc/codecs/madera.c                          | 4439 ++++++++++++++++++++
+ sound/soc/codecs/madera.h                          |  470 +++
+ 46 files changed, 27066 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/madera.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/madera.txt
+ create mode 100644 drivers/gpio/gpio-madera.c
+ create mode 100644 drivers/irqchip/irq-madera.c
+ create mode 100644 drivers/mfd/cs47l35-tables.c
+ create mode 100644 drivers/mfd/cs47l85-tables.c
+ create mode 100644 drivers/mfd/cs47l90-tables.c
+ create mode 100644 drivers/mfd/madera-core.c
+ create mode 100644 drivers/mfd/madera-i2c.c
+ create mode 100644 drivers/mfd/madera-spi.c
+ create mode 100644 drivers/mfd/madera.h
+ create mode 100644 drivers/pinctrl/cirrus/Kconfig
+ create mode 100644 drivers/pinctrl/cirrus/Makefile
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l35.c
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l85.c
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l90.c
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-madera.c
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-madera.h
+ create mode 100644 include/dt-bindings/sound/madera.h
+ create mode 100644 include/linux/irqchip/irq-madera-pdata.h
+ create mode 100644 include/linux/irqchip/irq-madera.h
+ create mode 100644 include/linux/mfd/madera/core.h
+ create mode 100644 include/linux/mfd/madera/pdata.h
+ create mode 100644 include/linux/mfd/madera/registers.h
+ create mode 100644 include/sound/madera-pdata.h
+ create mode 100644 sound/soc/codecs/cs47l35.c
+ create mode 100644 sound/soc/codecs/cs47l85.c
+ create mode 100644 sound/soc/codecs/cs47l90.c
+ create mode 100644 sound/soc/codecs/madera.c
+ create mode 100644 sound/soc/codecs/madera.h
 
-Sigh, the console code really needs clean up.
+-- 
+1.9.1
 
-Best Regards,
-Petr
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
