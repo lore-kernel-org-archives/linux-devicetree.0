@@ -1,7 +1,7 @@
 From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: [PATCH 02/18] dt: arm: shmobile: add H3ULCB Kingfisher board DT bindings
-Date: Thu,  7 Sep 2017 01:35:13 +0300
-Message-ID: <1504737313-22915-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Subject: [PATCH 08/18] arm64: dts: ulcb-kf: enable CAN0/1
+Date: Thu,  7 Sep 2017 01:36:08 +0300
+Message-ID: <1504737368-23152-1-git-send-email-vladimir.barinov@cogentembedded.com>
 References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
@@ -10,25 +10,56 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob 
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Add H3ULCB Kingfisher Device tree bindings Documentation, listing it as a
-supported board.
+This supports CAN0/1 on ULCB Kingfisher board
 
 Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
- Documentation/devicetree/bindings/arm/shmobile.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 89bd3a6..b313fe2 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -65,6 +65,7 @@ Boards:
-     compatible = "renesas,gose", "renesas,r8a7793"
-   - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKBX0010SA00 (H3 ES1.1))
-     H3ULCB (R-Car Starter Kit Premier, RTP0RC77951SKBX010SA00 (H3 ES2.0))
-+    H3ULCB Kingfisher (SBEV-RCAR-KF-M03)
-     compatible = "renesas,h3ulcb", "renesas,r8a7795";
-   - Henninger
-     compatible = "renesas,henninger", "renesas,r8a7791"
+diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+index 2449915..ca8de1a 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+@@ -16,6 +16,22 @@
+ 	};
+ };
+ 
++&can0 {
++	pinctrl-0 = <&can0_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	renesas,can-clock-select = <0x0>;
++};
++
++&can1 {
++	pinctrl-0 = <&can1_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	renesas,can-clock-select = <0x0>;
++};
++
+ &hscif0 {
+ 	pinctrl-0 = <&hscif0_pins>;
+ 	pinctrl-names = "default";
+@@ -25,6 +41,16 @@
+ };
+ 
+ &pfc {
++	can0_pins: can0 {
++		groups = "can0_data_a";
++		function = "can0";
++	};
++
++	can1_pins: can1 {
++		groups = "can1_data";
++		function = "can1";
++	};
++
+ 	hscif0_pins: hscif0 {
+ 		groups = "hscif0_data", "hscif0_ctrl";
+ 		function = "hscif0";
 -- 
 1.9.1
