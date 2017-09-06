@@ -1,54 +1,126 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d2 Xplained: Describe the SD card
- power supply
-Date: Wed, 6 Sep 2017 08:41:16 +0200
-Message-ID: <20170906064116.kr4rbq6o5jly7oo5@rfolt0960.corp.atmel.com>
-References: <20170905101805.15127-1-romain.izard.pro@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v8 02/21] v4l: async: Remove re-probing support
+Date: Wed, 6 Sep 2017 09:00:30 +0200
+Message-ID: <255d6d56-e6b8-0919-4e22-a38255d15e3d@xs4all.nl>
+References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
+ <20170905130553.1332-3-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170905101805.15127-1-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170905130553.1332-3-sakari.ailus@linux.intel.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 05, 2017 at 12:18:05PM +0200, Romain Izard wrote:
-> As the SAMA5D2 SDHCI controller works with an external power supply,
-> describe the power supply for the SD card slot. This makes it possible
-> to use mmc power sequences, in the case of external SDIO modules.
+On 09/05/2017 03:05 PM, Sakari Ailus wrote:
+> Remove V4L2 async re-probing support. The re-probing support has been
+> there to support cases where the sub-devices require resources provided by
+> the main driver's hardware to function, such as clocks.
 > 
-> Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reprobing has allowed unbinding and again binding the main driver without
+> explicilty unbinding the sub-device drivers. This is certainly not a
+> common need, and the responsibility will be the user's going forward.
+> 
+> An alternative could have been to introduce notifier specific locks.
+> Considering the complexity of the re-probing and that it isn't really a
+> solution to a problem but a workaround, remove re-probing instead.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-Acked-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+
+Regards,
+
+	Hans
 
 > ---
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/media/v4l2-core/v4l2-async.c | 54 ------------------------------------
+>  1 file changed, 54 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> index 2e2c3d1a1fa2..e0b0292ef132 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> @@ -103,6 +103,8 @@
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pinctrl_sdmmc1_default>;
->  			status = "okay"; /* conflict with qspi0 */
-> +			vqmmc-supply = <&vdd_3v3_reg>;
-> +			vmmc-supply = <&vdd_3v3_reg>;
->  		};
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 851f128eba22..f50a82767863 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -203,78 +203,24 @@ EXPORT_SYMBOL(v4l2_async_notifier_register);
+>  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+>  {
+>  	struct v4l2_subdev *sd, *tmp;
+> -	unsigned int notif_n_subdev = notifier->num_subdevs;
+> -	unsigned int n_subdev = min(notif_n_subdev, V4L2_MAX_SUBDEVS);
+> -	struct device **dev;
+> -	int i = 0;
 >  
->  		apb {
-> -- 
-> 2.11.0
+>  	if (!notifier->v4l2_dev)
+>  		return;
+>  
+> -	dev = kvmalloc_array(n_subdev, sizeof(*dev), GFP_KERNEL);
+> -	if (!dev) {
+> -		dev_err(notifier->v4l2_dev->dev,
+> -			"Failed to allocate device cache!\n");
+> -	}
+> -
+>  	mutex_lock(&list_lock);
+>  
+>  	list_del(&notifier->list);
+>  
+>  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
+> -		struct device *d;
+> -
+> -		d = get_device(sd->dev);
+> -
+>  		v4l2_async_cleanup(sd);
+>  
+> -		/* If we handled USB devices, we'd have to lock the parent too */
+> -		device_release_driver(d);
+> -
+>  		if (notifier->unbind)
+>  			notifier->unbind(notifier, sd, sd->asd);
+> -
+> -		/*
+> -		 * Store device at the device cache, in order to call
+> -		 * put_device() on the final step
+> -		 */
+> -		if (dev)
+> -			dev[i++] = d;
+> -		else
+> -			put_device(d);
+>  	}
+>  
+>  	mutex_unlock(&list_lock);
+>  
+> -	/*
+> -	 * Call device_attach() to reprobe devices
+> -	 *
+> -	 * NOTE: If dev allocation fails, i is 0, and the whole loop won't be
+> -	 * executed.
+> -	 */
+> -	while (i--) {
+> -		struct device *d = dev[i];
+> -
+> -		if (d && device_attach(d) < 0) {
+> -			const char *name = "(none)";
+> -			int lock = device_trylock(d);
+> -
+> -			if (lock && d->driver)
+> -				name = d->driver->name;
+> -			dev_err(d, "Failed to re-probe to %s\n", name);
+> -			if (lock)
+> -				device_unlock(d);
+> -		}
+> -		put_device(d);
+> -	}
+> -	kvfree(dev);
+> -
+>  	notifier->v4l2_dev = NULL;
+> -
+> -	/*
+> -	 * Don't care about the waiting list, it is initialised and populated
+> -	 * upon notifier registration.
+> -	 */
+>  }
+>  EXPORT_SYMBOL(v4l2_async_notifier_unregister);
+>  
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
