@@ -1,64 +1,96 @@
-From: surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org
-Subject: [PATCH v2] arm: dts: artpec6: Remove unnecessary interrupt-parent property from sub-nodes
-Date: Wed,  6 Sep 2017 10:38:27 +0530
-Message-ID: <1504674507-3364-1-git-send-email-surenderp@techveda.org>
-References: <5310134e-c371-d43f-175f-a3a9cdc5b657@axis.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] arm: dts: add Nuvoton NPCM750 device tree
+Date: Wed, 6 Sep 2017 14:53:26 +0930
+Message-ID: <CACPK8Xc0jrnx96=BoGMwQgoT2brgc0UTNU5HMHXDeFfeToVgxA@mail.gmail.com>
+References: <20170906003016.2159-1-brendanhiggins@google.com> <20170906003016.2159-3-brendanhiggins@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5310134e-c371-d43f-175f-a3a9cdc5b657-VrBV9hrLPhE@public.gmane.org>
+In-Reply-To: <20170906003016.2159-3-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jesper.nilsson-VrBV9hrLPhE@public.gmane.org, lars.persson-VrBV9hrLPhE@public.gmane.org, niklas.cassel-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+On Wed, Sep 6, 2017 at 10:00 AM, Brendan Higgins
+<brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> +++ b/Documentation/devicetree/bindings/arm/npcm/npcm.txt
+> @@ -0,0 +1,6 @@
+> +NPCM Platforms Device Tree Bindings
+> +-----------------------------------
+> +NPCM750 SoC
+> +Required root node properties:
+> +       - compatible = "nuvoton,npcm750";
+> +
 
-"interrupt-parent" property is declared in root node, so it is global
-to all nodes. This property is re-declared in few sub-nodes. To avoid
-duplication this property is removed from following sub-nodes: pmu,
-amba@0, amba@0/ethernet.
+This is minimal. I assume there will be more content added as more
+support is added?
 
-Signed-off-by: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
-Acked-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
----
-Changes for v2:
+Does it need it's own directory?
 
-- Done few changes as suggested by Niklas Cassel.
-- Patch is rebased and built(ARCH=arm) on latest next-20170905.
----
- arch/arm/boot/dts/artpec6.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
-index 767cbe8..2ed1177 100644
---- a/arch/arm/boot/dts/artpec6.dtsi
-+++ b/arch/arm/boot/dts/artpec6.dtsi
-@@ -151,7 +151,6 @@
- 		interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
- 			<GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-affinity = <&cpu0>, <&cpu1>;
--		interrupt-parent = <&intc>;
- 	};
- 
- 	pcie: pcie@f8050000 {
-@@ -185,7 +184,6 @@
- 		compatible = "simple-bus";
- 		#address-cells = <0x1>;
- 		#size-cells = <0x1>;
--		interrupt-parent = <&intc>;
- 		ranges;
- 		dma-ranges = <0x80000000 0x00000000 0x40000000>;
- 		dma-coherent;
-@@ -195,7 +193,6 @@
- 			clocks = <&eth_phy_ref_clk>,
- 				<&clkctrl ARTPEC6_CLK_ETH_ACLK>;
- 			compatible = "snps,dwc-qos-ethernet-4.10";
--			interrupt-parent = <&intc>;
- 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
- 			reg = <0xf8010000 0x4000>;
- 
--- 
-1.9.1
+> diff --git a/arch/arm/boot/dts/nuvoton-npcm750-evb.dts b/arch/arm/boot/dts/nuvoton-npcm750-evb.dts
+> new file mode 100644
+> index 000000000000..54df32cff21b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/nuvoton-npcm750-evb.dts
 
+> +
+> +/dts-v1/;
+> +#include "nuvoton-npcm750.dtsi"
+> +
+> +/ {
+> +       model = "Nuvoton npcm750 Development Board (Device Tree)";
+> +       compatible = "nuvoton,npcm750";
+> +
+> +       chosen {
+> +               stdout-path = &serial3;
+> +               bootargs = "earlyprintk=serial,serial3,115200";
+> +       };
+> +
+> +       memory {
+> +               reg = <0 0x40000000>;
+> +       };
+> +
+> +       cpus {
+> +               enable-method = "nuvoton,npcm7xx-smp";
+> +       };
+> +
+> +       clk: clock-controller@f0801000 {
+> +               status = "okay";
+> +       };
+> +
+> +       apb {
+> +               watchdog1: watchdog@f0009000 {
+> +                       status = "okay";
+> +               };
+
+You've already got the label for the node, is there are reason you
+don't use a phandle to set the status?
+
+&watchdog1 {
+   status = "okay";
+};
+
+Same with the serial nodes below.
+
+> +
+> +               serial0: serial0@f0001000 {
+> +                       status = "okay";
+> +               };
+> +
+> +               serial1: serial1@f0002000 {
+> +                       status = "okay";
+> +               };
+> +
+> +               serial2: serial2@f0003000 {
+> +                       status = "okay";
+> +               };
+> +
+> +               serial3: serial3@f0004000 {
+> +                       status = "okay";
+> +               };
+> +       };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
