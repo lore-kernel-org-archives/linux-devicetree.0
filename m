@@ -1,58 +1,46 @@
-From: Rocco Folino <rocco.folino-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] MIPS: ath79: support devicetree selection
-Date: Wed, 6 Sep 2017 14:01:44 +0200
-Message-ID: <20170906120144.GA20147@void>
-References: <b78cb3ef8df8531efdb7b011743ad3f38978015d.1503070362.git.rocco.folino@gmail.com>
- <20170906111435.GA1856@linux-mips.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170906111435.GA1856-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+From: Loic Poulain <loic.poulain@linaro.org>
+Subject: [PATCH v6 1/3] dt-bindings: net: document Bluetooth bindings in one place
+Date: Wed,  6 Sep 2017 14:11:36 +0200
+Message-ID: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: marcel@holtmann.org, robh+dt@kernel.org, johan.hedberg@gmail.com
+Cc: linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org, Loic Poulain <loic.poulain@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 06, 2017 at 01:14:35PM +0200, Ralf Baechle wrote:
-> On Fri, Aug 18, 2017 at 05:32:42PM +0200, Rocco Folino wrote:
-> 
-> > Allow to choose devicetrees from Kconfig.
-> > 
-> > Signed-off-by: Rocco Folino <rocco.folino-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/mips/ath79/Kconfig         | 44 +++++++++++++++++++++++++++++++++++++++++
-> >  arch/mips/boot/dts/qca/Makefile | 10 +++++-----
-> >  2 files changed, 49 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/mips/ath79/Kconfig b/arch/mips/ath79/Kconfig
-> > index dfc60209dc63..b43d116187af 100644
-> > --- a/arch/mips/ath79/Kconfig
-> > +++ b/arch/mips/ath79/Kconfig
-> > @@ -1,5 +1,49 @@
-> >  if ATH79
-> >  
-> > +menu "Atheros AR71XX/AR724X/AR913X devicetree selection"
-> > +
-> > +config DTB_ATH_DPT_MODULE
-> > +	bool "DPTechnics DPT-Module"
-> > +	select SOC_933X
-> 
-> There is no symbol SOC_933X.  Did you mean SOC_AR933X?
+In the same way as Ethernet, gather the Bluetooth related bindings in
+one file. Introduce the bluetooth-bd-address property which can be used
+to store the assigned BD address.
 
-Yes, right
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+---
+ v2: Set device as unconfigured if default address detected
+     Add warning if BD addr retrieved from DT
+ v3: if no addr retrieved from DT, unconditionally set
+     the invalid BD addr flag.
+     swap and set bdaddr in the platform probe
+ v4: Add dt-bindings documentation
+     split patch in two parts (setup, dt prop)
+     use local-bd-address name instead of local-mac-address
+ v5: remove 2/3 merged in bluetooth-next tree
+     Add bluetooth.txt for common BT bindings
+     expect local-bd-address in little-endian format
+ v6: use of_property_read_u8_array instead of of_get_property
 
-> 
-> Anyway, your patch does more than the changelog ("Allow to choose
-> devicetrees from Kconfig") says, so please either fix the changelog
-> or split that into multiple patches with proper changelogs.
+ Documentation/devicetree/bindings/net/bluetooth.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/bluetooth.txt
 
-Ok, I'll fix everything in the v2
-
-thanks for the comments.
-
-Rocco
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/bluetooth.txt b/Documentation/devicetree/bindings/net/bluetooth.txt
+new file mode 100644
+index 0000000..94797df
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/bluetooth.txt
+@@ -0,0 +1,5 @@
++The following properties are common to the Bluetooth controllers:
++
++- local-bd-address: array of 6 bytes, specifies the BD address that was
++  uniquely assigned to the Bluetooth device, formatted with least significant
++  byte first (little-endian).
+-- 
+1.9.1
