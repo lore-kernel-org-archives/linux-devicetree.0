@@ -1,49 +1,95 @@
-From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH] MIPS: ath79: support devicetree selection
-Date: Wed, 6 Sep 2017 13:14:35 +0200
-Message-ID: <20170906111435.GA1856@linux-mips.org>
-References: <b78cb3ef8df8531efdb7b011743ad3f38978015d.1503070362.git.rocco.folino@gmail.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH 1/4] arm: topology: remove cpu_efficiency
+Date: Wed, 6 Sep 2017 12:43:31 +0100
+Message-ID: <303d3f7b-5d64-e13a-c4f9-dd575958cafa@arm.com>
+References: <20170830144120.9312-1-dietmar.eggemann@arm.com>
+ <20170830144120.9312-2-dietmar.eggemann@arm.com>
+ <CAKfTPtBXkAyAc1aqqqEn6Yt14_Y7LFp3oySY-=G3ZTuG-DR_nA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b78cb3ef8df8531efdb7b011743ad3f38978015d.1503070362.git.rocco.folino-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rocco Folino <rocco.folino-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKfTPtBXkAyAc1aqqqEn6Yt14_Y7LFp3oySY-=G3ZTuG-DR_nA@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Juri Lelli <juri.lelli@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 05:32:42PM +0200, Rocco Folino wrote:
+Hi Vincent,
 
-> Allow to choose devicetrees from Kconfig.
+On 04/09/17 08:49, Vincent Guittot wrote:
+> Hi Dietmar,
 > 
-> Signed-off-by: Rocco Folino <rocco.folino-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/mips/ath79/Kconfig         | 44 +++++++++++++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/qca/Makefile | 10 +++++-----
->  2 files changed, 49 insertions(+), 5 deletions(-)
+> Removing cpu effificiency table looks good to me. Nevertheless, i have
+> some comments below for this patch.
+
+Thanks for the review!
+
+> On 30 August 2017 at 16:41, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>> Remove the 'cpu_efficiency/clock-frequency dt property' based solution
+>> to set cpu capacity which was only working for Cortex-A15/A7 arm
+>> big.LITTLE systems.
+>>
+>> I.e. the 'capacity-dmips-mhz' based solution is now the only one. It is
+>> shared between arm and arm64 and works for every big.LITTLE system no
+>> matter which core types it consists of.
+>>
+>> Cc: Russell King <linux@arm.linux.org.uk>
+>> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+>> Cc: Juri Lelli <juri.lelli@arm.com>
+>> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+>> ---
+>>  arch/arm/kernel/topology.c | 113 ++-------------------------------------------
+>>  1 file changed, 3 insertions(+), 110 deletions(-)
+
+[...]
+
+>> @@ -115,73 +70,13 @@ static void __init parse_dt_topology(void)
+>>                         of_node_put(cn);
+>>                         continue;
 > 
-> diff --git a/arch/mips/ath79/Kconfig b/arch/mips/ath79/Kconfig
-> index dfc60209dc63..b43d116187af 100644
-> --- a/arch/mips/ath79/Kconfig
-> +++ b/arch/mips/ath79/Kconfig
-> @@ -1,5 +1,49 @@
->  if ATH79
->  
-> +menu "Atheros AR71XX/AR724X/AR913X devicetree selection"
-> +
-> +config DTB_ATH_DPT_MODULE
-> +	bool "DPTechnics DPT-Module"
-> +	select SOC_933X
+> AFAICT, this continue is now useless as it was there to skipe the cpu
+> table efficiency method
 
-There is no symbol SOC_933X.  Did you mean SOC_AR933X?
+You're right ... will remove it.
 
-Anyway, your patch does more than the changelog ("Allow to choose
-devicetrees from Kconfig") says, so please either fix the changelog
-or split that into multiple patches with proper changelogs.
+[...]
 
-  Ralf
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> -       if (cap_from_dt)
+>> -               topology_normalize_cpu_scale();
+> 
+> Why have you moved the call to topology_normalize_cpu_scale() from
+> parse_dt_topology() to update_cpu_capacity() ?
+
+Didn't move it ? It's still called from parse_dt_topology().
+
+> You should keep it in parse_dt_topology() as itis part of the dt
+> parsing sequence
+
+Yes, this should be the case.
+
+[...]
+
+>> -/*
+>> - * Look for a customed capacity of a CPU in the cpu_capacity table during the
+>> - * boot. The update of all CPUs is in O(n^2) for heteregeneous system but the
+>> - * function returns directly for SMP system.
+>> - */
+>> -static void update_cpu_capacity(unsigned int cpu)
+>> -{
+>> -       if (!cpu_capacity(cpu) || cap_from_dt)
+>> -               return;
+>> -
+>> -       topology_set_cpu_scale(cpu, cpu_capacity(cpu) / middle_capacity);
+>> -
+>> -       pr_info("CPU%u: update cpu_capacity %lu\n",
+>> -               cpu, topology_get_cpu_scale(NULL, cpu));
+>> +       topology_normalize_cpu_scale();
+>>  }
+> 
+> You can probably just removed update_cpu_capacity()
+
+I did remove update_cpu_capacity(). Maybe the patch layout is confusing?
+
+[...]
