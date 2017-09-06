@@ -1,45 +1,54 @@
-From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 16/18] arm64: dts: ulcb-kf: enable PCA9548 on I2C2
-Date: Thu,  7 Sep 2017 01:37:10 +0300
-Message-ID: <1504737430-23465-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: [PATCH 15/18] arm64: dts: ulcb-kf: enable PCA9539 on I2C4
+Date: Thu,  7 Sep 2017 01:37:03 +0300
+Message-ID: <1504737423-23426-1-git-send-email-vladimir.barinov@cogentembedded.com>
 References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504737267-22829-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-This supports PCA9548 I2C switch on I2C2 bus on ULCB Kingfisher board
+This supports PCA9539 gpio expanders on I2C4 bus on ULCB Kingfisher board
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
- arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-index 1cf8466..3bbc490 100644
+index 40885e7..1cf8466 100644
 --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
 +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-@@ -68,6 +68,14 @@
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+@@ -70,6 +70,28 @@
  	};
-+
-+	i2cswitch2: pca9548@71 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x71>;
-+		reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-+	};
  };
  
- &i2c4 {
++&i2c4 {
++	gpio_exp_76: pca9539@76 {
++		compatible = "nxp,pca9539";
++		reg = <0x76>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		interrupt-parent = <&gpio7>;
++		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
++	};
++
++	gpio_exp_77: pca9539@77 {
++		compatible = "nxp,pca9539";
++		reg = <0x77>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		interrupt-parent = <&gpio5>;
++		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
++	};
++};
++
+ &ohci0 {
+ 	status = "okay";
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
