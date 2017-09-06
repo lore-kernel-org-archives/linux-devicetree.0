@@ -1,151 +1,71 @@
-From: Li Xu <li.xu@cirrus.com>
-Subject: [PATCH] ASoC: cs43130: Add break keyword to switch case
-Date: Tue, 5 Sep 2017 20:33:04 -0500
-Message-ID: <cdb2768e-7853-4ada-b1e3-dd48d09d0d15@EX4.ad.cirrus.com>
+From: Yisheng Xie <xieyisheng1@huawei.com>
+Subject: Re: [RFC PATCH 6/6] iommu/arm-smmu-v3: Avoid ILLEGAL setting of
+ STE.S1STALLD and CD.S
+Date: Wed, 6 Sep 2017 10:23:00 +0800
+Message-ID: <de4599d6-277f-00d6-40e7-7ca43a2bf2b8@huawei.com>
+References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
+ <1504167642-14922-7-git-send-email-xieyisheng1@huawei.com>
+ <738977bb-4cd7-7d86-0ea0-0c88b6af721c@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, brian.austin@cirrus.com, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, Paul.Handrigan@cirrus.com, Li Xu <li.xu@cirrus.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <738977bb-4cd7-7d86-0ea0-0c88b6af721c@arm.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, robert.moore@intel.com, lv.zheng@intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@acpica.org, liubo95@huawei.com, chenjiankang1@huawei.com, xieyisheng@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Add break keyword to all switch case unless the case is returning.
-Also remove gpio check for consistency.
+Hi Jean-Philippe,
 
-Signed-off-by: Li Xu <li.xu@cirrus.com>
----
-This patch addresses stylistic issues in driver.
+On 2017/9/5 20:54, Jean-Philippe Brucker wrote:
+> On 31/08/17 09:20, Yisheng Xie wrote:
+>> It is ILLEGAL to set STE.S1STALLD if STALL_MODEL is not 0b00, which
+>> means we should not disable stall mode if stall/terminate mode is not
+>> configuable.
+>>
+>> Meanwhile, it is also ILLEGAL when STALL_MODEL==0b10 && CD.S==0 which
+>> means if stall mode is force we should always set CD.S.
+>>
+>> This patch add ARM_SMMU_FEAT_TERMINATE feature bit for smmu, and use
+>> TERMINATE feature checking to ensue above ILLEGAL cases from happening.
+>>
+>> Signed-off-by: Yisheng Xie <xieyisheng1@huawei.com>
+>> ---
+>>  drivers/iommu/arm-smmu-v3.c | 22 ++++++++++++++++------
+>>  1 file changed, 16 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>> index dbda2eb..0745522 100644
+>> --- a/drivers/iommu/arm-smmu-v3.c
+>> +++ b/drivers/iommu/arm-smmu-v3.c
+>> @@ -55,6 +55,7 @@
+>>  #define IDR0_STALL_MODEL_SHIFT		24
+>>  #define IDR0_STALL_MODEL_MASK		0x3
+>>  #define IDR0_STALL_MODEL_STALL		(0 << IDR0_STALL_MODEL_SHIFT)
+>> +#define IDR0_STALL_MODEL_NS		(1 << IDR0_STALL_MODEL_SHIFT)
+>>  #define IDR0_STALL_MODEL_FORCE		(2 << IDR0_STALL_MODEL_SHIFT)
+>>  #define IDR0_TTENDIAN_SHIFT		21
+>>  #define IDR0_TTENDIAN_MASK		0x3
+>> @@ -766,6 +767,7 @@ struct arm_smmu_device {
+>>  #define ARM_SMMU_FEAT_SVM		(1 << 15)
+>>  #define ARM_SMMU_FEAT_HA		(1 << 16)
+>>  #define ARM_SMMU_FEAT_HD		(1 << 17)
+>> +#define ARM_SMMU_FEAT_TERMINATE		(1 << 18)
+> 
+> I'd rather introduce something like "ARM_SMMU_FEAT_STALL_FORCE" instead.
+> Terminate model has another meaning, and is defined by a different bit in
+> IDR0.
 
- sound/soc/codecs/cs43130.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Ok, sound more reasonable.
 
-diff --git a/sound/soc/codecs/cs43130.c b/sound/soc/codecs/cs43130.c
-index 643e37f..5ba0edc 100644
---- a/sound/soc/codecs/cs43130.c
-+++ b/sound/soc/codecs/cs43130.c
-@@ -909,6 +909,7 @@ static int cs43130_hw_params(struct snd_pcm_substream *substream,
- 		regmap_update_bits(cs43130->regmap, CS43130_DSD_PATH_CTL_2,
- 				   CS43130_DSD_SRC_MASK, CS43130_DSD_SRC_XSP <<
- 				   CS43130_DSD_SRC_SHIFT);
-+		break;
- 	}
- 
- 	if (!sclk && cs43130->dais[dai->id].dai_mode == SND_SOC_DAIFMT_CBM_CFM)
-@@ -1039,6 +1040,7 @@ static int cs43130_pcm_ch_put(struct snd_kcontrol *kcontrol,
- 		else
- 			regmap_multi_reg_write(cs43130->regmap, pcm_ch_dis_seq,
- 					       ARRAY_SIZE(pcm_ch_dis_seq));
-+		break;
- 	}
- 
- 	return snd_soc_put_enum_double(kcontrol, ucontrol);
-@@ -1152,6 +1154,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, dsd_seq,
- 					       ARRAY_SIZE(dsd_seq));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_POST_PMU:
-@@ -1162,6 +1165,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, unmute_seq,
- 					       ARRAY_SIZE(unmute_seq));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_PRE_PMD:
-@@ -1184,6 +1188,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
- 			regmap_update_bits(cs43130->regmap,
- 					   CS43130_DSD_PATH_CTL_1,
- 					   CS43130_MUTE_MASK, CS43130_MUTE_EN);
-+			break;
- 		}
- 		break;
- 	default:
-@@ -1206,6 +1211,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, pcm_seq,
- 					       ARRAY_SIZE(pcm_seq));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_POST_PMU:
-@@ -1216,6 +1222,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, unmute_seq,
- 					       ARRAY_SIZE(unmute_seq));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_PRE_PMD:
-@@ -1238,6 +1245,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
- 			regmap_update_bits(cs43130->regmap,
- 					   CS43130_PCM_PATH_CTL_1,
- 					   CS43130_MUTE_MASK, CS43130_MUTE_EN);
-+			break;
- 		}
- 		break;
- 	default:
-@@ -1277,6 +1285,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
- 		case CS43198_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, pop_free_seq2,
- 					       ARRAY_SIZE(pop_free_seq2));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_POST_PMU:
-@@ -1301,6 +1310,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
- 		case CS43198_CHIP_ID:
- 			usleep_range(12000, 12010);
- 			regmap_write(cs43130->regmap, CS43130_DXD13, 0);
-+			break;
- 		}
- 
- 		regmap_write(cs43130->regmap, CS43130_DXD1, 0);
-@@ -1311,6 +1321,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, dac_postpmd_seq,
- 					       ARRAY_SIZE(dac_postpmd_seq));
-+			break;
- 		}
- 		break;
- 	default:
-@@ -2133,6 +2144,7 @@ static void cs43130_imp_meas(struct work_struct *wk)
- 		cs43130_hpload_proc(cs43130, hp_dis_cal_seq2,
- 				    ARRAY_SIZE(hp_dis_cal_seq2),
- 				    CS43130_HPLOAD_OFF_INT, ac_idx);
-+		break;
- 	}
- 
- 	regmap_multi_reg_write(cs43130->regmap, hp_cln_seq,
-@@ -2543,6 +2555,7 @@ static int cs43130_i2c_probe(struct i2c_client *client,
- 			digital_hp_routes;
- 		soc_codec_dev_cs43130.component_driver.num_dapm_routes =
- 			ARRAY_SIZE(digital_hp_routes);
-+		break;
- 	}
- 
- 	ret = snd_soc_register_codec(&client->dev, &soc_codec_dev_cs43130,
-@@ -2586,8 +2599,7 @@ static int cs43130_i2c_remove(struct i2c_client *client)
- 		device_remove_file(&client->dev, &dev_attr_hpload_ac_r);
- 	}
- 
--	if (cs43130->reset_gpio)
--		gpiod_set_value_cansleep(cs43130->reset_gpio, 0);
-+	gpiod_set_value_cansleep(cs43130->reset_gpio, 0);
- 
- 	pm_runtime_disable(&client->dev);
- 	regulator_bulk_disable(CS43130_NUM_SUPPLIES, cs43130->supplies);
--- 
-1.9.1
+Thanks
+Yisheng Xie
+
+> 
+> Thanks,
+> Jean
+> 
+> .
+> 
+
