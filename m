@@ -1,71 +1,96 @@
-From: Yisheng Xie <xieyisheng1@huawei.com>
-Subject: Re: [RFC PATCH 6/6] iommu/arm-smmu-v3: Avoid ILLEGAL setting of
- STE.S1STALLD and CD.S
-Date: Wed, 6 Sep 2017 10:23:00 +0800
-Message-ID: <de4599d6-277f-00d6-40e7-7ca43a2bf2b8@huawei.com>
-References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
- <1504167642-14922-7-git-send-email-xieyisheng1@huawei.com>
- <738977bb-4cd7-7d86-0ea0-0c88b6af721c@arm.com>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v9 1/2] ASoC: rt5514: Add devicetree bindings
+	for rt5514-spi
+Date: Wed,  6 Sep 2017 10:41:08 +0800
+Message-ID: <20170906024109.9978-1-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <738977bb-4cd7-7d86-0ea0-0c88b6af721c@arm.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, robert.moore@intel.com, lv.zheng@intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@acpica.org, liubo95@huawei.com, chenjiankang1@huawei.com, xieyisheng@huawei.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, briannorris@chromium.org, Mark Brown <broonie@kernel.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Philippe,
+Add devicetree bindings documentation file for rt5514 spi dsp codec.
 
-On 2017/9/5 20:54, Jean-Philippe Brucker wrote:
-> On 31/08/17 09:20, Yisheng Xie wrote:
->> It is ILLEGAL to set STE.S1STALLD if STALL_MODEL is not 0b00, which
->> means we should not disable stall mode if stall/terminate mode is not
->> configuable.
->>
->> Meanwhile, it is also ILLEGAL when STALL_MODEL==0b10 && CD.S==0 which
->> means if stall mode is force we should always set CD.S.
->>
->> This patch add ARM_SMMU_FEAT_TERMINATE feature bit for smmu, and use
->> TERMINATE feature checking to ensue above ILLEGAL cases from happening.
->>
->> Signed-off-by: Yisheng Xie <xieyisheng1@huawei.com>
->> ---
->>  drivers/iommu/arm-smmu-v3.c | 22 ++++++++++++++++------
->>  1 file changed, 16 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->> index dbda2eb..0745522 100644
->> --- a/drivers/iommu/arm-smmu-v3.c
->> +++ b/drivers/iommu/arm-smmu-v3.c
->> @@ -55,6 +55,7 @@
->>  #define IDR0_STALL_MODEL_SHIFT		24
->>  #define IDR0_STALL_MODEL_MASK		0x3
->>  #define IDR0_STALL_MODEL_STALL		(0 << IDR0_STALL_MODEL_SHIFT)
->> +#define IDR0_STALL_MODEL_NS		(1 << IDR0_STALL_MODEL_SHIFT)
->>  #define IDR0_STALL_MODEL_FORCE		(2 << IDR0_STALL_MODEL_SHIFT)
->>  #define IDR0_TTENDIAN_SHIFT		21
->>  #define IDR0_TTENDIAN_MASK		0x3
->> @@ -766,6 +767,7 @@ struct arm_smmu_device {
->>  #define ARM_SMMU_FEAT_SVM		(1 << 15)
->>  #define ARM_SMMU_FEAT_HA		(1 << 16)
->>  #define ARM_SMMU_FEAT_HD		(1 << 17)
->> +#define ARM_SMMU_FEAT_TERMINATE		(1 << 18)
-> 
-> I'd rather introduce something like "ARM_SMMU_FEAT_STALL_FORCE" instead.
-> Terminate model has another meaning, and is defined by a different bit in
-> IDR0.
+Also update rt5514 i2c dt-binding's compatible to distinguish it from
+rt5514 spi.
 
-Ok, sound more reasonable.
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+---
 
-Thanks
-Yisheng Xie
+Changes in v9:
+Address comments from Brian.
 
-> 
-> Thanks,
-> Jean
-> 
-> .
-> 
+ .../devicetree/bindings/sound/rt5514-spi.txt       | 29 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/sound/rt5514.txt |  4 +--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/rt5514-spi.txt
 
+diff --git a/Documentation/devicetree/bindings/sound/rt5514-spi.txt b/Documentation/devicetree/bindings/sound/rt5514-spi.txt
+new file mode 100644
+index 000000000000..7911d1adbd29
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rt5514-spi.txt
+@@ -0,0 +1,29 @@
++RT5514 SPI audio CODEC
++
++This device supports SPI only.
++
++Required properties:
++
++- compatible : "realtek,rt5514" or "realtek,rt5514", "realtek,rt5514-spi".
++
++- reg : The SPI address of the device.
++
++Optional properties:
++
++- interrupt-parent: Should be the phandle for the interrupt controller
++- interrupts: The interrupt number to the cpu. The interrupt specifier format
++	      depends on the interrupt controller.
++
++Example:
++
++codec: rt5514-spi@0 {
++	compatible = "realtek,rt5514", "realtek,rt5514-spi";
++	reg = <0>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&mic_int>;
++
++	interrupt-parent = <&gpio1>;
++	interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
++	wakeup-source;
++};
+diff --git a/Documentation/devicetree/bindings/sound/rt5514.txt b/Documentation/devicetree/bindings/sound/rt5514.txt
+index 929ca6756b02..841a1159e234 100644
+--- a/Documentation/devicetree/bindings/sound/rt5514.txt
++++ b/Documentation/devicetree/bindings/sound/rt5514.txt
+@@ -4,7 +4,7 @@ This device supports I2C only.
+ 
+ Required properties:
+ 
+-- compatible : "realtek,rt5514".
++- compatible : "realtek,rt5514" or "realtek,rt5514", "realtek,rt5514-i2c".
+ 
+ - reg : The I2C address of the device.
+ 
+@@ -28,6 +28,6 @@ Pins on the device (for linking into audio routes) for RT5514:
+ Example:
+ 
+ codec: rt5514@57 {
+-	compatible = "realtek,rt5514";
++	compatible = "realtek,rt5514", "realtek,rt5514-i2c";
+ 	reg = <0x57>;
+ };
+-- 
+2.11.0
