@@ -1,211 +1,116 @@
-From: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 09/18] firmware: arm_scmi: probe and initialise all the
- supported protocols
-Date: Wed, 6 Sep 2017 14:41:38 +0100
-Message-ID: <934ce254-15af-56a7-5d93-ade0aa1bf4fa@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-10-git-send-email-sudeep.holla@arm.com>
- <bc52d57a-156b-cef0-7560-63a9ed7e78b5@arm.com>
- <7c82503d-229f-08e7-6605-18d778b6f525@arm.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: Setting CPU clock frequency on early boot
+Date: Wed, 6 Sep 2017 13:51:22 +0000
+Message-ID: <1504705881.3829.19.camel@synopsys.com>
+References: <1504625867.32565.34.camel@synopsys.com>
+         <CAL_JsqJ7c-raBnb0U+hL+hka7zN3XosX0pU1Sswoq16nbRFb+g@mail.gmail.com>
+         <b8f7f407-303a-2f3c-1a16-bfb385204930@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7c82503d-229f-08e7-6605-18d778b6f525-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <b8f7f407-303a-2f3c-1a16-bfb385204930@synopsys.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-ID: <2AA9E5E8E4F6744F9F38B2092299F103@internal.synopsys.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: "robh@kernel.org" <robh@kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/09/17 14:31, Sudeep Holla wrote:
-> 
-> 
-> On 06/09/17 10:41, Julien Thierry wrote:
->>
->>
->> On 04/08/17 15:31, Sudeep Holla wrote:
->>> Now that we have basic support for all the protocols in the
->>> specification, let's probe them individually and initialise them.
->>>
->>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>    drivers/firmware/arm_scmi/common.h |  5 +++
->>>    drivers/firmware/arm_scmi/driver.c | 80
->>> +++++++++++++++++++++++++++++++++++++-
->>>    2 files changed, 84 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/firmware/arm_scmi/common.h
->>> b/drivers/firmware/arm_scmi/common.h
->>> index 7473dfcad4ee..d7c73a8d260b 100644
->>> --- a/drivers/firmware/arm_scmi/common.h
->>> +++ b/drivers/firmware/arm_scmi/common.h
->>> @@ -118,4 +118,9 @@ int scmi_version_get(const struct scmi_handle *h,
->>> u8 protocol, u32 *version);
->>>    void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
->>>                         u8 *prot_imp);
->>>    +typedef int (*scmi_init_fn_t)(struct scmi_handle *);
->>>    int scmi_base_protocol_init(struct scmi_handle *h);
->>> +int scmi_perf_protocol_init(struct scmi_handle *h);
->>> +int scmi_sensors_protocol_init(struct scmi_handle *h);
->>> +int scmi_power_protocol_init(struct scmi_handle *h);
->>> +int scmi_clock_protocol_init(struct scmi_handle *h);
->>> diff --git a/drivers/firmware/arm_scmi/driver.c
->>> b/drivers/firmware/arm_scmi/driver.c
->>> index 601d0d7210d9..6f31761043e2 100644
->>> --- a/drivers/firmware/arm_scmi/driver.c
->>> +++ b/drivers/firmware/arm_scmi/driver.c
->>> @@ -157,6 +157,12 @@ struct scmi_shared_mem {
->>>        u8 msg_payload[0];
->>>    };
->>>    +struct scmi_protocol_match {
->>> +    u8 protocol_id;
->>> +    scmi_init_fn_t fn;
->>
->> Could we call this "init" or "prot_init"?
->>
-> 
-> Done
-> 
->>> +    char name[32];
->>> +};
->>> +
->>>    static int scmi_linux_errmap[] = {
->>>        /* better than switch case as long as return value is continuous */
->>>        0,            /* SCMI_SUCCESS */
->>> @@ -687,6 +693,41 @@ static int scmi_xfer_info_init(struct scmi_info
->>> *sinfo)
->>>        return 0;
->>>    }
->>>    +static const struct scmi_protocol_match scmi_protocols[] = {
->>> +    {
->>> +        .protocol_id = SCMI_PROTOCOL_PERF,
->>> +        .fn = scmi_perf_protocol_init,
->>> +        .name = "scmi-cpufreq",
->>> +    }, {
->>> +        .protocol_id = SCMI_PROTOCOL_CLOCK,
->>> +        .fn = scmi_clock_protocol_init,
->>> +        .name = "scmi-clocks",
->>> +    }, {
->>> +        .protocol_id = SCMI_PROTOCOL_POWER,
->>> +        .fn = scmi_power_protocol_init,
->>> +        .name = "scmi-power-domain",
->>> +    }, {
->>> +        .protocol_id = SCMI_PROTOCOL_SENSOR,
->>> +        .fn = scmi_sensors_protocol_init,
->>> +        .name = "scmi-hwmon",
->>> +    },
->>> +    {}
->>> +};
->>> +
->>> +static const struct scmi_protocol_match *scmi_protocol_match_get(u8
->>> protocol_id)
->>> +{
->>> +    int i;
->>> +    const struct scmi_protocol_match *match = NULL, *loop =
->>> scmi_protocols;
->>> +
->>> +    for (i = 0; i < ARRAY_SIZE(scmi_protocols); i++, loop++)
->>> +        if (loop->protocol_id == protocol_id) {
->>> +            match = loop;
->>> +            break;
->>> +        }
->>> +
->>> +    return match;
->>> +}
->>> +
->>
->> The "match" variable is not needed. We can just return "loop" in the if
->> branch and return NULL at the end of the function. Unless we are
->> following some coding standard that advises against that?
->>
-> 
-> Agreed and fixed locally.
-> 
->>>    static int scmi_mailbox_check(struct device_node *np)
->>>    {
->>>        struct of_phandle_args arg;
->>> @@ -778,7 +819,7 @@ static int scmi_probe(struct platform_device *pdev)
->>>        const struct scmi_desc *desc;
->>>        struct scmi_info *info;
->>>        struct device *dev = &pdev->dev;
->>> -    struct device_node *np = dev->of_node;
->>> +    struct device_node *child, *np = dev->of_node;
->>>          /* Only mailbox method supported, check for the presence of
->>> one */
->>>        if (scmi_mailbox_check(np)) {
->>> @@ -817,6 +858,43 @@ static int scmi_probe(struct platform_device *pdev)
->>>            return ret;
->>>        }
->>>    +    for_each_available_child_of_node(np, child) {
->>> +        int init_ret;
->>> +        u32 prot_id;
->>> +        const struct scmi_protocol_match *match;
->>> +
->>> +        if (of_property_read_u32(child, "reg", &prot_id))
->>> +            continue;
->>> +
->>> +        prot_id &= MSG_PROTOCOL_ID_MASK;
->>> +
->>> +        if (!scmi_is_protocol_implemented(handle, prot_id)) {
->>> +            dev_err(dev, "SCMI protocol %d not implemented\n",
->>> +                prot_id);
->>> +            continue;
->>> +        }
->>> +
->>> +        match = scmi_protocol_match_get(prot_id);
->>> +        if (match) {
->>> +            struct platform_device *cdev;
->>> +
->>> +            cdev = of_platform_device_create(child, match->name,
->>> +                             dev);
->>> +            if (!cdev) {
->>> +                dev_err(dev, "failed to create %s device\n",
->>> +                    match->name);
->>> +                continue;
->>> +            }
->>> +
->>> +            init_ret = match->fn(handle);
->>> +            if (init_ret) {
->>> +                dev_err(dev, "SCMI protocol %d init error %d\n",
->>> +                    prot_id, init_ret);
->>> +                of_platform_device_destroy(&cdev->dev, NULL);
->>> +            }
->>> +        }
->>> +    }
->>> +
->>
->> For the code in the "if (match)" branch, would it be better to have an
->> inline function "scmi_create_protocol_device" or something with a name
->> that fits?
->>
-> 
-> Done
-> 
->> Also I was wondering, what is the difference between the protocol being
->> implemented and finding the matching structure? Feels like there is a
->> bit of redundancy. If the protocol is implemented but doesn't have a
->> match structure does it just mean it doesn't need any specific
->> initialization?
->>
-> 
-> Yes, that's the idea. One reason to have both check is backward
-> compatibility. Suppose new protocols are implemented in the f/w but DT
-> doesn't have them or know how to use it or there are no users of that
-> feature, then skip initializing it. Similarly if DT is updated but not
-> the firmware.
-> 
-
-Oh I see, makes sense. Thanks for explaining.
-
-Cheers,
-
--- 
-Julien Thierry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgVmluZWV0LCBSb2IsDQoNCk9uIFR1ZSwgMjAxNy0wOS0wNSBhdCAxNjo0MCAtMDcwMCwgVmlu
+ZWV0IEd1cHRhIHdyb3RlOg0KPiBPbiAwOS8wNS8yMDE3IDAzOjA0IFBNLCBSb2IgSGVycmluZyB3
+cm90ZToNCj4gPiANCj4gPiBPbiBUdWUsIFNlcCA1LCAyMDE3IGF0IDEwOjM3IEFNLCBBbGV4ZXkg
+QnJvZGtpbg0KPiA+IDxBbGV4ZXkuQnJvZGtpbkBzeW5vcHN5cy5jb20+IHdyb3RlOg0KPiA+ID4g
+DQo+ID4gPiBIZWxsbywNCj4gPiA+IA0KPiA+ID4gSSdkIGxpa2UgdG8gZ2V0IHNvbWUgZmVlZGJh
+Y2sgb24gb3VyIGlkZWEgYXMgd2VsbCBhcyBjaGVjaw0KPiA+ID4gaWYgc29tZWJvZHkgZmFjZXMg
+c2ltaWxhciBzaXR1YXRpb25zIGFuZCBpZiBzbyB3aGF0IHdvdWxkIGJlIHRoZSBiZXN0DQo+ID4g
+PiB3YXkgdG8gaW1wbGVtZW50IHNvbWUgZ2VuZXJpYyBzb2x1dGlvbiB0aGF0IHN1aXRzIGV2ZXJ5
+b25lLg0KPiA+ID4gDQo+ID4gPiBTbyB0aGF0J3Mgb3VyIHByb2JsZW06DQo+ID4gPiAxLiBPbiBw
+b3dlci1vbiBoYXJkd2FyZSBtaWdodCBzdGFydCBjbG9ja2luZyBDUFUgd2l0aCBlaXRoZXINCj4g
+PiA+IMKgwqDCoMKgdG9vIGhpZ2ggZnJlcXVlbmN5IChzdWNoIHRoYXQgQ1BVIG1heSBnZXQgc3R1
+Y2sgYXQgc29tZSBwb2ludCkNCj4gPiA+IMKgwqDCoMKgb3IgdG9vIGxvdyBmcmVxdWVuY3kuDQo+
+ID4gPiANCj4gPiA+IMKgwqDCoMKgVGhhdCBhbGwgc291bmRzIHN0dXBpZCBidXQgbGV0IG1lIGVs
+YWJvcmF0ZSBhIGJpdCBoZXJlLg0KPiA+ID4gwqDCoMKgwqBJJ20gdGFsa2luZyBhYm91dCBGUEdB
+LWJhc2VkIGRldmJvYXJkcyBmaXJtd2FyZSBmb3Igd2hpY2gNCj4gPiA+IMKgwqDCoMKgKGhlcmUg
+SSBtZWFuIGp1c3QgaW1hZ2UgbG9hZGVkIGluIEZQR0Egd2l0aCBDUFUgaW1wbGVtZW50YXRpb24N
+Cj4gPiA+IMKgwqDCoMKgYnV0IG5vdCBzb21lIHNvZnR3YXJlIHlldCkgbWlnaHQgbm90IGJlIHN0
+YWJsZSBvciBiZSBldmVuIGV4cGVyaW1lbnRhbC4NCj4gPiA+IA0KPiA+ID4gwqDCoMKgwqBGb3Ig
+ZXhhbXBsZSB3ZSBtYXkgZGVhbCB3aXRoIGR1YWwtY29yZSBvciBxdWFkLWNvcmUgZGVzaWducy4N
+Cj4gPiA+IMKgwqDCoMKgRm9ybWVyIG1pZ2h0IGJlIE9LIHJ1bm5pbmcgQDEwME1IeiBhbmQgbGF0
+dGVyIGlzIG9ubHkgdXNhYmxlDQo+ID4gPiDCoMKgwqDCoEA3NU1IeiBhbmQgbG93ZXIuIFRoZSBz
+aW1wbGVzdCBzb2x1dGlvbiBtaWdodCBiZSB0byB1c2Ugc29tZSBzYWZlDQo+ID4gPiDCoMKgwqDC
+oHZhbHVlIGJlZm9yZSBzb21ldGhpbmcgbGlrZSBDUFVmcmVxIGtpY2tzIGluLiBCdXQgd2UgZG9u
+J3QgeWV0IGhhdmUNCj4gPiA+IMKgwqDCoMKgQ1BVZnJlcSBmb3IgQVJDICh3ZSBkbyBwbGFuIHRv
+IGdldCBpdCB3b3JraW5nIHNvbWV0aW1lIHNvb24pDQo+IA0KPiBCdXQgZXZlbiBpZiB3ZSBoYWQg
+Y3B1ZnJlcSBkcml2ZXIgZ29pbmcgLSBJIGRvbid0IHRoaW5rIGl0IHdvdWxkIGJlIHVzYWJsZSBm
+b3LCoA0KPiBkb2luZyBsYXJnZSBmcmVxIHN3aXRjaGVzLCBzaW5jZSBpbiBjdXJyZW50IGltcGxl
+bWVudGF0aW9ucyBvZiBTb0NzIChvciBmcGdhKSwgdGhlwqANCj4gY2xrL3BsbCBldGMgZHJpdmlu
+ZyBjb3JlIChhbmQgYWxsIHRpbWVycyBldGMpIGFyZSBub3QgZml4ZWQgbGlrZSBzYXkgQVJNLiBB
+bmQgYXPCoA0KPiBkaXNjdXNzZWQgYmVmb3JlIChhbmQgcG9pbnRlZCB0byBieSB0Z2x4KSwgdGlt
+ZXIgc3Vic3lzIGNhbid0IHRvbGVyYXRlIChvbsKgDQo+IHB1cnBvc2UpIHN1Y2ggbGFyZ2UgZHJp
+ZnRzLg0KDQpFc3NlbnRpYWxseSBjcHVmcmVxIG9ubHkgbWFrZXMgc2Vuc2UgZm9yICJjb21wYXRp
+YmxlIiBzeXN0ZW1zIGFuZCB1bmZvcnR1bmF0ZWx5DQptb3N0IG9mIG91ciBjdXJyZW50IGJvYXJk
+cyBhcmUgbm90IGNhcGFibGUgZHVlIHRvIG1pc3NpbmcgY29uc3RhbnQgW2RlY291cGxlZCBmcm9t
+DQpDUFUgZnJlcXVlbmN5XSBjbG9jayBzb3VyY2UuIEJ1dCBsb29raW5nIGZvcndhcmQgd2UgYXJl
+IHBsYW5uaW5nIHRvIGltcHJvdmUgb24gdGhhdA0Kc28gdGhhdCBob3BlZnVsbHkgZXZlbiBvdXIg
+RlBHQS1iYXNlZCBib2FyZHMgd2lsbCBiZSB1c2FibGUgd2l0aCBjcHVmcmVxLg0KDQo+ID4gPiB3
+aGljaA0KPiA+ID4gwqDCoMKgwqBtZWFucyBzaW1wbGUgY2hhbmdlIG9mIENQVSBmcmVxdWVuY3kg
+b25jZSB0aW1lLWtlZXBpbmcgaW5mcmFzdHJ1Y3R1cmUNCj4gPiA+IMKgwqDCoMKgd2FzIGJyb3Vn
+aHQtdXAgaXMgbm90IGFuIG9wdGlvbi4uLiBJLmUuIHdlJ2xsIGVuZCB1cCB3aXRoIHRoZSBzeXN0
+ZW0gcnVubmluZw0KPiA+ID4gwqDCoMKgwqBtdWNoIHNsb3dlciBjb21wYXJlZCB3aGF0IGNvdWxk
+IGhhdmUgYmVlbiBwb3NzaWJsZS4NCj4gPiA+IA0KPiA+ID4gMi4gVXAgdW50aWwgbm93IHdlIHVz
+ZWQgdG8gZG8gZGlydHkgaGFja3MgaW4gZWFybHkgcGxhdGZvcm0gaW5pdCBjb2RlLg0KPiA+ID4g
+wqDCoMKgwqBOYW1lbHkgKHNlZSBheHMxMDNfZWFybHlfaW5pdCgpIGluIGFyY2gvYXJjL3BsYXQt
+YXhzMTB4L2F4czEweC5jKToNCj4gPiA+IMKgwqDCoMKgwqAxKSBSZWFkIENQVSdzICJjbG9jay1m
+cmVxdWVuY3kiIGZyb20gLmR0YiAocmVtZW1iZXIgd2UncmUgb24gdmVyeSBlYXJseQ0KPiA+ID4g
+wqDCoMKgwqDCoMKgwqDCoGJvb3Qgc3RhZ2Ugc3RpbGwgc28gbm8gZXhwYW5kZWQgRGV2VHJlZSB5
+ZXQgZXhpc3RzKS4NCj4gPiA+IMKgwqDCoMKgwqAyKSBDaGVjayBob3cgbWFueSBjb3JlcyB3ZSBo
+YXZlIGFuZCB3aGljaCBmcmVxIGlzIHVzYWJsZQ0KPiA+ID4gwqDCoMKgwqDCoDMpIFVwZGF0ZSBQ
+TEwgc2V0dGluZ3MgcmlnaHQgaW4gcGxhY2UgaWYgbmV3IGZyZXEgIT0gZXhpc3RpbmcgaW4gUExM
+Lg0KPiA+ID4gDQo+ID4gPiDCoMKgwqDCoEV2ZW4gdGhvdWdoIGl0IGlzIHByb3ZlbiB0byB3b3Jr
+IGJ1dCB3aXRoIG1vcmUgcGxhdGZvcm1zIGluIHRoZSBwaXBlbGluZQ0KPiA+ID4gwqDCoMKgwqB3
+ZSdsbCBuZWVkIHRvIGNvcHktcGFzdGUgcHJldHR5IG11Y2ggdGhlIHNhbWUgc3R1ZmYgYWNyb3Nz
+IGFsbCBhZmZlY3RlZA0KPiA+ID4gwqDCoMKgwqBwbGF0cy4gV2hpY2ggaXMgbm90IG5pY2UuDQo+
+ID4gPiANCj4gPiA+IMKgwqDCoMKgTW9yZW92ZXIgYmFjayBpbiB0aGUgZGF5IHdlIGRpZG4ndCBo
+YXZlIGEgcHJvcGVyIGNsayBkcml2ZXIgZm9yIENQVSdzIFBMTC4NCj4gPiA+IMKgwqDCoMKgVGh1
+cyBhY3Rpbmcgb24gUExMIHJlZ2lzdGVycyByaWdodCBpbiBwbGFjZSB3YXMgdGhlIG9ubHkgdGhp
+bmcgd2Ugd2VyZSBhYmxlDQo+ID4gPiDCoMKgwqDCoHRvIGRvLiBOb3cgd2l0aCBpbnRyb2R1Y3Rp
+b24gb2Ygbm9ybWFsIGNsayBkcml2ZXINCj4gPiA+IMKgwqDCoMKgKHNlZSBkcml2ZXJzL2Nsay9h
+eHMxMHgvcGxsX2Nsb2NrLmMgaW4gbGludXgtbmV4dCkgd2UnZCBsaWtlIHRvIHV0aWxpemUNCj4g
+PiA+IMKgwqDCoMKgaXQgYW5kIGhhdmUgYSBjbGVhbmVyIGFuZCBtb3JlIHVuaXZlcnNhbCBzb2x1
+dGlvbiB0byB0aGUgcHJvYmxlbS4NCj4gPiA+IA0KPiA+ID4gwqDCoMKgwqBUaGF0J3MgaG93IGl0
+IGNvdWxkIGJlIGRvbmUgLSBodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJs
+P3U9aHR0cC0zQV9fcGF0Y2h3b3JrLm96bGFicy5vcmdfcGF0Y2hfODAxMjQwXyZkPUR3SUNBZyZj
+PURQTDZfWF82SmtYRg0KPiA+ID4geDdBWFdxQjB0ZyZyPWMxNFlTLWNILQ0KPiA+ID4ga2RoVE9X
+ODlLb3pGaEJ0QkpnczF6WHNjWm9qRVpRMFRIcyZtPXd1VWNjZVk4Q3o1RWhWa2xXTEFnajdSelUz
+cnZwYW51anZRM3FUSkswR3cmcz1ONUlCanFfZUN5T2ZfR1JrWnNrenFHaGN6QlBUYnhMSldfTVVm
+YXVLdnVBJmU9DQo+ID4gPiDCoMKgwqDCoEJhc2ljYWxseSBpbiBhcmNoaXRlY3R1cmUncyB0aW1l
+X2luaXQoKSB3ZSBjaGVjayBpZiB0aGVyZSdzIGV4cGxpY2l0bHkNCj4gPiA+IMKgwqDCoMKgc3Bl
+Y2lmaWVkICJjbG9jay1mcmVxdWVuY3kiIHBhcmFtZXRlciBpbiBjcHUncyBub2RlIGluIERldmlj
+ZSBUcmVlIGFuZA0KPiA+ID4gwqDCoMKgwqBpZiB0aGVyZSdzIG9uZSB3ZSBzZXQgaXQgdmlhIGp1
+c3QgaW5zdGFudGlhdGVkIGNsayBkcml2ZXIuDQo+ID4gVGhlIHBhdGNoIGxvb2tzIGdlbmVyYWxs
+eSBva2F5LiBJJ2QgbW92ZSBhbGwgdGhlIGxvZ2ljIHRvIHRoZSBjbG9jaw0KPiA+IGRyaXZlciB1
+bmxlc3MgcGVyaGFwcyBob3cgdG8gc2V0IHRoZSBjcHUgZnJlcSBpcyBkZWZpbmVkIGJ5IHRoZQ0K
+PiA+IGFyY2hpdGVjdHVyZS4NCg0KWWVhaCwgdGhhdCdzIGFuIGludGVyZXN0aW5nIHF1ZXN0aW9u
+LiBXZSBtYXkgaW5kZWVkIG1vdmUgbW9yZSBzbWFydHMgdG8gdGhlIGNsb2NrIGRyaXZlcg0KYnV0
+Og0KwqAxLiBXZSdsbCBoYXZlIGR1cGxpY2F0ZSBjb2RlIGluIGRpZmZlcmVudCBjbG9jayBkcml2
+ZXJzLiBFdmVuIHRvZGF5IHRoYXQga2luZCBvZiBjbG9jaw0KwqAgwqAgc2V0dXAgaXMgYXBwbGlj
+YWJsZSB0byBBWFMxMHggYW5kIEhTREsgcGxhdGZvcm1zIChhbmQgdGhleSB1c2UgZGlmZmVyZW50
+IGNsb2NrIGRyaXZlcnMpLg0KDQrCoDIuIFByaW50IG91dCBvZiBDUFUgZnJlcXVlbmN5IHdoaWNo
+IGlzIHVzZWQgZHVyaW5nIGJvb3QgcHJvY2VzcyBmb3IgdXMgaXMgaW1wb3J0YW50IGFzIHdlbGwN
+CsKgIMKgIGVzcGVjaWFsbHkgZHVyaW5nIGJyaW5nLXVwIG9mIG5ldyBIVy4NCg0KwqAzLiBJZiB0
+aGVyZSdzIG5vIGRlZGljYXRlZCAiY2xvY2stZnJlcXVlbmN5IiBwYXJhbWV0ZXIgaW4gQ1BVIG5v
+ZGUgd2Ugd29uJ3QNCsKgIMKgIGNoYW5nZSBhbnl0aGluZyBzbyB0aGF0IG5vbi1hZmZlY3RlZCBw
+bGF0Zm9ybXMgd2lsbCBsaXZlIGFzIHRoZXkgdXNlZCB0by4NCg0KVGhhdCBzYWlkIElNSE8gcHJv
+cG9zZWQgaW1wbGVtZW50YXRpb24gaXMgd2hhdCB3ZSB3YW50IHRvIGtlcCBmb3Igbm93Lg0KDQo+
+IEFsc28gbm90ZSB0aGF0IHRoaXMgY29kZSBpcyB1c2luZyBhIG5ldyAvIGFkaG9jIERUIGJpbmRp
+bmcgY3B1LWZyZXEgaW4gY291IG5vZGUgdG/CoA0KPiBkbyB0aGUgb3ZlcnJpZGUgLSBpcyB0aGF0
+IGFjY2VwdGFibGUgPw0KDQpJIHRoaW5rIHdlJ2xsIHN3aXRjaCB0byBtb3JlIGNvbW1vbiAiY2xv
+Y2stZnJlcXVlbmN5IiBpbiB0aGUgbmV4dCByZXNwaW4uDQpJbmRlZWQgImNwdS1mcmVxIiBtaWdo
+dCBiZSBhIGJpdCBtaXNsZWFkaW5nLg0KDQpBbHNvIEZXSVcgb25lIE1JUFMgcGxhdGZvcm0gdXNl
+cyBzb21ldGhpbmcgc2ltaWxhcg0KKGV2ZW4gdGhvdWdoIHRoZWlyIHByb3BlcnR5IG5hbWUgaXMg
+bm90IHN0YW5kYXJkIGJ1dCAibWlwcy1ocHQtZnJlcXVlbmN5IiksDQpzZWXCoGh0dHA6Ly9lbGl4
+aXIuZnJlZS1lbGVjdHJvbnMuY29tL2xpbnV4L2xhdGVzdC9zb3VyY2UvYXJjaC9taXBzL2Jvb3Qv
+ZHRzL2JyY20vYmNtMzM2OC5kdHNpI0wxMA0KaHR0cDovL2VsaXhpci5mcmVlLWVsZWN0cm9ucy5j
+b20vbGludXgvbGF0ZXN0L3NvdXJjZS9hcmNoL21pcHMvYm1pcHMvc2V0dXAuYyNMMTQxLg0KDQot
+QWxleGV5
