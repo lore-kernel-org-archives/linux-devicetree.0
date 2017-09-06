@@ -1,147 +1,143 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v8 12/21] v4l: async: Introduce helpers for calling async
- ops callbacks
-Date: Wed, 6 Sep 2017 09:50:36 +0200
-Message-ID: <a341b599-de8f-49d2-6e83-fc049fad3904@xs4all.nl>
-References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
- <20170905130553.1332-13-sakari.ailus@linux.intel.com>
+From: John Crispin <john@phrozen.org>
+Subject: Re: [PATCH] MIPS: mt7620: Rename uartlite to serial
+Date: Wed, 6 Sep 2017 09:52:32 +0200
+Message-ID: <262c7fd6-8663-c1a6-8977-fc46bfa358ae@phrozen.org>
+References: <1504277584-37794-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170905130553.1332-13-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1504277584-37794-1-git-send-email-harvey.hunt@imgtec.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Harvey Hunt <harvey.hunt@imgtec.com>, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org
+Cc: matt.redfearn@imgtec.com, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/2017 03:05 PM, Sakari Ailus wrote:
-> Add three helper functions to call async operations callbacks. Besides
-> simplifying callbacks, this allows async notifiers to have no ops set,
-> i.e. it can be left NULL.
+Hi,
 
-What is the use-case of that?
 
-Anyway:
+comments inline
 
-Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Regards,
-
-	Hans
-
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On 01/09/17 16:53, Harvey Hunt wrote:
+> Previously, mt7620.c defined the clocks for uarts with the names
+> uartlite, uart1 and uart2. Rename them to serial{0,1,2} and update
+> the devicetree node names.
+>
+> Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-mips@linux-mips.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->  drivers/media/v4l2-core/v4l2-async.c | 49 ++++++++++++++++++++++++++----------
->  include/media/v4l2-async.h           |  1 +
->  2 files changed, 37 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index f7eb3713207a..baee95eacbba 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -25,6 +25,34 @@
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
->  
-> +static int v4l2_async_notifier_call_bound(struct v4l2_async_notifier *n,
-> +					  struct v4l2_subdev *subdev,
-> +					  struct v4l2_async_subdev *asd)
-> +{
-> +	if (!n->ops || !n->ops->bound)
-> +		return 0;
-> +
-> +	return n->ops->bound(n, subdev, asd);
-> +}
-> +
-> +static void v4l2_async_notifier_call_unbind(struct v4l2_async_notifier *n,
-> +					    struct v4l2_subdev *subdev,
-> +					    struct v4l2_async_subdev *asd)
-> +{
-> +	if (!n->ops || !n->ops->unbind)
-> +		return;
-> +
-> +	n->ops->unbind(n, subdev, asd);
-> +}
-> +
-> +static int v4l2_async_notifier_call_complete(struct v4l2_async_notifier *n)
-> +{
-> +	if (!n->ops || !n->ops->complete)
-> +		return 0;
-> +
-> +	return n->ops->complete(n);
-> +}
-> +
->  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
->  {
->  #if IS_ENABLED(CONFIG_I2C)
-> @@ -107,16 +135,13 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
->  {
->  	int ret;
->  
-> -	if (notifier->ops->bound) {
-> -		ret = notifier->ops->bound(notifier, sd, asd);
-> -		if (ret < 0)
-> -			return ret;
-> -	}
-> +	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
-> +	if (ret < 0)
-> +		return ret;
->  
->  	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
->  	if (ret < 0) {
-> -		if (notifier->ops->unbind)
-> -			notifier->ops->unbind(notifier, sd, asd);
-> +		v4l2_async_notifier_call_unbind(notifier, sd, asd);
->  		return ret;
->  	}
->  
-> @@ -128,8 +153,8 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
->  	/* Move from the global subdevice list to notifier's done */
->  	list_move(&sd->async_list, &notifier->done);
->  
-> -	if (list_empty(&notifier->waiting) && notifier->ops->complete)
-> -		return notifier->ops->complete(notifier);
-> +	if (list_empty(&notifier->waiting))
-> +		return v4l2_async_notifier_call_complete(notifier);
->  
->  	return 0;
->  }
-> @@ -215,8 +240,7 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
->  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
->  		v4l2_async_cleanup(sd);
->  
-> -		if (notifier->ops->unbind)
-> -			notifier->ops->unbind(notifier, sd, sd->asd);
-> +		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
->  	}
->  
->  	mutex_unlock(&list_lock);
-> @@ -294,8 +318,7 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
->  
->  	v4l2_async_cleanup(sd);
->  
-> -	if (notifier->ops->unbind)
-> -		notifier->ops->unbind(notifier, sd, sd->asd);
-> +	v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
->  
->  	mutex_unlock(&list_lock);
->  }
-> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-> index 3c48f8b66d12..3bc8a7c0d83f 100644
-> --- a/include/media/v4l2-async.h
-> +++ b/include/media/v4l2-async.h
-> @@ -164,4 +164,5 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd);
->   * @sd: pointer to &struct v4l2_subdev
->   */
->  void v4l2_async_unregister_subdev(struct v4l2_subdev *sd);
-> +
->  #endif
-> 
+>   arch/mips/boot/dts/ralink/mt7620a.dtsi |  2 +-
+>   arch/mips/boot/dts/ralink/mt7628a.dtsi |  6 +++---
+>   arch/mips/ralink/mt7620.c              | 14 +++++++-------
+>   3 files changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/arch/mips/boot/dts/ralink/mt7620a.dtsi b/arch/mips/boot/dts/ralink/mt7620a.dtsi
+> index 793c0c7..58bd002 100644
+> --- a/arch/mips/boot/dts/ralink/mt7620a.dtsi
+> +++ b/arch/mips/boot/dts/ralink/mt7620a.dtsi
+> @@ -45,7 +45,7 @@
+>   			reg = <0x300 0x100>;
+>   		};
+>   
+> -		uartlite@c00 {
+> +		serial0@c00 {
+the uartlite is indeed not a full uart, having only rx/tx lines and 
+missing various other features. i would prefer to keep it as is. you 
+cannot connect a modem to the port for example as that would require HW 
+handshake for example. Also making these changes will break 
+compatibility with existing devicetrees.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+     John
+
+>   			compatible = "ralink,mt7620a-uart", "ralink,rt2880-uart", "ns16550a";
+>   			reg = <0xc00 0x100>;
+>   
+> diff --git a/arch/mips/boot/dts/ralink/mt7628a.dtsi b/arch/mips/boot/dts/ralink/mt7628a.dtsi
+> index 9ff7e8f..fe3fe9a 100644
+> --- a/arch/mips/boot/dts/ralink/mt7628a.dtsi
+> +++ b/arch/mips/boot/dts/ralink/mt7628a.dtsi
+> @@ -62,7 +62,7 @@
+>   			reg = <0x300 0x100>;
+>   		};
+>   
+> -		uart0: uartlite@c00 {
+> +		uart0: serial0@c00 {
+>   			compatible = "ns16550a";
+>   			reg = <0xc00 0x100>;
+>   
+> @@ -75,7 +75,7 @@
+>   			reg-shift = <2>;
+>   		};
+>   
+> -		uart1: uart1@d00 {
+> +		uart1: serial1@d00 {
+>   			compatible = "ns16550a";
+>   			reg = <0xd00 0x100>;
+>   
+> @@ -88,7 +88,7 @@
+>   			reg-shift = <2>;
+>   		};
+>   
+> -		uart2: uart2@e00 {
+> +		uart2: serial2@e00 {
+>   			compatible = "ns16550a";
+>   			reg = <0xe00 0x100>;
+>   
+> diff --git a/arch/mips/ralink/mt7620.c b/arch/mips/ralink/mt7620.c
+> index 9be8b08..f623ceb 100644
+> --- a/arch/mips/ralink/mt7620.c
+> +++ b/arch/mips/ralink/mt7620.c
+> @@ -54,7 +54,7 @@ static int dram_type;
+>   
+>   static struct rt2880_pmx_func i2c_grp[] =  { FUNC("i2c", 0, 1, 2) };
+>   static struct rt2880_pmx_func spi_grp[] = { FUNC("spi", 0, 3, 4) };
+> -static struct rt2880_pmx_func uartlite_grp[] = { FUNC("uartlite", 0, 15, 2) };
+> +static struct rt2880_pmx_func serial_grp[] = { FUNC("serial", 0, 15, 2) };
+>   static struct rt2880_pmx_func mdio_grp[] = {
+>   	FUNC("mdio", MT7620_GPIO_MODE_MDIO, 22, 2),
+>   	FUNC("refclk", MT7620_GPIO_MODE_MDIO_REFCLK, 22, 2),
+> @@ -92,7 +92,7 @@ static struct rt2880_pmx_group mt7620a_pinmux_data[] = {
+>   	GRP("uartf", uartf_grp, MT7620_GPIO_MODE_UART0_MASK,
+>   		MT7620_GPIO_MODE_UART0_SHIFT),
+>   	GRP("spi", spi_grp, 1, MT7620_GPIO_MODE_SPI),
+> -	GRP("uartlite", uartlite_grp, 1, MT7620_GPIO_MODE_UART1),
+> +	GRP("serial", serial_grp, 1, MT7620_GPIO_MODE_UART1),
+>   	GRP_G("wdt", wdt_grp, MT7620_GPIO_MODE_WDT_MASK,
+>   		MT7620_GPIO_MODE_WDT_GPIO, MT7620_GPIO_MODE_WDT_SHIFT),
+>   	GRP_G("mdio", mdio_grp, MT7620_GPIO_MODE_MDIO_MASK,
+> @@ -530,8 +530,8 @@ void __init ralink_clk_init(void)
+>   		periph_rate = MHZ(40);
+>   		pcmi2s_rate = MHZ(480);
+>   
+> -		ralink_clk_add("10000d00.uartlite", periph_rate);
+> -		ralink_clk_add("10000e00.uartlite", periph_rate);
+> +		ralink_clk_add("10000d00.serial0", periph_rate);
+> +		ralink_clk_add("10000e00.serial0", periph_rate);
+>   	} else {
+>   		cpu_pll_rate = mt7620_get_cpu_pll_rate(xtal_rate);
+>   		pll_rate = mt7620_get_pll_rate(xtal_rate, cpu_pll_rate);
+> @@ -566,9 +566,9 @@ void __init ralink_clk_init(void)
+>   	ralink_clk_add("10000a00.i2s", pcmi2s_rate);
+>   	ralink_clk_add("10000b00.spi", sys_rate);
+>   	ralink_clk_add("10000b40.spi", sys_rate);
+> -	ralink_clk_add("10000c00.uartlite", periph_rate);
+> -	ralink_clk_add("10000d00.uart1", periph_rate);
+> -	ralink_clk_add("10000e00.uart2", periph_rate);
+> +	ralink_clk_add("10000c00.serial0", periph_rate);
+> +	ralink_clk_add("10000d00.serial1", periph_rate);
+> +	ralink_clk_add("10000e00.serial2", periph_rate);
+>   	ralink_clk_add("10180000.wmac", xtal_rate);
+>   
+>   	if (IS_ENABLED(CONFIG_USB) && !is_mt76x8()) {
