@@ -1,50 +1,108 @@
-From: Rocco Folino <rocco.folino@gmail.com>
-Subject: Re: [PATCH] MIPS: ath79: support devicetree selection
-Date: Wed, 6 Sep 2017 15:59:59 +0200
-Message-ID: <20170906135959.GA25439@void>
-References: <b78cb3ef8df8531efdb7b011743ad3f38978015d.1503070362.git.rocco.folino@gmail.com>
- <20170906111435.GA1856@linux-mips.org>
- <20170906142005.67586253@avionic-0141>
- <20170906123200.GA21761@void>
- <20170906153543.412774d5@avionic-0141>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170906153543.412774d5@avionic-0141>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alban <albeu@free.fr>
-Cc: Ralf Baechle <ralf@linux-mips.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Antony Pavlov <antonynpavlov@gmail.com>, John Crispin <john@phrozen.org>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7 0/1] ZII RAVE platform driver
+Date: Wed,  6 Sep 2017 07:48:08 -0700
+Message-ID: <20170906144809.17942-1-andrew.smirnov@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 06, 2017 at 03:35:43PM +0200, Alban wrote:
-> On Wed, 6 Sep 2017 14:32:00 +0200
-> Rocco Folino <rocco.folino@gmail.com> wrote:
-> 
-> > On Wed, Sep 06, 2017 at 02:20:05PM +0200, Alban wrote:
-> > > On Wed, 6 Sep 2017 13:14:35 +0200
-> > > Ralf Baechle <ralf@linux-mips.org> wrote:
-> > >   
-> > > > On Fri, Aug 18, 2017 at 05:32:42PM +0200, Rocco Folino wrote:
-> > > >   
-> > > > > Allow to choose devicetrees from Kconfig.
-> > > > > 
-> > > > > Signed-off-by: Rocco Folino <rocco.folino@gmail.com>  
-> > > 
-> > > I don't really see the point of this patch. Building the dtb doesn't
-> > > take any significant time, so why add this extra complexity?  
-> > 
-> > Because you need to select the SoC type in order to enable some
-> > drivers, for example on the AR9331 to use the serial you need the
-> > CONFIG_SERIAL_AR933X which depends on the CONFIG_SOC_AR933X.
-> 
-> Seeing as this driver is the only one that make use of CONFIG_SOC_AR933X
-> I would prefer removing this dependency. It would also open the way to have
-> the driver built in COMPILE_TEST. A few more fixes might be needed but that
-> would be better than such a workaround.
+Hi everyone,
 
-Yes, I agree!
+This patch series is v7 of the driver for supervisory processor found
+on RAVE series of devices from ZII. Supervisory processor is a PIC
+microcontroller connected to various electrical subsystems on RAVE
+devices whose firmware implements protocol to command/qery them.
+
+Changes since [v6]:
+
+    - Patch 2/2 has been applied by Lee so it is no longer a part of the series
+
+    - Removed all sysfs and debugfs attribute to reduce the scope of
+      the driver propsed for inclusion. This is not a critical to have
+      feature and can be added/discussed later.
+
+Changes since [v5]:
+
+    - Fixed a build break, introduced by a last minute change in [v5]
+
+    - Moved majority of attributes that were exposed over sysfs to debugfs
+
+    - Document remaining sysfs attributes in Documentation/ABI/testing/sysfs-platform-rave-sp
+
+Changes since [v4]:
+
+    - Replaced usage of DEVICE_ATTR with DEVICE_ATTR_RW
+
+    - Fixed a number of warnings produces by sparse tool
+
+    - Incorporated event more feedback from Andy Shevchenko
+
+    - Collected Reviewed-by from Andy
+
+Changes since [v3]:
+
+    - Re-collected lost Acked-by from Rob
+
+    - Incorporated further feedback from Andy Shevchenko
+
+    - Dropped useless change (stray newline) to drivers/mfd/Makefile
+
+Changes since [v2]:
+
+    - Fixed swapped command codes in rave_sp_common_get_boot_source()
+      and rave_sp_common_set_boot_source() revealed by further testing
+      of the code
+
+    - Incorporated feedback from Andy Shevchenko
+
+Changes since [v1]:
+
+    - Updated wording in DT-bindings as per Rob's request.
+
+    - Collected Rob's Acked-by for patch 2/2
+
+NOTE:
+
+ * The driver for "zii,rave-sp-watchdog" exists, but I haven't
+   submitted it yet, becuase I wanted to make sure that API exposed by
+   this MFD is acceptable and doesn't need drastic changes.
+
+ * This driver is dependent on crc_ccitt_false() introduced in
+   2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
+
+Feedback is greatly appreciated!
 
 Thanks,
+Andrey Smirnov
 
-Rocco
+[v6] lkml.kernel.org/r/20170828163131.24815-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v5] lkml.kernel.org/r/20170728142704.11156-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v4] lkml.kernel.org/r/20170725184450.13171-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v3] lkml.kernel.org/r/20170724150915.4824-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v2] lkml.kernel.org/r/20170718175604.11735-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v1] lkml.kernel.org/r/20170710170449.4544-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+Andrey Smirnov (1):
+  platform: Add driver for RAVE Supervisory Processor
+
+ drivers/platform/Kconfig        |   2 +
+ drivers/platform/Makefile       |   1 +
+ drivers/platform/rave/Kconfig   |  26 ++
+ drivers/platform/rave/Makefile  |   1 +
+ drivers/platform/rave/rave-sp.c | 677 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/rave-sp.h         |  54 ++++
+ 6 files changed, 761 insertions(+)
+ create mode 100644 drivers/platform/rave/Kconfig
+ create mode 100644 drivers/platform/rave/Makefile
+ create mode 100644 drivers/platform/rave/rave-sp.c
+ create mode 100644 include/linux/rave-sp.h
+
+-- 
+2.13.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
