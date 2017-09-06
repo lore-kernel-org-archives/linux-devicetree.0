@@ -1,112 +1,50 @@
-From: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: r8a7743: Add IIC cores to dtsi
-Date: Wed,  6 Sep 2017 14:52:06 +0100
-Message-ID: <1504705926-31625-1-git-send-email-chris.paterson2@renesas.com>
-References: <1502704398-28378-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502704398-28378-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Rocco Folino <rocco.folino@gmail.com>
+Subject: Re: [PATCH] MIPS: ath79: support devicetree selection
+Date: Wed, 6 Sep 2017 15:59:59 +0200
+Message-ID: <20170906135959.GA25439@void>
+References: <b78cb3ef8df8531efdb7b011743ad3f38978015d.1503070362.git.rocco.folino@gmail.com>
+ <20170906111435.GA1856@linux-mips.org>
+ <20170906142005.67586253@avionic-0141>
+ <20170906123200.GA21761@void>
+ <20170906153543.412774d5@avionic-0141>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170906153543.412774d5@avionic-0141>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alban <albeu@free.fr>
+Cc: Ralf Baechle <ralf@linux-mips.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Antony Pavlov <antonynpavlov@gmail.com>, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+On Wed, Sep 06, 2017 at 03:35:43PM +0200, Alban wrote:
+> On Wed, 6 Sep 2017 14:32:00 +0200
+> Rocco Folino <rocco.folino@gmail.com> wrote:
+> 
+> > On Wed, Sep 06, 2017 at 02:20:05PM +0200, Alban wrote:
+> > > On Wed, 6 Sep 2017 13:14:35 +0200
+> > > Ralf Baechle <ralf@linux-mips.org> wrote:
+> > >   
+> > > > On Fri, Aug 18, 2017 at 05:32:42PM +0200, Rocco Folino wrote:
+> > > >   
+> > > > > Allow to choose devicetrees from Kconfig.
+> > > > > 
+> > > > > Signed-off-by: Rocco Folino <rocco.folino@gmail.com>  
+> > > 
+> > > I don't really see the point of this patch. Building the dtb doesn't
+> > > take any significant time, so why add this extra complexity?  
+> > 
+> > Because you need to select the SoC type in order to enable some
+> > drivers, for example on the AR9331 to use the serial you need the
+> > CONFIG_SERIAL_AR933X which depends on the CONFIG_SOC_AR933X.
+> 
+> Seeing as this driver is the only one that make use of CONFIG_SOC_AR933X
+> I would prefer removing this dependency. It would also open the way to have
+> the driver built in COMPILE_TEST. A few more fixes might be needed but that
+> would be better than such a workaround.
 
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
-v2->v3
-- Renamed lables to use iic instead of i2c.
+Yes, I agree!
 
-v1->v2
-- Corrected the resets property for i2c6 device node.
+Thanks,
 
-This patch is based on renesas-devel tag renesas-devel-20170905-v4.13.
-
-DT bindings has been accepted by Wolfram:
-https://patchwork.kernel.org/patch/9888119
-
-
- arch/arm/boot/dts/r8a7743.dtsi | 55 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 665a515..266c5ec 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -25,6 +25,9 @@
- 		i2c3 = &i2c3;
- 		i2c4 = &i2c4;
- 		i2c5 = &i2c5;
-+		i2c6 = &iic0;
-+		i2c7 = &iic1;
-+		i2c8 = &iic3;
- 	};
- 
- 	cpus {
-@@ -436,6 +439,58 @@
- 			status = "disabled";
- 		};
- 
-+		iic0: i2c@e6500000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,iic-r8a7743",
-+				     "renesas,rcar-gen2-iic",
-+				     "renesas,rmobile-iic";
-+			reg = <0 0xe6500000 0 0x425>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 318>;
-+			dmas = <&dmac0 0x61>, <&dmac0 0x62>,
-+			       <&dmac1 0x61>, <&dmac1 0x62>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 318>;
-+			status = "disabled";
-+		};
-+
-+		iic1: i2c@e6510000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,iic-r8a7743",
-+				     "renesas,rcar-gen2-iic",
-+				     "renesas,rmobile-iic";
-+			reg = <0 0xe6510000 0 0x425>;
-+			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 323>;
-+			dmas = <&dmac0 0x65>, <&dmac0 0x66>,
-+			       <&dmac1 0x65>, <&dmac1 0x66>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 323>;
-+			status = "disabled";
-+		};
-+
-+		iic3: i2c@e60b0000 {
-+			/* doesn't need pinmux */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,iic-r8a7743",
-+				     "renesas,rcar-gen2-iic",
-+				     "renesas,rmobile-iic";
-+			reg = <0 0xe60b0000 0 0x425>;
-+			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 926>;
-+			dmas = <&dmac0 0x77>, <&dmac0 0x78>,
-+			       <&dmac1 0x77>, <&dmac1 0x78>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 926>;
-+			status = "disabled";
-+		};
-+
- 		scifa0: serial@e6c40000 {
- 			compatible = "renesas,scifa-r8a7743",
- 				     "renesas,rcar-gen2-scifa", "renesas,scifa";
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rocco
