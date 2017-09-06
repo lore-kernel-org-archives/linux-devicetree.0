@@ -1,63 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 1/5] scsi: ufs: add Hisilicon ufs driver code
-Date: Thu, 7 Sep 2017 00:46:36 +0200
-Message-ID: <CAK8P3a0vV94g=iNLfHXXgR-XFHaaK-mHoQQ45FDYG+FVQhix6Q@mail.gmail.com>
-References: <20170829084116.106695-1-liwei213@huawei.com> <20170829084116.106695-2-liwei213@huawei.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: net: document Bluetooth bindings in
+ one place
+Date: Wed, 6 Sep 2017 16:26:10 -0700
+Message-ID: <20170906232610.GG1165@minitux>
+References: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170829084116.106695-2-liwei213@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Li Wei <liwei213@huawei.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>Linux
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1504699898-28011-1-git-send-email-loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 29, 2017 at 10:41 AM, Li Wei <liwei213@huawei.com> wrote:
-itel(host, UFS_ARESET, PERRSTDIS3_OFFSET);
-> +
-> +       /* disable lp_reset_n */
-> +       ufs_sys_ctrl_set_bits(host, BIT_SYSCTRL_LP_RESET_N, RESET_CTRL_EN);
-> +       mdelay(1);
-> +
-> +       if (gpio_is_valid(host->reset_gpio))
-> +               gpio_direction_output(host->reset_gpio, 1);
-> +
-> +       ufs_sys_ctrl_writel(host, MASK_UFS_DEVICE_RESET | BIT_UFS_DEVICE_RESET,
-> +               UFS_DEVICE_RESET_CTRL);
-> +
-> +       mdelay(20);
+On Wed 06 Sep 05:11 PDT 2017, Loic Poulain wrote:
 
-Could those mdelay() be turned into msleep() functions?
-
-> +static int ufs_hisi_get_resource(struct ufs_hisi_host *host)
-> +{
-> +       struct resource *mem_res;
-> +       struct device_node *np = NULL;
-> +       struct device *dev = host->hba->dev;
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +
-> +       /* get resource of ufs sys ctrl */
-> +       mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       host->ufs_sys_ctrl = devm_ioremap_resource(dev, mem_res);
-> +       if (IS_ERR(host->ufs_sys_ctrl))
-> +               return PTR_ERR(host->ufs_sys_ctrl);
-> +
-> +       np = of_find_compatible_node(NULL, NULL, "hisilicon,hi3660-crgctrl");
-
-It's generally not a good idea to look up one device by its "compatible"
-string. What is the "crgctrl"? Does it have a proper DT binding?
-Maybe there should be a driver for it, or you could make it a "syscon"
-device and look it up by phandle instead.
-
-> diff --git a/drivers/scsi/ufs/ufs-hisi.h b/drivers/scsi/ufs/ufs-hisi.h
+> In the same way as Ethernet, gather the Bluetooth related bindings in
+> one file. Introduce the bluetooth-bd-address property which can be used
+> to store the assigned BD address.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  v2: Set device as unconfigured if default address detected
+>      Add warning if BD addr retrieved from DT
+>  v3: if no addr retrieved from DT, unconditionally set
+>      the invalid BD addr flag.
+>      swap and set bdaddr in the platform probe
+>  v4: Add dt-bindings documentation
+>      split patch in two parts (setup, dt prop)
+>      use local-bd-address name instead of local-mac-address
+>  v5: remove 2/3 merged in bluetooth-next tree
+>      Add bluetooth.txt for common BT bindings
+>      expect local-bd-address in little-endian format
+>  v6: use of_property_read_u8_array instead of of_get_property
+> 
+>  Documentation/devicetree/bindings/net/bluetooth.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/bluetooth.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/bluetooth.txt b/Documentation/devicetree/bindings/net/bluetooth.txt
 > new file mode 100644
-> index 000000000000..52430a2aca90
+> index 0000000..94797df
 > --- /dev/null
-> +++ b/drivers/scsi/ufs/ufs-hisi.h
+> +++ b/Documentation/devicetree/bindings/net/bluetooth.txt
+> @@ -0,0 +1,5 @@
+> +The following properties are common to the Bluetooth controllers:
+> +
+> +- local-bd-address: array of 6 bytes, specifies the BD address that was
+> +  uniquely assigned to the Bluetooth device, formatted with least significant
+> +  byte first (little-endian).
 
+Is there a good reason for making this little endian?
 
-If the header is only used in one file, you don't need it, just move
-the definitions
-into the other file.
+Sure it's only going to be read and written by computers, but for anyone
+reading the generated DT it sure looks like the values are reversed.
 
-      Arnd
+Regards,
+Bjorn
