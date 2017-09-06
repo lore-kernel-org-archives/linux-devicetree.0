@@ -1,284 +1,110 @@
 From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 1/3] arm: npcm: add basic support for Nuvoton BMCs
-Date: Wed,  6 Sep 2017 01:07:49 -0700
-Message-ID: <20170906080751.6773-2-brendanhiggins@google.com>
-References: <20170906080751.6773-1-brendanhiggins@google.com>
+Subject: Re: [PATCH v3 2/3] arm: dts: add Nuvoton NPCM750 device tree
+Date: Wed, 6 Sep 2017 01:19:11 -0700
+Message-ID: <CAFd5g45s6yo=HSut76YknOkUeKbV8yOXWbivc=EyM2s7R8DOrA@mail.gmail.com>
+References: <20170906003016.2159-1-brendanhiggins@google.com>
+ <20170906003016.2159-3-brendanhiggins@google.com> <CACPK8Xc0jrnx96=BoGMwQgoT2brgc0UTNU5HMHXDeFfeToVgxA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170906080751.6773-1-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CACPK8Xc0jrnx96=BoGMwQgoT2brgc0UTNU5HMHXDeFfeToVgxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds basic support for the Nuvoton NPCM750 BMC.
+On Tue, Sep 5, 2017 at 10:23 PM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+> On Wed, Sep 6, 2017 at 10:00 AM, Brendan Higgins
+> <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+>> +++ b/Documentation/devicetree/bindings/arm/npcm/npcm.txt
+>> @@ -0,0 +1,6 @@
+>> +NPCM Platforms Device Tree Bindings
+>> +-----------------------------------
+>> +NPCM750 SoC
+>> +Required root node properties:
+>> +       - compatible = "nuvoton,npcm750";
+>> +
+>
+> This is minimal. I assume there will be more content added as more
+> support is added?
 
-Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/Kconfig             |  2 +
- arch/arm/Makefile            |  1 +
- arch/arm/mach-npcm/Kconfig   | 50 +++++++++++++++++++++++++
- arch/arm/mach-npcm/Makefile  |  3 ++
- arch/arm/mach-npcm/headsmp.S | 17 +++++++++
- arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
- arch/arm/mach-npcm/platsmp.c | 89 ++++++++++++++++++++++++++++++++++++++++++++
- 7 files changed, 196 insertions(+)
- create mode 100644 arch/arm/mach-npcm/Kconfig
- create mode 100644 arch/arm/mach-npcm/Makefile
- create mode 100644 arch/arm/mach-npcm/headsmp.S
- create mode 100644 arch/arm/mach-npcm/npcm7xx.c
- create mode 100644 arch/arm/mach-npcm/platsmp.c
+Yep, that's the plan. They have a number of similar BMCs, both those
+based on different ARM cores and some with different peripheral sets,
+so we will probably want to have different compat strings for those.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 61a0cb15067e..05543f1cfbde 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -782,6 +782,8 @@ source "arch/arm/mach-netx/Kconfig"
- 
- source "arch/arm/mach-nomadik/Kconfig"
- 
-+source "arch/arm/mach-npcm/Kconfig"
-+
- source "arch/arm/mach-nspire/Kconfig"
- 
- source "arch/arm/plat-omap/Kconfig"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 47d3a1ab08d2..60ca50c7d762 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -191,6 +191,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)		+= mediatek
- machine-$(CONFIG_ARCH_MXS)		+= mxs
- machine-$(CONFIG_ARCH_NETX)		+= netx
- machine-$(CONFIG_ARCH_NOMADIK)		+= nomadik
-+machine-$(CONFIG_ARCH_NPCM)		+= npcm
- machine-$(CONFIG_ARCH_NSPIRE)		+= nspire
- machine-$(CONFIG_ARCH_OXNAS)		+= oxnas
- machine-$(CONFIG_ARCH_OMAP1)		+= omap1
-diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
-new file mode 100644
-index 000000000000..d47061855439
---- /dev/null
-+++ b/arch/arm/mach-npcm/Kconfig
-@@ -0,0 +1,50 @@
-+menuconfig ARCH_NPCM
-+	bool "Nuvoton NPCM Architecture"
-+	select ARCH_REQUIRE_GPIOLIB
-+	select USE_OF
-+	select PINCTRL
-+	select PINCTRL_NPCM7XX
-+
-+if ARCH_NPCM
-+
-+comment "NPCMX50 CPU type"
-+
-+config CPU_NPCM750
-+	depends on ARCH_NPCM && ARCH_MULTI_V7
-+	bool "Support for NPCM750 BMC CPU (Poleg)"
-+	select CACHE_L2X0
-+	select CPU_V7
-+	select ARM_GIC
-+	select HAVE_SMP
-+	select SMP
-+	select SMP_ON_UP
-+	select HAVE_ARM_SCU
-+	select HAVE_ARM_TWD if SMP
-+	select ARM_ERRATA_458693
-+	select ARM_ERRATA_720789
-+	select ARM_ERRATA_742231
-+	select ARM_ERRATA_754322
-+	select ARM_ERRATA_764369
-+	select ARM_ERRATA_794072
-+	select PL310_ERRATA_588369
-+	select PL310_ERRATA_727915
-+	select USB_EHCI_ROOT_HUB_TT
-+	select USB_ARCH_HAS_HCD
-+	select USB_ARCH_HAS_EHCI
-+	select USB_EHCI_HCD
-+	select USB_ARCH_HAS_OHCI
-+	select USB_OHCI_HCD
-+	select USB
-+	select FIQ
-+	select CPU_USE_DOMAINS
-+	select GENERIC_CLOCKEVENTS
-+	select CLKDEV_LOOKUP
-+	select COMMON_CLK if OF
-+	select NPCM750_TIMER
-+	select MFD_SYSCON
-+	help
-+	  Support for NPCM750 BMC CPU (Poleg).
-+
-+	  Nuvoton NPCM750 BMC based on the Cortex A9.
-+
-+endif
-diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
-new file mode 100644
-index 000000000000..78416055b854
---- /dev/null
-+++ b/arch/arm/mach-npcm/Makefile
-@@ -0,0 +1,3 @@
-+AFLAGS_headsmp.o		+= -march=armv7-a
-+
-+obj-$(CONFIG_CPU_NPCM750)	+= npcm7xx.o platsmp.o headsmp.o
-diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
-new file mode 100644
-index 000000000000..9fccbbd49ed4
---- /dev/null
-+++ b/arch/arm/mach-npcm/headsmp.S
-@@ -0,0 +1,17 @@
-+/*
-+ * Copyright 2017 Google, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/linkage.h>
-+#include <linux/init.h>
-+#include <asm/assembler.h>
-+
-+ENTRY(npcm7xx_secondary_startup)
-+	safe_svcmode_maskall r0
-+
-+	b	secondary_startup
-+ENDPROC(npcm7xx_secondary_startup)
-diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
-new file mode 100644
-index 000000000000..132e9d587857
---- /dev/null
-+++ b/arch/arm/mach-npcm/npcm7xx.c
-@@ -0,0 +1,34 @@
-+/*
-+ * Copyright (c) 2017 Nuvoton Technology corporation.
-+ * Copyright 2017 Google, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/types.h>
-+#include <asm/mach/arch.h>
-+#include <asm/mach-types.h>
-+#include <asm/mach/map.h>
-+#include <asm/hardware/cache-l2x0.h>
-+
-+#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |			       \
-+			 L310_AUX_CTRL_DATA_PREFETCH |			       \
-+			 L310_AUX_CTRL_NS_LOCKDOWN |			       \
-+			 L310_AUX_CTRL_CACHE_REPLACE_RR |		       \
-+			 L2C_AUX_CTRL_SHARED_OVERRIDE |			       \
-+			 L310_AUX_CTRL_FULL_LINE_ZERO)
-+
-+static const char *const npcm7xx_dt_match[] = {
-+	"nuvoton,npcm750",
-+	NULL
-+};
-+
-+DT_MACHINE_START(NPCM7XX_DT, "NPCMX50 Chip family")
-+	.atag_offset	= 0x100,
-+	.dt_compat	= npcm7xx_dt_match,
-+	.l2c_aux_val	= NPCM7XX_AUX_VAL,
-+	.l2c_aux_mask	= ~NPCM7XX_AUX_VAL,
-+MACHINE_END
-diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
-new file mode 100644
-index 000000000000..144e3e7ec7e6
---- /dev/null
-+++ b/arch/arm/mach-npcm/platsmp.c
-@@ -0,0 +1,89 @@
-+/*
-+ * Copyright 2017 Google, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#define pr_fmt(fmt) "PLATSMP: " fmt
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/smp.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <asm/cacheflush.h>
-+#include <asm/smp.h>
-+#include <asm/smp_plat.h>
-+#include <asm/smp_scu.h>
-+
-+#define NPCM7XX_SCRPAD_REG 0x13c
-+
-+extern void npcm7xx_secondary_startup(void);
-+
-+static int npcm7xx_smp_boot_secondary(unsigned int cpu,
-+				      struct task_struct *idle)
-+{
-+	struct device_node *gcr_np;
-+	void __iomem *gcr_base;
-+	int ret = 0;
-+
-+	gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
-+	if (!gcr_np) {
-+		pr_err("no gcr device node\n");
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+	gcr_base = of_iomap(gcr_np, 0);
-+	if (!gcr_base) {
-+		pr_err("could not iomap gcr at: 0x%llx\n", gcr_base);
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+
-+	/* give boot ROM kernel start address. */
-+	iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
-+		  NPCM7XX_SCRPAD_REG);
-+	/* make sure npcm7xx_secondary_startup is seen by all observers. */
-+	smp_wmb();
-+	dsb_sev();
-+	/* make sure write buffer is drained */
-+	mb();
-+
-+out:
-+	iounmap(gcr_base);
-+	return ret;
-+}
-+
-+static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	struct device_node *scu_np;
-+	void __iomem *scu_base;
-+
-+	scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
-+	if (!scu_np) {
-+		pr_err("no scu device node\n");
-+		return;
-+	}
-+	scu_base = of_iomap(scu_np, 0);
-+	if (!scu_base) {
-+		pr_err("could not iomap scu at: 0x%llx\n", scu_base);
-+		return;
-+	}
-+
-+	scu_enable(scu_base);
-+
-+out:
-+	iounmap(scu_base);
-+}
-+
-+static struct smp_operations npcm7xx_smp_ops __initdata = {
-+	.smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
-+	.smp_boot_secondary = npcm7xx_smp_boot_secondary,
-+};
-+
-+CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm7xx-smp", &npcm7xx_smp_ops);
--- 
-2.14.1.581.gf28d330327-goog
+>
+> Does it need it's own directory?
 
+Not sure, I saw that some of the other architectures did it, some did
+not. I don't feel strongly about it.
+
+>
+>
+>> diff --git a/arch/arm/boot/dts/nuvoton-npcm750-evb.dts b/arch/arm/boot/dts/nuvoton-npcm750-evb.dts
+>> new file mode 100644
+>> index 000000000000..54df32cff21b
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/nuvoton-npcm750-evb.dts
+>
+>> +
+>> +/dts-v1/;
+>> +#include "nuvoton-npcm750.dtsi"
+>> +
+>> +/ {
+>> +       model = "Nuvoton npcm750 Development Board (Device Tree)";
+>> +       compatible = "nuvoton,npcm750";
+>> +
+>> +       chosen {
+>> +               stdout-path = &serial3;
+>> +               bootargs = "earlyprintk=serial,serial3,115200";
+>> +       };
+>> +
+>> +       memory {
+>> +               reg = <0 0x40000000>;
+>> +       };
+>> +
+>> +       cpus {
+>> +               enable-method = "nuvoton,npcm7xx-smp";
+>> +       };
+>> +
+>> +       clk: clock-controller@f0801000 {
+>> +               status = "okay";
+>> +       };
+>> +
+>> +       apb {
+>> +               watchdog1: watchdog@f0009000 {
+>> +                       status = "okay";
+>> +               };
+>
+> You've already got the label for the node, is there are reason you
+> don't use a phandle to set the status?
+
+Addressed in v4.
+
+>
+> &watchdog1 {
+>    status = "okay";
+> };
+>
+> Same with the serial nodes below.
+>
+>> +
+>> +               serial0: serial0@f0001000 {
+>> +                       status = "okay";
+>> +               };
+>> +
+>> +               serial1: serial1@f0002000 {
+>> +                       status = "okay";
+>> +               };
+>> +
+>> +               serial2: serial2@f0003000 {
+>> +                       status = "okay";
+>> +               };
+>> +
+>> +               serial3: serial3@f0004000 {
+>> +                       status = "okay";
+>> +               };
+>> +       };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
