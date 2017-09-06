@@ -1,74 +1,138 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v6 3/3] Bluetooth: btqcomsmd: retrieve BD address from DT
- property
-Date: Wed, 6 Sep 2017 19:24:37 +0200
-Message-ID: <AD664D12-31A5-456B-9971-4A76BDC32BA3@holtmann.org>
-References: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
- <1504699898-28011-3-git-send-email-loic.poulain@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1504699898-28011-3-git-send-email-loic.poulain@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Loic Poulain <loic.poulain@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Bluez mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, bjorn.andersson@linaro.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: Setting CPU clock frequency on early boot
+Date: Wed, 6 Sep 2017 14:20:04 -0500
+Message-ID: <CAL_Jsq+oBVeZ9FrvCZsVWyQjTiFw=mujf-p64oLEEo4XYkdmVQ@mail.gmail.com>
+References: <1504625867.32565.34.camel@synopsys.com> <CAL_JsqJ7c-raBnb0U+hL+hka7zN3XosX0pU1Sswoq16nbRFb+g@mail.gmail.com>
+ <b8f7f407-303a-2f3c-1a16-bfb385204930@synopsys.com> <1504705881.3829.19.camel@synopsys.com>
+ <CAL_Jsq+B74keQ3N=8x6jx1URkLq8fa9gwsc5JAuiV86Wwczi9Q@mail.gmail.com> <1504714938.3829.40.camel@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1504714938.3829.40.camel@synopsys.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Loic,
+On Wed, Sep 6, 2017 at 11:22 AM, Alexey Brodkin
+<Alexey.Brodkin@synopsys.com> wrote:
+> Hi Rob,
+>
+> On Wed, 2017-09-06 at 10:25 -0500, Rob Herring wrote:
+>> On Wed, Sep 6, 2017 at 8:51 AM, Alexey Brodkin
+>> <Alexey.Brodkin@synopsys.com> wrote:
+>> >
+>> > Hi Vineet, Rob,
+>> >
+>> > On Tue, 2017-09-05 at 16:40 -0700, Vineet Gupta wrote:
+>> > >
+>> > > On 09/05/2017 03:04 PM, Rob Herring wrote:
+>> > > >
+>> > > >
+>> > > > On Tue, Sep 5, 2017 at 10:37 AM, Alexey Brodkin
+>> > > > <Alexey.Brodkin@synopsys.com> wrote:
+>
+> [snip]
+>
+>> > Yeah, that's an interesting question. We may indeed move more smarts to the clock driver
+>> > but:
+>> >  1. We'll have duplicate code in different clock drivers. Even today that kind of clock
+>> >     setup is applicable to AXS10x and HSDK platforms (and they use different clock drivers).
+>>
+>> No, you could provide a common, shared function to call. Then each
+>> platform can opt-in. If you can make something that applies to every
+>> single platform now or in the future, then I'd put it in arch. If you
+>> have plans to decouple the timer and cpu clocks, then sounds like you
+>> can't.
+>
+> Right so we'll implement a function which is called by a platform if required.
+> That way we escape copy-pasting while keeping enough flexibility for current
+> and future platforms.
+>
+>> IMO, if it's not part of the defined CPU architecture, then don't put
+>> it in arch/. That's how we end up with multiple copies of the same
+>> thing done arbitrarily different ways because few people look across
+>> architectures.
+>
+> So do you propose to have the function [that reads "clock-frequency" from say
+> CPU node and passes its value to CPU's parent clock driver] in generic
+> [i.e. architecture agnostic] code somewhere in "init/main.c"?
 
-> Retrieve BD address from the local-bd-address property.
-> This address must be unique and is usually added in the DT
-> by the bootloader which has access to the provisioned data.
-> 
-> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-> ---
-> v2: Set device as unconfigured if default address detected
->     Add warning if BD addr retrieved from DT
-> v3: if no addr retrieved from DT, unconditionally set
->     the invalid BD addr flag.
->     swap and set bdaddr in the platform probe
-> v4: Add dt-bindings documentation
->     split patch in two parts (setup, dt prop)
->     use local-bd-address name instead of local-mac-address
-> v5: remove 2/3 merged in bluetooth-next tree
->     Add bluetooth.txt for common BT bindings
->     expect local-bd-address in little-endian format
-> v6: use of_property_read_u8_array instead of of_get_property
-> 
-> drivers/bluetooth/btqcomsmd.c | 11 +++++++++++
-> 1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/btqcomsmd.c b/drivers/bluetooth/btqcomsmd.c
-> index bd810d0..b5716f0 100644
-> --- a/drivers/bluetooth/btqcomsmd.c
-> +++ b/drivers/bluetooth/btqcomsmd.c
-> @@ -15,6 +15,8 @@
-> #include <linux/module.h>
-> #include <linux/slab.h>
-> #include <linux/rpmsg.h>
-> +#include <linux/of.h>
-> +
-> #include <linux/soc/qcom/wcnss_ctrl.h>
-> #include <linux/platform_device.h>
-> 
-> @@ -156,6 +158,15 @@ static int btqcomsmd_probe(struct platform_device *pdev)
-> 	if (IS_ERR(btq->cmd_channel))
-> 		return PTR_ERR(btq->cmd_channel);
-> 
-> +	/* The local-bd-address property is usually injected by the
-> +	 * bootloader which has access to the allocated BD address.
-> +	 */
-> +	if (!of_property_read_u8_array(pdev->dev.of_node, "local-bd-address",
-> +				       (u8 *)&btq->bdaddr, sizeof(bdaddr_t))) {
-> +		BT_INFO("BD address %pMR retrieved from device-tree",
-> +			&btq->bdaddr);
-> +	}
+No, just like you said above and have the platform's clock driver
+initialize frequencies.
 
-any reason you are not using bt_dev_info here? I think it would be important to print the device information prefix.
+I haven't seen anyone else want such a thing as generally the
+bootloader should initialize things to something reasonable.
 
-Otherwise the patch set looks good to me. However I would prefer if we get an ack from Rob.
+>> >  2. Print out of CPU frequency which is used during boot process for us is important as well
+>> >     especially during bring-up of new HW.
+>> >
+>> >  3. If there's no dedicated "clock-frequency" parameter in CPU node we won't
+>> >     change anything so that non-affected platforms will live as they used to.
+>> >
+>> > That said IMHO proposed implementation is what we want to kep for now.
+>> >
+>> > >
+>> > > Also note that this code is using a new / adhoc DT binding cpu-freq in cou node to
+>> > > do the override - is that acceptable ?
+>>
+>> No, I meant to point that out.
+>
+> Sorry, but for me it's not clear what did you mean here.
+> Care to elaborate a bit more?
 
-Regards
+I noticed the same thing and meant to highlight that in my first
+reply. Use clock-frequency, don't invent something new.
 
-Marcel
+>> > I think we'll switch to more common "clock-frequency" in the next respin.
+>> > Indeed "cpu-freq" might be a bit misleading.
+>>
+>> Ideally, you'd use the clock binding eventually.
+>
+> Again I'm probably missing something :)
+
+"clock-frequency" property and the clock bindings (i.e. clocks =
+<&phandle>) are generally mutually exclusive at least within clock
+consumer side. There's the assigned-clocks binding which provides the
+ability to set both parent clocks and frequency.
+
+> I meant we will have both clock phandle and "clock-frequency" at the same time.
+> Something like this:
+> -------------------------------->8---------------------------
+>         cpus {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+>                 cpu@0 {
+>                         device_type = "cpu";
+>                         compatible = "snps,archs38";
+>                         reg = <0>;
+>                         clocks = <&core_clk>;
+>                         clock-frequency = <100000000>;  <-- That's where we want to set desired value
+>                 };
+>         ...
+>         }
+>
+>         core_clk: core-clk@80 {
+>                 compatible = "snps,axs10x-arc-pll-clock";
+>                 reg = <0x80 0x10>, <0x100 0x10>;
+>                 #clock-cells = <0>;
+>                 clocks = <&input_clk>;
+>         };
+> -------------------------------->8---------------------------
+>
+> Or alternatively we may move "clock-frequency" right to the clock's node and have
+> it like that:
+> -------------------------------->8---------------------------
+>         core_clk: core-clk@80 {
+>                 compatible = "snps,axs10x-arc-pll-clock";
+>                 reg = <0x80 0x10>, <0x100 0x10>;
+>
+> #clock-cells = <0>;
+>                 clocks = <&input_clk>;
+>                 clock-frequency = <100000000>;  <-- That's where we want to set desired value
+
+I think this is how it should be done if you use clock-frequency prop.
+This is inline with how fixed-clock binding is done.
+
+Rob
