@@ -1,203 +1,82 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 09/18] firmware: arm_scmi: probe and initialise all the
- supported protocols
-Date: Wed, 6 Sep 2017 14:31:18 +0100
-Message-ID: <7c82503d-229f-08e7-6605-18d778b6f525@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-10-git-send-email-sudeep.holla@arm.com>
- <bc52d57a-156b-cef0-7560-63a9ed7e78b5@arm.com>
+From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [PATCH] of: do not leak console options
+Date: Wed, 6 Sep 2017 22:29:23 +0900
+Message-ID: <20170906132923.GA805@jagdpanzerIV.localdomain>
+References: <20170825173647.1004-1-sergey.senozhatsky@gmail.com>
+ <20170825223721.hilqpt5z4urevh6b@rob-hp-laptop>
+ <20170827071910.GA581@tigerII.localdomain>
+ <20170906124033.GB3143@pathway.suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <bc52d57a-156b-cef0-7560-63a9ed7e78b5-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170906124033.GB3143@pathway.suse.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Petr Mladek <pmladek@suse.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-
-On 06/09/17 10:41, Julien Thierry wrote:
+On (09/06/17 14:40), Petr Mladek wrote:
+[..]
+> > I wouldn't know :) let's find that out
+> > 
+> > the patch used to pass `of_stdout_options' in v1 and v2
+> > https://patches.linaro.org/patch/41559/
+> > 
+> > starting from v3 options are kstrdup-ed
+> > https://patchwork.kernel.org/patch/5398761/
 > 
+> I was curious. The const char * was suggested by Grant Likely,
+> see https://lkml.kernel.org/r/CACxGe6tQ5rWzCUcS+_fFY+rjEyua2khApAoCVKpTuJAghU=N_w@mail.gmail.com
+> I guess that the reason was to make the of_find_node_by_path()
+> API clean.
+
+ok, thanks.
+
+> > > AFAICT, the only reason is options within the console/printk code is a 
+> > > char * and not a const char *. I can't imagine that options need 
+> > > modifications?
+> > 
+> > as far as I can tell, ->match callback has side efects, sometimes.
 > 
-> On 04/08/17 15:31, Sudeep Holla wrote:
->> Now that we have basic support for all the protocols in the
->> specification, let's probe them individually and initialise them.
->>
->> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>   drivers/firmware/arm_scmi/common.h |  5 +++
->>   drivers/firmware/arm_scmi/driver.c | 80
->> +++++++++++++++++++++++++++++++++++++-
->>   2 files changed, 84 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/firmware/arm_scmi/common.h
->> b/drivers/firmware/arm_scmi/common.h
->> index 7473dfcad4ee..d7c73a8d260b 100644
->> --- a/drivers/firmware/arm_scmi/common.h
->> +++ b/drivers/firmware/arm_scmi/common.h
->> @@ -118,4 +118,9 @@ int scmi_version_get(const struct scmi_handle *h,
->> u8 protocol, u32 *version);
->>   void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
->>                        u8 *prot_imp);
->>   +typedef int (*scmi_init_fn_t)(struct scmi_handle *);
->>   int scmi_base_protocol_init(struct scmi_handle *h);
->> +int scmi_perf_protocol_init(struct scmi_handle *h);
->> +int scmi_sensors_protocol_init(struct scmi_handle *h);
->> +int scmi_power_protocol_init(struct scmi_handle *h);
->> +int scmi_clock_protocol_init(struct scmi_handle *h);
->> diff --git a/drivers/firmware/arm_scmi/driver.c
->> b/drivers/firmware/arm_scmi/driver.c
->> index 601d0d7210d9..6f31761043e2 100644
->> --- a/drivers/firmware/arm_scmi/driver.c
->> +++ b/drivers/firmware/arm_scmi/driver.c
->> @@ -157,6 +157,12 @@ struct scmi_shared_mem {
->>       u8 msg_payload[0];
->>   };
->>   +struct scmi_protocol_match {
->> +    u8 protocol_id;
->> +    scmi_init_fn_t fn;
-> 
-> Could we call this "init" or "prot_init"?
-> 
+> I hope that the match() callbacks does not have this kind of side
+> effects. I think that they initialize some stuff, assign some values.
+> But I hope that they do not modify given strings, like console
+> name or options. At leats I am unable to find any place.
+> But I am not 100% sure.
 
-Done
+yeah, seems like we can pass just char *options.
 
->> +    char name[32];
->> +};
->> +
->>   static int scmi_linux_errmap[] = {
->>       /* better than switch case as long as return value is continuous */
->>       0,            /* SCMI_SUCCESS */
->> @@ -687,6 +693,41 @@ static int scmi_xfer_info_init(struct scmi_info
->> *sinfo)
->>       return 0;
->>   }
->>   +static const struct scmi_protocol_match scmi_protocols[] = {
->> +    {
->> +        .protocol_id = SCMI_PROTOCOL_PERF,
->> +        .fn = scmi_perf_protocol_init,
->> +        .name = "scmi-cpufreq",
->> +    }, {
->> +        .protocol_id = SCMI_PROTOCOL_CLOCK,
->> +        .fn = scmi_clock_protocol_init,
->> +        .name = "scmi-clocks",
->> +    }, {
->> +        .protocol_id = SCMI_PROTOCOL_POWER,
->> +        .fn = scmi_power_protocol_init,
->> +        .name = "scmi-power-domain",
->> +    }, {
->> +        .protocol_id = SCMI_PROTOCOL_SENSOR,
->> +        .fn = scmi_sensors_protocol_init,
->> +        .name = "scmi-hwmon",
->> +    },
->> +    {}
->> +};
->> +
->> +static const struct scmi_protocol_match *scmi_protocol_match_get(u8
->> protocol_id)
->> +{
->> +    int i;
->> +    const struct scmi_protocol_match *match = NULL, *loop =
->> scmi_protocols;
->> +
->> +    for (i = 0; i < ARRAY_SIZE(scmi_protocols); i++, loop++)
->> +        if (loop->protocol_id == protocol_id) {
->> +            match = loop;
->> +            break;
->> +        }
->> +
->> +    return match;
->> +}
->> +
-> 
-> The "match" variable is not needed. We can just return "loop" in the if
-> branch and return NULL at the end of the function. Unless we are
-> following some coding standard that advises against that?
->
+const-ifying options (and brl options) on the printk side would probably
+be a better solution. need to check if we can do that, tho. that also
+would require touching printk API, struct console, struct console_cmdline,
+->match callbacks of every console in the kernel, etc. not like a big deal,
+just potentially a bit of a noisy patch.
 
-Agreed and fixed locally.
 
->>   static int scmi_mailbox_check(struct device_node *np)
->>   {
->>       struct of_phandle_args arg;
->> @@ -778,7 +819,7 @@ static int scmi_probe(struct platform_device *pdev)
->>       const struct scmi_desc *desc;
->>       struct scmi_info *info;
->>       struct device *dev = &pdev->dev;
->> -    struct device_node *np = dev->of_node;
->> +    struct device_node *child, *np = dev->of_node;
->>         /* Only mailbox method supported, check for the presence of
->> one */
->>       if (scmi_mailbox_check(np)) {
->> @@ -817,6 +858,43 @@ static int scmi_probe(struct platform_device *pdev)
->>           return ret;
->>       }
->>   +    for_each_available_child_of_node(np, child) {
->> +        int init_ret;
->> +        u32 prot_id;
->> +        const struct scmi_protocol_match *match;
->> +
->> +        if (of_property_read_u32(child, "reg", &prot_id))
->> +            continue;
->> +
->> +        prot_id &= MSG_PROTOCOL_ID_MASK;
->> +
->> +        if (!scmi_is_protocol_implemented(handle, prot_id)) {
->> +            dev_err(dev, "SCMI protocol %d not implemented\n",
->> +                prot_id);
->> +            continue;
->> +        }
->> +
->> +        match = scmi_protocol_match_get(prot_id);
->> +        if (match) {
->> +            struct platform_device *cdev;
->> +
->> +            cdev = of_platform_device_create(child, match->name,
->> +                             dev);
->> +            if (!cdev) {
->> +                dev_err(dev, "failed to create %s device\n",
->> +                    match->name);
->> +                continue;
->> +            }
->> +
->> +            init_ret = match->fn(handle);
->> +            if (init_ret) {
->> +                dev_err(dev, "SCMI protocol %d init error %d\n",
->> +                    prot_id, init_ret);
->> +                of_platform_device_destroy(&cdev->dev, NULL);
->> +            }
->> +        }
->> +    }
->> +
-> 
-> For the code in the "if (match)" branch, would it be better to have an
-> inline function "scmi_create_protocol_device" or something with a name
-> that fits?
-> 
+Rob, Grant,
+will this dirty hack work for you? I can respin the patch.
 
-Done
+---
+ drivers/of/base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Also I was wondering, what is the difference between the protocol being
-> implemented and finding the matching structure? Feels like there is a
-> bit of redundancy. If the protocol is implemented but doesn't have a
-> match structure does it just mean it doesn't need any specific
-> initialization?
-> 
-
-Yes, that's the idea. One reason to have both check is backward
-compatibility. Suppose new protocols are implemented in the f/w but DT
-doesn't have them or know how to use it or there are no users of that
-feature, then skip initializing it. Similarly if DT is updated but not
-the firmware.
-
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 260d33c0f26c..e6839045c454 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1781,8 +1781,8 @@ bool of_console_check(struct device_node *dn, char *name, int index)
+ {
+ 	if (!dn || dn != of_stdout || console_set_on_cmdline)
+ 		return false;
+-	return !add_preferred_console(name, index,
+-				      kstrdup(of_stdout_options, GFP_KERNEL));
++
++	return !add_preferred_console(name, index, (char *)of_stdout_options);
+ }
+ EXPORT_SYMBOL_GPL(of_console_check);
+ 
 -- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.14.1
