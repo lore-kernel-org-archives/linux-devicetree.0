@@ -1,52 +1,151 @@
-From: Hanjun Guo <hanjun.guo@linaro.org>
-Subject: Re: [RFC PATCH 0/6] Add platform device SVM support for ARM SMMUv3
-Date: Wed, 6 Sep 2017 09:24:23 +0800
-Message-ID: <1bd8a485-d915-5d82-1ffe-0754b32a7656@linaro.org>
-References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
+From: Li Xu <li.xu@cirrus.com>
+Subject: [PATCH] ASoC: cs43130: Add break keyword to switch case
+Date: Tue, 5 Sep 2017 20:33:04 -0500
+Message-ID: <cdb2768e-7853-4ada-b1e3-dd48d09d0d15@EX4.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Yisheng Xie <xieyisheng1@huawei.com>, jean-philippe.brucker@arm.com
-Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, robert.moore@intel.com, lv.zheng@intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@acpica.org, liubo95@huawei.com, chenjiankang1@huawei.com, xieyisheng@huawei.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, brian.austin@cirrus.com, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, Paul.Handrigan@cirrus.com, Li Xu <li.xu@cirrus.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2017/8/31 16:20, Yisheng Xie wrote:
-> Jean-Philippe has post a patchset for Adding PCIe SVM support to ARM SMMUv3:
-> https://www.spinics.net/lists/arm-kernel/msg565155.html
-> 
-> But for some platform devices(aka on-chip integrated devices), there is also
-> SVM requirement, which works based on the SMMU stall mode.
-> Jean-Philippe has prepared a prototype patchset to support it:
-> git://linux-arm.org/linux-jpb.git svm/stall
-> 
-> We tested this patchset with some fixes on a on-chip integrated device. The
-> basic function is ok, so I just send them out for review, although this
-> patchset heavily depends on the former patchset (PCIe SVM support for ARM
-> SMMUv3), which is still under discussion.
-> 
-> Patch Overview:
-> *1 to 3 prepare for device tree or acpi get the device stall ability and pasid bits
-> *4 is to realise the SVM function for platform device
-> *5 is fix a bug when test SVM function while SMMU donnot support this feature
-> *6 avoid ILLEGAL setting of STE and CD entry about stall
-> 
-> Acctually here, I also have a question about SVM on SMMUv3:
-> 
-> 1. Why the SVM feature on SMMUv3 depends on BTM feature? when bind a task to device,
->     it will register a mmu_notify. Therefore, when a page range is invalid, we can
->     send TLBI or ATC invalid without BTM?
-> 
-> 2. According to ACPI IORT spec, named component specific data has a node flags field
->     whoes bit0 is for Stall support. However, it do not have any field for pasid bit.
->     Can we use other 5 bits[5:1] for pasid bit numbers, so we can have 32 pasid bit for
->     a single platform device which should be enough, because SMMU only support 20 bit pasid
+Add break keyword to all switch case unless the case is returning.
+Also remove gpio check for consistency.
 
-I think we can propose something similar, it's a missing function in
-IORT.
+Signed-off-by: Li Xu <li.xu@cirrus.com>
+---
+This patch addresses stylistic issues in driver.
 
-Thanks
-Hanjun
+ sound/soc/codecs/cs43130.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/codecs/cs43130.c b/sound/soc/codecs/cs43130.c
+index 643e37f..5ba0edc 100644
+--- a/sound/soc/codecs/cs43130.c
++++ b/sound/soc/codecs/cs43130.c
+@@ -909,6 +909,7 @@ static int cs43130_hw_params(struct snd_pcm_substream *substream,
+ 		regmap_update_bits(cs43130->regmap, CS43130_DSD_PATH_CTL_2,
+ 				   CS43130_DSD_SRC_MASK, CS43130_DSD_SRC_XSP <<
+ 				   CS43130_DSD_SRC_SHIFT);
++		break;
+ 	}
+ 
+ 	if (!sclk && cs43130->dais[dai->id].dai_mode == SND_SOC_DAIFMT_CBM_CFM)
+@@ -1039,6 +1040,7 @@ static int cs43130_pcm_ch_put(struct snd_kcontrol *kcontrol,
+ 		else
+ 			regmap_multi_reg_write(cs43130->regmap, pcm_ch_dis_seq,
+ 					       ARRAY_SIZE(pcm_ch_dis_seq));
++		break;
+ 	}
+ 
+ 	return snd_soc_put_enum_double(kcontrol, ucontrol);
+@@ -1152,6 +1154,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
+ 		case CS4399_CHIP_ID:
+ 			regmap_multi_reg_write(cs43130->regmap, dsd_seq,
+ 					       ARRAY_SIZE(dsd_seq));
++			break;
+ 		}
+ 		break;
+ 	case SND_SOC_DAPM_POST_PMU:
+@@ -1162,6 +1165,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
+ 		case CS4399_CHIP_ID:
+ 			regmap_multi_reg_write(cs43130->regmap, unmute_seq,
+ 					       ARRAY_SIZE(unmute_seq));
++			break;
+ 		}
+ 		break;
+ 	case SND_SOC_DAPM_PRE_PMD:
+@@ -1184,6 +1188,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
+ 			regmap_update_bits(cs43130->regmap,
+ 					   CS43130_DSD_PATH_CTL_1,
+ 					   CS43130_MUTE_MASK, CS43130_MUTE_EN);
++			break;
+ 		}
+ 		break;
+ 	default:
+@@ -1206,6 +1211,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
+ 		case CS4399_CHIP_ID:
+ 			regmap_multi_reg_write(cs43130->regmap, pcm_seq,
+ 					       ARRAY_SIZE(pcm_seq));
++			break;
+ 		}
+ 		break;
+ 	case SND_SOC_DAPM_POST_PMU:
+@@ -1216,6 +1222,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
+ 		case CS4399_CHIP_ID:
+ 			regmap_multi_reg_write(cs43130->regmap, unmute_seq,
+ 					       ARRAY_SIZE(unmute_seq));
++			break;
+ 		}
+ 		break;
+ 	case SND_SOC_DAPM_PRE_PMD:
+@@ -1238,6 +1245,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
+ 			regmap_update_bits(cs43130->regmap,
+ 					   CS43130_PCM_PATH_CTL_1,
+ 					   CS43130_MUTE_MASK, CS43130_MUTE_EN);
++			break;
+ 		}
+ 		break;
+ 	default:
+@@ -1277,6 +1285,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
+ 		case CS43198_CHIP_ID:
+ 			regmap_multi_reg_write(cs43130->regmap, pop_free_seq2,
+ 					       ARRAY_SIZE(pop_free_seq2));
++			break;
+ 		}
+ 		break;
+ 	case SND_SOC_DAPM_POST_PMU:
+@@ -1301,6 +1310,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
+ 		case CS43198_CHIP_ID:
+ 			usleep_range(12000, 12010);
+ 			regmap_write(cs43130->regmap, CS43130_DXD13, 0);
++			break;
+ 		}
+ 
+ 		regmap_write(cs43130->regmap, CS43130_DXD1, 0);
+@@ -1311,6 +1321,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
+ 		case CS4399_CHIP_ID:
+ 			regmap_multi_reg_write(cs43130->regmap, dac_postpmd_seq,
+ 					       ARRAY_SIZE(dac_postpmd_seq));
++			break;
+ 		}
+ 		break;
+ 	default:
+@@ -2133,6 +2144,7 @@ static void cs43130_imp_meas(struct work_struct *wk)
+ 		cs43130_hpload_proc(cs43130, hp_dis_cal_seq2,
+ 				    ARRAY_SIZE(hp_dis_cal_seq2),
+ 				    CS43130_HPLOAD_OFF_INT, ac_idx);
++		break;
+ 	}
+ 
+ 	regmap_multi_reg_write(cs43130->regmap, hp_cln_seq,
+@@ -2543,6 +2555,7 @@ static int cs43130_i2c_probe(struct i2c_client *client,
+ 			digital_hp_routes;
+ 		soc_codec_dev_cs43130.component_driver.num_dapm_routes =
+ 			ARRAY_SIZE(digital_hp_routes);
++		break;
+ 	}
+ 
+ 	ret = snd_soc_register_codec(&client->dev, &soc_codec_dev_cs43130,
+@@ -2586,8 +2599,7 @@ static int cs43130_i2c_remove(struct i2c_client *client)
+ 		device_remove_file(&client->dev, &dev_attr_hpload_ac_r);
+ 	}
+ 
+-	if (cs43130->reset_gpio)
+-		gpiod_set_value_cansleep(cs43130->reset_gpio, 0);
++	gpiod_set_value_cansleep(cs43130->reset_gpio, 0);
+ 
+ 	pm_runtime_disable(&client->dev);
+ 	regulator_bulk_disable(CS43130_NUM_SUPPLIES, cs43130->supplies);
+-- 
+1.9.1
