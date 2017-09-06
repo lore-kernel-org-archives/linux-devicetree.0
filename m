@@ -1,65 +1,87 @@
-From: Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH v6 3/3] Bluetooth: btqcomsmd: retrieve BD address from DT property
-Date: Wed,  6 Sep 2017 14:11:38 +0200
-Message-ID: <1504699898-28011-3-git-send-email-loic.poulain@linaro.org>
-References: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: marcel@holtmann.org, robh+dt@kernel.org, johan.hedberg@gmail.com
-Cc: linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org, Loic Poulain <loic.poulain@linaro.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 4/8] tty/bcm63xx_uart: allow naming clock in device tree
+Date: Wed, 6 Sep 2017 14:17:15 +0200
+Message-ID: <20170906121715.GA27869@kroah.com>
+References: <20170802093429.12572-1-jonas.gorski@gmail.com>
+ <20170802093429.12572-5-jonas.gorski@gmail.com>
+ <CAOiHx=mC=GfX0VvuRWR-AmXYfVOEkuruwGHooS08WrL_z-60UA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOiHx=mC=GfX0VvuRWR-AmXYfVOEkuruwGHooS08WrL_z-60UA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: MIPS Mailing List <linux-mips@linux-mips.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Kevin Cernekee <cernekee@gmail.com>, Jiri Slaby <jslaby@suse.com>, "David S. Miller" <davem@davemloft.net>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Retrieve BD address from the local-bd-address property.
-This address must be unique and is usually added in the DT
-by the bootloader which has access to the provisioned data.
+On Wed, Sep 06, 2017 at 01:01:32PM +0200, Jonas Gorski wrote:
+> Hi Greg,
+> 
+> On 2 August 2017 at 11:34, Jonas Gorski <jonas.gorski@gmail.com> wrote:
+> > Codify using a named clock for the refclk of the uart. This makes it
+> > easier if we might need to add a gating clock (like present on the
+> > BCM6345).
+> >
+> > Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> 
+> Could I please get a (N)Ack so Ralf can add this patch to his tree?
+> 
+> 
+> Regards
+> Jonas
+> 
+> 
+> > ---
+> >  Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.txt | 6 ++++++
+> >  drivers/tty/serial/bcm63xx_uart.c                              | 6 ++++--
+> >  2 files changed, 10 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.txt b/Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.txt
+> > index 5c52e5eef16d..8b2b0460259a 100644
+> > --- a/Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.txt
+> > +++ b/Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.txt
+> > @@ -11,6 +11,11 @@ Required properties:
+> >  - clocks: Clock driving the hardware; used to figure out the baud rate
+> >    divisor.
+> >
+> > +
+> > +Optional properties:
+> > +
+> > +- clock-names: Should be "refclk".
+> > +
+> >  Example:
+> >
+> >         uart0: serial@14e00520 {
+> > @@ -19,6 +24,7 @@ Example:
+> >                 interrupt-parent = <&periph_intc>;
+> >                 interrupts = <2>;
+> >                 clocks = <&periph_clk>;
+> > +               clock-names = "refclk";
+> >         };
+> >
+> >         clocks {
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
----
- v2: Set device as unconfigured if default address detected
-     Add warning if BD addr retrieved from DT
- v3: if no addr retrieved from DT, unconditionally set
-     the invalid BD addr flag.
-     swap and set bdaddr in the platform probe
- v4: Add dt-bindings documentation
-     split patch in two parts (setup, dt prop)
-     use local-bd-address name instead of local-mac-address
- v5: remove 2/3 merged in bluetooth-next tree
-     Add bluetooth.txt for common BT bindings
-     expect local-bd-address in little-endian format
- v6: use of_property_read_u8_array instead of of_get_property
+I don't ack devtree changes :)
 
- drivers/bluetooth/btqcomsmd.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> > diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
+> > index a2b9376ec861..f227eff28d3a 100644
+> > --- a/drivers/tty/serial/bcm63xx_uart.c
+> > +++ b/drivers/tty/serial/bcm63xx_uart.c
+> > @@ -841,8 +841,10 @@ static int bcm_uart_probe(struct platform_device *pdev)
+> >         if (!res_irq)
+> >                 return -ENODEV;
+> >
+> > -       clk = pdev->dev.of_node ? of_clk_get(pdev->dev.of_node, 0) :
+> > -                                 clk_get(&pdev->dev, "refclk");
+> > +       clk = clk_get(&pdev->dev, "refclk");
+> > +       if (IS_ERR(clk) && pdev->dev.of_node)
+> > +               clk = of_clk_get(pdev->dev.of_node, 0);
+> > +
+> >         if (IS_ERR(clk))
+> >                 return -ENODEV;
+> >
 
-diff --git a/drivers/bluetooth/btqcomsmd.c b/drivers/bluetooth/btqcomsmd.c
-index bd810d0..b5716f0 100644
---- a/drivers/bluetooth/btqcomsmd.c
-+++ b/drivers/bluetooth/btqcomsmd.c
-@@ -15,6 +15,8 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/rpmsg.h>
-+#include <linux/of.h>
-+
- #include <linux/soc/qcom/wcnss_ctrl.h>
- #include <linux/platform_device.h>
- 
-@@ -156,6 +158,15 @@ static int btqcomsmd_probe(struct platform_device *pdev)
- 	if (IS_ERR(btq->cmd_channel))
- 		return PTR_ERR(btq->cmd_channel);
- 
-+	/* The local-bd-address property is usually injected by the
-+	 * bootloader which has access to the allocated BD address.
-+	 */
-+	if (!of_property_read_u8_array(pdev->dev.of_node, "local-bd-address",
-+				       (u8 *)&btq->bdaddr, sizeof(bdaddr_t))) {
-+		BT_INFO("BD address %pMR retrieved from device-tree",
-+			&btq->bdaddr);
-+	}
-+
- 	hdev = hci_alloc_dev();
- 	if (!hdev)
- 		return -ENOMEM;
--- 
-1.9.1
+This part is fine with me:
+
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
