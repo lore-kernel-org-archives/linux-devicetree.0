@@ -1,87 +1,63 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [RFC PATCH 0/6] Add platform device SVM support for ARM SMMUv3
-Date: Wed, 6 Sep 2017 10:59:43 +0100
-Message-ID: <fd4200c1-3c89-23f1-a2b1-6457ef8475c1@arm.com>
-References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
- <95d1a9e2-1816-ff7d-9a8d-98406a6c2c22@arm.com>
- <de1a6b52-5e4f-1c0a-af3d-f6adb4b01daf@huawei.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Subject: Re: [PATCH 6/8] bcm63xx_enet: just use "enet" as the clock name
+Date: Wed, 6 Sep 2017 13:00:26 +0200
+Message-ID: <CAOiHx=nvzGybbsTy+y54TetDAQ5zZBLZ3pJh7EVAZM_VbzVS9A@mail.gmail.com>
+References: <20170802093429.12572-1-jonas.gorski@gmail.com> <20170802093429.12572-7-jonas.gorski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <de1a6b52-5e4f-1c0a-af3d-f6adb4b01daf@huawei.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Yisheng Xie <xieyisheng1@huawei.com>
-Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, robert.moore@intel.com, lv.zheng@intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@acpica.org, liubo95@huawei.com, chenjiankang1@huawei.com, xieyisheng@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170802093429.12572-7-jonas.gorski@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: MIPS Mailing List <linux-mips@linux-mips.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Network Development <netdev@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Kevin Cernekee <cernekee@gmail.com>, Jiri Slaby <jslaby@suse.com>, "David S. Miller" <davem@davemloft.net>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/17 02:16, Yisheng Xie wrote:
-> Hi Jean-Philippe,
-> 
-> On 2017/9/5 20:56, Jean-Philippe Brucker wrote:
->> On 31/08/17 09:20, Yisheng Xie wrote:
->>> Jean-Philippe has post a patchset for Adding PCIe SVM support to ARM SMMUv3:
->>> https://www.spinics.net/lists/arm-kernel/msg565155.html
->>>
->>> But for some platform devices(aka on-chip integrated devices), there is also
->>> SVM requirement, which works based on the SMMU stall mode.
->>> Jean-Philippe has prepared a prototype patchset to support it:
->>> git://linux-arm.org/linux-jpb.git svm/stall
->>
->> Only meant for testing at that point, and unfit even for an RFC.
-> 
-> Sorry about that, I should ask you before send it out. It's my mistake. For I also
-> have some question about this patchset.
-> 
-> We have related device, and would like to do some help about it. Do you have
-> any plan about upstream ?
-> 
->>
->>> We tested this patchset with some fixes on a on-chip integrated device. The
->>> basic function is ok, so I just send them out for review, although this
->>> patchset heavily depends on the former patchset (PCIe SVM support for ARM
->>> SMMUv3), which is still under discussion.
->>>
->>> Patch Overview:
->>> *1 to 3 prepare for device tree or acpi get the device stall ability and pasid bits
->>> *4 is to realise the SVM function for platform device
->>> *5 is fix a bug when test SVM function while SMMU donnot support this feature
->>> *6 avoid ILLEGAL setting of STE and CD entry about stall
->>>
->>> Acctually here, I also have some questions about SVM on SMMUv3:
->>>
->>> 1. Why the SVM feature on SMMUv3 depends on BTM feature? when bind a task to device,
->>>    it will register a mmu_notify. Therefore, when a page range is invalid, we can
->>>    send TLBI or ATC invalid without BTM?
->>
->> We could, but the end goal for SVM is to perfectly mirror the CPU page
->> tables. So for platform SVM we would like to get rid of MMU notifiers
->> entirely.
-> 
-> I see, but for some SMMU which do not support BTM, it cannot benefit from SVM.
-> 
-> Meanwhile, do you mean even with BTM feature, the PCI-e device also need to send a
-> ATC invalid by MMU notify? It seems not fair, why not hardware do the entirely work
-> in this case? It may costly for send ATC invalid and sync.
+Hi David,
 
-It will certainly be costly. But there are major problems with
-transforming broadcast TLB maintenance into ATC invalidations in HW:
+On 2 August 2017 at 11:34, Jonas Gorski <jonas.gorski@gmail.com> wrote:
+> Now that we have the individual clocks available as "enet" we
+> don't need to rely on the device id for them anymore.
+>
+> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 
-* VMID:ASID to SID:SSID conversion. TLBIs use VMID:ASID, while ATCIs use
-SID:SSID.
+Could I please get a (N)Ack so Ralf can add this patch to his tree?
 
-* Most importantly, ATC invalidations accounting. Each endpoint has a
-limited number of in-flight ATC invalidate requests. The conversion module
-would have to buffer incoming invalidations and wait for in-flight ATC
-invalidation to complete before sending the next ones. In case of
-overflow, either we lose invalidation (which opens security holes) or we
-somehow put back-pressure on the interconnect (no idea how feasible this
-is, I suspect really hard).
 
-Solving the last one is also quite difficult in software, but at least we
-can still invalidate a range. In hardware we would invalidate the ATC
-page-by-page and quickly jam the bus.
+Regards
+Jonas
 
-Thanks,
-Jean
+> ---
+>  drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+> index 61a88b64bd39..d6844923a1c0 100644
+> --- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+> +++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+> @@ -1718,7 +1718,6 @@ static int bcm_enet_probe(struct platform_device *pdev)
+>         struct bcm63xx_enet_platform_data *pd;
+>         struct resource *res_mem, *res_irq, *res_irq_rx, *res_irq_tx;
+>         struct mii_bus *bus;
+> -       const char *clk_name;
+>         int i, ret;
+>
+>         /* stop if shared driver failed, assume driver->probe will be
+> @@ -1761,14 +1760,12 @@ static int bcm_enet_probe(struct platform_device *pdev)
+>         if (priv->mac_id == 0) {
+>                 priv->rx_chan = 0;
+>                 priv->tx_chan = 1;
+> -               clk_name = "enet0";
+>         } else {
+>                 priv->rx_chan = 2;
+>                 priv->tx_chan = 3;
+> -               clk_name = "enet1";
+>         }
+>
+> -       priv->mac_clk = clk_get(&pdev->dev, clk_name);
+> +       priv->mac_clk = clk_get(&pdev->dev, "enet");
+>         if (IS_ERR(priv->mac_clk)) {
+>                 ret = PTR_ERR(priv->mac_clk);
+>                 goto out;
+> --
+> 2.13.2
+>
