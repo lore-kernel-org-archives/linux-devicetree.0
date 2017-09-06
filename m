@@ -1,95 +1,46 @@
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH 1/4] arm: topology: remove cpu_efficiency
-Date: Wed, 6 Sep 2017 12:43:31 +0100
-Message-ID: <303d3f7b-5d64-e13a-c4f9-dd575958cafa@arm.com>
-References: <20170830144120.9312-1-dietmar.eggemann@arm.com>
- <20170830144120.9312-2-dietmar.eggemann@arm.com>
- <CAKfTPtBXkAyAc1aqqqEn6Yt14_Y7LFp3oySY-=G3ZTuG-DR_nA@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 1/3] dt-bindings: sdhci-omap: Add bindings for the sdhci-omap controller
+Date: Wed, 6 Sep 2017 17:15:54 +0530
+Message-ID: <20170906114556.32532-2-kishon@ti.com>
+References: <20170906114556.32532-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKfTPtBXkAyAc1aqqqEn6Yt14_Y7LFp3oySY-=G3ZTuG-DR_nA@mail.gmail.com>
-Content-Language: en-GB
+In-Reply-To: <20170906114556.32532-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Juri Lelli <juri.lelli@arm.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
+Add binding for the TI's sdhci-omap controller.
 
-On 04/09/17 08:49, Vincent Guittot wrote:
-> Hi Dietmar,
-> 
-> Removing cpu effificiency table looks good to me. Nevertheless, i have
-> some comments below for this patch.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-omap.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-omap.txt
 
-Thanks for the review!
-
-> On 30 August 2017 at 16:41, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->> Remove the 'cpu_efficiency/clock-frequency dt property' based solution
->> to set cpu capacity which was only working for Cortex-A15/A7 arm
->> big.LITTLE systems.
->>
->> I.e. the 'capacity-dmips-mhz' based solution is now the only one. It is
->> shared between arm and arm64 and works for every big.LITTLE system no
->> matter which core types it consists of.
->>
->> Cc: Russell King <linux@arm.linux.org.uk>
->> Cc: Vincent Guittot <vincent.guittot@linaro.org>
->> Cc: Juri Lelli <juri.lelli@arm.com>
->> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
->> ---
->>  arch/arm/kernel/topology.c | 113 ++-------------------------------------------
->>  1 file changed, 3 insertions(+), 110 deletions(-)
-
-[...]
-
->> @@ -115,73 +70,13 @@ static void __init parse_dt_topology(void)
->>                         of_node_put(cn);
->>                         continue;
-> 
-> AFAICT, this continue is now useless as it was there to skipe the cpu
-> table efficiency method
-
-You're right ... will remove it.
-
-[...]
-
->> -       if (cap_from_dt)
->> -               topology_normalize_cpu_scale();
-> 
-> Why have you moved the call to topology_normalize_cpu_scale() from
-> parse_dt_topology() to update_cpu_capacity() ?
-
-Didn't move it ? It's still called from parse_dt_topology().
-
-> You should keep it in parse_dt_topology() as itis part of the dt
-> parsing sequence
-
-Yes, this should be the case.
-
-[...]
-
->> -/*
->> - * Look for a customed capacity of a CPU in the cpu_capacity table during the
->> - * boot. The update of all CPUs is in O(n^2) for heteregeneous system but the
->> - * function returns directly for SMP system.
->> - */
->> -static void update_cpu_capacity(unsigned int cpu)
->> -{
->> -       if (!cpu_capacity(cpu) || cap_from_dt)
->> -               return;
->> -
->> -       topology_set_cpu_scale(cpu, cpu_capacity(cpu) / middle_capacity);
->> -
->> -       pr_info("CPU%u: update cpu_capacity %lu\n",
->> -               cpu, topology_get_cpu_scale(NULL, cpu));
->> +       topology_normalize_cpu_scale();
->>  }
-> 
-> You can probably just removed update_cpu_capacity()
-
-I did remove update_cpu_capacity(). Maybe the patch layout is confusing?
-
-[...]
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+new file mode 100644
+index 000000000000..51775a372c06
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+@@ -0,0 +1,16 @@
++* TI OMAP SDHCI Controller
++
++Refer to mmc.txt for standard MMC bindings.
++
++Required properties:
++- compatible: Should be "ti,dra7-sdhci" for DRA7 and DRA72 controllers
++- ti,hwmods: Must be "mmc<n>", <n> is controller instance starting 1
++
++Example:
++	mmc1: mmc@4809c000 {
++		compatible = "ti,dra7-sdhci";
++		reg = <0x4809c000 0x400>;
++		ti,hwmods = "mmc1";
++		bus-width = <4>;
++		vmmc-supply = <&vmmc>; /* phandle to regulator node */
++	};
+-- 
+2.11.0
