@@ -1,105 +1,50 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v3 05/14] [media] cxd2880: Add tuner part of the driver
-Date: Thu, 7 Sep 2017 07:26:25 -0300
-Message-ID: <20170907072625.460caacf@vento.lan>
-References: <20170816041714.20551-1-Yasunari.Takiguchi@sony.com>
-        <20170816043714.21394-1-Yasunari.Takiguchi@sony.com>
-        <20170827114544.39865dbb@vento.lan>
-        <22918ced-b130-abf6-847d-369b7a5c0ebf@sony.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 2/3] leds: as3645a: Add LED flash class driver
+Date: Thu, 7 Sep 2017 13:26:57 +0300
+Message-ID: <20170907102657.stoqw5e7glbkbz2z@valkosipuli.retiisi.org.uk>
+References: <20170823081100.11733-1-sakari.ailus@linux.intel.com>
+ <20170823081100.11733-3-sakari.ailus@linux.intel.com>
+ <20170828110451.GB492@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22918ced-b130-abf6-847d-369b7a5c0ebf@sony.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170828110451.GB492@amd>
+Sender: linux-media-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, javier@dowhile0.org, jacek.anaszewski@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Em Thu, 7 Sep 2017 19:12:57 +0900
-"Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com> escreveu:
+Hi Pavel,
 
-> Dear Mauro
+On Mon, Aug 28, 2017 at 01:04:51PM +0200, Pavel Machek wrote:
+> On Wed 2017-08-23 11:10:59, Sakari Ailus wrote:
+> > Add a LED flash class driver for the as3654a flash controller. A V4L2 flash
+> > driver for it already exists (drivers/media/i2c/as3645a.c), and this driver
+> > is based on that.
 > 
-> Thanks for your review and reply.
-> 
-> We are going to discuss how to change our code with your comments internally.
-> 
-> I reply for your  2 comments,
-> 
-> >> [Change list]
-> >> Changes in V3
-> >>    drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h
-> >>       -removed code relevant to ISDB-T
-> > 
-> > Just curiosity here: why is it removed?
-> We decided to withhold the ISDB-T functionality as it contains some company proprietary code.
+> We do not want to have two drivers for same hardware... how is that
+> supposed to work?
 
-I'm sorry to hear. I hope that such code could be released
-on some future.
-
-> >> +	if (ret)
-> >> +		return ret;
-> >> +	if ((sys == CXD2880_DTV_SYS_DVBT2) && en_fef_intmtnt_ctrl) {
-> >> +		data[0] = 0x01;
-> >> +		data[1] = 0x01;
-> >> +		data[2] = 0x01;
-> >> +		data[3] = 0x01;
-> >> +		data[4] = 0x01;
-> >> +		data[5] = 0x01;
-> >> +	} else {
-> >> +		data[0] = 0x00;
-> >> +		data[1] = 0x00;
-> >> +		data[2] = 0x00;
-> >> +		data[3] = 0x00;
-> >> +		data[4] = 0x00;
-> >> +		data[5] = 0x00;
-> >> +	}
-> > 
-> > Instead, just do:
-> > 
-> > 	if ((sys == CXD2880_DTV_SYS_DVBT2) && en_fef_intmtnt_ctrl)
-> > 		memset(data, 0x01, sizeof(data));
-> > 	else
-> > 		memset(data, 0x00, sizeof(data));
-> > 
-> >> +	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
-> >> +				      CXD2880_IO_TGT_SYS,
-> >> +				      0xef, data, 6);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> >> +				     CXD2880_IO_TGT_DMD,
-> >> +				     0x00, 0x2d);
-> >> +	if (ret)
-> >> +		return ret;
-> > 
-> >> +	if ((sys == CXD2880_DTV_SYS_DVBT2) && en_fef_intmtnt_ctrl)
-> >> +		data[0] = 0x00;
-> >> +	else
-> >> +		data[0] = 0x01;
-> > 
-> > Not actually needed, as the previous logic already set data[0]
-> > accordingly.
-> > 
-> >> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
-> >> +				     CXD2880_IO_TGT_DMD,
-> >> +				     0xb1, data[0]);
-> 
-> In this case、logic of data[0]( logic of if() ) is different from that of previous one.
-> And with setting register for address 0xb1, a bug might occur in the future, 
-> if our software specification (sequence) is changed.
-> So we would like to keep setting value of data[0] for address 0xb1.
-
-OK. Better to document it then, as otherwise someone might
-end by sending cleanup patches that would touch it.
+No, we don't. The intent is to remove the other driver later on, as it's
+implemented as a V4L2 sub-device driver. It also lacks DT support.
 
 > 
-> Thanks,
-> Takiguchi
+> Yes, we might want to have both LED and v4l2 interface for a single
+> LED, because v4l2 is just too hairy to use, but we should not
+> duplicate drivers for that.
+> 
+> We _might_ want to do some helpers; as these LED drivers are all quite
+> similar, it should be possible to have "flash led driver" and just
+> link it to v4l2 and LED interfaces...
 
+This is what the new LED (flash) class driver does. Feature-wise it's a
+superset of the old one. There's a minor matter left, though, which is
+querying the flash strobe status which the old driver did and the new one
+does not do yet. I don't know if anyone ever even used that feature though.
 
+-- 
+Regards,
 
-Thanks,
-Mauro
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
