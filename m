@@ -1,100 +1,53 @@
-From: Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/9] ARM: dts: TQma53: regulators are no bus
-Date: Thu,  7 Sep 2017 11:05:22 +0200
-Message-ID: <20170907090530.1241-2-jbe@pengutronix.de>
+From: Juergen Borleis <jbe@pengutronix.de>
+Subject: [PATCH 4/9] ARM: dts: TQma53: ESDHC2: use correct IO lines power supply
+Date: Thu,  7 Sep 2017 11:05:25 +0200
+Message-ID: <20170907090530.1241-5-jbe@pengutronix.de>
 References: <20170907090530.1241-1-jbe@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170907090530.1241-1-jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170907090530.1241-1-jbe@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+According to the devicetree bindings the 'vmmc' power supply is the SD
+card's power supply and 'vqmmc' is the IO line's power supply.
+
+The i.MX53's ESDHC2 unit on the 'TQma53' CPU card is dedicated to be used
+with an externally connected SD card. The on-board power supply is connected
+to the SDHC2 IO lines only. The SD card socket is not part of the CPU card,
+so the 'vmmc' info must be part of the baseboard devicetree.
+
+Signed-off-by: Juergen Borleis <jbe@pengutronix.de>
 ---
- arch/arm/boot/dts/imx53-mba53.dts   | 33 +++++++++++++--------------------
- arch/arm/boot/dts/imx53-tqma53.dtsi | 19 ++++++-------------
- 2 files changed, 19 insertions(+), 33 deletions(-)
+ arch/arm/boot/dts/imx53-mba53.dts   | 1 +
+ arch/arm/boot/dts/imx53-tqma53.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
-index df705ba48897f..11c61844d5d85 100644
+index 5a21562a2dc1b..69733c8473d2b 100644
 --- a/arch/arm/boot/dts/imx53-mba53.dts
 +++ b/arch/arm/boot/dts/imx53-mba53.dts
-@@ -44,27 +44,20 @@
- 		};
- 	};
- 
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		reg_backlight: regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "lcd-supply";
--			gpio = <&gpio2 5 0>;
--			startup-delay-us = <5000>;
--		};
- 
--		reg_3p2v: regulator@1 {
--			compatible = "regulator-fixed";
--			reg = <1>;
--			regulator-name = "3P2V";
--			regulator-min-microvolt = <3200000>;
--			regulator-max-microvolt = <3200000>;
--			regulator-always-on;
--		};
-+	reg_backlight: backlight {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd-supply";
-+		gpio = <&gpio2 5 0>;
-+		startup-delay-us = <5000>;
-+	};
-+
-+	reg_3p2v: base3p2v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P2V";
-+		regulator-min-microvolt = <3200000>;
-+		regulator-max-microvolt = <3200000>;
-+		regulator-always-on;
- 	};
- 
- 	sound {
-diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
-index eecdc1c55eefc..4aff91e31f288 100644
---- a/arch/arm/boot/dts/imx53-tqma53.dtsi
-+++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
-@@ -20,19 +20,12 @@
- 		reg = <0x70000000 0x40000000>; /* Up to 1GiB */
- 	};
- 
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		reg_3p3v: regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "3P3V";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			regulator-always-on;
--		};
-+	reg_3p3v: card3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
- 	};
+@@ -193,6 +193,7 @@
  };
  
+ &esdhc2 {
++	vmmc-supply = <&reg_3p3v>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
+index eedeced3c8810..ceba1004038b1 100644
+--- a/arch/arm/boot/dts/imx53-tqma53.dtsi
++++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
+@@ -33,7 +33,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_esdhc2>,
+ 		    <&pinctrl_esdhc2_cdwp>;
+-	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_3p3v>;
+ 	wp-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+ 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+ 	status = "disabled";
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
