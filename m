@@ -1,111 +1,60 @@
-From: Bob Liu <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 0/6] Add platform device SVM support for ARM SMMUv3
-Date: Thu, 7 Sep 2017 09:41:42 +0800
-Message-ID: <1d358989-48bb-ccde-d7d9-36e004bc2d78@huawei.com>
-References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
- <95d1a9e2-1816-ff7d-9a8d-98406a6c2c22@arm.com>
- <caf68193-6aff-1e1c-86cd-9cc7069b0e37@huawei.com>
- <2874a1f3-22f1-20d4-4009-50add127a10f@arm.com>
+From: Lori Hikichi <lori.hikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/9] ASoC: cygnus: Update bindings for audio clock changes
+Date: Wed, 6 Sep 2017 18:45:22 -0700
+Message-ID: <492cb202-f4cb-4f5d-5d32-3dee4f1226b5@broadcom.com>
+References: <1502748417-26417-1-git-send-email-lori.hikichi@broadcom.com>
+ <1502748417-26417-3-git-send-email-lori.hikichi@broadcom.com>
+ <20170815171424.whcy4mftex6sgzgj@sirena.org.uk>
+ <d7e7144b-26c7-b96a-663d-03744bb60c36@broadcom.com>
+ <20170816105954.ve434zeeqinweo5a@sirena.org.uk>
+ <8c2fc92d-5ea8-8163-a588-0a4cba55e0f8@broadcom.com>
+ <20170822160703.nusf7sv6k4gj3pti@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2874a1f3-22f1-20d4-4009-50add127a10f-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170822160703.nusf7sv6k4gj3pti-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, chenjiankang1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xieyisheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017/9/6 17:57, Jean-Philippe Brucker wrote:
-> On 06/09/17 02:02, Bob Liu wrote:
->> On 2017/9/5 20:56, Jean-Philippe Brucker wrote:
->>> On 31/08/17 09:20, Yisheng Xie wrote:
->>>> Jean-Philippe has post a patchset for Adding PCIe SVM support to ARM SMMUv3:
->>>> https://www.spinics.net/lists/arm-kernel/msg565155.html
->>>>
->>>> But for some platform devices(aka on-chip integrated devices), there is also
->>>> SVM requirement, which works based on the SMMU stall mode.
->>>> Jean-Philippe has prepared a prototype patchset to support it:
->>>> git://linux-arm.org/linux-jpb.git svm/stall
->>>
->>> Only meant for testing at that point, and unfit even for an RFC.
->>>
->>
->> Sorry for the misunderstanding.
->> The PRI mode patches is in RFC even no hardware for testing, so I thought it's fine for "Stall mode" patches sent as RFC.
->> We have tested the Stall mode on our platform.
->> Anyway, I should confirm with you in advance.
->>
->> Btw, Would you consider the "stall mode" upstream at first? Since there is no hardware for testing the PRI mode.
->> (We can provide you the hardware which support SMMU stall mode if necessary.)
-> 
-> Yes. What's blocking the ATS, PRI and PASID patches at the moment is the
-> lack of endpoints for testing. There has been lots of discussion on the
-> API side since my first RFC and I'd like to resubmit the API changes soon.
-> It is the same API for ATS+PRI+PASID and SSID+Stall, so the backend
-> doesn't matter.
-> 
 
-Indeed!
 
-> I'm considering upstreaming SSID+Stall first if it can be tested on
-> hardware (having direct access to it would certainly speed things up).
+On 8/22/2017 9:07 AM, Mark Brown wrote:
+> On Wed, Aug 16, 2017 at 12:39:42PM -0700, Lori Hikichi wrote:
+>
+>> By far the most common usage case for Cygnus is a configuration which
+>> uses only the three i2s/tdm ports. In this case each port is assigned
+>> a clock.  Each clock has the same capabilities so there would never be
+>> a reason change the static mapping.
+> The usual reason would be to bring things into sync.
+>
+>> Now for the case when the "non-audio block" uses one of these clocks.
+>> In this situation we will only need one i2s port because this
+>> configuration of the chip is not audio intensive.  When the system
+>> is designed we know if this non-audio block will be in use, it is not
+>> a runtime configurable thing. Again, a static mapping is fine.
+> Is this limitation when the other block is in use a physical limitation
+> or is it just a case of not seeing the use case.
+>
+>> At the time it did not seem necessary to make addition driver changes to
+>> support a use case that will very likely never arise. As it turns out,
+>> we are working on a new version of this audio block.  The clocking
+>> configuration for this new version is more complex and I am already in
+>> the process of creating clock bindings for all this this. I am hopeful
+>> that the driver for this new version will be applicable to Cygnus.
+> If the clocking is more complex that seems like even more reason to not
+> fix this in the binding, and possibly to do as I think I suggested
+> earlier and use the common clock bindings to manage this rather than
+> doing something custom and driver specific.
+Ok, I will create the necessary clocks to allow this to work.
+This will likely impact a couple of the other patches in the series, but
+most should be applicable. What would be the best way to have some of the
+other patches in this series reviewed?  Should I just drop this series and
+resubmit new individual patches for review.
 
-Glad to hear that.
-
-> This would require some work in moving the PCI bits at the end of the
-> series. I can reserve some time in the coming months to do it, but I need
-> to know what to focus on. Are you able to test SSID as well?
-> 
-
-Yes, but the difficulty is our devices are on-chip integrated hardware accelerators which requires complicate driver.
-You may need much time to understand the driver.
-That's the same case as intel/amd SVM, the current user is their GPU :-(
-
-Btw, what kind of device/method do you think is ideal for testing arm-SVM?
-
->>>> We tested this patchset with some fixes on a on-chip integrated device. The
->>>> basic function is ok, so I just send them out for review, although this
->>>> patchset heavily depends on the former patchset (PCIe SVM support for ARM
->>>> SMMUv3), which is still under discussion.
->>>>
->>>> Patch Overview:
->>>> *1 to 3 prepare for device tree or acpi get the device stall ability and pasid bits
->>>> *4 is to realise the SVM function for platform device
->>>> *5 is fix a bug when test SVM function while SMMU donnot support this feature
->>>> *6 avoid ILLEGAL setting of STE and CD entry about stall
->>>>
->>>> Acctually here, I also have a question about SVM on SMMUv3:
->>>>
->>>> 1. Why the SVM feature on SMMUv3 depends on BTM feature? when bind a task to device,
->>>>    it will register a mmu_notify. Therefore, when a page range is invalid, we can
->>>>    send TLBI or ATC invalid without BTM?
->>>
->>> We could, but the end goal for SVM is to perfectly mirror the CPU page
->>> tables. So for platform SVM we would like to get rid of MMU notifiers
->>> entirely.
->>>
->>>> 2. According to ACPI IORT spec, named component specific data has a node flags field
->>>>    whoes bit0 is for Stall support. However, it do not have any field for pasid bit.
->>>>    Can we use other 5 bits[5:1] for pasid bit numbers, so we can have 32 pasid bit for
->>>>    a single platform device which should be enough, because SMMU only support 20 bit pasid
->>>>
->>
->> Any comment on this?
->> The ACPI IORT spec may need be updated?
-> 
-> I suppose that the Named Component Node could be used for SSID and stall
-> capability bits. Can't the ACPI namespace entries be extended to host
-> these capabilities in a more generic way? Platforms with different IOMMUs
-> might also need this information some day.
-> 
-
-Hmm, that would be better.
-But in anyway, it depends on the ACPI IORT Spec would be extended in next version.
-
---
-Thanks,
-Bob Liu
 
 
 
