@@ -1,87 +1,84 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: net: document Bluetooth bindings in
- one place
-Date: Thu, 7 Sep 2017 08:14:32 +0200
-Message-ID: <41A0C162-4AC5-4969-813D-9E2C7F5D5031@holtmann.org>
-References: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
- <20170906232610.GG1165@minitux>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170906232610.GG1165@minitux>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bluez mailing list <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjMgMS81XSBzY3NpOiB1ZnM6IGFkZCBIaXNpbGlj?=
+ =?utf-8?Q?on_ufs_driver_code?=
+Date: Thu, 7 Sep 2017 06:34:19 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA18C49@DGGEMM506-MBX.china.huawei.com>
+References: <20170829084116.106695-1-liwei213@huawei.com>
+ <20170829084116.106695-2-liwei213@huawei.com>
+ <CAK8P3a0vV94g=iNLfHXXgR-XFHaaK-mHoQQ45FDYG+FVQhix6Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0vV94g=iNLfHXXgR-XFHaaK-mHoQQ45FDYG+FVQhix6Q@mail.gmail.com>
+Content-Language: zh-CN
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>Linux Kernel Mailing List <l>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
->> In the same way as Ethernet, gather the Bluetooth related bindings in
->> one file. Introduce the bluetooth-bd-address property which can be used
->> to store the assigned BD address.
->> 
->> Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> v2: Set device as unconfigured if default address detected
->>     Add warning if BD addr retrieved from DT
->> v3: if no addr retrieved from DT, unconditionally set
->>     the invalid BD addr flag.
->>     swap and set bdaddr in the platform probe
->> v4: Add dt-bindings documentation
->>     split patch in two parts (setup, dt prop)
->>     use local-bd-address name instead of local-mac-address
->> v5: remove 2/3 merged in bluetooth-next tree
->>     Add bluetooth.txt for common BT bindings
->>     expect local-bd-address in little-endian format
->> v6: use of_property_read_u8_array instead of of_get_property
->> 
->> Documentation/devicetree/bindings/net/bluetooth.txt | 5 +++++
->> 1 file changed, 5 insertions(+)
->> create mode 100644 Documentation/devicetree/bindings/net/bluetooth.txt
->> 
->> diff --git a/Documentation/devicetree/bindings/net/bluetooth.txt b/Documentation/devicetree/bindings/net/bluetooth.txt
->> new file mode 100644
->> index 0000000..94797df
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/bluetooth.txt
->> @@ -0,0 +1,5 @@
->> +The following properties are common to the Bluetooth controllers:
->> +
->> +- local-bd-address: array of 6 bytes, specifies the BD address that was
->> +  uniquely assigned to the Bluetooth device, formatted with least significant
->> +  byte first (little-endian).
-> 
-> Is there a good reason for making this little endian?
-> 
-> Sure it's only going to be read and written by computers, but for anyone
-> reading the generated DT it sure looks like the values are reversed.
-
-the Bluetooth spec has a string notation and defines how it is packed as 6 octet binary.
-
-"On the baseband level the BD_ADDR is represented as 48 bits. On the Link Layer the public and random device address are represented as 48-bit addresses."
-
-"On the UI level the Bluetooth address shall be represented as 12 hexadecimal characters, possibly divided into sub-parts separated by ‘:’ (e.g., ‘000C3E3A4B69’ or ‘00:0C:3E:3A:4B:69’). On the UI level any number shall have the MSB -> LSB (from left to right) ‘natural’ ordering.”
-
-However on the wire level it is LSB -> MSB. See our ba2str function.
-
-int str2ba(const char *str, bdaddr_t *ba)
-{
-	int i;
-	
-	for (i = 5; i >= 0; i--, str += 3)
-		ba->b[i] = strtol(str, NULL, 16);
-
-	return 0;
-}
-
-I would prefer the boot loader actually providing the BD Address in the correct byte order as the protocol expects and not yet another form. The string representation is just for reference since that is what most people have seen so far.
-
-Regards
-
-Marcel
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksIEFybmQNCg0KVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb25zLCBJIGhvcGUgeW91J2xsIHJl
+cGx5IGFnYWluOg0KDQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogYXJuZGJl
+cmdtYW5uQGdtYWlsLmNvbSBbbWFpbHRvOmFybmRiZXJnbWFubkBnbWFpbC5jb21dIOS7o+ihqCBB
+cm5kIEJlcmdtYW5uDQrlj5HpgIHml7bpl7Q6IDIwMTflubQ55pyIN+aXpSA2OjQ3DQrmlLbku7bk
+uro6IGxpd2VpIChDTSkNCuaKhOmAgTogUm9iIEhlcnJpbmc7IE1hcmsgUnV0bGFuZDsgeHV3ZWkg
+KE8pOyBDYXRhbGluIE1hcmluYXM7IFdpbGwgRGVhY29uOyBWaW5heWFrIEhvbGlrYXR0aTsgSmFt
+ZXMgRS5KLiBCb3R0b21sZXk7IE1hcnRpbiBLLiBQZXRlcnNlbjsgS2V2aW4gSGlsbWFuOyBHcmVn
+b3J5IENMRU1FTlQ7IFRob21hcyBQZXRhenpvbmk7IE1hc2FoaXJvIFlhbWFkYTsgUmlrdSBWb2lw
+aW87IFRoaWVycnkgUmVkaW5nOyBLcnp5c3p0b2YgS296bG93c2tpOyBFcmljIEFuaG9sdDsgZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3Q7IExpbnV4
+IEFSTTsgbGludXgtc2NzaTsgR3VvZG9uZyBYdTsgRmVuZ2Jhb3BlbmcgKGtldmluLCBLaXJpbiBT
+b2x1dGlvbiBEZXB0KQ0K5Li76aKYOiBSZTogW1BBVENIIHYzIDEvNV0gc2NzaTogdWZzOiBhZGQg
+SGlzaWxpY29uIHVmcyBkcml2ZXIgY29kZQ0KDQpPbiBUdWUsIEF1ZyAyOSwgMjAxNyBhdCAxMDo0
+MSBBTSwgTGkgV2VpIDxsaXdlaTIxM0BodWF3ZWkuY29tPiB3cm90ZToNCml0ZWwoaG9zdCwgVUZT
+X0FSRVNFVCwgUEVSUlNURElTM19PRkZTRVQpOw0KPiArDQo+ICsgICAgICAgLyogZGlzYWJsZSBs
+cF9yZXNldF9uICovDQo+ICsgICAgICAgdWZzX3N5c19jdHJsX3NldF9iaXRzKGhvc3QsIEJJVF9T
+WVNDVFJMX0xQX1JFU0VUX04sIFJFU0VUX0NUUkxfRU4pOw0KPiArICAgICAgIG1kZWxheSgxKTsN
+Cj4gKw0KPiArICAgICAgIGlmIChncGlvX2lzX3ZhbGlkKGhvc3QtPnJlc2V0X2dwaW8pKQ0KPiAr
+ICAgICAgICAgICAgICAgZ3Bpb19kaXJlY3Rpb25fb3V0cHV0KGhvc3QtPnJlc2V0X2dwaW8sIDEp
+Ow0KPiArDQo+ICsgICAgICAgdWZzX3N5c19jdHJsX3dyaXRlbChob3N0LCBNQVNLX1VGU19ERVZJ
+Q0VfUkVTRVQgfCBCSVRfVUZTX0RFVklDRV9SRVNFVCwNCj4gKyAgICAgICAgICAgICAgIFVGU19E
+RVZJQ0VfUkVTRVRfQ1RSTCk7DQo+ICsNCj4gKyAgICAgICBtZGVsYXkoMjApOw0KDQpDb3VsZCB0
+aG9zZSBtZGVsYXkoKSBiZSB0dXJuZWQgaW50byBtc2xlZXAoKSBmdW5jdGlvbnM/DQoNCkkgd2ls
+bCBmaXggaXQgaW4gcGF0Y2ggdjQuDQoNCj4gK3N0YXRpYyBpbnQgdWZzX2hpc2lfZ2V0X3Jlc291
+cmNlKHN0cnVjdCB1ZnNfaGlzaV9ob3N0ICpob3N0KSB7DQo+ICsgICAgICAgc3RydWN0IHJlc291
+cmNlICptZW1fcmVzOw0KPiArICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBOVUxMOw0K
+PiArICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9IGhvc3QtPmhiYS0+ZGV2Ow0KPiArICAgICAg
+IHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19wbGF0Zm9ybV9kZXZpY2UoZGV2KTsN
+Cj4gKw0KPiArICAgICAgIC8qIGdldCByZXNvdXJjZSBvZiB1ZnMgc3lzIGN0cmwgKi8NCj4gKyAg
+ICAgICBtZW1fcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVN
+LCAxKTsNCj4gKyAgICAgICBob3N0LT51ZnNfc3lzX2N0cmwgPSBkZXZtX2lvcmVtYXBfcmVzb3Vy
+Y2UoZGV2LCBtZW1fcmVzKTsNCj4gKyAgICAgICBpZiAoSVNfRVJSKGhvc3QtPnVmc19zeXNfY3Ry
+bCkpDQo+ICsgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihob3N0LT51ZnNfc3lzX2N0cmwp
+Ow0KPiArDQo+ICsgICAgICAgbnAgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxM
+LCANCj4gKyAiaGlzaWxpY29uLGhpMzY2MC1jcmdjdHJsIik7DQoNCkl0J3MgZ2VuZXJhbGx5IG5v
+dCBhIGdvb2QgaWRlYSB0byBsb29rIHVwIG9uZSBkZXZpY2UgYnkgaXRzICJjb21wYXRpYmxlIg0K
+c3RyaW5nLiBXaGF0IGlzIHRoZSAiY3JnY3RybCI/IERvZXMgaXQgaGF2ZSBhIHByb3BlciBEVCBi
+aW5kaW5nPw0KTWF5YmUgdGhlcmUgc2hvdWxkIGJlIGEgZHJpdmVyIGZvciBpdCwgb3IgeW91IGNv
+dWxkIG1ha2UgaXQgYSAic3lzY29uIg0KZGV2aWNlIGFuZCBsb29rIGl0IHVwIGJ5IHBoYW5kbGUg
+aW5zdGVhZC4NCg0Kb2ssIGNyZ2N0cmwgaXMgb3VyIGNvbW1vbiByZWdpc3RlciwgaWYgbG9vayB1
+cCBkZXZpY2UgYnkgaXRzICJjb21wYXRpYmxlIiBpcyBub3QgYXBwcm9wcmlhdGUsDQpJIHdpbGwg
+YWRkIGEgcHJvcGVydGllcyBpbiB1ZnMgbm9kZSwgbGlrZSB0aGlzOg0KdWZzOiB1ZnNAZmYzYjAw
+MDAgew0KCQkJY29tcGF0aWJsZSA9ICJqZWRlYyx1ZnMtMS4xIiwgImhpc2lsaWNvbixoaTM2NjAt
+dWZzIjsNCgkJCS8qIDA6IEhDSSBzdGFuZGFyZCAqLw0KCQkJLyogMTogVUZTIFNZUyBDVFJMICov
+DQoJCQlyZWcgPSA8MHgwIDB4ZmYzYjAwMDAgMHgwIDB4MTAwMD4sDQoJCQkJPDB4MCAweGZmM2Ix
+MDAwIDB4MCAweDEwMDA+Ow0KCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCgkJCWludGVy
+cnVwdHMgPSA8R0lDX1NQSSAyNzggSVJRX1RZUEVfTEVWRUxfSElHSD47DQoJCQljbG9ja3MgPSA8
+JmNyZ19jdHJsIEhJMzY2MF9DTEtfR0FURV9VRlNJT19SRUY+LA0KCQkJCTwmY3JnX2N0cmwgSEkz
+NjYwX0NMS19HQVRFX1VGU1BIWV9DRkc+Ow0KCQkJY2xvY2stbmFtZXMgPSAiY2xrX3JlZiIsICJj
+bGtfcGh5IjsNCgkJCWZyZXEtdGFibGUtaHogPSA8MCAwPiwgPDAgMD47DQorCQkJLyogb2Zmc2V0
+OiAweDg0OyBiaXQ6IDEyICovDQorCQkJLyogb2Zmc2V0OiAweDg0OyBiaXQ6IDcgICovDQorCQkJ
+cmVzZXRzID0gPCZjcmdfcnN0IDB4ODQgMTI+LA0KKwkJCQk8JmNyZ19yc3QgMHg4NCA3PjsNCisJ
+CQlyZXNldC1uYW1lcyA9ICJyc3QiLCAiYXNzZXJ0IjsNCn0NCkFuZCBmaW5kIHRoYXQgYnksIGlz
+IGl0IE9LPw0KKwlob3N0LT5yc3QgPSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0KGRldiwgInJzdCIp
+Ow0KKwlob3N0LT5hc3NlcnQgPSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0KGRldiwgImFzc2VydCIp
+Ow0KDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmggYi9kcml2ZXJz
+L3Njc2kvdWZzL3Vmcy1oaXNpLmggDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAw
+MDAwMDAwMC4uNTI0MzBhMmFjYTkwDQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnMtaGlzaS5oDQoNCg0KSWYgdGhlIGhlYWRlciBpcyBvbmx5IHVzZWQgaW4gb25l
+IGZpbGUsIHlvdSBkb24ndCBuZWVkIGl0LCBqdXN0IG1vdmUNCnRoZSBkZWZpbml0aW9ucw0KaW50
+byB0aGUgb3RoZXIgZmlsZS4NCg0KQ3VycmVudGx5IG9ubHkgb25lIGZpbGUgdXNlIHVmcy1oaXNp
+LmgsIGJ1dCBJIHRoaW5rIHNvIG1hbnkgZGVmaW5pdGlvbnMgYXJlIGRlZmluZWQgaW4gYSAuaCBm
+aWxlIGlzIG1vcmUgY2xlYXJlciwgbGlrZSB1ZnMtcWNvbS5oLg0KSWYgeW91IHRoaW5rIGl0IGlz
+bid0IG5lY2Vzc2FyeSwgSSB3aWxsIG1vdmUgaXQgaW50byB1ZnMtaGlzaS5jPw0KDQoNCiAgICAg
+IEFybmQNCg==
