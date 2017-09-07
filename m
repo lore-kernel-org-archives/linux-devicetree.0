@@ -1,69 +1,58 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum ADI controller
- documentation
-Date: Thu, 7 Sep 2017 12:44:01 +0100
-Message-ID: <20170907114401.kz2rfss2bkslybtq@sirena.co.uk>
-References: <ccbb0641fa123021249c7a51cbe2dcd975c41f39.1504677110.git.baolin.wang@spreadtrum.com>
- <20170906145900.yesyfyruv5wd3wxj@sirena.co.uk>
- <CAMz4ku+hKaemHQdVtNEbCf0J_9CjqKouSygAaQsqf+hBzGd-mg@mail.gmail.com>
- <20170907095435.5yhybxz6oootp37h@sirena.co.uk>
- <CAMz4kuLGTCgppki=je9pE5SidRnYWJA-nJd1=RD7qdN1ZRww3Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vguk34mvr5spuvig"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuLGTCgppki=je9pE5SidRnYWJA-nJd1=RD7qdN1ZRww3Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH v4 2/6] irqdomain: clear trigger type in irq_domain_push_irq()
+Date: Thu,  7 Sep 2017 20:41:58 +0900
+Message-ID: <1504784522-26841-3-git-send-email-yamada.masahiro@socionext.com>
+References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504784522-26841-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Prior to the addition of irq_domain_push_irq(), the hierarchy
+IRQ domain always allocates IRQs from the outer-most domain.
+Each irqchip usually calls irq_domain_alloc_irqs_parent(),
+ascending the topology up to the root irqchip.
 
---vguk34mvr5spuvig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The brand-new function irq_domain_push_irq() allows us to allocate
+IRQs for parent domain first, then add a child irq_data to the
+tail of the chain.
 
-On Thu, Sep 07, 2017 at 07:03:18PM +0800, Baolin Wang wrote:
-> On 7 September 2017 at 17:54, Mark Brown <broonie@kernel.org> wrote:
-> > On Thu, Sep 07, 2017 at 11:29:05AM +0800, Baolin Wang wrote:
+For the new use-case, if the parent sets a temporary trigger type,
+it may differ from the type requested to the outer-most irqchip,
+then irq_create_fwspec_mapping() warns "type mismatch, failed to map..."
 
-> >> The hwspinlock name should be "adi", and I will make it clear in next version.
+Clear the trigger type when a new irq_data is connected to the chain.
 
-> > So there's other drivers that might also be accessing this IP block?
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
 
-> Yes. Other drivers (like regulator, RTC or charger ... ) can access
-> analog chip (like PMIC) by ADI controller. But the hardware spinlock
-> is used to synchronize between the multiple subsystems, since we only
-> have one ADI controller.
+Changes in v4:
+  - Newly added
 
-If it were other drivers then the kernel should already be doing that
-but...
 
-> > So does this driver control all the channels or are there other drivers
-> > (or hardware components) that control some of the other channels?
+ kernel/irq/irqdomain.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> The ADI driver only controls 2 software channels (read/write), and
-> other hardware channels can be controlled by hardware components if we
-> set the hardware config.
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index da3e0b6..18d11b9 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1532,6 +1532,9 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
+ 	tail_irq_data->chip = NULL;
+ 	tail_irq_data->chip_data = NULL;
+ 
++	/* clear the trigger type to avoid "type mismatch" error */
++	irqd_set_trigger_type(tail_irq_data, IRQ_TYPE_NONE);
++
+ 	/* May (probably does) set hwirq, chip, etc. */
+ 	rv = irq_domain_alloc_irqs_hierarchy(domain, virq, 1, arg);
+ 	if (rv) {
+-- 
+2.7.4
 
-...if it can be configured to allow other things to use it independently
-then this is fine, just needs a bit more documentation so someone can
-understand how the bindings and hardware match up.
-
---vguk34mvr5spuvig
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmxMQAACgkQJNaLcl1U
-h9BsMwf8CG0Ejhc4sKcJgClOTN/XPVwI52R/pobIErQ50ERLnh1/r/mZEbI1EyPH
-IqWqzB45nVrU5ZKpUy+bw+TgM8Cv6eakcfmUNsltV9eQgPXAFSiH6JIOEN0STXB7
-wBYCfRJ2wyhHcOMmy7/9nbVQcH1h34xuKJN8ERPE+Q23f3UauE/Lu4yWjgMHmPtW
-mai+0fzwJswUVq9wf9KIuBDlXRwIkGI7wJDrSzh5sqLHKBV0WMTszwf70bcq6/pk
-THI4OYU8dvksoEBiv3gzN9VIKwQLqwTeOPGwmUFMbldonZyta7qRx/+7GcnUsIJf
-P0SsklPOhwzmJ4Zej24LiIT5fKI8gA==
-=wXNB
------END PGP SIGNATURE-----
-
---vguk34mvr5spuvig--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
