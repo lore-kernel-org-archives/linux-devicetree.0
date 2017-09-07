@@ -1,58 +1,69 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v4 2/6] irqdomain: clear trigger type in irq_domain_push_irq()
-Date: Thu,  7 Sep 2017 20:41:58 +0900
-Message-ID: <1504784522-26841-3-git-send-email-yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v4 5/6] irqdomain: add IRQ_DOMAIN_FLAG_NO_CREATE flag
+Date: Thu,  7 Sep 2017 20:42:01 +0900
+Message-ID: <1504784522-26841-6-git-send-email-yamada.masahiro@socionext.com>
 References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504784522-26841-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, David Daney <david.daney@cavium.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Prior to the addition of irq_domain_push_irq(), the hierarchy
-IRQ domain always allocates IRQs from the outer-most domain.
-Each irqchip usually calls irq_domain_alloc_irqs_parent(),
-ascending the topology up to the root irqchip.
+When an irqchip driver uses irq_domain_push_irq(), all irqs should be
+statically created by the irqchip.
 
-The brand-new function irq_domain_push_irq() allows us to allocate
-IRQs for parent domain first, then add a child irq_data to the
-tail of the chain.
+If a device tries to allocate an irq on-the-fly, irq_domain_alloc_irqs()
+is called.  It allocates struct irq_data and invokes .alloc() hook
+passing fwspec as its argument.  This is probably not what the irqchip
+expects (unless .alloc can call it recursively).
 
-For the new use-case, if the parent sets a temporary trigger type,
-it may differ from the type requested to the outer-most irqchip,
-then irq_create_fwspec_mapping() warns "type mismatch, failed to map..."
+This issue could happen when a device tries to get irq after
+irq_domain_create_hierarchy(), but before irq_domain_push_irq().
 
-Clear the trigger type when a new irq_data is connected to the chain.
+To avoid the race, add IRQ_DOMAIN_FLAG_NO_CREATE flag.  This flag
+prevents devices from creating irqs.  Devices are only allowed to get
+already existing irqs.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
 Changes in v4:
   - Newly added
 
 
- kernel/irq/irqdomain.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/irqdomain.h | 3 +++
+ kernel/irq/irqdomain.c    | 3 +++
+ 2 files changed, 6 insertions(+)
 
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 7609807..525de32 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -195,6 +195,9 @@ enum {
+ 	/* Irq domain name was allocated in __irq_domain_add() */
+ 	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 6),
+ 
++	/* Do not allow irq consumers to create irq */
++	IRQ_DOMAIN_FLAG_NO_CREATE	= (1 << 7),
++
+ 	/*
+ 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
+ 	 * for implementation specific purposes and ignored by the
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index da3e0b6..18d11b9 100644
+index b317a64..ecf107ab 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -1532,6 +1532,9 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- 	tail_irq_data->chip = NULL;
- 	tail_irq_data->chip_data = NULL;
+@@ -806,6 +806,9 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ 		return 0;
+ 	}
  
-+	/* clear the trigger type to avoid "type mismatch" error */
-+	irqd_set_trigger_type(tail_irq_data, IRQ_TYPE_NONE);
++	if (domain->flags & IRQ_DOMAIN_FLAG_NO_CREATE)
++		return -EPROBE_DEFER;
 +
- 	/* May (probably does) set hwirq, chip, etc. */
- 	rv = irq_domain_alloc_irqs_hierarchy(domain, virq, 1, arg);
- 	if (rv) {
+ 	if (irq_domain_is_hierarchy(domain)) {
+ 		virq = irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, fwspec);
+ 		if (virq <= 0)
 -- 
 2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
