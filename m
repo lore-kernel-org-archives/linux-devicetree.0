@@ -1,68 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: Add ADI driver for Spreadtrum platform
-Date: Thu, 7 Sep 2017 11:10:17 +0100
-Message-ID: <20170907101017.mcxfnm3u4osda7xr@sirena.co.uk>
-References: <ccbb0641fa123021249c7a51cbe2dcd975c41f39.1504677110.git.baolin.wang@spreadtrum.com>
- <c2faf18e6bbdac631963b22e5a4b5ee9be7f9e31.1504677110.git.baolin.wang@spreadtrum.com>
- <20170906150446.v7qqc24wxeykcwwk@sirena.co.uk>
- <CAMz4kuL1cDD0PTBJ9-7an3KnFyhE9iZOp4VU4MCsHcx8TG5DhQ@mail.gmail.com>
+From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
+Subject: Re: [PATCH v3 05/14] [media] cxd2880: Add tuner part of the driver
+Date: Thu, 7 Sep 2017 19:12:57 +0900
+Message-ID: <22918ced-b130-abf6-847d-369b7a5c0ebf@sony.com>
+References: <20170816041714.20551-1-Yasunari.Takiguchi@sony.com>
+ <20170816043714.21394-1-Yasunari.Takiguchi@sony.com>
+ <20170827114544.39865dbb@vento.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ajr4hkh6p2f4q2l2"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuL1cDD0PTBJ9-7an3KnFyhE9iZOp4VU4MCsHcx8TG5DhQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170827114544.39865dbb@vento.lan>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>, yasunari.takiguchi@sony.com
 List-Id: devicetree@vger.kernel.org
 
+Dear Mauro
 
---ajr4hkh6p2f4q2l2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your review and reply.
 
-On Thu, Sep 07, 2017 at 11:13:00AM +0800, Baolin Wang wrote:
+We are going to discuss how to change our code with your comments internally.
 
-> >> +static int __init sprd_adi_init(void)
-> >> +{
-> >> +     return platform_driver_register(&sprd_adi_driver);
-> >> +}
-> >> +subsys_initcall(sprd_adi_init);
+I reply for your  2 comments,
 
-> > Why is this subsys_initcall() and not module_platform_driver()?
+>> [Change list]
+>> Changes in V3
+>>    drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h
+>>       -removed code relevant to ISDB-T
+> 
+> Just curiosity here: why is it removed?
+We decided to withhold the ISDB-T functionality as it contains some company proprietary code.
 
-> Since ADI is one very fundamental driver for our SoC, many drivers
-> such as regulator need depend on ADI, and regulator need to regulate
-> core voltage as earlier as possible.
 
-That applies to huge numbers of systems - you should still just use
-regular init ordering in mainline, there are efforts to make things
-better there (look at Viresh's dependency stuff) so hopefully things
-will improve in the future and in the meantime the cost of probe
-deferral isn't *that* great and it's less fiddly than tweaking ordering. =
-=20
-Practically speaking init ordering stuff can always be added in vendor
-kernels in the meantime.
+>> +	if (ret)
+>> +		return ret;
+>> +	if ((sys == CXD2880_DTV_SYS_DVBT2) && en_fef_intmtnt_ctrl) {
+>> +		data[0] = 0x01;
+>> +		data[1] = 0x01;
+>> +		data[2] = 0x01;
+>> +		data[3] = 0x01;
+>> +		data[4] = 0x01;
+>> +		data[5] = 0x01;
+>> +	} else {
+>> +		data[0] = 0x00;
+>> +		data[1] = 0x00;
+>> +		data[2] = 0x00;
+>> +		data[3] = 0x00;
+>> +		data[4] = 0x00;
+>> +		data[5] = 0x00;
+>> +	}
+> 
+> Instead, just do:
+> 
+> 	if ((sys == CXD2880_DTV_SYS_DVBT2) && en_fef_intmtnt_ctrl)
+> 		memset(data, 0x01, sizeof(data));
+> 	else
+> 		memset(data, 0x00, sizeof(data));
+> 
+>> +	ret = tnr_dmd->io->write_regs(tnr_dmd->io,
+>> +				      CXD2880_IO_TGT_SYS,
+>> +				      0xef, data, 6);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
+>> +				     CXD2880_IO_TGT_DMD,
+>> +				     0x00, 0x2d);
+>> +	if (ret)
+>> +		return ret;
+> 
+>> +	if ((sys == CXD2880_DTV_SYS_DVBT2) && en_fef_intmtnt_ctrl)
+>> +		data[0] = 0x00;
+>> +	else
+>> +		data[0] = 0x01;
+> 
+> Not actually needed, as the previous logic already set data[0]
+> accordingly.
+> 
+>> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
+>> +				     CXD2880_IO_TGT_DMD,
+>> +				     0xb1, data[0]);
 
---ajr4hkh6p2f4q2l2
-Content-Type: application/pgp-signature; name="signature.asc"
+In this case、logic of data[0]( logic of if() ) is different from that of previous one.
+And with setting register for address 0xb1, a bug might occur in the future, 
+if our software specification (sequence) is changed.
+So we would like to keep setting value of data[0] for address 0xb1.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmxGwgACgkQJNaLcl1U
-h9ATxQf9GJyFelS5pv6enjgBsoy33K4irFW9v2DQM1v+ieuzCGjQlyebPrSiI1gi
-PM77w0tXGEBlm8yScNeW4E1CHg9fSx86Dg5X8tCW9fzal4L1AJa2GzgPpkKCwICN
-hpwUNsI3ujnRt2o5I/oLMkZt7Bbt/wHe0E4NwsvY6+fWj5BrxAR3dSBhMnjgphzz
-hTQeZVLz1JYNivizq8HU7qB8KjrJxeALJXN2wQ8FL2Js5rlqdiqIjZr3JpS804AR
-es291/huniQEmO4CuHl3k5obQGjgJKmaFQZkaVxe4iEHyWSHUinaYMWT/6aizr55
-ZZQNFrMHlLWWlyO0XkwsiZYI+M4PoQ==
-=8Eox
------END PGP SIGNATURE-----
-
---ajr4hkh6p2f4q2l2--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Takiguchi
