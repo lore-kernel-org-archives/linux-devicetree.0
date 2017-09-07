@@ -1,206 +1,128 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v4 1/6] irqdomain: rename variables in irq_domain_{push,pop}_irq()
-Date: Thu,  7 Sep 2017 20:41:57 +0900
-Message-ID: <1504784522-26841-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 0/6] irqdomain,
+ gpio: expand irq_domain_push_irq() for DT use and use it for GPIO
+Date: Thu,  7 Sep 2017 20:41:56 +0900
+Message-ID: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, David Daney <david.daney@cavium.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Jassi Brar <jaswinder.singh@linaro.org>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The meaning of "root" in irq_domain_{push,pop} is opposite to the
-documentation.  Documentation/IRQ-domain.txt depicts the hierarchy
-IRQ domain as follows:
 
-    CPU Vector irq_domain (root irq_domain to manage CPU vectors)
-            ^
-            |
-    Interrupt Remapping irq_domain (manage irq_remapping entries)
-            ^
-            |
-    IOAPIC irq_domain (manage IOAPIC delivery entries/pins)
+This series adds a GPIO controller for UniPhier SoC family.
+It also works as an irqchip in hierarchy domain manner.
 
->From above, the inner-most domain (nearest to the CPU) is "root".
+My problem is mapping of IRQ from this controller to the parent
+irqchip is not contiguous.
 
-The document also says, "When building irq_domain hierarchy, the
-irq_domain near to the device is child and the irq_domain near to
-CPU is parent."  This is how irq_data->parent_data works.  In
-contrast, these function use a variable "child_irq_data" for that.
+  IRQ line of GPIO  --->  Parent interrupt
+        0           --->     48
+        1           --->     49
+                ...
+        15          --->     63
+        16          --->    154
+        17          --->    155
+                ...
+        20          --->    158
+        21          --->    217
+        22          --->    218
+                ...
 
-To avoid confusion, flip the direction as follows:
+So, I need to have an array of parent hwirqs somehow.
 
-  root_irq_data  -> tail_irq_data
-  child_irq_data -> parent_irq_data
+Probably, most of people will try to use "interrupts" DT property,
+but I noticed a potential problem for hierarchy IRQ domain.
+If "interrupts" property exists in the device node, IRQ resource
+may be statically allocated when platform devices are populated
+from DT.  I asked this question some time ago:
+https://lkml.org/lkml/2017/7/6/758
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+After I tackled this, I decided to put the array in the driver,
+but I could not get a positive response for this.
+The discussion mostly happened in v1 thread:
+http://patchwork.ozlabs.org/patch/797145/
 
-Changes in v4:
- - Newly added
+Recently, the new API irq_domain_push_irq() was merged in the
+mainline.  I thought this might be useful to solve the hierarchy
+domain issue.  Hence, here is a trial.
+
+I found patch 2 is needed to avoid "type mismatch" error.
+
+One more thing, I am worried about a race condition.
+
+I think there is a possibility where a device tries to get IRQ
+after irq_domain_create_hierarchy(), but before irq_domain_push_irq().
+
+	priv->domain = irq_domain_create_hierarchy(...)
+	if (!priv->domain)
+		return -ENOMEM;
+
+        [  *** What if a irq consumer device request the irq here? *** ]
+
+	for (i = 0; i < nirqs; i++) {
+		virq = platform_get_irq(pdev, i);
+		if (virq < 0)
+			continue;
+
+		ret = irq_domain_push_irq(priv->domain, virq, (void *)(long)i);
+		if (ret)
+			return ret;
+	}
+
+By the time irq_domain_create_hierarchy() finished,
+the irqdomain will be added to the "irq_domain_list".
+
+If a device calls platform_get_irq(),
+the domain is registered, but virq is not allocated yet.
+
+So, irq_create_fwspec_mapping() will call irq_domain_alloc_irqs(),
+then irqchip's .alloc() hook is invoked with fwspec passed as arg.
+
+I tried to fix this by patch 3 and 4.
+
+This topic is related to both irqdomain and GPIO,
+so includes them in a series.
+
+Comments are appreciated.
+
+I am not sure if my approach is correct.
+If I am doing wrong, I will go back to the previous adhoc solution.
 
 
- kernel/irq/irqdomain.c | 68 +++++++++++++++++++++++++-------------------------
- 1 file changed, 34 insertions(+), 34 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index e84b705..da3e0b6 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1467,20 +1467,20 @@ static void irq_domain_fix_revmap(struct irq_data *d)
- }
- 
- /**
-- * irq_domain_push_irq() - Push a domain in to the top of a hierarchy.
-+ * irq_domain_push_irq() - Push a domain in to the tail of a hierarchy.
-  * @domain:	Domain to push.
-  * @virq:	Irq to push the domain in to.
-  * @arg:	Passed to the irq_domain_ops alloc() function.
-  *
-  * For an already existing irqdomain hierarchy, as might be obtained
-  * via a call to pci_enable_msix(), add an additional domain to the
-- * head of the processing chain.  Must be called before request_irq()
-+ * tail of the processing chain.  Must be called before request_irq()
-  * has been called.
-  */
- int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- {
--	struct irq_data *child_irq_data;
--	struct irq_data *root_irq_data = irq_get_irq_data(virq);
-+	struct irq_data *parent_irq_data;
-+	struct irq_data *tail_irq_data = irq_get_irq_data(virq);
- 	struct irq_desc *desc;
- 	int rv = 0;
- 
-@@ -1505,43 +1505,43 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- 	if (WARN_ON(!irq_domain_is_hierarchy(domain)))
- 		return -EINVAL;
- 
--	if (!root_irq_data)
-+	if (!tail_irq_data)
- 		return -EINVAL;
- 
--	if (domain->parent != root_irq_data->domain)
-+	if (domain->parent != tail_irq_data->domain)
- 		return -EINVAL;
- 
--	child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
--				      irq_data_get_node(root_irq_data));
--	if (!child_irq_data)
-+	parent_irq_data = kzalloc_node(sizeof(*parent_irq_data), GFP_KERNEL,
-+				      irq_data_get_node(tail_irq_data));
-+	if (!parent_irq_data)
- 		return -ENOMEM;
- 
- 	mutex_lock(&irq_domain_mutex);
- 
- 	/* Copy the original irq_data. */
--	*child_irq_data = *root_irq_data;
-+	*parent_irq_data = *tail_irq_data;
- 
- 	/*
--	 * Overwrite the root_irq_data, which is embedded in struct
-+	 * Overwrite the tail_irq_data, which is embedded in struct
- 	 * irq_desc, with values for this domain.
- 	 */
--	root_irq_data->parent_data = child_irq_data;
--	root_irq_data->domain = domain;
--	root_irq_data->mask = 0;
--	root_irq_data->hwirq = 0;
--	root_irq_data->chip = NULL;
--	root_irq_data->chip_data = NULL;
-+	tail_irq_data->parent_data = parent_irq_data;
-+	tail_irq_data->domain = domain;
-+	tail_irq_data->mask = 0;
-+	tail_irq_data->hwirq = 0;
-+	tail_irq_data->chip = NULL;
-+	tail_irq_data->chip_data = NULL;
- 
- 	/* May (probably does) set hwirq, chip, etc. */
- 	rv = irq_domain_alloc_irqs_hierarchy(domain, virq, 1, arg);
- 	if (rv) {
- 		/* Restore the original irq_data. */
--		*root_irq_data = *child_irq_data;
-+		*tail_irq_data = *parent_irq_data;
- 		goto error;
- 	}
- 
--	irq_domain_fix_revmap(child_irq_data);
--	irq_domain_set_mapping(domain, root_irq_data->hwirq, root_irq_data);
-+	irq_domain_fix_revmap(parent_irq_data);
-+	irq_domain_set_mapping(domain, tail_irq_data->hwirq, tail_irq_data);
- 
- error:
- 	mutex_unlock(&irq_domain_mutex);
-@@ -1551,7 +1551,7 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
- EXPORT_SYMBOL_GPL(irq_domain_push_irq);
- 
- /**
-- * irq_domain_pop_irq() - Remove a domain from the top of a hierarchy.
-+ * irq_domain_pop_irq() - Remove a domain from the tail of a hierarchy.
-  * @domain:	Domain to remove.
-  * @virq:	Irq to remove the domain from.
-  *
-@@ -1560,8 +1560,8 @@ EXPORT_SYMBOL_GPL(irq_domain_push_irq);
-  */
- int irq_domain_pop_irq(struct irq_domain *domain, int virq)
- {
--	struct irq_data *root_irq_data = irq_get_irq_data(virq);
--	struct irq_data *child_irq_data;
-+	struct irq_data *tail_irq_data = irq_get_irq_data(virq);
-+	struct irq_data *parent_irq_data;
- 	struct irq_data *tmp_irq_data;
- 	struct irq_desc *desc;
- 
-@@ -1583,37 +1583,37 @@ int irq_domain_pop_irq(struct irq_domain *domain, int virq)
- 	if (domain == NULL)
- 		return -EINVAL;
- 
--	if (!root_irq_data)
-+	if (!tail_irq_data)
- 		return -EINVAL;
- 
- 	tmp_irq_data = irq_domain_get_irq_data(domain, virq);
- 
--	/* We can only "pop" if this domain is at the top of the list */
--	if (WARN_ON(root_irq_data != tmp_irq_data))
-+	/* We can only "pop" if this domain is at the tail of the list */
-+	if (WARN_ON(tail_irq_data != tmp_irq_data))
- 		return -EINVAL;
- 
--	if (WARN_ON(root_irq_data->domain != domain))
-+	if (WARN_ON(tail_irq_data->domain != domain))
- 		return -EINVAL;
- 
--	child_irq_data = root_irq_data->parent_data;
--	if (WARN_ON(!child_irq_data))
-+	parent_irq_data = tail_irq_data->parent_data;
-+	if (WARN_ON(!parent_irq_data))
- 		return -EINVAL;
- 
- 	mutex_lock(&irq_domain_mutex);
- 
--	root_irq_data->parent_data = NULL;
-+	tail_irq_data->parent_data = NULL;
- 
--	irq_domain_clear_mapping(domain, root_irq_data->hwirq);
-+	irq_domain_clear_mapping(domain, tail_irq_data->hwirq);
- 	irq_domain_free_irqs_hierarchy(domain, virq, 1);
- 
- 	/* Restore the original irq_data. */
--	*root_irq_data = *child_irq_data;
-+	*tail_irq_data = *parent_irq_data;
- 
--	irq_domain_fix_revmap(root_irq_data);
-+	irq_domain_fix_revmap(tail_irq_data);
- 
- 	mutex_unlock(&irq_domain_mutex);
- 
--	kfree(child_irq_data);
-+	kfree(parent_irq_data);
- 
- 	return 0;
- }
+Masahiro Yamada (6):
+  irqdomain: rename variables in irq_domain_{push,pop}_irq()
+  irqdomain: clear trigger type in irq_domain_push_irq()
+  irqdomain: move IRQ_DOMAIN_NAME_ALLOCATED define to the original
+    position
+  irqdomain: set irq domain flags before the irq domain becomes visible
+  irqdomain: add IRQ_DOMAIN_FLAG_NO_CREATE flag
+  gpio: uniphier: add UniPhier GPIO controller driver
+
+ .../devicetree/bindings/gpio/gpio-uniphier.txt     |  43 ++
+ MAINTAINERS                                        |   1 +
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-uniphier.c                       | 486 +++++++++++++++++++++
+ include/dt-bindings/gpio/uniphier-gpio.h           |  18 +
+ include/linux/irqdomain.h                          |  22 +-
+ kernel/irq/irqdomain.c                             |  93 ++--
+ 8 files changed, 619 insertions(+), 53 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+ create mode 100644 drivers/gpio/gpio-uniphier.c
+ create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
+
 -- 
 2.7.4
