@@ -1,272 +1,80 @@
-From: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Subject: [PATCH v9] arm64: allwinner: h5: add NanoPi NEO Plus2 DT support
-Date: Thu,  7 Sep 2017 18:42:22 +0200
-Message-ID: <20170907164222.66759-1-antony@phenome.org>
-References: <20170824231716.2623-1-antony@phenome.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170824231716.2623-1-antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v4 1/6] irqdomain: rename variables in
+ irq_domain_{push,pop}_irq()
+Date: Thu, 7 Sep 2017 10:45:34 -0700
+Message-ID: <c9fd0412-6dce-95e9-4ca3-d4d61f9feeca@caviumnetworks.com>
+References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+ <1504784522-26841-2-git-send-email-yamada.masahiro@socionext.com>
+ <fb4a28cb-2005-4e9b-8b3d-4d9f4c667c8f@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fb4a28cb-2005-4e9b-8b3d-4d9f4c667c8f@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial DT for NanoPi NEO Plus2 by FriendlyARM
-- Allwinner quad core H5 Cortex A53 with an ARM Mali-450MP GPU
-- 1 GB DDR3 RAM
-- 8GB eMMC flash (Samsung KLM8G1WEPD-B031)
-- micro SD card slot
-- Gigabit Ethernet (external RTL8211E-VB-CG chip)
-- 802.11 b/g/n WiFi, Bluetooth 4.0 (Ampak AP6212A module)
-- 2x USB 2.0 host ports & 2x USB via headers
+On 09/07/2017 05:47 AM, Marc Zyngier wrote:
+> On 07/09/17 12:41, Masahiro Yamada wrote:
+>> The meaning of "root" in irq_domain_{push,pop} is opposite to the
+>> documentation.  Documentation/IRQ-domain.txt depicts the hierarchy
+>> IRQ domain as follows:
+>>
+>>      CPU Vector irq_domain (root irq_domain to manage CPU vectors)
+>>              ^
+>>              |
+>>      Interrupt Remapping irq_domain (manage irq_remapping entries)
+>>              ^
+>>              |
+>>      IOAPIC irq_domain (manage IOAPIC delivery entries/pins)
+>>
+>>  From above, the inner-most domain (nearest to the CPU) is "root".
+>>
+>> The document also says, "When building irq_domain hierarchy, the
+>> irq_domain near to the device is child and the irq_domain near to
+>> CPU is parent."  This is how irq_data->parent_data works.  In
+>> contrast, these function use a variable "child_irq_data" for that.
+> The exact opposite argument could be used for the data structure. The
+> irq_desc is the root of the list ordered with parent_data.
+> 
+> Yes, this is confusing, but because we're using the same English words
+> to describe two different things, we're bound to make one thing more
+> difficult. I'm unconvinced that this change helps anything (it certainly
+> confuses me more than anything else).
+> 
 
-Signed-off-by: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/Makefile             |   1 +
- .../dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts   | 193 +++++++++++++++++++++
- 2 files changed, 194 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
+There may be room for improvement here.
 
----
-Changes
-v1 -> v2
- add wifi power controller,  mmc1, mmc2
- remove reg_usb0_vbus
-v2 -> v3
-fix typo s/orangepi/nanopi/, s/pus/plus/
- usb_otg set to host mode
- wifi fix, based on commit 442e1f7e brcm,bcm43xx-fmac.txt
- remove functions on header pins: spi, ir, ehci 1&2, ohci 1&2, uart 1&2
- remove hdmi, de2, r-gpio-keys, mixer - not supported the board
-v3->v4 update WiFi chip compatible to bcm43430-fmac
-v4->v5 back to bcm4329-fmac bcm43430-fmac is the wrong way.
-v5-->v6
-  sorted nodes
-  removed usb0_id_det-gpios,boot_device, drive-strength = <40>; boot_device
-  delete nodes which are same as the defaults.
-v6->v7
-  s/brcm,bcm4329-fmac/brcm/
-v7->v8
-  remove emac(stmmac: sun8i is reverted in upstream) & related node
-  remove AP6212A comment
-v8->v9
-  remove r_pio, boot_device(missed in v6)
-  s/brcm/brcm,bcm4329-fmac/
+Here is my recollection of how I choose the names:
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 108f12c..e6810c8 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo-plus2.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-new file mode 100644
-index 0000000..7c028af
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-@@ -0,0 +1,193 @@
-+/*
-+ * Copyright (C) 2017 Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-+ * Copyright (C) 2016 ARM Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun50i-h5.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "FriendlyARM NanoPi NEO Plus2";
-+	compatible = "friendlyarm,nanopi-neo-plus2", "allwinner,sun50i-h5";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		pwr {
-+			label = "nanopi:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		status {
-+			label = "nanopi:red:status";
-+			gpios = <&pio 0 20 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vdd_cpux: gpio-regulator {
-+		compatible = "regulator-gpio";
-+		pinctrl-names = "default";
-+		regulator-name = "vdd-cpux";
-+		regulator-type = "voltage";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-ramp-delay = <50>; /* 4ms */
-+		gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0x1>;
-+		states = <1100000 0x0
-+			  1300000 0x1>;
-+	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		post-power-on-delay-ms = <200>;
-+	};
-+};
-+
-+&codec {
-+	allwinner,audio-routing =
-+		"Line Out", "LINEOUT",
-+		"MIC1", "Mic",
-+		"Mic",  "MBIAS";
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci3 {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci3 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	/* USB Type-A ports' VBUS is always on */
-+	status = "okay";
-+};
--- 
-2.9.3
+"root" is the thing embedded in the struct irq_desc, if you think about 
+a typical linked list structure like this, we can refer to the starting 
+point as the "root".  Sometimes it might be referred to as the "head" of 
+the list, but usually not the "tail"
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+"child" was used to indicate the thing we get to by traversing the link 
+in the list.  The fact that ->parent is the name of the next pointer and 
+that it points to something called "child" is confusing here.
+
+So what do I think should be done?  This:
+
+Either
+   A) s/child_irq_data/parent_irq_data/g  As this patch does, but leave 
+the root_irq_data name unchanged.
+
+   B) Change the name of the ->parent in struct irq_data to ->next
+
+But that is just my $0.02
+
+I fear we risk a Bike Shedding type of discussion here.
+
+
+David Daney
+
+> Thanks,
+> 
+> 	M.
+> 
