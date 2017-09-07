@@ -1,60 +1,33 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: net: document Bluetooth bindings in
- one place
-Date: Wed, 6 Sep 2017 16:26:10 -0700
-Message-ID: <20170906232610.GG1165@minitux>
-References: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1504699898-28011-1-git-send-email-loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] Binding document for iProc CDRU and MHB
+Date: Wed,  6 Sep 2017 17:27:40 -0700
+Message-ID: <1504744062-5941-1-git-send-email-ray.jui@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 06 Sep 05:11 PDT 2017, Loic Poulain wrote:
+This patch series adds binding documents for the iProc CDRU and MHB blocks
 
-> In the same way as Ethernet, gather the Bluetooth related bindings in
-> one file. Introduce the bluetooth-bd-address property which can be used
-> to store the assigned BD address.
-> 
-> Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  v2: Set device as unconfigured if default address detected
->      Add warning if BD addr retrieved from DT
->  v3: if no addr retrieved from DT, unconditionally set
->      the invalid BD addr flag.
->      swap and set bdaddr in the platform probe
->  v4: Add dt-bindings documentation
->      split patch in two parts (setup, dt prop)
->      use local-bd-address name instead of local-mac-address
->  v5: remove 2/3 merged in bluetooth-next tree
->      Add bluetooth.txt for common BT bindings
->      expect local-bd-address in little-endian format
->  v6: use of_property_read_u8_array instead of of_get_property
-> 
->  Documentation/devicetree/bindings/net/bluetooth.txt | 5 +++++
->  1 file changed, 5 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/bluetooth.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/bluetooth.txt b/Documentation/devicetree/bindings/net/bluetooth.txt
-> new file mode 100644
-> index 0000000..94797df
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/bluetooth.txt
-> @@ -0,0 +1,5 @@
-> +The following properties are common to the Bluetooth controllers:
-> +
-> +- local-bd-address: array of 6 bytes, specifies the BD address that was
-> +  uniquely assigned to the Bluetooth device, formatted with least significant
-> +  byte first (little-endian).
+This patch series is based off v4.13-rc3 and is available on GIHUB:
+repo: https://github.com/Broadcom/arm64-linux.git
+branch: iproc-mfd-mhb-v1
 
-Is there a good reason for making this little endian?
+Ray Jui (2):
+  syscon: dt-bindings: Add binding doc for Broadcom iProc CDRU
+  syscon: dt-bindings: Add binding document for iProc MHB block
 
-Sure it's only going to be read and written by computers, but for anyone
-reading the generated DT it sure looks like the values are reversed.
+ .../devicetree/bindings/mfd/brcm,iproc-cdru.txt        | 16 ++++++++++++++++
+ .../devicetree/bindings/mfd/brcm,iproc-mhb.txt         | 18 ++++++++++++++++++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/brcm,iproc-cdru.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/brcm,iproc-mhb.txt
 
-Regards,
-Bjorn
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
