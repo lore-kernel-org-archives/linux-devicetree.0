@@ -1,360 +1,46 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v2] ARM: dts: exynos: fix incomplete Odroid-XU3/4
- thermal-zones definition
-Date: Thu, 07 Sep 2017 18:10 +0200
-Message-ID: <1848394.K3C0KxojUN@amdc3058>
-References: <CGME20170907161007epcas1p316fba6e329eaabedde8a98628ebb9751@epcas1p3.samsung.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [RFC PATCH 0/6] Add platform device SVM support for ARM SMMUv3
+Date: Thu, 7 Sep 2017 17:30:37 +0100
+Message-ID: <24e7e405-ad4a-4847-6177-987966182cbd@arm.com>
+References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
+ <95d1a9e2-1816-ff7d-9a8d-98406a6c2c22@arm.com>
+ <de1a6b52-5e4f-1c0a-af3d-f6adb4b01daf@huawei.com>
+ <fd4200c1-3c89-23f1-a2b1-6457ef8475c1@arm.com>
+ <8e4764f5-0e5d-7fd6-529b-35914e1e3668@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Willy Wolff <willy.mh.wolff@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <8e4764f5-0e5d-7fd6-529b-35914e1e3668@huawei.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Bob Liu <liubo95@huawei.com>, Yisheng Xie <xieyisheng1@huawei.com>
+Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, robert.moore@intel.com, lv.zheng@intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@acpica.org, chenjiankang1@huawei.com, xieyisheng@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-From: Willy Wolff <willy.mh.wolff@gmail.com>
+On 07/09/17 02:55, Bob Liu wrote:
+> Speak to the invalidation, I have one more question.
+> 
+> There is a time window between 1) modify page table;  2) tlb invalidate;
+> 
+> ARM-CPU                           Device
+> 
+> 1. modify page table
+> 
+>                              ^^^^^
+>                               Can still write data through smmu tlb even page table was already modified.
+>                               (At this point, the same virtual addr may not point to the same thing for CPU and device!!!
+>                                I'm afraid there may be some data-loss or other potential problems if this situation happens.)
+> 
+> 2. tlb invalidate range
 
-Odroid XU3/4 boards have thermal sensors per 4 pairs of A7+A15
-cores but currently there is only one thermal-zone (including
-cooling maps) defined (for the first pair of cores - the first
-core of the A7 cluster and the first core of A15 cluster) so
-i.e. if the task is running on any of A15 cores but the first
-one, such core can reach high temperature without any proper
-cooling action.
+The mm code serializes map/unmap operations with mm->mmap_sem, and at a
+lower level I think the pte lock is used to prevent more subtle races.
+Don't take my word for it though, mm/ is still very obscure to me. So the
+kernel shouldn't be able to reuse the VA for something else before the tlb
+invalidation completes. Even if you're using the CMDQ to invalidate
+instead of TLBI instructions, you're still called by a notifier from the
+mm code so there is no problem.
 
-Fix it by adding missing thermal-zones definitions.
-
-Also while at it fix the number of steps in cpufreq cooling for
-cpu4 (11 steps for A15 corresponds to 700MHz, for 600MHz 12 steps
-should be used).
-
-Signed-off-by: Willy Wolff <willy.mh.wolff@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Kukjin Kim <kgene@kernel.org>
-[b.zolnierkie: rewrote patch subject & description + minor fixups]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
-v2:
-
-Newlines removed (1 original + 3 new ones), sorry for not catching it
-earlier in v1.
-
-v1:
-
-I updated the patch to address Krzysztof's review comments,
-the original version from June can be found here:
-
-	https://patchwork.kernel.org/patch/9807333/
-
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  239 +++++++++++++++++++--
- 1 file changed, 219 insertions(+), 20 deletions(-)
-
-Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-===================================================================
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2017-09-07 17:56:29.256414483 +0200
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2017-09-07 18:04:40.596426857 +0200
-@@ -63,22 +63,22 @@
- 			polling-delay-passive = <250>;
- 			polling-delay = <0>;
- 			trips {
--				cpu_alert0: cpu-alert-0 {
-+				cpu0_alert0: cpu-alert-0 {
- 					temperature = <50000>; /* millicelsius */
- 					hysteresis = <5000>; /* millicelsius */
- 					type = "active";
- 				};
--				cpu_alert1: cpu-alert-1 {
-+				cpu0_alert1: cpu-alert-1 {
- 					temperature = <60000>; /* millicelsius */
- 					hysteresis = <5000>; /* millicelsius */
- 					type = "active";
- 				};
--				cpu_alert2: cpu-alert-2 {
-+				cpu0_alert2: cpu-alert-2 {
- 					temperature = <70000>; /* millicelsius */
- 					hysteresis = <5000>; /* millicelsius */
- 					type = "active";
- 				};
--				cpu_crit0: cpu-crit-0 {
-+				cpu0_crit0: cpu-crit-0 {
- 					temperature = <120000>; /* millicelsius */
- 					hysteresis = <0>; /* millicelsius */
- 					type = "critical";
-@@ -87,59 +87,258 @@
- 				 * Exynos542x supports only 4 trip-points
- 				 * so for these polling mode is required.
- 				 * Start polling at temperature level of last
--				 * interrupt-driven trip: cpu_alert2
-+				 * interrupt-driven trip: cpu0_alert2
- 				 */
--				cpu_alert3: cpu-alert-3 {
-+				cpu0_alert3: cpu-alert-3 {
- 					temperature = <70000>; /* millicelsius */
- 					hysteresis = <10000>; /* millicelsius */
- 					type = "passive";
- 				};
--				cpu_alert4: cpu-alert-4 {
-+				cpu0_alert4: cpu-alert-4 {
- 					temperature = <85000>; /* millicelsius */
- 					hysteresis = <10000>; /* millicelsius */
- 					type = "passive";
- 				};
--
- 			};
- 			cooling-maps {
- 				map0 {
--					trip = <&cpu_alert0>;
-+					trip = <&cpu0_alert0>;
- 					cooling-device = <&fan0 0 1>;
- 				};
- 				map1 {
--					trip = <&cpu_alert1>;
-+					trip = <&cpu0_alert1>;
- 					cooling-device = <&fan0 1 2>;
- 				};
- 				map2 {
--					trip = <&cpu_alert2>;
-+					trip = <&cpu0_alert2>;
- 					cooling-device = <&fan0 2 3>;
- 				};
- 				/*
--				 * When reaching cpu_alert3, reduce CPU
-+				 * When reaching cpu0_alert3, reduce CPU
- 				 * by 2 steps. On Exynos5422/5800 that would
- 				 * be: 1600 MHz and 1100 MHz.
- 				 */
- 				map3 {
--					trip = <&cpu_alert3>;
-+					trip = <&cpu0_alert3>;
- 					cooling-device = <&cpu0 0 2>;
- 				};
- 				map4 {
--					trip = <&cpu_alert3>;
-+					trip = <&cpu0_alert3>;
- 					cooling-device = <&cpu4 0 2>;
- 				};
--
- 				/*
--				 * When reaching cpu_alert4, reduce CPU
--				 * further, down to 600 MHz (11 steps for big,
-+				 * When reaching cpu0_alert4, reduce CPU
-+				 * further, down to 600 MHz (12 steps for big,
- 				 * 7 steps for LITTLE).
- 				 */
- 				map5 {
--					trip = <&cpu_alert4>;
-+					trip = <&cpu0_alert4>;
- 					cooling-device = <&cpu0 3 7>;
- 				};
- 				map6 {
--					trip = <&cpu_alert4>;
--					cooling-device = <&cpu4 3 11>;
-+					trip = <&cpu0_alert4>;
-+					cooling-device = <&cpu4 3 12>;
-+				};
-+			};
-+		};
-+		cpu1_thermal: cpu1-thermal {
-+			thermal-sensors = <&tmu_cpu1 0>;
-+			polling-delay-passive = <250>;
-+			polling-delay = <0>;
-+			trips {
-+				cpu1_alert0: cpu-alert-0 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu1_alert1: cpu-alert-1 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu1_alert2: cpu-alert-2 {
-+					temperature = <70000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu1_crit0: cpu-crit-0 {
-+					temperature = <120000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+				cpu1_alert3: cpu-alert-3 {
-+					temperature = <70000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+				cpu1_alert4: cpu-alert-4 {
-+					temperature = <85000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu1_alert0>;
-+					cooling-device = <&fan0 0 1>;
-+				};
-+				map1 {
-+					trip = <&cpu1_alert1>;
-+					cooling-device = <&fan0 1 2>;
-+				};
-+				map2 {
-+					trip = <&cpu1_alert2>;
-+					cooling-device = <&fan0 2 3>;
-+				};
-+				map3 {
-+					trip = <&cpu1_alert3>;
-+					cooling-device = <&cpu0 0 2>;
-+				};
-+				map4 {
-+					trip = <&cpu1_alert3>;
-+					cooling-device = <&cpu4 0 2>;
-+				};
-+				map5 {
-+					trip = <&cpu1_alert4>;
-+					cooling-device = <&cpu0 3 7>;
-+				};
-+				map6 {
-+					trip = <&cpu1_alert4>;
-+					cooling-device = <&cpu4 3 12>;
-+				};
-+			};
-+		};
-+		cpu2_thermal: cpu2-thermal {
-+			thermal-sensors = <&tmu_cpu2 0>;
-+			polling-delay-passive = <250>;
-+			polling-delay = <0>;
-+			trips {
-+				cpu2_alert0: cpu-alert-0 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu2_alert1: cpu-alert-1 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu2_alert2: cpu-alert-2 {
-+					temperature = <70000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu2_crit0: cpu-crit-0 {
-+					temperature = <120000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+				cpu2_alert3: cpu-alert-3 {
-+					temperature = <70000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+				cpu2_alert4: cpu-alert-4 {
-+					temperature = <85000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu2_alert0>;
-+					cooling-device = <&fan0 0 1>;
-+				};
-+				map1 {
-+					trip = <&cpu2_alert1>;
-+					cooling-device = <&fan0 1 2>;
-+				};
-+				map2 {
-+					trip = <&cpu2_alert2>;
-+					cooling-device = <&fan0 2 3>;
-+				};
-+				map3 {
-+					trip = <&cpu2_alert3>;
-+					cooling-device = <&cpu0 0 2>;
-+				};
-+				map4 {
-+					trip = <&cpu2_alert3>;
-+					cooling-device = <&cpu4 0 2>;
-+				};
-+				map5 {
-+					trip = <&cpu2_alert4>;
-+					cooling-device = <&cpu0 3 7>;
-+				};
-+				map6 {
-+					trip = <&cpu2_alert4>;
-+					cooling-device = <&cpu4 3 12>;
-+				};
-+			};
-+		};
-+		cpu3_thermal: cpu3-thermal {
-+			thermal-sensors = <&tmu_cpu3 0>;
-+			polling-delay-passive = <250>;
-+			polling-delay = <0>;
-+			trips {
-+				cpu3_alert0: cpu-alert-0 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu3_alert1: cpu-alert-1 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu3_alert2: cpu-alert-2 {
-+					temperature = <70000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu3_crit0: cpu-crit-0 {
-+					temperature = <120000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+				cpu3_alert3: cpu-alert-3 {
-+					temperature = <70000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+				cpu3_alert4: cpu-alert-4 {
-+					temperature = <85000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu3_alert0>;
-+					cooling-device = <&fan0 0 1>;
-+				};
-+				map1 {
-+					trip = <&cpu3_alert1>;
-+					cooling-device = <&fan0 1 2>;
-+				};
-+				map2 {
-+					trip = <&cpu3_alert2>;
-+					cooling-device = <&fan0 2 3>;
-+				};
-+				map3 {
-+					trip = <&cpu3_alert3>;
-+					cooling-device = <&cpu0 0 2>;
-+				};
-+				map4 {
-+					trip = <&cpu3_alert3>;
-+					cooling-device = <&cpu4 0 2>;
-+				};
-+				map5 {
-+					trip = <&cpu3_alert4>;
-+					cooling-device = <&cpu0 3 7>;
-+				};
-+				map6 {
-+					trip = <&cpu3_alert4>;
-+					cooling-device = <&cpu4 3 12>;
- 				};
- 			};
- 		};
+Thanks,
+Jean
