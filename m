@@ -1,99 +1,263 @@
 From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v8 14/21] v4l: async: Allow binding notifiers to
- sub-devices
-Date: Thu, 7 Sep 2017 14:02:14 +0200
-Message-ID: <62199083-9d61-daa5-f16a-c3d29ed94407@xs4all.nl>
+Subject: Re: [PATCH v8 06/21] v4l: fwnode: Support generic parsing of graph
+ endpoints in a device
+Date: Thu, 7 Sep 2017 14:03:57 +0200
+Message-ID: <8123f8c5-9045-2a22-c97f-09d36e504e2e@xs4all.nl>
 References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
- <20170905130553.1332-15-sakari.ailus@linux.intel.com>
- <910b3d01-a8a4-2363-4b24-ed0edd1e1f4d@xs4all.nl>
- <20170907083209.3xtaxwhrfmgrtpfz@valkosipuli.retiisi.org.uk>
+ <20170905130553.1332-7-sakari.ailus@linux.intel.com>
+ <dd3a2e55-8de0-c30e-04a7-cb26b519689c@xs4all.nl>
+ <20170907073446.ajxsscekwrbfbtgk@valkosipuli.retiisi.org.uk>
+ <85733523-7f6b-4aaf-55ca-e60e76719874@xs4all.nl>
+ <20170907095850.m7mlag3tofwbj2jc@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170907083209.3xtaxwhrfmgrtpfz-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+In-Reply-To: <20170907095850.m7mlag3tofwbj2jc-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/17 10:32, Sakari Ailus wrote:
+On 09/07/17 11:58, Sakari Ailus wrote:
 > Hi Hans,
 > 
-> On Wed, Sep 06, 2017 at 10:46:31AM +0200, Hans Verkuil wrote:
->> On 09/05/2017 03:05 PM, Sakari Ailus wrote:
-
->>> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
->>> index 3bc8a7c0d83f..12739be44bd1 100644
->>> --- a/include/media/v4l2-async.h
->>> +++ b/include/media/v4l2-async.h
->>> @@ -102,7 +102,9 @@ struct v4l2_async_notifier_operations {
->>>   * @num_subdevs: number of subdevices used in the subdevs array
->>>   * @max_subdevs: number of subdevices allocated in the subdevs array
->>>   * @subdevs:	array of pointers to subdevice descriptors
->>> - * @v4l2_dev:	pointer to struct v4l2_device
->>> + * @v4l2_dev:	v4l2_device of the master, for subdev notifiers NULL
->>> + * @sd:		sub-device that registered the notifier, NULL otherwise
->>> + * @master:	master notifier carrying @v4l2_dev
+> On Thu, Sep 07, 2017 at 10:51:21AM +0200, Hans Verkuil wrote:
+>> On 09/07/17 09:34, Sakari Ailus wrote:
+>>> Hi Hans,
+>>>
+>>> On Wed, Sep 06, 2017 at 09:41:40AM +0200, Hans Verkuil wrote:
+>>>> On 09/05/2017 03:05 PM, Sakari Ailus wrote:
+>>>>> The current practice is that drivers iterate over their endpoints and
+>>>>> parse each endpoint separately. This is very similar in a number of
+>>>>> drivers, implement a generic function for the job. Driver specific matters
+>>>>> can be taken into account in the driver specific callback.
+>>>>>
+>>>>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>>> ---
+>>>>>  drivers/media/v4l2-core/v4l2-async.c  |  19 +++++
+>>>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 140 ++++++++++++++++++++++++++++++++++
+>>>>>  include/media/v4l2-async.h            |  24 +++++-
+>>>>>  include/media/v4l2-fwnode.h           |  53 +++++++++++++
+>>>>>  4 files changed, 234 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+>>>>> index 3d81ff6a496f..7bd595c4094a 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-async.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-async.c
+>>>>> @@ -22,6 +22,7 @@
+>>>>>  
+>>>>>  #include <media/v4l2-async.h>
+>>>>>  #include <media/v4l2-device.h>
+>>>>> +#include <media/v4l2-fwnode.h>
+>>>>>  #include <media/v4l2-subdev.h>
+>>>>>  
+>>>>>  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+>>>>> @@ -224,6 +225,24 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+>>>>>  }
+>>>>>  EXPORT_SYMBOL(v4l2_async_notifier_unregister);
+>>>>>  
+>>>>> +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier)
+>>>>> +{
+>>>>> +	unsigned int i;
+>>>>> +
+>>>>> +	if (!notifier->max_subdevs)
+>>>>> +		return;
+>>>>> +
+>>>>> +	for (i = 0; i < notifier->num_subdevs; i++)
+>>>>> +		kfree(notifier->subdevs[i]);
+>>>>> +
+>>>>> +	notifier->max_subdevs = 0;
+>>>>> +	notifier->num_subdevs = 0;
+>>>>> +
+>>>>> +	kvfree(notifier->subdevs);
+>>>>> +	notifier->subdevs = NULL;
+>>>>> +}
+>>>>> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_release);
+>>>>> +
+>>>>>  int v4l2_async_register_subdev(struct v4l2_subdev *sd)
+>>>>>  {
+>>>>>  	struct v4l2_async_notifier *notifier;
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> index 706f9e7b90f1..e6932d7d47b6 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> @@ -19,6 +19,7 @@
+>>>>>   */
+>>>>>  #include <linux/acpi.h>
+>>>>>  #include <linux/kernel.h>
+>>>>> +#include <linux/mm.h>
+>>>>>  #include <linux/module.h>
+>>>>>  #include <linux/of.h>
+>>>>>  #include <linux/property.h>
+>>>>> @@ -26,6 +27,7 @@
+>>>>>  #include <linux/string.h>
+>>>>>  #include <linux/types.h>
+>>>>>  
+>>>>> +#include <media/v4l2-async.h>
+>>>>>  #include <media/v4l2-fwnode.h>
+>>>>>  
+>>>>>  enum v4l2_fwnode_bus_type {
+>>>>> @@ -313,6 +315,144 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+>>>>>  }
+>>>>>  EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+>>>>>  
+>>>>> +static int v4l2_async_notifier_realloc(struct v4l2_async_notifier *notifier,
+>>>>> +				       unsigned int max_subdevs)
+>>>>> +{
+>>>>> +	struct v4l2_async_subdev **subdevs;
+>>>>> +
+>>>>> +	if (max_subdevs <= notifier->max_subdevs)
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	subdevs = kvmalloc_array(
+>>>>> +		max_subdevs, sizeof(*notifier->subdevs),
+>>>>> +		GFP_KERNEL | __GFP_ZERO);
+>>>>> +	if (!subdevs)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	if (notifier->subdevs) {
+>>>>> +		memcpy(subdevs, notifier->subdevs,
+>>>>> +		       sizeof(*subdevs) * notifier->num_subdevs);
+>>>>> +
+>>>>> +		kvfree(notifier->subdevs);
+>>>>> +	}
+>>>>> +
+>>>>> +	notifier->subdevs = subdevs;
+>>>>> +	notifier->max_subdevs = max_subdevs;
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int v4l2_async_notifier_fwnode_parse_endpoint(
+>>>>> +	struct device *dev, struct v4l2_async_notifier *notifier,
+>>>>> +	struct fwnode_handle *endpoint, unsigned int asd_struct_size,
+>>>>> +	int (*parse_endpoint)(struct device *dev,
+>>>>> +			    struct v4l2_fwnode_endpoint *vep,
+>>>>> +			    struct v4l2_async_subdev *asd))
+>>>>> +{
+>>>>> +	struct v4l2_async_subdev *asd;
+>>>>> +	struct v4l2_fwnode_endpoint *vep;
+>>>>> +	struct fwnode_endpoint ep;
+>>>>> +	int ret = 0;
+>>>>> +
+>>>>> +	asd = kzalloc(asd_struct_size, GFP_KERNEL);
+>>>>> +	if (!asd)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	asd->match.fwnode.fwnode =
+>>>>> +		fwnode_graph_get_remote_port_parent(endpoint);
+>>>>> +	if (!asd->match.fwnode.fwnode) {
+>>>>> +		dev_warn(dev, "bad remote port parent\n");
+>>>>> +		ret = -EINVAL;
+>>>>> +		goto out_err;
+>>>>> +	}
+>>>>> +
+>>>>> +	/* Ignore endpoints the parsing of which failed. */
+>>>>> +	vep = v4l2_fwnode_endpoint_alloc_parse(endpoint);
+>>>>> +	if (IS_ERR(vep)) {
+>>>>> +		ret = PTR_ERR(vep);
+>>>>> +		dev_warn(dev, "unable to parse V4L2 fwnode endpoint (%d)\n",
+>>>>> +			 ret);
+>>>>> +		goto out_err;
+>>>>> +	}
+>>>>> +
+>>>>> +	ep = vep->base;
+>>>>> +
+>>>>> +	ret = parse_endpoint ? parse_endpoint(dev, vep, asd) : 0;
+>>>>> +	v4l2_fwnode_endpoint_free(vep);
+>>>>> +	if (ret == -ENOTCONN) {
+>>>>> +		dev_dbg(dev, "ignoring endpoint %u,%u\n", ep.port, ep.id);
+>>>>> +		kfree(asd);
+>>>>
+>>>> Shouldn't there be a call to fwnode_handle_put()?
+>>>
+>>> Actually no. But your hunch is right in the sense that I think there are
+>>> issues. The fwnode_endpoint (as of_endpoint) contains the fwnode which is
+>>> referenced, but no reference is taken here. One couldn't be released either
+>>> later on, as the fwnode field is const.
+>>>
+>>> I guess this is almost fine as long as the fwnode field is used for pointer
+>>> comparison and nothing else but you can never be sure what drivers actually
+>>> do.
+>>>
+>>> This actually should be addressed for both OF and fwnode but it's mostly
+>>> independent of this patchset. Luckily there are not *that* many users of
+>>> this. The V4L2 fwnode interface that allocates and releases endpoints makes
+>>> this quite a bit easier actually.
 >>
->> I think this description is out of date. It is really the parent notifier,
->> right? Should 'master' be renamed to 'parent'?
+>> I think a comment or two here would be helpful. If I tripped over this, so
+>> will others.
 > 
-> You could view it as one, yes. What is known is that the notifier is
-> related, and through which the v4l2_dev can be found. I'll rename it as
-> "parent".
+> Reading the code again, I noticed I didn't read far enough the last time.
+> While v4l2_fwnode_endpoint_alloc_parse() won't take a reference,
+> fwnode_graph_get_remote_port_parent() does. That reference indeed isn't
+> released right now.
 > 
-> I'll use root in the commit message as well.
+> It shouldn't be too hard to do that properly in
+> v4l2_async_notifier_release(). I guess I'll do just that actually. By that
+> time, there are no users left anymore.
+> 
+> Good catch.
 > 
 >>
->> Same problem with the description of @v4l2_dev: it's the v4l2_device of the
->> root/top-level notifier.
+>>>
+>>>>
+>>>>> +		return 0;
+>>>>> +	} else if (ret < 0) {
+>>>>> +		dev_warn(dev, "driver could not parse endpoint %u,%u (%d)\n",
+>>>>> +			 ep.port, ep.id, ret);
+>>>>> +		goto out_err;
+>>>>> +	}
+>>>>
+>>>> I think this would be better and it avoids the need for the ep local variable:
+>>>>
+>>>> 	ret = parse_endpoint ? parse_endpoint(dev, vep, asd) : 0;
+>>>> 	if (ret == -ENOTCONN)
+>>>> 		dev_dbg(dev, "ignoring endpoint %u,%u\n", vep->base.port, vep->base.id);
+>>>> 	else if (ret < 0)
+>>>> 		dev_warn(dev, "driver could not parse endpoint %u,%u (%d)\n",
+>>>> 			 vep->base.port, vep->base.id, ret);
+>>>> 	v4l2_fwnode_endpoint_free(vep);
+>>>> 	if (ret < 0)
+>>>> 		goto out_err;
+>>>>
+>>>> And the 'return ret;' below would become:
+>>>>
+>>>> 	return ret == -ENOTCONN ? 0 : ret;
+>>>
+>>> Looks good to me, I'll use it.
+>>>
+>>>>
+>>>>> +
+>>>>> +	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+>>>>> +	notifier->subdevs[notifier->num_subdevs] = asd;
+>>>>> +	notifier->num_subdevs++;
+>>>>> +
+>>>>> +	return 0;
+>>>>> +
+>>>>> +out_err:
+>>>>> +	fwnode_handle_put(asd->match.fwnode.fwnode);
+>>
+>> Just a reminder: this put() should now check if ret != -ENOTCONN.
 > 
-> "v4l2_device of the root notifier, NULL otherwise"?
+> Should it? Even if ret == -ENOTCONN, the reference is there and needs to be
+> released as the endpoint is not used (just as in the case of an error).
 
-Ack.
+Well, in the previous reply you mentioned that the put wasn't necessary, hence
+my comment. Since it is now needed again you can ignore this.
+
+Regards,
 
 	Hans
 
 > 
 >>
->>>   * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
->>>   * @done:	list of struct v4l2_subdev, already probed
->>>   * @list:	member in a global list of notifiers
->>> @@ -113,6 +115,8 @@ struct v4l2_async_notifier {
->>>  	unsigned int max_subdevs;
->>>  	struct v4l2_async_subdev **subdevs;
->>>  	struct v4l2_device *v4l2_dev;
->>> +	struct v4l2_subdev *sd;
->>> +	struct v4l2_async_notifier *master;
->>>  	struct list_head waiting;
->>>  	struct list_head done;
->>>  	struct list_head list;
->>> @@ -128,6 +132,16 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
->>>  				 struct v4l2_async_notifier *notifier);
->>>  
->>>  /**
->>> + * v4l2_async_subdev_notifier_register - registers a subdevice asynchronous
->>> + *					 notifier for a sub-device
->>> + *
->>> + * @sd: pointer to &struct v4l2_subdev
->>> + * @notifier: pointer to &struct v4l2_async_notifier
->>> + */
->>> +int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
->>> +					struct v4l2_async_notifier *notifier);
->>> +
->>> +/**
->>>   * v4l2_async_notifier_unregister - unregisters a subdevice asynchronous notifier
->>>   *
->>>   * @notifier: pointer to &struct v4l2_async_notifier
->>>
->>
->> This v8 is much better and is getting close.
-> 
-> Thanks!
-> 
-
+>>>>> +	kfree(asd);
+>>>>> +
+>>>>> +	return ret;
+>>>>> +}
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
