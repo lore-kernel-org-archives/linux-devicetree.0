@@ -1,46 +1,337 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] leds: as3645a: Add LED flash class driver
-Date: Thu, 7 Sep 2017 17:52:05 +0300
-Message-ID: <20170907145205.k3uzwwgvv3hxrb5t@valkosipuli.retiisi.org.uk>
-References: <20170823081100.11733-1-sakari.ailus@linux.intel.com>
- <20170823081100.11733-3-sakari.ailus@linux.intel.com>
- <20170828110451.GB492@amd>
- <20170907102657.stoqw5e7glbkbz2z@valkosipuli.retiisi.org.uk>
- <20170907125027.GA3108@amd>
+From: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] arm: npcm: add basic support for Nuvoton BMCs
+Date: Thu, 7 Sep 2017 18:09:06 +0300
+Message-ID: <CAKKbWA4HSw3xXEhF5tf51UMM5Ch3OxnryjzGjw8tWb23o5cNYQ@mail.gmail.com>
+References: <20170906080751.6773-1-brendanhiggins@google.com>
+ <20170906080751.6773-2-brendanhiggins@google.com> <CAKKbWA4OXL__VWzwRvN_wujDc70zWqmGPcu2_WRpvsSUYba1Qg@mail.gmail.com>
+ <CAFd5g46fh3unYC8J3CyUg25=3XAbz+U-XC6ON7V9p5Nt0mLKgA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170907125027.GA3108@amd>
+In-Reply-To: <CAFd5g46fh3unYC8J3CyUg25=3XAbz+U-XC6ON7V9p5Nt0mLKgA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 07, 2017 at 02:50:27PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > On Mon, Aug 28, 2017 at 01:04:51PM +0200, Pavel Machek wrote:
-> > > On Wed 2017-08-23 11:10:59, Sakari Ailus wrote:
-> > > > Add a LED flash class driver for the as3654a flash controller. A V4L2 flash
-> > > > driver for it already exists (drivers/media/i2c/as3645a.c), and this driver
-> > > > is based on that.
-> > > 
-> > > We do not want to have two drivers for same hardware... how is that
-> > > supposed to work?
-> > 
-> > No, we don't. The intent is to remove the other driver later on, as it's
-> > implemented as a V4L2 sub-device driver. It also lacks DT support.
-> 
-> Could we perhaps remove the driver with the same patch that merges
-> this?
+On Thu, Sep 7, 2017 at 8:09 AM, Brendan Higgins
+<brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Wed, Sep 6, 2017 at 2:04 PM, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Sorry for sending again some mailing list rejected it due to HTML
+>> involved (althoug I tried Plain Text), Trying again.
+>>
+>> 2017-09-06 11:07 GMT+03:00 Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>:
+>>> Adds basic support for the Nuvoton NPCM750 BMC.
+>>>
+>>> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  arch/arm/Kconfig             |  2 +
+>>>  arch/arm/Makefile            |  1 +
+>>>  arch/arm/mach-npcm/Kconfig   | 50 +++++++++++++++++++++++++
+>>>  arch/arm/mach-npcm/Makefile  |  3 ++
+>>>  arch/arm/mach-npcm/headsmp.S | 17 +++++++++
+>>>  arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
+>>>  arch/arm/mach-npcm/platsmp.c | 89 ++++++++++++++++++++++++++++++++++++++++++++
+>>>  7 files changed, 196 insertions(+)
+>>>  create mode 100644 arch/arm/mach-npcm/Kconfig
+>>>  create mode 100644 arch/arm/mach-npcm/Makefile
+>>>  create mode 100644 arch/arm/mach-npcm/headsmp.S
+>>>  create mode 100644 arch/arm/mach-npcm/npcm7xx.c
+>>>  create mode 100644 arch/arm/mach-npcm/platsmp.c
+>>>
+>>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>>> index 61a0cb15067e..05543f1cfbde 100644
+>>> --- a/arch/arm/Kconfig
+>>> +++ b/arch/arm/Kconfig
+>>> @@ -782,6 +782,8 @@ source "arch/arm/mach-netx/Kconfig"
+>>>
+>>>  source "arch/arm/mach-nomadik/Kconfig"
+>>>
+>>> +source "arch/arm/mach-npcm/Kconfig"
+>>> +
+>>>  source "arch/arm/mach-nspire/Kconfig"
+>>>
+>>>  source "arch/arm/plat-omap/Kconfig"
+>>> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+>>> index 47d3a1ab08d2..60ca50c7d762 100644
+>>> --- a/arch/arm/Makefile
+>>> +++ b/arch/arm/Makefile
+>>> @@ -191,6 +191,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)             += mediatek
+>>>  machine-$(CONFIG_ARCH_MXS)             += mxs
+>>>  machine-$(CONFIG_ARCH_NETX)            += netx
+>>>  machine-$(CONFIG_ARCH_NOMADIK)         += nomadik
+>>> +machine-$(CONFIG_ARCH_NPCM)            += npcm
+>>>  machine-$(CONFIG_ARCH_NSPIRE)          += nspire
+>>>  machine-$(CONFIG_ARCH_OXNAS)           += oxnas
+>>>  machine-$(CONFIG_ARCH_OMAP1)           += omap1
+>>> diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
+>>> new file mode 100644
+>>> index 000000000000..d47061855439
+>>> --- /dev/null
+>>> +++ b/arch/arm/mach-npcm/Kconfig
+>>> @@ -0,0 +1,50 @@
+>>> +menuconfig ARCH_NPCM
+>>> +       bool "Nuvoton NPCM Architecture"
+>>> +       select ARCH_REQUIRE_GPIOLIB
+>>> +       select USE_OF
+>>> +       select PINCTRL
+>>> +       select PINCTRL_NPCM7XX
+>>> +
+>>> +if ARCH_NPCM
+>>> +
+>>> +comment "NPCMX50 CPU type"
+>>> +
+>>> +config CPU_NPCM750
+>>> +       depends on ARCH_NPCM && ARCH_MULTI_V7
+>>> +       bool "Support for NPCM750 BMC CPU (Poleg)"
+>>> +       select CACHE_L2X0
+>>> +       select CPU_V7
+>>> +       select ARM_GIC
+>>> +       select HAVE_SMP
+>>> +       select SMP
+>>> +       select SMP_ON_UP
+>>> +       select HAVE_ARM_SCU
+>>> +       select HAVE_ARM_TWD if SMP
+>>> +       select ARM_ERRATA_458693
+>>> +       select ARM_ERRATA_720789
+>>> +       select ARM_ERRATA_742231
+>>> +       select ARM_ERRATA_754322
+>>> +       select ARM_ERRATA_764369
+>>> +       select ARM_ERRATA_794072
+>>> +       select PL310_ERRATA_588369
+>>> +       select PL310_ERRATA_727915
+>>> +       select USB_EHCI_ROOT_HUB_TT
+>>> +       select USB_ARCH_HAS_HCD
+>>> +       select USB_ARCH_HAS_EHCI
+>>> +       select USB_EHCI_HCD
+>>> +       select USB_ARCH_HAS_OHCI
+>>> +       select USB_OHCI_HCD
+>>> +       select USB
+>>> +       select FIQ
+>>> +       select CPU_USE_DOMAINS
+>>> +       select GENERIC_CLOCKEVENTS
+>>> +       select CLKDEV_LOOKUP
+>>> +       select COMMON_CLK if OF
+>>> +       select NPCM750_TIMER
+>>> +       select MFD_SYSCON
+>>> +       help
+>>> +         Support for NPCM750 BMC CPU (Poleg).
+>>> +
+>>> +         Nuvoton NPCM750 BMC based on the Cortex A9.
+>>> +
+>>> +endif
+>>> diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
+>>> new file mode 100644
+>>> index 000000000000..78416055b854
+>>> --- /dev/null
+>>> +++ b/arch/arm/mach-npcm/Makefile
+>>> @@ -0,0 +1,3 @@
+>>> +AFLAGS_headsmp.o               += -march=armv7-a
+>>> +
+>>> +obj-$(CONFIG_CPU_NPCM750)      += npcm7xx.o platsmp.o headsmp.o
+>>> diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
+>>> new file mode 100644
+>>> index 000000000000..9fccbbd49ed4
+>>> --- /dev/null
+>>> +++ b/arch/arm/mach-npcm/headsmp.S
+>>> @@ -0,0 +1,17 @@
+>>> +/*
+>>> + * Copyright 2017 Google, Inc.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#include <linux/linkage.h>
+>>> +#include <linux/init.h>
+>>> +#include <asm/assembler.h>
+>>> +
+>>> +ENTRY(npcm7xx_secondary_startup)
+>>> +       safe_svcmode_maskall r0
+>>
+>> I saw you  answered to Florian Fainelli that the BootRom is not
+>> starting the secondary CPU in SVC mode. Are you sure? In our
+>> engineering npcm7xx revision, Z1, the BootRom indeed started to run it
+>> in IRQ mode but we fixed it in the production version, A1, (quite long
+>> time ago), I hope you didn't get an EB with Z1 you can check that in
+>> BootBlock console print:
+>>> ADC CLK is set to 25000000
+>>>Last reset was CORST
+>>>vgaioen=1 and mux gspi.
+>>>A1 <<====== this is what you should see, if you see Z1 we need to replace your EB
+>>
+>
+> Nope, on boot it prints:
+>
+>>EB
+>>Board manufacturer: Nuvoton
+>
+>> CPU CLK is 800000000
+>> MC  CLK is 800000000
+>
+>> ADC CLK is set to 25000000
+>>Last reset was PORST
+>>vgaioen=1 and mux gspi.
+>>A1
+>>Skip PCI config.
+>
+> To reproduce, all you have to do is delete
+>
+>>> +       safe_svcmode_maskall r0
+>
+> and the kernel will warn that the core is not starting in SVC mode
+>
 
-This patch is already merged, but I can submit another patch removing the
-other driver.
+OK, Tomer also confirmed it, his kernel printed this:
+    CPU: WARNING: CPU(s) started in wrong/inconsistent modes (primary
+CPU mode 0x13)
+    CPU: This may indicate a broken bootloader or firmware.
+It appears that in kernel CPU0 starts at SVC mode (0x13) and CPU1
+starts at SYS mode (0x1F) and the kernel doesn't like that, so leave
+it as is.
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+>>> +
+>>> +       b       secondary_startup
+>>> +ENDPROC(npcm7xx_secondary_startup)
+>>> diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
+>>> new file mode 100644
+>>> index 000000000000..132e9d587857
+>>> --- /dev/null
+>>> +++ b/arch/arm/mach-npcm/npcm7xx.c
+>>> @@ -0,0 +1,34 @@
+>>> +/*
+>>> + * Copyright (c) 2017 Nuvoton Technology corporation.
+>>> + * Copyright 2017 Google, Inc.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/types.h>
+>>> +#include <asm/mach/arch.h>
+>>> +#include <asm/mach-types.h>
+>>> +#include <asm/mach/map.h>
+>>> +#include <asm/hardware/cache-l2x0.h>
+>>> +
+>>> +#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |                               \
+>>> +                        L310_AUX_CTRL_DATA_PREFETCH |                         \
+>>> +                        L310_AUX_CTRL_NS_LOCKDOWN |                           \
+>>> +                        L310_AUX_CTRL_CACHE_REPLACE_RR |                      \
+>>> +                        L2C_AUX_CTRL_SHARED_OVERRIDE |                        \
+>>> +                        L310_AUX_CTRL_FULL_LINE_ZERO)
+>>> +
+>>> +static const char *const npcm7xx_dt_match[] = {
+>>> +       "nuvoton,npcm750",
+>>> +       NULL
+>>> +};
+>>> +
+>>> +DT_MACHINE_START(NPCM7XX_DT, "NPCMX50 Chip family")
+>>> +       .atag_offset    = 0x100,
+>>> +       .dt_compat      = npcm7xx_dt_match,
+>>> +       .l2c_aux_val    = NPCM7XX_AUX_VAL,
+>>> +       .l2c_aux_mask   = ~NPCM7XX_AUX_VAL,
+>>> +MACHINE_END
+>>> diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
+>>> new file mode 100644
+>>> index 000000000000..144e3e7ec7e6
+>>> --- /dev/null
+>>> +++ b/arch/arm/mach-npcm/platsmp.c
+>>> @@ -0,0 +1,89 @@
+>>> +/*
+>>> + * Copyright 2017 Google, Inc.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#define pr_fmt(fmt) "PLATSMP: " fmt
+>>> +
+>>> +#include <linux/delay.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/smp.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/of_device.h>
+>>> +#include <linux/of_platform.h>
+>>> +#include <linux/of_address.h>
+>>> +#include <asm/cacheflush.h>
+>>> +#include <asm/smp.h>
+>>> +#include <asm/smp_plat.h>
+>>> +#include <asm/smp_scu.h>
+>>> +
+>>> +#define NPCM7XX_SCRPAD_REG 0x13c
+>>> +
+>>> +extern void npcm7xx_secondary_startup(void);
+>>> +
+>>> +static int npcm7xx_smp_boot_secondary(unsigned int cpu,
+>>> +                                     struct task_struct *idle)
+>>> +{
+>>> +       struct device_node *gcr_np;
+>>> +       void __iomem *gcr_base;
+>>> +       int ret = 0;
+>>> +
+>>> +       gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
+>>> +       if (!gcr_np) {
+>>> +               pr_err("no gcr device node\n");
+>>> +               ret = -EFAULT;
+>>> +               goto out;
+>>> +       }
+>>> +       gcr_base = of_iomap(gcr_np, 0);
+>>> +       if (!gcr_base) {
+>>> +               pr_err("could not iomap gcr at: 0x%llx\n", gcr_base);
+>>> +               ret = -EFAULT;
+>>> +               goto out;
+>>> +       }
+>>> +
+>>> +       /* give boot ROM kernel start address. */
+>>> +       iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
+>>> +                 NPCM7XX_SCRPAD_REG);
+>>> +       /* make sure npcm7xx_secondary_startup is seen by all observers. */
+>>> +       smp_wmb();
+>>> +       dsb_sev();
+>>> +       /* make sure write buffer is drained */
+>>> +       mb();
+>>> +
+>>> +out:
+>>> +       iounmap(gcr_base);
+>>> +       return ret;
+>>> +}
+>>> +
+>>> +static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
+>>> +{
+>>> +       struct device_node *scu_np;
+>>> +       void __iomem *scu_base;
+>>> +
+>>> +       scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
+>>> +       if (!scu_np) {
+>>> +               pr_err("no scu device node\n");
+>>> +               return;
+>>> +       }
+>>> +       scu_base = of_iomap(scu_np, 0);
+>>> +       if (!scu_base) {
+>>> +               pr_err("could not iomap scu at: 0x%llx\n", scu_base);
+>>> +               return;
+>>> +       }
+>>> +
+>>> +       scu_enable(scu_base);
+>>> +
+>>> +out:
+>>> +       iounmap(scu_base);
+>>> +}
+>>> +
+>>> +static struct smp_operations npcm7xx_smp_ops __initdata = {
+>>> +       .smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
+>>> +       .smp_boot_secondary = npcm7xx_smp_boot_secondary,
+>>> +};
+>>> +
+>>> +CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm7xx-smp", &npcm7xx_smp_ops);
+>>> --
+>>> 2.14.1.581.gf28d330327-goog
+>>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
