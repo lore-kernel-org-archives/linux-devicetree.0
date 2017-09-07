@@ -1,128 +1,160 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v4 0/6] irqdomain,
- gpio: expand irq_domain_push_irq() for DT use and use it for GPIO
-Date: Thu,  7 Sep 2017 20:41:56 +0900
-Message-ID: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Jassi Brar <jaswinder.singh@linaro.org>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH v4 4/6] irqdomain: set irq domain flags before the irq domain becomes visible
+Date: Thu,  7 Sep 2017 20:42:00 +0900
+Message-ID: <1504784522-26841-5-git-send-email-yamada.masahiro@socionext.com>
+References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504784522-26841-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+irq_domain_create_hierarchy() sets additional flags after the domain
+is successfully allocated, but the domain becomes visible when it is
+added to irq_domain_list.  When a consumer gets the domain, the flags
+may not have been set yet.
 
-This series adds a GPIO controller for UniPhier SoC family.
-It also works as an irqchip in hierarchy domain manner.
+Move "domain->flags |= flags;" into __irq_domain_add().
 
-My problem is mapping of IRQ from this controller to the parent
-irqchip is not contiguous.
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
 
-  IRQ line of GPIO  --->  Parent interrupt
-        0           --->     48
-        1           --->     49
-                ...
-        15          --->     63
-        16          --->    154
-        17          --->    155
-                ...
-        20          --->    158
-        21          --->    217
-        22          --->    218
-                ...
-
-So, I need to have an array of parent hwirqs somehow.
-
-Probably, most of people will try to use "interrupts" DT property,
-but I noticed a potential problem for hierarchy IRQ domain.
-If "interrupts" property exists in the device node, IRQ resource
-may be statically allocated when platform devices are populated
-from DT.  I asked this question some time ago:
-https://lkml.org/lkml/2017/7/6/758
-
-After I tackled this, I decided to put the array in the driver,
-but I could not get a positive response for this.
-The discussion mostly happened in v1 thread:
-http://patchwork.ozlabs.org/patch/797145/
-
-Recently, the new API irq_domain_push_irq() was merged in the
-mainline.  I thought this might be useful to solve the hierarchy
-domain issue.  Hence, here is a trial.
-
-I found patch 2 is needed to avoid "type mismatch" error.
-
-One more thing, I am worried about a race condition.
-
-I think there is a possibility where a device tries to get IRQ
-after irq_domain_create_hierarchy(), but before irq_domain_push_irq().
-
-	priv->domain = irq_domain_create_hierarchy(...)
-	if (!priv->domain)
-		return -ENOMEM;
-
-        [  *** What if a irq consumer device request the irq here? *** ]
-
-	for (i = 0; i < nirqs; i++) {
-		virq = platform_get_irq(pdev, i);
-		if (virq < 0)
-			continue;
-
-		ret = irq_domain_push_irq(priv->domain, virq, (void *)(long)i);
-		if (ret)
-			return ret;
-	}
-
-By the time irq_domain_create_hierarchy() finished,
-the irqdomain will be added to the "irq_domain_list".
-
-If a device calls platform_get_irq(),
-the domain is registered, but virq is not allocated yet.
-
-So, irq_create_fwspec_mapping() will call irq_domain_alloc_irqs(),
-then irqchip's .alloc() hook is invoked with fwspec passed as arg.
-
-I tried to fix this by patch 3 and 4.
-
-This topic is related to both irqdomain and GPIO,
-so includes them in a series.
-
-Comments are appreciated.
-
-I am not sure if my approach is correct.
-If I am doing wrong, I will go back to the previous adhoc solution.
+Changes in v4:
+  - Newly added
 
 
+ include/linux/irqdomain.h | 13 +++++++------
+ kernel/irq/irqdomain.c    | 19 +++++++++----------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-Masahiro Yamada (6):
-  irqdomain: rename variables in irq_domain_{push,pop}_irq()
-  irqdomain: clear trigger type in irq_domain_push_irq()
-  irqdomain: move IRQ_DOMAIN_NAME_ALLOCATED define to the original
-    position
-  irqdomain: set irq domain flags before the irq domain becomes visible
-  irqdomain: add IRQ_DOMAIN_FLAG_NO_CREATE flag
-  gpio: uniphier: add UniPhier GPIO controller driver
-
- .../devicetree/bindings/gpio/gpio-uniphier.txt     |  43 ++
- MAINTAINERS                                        |   1 +
- drivers/gpio/Kconfig                               |   8 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-uniphier.c                       | 486 +++++++++++++++++++++
- include/dt-bindings/gpio/uniphier-gpio.h           |  18 +
- include/linux/irqdomain.h                          |  22 +-
- kernel/irq/irqdomain.c                             |  93 ++--
- 8 files changed, 619 insertions(+), 53 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
- create mode 100644 drivers/gpio/gpio-uniphier.c
- create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
-
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 31be32d..7609807 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -237,7 +237,8 @@ static inline struct fwnode_handle *irq_domain_alloc_fwnode(void *data)
+ }
+ 
+ void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
+-struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
++struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode,
++				    unsigned int flags, int size,
+ 				    irq_hw_number_t hwirq_max, int direct_max,
+ 				    const struct irq_domain_ops *ops,
+ 				    void *host_data);
+@@ -309,14 +310,14 @@ static inline struct irq_domain *irq_domain_add_linear(struct device_node *of_no
+ 					 const struct irq_domain_ops *ops,
+ 					 void *host_data)
+ {
+-	return __irq_domain_add(of_node_to_fwnode(of_node), size, size, 0, ops, host_data);
++	return __irq_domain_add(of_node_to_fwnode(of_node), 0, size, size, 0, ops, host_data);
+ }
+ static inline struct irq_domain *irq_domain_add_nomap(struct device_node *of_node,
+ 					 unsigned int max_irq,
+ 					 const struct irq_domain_ops *ops,
+ 					 void *host_data)
+ {
+-	return __irq_domain_add(of_node_to_fwnode(of_node), 0, max_irq, max_irq, ops, host_data);
++	return __irq_domain_add(of_node_to_fwnode(of_node), 0, 0, max_irq, max_irq, ops, host_data);
+ }
+ static inline struct irq_domain *irq_domain_add_legacy_isa(
+ 				struct device_node *of_node,
+@@ -330,7 +331,7 @@ static inline struct irq_domain *irq_domain_add_tree(struct device_node *of_node
+ 					 const struct irq_domain_ops *ops,
+ 					 void *host_data)
+ {
+-	return __irq_domain_add(of_node_to_fwnode(of_node), 0, ~0, 0, ops, host_data);
++	return __irq_domain_add(of_node_to_fwnode(of_node), 0, 0, ~0, 0, ops, host_data);
+ }
+ 
+ static inline struct irq_domain *irq_domain_create_linear(struct fwnode_handle *fwnode,
+@@ -338,14 +339,14 @@ static inline struct irq_domain *irq_domain_create_linear(struct fwnode_handle *
+ 					 const struct irq_domain_ops *ops,
+ 					 void *host_data)
+ {
+-	return __irq_domain_add(fwnode, size, size, 0, ops, host_data);
++	return __irq_domain_add(fwnode, 0, size, size, 0, ops, host_data);
+ }
+ 
+ static inline struct irq_domain *irq_domain_create_tree(struct fwnode_handle *fwnode,
+ 					 const struct irq_domain_ops *ops,
+ 					 void *host_data)
+ {
+-	return __irq_domain_add(fwnode, 0, ~0, 0, ops, host_data);
++	return __irq_domain_add(fwnode, 0, 0, ~0, 0, ops, host_data);
+ }
+ 
+ extern void irq_domain_remove(struct irq_domain *host);
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 18d11b9..b317a64 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -115,6 +115,7 @@ EXPORT_SYMBOL_GPL(irq_domain_free_fwnode);
+ /**
+  * __irq_domain_add() - Allocate a new irq_domain data structure
+  * @fwnode: firmware node for the interrupt controller
++ * @flags:	Irq domain flags associated to the domain
+  * @size: Size of linear map; 0 for radix mapping only
+  * @hwirq_max: Maximum number of interrupts supported by controller
+  * @direct_max: Maximum value of direct maps; Use ~0 for no limit; 0 for no
+@@ -125,7 +126,8 @@ EXPORT_SYMBOL_GPL(irq_domain_free_fwnode);
+  * Allocates and initialize and irq_domain structure.
+  * Returns pointer to IRQ domain, or NULL on failure.
+  */
+-struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
++struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode,
++				    unsigned int flags, int size,
+ 				    irq_hw_number_t hwirq_max, int direct_max,
+ 				    const struct irq_domain_ops *ops,
+ 				    void *host_data)
+@@ -213,6 +215,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 	INIT_RADIX_TREE(&domain->revmap_tree, GFP_KERNEL);
+ 	domain->ops = ops;
+ 	domain->host_data = host_data;
++	domain->flags |= flags;
+ 	domain->hwirq_max = hwirq_max;
+ 	domain->revmap_size = size;
+ 	domain->revmap_direct_max_irq = direct_max;
+@@ -319,7 +322,7 @@ struct irq_domain *irq_domain_add_simple(struct device_node *of_node,
+ {
+ 	struct irq_domain *domain;
+ 
+-	domain = __irq_domain_add(of_node_to_fwnode(of_node), size, size, 0, ops, host_data);
++	domain = __irq_domain_add(of_node_to_fwnode(of_node), 0, size, size, 0, ops, host_data);
+ 	if (!domain)
+ 		return NULL;
+ 
+@@ -363,7 +366,7 @@ struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
+ {
+ 	struct irq_domain *domain;
+ 
+-	domain = __irq_domain_add(of_node_to_fwnode(of_node), first_hwirq + size,
++	domain = __irq_domain_add(of_node_to_fwnode(of_node), 0, first_hwirq + size,
+ 				  first_hwirq + size, 0, ops, host_data);
+ 	if (domain)
+ 		irq_domain_associate_many(domain, first_irq, first_hwirq, size);
+@@ -1133,14 +1136,10 @@ struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+ {
+ 	struct irq_domain *domain;
+ 
+-	if (size)
+-		domain = irq_domain_create_linear(fwnode, size, ops, host_data);
+-	else
+-		domain = irq_domain_create_tree(fwnode, ops, host_data);
+-	if (domain) {
++	domain = __irq_domain_add(fwnode, flags, size, size ? size : ~0, 0,
++				  ops, host_data);
++	if (domain)
+ 		domain->parent = parent;
+-		domain->flags |= flags;
+-	}
+ 
+ 	return domain;
+ }
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
