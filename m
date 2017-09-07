@@ -1,63 +1,80 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 01/18] dt: arm: shmobile: add M3ULCB Kingfisher board DT bindings
-Date: Thu, 7 Sep 2017 12:58:57 +0200
-Message-ID: <CAMuHMdUi9THE7nTd54C22K6kOo_Ye5LkhTrRZPNfcHfWCiBsUQ@mail.gmail.com>
-References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1504737303-22874-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum ADI controller documentation
+Date: Thu, 7 Sep 2017 19:03:18 +0800
+Message-ID: <CAMz4kuLGTCgppki=je9pE5SidRnYWJA-nJd1=RD7qdN1ZRww3Q@mail.gmail.com>
+References: <ccbb0641fa123021249c7a51cbe2dcd975c41f39.1504677110.git.baolin.wang@spreadtrum.com>
+ <20170906145900.yesyfyruv5wd3wxj@sirena.co.uk> <CAMz4ku+hKaemHQdVtNEbCf0J_9CjqKouSygAaQsqf+hBzGd-mg@mail.gmail.com>
+ <20170907095435.5yhybxz6oootp37h@sirena.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1504737303-22874-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170907095435.5yhybxz6oootp37h@sirena.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-On Thu, Sep 7, 2017 at 12:35 AM, Vladimir Barinov
-<vladimir.barinov@cogentembedded.com> wrote:
-> Add M3ULCB Kingfisher Device tree bindings Documentation, listing it as a
-> supported board.
+On 7 September 2017 at 17:54, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Sep 07, 2017 at 11:29:05AM +0800, Baolin Wang wrote:
+>> On 6 September 2017 at 22:59, Mark Brown <broonie@kernel.org> wrote:
+>> > On Wed, Sep 06, 2017 at 02:10:43PM +0800, Baolin Wang wrote:
 >
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> >> +- hwlocks: Reference to a phandle of a hwlock provider node.
+>> >> +- hwlock-names: Reference to hwlock name strings defined in the same order
+>> >> +     as the hwlocks.
+>
+>> > What are these hwlocks protecting, and what names are expected?
+>
+>> I made one explanation in above sentence, I assume it is not clear.
+>> Since we have multi-subsystems will use ADI to access analog chip,
+>> when one system is reading/writing data by ADI, which should be under
+>> one hardware spinlock protection to prevent other systems from
+>> reading/writing data by ADI at the same time, or two parallel routine
+>> of setting ADI registers will get incorrect results.
+>
+>> The hwspinlock name should be "adi", and I will make it clear in next version.
+>
+> So there's other drivers that might also be accessing this IP block?
 
-Thanks for your patch!
+Yes. Other drivers (like regulator, RTC or charger ... ) can access
+analog chip (like PMIC) by ADI controller. But the hardware spinlock
+is used to synchronize between the multiple subsystems, since we only
+have one ADI controller.
 
-> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
-> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> @@ -85,6 +85,7 @@ Boards:
->    - Lager (RTP0RC7790SEB00010S)
->      compatible = "renesas,lager", "renesas,r8a7790"
->    - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
-> +    M3ULCB Kingfisher (SBEV-RCAR-KF-M03)
+>
+>> >> +Optional properties:
+>> >> +- sprd,hw-channels: Specify the hardware channel number and mapped address
+>> >> +     for hardware channel accessing.
+>
+>> > What do these mean and how are the numbers and how will the binding be
+>> > interpreted?
+>
+>> I also gave one explanation in above sentence, is it not clear? I try again.
+>
+> It says what they are, it doesn't say for example what a hardware
+> channel is or how those numbers map onto the actual hardware.
 
-As the Kingfisher is an extension board (and you added the same board part
-number to the H3ULCB section in patch 02/18), shouldn't it have its own
-compatible value "shimafuji,kingfisher" instead?
+OK. I will add more documentation to explain that.
 
-Then this can be used in ulcb-kf.dtsi:
+>
+>> ADI controller has 50 channels including 2 software read/write
+>> channels and 48 hardware channels to access analog chip. For 2
+>> software read/write channels, which means we should set ADI registers
+>> to access analog chip. But For hardware channels, we can just mapped
+>> one analog chip address to one hardware channel, then user can access
+>> analog chip by hardware channel without setting ADI registers.
+>
+>> For this "sprd,hw-channels" property, the first value specifies the
+>> channel id, and the second value specifies the address which is mapped
+>> into analog chip space.
+>
+> So does this driver control all the channels or are there other drivers
+> (or hardware components) that control some of the other channels?
 
-    compatible = "shimafuji,kingfisher";
+The ADI driver only controls 2 software channels (read/write), and
+other hardware channels can be controlled by hardware components if we
+set the hardware config.
 
-and appended (overridden, as there's no /append-property/ directive in dtc
-yet?) in the board files, e.g. r8a7796-m3ulcb-kf.dts:
-
-    compatible = "shimafuji,kingfisher", "renesas,m3ulcb", "renesas,r8a7796";
-
-Does that make sense?
-
->      compatible = "renesas,m3ulcb", "renesas,r8a7796";
->    - Marzen (R0P7779A00010S)
->      compatible = "renesas,marzen", "renesas,r8a7779"
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Baolin.wang
+Best Regards
