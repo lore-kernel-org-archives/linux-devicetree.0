@@ -1,410 +1,70 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
-Date: Thu, 7 Sep 2017 15:06:13 +0530
-Message-ID: <c17e158a-3e37-8ae6-e31c-7ed89429166a@codeaurora.org>
-References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v2 2/3] ARM: dts: exynos: Add clean name of compatible.
+Date: Thu, 07 Sep 2017 18:39:02 +0900
+Message-ID: <1504777143-29834-3-git-send-email-hoegeun.kwon@samsung.com>
+References: <1504777143-29834-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170907093912epcas2p2c012de3af3915a58d889c2d48e283705@epcas2p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170831155519.3704-1-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1504777143-29834-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: inki.dae@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, m.szyprowski@samsung.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 08/31/2017 09:25 PM, Boris Brezillon wrote:
-> Add a driver for Cadence DPI -> DSI bridge.
-> 
-> This driver only support a subset of Cadence DSI bridge capabilities.
-> 
-> Here is a non-exhaustive list of missing features:
->   * burst mode
->   * dynamic configuration of the DPHY based on the
->   * support for additional input interfaces (SDI input)
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> Changes in v3:
-> - replace magic values by real timing calculation. The DPHY PLL clock
->    is still hardcoded since we don't have a working DPHY block yet, and
->    this is the piece of HW we need to dynamically configure the PLL
->    rate based on the display refresh rate and the resolution.
-> - parse DSI devices represented with the OF-graph. This is needed to
->    support DSI devices controlled through an external bus like I2C or
->    SPI.
-> - use the DRM panel-bridge infrastructure to simplify the DRM panel
->    logic
-> 
-> Changes in v2:
-> - rebase on v4.12-rc1 and adapt to driver to the drm_bridge API changes
-> - return the correct error when devm_clk_get(sysclk) fails
-> - add missing depends on OF and select DRM_PANEL in the Kconfig entry
-> ---
->   drivers/gpu/drm/bridge/Kconfig    |    9 +
->   drivers/gpu/drm/bridge/Makefile   |    1 +
->   drivers/gpu/drm/bridge/cdns-dsi.c | 1090 +++++++++++++++++++++++++++++++++++++
->   3 files changed, 1100 insertions(+)
->   create mode 100644 drivers/gpu/drm/bridge/cdns-dsi.c
-> 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index adf9ae0e0b7c..88c324b12e16 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -25,6 +25,15 @@ config DRM_ANALOGIX_ANX78XX
->   	  the HDMI output of an application processor to MyDP
->   	  or DisplayPort.
->   
-> +config DRM_CDNS_DSI
-> +	tristate "Cadence DPI/DSI bridge"
-> +	select DRM_KMS_HELPER
-> +	select DRM_MIPI_DSI
-> +	select DRM_PANEL
-> +	depends on OF
-> +	help
-> +	  Support Cadence DPI to DSI bridge.
-
-Maybe we can briefly mention here that it's a internal bridge/IP, and not an external chip?
-
-> +
->   config DRM_DUMB_VGA_DAC
->   	tristate "Dumb VGA DAC Bridge support"
->   	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index defcf1e7ca1c..77b65e8ecf59 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,4 +1,5 @@
->   obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
-> +obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->   obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
->   obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
->   obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
-> diff --git a/drivers/gpu/drm/bridge/cdns-dsi.c b/drivers/gpu/drm/bridge/cdns-dsi.c
-
-<snip>
-
-> +
-> +static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
-> +{
-> +	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
-> +	struct cdns_dsi *dsi = input_to_dsi(input);
-> +	u32 val;
-> +
-> +	val = readl(dsi->regs + MCTL_MAIN_DATA_CTL);
-> +	val &= ~(IF_VID_SELECT_MASK | IF_VID_MODE | VID_EN | HOST_EOT_GEN |
-> +		 DISP_EOT_GEN);
-
-I see some truncation related sparse warnings here and a couple of other places
-when building against arm32. Those would be nice to fix.
-
-> +	writel(val, dsi->regs + MCTL_MAIN_DATA_CTL);
-> +
-> +	val = readl(dsi->regs + MCTL_MAIN_EN) & ~IF_EN(input->id);
-> +	writel(val, dsi->regs + MCTL_MAIN_EN);
-> +}
-> +
-> +#define DSI_HBP_FRAME_OVERHEAD		12
-> +#define DSI_HSA_FRAME_OVERHEAD		14
-> +#define DSI_HFP_FRAME_OVERHEAD		6
-> +#define DSI_HSS_VSS_VSE_FRAME_OVERHEAD	4
-> +#define DSI_BLANKING_FRAME_OVERHEAD	6
-> +#define DSI_NULL_FRAME_OVERHEAD		6
-> +#define DSI_EOT_PKT_SIZE		4
-> +
-> +#define REG_WAKEUP_TIME_NS		800
-> +#define DPHY_PLL_RATE_HZ		108000000
-> +
-> +static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
-> +{
-> +	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
-> +	struct cdns_dsi *dsi = input_to_dsi(input);
-> +	struct cdns_dsi_output *output = &dsi->output;
-> +	u32 hsize0, hsa, hline, tmp, reg_wakeup, div;
-> +	unsigned long dphy_pll_period, tx_byte_period;
-> +	struct drm_display_mode *mode;
-> +	int bpp, nlanes;
-> +
-> +	mode = &bridge->encoder->crtc->state->adjusted_mode;
-> +	bpp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
-> +	nlanes = output->dev->lanes;
-> +
-> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> +		tmp = mode->crtc_htotal - mode->crtc_hsync_end;
-> +	else
-> +		tmp = mode->crtc_htotal - mode->crtc_hsync_start;
-> +	tmp = (tmp * bpp) / 8;
-> +	tmp = tmp < DSI_HBP_FRAME_OVERHEAD ? 0 : tmp - DSI_HBP_FRAME_OVERHEAD;
-> +	hsize0 = HBP_LEN(tmp);
-> +
-> +	tmp = mode->crtc_hsync_start - mode->crtc_hdisplay;
-> +	tmp = (tmp * bpp) / 8;
-> +	tmp = tmp < DSI_HFP_FRAME_OVERHEAD ? 0 : tmp - DSI_HFP_FRAME_OVERHEAD;
-> +	hsize0 |= HFP_LEN(tmp);
-> +
-> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> +		tmp = mode->crtc_hsync_end - mode->crtc_hsync_start;
-> +	else
-> +		tmp = 0;
-> +	tmp = (tmp * 8) / bpp;
-> +	tmp = tmp < DSI_HSA_FRAME_OVERHEAD ? 0 : tmp - DSI_HSA_FRAME_OVERHEAD;
-> +	hsa = tmp;
-> +	hsize0 |= HSA_LEN(tmp);
-> +
-> +	writel(hsize0, dsi->regs + VID_HSIZE1);
-> +	writel((mode->crtc_hdisplay * bpp) / 8, dsi->regs + VID_HSIZE2);
-> +
-> +	writel(VBP_LEN(mode->crtc_vtotal - mode->crtc_vsync_end - 1) |
-> +	       VFP_LEN(mode->crtc_vsync_start - mode->crtc_vdisplay) |
-> +	       VSA_LEN(mode->crtc_vsync_end - mode->crtc_vsync_start),
-> +	       dsi->regs + VID_VSIZE1);
-> +	writel(mode->crtc_vdisplay, dsi->regs + VID_VSIZE2);
-> +
-> +	hline = (mode->crtc_htotal * bpp) / 8;
-> +	tmp = hline - DSI_HSA_FRAME_OVERHEAD;
-> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> +		tmp -= hsa + DSI_HSA_FRAME_OVERHEAD;
-> +
-> +	writel(BLK_LINE_PULSE_PKT_LEN(tmp), dsi->regs + VID_BLKSIZE2);
-> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> +		writel(MAX_LINE_LIMIT(tmp - DSI_NULL_FRAME_OVERHEAD),
-> +		       dsi->regs + VID_VCA_SETTING2);
-> +
-> +	tmp = hline -
-> +	      (DSI_HSS_VSS_VSE_FRAME_OVERHEAD + DSI_BLANKING_FRAME_OVERHEAD);
-> +	writel(BLK_LINE_EVENT_PKT_LEN(tmp), dsi->regs + VID_BLKSIZE1);
-> +	if (!(output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE))
-> +		writel(MAX_LINE_LIMIT(tmp - DSI_NULL_FRAME_OVERHEAD),
-> +		       dsi->regs + VID_VCA_SETTING2);
-> +
-> +	tmp = DIV_ROUND_UP(hline, nlanes) - DIV_ROUND_UP(hsa, nlanes);
-> +
-> +	if (!(output->dev->mode_flags & MIPI_DSI_MODE_EOT_PACKET))
-> +		tmp -= DIV_ROUND_UP(DSI_EOT_PKT_SIZE, nlanes);
-> +
-> +	dphy_pll_period = NSEC_PER_SEC / DPHY_PLL_RATE_HZ;
-> +	tx_byte_period = (dphy_pll_period * 2) / 8;
-> +	reg_wakeup = REG_WAKEUP_TIME_NS / dphy_pll_period;
-> +	writel(REG_WAKEUP_TIME(reg_wakeup) | REG_LINE_DURATION(tmp),
-> +	       dsi->regs + VID_DPHY_TIME);
-> +
-> +	/*
-> +	 * HSTX and LPRX timeouts are both expressed in TX byte clk cycles and
-> +	 * both should be set to at least the time it takes to transmit a
-> +	 * frame.
-> +	 */
-> +	tmp = NSEC_PER_SEC / mode->vrefresh;
-> +	tmp /= tx_byte_period;
-> +
-> +	for (div = 0; div <= CLK_DIV_MAX; div++) {
-> +		if (tmp <= HSTX_TIMEOUT_MAX)
-> +			break;
-> +
-> +		tmp >>= 1;
-> +	}
-> +
-> +	if (tmp > HSTX_TIMEOUT_MAX)
-> +		tmp = HSTX_TIMEOUT_MAX;
-> +
-> +	writel(CLK_DIV(div) | HSTX_TIMEOUT(tmp),
-> +	       dsi->regs + MCTL_DPHY_TIMEOUT1);
-> +
-> +	writel(LPRX_TIMEOUT(tmp), dsi->regs + MCTL_DPHY_TIMEOUT2);
-> +
-> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO) {
-> +		switch (output->dev->format) {
-> +		case MIPI_DSI_FMT_RGB888:
-> +			tmp = VID_PIXEL_MODE_RGB888 |
-> +			      VID_DATATYPE(MIPI_DSI_PACKED_PIXEL_STREAM_24);
-> +			break;
-> +
-> +		case MIPI_DSI_FMT_RGB666:
-> +			tmp = VID_PIXEL_MODE_RGB666 |
-> +			      VID_DATATYPE(MIPI_DSI_PIXEL_STREAM_3BYTE_18);
-> +			break;
-> +
-> +		case MIPI_DSI_FMT_RGB666_PACKED:
-> +			tmp = VID_PIXEL_MODE_RGB666_PACKED |
-> +			      VID_DATATYPE(MIPI_DSI_PACKED_PIXEL_STREAM_18);
-> +			break;
-> +
-> +		case MIPI_DSI_FMT_RGB565:
-> +			tmp = VID_PIXEL_MODE_RGB666_PACKED |
-> +			      VID_DATATYPE(MIPI_DSI_PACKED_PIXEL_STREAM_16);
-> +			break;
-> +
-> +		default:
-> +			dev_err(dsi->base.dev, "Unsupported DSI format\n");
-> +			return;
-> +		}
-> +
-> +		if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> +			tmp |= SYNC_PULSE_ACTIVE | SYNC_PULSE_HORIZONTAL;
-> +
-> +		tmp |= REG_BLKLINE_MODE(REG_BLK_MODE_BLANKING_PKT) |
-> +		       REG_BLKEOL_MODE(REG_BLK_MODE_BLANKING_PKT) |
-> +		       RECOVERY_MODE(RECOVERY_MODE_NEXT_HSYNC);
-> +
-> +		writel(tmp, dsi->regs + VID_MAIN_CTL);
-> +	}
-> +
-> +	tmp = readl(dsi->regs + MCTL_MAIN_DATA_CTL);
-> +	tmp &= ~(IF_VID_SELECT_MASK | HOST_EOT_GEN | IF_VID_MODE);
-> +
-> +	if (!(output->dev->mode_flags & MIPI_DSI_MODE_EOT_PACKET))
-> +		tmp |= HOST_EOT_GEN;
-> +
-> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO)
-> +		tmp |= IF_VID_MODE | IF_VID_SELECT(input->id) | VID_EN;
-> +
-> +	writel(tmp, dsi->regs + MCTL_MAIN_DATA_CTL);
-> +
-> +	tmp = readl(dsi->regs + MCTL_MAIN_EN) | IF_EN(input->id);
-> +	writel(tmp, dsi->regs + MCTL_MAIN_EN);
-> +}
-> +
-> +static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
-> +	.attach = cdns_dsi_bridge_attach,
-> +	.mode_valid = cdns_dsi_bridge_mode_valid,
-> +	.disable = cdns_dsi_bridge_disable,
-> +	.enable = cdns_dsi_bridge_enable,
-> +};
-> +
-> +static int cdns_dsi_init_link(struct cdns_dsi *dsi)
-> +{
-> +	struct cdns_dsi_output *output = &dsi->output;
-> +	unsigned long sysclk_period, ulpout;
-> +	u32 val;
-> +	int i;
-> +
-> +	writel(0, dsi->regs + MCTL_DPHY_STATIC);
-> +
-> +	val = 0;
-> +	for (i = 1; i < output->dev->lanes; i++)
-> +		val |= DATA_LANE_EN(i);
-> +
-> +	if (!(output->dev->mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
-> +		val |= CLK_CONTINUOUS;
-> +
-> +	writel(val, dsi->regs + MCTL_MAIN_PHY_CTL);
-> +
-> +	/* ULPOUT should be set to 1ms and is expressed in sysclk cycles. */
-> +	sysclk_period = NSEC_PER_SEC / clk_get_rate(dsi->sysclk);
-> +	ulpout = DIV_ROUND_UP(NSEC_PER_MSEC, sysclk_period);
-> +	writel(CLK_LANE_ULPOUT_TIME(ulpout) | DATA_LANE_ULPOUT_TIME(ulpout),
-> +	       dsi->regs + MCTL_ULPOUT_TIME);
-> +
-> +	writel(LINK_EN, dsi->regs + MCTL_MAIN_DATA_CTL);
-> +
-> +	val = CLK_LANE_EN | PLL_START;
-> +	for (i = 0; i < output->dev->lanes; i++)
-> +		val |= DATA_LANE_START(i);
-> +
-> +	writel(val, dsi->regs + MCTL_MAIN_EN);
-> +
-> +	ndelay(100);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cdns_dsi_attach(struct mipi_dsi_host *host,
-> +			   struct mipi_dsi_device *dev)
-> +{
-> +	struct cdns_dsi *dsi = to_cdns_dsi(host);
-> +	struct cdns_dsi_output *output = &dsi->output;
-> +	struct cdns_dsi_input *input = &dsi->input;
-> +	struct drm_bridge *bridge;
-> +	struct drm_panel *panel;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	/*
-> +	 * We currently do not support connecting several DSI devices to the
-> +	 * same host. In order to support that we'd need the DRM bridge
-> +	 * framework to allow dynamic reconfiguration of the bridge chain.
-> +	 */
-> +	if (output->dev)
-> +		return -EBUSY;
-> +
-> +	/* We do not support burst mode yet. */
-> +	if (dev->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
-> +		return -ENOTSUPP;
-> +
-> +	/*
-> +	 * The host <-> device link might be described using an OF-graph
-> +	 * representation, in this case we extract the device of_node from
-> +	 * this representation, otherwise we use dsidev->dev.of_node which
-> +	 * should have been filled by the core.
-> +	 */
-> +	np = of_graph_get_remote_node(dsi->base.dev->of_node, DSI_OUTPUT_PORT,
-> +				      dev->channel);
-> +	if (!np)
-> +		np = of_node_get(dev->dev.of_node); > +
-> +	panel = of_drm_find_panel(np);
-> +	if (panel) {
-> +		bridge = drm_panel_bridge_add(panel, DRM_MODE_CONNECTOR_DSI);
-> +	} else {
-> +		bridge = of_drm_find_bridge(dev->dev.of_node);
-> +		if (!bridge)
-> +			bridge = ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	of_node_put(np);
-
-It would have been nice to use drm_of_find_panel_or_bridge() here, but I guess
-you couldn't use it because you have to handle both OF-graph based links, and
-children directly under the host DSI bus.
-
-The patch looks good to me otherwise.
-
-Thanks,
-Archit
-
-> +
-> +	if (IS_ERR(bridge)) {
-> +		ret = PTR_ERR(bridge);
-> +		dev_err(host->dev, "failed to add DSI device %s (err = %d)",
-> +			dev->name, ret);
-> +		return ret;
-> +	}
-> +
-> +	output->dev = dev;
-> +	output->bridge = bridge;
-> +	output->panel = panel;
-> +
-> +	ret = cdns_dsi_init_link(dsi);
-> +	if (ret)
-> +		goto err_rst_output;
-> +
-> +	/*
-> +	 * The DSI output has been properly configured, we can now safely
-> +	 * register the input to the bridge framework so that it can take place
-> +	 * in a display pipeline.
-> +	 */
-> +	drm_bridge_add(&input->bridge);
-> +
-> +	return 0;
-> +
-> +err_rst_output:
-> +	if (panel)
-> +		drm_panel_bridge_remove(bridge);
-> +
-> +	output->bridge = NULL;
-> +	output->panel = NULL;
-> +	output->dev = NULL;
-> +
-> +	return ret;
-> +}
-
-<snip>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RXh5bm9zIDUyNTAgYW5kIDU0MjAgaGF2ZSBkaWZmZXJlbnQgaGFyZHdhcmUgcm90YXRpb24gbGlt
+aXRzLiBIb3dldmVyLApjdXJyZW50bHkgaXQgdXNlcyBvbmx5IG9uZSBjb21wYXRpYmxlIC0gImV4
+eW5vczUtZ3NjIi4gU2luY2Ugd2UgaGF2ZQp0byBkaXN0aW5ndWlzaCBiZXR3ZWVuIHRoZXNlIHR3
+bywgd2UgYWRkIGRpZmZlcmVudCBjb21wYXRpYmxlLgoKU2lnbmVkLW9mZi1ieTogSG9lZ2V1biBL
+d29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZXh5
+bm9zNTI1MC5kdHNpIHwgOCArKysrLS0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC5k
+dHNpIHwgNCArKy0tCiAyIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlv
+bnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLmR0c2kgYi9h
+cmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLmR0c2kKaW5kZXggOGRiZWI4Ny4uZjc5NWM3NiAx
+MDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC5kdHNpCisrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAuZHRzaQpAQCAtNjM3LDcgKzYzNyw3IEBACiAJCX07CiAK
+IAkJZ3NjXzA6ICBnc2NAMTNlMDAwMDAgewotCQkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5v
+czUtZ3NjIjsKKwkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1LWdzYyIsIHNhbXN1bmcs
+ZXh5bm9zNTI1MC1nc2MiOwogCQkJcmVnID0gPDB4MTNlMDAwMDAgMHgxMDAwPjsKIAkJCWludGVy
+cnVwdHMgPSA8R0lDX1NQSSA4NSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKIAkJCXBvd2VyLWRvbWFp
+bnMgPSA8JnBkX2dzYz47CkBAIC02NDcsNyArNjQ3LDcgQEAKIAkJfTsKIAogCQlnc2NfMTogIGdz
+Y0AxM2UxMDAwMCB7Ci0JCQljb21wYXRpYmxlID0gInNhbXN1bmcsZXh5bm9zNS1nc2MiOworCQkJ
+Y29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vczUtZ3NjIiwgc2Ftc3VuZyxleHlub3M1MjUwLWdz
+YyI7CiAJCQlyZWcgPSA8MHgxM2UxMDAwMCAweDEwMDA+OwogCQkJaW50ZXJydXB0cyA9IDxHSUNf
+U1BJIDg2IElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJcG93ZXItZG9tYWlucyA9IDwmcGRfZ3Nj
+PjsKQEAgLTY1Nyw3ICs2NTcsNyBAQAogCQl9OwogCiAJCWdzY18yOiAgZ3NjQDEzZTIwMDAwIHsK
+LQkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1LWdzYyI7CisJCQljb21wYXRpYmxlID0g
+InNhbXN1bmcsZXh5bm9zNS1nc2MiLCBzYW1zdW5nLGV4eW5vczUyNTAtZ3NjIjsKIAkJCXJlZyA9
+IDwweDEzZTIwMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODcgSVJRX1RZ
+UEVfTEVWRUxfSElHSD47CiAJCQlwb3dlci1kb21haW5zID0gPCZwZF9nc2M+OwpAQCAtNjY3LDcg
+KzY2Nyw3IEBACiAJCX07CiAKIAkJZ3NjXzM6ICBnc2NAMTNlMzAwMDAgewotCQkJY29tcGF0aWJs
+ZSA9ICJzYW1zdW5nLGV4eW5vczUtZ3NjIjsKKwkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlu
+b3M1LWdzYyIsIHNhbXN1bmcsZXh5bm9zNTI1MC1nc2MiOwogCQkJcmVnID0gPDB4MTNlMzAwMDAg
+MHgxMDAwPjsKIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA4OCBJUlFfVFlQRV9MRVZFTF9ISUdI
+PjsKIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnBkX2dzYz47CmRpZmYgLS1naXQgYS9hcmNoL2FybS9i
+b290L2R0cy9leHlub3M1NDIwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0
+c2kKaW5kZXggMDJkMmY4OS4uODZhZmU3NyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
+ZXh5bm9zNTQyMC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAuZHRzaQpA
+QCAtNjU4LDcgKzY1OCw3IEBACiAJCX07CiAKIAkJZ3NjXzA6IHZpZGVvLXNjYWxlckAxM2UwMDAw
+MCB7Ci0JCQljb21wYXRpYmxlID0gInNhbXN1bmcsZXh5bm9zNS1nc2MiOworCQkJY29tcGF0aWJs
+ZSA9ICJzYW1zdW5nLGV4eW5vczUtZ3NjIiwgInNhbXN1bmcsZXh5bm9zNTQyMC1nc2MiOwogCQkJ
+cmVnID0gPDB4MTNlMDAwMDAgMHgxMDAwPjsKIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA4NSBJ
+UlFfVFlQRV9MRVZFTF9ISUdIPjsKIAkJCWNsb2NrcyA9IDwmY2xvY2sgQ0xLX0dTQ0wwPjsKQEAg
+LTY2OCw3ICs2NjgsNyBAQAogCQl9OwogCiAJCWdzY18xOiB2aWRlby1zY2FsZXJAMTNlMTAwMDAg
+ewotCQkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vczUtZ3NjIjsKKwkJCWNvbXBhdGlibGUg
+PSAic2Ftc3VuZyxleHlub3M1LWdzYyIsICJzYW1zdW5nLGV4eW5vczU0MjAtZ3NjIjsKIAkJCXJl
+ZyA9IDwweDEzZTEwMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODYgSVJR
+X1RZUEVfTEVWRUxfSElHSD47CiAJCQljbG9ja3MgPSA8JmNsb2NrIENMS19HU0NMMT47Ci0tIAox
+LjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
