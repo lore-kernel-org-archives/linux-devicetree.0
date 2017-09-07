@@ -1,128 +1,293 @@
-From: Juergen Borleis <jbe@pengutronix.de>
-Subject: [PATCH 9/9] ARM: dts: TQma53: describe the full power supply tree
-Date: Thu,  7 Sep 2017 11:05:30 +0200
-Message-ID: <20170907090530.1241-10-jbe@pengutronix.de>
-References: <20170907090530.1241-1-jbe@pengutronix.de>
+From: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] arm: npcm: add basic support for Nuvoton BMCs
+Date: Thu, 7 Sep 2017 12:18:47 +0300
+Message-ID: <CAP6Zq1jf81tvG_F1aDN+1QdWg=c2v2spkb9gi-Z8-e5=9pMd0g@mail.gmail.com>
+References: <20170906080751.6773-1-brendanhiggins@google.com> <20170906080751.6773-2-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170907090530.1241-1-jbe@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170906080751.6773-2-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-       |<--- mba53 devel baseboard --->|<----- TQma53 CPU card ----->|
-       |                               |                             |
-+12 V -|-o--> 3.3 V ----> internal use |                             |
-       | |                             |                             |
-       | \--> 5.0 V -o--> internal use | /--> 3.8 V --> PMIC         |
-       |             |                 | |                           |
-       |             \---------------->|-o--> 3.2 V --> internal use |
-       |                               |
+On 6 September 2017 at 11:07, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> Adds basic support for the Nuvoton NPCM750 BMC.
+>
+> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/Kconfig             |  2 +
+>  arch/arm/Makefile            |  1 +
+>  arch/arm/mach-npcm/Kconfig   | 50 +++++++++++++++++++++++++
+>  arch/arm/mach-npcm/Makefile  |  3 ++
+>  arch/arm/mach-npcm/headsmp.S | 17 +++++++++
+>  arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
+>  arch/arm/mach-npcm/platsmp.c | 89 ++++++++++++++++++++++++++++++++++++++++++++
+>  7 files changed, 196 insertions(+)
+>  create mode 100644 arch/arm/mach-npcm/Kconfig
+>  create mode 100644 arch/arm/mach-npcm/Makefile
+>  create mode 100644 arch/arm/mach-npcm/headsmp.S
+>  create mode 100644 arch/arm/mach-npcm/npcm7xx.c
+>  create mode 100644 arch/arm/mach-npcm/platsmp.c
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 61a0cb15067e..05543f1cfbde 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -782,6 +782,8 @@ source "arch/arm/mach-netx/Kconfig"
+>
+>  source "arch/arm/mach-nomadik/Kconfig"
+>
+> +source "arch/arm/mach-npcm/Kconfig"
+> +
+>  source "arch/arm/mach-nspire/Kconfig"
+>
+>  source "arch/arm/plat-omap/Kconfig"
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index 47d3a1ab08d2..60ca50c7d762 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -191,6 +191,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)             += mediatek
+>  machine-$(CONFIG_ARCH_MXS)             += mxs
+>  machine-$(CONFIG_ARCH_NETX)            += netx
+>  machine-$(CONFIG_ARCH_NOMADIK)         += nomadik
+> +machine-$(CONFIG_ARCH_NPCM)            += npcm
+>  machine-$(CONFIG_ARCH_NSPIRE)          += nspire
+>  machine-$(CONFIG_ARCH_OXNAS)           += oxnas
+>  machine-$(CONFIG_ARCH_OMAP1)           += omap1
+> diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
+> new file mode 100644
+> index 000000000000..d47061855439
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/Kconfig
+> @@ -0,0 +1,50 @@
+> +menuconfig ARCH_NPCM
+> +       bool "Nuvoton NPCM Architecture"
+> +       select ARCH_REQUIRE_GPIOLIB
+> +       select USE_OF
+> +       select PINCTRL
+> +       select PINCTRL_NPCM7XX
+> +
+> +if ARCH_NPCM
+> +
+> +comment "NPCMX50 CPU type"
+> +
+> +config CPU_NPCM750
+> +       depends on ARCH_NPCM && ARCH_MULTI_V7
+> +       bool "Support for NPCM750 BMC CPU (Poleg)"
+> +       select CACHE_L2X0
+> +       select CPU_V7
+> +       select ARM_GIC
+> +       select HAVE_SMP
+> +       select SMP
+> +       select SMP_ON_UP
+> +       select HAVE_ARM_SCU
+> +       select HAVE_ARM_TWD if SMP
+> +       select ARM_ERRATA_458693
+> +       select ARM_ERRATA_720789
+> +       select ARM_ERRATA_742231
+> +       select ARM_ERRATA_754322
+> +       select ARM_ERRATA_764369
+> +       select ARM_ERRATA_794072
+> +       select PL310_ERRATA_588369
+> +       select PL310_ERRATA_727915
+> +       select USB_EHCI_ROOT_HUB_TT
+> +       select USB_ARCH_HAS_HCD
+> +       select USB_ARCH_HAS_EHCI
+> +       select USB_EHCI_HCD
+> +       select USB_ARCH_HAS_OHCI
+> +       select USB_OHCI_HCD
+> +       select USB
+> +       select FIQ
+> +       select CPU_USE_DOMAINS
+> +       select GENERIC_CLOCKEVENTS
+> +       select CLKDEV_LOOKUP
+> +       select COMMON_CLK if OF
+> +       select NPCM750_TIMER
+> +       select MFD_SYSCON
+> +       help
+> +         Support for NPCM750 BMC CPU (Poleg).
+> +
+> +         Nuvoton NPCM750 BMC based on the Cortex A9.
+> +
+> +endif
+> diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
+> new file mode 100644
+> index 000000000000..78416055b854
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/Makefile
+> @@ -0,0 +1,3 @@
+> +AFLAGS_headsmp.o               += -march=armv7-a
+> +
+> +obj-$(CONFIG_CPU_NPCM750)      += npcm7xx.o platsmp.o headsmp.o
+> diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
+> new file mode 100644
+> index 000000000000..9fccbbd49ed4
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/headsmp.S
+> @@ -0,0 +1,17 @@
+> +/*
+> + * Copyright 2017 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/linkage.h>
+> +#include <linux/init.h>
+> +#include <asm/assembler.h>
+> +
+> +ENTRY(npcm7xx_secondary_startup)
+> +       safe_svcmode_maskall r0
+> +
+> +       b       secondary_startup
+> +ENDPROC(npcm7xx_secondary_startup)
+> diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
+> new file mode 100644
+> index 000000000000..132e9d587857
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/npcm7xx.c
+> @@ -0,0 +1,34 @@
+> +/*
+> + * Copyright (c) 2017 Nuvoton Technology corporation.
+> + * Copyright 2017 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/types.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach-types.h>
+> +#include <asm/mach/map.h>
+> +#include <asm/hardware/cache-l2x0.h>
+> +
+> +#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |                               \
+> +                        L310_AUX_CTRL_DATA_PREFETCH |                         \
+> +                        L310_AUX_CTRL_NS_LOCKDOWN |                           \
+> +                        L310_AUX_CTRL_CACHE_REPLACE_RR |                      \
+> +                        L2C_AUX_CTRL_SHARED_OVERRIDE |                        \
+> +                        L310_AUX_CTRL_FULL_LINE_ZERO)
+> +
+> +static const char *const npcm7xx_dt_match[] = {
+> +       "nuvoton,npcm750",
+> +       NULL
+> +};
+> +
+> +DT_MACHINE_START(NPCM7XX_DT, "NPCMX50 Chip family")
+> +       .atag_offset    = 0x100,
+> +       .dt_compat      = npcm7xx_dt_match,
+> +       .l2c_aux_val    = NPCM7XX_AUX_VAL,
+> +       .l2c_aux_mask   = ~NPCM7XX_AUX_VAL,
+> +MACHINE_END
+> diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
+> new file mode 100644
+> index 000000000000..144e3e7ec7e6
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/platsmp.c
+> @@ -0,0 +1,89 @@
+> +/*
+> + * Copyright 2017 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#define pr_fmt(fmt) "PLATSMP: " fmt
+> +
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/smp.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/smp.h>
+> +#include <asm/smp_plat.h>
+> +#include <asm/smp_scu.h>
+> +
+> +#define NPCM7XX_SCRPAD_REG 0x13c
+> +
+> +extern void npcm7xx_secondary_startup(void);
+> +
+> +static int npcm7xx_smp_boot_secondary(unsigned int cpu,
+> +                                     struct task_struct *idle)
+> +{
+> +       struct device_node *gcr_np;
+> +       void __iomem *gcr_base;
+> +       int ret = 0;
+> +
+> +       gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
+> +       if (!gcr_np) {
+> +               pr_err("no gcr device node\n");
+> +               ret = -EFAULT;
+> +               goto out;
+> +       }
+> +       gcr_base = of_iomap(gcr_np, 0);
+> +       if (!gcr_base) {
+> +               pr_err("could not iomap gcr at: 0x%llx\n", gcr_base);
+> +               ret = -EFAULT;
+> +               goto out;
+> +       }
+> +
+> +       /* give boot ROM kernel start address. */
+> +       iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
+> +                 NPCM7XX_SCRPAD_REG);
+> +       /* make sure npcm7xx_secondary_startup is seen by all observers. */
+> +       smp_wmb();
+> +       dsb_sev();
+> +       /* make sure write buffer is drained */
+> +       mb();
+> +
+> +out:
+> +       iounmap(gcr_base);
+> +       return ret;
+> +}
+> +
+> +static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
+> +{
+> +       struct device_node *scu_np;
+> +       void __iomem *scu_base;
+> +
+> +       scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
+> +       if (!scu_np) {
+> +               pr_err("no scu device node\n");
+> +               return;
+> +       }
+> +       scu_base = of_iomap(scu_np, 0);
+> +       if (!scu_base) {
+> +               pr_err("could not iomap scu at: 0x%llx\n", scu_base);
+> +               return;
+> +       }
+> +
+> +       scu_enable(scu_base);
+> +
+> +out:
+> +       iounmap(scu_base);
+> +}
+> +
+> +static struct smp_operations npcm7xx_smp_ops __initdata = {
+> +       .smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
+> +       .smp_boot_secondary = npcm7xx_smp_boot_secondary,
+> +};
+> +
+> +CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm7xx-smp", &npcm7xx_smp_ops);
+> --
+> 2.14.1.581.gf28d330327-goog
+>
 
-Signed-off-by: Juergen Borleis <jbe@pengutronix.de>
----
- arch/arm/boot/dts/imx53-mba53.dts   | 36 +++++++++++++++++++++++++++++++++++-
- arch/arm/boot/dts/imx53-tqma53.dtsi |  9 +++++++++
- 2 files changed, 44 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
-index fb50ed8cc8f47..b5e1b9b373bf5 100644
---- a/arch/arm/boot/dts/imx53-mba53.dts
-+++ b/arch/arm/boot/dts/imx53-mba53.dts
-@@ -44,6 +44,32 @@
- 		};
- 	};
- 
-+	main_power_in_12p0v: mainpowerin {
-+		/* external power-in */
-+		compatible = "regulator-fixed";
-+		regulator-name = "12P0V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_5p0v: base5p0v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5P0V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&main_power_in_12p0v>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3p3v: base3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&main_power_in_12p0v>;
-+		regulator-always-on;
-+	};
- 
- 	reg_backlight: backlight {
- 		compatible = "regulator-fixed";
-@@ -67,6 +93,14 @@
- 	};
- };
- 
-+&reg_3p2v {
-+	vin-supply = <&reg_5p0v>;
-+};
-+
-+&reg_3p8v {
-+	vin-supply = <&reg_5p0v>;
-+};
-+
- &ldb {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_lvds1_1>;
-@@ -192,7 +226,7 @@
- };
- 
- &esdhc2 {
--	vmmc-supply = <&reg_3p2v>;
-+	vmmc-supply = <&reg_3p3v>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
-index 1ab5fbab1d728..ff4608b7318f4 100644
---- a/arch/arm/boot/dts/imx53-tqma53.dtsi
-+++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
-@@ -27,6 +27,14 @@
- 		regulator-max-microvolt = <3200000>;
- 		regulator-always-on;
- 	};
-+
-+	reg_3p8v: card3p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P8V";
-+		regulator-min-microvolt = <3800000>;
-+		regulator-max-microvolt = <3800000>;
-+		regulator-always-on;
-+	};
- };
- 
- &esdhc2 {
-@@ -264,6 +272,7 @@
- 		fsl,mc13xxx-uses-rtc;
- 		interrupt-parent = <&gpio2>;
- 		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
-+		/* power supply input is &reg_3p8v */
- 	};
- 
- 	sensor1: lm75@48 {
--- 
-2.11.0
+Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
