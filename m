@@ -1,50 +1,55 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 2/3] leds: as3645a: Add LED flash class driver
-Date: Thu, 7 Sep 2017 13:26:57 +0300
-Message-ID: <20170907102657.stoqw5e7glbkbz2z@valkosipuli.retiisi.org.uk>
-References: <20170823081100.11733-1-sakari.ailus@linux.intel.com>
- <20170823081100.11733-3-sakari.ailus@linux.intel.com>
- <20170828110451.GB492@amd>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 16/18] arm64: dts: ulcb-kf: enable PCA9548 on I2C2
+Date: Thu, 7 Sep 2017 12:37:02 +0200
+Message-ID: <CAMuHMdU8qeM2RXSSsqf5ouPAE2gq_gpSd0iDj7TE2s9O_f-GVw@mail.gmail.com>
+References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1504737430-23465-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170828110451.GB492@amd>
-Sender: linux-media-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, javier@dowhile0.org, jacek.anaszewski@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1504737430-23465-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Thu, Sep 7, 2017 at 12:37 AM, Vladimir Barinov
+<vladimir.barinov@cogentembedded.com> wrote:
+> This supports PCA9548 I2C switch on I2C2 bus on ULCB Kingfisher board
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> ---
+>  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> index 1cf8466..3bbc490 100644
+> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> @@ -68,6 +68,14 @@
+>                 interrupt-parent = <&gpio6>;
+>                 interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+>         };
+> +
+> +       i2cswitch2: pca9548@71 {
 
-On Mon, Aug 28, 2017 at 01:04:51PM +0200, Pavel Machek wrote:
-> On Wed 2017-08-23 11:10:59, Sakari Ailus wrote:
-> > Add a LED flash class driver for the as3654a flash controller. A V4L2 flash
-> > driver for it already exists (drivers/media/i2c/as3645a.c), and this driver
-> > is based on that.
-> 
-> We do not want to have two drivers for same hardware... how is that
-> supposed to work?
+Please use generic node names: i2c-switch@71
 
-No, we don't. The intent is to remove the other driver later on, as it's
-implemented as a V4L2 sub-device driver. It also lacks DT support.
+> +               compatible = "nxp,pca9548";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x71>;
+> +               reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+> +       };
+>  };
 
-> 
-> Yes, we might want to have both LED and v4l2 interface for a single
-> LED, because v4l2 is just too hairy to use, but we should not
-> duplicate drivers for that.
-> 
-> We _might_ want to do some helpers; as these LED drivers are all quite
-> similar, it should be possible to have "flash led driver" and just
-> link it to v4l2 and LED interfaces...
+Gr{oetje,eeting}s,
 
-This is what the new LED (flash) class driver does. Feature-wise it's a
-superset of the old one. There's a minor matter left, though, which is
-querying the flash strobe status which the old driver did and the new one
-does not do yet. I don't know if anyone ever even used that feature though.
+                        Geert
 
--- 
-Regards,
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
