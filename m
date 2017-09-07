@@ -1,115 +1,38 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 1/2] drm/bridge: add Silicon Image SiI9234 driver
-Date: Thu, 07 Sep 2017 10:09:59 +0200
-Message-ID: <3492951c-f57a-99b5-7cc7-f3071b1893b9@samsung.com>
-References: <1504182434-8201-1-git-send-email-m.purski@samsung.com>
- <2326944.Wi9TMObRze@avalon>
- <b8df49d4-4636-f52e-c974-699a8a81872a@samsung.com>
- <CGME20170905150603epcas2p16add56f42aca1f48cabca3329d359e1d@epcas2p1.samsung.com>
- <1569224.pDUtqo7azG@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1569224.pDUtqo7azG@avalon>
-Content-language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maciej Purski <m.purski@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH] dt-bindings: net: don't confuse with generic PHY property
+Date: Thu,  7 Sep 2017 11:09:59 +0300
+Message-ID: <2e201cc1cff4fad372f589c83c4c438b3dccbadf.1504771799.git.baruch@tkos.co.il>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIDA1LjA5LjIwMTcgMTc6MDUsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
-Cj4gSGkgTWFjaWVqLAo+Cj4gT24gVHVlc2RheSwgNSBTZXB0ZW1iZXIgMjAxNyAxNjowMTo1NCBF
-RVNUIE1hY2llaiBQdXJza2kgd3JvdGU6Cj4+IEhpIExhdXJlbnQsCj4+Cj4+IFRoYW5rIHlvdSBm
-b3IgeW91ciByZXBseS4gVGhlIHByb2JsZW0gd2FzIGFscmVhZHkgZGlzY3Vzc2VkIHdoZW4gYWRk
-aW5nCj4+IHNpbDg2MjAgZHJpdmVyLiBJdCBjYW4gYmUgc29sdmVkIGxhdGVyLiBJJ20gQ0MtaW5n
-IEFuZHJ6ZWogSGFqZGEsIGFzIGhlCj4+IHVzZWQgdG8gZGlzY3VzcyBpdCB3aXRoIHlvdS4KPiBJ
-J20gYWZyYWlkIGl0IGNhbid0IGJlIHNvbHZlZCBsYXRlci4gRFQgYmluZGluZ3MgYXJlIHN1cHBv
-c2VkIHRvIGJlIGEgc3RhYmxlIAo+IEFCSSwgd2UgY2FuJ3QgbWVyZ2UgYSBiaW5kaW5nIHRoYXQg
-d2UgYWxyZWFkeSBrbm93IGlzbid0IGNvcnJlY3QuCgpUaGUgcHJvYmxlbSBoZXJlIGlzIHRoYXQg
-YnJpZGdlIG91dHB1dCBpcyBjb25uZWN0ZWQgdG8gbWljcm8tVVNCCmNvbm5lY3Rvcihub3QgSERN
-SSAhISEpLgpBbmQgY3VycmVudGx5IHRoZXJlIGFyZSBubyBiaW5kaW5ncyBmb3IgbWljcm8tVVNC
-IGNvbm5lY3Rvci4gQ3JlYXRpbmcKZ29vZCBiaW5kaW5ncyBjYW4gYmUgdHJpY2t5CmJlY2F1c2Ug
-bWljcm8tVVNCIGNvbm5lY3RvciBjYW4gYmUgdXNlZCB0byBtdWx0aXBsZSBmdW5jdGlvbnM6Ci0g
-VVNCLAotIGNoYXJnaW5nLAotIFVBUlQsCi0gTUhMLAotIGF1ZGlvLAotIC4uLgpBbmQgaXQgY2Fu
-IGJlIGNvbnRyb2xsZWQgYnkgZGlmZmVyZW50IGNoaXBzIChNVUlDcyksIHdpdGggZGlmZmVyZW50
-CmNhcGFiaWxpdGllcy4KCkkgcGxhbiB0byBzZW5kIFJGQyBpbiBuZWFyIGZ1dHVyZSBvZiBzdWNo
-IGJpbmRpbmdzIChhcyBJIG5lZWQgdGhlbSBmb3IKc2lpODYyMCksIGJ1dCBJIGd1ZXNzIGl0IHdv
-dWxkIHJlcXVpcmUgbW9yZSByZXZpZXcgYmVmb3JlIGl0IHdpbGwgYmUKYWNjZXB0ZWQuCgpSZXR1
-cm5pbmcgdG8gU2lJOTIzNCwgc29sdXRpb24gd291bGQgYmUgdG8gYWRkIG91dHB1dCBwb3J0IGJp
-bmRpbmdzIHRvClNpSTkyMzQsIGJ1dCBkbyBub3QgYWRkIHRoZW0gdG8gZHRzLiBJdCB3aWxsIG1h
-a2UgYmluZGluZ3MgZm9yIFNpaTkyMzQKY29tcGxldGUuCgpSZWdhcmRzCkFuZHJ6ZWoKCgo+Cj4+
-IGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9wYXRjaC8xMTQyMjQvCj4+IGh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LURlY2VtYmVy
-LzA5Njc1Ni5odG1sCj4+Cj4+IFJlZ2FyZHMsCj4+Cj4+IAlNYWNpZWoKPj4KPj4gT24gMzEvMDgv
-MTcgMTU6MzAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+PiBIaSBNYWNpZWosCj4+Pgo+Pj4g
-VGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4+Pgo+Pj4gT24gVGh1cnNkYXksIDMxIEF1Z3VzdCAy
-MDE3IDE1OjI3OjEzIEVFU1QgTWFjaWVqIFB1cnNraSB3cm90ZToKPj4+PiBTaUk5MjM0IHRyYW5z
-bWl0dGVyIGNvbnZlcnRzIGVUTURTL0hETUkgc2lnbmFsIHRvIE1ITCAxLjAuCj4+Pj4gSXQgaXMg
-Y29udHJvbGxlZCB2aWEgSTJDIGJ1cy4gSXRzIGludGVyYWN0aW9uIHdpdGggb3RoZXIKPj4+PiBk
-ZXZpY2VzIGluIHZpZGVvIHBpcGVsaW5lIGlzIHBlcmZvcm1lZCBtYWlubHkgb24gSFcgbGV2ZWwu
-Cj4+Pj4gVGhlIG9ubHkgaW50ZXJhY3Rpb24gaXQgZG9lcyBvbiBkZXZpY2UgZHJpdmVyIGxldmVs
-IGlzCj4+Pj4gZmlsdGVyaW5nLW91dCB1bnN1cHBvcnRlZCB2aWRlbyBtb2RlcywgaXQgZXhwb3Nl
-cyBkcm1fYnJpZGdlCj4+Pj4gaW50ZXJmYWNlIHRvIHBlcmZvcm0gdGhpcyBvcGVyYXRpb24uCj4+
-Pj4KPj4+PiBUaGlzIHBhdGNoIGlzIGJhc2VkIG9uIHRoZSBjb2RlIHJlZmFjdG9yZWQgYnkgVG9t
-YXN6IFN0YW5pc2xhd3NraQo+Pj4+IDx0LnN0YW5pc2xhd3NAc2Ftc3VuZy5jb20+LCB3aGljaCB3
-YXMgaW5pdGlhbGx5IGRldmVsb3BlZCBieToKPj4+PiBBZGFtIEhhbXBzb24gPGFoYW1wc29uQHN0
-YS5zYW1zdW5nLmNvbT4KPj4+PiBFcmlrIEdpbGxpbmcgPGtvbmtlcnNAYW5kcm9pZC5jb20+Cj4+
-Pj4gU2hhbmthciBCYW5kYWwgPHNoYW5rYXIuYkBzYW1zdW5nLmNvbT4KPj4+PiBEaGFyYW0gS3Vt
-YXIgPGRoYXJhbS5rckBzYW1zdW5nLmNvbT4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IE1hY2ll
-aiBQdXJza2kgPG0ucHVyc2tpQHNhbXN1bmcuY29tPgo+Pj4+IC0tLQo+Pj4+IENoYW5nZXMgaW4g
-djI6Cj4+Pj4gLSB1c2UgYnVsa19yZXF1bGF0b3JzIGluc3RlYWQgb2Ygc2luZ2xlIG9uZQo+Pj4+
-IC0gc3Vic3RpdHV0ZSBzb21lIG9mIHRoZSBtYWdpYyB2YWx1ZXMgd2l0aCBtYWNyb3MKPj4+PiAt
-IGltcHJvdmUgY29kaW5nIHN0eWxlCj4+Pj4gLSBpbXByb3ZlZCBlcnJvciBoYW5kbGluZyBpbiBz
-aWk5MjM0X3Byb2JlKCkKPj4+PiAtLS0KPj4+Pgo+Pj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQgfCAgMzQgKwo+Pj4+ICAgZHJpdmVycy9ncHUv
-ZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwo+Pj4+ICAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+
-Pj4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MjM0LmMgICAgICAgICAgICAgICAgICAg
-fCA5OTMKPj4+PiAgICsrKysrKysrKysrKysrKysrKwo+Pj4+ICAgNCBmaWxlcyBjaGFuZ2VkLCAx
-MDM2IGluc2VydGlvbnMoKykKPj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+Pj4+Cj4+Pj4gRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkyMzQudHh0
-IGNyZWF0ZSBtb2RlCj4+Pj4gMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTIzNC5j
-Cj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvYnJpZGdlL3NpaTkyMzQudHh0Cj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQgbmV3IGZpbGUKPj4+PiBtb2Rl
-IDEwMDY0NAo+Pj4+IGluZGV4IDAwMDAwMDAuLjNjZTc0MTMKPj4+PiAtLS0gL2Rldi9udWxsCj4+
-Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L3NpaTkyMzQudHh0Cj4+Pj4gQEAgLTAsMCArMSwzNCBAQAo+Pj4+ICtTaWxpY29uIEltYWdlIFNp
-STkyMzQgSERNSS9NSEwgYnJpZGdlIGJpbmRpbmdzCj4+Pj4gKwo+Pj4+ICtSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgo+Pj4+ICsJLSBjb21wYXRpYmxlIDogInNpbCxzaWk5MjM0Ii4KPj4+PiArCS0gcmVn
-IDogSTJDIGFkZHJlc3MgZm9yIFRQSSBpbnRlcmZhY2UsIHVzZSAweDM5Cj4+Pj4gKwktIGF2Y2Mz
-My1zdXBwbHkgOiBNSEwvVVNCIFN3aXRjaCBTdXBwbHkgVm9sdGFnZSAoMy4zVikKPj4+PiArCS0g
-aW92Y2MxOC1zdXBwbHkgOiBJL08gU3VwcGx5IFZvbHRhZ2UgKDEuOFYpCj4+Pj4gKwktIGF2Y2Mx
-Mi1zdXBwbHkgOiBUTURTIEFuYWxvZyBTdXBwbHkgVm9sdGFnZSAoMS4yVikKPj4+PiArCS0gY3Zj
-YzEyLXN1cHBseSA6IERpZ2l0YWwgQ29yZSBTdXBwbHkgVm9sdGFnZSAoMS4yVikKPj4+PiArCS0g
-aW50ZXJydXB0cywgaW50ZXJydXB0LXBhcmVudDogaW50ZXJydXB0IHNwZWNpZmllciBvZiBJTlQg
-cGluCj4+Pj4gKwktIHJlc2V0LWdwaW9zOiBncGlvIHNwZWNpZmllciBvZiBSRVNFVCBwaW4gKGFj
-dGl2ZSBsb3cpCj4+Pj4gKwktIHZpZGVvIGludGVyZmFjZXM6IERldmljZSBub2RlIGNhbiBjb250
-YWluIHZpZGVvIGludGVyZmFjZSBwb3J0Cj4+Pj4gKwkJCSAgICBub2RlIGZvciBIRE1JIGVuY29k
-ZXIgYWNjb3JkaW5nIHRvIFsxXS4KPj4+PiArCj4+Pj4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4+PiBEb2Vzbid0IHRo
-aXMgY2hpcCBoYXZlIHR3byBwb3J0cywgb25lIGlucHV0IGNvbm5lY3RlZCB0byB0aGUgU29DIGFu
-ZCBvbmUKPj4+IG91dHB1dCBjb25uZWN0ZWQgdG8gYW4gSERNSSBjb25uZWN0b3IgPyBJZiBzbyB0
-aGVyZSBzaG91bGQgYmUgdHdvIHBvcnRzIGluCj4+PiBEVCB0b28uCj4+Pgo+Pj4+ICtFeGFtcGxl
-Ogo+Pj4+ICsJc2lpOTIzNEAzOSB7Cj4+Pj4gKwkJY29tcGF0aWJsZSA9ICJzaWwsc2lpOTIzNCI7
-Cj4+Pj4gKwkJcmVnID0gPDB4Mzk+Owo+Pj4+ICsJCWF2Y2MzMy1zdXBwbHkgPSA8JnZjYzMzbWhs
-PjsKPj4+PiArCQlpb3ZjYzE4LXN1cHBseSA9IDwmdmNjMThtaGw+Owo+Pj4+ICsJCWF2Y2MxMi1z
-dXBwbHkgPSA8JnZzaWwxMj47Cj4+Pj4gKwkJY3ZjYzEyLXN1cHBseSA9IDwmdnNpbDEyPjsKPj4+
-PiArCQlyZXNldC1ncGlvcyA9IDwmZ3BmMyA0IEdQSU9fQUNUSVZFX0xPVz47Cj4+Pj4gKwkJaW50
-ZXJydXB0LXBhcmVudCA9IDwmZ3BmMz47Cj4+Pj4gKwkJaW50ZXJydXB0cyA9IDw1IElSUV9UWVBF
-X0xFVkVMX0hJR0g+Owo+Pj4+ICsKPj4+PiArCQlwb3J0IHsKPj4+PiArCQkJbWhsX3RvX2hkbWk6
-IGVuZHBvaW50IHsKPj4+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV90b19taGw+Owo+
-Pj4gSXQgd291bGQgYmUgdXNlZnVsIHRvIGluY2x1ZGUgdGhlIHJlbW90ZSBEVCBub2RlcyBpbiB0
-aGUgZXhhbXBsZSB0b28uCj4+Pgo+Pj4+ICsJCQl9Owo+Pj4+ICsJCX07Cj4+Pj4gKwl9Owo+Cgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This complements commit 9a94b3a4bd (dt-binding: phy: don't confuse with
+Ethernet phy properties).
+
+The generic PHY 'phys' property sometime appears in the same node with
+the Ethernet PHY 'phy' or 'phy-handle' properties. Add a warning in
+ethernet.txt to reduce confusion.
+
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+ Documentation/devicetree/bindings/net/ethernet.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 7da86f22a13b..2974e63ba311 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -1,5 +1,9 @@
+ The following properties are common to the Ethernet controllers:
+ 
++NOTE: All 'phy*' properties documented below are Ethernet specific. For the
++generic PHY 'phys' property, see
++Documentation/devicetree/bindings/phy/phy-bindings.txt.
++
+ - local-mac-address: array of 6 bytes, specifies the MAC address that was
+   assigned to the network device;
+ - mac-address: array of 6 bytes, specifies the MAC address that was last used by
+-- 
+2.14.1
