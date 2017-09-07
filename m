@@ -1,57 +1,360 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] Bluetooth: btqcomsmd: retieve BD address from DT
-Date: Thu, 7 Sep 2017 10:50:32 -0500
-Message-ID: <CAL_JsqLVQeC9TX6g+JbYq6gX7LbRT_-oeTevwDMeX8VHRrEcXg@mail.gmail.com>
-References: <1504637923-21652-1-git-send-email-loic.poulain@linaro.org>
- <1504637923-21652-3-git-send-email-loic.poulain@linaro.org>
- <CAL_JsqJhEaZkcBA6qnC3rVduQJ9Yesrz_h9i_WXo1bRaq1NT4Q@mail.gmail.com> <46A7D7AE-FDBB-424D-8E85-7180FEE24A14@holtmann.org>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: exynos: fix incomplete Odroid-XU3/4 thermal-zones
+ definition
+Date: Thu, 07 Sep 2017 17:58:54 +0200
+Message-ID: <12756817.Sq0VSgt4c1@amdc3058>
+References: <CGME20170907155857epcas2p1819af1f0290828b48aaf953a05aa32b0@epcas2p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <46A7D7AE-FDBB-424D-8E85-7180FEE24A14-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Cc: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Willy Wolff <willy.mh.wolff-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 6, 2017 at 2:04 AM, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> wrote:
-> Hi Rob,
->
->>> Retrieve BD address from the DT local-bd-address property.
->>> This address must be unique and is usually added in the DT
->>> by the bootloader which has access to the provisioned data.
->>>
->>> Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Willy Wolff <willy.mh.wolff-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-[...]
+Odroid XU3/4 boards have thermal sensors per 4 pairs of A7+A15
+cores but currently there is only one thermal-zone (including
+cooling maps) defined (for the first pair of cores - the first
+core of the A7 cluster and the first core of A15 cluster) so
+i.e. if the task is running on any of A15 cores but the first
+one, such core can reach high temperature without any proper
+cooling action.
 
->>> +       /* The local-bd-address DT property is usually injected by the
->>> +        * bootloader which has access to the allocated BD address.
->>> +        */
->>> +       bdaddr = of_get_property(pdev->dev.of_node, "local-bd-address", &ret);
->>> +       if (bdaddr && ret == sizeof(bdaddr_t)) {
->>> +               BT_INFO("BD address %pMR retrieved from device-tree", bdaddr);
->>> +               bacpy(&btq->bdaddr, bdaddr);
->>> +       }
->>
->> Can we put all this into a helper function before we get more
->> instances. And use the u8 array property function. We're trying to
->> make of_get_property an internal function.
->
-> using of_property_read_u8_array seems sensible since that would shorten this into
->
->         if (!of_property_read_u8_array(pdev->dev.of_node, “local-bd-address”, &btq->bdaddr, 6))
->                 bt_dev_info(pdev->dev, “BD address %pMR ..”, &btq->bdaddr);
->
+Fix it by adding missing thermal-zones definitions.
 
-Yes.
+Also while at it fix the number of steps in cpufreq cooling for
+cpu4 (11 steps for A15 corresponds to 700MHz, for 600MHz 12 steps
+should be used).
 
-> Creating a Bluetooth internal helper function seems rather pointless at this stage. If more users appears, then we might need to move this into the Bluetooth core to deal with this. However as said before, I am not a big fan of IEEE address assignment via DT since that forces to have the smarts in the boot loader and the boot loader doing the right thing. There are too many boards and DT where this will not be true. In a lot of cases it would make more sense to store the BD address as part of your file system. Since we do support this in a total generic fashion, I rather push for that method and have the QCOM SMD based SoC being the exception.
+Signed-off-by: Willy Wolff <willy.mh.wolff-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+[b.zolnierkie: rewrote patch subject & description + minor fixups]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+I updated the patch to address Krzysztof's review comments,
+the original version from June can be found here:
 
-Okay, sounds reasonable and it's your call anyway.
+	https://patchwork.kernel.org/patch/9807333/
 
-Rob
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  241 +++++++++++++++++++--
+ 1 file changed, 222 insertions(+), 19 deletions(-)
 
-BTW, your mails are always quoted-printable encoding which shouldn't
-be used on lists AIUI.
+Index: b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+===================================================================
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2017-09-07 17:41:18.264391541 +0200
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi	2017-09-07 17:47:07.788400343 +0200
+@@ -63,22 +63,22 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <0>;
+ 			trips {
+-				cpu_alert0: cpu-alert-0 {
++				cpu0_alert0: cpu-alert-0 {
+ 					temperature = <50000>; /* millicelsius */
+ 					hysteresis = <5000>; /* millicelsius */
+ 					type = "active";
+ 				};
+-				cpu_alert1: cpu-alert-1 {
++				cpu0_alert1: cpu-alert-1 {
+ 					temperature = <60000>; /* millicelsius */
+ 					hysteresis = <5000>; /* millicelsius */
+ 					type = "active";
+ 				};
+-				cpu_alert2: cpu-alert-2 {
++				cpu0_alert2: cpu-alert-2 {
+ 					temperature = <70000>; /* millicelsius */
+ 					hysteresis = <5000>; /* millicelsius */
+ 					type = "active";
+ 				};
+-				cpu_crit0: cpu-crit-0 {
++				cpu0_crit0: cpu-crit-0 {
+ 					temperature = <120000>; /* millicelsius */
+ 					hysteresis = <0>; /* millicelsius */
+ 					type = "critical";
+@@ -87,14 +87,14 @@
+ 				 * Exynos542x supports only 4 trip-points
+ 				 * so for these polling mode is required.
+ 				 * Start polling at temperature level of last
+-				 * interrupt-driven trip: cpu_alert2
++				 * interrupt-driven trip: cpu0_alert2
+ 				 */
+-				cpu_alert3: cpu-alert-3 {
++				cpu0_alert3: cpu-alert-3 {
+ 					temperature = <70000>; /* millicelsius */
+ 					hysteresis = <10000>; /* millicelsius */
+ 					type = "passive";
+ 				};
+-				cpu_alert4: cpu-alert-4 {
++				cpu0_alert4: cpu-alert-4 {
+ 					temperature = <85000>; /* millicelsius */
+ 					hysteresis = <10000>; /* millicelsius */
+ 					type = "passive";
+@@ -103,43 +103,246 @@
+ 			};
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu_alert0>;
++					trip = <&cpu0_alert0>;
+ 					cooling-device = <&fan0 0 1>;
+ 				};
+ 				map1 {
+-					trip = <&cpu_alert1>;
++					trip = <&cpu0_alert1>;
+ 					cooling-device = <&fan0 1 2>;
+ 				};
+ 				map2 {
+-					trip = <&cpu_alert2>;
++					trip = <&cpu0_alert2>;
+ 					cooling-device = <&fan0 2 3>;
+ 				};
+ 				/*
+-				 * When reaching cpu_alert3, reduce CPU
++				 * When reaching cpu0_alert3, reduce CPU
+ 				 * by 2 steps. On Exynos5422/5800 that would
+ 				 * be: 1600 MHz and 1100 MHz.
+ 				 */
+ 				map3 {
+-					trip = <&cpu_alert3>;
++					trip = <&cpu0_alert3>;
+ 					cooling-device = <&cpu0 0 2>;
+ 				};
+ 				map4 {
+-					trip = <&cpu_alert3>;
++					trip = <&cpu0_alert3>;
+ 					cooling-device = <&cpu4 0 2>;
+ 				};
+-
+ 				/*
+-				 * When reaching cpu_alert4, reduce CPU
+-				 * further, down to 600 MHz (11 steps for big,
++				 * When reaching cpu0_alert4, reduce CPU
++				 * further, down to 600 MHz (12 steps for big,
+ 				 * 7 steps for LITTLE).
+ 				 */
+ 				map5 {
+-					trip = <&cpu_alert4>;
++					trip = <&cpu0_alert4>;
++					cooling-device = <&cpu0 3 7>;
++				};
++				map6 {
++					trip = <&cpu0_alert4>;
++					cooling-device = <&cpu4 3 12>;
++				};
++			};
++		};
++		cpu1_thermal: cpu1-thermal {
++			thermal-sensors = <&tmu_cpu1 0>;
++			polling-delay-passive = <250>;
++			polling-delay = <0>;
++			trips {
++				cpu1_alert0: cpu-alert-0 {
++					temperature = <50000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu1_alert1: cpu-alert-1 {
++					temperature = <60000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu1_alert2: cpu-alert-2 {
++					temperature = <70000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu1_crit0: cpu-crit-0 {
++					temperature = <120000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++				cpu1_alert3: cpu-alert-3 {
++					temperature = <70000>;
++					hysteresis = <10000>;
++					type = "passive";
++				};
++				cpu1_alert4: cpu-alert-4 {
++					temperature = <85000>;
++					hysteresis = <10000>;
++					type = "passive";
++				};
++
++			};
++			cooling-maps {
++				map0 {
++					trip = <&cpu1_alert0>;
++					cooling-device = <&fan0 0 1>;
++				};
++				map1 {
++					trip = <&cpu1_alert1>;
++					cooling-device = <&fan0 1 2>;
++				};
++				map2 {
++					trip = <&cpu1_alert2>;
++					cooling-device = <&fan0 2 3>;
++				};
++				map3 {
++					trip = <&cpu1_alert3>;
++					cooling-device = <&cpu0 0 2>;
++				};
++				map4 {
++					trip = <&cpu1_alert3>;
++					cooling-device = <&cpu4 0 2>;
++				};
++				map5 {
++					trip = <&cpu1_alert4>;
++					cooling-device = <&cpu0 3 7>;
++				};
++				map6 {
++					trip = <&cpu1_alert4>;
++					cooling-device = <&cpu4 3 12>;
++				};
++			};
++		};
++		cpu2_thermal: cpu2-thermal {
++			thermal-sensors = <&tmu_cpu2 0>;
++			polling-delay-passive = <250>;
++			polling-delay = <0>;
++			trips {
++				cpu2_alert0: cpu-alert-0 {
++					temperature = <50000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu2_alert1: cpu-alert-1 {
++					temperature = <60000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu2_alert2: cpu-alert-2 {
++					temperature = <70000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu2_crit0: cpu-crit-0 {
++					temperature = <120000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++				cpu2_alert3: cpu-alert-3 {
++					temperature = <70000>;
++					hysteresis = <10000>;
++					type = "passive";
++				};
++				cpu2_alert4: cpu-alert-4 {
++					temperature = <85000>;
++					hysteresis = <10000>;
++					type = "passive";
++				};
++
++			};
++			cooling-maps {
++				map0 {
++					trip = <&cpu2_alert0>;
++					cooling-device = <&fan0 0 1>;
++				};
++				map1 {
++					trip = <&cpu2_alert1>;
++					cooling-device = <&fan0 1 2>;
++				};
++				map2 {
++					trip = <&cpu2_alert2>;
++					cooling-device = <&fan0 2 3>;
++				};
++				map3 {
++					trip = <&cpu2_alert3>;
++					cooling-device = <&cpu0 0 2>;
++				};
++				map4 {
++					trip = <&cpu2_alert3>;
++					cooling-device = <&cpu4 0 2>;
++				};
++				map5 {
++					trip = <&cpu2_alert4>;
++					cooling-device = <&cpu0 3 7>;
++				};
++				map6 {
++					trip = <&cpu2_alert4>;
++					cooling-device = <&cpu4 3 12>;
++				};
++			};
++		};
++		cpu3_thermal: cpu3-thermal {
++			thermal-sensors = <&tmu_cpu3 0>;
++			polling-delay-passive = <250>;
++			polling-delay = <0>;
++			trips {
++				cpu3_alert0: cpu-alert-0 {
++					temperature = <50000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu3_alert1: cpu-alert-1 {
++					temperature = <60000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu3_alert2: cpu-alert-2 {
++					temperature = <70000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				cpu3_crit0: cpu-crit-0 {
++					temperature = <120000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++				cpu3_alert3: cpu-alert-3 {
++					temperature = <70000>;
++					hysteresis = <10000>;
++					type = "passive";
++				};
++				cpu3_alert4: cpu-alert-4 {
++					temperature = <85000>;
++					hysteresis = <10000>;
++					type = "passive";
++				};
++
++			};
++			cooling-maps {
++				map0 {
++					trip = <&cpu3_alert0>;
++					cooling-device = <&fan0 0 1>;
++				};
++				map1 {
++					trip = <&cpu3_alert1>;
++					cooling-device = <&fan0 1 2>;
++				};
++				map2 {
++					trip = <&cpu3_alert2>;
++					cooling-device = <&fan0 2 3>;
++				};
++				map3 {
++					trip = <&cpu3_alert3>;
++					cooling-device = <&cpu0 0 2>;
++				};
++				map4 {
++					trip = <&cpu3_alert3>;
++					cooling-device = <&cpu4 0 2>;
++				};
++				map5 {
++					trip = <&cpu3_alert4>;
+ 					cooling-device = <&cpu0 3 7>;
+ 				};
+ 				map6 {
+-					trip = <&cpu_alert4>;
+-					cooling-device = <&cpu4 3 11>;
++					trip = <&cpu3_alert4>;
++					cooling-device = <&cpu4 3 12>;
+ 				};
+ 			};
+ 		};
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
