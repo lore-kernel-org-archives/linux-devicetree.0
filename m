@@ -1,67 +1,80 @@
 From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 2/6] irqdomain: clear trigger type in
- irq_domain_push_irq()
-Date: Thu, 7 Sep 2017 13:25:03 +0100
-Message-ID: <a3e38f20-007b-1065-7999-95e2264f2155@arm.com>
+Subject: Re: [PATCH v4 0/6] irqdomain, gpio: expand irq_domain_push_irq() for
+ DT use and use it for GPIO
+Date: Thu, 7 Sep 2017 13:39:11 +0100
+Message-ID: <b0f7495b-3b51-a75f-2a29-bbcd86eacb53@arm.com>
 References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
- <1504784522-26841-3-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1504784522-26841-3-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
 Content-Language: en-GB
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On 07/09/17 12:41, Masahiro Yamada wrote:
-> Prior to the addition of irq_domain_push_irq(), the hierarchy
-> IRQ domain always allocates IRQs from the outer-most domain.
-> Each irqchip usually calls irq_domain_alloc_irqs_parent(),
-> ascending the topology up to the root irqchip.
 > 
-> The brand-new function irq_domain_push_irq() allows us to allocate
-> IRQs for parent domain first, then add a child irq_data to the
-> tail of the chain.
+> This series adds a GPIO controller for UniPhier SoC family.
+> It also works as an irqchip in hierarchy domain manner.
 > 
-> For the new use-case, if the parent sets a temporary trigger type,
-> it may differ from the type requested to the outer-most irqchip,
-> then irq_create_fwspec_mapping() warns "type mismatch, failed to map..."
+> My problem is mapping of IRQ from this controller to the parent
+> irqchip is not contiguous.
 > 
-> Clear the trigger type when a new irq_data is connected to the chain.
+>   IRQ line of GPIO  --->  Parent interrupt
+>         0           --->     48
+>         1           --->     49
+>                 ...
+>         15          --->     63
+>         16          --->    154
+>         17          --->    155
+>                 ...
+>         20          --->    158
+>         21          --->    217
+>         22          --->    218
+>                 ...
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> So, I need to have an array of parent hwirqs somehow.
 > 
-> Changes in v4:
->   - Newly added
+> Probably, most of people will try to use "interrupts" DT property,
+> but I noticed a potential problem for hierarchy IRQ domain.
+> If "interrupts" property exists in the device node, IRQ resource
+> may be statically allocated when platform devices are populated
+> from DT.  I asked this question some time ago:
+> https://lkml.org/lkml/2017/7/6/758
 > 
+> After I tackled this, I decided to put the array in the driver,
+> but I could not get a positive response for this.
+> The discussion mostly happened in v1 thread:
+> http://patchwork.ozlabs.org/patch/797145/
 > 
->  kernel/irq/irqdomain.c | 3 +++
->  1 file changed, 3 insertions(+)
+> Recently, the new API irq_domain_push_irq() was merged in the
+> mainline.  I thought this might be useful to solve the hierarchy
+> domain issue.  Hence, here is a trial.
 > 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index da3e0b6..18d11b9 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -1532,6 +1532,9 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
->  	tail_irq_data->chip = NULL;
->  	tail_irq_data->chip_data = NULL;
->  
-> +	/* clear the trigger type to avoid "type mismatch" error */
-> +	irqd_set_trigger_type(tail_irq_data, IRQ_TYPE_NONE);
-> +
+> I found patch 2 is needed to avoid "type mismatch" error.
+> 
+> One more thing, I am worried about a race condition.
+> 
+> I think there is a possibility where a device tries to get IRQ
+> after irq_domain_create_hierarchy(), but before irq_domain_push_irq().
+> 
+> 	priv->domain = irq_domain_create_hierarchy(...)
+> 	if (!priv->domain)
+> 		return -ENOMEM;
+> 
+>         [  *** What if a irq consumer device request the irq here? *** ]
 
-This feels wrong. The initial interrupt hierarchy does have a set
-trigger, because it has been configured already, and switching it to
-NONE is hiding the fact that you're setting it to another, conflicting
-value.
+We've explicitly forbidden such a use case. There is a (not exactly fool
+proof) check in irq_domain_push_irq(), but it is pretty easy to bypass
+it. "Don't do it" is the conclusion we reached with David Daney.
 
-Your new fwspec should have a type that is really compatible with with
-the underlying interrupt, however "temporary". If it is not, you have a
-problem.
+If you don't want these interrupts to be requested, you might as well
+flag them as IRQ_NOREQUEST, and unflag them when the hierarchy is ready.
+
+Would that work for you?
 
 Thanks,
 
