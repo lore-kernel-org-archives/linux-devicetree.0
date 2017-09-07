@@ -1,240 +1,95 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 2/2] dma: sprd: Add Spreadtrum DMA driver
-Date: Thu, 7 Sep 2017 11:04:34 +0800
-Message-ID: <CAMz4kuJsy7_qWLvVkxxsV+Z4X9ZQe+uar9UG3bWG53yjVPtOBw@mail.gmail.com>
-References: <b7bea49d254da89c43baf2ae02858bf67c59fd1d.1503995645.git.baolin.wang@spreadtrum.com>
- <20e9e7ca9b46eabf48cf3fc68fcb0aae47071dc9.1503995645.git.baolin.wang@spreadtrum.com>
- <20170905042348.GN3053@localhost> <20170905114842.GA24350@spreadtrum.com>
- <20170906162231.GR3053@localhost> <CAMz4kuJ-mhVDYcK2SYBWb6rZ56GNTsKK9c5fSoeOHHzd31xBCQ@mail.gmail.com>
+From: Chen Zhong <chen.zhong@mediatek.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: input: Add document bindings for
+ mtk-pmic-keys
+Date: Thu, 7 Sep 2017 11:05:40 +0800
+Message-ID: <1504753540.9882.15.camel@mhfsdcap03>
+References: <1503642753-12385-1-git-send-email-chen.zhong@mediatek.com>
+         <1503642753-12385-3-git-send-email-chen.zhong@mediatek.com>
+         <20170831195239.b2litxbu7smhkkjl@rob-hp-laptop>
+         <1504318583.15359.12.camel@mhfsdcap03>
+         <CAL_JsqLe3o+iw0Wh=g5Ks93qM1BR1+S04Nv1R3FV17Z3dph1jg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMz4kuJ-mhVDYcK2SYBWb6rZ56GNTsKK9c5fSoeOHHzd31xBCQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLe3o+iw0Wh=g5Ks93qM1BR1+S04Nv1R3FV17Z3dph1jg@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andi Shyti <andi.shyti@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Jaechul Lee <jcsing.lee@samsung.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7 September 2017 at 10:48, Baolin Wang <baolin.wang@linaro.org> wrote:
-> Hi Vinod,
->
-> On 7 September 2017 at 00:22, Vinod Koul <vinod.koul@intel.com> wrote:
->> On Tue, Sep 05, 2017 at 07:48:43PM +0800, Baolin Wang wrote:
->>
->>> > > +/* DMA global registers definition */
->>> > > +#define DMA_GLB_PAUSE                    0x0
->>> > > +#define DMA_GLB_FRAG_WAIT                0x4
->>> > > +#define DMA_GLB_REQ_PEND0_EN             0x8
->>> > > +#define DMA_GLB_REQ_PEND1_EN             0xc
->>> > > +#define DMA_GLB_INT_RAW_STS              0x10
->>> > > +#define DMA_GLB_INT_MSK_STS              0x14
->>> > > +#define DMA_GLB_REQ_STS                  0x18
->>> > > +#define DMA_GLB_CHN_EN_STS               0x1c
->>> > > +#define DMA_GLB_DEBUG_STS                0x20
->>> > > +#define DMA_GLB_ARB_SEL_STS              0x24
->>> > > +#define DMA_GLB_CHN_START_CHN_CFG1       0x28
->>> > > +#define DMA_GLB_CHN_START_CHN_CFG2       0x2c
->>> > > +#define DMA_CHN_LLIST_OFFSET             0x10
->>> > > +#define DMA_GLB_REQ_CID_OFFSET           0x2000
->>> > > +#define DMA_GLB_REQ_CID(uid)             (0x4 * ((uid) - 1))
->>> >
->>> > namespaced properly please, here and rest..
->>>
->>> Could you elaborate which name need to named properly?
->>> I guess DMA_GLB_REQ_CID is not very clear, can I change
->>> to DMA_GLB_REQ_UID(uid) which is used to define the UID
->>> registers?
->>
->> I meant something like:
->>
->> SPRD_DMA_xxxx
->>
->> DMA_GLB is very generic term and might cause collisions in future so lets
->> make these future proof..
->
-> Make sense.
->
->>
->>> > > +static int sprd_dma_enable(struct sprd_dma_dev *sdev)
->>> > > +{
->>> > > + int ret;
->>> > > +
->>> > > + ret = clk_prepare_enable(sdev->clk);
->>> > > + if (ret)
->>> > > +         return ret;
->>> > > +
->>> > > + if (!IS_ERR(sdev->ashb_clk))
->>> >
->>> > that looks odd, can you explain this?
->>>
->>> Since the ashb_clk is optional and only for AGCP DMA controller,
->>> so here we add one condition to check if the ashb_clk need enable.
->>
->> it be worth documenting this..
->
-> OK.
->
->>
->>> > > +static void sprd_dma_free_chan_resources(struct dma_chan *chan)
->>> > > +{
->>> > > + struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
->>> > > + unsigned long flags;
->>> > > +
->>> > > + spin_lock_irqsave(&schan->vc.lock, flags);
->>> > > + sprd_dma_stop(schan);
->>> > > + spin_unlock_irqrestore(&schan->vc.lock, flags);
->>> > > +
->>> > > + vchan_free_chan_resources(&schan->vc);
->>> > > + pm_runtime_put_sync(chan->device->dev);
->>> >
->>> > why put_sync()
->>>
->>> Since we will get pm counter to resume DMA when allocating resources, then
->>> we should put pm counter in sprd_dma_free_chan_resources() to try to suspend
->>> DMA if the pm counter is 0.
->>
->> runtime_pm part is fine, you could have used pm_runtime_put(), why the
->> sync() variant here...
->
-> After checking again, I agree pm_runtime_put() is enough here and I
-> will fix it in next version.
->
->>>
->>> >
->>> > > +static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
->>> > > +                                   dma_cookie_t cookie,
->>> > > +                                   struct dma_tx_state *txstate)
->>> > > +{
->>> > > + struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
->>> > > + unsigned long flags;
->>> > > + enum dma_status ret;
->>> > > +
->>> > > + ret = dma_cookie_status(chan, cookie, txstate);
->>> > > +
->>> > > + spin_lock_irqsave(&schan->vc.lock, flags);
->>> > > + txstate->residue = sprd_dma_get_dst_addr(schan);
->>> >
->>> > I dont think this is correct, the residue needs to be read only for current
->>> > cookie and the query might be for one which is not even submitted
->>>
->>> We have one scenario for our audio driver, the audio driver need to get
->>> the destination address to check if their transfer is done in no irq mode.
->>
->> Yes but for the descriptor requested but not any. Audio maybe working as
->> period count maybe lesser...
+On Tue, 2017-09-05 at 11:05 -0500, Rob Herring wrote:
+> On Fri, Sep 1, 2017 at 9:16 PM, Chen Zhong <chen.zhong@mediatek.com> wrote:
+> > On Thu, 2017-08-31 at 14:52 -0500, Rob Herring wrote:
+> >> On Fri, Aug 25, 2017 at 02:32:30PM +0800, Chen Zhong wrote:
+> >> > This patch adds the device tree binding documentation for the MediaTek
+> >> > pmic keys found on PMIC MT6397/MT6323.
+> >> >
+> >> > Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+> >> > ---
+> >> >  .../devicetree/bindings/input/mtk-pmic-keys.txt    |   38 ++++++++++++++++++++
+> >> >  1 file changed, 38 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+> >> > new file mode 100644
+> >> > index 0000000..100ec44
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+> >> > @@ -0,0 +1,38 @@
+> >> > +MediaTek MT6397/MT6323 PMIC Keys Device Driver
+> >> > +
+> >> > +There are two key functions provided by MT6397/MT6323 PMIC, pwrkey
+> >> > +and homekey. The key functions are defined as the subnode of the function
+> >> > +node provided by MT6397/MT6323 PMIC that is being defined as one kind
+> >> > +of Muti-Function Device (MFD)
+> >> > +
+> >> > +For MT6397/MT6323 MFD bindings see:
+> >> > +Documentation/devicetree/bindings/mfd/mt6397.txt
+> >> > +
+> >> > +Required properties:
+> >> > +- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
+> >> > +- linux,keycodes: Specifies the numeric keycode values to
+> >> > +   be used for reporting keys presses. The array can
+> >> > +   contain up to 2 entries.
+> >> > +
+> >> > +Optional Properties:
+> >> > +- wakeup-source: each key can be used as a wakeup source.
+> >>
+> >> wakeup-source is defined as a boolean.
+> >
+> > Hi Rob,
+> >
+> > Could I modify it as this?
+> >
+> > mediatek,wakeup-keys = <1>, <0>;
+> > wakeup-source;
+> 
+> What do the values and index signify? The power key is index 0 and the
+> value 1 means enable wakeup? Or each value is the raw key (i.e.
+> indexes in linux,keycode) that wakeup is enabled for?
+> 
+> I don't think this should be in DT really. It's really up to the user
+> (i.e. userspace) to decide what keys cause wakeup (or maybe that's
+> only suspend). If you default to the power key causes wakeup, do you
+> really need to support different options?
+> 
+> If we do put this in DT, then it should be a common binding to specify
+> keys that cause wake-up.
+> 
+> Rob
 
-Sorry for missing one comment. I know what is your meaning, now I
-understand the residue needs to be read only for current cookie and I
-will fix this in next version.
+Hi Rob,
 
->>
->>> > > +static int sprd_dma_probe(struct platform_device *pdev)
->>> > > +{
->>> > > + struct device_node *np = pdev->dev.of_node;
->>> > > + struct sprd_dma_dev *sdev;
->>> > > + struct sprd_dma_chn *dma_chn;
->>> > > + struct resource *res;
->>> > > + u32 chn_count;
->>> > > + int ret, i;
->>> > > +
->>> > > + ret = of_property_read_u32(np, "#dma-channels", &chn_count);
->>> > > + if (ret) {
->>> > > +         dev_err(&pdev->dev, "get dma channels count failed\n");
->>> > > +         return ret;
->>> > > + }
->>> > > +
->>> > > + sdev = devm_kzalloc(&pdev->dev, (sizeof(*sdev) +
->>> > > +                     (sizeof(struct sprd_dma_chn) * chn_count)),
->>> > > +                     GFP_KERNEL);
->>> > > + if (!sdev)
->>> > > +         return -ENOMEM;
->>> > > +
->>> > > + sdev->clk = devm_clk_get(&pdev->dev, "enable");
->>> > > + if (IS_ERR(sdev->clk)) {
->>> > > +         dev_err(&pdev->dev, "get enable clock failed\n");
->>> > > +         return PTR_ERR(sdev->clk);
->>> > > + }
->>> > > +
->>> > > + /* ashb clock is optional for AGCP DMA */
->>> > > + sdev->ashb_clk = devm_clk_get(&pdev->dev, "ashb_eb");
->>> > > + if (IS_ERR(sdev->ashb_clk))
->>> > > +         dev_warn(&pdev->dev, "no optional ashb eb clock\n");
->>> > > +
->>> > > + sdev->irq = platform_get_irq(pdev, 0);
->>> > > + if (sdev->irq > 0) {
->>> > > +         ret = devm_request_irq(&pdev->dev, sdev->irq, dma_irq_handle,
->>> > > +                                0, "sprd_dma", (void *)sdev);
->>> >
->>> > so after this your driver should be able to handle the urq, are you ready
->>> > for that, I think not
->>>
->>> We have one no irq mode for audio driver, our DMA driver do not need do handle
->>> the irq, and audio driver can get the destination address to check if their
->>> transfer is done.
->>
->> ?? you are adding interrupt handler!
->
-> Sorry for confusing. This driver is not only for one DMA controller,
-> we can have 3 DMA controllers for different usage, moreover we can
-> have irq mode or no irq mode for different cases, in irq mode the DMA
-> interrupt handler need handle the descriptors when transfer is done.
-> But in no irq mode for our audio driver special case, which is used to
-> save system power without DMA interrupts resume system, in this
-> scenario we do not need complete descriptors by DMA handler.
->
->>
->>> > > +static int sprd_dma_remove(struct platform_device *pdev)
->>> > > +{
->>> > > + struct sprd_dma_dev *sdev = platform_get_drvdata(pdev);
->>> > > + int ret;
->>> > > +
->>> > > + ret = pm_runtime_get_sync(&pdev->dev);
->>> > > + if (ret < 0)
->>> > > +         return ret;
->>> > > +
->>> > > + dma_async_device_unregister(&sdev->dma_dev);
->>> > > + sprd_dma_disable(sdev);
->>> >
->>> > and irq is not freed, how do you guarantee that irqs are not scheduled
->>> > anymore and all tasklets running have completed and cant be further
->>> > scheduled?
->>>
->>> Since we request irq by devm_xxx() API, which means the irq can be freed
->>> automatically when removing the DMA driver.
->>
->> no, thats buggy. you should explictly, a) kill the tasklet b) free irq
->
-> OK.
->
->>
->>> > > +static int __init sprd_dma_init(void)
->>> > > +{
->>> > > + return platform_driver_register(&sprd_dma_driver);
->>> > > +}
->>> > > +arch_initcall_sync(sprd_dma_init);
->>> > > +
->>> > > +static void __exit sprd_dma_exit(void)
->>> > > +{
->>> > > + platform_driver_unregister(&sprd_dma_driver);
->>> > > +}
->>> > > +module_exit(sprd_dma_exit);
->>> >
->>> > module_platform_driver() pls
->>>
->>> Since our SPI will depend on DMA driver, but I will try to set module_init
->>> level.
->>
->> ah okay, i missed that. Btw with defer probe I don't think we should have
->> that issue
->
-> Yes. Will fix that. Thanks for your comments.
->
-> --
-> Baolin.wang
-> Best Regards
+Yes, we want to describe that power key is index 0 and is a wakeup
+source, homekey is index 1 and not a wakeup source.
+
+Since power key and homekey are two real HW keys, customer can decide
+which key to be the wakeup source or both due to their hw design, so we
+put this in DT and can be different for different boards.
+
+Thank you.
+
+Chen
 
 
-
--- 
-Baolin.wang
-Best Regards
