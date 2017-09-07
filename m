@@ -1,322 +1,170 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v4 1/3] arm: npcm: add basic support for Nuvoton BMCs
-Date: Wed, 6 Sep 2017 22:09:05 -0700
-Message-ID: <CAFd5g46fh3unYC8J3CyUg25=3XAbz+U-XC6ON7V9p5Nt0mLKgA@mail.gmail.com>
-References: <20170906080751.6773-1-brendanhiggins@google.com>
- <20170906080751.6773-2-brendanhiggins@google.com> <CAKKbWA4OXL__VWzwRvN_wujDc70zWqmGPcu2_WRpvsSUYba1Qg@mail.gmail.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH 3/3] drm/exynos/gsc: Add rotation hardware limits of
+ gscaler
+Date: Thu, 07 Sep 2017 14:16:13 +0900
+Message-ID: <1e8a7563-046b-82b1-6da9-2e883426edf7@samsung.com>
+References: <1504230476-1878-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170901014758epcas2p13ae73e7dcac72a1a28c9324164efbd6d@epcas2p1.samsung.com>
+ <1504230476-1878-4-git-send-email-hoegeun.kwon@samsung.com>
+ <10747c31-55fc-6464-eb00-99da6d66fca6@samsung.com>
+ <7e628ff8-82be-a295-90fa-8f547a541cb3@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKKbWA4OXL__VWzwRvN_wujDc70zWqmGPcu2_WRpvsSUYba1Qg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Avi Fishman <avifishman70@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, tmaimon77@gmail.com, Rick Altherr <raltherr@google.com>, Florian Fainelli <f.fainelli@gmail.com>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <7e628ff8-82be-a295-90fa-8f547a541cb3@samsung.com>
+Content-language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Inki Dae <inki.dae@samsung.com>, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 6, 2017 at 2:04 PM, Avi Fishman <avifishman70@gmail.com> wrote:
-> Sorry for sending again some mailing list rejected it due to HTML
-> involved (althoug I tried Plain Text), Trying again.
->
-> 2017-09-06 11:07 GMT+03:00 Brendan Higgins <brendanhiggins@google.com>:
->> Adds basic support for the Nuvoton NPCM750 BMC.
->>
->> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->> ---
->>  arch/arm/Kconfig             |  2 +
->>  arch/arm/Makefile            |  1 +
->>  arch/arm/mach-npcm/Kconfig   | 50 +++++++++++++++++++++++++
->>  arch/arm/mach-npcm/Makefile  |  3 ++
->>  arch/arm/mach-npcm/headsmp.S | 17 +++++++++
->>  arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
->>  arch/arm/mach-npcm/platsmp.c | 89 ++++++++++++++++++++++++++++++++++++++++++++
->>  7 files changed, 196 insertions(+)
->>  create mode 100644 arch/arm/mach-npcm/Kconfig
->>  create mode 100644 arch/arm/mach-npcm/Makefile
->>  create mode 100644 arch/arm/mach-npcm/headsmp.S
->>  create mode 100644 arch/arm/mach-npcm/npcm7xx.c
->>  create mode 100644 arch/arm/mach-npcm/platsmp.c
->>
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index 61a0cb15067e..05543f1cfbde 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -782,6 +782,8 @@ source "arch/arm/mach-netx/Kconfig"
->>
->>  source "arch/arm/mach-nomadik/Kconfig"
->>
->> +source "arch/arm/mach-npcm/Kconfig"
->> +
->>  source "arch/arm/mach-nspire/Kconfig"
->>
->>  source "arch/arm/plat-omap/Kconfig"
->> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
->> index 47d3a1ab08d2..60ca50c7d762 100644
->> --- a/arch/arm/Makefile
->> +++ b/arch/arm/Makefile
->> @@ -191,6 +191,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)             += mediatek
->>  machine-$(CONFIG_ARCH_MXS)             += mxs
->>  machine-$(CONFIG_ARCH_NETX)            += netx
->>  machine-$(CONFIG_ARCH_NOMADIK)         += nomadik
->> +machine-$(CONFIG_ARCH_NPCM)            += npcm
->>  machine-$(CONFIG_ARCH_NSPIRE)          += nspire
->>  machine-$(CONFIG_ARCH_OXNAS)           += oxnas
->>  machine-$(CONFIG_ARCH_OMAP1)           += omap1
->> diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
->> new file mode 100644
->> index 000000000000..d47061855439
->> --- /dev/null
->> +++ b/arch/arm/mach-npcm/Kconfig
->> @@ -0,0 +1,50 @@
->> +menuconfig ARCH_NPCM
->> +       bool "Nuvoton NPCM Architecture"
->> +       select ARCH_REQUIRE_GPIOLIB
->> +       select USE_OF
->> +       select PINCTRL
->> +       select PINCTRL_NPCM7XX
->> +
->> +if ARCH_NPCM
->> +
->> +comment "NPCMX50 CPU type"
->> +
->> +config CPU_NPCM750
->> +       depends on ARCH_NPCM && ARCH_MULTI_V7
->> +       bool "Support for NPCM750 BMC CPU (Poleg)"
->> +       select CACHE_L2X0
->> +       select CPU_V7
->> +       select ARM_GIC
->> +       select HAVE_SMP
->> +       select SMP
->> +       select SMP_ON_UP
->> +       select HAVE_ARM_SCU
->> +       select HAVE_ARM_TWD if SMP
->> +       select ARM_ERRATA_458693
->> +       select ARM_ERRATA_720789
->> +       select ARM_ERRATA_742231
->> +       select ARM_ERRATA_754322
->> +       select ARM_ERRATA_764369
->> +       select ARM_ERRATA_794072
->> +       select PL310_ERRATA_588369
->> +       select PL310_ERRATA_727915
->> +       select USB_EHCI_ROOT_HUB_TT
->> +       select USB_ARCH_HAS_HCD
->> +       select USB_ARCH_HAS_EHCI
->> +       select USB_EHCI_HCD
->> +       select USB_ARCH_HAS_OHCI
->> +       select USB_OHCI_HCD
->> +       select USB
->> +       select FIQ
->> +       select CPU_USE_DOMAINS
->> +       select GENERIC_CLOCKEVENTS
->> +       select CLKDEV_LOOKUP
->> +       select COMMON_CLK if OF
->> +       select NPCM750_TIMER
->> +       select MFD_SYSCON
->> +       help
->> +         Support for NPCM750 BMC CPU (Poleg).
->> +
->> +         Nuvoton NPCM750 BMC based on the Cortex A9.
->> +
->> +endif
->> diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
->> new file mode 100644
->> index 000000000000..78416055b854
->> --- /dev/null
->> +++ b/arch/arm/mach-npcm/Makefile
->> @@ -0,0 +1,3 @@
->> +AFLAGS_headsmp.o               += -march=armv7-a
->> +
->> +obj-$(CONFIG_CPU_NPCM750)      += npcm7xx.o platsmp.o headsmp.o
->> diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
->> new file mode 100644
->> index 000000000000..9fccbbd49ed4
->> --- /dev/null
->> +++ b/arch/arm/mach-npcm/headsmp.S
->> @@ -0,0 +1,17 @@
->> +/*
->> + * Copyright 2017 Google, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/linkage.h>
->> +#include <linux/init.h>
->> +#include <asm/assembler.h>
->> +
->> +ENTRY(npcm7xx_secondary_startup)
->> +       safe_svcmode_maskall r0
->
-> I saw you  answered to Florian Fainelli that the BootRom is not
-> starting the secondary CPU in SVC mode. Are you sure? In our
-> engineering npcm7xx revision, Z1, the BootRom indeed started to run it
-> in IRQ mode but we fixed it in the production version, A1, (quite long
-> time ago), I hope you didn't get an EB with Z1 you can check that in
-> BootBlock console print:
->> ADC CLK is set to 25000000
->>Last reset was CORST
->>vgaioen=1 and mux gspi.
->>A1 <<====== this is what you should see, if you see Z1 we need to replace your EB
->
-
-Nope, on boot it prints:
-
->EB
->Board manufacturer: Nuvoton
-
-> CPU CLK is 800000000
-> MC  CLK is 800000000
-
-> ADC CLK is set to 25000000
->Last reset was PORST
->vgaioen=1 and mux gspi.
->A1
->Skip PCI config.
-
-To reproduce, all you have to do is delete
-
->> +       safe_svcmode_maskall r0
-
-and the kernel will warn that the core is not starting in SVC mode
-
->> +
->> +       b       secondary_startup
->> +ENDPROC(npcm7xx_secondary_startup)
->> diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
->> new file mode 100644
->> index 000000000000..132e9d587857
->> --- /dev/null
->> +++ b/arch/arm/mach-npcm/npcm7xx.c
->> @@ -0,0 +1,34 @@
->> +/*
->> + * Copyright (c) 2017 Nuvoton Technology corporation.
->> + * Copyright 2017 Google, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/types.h>
->> +#include <asm/mach/arch.h>
->> +#include <asm/mach-types.h>
->> +#include <asm/mach/map.h>
->> +#include <asm/hardware/cache-l2x0.h>
->> +
->> +#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |                               \
->> +                        L310_AUX_CTRL_DATA_PREFETCH |                         \
->> +                        L310_AUX_CTRL_NS_LOCKDOWN |                           \
->> +                        L310_AUX_CTRL_CACHE_REPLACE_RR |                      \
->> +                        L2C_AUX_CTRL_SHARED_OVERRIDE |                        \
->> +                        L310_AUX_CTRL_FULL_LINE_ZERO)
->> +
->> +static const char *const npcm7xx_dt_match[] = {
->> +       "nuvoton,npcm750",
->> +       NULL
->> +};
->> +
->> +DT_MACHINE_START(NPCM7XX_DT, "NPCMX50 Chip family")
->> +       .atag_offset    = 0x100,
->> +       .dt_compat      = npcm7xx_dt_match,
->> +       .l2c_aux_val    = NPCM7XX_AUX_VAL,
->> +       .l2c_aux_mask   = ~NPCM7XX_AUX_VAL,
->> +MACHINE_END
->> diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
->> new file mode 100644
->> index 000000000000..144e3e7ec7e6
->> --- /dev/null
->> +++ b/arch/arm/mach-npcm/platsmp.c
->> @@ -0,0 +1,89 @@
->> +/*
->> + * Copyright 2017 Google, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#define pr_fmt(fmt) "PLATSMP: " fmt
->> +
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->> +#include <linux/smp.h>
->> +#include <linux/io.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_address.h>
->> +#include <asm/cacheflush.h>
->> +#include <asm/smp.h>
->> +#include <asm/smp_plat.h>
->> +#include <asm/smp_scu.h>
->> +
->> +#define NPCM7XX_SCRPAD_REG 0x13c
->> +
->> +extern void npcm7xx_secondary_startup(void);
->> +
->> +static int npcm7xx_smp_boot_secondary(unsigned int cpu,
->> +                                     struct task_struct *idle)
->> +{
->> +       struct device_node *gcr_np;
->> +       void __iomem *gcr_base;
->> +       int ret = 0;
->> +
->> +       gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
->> +       if (!gcr_np) {
->> +               pr_err("no gcr device node\n");
->> +               ret = -EFAULT;
->> +               goto out;
->> +       }
->> +       gcr_base = of_iomap(gcr_np, 0);
->> +       if (!gcr_base) {
->> +               pr_err("could not iomap gcr at: 0x%llx\n", gcr_base);
->> +               ret = -EFAULT;
->> +               goto out;
->> +       }
->> +
->> +       /* give boot ROM kernel start address. */
->> +       iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
->> +                 NPCM7XX_SCRPAD_REG);
->> +       /* make sure npcm7xx_secondary_startup is seen by all observers. */
->> +       smp_wmb();
->> +       dsb_sev();
->> +       /* make sure write buffer is drained */
->> +       mb();
->> +
->> +out:
->> +       iounmap(gcr_base);
->> +       return ret;
->> +}
->> +
->> +static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
->> +{
->> +       struct device_node *scu_np;
->> +       void __iomem *scu_base;
->> +
->> +       scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
->> +       if (!scu_np) {
->> +               pr_err("no scu device node\n");
->> +               return;
->> +       }
->> +       scu_base = of_iomap(scu_np, 0);
->> +       if (!scu_base) {
->> +               pr_err("could not iomap scu at: 0x%llx\n", scu_base);
->> +               return;
->> +       }
->> +
->> +       scu_enable(scu_base);
->> +
->> +out:
->> +       iounmap(scu_base);
->> +}
->> +
->> +static struct smp_operations npcm7xx_smp_ops __initdata = {
->> +       .smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
->> +       .smp_boot_secondary = npcm7xx_smp_boot_secondary,
->> +};
->> +
->> +CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm7xx-smp", &npcm7xx_smp_ops);
->> --
->> 2.14.1.581.gf28d330327-goog
->>
+T24gMDkvMDQvMjAxNyAwMzoxOSBQTSwgSG9lZ2V1biBLd29uIHdyb3RlOgo+IE9uIDA5LzAxLzIw
+MTcgMDQ6MzEgUE0sIE1hcmVrIFN6eXByb3dza2kgd3JvdGU6Cj4+IEhpIEhvZWdldW4sCj4+Cj4+
+IE9uIDIwMTctMDktMDEgMDM6NDcsIEhvZWdldW4gS3dvbiB3cm90ZToKPj4+IFRoZSBnc2NhbGVy
+IGhhcyBoYXJkd2FyZSByb3RhdGlvbiBsaW1pdHMgdGhhdCBuZWVkIHRvIGJlIGltcG9ydGVkIGZy
+b20KPj4+IGR0cy4gUGFyc2UgdGhlbSBhbmQgYWRkIHRoZW0gdG8gdGhlIHByb3BlcnR5IGxpc3Qu
+Cj4+Pgo+Pj4gVGhlIHJvdGF0aW9uIGhhcmR3YXJlIGxpbWl0cyBhcmUgcmVsYXRlZCB0byB0aGUg
+Y3JvcHBlZCBzb3VyY2Ugc2l6ZS4KPj4+IFdoZW4gc3dhcCBvY2N1cnMsIHVzZSByb3RfbWF4IHNp
+emUgaW5zdGVhZCBvZiBjcm9wX21heCBzaXplLgo+Pj4KPj4+IEFsc28gdGhlIHNjYWxpbmcgbGlt
+aXRzIGFyZSByZWxhdGVkIHRvIHBvc3Qgc2l6ZSwgdXNlIHBvcyBzaXplIHRvCj4+PiBjaGVjayB0
+aGUgbGltaXRzLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IEhvZWdldW4gS3dvbiA8aG9lZ2V1bi5r
+d29uQHNhbXN1bmcuY29tPgo+Pj4gLS0tCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5
+bm9zX2RybV9nc2MuYyB8IDYzIAo+Pj4gKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0t
+Cj4+PiAgIGluY2x1ZGUvdWFwaS9kcm0vZXh5bm9zX2RybS5oICAgICAgICAgICB8ICAyICsrCj4+
+PiAgIDIgZmlsZXMgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygrKSwgMjMgZGVsZXRpb25zKC0pCj4+
+Pgo+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9nc2Mu
+YyAKPj4+IGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2dzYy5jCj4+PiBpbmRl
+eCAwNTA2YjJiLi5kZDliMDU3IDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5v
+cy9leHlub3NfZHJtX2dzYy5jCj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
+c19kcm1fZ3NjLmMKPj4+IEBAIC0xNDAxLDYgKzE0MDEsMjMgQEAgc3RhdGljIGludCBnc2NfaXBw
+ZHJ2X2NoZWNrX3Byb3BlcnR5KHN0cnVjdCAKPj4+IGRldmljZSAqZGV2LAo+Pj4gICAgICAgYm9v
+bCBzd2FwOwo+Pj4gICAgICAgaW50IGk7Cj4+PiAgICsgICAgY29uZmlnID0gJnByb3BlcnR5LT5j
+b25maWdbRVhZTk9TX0RSTV9PUFNfRFNUXTsKPj4+ICsKPj4+ICsgICAgLyogY2hlY2sgZm9yIGRl
+Z3JlZSAqLwo+Pj4gKyAgICBzd2l0Y2ggKGNvbmZpZy0+ZGVncmVlKSB7Cj4+PiArICAgIGNhc2Ug
+RVhZTk9TX0RSTV9ERUdSRUVfOTA6Cj4+PiArICAgIGNhc2UgRVhZTk9TX0RSTV9ERUdSRUVfMjcw
+Ogo+Pj4gKyAgICAgICAgc3dhcCA9IHRydWU7Cj4+PiArICAgICAgICBicmVhazsKPj4+ICsgICAg
+Y2FzZSBFWFlOT1NfRFJNX0RFR1JFRV8wOgo+Pj4gKyAgICBjYXNlIEVYWU5PU19EUk1fREVHUkVF
+XzE4MDoKPj4+ICsgICAgICAgIHN3YXAgPSBmYWxzZTsKPj4+ICsgICAgICAgIGJyZWFrOwo+Pj4g
+KyAgICBkZWZhdWx0Ogo+Pj4gKyAgICAgICAgRFJNX0VSUk9SKCJpbnZhbGlkIGRlZ3JlZS5cbiIp
+Owo+Pj4gKyAgICAgICAgZ290byBlcnJfcHJvcGVydHk7Cj4+PiArICAgIH0KPj4+ICsKPj4+ICAg
+ICAgIGZvcl9lYWNoX2lwcF9vcHMoaSkgewo+Pj4gICAgICAgICAgIGlmICgoaSA9PSBFWFlOT1Nf
+RFJNX09QU19TUkMpICYmCj4+PiAgICAgICAgICAgICAgIChwcm9wZXJ0eS0+Y21kID09IElQUF9D
+TURfV0IpKQo+Pj4gQEAgLTE0MTYsMjEgKzE0MzMsNiBAQCBzdGF0aWMgaW50IGdzY19pcHBkcnZf
+Y2hlY2tfcHJvcGVydHkoc3RydWN0IAo+Pj4gZGV2aWNlICpkZXYsCj4+PiAgICAgICAgICAgICAg
+IGdvdG8gZXJyX3Byb3BlcnR5Owo+Pj4gICAgICAgICAgIH0KPj4+ICAgLSAgICAgICAgLyogY2hl
+Y2sgZm9yIGRlZ3JlZSAqLwo+Pj4gLSAgICAgICAgc3dpdGNoIChjb25maWctPmRlZ3JlZSkgewo+
+Pj4gLSAgICAgICAgY2FzZSBFWFlOT1NfRFJNX0RFR1JFRV85MDoKPj4+IC0gICAgICAgIGNhc2Ug
+RVhZTk9TX0RSTV9ERUdSRUVfMjcwOgo+Pj4gLSAgICAgICAgICAgIHN3YXAgPSB0cnVlOwo+Pj4g
+LSAgICAgICAgICAgIGJyZWFrOwo+Pj4gLSAgICAgICAgY2FzZSBFWFlOT1NfRFJNX0RFR1JFRV8w
+Ogo+Pj4gLSAgICAgICAgY2FzZSBFWFlOT1NfRFJNX0RFR1JFRV8xODA6Cj4+PiAtICAgICAgICAg
+ICAgc3dhcCA9IGZhbHNlOwo+Pj4gLSAgICAgICAgICAgIGJyZWFrOwo+Pj4gLSAgICAgICAgZGVm
+YXVsdDoKPj4+IC0gICAgICAgICAgICBEUk1fRVJST1IoImludmFsaWQgZGVncmVlLlxuIik7Cj4+
+PiAtICAgICAgICAgICAgZ290byBlcnJfcHJvcGVydHk7Cj4+PiAtICAgICAgICB9Cj4+PiAtCj4+
+PiAgICAgICAgICAgLyogY2hlY2sgZm9yIGJ1ZmZlciBib3VuZCAqLwo+Pj4gICAgICAgICAgIGlm
+ICgocG9zLT54ICsgcG9zLT53ID4gc3otPmhzaXplKSB8fAo+Pj4gICAgICAgICAgICAgICAocG9z
+LT55ICsgcG9zLT5oID4gc3otPnZzaXplKSkgewo+Pj4gQEAgLTE0MzgsMjEgKzE0NDAsMjcgQEAg
+c3RhdGljIGludCBnc2NfaXBwZHJ2X2NoZWNrX3Byb3BlcnR5KHN0cnVjdCAKPj4+IGRldmljZSAq
+ZGV2LAo+Pj4gICAgICAgICAgICAgICBnb3RvIGVycl9wcm9wZXJ0eTsKPj4+ICAgICAgICAgICB9
+Cj4+PiAgICsgICAgICAgIC8qCj4+PiArICAgICAgICAgKiBUaGUgcm90YXRpb24gaGFyZHdhcmUg
+bGltaXRzIGFyZSByZWxhdGVkIHRvIHRoZSBjcm9wcGVkCj4+PiArICAgICAgICAgKiBzb3VyY2Ug
+c2l6ZS4gU28gdXNlIHJvdF9tYXggc2l6ZSB0byBjaGVjayB0aGUgbGltaXRzIHdoZW4KPj4+ICsg
+ICAgICAgICAqIHN3YXAgaGFwcGVucy4gQW5kIGFsc28gdGhlIHNjYWxpbmcgbGltaXRzIGFyZSBy
+ZWxhdGVkIHRvIAo+Pj4gcG9zCj4+PiArICAgICAgICAgKiBzaXplLCB1c2UgcG9zIHNpemUgdG8g
+Y2hlY2sgdGhlIGxpbWl0cy4KPj4+ICsgICAgICAgICAqLwo+Pj4gICAgICAgICAgIC8qIGNoZWNr
+IGZvciBjcm9wICovCj4+PiAgICAgICAgICAgaWYgKChpID09IEVYWU5PU19EUk1fT1BTX1NSQykg
+JiYgKHBwLT5jcm9wKSkgewo+Pj4gICAgICAgICAgICAgICBpZiAoc3dhcCkgewo+Pj4gICAgICAg
+ICAgICAgICAgICAgaWYgKChwb3MtPmggPCBwcC0+Y3JvcF9taW4uaHNpemUpIHx8Cj4+PiAtICAg
+ICAgICAgICAgICAgICAgICAoc3otPnZzaXplID4gcHAtPmNyb3BfbWF4LmhzaXplKSB8fAo+Pj4g
+KyAgICAgICAgICAgICAgICAgICAgKHBvcy0+aCA+IHBwLT5yb3RfbWF4LmhzaXplKSB8fAo+Pj4g
+ICAgICAgICAgICAgICAgICAgICAgIChwb3MtPncgPCBwcC0+Y3JvcF9taW4udnNpemUpIHx8Cj4+
+PiAtICAgICAgICAgICAgICAgICAgICAoc3otPmhzaXplID4gcHAtPmNyb3BfbWF4LnZzaXplKSkg
+ewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgKHBvcy0+dyA+IHBwLT5yb3RfbWF4LnZzaXplKSkg
+ewo+Pj4gICAgICAgICAgICAgICAgICAgICAgIERSTV9FUlJPUigib3V0IG9mIGNyb3Agc2l6ZS5c
+biIpOwo+Pj4gICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyX3Byb3BlcnR5Owo+Pj4gICAg
+ICAgICAgICAgICAgICAgfQo+Pj4gICAgICAgICAgICAgICB9IGVsc2Ugewo+Pj4gICAgICAgICAg
+ICAgICAgICAgaWYgKChwb3MtPncgPCBwcC0+Y3JvcF9taW4uaHNpemUpIHx8Cj4+PiAtICAgICAg
+ICAgICAgICAgICAgICAoc3otPmhzaXplID4gcHAtPmNyb3BfbWF4LmhzaXplKSB8fAo+Pj4gKyAg
+ICAgICAgICAgICAgICAgICAgKHBvcy0+dyA+IHBwLT5jcm9wX21heC5oc2l6ZSkgfHwKPj4+ICAg
+ICAgICAgICAgICAgICAgICAgICAocG9zLT5oIDwgcHAtPmNyb3BfbWluLnZzaXplKSB8fAo+Pj4g
+LSAgICAgICAgICAgICAgICAgICAgKHN6LT52c2l6ZSA+IHBwLT5jcm9wX21heC52c2l6ZSkpIHsK
+Pj4+ICsgICAgICAgICAgICAgICAgICAgIChwb3MtPmggPiBwcC0+Y3JvcF9tYXgudnNpemUpKSB7
+Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJvdXQgb2YgY3JvcCBzaXplLlxu
+Iik7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgZ290byBlcnJfcHJvcGVydHk7Cj4+PiAgICAg
+ICAgICAgICAgICAgICB9Cj4+PiBAQCAtMTQ2MywxNyArMTQ3MSwxNyBAQCBzdGF0aWMgaW50IGdz
+Y19pcHBkcnZfY2hlY2tfcHJvcGVydHkoc3RydWN0IAo+Pj4gZGV2aWNlICpkZXYsCj4+PiAgICAg
+ICAgICAgaWYgKChpID09IEVYWU5PU19EUk1fT1BTX0RTVCkgJiYgKHBwLT5zY2FsZSkpIHsKPj4+
+ICAgICAgICAgICAgICAgaWYgKHN3YXApIHsKPj4+ICAgICAgICAgICAgICAgICAgIGlmICgocG9z
+LT5oIDwgcHAtPnNjYWxlX21pbi5oc2l6ZSkgfHwKPj4+IC0gICAgICAgICAgICAgICAgICAgIChz
+ei0+dnNpemUgPiBwcC0+c2NhbGVfbWF4LmhzaXplKSB8fAo+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgKHBvcy0+aCA+IHBwLT5zY2FsZV9tYXguaHNpemUpIHx8Cj4+PiAgICAgICAgICAgICAgICAg
+ICAgICAgKHBvcy0+dyA8IHBwLT5zY2FsZV9taW4udnNpemUpIHx8Cj4+PiAtICAgICAgICAgICAg
+ICAgICAgICAoc3otPmhzaXplID4gcHAtPnNjYWxlX21heC52c2l6ZSkpIHsKPj4+ICsgICAgICAg
+ICAgICAgICAgICAgIChwb3MtPncgPiBwcC0+c2NhbGVfbWF4LnZzaXplKSkgewo+Pj4gICAgICAg
+ICAgICAgICAgICAgICAgIERSTV9FUlJPUigib3V0IG9mIHNjYWxlIHNpemUuXG4iKTsKPj4+ICAg
+ICAgICAgICAgICAgICAgICAgICBnb3RvIGVycl9wcm9wZXJ0eTsKPj4+ICAgICAgICAgICAgICAg
+ICAgIH0KPj4+ICAgICAgICAgICAgICAgfSBlbHNlIHsKPj4+ICAgICAgICAgICAgICAgICAgIGlm
+ICgocG9zLT53IDwgcHAtPnNjYWxlX21pbi5oc2l6ZSkgfHwKPj4+IC0gICAgICAgICAgICAgICAg
+ICAgIChzei0+aHNpemUgPiBwcC0+c2NhbGVfbWF4LmhzaXplKSB8fAo+Pj4gKyAgICAgICAgICAg
+ICAgICAgICAgKHBvcy0+dyA+IHBwLT5zY2FsZV9tYXguaHNpemUpIHx8Cj4+PiAgICAgICAgICAg
+ICAgICAgICAgICAgKHBvcy0+aCA8IHBwLT5zY2FsZV9taW4udnNpemUpIHx8Cj4+PiAtICAgICAg
+ICAgICAgICAgICAgICAoc3otPnZzaXplID4gcHAtPnNjYWxlX21heC52c2l6ZSkpIHsKPj4+ICsg
+ICAgICAgICAgICAgICAgICAgIChwb3MtPmggPiBwcC0+c2NhbGVfbWF4LnZzaXplKSkgewo+Pj4g
+ICAgICAgICAgICAgICAgICAgICAgIERSTV9FUlJPUigib3V0IG9mIHNjYWxlIHNpemUuXG4iKTsK
+Pj4+ICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGVycl9wcm9wZXJ0eTsKPj4+ICAgICAgICAg
+ICAgICAgICAgIH0KPj4+IEBAIC0xNjc2LDYgKzE2ODQsMTUgQEAgc3RhdGljIGludCBnc2NfcHJv
+YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAKPj4+ICpwZGV2KQo+Pj4gICAgICAgICAgICAgICBk
+ZXZfd2FybihkZXYsICJmYWlsZWQgdG8gZ2V0IHN5c3RlbSByZWdpc3Rlci5cbiIpOwo+Pj4gICAg
+ICAgICAgICAgICBjdHgtPnN5c3JlZyA9IE5VTEw7Cj4+PiAgICAgICAgICAgfQo+Pj4gKwo+Pj4g
+KyAgICAgICAgcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCAicm90LW1h
+eC1oc2l6ZSIsCj4+PiArICAgICAgICAgICAgICAgICZjdHgtPmlwcGRydi5wcm9wX2xpc3Qucm90
+X21heC5oc2l6ZSk7Cj4+PiArICAgICAgICByZXQgfD0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2
+LT5vZl9ub2RlLCAicm90LW1heC12c2l6ZSIsCj4+PiArICAgICAgICAgICAgICAgICZjdHgtPmlw
+cGRydi5wcm9wX2xpc3Qucm90X21heC52c2l6ZSk7Cj4+PiArICAgICAgICBpZiAocmV0KSB7Cj4+
+PiArICAgICAgICAgICAgZGV2X2VycihkZXYsICJyb3QtbWF4IHByb3BlcnR5IHNob3VsZCBiZSBw
+cm92aWRlZCBieSAKPj4+IGRldmljZSB0cmVlLlxuIik7Cj4+PiArICAgICAgICAgICAgcmV0dXJu
+IC1FSU5WQUw7Cj4+PiArICAgICAgICB9Cj4+PiAgICAgICB9Cj4+PiAgICAgICAgIC8qIGNsb2Nr
+IGNvbnRyb2wgKi8KPj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvZHJtL2V4eW5vc19kcm0u
+aCAKPj4+IGIvaW5jbHVkZS91YXBpL2RybS9leHlub3NfZHJtLmgKPj4+IGluZGV4IGNiM2U5Zjku
+LmQ1ZDU1MTggMTAwNjQ0Cj4+PiAtLS0gYS9pbmNsdWRlL3VhcGkvZHJtL2V4eW5vc19kcm0uaAo+
+Pj4gKysrIGIvaW5jbHVkZS91YXBpL2RybS9leHlub3NfZHJtLmgKPj4+IEBAIC0xOTIsNiArMTky
+LDcgQEAgZW51bSBkcm1fZXh5bm9zX3BsYW5lciB7Cj4+PiAgICAqIEBjcm9wX21heDogY3JvcCBt
+YXggcmVzb2x1dGlvbi4KPj4+ICAgICogQHNjYWxlX21pbjogc2NhbGUgbWluIHJlc29sdXRpb24u
+Cj4+PiAgICAqIEBzY2FsZV9tYXg6IHNjYWxlIG1heCByZXNvbHV0aW9uLgo+Pj4gKyAqIEByb3Rf
+bWF4OiByb3RhdGlvbiBtYXggcmVzb2x1dGlvbi4KPj4+ICAgICovCj4+PiAgIHN0cnVjdCBkcm1f
+ZXh5bm9zX2lwcF9wcm9wX2xpc3Qgewo+Pj4gICAgICAgX191MzIgICAgdmVyc2lvbjsKPj4+IEBA
+IC0yMTAsNiArMjExLDcgQEAgc3RydWN0IGRybV9leHlub3NfaXBwX3Byb3BfbGlzdCB7Cj4+PiAg
+ICAgICBzdHJ1Y3QgZHJtX2V4eW5vc19zeiAgICBjcm9wX21heDsKPj4+ICAgICAgIHN0cnVjdCBk
+cm1fZXh5bm9zX3N6ICAgIHNjYWxlX21pbjsKPj4+ICAgICAgIHN0cnVjdCBkcm1fZXh5bm9zX3N6
+ICAgIHNjYWxlX21heDsKPj4+ICsgICAgc3RydWN0IGRybV9leHlub3Nfc3ogICAgcm90X21heDsK
+Pj4+ICAgfTsKPj4+ICAgICAvKioKPj4KPj4gSU1PIG1heGltdW0gc3VwcG9ydGVkIHBpY3R1cmUg
+c2l6ZSBzaG91bGQgYmUgaGFyZGNvZGVkIGludG8gZHJpdmVyLCAKPj4gdGhlcmUKPj4gaXMgbm8g
+bmVlZCB0byBhZGQgZGV2aWNlIHRyZWUgcHJvcGVydGllcyBmb3IgdGhhdC4gUGxlYXNlIGFsc28g
+Y2hlY2sgCj4+IHY0bDIKPj4gZHJpdmVyIGZvciBFeHlub3MgR1NDLgo+Pgo+PiBDdXJyZW50bHkg
+aXQgdXNlcyBvbmx5IG9uZSBjb21wYXRpYmxlIC0gImV4eW5vczUtZ3NjIiwgYnV0IGltaG8gWW91
+IAo+PiBzaG91bGQKPj4gc2ltcGx5IHJlcGxhY2UgaXQgd2l0aCAiZXh5bm9zNTI1MC1nc2MiIGFu
+ZCAiZXh5bm9zNTQyMC1nc2MiLCBhbmQgYWRkIAo+PiB0aG9zZQo+PiB2YXJpYW50cyB3aXRoIHBy
+b3BlciBtYXhpbXVtIHN1cHBvcnRlZCBzaXplICgyMDQ3IGFuZCAyMDE2IAo+PiByZXNwZWN0aXZl
+bHkpLgo+Pgo+PiBCZXN0IHJlZ2FyZHMKPgo+IEhpIEtyenlzenRvZiBhbmQgTWFyZWssCj4KPiBU
+aGFua3MgS3J6eXN6dG9mIGFuZCBNYXJlayByZXZpZXdzLgo+Cj4gQXMgTWFyZWsgc2F5cywgcm90
+X21heCBzaXplIHdpbGwgYmUgaGFyZGNvZGVkIGludG8gZHJpdmVyLAo+IHRoZW4gaXQgd2lsbCBu
+b3QgYnJlYWsgdGhlIEFCSS4gQW5kIGFsc28sCj4gSSB3aWxsIGNoZWNrIHRoZSB2NGwyIGRyaXZl
+ciBmb3IgRXh5bm9zIEdTQy4KPgo+IEJlc3QgcmVnYXJkcywKPiBIb2VnZXVuCj4KCkhpIE1hcmVr
+LAoKSSBoYXZlIGNoZWNrZWQgdjRsMiBkcml2ZXIgZm9yIEV4eW5vcyBHU0MuIFRoZSB2NGwyIGRy
+aXZlciBzdXBwb3J0cwpFeHlub3MgNTI1MCBhbmQgNTQzMyBHU0MuIEN1cnJlbnRseSwgdGhlIGhh
+cmR3YXJlIGxpbWl0cyByb3RhdGlvbiBpcwpzZXQgdG8gMjA0NyBpbiB0aGUgdjRsMiBkcml2ZXIu
+CgpJbiBteSBvcGluaW9uIGRvbid0IG5lZWQgdG8gZml4IGl0LCBiZWNhdXNlIHRoZSBFeHlub3Mg
+NTI1MCBoYXMgYQpoYXJkd2FyZSByb3RhdGlvbiBsaW1pdHMgb2YgMjA0OCBhbmQgdGhlIEV4eW5v
+cyA1MjUwIGhhcyBhIGhhcmR3YXJlCnJvdGF0aW9uIGxpbWl0cyBvZiAyMDQ3LgoKUGxlYXNlIHRl
+bGwgbWUgaWYgeW91IGhhdmUgYW55IG90aGVyIG9waW5pb24uCgpCZXN0IHJlZ2FyZHMsCkhvZWdl
+dW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
