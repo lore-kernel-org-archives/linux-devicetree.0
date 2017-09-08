@@ -1,86 +1,73 @@
-Return-Path: <SRS0=IFt6=AT=st.com=fabien.dessenne@kernel.org>
-From: Fabien DESSENNE <fabien.dessenne@st.com>
-Subject: Re: [PATCH 0/3] STM32 CRYP crypto driver
-Date: Mon, 18 Sep 2017 09:20:20 +0000
-Message-ID: <e5c7567c-d839-bd3b-5c5a-eb97725b8039@st.com>
-References: <1499939979-8623-1-git-send-email-fabien.dessenne@st.com>
-In-Reply-To: <1499939979-8623-1-git-send-email-fabien.dessenne@st.com>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_e5c7567cd839bd3b5c5aeb97725b8039stcom_"
+Return-Path: <SRS0=ltBB=AJ=linaro.org=loic.poulain@kernel.org>
 MIME-Version: 1.0
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Benjamin GAIGNARD <benjamin.gaignard@st.com>, Lionel DEBIEVE <lionel.debieve@st.com>, Ludovic BARRE <ludovic.barre@st.com>
+In-Reply-To: <AD664D12-31A5-456B-9971-4A76BDC32BA3@holtmann.org>
+References: <1504699898-28011-1-git-send-email-loic.poulain@linaro.org>
+ <1504699898-28011-3-git-send-email-loic.poulain@linaro.org> <AD664D12-31A5-456B-9971-4A76BDC32BA3@holtmann.org>
+From: Loic Poulain <loic.poulain@linaro.org>
+Date: Fri, 8 Sep 2017 09:04:15 +0200
+Message-ID: <CAMZdPi8gSnS702LadCL7gRKzYbEtOBUZTYUrN1b_1wiycpC1gw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] Bluetooth: btqcomsmd: retrieve BD address from DT property
+Content-Type: multipart/alternative; boundary="94eb2c0867b6be0df30558a831ec"
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Bluez mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
---_000_e5c7567cd839bd3b5c5aeb97725b8039stcom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+--94eb2c0867b6be0df30558a831ec
+Content-Type: text/plain; charset="UTF-8"
 
-SnVzdCBhIGdlbnRsZSBwaW5nIC4uLiBvciBoYXZlIEkgbWlzc2VkIG91dCBvbiBhIHJlcGx5Pw0K
-DQpPbiAxMy8wNy8xNyAxMTo1OSwgRmFiaWVuIERlc3Nlbm5lIHdyb3RlOg0KDQpUaGlzIHNldCBv
-ZiBwYXRjaGVzIGFkZHMgYSBuZXcgY3J5cHRvIGRyaXZlciBmb3IgU1RNaWNyb2VsZWN0cm9uaWNz
-IHN0bTMyIEhXLg0KVGhpcyBkcml2ZXJzIHVzZXMgdGhlIGNyeXB0byBBUEkgYW5kIHByb3ZpZGVz
-IHdpdGggSFctZW5hYmxlZCBBRUFEIGFuZCBibG9jaw0KY2lwaGVyIGFsZ29yaXRobXMuDQpJdCBt
-YWtlcyB1c2Ugb2YgdGhlIGNyeXB0byBlbmdpbmUgd2hpY2ggaXMgdXBncmFkZWQgaW4gb3JkZXIg
-dG8gc3VwcG9ydCBBRUFEDQpyZXF1ZXN0cy4NCg0KVGhpcyBkcml2ZXIgd2FzIHN1Y2Nlc3NmdWxs
-eSB0ZXN0ZWQgd2l0aCB0Y3J5cHQgLyB0ZXN0bWdyLg0KDQpOb3RlOg0KU2luY2UgdHdvIG90aGVy
-IHNldCBvZiBwYXRjaGVzICh1cGRhdGUgb2YgU1RNMzIgQ1JDMzIgYW5kIGFkZGl0aW9uIG9mIFNU
-TTMyDQpIQVNIKSBhcmUgYmVpbmcgcHJvcG9zZWQsIGl0IG1heSBoYXBwZW4gdGhhdCB0aGVyZSBh
-cmUgc29tZSBtaW5vciBjb25mbGljdHMgaW4NCidLY29uZmlnJyBhbmQgJ01ha2VmaWxlJy4gSW4g
-dGhhdCBjYXNlLCBJIHdpbGwgZml4IHRoZSBpc3N1ZSBpbiBkdWUgY291cnNlLg0KDQpGYWJpZW4g
-RGVzc2VubmUgKDMpOg0KICBjcnlwdG86IGVuZ2luZSAtIHBlcm1pdCB0byBlbnF1ZXVlIGFlYWRf
-cmVxdWVzdA0KICBkdC1iaW5kaW5nczogRG9jdW1lbnQgU1RNMzIgQ1JZUCBiaW5kaW5ncw0KICBj
-cnlwdG86IHN0bTMyIC0gU3VwcG9ydCBmb3IgU1RNMzIgQ1JZUCBjcnlwdG8gbW9kdWxlDQoNCiAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9jcnlwdG8vc3Qsc3RtMzItY3J5cC50eHQgICB8ICAgMjAg
-Kw0KIGNyeXB0by9jcnlwdG9fZW5naW5lLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-IDEwMSArDQogZHJpdmVycy9jcnlwdG8vc3RtMzIvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgICA5ICsNCiBkcml2ZXJzL2NyeXB0by9zdG0zMi9NYWtlZmlsZSAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgIDEgKw0KIGRyaXZlcnMvY3J5cHRvL3N0bTMyL3N0bTMyLWNyeXAuYyAgICAg
-ICAgICAgICAgICAgIHwgMTk2MiArKysrKysrKysrKysrKysrKysrKw0KIGluY2x1ZGUvY3J5cHRv
-L2VuZ2luZS5oICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxNiArDQogNiBmaWxlcyBj
-aGFuZ2VkLCAyMTA5IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NyeXB0by9zdCxzdG0zMi1jcnlwLnR4dA0KIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2NyeXB0by9zdG0zMi9zdG0zMi1jcnlwLmMNCg0KDQoNCg==
+Hi Marcel,
 
---_000_e5c7567cd839bd3b5c5aeb97725b8039stcom_
-Content-Type: text/html; charset="utf-8"
-Content-ID: <8FC80D098BFE2844A3DB19ACC1A127B4@st.com>
-Content-Transfer-Encoding: base64
+>
+> > +     /* The local-bd-address property is usually injected by the
+> > +      * bootloader which has access to the allocated BD address.
+> > +      */
+> > +     if (!of_property_read_u8_array(pdev->dev.of_node,
+> "local-bd-address",
+> > +                                    (u8 *)&btq->bdaddr,
+> sizeof(bdaddr_t))) {
+> > +             BT_INFO("BD address %pMR retrieved from device-tree",
+> > +                     &btq->bdaddr);
+> > +     }
+>
+> any reason you are not using bt_dev_info here? I think it would be
+> important to print the device information prefix.
+>
 
-PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
-dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IHRleHQ9IiMwMDAwMDAi
-IGJnY29sb3I9IiNGRkZGRkYiPg0KPHA+PGZvbnQgY29sb3I9IiMwMDc3NzciPkp1c3QgYSBnZW50
-bGUgcGluZyAuLi4gb3IgaGF2ZSBJIG1pc3NlZCBvdXQgb24gYSByZXBseT8gPC9mb250Pg0KPC9w
-Pg0KPGJyPg0KPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAxMy8wNy8xNyAxMTo1OSwg
-RmFiaWVuIERlc3Nlbm5lIHdyb3RlOjxicj4NCjwvZGl2Pg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0
-ZSIgY2l0ZT0ibWlkOjE0OTk5Mzk5NzktODYyMy0xLWdpdC1zZW5kLWVtYWlsLWZhYmllbi5kZXNz
-ZW5uZUBzdC5jb20iPg0KPHByZSB3cmFwPSIiPlRoaXMgc2V0IG9mIHBhdGNoZXMgYWRkcyBhIG5l
-dyBjcnlwdG8gZHJpdmVyIGZvciBTVE1pY3JvZWxlY3Ryb25pY3Mgc3RtMzIgSFcuDQpUaGlzIGRy
-aXZlcnMgdXNlcyB0aGUgY3J5cHRvIEFQSSBhbmQgcHJvdmlkZXMgd2l0aCBIVy1lbmFibGVkIEFF
-QUQgYW5kIGJsb2NrDQpjaXBoZXIgYWxnb3JpdGhtcy4NCkl0IG1ha2VzIHVzZSBvZiB0aGUgY3J5
-cHRvIGVuZ2luZSB3aGljaCBpcyB1cGdyYWRlZCBpbiBvcmRlciB0byBzdXBwb3J0IEFFQUQNCnJl
-cXVlc3RzLg0KDQpUaGlzIGRyaXZlciB3YXMgc3VjY2Vzc2Z1bGx5IHRlc3RlZCB3aXRoIHRjcnlw
-dCAvIHRlc3RtZ3IuDQoNCk5vdGU6DQpTaW5jZSB0d28gb3RoZXIgc2V0IG9mIHBhdGNoZXMgKHVw
-ZGF0ZSBvZiBTVE0zMiBDUkMzMiBhbmQgYWRkaXRpb24gb2YgU1RNMzINCkhBU0gpIGFyZSBiZWlu
-ZyBwcm9wb3NlZCwgaXQgbWF5IGhhcHBlbiB0aGF0IHRoZXJlIGFyZSBzb21lIG1pbm9yIGNvbmZs
-aWN0cyBpbg0KJ0tjb25maWcnIGFuZCAnTWFrZWZpbGUnLiBJbiB0aGF0IGNhc2UsIEkgd2lsbCBm
-aXggdGhlIGlzc3VlIGluIGR1ZSBjb3Vyc2UuDQoNCkZhYmllbiBEZXNzZW5uZSAoMyk6DQogIGNy
-eXB0bzogZW5naW5lIC0gcGVybWl0IHRvIGVucXVldWUgYWVhZF9yZXF1ZXN0DQogIGR0LWJpbmRp
-bmdzOiBEb2N1bWVudCBTVE0zMiBDUllQIGJpbmRpbmdzDQogIGNyeXB0bzogc3RtMzIgLSBTdXBw
-b3J0IGZvciBTVE0zMiBDUllQIGNyeXB0byBtb2R1bGUNCg0KIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2NyeXB0by9zdCxzdG0zMi1jcnlwLnR4dCAgIHwgICAyMCAmIzQzOw0KIGNyeXB0by9jcnlw
-dG9fZW5naW5lLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwMSAmIzQzOw0KIGRy
-aXZlcnMvY3J5cHRvL3N0bTMyL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOSAm
-IzQzOw0KIGRyaXZlcnMvY3J5cHRvL3N0bTMyL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAg
-IHwgICAgMSAmIzQzOw0KIGRyaXZlcnMvY3J5cHRvL3N0bTMyL3N0bTMyLWNyeXAuYyAgICAgICAg
-ICAgICAgICAgIHwgMTk2MiAmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7
-JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYj
-NDM7DQogaW5jbHVkZS9jcnlwdG8vZW5naW5lLmggICAgICAgICAgICAgICAgICAgICAgICAgICAg
-fCAgIDE2ICYjNDM7DQogNiBmaWxlcyBjaGFuZ2VkLCAyMTA5IGluc2VydGlvbnMoJiM0MzspDQog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcnlw
-dG8vc3Qsc3RtMzItY3J5cC50eHQNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jcnlwdG8v
-c3RtMzIvc3RtMzItY3J5cC5jDQoNCjwvcHJlPg0KPC9ibG9ja3F1b3RlPg0KPGJyPg0KPC9ib2R5
-Pg0KPC9odG1sPg0K
+Yes, hdev does not have any allocated name/number before being registered.
+I can move this after hci_register_dev if you prefer.
 
---_000_e5c7567cd839bd3b5c5aeb97725b8039stcom_--
+Regards,
+Loic
+
+--94eb2c0867b6be0df30558a831ec
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Marcel,<br><br><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex">
+&gt;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0/* The local-bd-address property is usually injec=
+ted by the<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 * bootloader which has access to the allocated B=
+D address.<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (!of_property_read_u8_array(<wbr>pdev-&gt;dev.=
+of_node, &quot;local-bd-address&quot;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (u8 *)&amp;btq-&gt=
+;bdaddr, sizeof(bdaddr_t))) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0BT_INFO(&quot;BD addr=
+ess %pMR retrieved from device-tree&quot;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0&amp;btq-&gt;bdaddr);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+<br>
+any reason you are not using bt_dev_info here? I think it would be importan=
+t to print the device information prefix.<span class=3D"gmail-HOEnZb"><font=
+ color=3D"#888888"><br></font></span></blockquote><div><br></div><div>Yes, =
+hdev does not have any allocated name/number before being registered.<br></=
+div><div>I can move this after hci_register_dev if you prefer.<br><br></div=
+><div>Regards,<br></div>Loic</div>
+
+--94eb2c0867b6be0df30558a831ec--
