@@ -1,87 +1,65 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] ARM: dts: bcm283x: Use stdout-path instead of
- console bootarg
-Date: Fri, 8 Sep 2017 11:23:13 -0700
-Message-ID: <9153f30c-adf5-8563-8333-3ff2e2e46dc9@gmail.com>
-References: <1504125721-4760-1-git-send-email-loic.poulain@gmail.com>
- <19D1F3B6-A05B-425B-A06D-AD44EEE39BFE@holtmann.org>
- <874lsdnkk5.fsf@anholt.net>
- <C7897D52-34DE-4EAD-BA79-67ED91929D85@holtmann.org>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 2/2] ARM: dts: keystone-k2g-evm: Add I2C EEPROM DT entry
+Date: Fri, 8 Sep 2017 13:21:42 -0500
+Message-ID: <20170908182142.5274-3-fcooper@ti.com>
+References: <20170908182142.5274-1-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C7897D52-34DE-4EAD-BA79-67ED91929D85-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170908182142.5274-1-fcooper-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2017 11:04 AM, Marcel Holtmann wrote:
-> Hi Eric,
-> 
->>>> Add the serial port config to "chosen/stdout-path".
->>>> Create serial0/1 aliases referring to uart0 ant uart1 paths.
->>>> Remove unneeded earlyprintk.
->>>>
->>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>> arch/arm/boot/dts/bcm283x.dtsi | 7 ++++++-
->>>> 1 file changed, 6 insertions(+), 1 deletion(-)
->>>>
->>>> v2: dt-bindings as separate patch
->>>>    rebase on upcoming pi3 dts changes
->>>> v3: changes in bcm serdev drivers:
->>>>    name refactoring and additional comments
->>>>    Add generic host_set_baudrate method
->>>>    Use agnostic device_property_read
->>>> v4: changes in doc and dts:
->>>>    Add additional params to broadcom bt dt-bindings
->>>>    Set the max baudrate to 2000000 instead of 921600
->>>>    use chosen/stdout-path instead of console=
->>>>    remove useless earlyprintk
->>>>    same changes in bcm283x.dtsi
->>>> v5: remove 1/4 dt-bindings and 4/4 hci_bcm serdev support
->>>>    1/4 and 4/4 merged in bluetooth-next tree
->>>>
->>>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
->>>> index 431dcfc..013431e 100644
->>>> --- a/arch/arm/boot/dts/bcm283x.dtsi
->>>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
->>>> @@ -20,8 +20,13 @@
->>>> 	#address-cells = <1>;
->>>> 	#size-cells = <1>;
->>>>
->>>> +	aliases {
->>>> +		serial0 = &uart0;
->>>> +		serial1 = &uart1;
->>>> +	};
->>>> +
->>>> 	chosen {
->>>> -		bootargs = "earlyprintk console=ttyAMA0";
->>>> +		stdout-path = "serial0:115200n8";
->>>> 	};
->>>
->>> is anybody taking care of these two patches. I do not see them in Linus’ tree yet?
->>
->> arm-soc process unfortunately doesn't accept PRs between rc5 or 6 and
->> the next rc1, so they're still in my TODO pile for when we get -rc1
->> again.
-> 
-> the aliases change is actually fixing a real issue. The RPI 3 has the Bluetooth controller where the older models had the console. Leave the bluetooth { } section out of it, but at least fix the bootargs bug and use stdout-path with the correct aliases. Postponing real fixes like this until next -rc1 is a stupid process.
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 
-Since this is a real fix, what's the proper Fixes: tag for that so it
-can also be backported to -stable trees?
+K2G EVM has an onboard I2C EEPROM connected to I2C0. This patch adds
+the necessary DT entry for the AT24CM01 EEPROM.
 
-Fixes can be submitted pretty much at any time, and having a Fixes: tag
-helps everyone maintaining -stable trees to get that backported where
-appropriate.
+Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Thanks
+diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
+index f462f10..a6ad5fc 100644
+--- a/arch/arm/boot/dts/keystone-k2g-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
+@@ -81,6 +81,14 @@
+ 			K2G_CORE_IOPAD(0x1110) (BUFFER_CLASS_B | PIN_PULLUP | MUX_MODE0)	/* mmc1_cmd.mmc1_cmd */
+ 		>;
+ 	};
++
++	i2c0_pins: pinmux_i2c0_pins {
++		pinctrl-single,pins = <
++			K2G_CORE_IOPAD(0x137c) (BUFFER_CLASS_B | PIN_PULLUP | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
++			K2G_CORE_IOPAD(0x1380) (BUFFER_CLASS_B | PIN_PULLUP | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
++		>;
++	};
++
+ };
+ 
+ &uart0 {
+@@ -112,3 +120,14 @@
+ 	memory-region = <&dsp_common_memory>;
+ 	status = "okay";
+ };
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins>;
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c1024";
++		reg = <0x50>;
++	};
++};
 -- 
-Florian
+2.9.4.dirty
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
