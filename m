@@ -1,111 +1,64 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 6/8] drm/sun4i: tcon: Support backend input mux
-Date: Fri,  8 Sep 2017 15:50:14 +0800
-Message-ID: <20170908075016.18657-7-wens@csie.org>
-References: <20170908075016.18657-1-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170908075016.18657-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 0/8] drm/sun4i: Make both display pipeline work together
+Date: Fri,  8 Sep 2017 15:50:08 +0800
+Message-ID: <20170908075016.18657-1-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The TCON has a mux to select the source of the data to display.
-This mux includes selecting the display backends. On the A31,
-which has two display pipelines, this mux can let the TCON
-select either backend as its data source. Although the muxing
-can be changed on the fly, DRM needs to be able to group a
-bunch of layers such that they get switched to another crtc
-together. This is because the display backend does the layer
-compositing, while the TCON generates the display timings.
-This constraint is not supported by DRM.
-
-Here we simply pair up backends and TCONs with the same ID.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 25 +++++++++++++++++++++++--
- drivers/gpu/drm/sun4i/sun4i_tcon.h |  3 +++
- 2 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index e9ab03f0bf6e..0951e3f0a35e 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -701,6 +701,25 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 	if (ret < 0)
- 		goto err_free_clocks;
- 
-+	if (tcon->quirks->needs_de_be_mux) {
-+		/*
-+		 * We assume there is no dynamic muxing of backends
-+		 * and TCONs, so we select the backend with same ID.
-+		 *
-+		 * While dynamic selection might be interesting, since
-+		 * the CRTC is tied to the TCON, while the layers are
-+		 * tied to the backends, this means, we will need to
-+		 * switch between groups of layers. There might not be
-+		 * a way to represent this constraint in DRM.
-+		 */
-+		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
-+				   SUN4I_TCON0_CTL_SRC_SEL_MASK,
-+				   tcon->id);
-+		regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
-+				   SUN4I_TCON1_CTL_SRC_SEL_MASK,
-+				   tcon->id);
-+	}
-+
- 	list_add_tail(&tcon->list, &drv->tcon_list);
- 
- 	return 0;
-@@ -756,11 +775,13 @@ static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
- };
- 
- static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
--	.has_channel_1	= true,
-+	.has_channel_1		= true,
-+	.needs_de_be_mux	= true,
- };
- 
- static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
--	.has_channel_1	= true,
-+	.has_channel_1		= true,
-+	.needs_de_be_mux	= true,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index 552c88ec16be..5a219d1ccc26 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -37,6 +37,7 @@
- #define SUN4I_TCON0_CTL_TCON_ENABLE			BIT(31)
- #define SUN4I_TCON0_CTL_CLK_DELAY_MASK			GENMASK(8, 4)
- #define SUN4I_TCON0_CTL_CLK_DELAY(delay)		((delay << 4) & SUN4I_TCON0_CTL_CLK_DELAY_MASK)
-+#define SUN4I_TCON0_CTL_SRC_SEL_MASK			GENMASK(2, 0)
- 
- #define SUN4I_TCON0_DCLK_REG			0x44
- #define SUN4I_TCON0_DCLK_GATE_BIT			(31)
-@@ -85,6 +86,7 @@
- #define SUN4I_TCON1_CTL_INTERLACE_ENABLE		BIT(20)
- #define SUN4I_TCON1_CTL_CLK_DELAY_MASK			GENMASK(8, 4)
- #define SUN4I_TCON1_CTL_CLK_DELAY(delay)		((delay << 4) & SUN4I_TCON1_CTL_CLK_DELAY_MASK)
-+#define SUN4I_TCON1_CTL_SRC_SEL_MASK			GENMASK(1, 0)
- 
- #define SUN4I_TCON1_BASIC0_REG			0x94
- #define SUN4I_TCON1_BASIC0_X(width)			((((width) - 1) & 0xfff) << 16)
-@@ -146,6 +148,7 @@
- struct sun4i_tcon_quirks {
- 	bool	has_unknown_mux; /* sun5i has undocumented mux */
- 	bool	has_channel_1;	/* a33 does not have channel 1 */
-+	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
- };
- 
- struct sun4i_tcon {
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgZXZlcnlvbmUsCgpQcmV2aW91c2x5IEkgYWRkZWQgc3VwcG9ydCBmb3IgdHdvIGRpc3BsYXkg
+cGlwZWxpbmVzIGZvciB0aGUgc3VuNGktZHJtCmRyaXZlci4gQXQgdGhlIHRpbWUgd2UgZGlkIG5v
+dCBoYXZlIHN1cHBvcnQgZm9yIGRvd25zdHJlYW0gZW5jb2RlcnMgdG8KYWN0dWFsbHkgdGVzdCB0
+aGUgc2Vjb25kIHBpcGVsaW5lLCBub3IgaGF2aW5nIGJvdGggcGlwZWxpbmVzIGFjdGl2ZSBhdAp0
+aGUgc2FtZSB0aW1lLgoKV2l0aCBIRE1JIGVuY29kZXIgc3VwcG9ydCBub3cgbWVyZ2VkIGFuZCBz
+dXBwb3J0IGZvciBpdCBvbiBzdW42aSBpbgpwcm9ncmVzcywgd2UgYXJlIG5vdyBhYmxlIHRvIHRl
+c3QgYm90aCBwaXBlbGluZXMgYmVpbmcgYWN0aXZlIGF0IHRoZQpzYW1lIHRpbWUsIHdpdGggTENE
+IG91dHB1dCBmcm9tIG9uZSBhbmQgSERNSSBmcm9tIHRoZSBvdGhlci4gVGVzdGluZwpoYXMgcmV2
+ZWFsZWQgc29tZSBtb3JlIGlzc3Vlcywgc3VjaCBhcyBjb21wb25lbnQgcHJvYmluZyBvcmRlci4g
+QWxzbywKd2UgZm91bmQgb3V0IHRoYXQgbXV4aW5nIGJldHdlZW4gdGhlIGRpc3BsYXkgYmFja2Vu
+ZCBhbmQgVENPTiB3YXMKcG9zc2libGUsIGFuZCByZXF1aXJlZCBmb3IgdGhlIHNlY29uZCBwaXBl
+bGluZSB0byB3b3JrIGFzIGludGVuZGVkLgpMYXN0LCB0aGUgbnVtYmVyIG9mIENSVENzIHByb3Zp
+ZGVkIHRvIGRybV92YmxhbmtfaW5pdCBuZWVkcyB0byBiZQppbmNyZWFzZWQgZm9yIHZibGFua3Mg
+dG8gd29yayBwcm9wZXJseS4KClRoaXMgcGF0Y2ggc2VyaWVzIGRvZXMgYSBmZXcgdGhpbmdzOgoK
+ICAtIEZpeCBlbmRwb2ludCBJRHMgc28gdGhleSBjb25mb3JtIHRvIHdoYXQgdGhlIERUIGJpbmRp
+bmcgc3RpcHVsYXRlcy4KCiAgLSBDaGFuZ2UgdGhlIG9yZGVyIHRoZSBpbmRpdmlkdWFsIGNvbXBv
+bmVudHMgYXJlIHF1ZXVlZCB1cC4KCiAgLSBGaXggaG93IHRoZSBUQ09OIGdldHMgaXRzIElEIHdo
+ZW4gdGhlIGJhY2tlbmQtVENPTiBtdXggaXMgcHJlc2VudC4KCiAgLSBTdXBwb3J0IHRoZSBpbnB1
+dCBtdXggaW4gdGhlIFRDT04gKHdoaWNoIHNlbGVjdHMgd2hpY2ggYmFja2VuZCB0bwogICAgdXNl
+IG9uIHRoZSBBMzEvQTMxcykuCgogIC0gRml4IHRoZSBkcm1fdmJsYW5rX2luaXQgY2FsbCBhbmQg
+cGFzcyB0aGUgY29ycmVjdCBudW1iZXIgb2YgY3J0Y3MuCgogIC0gQWRkIHRoZSBjcm9zcyBwaXBl
+bGluZSBjb25uZWN0aW9ucyBiZXR3ZWVuIHRoZSBEUkNzIGFuZCBUQ09OcyBvbgogICAgdGhlIEEz
+MSwgY29uZm9ybWluZyB0byB0aGUgRFQgYmluZGluZyBhbmQgd2hhdCB0aGUgaGFyZHdhcmUgaXMK
+ICAgIGNhcGFibGUgb2YuCgpNb3JlIGRldGFpbHMgYXJlIGF2YWlsYWJsZSBpbiBlYWNoIGluZGl2
+aWR1YWwgY29tbWl0LiBQbGVhc2UgaGF2ZSBhIGxvb2suCgpSZWdhcmRzCkNoZW5ZdQoKCkNoZW4t
+WXUgVHNhaSAoOCk6CiAgQVJNOiBkdHM6IHN1bjZpOiBGaXggZW5kcG9pbnQgSURzIGluIHNlY29u
+ZCBkaXNwbGF5IHBpcGVsaW5lCiAgZHJtL3N1bjRpOiBhZGQgY29tcG9uZW50cyBpbiBicmVhZHRo
+IGZpcnN0IHRyYXZlcnNhbCBvcmRlcgogIGRybS9zdW40aTogdGNvbjogQ2hlY2sgZm9yIG11bHRp
+cGxlIHBhdGhzIGJldHdlZW4gVENPTnMgYW5kIGJhY2tlbmRzCiAgZHJtL3N1bjRpOiB0Y29uOiBn
+ZXQgVENPTiBJRCBhbmQgbWF0Y2hpbmcgZW5naW5lIHdpdGggcmVtb3RlIGVuZHBvaW50CiAgICBJ
+RAogIGRybS9zdW40aTogdGNvbjogU2ltcGxpZnkgc3VuNGlfdGNvbl9maW5kX2VuZ2luZV90cmF2
+ZXJzZSBmb3Igb25lCiAgICBpbnB1dAogIGRybS9zdW40aTogdGNvbjogU3VwcG9ydCBiYWNrZW5k
+IGlucHV0IG11eAogIGRybS9zdW40aTogY2FsbCBkcm1fdmJsYW5rX2luaXQgd2l0aCBjb3JyZWN0
+IG51bWJlciBvZiBjcnRjcwogIEFSTTogZHRzOiBzdW42aTogQWRkIGNyb3NzIHBpcGVsaW5lIGNv
+bm5lY3Rpb25zIGJldHdlZW4gRFJDcyBhbmQgVENPTnMKCiBhcmNoL2FybS9ib290L2R0cy9zdW42
+aS1hMzEuZHRzaSAgIHwgIDMyICsrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9k
+cnYuYyAgfCAgOTEgKysrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
+NGlfdGNvbi5jIHwgMTkxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0KIGRy
+aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmggfCAgIDMgKwogNCBmaWxlcyBjaGFuZ2Vk
+LCAyNzYgaW5zZXJ0aW9ucygrKSwgNDEgZGVsZXRpb25zKC0pCgotLSAKMi4xNC4xCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
