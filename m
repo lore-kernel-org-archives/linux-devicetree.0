@@ -1,76 +1,87 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v4 3/6] irqdomain: move IRQ_DOMAIN_NAME_ALLOCATED define
- to the original position
-Date: Sat, 9 Sep 2017 00:10:36 +0900
-Message-ID: <CAK7LNASbNE9RvMucma=48CDFGQ2L4i=ktqs-fMzgZwWJvdUMMA@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v4 6/6] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Sat, 9 Sep 2017 00:14:45 +0900
+Message-ID: <CAK7LNARwusK2i2mp7LE4AW28oYs81tWxgXG7pgBa-hu=2ZTW7A@mail.gmail.com>
 References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
- <1504784522-26841-4-git-send-email-yamada.masahiro@socionext.com> <92500143-814b-b255-bb7b-c36d5eca5457@arm.com>
+ <1504784522-26841-7-git-send-email-yamada.masahiro@socionext.com> <CAL_Jsq+Da1=myQGEpA_0f+dEU0Rk6RB3BJHVCzq0M0MyJ3UDoQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <92500143-814b-b255-bb7b-c36d5eca5457@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, David Daney <david.daney@cavium.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+Da1=myQGEpA_0f+dEU0Rk6RB3BJHVCzq0M0MyJ3UDoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-09-07 21:04 GMT+09:00 Marc Zyngier <marc.zyngier@arm.com>:
-> On 07/09/17 12:41, Masahiro Yamada wrote:
->> Commit 6a6544e520ab ("genirq/irqdomain: Remove auto-recursive hierarchy
->> support") not only deleted IRQ_DOMAIN_FLAG_AUTO_RECURSIVE, but also
->> moved IRQ_DOMAIN_NAME_ALLOCATED up.
+Hi Rob,
+
+
+2017-09-08 4:41 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Thu, Sep 7, 2017 at 6:42 AM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> This GPIO controller device is used on UniPhier SoCs.
 >>
->> Get it back to the original position to sort the enum by the bit shift.
+>> It also serves as an interrupt controller, but interrupt signals are
+>> just delivered to the parent irqchip without any latching or OR'ing.
+>> This is implemented by using hierarchy IRQ domain.
 >>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> Implementation note:
+>> Unfortunately, the IRQ mapping from this controller to the parent is
+>> random. (48, 49, ..., 63, 154, 155, ...)
+>> If "interrupts" property is used, IRQ resources may be statically
+>> allocated when platform devices are populated from DT.  This can be
+>> a problem for the hierarchy IRQ domain because IRQ allocation must
+>> happen from the outer-most domain up to the root domain in order to
+>> build up the stacked IRQ.  (https://lkml.org/lkml/2017/7/6/758)
+>> Solutions to work around it could be to hard-code parent hwirqs or
+>> to invent a driver-specific DT property.
+>>
+>> Here, the new API irq_domain_push_irq() was merged by v4.14-rc1.
+>> It allows to add irq_data to the existing hierarchy.  It will help
+>> to make this driver work whether the parent has already initialized
+>> the hierarchy or not.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 >> ---
 >>
 >> Changes in v4:
->>   - Newly added
+>>   - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
+>>   - Reimplement irqchip part by using irq_domain_push_irq()
 >>
+>> Changes in v3:
+>>   - Add .irq_set_affinity() hook
+>>   - Use irq_domain_create_hierarchy() instead of legacy
+>>     irq_domain_add_hierarchy()
 >>
->>  include/linux/irqdomain.h | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
+>> Changes in v2:
+>>   - Remove +32 offset for parent interrupts to follow the GIC
+>>     binding convention
+>>   - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
+>>   - Allocate gpio_chip statically because just one instance is
+>>     supported
+>>   - Fix suspend and resume hooks
 >>
->> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
->> index 81e4889..31be32d 100644
->> --- a/include/linux/irqdomain.h
->> +++ b/include/linux/irqdomain.h
->> @@ -180,9 +180,6 @@ enum {
->>       /* Irq domain is hierarchical */
->>       IRQ_DOMAIN_FLAG_HIERARCHY       = (1 << 0),
->>
->> -     /* Irq domain name was allocated in __irq_domain_add() */
->> -     IRQ_DOMAIN_NAME_ALLOCATED       = (1 << 6),
->> -
->>       /* Irq domain is an IPI domain with virq per cpu */
->>       IRQ_DOMAIN_FLAG_IPI_PER_CPU     = (1 << 2),
->>
->> @@ -195,6 +192,9 @@ enum {
->>       /* Irq domain implements MSI remapping */
->>       IRQ_DOMAIN_FLAG_MSI_REMAP       = (1 << 5),
->>
->> +     /* Irq domain name was allocated in __irq_domain_add() */
->> +     IRQ_DOMAIN_NAME_ALLOCATED       = (1 << 6),
->> +
+>>  .../devicetree/bindings/gpio/gpio-uniphier.txt     |  43 ++
 >
-> The right fix would be to leave it where it is, but to actually fix the
-> shift, which is what I should have done the first place.
+> What happened to my ack? One line here more that before, but I'm not
+> going to diff your patches for you.
+
+I changed the binding for this version.
+It includes a new one you have not acked yet.
+
+Maybe I was too worried about it.
 
 
-You are definitely right.
+> BTW, it is preferred to split bindings to a separate patch.
 
-At first, I missed the fact that (1 << 6) was already used,
-then I assigned the same value to my new flag.
-
-So, I tried to fix the list before adding my new one.
-
-
-Without 5/6, I do not have a good reason to
-push this cosmetic patch only.
+I will do so next time.
 
 
 
 -- 
 Best Regards
 Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
