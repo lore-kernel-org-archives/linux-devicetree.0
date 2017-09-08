@@ -1,87 +1,47 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v4 6/6] gpio: uniphier: add UniPhier GPIO controller driver
-Date: Sat, 9 Sep 2017 00:14:45 +0900
-Message-ID: <CAK7LNARwusK2i2mp7LE4AW28oYs81tWxgXG7pgBa-hu=2ZTW7A@mail.gmail.com>
-References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
- <1504784522-26841-7-git-send-email-yamada.masahiro@socionext.com> <CAL_Jsq+Da1=myQGEpA_0f+dEU0Rk6RB3BJHVCzq0M0MyJ3UDoQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+Da1=myQGEpA_0f+dEU0Rk6RB3BJHVCzq0M0MyJ3UDoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] Bluetooth: btqcomsmd: retrieve BD address from DT
+ property
+Date: Fri, 8 Sep 2017 17:31:14 +0200
+Message-ID: <AA9FCC78-BFEC-4944-B91F-DCDE6F455DBB@holtmann.org>
+References: <1504879075-587-1-git-send-email-loic.poulain@linaro.org>
+ <1504879075-587-3-git-send-email-loic.poulain@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504879075-587-3-git-send-email-loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bluez mailing list <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Loic,
 
+> Retrieve BD address from the local-bd-address property.
+> This address must be unique and is usually added in the DT
+> by the bootloader which has access to the provisioned data.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> v2: Set device as unconfigured if default address detected
+>     Add warning if BD addr retrieved from DT
+> v3: if no addr retrieved from DT, unconditionally set
+>     the invalid BD addr flag.
+>     swap and set bdaddr in the platform probe
+> v4: Add dt-bindings documentation
+>     split patch in two parts (setup, dt prop)
+>     use local-bd-address name instead of local-mac-address
+> v5: remove 2/3 merged in bluetooth-next tree
+>     Add bluetooth.txt for common BT bindings
+>     expect local-bd-address in little-endian format
+> v6: use of_property_read_u8_array instead of of_get_property
+> v7: use dev_info instead of BT_INFO to have dev context
+> 
+> drivers/bluetooth/btqcomsmd.c | 11 +++++++++++
+> 1 file changed, 11 insertions(+)
 
-2017-09-08 4:41 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Thu, Sep 7, 2017 at 6:42 AM, Masahiro Yamada
-> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->> This GPIO controller device is used on UniPhier SoCs.
->>
->> It also serves as an interrupt controller, but interrupt signals are
->> just delivered to the parent irqchip without any latching or OR'ing.
->> This is implemented by using hierarchy IRQ domain.
->>
->> Implementation note:
->> Unfortunately, the IRQ mapping from this controller to the parent is
->> random. (48, 49, ..., 63, 154, 155, ...)
->> If "interrupts" property is used, IRQ resources may be statically
->> allocated when platform devices are populated from DT.  This can be
->> a problem for the hierarchy IRQ domain because IRQ allocation must
->> happen from the outer-most domain up to the root domain in order to
->> build up the stacked IRQ.  (https://lkml.org/lkml/2017/7/6/758)
->> Solutions to work around it could be to hard-code parent hwirqs or
->> to invent a driver-specific DT property.
->>
->> Here, the new API irq_domain_push_irq() was merged by v4.14-rc1.
->> It allows to add irq_data to the existing hierarchy.  It will help
->> to make this driver work whether the parent has already initialized
->> the hierarchy or not.
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->> ---
->>
->> Changes in v4:
->>   - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
->>   - Reimplement irqchip part by using irq_domain_push_irq()
->>
->> Changes in v3:
->>   - Add .irq_set_affinity() hook
->>   - Use irq_domain_create_hierarchy() instead of legacy
->>     irq_domain_add_hierarchy()
->>
->> Changes in v2:
->>   - Remove +32 offset for parent interrupts to follow the GIC
->>     binding convention
->>   - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
->>   - Allocate gpio_chip statically because just one instance is
->>     supported
->>   - Fix suspend and resume hooks
->>
->>  .../devicetree/bindings/gpio/gpio-uniphier.txt     |  43 ++
->
-> What happened to my ack? One line here more that before, but I'm not
-> going to diff your patches for you.
+all 3 patches have been applied to bluetooth-next tree.
 
-I changed the binding for this version.
-It includes a new one you have not acked yet.
+Regards
 
-Maybe I was too worried about it.
-
-
-> BTW, it is preferred to split bindings to a separate patch.
-
-I will do so next time.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Marcel
