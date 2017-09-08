@@ -1,44 +1,82 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: h3: Fix Pincrtl
- bindings on Bananapi M2 Plus
-Date: Fri, 8 Sep 2017 15:26:07 +0200
-Message-ID: <20170908132607.rr3r7se23ixg7wqn@flea.lan>
-References: <1504643656-4926-1-git-send-email-embed3d@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v5 10/10] net: stmmac: dwmac-sun8i: Handle
+ integrated/external MDIOs
+Date: Fri, 8 Sep 2017 15:26:32 +0200
+Message-ID: <20170908132632.GA3037@Red>
+References: <20170908071156.5115-1-clabbe.montjoie@gmail.com>
+ <20170908071156.5115-11-clabbe.montjoie@gmail.com>
+ <20170908130520.GA11248@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xfikk45c7phvflpz"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4FUZLGQKGQEEXG75VA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1504643656-4926-1-git-send-email-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170908130520.GA11248@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---xfikk45c7phvflpz
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Sep 05, 2017 at 10:34:16PM +0200, Philipp Rossak wrote:
-> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Fri, Sep 08, 2017 at 03:05:20PM +0200, Andrew Lunn wrote:
+> > +#define DWMAC_sUN8I_MDIO_MUX_INTERNAL_ID	0
+> > +#define DWMAC_sUN8I_MDIO_MUX_EXTERNAL_ID	1
+> >  
+> >  /* H3/A64 specific bits */
+> >  #define SYSCON_RMII_EN		BIT(13) /* 1: enable RMII (overrides EPIT) */
+> > @@ -634,6 +639,76 @@ static int sun8i_dwmac_reset(struct stmmac_priv *priv)
+> >  	return 0;
+> >  }
+> >  
+> > +/* MDIO multiplexing switch function
+> > + * This function is called by the mdio-mux layer when it thinks the mdio bus
+> > + * multiplexer needs to switch.
+> > + * 'current_child' is the current value of the mux register
+> > + * 'desired_child' is the value of the 'reg' property of the target child MDIO
+> > + * node.
+> > + * The first time this function is called, current_child == -1.
+> > + * If current_child == desired_child, then the mux is already set to the
+> > + * correct bus.
+> > + *
+> > + * Note that we do not use reg/mask like mdio-mux-mmioreg because we need to
+> > + * know easily which bus is used (reset must be done only for desired bus).
+> > + */
+> > +static int mdio_mux_syscon_switch_fn(int current_child, int desired_child,
+> > +				     void *data)
+> > +{
+> > +	struct stmmac_priv *priv = data;
+> > +	struct sunxi_priv_data *gmac = priv->plat->bsp_priv;
+> > +	u32 reg, val;
+> > +	int ret = 0;
+> > +	bool need_reset = false;
+> > +
+> > +	if (current_child ^ desired_child) {
+> > +		regmap_read(gmac->regmap, SYSCON_EMAC_REG, &reg);
+> > +		switch (desired_child) {
+> > +		case DWMAC_sUN8I_MDIO_MUX_INTERNAL_ID:
+> > +			dev_info(priv->device, "Switch mux to internal PHY");
+> > +			val = (reg & ~H3_EPHY_MUX_MASK) | H3_EPHY_SELECT;
+> > +			if (gmac->use_internal_phy)
+> > +				need_reset = true;
+> > +			break;
 > 
-> There is no need for pincontrol nodes when the pin is set to a GPIO
+> This i don't get. Why do you need use_internal_phy? Isn't that
+> implicit from DWMAC_sUN8I_MDIO_MUX_INTERNAL_ID? Is it even possible to
+> use an external PHY on the internal MDIO bus?
 > 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Applied, thanks!
-Maxime
+On my H3 box with external PHY, the MDIO mux library first select (for scan ?) the internal MDIO.
+Without use_internal_phy usage, this board will launch a reset to use the internal MDIO... and this reset timeout/fail.
+After the MDIO mux select the external MDIO.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---xfikk45c7phvflpz--
+> > +		case DWMAC_sUN8I_MDIO_MUX_EXTERNAL_ID:
+> > +			dev_info(priv->device, "Switch mux to external PHY");
+> > +			val = (reg & ~H3_EPHY_MUX_MASK) | H3_EPHY_SHUTDOWN;
+> > +			if (!gmac->use_internal_phy)
+> > +				need_reset = true;
+> > +			break;
+> 
+> And is it possible to use the internal PHY on the external bus?
+> 
+
+I need to check that.
+
+Regards
