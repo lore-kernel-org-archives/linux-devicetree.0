@@ -1,90 +1,40 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 8/8] ARM: dts: sun6i: Add cross pipeline connections between DRCs and TCONs
-Date: Fri,  8 Sep 2017 15:50:16 +0800
-Message-ID: <20170908075016.18657-9-wens@csie.org>
-References: <20170908075016.18657-1-wens@csie.org>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH] dt-bindings: qspi: Add r8a7743/5 to the compatible list
+Date: Fri,  8 Sep 2017 09:07:15 +0100
+Message-ID: <1504858035-3568-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170908075016.18657-1-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The TCONs on A31/A31s can select either backend as its input. As there
-is no configurable mux in the backend or DRC to redirect their output,
-or for the DRC to select an input, the connections are presumably from
-the each DRC to each TCON, with the TCON having two input ports, like
-the following diagram:
-
-	Backend 0  -------  DRC 0  ------- [0]  TCON 0
-				   --   -- [1]
-                                     \ /
-				      X
-				     / \
-				   --   -- [0]
-	Backend 1  -------  DRC 1  ------- [1]  TCON 1
-
-Add these connection endpoints to the device tree.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ Documentation/devicetree/bindings/spi/spi-rspi.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 00a4c7614e0a..93209cda28db 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -278,6 +278,11 @@
- 						reg = <0>;
- 						remote-endpoint = <&drc0_out_tcon0>;
- 					};
-+
-+					tcon0_in_drc1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&drc1_out_tcon0>;
-+					};
- 				};
- 
- 				tcon0_out: port@1 {
-@@ -311,6 +316,11 @@
- 					#size-cells = <0>;
- 					reg = <0>;
- 
-+					tcon1_in_drc0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&drc0_out_tcon1>;
-+					};
-+
- 					tcon1_in_drc1: endpoint@1 {
- 						reg = <1>;
- 						remote-endpoint = <&drc1_out_tcon1>;
-@@ -1079,6 +1089,11 @@
- 					#size-cells = <0>;
- 					reg = <1>;
- 
-+					drc1_out_tcon0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&tcon0_in_drc1>;
-+					};
-+
- 					drc1_out_tcon1: endpoint@1 {
- 						reg = <1>;
- 						remote-endpoint = <&tcon1_in_drc1>;
-@@ -1170,6 +1185,11 @@
- 						reg = <0>;
- 						remote-endpoint = <&tcon0_in_drc0>;
- 					};
-+
-+					drc0_out_tcon1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&tcon1_in_drc0>;
-+					};
- 				};
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+index 8f4169f..3b02b3a 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+@@ -5,11 +5,14 @@ Required properties:
+ 		     "renesas,rspi-<soctype>", "renesas,rspi" as fallback.
+ 		     For Renesas Serial Peripheral Interface on RZ/A1H:
+ 		     "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
+-		     For Quad Serial Peripheral Interface on R-Car Gen2:
++		     For Quad Serial Peripheral Interface on R-Car Gen2 and
++		     RZ/G1 devices:
+ 		     "renesas,qspi-<soctype>", "renesas,qspi" as fallback.
+ 		     Examples with soctypes are:
+ 		        - "renesas,rspi-sh7757" (SH)
+ 			- "renesas,rspi-r7s72100" (RZ/A1H)
++			- "renesas,qspi-r8a7743" (RZ/G1M)
++			- "renesas,qspi-r8a7745" (RZ/G1E)
+ 			- "renesas,qspi-r8a7790" (R-Car H2)
+ 			- "renesas,qspi-r8a7791" (R-Car M2-W)
+ 			- "renesas,qspi-r8a7792" (R-Car V2H)
 -- 
-2.14.1
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
