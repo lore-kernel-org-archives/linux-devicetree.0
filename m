@@ -1,103 +1,91 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v9 23/24] dt: bindings: smiapp: Document lens-focus and
- flash properties
-Date: Fri, 8 Sep 2017 23:45:44 +0200
-Message-ID: <20170908214544.GB27428@amd>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
- <20170908131822.31020-19-sakari.ailus@linux.intel.com>
- <20170908133652.GR18365@amd>
- <20170908134226.m5ts637dej7oa4jw@valkosipuli.retiisi.org.uk>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: stratix10: add ethernet/sdmmc support to
+ the S10 devkit
+Date: Fri, 8 Sep 2017 15:30:32 -0700
+Message-ID: <4e289c38-bf04-6d07-5e72-f543b0f4cb0f@gmail.com>
+References: <1504885734-9618-1-git-send-email-dinguyen@kernel.org>
+ <1504885734-9618-2-git-send-email-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170908134226.m5ts637dej7oa4jw@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504885734-9618-2-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/08/2017 08:48 AM, Dinh Nguyen wrote:
+> Enable ethernet and sdmmc support on the Stratix10 devkit.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> index 41ea2db..ae0e8f3 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> @@ -34,6 +34,42 @@
+>  	};
+>  };
+>  
+> +&gmac0 {
+> +	phy-mode = "rgmii";
+> +	phy-addr = <0xffffffff>; /* probe for phy addr */
 
---0ntfKIWw70PvrIHh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is a deprecated property for stmmac, just use the correct PHY
+address and use a phy-handle property to connect to it, along with a
+proper mdio subnode to indicate it is connecting to the stmmac MDIO bus.
 
-On Fri 2017-09-08 16:42:26, Sakari Ailus wrote:
-> Hi Pavel,
->=20
-> On Fri, Sep 08, 2017 at 03:36:52PM +0200, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > Document optional lens-focus and flash properties for the smiapp driv=
-er.
-> > >=20
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.t=
-xt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-> > > index 855e1faf73e2..a052969365d9 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-> > > @@ -27,6 +27,8 @@ Optional properties
-> > >  - nokia,nvm-size: The size of the NVM, in bytes. If the size is not =
-given,
-> > >    the NVM contents will not be read.
-> > >  - reset-gpios: XSHUTDOWN GPIO
-> > > +- flash-leds: One or more phandles to refer to flash LEDs
-> > > +- lens-focus: Phandle for lens focus
-> >=20
-> > Should we simply reference the generic documentation here? If it needs
-> > changing, it will be easier changing single place.
->=20
-> Good question.
->=20
-> Ideally the properties at least would never change; we do have a common
-> parser for the properties which is part of the patchset so in theory it
-> would be possible to change the documentation in a backward-compatible wa=
-y.
->=20
-> I added these properties as well as all the other properties supported by
-> the sensor driver are documented here. That has been the practice AFAIU,
-> albeit omissions do happen occasionally.
->=20
-> The issue I see with omitting the documentation here is that the user
-> otherwise won't know whether a driver uses a given property or not: it
-> shouldn't be necessary to read driver code to write DT source.
+> +
+> +	/*
+> +	 * These skews assume the user's FPGA design is adding 600ps of delay
+> +	 * for TX_CLK on Arria 10.
+> +	 *
+> +	 * All skews are offset since hardware skew values for the ksz9031
+> +	 * range from a negative skew to a positive skew.
+> +	 * See the micrel-ksz90x1.txt Documentation file for details.
+> +	*/
+> +	txd0-skew-ps = <0>; /* -420ps */
+> +	txd1-skew-ps = <0>; /* -420ps */
+> +	txd2-skew-ps = <0>; /* -420ps */
+> +	txd3-skew-ps = <0>; /* -420ps */
+> +	rxd0-skew-ps = <420>; /* 0ps */
+> +	rxd1-skew-ps = <420>; /* 0ps */
+> +	rxd2-skew-ps = <420>; /* 0ps */
+> +	rxd3-skew-ps = <420>; /* 0ps */
+> +	txen-skew-ps = <0>; /* -420ps */
+> +	txc-skew-ps = <1860>; /* 960ps */
+> +	rxdv-skew-ps = <420>; /* 0ps */
+> +	rxc-skew-ps = <1680>; /* 780ps */
 
-I see... OTOH documentation in central place _is_ a bit more verbose:
+These are all PHY properties, and the driver and binding now recommend
+using them as such, can you move that to the PHY node instead?
 
-+- flash-leds: An array of phandles, each referring to a flash LED, a sub-n=
-ode
-+  of the LED driver device node.
+> +	max-frame-size = <3800>;
+> +	status = "okay";
+> +};
+> +
+> +&mmc {
+> +	status = "okay";
+> +	num-slots = <1>;
+> +	cap-sd-highspeed;
+> +	broken-cd;
+> +	bus-width = <4>;
+> +};
+> +
+>  &uart0 {
+>  	status = "okay";
+>  };
+> 
 
-What about:
 
-flash-leds, lens-focus: see <reference to central place>
-
-?
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---0ntfKIWw70PvrIHh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlmzD4gACgkQMOfwapXb+vJg3gCdFHDoYN/4wdVf9lsg2ODFOle7
-EhgAmwevFhan9WjuQkPNYZxXby0dOGP1
-=AHq7
------END PGP SIGNATURE-----
-
---0ntfKIWw70PvrIHh--
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
