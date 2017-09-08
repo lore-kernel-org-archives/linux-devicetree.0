@@ -1,37 +1,53 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v2 0/2] ARM: dts: keystone-k2g-evm: Add USB nodes and enable
- USB on K2G EVM
-Date: Fri, 8 Sep 2017 13:41:30 -0500
-Message-ID: <20170908184132.6155-1-fcooper@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rogerq@ti.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARC: HSDK: DTS: Temporary fix of sdio ciu frequency
+Date: Fri,  8 Sep 2017 21:42:33 +0300
+Message-ID: <20170908184233.1779-1-Eugeniy.Paltsev@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add USB nodes to 66AK2G dtsi. Also enable the two USB nodes that are on
-the K2G EVM.
+DW sdio controller has external ciu clock devider controlled via
+register in SDIO IP. Due to its unexpected default value
+(it should devide by 1 but it devides by 8)
+SDIO IP uses wrong ciu clock and works unstable (see STAR 9001204800)
 
-Roger Quadros (1):
-  ARM: dts: k2g-evm: Enable USB 0 and 1
+So add temporary fix and change clock frequency from 100000000
+to 12500000 Hz until we fix dw sdio driver itself.
 
-Vitaly Andrianov (1):
-  ARM: dts: k2g: Add USB instances
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ arch/arc/boot/dts/hsdk.dts | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
- arch/arm/boot/dts/keystone-k2g-evm.dts | 26 ++++++++++++++++
- arch/arm/boot/dts/keystone-k2g.dtsi    | 56 ++++++++++++++++++++++++++++++++++
- 2 files changed, 82 insertions(+)
-
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 8412669..b922f3f 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -127,7 +127,17 @@
+ 
+ 		mmcclk_ciu: mmcclk-ciu {
+ 			compatible = "fixed-clock";
+-			clock-frequency = <100000000>;
++			/*
++			 * DW sdio controller has external ciu clock divider
++			 * controlled via register in SDIO IP. Due to its
++			 * unexpected default value (it should devide by 1
++			 * but it devides by 8) SDIO IP uses wrong clock and
++			 * works unstable (see STAR 9001204800)
++			 * So add temporary fix and change clock frequency
++			 * from 100000000 to 12500000 Hz until we fix dw sdio
++			 * driver itself.
++			 */
++			clock-frequency = <12500000>;
+ 			#clock-cells = <0>;
+ 		};
+ 
 -- 
-2.9.4.dirty
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
