@@ -1,49 +1,38 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v3 2/2] dt-bindings: i2c: i2c-davinci: Update binding for 66AK2Gx pwr dm property
-Date: Fri, 8 Sep 2017 12:54:48 -0500
-Message-ID: <20170908175448.3367-3-fcooper@ti.com>
-References: <20170908175448.3367-1-fcooper@ti.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
+ copying _shipped files
+Date: Fri, 8 Sep 2017 11:01:08 -0700
+Message-ID: <CA+55aFzZNpuYjVa4EZ2eJhvtU7-bzZTor_596TA5_CY77j+BEw@mail.gmail.com>
+References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
+ <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
+ <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug@mail.gmail.com>
+ <CAK7LNATaisd3tPNbujTWLUq-2sMQ3pyTkPRSgjw00zUzv=GvSQ@mail.gmail.com> <CA+55aFwvaZSXubcmaaZD-i5c_F5bHWhr6OBxRM+=7dGueua0Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170908175448.3367-1-fcooper@ti.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, linux@armlinux.org.uk, nsekhar@ti.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com, vigneshr@ti.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <CA+55aFwvaZSXubcmaaZD-i5c_F5bHWhr6OBxRM+=7dGueua0Ng@mail.gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>, Michal Marek <mmarek@suse.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Richard Purdie <richard.purdie@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Markus Heiser <markus.heiser@darmarit.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, SeongJae Park <sj38.park@gmail.com>, "Yann E. MORIN" <yann.morin.1>
 List-Id: devicetree@vger.kernel.org
 
-Add pm-domains property which is required for 66AK2Gx. Also document 66AK2G
-unique clocks property usage.
+On Fri, Sep 8, 2017 at 10:22 AM, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Of course, I only did a "make allmodconfig" to test the MODVERSIONS
+> case, I didn't actually install the modules. Is that error perhaps
+> only detected at install time?
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Sekhar Nori <nsekhar@ti.com>
----
- Documentation/devicetree/bindings/i2c/i2c-davinci.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Oh, I take that back. I just got a ton of warnings with my
+allmodconfig after doing a "git clean -dqfx".
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
-index 5b123e0..64e6e65 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
-@@ -6,6 +6,18 @@ davinci/keystone i2c interface contains.
- Required properties:
- - compatible: "ti,davinci-i2c" or "ti,keystone-i2c";
- - reg : Offset and length of the register set for the device
-+- clocks: I2C functional clock phandle.
-+	  For 66AK2G this property should be set per binding,
-+	  Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-+
-+SoC-specific Required Properties:
-+
-+The following are mandatory properties for Keystone 2 66AK2G SoCs only:
-+
-+- power-domains:	Should contain a phandle to a PM domain provider node
-+			and an args specifier containing the I2C device id
-+			value. This property is as per the binding,
-+			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
- 
- Recommended properties :
- - interrupts : standard interrupt property.
--- 
-2.9.4.dirty
+So I guess there is a dependency issue - my normal build test after
+the merge didn't show any issues, simply because the change in
+ksymoops didn't actually cause the version information to be
+re-generated.
+
+It doesn't seem to happen for every exported symbol, though. Odd.
+
+Looking at it, but not making sense of it yet.
+
+                Linus
