@@ -1,92 +1,50 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH net-next 2/3] net: ethernet: socionext: add AVE ethernet driver
-Date: Fri, 8 Sep 2017 23:44:13 +0900
-Message-ID: <CAK7LNASqfRbG08gvLxx4WxY2Vs2YYPkZ6NUpjj3_OOvOdEBKMA@mail.gmail.com>
-References: <1504875731-3680-1-git-send-email-hayashi.kunihiko@socionext.com> <1504875731-3680-3-git-send-email-hayashi.kunihiko@socionext.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v9] arm64: allwinner: h5: add NanoPi NEO
+ Plus2 DT support
+Date: Fri, 8 Sep 2017 16:49:06 +0200
+Message-ID: <20170908144906.zs7vutgsqbuvvodt@flea.lan>
+References: <20170824231716.2623-1-antony@phenome.org>
+ <20170907164222.66759-1-antony@phenome.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504875731-3680-3-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uuf3t36ifo5l6und"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3O3ZLGQKGQE7NLLFPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170907164222.66759-1-antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-09-08 22:02 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
 
-> diff --git a/drivers/net/ethernet/socionext/Kconfig b/drivers/net/ethernet/socionext/Kconfig
-> new file mode 100644
-> index 0000000..788f26f
-> --- /dev/null
-> +++ b/drivers/net/ethernet/socionext/Kconfig
-> @@ -0,0 +1,22 @@
-> +config NET_VENDOR_SOCIONEXT
-> +       bool "Socionext ethernet drivers"
-> +       default y
-> +       ---help---
-> +         Option to select ethernet drivers for Socionext platforms.
-> +
-> +         Note that the answer to this question doesn't directly affect the
-> +         kernel: saying N will just cause the configurator to skip all
-> +         the questions about Agere devices. If you say Y, you will be asked
-> +         for your specific card in the following questions.
+--uuf3t36ifo5l6und
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
+On Thu, Sep 07, 2017 at 06:42:22PM +0200, Antony Antony wrote:
+> Add initial DT for NanoPi NEO Plus2 by FriendlyARM
+> - Allwinner quad core H5 Cortex A53 with an ARM Mali-450MP GPU
+> - 1 GB DDR3 RAM
+> - 8GB eMMC flash (Samsung KLM8G1WEPD-B031)
+> - micro SD card slot
+> - Gigabit Ethernet (external RTL8211E-VB-CG chip)
+> - 802.11 b/g/n WiFi, Bluetooth 4.0 (Ampak AP6212A module)
+> - 2x USB 2.0 host ports & 2x USB via headers
+> 
+> Signed-off-by: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
 
-Agere?
-
-
-
-> +
-> +       dev_info(dev, "Socionext %c%c%c%c Ethernet IP %s (irq=%d, phy=%s)\n",
-> +                (ave_id >> 24) & 0xff, (ave_id >> 16) & 0xff,
-> +                (ave_id >> 8) & 0xff, (ave_id >> 0) & 0xff,
-> +                buf, ndev->irq, phy_modes(phy_mode));
-> +
-> +       return 0;
-> +err_netdev_register:
-
-Maybe, a bad label name.
-for ex. out_del_napi or whatever.
-
-Documentation/process/coding-style.rst says
-"Choose label names which say what the goto does ..."
-
-
-> +       netif_napi_del(&priv->napi_rx);
-> +       netif_napi_del(&priv->napi_tx);
-> +       mdiobus_unregister(priv->mdio);
-> +err_mdiobus_register:
-> +err_mdiobus_alloc:
-> +err_req_irq:
-
-These three should be merged, for ex.
-out_free_device.
-
-
-
-I ran sparse for you.
-
-Please take a look if it is worthwhile.
-Seems endianess around mac_addr.
-
-
-drivers/net/ethernet/socionext/sni_ave.c:423:15: warning: cast to
-restricted __le32
-drivers/net/ethernet/socionext/sni_ave.c:425:20: warning: cast to
-restricted __le16
-drivers/net/ethernet/socionext/sni_ave.c:1194:15: warning: cast to
-restricted __le32
-drivers/net/ethernet/socionext/sni_ave.c:1196:20: warning: cast to
-restricted __le16
-drivers/net/ethernet/socionext/sni_ave.c:1398:15: warning: cast to
-restricted __le32
-drivers/net/ethernet/socionext/sni_ave.c:1400:20: warning: cast to
-restricted __le16
-
-
-
-
+Queued for 4.15, thanks!
+Maxime
 
 -- 
-Best Regards
-Masahiro Yamada
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--uuf3t36ifo5l6und--
