@@ -1,12 +1,12 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Subject: [PATCH v2 1/2] dt-bindings: clock: add R8A77970 CPG core clock definitions
 Date: Sat, 09 Sep 2017 00:34:19 +0300
-Message-ID: <20170908213758.670316956@cogentembedded.com>
+Message-ID: <20170908213758.670316956__36717.5094936558$1504906693$gmane$org@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline; filename=dt-bindings-clock-add-R8A77970-CPG-core-clock-definitions-v2.patch
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
 Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
@@ -87,3 +87,4 @@ Index: linux/include/dt-bindings/clock/r8a77970-cpg-mssr.h
 +#define R8A77970_CLK_OSC		30
 +
 +#endif /* __DT_BINDINGS_CLOCK_R8A77970_CPG_MSSR_H__ */
+
