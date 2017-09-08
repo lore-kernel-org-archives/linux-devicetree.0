@@ -1,84 +1,38 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 serial
- slave
-Date: Fri, 8 Sep 2017 14:53:38 +0200
-Message-ID: <C1D28787-A7C3-4A7A-8EAC-7E7994E54B29@holtmann.org>
-References: <1504125721-4760-1-git-send-email-loic.poulain@gmail.com>
- <1504125721-4760-2-git-send-email-loic.poulain@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504125721-4760-2-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH net-next 0/3] add UniPhier AVE ethernet support
+Date: Fri,  8 Sep 2017 22:02:08 +0900
+Message-ID: <1504875731-3680-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This series adds support for Socionext AVE ethernet controller implemented
+on UniPhier SoCs. This driver supports RGMII/RMII modes.
 
-> Add BCM43438 (bluetooth) as a slave device of uart0 (pl011/ttyAMA0).
-> This allows to automatically insert the bcm43438 to the bluetooth
-> subsystem instead of relying on userspace helpers (hciattach).
-> 
-> Overwrite chosen/stdout-path to use 8250 aux uart as console.
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
-> 1 file changed, 10 insertions(+)
-> 
-> v2: dt-bindings as separate patch
->     rebase on upcoming pi3 dts changes
-> v3: changes in bcm serdev drivers:
->     name refactoring and additional comments
->     Add generic host_set_baudrate method
->     Use agnostic device_property_read
-> v4: changes in doc and dts:
->     Add additional params to broadcom bt dt-bindings
->     Set the max baudrate to 2000000 instead of 921600
->     use chosen/stdout-path instead of console=
->     remove useless earlyprintk
->     same changes in bcm283x.dtsi
-> v5: remove 1/4 dt-bindings and 4/4 hci_bcm serdev support
->     1/4 and 4/4 merged in bluetooth-next tree
-> 
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> index 20725ca..e4488cb 100644
-> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> @@ -8,6 +8,11 @@
-> 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-> 	model = "Raspberry Pi 3 Model B";
-> 
-> +	chosen {
-> +		/* 8250 auxiliar UART instead of pl011 */
-> +		stdout-path = "serial1:115200n8";
-> +	};
-> +
-> 	memory {
-> 		reg = <0 0x40000000>;
-> 	};
-> @@ -24,6 +29,11 @@
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
-> 	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "brcm,bcm43438-bt";
-> +		max-speed = <2000000>;
-> +	};
-> };
-> 
+Furthermore, this series includes support for realtek RTL8201F PHY to be
+implemented on some supported boards.
 
-the driver for this is already in Linus’ tree. And I would really prefer that we get the DT changes merged in as well.
+Jassi Brar (1):
+  net: phy: realtek: add RTL8201F phy-id and functions
 
-Regards
+Kunihiko Hayashi (2):
+  dt-bindings: net: add DT bindings for Socionext UniPhier AVE
+  net: ethernet: socionext: add AVE ethernet driver
 
-Marcel
+ .../bindings/net/socionext,uniphier-ave4.txt       |   44 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/socionext/Kconfig             |   22 +
+ drivers/net/ethernet/socionext/Makefile            |    4 +
+ drivers/net/ethernet/socionext/sni_ave.c           | 1618 ++++++++++++++++++++
+ drivers/net/phy/realtek.c                          |   45 +
+ 7 files changed, 1735 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+ create mode 100644 drivers/net/ethernet/socionext/Kconfig
+ create mode 100644 drivers/net/ethernet/socionext/Makefile
+ create mode 100644 drivers/net/ethernet/socionext/sni_ave.c
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
