@@ -1,110 +1,60 @@
-From: Sumit Garg <sumit.garg@nxp.com>
-Subject: [PATCH] arm64: dts: ls: Add optee node
-Date: Sat, 9 Sep 2017 05:03:28 +0530
-Message-ID: <1504913608-21804-1-git-send-email-sumit.garg@nxp.com>
+From: Ravi Shankar Jonnalagadda <venkata.ravi.jonnalagadda@xilinx.com>
+Subject: [PATCH v2 2/5] PCI:xilinx-nwl: Correcting Styling checks
+Date: Fri, 8 Sep 2017 17:53:04 +0530
+Message-ID: <1504873388-29195-3-git-send-email-vjonnal@xilinx.com>
+References: <1504873388-29195-1-git-send-email-vjonnal@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, jens.wiklander@linaro.org, ruchika.gupta@nxp.com, arun.pathak@nxp.com, pankaj.gupta@nxp.com, sahil.malhotra@nxp.com, Sumit Garg <sumit.garg@nxp.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1504873388-29195-1-git-send-email-vjonnal@xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, dan.j.williams@intel.com, bhelgaas@google.com, vjonnal@xilinx.com, lorenzo.pieralisi@arm.com, bharat.kumar.gogada@xilinx.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, rgummal@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Add optee device tree node on ls1012a, ls1043a, ls1046a, ls1088a
-and ls208xa.
+Correcting Style checks thrown by checkpatch scripts
 
-Signed-off-by: Sumit Garg <sumit.garg@nxp.com>
+Signed-off-by: Ravi Shankar Jonnalagadda <vjonnal@xilinx.com>
+Signed-off-by: RaviKiran Gummaluri <rgummal@xilinx.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 7 +++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 7 +++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 7 +++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 7 +++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 7 +++++++
- 5 files changed, 35 insertions(+)
+ drivers/pci/host/pcie-xilinx-nwl.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index df83915..a1764d3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -472,4 +472,11 @@
- 			phy_type = "ulpi";
- 		};
- 	};
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 31fd77f..e6be740 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -749,6 +749,13 @@
- 		};
- 	};
+diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
+index 5766582..3c62e3d 100644
+--- a/drivers/pci/host/pcie-xilinx-nwl.c
++++ b/drivers/pci/host/pcie-xilinx-nwl.c
+@@ -506,15 +506,15 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
  
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
-+
- };
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
+-				domain->host_data, handle_simple_irq,
+-				NULL, NULL);
++				    domain->host_data, handle_simple_irq,
++				    NULL, NULL);
+ 	}
+ 	mutex_unlock(&msi->lock);
+ 	return 0;
+ }
  
- #include "qoriq-qman-portals.dtsi"
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index dc1640b..7c30401 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -658,6 +658,13 @@
- 			no-map;
- 		};
- 	};
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
- };
+ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+-					unsigned int nr_irqs)
++				unsigned int nr_irqs)
+ {
+ 	struct irq_data *data = irq_domain_get_irq_data(domain, virq);
+ 	struct nwl_pcie *pcie = irq_data_get_irq_chip_data(data);
+@@ -767,7 +767,6 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
+ 	/* Enable all misc interrupts */
+ 	nwl_bridge_writel(pcie, MSGF_MISC_SR_MASKALL, MSGF_MISC_MASK);
  
- #include "qoriq-qman-portals.dtsi"
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 33797b3..253df8a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -436,4 +436,11 @@
- 		};
- 	};
+-
+ 	/* Disable all legacy interrupts */
+ 	nwl_bridge_writel(pcie, (u32)~MSGF_LEG_SR_MASKALL, MSGF_LEG_MASK);
  
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
-+
+@@ -932,4 +931,5 @@ static struct platform_driver nwl_pcie_driver = {
+ 	},
+ 	.probe = nwl_pcie_probe,
  };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 4fb9a09..f3a40af 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -786,4 +786,11 @@
- 		interrupts = <0 18 0x4>;
- 		little-endian;
- 	};
 +
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
- };
+ builtin_platform_driver(nwl_pcie_driver);
 -- 
-1.9.1
+2.7.4
