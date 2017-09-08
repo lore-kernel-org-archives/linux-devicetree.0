@@ -1,44 +1,56 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 15/16] dmaengine: bcm-sba-raid: Add debugfs support
-Date: Fri, 8 Sep 2017 09:39:54 +0530
-Message-ID: <20170908040954.GB3053@localhost>
-References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
- <1501583880-32072-16-git-send-email-anup.patel@broadcom.com>
- <20170817080142.GC3053@localhost>
- <CAALAos_SXTMms8XmhEC28gxx4qvvr0z3wqQ=o_-BohMpcXwQTw@mail.gmail.com>
- <20170818052613.GE3053@localhost>
- <20170907193732.GB11006@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v3 0/3] pmbus: Expand fan support and add MAX31785 driver
+Date: Fri,  8 Sep 2017 14:39:16 +1000
+Message-ID: <20170908043919.6924-1-andrew@aj.id.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170907193732.GB11006@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: linux@roeck-us.net, linux-hwmon@vger.kernel.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, mspinler@linux.vnet.ibm.com, msbarth@linux.vnet.ibm.com, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 07, 2017 at 09:37:32PM +0200, Greg KH wrote:
-> On Fri, Aug 18, 2017 at 10:56:13AM +0530, Vinod Koul wrote:
-> > On Fri, Aug 18, 2017 at 10:33:54AM +0530, Anup Patel wrote:
-> > > On Thu, Aug 17, 2017 at 1:31 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> > > > On Tue, Aug 01, 2017 at 04:07:59PM +0530, Anup Patel wrote:
-> > > > why fail, debugfs should be an optional thingy, why would you want to fail here?
-> > > 
-> > > Yes, we are handling the case when debugfs is not available
-> > > and skipping debugfs gracefully.
-> > > 
-> > > If debugfs is available then failure of debugfs_create_dir()
-> > > should be reported.
-> > 
-> > reported yes, bailing out on that err no..
-> 
-> Reported, no.  You should _never_ care about the return value of a
-> debugfs call.  Never check it, just move on ad keep on going.  It
-> doesn't matter.
+Hello,
 
-Agreed that makes more sense. The driver was checking and bailing out, I
-advised against that :)
+These three patches lay the ground work for fan control in the pmbus core and
+introduce a driver for the MAX31785 Intelligent Fan Controller that makes use
+of the new control features.
+
+Since v2[1] I've addressed Rob's comments on the bindings, integrating the thermal
+support and cleaning up some warts. One of the warts was regarding the
+maxim,tmp-fans property which was switched to use a list of fan phandles rather
+than indexes. A corresponding change is made in the driver. I also did a
+comparison with the Aspeed PWM/Tach bindings but I'm not convinced there's much
+to take away from it other than those bindings are somewhat broken.
+
+In v3 I've dropped patch 4 from v2, which was a bunch of work-arounds for bad
+behaviour I observed in testing. At this stage the bad behaviour appears to be
+a product of the larger hardware design, not necessarily a problem with the
+Maxim chip. Guenter has performed some quick testing of a cut-down v2 driver
+against the MAX31785 evaluation board and couldn't reproduce the results I was
+seeing[2][3], which increases the likelyhood that it's not the Maxim chip and
+the work-around patch is inappropriate.
+
+Please review!
+
+Andrew
+
+[1] https://lkml.org/lkml/2017/8/2/88
+[2] https://lkml.org/lkml/2017/9/7/669
+[3] https://lkml.org/lkml/2017/9/5/53
+
+Andrew Jeffery (3):
+  dt-bindings: hwmon: pmbus: Add Maxim MAX31785 documentation
+  hwmon: pmbus: Add fan control support
+  pmbus: Add driver for Maxim MAX31785 Intelligent Fan Controller
+
+ .../devicetree/bindings/hwmon/pmbus/max31785.txt   | 158 +++++
+ drivers/hwmon/pmbus/Kconfig                        |  10 +
+ drivers/hwmon/pmbus/Makefile                       |   1 +
+ drivers/hwmon/pmbus/max31785.c                     | 673 +++++++++++++++++++++
+ drivers/hwmon/pmbus/pmbus.h                        |  29 +
+ drivers/hwmon/pmbus/pmbus_core.c                   | 224 ++++++-
+ 6 files changed, 1080 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/max31785.txt
+ create mode 100644 drivers/hwmon/pmbus/max31785.c
 
 -- 
-~Vinod
+2.11.0
