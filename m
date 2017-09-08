@@ -1,50 +1,60 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v9] arm64: allwinner: h5: add NanoPi NEO
- Plus2 DT support
-Date: Fri, 8 Sep 2017 16:49:06 +0200
-Message-ID: <20170908144906.zs7vutgsqbuvvodt@flea.lan>
-References: <20170824231716.2623-1-antony@phenome.org>
- <20170907164222.66759-1-antony@phenome.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for Allwinner A64
+Date: Fri, 8 Sep 2017 15:57:03 +0100
+Message-ID: <4c4ea0f7-3df3-7ab4-100d-c8545211d582@arm.com>
+References: <20170830233609.13855-4-stefan.bruens@rwth-aachen.de>
+ <20170901003135.10058-1-andre.przywara@arm.com>
+ <20170901060445.vboici7qxfkztp3s@flea>
+ <743ae23a-372a-762b-c345-b914f09fd718@arm.com>
+ <20170904070415.e6nclz5n23bo7f4v@flea>
+ <d3d32839-12a8-71fa-cfec-03055d64388d@arm.com>
+ <20170908143913.6ga64ssakvk2mjis@flea.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uuf3t36ifo5l6und"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3O3ZLGQKGQE7NLLFPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170907164222.66759-1-antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170908143913.6ga64ssakvk2mjis@flea.lan>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: =?UTF-8?Q?Stefan_Br=c3=bcns?= <stefan.bruens@rwth-aachen.de>, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Maxime,
 
---uuf3t36ifo5l6und
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Thu, Sep 07, 2017 at 06:42:22PM +0200, Antony Antony wrote:
-> Add initial DT for NanoPi NEO Plus2 by FriendlyARM
-> - Allwinner quad core H5 Cortex A53 with an ARM Mali-450MP GPU
-> - 1 GB DDR3 RAM
-> - 8GB eMMC flash (Samsung KLM8G1WEPD-B031)
-> - micro SD card slot
-> - Gigabit Ethernet (external RTL8211E-VB-CG chip)
-> - 802.11 b/g/n WiFi, Bluetooth 4.0 (Ampak AP6212A module)
-> - 2x USB 2.0 host ports & 2x USB via headers
+On 08/09/17 15:39, Maxime Ripard wrote:
+> Hi,
 > 
-> Signed-off-by: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
+> On Mon, Sep 04, 2017 at 09:14:52AM +0100, André Przywara wrote:
+>>> And obviously, while maintaining the stability of the binding of those
+>>> hundreds properties.
+>>>
+>>> Or, you can base all this on the compatible, and be done with it once
+>>> and for all.
+>>
+>> What I am after is to cover SoCs which *don't* have differences in their
+>> register layout, for instance A83T, H3, A64, R40.
+>> In an ideal world we could have reused the H3 compatible string,
+>> adjusting the number of channels for each SoC in the DT.
+>>
+>> So I see that having a generic compatible name will not fly, as we now
+>> have differences which should not be modelled by DT properties.
+>> But I still think we should try to cover those non-register differences
+>> (number of channels) with a DT property, to allow reusing the existing
+>> driver code whenever possible. As is stands with this series, the R40
+>> support should just be a matter of:
+>> 	compatible = "allwinner,sun8i-r40-dma",
+>> 		     "allwinner,sun50i-a64-dma";
+> 
+> I just suggested the exact same thing, and then saw your mail, so I
+> guess we have an agreement :)
 
-Queued for 4.15, thanks!
-Maxime
+Yes, I was thinking so as well.
+Since my DeLorean is in the garage ;-) we have no other choice than
+doing so.
+My original suggestion for a generic name was based on my naive reading
+of the existing code, which *looked like* it would be all compatible.
+But as we know better now, this is the way to go.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---uuf3t36ifo5l6und--
+Merci,
+André
