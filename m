@@ -1,51 +1,65 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARC: HSDK: DTS: Temporary fix of sdio ciu frequency
-Date: Fri,  8 Sep 2017 21:42:33 +0300
-Message-ID: <20170908184233.1779-1-Eugeniy.Paltsev@synopsys.com>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 2/2] ARM: dts: k2g-evm: Enable USB 0 and 1
+Date: Fri, 8 Sep 2017 13:41:32 -0500
+Message-ID: <20170908184132.6155-3-fcooper@ti.com>
+References: <20170908184132.6155-1-fcooper@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170908184132.6155-1-fcooper-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+To: ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DW sdio controller has external ciu clock devider controlled via
-register in SDIO IP. Due to its unexpected default value
-(it should devide by 1 but it devides by 8)
-SDIO IP uses wrong ciu clock and works unstable (see STAR 9001204800)
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
-So add temporary fix and change clock frequency from 100000000
-to 12500000 Hz until we fix dw sdio driver itself.
+Enable USB 0 which will be used as a host port and USB 1 which will be
+used in peripheral mode.
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 ---
- arch/arc/boot/dts/hsdk.dts | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 8412669..b922f3f 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -127,7 +127,17 @@
- 
- 		mmcclk_ciu: mmcclk-ciu {
- 			compatible = "fixed-clock";
--			clock-frequency = <100000000>;
-+			/*
-+			 * DW sdio controller has external ciu clock divider
-+			 * controlled via register in SDIO IP. Due to its
-+			 * unexpected default value (it should devide by 1
-+			 * but it devides by 8) SDIO IP uses wrong clock and
-+			 * works unstable (see STAR 9001204800)
-+			 * So add temporary fix and change clock frequency
-+			 * from 100000000 to 12500000 Hz until we fix dw sdio
-+			 * driver itself.
-+			 */
-+			clock-frequency = <12500000>;
- 			#clock-cells = <0>;
- 		};
- 
+diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
+index 61883cb..4f56295 100644
+--- a/arch/arm/boot/dts/keystone-k2g-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
+@@ -41,3 +41,29 @@
+ 	pinctrl-0 = <&uart0_pins>;
+ 	status = "okay";
+ };
++
++&keystone_usb0 {
++	status = "okay";
++};
++
++&usb0_phy {
++	status = "okay";
++};
++
++&usb0 {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&keystone_usb1 {
++	status = "okay";
++};
++
++&usb1_phy {
++	status = "okay";
++};
++
++&usb1 {
++	dr_mode = "peripheral";
++	status = "okay";
++};
 -- 
-2.9.3
+2.9.4.dirty
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
