@@ -1,31 +1,103 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
- copying _shipped files
-Date: Fri, 8 Sep 2017 14:38:23 -0700
-Message-ID: <CA+55aFy4w6Ken-a83EE+otw6d+cgRfdV9wj6ayoDYFhi251Gvg@mail.gmail.com>
-References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
- <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
- <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug@mail.gmail.com>
- <CAK7LNATaisd3tPNbujTWLUq-2sMQ3pyTkPRSgjw00zUzv=GvSQ@mail.gmail.com>
- <CA+55aFwvaZSXubcmaaZD-i5c_F5bHWhr6OBxRM+=7dGueua0Ng@mail.gmail.com>
- <CA+55aFzZNpuYjVa4EZ2eJhvtU7-bzZTor_596TA5_CY77j+BEw@mail.gmail.com> <CA+55aFzz_fv--Kx8phjWt_VOzZOMmbs0XX7_kL--_XRitWwJQA@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v9 23/24] dt: bindings: smiapp: Document lens-focus and
+ flash properties
+Date: Fri, 8 Sep 2017 23:45:44 +0200
+Message-ID: <20170908214544.GB27428@amd>
+References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
+ <20170908131822.31020-19-sakari.ailus@linux.intel.com>
+ <20170908133652.GR18365@amd>
+ <20170908134226.m5ts637dej7oa4jw@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CA+55aFzz_fv--Kx8phjWt_VOzZOMmbs0XX7_kL--_XRitWwJQA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>, Michal Marek <mmarek@suse.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Richard Purdie <richard.purdie@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Markus Heiser <markus.heiser@darmarit.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, SeongJae Park <sj38.park@gmail.com>, "Yann E. MORIN" <yann.morin.1>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170908134226.m5ts637dej7oa4jw@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 8, 2017 at 11:39 AM, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Strange. Does anybody see what the pattern to the failure is?
 
-Found it. Stupid special case for 'typeof()' that used
-is_reserved_word() in ways I hadn't realized.
+--0ntfKIWw70PvrIHh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fix committed.
+On Fri 2017-09-08 16:42:26, Sakari Ailus wrote:
+> Hi Pavel,
+>=20
+> On Fri, Sep 08, 2017 at 03:36:52PM +0200, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > Document optional lens-focus and flash properties for the smiapp driv=
+er.
+> > >=20
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.t=
+xt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > > index 855e1faf73e2..a052969365d9 100644
+> > > --- a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > > @@ -27,6 +27,8 @@ Optional properties
+> > >  - nokia,nvm-size: The size of the NVM, in bytes. If the size is not =
+given,
+> > >    the NVM contents will not be read.
+> > >  - reset-gpios: XSHUTDOWN GPIO
+> > > +- flash-leds: One or more phandles to refer to flash LEDs
+> > > +- lens-focus: Phandle for lens focus
+> >=20
+> > Should we simply reference the generic documentation here? If it needs
+> > changing, it will be easier changing single place.
+>=20
+> Good question.
+>=20
+> Ideally the properties at least would never change; we do have a common
+> parser for the properties which is part of the patchset so in theory it
+> would be possible to change the documentation in a backward-compatible wa=
+y.
+>=20
+> I added these properties as well as all the other properties supported by
+> the sensor driver are documented here. That has been the practice AFAIU,
+> albeit omissions do happen occasionally.
+>=20
+> The issue I see with omitting the documentation here is that the user
+> otherwise won't know whether a driver uses a given property or not: it
+> shouldn't be necessary to read driver code to write DT source.
 
-             Linus
+I see... OTOH documentation in central place _is_ a bit more verbose:
+
++- flash-leds: An array of phandles, each referring to a flash LED, a sub-n=
+ode
++  of the LED driver device node.
+
+What about:
+
+flash-leds, lens-focus: see <reference to central place>
+
+?
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--0ntfKIWw70PvrIHh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmzD4gACgkQMOfwapXb+vJg3gCdFHDoYN/4wdVf9lsg2ODFOle7
+EhgAmwevFhan9WjuQkPNYZxXby0dOGP1
+=AHq7
+-----END PGP SIGNATURE-----
+
+--0ntfKIWw70PvrIHh--
