@@ -1,45 +1,63 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/8] ARM: dts: sun6i: Fix endpoint IDs in second display
- pipeline
-Date: Fri, 8 Sep 2017 21:38:23 +0800
-Message-ID: <CAGb2v64S9uifdR3H2OSzQP1GBWg0vW3B4_dA7yAOkhC7r15Tug@mail.gmail.com>
-References: <20170908075016.18657-1-wens@csie.org>
- <20170908075016.18657-2-wens@csie.org>
- <20170908132932.rfz4hxab4tgntioo@flea.lan>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v9 23/24] dt: bindings: smiapp: Document lens-focus and
+ flash properties
+Date: Fri, 8 Sep 2017 16:42:26 +0300
+Message-ID: <20170908134226.m5ts637dej7oa4jw@valkosipuli.retiisi.org.uk>
+References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
+ <20170908131822.31020-19-sakari.ailus@linux.intel.com>
+ <20170908133652.GR18365@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170908132932.rfz4hxab4tgntioo@flea.lan>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170908133652.GR18365@amd>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBTZXAgOCwgMjAxNyBhdCA5OjI5IFBNLCBNYXhpbWUgUmlwYXJkCjxtYXhpbWUucmlw
-YXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4gSGksCj4KPiBPbiBGcmksIFNlcCAwOCwg
-MjAxNyBhdCAwMzo1MDowOVBNICswODAwLCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4+IFdoZW4gdGhl
-IHNlY29uZCBkaXNwbGF5IHBpcGVsaW5lIGRldmljZSBub2RlcyBmb3IgdGhlIEEzMS9BMzFzIHdl
-cmUKPj4gYWRkZWQsIGl0IHdhcyBub3Qga25vd24gdGhhdCB0aGUgVENPTnMgY291bGQgKHRocm91
-Z2ggZWl0aGVyIERSQ3MpCj4+IHNlbGVjdCBlaXRoZXIgYmFja2VuZCBhcyB0aGVpciBpbnB1dC4g
-VGh1cyBpbiB0aGUgZW5kcG9pbnRzIGNvbm5lY3RpbmcKPj4gdGhlc2UgY29tcG9uZW50cyB0b2dl
-dGhlciwgdGhlIGVuZHBvaW50IElEcyB3ZXJlIHNldCB0byAwLCB3aGlsZSBpbgo+PiBmYWN0IHRo
-ZXkgc2hvdWxkIGhhdmUgYmVlbiBzZXQgdG8gMS4KPj4KPj4gRml4ZXM6IDlhMjY4ODJhNzM3OCAo
-IkFSTTogZHRzOiBzdW42aTogQWRkIHNlY29uZCBkaXNwbGF5IHBpcGVsaW5lIGRldmljZQo+PiAg
-ICAgICAgICAgICAgICAgICAgIG5vZGVzIikKPj4gU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2Fp
-IDx3ZW5zQGNzaWUub3JnPgo+Cj4gU2hvdWxkIHdlIENDIHN0YWJsZSBvbiB0aGlzIG9uZT8KCkl0
-IHdvdWxkbid0IG1hdHRlciBmb3Igb2xkIGtlcm5lbHMsIGJ1dCBJIHN1cHBvc2Ugd2Ugc2hvdWxk
-IGdldCBpdCByaWdodApldmVyeXdoZXJlLCBzbyB3ZSBzaG91bGQgcHJvYmFibHkgQ0Mgc3RhYmxl
-LiBBbHNvIEkgZm9yZ290IHRvIG1lbnRpb24KdGhhdCB0aGlzIHBhdGNoIHNob3VsZCBnbyBpbiAt
-Zml4ZXMsIHdoaWxlIHRoZSByZXN0IGNhbiBnbyBpbiAtbmV4dC4KClRoYW5rcwpDaGVuWXUKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Pavel,
+
+On Fri, Sep 08, 2017 at 03:36:52PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > Document optional lens-focus and flash properties for the smiapp driver.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > index 855e1faf73e2..a052969365d9 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > +++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > @@ -27,6 +27,8 @@ Optional properties
+> >  - nokia,nvm-size: The size of the NVM, in bytes. If the size is not given,
+> >    the NVM contents will not be read.
+> >  - reset-gpios: XSHUTDOWN GPIO
+> > +- flash-leds: One or more phandles to refer to flash LEDs
+> > +- lens-focus: Phandle for lens focus
+> 
+> Should we simply reference the generic documentation here? If it needs
+> changing, it will be easier changing single place.
+
+Good question.
+
+Ideally the properties at least would never change; we do have a common
+parser for the properties which is part of the patchset so in theory it
+would be possible to change the documentation in a backward-compatible way.
+
+I added these properties as well as all the other properties supported by
+the sensor driver are documented here. That has been the practice AFAIU,
+albeit omissions do happen occasionally.
+
+The issue I see with omitting the documentation here is that the user
+otherwise won't know whether a driver uses a given property or not: it
+shouldn't be necessary to read driver code to write DT source.
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
