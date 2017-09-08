@@ -1,69 +1,89 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v3 6/6] ARM: dts: exynos: Remove unnecessary compatible
-Date: Fri, 08 Sep 2017 15:02:40 +0900
-Message-ID: <1504850560-27950-7-git-send-email-hoegeun.kwon@samsung.com>
-References: <1504850560-27950-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170908060309epcas1p3f995a5092a5b8c7d9a9e4b6d982bc3d9@epcas1p3.samsung.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
+ copying _shipped files
+Date: Fri, 8 Sep 2017 15:18:31 +0900
+Message-ID: <CAK7LNATaisd3tPNbujTWLUq-2sMQ3pyTkPRSgjw00zUzv=GvSQ@mail.gmail.com>
+References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
+ <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com> <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1504850560-27950-1-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: inki.dae@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, mchehab@kernel.org, s.nawrocki@samsung.com, m.szyprowski@samsung.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Richard Purdie <richard.purdie-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Markus Heiser <markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, SeongJae Park <sj38.park-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yann E. MORIN" <yann.morin.1>
 List-Id: devicetree@vger.kernel.org
 
-Q3VycmVudGx5LCB0aGUgY29tcGF0aWJsZSgnc2Ftc3VuZyxleHlub3M1LWdzYycpIGlzIG5vdCB1
-c2VkLgpSZW1vdmUgdW5uZWNlc3NhcnkgY29tcGF0aWJsZS4KClNpZ25lZC1vZmYtYnk6IEhvZWdl
-dW4gS3dvbiA8aG9lZ2V1bi5rd29uQHNhbXN1bmcuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRz
-L2V4eW5vczUyNTAuZHRzaSB8IDggKysrKy0tLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0
-MjAuZHRzaSB8IDQgKystLQogMiBmaWxlcyBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDYgZGVs
-ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC5kdHNp
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC5kdHNpCmluZGV4IGJmMDgxMDEuLmU2MzJm
-YWYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAuZHRzaQorKysgYi9h
-cmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLmR0c2kKQEAgLTYzNyw3ICs2MzcsNyBAQAogCQl9
-OwogCiAJCWdzY18wOiAgZ3NjQDEzZTAwMDAwIHsKLQkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxl
-eHlub3M1LWdzYyIsICJzYW1zdW5nLGV4eW5vczUyNTAtZ3NjIjsKKwkJCWNvbXBhdGlibGUgPSAi
-c2Ftc3VuZyxleHlub3M1MjUwLWdzYyI7CiAJCQlyZWcgPSA8MHgxM2UwMDAwMCAweDEwMDA+Owog
-CQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDg1IElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJcG93
-ZXItZG9tYWlucyA9IDwmcGRfZ3NjPjsKQEAgLTY0Nyw3ICs2NDcsNyBAQAogCQl9OwogCiAJCWdz
-Y18xOiAgZ3NjQDEzZTEwMDAwIHsKLQkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1LWdz
-YyIsICJzYW1zdW5nLGV4eW5vczUyNTAtZ3NjIjsKKwkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxl
-eHlub3M1MjUwLWdzYyI7CiAJCQlyZWcgPSA8MHgxM2UxMDAwMCAweDEwMDA+OwogCQkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDg2IElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJcG93ZXItZG9tYWlu
-cyA9IDwmcGRfZ3NjPjsKQEAgLTY1Nyw3ICs2NTcsNyBAQAogCQl9OwogCiAJCWdzY18yOiAgZ3Nj
-QDEzZTIwMDAwIHsKLQkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1LWdzYyIsICJzYW1z
-dW5nLGV4eW5vczUyNTAtZ3NjIjsKKwkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1MjUw
-LWdzYyI7CiAJCQlyZWcgPSA8MHgxM2UyMDAwMCAweDEwMDA+OwogCQkJaW50ZXJydXB0cyA9IDxH
-SUNfU1BJIDg3IElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJcG93ZXItZG9tYWlucyA9IDwmcGRf
-Z3NjPjsKQEAgLTY2Nyw3ICs2NjcsNyBAQAogCQl9OwogCiAJCWdzY18zOiAgZ3NjQDEzZTMwMDAw
-IHsKLQkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1LWdzYyIsICJzYW1zdW5nLGV4eW5v
-czUyNTAtZ3NjIjsKKwkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1MjUwLWdzYyI7CiAJ
-CQlyZWcgPSA8MHgxM2UzMDAwMCAweDEwMDA+OwogCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDg4
-IElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJcG93ZXItZG9tYWlucyA9IDwmcGRfZ3NjPjsKZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAuZHRzaSBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2V4eW5vczU0MjAuZHRzaQppbmRleCA4NmFmZTc3Li41ODM5MmIzIDEwMDY0NAotLS0g
-YS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvZXh5bm9zNTQyMC5kdHNpCkBAIC02NTgsNyArNjU4LDcgQEAKIAkJfTsKIAogCQlnc2NfMDog
-dmlkZW8tc2NhbGVyQDEzZTAwMDAwIHsKLQkJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1
-LWdzYyIsICJzYW1zdW5nLGV4eW5vczU0MjAtZ3NjIjsKKwkJCWNvbXBhdGlibGUgPSAic2Ftc3Vu
-ZyxleHlub3M1NDIwLWdzYyI7CiAJCQlyZWcgPSA8MHgxM2UwMDAwMCAweDEwMDA+OwogCQkJaW50
-ZXJydXB0cyA9IDxHSUNfU1BJIDg1IElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQkJY2xvY2tzID0g
-PCZjbG9jayBDTEtfR1NDTDA+OwpAQCAtNjY4LDcgKzY2OCw3IEBACiAJCX07CiAKIAkJZ3NjXzE6
-IHZpZGVvLXNjYWxlckAxM2UxMDAwMCB7Ci0JCQljb21wYXRpYmxlID0gInNhbXN1bmcsZXh5bm9z
-NS1nc2MiLCAic2Ftc3VuZyxleHlub3M1NDIwLWdzYyI7CisJCQljb21wYXRpYmxlID0gInNhbXN1
-bmcsZXh5bm9zNTQyMC1nc2MiOwogCQkJcmVnID0gPDB4MTNlMTAwMDAgMHgxMDAwPjsKIAkJCWlu
-dGVycnVwdHMgPSA8R0lDX1NQSSA4NiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKIAkJCWNsb2NrcyA9
-IDwmY2xvY2sgQ0xLX0dTQ0wxPjsKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Linus,
+
+
+Very sorry that I had not responded quickly.
+
+When I was digging into tool version dependency,
+as you pointed out, gperf is a problem (but seemed one time breakage
+for gperf 3.1)
+flex seemed very stable for a long time.
+bison seemed a bit problem if old version is used.
+
+
+But, I did not have enough time to take a closer look.
+I thought I should respond after I tested more, but I has been pressed
+by my daily tasks, then time passed...
+Very sorry.
+
+
+
+Today, I just noticed gperf usage got dropped from the kernel.
+
+If CONFIG_MODVERSIONS is enabled,
+I notice lots of error messages.
+WARNING: EXPORT symbol "finish_open" [vmlinux] version generation
+failed, symbol will not be
+
+
+So, I think something was broken in scripts/genksyms/.
+
+Of course, it was a trivial conversion, so it should not be hard to fix...
+
+
+
+> gperf is clearly written by clowns that don't understand about
+> compatibility issues - it would have been trivial for them to add some
+> kind of marker define so that you could test for this directly rather
+> than depend on some kind of autoconf "try to build and see if it
+> fails" crap.
+
+
+One idea may be to process the output of "gperf -v"
+and embed GPERF_VERSION into the output .c files.
+
+But, if you are unhappy with gperf breakage this time,
+we can live without gperf.
+
+
+
+
+> It's likely not even any slower, but who the hell knows.. Do we even
+> care? It's almost certainly faster if you compare to generating that
+> gperf code.
+>
+
+For scripts/kconfig/, I think we do not care at all
+because we usually invoke it just once when we configure the build setting.
+
+
+If we enable CONFIG_MODVERSIONS, scripts/genksyms/ is invoked
+over and over again.
+
+Sorry, I have not evaluated if
+the perfect hash gives us noticeable advantage or not..
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
