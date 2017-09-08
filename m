@@ -1,40 +1,81 @@
 From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v2 0/2] ARM: dts: keystone-k2g-evm: Add I2C nodes and enable
- I2C0 on K2G EVM
-Date: Fri, 8 Sep 2017 13:21:40 -0500
-Message-ID: <20170908182142.5274-1-fcooper@ti.com>
+Subject: [PATCH v2 1/2] ARM: dts: keystone-k2g: Add I2C nodes
+Date: Fri, 8 Sep 2017 13:21:41 -0500
+Message-ID: <20170908182142.5274-2-fcooper@ti.com>
+References: <20170908182142.5274-1-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170908182142.5274-1-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: Vitaly Andrianov <vitalya@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add I2C DT nodes for 66AK2G. Also enable I2C0 in K2G EVM which is needed
-to access the I2C EEPROM. 
+From: Vitaly Andrianov <vitalya@ti.com>
 
-Version 2 changes:
-No real changes. Split patches into their own patchset
+Add nodes for the various I2C instances.
 
-Murali Karicheri (1):
-  ARM: dts: keystone-k2g-evm: Add I2C EEPROM DT entry
+Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
+Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ arch/arm/boot/dts/keystone-k2g.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Vitaly Andrianov (1):
-  ARM: dts: keystone-k2g: Add I2C nodes
-
- arch/arm/boot/dts/keystone-k2g-evm.dts | 19 ++++++++++++++++++
- arch/arm/boot/dts/keystone-k2g.dtsi    | 36 ++++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
-
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index 826b286..8a98d76 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -28,6 +28,9 @@
+ 
+ 	aliases {
+ 		serial0 = &uart0;
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
+ 		rproc0 = &dsp0;
+ 	};
+ 
+@@ -133,6 +136,39 @@
+ 			clocks = <&k2g_clks 0x0009 1>;
+ 		};
+ 
++		i2c0: i2c@2530000 {
++			compatible = "ti,keystone-i2c";
++			reg = <0x02530000 0x400>;
++			clocks = <&k2g_clks 0x003a 0>;
++			power-domains = <&k2g_pds 0x003a>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@2530400 {
++			compatible = "ti,keystone-i2c";
++			reg = <0x02530400 0x400>;
++			clocks = <&k2g_clks 0x003b 0>;
++			power-domains = <&k2g_pds 0x003b>;
++			interrupts = <GIC_SPI 89 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@2530800 {
++			compatible = "ti,keystone-i2c";
++			reg = <0x02530800 0x400>;
++			clocks = <&k2g_clks 0x003c 0>;
++			power-domains = <&k2g_pds 0x003c>;
++			interrupts = <GIC_SPI 90 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		kirq0: keystone_irq@026202a0 {
+ 			compatible = "ti,keystone-irq";
+ 			interrupts = <GIC_SPI 1 IRQ_TYPE_EDGE_RISING>;
 -- 
 2.9.4.dirty
