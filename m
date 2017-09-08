@@ -1,75 +1,45 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 3/3] as3645a: Use integer numbers for parsing LEDs
-Date: Fri, 8 Sep 2017 15:38:41 +0200
-Message-ID: <20170908133841.GS18365@amd>
-References: <20170908124213.18904-1-sakari.ailus@linux.intel.com>
- <20170908124213.18904-4-sakari.ailus@linux.intel.com>
- <20170908131758.GQ18365@amd>
- <20170908132333.rlhurlwrzq43ss2k@valkosipuli.retiisi.org.uk>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/8] ARM: dts: sun6i: Fix endpoint IDs in second display
+ pipeline
+Date: Fri, 8 Sep 2017 21:38:23 +0800
+Message-ID: <CAGb2v64S9uifdR3H2OSzQP1GBWg0vW3B4_dA7yAOkhC7r15Tug@mail.gmail.com>
+References: <20170908075016.18657-1-wens@csie.org>
+ <20170908075016.18657-2-wens@csie.org>
+ <20170908132932.rfz4hxab4tgntioo@flea.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3sseE1tnmEs+TkKq"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170908132333.rlhurlwrzq43ss2k@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170908132932.rfz4hxab4tgntioo@flea.lan>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-
---3sseE1tnmEs+TkKq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri 2017-09-08 16:23:34, Sakari Ailus wrote:
-> Hi Pavel,
->=20
-> Thanks for the review.
->=20
-> On Fri, Sep 08, 2017 at 03:17:58PM +0200, Pavel Machek wrote:
-> > On Fri 2017-09-08 15:42:13, Sakari Ailus wrote:
-> > > Use integer numbers for LEDs, 0 is the flash and 1 is the indicator.
-> > >=20
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> >=20
-> > Dunno. Old code is shorter, old device tree is shorter, ... IMO both
-> > versions are fine, because the LEDs are really different. Do we have
-> > documentation somewhere saying that reg=3D should be used for this? Are
-> > you doing this for consistency?
->=20
-> Well, actually for ACPI support. :-) It requires less driver changes this
-> way. See 17th and 18th patches in "[PATCH v9 00/23] Unified fwnode endpoi=
-nt
-> parser, async sub-device notifier support, N9 flash DTS".
-
-ACPI, I hate ACPI.
-
-> A number of chips have LED binding that is aligned, see e.g.
-> Documentation/devicetree/bindings/leds/leds-bcm6328.txt .
-
-Ok, yes, that's common way LED controllers are handled. Usually all
-the LEDs are "same", but...
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---3sseE1tnmEs+TkKq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlmynWEACgkQMOfwapXb+vJvGgCeN2aFZ7VFkP4zwan+XVr7SQNy
-xH4AnAv/X6P9KegVI000ek5O0pc//Alo
-=YBVY
------END PGP SIGNATURE-----
-
---3sseE1tnmEs+TkKq--
+T24gRnJpLCBTZXAgOCwgMjAxNyBhdCA5OjI5IFBNLCBNYXhpbWUgUmlwYXJkCjxtYXhpbWUucmlw
+YXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4gSGksCj4KPiBPbiBGcmksIFNlcCAwOCwg
+MjAxNyBhdCAwMzo1MDowOVBNICswODAwLCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4+IFdoZW4gdGhl
+IHNlY29uZCBkaXNwbGF5IHBpcGVsaW5lIGRldmljZSBub2RlcyBmb3IgdGhlIEEzMS9BMzFzIHdl
+cmUKPj4gYWRkZWQsIGl0IHdhcyBub3Qga25vd24gdGhhdCB0aGUgVENPTnMgY291bGQgKHRocm91
+Z2ggZWl0aGVyIERSQ3MpCj4+IHNlbGVjdCBlaXRoZXIgYmFja2VuZCBhcyB0aGVpciBpbnB1dC4g
+VGh1cyBpbiB0aGUgZW5kcG9pbnRzIGNvbm5lY3RpbmcKPj4gdGhlc2UgY29tcG9uZW50cyB0b2dl
+dGhlciwgdGhlIGVuZHBvaW50IElEcyB3ZXJlIHNldCB0byAwLCB3aGlsZSBpbgo+PiBmYWN0IHRo
+ZXkgc2hvdWxkIGhhdmUgYmVlbiBzZXQgdG8gMS4KPj4KPj4gRml4ZXM6IDlhMjY4ODJhNzM3OCAo
+IkFSTTogZHRzOiBzdW42aTogQWRkIHNlY29uZCBkaXNwbGF5IHBpcGVsaW5lIGRldmljZQo+PiAg
+ICAgICAgICAgICAgICAgICAgIG5vZGVzIikKPj4gU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2Fp
+IDx3ZW5zQGNzaWUub3JnPgo+Cj4gU2hvdWxkIHdlIENDIHN0YWJsZSBvbiB0aGlzIG9uZT8KCkl0
+IHdvdWxkbid0IG1hdHRlciBmb3Igb2xkIGtlcm5lbHMsIGJ1dCBJIHN1cHBvc2Ugd2Ugc2hvdWxk
+IGdldCBpdCByaWdodApldmVyeXdoZXJlLCBzbyB3ZSBzaG91bGQgcHJvYmFibHkgQ0Mgc3RhYmxl
+LiBBbHNvIEkgZm9yZ290IHRvIG1lbnRpb24KdGhhdCB0aGlzIHBhdGNoIHNob3VsZCBnbyBpbiAt
+Zml4ZXMsIHdoaWxlIHRoZSByZXN0IGNhbiBnbyBpbiAtbmV4dC4KClRoYW5rcwpDaGVuWXUKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
