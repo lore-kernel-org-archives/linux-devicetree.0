@@ -1,55 +1,80 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 3/8] drm/sun4i: tcon: Check for multiple paths between TCONs
- and backends
-Date: Fri,  8 Sep 2017 15:50:11 +0800
-Message-ID: <20170908075016.18657-4-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 1/8] ARM: dts: sun6i: Fix endpoint IDs in second display pipeline
+Date: Fri,  8 Sep 2017 15:50:09 +0800
+Message-ID: <20170908075016.18657-2-wens@csie.org>
 References: <20170908075016.18657-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170908075016.18657-1-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170908075016.18657-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHBhdGNoIGIzMTdmYTNiYTExYSAoImRybS9zdW40aTogdGNvbjogRmluZCBtYXRjaGluZyBk
-aXNwbGF5IGJhY2tlbmQKYnkgZGV2aWNlIG5vZGUgbWF0Y2hpbmciKSBhc3N1bWVkIGEgb25lLXRv
-LW9uZSBtYXBwaW5nIGJldHdlZW4gVENPTnMKYW5kIGJhY2tlbmRzLiBUaGlzIHR1cm5lZCBvdXQg
-d3JvbmcsIGFzIHdlIGZvdW5kIG11eGluZyBjb250cm9scyBpbiB0aGUKVENPTiBvZiB0aGUgQTMx
-LCBhbmQgdW5kb2N1bWVudGVkIHVzYWdlIG9mIHRoZSBiYWNrZW5kIG91dHB1dCBzZWxlY3Rvcgpv
-ZiB0aGUgQTIwLgoKTWFrZSBzdW40aV90Y29uX2ZpbmRfZW5naW5lKCkgYmFpbCBvdXQgaWYgdGhl
-IGN1cnJlbnQgbm9kZSBoYXMgbXVsdGlwbGUKaW5wdXQgY29ubmVjdGlvbnMuCgpGaXhlczogYjMx
-N2ZhM2JhMTFhICgiZHJtL3N1bjRpOiB0Y29uOiBGaW5kIG1hdGNoaW5nIGRpc3BsYXkgYmFja2Vu
-ZAoJCSAgICAgIGJ5IGRldmljZSBub2RlIG1hdGNoaW5nIikKU2lnbmVkLW9mZi1ieTogQ2hlbi1Z
-dSBUc2FpIDx3ZW5zQGNzaWUub3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90
-Y29uLmMgfCAxNCArKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMo
-KykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jIGIvZHJp
-dmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwppbmRleCBlYjMyNjc2ZDViMDEuLjA2NTY1
-NGRiZmIyYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jCkBAIC00NzMsNiArNDczLDIw
-IEBAIHN0YXRpYyBzdHJ1Y3Qgc3VueGlfZW5naW5lICpzdW40aV90Y29uX2ZpbmRfZW5naW5lKHN0
-cnVjdCBzdW40aV9kcnYgKmRydiwKIAlpZiAoIXBvcnQpCiAJCXJldHVybiBFUlJfUFRSKC1FSU5W
-QUwpOwogCisJLyoKKwkgKiBUaGlzIG9ubHkgd29ya3MgaWYgdGhlcmUgaXMgb25seSBvbmUgcGF0
-aCBmcm9tIHRoZSBUQ09OCisJICogdG8gYW55IGRpc3BsYXkgZW5naW5lLiBPdGhlcndpc2UgdGhl
-IHByb2JlIG9yZGVyIG9mIHRoZQorCSAqIFRDT05zIGFuZCBkaXNwbGF5IGVuZ2luZXMgaXMgbm90
-IGd1YXJhbnRlZWQuIFRoZXkgbWF5CisJICogZWl0aGVyIGJpbmQgdG8gdGhlIHdyb25nIG9uZSwg
-b3Igd29yc2UsIGJpbmQgdG8gdGhlIHNhbWUKKwkgKiBvbmUgaWYgYWRkaXRpb25hbCBjaGVja3Mg
-YXJlIG5vdCBkb25lLgorCSAqCisJICogQmFpbCBvdXQgaWYgdGhlcmUgYXJlIG11bHRpcGxlIGlu
-cHV0IGNvbm5lY3Rpb25zLgorCSAqLworCWlmIChvZl9nZXRfYXZhaWxhYmxlX2NoaWxkX2NvdW50
-KHBvcnQpICE9IDEpIHsKKwkJb2Zfbm9kZV9wdXQocG9ydCk7CisJCXJldHVybiBFUlJfUFRSKC1F
-SU5WQUwpOworCX0KKwogCWZvcl9lYWNoX2F2YWlsYWJsZV9jaGlsZF9vZl9ub2RlKHBvcnQsIGVw
-KSB7CiAJCXJlbW90ZSA9IG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZXApOwogCQlp
-ZiAoIXJlbW90ZSkKLS0gCjIuMTQuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+When the second display pipeline device nodes for the A31/A31s were
+added, it was not known that the TCONs could (through either DRCs)
+select either backend as their input. Thus in the endpoints connecting
+these components together, the endpoint IDs were set to 0, while in
+fact they should have been set to 1.
+
+Fixes: 9a26882a7378 ("ARM: dts: sun6i: Add second display pipeline device
+		      nodes")
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index f3d74dc5b292..00a4c7614e0a 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -311,8 +311,8 @@
+ 					#size-cells = <0>;
+ 					reg = <0>;
+ 
+-					tcon1_in_drc1: endpoint@0 {
+-						reg = <0>;
++					tcon1_in_drc1: endpoint@1 {
++						reg = <1>;
+ 						remote-endpoint = <&drc1_out_tcon1>;
+ 					};
+ 				};
+@@ -1038,8 +1038,8 @@
+ 					#size-cells = <0>;
+ 					reg = <1>;
+ 
+-					be1_out_drc1: endpoint@0 {
+-						reg = <0>;
++					be1_out_drc1: endpoint@1 {
++						reg = <1>;
+ 						remote-endpoint = <&drc1_in_be1>;
+ 					};
+ 				};
+@@ -1068,8 +1068,8 @@
+ 					#size-cells = <0>;
+ 					reg = <0>;
+ 
+-					drc1_in_be1: endpoint@0 {
+-						reg = <0>;
++					drc1_in_be1: endpoint@1 {
++						reg = <1>;
+ 						remote-endpoint = <&be1_out_drc1>;
+ 					};
+ 				};
+@@ -1079,8 +1079,8 @@
+ 					#size-cells = <0>;
+ 					reg = <1>;
+ 
+-					drc1_out_tcon1: endpoint@0 {
+-						reg = <0>;
++					drc1_out_tcon1: endpoint@1 {
++						reg = <1>;
+ 						remote-endpoint = <&tcon1_in_drc1>;
+ 					};
+ 				};
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
