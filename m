@@ -1,70 +1,32 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v9 17/24] ACPI: Document how to refer to LEDs from remote
- nodes
-Date: Fri, 8 Sep 2017 16:54:07 +0300
-Message-ID: <20170908135407.qxustmjr3yqhp7y5@valkosipuli.retiisi.org.uk>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
- <20170908131822.31020-13-sakari.ailus@linux.intel.com>
- <20170908134320.GC2477@lahna.fi.intel.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 3/3] net: phy: realtek: add RTL8201F phy-id and
+ functions
+Date: Fri, 8 Sep 2017 15:57:16 +0200
+Message-ID: <20170908135716.GB25219@lunn.ch>
+References: <1504875731-3680-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1504875731-3680-4-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170908134320.GC2477@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+In-Reply-To: <1504875731-3680-4-git-send-email-hayashi.kunihiko@socionext.com>
+Sender: netdev-owner@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Jongsung Kim <neidhard.kim@lge.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 08, 2017 at 04:43:20PM +0300, Mika Westerberg wrote:
-> On Fri, Sep 08, 2017 at 04:18:15PM +0300, Sakari Ailus wrote:
-> > +	Device (LED)
-> > +	{
-> > +		Name ((_DSD), Package () {
-> > +			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> > +			Package () {
-> > +				Package () { "led0", "LED0" },
-> > +				Package () { "led1", "LED1" },
-> > +			}
-> > +		})
-> > +		Name ((LED0), Package () {
-> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > +			Package () {
-> > +				Package () { "led", 0 },
-> > +				Package () { "flash-max-microamp", 1000000 },
-> > +				Package () { "led-max-microamp", 100000 },
-> > +				Package () { "label", "led:salama" },
-> > +			}
-> > +		})
-> > +		Name ((LED1), Package () {
-> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > +			Package () {
-> > +				Package () { "led", 1 },
-> > +				Package () { "led-max-microamp", 10000 },
-> > +				Package () { "label", "led:huomiovalo" },
-> > +			}
-> > +		})
-> > +	}
-> > +
-> > +	Device (SEN)
-> > +	{
-> > +		Name ((_DSD), Package () {
-> > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > +			Package () {
-> > +				Package () {
-> > +					"flash-leds",
-> > +					Package () { \\LED, 0, \\LED, 1 },
-> > +				}
-> > +			}
-> > +		})
-> > +	}
+On Fri, Sep 08, 2017 at 10:02:11PM +0900, Kunihiko Hayashi wrote:
+> From: Jassi Brar <jaswinder.singh@linaro.org>
 > 
-> You should probably try to compile these examples first ;-)
+> Add RTL8201F phy-id and the related functions to the driver.
+> 
+> The original patch is as follows:
+> https://patchwork.kernel.org/patch/2538341/
+> 
+> Signed-off-by: Jongsung Kim <neidhard.kim@lge.com>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-Do you think I'm missing something else than s/\\\\/^/g ? :-)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Yes, I tested it but then changed the tested ASL afterwards. :-P
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+    Andrew
