@@ -1,29 +1,44 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v9 00/23] Unified fwnode endpoint parser, async
- sub-device notifier support, N9 flash DTS
-Date: Fri, 8 Sep 2017 16:25:07 +0300
-Message-ID: <20170908132507.nqofkw2g43m7ydux@valkosipuli.retiisi.org.uk>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i: h3: Fix Pincrtl
+ bindings on Bananapi M2 Plus
+Date: Fri, 8 Sep 2017 15:26:07 +0200
+Message-ID: <20170908132607.rr3r7se23ixg7wqn@flea.lan>
+References: <1504643656-4926-1-git-send-email-embed3d@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xfikk45c7phvflpz"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4FUZLGQKGQEEXG75VA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+In-Reply-To: <1504643656-4926-1-git-send-email-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 08, 2017 at 04:11:51PM +0300, Sakari Ailus wrote:
-> With this, the as3645a driver successfully registers a sub-device to the
-> media device created by the omap3isp driver. The kernel also has the
-> information it's related to the sensor driven by the smiapp driver but we
-> don't have a way to expose that information yet.
 
-The patches are also available here:
+--xfikk45c7phvflpz
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=fwnode-parse>
+On Tue, Sep 05, 2017 at 10:34:16PM +0200, Philipp Rossak wrote:
+> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> There is no need for pincontrol nodes when the pin is set to a GPIO
+> 
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Applied, thanks!
+Maxime
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--xfikk45c7phvflpz--
