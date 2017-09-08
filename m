@@ -1,54 +1,98 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v8 03/21] v4l: async: Use more intuitive names for
- internal functions
-Date: Fri, 8 Sep 2017 14:40:10 +0200
-Message-ID: <20170908124010.GO18365@amd>
-References: <20170905130553.1332-1-sakari.ailus@linux.intel.com>
- <20170905130553.1332-4-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="XVTPT6MZt3zd/C+/"
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 2/3] dt: bindings: as3645a: Use LED number to refer to LEDs
+Date: Fri,  8 Sep 2017 15:42:12 +0300
+Message-ID: <20170908124213.18904-3-sakari.ailus@linux.intel.com>
+References: <20170908124213.18904-1-sakari.ailus@linux.intel.com>
 Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170905130553.1332-4-sakari.ailus@linux.intel.com>
+In-Reply-To: <20170908124213.18904-1-sakari.ailus@linux.intel.com>
 Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, sre@kernel.org
+To: linux-media@vger.kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Use integers (reg property) to tell the number of the LED to the driver
+instead of the node name. While both of these approaches are currently
+used by the LED bindings, using integers will require less driver changes
+for ACPI support. Additionally, it will make possible LED naming using
+chip and LED node names, effectively making the label property most useful
+for human-readable names only.
 
---XVTPT6MZt3zd/C+/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ .../devicetree/bindings/leds/ams,as3645a.txt       | 28 ++++++++++++++--------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-On Tue 2017-09-05 16:05:35, Sakari Ailus wrote:
-> Rename internal functions to make the names of the functions better
-> describe what they do.
->=20
-> 	Old name			New name
-> 	v4l2_async_test_notify	v4l2_async_match_notify
-> 	v4l2_async_belongs	v4l2_async_find_match
->=20
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---XVTPT6MZt3zd/C+/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlmyj6kACgkQMOfwapXb+vJsAwCgku7G59h8hem9oZana53BkuRr
-f8wAnRk6GC4LxGcK/AiCBsYMaQZPhNMM
-=ICAd
------END PGP SIGNATURE-----
-
---XVTPT6MZt3zd/C+/--
+diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+index 12c5ef26ec73..fdc40e354a64 100644
+--- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
++++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+@@ -15,11 +15,14 @@ Required properties
+ 
+ compatible	: Must be "ams,as3645a".
+ reg		: The I2C address of the device. Typically 0x30.
++#address-cells	: 1
++#size-cells	: 0
+ 
+ 
+-Required properties of the "flash" child node
+-=============================================
++Required properties of the flash child node (0)
++===============================================
+ 
++reg: 0
+ flash-timeout-us: Flash timeout in microseconds. The value must be in
+ 		  the range [100000, 850000] and divisible by 50000.
+ flash-max-microamp: Maximum flash current in microamperes. Has to be
+@@ -33,20 +36,21 @@ ams,input-max-microamp: Maximum flash controller input current. The
+ 			and divisible by 50000.
+ 
+ 
+-Optional properties of the "flash" child node
+-=============================================
++Optional properties of the flash child node
++===========================================
+ 
+ label		: The label of the flash LED.
+ 
+ 
+-Required properties of the "indicator" child node
+-=================================================
++Required properties of the indicator child node (1)
++===================================================
+ 
++reg: 1
+ led-max-microamp: Maximum indicator current. The allowed values are
+ 		  2500, 5000, 7500 and 10000.
+ 
+-Optional properties of the "indicator" child node
+-=================================================
++Optional properties of the indicator child node
++===============================================
+ 
+ label		: The label of the indicator LED.
+ 
+@@ -55,16 +59,20 @@ Example
+ =======
+ 
+ 	as3645a@30 {
++		#address-cells: 1
++		#size-cells: 0
+ 		reg = <0x30>;
+ 		compatible = "ams,as3645a";
+-		flash {
++		flash@0 {
++			reg = <0x0>;
+ 			flash-timeout-us = <150000>;
+ 			flash-max-microamp = <320000>;
+ 			led-max-microamp = <60000>;
+ 			ams,input-max-microamp = <1750000>;
+ 			label = "as3645a:flash";
+ 		};
+-		indicator {
++		indicator@1 {
++			reg = <0x1>;
+ 			led-max-microamp = <10000>;
+ 			label = "as3645a:indicator";
+ 		};
+-- 
+2.11.0
