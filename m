@@ -1,70 +1,184 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 5/8] drm/sun4i: tcon: Simplify sun4i_tcon_find_engine_traverse
- for one input
-Date: Fri,  8 Sep 2017 15:50:13 +0800
-Message-ID: <20170908075016.18657-6-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 2/8] drm/sun4i: add components in breadth first traversal order
+Date: Fri,  8 Sep 2017 15:50:10 +0800
+Message-ID: <20170908075016.18657-3-wens@csie.org>
 References: <20170908075016.18657-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170908075016.18657-1-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170908075016.18657-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tm93IHRoYXQgc3VuNGlfdGNvbl9maW5kX2VuZ2luZV90cmF2ZXJzZSgpIHVzYWdlIGlzIHJlc3Ry
-aWN0ZWQgdG8gdGhlCnNpbmdsZSBpbnB1dCBjYXNlLCB3ZSBjYW4gcmVtb3ZlIHRoZSBmb3JfZWFj
-aF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZQpsb29wLgoKV2hpbGUgYXQgaXQsIGNvbnNvbGlkYXRl
-IGFsbCB0aGUgb2Zfbm9kZV9wdXQgY2FsbHMgaW50byBhIGNvbW1vbiBleGl0CnBhdGguCgpTaWdu
-ZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Ci0tLQogZHJpdmVycy9ncHUv
-ZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyB8IDUxICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
-LS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMjYgZGVsZXRpb25z
-KC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKaW5kZXggMzNjMjBkMmY5ZmIxLi5lOWFi
-MDNmMGJmNmUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMK
-KysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwpAQCAtNDY4LDcgKzQ2OCw3
-IEBAIHN1bjRpX3Rjb25fZmluZF9lbmdpbmVfdHJhdmVyc2Uoc3RydWN0IHN1bjRpX2RydiAqZHJ2
-LAogCQkJCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKIHsKIAlzdHJ1Y3QgZGV2aWNlX25vZGUg
-KnBvcnQsICplcCwgKnJlbW90ZTsKLQlzdHJ1Y3Qgc3VueGlfZW5naW5lICplbmdpbmU7CisJc3Ry
-dWN0IHN1bnhpX2VuZ2luZSAqZW5naW5lID0gRVJSX1BUUigtRUlOVkFMKTsKIAogCXBvcnQgPSBv
-Zl9ncmFwaF9nZXRfcG9ydF9ieV9pZChub2RlLCAwKTsKIAlpZiAoIXBvcnQpCkBAIC00ODMsMzUg
-KzQ4MywzNCBAQCBzdW40aV90Y29uX2ZpbmRfZW5naW5lX3RyYXZlcnNlKHN0cnVjdCBzdW40aV9k
-cnYgKmRydiwKIAkgKgogCSAqIEJhaWwgb3V0IGlmIHRoZXJlIGFyZSBtdWx0aXBsZSBpbnB1dCBj
-b25uZWN0aW9ucy4KIAkgKi8KLQlpZiAob2ZfZ2V0X2F2YWlsYWJsZV9jaGlsZF9jb3VudChwb3J0
-KSAhPSAxKSB7Ci0JCW9mX25vZGVfcHV0KHBvcnQpOwotCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFM
-KTsKLQl9CisJaWYgKG9mX2dldF9hdmFpbGFibGVfY2hpbGRfY291bnQocG9ydCkgIT0gMSkKKwkJ
-Z290byBvdXRfcHV0X3BvcnQ7CiAKLQlmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZShw
-b3J0LCBlcCkgewotCQlyZW1vdGUgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGVw
-KTsKLQkJaWYgKCFyZW1vdGUpCi0JCQljb250aW51ZTsKKwkvKiBHZXQgdGhlIGZpcnN0IGNvbm5l
-Y3Rpb24gd2l0aG91dCBzcGVjaWZ5aW5nIGFuIElEICovCisJZXAgPSBvZl9nZXRfbmV4dF9hdmFp
-bGFibGVfY2hpbGQocG9ydCwgTlVMTCk7CisJaWYgKCFlcCkKKwkJZ290byBvdXRfcHV0X3BvcnQ7
-CiAKLQkJLyogZG9lcyB0aGlzIG5vZGUgbWF0Y2ggYW55IHJlZ2lzdGVyZWQgZW5naW5lcz8gKi8K
-LQkJbGlzdF9mb3JfZWFjaF9lbnRyeShlbmdpbmUsICZkcnYtPmVuZ2luZV9saXN0LCBsaXN0KSB7
-Ci0JCQlpZiAocmVtb3RlID09IGVuZ2luZS0+bm9kZSkgewotCQkJCW9mX25vZGVfcHV0KHJlbW90
-ZSk7Ci0JCQkJb2Zfbm9kZV9wdXQocG9ydCk7Ci0JCQkJcmV0dXJuIGVuZ2luZTsKLQkJCX0KLQkJ
-fQorCXJlbW90ZSA9IG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZXApOworCWlmICgh
-cmVtb3RlKQorCQlnb3RvIG91dF9wdXRfZXA7CiAKLQkJLyoga2VlcCBsb29raW5nIHRocm91Z2gg
-dXBzdHJlYW0gcG9ydHMgKi8KLQkJZW5naW5lID0gc3VuNGlfdGNvbl9maW5kX2VuZ2luZV90cmF2
-ZXJzZShkcnYsIHJlbW90ZSk7Ci0JCWlmICghSVNfRVJSKGVuZ2luZSkpIHsKLQkJCW9mX25vZGVf
-cHV0KHJlbW90ZSk7Ci0JCQlvZl9ub2RlX3B1dChwb3J0KTsKLQkJCXJldHVybiBlbmdpbmU7Ci0J
-CX0KLQl9CisJLyogZG9lcyB0aGlzIG5vZGUgbWF0Y2ggYW55IHJlZ2lzdGVyZWQgZW5naW5lcz8g
-Ki8KKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KGVuZ2luZSwgJmRydi0+ZW5naW5lX2xpc3QsIGxpc3Qp
-CisJCWlmIChyZW1vdGUgPT0gZW5naW5lLT5ub2RlKQorCQkJZ290byBvdXRfcHV0X3JlbW90ZTsK
-IAotCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOworCS8qIGtlZXAgbG9va2luZyB0aHJvdWdoIHVw
-c3RyZWFtIHBvcnRzICovCisJZW5naW5lID0gc3VuNGlfdGNvbl9maW5kX2VuZ2luZV90cmF2ZXJz
-ZShkcnYsIHJlbW90ZSk7CisKK291dF9wdXRfcmVtb3RlOgorCW9mX25vZGVfcHV0KHJlbW90ZSk7
-CitvdXRfcHV0X2VwOgorCW9mX25vZGVfcHV0KGVwKTsKK291dF9wdXRfcG9ydDoKKwlvZl9ub2Rl
-X3B1dChwb3J0KTsKKworCXJldHVybiBlbmdpbmU7CiB9CiAKIC8qCi0tIAoyLjE0LjEKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The encoder drivers use drm_of_find_possible_crtcs to get upstream
+crtcs from the device tree using of_graph. For the results to be
+correct, encoders must be probed/bound after _all_ crtcs have been
+created. The existing code uses a depth first recursive traversal
+of the of_graph, which means the encoders downstream of the TCON
+get add right after the first TCON. The second TCON or CRTC will
+never be properly associated with encoders connected to it.
+
+Other platforms, such as Rockchip, deal with this by probing all
+CRTCs first, then all subsequent components. This is easy to do
+since the CRTCs correspond to just one device node, and are the
+first nodes in the pipeline.
+
+However with Allwinner SoCs, the function of the CRTC is split
+between the display backend (DE 1.0) or mixer (DE 2.0), which does
+scan-out and compositing, and the TCON, which generates the display
+timing signals. Further complicating the process, there may be a
+Dynamic Range Controller between the backend and the TCON. Also, the
+backend is preceded by the frontend, with a Display Enhancement Unit
+possibly in between.
+
+In a dual display pipeline setup, both frontends can feed either
+backend, and both backends can feed either TCON. We want all
+components of the same type to be added before the next type in the
+pipeline. Fortunately, the pipelines are perfectly symmetric, i.e.
+components of the same type are at the same depth when counted from
+the frontend. The only exception is the third pipeline in the A80
+SoC, which we do not support anyway.
+
+Hence we can use a breadth first search traversal order to add
+components. We do not need to check for duplicates. The component
+matching system handles this for us.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 81 ++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 72 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index ace59651892f..2ff4233fe2da 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -200,11 +200,39 @@ static int compare_of(struct device *dev, void *data)
+ 	return dev->of_node == data;
+ }
+ 
++/*
++ * The encoder drivers use drm_of_find_possible_crtcs to get upstream
++ * crtcs from the device tree using of_graph. For the results to be
++ * correct, encoders must be probed/bound after _all_ crtcs have been
++ * created. The existing code uses a depth first recursive traversal
++ * of the of_graph, which means the encoders downstream of the TCON
++ * get add right after the first TCON. The second TCON or CRTC will
++ * never be properly associated with encoders connected to it.
++ *
++ * Also, in a dual display pipeline setup, both frontends can feed
++ * either backend, and both backends can feed either TCON, we want
++ * all components of the same type to be added before the next type
++ * in the pipeline. Fortunately, the pipelines are perfectly symmetric,
++ * i.e. components of the same type are at the same depth when counted
++ * from the frontend. The only exception is the third pipeline in
++ * the A80 SoC, which we do not support anyway.
++ *
++ * Hence we can use a breadth first search traversal order to add
++ * components. We do not need to check for duplicates. The component
++ * matching system handles this for us.
++ */
++struct endpoint_list {
++	struct device_node *node;
++	struct list_head list;
++};
++
+ static int sun4i_drv_add_endpoints(struct device *dev,
++				   struct list_head *endpoints,
+ 				   struct component_match **match,
+ 				   struct device_node *node)
+ {
+ 	struct device_node *port, *ep, *remote;
++	struct endpoint_list *endpoint;
+ 	int count = 0;
+ 
+ 	/*
+@@ -264,10 +292,15 @@ static int sun4i_drv_add_endpoints(struct device *dev,
+ 			}
+ 		}
+ 
+-		/* Walk down our tree */
+-		count += sun4i_drv_add_endpoints(dev, match, remote);
++		/* Add downstream nodes to the queue */
++		endpoint = kzalloc(sizeof(*endpoint), GFP_KERNEL);
++		if (!endpoint) {
++			of_node_put(remote);
++			return -ENOMEM;
++		}
+ 
+-		of_node_put(remote);
++		endpoint->node = remote;
++		list_add_tail(&endpoint->list, endpoints);
+ 	}
+ 
+ 	return count;
+@@ -277,7 +310,9 @@ static int sun4i_drv_probe(struct platform_device *pdev)
+ {
+ 	struct component_match *match = NULL;
+ 	struct device_node *np = pdev->dev.of_node;
+-	int i, count = 0;
++	struct endpoint_list *endpoint, *endpoint_temp;
++	int i, ret, count = 0;
++	LIST_HEAD(endpoints);
+ 
+ 	for (i = 0;; i++) {
+ 		struct device_node *pipeline = of_parse_phandle(np,
+@@ -286,12 +321,31 @@ static int sun4i_drv_probe(struct platform_device *pdev)
+ 		if (!pipeline)
+ 			break;
+ 
+-		count += sun4i_drv_add_endpoints(&pdev->dev, &match,
+-						pipeline);
+-		of_node_put(pipeline);
++		endpoint = kzalloc(sizeof(*endpoint), GFP_KERNEL);
++		if (!endpoint) {
++			ret = -ENOMEM;
++			goto err_free_endpoints;
++		}
++
++		endpoint->node = pipeline;
++		list_add_tail(&endpoint->list, &endpoints);
++	}
++
++	list_for_each_entry_safe(endpoint, endpoint_temp, &endpoints, list) {
++		/* process this endpoint */
++		ret = sun4i_drv_add_endpoints(&pdev->dev, &endpoints, &match,
++					      endpoint->node);
++
++		/* sun4i_drv_add_endpoints can fail to allocate memory */
++		if (ret < 0)
++			goto err_free_endpoints;
++
++		count += ret;
+ 
+-		DRM_DEBUG_DRIVER("Queued %d outputs on pipeline %d\n",
+-				 count, i);
++		/* delete and cleanup the current entry */
++		list_del(&endpoint->list);
++		of_node_put(endpoint->node);
++		kfree(endpoint);
+ 	}
+ 
+ 	if (count)
+@@ -300,6 +354,15 @@ static int sun4i_drv_probe(struct platform_device *pdev)
+ 						       match);
+ 	else
+ 		return 0;
++
++err_free_endpoints:
++	list_for_each_entry_safe(endpoint, endpoint_temp, &endpoints, list) {
++		list_del(&endpoint->list);
++		of_node_put(endpoint->node);
++		kfree(endpoint);
++	}
++
++	return ret;
+ }
+ 
+ static int sun4i_drv_remove(struct platform_device *pdev)
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
