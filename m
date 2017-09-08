@@ -1,39 +1,69 @@
 From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] arm64: dts: stratix10: fix up the gic register for the Stratix10 platform
-Date: Fri,  8 Sep 2017 10:48:53 -0500
-Message-ID: <1504885734-9618-1-git-send-email-dinguyen@kernel.org>
+Subject: [PATCH 2/2] arm64: dts: stratix10: add ethernet/sdmmc support to the S10 devkit
+Date: Fri,  8 Sep 2017 10:48:54 -0500
+Message-ID: <1504885734-9618-2-git-send-email-dinguyen@kernel.org>
+References: <1504885734-9618-1-git-send-email-dinguyen@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504885734-9618-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 Cc: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The register entries for the ARM GIC-400 should have a 2nd set of address.
+Enable ethernet and sdmmc support on the Stratix10 devkit.
 
 Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index c2b9bcb..631e09a 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -75,10 +75,10 @@
- 		compatible = "arm,gic-400", "arm,cortex-a15-gic";
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
--		reg = <0x0 0xfffc1000 0x1000>,
--		      <0x0 0xfffc2000 0x2000>,
--		      <0x0 0xfffc4000 0x2000>,
--		      <0x0 0xfffc6000 0x2000>;
-+		reg = <0x0 0xfffc1000 0x0 0x1000>,
-+		      <0x0 0xfffc2000 0x0 0x2000>,
-+		      <0x0 0xfffc4000 0x0 0x2000>,
-+		      <0x0 0xfffc6000 0x0 0x2000>;
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 41ea2db..ae0e8f3 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -34,6 +34,42 @@
  	};
+ };
  
- 	soc {
++&gmac0 {
++	phy-mode = "rgmii";
++	phy-addr = <0xffffffff>; /* probe for phy addr */
++
++	/*
++	 * These skews assume the user's FPGA design is adding 600ps of delay
++	 * for TX_CLK on Arria 10.
++	 *
++	 * All skews are offset since hardware skew values for the ksz9031
++	 * range from a negative skew to a positive skew.
++	 * See the micrel-ksz90x1.txt Documentation file for details.
++	*/
++	txd0-skew-ps = <0>; /* -420ps */
++	txd1-skew-ps = <0>; /* -420ps */
++	txd2-skew-ps = <0>; /* -420ps */
++	txd3-skew-ps = <0>; /* -420ps */
++	rxd0-skew-ps = <420>; /* 0ps */
++	rxd1-skew-ps = <420>; /* 0ps */
++	rxd2-skew-ps = <420>; /* 0ps */
++	rxd3-skew-ps = <420>; /* 0ps */
++	txen-skew-ps = <0>; /* -420ps */
++	txc-skew-ps = <1860>; /* 960ps */
++	rxdv-skew-ps = <420>; /* 0ps */
++	rxc-skew-ps = <1680>; /* 780ps */
++	max-frame-size = <3800>;
++	status = "okay";
++};
++
++&mmc {
++	status = "okay";
++	num-slots = <1>;
++	cap-sd-highspeed;
++	broken-cd;
++	bus-width = <4>;
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
 -- 
 2.7.4
 
