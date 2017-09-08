@@ -1,64 +1,197 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 0/8] drm/sun4i: Make both display pipeline work together
-Date: Fri,  8 Sep 2017 15:50:08 +0800
-Message-ID: <20170908075016.18657-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 4/8] drm/sun4i: tcon: get TCON ID and matching engine with remote endpoint ID
+Date: Fri,  8 Sep 2017 15:50:12 +0800
+Message-ID: <20170908075016.18657-5-wens@csie.org>
+References: <20170908075016.18657-1-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170908075016.18657-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgZXZlcnlvbmUsCgpQcmV2aW91c2x5IEkgYWRkZWQgc3VwcG9ydCBmb3IgdHdvIGRpc3BsYXkg
-cGlwZWxpbmVzIGZvciB0aGUgc3VuNGktZHJtCmRyaXZlci4gQXQgdGhlIHRpbWUgd2UgZGlkIG5v
-dCBoYXZlIHN1cHBvcnQgZm9yIGRvd25zdHJlYW0gZW5jb2RlcnMgdG8KYWN0dWFsbHkgdGVzdCB0
-aGUgc2Vjb25kIHBpcGVsaW5lLCBub3IgaGF2aW5nIGJvdGggcGlwZWxpbmVzIGFjdGl2ZSBhdAp0
-aGUgc2FtZSB0aW1lLgoKV2l0aCBIRE1JIGVuY29kZXIgc3VwcG9ydCBub3cgbWVyZ2VkIGFuZCBz
-dXBwb3J0IGZvciBpdCBvbiBzdW42aSBpbgpwcm9ncmVzcywgd2UgYXJlIG5vdyBhYmxlIHRvIHRl
-c3QgYm90aCBwaXBlbGluZXMgYmVpbmcgYWN0aXZlIGF0IHRoZQpzYW1lIHRpbWUsIHdpdGggTENE
-IG91dHB1dCBmcm9tIG9uZSBhbmQgSERNSSBmcm9tIHRoZSBvdGhlci4gVGVzdGluZwpoYXMgcmV2
-ZWFsZWQgc29tZSBtb3JlIGlzc3Vlcywgc3VjaCBhcyBjb21wb25lbnQgcHJvYmluZyBvcmRlci4g
-QWxzbywKd2UgZm91bmQgb3V0IHRoYXQgbXV4aW5nIGJldHdlZW4gdGhlIGRpc3BsYXkgYmFja2Vu
-ZCBhbmQgVENPTiB3YXMKcG9zc2libGUsIGFuZCByZXF1aXJlZCBmb3IgdGhlIHNlY29uZCBwaXBl
-bGluZSB0byB3b3JrIGFzIGludGVuZGVkLgpMYXN0LCB0aGUgbnVtYmVyIG9mIENSVENzIHByb3Zp
-ZGVkIHRvIGRybV92YmxhbmtfaW5pdCBuZWVkcyB0byBiZQppbmNyZWFzZWQgZm9yIHZibGFua3Mg
-dG8gd29yayBwcm9wZXJseS4KClRoaXMgcGF0Y2ggc2VyaWVzIGRvZXMgYSBmZXcgdGhpbmdzOgoK
-ICAtIEZpeCBlbmRwb2ludCBJRHMgc28gdGhleSBjb25mb3JtIHRvIHdoYXQgdGhlIERUIGJpbmRp
-bmcgc3RpcHVsYXRlcy4KCiAgLSBDaGFuZ2UgdGhlIG9yZGVyIHRoZSBpbmRpdmlkdWFsIGNvbXBv
-bmVudHMgYXJlIHF1ZXVlZCB1cC4KCiAgLSBGaXggaG93IHRoZSBUQ09OIGdldHMgaXRzIElEIHdo
-ZW4gdGhlIGJhY2tlbmQtVENPTiBtdXggaXMgcHJlc2VudC4KCiAgLSBTdXBwb3J0IHRoZSBpbnB1
-dCBtdXggaW4gdGhlIFRDT04gKHdoaWNoIHNlbGVjdHMgd2hpY2ggYmFja2VuZCB0bwogICAgdXNl
-IG9uIHRoZSBBMzEvQTMxcykuCgogIC0gRml4IHRoZSBkcm1fdmJsYW5rX2luaXQgY2FsbCBhbmQg
-cGFzcyB0aGUgY29ycmVjdCBudW1iZXIgb2YgY3J0Y3MuCgogIC0gQWRkIHRoZSBjcm9zcyBwaXBl
-bGluZSBjb25uZWN0aW9ucyBiZXR3ZWVuIHRoZSBEUkNzIGFuZCBUQ09OcyBvbgogICAgdGhlIEEz
-MSwgY29uZm9ybWluZyB0byB0aGUgRFQgYmluZGluZyBhbmQgd2hhdCB0aGUgaGFyZHdhcmUgaXMK
-ICAgIGNhcGFibGUgb2YuCgpNb3JlIGRldGFpbHMgYXJlIGF2YWlsYWJsZSBpbiBlYWNoIGluZGl2
-aWR1YWwgY29tbWl0LiBQbGVhc2UgaGF2ZSBhIGxvb2suCgpSZWdhcmRzCkNoZW5ZdQoKCkNoZW4t
-WXUgVHNhaSAoOCk6CiAgQVJNOiBkdHM6IHN1bjZpOiBGaXggZW5kcG9pbnQgSURzIGluIHNlY29u
-ZCBkaXNwbGF5IHBpcGVsaW5lCiAgZHJtL3N1bjRpOiBhZGQgY29tcG9uZW50cyBpbiBicmVhZHRo
-IGZpcnN0IHRyYXZlcnNhbCBvcmRlcgogIGRybS9zdW40aTogdGNvbjogQ2hlY2sgZm9yIG11bHRp
-cGxlIHBhdGhzIGJldHdlZW4gVENPTnMgYW5kIGJhY2tlbmRzCiAgZHJtL3N1bjRpOiB0Y29uOiBn
-ZXQgVENPTiBJRCBhbmQgbWF0Y2hpbmcgZW5naW5lIHdpdGggcmVtb3RlIGVuZHBvaW50CiAgICBJ
-RAogIGRybS9zdW40aTogdGNvbjogU2ltcGxpZnkgc3VuNGlfdGNvbl9maW5kX2VuZ2luZV90cmF2
-ZXJzZSBmb3Igb25lCiAgICBpbnB1dAogIGRybS9zdW40aTogdGNvbjogU3VwcG9ydCBiYWNrZW5k
-IGlucHV0IG11eAogIGRybS9zdW40aTogY2FsbCBkcm1fdmJsYW5rX2luaXQgd2l0aCBjb3JyZWN0
-IG51bWJlciBvZiBjcnRjcwogIEFSTTogZHRzOiBzdW42aTogQWRkIGNyb3NzIHBpcGVsaW5lIGNv
-bm5lY3Rpb25zIGJldHdlZW4gRFJDcyBhbmQgVENPTnMKCiBhcmNoL2FybS9ib290L2R0cy9zdW42
-aS1hMzEuZHRzaSAgIHwgIDMyICsrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9k
-cnYuYyAgfCAgOTEgKysrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
-NGlfdGNvbi5jIHwgMTkxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0KIGRy
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmggfCAgIDMgKwogNCBmaWxlcyBjaGFuZ2Vk
-LCAyNzYgaW5zZXJ0aW9ucygrKSwgNDEgZGVsZXRpb25zKC0pCgotLSAKMi4xNC4xCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The device tree binding for sun4i-drm says:
+
+    For all connections between components up to the TCONs in the display
+    pipeline, when there are multiple components of the same type at the
+    same depth, the local endpoint ID must be the same as the remote
+    component's index. For example, if the remote endpoint is Frontend 1,
+    then the local endpoint ID must be 1.
+
+We should be able to get the TCON's ID directly from any of the remote
+endpoints from its input port. With the ID, we can then go through the
+list of registered engines and find a matching one by ID.
+
+However the A31 device tree is incorrect. We assumed that there were no
+cross pipeline connections between the backends and TCONs. As a result,
+in all the endpoints between the backends and TCONs of the second
+display pipeline, the endpoint IDs were incorrectly set to 0, when in
+fact they should've been set to 1.
+
+To maintain compatibility with this incorrect device tree, we first
+check if the TCON's input port has 1 or many endpoints. If there are
+more than 1, then it is likely a fixed version, and we can proceed
+with the new method. If there is only 1 endpoint, then it is possibly
+an incorrect version, or it could be the SoC only has one pipeline.
+In either case we fall back to using the old method of traversing
+the input connections to find a matching engine, and then get its
+ID.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 121 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 118 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 065654dbfb2c..33c20d2f9fb1 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -463,8 +463,9 @@ static int sun4i_tcon_init_regmap(struct device *dev,
+  * function in fact searches the corresponding engine, and the ID is
+  * requested via the get_id function of the engine.
+  */
+-static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+-						   struct device_node *node)
++static struct sunxi_engine *
++sun4i_tcon_find_engine_traverse(struct sun4i_drv *drv,
++				struct device_node *node)
+ {
+ 	struct device_node *port, *ep, *remote;
+ 	struct sunxi_engine *engine;
+@@ -502,7 +503,7 @@ static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+ 		}
+ 
+ 		/* keep looking through upstream ports */
+-		engine = sun4i_tcon_find_engine(drv, remote);
++		engine = sun4i_tcon_find_engine_traverse(drv, remote);
+ 		if (!IS_ERR(engine)) {
+ 			of_node_put(remote);
+ 			of_node_put(port);
+@@ -513,6 +514,120 @@ static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++/*
++ * The device tree binding says that the remote endpoint ID of any
++ * connection between components, up to and including the TCON, of
++ * the display pipeline should be equal to the actual ID of the local
++ * component. Thus we can look at any one of the input connections of
++ * the TCONs, and use that connection's remote endpoint ID as our own.
++ *
++ * Since the user of this function already finds the input port,
++ * the port is passed in directly without further checks.
++ */
++static int sun4i_tcon_of_get_id_from_port(struct device_node *port)
++{
++	struct device_node *ep;
++	int ret = -EINVAL;
++
++	/* try finding an upstream endpoint */
++	for_each_available_child_of_node(port, ep) {
++		struct device_node *remote;
++		u32 reg;
++
++		remote = of_graph_get_remote_endpoint(ep);
++		if (!remote)
++			continue;
++
++		ret = of_property_read_u32(remote, "reg", &reg);
++		if (ret)
++			continue;
++
++		ret = reg;
++	}
++
++	return ret;
++}
++
++/*
++ * Once we know the TCON's id, we can look through the list of
++ * engines to find a matching one. We assume all engines have
++ * been probed and added to the list.
++ */
++static struct sunxi_engine *sun4i_tcon_get_engine_by_id(struct sun4i_drv *drv,
++							int id)
++{
++	struct sunxi_engine *engine;
++
++	list_for_each_entry(engine, &drv->engine_list, list)
++		if (engine->id == id)
++			return engine;
++
++	return ERR_PTR(-EINVAL);
++}
++
++/*
++ * On SoCs with the old display pipeline design (Display Engine 1.0),
++ * we assumed the TCON was always tied to just one backend. However
++ * this proved not to be the case. On the A31, the TCON can select
++ * either backend as its source. On the A20 (and likely on the A10),
++ * the backend can choose which TCON to output to.
++ *
++ * The device tree binding says that the remote endpoint ID of any
++ * connection between components, up to and including the TCON, of
++ * the display pipeline should be equal to the actual ID of the local
++ * component. Thus we should be able to look at any one of the input
++ * connections of the TCONs, and use that connection's remote endpoint
++ * ID as our own.
++ *
++ * However  the connections between the backend and TCON were assumed
++ * to be always singular, and their endpoit IDs were all incorrectly
++ * set to 0. This means for these old device trees, we cannot just look
++ * up the remote endpoint ID of a TCON input endpoint. TCON1 would be
++ * incorrectly identified as TCON0.
++ *
++ * This function first checks if the TCON node has 2 input endpoints.
++ * If so, then the device tree is a corrected version, and it will use
++ * sun4i_tcon_of_get_id() and sun4i_tcon_get_engine_by_id() from above
++ * to fetch the ID and engine directly. If not, then it is likely an
++ * old device trees, where the endpoint IDs were incorrect, but did not
++ * have endpoint connections between the backend and TCON across
++ * different display pipelines. It will fall back to the old method of
++ * traversing the  of_graph to try and find a matching engine by device
++ * node.
++ *
++ * In the case of single display pipeline device trees, either method
++ * works.
++ */
++static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
++						   struct device_node *node)
++{
++	struct device_node *port;
++	struct sunxi_engine *engine;
++
++	port = of_graph_get_port_by_id(node, 0);
++	if (!port)
++		return ERR_PTR(-EINVAL);
++
++	/*
++	 * Is this a corrected device tree with cross pipeline
++	 * connections between the backend and TCON?
++	 */
++	if (of_get_child_count(port) > 1) {
++		/* Get our ID directly from an upstream endpoint */
++		int id = sun4i_tcon_of_get_id_from_port(port);
++
++		/* Get our engine by matching our ID */
++		engine = sun4i_tcon_get_engine_by_id(drv, id);
++
++		of_node_put(port);
++		return engine;
++	}
++
++	/* Fallback to old method by traversing input endpoints */
++	of_node_put(port);
++	return sun4i_tcon_find_engine_traverse(drv, node);
++}
++
+ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 			   void *data)
+ {
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
