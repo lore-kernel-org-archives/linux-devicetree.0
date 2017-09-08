@@ -1,38 +1,79 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
- copying _shipped files
-Date: Fri, 8 Sep 2017 11:01:08 -0700
-Message-ID: <CA+55aFzZNpuYjVa4EZ2eJhvtU7-bzZTor_596TA5_CY77j+BEw@mail.gmail.com>
-References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
- <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
- <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug@mail.gmail.com>
- <CAK7LNATaisd3tPNbujTWLUq-2sMQ3pyTkPRSgjw00zUzv=GvSQ@mail.gmail.com> <CA+55aFwvaZSXubcmaaZD-i5c_F5bHWhr6OBxRM+=7dGueua0Ng@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <CA+55aFwvaZSXubcmaaZD-i5c_F5bHWhr6OBxRM+=7dGueua0Ng@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>, Michal Marek <mmarek@suse.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Richard Purdie <richard.purdie@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Markus Heiser <markus.heiser@darmarit.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, SeongJae Park <sj38.park@gmail.com>, "Yann E. MORIN" <yann.morin.1>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] ARM: dts: bcm283x: Use stdout-path instead of
+ console bootarg
+Date: Fri, 8 Sep 2017 20:04:16 +0200
+Message-ID: <C7897D52-34DE-4EAD-BA79-67ED91929D85@holtmann.org>
+References: <1504125721-4760-1-git-send-email-loic.poulain@gmail.com>
+ <19D1F3B6-A05B-425B-A06D-AD44EEE39BFE@holtmann.org>
+ <874lsdnkk5.fsf@anholt.net>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <874lsdnkk5.fsf-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 8, 2017 at 10:22 AM, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Of course, I only did a "make allmodconfig" to test the MODVERSIONS
-> case, I didn't actually install the modules. Is that error perhaps
-> only detected at install time?
+Hi Eric,
 
-Oh, I take that back. I just got a ton of warnings with my
-allmodconfig after doing a "git clean -dqfx".
+>>> Add the serial port config to "chosen/stdout-path".
+>>> Create serial0/1 aliases referring to uart0 ant uart1 paths.
+>>> Remove unneeded earlyprintk.
+>>> 
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>> arch/arm/boot/dts/bcm283x.dtsi | 7 ++++++-
+>>> 1 file changed, 6 insertions(+), 1 deletion(-)
+>>> 
+>>> v2: dt-bindings as separate patch
+>>>    rebase on upcoming pi3 dts changes
+>>> v3: changes in bcm serdev drivers:
+>>>    name refactoring and additional comments
+>>>    Add generic host_set_baudrate method
+>>>    Use agnostic device_property_read
+>>> v4: changes in doc and dts:
+>>>    Add additional params to broadcom bt dt-bindings
+>>>    Set the max baudrate to 2000000 instead of 921600
+>>>    use chosen/stdout-path instead of console=
+>>>    remove useless earlyprintk
+>>>    same changes in bcm283x.dtsi
+>>> v5: remove 1/4 dt-bindings and 4/4 hci_bcm serdev support
+>>>    1/4 and 4/4 merged in bluetooth-next tree
+>>> 
+>>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+>>> index 431dcfc..013431e 100644
+>>> --- a/arch/arm/boot/dts/bcm283x.dtsi
+>>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+>>> @@ -20,8 +20,13 @@
+>>> 	#address-cells = <1>;
+>>> 	#size-cells = <1>;
+>>> 
+>>> +	aliases {
+>>> +		serial0 = &uart0;
+>>> +		serial1 = &uart1;
+>>> +	};
+>>> +
+>>> 	chosen {
+>>> -		bootargs = "earlyprintk console=ttyAMA0";
+>>> +		stdout-path = "serial0:115200n8";
+>>> 	};
+>> 
+>> is anybody taking care of these two patches. I do not see them in Linus’ tree yet?
+> 
+> arm-soc process unfortunately doesn't accept PRs between rc5 or 6 and
+> the next rc1, so they're still in my TODO pile for when we get -rc1
+> again.
 
-So I guess there is a dependency issue - my normal build test after
-the merge didn't show any issues, simply because the change in
-ksymoops didn't actually cause the version information to be
-re-generated.
+the aliases change is actually fixing a real issue. The RPI 3 has the Bluetooth controller where the older models had the console. Leave the bluetooth { } section out of it, but at least fix the bootargs bug and use stdout-path with the correct aliases. Postponing real fixes like this until next -rc1 is a stupid process.
 
-It doesn't seem to happen for every exported symbol, though. Odd.
+Regards
 
-Looking at it, but not making sense of it yet.
+Marcel
 
-                Linus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
