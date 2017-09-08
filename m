@@ -1,42 +1,50 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 0/3] AS3645A fixes
-Date: Fri, 8 Sep 2017 21:51:22 +0200
-Message-ID: <4b4517bc-e215-ef48-3431-1fc2396034cd@gmail.com>
-References: <20170908124213.18904-1-sakari.ailus@linux.intel.com>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/3] dt-bindings: spi: spi-davinci: Update binding for 66AK2Gx pwr dm property
+Date: Fri, 8 Sep 2017 15:46:36 -0500
+Message-ID: <20170908204638.13149-2-fcooper@ti.com>
+References: <20170908204638.13149-1-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170908124213.18904-1-sakari.ailus@linux.intel.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170908204638.13149-1-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Add pm-domains property which is required for 66AK2Gx. Also document 66AK2G
+unique clocks property usage.
 
-Thanks for the patch set.
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/spi-davinci.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-On 09/08/2017 02:42 PM, Sakari Ailus wrote:
-> Hi folks,
-> 
-> Here are a few fixes for the as3645a DTS as well as changes in bindings.
-> The driver is not in a release yet. I'd like to get these in as through
-> the media tree fixes branch.
-> 
-> Sakari Ailus (3):
->   as3645a: Use ams,input-max-microamp as documented in DT bindings
->   dt: bindings: as3645a: Use LED number to refer to LEDs
->   as3645a: Use integer numbers for parsing LEDs
-> 
->  .../devicetree/bindings/leds/ams,as3645a.txt       | 28 ++++++++++++++--------
->  arch/arm/boot/dts/omap3-n950-n9.dtsi               | 10 +++++---
->  drivers/leds/leds-as3645a.c                        | 28 +++++++++++++++++++---
->  3 files changed, 50 insertions(+), 16 deletions(-)
-> 
-
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-
+diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+index f5916c9..1925277 100644
+--- a/Documentation/devicetree/bindings/spi/spi-davinci.txt
++++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+@@ -24,6 +24,16 @@ Required properties:
+ 	based on a specific SoC configuration.
+ - interrupts: interrupt number mapped to CPU.
+ - clocks: spi clk phandle
++          For 66AK2G this property should be set per binding,
++          Documentation/devicetree/bindings/clock/ti,sci-clk.txt
++
++SoC-specific Required Properties:
++
++The following are mandatory properties for Keystone 2 66AK2G SoCs only:
++
++- power-domains:	Should contain a phandle to a PM domain provider node
++			and an args specifier containing the SPI device id
++			value. This property is as per the binding,
+ 
+ Optional:
+ - cs-gpios: gpio chip selects
 -- 
-Best regards,
-Jacek Anaszewski
+2.9.4.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
