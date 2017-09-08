@@ -1,47 +1,78 @@
-From: Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH v7 1/3] dt-bindings: net: document Bluetooth bindings in one place
-Date: Fri,  8 Sep 2017 15:57:53 +0200
-Message-ID: <1504879075-587-1-git-send-email-loic.poulain@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: marcel@holtmann.org, robh+dt@kernel.org, johan.hedberg@gmail.com
-Cc: linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org, Loic Poulain <loic.poulain@linaro.org>
+From: Mika Westerberg <mika.westerberg@intel.com>
+Subject: Re: [PATCH v9 17/24] ACPI: Document how to refer to LEDs from remote
+ nodes
+Date: Fri, 8 Sep 2017 16:58:03 +0300
+Message-ID: <20170908135803.GD2477@lahna.fi.intel.com>
+References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
+ <20170908131822.31020-13-sakari.ailus@linux.intel.com>
+ <20170908134320.GC2477@lahna.fi.intel.com>
+ <20170908135407.qxustmjr3yqhp7y5@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170908135407.qxustmjr3yqhp7y5@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In the same way as Ethernet, gather the Bluetooth related bindings in
-one file. Introduce the bluetooth-bd-address property which can be used
-to store the assigned BD address.
+On Fri, Sep 08, 2017 at 04:54:07PM +0300, Sakari Ailus wrote:
+> On Fri, Sep 08, 2017 at 04:43:20PM +0300, Mika Westerberg wrote:
+> > On Fri, Sep 08, 2017 at 04:18:15PM +0300, Sakari Ailus wrote:
+> > > +	Device (LED)
+> > > +	{
+> > > +		Name ((_DSD), Package () {
+> > > +			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> > > +			Package () {
+> > > +				Package () { "led0", "LED0" },
+> > > +				Package () { "led1", "LED1" },
+> > > +			}
+> > > +		})
+> > > +		Name ((LED0), Package () {
+> > > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > > +			Package () {
+> > > +				Package () { "led", 0 },
+> > > +				Package () { "flash-max-microamp", 1000000 },
+> > > +				Package () { "led-max-microamp", 100000 },
+> > > +				Package () { "label", "led:salama" },
+> > > +			}
+> > > +		})
+> > > +		Name ((LED1), Package () {
+> > > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > > +			Package () {
+> > > +				Package () { "led", 1 },
+> > > +				Package () { "led-max-microamp", 10000 },
+> > > +				Package () { "label", "led:huomiovalo" },
+> > > +			}
+> > > +		})
+> > > +	}
+> > > +
+> > > +	Device (SEN)
+> > > +	{
+> > > +		Name ((_DSD), Package () {
+> > > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > > +			Package () {
+> > > +				Package () {
+> > > +					"flash-leds",
+> > > +					Package () { \\LED, 0, \\LED, 1 },
+> > > +				}
+> > > +			}
+> > > +		})
+> > > +	}
+> > 
+> > You should probably try to compile these examples first ;-)
+> 
+> Do you think I'm missing something else than s/\\\\/^/g ? :-)
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
----
- v2: Set device as unconfigured if default address detected
-     Add warning if BD addr retrieved from DT
- v3: if no addr retrieved from DT, unconditionally set
-     the invalid BD addr flag.
-     swap and set bdaddr in the platform probe
- v4: Add dt-bindings documentation
-     split patch in two parts (setup, dt prop)
-     use local-bd-address name instead of local-mac-address
- v5: remove 2/3 merged in bluetooth-next tree
-     Add bluetooth.txt for common BT bindings
-     expect local-bd-address in little-endian format
- v6: use of_property_read_u8_array instead of of_get_property
- v7: use dev_info instead of BT_INFO to have dev context
+Well, you should write
 
- Documentation/devicetree/bindings/net/bluetooth.txt | 5 +++++
- 1 file changed, 5 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/bluetooth.txt
+	Name (_DSD, Package () {
 
-diff --git a/Documentation/devicetree/bindings/net/bluetooth.txt b/Documentation/devicetree/bindings/net/bluetooth.txt
-new file mode 100644
-index 0000000..94797df
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/bluetooth.txt
-@@ -0,0 +1,5 @@
-+The following properties are common to the Bluetooth controllers:
-+
-+- local-bd-address: array of 6 bytes, specifies the BD address that was
-+  uniquely assigned to the Bluetooth device, formatted with least significant
-+  byte first (little-endian).
--- 
-1.9.1
+instead of
+
+	Name ((_DSD), Package () {
+
+but I guess the compiler accepts the former. However, please fix it and
+make sure it compiles without issues so that we get good, working
+examples.
