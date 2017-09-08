@@ -1,82 +1,92 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v5 10/10] net: stmmac: dwmac-sun8i: Handle
- integrated/external MDIOs
-Date: Fri, 8 Sep 2017 15:26:32 +0200
-Message-ID: <20170908132632.GA3037@Red>
-References: <20170908071156.5115-1-clabbe.montjoie@gmail.com>
- <20170908071156.5115-11-clabbe.montjoie@gmail.com>
- <20170908130520.GA11248@lunn.ch>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/8] ARM: dts: sun6i: Fix endpoint IDs in second display
+ pipeline
+Date: Fri, 8 Sep 2017 15:29:32 +0200
+Message-ID: <20170908132932.rfz4hxab4tgntioo@flea.lan>
+References: <20170908075016.18657-1-wens@csie.org>
+ <20170908075016.18657-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170908130520.GA11248@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1077176311=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170908075016.18657-2-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 08, 2017 at 03:05:20PM +0200, Andrew Lunn wrote:
-> > +#define DWMAC_sUN8I_MDIO_MUX_INTERNAL_ID	0
-> > +#define DWMAC_sUN8I_MDIO_MUX_EXTERNAL_ID	1
-> >  
-> >  /* H3/A64 specific bits */
-> >  #define SYSCON_RMII_EN		BIT(13) /* 1: enable RMII (overrides EPIT) */
-> > @@ -634,6 +639,76 @@ static int sun8i_dwmac_reset(struct stmmac_priv *priv)
-> >  	return 0;
-> >  }
-> >  
-> > +/* MDIO multiplexing switch function
-> > + * This function is called by the mdio-mux layer when it thinks the mdio bus
-> > + * multiplexer needs to switch.
-> > + * 'current_child' is the current value of the mux register
-> > + * 'desired_child' is the value of the 'reg' property of the target child MDIO
-> > + * node.
-> > + * The first time this function is called, current_child == -1.
-> > + * If current_child == desired_child, then the mux is already set to the
-> > + * correct bus.
-> > + *
-> > + * Note that we do not use reg/mask like mdio-mux-mmioreg because we need to
-> > + * know easily which bus is used (reset must be done only for desired bus).
-> > + */
-> > +static int mdio_mux_syscon_switch_fn(int current_child, int desired_child,
-> > +				     void *data)
-> > +{
-> > +	struct stmmac_priv *priv = data;
-> > +	struct sunxi_priv_data *gmac = priv->plat->bsp_priv;
-> > +	u32 reg, val;
-> > +	int ret = 0;
-> > +	bool need_reset = false;
-> > +
-> > +	if (current_child ^ desired_child) {
-> > +		regmap_read(gmac->regmap, SYSCON_EMAC_REG, &reg);
-> > +		switch (desired_child) {
-> > +		case DWMAC_sUN8I_MDIO_MUX_INTERNAL_ID:
-> > +			dev_info(priv->device, "Switch mux to internal PHY");
-> > +			val = (reg & ~H3_EPHY_MUX_MASK) | H3_EPHY_SELECT;
-> > +			if (gmac->use_internal_phy)
-> > +				need_reset = true;
-> > +			break;
-> 
-> This i don't get. Why do you need use_internal_phy? Isn't that
-> implicit from DWMAC_sUN8I_MDIO_MUX_INTERNAL_ID? Is it even possible to
-> use an external PHY on the internal MDIO bus?
-> 
 
-On my H3 box with external PHY, the MDIO mux library first select (for scan ?) the internal MDIO.
-Without use_internal_phy usage, this board will launch a reset to use the internal MDIO... and this reset timeout/fail.
-After the MDIO mux select the external MDIO.
+--===============1077176311==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="boiord233u4nq2qs"
+Content-Disposition: inline
 
-> > +		case DWMAC_sUN8I_MDIO_MUX_EXTERNAL_ID:
-> > +			dev_info(priv->device, "Switch mux to external PHY");
-> > +			val = (reg & ~H3_EPHY_MUX_MASK) | H3_EPHY_SHUTDOWN;
-> > +			if (!gmac->use_internal_phy)
-> > +				need_reset = true;
-> > +			break;
-> 
-> And is it possible to use the internal PHY on the external bus?
-> 
 
-I need to check that.
+--boiord233u4nq2qs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards
+Hi,
+
+On Fri, Sep 08, 2017 at 03:50:09PM +0800, Chen-Yu Tsai wrote:
+> When the second display pipeline device nodes for the A31/A31s were
+> added, it was not known that the TCONs could (through either DRCs)
+> select either backend as their input. Thus in the endpoints connecting
+> these components together, the endpoint IDs were set to 0, while in
+> fact they should have been set to 1.
+>=20
+> Fixes: 9a26882a7378 ("ARM: dts: sun6i: Add second display pipeline device
+> 		      nodes")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+
+Should we CC stable on this one?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--boiord233u4nq2qs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZsps8AAoJEBx+YmzsjxAgl4MQAIAf8dVZzAp+cCXKl2lSzf/B
+7gz/mmr4P1SGLfHSjDPIKLmef+HiUyHd44EKLVI6yxe+LW1U8iJC4T4dIL+r8HEU
+qgVJ91U3LxxAaA/A/2TRwcoiElkt5V58oa7NC/LLMoHK2+TftqXx64bjSMMbmmqI
+8IxIb34soEQkIasIk//QDFYmSTh6HIlPQeY4y1J4yavESwy/MtcoyQpeQGrwn+r3
+MGkslho4w4AgA5sZI8Lvyb7Rp4eopvufSIvy85nI0SD0XYGBx1mXJUL6+RgC9ijl
+46kSy1VUSAihOSGlFQtsP5BSWRxH+lhXvL1CaxEiIB/tWtaB0PXXXUC+/9WkbvGn
+3jIq8Wp2ftEzNgJbKn90Ei8VeO8wPlS0pbDuOX0EPsgoRyATQaMWoW6TvHQJAgvt
+T21LP/JtKn6Cp74fJwkloG95Ha3+Tbr9ObuIq0Umz2DW7S6Bb/WnRW+Y5ULkFhqJ
+u37cS+qOX8kd3k4MI7Ull1NhSDCauek7Y6KR3bxhZjwixsAm9tvhpx2KITxvMxAE
+8HFQftVp2mxMMRGcl0NG+3V85L31ktFU+FjPM2hid7MXkwQ6gBGd8zHEfodkh8zq
+Zap64ys7kh1+huTWZSHQbJQiH20ZJYI/eXEJtKX4QYHbyYb4bk99HaTTP2A3h7aD
+JcklB2qHy0DSnk0vVwUy
+=NfdT
+-----END PGP SIGNATURE-----
+
+--boiord233u4nq2qs--
+
+--===============1077176311==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1077176311==--
