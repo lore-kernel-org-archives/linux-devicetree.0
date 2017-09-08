@@ -1,105 +1,140 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH 3/3] as3645a: Use integer numbers for parsing LEDs
-Date: Fri,  8 Sep 2017 15:42:13 +0300
-Message-ID: <20170908124213.18904-4-sakari.ailus@linux.intel.com>
-References: <20170908124213.18904-1-sakari.ailus@linux.intel.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2 v4] PCI: v3: Update the device tree bindings
+Date: Fri,  8 Sep 2017 14:45:02 +0200
+Message-ID: <20170908124503.4491-1-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170908124213.18904-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use integer numbers for LEDs, 0 is the flash and 1 is the indicator.
+The bindings for the V3 Semiconductor PCI bridge are a tad bit outdated
+and predates the more formal format we have adopted for the bindings.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Update them a bit so it is easier to read, and add the Integrator AP-
+specific compatible so we can detect that we are running on that specific
+platform.
+
+Add a second register bank for the configuration memory area. The
+device tree specs does specify a memory range for configuration
+space but it is not applicable to custom accessors like this. Instead
+follow the pattern from the Versatile PCI adapter and simply add
+a second register bank for this memory.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/omap3-n950-n9.dtsi |  8 ++++++--
- drivers/leds/leds-as3645a.c          | 26 ++++++++++++++++++++++++--
- 2 files changed, 30 insertions(+), 4 deletions(-)
+ChangeLog v3->v4:
+- Add bus-range to the example and the required properties.
+ChangeLog v2->v3:
+- Add a second register bank for the config space.
+- Mention that nonpre and pre memory must be 256MB and adjacent
+- Make the prefetched and non-prefetched memory mapped 1:1 to
+  the PCI address space so that local bus 0x40000000 and
+  0x50000000 maps to the *same* local (CPU) bus addresses.
+- Add reference to dma-ranges and that this is required.
+- Add an example from the ARM Integrator/AP
+- Rob ACKed an earlier version, he might want to have a glance
+  at this before merging.
+ChangeLog v1->v2:
+- Added Rob's ACK.
 
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-index b86fc83a5a65..1b0bd72945f2 100644
---- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -267,15 +267,19 @@
- 	clock-frequency = <400000>;
+Bjorn: please merge this when you feel confident with it.
+---
+ .../devicetree/bindings/pci/v3-v360epc-pci.txt     | 75 ++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt b/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
+index 30b364e504ba..11063293f761 100644
+--- a/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
++++ b/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
+@@ -2,14 +2,75 @@ V3 Semiconductor V360 EPC PCI bridge
  
- 	as3645a@30 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		reg = <0x30>;
- 		compatible = "ams,as3645a";
--		flash {
-+		flash@0 {
-+			reg = <0x0>;
- 			flash-timeout-us = <150000>;
- 			flash-max-microamp = <320000>;
- 			led-max-microamp = <60000>;
- 			ams,input-max-microamp = <1750000>;
- 		};
--		indicator {
-+		indicator@1 {
-+			reg = <0x1>;
- 			led-max-microamp = <10000>;
- 		};
- 	};
-diff --git a/drivers/leds/leds-as3645a.c b/drivers/leds/leds-as3645a.c
-index e3f89c6130d2..605e0c64e974 100644
---- a/drivers/leds/leds-as3645a.c
-+++ b/drivers/leds/leds-as3645a.c
-@@ -112,6 +112,10 @@
- #define AS_PEAK_mA_TO_REG(a) \
- 	((min_t(u32, AS_PEAK_mA_MAX, a) - 1250) / 250)
+ This bridge is found in the ARM Integrator/AP (Application Platform)
  
-+/* LED numbers for Devicetree */
-+#define AS_LED_FLASH				0
-+#define AS_LED_INDICATOR			1
-+
- enum as_mode {
- 	AS_MODE_EXT_TORCH = 0 << AS_CONTROL_MODE_SETTING_SHIFT,
- 	AS_MODE_INDICATOR = 1 << AS_CONTROL_MODE_SETTING_SHIFT,
-@@ -491,10 +495,29 @@ static int as3645a_parse_node(struct as3645a *flash,
- 			      struct device_node *node)
- {
- 	struct as3645a_config *cfg = &flash->cfg;
-+	struct device_node *child;
- 	const char *name;
- 	int rval;
+-Integrator-specific notes:
++Required properties:
++- compatible: should be one of:
++  "v3,v360epc-pci"
++  "arm,integrator-ap-pci", "v3,v360epc-pci"
++- reg: should contain two register areas:
++  first the base address of the V3 host bridge controller, 64KB
++  second the configuration area register space, 16MB
++- interrupts: should contain a reference to the V3 error interrupt
++  as routed on the system.
++- bus-range: see pci.txt
++- ranges: this follows the standard PCI bindings in the IEEE Std
++  1275-1994 (see pci.txt) with the following restriction:
++  - The non-prefetchable and prefetchable memory windows must
++    each be exactly 256MB (0x10000000) in size.
++  - The prefetchable memory window must be immediately adjacent
++    to the non-prefetcable memory window
++- dma-ranges: three ranges for the inbound memory region. The ranges must
++  be aligned to a 1MB boundary, and may be 1MB, 2MB, 4MB, 8MB, 16MB, 32MB,
++  64MB, 128MB, 256MB, 512MB, 1GB or 2GB in size. The memory should be marked
++  as pre-fetchable. Two ranges are supported by the hardware.
  
--	flash->flash_node = of_get_child_by_name(node, "flash");
-+	for_each_child_of_node(node, child) {
-+		u32 id = 0;
-+
-+		of_property_read_u32(child, "reg", &id);
-+
-+		switch (id) {
-+		case AS_LED_FLASH:
-+			flash->flash_node = of_node_get(child);
-+			break;
-+		case AS_LED_INDICATOR:
-+			flash->indicator_node = of_node_get(child);
-+			break;
-+		default:
-+			dev_warn(&flash->client->dev,
-+				 "unknown LED %u encountered, ignoring\n", id);
-+			break;
-+		}
-+	}
-+
- 	if (!flash->flash_node) {
- 		dev_err(&flash->client->dev, "can't find flash node\n");
- 		return -ENODEV;
-@@ -538,7 +561,6 @@ static int as3645a_parse_node(struct as3645a *flash,
- 			     &cfg->peak);
- 	cfg->peak = AS_PEAK_mA_TO_REG(cfg->peak);
+-- syscon: should contain a link to the syscon device node (since
++Integrator-specific required properties:
++- syscon: should contain a link to the syscon device node, since
+   on the Integrator, some registers in the syscon are required to
+-  operate the V3).
++  operate the V3 host bridge.
  
--	flash->indicator_node = of_get_child_by_name(node, "indicator");
- 	if (!flash->indicator_node) {
- 		dev_warn(&flash->client->dev,
- 			 "can't find indicator node\n");
+-V360 EPC specific notes:
++Example:
+ 
+-- reg: should contain the base address of the V3 adapter.
+-- interrupts: should contain a reference to the V3 error interrupt
+-  as routed on the system.
++pci: pciv3@62000000 {
++	compatible = "arm,integrator-ap-pci", "v3,v360epc-pci";
++	#interrupt-cells = <1>;
++	#size-cells = <2>;
++	#address-cells = <3>;
++	reg = <0x62000000 0x10000>, <0x61000000 0x01000000>;
++	interrupt-parent = <&pic>;
++	interrupts = <17>; /* Bus error IRQ */
++	clocks = <&pciclk>;
++	bus-range = <0x00 0xff>;
++	ranges = 0x01000000 0 0x00000000 /* I/O space @00000000 */
++		0x60000000 0 0x01000000 /* 16 MiB @ LB 60000000 */
++		0x02000000 0 0x40000000 /* non-prefectable memory @40000000 */
++		0x40000000 0 0x10000000 /* 256 MiB @ LB 40000000 1:1 */
++		0x42000000 0 0x50000000 /* prefetchable memory @50000000 */
++		0x50000000 0 0x10000000>; /* 256 MiB @ LB 50000000 1:1 */
++	dma-ranges = <0x02000000 0 0x20000000 /* EBI memory space */
++		0x20000000 0 0x20000000 /* 512 MB @ LB 20000000 1:1 */
++		0x02000000 0 0x80000000 /* Core module alias memory */
++		0x80000000 0 0x40000000>; /* 1GB @ LB 80000000 */
++	interrupt-map-mask = <0xf800 0 0 0x7>;
++	interrupt-map = <
++	/* IDSEL 9 */
++	0x4800 0 0 1 &pic 13 /* INT A on slot 9 is irq 13 */
++	0x4800 0 0 2 &pic 14 /* INT B on slot 9 is irq 14 */
++	0x4800 0 0 3 &pic 15 /* INT C on slot 9 is irq 15 */
++	0x4800 0 0 4 &pic 16 /* INT D on slot 9 is irq 16 */
++	/* IDSEL 10 */
++	0x5000 0 0 1 &pic 14 /* INT A on slot 10 is irq 14 */
++	0x5000 0 0 2 &pic 15 /* INT B on slot 10 is irq 15 */
++	0x5000 0 0 3 &pic 16 /* INT C on slot 10 is irq 16 */
++	0x5000 0 0 4 &pic 13 /* INT D on slot 10 is irq 13 */
++	/* IDSEL 11 */
++	0x5800 0 0 1 &pic 15 /* INT A on slot 11 is irq 15 */
++	0x5800 0 0 2 &pic 16 /* INT B on slot 11 is irq 16 */
++	0x5800 0 0 3 &pic 13 /* INT C on slot 11 is irq 13 */
++	0x5800 0 0 4 &pic 14 /* INT D on slot 11 is irq 14 */
++	/* IDSEL 12 */
++	0x6000 0 0 1 &pic 16 /* INT A on slot 12 is irq 16 */
++	0x6000 0 0 2 &pic 13 /* INT B on slot 12 is irq 13 */
++	0x6000 0 0 3 &pic 14 /* INT C on slot 12 is irq 14 */
++	0x6000 0 0 4 &pic 15 /* INT D on slot 12 is irq 15 */
++	>;
++};
 -- 
-2.11.0
+2.13.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
