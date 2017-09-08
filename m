@@ -1,78 +1,66 @@
-From: Mika Westerberg <mika.westerberg@intel.com>
-Subject: Re: [PATCH v9 17/24] ACPI: Document how to refer to LEDs from remote
- nodes
-Date: Fri, 8 Sep 2017 16:58:03 +0300
-Message-ID: <20170908135803.GD2477@lahna.fi.intel.com>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
- <20170908131822.31020-13-sakari.ailus@linux.intel.com>
- <20170908134320.GC2477@lahna.fi.intel.com>
- <20170908135407.qxustmjr3yqhp7y5@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170908135407.qxustmjr3yqhp7y5@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+From: Loic Poulain <loic.poulain@linaro.org>
+Subject: [PATCH v7 3/3] Bluetooth: btqcomsmd: retrieve BD address from DT property
+Date: Fri,  8 Sep 2017 15:57:55 +0200
+Message-ID: <1504879075-587-3-git-send-email-loic.poulain@linaro.org>
+References: <1504879075-587-1-git-send-email-loic.poulain@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1504879075-587-1-git-send-email-loic.poulain@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: marcel@holtmann.org, robh+dt@kernel.org, johan.hedberg@gmail.com
+Cc: linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org, Loic Poulain <loic.poulain@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 08, 2017 at 04:54:07PM +0300, Sakari Ailus wrote:
-> On Fri, Sep 08, 2017 at 04:43:20PM +0300, Mika Westerberg wrote:
-> > On Fri, Sep 08, 2017 at 04:18:15PM +0300, Sakari Ailus wrote:
-> > > +	Device (LED)
-> > > +	{
-> > > +		Name ((_DSD), Package () {
-> > > +			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> > > +			Package () {
-> > > +				Package () { "led0", "LED0" },
-> > > +				Package () { "led1", "LED1" },
-> > > +			}
-> > > +		})
-> > > +		Name ((LED0), Package () {
-> > > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > > +			Package () {
-> > > +				Package () { "led", 0 },
-> > > +				Package () { "flash-max-microamp", 1000000 },
-> > > +				Package () { "led-max-microamp", 100000 },
-> > > +				Package () { "label", "led:salama" },
-> > > +			}
-> > > +		})
-> > > +		Name ((LED1), Package () {
-> > > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > > +			Package () {
-> > > +				Package () { "led", 1 },
-> > > +				Package () { "led-max-microamp", 10000 },
-> > > +				Package () { "label", "led:huomiovalo" },
-> > > +			}
-> > > +		})
-> > > +	}
-> > > +
-> > > +	Device (SEN)
-> > > +	{
-> > > +		Name ((_DSD), Package () {
-> > > +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > > +			Package () {
-> > > +				Package () {
-> > > +					"flash-leds",
-> > > +					Package () { \\LED, 0, \\LED, 1 },
-> > > +				}
-> > > +			}
-> > > +		})
-> > > +	}
-> > 
-> > You should probably try to compile these examples first ;-)
-> 
-> Do you think I'm missing something else than s/\\\\/^/g ? :-)
+Retrieve BD address from the local-bd-address property.
+This address must be unique and is usually added in the DT
+by the bootloader which has access to the provisioned data.
 
-Well, you should write
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+---
+ v2: Set device as unconfigured if default address detected
+     Add warning if BD addr retrieved from DT
+ v3: if no addr retrieved from DT, unconditionally set
+     the invalid BD addr flag.
+     swap and set bdaddr in the platform probe
+ v4: Add dt-bindings documentation
+     split patch in two parts (setup, dt prop)
+     use local-bd-address name instead of local-mac-address
+ v5: remove 2/3 merged in bluetooth-next tree
+     Add bluetooth.txt for common BT bindings
+     expect local-bd-address in little-endian format
+ v6: use of_property_read_u8_array instead of of_get_property
+ v7: use dev_info instead of BT_INFO to have dev context
 
-	Name (_DSD, Package () {
+ drivers/bluetooth/btqcomsmd.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-instead of
-
-	Name ((_DSD), Package () {
-
-but I guess the compiler accepts the former. However, please fix it and
-make sure it compiles without issues so that we get good, working
-examples.
+diff --git a/drivers/bluetooth/btqcomsmd.c b/drivers/bluetooth/btqcomsmd.c
+index bd810d0..663bed6 100644
+--- a/drivers/bluetooth/btqcomsmd.c
++++ b/drivers/bluetooth/btqcomsmd.c
+@@ -15,6 +15,8 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/rpmsg.h>
++#include <linux/of.h>
++
+ #include <linux/soc/qcom/wcnss_ctrl.h>
+ #include <linux/platform_device.h>
+ 
+@@ -156,6 +158,15 @@ static int btqcomsmd_probe(struct platform_device *pdev)
+ 	if (IS_ERR(btq->cmd_channel))
+ 		return PTR_ERR(btq->cmd_channel);
+ 
++	/* The local-bd-address property is usually injected by the
++	 * bootloader which has access to the allocated BD address.
++	 */
++	if (!of_property_read_u8_array(pdev->dev.of_node, "local-bd-address",
++				       (u8 *)&btq->bdaddr, sizeof(bdaddr_t))) {
++		dev_info(&pdev->dev, "BD address %pMR retrieved from device-tree",
++			 &btq->bdaddr);
++	}
++
+ 	hdev = hci_alloc_dev();
+ 	if (!hdev)
+ 		return -ENOMEM;
+-- 
+1.9.1
