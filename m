@@ -1,80 +1,122 @@
-From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 01/18] dt: arm: shmobile: add M3ULCB Kingfisher board DT
- bindings
-Date: Fri, 8 Sep 2017 10:05:40 +0300
-Message-ID: <a106fe34-d584-1560-797c-581ffc33a305@cogentembedded.com>
-References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1504737303-22874-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdUi9THE7nTd54C22K6kOo_Ye5LkhTrRZPNfcHfWCiBsUQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 00/10] net: stmmac: dwmac-sun8i: Handle integrated PHY
+Date: Fri,  8 Sep 2017 09:11:46 +0200
+Message-ID: <20170908071156.5115-1-clabbe.montjoie@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUi9THE7nTd54C22K6kOo_Ye5LkhTrRZPNfcHfWCiBsUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hello
 
-On 07.09.2017 13:58, Geert Uytterhoeven wrote:
-> Hi Vladimir,
->
-> On Thu, Sep 7, 2017 at 12:35 AM, Vladimir Barinov
-> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
->> Add M3ULCB Kingfisher Device tree bindings Documentation, listing it as a
->> supported board.
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Thanks for your patch!
->
->> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
->> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
->> @@ -85,6 +85,7 @@ Boards:
->>     - Lager (RTP0RC7790SEB00010S)
->>       compatible = "renesas,lager", "renesas,r8a7790"
->>     - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
->> +    M3ULCB Kingfisher (SBEV-RCAR-KF-M03)
-> As the Kingfisher is an extension board (and you added the same board part
-> number to the H3ULCB section in patch 02/18), shouldn't it have its own
-> compatible value "shimafuji,kingfisher" instead?
-Thank you for this suggestion.
+The current way to find if the PHY is internal is to compare DT phy-mode
+and emac_variant/internal_phy.
+But it will negate a possible future SoC where an external PHY use the
+same phy mode than the integrated one.
 
-This looks very meaningful for boards differentiation.
+This patchs series adds a new way to find if the PHY is integrated, via
+the phy-is-integrated DT property.
 
-> Then this can be used in ulcb-kf.dtsi:
->
->      compatible = "shimafuji,kingfisher";
->
-> and appended (overridden, as there's no /append-property/ directive in dtc
-> yet?) in the board files, e.g. r8a7796-m3ulcb-kf.dts:
->
->      compatible = "shimafuji,kingfisher", "renesas,m3ulcb", "renesas,r8a7796";
->
-> Does that make sense?
-Yes.
-I will rework this in V2 patchset according to your suggestion.
+Since it exists both integrated and external ethernet-phy@1, they are merged in
+the final DTB and so share all properties.
+For avoiding this, and better represent the reality, we use a MDIO mux.
 
->
->>       compatible = "renesas,m3ulcb", "renesas,r8a7796";
->>     - Marzen (R0P7779A00010S)
->>       compatible = "renesas,marzen", "renesas,r8a7779"
-> Gr{oetje,eeting}s,
->
->                          Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                  -- Linus Torvalds
+The first try was to create a new MDIO mux "mdio-mux-syscon".
+mdio-mux-syscon working the same way than mdio-mux-mmioreg with the exception
+that the register is used via syscon/regmap.
+But this solution does not work for two reason:
+- changing the MDIO selection need the reset of MAC which cannot be done by the
+        mdio-mux-syscon driver
+- There were driver loading order problem:
+        - mdio-mux-syscon needing that stmmac register the parent MDIO
+        - stmmac needing that child MDIO was registered just after registering parent MDIO
 
+So we cannot use any external MDIO-mux.
+
+The final solution was to represent a mdio-mux and let the MAC handle all things.
+Note that phy-is-integrated is still needed (even if we use a MDIO mux) since
+some properties apply only on integrated PHY and we need to know the final MDIO
+bus in mdio_mux_syscon_switch_fn().
+
+Since DT bits was reverted in 4.13, this patch series include the revert of the revert.
+So
+- the first four patchs bring back DT/stmmac stuff that was in 4.13 (and reverted)
+- fifth patch document how DT MDIO mux is implemented
+- patch 6 and 7 modify DT
+- patch 8, 9, 10 Modify stmmac according to the new bindings
+
+I have let patch splited for easy review. (for seeing what's new)
+But the final serie could have some patch squashed if someone want.
+Like squashing patch and 2 and 5 (documentation)
+
+Since DT worked well in 4.13, could it be targeted for 4.14 ?
+If necessary I could split this serie in two:
+- bring back A64/A83T (patchs 1, 2, 4, 7, 9)
+- add MXIO-mux and H3 (patchs 3, 4, 5, 6, 8, 10)
+
+Regards
+
+Changes since v4:
+- Update documentation for new bindings
+- Added 4 patchs for bring back reverted stuff of 4.13
+- dwmac-sun8i now handle mdio-mux
+- MDIO use now compatible = "snps,dwmac-mdio";
+
+Changes since v3:
+- Added a patch for handling fixed-link
+- Updated documentation
+
+Changes since v2:
+- Add a MDIO mux for creating distinction between integrated and external MDIO.
+- phy-is-integrated is not set in dtsi.
+
+Changes since v1:
+- Dropped phy-is-integrated documentation patch since another same patch was already merged
+- Moved phy-is-integrated from SoC dtsi to final board DT.
+
+
+Corentin Labbe (10):
+  arm64: dts: allwinner: Restore EMAC changes
+  dt-bindings: net: Restore sun8i dwmac binding
+  arm: dts: sunxi: Restore EMAC changes
+  net: stmmac: sun8i: Restore the compatibles
+  dt-bindings: net: dwmac-sun8i: update documentation about integrated
+    PHY
+  ARM: dts: sunxi: h3/h5: represent the mdio switch used by
+    sun8i-h3-emac
+  arm64: dts: allwinner: add snps,dwmac-mdio compatible to emac/mdio
+  net: stmmac: dwmac-sun8i: choose internal PHY via phy-is-integrated
+  net: stmmac: snps,dwmac-mdio MDIOs are automatically registered
+  net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs
+
+ .../devicetree/bindings/net/dwmac-sun8i.txt        | 197 +++++++++++++++++++++
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts  |   9 +
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  19 ++
+ arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts          |   7 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts    |   5 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  22 +++
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts     |  16 ++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  46 +++++
+ .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts |  16 ++
+ .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts  |  15 ++
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |  17 ++
+ .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  |  16 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  21 +++
+ .../boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts   |  17 ++
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  |  17 ++
+ .../dts/allwinner/sun50i-h5-orangepi-prime.dts     |  17 ++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  | 140 ++++++++++++---
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   4 -
+ 22 files changed, 601 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
 
 -- 
-Regards,
-Vladimir
+2.13.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
