@@ -1,60 +1,70 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 7/8] drm/sun4i: call drm_vblank_init with correct number of crtcs
-Date: Fri,  8 Sep 2017 15:50:15 +0800
-Message-ID: <20170908075016.18657-8-wens@csie.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 5/8] drm/sun4i: tcon: Simplify sun4i_tcon_find_engine_traverse
+ for one input
+Date: Fri,  8 Sep 2017 15:50:13 +0800
+Message-ID: <20170908075016.18657-6-wens@csie.org>
 References: <20170908075016.18657-1-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170908075016.18657-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170908075016.18657-1-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-If we want to have vblank on both pipelines at the same time, we need
-to call drm_vblank_init with num_crtcs = 2.
-
-Instead, since the crtc init calls correctly set mode_config.num_crtc,
-we can move the drm_vblank_init call to after the crtc init code is
-called, which is the component bind part. Then we can just pass
-mode_config.num_crtc in.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun4i_drv.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 2ff4233fe2da..a2012638d5f7 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -106,11 +106,6 @@ static int sun4i_drv_bind(struct device *dev)
- 		goto free_drm;
- 	}
- 
--	/* drm_vblank_init calls kcalloc, which can fail */
--	ret = drm_vblank_init(drm, 1);
--	if (ret)
--		goto free_mem_region;
--
- 	drm_mode_config_init(drm);
- 
- 	ret = component_bind_all(drm->dev, drm);
-@@ -119,6 +114,11 @@ static int sun4i_drv_bind(struct device *dev)
- 		goto cleanup_mode_config;
- 	}
- 
-+	/* drm_vblank_init calls kcalloc, which can fail */
-+	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
-+	if (ret)
-+		goto free_mem_region;
-+
- 	drm->irq_enabled = true;
- 
- 	/* Remove early framebuffers (ie. simplefb) */
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tm93IHRoYXQgc3VuNGlfdGNvbl9maW5kX2VuZ2luZV90cmF2ZXJzZSgpIHVzYWdlIGlzIHJlc3Ry
+aWN0ZWQgdG8gdGhlCnNpbmdsZSBpbnB1dCBjYXNlLCB3ZSBjYW4gcmVtb3ZlIHRoZSBmb3JfZWFj
+aF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZQpsb29wLgoKV2hpbGUgYXQgaXQsIGNvbnNvbGlkYXRl
+IGFsbCB0aGUgb2Zfbm9kZV9wdXQgY2FsbHMgaW50byBhIGNvbW1vbiBleGl0CnBhdGguCgpTaWdu
+ZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Ci0tLQogZHJpdmVycy9ncHUv
+ZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyB8IDUxICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
+LS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMjYgZGVsZXRpb25z
+KC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKaW5kZXggMzNjMjBkMmY5ZmIxLi5lOWFi
+MDNmMGJmNmUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMK
+KysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwpAQCAtNDY4LDcgKzQ2OCw3
+IEBAIHN1bjRpX3Rjb25fZmluZF9lbmdpbmVfdHJhdmVyc2Uoc3RydWN0IHN1bjRpX2RydiAqZHJ2
+LAogCQkJCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKIHsKIAlzdHJ1Y3QgZGV2aWNlX25vZGUg
+KnBvcnQsICplcCwgKnJlbW90ZTsKLQlzdHJ1Y3Qgc3VueGlfZW5naW5lICplbmdpbmU7CisJc3Ry
+dWN0IHN1bnhpX2VuZ2luZSAqZW5naW5lID0gRVJSX1BUUigtRUlOVkFMKTsKIAogCXBvcnQgPSBv
+Zl9ncmFwaF9nZXRfcG9ydF9ieV9pZChub2RlLCAwKTsKIAlpZiAoIXBvcnQpCkBAIC00ODMsMzUg
+KzQ4MywzNCBAQCBzdW40aV90Y29uX2ZpbmRfZW5naW5lX3RyYXZlcnNlKHN0cnVjdCBzdW40aV9k
+cnYgKmRydiwKIAkgKgogCSAqIEJhaWwgb3V0IGlmIHRoZXJlIGFyZSBtdWx0aXBsZSBpbnB1dCBj
+b25uZWN0aW9ucy4KIAkgKi8KLQlpZiAob2ZfZ2V0X2F2YWlsYWJsZV9jaGlsZF9jb3VudChwb3J0
+KSAhPSAxKSB7Ci0JCW9mX25vZGVfcHV0KHBvcnQpOwotCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFM
+KTsKLQl9CisJaWYgKG9mX2dldF9hdmFpbGFibGVfY2hpbGRfY291bnQocG9ydCkgIT0gMSkKKwkJ
+Z290byBvdXRfcHV0X3BvcnQ7CiAKLQlmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZShw
+b3J0LCBlcCkgewotCQlyZW1vdGUgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGVw
+KTsKLQkJaWYgKCFyZW1vdGUpCi0JCQljb250aW51ZTsKKwkvKiBHZXQgdGhlIGZpcnN0IGNvbm5l
+Y3Rpb24gd2l0aG91dCBzcGVjaWZ5aW5nIGFuIElEICovCisJZXAgPSBvZl9nZXRfbmV4dF9hdmFp
+bGFibGVfY2hpbGQocG9ydCwgTlVMTCk7CisJaWYgKCFlcCkKKwkJZ290byBvdXRfcHV0X3BvcnQ7
+CiAKLQkJLyogZG9lcyB0aGlzIG5vZGUgbWF0Y2ggYW55IHJlZ2lzdGVyZWQgZW5naW5lcz8gKi8K
+LQkJbGlzdF9mb3JfZWFjaF9lbnRyeShlbmdpbmUsICZkcnYtPmVuZ2luZV9saXN0LCBsaXN0KSB7
+Ci0JCQlpZiAocmVtb3RlID09IGVuZ2luZS0+bm9kZSkgewotCQkJCW9mX25vZGVfcHV0KHJlbW90
+ZSk7Ci0JCQkJb2Zfbm9kZV9wdXQocG9ydCk7Ci0JCQkJcmV0dXJuIGVuZ2luZTsKLQkJCX0KLQkJ
+fQorCXJlbW90ZSA9IG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZXApOworCWlmICgh
+cmVtb3RlKQorCQlnb3RvIG91dF9wdXRfZXA7CiAKLQkJLyoga2VlcCBsb29raW5nIHRocm91Z2gg
+dXBzdHJlYW0gcG9ydHMgKi8KLQkJZW5naW5lID0gc3VuNGlfdGNvbl9maW5kX2VuZ2luZV90cmF2
+ZXJzZShkcnYsIHJlbW90ZSk7Ci0JCWlmICghSVNfRVJSKGVuZ2luZSkpIHsKLQkJCW9mX25vZGVf
+cHV0KHJlbW90ZSk7Ci0JCQlvZl9ub2RlX3B1dChwb3J0KTsKLQkJCXJldHVybiBlbmdpbmU7Ci0J
+CX0KLQl9CisJLyogZG9lcyB0aGlzIG5vZGUgbWF0Y2ggYW55IHJlZ2lzdGVyZWQgZW5naW5lcz8g
+Ki8KKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KGVuZ2luZSwgJmRydi0+ZW5naW5lX2xpc3QsIGxpc3Qp
+CisJCWlmIChyZW1vdGUgPT0gZW5naW5lLT5ub2RlKQorCQkJZ290byBvdXRfcHV0X3JlbW90ZTsK
+IAotCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOworCS8qIGtlZXAgbG9va2luZyB0aHJvdWdoIHVw
+c3RyZWFtIHBvcnRzICovCisJZW5naW5lID0gc3VuNGlfdGNvbl9maW5kX2VuZ2luZV90cmF2ZXJz
+ZShkcnYsIHJlbW90ZSk7CisKK291dF9wdXRfcmVtb3RlOgorCW9mX25vZGVfcHV0KHJlbW90ZSk7
+CitvdXRfcHV0X2VwOgorCW9mX25vZGVfcHV0KGVwKTsKK291dF9wdXRfcG9ydDoKKwlvZl9ub2Rl
+X3B1dChwb3J0KTsKKworCXJldHVybiBlbmdpbmU7CiB9CiAKIC8qCi0tIAoyLjE0LjEKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
