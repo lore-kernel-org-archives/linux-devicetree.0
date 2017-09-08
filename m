@@ -1,86 +1,55 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 05/10] dmaengine: sun6i: Move number of
- pchans/vchans/request to device struct
-Date: Fri, 8 Sep 2017 16:37:10 +0200
-Message-ID: <20170908143710.rhz6x3i776zrhbzo@flea.lan>
-References: <20170903224100.17893-1-stefan.bruens@rwth-aachen.de>
- <20170903224100.17893-6-stefan.bruens@rwth-aachen.de>
- <20170904074355.niloziky42aki7bg@flea>
- <3533197.81BdoSVRz8@sbruens-linux>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for Allwinner A64
+Date: Fri, 8 Sep 2017 16:39:13 +0200
+Message-ID: <20170908143913.6ga64ssakvk2mjis@flea.lan>
+References: <20170830233609.13855-4-stefan.bruens@rwth-aachen.de>
+ <20170901003135.10058-1-andre.przywara@arm.com>
+ <20170901060445.vboici7qxfkztp3s@flea>
+ <743ae23a-372a-762b-c345-b914f09fd718@arm.com>
+ <20170904070415.e6nclz5n23bo7f4v@flea>
+ <d3d32839-12a8-71fa-cfec-03055d64388d@arm.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="i5qul5ppysoi43r7"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF6WZLGQKGQEZB4MCEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="mw5xc3xt6qcvg4z7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3533197.81BdoSVRz8@sbruens-linux>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?iso-8859-1?B?QnL8bnMs?= Stefan <Stefan.Bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Cc: "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <d3d32839-12a8-71fa-cfec-03055d64388d@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
+Cc: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---i5qul5ppysoi43r7
-Content-Type: text/plain; charset="UTF-8"
+--mw5xc3xt6qcvg4z7
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 04, 2017 at 02:30:59PM +0000, Br=C3=BCns, Stefan wrote:
-> On Montag, 4. September 2017 09:43:55 CEST Maxime Ripard wrote:
-> > On Mon, Sep 04, 2017 at 12:40:56AM +0200, Stefan Br=C3=BCns wrote:
-> > > Preparatory patch: If the same compatible is used for different SoCs =
-which
-> > > have a common register layout, but different number of channels, the
-> > > channel count can no longer be stored in the config. Store it in the
-> > > device structure instead.
-> > >=20
-> > > Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Hi,
+
+On Mon, Sep 04, 2017 at 09:14:52AM +0100, Andr=E9 Przywara wrote:
+> > And obviously, while maintaining the stability of the binding of those
+> > hundreds properties.
 > >=20
-> > As stated already, we already are going to have a different
-> > compatible, and this is not something that will change from one
-> > instance to the other. Having code is therefore:
-> >   A) Making the code more complex
-> >   B) For no particular reason.
+> > Or, you can base all this on the compatible, and be done with it once
+> > and for all.
 >=20
-> If the dma channel count (which is a standard dma binding, likely for a=
-=20
-> reason) goes into the devicetree, it has to be moved out of the config.
->
-> The R40 (which has register manuals available) has the same register layo=
-ut as=20
-> the A64, but *does* have a different channel count. So you think it is a =
-good=20
-> idea to introduce a new compatible again?
+> What I am after is to cover SoCs which *don't* have differences in their
+> register layout, for instance A83T, H3, A64, R40.
+> In an ideal world we could have reused the H3 compatible string,
+> adjusting the number of channels for each SoC in the DT.
 >=20
-> If you had been half as picky when merging the H3 and A83T support, we wo=
-uld=20
-> not have this mess now.
->=20
-> There is also the H6, where there is no register manual available yet, bu=
-t I =20
-> bet it has the H3 (and A64, H5, R40) register layout, but unlikely the sa=
-me=20
-> number of DMA channels *and* the same number of ports.
+> So I see that having a generic compatible name will not fly, as we now
+> have differences which should not be modelled by DT properties.
+> But I still think we should try to cover those non-register differences
+> (number of channels) with a DT property, to allow reusing the existing
+> driver code whenever possible. As is stands with this series, the R40
+> support should just be a matter of:
+> 	compatible =3D "allwinner,sun8i-r40-dma",
+> 		     "allwinner,sun50i-a64-dma";
 
-The thing is that this kind of things usually grow organically until
-you can't just add a simple if case any more.
-
-I'm sorry you were at the tipping point, but I'm sure you also
-understand that adding more to the mess until the next one shows up
-isn't viable either.
-
-That being said, thinking a bit more on that one, if you add to the
-binding that we need to have both the current SoC compatible (to
-workaround any variation / bugs we might encounter in the future) and
-the "generation" one (to avoid adding one for each new IP), plus the
-mandatory dma-channels / dma-requests properties, that would work for
-me.
+I just suggested the exact same thing, and then saw your mail, so I
+guess we have an agreement :)
 
 Maxime
 
@@ -89,31 +58,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---i5qul5ppysoi43r7
+--mw5xc3xt6qcvg4z7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZsqsVAAoJEBx+YmzsjxAg5lwP/1NM3BKsC+biAcayiv3LsUTp
-FMiOu6HGOyOY66MWMvXXDL9OUyK3o1uE+1T2BNp1OoPwCU5w9WP1kF6F5k5JwdEm
-95up+NEbHiwgwT73/QcckODnOzZzKG2/0GGnJzPugrMJjKmVRC2AzEPSOPnwS95B
-dNAN0kz21aaQA9iFaauBYSnthykrHD8l/XXAx4q1A45wk5C/VP0zT9dtPWwK0ACR
-WgivqD3Zc/vHoPfsacKbNW9pJITQn0eRrM+iHByH4x+8ZvhNveFxifzrV69JBIvg
-y/9Q195Ai7DsGcTY3MlxNrG3mebAg/JKqXeCCn9tPYlrnUqLyDD/YwBbFCizbe/M
-jWqSlGTVnLo1NRriqQTK/8eGLefR9ZN5VlWlHXP5dbRMIRNLMsG/kFNOiBO8R10p
-Hz3tsgORYHYdGtLTA225SDhBMt+BOPa0vDSqzBxQfA63NsfAnpOqE7HBs4yDjy9E
-afeUN8uTZPz7usI2f3MkRWTzN18ol8iKM84qGhrca6x9duti+cDHvmzRiaXUOKH0
-jEuUGpXz/s+Ht6Br4HXU02Ajdu+RkuWD+8jDPBcIUIBKj9PXFKIOYoPkE3PXRZHq
-9lUmdUS4hLL4W6ahTbLuMyiR0go/DKZ0xJsDrhL9KvalEe0Rl20rbwNHG534b2Jh
-daIuXZN8NFLnYxShlN+g
-=OUsa
+iQIcBAEBAgAGBQJZsquRAAoJEBx+YmzsjxAg1NkP+wd9vfGoWbV35Gx6OGu9b0B/
+AiaOdLOaVG7fWfYP9mEUZFJoEGd+B5nT9ziNB6oeSBVwwfehefP2J15gAU/nlta1
+53lac2FJ8vKNsVk30aJ0/v7f2cb4rUETzgmTN1lS1y/bcpw8nU0ik7qc3td5dYj6
+2E9Xd9Mxy3u2LhOQ9YzeANB9BpdY9cASVxbFoRtVWwaROhd6equIh2qtZ+KlBPFe
+FW1trleqC1rPCWQ5PBf0C83ZwdXq0r+RwMZRCjZzjf/W0fVkPRmU9xiLxDh/2xPw
+oPJvefkio42KFi6RsnnlL5QPMVAonU1g3v8wPVJoqp5+0qdw1x65mUE6xA3zDkRy
+HKIRB8zkwc9htjOLhpCaH9g5915cIwmJrtnlndCIhD0l+ZTO1psunxmgPW2LzwCu
+PROj3mgITfrc/WpQ2XsTZa6ADjoHP28k5W+kJ2P3nKUk76n9ZM2qKGe94tIk+R/c
+S6GAKOEz7ijFWV5HcIUx5zFBmfWwMPz8aKUGRAdxpWHxxKD653gSmZ9l6Xi8JHcI
+C5YxyA6Ox29JaTR0jZngQnFr1A7kVTzlTRXDr3gBT0kWyshR909mkL478Tqq4qoq
+LpIyPbfmcARy1oCb2hu48jW4a3n0eqx9WoZCMhi4cmW+zg6up5v5wsR7LO56EsvE
+0lJ7eTIMsj37pzO4e74A
+=5LPq
 -----END PGP SIGNATURE-----
 
---i5qul5ppysoi43r7--
+--mw5xc3xt6qcvg4z7--
