@@ -1,60 +1,121 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH 3/3] dmaengine: sun6i: Add support for Allwinner A64
-Date: Fri, 8 Sep 2017 15:57:03 +0100
-Message-ID: <4c4ea0f7-3df3-7ab4-100d-c8545211d582@arm.com>
-References: <20170830233609.13855-4-stefan.bruens@rwth-aachen.de>
- <20170901003135.10058-1-andre.przywara@arm.com>
- <20170901060445.vboici7qxfkztp3s@flea>
- <743ae23a-372a-762b-c345-b914f09fd718@arm.com>
- <20170904070415.e6nclz5n23bo7f4v@flea>
- <d3d32839-12a8-71fa-cfec-03055d64388d@arm.com>
- <20170908143913.6ga64ssakvk2mjis@flea.lan>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v4 1/6] irqdomain: rename variables in irq_domain_{push,pop}_irq()
+Date: Sat, 9 Sep 2017 00:05:49 +0900
+Message-ID: <CAK7LNARboWo4-zkioMAxtpM84f9avtL8Z4z_s0cU5UHXkGotPg@mail.gmail.com>
+References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+ <1504784522-26841-2-git-send-email-yamada.masahiro@socionext.com>
+ <fb4a28cb-2005-4e9b-8b3d-4d9f4c667c8f@arm.com> <c9fd0412-6dce-95e9-4ca3-d4d61f9feeca@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170908143913.6ga64ssakvk2mjis@flea.lan>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: =?UTF-8?Q?Stefan_Br=c3=bcns?= <stefan.bruens@rwth-aachen.de>, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <c9fd0412-6dce-95e9-4ca3-d4d61f9feeca@caviumnetworks.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, David Daney <david.daney@cavium.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi Marc, David,
 
-On 08/09/17 15:39, Maxime Ripard wrote:
-> Hi,
-> 
-> On Mon, Sep 04, 2017 at 09:14:52AM +0100, André Przywara wrote:
->>> And obviously, while maintaining the stability of the binding of those
->>> hundreds properties.
+
+2017-09-08 2:45 GMT+09:00 David Daney <ddaney@caviumnetworks.com>:
+> On 09/07/2017 05:47 AM, Marc Zyngier wrote:
+>>
+>> On 07/09/17 12:41, Masahiro Yamada wrote:
 >>>
->>> Or, you can base all this on the compatible, and be done with it once
->>> and for all.
+>>> The meaning of "root" in irq_domain_{push,pop} is opposite to the
+>>> documentation.  Documentation/IRQ-domain.txt depicts the hierarchy
+>>> IRQ domain as follows:
+>>>
+>>>      CPU Vector irq_domain (root irq_domain to manage CPU vectors)
+>>>              ^
+>>>              |
+>>>      Interrupt Remapping irq_domain (manage irq_remapping entries)
+>>>              ^
+>>>              |
+>>>      IOAPIC irq_domain (manage IOAPIC delivery entries/pins)
+>>>
+>>>  From above, the inner-most domain (nearest to the CPU) is "root".
+>>>
+>>> The document also says, "When building irq_domain hierarchy, the
+>>> irq_domain near to the device is child and the irq_domain near to
+>>> CPU is parent."  This is how irq_data->parent_data works.  In
+>>> contrast, these function use a variable "child_irq_data" for that.
 >>
->> What I am after is to cover SoCs which *don't* have differences in their
->> register layout, for instance A83T, H3, A64, R40.
->> In an ideal world we could have reused the H3 compatible string,
->> adjusting the number of channels for each SoC in the DT.
+>> The exact opposite argument could be used for the data structure. The
+>> irq_desc is the root of the list ordered with parent_data.
 >>
->> So I see that having a generic compatible name will not fly, as we now
->> have differences which should not be modelled by DT properties.
->> But I still think we should try to cover those non-register differences
->> (number of channels) with a DT property, to allow reusing the existing
->> driver code whenever possible. As is stands with this series, the R40
->> support should just be a matter of:
->> 	compatible = "allwinner,sun8i-r40-dma",
->> 		     "allwinner,sun50i-a64-dma";
-> 
-> I just suggested the exact same thing, and then saw your mail, so I
-> guess we have an agreement :)
+>> Yes, this is confusing, but because we're using the same English words
+>> to describe two different things, we're bound to make one thing more
+>> difficult. I'm unconvinced that this change helps anything (it certainly
+>> confuses me more than anything else).
+>>
+>
+> There may be room for improvement here.
+>
+> Here is my recollection of how I choose the names:
+>
+> "root" is the thing embedded in the struct irq_desc, if you think about a
+> typical linked list structure like this, we can refer to the starting point
+> as the "root".  Sometimes it might be referred to as the "head" of the list,
+> but usually not the "tail"
+>
+> "child" was used to indicate the thing we get to by traversing the link in
+> the list.  The fact that ->parent is the name of the next pointer and that
+> it points to something called "child" is confusing here.
+> So what do I think should be done?  This:
+>
+> Either
+>   A) s/child_irq_data/parent_irq_data/g  As this patch does, but leave the
+> root_irq_data name unchanged.
 
-Yes, I was thinking so as well.
-Since my DeLorean is in the garage ;-) we have no other choice than
-doing so.
-My original suggestion for a generic name was based on my naive reading
-of the existing code, which *looked like* it would be all compatible.
-But as we know better now, this is the way to go.
 
-Merci,
-André
+Sounds better than the current situation.
+
+
+
+
+>   B) Change the name of the ->parent in struct irq_data to ->next
+
+
+This is a bad idea.
+
+irq_data->parent_data corresponds to irq_domain->parent.
+We should not lose consistency/symmetry.
+
+irq_domain->parent originates in the "parent" argument
+passed to irq_domain_create_hierarchy().
+If we change this, it will introduce horrible confusion.
+
+As the document says, when we talk about the hierarchy,
+"the irq_domain near to the device is
+child and the irq_domain near to CPU is parent"
+This is the original concept, and should not be changed.
+
+
+We can excuse that all the variables in these two helpers
+were named from the point of linked-list view,
+not talking about the hierarchy.
+
+
+However, what I thought more confusing was the comment block.
+
+/**
+ * irq_domain_push_irq() - Push a domain in to the top of a hierarchy.
+
+
+This comment is talking about the "hierarchy" at first glance.
+So, what is my mind is the picture in Documentation/IRQ-domain.txt
+
+But, from the term "top", this is talking about the linked list here too.
+The linked list is just implementation detail...
+
+
+
+
+> But that is just my $0.02
+>
+> I fear we risk a Bike Shedding type of discussion here.
+
+-- 
+Best Regards
+Masahiro Yamada
