@@ -1,38 +1,72 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
- copying _shipped files
-Date: Sat, 9 Sep 2017 08:39:11 +0200
-Message-ID: <20170909063911.GA841@ravnborg.org>
-References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
- <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
- <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug@mail.gmail.com>
- <CAK7LNATaisd3tPNbujTWLUq-2sMQ3pyTkPRSgjw00zUzv=GvSQ@mail.gmail.com>
- <CA+55aFwvaZSXubcmaaZD-i5c_F5bHWhr6OBxRM+=7dGueua0Ng@mail.gmail.com>
- <CA+55aFzZNpuYjVa4EZ2eJhvtU7-bzZTor_596TA5_CY77j+BEw@mail.gmail.com>
- <CA+55aFzz_fv--Kx8phjWt_VOzZOMmbs0XX7_kL--_XRitWwJQA@mail.gmail.com>
- <CA+55aFy4w6Ken-a83EE+otw6d+cgRfdV9wj6ayoDYFhi251Gvg@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v9 17/24] ACPI: Document how to refer to LEDs from remote
+ nodes
+Date: Sat, 9 Sep 2017 11:08:18 +0200
+Message-ID: <20170909090817.GG27428@amd>
+References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
+ <20170908131822.31020-13-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="eVzOFob/8UvintSX"
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CA+55aFy4w6Ken-a83EE+otw6d+cgRfdV9wj6ayoDYFhi251Gvg@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <mmarek@suse.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Richard Purdie <richard.purdie@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Markus Heiser <markus.heiser@darmarit.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, SeongJae Park <sj38.park@gmail.com>, Yann
+In-Reply-To: <20170908131822.31020-13-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 08, 2017 at 02:38:23PM -0700, Linus Torvalds wrote:
-> On Fri, Sep 8, 2017 at 11:39 AM, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Strange. Does anybody see what the pattern to the failure is?
-> 
-> Found it. Stupid special case for 'typeof()' that used
-> is_reserved_word() in ways I hadn't realized.
-> 
-> Fix committed.
 
-To get bonus points for this cleanup you should also remove
-the now unused gpref support in Makefile.lib
+--eVzOFob/8UvintSX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Sam
+On Fri 2017-09-08 16:18:15, Sakari Ailus wrote:
+> Document referring to LEDs from remote device nodes, such as from camera
+> sensors.
+>=20
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+> diff --git a/Documentation/acpi/dsd/leds.txt b/Documentation/acpi/dsd/led=
+s.txt
+> new file mode 100644
+> index 000000000000..6217fcda15c9
+> --- /dev/null
+> +++ b/Documentation/acpi/dsd/leds.txt
+> @@ -0,0 +1,92 @@
+> +Describing and referring to LEDs in ACPI
+> +
+> +Individual LEDs are described by hierarchical data extension [6] nodes
+> +under the device node, the LED driver chip. The "led" property in the
+> +LED specific nodes tells the numerical ID of each individual LED. The
+> +"led" property is used here in a similar fashion as the "reg" property
+> +in DT. [3]
+> +
+> +Referring to LEDs in Devicetree is documented in [4], in "flash-leds"
+> +property documentation. In short, LEDs are directly referred to by
+> +using phandles.
+> +
+> +While Devicetree allows referring to any node in the tree[1], in
+
+Documentation/devicetree/usage-model.txt talks about "device tree" or
+"Device Tree" . Single word looks strange to me...
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--eVzOFob/8UvintSX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmzr4EACgkQMOfwapXb+vLf8gCeK2pBgd7UqLUBZ/mHDV4jTLkZ
+ixsAniVaWicTXQzKE4erA50jgdo79qF+
+=lQ1r
+-----END PGP SIGNATURE-----
+
+--eVzOFob/8UvintSX--
