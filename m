@@ -1,26 +1,38 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6sx: add vining-2000 board support
-Date: Sat, 9 Sep 2017 08:36:36 -0300
-Message-ID: <CAOMZO5ALWF4WJomwFfKpO0pROd2dkSXeBM1bXFmV-V5jEeSSRQ@mail.gmail.com>
-References: <1504195599.1918.17.camel@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Wig C <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] dt-bindings: vendor-prefixes: Add nutsboard to vendor prefix.
+Date: Sat,  9 Sep 2017 19:40:58 +0800
+Message-ID: <1504957258-23334-1-git-send-email-onlywig@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504195599.1918.17.camel-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open-source <open-source-MNoX7ImGUMaELgA04lAiVw@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christoph,
+From: YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-On Thu, Aug 31, 2017 at 1:06 PM, Christoph Fritz
-<chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> Add initial imx6sx-softing-vining-2000 board support.
->
-> Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+NutsBoard (http://nutsboard.org/) is an organization and focus
+on ARM based embedded boards with open source software.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index daf465be..7746dbc 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -230,6 +230,7 @@ nintendo	Nintendo
+ nlt	NLT Technologies, Ltd.
+ nokia	Nokia
+ nordic	Nordic Semiconductor
++nutsboard	NutsBoard
+ nuvoton	Nuvoton Technology Corporation
+ nvd	New Vision Display
+ nvidia	NVIDIA
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
