@@ -1,100 +1,245 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/8] drm/sun4i: Make both display pipeline work together
-Date: Sat, 9 Sep 2017 17:41:40 +0200
-Message-ID: <20170909154140.wmuh46kxamumyspz@flea.lan>
+Subject: Re: [PATCH 4/8] drm/sun4i: tcon: get TCON ID and matching engine
+ with remote endpoint ID
+Date: Sat, 9 Sep 2017 17:42:57 +0200
+Message-ID: <20170909154257.wgwybldpmpr6snsc@flea.lan>
 References: <20170908075016.18657-1-wens@csie.org>
+ <20170908075016.18657-5-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="kfqkuj2vp7zlwfpe"
+        protocol="application/pgp-signature"; boundary="ri7gvs7xpplwpxxr"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170908075016.18657-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20170908075016.18657-5-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---kfqkuj2vp7zlwfpe
+--ri7gvs7xpplwpxxr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, Sep 08, 2017 at 03:50:08PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
+On Fri, Sep 08, 2017 at 03:50:12PM +0800, Chen-Yu Tsai wrote:
+> The device tree binding for sun4i-drm says:
 >=20
-> Previously I added support for two display pipelines for the sun4i-drm
-> driver. At the time we did not have support for downstream encoders to
-> actually test the second pipeline, nor having both pipelines active at
-> the same time.
+>     For all connections between components up to the TCONs in the display
+>     pipeline, when there are multiple components of the same type at the
+>     same depth, the local endpoint ID must be the same as the remote
+>     component's index. For example, if the remote endpoint is Frontend 1,
+>     then the local endpoint ID must be 1.
 >=20
-> With HDMI encoder support now merged and support for it on sun6i in
-> progress, we are now able to test both pipelines being active at the
-> same time, with LCD output from one and HDMI from the other. Testing
-> has revealed some more issues, such as component probing order. Also,
-> we found out that muxing between the display backend and TCON was
-> possible, and required for the second pipeline to work as intended.
-> Last, the number of CRTCs provided to drm_vblank_init needs to be
-> increased for vblanks to work properly.
+> We should be able to get the TCON's ID directly from any of the remote
+> endpoints from its input port. With the ID, we can then go through the
+> list of registered engines and find a matching one by ID.
 >=20
-> This patch series does a few things:
+> However the A31 device tree is incorrect. We assumed that there were no
+> cross pipeline connections between the backends and TCONs. As a result,
+> in all the endpoints between the backends and TCONs of the second
+> display pipeline, the endpoint IDs were incorrectly set to 0, when in
+> fact they should've been set to 1.
 >=20
->   - Fix endpoint IDs so they conform to what the DT binding stipulates.
+> To maintain compatibility with this incorrect device tree, we first
+> check if the TCON's input port has 1 or many endpoints. If there are
+> more than 1, then it is likely a fixed version, and we can proceed
+> with the new method. If there is only 1 endpoint, then it is possibly
+> an incorrect version, or it could be the SoC only has one pipeline.
+> In either case we fall back to using the old method of traversing
+> the input connections to find a matching engine, and then get its
+> ID.
 >=20
->   - Change the order the individual components are queued up.
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 121 +++++++++++++++++++++++++++++++=
++++++-
+>  1 file changed, 118 insertions(+), 3 deletions(-)
 >=20
->   - Fix how the TCON gets its ID when the backend-TCON mux is present.
->=20
->   - Support the input mux in the TCON (which selects which backend to
->     use on the A31/A31s).
->=20
->   - Fix the drm_vblank_init call and pass the correct number of crtcs.
->=20
->   - Add the cross pipeline connections between the DRCs and TCONs on
->     the A31, conforming to the DT binding and what the hardware is
->     capable of.
->=20
-> More details are available in each individual commit. Please have a look.
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/s=
+un4i_tcon.c
+> index 065654dbfb2c..33c20d2f9fb1 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -463,8 +463,9 @@ static int sun4i_tcon_init_regmap(struct device *dev,
+>   * function in fact searches the corresponding engine, and the ID is
+>   * requested via the get_id function of the engine.
+>   */
+> -static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+> -						   struct device_node *node)
+> +static struct sunxi_engine *
+> +sun4i_tcon_find_engine_traverse(struct sun4i_drv *drv,
+> +				struct device_node *node)
+>  {
+>  	struct device_node *port, *ep, *remote;
+>  	struct sunxi_engine *engine;
+> @@ -502,7 +503,7 @@ static struct sunxi_engine *sun4i_tcon_find_engine(st=
+ruct sun4i_drv *drv,
+>  		}
+> =20
+>  		/* keep looking through upstream ports */
+> -		engine =3D sun4i_tcon_find_engine(drv, remote);
+> +		engine =3D sun4i_tcon_find_engine_traverse(drv, remote);
+>  		if (!IS_ERR(engine)) {
+>  			of_node_put(remote);
+>  			of_node_put(port);
+> @@ -513,6 +514,120 @@ static struct sunxi_engine *sun4i_tcon_find_engine(=
+struct sun4i_drv *drv,
+>  	return ERR_PTR(-EINVAL);
+>  }
+> =20
+> +/*
+> + * The device tree binding says that the remote endpoint ID of any
+> + * connection between components, up to and including the TCON, of
+> + * the display pipeline should be equal to the actual ID of the local
+> + * component. Thus we can look at any one of the input connections of
+> + * the TCONs, and use that connection's remote endpoint ID as our own.
+> + *
+> + * Since the user of this function already finds the input port,
+> + * the port is passed in directly without further checks.
+> + */
+> +static int sun4i_tcon_of_get_id_from_port(struct device_node *port)
+> +{
+> +	struct device_node *ep;
+> +	int ret =3D -EINVAL;
+> +
+> +	/* try finding an upstream endpoint */
+> +	for_each_available_child_of_node(port, ep) {
+> +		struct device_node *remote;
+> +		u32 reg;
+> +
+> +		remote =3D of_graph_get_remote_endpoint(ep);
+> +		if (!remote)
+> +			continue;
+> +
+> +		ret =3D of_property_read_u32(remote, "reg", &reg);
+> +		if (ret)
+> +			continue;
+> +
+> +		ret =3D reg;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Once we know the TCON's id, we can look through the list of
+> + * engines to find a matching one. We assume all engines have
+> + * been probed and added to the list.
+> + */
+> +static struct sunxi_engine *sun4i_tcon_get_engine_by_id(struct sun4i_drv=
+ *drv,
+> +							int id)
+> +{
+> +	struct sunxi_engine *engine;
+> +
+> +	list_for_each_entry(engine, &drv->engine_list, list)
+> +		if (engine->id =3D=3D id)
+> +			return engine;
+> +
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +
+> +/*
+> + * On SoCs with the old display pipeline design (Display Engine 1.0),
+> + * we assumed the TCON was always tied to just one backend. However
+> + * this proved not to be the case. On the A31, the TCON can select
+> + * either backend as its source. On the A20 (and likely on the A10),
+> + * the backend can choose which TCON to output to.
+> + *
+> + * The device tree binding says that the remote endpoint ID of any
+> + * connection between components, up to and including the TCON, of
+> + * the display pipeline should be equal to the actual ID of the local
+> + * component. Thus we should be able to look at any one of the input
+> + * connections of the TCONs, and use that connection's remote endpoint
+> + * ID as our own.
+> + *
+> + * However  the connections between the backend and TCON were assumed
+> + * to be always singular, and their endpoit IDs were all incorrectly
+> + * set to 0. This means for these old device trees, we cannot just look
+> + * up the remote endpoint ID of a TCON input endpoint. TCON1 would be
+> + * incorrectly identified as TCON0.
+> + *
+> + * This function first checks if the TCON node has 2 input endpoints.
+> + * If so, then the device tree is a corrected version, and it will use
+> + * sun4i_tcon_of_get_id() and sun4i_tcon_get_engine_by_id() from above
+> + * to fetch the ID and engine directly. If not, then it is likely an
+> + * old device trees, where the endpoint IDs were incorrect, but did not
+> + * have endpoint connections between the backend and TCON across
+> + * different display pipelines. It will fall back to the old method of
+> + * traversing the  of_graph to try and find a matching engine by device
+> + * node.
+> + *
+> + * In the case of single display pipeline device trees, either method
+> + * works.
+> + */
+> +static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+> +						   struct device_node *node)
+> +{
+> +	struct device_node *port;
+> +	struct sunxi_engine *engine;
+> +
+> +	port =3D of_graph_get_port_by_id(node, 0);
+> +	if (!port)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	/*
+> +	 * Is this a corrected device tree with cross pipeline
+> +	 * connections between the backend and TCON?
+> +	 */
+> +	if (of_get_child_count(port) > 1) {
+> +		/* Get our ID directly from an upstream endpoint */
+> +		int id =3D sun4i_tcon_of_get_id_from_port(port);
+> +
+> +		/* Get our engine by matching our ID */
+> +		engine =3D sun4i_tcon_get_engine_by_id(drv, id);
+> +
+> +		of_node_put(port);
+> +		return engine;
+> +	}
+> +
+> +	/* Fallback to old method by traversing input endpoints */
+> +	of_node_put(port);
+> +	return sun4i_tcon_find_engine_traverse(drv, node);
 
-I've applied all the commits, with:
-patch 1 in our arm-soc fixes branch
-patch 2-7 in drm-misc-next
-patch 8 in sunxi/dt-for-4.15.
+In the old DT case, I'd like to have a warning displayed in the log
+saying that the DT is too old and we won't be able to support the
+dual-pipeline properly, so that the users can at least know that they
+should update.
 
-I have a minor comment on one patch that can be fixed in a followup
-patch, so please have a look at my other mail.
+Can you add it in a follow-up?
 
-Thanks for this great work,
-Maxime
+Thanks!
+
 
 --=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---kfqkuj2vp7zlwfpe
+--ri7gvs7xpplwpxxr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZtAu0AAoJEBx+YmzsjxAgglgP/0yWOo5Nay/2pXap4IklR1Z+
-sBhkBRTO+Rnn0PujSmHE6CFOGLXKe6II3293UfquDmVRoIbszo7oyEn9aMIXxOuN
-egne3dweEISSGMzUOlZqpT0nKltD+VGNMwkz/giUVI6EXfl5wLb0fumu9m9K7ZmM
-b1o7jt4xx0mGuVWWcbPFtbl2UW0vMvlIzqaP4dhu/ZiydYVNUSHgzsAIyHw9JZpK
-/8JIMnrRn1ZlxKbxO4RAbVjeBmCya36b5lM4fDA2sZzyB+Ouhf6nSabbUf5ITjs3
-IFeL6hhB5Hgk8P2Oc7/juK5D7o6kIEkStXCiYJjmTkQ+uRr8mNQbB9rz36AhLqWo
-VyitbVI/T2kKbLGhYvhg+W/R7H0L+IHQmtB6uWbKRD7SgGrePiTyrnCEHmWlDdFl
-LncQdfvxiH48pKVvc+CavPkHnZvw/DPDd0m+Vd+On5MKTdQ26hRKeUOgeV7Om0Fs
-QQwp4TPa1E+kZdGMmmCbtSxQsgDd9g6xgQ/x3A1vnA4bzaJ0Y1KkSKIp/SSXF1kD
-o8yWNxoYdTKi6jKBjF4hm2QqamEhjnQWdG2kzBmZttCA7SwTTgAWY7o4fnjQhfjU
-NM2+n4tfECiHLbj6TO0h4SYZstnJ1s03YrHgDM28C8/GyqhpadjKU5s0MTNSsWmX
-HO869qiRUoe9QQUqyIeU
-=Jsm0
+iQIcBAEBAgAGBQJZtAwBAAoJEBx+YmzsjxAgZsQP/160hxyATn2FiMId9/fvgQR2
+skP8sV2BZWS6fs60gmgxO4Wl2jt/sdCBHgVfdQlckONvKfRhITd0h4uIdxNxAq4V
+oSNlYkXyk1rKtZzawWkh7aBQmxRJP7FxoEXe2Xy/MgCs8OTVTgeljF5rke187x/K
+6RSUCeKTyQIod9CKtREh824RbKTnuzaPNMtsFrN5rEkRdBExmuzye93mRi0Obl5j
+rtce3WuApL+Zhpcm+Zd4SgSPBa4Sc/4S8NA+X7r8nhoSYPgMespwQwvhjasfdbY4
+aqzCha0QUiFMJuUFbCXnvQD7n+gIkqsrWlcNIFKiq6PoJHC0JDA0nGUhuvOdeAdY
+JfGMyvQvDY3B8Bo1kViA5PynvXkccHYnTF6kb+81rza8nF1eboRx4Ta9Z2+MI3qT
+KS0EJYuV2bs6mf/9asXozlXV+TYI7rjsMACixb5XBEeFY95CNKgIsPDAuN+mGgis
+Gx/H3MTf+j1U+ahupGWAZhJZ3C2TxSizo3SAdou+Y2o96e6X4ytwyT3Z84gzE/qY
+LmSkvfhxkoPSX98mLDXB+dbtUynGbEVTx6FKmNg87TEzJBG2dceMOVjMTL2IMooo
+yEGhY6zWMuQnU7OQsbuuLQT5NWqe29V9tDuDj+3QNHr2i91ukK/FUV0WwTBcrtYJ
+vxS8kWwdP6P9w+cJtgcA
+=Ktea
 -----END PGP SIGNATURE-----
 
---kfqkuj2vp7zlwfpe--
+--ri7gvs7xpplwpxxr--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
