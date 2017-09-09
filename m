@@ -1,27 +1,103 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] dt-bindings: vendor-prefixes: Add nutsboard to vendor prefix.
-Date: Sat, 9 Sep 2017 12:06:37 -0300
-Message-ID: <CAOMZO5C5ZJqvsE=AH99jo+k1Mdw5gURcxKdqen_KDZ8qBKOi4A@mail.gmail.com>
-References: <1504957258-23334-1-git-send-email-onlywig@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v9 03/24] v4l: async: Use more intuitive names for internal functions
+Date: Sat, 09 Sep 2017 18:34:25 +0300
+Message-ID: <3924992.Y6xJjAbaat@avalon>
+References: <20170908131235.30294-1-sakari.ailus@linux.intel.com> <20170908131235.30294-4-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504957258-23334-1-git-send-email-onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wig C <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170908131235.30294-4-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 9, 2017 at 8:40 AM, Wig C <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> NutsBoard (http://nutsboard.org/) is an organization and focus
-> on ARM based embedded boards with open source software.
->
-> Signed-off-by: YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Sakari,
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you for the patch.
+
+On Friday, 8 September 2017 16:11:54 EEST Sakari Ailus wrote:
+> Rename internal functions to make the names of the functions better
+> describe what they do.
+> 
+> 	Old name			New name
+> 	v4l2_async_test_notify	v4l2_async_match_notify
+> 	v4l2_async_belongs	v4l2_async_find_match
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+Looks good to me.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Kerneldoc for the two functions would of course have been even better :-) That 
+can be added in a separate patch.
+
+> ---
+>  drivers/media/v4l2-core/v4l2-async.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> b/drivers/media/v4l2-core/v4l2-async.c index e109d9da4653..831f185ecd47
+> 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -60,8 +60,8 @@ static LIST_HEAD(subdev_list);
+>  static LIST_HEAD(notifier_list);
+>  static DEFINE_MUTEX(list_lock);
+> 
+> -static struct v4l2_async_subdev *v4l2_async_belongs(struct
+> v4l2_async_notifier *notifier, -						    struct v4l2_subdev *sd)
+> +static struct v4l2_async_subdev *v4l2_async_find_match(
+> +	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
+>  {
+>  	bool (*match)(struct v4l2_subdev *, struct v4l2_async_subdev *);
+>  	struct v4l2_async_subdev *asd;
+> @@ -95,9 +95,9 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct
+> v4l2_async_notifier * return NULL;
+>  }
+> 
+> -static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
+> -				  struct v4l2_subdev *sd,
+> -				  struct v4l2_async_subdev *asd)
+> +static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
+> +				   struct v4l2_subdev *sd,
+> +				   struct v4l2_async_subdev *asd)
+>  {
+>  	int ret;
+> 
+> @@ -175,11 +175,11 @@ int v4l2_async_notifier_register(struct v4l2_device
+> *v4l2_dev, list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
+>  		int ret;
+> 
+> -		asd = v4l2_async_belongs(notifier, sd);
+> +		asd = v4l2_async_find_match(notifier, sd);
+>  		if (!asd)
+>  			continue;
+> 
+> -		ret = v4l2_async_test_notify(notifier, sd, asd);
+> +		ret = v4l2_async_match_notify(notifier, sd, asd);
+>  		if (ret < 0) {
+>  			mutex_unlock(&list_lock);
+>  			return ret;
+> @@ -236,9 +236,10 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
+>  	INIT_LIST_HEAD(&sd->async_list);
+> 
+>  	list_for_each_entry(notifier, &notifier_list, list) {
+> -		struct v4l2_async_subdev *asd = v4l2_async_belongs(notifier, sd);
+> +		struct v4l2_async_subdev *asd = v4l2_async_find_match(notifier,
+> +								      sd);
+>  		if (asd) {
+> -			int ret = v4l2_async_test_notify(notifier, sd, asd);
+> +			int ret = v4l2_async_match_notify(notifier, sd, asd);
+>  			mutex_unlock(&list_lock);
+>  			return ret;
+>  		}
+
+
+-- 
+Regards,
+
+Laurent Pinchart
+
