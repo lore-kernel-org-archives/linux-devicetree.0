@@ -1,29 +1,44 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v8 2/3] ARM: dts: Add LVDS info for rk3288
-Date: Sat, 09 Sep 2017 01:45:53 +0200
-Message-ID: <35833616.zLl8rNldH8@phil>
-References: <1504351723-135876-1-git-send-email-hjc@rock-chips.com> <1504351732-135989-1-git-send-email-hjc@rock-chips.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/3] watchdog: jz4780: Allow selection of jz4740-wdt
+ driver
+Date: Fri, 8 Sep 2017 18:32:31 -0700
+Message-ID: <65d7a551-9496-c0ef-f4a2-5dacc4678326@roeck-us.net>
+References: <20170908183558.1537-1-malat@debian.org>
+ <20170908183558.1537-2-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504351732-135989-1-git-send-email-hjc@rock-chips.com>
+In-Reply-To: <20170908183558.1537-2-malat@debian.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sandy Huang <hjc@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Wim Van Sebroeck <wim@iguana.be>, Paul Cercueil <paul@crapouillou.net>, Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 2. September 2017, 19:28:52 CEST schrieb Sandy Huang:
-> add LVDS info in rk3288.dtsi for LVDS driver
-> This based on the patches from Mark yao and Heiko Stuebner.
+On 09/08/2017 11:35 AM, Mathieu Malaterre wrote:
+> This driver works for jz4740 & jz4780
 > 
-> Signed-off-by: Mark yao <mark.yao@rock-chips.com>
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+> Suggested-by: Maarten ter Huurne <maarten@treewalker.org>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 
-applied for 4.15 after moving both the lvds node to its correct
-position (please always sort by address) and fixed the register
-addressing to honor the recent rk3288 64bit conversion.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-
-Heiko
+> ---
+>   drivers/watchdog/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index c722cbfdc7e6..ca200d1f310a 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1460,7 +1460,7 @@ config INDYDOG
+>   
+>   config JZ4740_WDT
+>   	tristate "Ingenic jz4740 SoC hardware watchdog"
+> -	depends on MACH_JZ4740
+> +	depends on MACH_JZ4740 || MACH_JZ4780
+>   	select WATCHDOG_CORE
+>   	help
+>   	  Hardware driver for the built-in watchdog timer on Ingenic jz4740 SoCs.
+> 
