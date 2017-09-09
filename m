@@ -1,36 +1,52 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [RESENT PATCH v7 2/7] arm64: dts: rockchip: Add rt5514 dsp for Gru
-Date: Sat, 09 Sep 2017 13:45:43 +0200
-Message-ID: <18355462.FN9gHMXt24@phil>
-References: <20170824045227.15504-1-jeffy.chen@rock-chips.com> <20170824045227.15504-3-jeffy.chen@rock-chips.com> <5927343.7rXO2nMfqk@phil>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3] ARM: dts: Add initial Pistachio i.mx6q board support.
+Date: Sat, 9 Sep 2017 08:48:49 -0300
+Message-ID: <CAOMZO5Bsiw0z5Ab1oJ_MzsBeTueuEp1oZ3MpowwB8igKQApvew@mail.gmail.com>
+References: <1504949308-13552-1-git-send-email-onlywig@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5927343.7rXO2nMfqk@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504949308-13552-1-git-send-email-onlywig@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wig C <onlywig@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 9. September 2017, 13:13:01 CEST schrieb Heiko Stuebner:
-> Am Donnerstag, 24. August 2017, 12:52:22 CEST schrieb Jeffy Chen:
-> > Add rt5514 dsp of_node to codec list for Gru boards.
-> > 
-> > Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> applied for 4.15
-> Second patch needs to wait a bit more for the binding to get accepted.
+On Sat, Sep 9, 2017 at 6:28 AM, Wig C <onlywig@gmail.com> wrote:
 
-just realized that
-	[PATCH v7 3/7] arm64: dts: rockchip: Update rt5514 devices' compatible for Gru
+> +&usdhc2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_usdhc2>;
+> +       bus-width = <4>;
+> +       vmmc-supply = <&wlan_en_reg>;
+> +       no-1-8-v;
+> +       keep-power-in-suspend;
+> +  non-removable;
+> +  cap-power-off-card;
 
-is also part of the 2-patch series adding the compatible, so I don't need
-to track it here anymore, so nevermind the comment above.
+As I mentioned previously the indentation is not correct here.
 
+You should use tab instead of spaces.
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+checkpatch also complains about it:
+
+WARNING: please, no spaces at the start of a line
+#699: FILE: arch/arm/boot/dts/imx6q-pistachio.dts:654:
++  non-removable;$
+
+WARNING: please, no spaces at the start of a line
+#700: FILE: arch/arm/boot/dts/imx6q-pistachio.dts:655:
++  cap-power-off-card;$
+
+> +&wdog1 {
+> +       status = "okay";
+> +};
+
+Why don't you use like this as you intended in the original patch?
+
+&wdog1 {
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_wdog>;
+    fsl,ext-reset-output;
+    status = "okay";
+};
