@@ -1,97 +1,57 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v9 24/24] arm: dts: omap3: N9/N950: Add flash references
- to the camera
-Date: Sat, 9 Sep 2017 20:32:40 +0200
-Message-ID: <20170909183240.GA15397@amd>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
- <20170908131822.31020-20-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170908131822.31020-20-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 0/6] IIO driver for MCP3550/1/3
+Date: Sat, 9 Sep 2017 20:32:41 +0200
+Message-ID: <cover.1504807204.git.lukas@wunner.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+One speedup, one cleanup, one kerneldoc patch for mcp320x.c
+plus support for the MCP3550/1/3 used by the "Revolution Pi"
+family of open source PLCs (https://revolution.kunbus.com/).
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v1:
+- Drop two patches which are now queued. (Jonathan)
 
-Hi!
+- Move kerneldoc to separate patch. (Jonathan)
 
-> Add flash and indicator LED phandles to the sensor node.
->=20
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+- Move support for continuous conversion mode to separate patch
+  which is marked informational / not for merging.  Rename device
+  property to "continuous" for consistency with the existing
+  similar property of drivers/iio/light/us5182d.c. (Rob, Jonathan)
 
-I'm adding similar support to et8ek8 and wonder.. why don't you also
-add support for autofocus? Driver not yet available?
+- Rework calculation of raw value in patch [5/6]:  Instead of
+  byte-wise mangling, convert the big endian value clocked out
+  by the chip to host byte order and mangle the resulting 32-bit
+  value.  Reduces the amount of code and improves readability as
+  the bit numbers referenced in the code comment and datasheet
+  are used verbatim in the code.
+
+- Use switch/case-statement instead of if-clause when applying
+  chip-specific quirks in mcp320x_probe(). (Jonathan)
+
+- Expand code comment explaining the two consecutive conversions
+  in mcp320x_probe(). (Jonathan)
 
 Thanks,
-							Pavel
-> @@ -26,6 +26,7 @@
->  		clocks =3D <&isp 0>;
->  		clock-frequency =3D <9600000>;
->  		nokia,nvm-size =3D <(16 * 64)>;
-> +		flash-leds =3D <&as3645a_flash &as3645a_indicator>;
->  		port {
->  			smia_1_1: endpoint {
->  				link-frequencies =3D /bits/ 64 <199200000 210000000 499200000>;
-> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/oma=
-p3-n950-n9.dtsi
-> index 1b0bd72945f2..12fbb3da5fce 100644
-> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> @@ -271,14 +271,14 @@
->  		#size-cells =3D <0>;
->  		reg =3D <0x30>;
->  		compatible =3D "ams,as3645a";
-> -		flash@0 {
-> +		as3645a_flash: flash@0 {
->  			reg =3D <0x0>;
->  			flash-timeout-us =3D <150000>;
->  			flash-max-microamp =3D <320000>;
->  			led-max-microamp =3D <60000>;
->  			ams,input-max-microamp =3D <1750000>;
->  		};
-> -		indicator@1 {
-> +		as3645a_indicator: indicator@1 {
->  			reg =3D <0x1>;
->  			led-max-microamp =3D <10000>;
->  		};
-> diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n=
-950.dts
-> index 646601a3ebd8..c354a1ed1e70 100644
-> --- a/arch/arm/boot/dts/omap3-n950.dts
-> +++ b/arch/arm/boot/dts/omap3-n950.dts
-> @@ -60,6 +60,7 @@
->  		clocks =3D <&isp 0>;
->  		clock-frequency =3D <9600000>;
->  		nokia,nvm-size =3D <(16 * 64)>;
-> +		flash-leds =3D <&as3645a_flash &as3645a_indicator>;
->  		port {
->  			smia_1_1: endpoint {
->  				link-frequencies =3D /bits/ 64 <210000000 333600000 398400000>;
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Lukas
 
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Lukas Wunner (6):
+  iio: adc: mcp320x: Speed up readout of single-channel ADCs
+  iio: adc: mcp320x: Drop unnecessary of_device_id attributes
+  iio: adc: mcp320x: Document struct mcp320x
+  dt-bindings: iio: adc: mcp320x: Update for mcp3550/1/3
+  iio: adc: mcp320x: Add support for mcp3550/1/3
+  iio: adc: mcp320x: Support continuous conversion mode
 
-iEYEARECAAYFAlm0M8gACgkQMOfwapXb+vIvZQCfate7l5DVw3yuBkMxAzasFiS3
-fE8AoJKmlEnPsw/DqFrOArXFG6qVcieC
-=ASCE
------END PGP SIGNATURE-----
+ .../devicetree/bindings/iio/adc/mcp320x.txt        |  23 ++
+ drivers/iio/adc/Kconfig                            |   5 +-
+ drivers/iio/adc/mcp320x.c                          | 240 ++++++++++++++-------
+ 3 files changed, 188 insertions(+), 80 deletions(-)
 
---oyUTqETQ0mS9luUI--
+-- 
+2.11.0
