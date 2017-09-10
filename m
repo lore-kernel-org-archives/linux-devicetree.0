@@ -1,330 +1,289 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 06/14] irqchip: add initial support for ompic
-Date: Sun, 10 Sep 2017 15:49:18 +0900
-Message-ID: <20170910064926.5874-7-shorne@gmail.com>
-References: <20170910064926.5874-1-shorne@gmail.com>
+From: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] arm: npcm: add basic support for Nuvoton BMCs
+Date: Sun, 10 Sep 2017 11:36:30 +0300
+Message-ID: <CAP6Zq1jj08RbnUhPKaFuxn_06W1SzDmJoN6x8xV2pc05RKfngw@mail.gmail.com>
+References: <20170909015308.30001-1-brendanhiggins@google.com> <20170909015308.30001-2-brendanhiggins@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170910064926.5874-1-shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170909015308.30001-2-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+On 9 September 2017 at 04:53, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> Adds basic support for the Nuvoton NPCM750 BMC.
+>
+> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/Kconfig             |  2 +
+>  arch/arm/Makefile            |  1 +
+>  arch/arm/mach-npcm/Kconfig   | 48 ++++++++++++++++++++++++
+>  arch/arm/mach-npcm/Makefile  |  3 ++
+>  arch/arm/mach-npcm/headsmp.S | 17 +++++++++
+>  arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
+>  arch/arm/mach-npcm/platsmp.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
+>  7 files changed, 193 insertions(+)
+>  create mode 100644 arch/arm/mach-npcm/Kconfig
+>  create mode 100644 arch/arm/mach-npcm/Makefile
+>  create mode 100644 arch/arm/mach-npcm/headsmp.S
+>  create mode 100644 arch/arm/mach-npcm/npcm7xx.c
+>  create mode 100644 arch/arm/mach-npcm/platsmp.c
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 61a0cb15067e..05543f1cfbde 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -782,6 +782,8 @@ source "arch/arm/mach-netx/Kconfig"
+>
+>  source "arch/arm/mach-nomadik/Kconfig"
+>
+> +source "arch/arm/mach-npcm/Kconfig"
+> +
+>  source "arch/arm/mach-nspire/Kconfig"
+>
+>  source "arch/arm/plat-omap/Kconfig"
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index 47d3a1ab08d2..60ca50c7d762 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -191,6 +191,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)             += mediatek
+>  machine-$(CONFIG_ARCH_MXS)             += mxs
+>  machine-$(CONFIG_ARCH_NETX)            += netx
+>  machine-$(CONFIG_ARCH_NOMADIK)         += nomadik
+> +machine-$(CONFIG_ARCH_NPCM)            += npcm
+>  machine-$(CONFIG_ARCH_NSPIRE)          += nspire
+>  machine-$(CONFIG_ARCH_OXNAS)           += oxnas
+>  machine-$(CONFIG_ARCH_OMAP1)           += omap1
+> diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
+> new file mode 100644
+> index 000000000000..21dfa8ce828f
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/Kconfig
+> @@ -0,0 +1,48 @@
+> +menuconfig ARCH_NPCM
+> +       bool "Nuvoton NPCM Architecture"
+> +       select ARCH_REQUIRE_GPIOLIB
+> +       select USE_OF
+> +       select PINCTRL
+> +       select PINCTRL_NPCM7XX
+> +
+> +if ARCH_NPCM
+> +
+> +comment "NPCMX50 CPU type"
+> +
+> +config CPU_NPCM750
+> +       depends on ARCH_NPCM && ARCH_MULTI_V7
+> +       bool "Support for NPCM750 BMC CPU (Poleg)"
+> +       select CACHE_L2X0
+> +       select CPU_V7
+> +       select ARM_GIC
+> +       select HAVE_SMP
+> +       select SMP
+> +       select SMP_ON_UP
+> +       select HAVE_ARM_SCU
+> +       select HAVE_ARM_TWD if SMP
+> +       select ARM_ERRATA_720789
+> +       select ARM_ERRATA_754322
+> +       select ARM_ERRATA_764369
+> +       select ARM_ERRATA_794072
+> +       select PL310_ERRATA_588369
+> +       select PL310_ERRATA_727915
+> +       select USB_EHCI_ROOT_HUB_TT
+> +       select USB_ARCH_HAS_HCD
+> +       select USB_ARCH_HAS_EHCI
+> +       select USB_EHCI_HCD
+> +       select USB_ARCH_HAS_OHCI
+> +       select USB_OHCI_HCD
+> +       select USB
+> +       select FIQ
+> +       select CPU_USE_DOMAINS
+> +       select GENERIC_CLOCKEVENTS
+> +       select CLKDEV_LOOKUP
+> +       select COMMON_CLK if OF
+> +       select NPCM750_TIMER
+> +       select MFD_SYSCON
+> +       help
+> +         Support for NPCM750 BMC CPU (Poleg).
+> +
+> +         Nuvoton NPCM750 BMC based on the Cortex A9.
+> +
+> +endif
+> diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
+> new file mode 100644
+> index 000000000000..78416055b854
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/Makefile
+> @@ -0,0 +1,3 @@
+> +AFLAGS_headsmp.o               += -march=armv7-a
+> +
+> +obj-$(CONFIG_CPU_NPCM750)      += npcm7xx.o platsmp.o headsmp.o
+> diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
+> new file mode 100644
+> index 000000000000..9fccbbd49ed4
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/headsmp.S
+> @@ -0,0 +1,17 @@
+> +/*
+> + * Copyright 2017 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/linkage.h>
+> +#include <linux/init.h>
+> +#include <asm/assembler.h>
+> +
+> +ENTRY(npcm7xx_secondary_startup)
+> +       safe_svcmode_maskall r0
+> +
+> +       b       secondary_startup
+> +ENDPROC(npcm7xx_secondary_startup)
+> diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
+> new file mode 100644
+> index 000000000000..132e9d587857
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/npcm7xx.c
+> @@ -0,0 +1,34 @@
+> +/*
+> + * Copyright (c) 2017 Nuvoton Technology corporation.
+> + * Copyright 2017 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/types.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach-types.h>
+> +#include <asm/mach/map.h>
+> +#include <asm/hardware/cache-l2x0.h>
+> +
+> +#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |                               \
+> +                        L310_AUX_CTRL_DATA_PREFETCH |                         \
+> +                        L310_AUX_CTRL_NS_LOCKDOWN |                           \
+> +                        L310_AUX_CTRL_CACHE_REPLACE_RR |                      \
+> +                        L2C_AUX_CTRL_SHARED_OVERRIDE |                        \
+> +                        L310_AUX_CTRL_FULL_LINE_ZERO)
+> +
+> +static const char *const npcm7xx_dt_match[] = {
+> +       "nuvoton,npcm750",
+> +       NULL
+> +};
+> +
+> +DT_MACHINE_START(NPCM7XX_DT, "NPCMX50 Chip family")
+> +       .atag_offset    = 0x100,
+> +       .dt_compat      = npcm7xx_dt_match,
+> +       .l2c_aux_val    = NPCM7XX_AUX_VAL,
+> +       .l2c_aux_mask   = ~NPCM7XX_AUX_VAL,
+> +MACHINE_END
+> diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
+> new file mode 100644
+> index 000000000000..450e83c3c531
+> --- /dev/null
+> +++ b/arch/arm/mach-npcm/platsmp.c
+> @@ -0,0 +1,88 @@
+> +/*
+> + * Copyright 2017 Google, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#define pr_fmt(fmt) "PLATSMP: " fmt
+> +
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/smp.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/smp.h>
+> +#include <asm/smp_plat.h>
+> +#include <asm/smp_scu.h>
+> +
+> +#define NPCM7XX_SCRPAD_REG 0x13c
+> +
+> +extern void npcm7xx_secondary_startup(void);
+> +
+> +static int npcm7xx_smp_boot_secondary(unsigned int cpu,
+> +                                     struct task_struct *idle)
+> +{
+> +       struct device_node *gcr_np;
+> +       void __iomem *gcr_base;
+> +       int ret = 0;
+> +
+> +       gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
+> +       if (!gcr_np) {
+> +               pr_err("no gcr device node\n");
+> +               ret = -EFAULT;
+> +               goto out;
+> +       }
+> +       gcr_base = of_iomap(gcr_np, 0);
+> +       if (!gcr_base) {
+> +               pr_err("could not iomap gcr at: 0x%p\n", gcr_base);
+> +               ret = -EFAULT;
+> +               goto out;
+> +       }
+> +
+> +       /* give boot ROM kernel start address. */
+> +       iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
+> +                 NPCM7XX_SCRPAD_REG);
+> +       /* make sure npcm7xx_secondary_startup is seen by all observers. */
+> +       smp_wmb();
+> +       dsb_sev();
+> +       /* make sure write buffer is drained */
+> +       mb();
+> +
+> +       iounmap(gcr_base);
+> +out:
+> +       return ret;
+> +}
+> +
+> +static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
+> +{
+> +       struct device_node *scu_np;
+> +       void __iomem *scu_base;
+> +
+> +       scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
+> +       if (!scu_np) {
+> +               pr_err("no scu device node\n");
+> +               return;
+> +       }
+> +       scu_base = of_iomap(scu_np, 0);
+> +       if (!scu_base) {
+> +               pr_err("could not iomap scu at: 0x%p\n", scu_base);
+> +               return;
+> +       }
+> +
+> +       scu_enable(scu_base);
+> +
+> +       iounmap(scu_base);
+> +}
+> +
+> +static struct smp_operations npcm7xx_smp_ops __initdata = {
+> +       .smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
+> +       .smp_boot_secondary = npcm7xx_smp_boot_secondary,
+> +};
+> +
+> +CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm7xx-smp", &npcm7xx_smp_ops);
+> --
+> 2.14.1.581.gf28d330327-goog
+>
 
-IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
-described in the Multicore support section of the OpenRISC 1.2
-proposed architecture specification:
-
-  https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
-
-Each OpenRISC core contains a full interrupt controller which is used in
-the SMP architecture for interrupt balancing.  This IPI device, the
-ompic, is the only external device required for enabling SMP on
-OpenRISC.
-
-Pending ops are stored in a memory bit mask which can allow multiple
-pending operations to be set and serviced at a time. This is mostly
-borrowed from the alpha IPI implementation.
-
-Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-[shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
-Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-
-Changes since v1
- - Added openrisc, prefix
- - Clarified 8 bytes per cpu
- - Removed #interrupt-cells as this will not be an irq parent
- - Changed ops to be percpu
- - Added DTS and intialization failure validations
-
- .../interrupt-controller/openrisc,ompic.txt        |  19 ++
- arch/openrisc/Kconfig                              |   1 +
- drivers/irqchip/Kconfig                            |   3 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-ompic.c                        | 205 +++++++++++++++++++++
- 5 files changed, 229 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
- create mode 100644 drivers/irqchip/irq-ompic.c
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
-new file mode 100644
-index 000000000000..346e6042d62f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
-@@ -0,0 +1,19 @@
-+Open Multi-Processor Interrupt Controller
-+
-+Required properties:
-+
-+- compatible : This should be "openrisc,ompic"
-+- reg : Specifies base physical address and size of the register space. The
-+  size is based on the number of cores the controller has been configured
-+  to handle, this should be set to 8 bytes per cpu core.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- interrupts : Specifies the interrupt line to which the ompic is wired.
-+
-+Example:
-+
-+ompic: ompic {
-+	compatible = "openrisc,ompic";
-+	reg = <0x98000000 16>;
-+	interrupt-controller;
-+	interrupts = <1>;
-+};
-diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
-index b49acda5e8f4..34eb4e90f56c 100644
---- a/arch/openrisc/Kconfig
-+++ b/arch/openrisc/Kconfig
-@@ -30,6 +30,7 @@ config OPENRISC
- 	select NO_BOOTMEM
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_USE_QUEUED_RWLOCKS
-+	select OMPIC if SMP
- 
- config CPU_BIG_ENDIAN
- 	def_bool y
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index f1fd5f44d1d4..0e4c96c90b86 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -145,6 +145,9 @@ config CLPS711X_IRQCHIP
- 	select SPARSE_IRQ
- 	default y
- 
-+config OMPIC
-+	bool
-+
- config OR1K_PIC
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index e88d856cc09c..123047d7a20d 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
- obj-$(CONFIG_METAG)			+= irq-metag-ext.o
- obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
- obj-$(CONFIG_CLPS711X_IRQCHIP)		+= irq-clps711x.o
-+obj-$(CONFIG_OMPIC)			+= irq-ompic.o
- obj-$(CONFIG_OR1K_PIC)			+= irq-or1k-pic.o
- obj-$(CONFIG_ORION_IRQCHIP)		+= irq-orion.o
- obj-$(CONFIG_OMAP_IRQCHIP)		+= irq-omap-intc.o
-diff --git a/drivers/irqchip/irq-ompic.c b/drivers/irqchip/irq-ompic.c
-new file mode 100644
-index 000000000000..cd2616b6639b
---- /dev/null
-+++ b/drivers/irqchip/irq-ompic.c
-@@ -0,0 +1,205 @@
-+/*
-+ * Open Multi-Processor Interrupt Controller driver
-+ *
-+ * Copyright (C) 2014 Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-+ * Copyright (C) 2017 Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ *
-+ * The ompic device handles IPI communication because cores in mulicore
-+ * OpenRISC systems.
-+ *
-+ * Registers
-+ *
-+ * For each CPU the ompic has 2 registers. The control register for sending
-+ * and acking IPIs and the status register for receiving IPIs. The register
-+ * layouts are as follows:
-+ *
-+ *  Control register
-+ *  +---------+---------+----------+---------+
-+ *  | 31      | 30      | 29 .. 16 | 15 .. 0 |
-+ *  ----------+---------+----------+----------
-+ *  | IRQ ACK | IRQ GEN | DST CORE | DATA    |
-+ *  +---------+---------+----------+---------+
-+ *
-+ *  Status register
-+ *  +----------+-------------+----------+---------+
-+ *  | 31       | 30          | 29 .. 16 | 15 .. 0 |
-+ *  -----------+-------------+----------+---------+
-+ *  | Reserved | IRQ Pending | SRC CORE | DATA    |
-+ *  +----------+-------------+----------+---------+
-+ *
-+ * Architecture
-+ *
-+ * - The ompic generates a level interrupt to the CPU PIC when a message is
-+ *   ready.  Messages are delivered via the memory bus.
-+ * - The ompic does not have any interrupt input lines.
-+ * - The ompic is wired to the same irq line on each core.
-+ * - Devices are wired to the same irq line on each core.
-+ *
-+ *   +---------+                         +---------+
-+ *   | CPU     |                         | CPU     |
-+ *   |  Core 0 |<==\ (memory access) /==>|  Core 1 |
-+ *   |  [ PIC ]|   |                 |   |  [ PIC ]|
-+ *   +----^-^--+   |                 |   +----^-^--+
-+ *        | |      v                 v        | |
-+ *   <====|=|=================================|=|==> (memory bus)
-+ *        | |      ^                  ^       | |
-+ *  (ipi  | +------|---------+--------|-------|-+ (device irq)
-+ *   irq  |        |         |        |       |
-+ *  core0)| +------|---------|--------|-------+ (ipi irq core1)
-+ *        | |      |         |        |
-+ *   +----o-o-+    |    +--------+    |
-+ *   | ompic  |<===/    | Device |<===/
-+ *   |  IPI   |         +--------+
-+ *   +--------+*
-+ *
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/interrupt.h>
-+#include <linux/smp.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+
-+#include <linux/irqchip.h>
-+
-+#define OMPIC_CPUBYTES		8
-+#define OMPIC_CTRL(cpu)		(0x0 + (cpu * OMPIC_CPUBYTES))
-+#define OMPIC_STAT(cpu)		(0x4 + (cpu * OMPIC_CPUBYTES))
-+
-+#define OMPIC_CTRL_IRQ_ACK	(1 << 31)
-+#define OMPIC_CTRL_IRQ_GEN	(1 << 30)
-+#define OMPIC_CTRL_DST(cpu)	(((cpu) & 0x3fff) << 16)
-+
-+#define OMPIC_STAT_IRQ_PENDING	(1 << 30)
-+
-+#define OMPIC_DATA(x)		((x) & 0xffff)
-+
-+DEFINE_PER_CPU(unsigned long, ops);
-+
-+static void __iomem *ompic_base;
-+
-+static inline u32 ompic_readreg(void __iomem *base, loff_t offset)
-+{
-+	return ioread32be(base + offset);
-+}
-+
-+static void ompic_writereg(void __iomem *base, loff_t offset, u32 data)
-+{
-+	iowrite32be(data, base + offset);
-+}
-+
-+void ompic_raise_softirq(const struct cpumask *mask, unsigned int ipi_msg)
-+{
-+	unsigned int dst_cpu;
-+	unsigned int src_cpu = smp_processor_id();
-+
-+	for_each_cpu(dst_cpu, mask) {
-+		set_bit(ipi_msg, &per_cpu(ops, dst_cpu));
-+
-+		/*
-+		 * On OpenRISC the atomic set_bit() call implies a memory
-+		 * barrier.  Otherwise we would need: smp_wmb(); paired
-+		 * with the read in ompic_ipi_handler.
-+		 */
-+
-+		ompic_writereg(ompic_base, OMPIC_CTRL(src_cpu),
-+			       OMPIC_CTRL_IRQ_GEN |
-+			       OMPIC_CTRL_DST(dst_cpu) |
-+			       OMPIC_DATA(1));
-+	}
-+}
-+
-+irqreturn_t ompic_ipi_handler(int irq, void *dev_id)
-+{
-+	unsigned int cpu = smp_processor_id();
-+	unsigned long *pending_ops = &per_cpu(ops, cpu);
-+	unsigned long ops;
-+
-+	ompic_writereg(ompic_base, OMPIC_CTRL(cpu), OMPIC_CTRL_IRQ_ACK);
-+	while ((ops = xchg(pending_ops, 0)) != 0) {
-+
-+		/*
-+		 * On OpenRISC the atomic xchg() call implies a memory
-+		 * barrier.  Otherwise we may need an smp_rmb(); paired
-+		 * with the write in ompic_raise_softirq.
-+		 */
-+
-+		do {
-+			unsigned long ipi_msg;
-+
-+			ipi_msg = __ffs(ops);
-+			ops &= ~(1UL << ipi_msg);
-+
-+			handle_IPI(ipi_msg);
-+		} while (ops);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct irqaction ompi_ipi_irqaction = {
-+	.handler =      ompic_ipi_handler,
-+	.flags =        IRQF_PERCPU,
-+	.name =         "ompic_ipi",
-+};
-+
-+int __init ompic_of_init(struct device_node *node, struct device_node *parent)
-+{
-+	struct resource res;
-+	int irq;
-+	int ret;
-+
-+	/* Validate the DT */
-+	if (ompic_base) {
-+		pr_err("ompic: duplicate ompic's are not supported");
-+		return -EEXIST;
-+	}
-+
-+	if (of_address_to_resource(node, 0, &res)) {
-+		pr_err("ompic: reg property requires an address and size");
-+		return -EINVAL;
-+	}
-+
-+	if (resource_size(&res) < (num_possible_cpus() * OMPIC_CPUBYTES)) {
-+		pr_err("ompic: reg size, currently %d must be at least %d",
-+			resource_size(&res),
-+			(num_possible_cpus() * OMPIC_CPUBYTES));
-+		return -EINVAL;
-+	}
-+
-+	/* Setup the device */
-+	ompic_base = ioremap(res.start, resource_size(&res));
-+	if (IS_ERR(ompic_base)) {
-+		pr_err("ompic: unable to map registers");
-+		return PTR_ERR(ompic_base);
-+	}
-+
-+	irq = irq_of_parse_and_map(node, 0);
-+	if (irq <= 0) {
-+		pr_err("ompic: unable to parse device irq");
-+		ret = -EINVAL;
-+		goto out_unmap;
-+	}
-+
-+	ret = setup_irq(irq, &ompi_ipi_irqaction);
-+	if (ret)
-+		goto out_irq_disp;
-+
-+	set_smp_cross_call(ompic_raise_softirq);
-+
-+	return 0;
-+
-+out_irq_disp:
-+	irq_dispose_mapping(irq);
-+out_unmap:
-+	iounmap(ompic_base);
-+	ompic_base = NULL;
-+	return ret;
-+}
-+IRQCHIP_DECLARE(ompic, "openrisc,ompic", ompic_of_init);
--- 
-2.13.5
-
+Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
