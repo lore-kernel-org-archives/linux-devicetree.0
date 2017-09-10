@@ -1,56 +1,86 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: realtek: Add watchdog node for RTD1295
-Date: Sun, 10 Sep 2017 08:18:20 -0700
-Message-ID: <bf49f284-de9a-4990-a551-45aef2b4d0f2@roeck-us.net>
-References: <20170904231602.29787-1-afaerber@suse.de>
- <20170904231602.29787-4-afaerber@suse.de>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] dt-bindings: iio: adc: mcp320x: Update for
+ mcp3550/1/3
+Date: Sun, 10 Sep 2017 17:16:13 +0100
+Message-ID: <20170910171613.59df4c36@archlinux>
+References: <cover.1504807204.git.lukas@wunner.de>
+        <f5899af5ef548c618ac14950301f6bc8eff6e9ba.1504807204.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170904231602.29787-4-afaerber-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?B?6JKL5Li955C0?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f5899af5ef548c618ac14950301f6bc8eff6e9ba.1504807204.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2017 04:16 PM, Andreas Färber wrote:
-> Add the watchdog node to the RTD1295 Device Tree.
+On Sat, 9 Sep 2017 20:32:41 +0200
+Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
+
+> All chips supported by this driver clock data out on the falling edge
+> and latch data in on the rising edge, hence SPI mode (0,0) or (1,1)
+> must be used.
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> Furthermore, none of the chips has an internal reference voltage
+> regulator, so an external supply is always required and needs to be
+> specified in the device tree lest the IIO "scale" in sysfs cannot be
+> calculated.
+> 
+> Document these requirements in the device tree binding, add compatible
+> strings for the newly supported mcp3550/1/3 and explain that SPI mode
+> (0,0) should be preferred for these chips.
+> 
+> Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
 
-Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+I'm happy with this, but just want to give Rob / Mark more time to take
+a look at it.
 
+Give me a poke if I seem to have forgotten it in a week or so.
+
+Thanks,
+
+Jonathan
 > ---
->   Depends on the pending clock nodes patch.
->   
->   v1 -> v2: Unchanged
->   
->   arch/arm64/boot/dts/realtek/rtd1295.dtsi | 6 ++++++
->   1 file changed, 6 insertions(+)
+> Changes since v1:
+> - Move support for continuous conversion mode to separate patch
+>   which is marked informational / not for merging. (Rob, Jonathan)
 > 
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> index fbbd6456079e..f39ab63f879d 100644
-> --- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> +++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-> @@ -123,6 +123,12 @@
->   			#interrupt-cells = <1>;
->   		};
->   
-> +		watchdog@98007680 {
-> +			compatible = "realtek,rtd1295-watchdog";
-> +			reg = <0x98007680 0x100>;
-> +			clocks = <&osc27M>;
-> +		};
+>  Documentation/devicetree/bindings/iio/adc/mcp320x.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> index bcd3ac8e6e0c..7d64753df949 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
+> @@ -29,15 +29,29 @@ Required properties:
+>  				"microchip,mcp3204"
+>  				"microchip,mcp3208"
+>  				"microchip,mcp3301"
+> +				"microchip,mcp3550-50"
+> +				"microchip,mcp3550-60"
+> +				"microchip,mcp3551"
+> +				"microchip,mcp3553"
+>  
+>  			NOTE: The use of the compatibles with no vendor prefix
+>  			is deprecated and only listed because old DT use them.
+>  
+> +	- spi-cpha, spi-cpol (boolean):
+> +			Either SPI mode (0,0) or (1,1) must be used, so specify
+> +			none or both of spi-cpha, spi-cpol.  The MCP3550/1/3
+> +			is more efficient in mode (1,1) as only 3 instead of
+> +			4 bytes need to be read from the ADC, but not all SPI
+> +			masters support it.
 > +
->   		uart0: serial@98007800 {
->   			compatible = "snps,dw-apb-uart";
->   			reg = <0x98007800 0x400>;
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	- vref-supply:	Phandle to the external reference voltage supply.
+> +
+>  Examples:
+>  spi_controller {
+>  	mcp3x0x@0 {
+>  		compatible = "mcp3002";
+>  		reg = <0>;
+>  		spi-max-frequency = <1000000>;
+> +		vref-supply = <&vref_reg>;
+>  	};
+>  };
