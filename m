@@ -1,176 +1,329 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: cs43130: Add break keyword to switch case" to the asoc tree
-Date: Sun, 10 Sep 2017 05:58:49 +0100
-Message-ID: <E1dquKX-0005RS-EQ@debutante>
-References: <cdb2768e-7853-4ada-b1e3-dd48d09d0d15@EX4.ad.cirrus.com>
+From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 06/14] irqchip: add initial support for ompic
+Date: Sun, 10 Sep 2017 15:49:18 +0900
+Message-ID: <20170910064926.5874-7-shorne@gmail.com>
+References: <20170910064926.5874-1-shorne@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cdb2768e-7853-4ada-b1e3-dd48d09d0d15-k7YZYYsDncjfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20170910064926.5874-1-shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
 
-   ASoC: cs43130: Add break keyword to switch case
+IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
+described in the Multicore support section of the OpenRISC 1.2
+proposed architecture specification:
 
-has been applied to the asoc tree at
+  https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Each OpenRISC core contains a full interrupt controller which is used in
+the SMP architecture for interrupt balancing.  This IPI device, the
+ompic, is the only external device required for enabling SMP on
+OpenRISC.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Pending ops are stored in a memory bit mask which can allow multiple
+pending operations to be set and serviced at a time. This is mostly
+borrowed from the alpha IPI implementation.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 574ff444b9fcc2554e381054f5052cb9c0e91de7 Mon Sep 17 00:00:00 2001
-From: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Date: Tue, 5 Sep 2017 20:33:04 -0500
-Subject: [PATCH] ASoC: cs43130: Add break keyword to switch case
-
-Add break keyword to all switch case unless the case is returning.
-Also remove gpio check for consistency.
-
-Signed-off-by: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+[shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
+Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- sound/soc/codecs/cs43130.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/cs43130.c b/sound/soc/codecs/cs43130.c
-index 643e37fc218e..5ba0edc19df4 100644
---- a/sound/soc/codecs/cs43130.c
-+++ b/sound/soc/codecs/cs43130.c
-@@ -909,6 +909,7 @@ static int cs43130_hw_params(struct snd_pcm_substream *substream,
- 		regmap_update_bits(cs43130->regmap, CS43130_DSD_PATH_CTL_2,
- 				   CS43130_DSD_SRC_MASK, CS43130_DSD_SRC_XSP <<
- 				   CS43130_DSD_SRC_SHIFT);
-+		break;
- 	}
+Changes since v1
+ - Added openrisc, prefix
+ - Clarified 8 bytes per cpu
+ - Removed #interrupt-cells as this will not be an irq parent
+ - Changed ops to be percpu
+ - Added DTS and intialization failure validations
+
+ .../interrupt-controller/openrisc,ompic.txt        |  19 ++
+ arch/openrisc/Kconfig                              |   1 +
+ drivers/irqchip/Kconfig                            |   3 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-ompic.c                        | 205 +++++++++++++++++++++
+ 5 files changed, 229 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+ create mode 100644 drivers/irqchip/irq-ompic.c
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+new file mode 100644
+index 000000000000..346e6042d62f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+@@ -0,0 +1,19 @@
++Open Multi-Processor Interrupt Controller
++
++Required properties:
++
++- compatible : This should be "openrisc,ompic"
++- reg : Specifies base physical address and size of the register space. The
++  size is based on the number of cores the controller has been configured
++  to handle, this should be set to 8 bytes per cpu core.
++- interrupt-controller : Identifies the node as an interrupt controller
++- interrupts : Specifies the interrupt line to which the ompic is wired.
++
++Example:
++
++ompic: ompic {
++	compatible = "openrisc,ompic";
++	reg = <0x98000000 16>;
++	interrupt-controller;
++	interrupts = <1>;
++};
+diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
+index b49acda5e8f4..34eb4e90f56c 100644
+--- a/arch/openrisc/Kconfig
++++ b/arch/openrisc/Kconfig
+@@ -30,6 +30,7 @@ config OPENRISC
+ 	select NO_BOOTMEM
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+ 	select ARCH_USE_QUEUED_RWLOCKS
++	select OMPIC if SMP
  
- 	if (!sclk && cs43130->dais[dai->id].dai_mode == SND_SOC_DAIFMT_CBM_CFM)
-@@ -1039,6 +1040,7 @@ static int cs43130_pcm_ch_put(struct snd_kcontrol *kcontrol,
- 		else
- 			regmap_multi_reg_write(cs43130->regmap, pcm_ch_dis_seq,
- 					       ARRAY_SIZE(pcm_ch_dis_seq));
-+		break;
- 	}
+ config CPU_BIG_ENDIAN
+ 	def_bool y
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index f1fd5f44d1d4..0e4c96c90b86 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -145,6 +145,9 @@ config CLPS711X_IRQCHIP
+ 	select SPARSE_IRQ
+ 	default y
  
- 	return snd_soc_put_enum_double(kcontrol, ucontrol);
-@@ -1152,6 +1154,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, dsd_seq,
- 					       ARRAY_SIZE(dsd_seq));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_POST_PMU:
-@@ -1162,6 +1165,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, unmute_seq,
- 					       ARRAY_SIZE(unmute_seq));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_PRE_PMD:
-@@ -1184,6 +1188,7 @@ static int cs43130_dsd_event(struct snd_soc_dapm_widget *w,
- 			regmap_update_bits(cs43130->regmap,
- 					   CS43130_DSD_PATH_CTL_1,
- 					   CS43130_MUTE_MASK, CS43130_MUTE_EN);
-+			break;
- 		}
- 		break;
- 	default:
-@@ -1206,6 +1211,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, pcm_seq,
- 					       ARRAY_SIZE(pcm_seq));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_POST_PMU:
-@@ -1216,6 +1222,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, unmute_seq,
- 					       ARRAY_SIZE(unmute_seq));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_PRE_PMD:
-@@ -1238,6 +1245,7 @@ static int cs43130_pcm_event(struct snd_soc_dapm_widget *w,
- 			regmap_update_bits(cs43130->regmap,
- 					   CS43130_PCM_PATH_CTL_1,
- 					   CS43130_MUTE_MASK, CS43130_MUTE_EN);
-+			break;
- 		}
- 		break;
- 	default:
-@@ -1277,6 +1285,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
- 		case CS43198_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, pop_free_seq2,
- 					       ARRAY_SIZE(pop_free_seq2));
-+			break;
- 		}
- 		break;
- 	case SND_SOC_DAPM_POST_PMU:
-@@ -1301,6 +1310,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
- 		case CS43198_CHIP_ID:
- 			usleep_range(12000, 12010);
- 			regmap_write(cs43130->regmap, CS43130_DXD13, 0);
-+			break;
- 		}
- 
- 		regmap_write(cs43130->regmap, CS43130_DXD1, 0);
-@@ -1311,6 +1321,7 @@ static int cs43130_dac_event(struct snd_soc_dapm_widget *w,
- 		case CS4399_CHIP_ID:
- 			regmap_multi_reg_write(cs43130->regmap, dac_postpmd_seq,
- 					       ARRAY_SIZE(dac_postpmd_seq));
-+			break;
- 		}
- 		break;
- 	default:
-@@ -2133,6 +2144,7 @@ static void cs43130_imp_meas(struct work_struct *wk)
- 		cs43130_hpload_proc(cs43130, hp_dis_cal_seq2,
- 				    ARRAY_SIZE(hp_dis_cal_seq2),
- 				    CS43130_HPLOAD_OFF_INT, ac_idx);
-+		break;
- 	}
- 
- 	regmap_multi_reg_write(cs43130->regmap, hp_cln_seq,
-@@ -2543,6 +2555,7 @@ static int cs43130_i2c_probe(struct i2c_client *client,
- 			digital_hp_routes;
- 		soc_codec_dev_cs43130.component_driver.num_dapm_routes =
- 			ARRAY_SIZE(digital_hp_routes);
-+		break;
- 	}
- 
- 	ret = snd_soc_register_codec(&client->dev, &soc_codec_dev_cs43130,
-@@ -2586,8 +2599,7 @@ static int cs43130_i2c_remove(struct i2c_client *client)
- 		device_remove_file(&client->dev, &dev_attr_hpload_ac_r);
- 	}
- 
--	if (cs43130->reset_gpio)
--		gpiod_set_value_cansleep(cs43130->reset_gpio, 0);
-+	gpiod_set_value_cansleep(cs43130->reset_gpio, 0);
- 
- 	pm_runtime_disable(&client->dev);
- 	regulator_bulk_disable(CS43130_NUM_SUPPLIES, cs43130->supplies);
++config OMPIC
++	bool
++
+ config OR1K_PIC
+ 	bool
+ 	select IRQ_DOMAIN
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index e88d856cc09c..123047d7a20d 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
+ obj-$(CONFIG_METAG)			+= irq-metag-ext.o
+ obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
+ obj-$(CONFIG_CLPS711X_IRQCHIP)		+= irq-clps711x.o
++obj-$(CONFIG_OMPIC)			+= irq-ompic.o
+ obj-$(CONFIG_OR1K_PIC)			+= irq-or1k-pic.o
+ obj-$(CONFIG_ORION_IRQCHIP)		+= irq-orion.o
+ obj-$(CONFIG_OMAP_IRQCHIP)		+= irq-omap-intc.o
+diff --git a/drivers/irqchip/irq-ompic.c b/drivers/irqchip/irq-ompic.c
+new file mode 100644
+index 000000000000..cd2616b6639b
+--- /dev/null
++++ b/drivers/irqchip/irq-ompic.c
+@@ -0,0 +1,205 @@
++/*
++ * Open Multi-Processor Interrupt Controller driver
++ *
++ * Copyright (C) 2014 Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
++ * Copyright (C) 2017 Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ *
++ * The ompic device handles IPI communication because cores in mulicore
++ * OpenRISC systems.
++ *
++ * Registers
++ *
++ * For each CPU the ompic has 2 registers. The control register for sending
++ * and acking IPIs and the status register for receiving IPIs. The register
++ * layouts are as follows:
++ *
++ *  Control register
++ *  +---------+---------+----------+---------+
++ *  | 31      | 30      | 29 .. 16 | 15 .. 0 |
++ *  ----------+---------+----------+----------
++ *  | IRQ ACK | IRQ GEN | DST CORE | DATA    |
++ *  +---------+---------+----------+---------+
++ *
++ *  Status register
++ *  +----------+-------------+----------+---------+
++ *  | 31       | 30          | 29 .. 16 | 15 .. 0 |
++ *  -----------+-------------+----------+---------+
++ *  | Reserved | IRQ Pending | SRC CORE | DATA    |
++ *  +----------+-------------+----------+---------+
++ *
++ * Architecture
++ *
++ * - The ompic generates a level interrupt to the CPU PIC when a message is
++ *   ready.  Messages are delivered via the memory bus.
++ * - The ompic does not have any interrupt input lines.
++ * - The ompic is wired to the same irq line on each core.
++ * - Devices are wired to the same irq line on each core.
++ *
++ *   +---------+                         +---------+
++ *   | CPU     |                         | CPU     |
++ *   |  Core 0 |<==\ (memory access) /==>|  Core 1 |
++ *   |  [ PIC ]|   |                 |   |  [ PIC ]|
++ *   +----^-^--+   |                 |   +----^-^--+
++ *        | |      v                 v        | |
++ *   <====|=|=================================|=|==> (memory bus)
++ *        | |      ^                  ^       | |
++ *  (ipi  | +------|---------+--------|-------|-+ (device irq)
++ *   irq  |        |         |        |       |
++ *  core0)| +------|---------|--------|-------+ (ipi irq core1)
++ *        | |      |         |        |
++ *   +----o-o-+    |    +--------+    |
++ *   | ompic  |<===/    | Device |<===/
++ *   |  IPI   |         +--------+
++ *   +--------+*
++ *
++ */
++
++#include <linux/io.h>
++#include <linux/ioport.h>
++#include <linux/interrupt.h>
++#include <linux/smp.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/of_address.h>
++
++#include <linux/irqchip.h>
++
++#define OMPIC_CPUBYTES		8
++#define OMPIC_CTRL(cpu)		(0x0 + (cpu * OMPIC_CPUBYTES))
++#define OMPIC_STAT(cpu)		(0x4 + (cpu * OMPIC_CPUBYTES))
++
++#define OMPIC_CTRL_IRQ_ACK	(1 << 31)
++#define OMPIC_CTRL_IRQ_GEN	(1 << 30)
++#define OMPIC_CTRL_DST(cpu)	(((cpu) & 0x3fff) << 16)
++
++#define OMPIC_STAT_IRQ_PENDING	(1 << 30)
++
++#define OMPIC_DATA(x)		((x) & 0xffff)
++
++DEFINE_PER_CPU(unsigned long, ops);
++
++static void __iomem *ompic_base;
++
++static inline u32 ompic_readreg(void __iomem *base, loff_t offset)
++{
++	return ioread32be(base + offset);
++}
++
++static void ompic_writereg(void __iomem *base, loff_t offset, u32 data)
++{
++	iowrite32be(data, base + offset);
++}
++
++void ompic_raise_softirq(const struct cpumask *mask, unsigned int ipi_msg)
++{
++	unsigned int dst_cpu;
++	unsigned int src_cpu = smp_processor_id();
++
++	for_each_cpu(dst_cpu, mask) {
++		set_bit(ipi_msg, &per_cpu(ops, dst_cpu));
++
++		/*
++		 * On OpenRISC the atomic set_bit() call implies a memory
++		 * barrier.  Otherwise we would need: smp_wmb(); paired
++		 * with the read in ompic_ipi_handler.
++		 */
++
++		ompic_writereg(ompic_base, OMPIC_CTRL(src_cpu),
++			       OMPIC_CTRL_IRQ_GEN |
++			       OMPIC_CTRL_DST(dst_cpu) |
++			       OMPIC_DATA(1));
++	}
++}
++
++irqreturn_t ompic_ipi_handler(int irq, void *dev_id)
++{
++	unsigned int cpu = smp_processor_id();
++	unsigned long *pending_ops = &per_cpu(ops, cpu);
++	unsigned long ops;
++
++	ompic_writereg(ompic_base, OMPIC_CTRL(cpu), OMPIC_CTRL_IRQ_ACK);
++	while ((ops = xchg(pending_ops, 0)) != 0) {
++
++		/*
++		 * On OpenRISC the atomic xchg() call implies a memory
++		 * barrier.  Otherwise we may need an smp_rmb(); paired
++		 * with the write in ompic_raise_softirq.
++		 */
++
++		do {
++			unsigned long ipi_msg;
++
++			ipi_msg = __ffs(ops);
++			ops &= ~(1UL << ipi_msg);
++
++			handle_IPI(ipi_msg);
++		} while (ops);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static struct irqaction ompi_ipi_irqaction = {
++	.handler =      ompic_ipi_handler,
++	.flags =        IRQF_PERCPU,
++	.name =         "ompic_ipi",
++};
++
++int __init ompic_of_init(struct device_node *node, struct device_node *parent)
++{
++	struct resource res;
++	int irq;
++	int ret;
++
++	/* Validate the DT */
++	if (ompic_base) {
++		pr_err("ompic: duplicate ompic's are not supported");
++		return -EEXIST;
++	}
++
++	if (of_address_to_resource(node, 0, &res)) {
++		pr_err("ompic: reg property requires an address and size");
++		return -EINVAL;
++	}
++
++	if (resource_size(&res) < (num_possible_cpus() * OMPIC_CPUBYTES)) {
++		pr_err("ompic: reg size, currently %d must be at least %d",
++			resource_size(&res),
++			(num_possible_cpus() * OMPIC_CPUBYTES));
++		return -EINVAL;
++	}
++
++	/* Setup the device */
++	ompic_base = ioremap(res.start, resource_size(&res));
++	if (IS_ERR(ompic_base)) {
++		pr_err("ompic: unable to map registers");
++		return PTR_ERR(ompic_base);
++	}
++
++	irq = irq_of_parse_and_map(node, 0);
++	if (irq <= 0) {
++		pr_err("ompic: unable to parse device irq");
++		ret = -EINVAL;
++		goto out_unmap;
++	}
++
++	ret = setup_irq(irq, &ompi_ipi_irqaction);
++	if (ret)
++		goto out_irq_disp;
++
++	set_smp_cross_call(ompic_raise_softirq);
++
++	return 0;
++
++out_irq_disp:
++	irq_dispose_mapping(irq);
++out_unmap:
++	iounmap(ompic_base);
++	ompic_base = NULL;
++	return ret;
++}
++IRQCHIP_DECLARE(ompic, "openrisc,ompic", ompic_of_init);
 -- 
-2.14.1
+2.13.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
