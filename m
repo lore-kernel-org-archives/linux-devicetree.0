@@ -1,86 +1,48 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] dt-bindings: iio: adc: mcp320x: Update for
- mcp3550/1/3
-Date: Sun, 10 Sep 2017 17:16:13 +0100
-Message-ID: <20170910171613.59df4c36@archlinux>
-References: <cover.1504807204.git.lukas@wunner.de>
-        <f5899af5ef548c618ac14950301f6bc8eff6e9ba.1504807204.git.lukas@wunner.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 0/3] kbuild: generate intermediate C files instead of
+ copying _shipped files
+Date: Sun, 10 Sep 2017 09:27:58 -0700
+Message-ID: <CA+55aFyFZTdOBA0cdCna0yqwZk=_DEw7XD43TOOAv6SjOxZw7g@mail.gmail.com>
+References: <1503132577-24423-1-git-send-email-yamada.masahiro@socionext.com>
+ <CA+55aFzQ4shyD=bqdSMreU33iLVkEsSgnMXegL5wcu5ug0fOUg@mail.gmail.com>
+ <CA+55aFzr2HTZVOuzpHYDwmtRJLsVzE-yqg2DHpHi_9ePsYp5ug@mail.gmail.com>
+ <CAK7LNATaisd3tPNbujTWLUq-2sMQ3pyTkPRSgjw00zUzv=GvSQ@mail.gmail.com>
+ <CA+55aFwvaZSXubcmaaZD-i5c_F5bHWhr6OBxRM+=7dGueua0Ng@mail.gmail.com>
+ <CA+55aFzZNpuYjVa4EZ2eJhvtU7-bzZTor_596TA5_CY77j+BEw@mail.gmail.com>
+ <CA+55aFzz_fv--Kx8phjWt_VOzZOMmbs0XX7_kL--_XRitWwJQA@mail.gmail.com>
+ <CA+55aFy4w6Ken-a83EE+otw6d+cgRfdV9wj6ayoDYFhi251Gvg@mail.gmail.com> <CAK7LNAQL7noRiHvnsrKWuZ9NLxq8bP5OAEybAK801f1DdPiJBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f5899af5ef548c618ac14950301f6bc8eff6e9ba.1504807204.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNAQL7noRiHvnsrKWuZ9NLxq8bP5OAEybAK801f1DdPiJBQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>, Michal Marek <mmarek@suse.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Richard Purdie <richard.purdie@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Markus Heiser <markus.heiser@darmarit.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, SeongJae Park <sj38.park@gmail.com>, "Yann E. MORIN" <yann.morin.1>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 9 Sep 2017 20:32:41 +0200
-Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
+On Sun, Sep 10, 2017 at 6:58 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> "is_reserved_word()" sounds like a boolean function
+> that returns 1 or 0.
+> Maybe, the choice of the function name was not nice.
 
-> All chips supported by this driver clock data out on the falling edge
-> and latch data in on the rising edge, hence SPI mode (0,0) or (1,1)
-> must be used.
-> 
-> Furthermore, none of the chips has an internal reference voltage
-> regulator, so an external supply is always required and needs to be
-> specified in the device tree lest the IIO "scale" in sysfs cannot be
-> calculated.
-> 
-> Document these requirements in the device tree binding, add compatible
-> strings for the newly supported mcp3550/1/3 and explain that SPI mode
-> (0,0) should be preferred for these chips.
-> 
-> Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
-> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Yeah, not great name. That's the old name, though - I didn't change
+that part, I just changed how it used to return the token structure
+pointer, which would be NULL when it wasn't a keyword.
 
-I'm happy with this, but just want to give Rob / Mark more time to take
-a look at it.
+I actually *should* have made it just return 0 for the "not a keyword"
+case rather than -1, and that would have ended up being semantically
+closer to the old use (because you could treat the return value as a
+boolean, like you could with the token pointer). But it's been
+literally decades since I used bison/flex, and I didn't remember the
+rules for 'enum yytokentype', so I just thought "negative numbers for
+error" was safer. Zero would have been fine, no token can have that
+number anyway (it just means EOF).
 
-Give me a poke if I seem to have forgotten it in a week or so.
+And negative wasn't safer, it caused that bug due to the bare boolean
+use I hadn't noticed.
 
-Thanks,
+Oh well.
 
-Jonathan
-> ---
-> Changes since v1:
-> - Move support for continuous conversion mode to separate patch
->   which is marked informational / not for merging. (Rob, Jonathan)
-> 
->  Documentation/devicetree/bindings/iio/adc/mcp320x.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
-> index bcd3ac8e6e0c..7d64753df949 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/mcp320x.txt
-> @@ -29,15 +29,29 @@ Required properties:
->  				"microchip,mcp3204"
->  				"microchip,mcp3208"
->  				"microchip,mcp3301"
-> +				"microchip,mcp3550-50"
-> +				"microchip,mcp3550-60"
-> +				"microchip,mcp3551"
-> +				"microchip,mcp3553"
->  
->  			NOTE: The use of the compatibles with no vendor prefix
->  			is deprecated and only listed because old DT use them.
->  
-> +	- spi-cpha, spi-cpol (boolean):
-> +			Either SPI mode (0,0) or (1,1) must be used, so specify
-> +			none or both of spi-cpha, spi-cpol.  The MCP3550/1/3
-> +			is more efficient in mode (1,1) as only 3 instead of
-> +			4 bytes need to be read from the ADC, but not all SPI
-> +			masters support it.
-> +
-> +	- vref-supply:	Phandle to the external reference voltage supply.
-> +
->  Examples:
->  spi_controller {
->  	mcp3x0x@0 {
->  		compatible = "mcp3002";
->  		reg = <0>;
->  		spi-max-frequency = <1000000>;
-> +		vref-supply = <&vref_reg>;
->  	};
->  };
+          Linus
