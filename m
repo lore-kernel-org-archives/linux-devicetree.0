@@ -1,290 +1,52 @@
-From: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] arm: npcm: add basic support for Nuvoton BMCs
-Date: Sun, 10 Sep 2017 11:36:30 +0300
-Message-ID: <CAP6Zq1jj08RbnUhPKaFuxn_06W1SzDmJoN6x8xV2pc05RKfngw@mail.gmail.com>
-References: <20170909015308.30001-1-brendanhiggins@google.com> <20170909015308.30001-2-brendanhiggins@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] of: overlay: Fix uninitialized vars in dup_and_fixup_symbol_prop()
+Date: Sun, 10 Sep 2017 12:26:04 +0200
+Message-ID: <1505039164-25468-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170909015308.30001-2-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 September 2017 at 04:53, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
-> Adds basic support for the Nuvoton NPCM750 BMC.
->
-> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/Kconfig             |  2 +
->  arch/arm/Makefile            |  1 +
->  arch/arm/mach-npcm/Kconfig   | 48 ++++++++++++++++++++++++
->  arch/arm/mach-npcm/Makefile  |  3 ++
->  arch/arm/mach-npcm/headsmp.S | 17 +++++++++
->  arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
->  arch/arm/mach-npcm/platsmp.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
->  7 files changed, 193 insertions(+)
->  create mode 100644 arch/arm/mach-npcm/Kconfig
->  create mode 100644 arch/arm/mach-npcm/Makefile
->  create mode 100644 arch/arm/mach-npcm/headsmp.S
->  create mode 100644 arch/arm/mach-npcm/npcm7xx.c
->  create mode 100644 arch/arm/mach-npcm/platsmp.c
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 61a0cb15067e..05543f1cfbde 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -782,6 +782,8 @@ source "arch/arm/mach-netx/Kconfig"
->
->  source "arch/arm/mach-nomadik/Kconfig"
->
-> +source "arch/arm/mach-npcm/Kconfig"
-> +
->  source "arch/arm/mach-nspire/Kconfig"
->
->  source "arch/arm/plat-omap/Kconfig"
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 47d3a1ab08d2..60ca50c7d762 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -191,6 +191,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)             += mediatek
->  machine-$(CONFIG_ARCH_MXS)             += mxs
->  machine-$(CONFIG_ARCH_NETX)            += netx
->  machine-$(CONFIG_ARCH_NOMADIK)         += nomadik
-> +machine-$(CONFIG_ARCH_NPCM)            += npcm
->  machine-$(CONFIG_ARCH_NSPIRE)          += nspire
->  machine-$(CONFIG_ARCH_OXNAS)           += oxnas
->  machine-$(CONFIG_ARCH_OMAP1)           += omap1
-> diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
-> new file mode 100644
-> index 000000000000..21dfa8ce828f
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/Kconfig
-> @@ -0,0 +1,48 @@
-> +menuconfig ARCH_NPCM
-> +       bool "Nuvoton NPCM Architecture"
-> +       select ARCH_REQUIRE_GPIOLIB
-> +       select USE_OF
-> +       select PINCTRL
-> +       select PINCTRL_NPCM7XX
-> +
-> +if ARCH_NPCM
-> +
-> +comment "NPCMX50 CPU type"
-> +
-> +config CPU_NPCM750
-> +       depends on ARCH_NPCM && ARCH_MULTI_V7
-> +       bool "Support for NPCM750 BMC CPU (Poleg)"
-> +       select CACHE_L2X0
-> +       select CPU_V7
-> +       select ARM_GIC
-> +       select HAVE_SMP
-> +       select SMP
-> +       select SMP_ON_UP
-> +       select HAVE_ARM_SCU
-> +       select HAVE_ARM_TWD if SMP
-> +       select ARM_ERRATA_720789
-> +       select ARM_ERRATA_754322
-> +       select ARM_ERRATA_764369
-> +       select ARM_ERRATA_794072
-> +       select PL310_ERRATA_588369
-> +       select PL310_ERRATA_727915
-> +       select USB_EHCI_ROOT_HUB_TT
-> +       select USB_ARCH_HAS_HCD
-> +       select USB_ARCH_HAS_EHCI
-> +       select USB_EHCI_HCD
-> +       select USB_ARCH_HAS_OHCI
-> +       select USB_OHCI_HCD
-> +       select USB
-> +       select FIQ
-> +       select CPU_USE_DOMAINS
-> +       select GENERIC_CLOCKEVENTS
-> +       select CLKDEV_LOOKUP
-> +       select COMMON_CLK if OF
-> +       select NPCM750_TIMER
-> +       select MFD_SYSCON
-> +       help
-> +         Support for NPCM750 BMC CPU (Poleg).
-> +
-> +         Nuvoton NPCM750 BMC based on the Cortex A9.
-> +
-> +endif
-> diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
-> new file mode 100644
-> index 000000000000..78416055b854
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/Makefile
-> @@ -0,0 +1,3 @@
-> +AFLAGS_headsmp.o               += -march=armv7-a
-> +
-> +obj-$(CONFIG_CPU_NPCM750)      += npcm7xx.o platsmp.o headsmp.o
-> diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
-> new file mode 100644
-> index 000000000000..9fccbbd49ed4
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/headsmp.S
-> @@ -0,0 +1,17 @@
-> +/*
-> + * Copyright 2017 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/linkage.h>
-> +#include <linux/init.h>
-> +#include <asm/assembler.h>
-> +
-> +ENTRY(npcm7xx_secondary_startup)
-> +       safe_svcmode_maskall r0
-> +
-> +       b       secondary_startup
-> +ENDPROC(npcm7xx_secondary_startup)
-> diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
-> new file mode 100644
-> index 000000000000..132e9d587857
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/npcm7xx.c
-> @@ -0,0 +1,34 @@
-> +/*
-> + * Copyright (c) 2017 Nuvoton Technology corporation.
-> + * Copyright 2017 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/types.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach-types.h>
-> +#include <asm/mach/map.h>
-> +#include <asm/hardware/cache-l2x0.h>
-> +
-> +#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |                               \
-> +                        L310_AUX_CTRL_DATA_PREFETCH |                         \
-> +                        L310_AUX_CTRL_NS_LOCKDOWN |                           \
-> +                        L310_AUX_CTRL_CACHE_REPLACE_RR |                      \
-> +                        L2C_AUX_CTRL_SHARED_OVERRIDE |                        \
-> +                        L310_AUX_CTRL_FULL_LINE_ZERO)
-> +
-> +static const char *const npcm7xx_dt_match[] = {
-> +       "nuvoton,npcm750",
-> +       NULL
-> +};
-> +
-> +DT_MACHINE_START(NPCM7XX_DT, "NPCMX50 Chip family")
-> +       .atag_offset    = 0x100,
-> +       .dt_compat      = npcm7xx_dt_match,
-> +       .l2c_aux_val    = NPCM7XX_AUX_VAL,
-> +       .l2c_aux_mask   = ~NPCM7XX_AUX_VAL,
-> +MACHINE_END
-> diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
-> new file mode 100644
-> index 000000000000..450e83c3c531
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/platsmp.c
-> @@ -0,0 +1,88 @@
-> +/*
-> + * Copyright 2017 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#define pr_fmt(fmt) "PLATSMP: " fmt
-> +
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/smp.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/smp.h>
-> +#include <asm/smp_plat.h>
-> +#include <asm/smp_scu.h>
-> +
-> +#define NPCM7XX_SCRPAD_REG 0x13c
-> +
-> +extern void npcm7xx_secondary_startup(void);
-> +
-> +static int npcm7xx_smp_boot_secondary(unsigned int cpu,
-> +                                     struct task_struct *idle)
-> +{
-> +       struct device_node *gcr_np;
-> +       void __iomem *gcr_base;
-> +       int ret = 0;
-> +
-> +       gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
-> +       if (!gcr_np) {
-> +               pr_err("no gcr device node\n");
-> +               ret = -EFAULT;
-> +               goto out;
-> +       }
-> +       gcr_base = of_iomap(gcr_np, 0);
-> +       if (!gcr_base) {
-> +               pr_err("could not iomap gcr at: 0x%p\n", gcr_base);
-> +               ret = -EFAULT;
-> +               goto out;
-> +       }
-> +
-> +       /* give boot ROM kernel start address. */
-> +       iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
-> +                 NPCM7XX_SCRPAD_REG);
-> +       /* make sure npcm7xx_secondary_startup is seen by all observers. */
-> +       smp_wmb();
-> +       dsb_sev();
-> +       /* make sure write buffer is drained */
-> +       mb();
-> +
-> +       iounmap(gcr_base);
-> +out:
-> +       return ret;
-> +}
-> +
-> +static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +       struct device_node *scu_np;
-> +       void __iomem *scu_base;
-> +
-> +       scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
-> +       if (!scu_np) {
-> +               pr_err("no scu device node\n");
-> +               return;
-> +       }
-> +       scu_base = of_iomap(scu_np, 0);
-> +       if (!scu_base) {
-> +               pr_err("could not iomap scu at: 0x%p\n", scu_base);
-> +               return;
-> +       }
-> +
-> +       scu_enable(scu_base);
-> +
-> +       iounmap(scu_base);
-> +}
-> +
-> +static struct smp_operations npcm7xx_smp_ops __initdata = {
-> +       .smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
-> +       .smp_boot_secondary = npcm7xx_smp_boot_secondary,
-> +};
-> +
-> +CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm7xx-smp", &npcm7xx_smp_ops);
-> --
-> 2.14.1.581.gf28d330327-goog
->
+With gcc 4.1.2:
 
-Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    drivers/of/overlay.c: In function ‘dup_and_fixup_symbol_prop’:
+    drivers/of/overlay.c:108: warning: ‘overlay_name_len’ may be used uninitialized in this function
+    drivers/of/overlay.c:100: warning: ‘ovinfo’ may be used uninitialized in this function
+
+Indeed, if ov->count == 0, both variables are uninitialized, which may
+lead to a crash when dereferencing ovinfo later.
+
+Currently this is a false positive, as the sole creator of of_overlay
+structures (of_build_overlay_info(), introduced in commit
+7518b5890d8ac366 ("of/overlay: Introduce DT overlay support") checks for
+this.
+
+To prevent future issues, add a check for a zero ov->count to
+dup_and_fixup_symbol_prop().  Note that this does not get rid of the
+actual compiler warning.
+
+Fixes: d1651b03c2df75db ("of: overlay: add overlay symbols to live device tree")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ drivers/of/overlay.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 8ecfee31ab6d3874..ebe19e0f8e4d1f4b 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -108,7 +108,7 @@ static struct property *dup_and_fixup_symbol_prop(struct of_overlay *ov,
+ 	int overlay_name_len;
+ 	int target_path_len;
+ 
+-	if (!prop->value)
++	if (!ov->count || !prop->value)
+ 		return NULL;
+ 	symbol_path = prop->value;
+ 
+-- 
+2.7.4
