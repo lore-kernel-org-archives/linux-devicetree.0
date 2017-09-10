@@ -1,52 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] of: overlay: Fix uninitialized vars in dup_and_fixup_symbol_prop()
-Date: Sun, 10 Sep 2017 12:26:04 +0200
-Message-ID: <1505039164-25468-1-git-send-email-geert@linux-m68k.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v2 05/14] dt-bindings: add openrisc to vendor prefixes
+ list
+Date: Sun, 10 Sep 2017 13:13:55 +0200
+Message-ID: <8692ec38-798e-9766-56f6-56bf7b022718@suse.de>
+References: <20170910064926.5874-1-shorne@gmail.com>
+ <20170910064926.5874-6-shorne@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170910064926.5874-6-shorne@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+To: Stafford Horne <shorne@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: Openrisc <openrisc@lists.librecores.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Jonathan Cameron <jic23@kernel.org>, Thierry Reding <treding@nvidia.com>, Marek Vasut <marek.vasut@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With gcc 4.1.2:
+Am 10.09.2017 um 08:49 schrieb Stafford Horne:
+> Add OpenRISC.io to vendor prefixes.  This is reserved for softcores
+> developed by the OpenRISC community.  The OpenRISC community has
+> separated from OpenCores.org requiring a new prefix.
+> 
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
 
-    drivers/of/overlay.c: In function ‘dup_and_fixup_symbol_prop’:
-    drivers/of/overlay.c:108: warning: ‘overlay_name_len’ may be used uninitialized in this function
-    drivers/of/overlay.c:100: warning: ‘ovinfo’ may be used uninitialized in this function
+Reviewed-by: Andreas Färber <afaerber@suse.de>
 
-Indeed, if ov->count == 0, both variables are uninitialized, which may
-lead to a crash when dereferencing ovinfo later.
+Regards,
+Andreas
 
-Currently this is a false positive, as the sole creator of of_overlay
-structures (of_build_overlay_info(), introduced in commit
-7518b5890d8ac366 ("of/overlay: Introduce DT overlay support") checks for
-this.
-
-To prevent future issues, add a check for a zero ov->count to
-dup_and_fixup_symbol_prop().  Note that this does not get rid of the
-actual compiler warning.
-
-Fixes: d1651b03c2df75db ("of: overlay: add overlay symbols to live device tree")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- drivers/of/overlay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 8ecfee31ab6d3874..ebe19e0f8e4d1f4b 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -108,7 +108,7 @@ static struct property *dup_and_fixup_symbol_prop(struct of_overlay *ov,
- 	int overlay_name_len;
- 	int target_path_len;
- 
--	if (!prop->value)
-+	if (!ov->count || !prop->value)
- 		return NULL;
- 	symbol_path = prop->value;
- 
 -- 
-2.7.4
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
