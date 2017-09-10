@@ -1,52 +1,43 @@
-From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] of: add vendor prefix for Silicon Storage Technology Inc.
-Date: Wed, 13 Sep 2017 15:27:01 +0000
-Message-ID: <SG2PR06MB0694CBEF430ABA5E6AF79505B76E0@SG2PR06MB0694.apcprd06.prod.outlook.com>
-References: <1505118623-3844-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <0cd76127-0463-701d-6db8-8b752fb17032@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 05/14] dt-bindings: add openrisc to vendor prefixes list
+Date: Sun, 10 Sep 2017 15:49:17 +0900
+Message-ID: <20170910064926.5874-6-shorne@gmail.com>
+References: <20170910064926.5874-1-shorne@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0cd76127-0463-701d-6db8-8b752fb17032-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170910064926.5874-1-shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQW5kcmVhcywNCg0KPiBGcm9tOiBBbmRyZWFzIEbDpHJiZXIgW21haWx0bzphZmFlcmJl
-ckBzdXNlLmRlXQ0KPiBTZW50OiAxMSBTZXB0ZW1iZXIgMjAxNyAxMToxOA0KPiANCj4gSGksDQo+
-IA0KPiBOaXQ6ICRzdWJqZWN0IHNob3VsZCB1c2UgImR0LWJpbmRpbmdzOiIgcHJlZml4Lg0KDQpE
-byB5b3UgdGhpbmsgdGhlcmUgbmVlZHMgdG8gYmUgYSB2MiBmb3IgdGhpcz8gT3IgY2FuIHRoaXMg
-YmUgY2hhbmdlZCB3aGVuIGFwcGxpZWQ/DQoNCj4gDQo+IEFtIDExLjA5LjIwMTcgdW0gMTA6MzAg
-c2NocmllYiBGYWJyaXppbyBDYXN0cm86DQo+ID4gQWRkIFNpbGljb24gU3RvcmFnZSBUZWNobm9s
-b2d5IEluYy4gdG8gdGhlIGxpc3Qgb2YgZGV2aWNldHJlZSB2ZW5kb3INCj4gPiBwcmVmaXhlcy4N
-Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJv
-QGJwLnJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4gPiBpbmRleCA5ZjlhM2Q2
-Li45MDBjOTkzIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4gPiBAQCAtMzE2LDYgKzMxNiw3IEBA
-IHNvbG9tb24gICAgICAgIFNvbG9tb24gU3lzdGVjaCBMaW1pdGVkDQo+ID4gIHNvbnkJU29ueSBD
-b3Jwb3JhdGlvbg0KPiA+ICBzcGFuc2lvbglTcGFuc2lvbiBJbmMuDQo+ID4gIHNwcmQJU3ByZWFk
-dHJ1bSBDb21tdW5pY2F0aW9ucyBJbmMuDQo+ID4gK3NzdAlTaWxpY29uIFN0b3JhZ2UgVGVjaG5v
-bG9neSwgSW5jLg0KPiANCj4gUmVjdXJyaW5nIHF1ZXN0aW9uOiBXaGF0IGlzIHRoaXMgcHJlZml4
-IGJlaW5nIHVzZWQgZm9yPyBUaGlzIHBhdGNoIGlzDQo+IGFwcGFyZW50bHkgbm90IHBhcnQgb2Yg
-YW55IHNlcmllcy4NCg0KV2UgYXJlIGFib3V0IHRvIHN1Ym1pdCBhIHBhdGNoIHRvIGFkZCBhbiBz
-c3QgZmxhc2ggZGV2aWNlIHRvIGEgZGV2aWNlIHRyZWUuIENoZWNrcGF0Y2gga2lja3Mgb2ZmIGJl
-Y2F1c2Ugc3N0IGlzbid0IHByZXNlbnQgaW4gdmVuZG9yLXByZWZpeGVzLnR4dCwgaGVuY2UgdGhp
-cyBwYXRjaC4NCg0KPiANCj4gT3RoZXJ3aXNlIGxvb2tzIG9rYXksDQo+IA0KPiBSZXZpZXdlZC1i
-eTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KDQpUaGFuayB5b3UhDQoNCktp
-bmQgcmVnYXJkcywgQ2hyaXMNCg0KPiANCj4gUmVnYXJkcywNCj4gQW5kcmVhcw0KPiANCj4gPiAg
-c3QJU1RNaWNyb2VsZWN0cm9uaWNzDQo+ID4gIHN0YXJyeQlTdGFycnkgRWxlY3Ryb25pYyBUZWNo
-bm9sb2d5IChTaGVuWmhlbikgQ28uLCBMVEQNCj4gPiAgc3RhcnRlawlTdGFydGVrDQo+IA0KPiAt
-LQ0KPiBTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2Vy
-bWFueQ0KPiBHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9y
-dG9uIEhSQiAyMTI4NCAoQUcNCj4gTsO8cm5iZXJnKQ0K
+Add OpenRISC.io to vendor prefixes.  This is reserved for softcores
+developed by the OpenRISC community.  The OpenRISC community has
+separated from OpenCores.org requiring a new prefix.
+
+Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+
+Changes since v1
+ - New patch
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index daf465bef758..0025aa7c3745 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -241,6 +241,7 @@ onion	Onion Corporation
+ onnn	ON Semiconductor Corp.
+ ontat	On Tat Industrial Company
+ opencores	OpenCores.org
++openrisc	OpenRISC.io
+ option	Option NV
+ ORCL	Oracle Corporation
+ ortustech	Ortus Technology Co., Ltd.
+-- 
+2.13.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
