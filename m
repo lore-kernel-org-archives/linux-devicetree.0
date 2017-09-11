@@ -1,93 +1,70 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: Re: [PATCH v3 1/2] i2c: davinci: Add PM Runtime Support
-Date: Mon, 11 Sep 2017 15:07:15 -0500
-Message-ID: <f185afb9-e877-1916-fcbc-c2a28f23b0cc@ti.com>
-References: <20170908175448.3367-1-fcooper@ti.com>
- <20170908175448.3367-2-fcooper@ti.com>
- <57153767-6dee-a5b5-548c-f7b0dc104b46@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <57153767-6dee-a5b5-548c-f7b0dc104b46@ti.com>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, wsa@the-dreams.de, robh+dt@kernel.org, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com, vigneshr@ti.com
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: [PATCH 1/2] [RESEND] of: provide of_n_{addr,size}_cells wrappers for !CONFIG_OF
+Date: Mon, 11 Sep 2017 22:07:49 +0200
+Message-ID: <20170911200805.3363318-1-arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The pci-rcar driver is enabled for compile tests, and this has
+shown that the driver cannot build without CONFIG_OF,
+following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
+interrupt mapping when possible":
 
+drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
+drivers/pci/host/pcie-rcar.c:1039:2: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
+  parser->pna = of_n_addr_cells(node);
+  ^
+As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+supposed to build fine, which we can achieve if we make the
+declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+and provide an empty inline function otherwise, as we do for
+a lot of other of interfaces.
 
-On 09/11/2017 06:29 AM, Sekhar Nori wrote:
-> On Friday 08 September 2017 11:24 PM, Franklin S Cooper Jr wrote:
->> 66AK2G has I2C instances that are not apart of the ALWAYS_ON power domain
->> like other Keystone 2 SoCs and OMAPL138. Therefore, pm_runtime
-> 
-> unlike ?
-> 
->> is required to insure the power domain used by the specific I2C instance is
->> properly turned on along with its functional clock.
->>
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->> ---
->> Version 3 changes:
->> Remove several statements that set clk to NULL
->> Fix error path
->>
->>  drivers/i2c/busses/i2c-davinci.c | 64 +++++++++++++++++++++++++++++++++-------
->>  1 file changed, 53 insertions(+), 11 deletions(-)
-> 
->> @@ -802,12 +821,22 @@ static int davinci_i2c_probe(struct platform_device *pdev)
->>  	dev->clk = devm_clk_get(&pdev->dev, NULL);
->>  	if (IS_ERR(dev->clk))
->>  		return PTR_ERR(dev->clk);
->> -	clk_prepare_enable(dev->clk);
->>  
->>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>  	dev->base = devm_ioremap_resource(&pdev->dev, mem);
->>  	if (IS_ERR(dev->base)) {
->> -		r = PTR_ERR(dev->base);
->> +		return PTR_ERR(dev->base);
->> +	}
->> +
->> +	pm_runtime_set_autosuspend_delay(dev->dev,
->> +					 DAVINCI_I2C_PM_TIMEOUT);
->> +	pm_runtime_use_autosuspend(dev->dev);
->> +
->> +	pm_runtime_enable(dev->dev);
->> +
->> +	r = pm_runtime_get_sync(dev->dev);
->> +	if (r < 0) {
->> +		dev_err(dev->dev, "failed to runtime_get device: %d\n", r);
->>  		goto err_unuse_clocks;
-> 
-> You end up doing a pm_runtime_put_sync() on failure here, instead of
-> pm_runtime_put_noidle() like rest of the patch.
-> 
-> May be handle this failure here instead of relying on the goto path.
+This lets us build the rcar_pci driver again without CONFIG_OF
+for build testing. All platforms using this driver select OF,
+so this doesn't change anything for the users.
 
-Ok
-> 
->>  	}
->>  
->> @@ -849,27 +878,40 @@ static int davinci_i2c_probe(struct platform_device *pdev)
->>  	if (r)
->>  		goto err_unuse_clocks;
->>  
->> +	pm_runtime_mark_last_busy(dev->dev);
->> +	pm_runtime_put_autosuspend(dev->dev);
->> +
->>  	return 0;
->>  
->>  err_unuse_clocks:
->> -	clk_disable_unprepare(dev->clk);
->> -	dev->clk = NULL;
->> +	pm_runtime_dont_use_autosuspend(dev->dev);
->> +	pm_runtime_put_sync(dev->dev);
->> +	pm_runtime_disable(dev->dev);
->> +
->>  	return r;
->>  }
-> 
-> Thanks,
-> Sekhar
-> 
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+I originally sent the patch in 2014 when things initially broke
+and then forgot about while it was applied in my randconfig patch
+stack. I sent it again in 2016 and then in July 2017 without reply.
+
+It's still broken and I think this is the correct fix.
+---
+ include/linux/of.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index cfc34117fc92..fb700d1e1fab 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -734,6 +734,9 @@ static inline struct device_node *of_get_cpu_node(int cpu,
+ 	return NULL;
+ }
+ 
++static inline int of_n_addr_cells(struct device_node *np) { return 0; }
++static inline int of_n_size_cells(struct device_node *np) { return 0; }
++
+ static inline int of_property_read_u64(const struct device_node *np,
+ 				       const char *propname, u64 *out_value)
+ {
+-- 
+2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
