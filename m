@@ -1,75 +1,46 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v10 19/24] v4l: fwnode: Add convenience function for
- parsing common external refs
-Date: Mon, 11 Sep 2017 13:17:46 +0200
-Message-ID: <20170911111746.GC28095@amd>
-References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
- <20170911080008.21208-20-sakari.ailus@linux.intel.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 4/6] ARM: dts: imx6dl-icore: Add LVDS support
+Date: Mon, 11 Sep 2017 08:25:31 -0300
+Message-ID: <CAOMZO5B0RAjdupLSe=S+tDEA-hpf-Si_4qjkcKC_ECX86PLScQ@mail.gmail.com>
+References: <1505121145-9507-1-git-send-email-jteki@openedev.com> <1505121145-9507-4-git-send-email-jteki@openedev.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="lCAWRPmW1mITcIfM"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170911080008.21208-20-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505121145-9507-4-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jagan,
 
---lCAWRPmW1mITcIfM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 11, 2017 at 6:12 AM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On Mon 2017-09-11 11:00:03, Sakari Ailus wrote:
-> Add v4l2_fwnode_parse_reference_sensor_common for parsing common
-> sensor properties that refer to adjacent devices such as flash or lens
-> driver chips.
->=20
-> As this is an association only, there's little a regular driver needs to
-> know about these devices as such.
->=20
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> ---
->  drivers/media/v4l2-core/v4l2-fwnode.c | 35 +++++++++++++++++++++++++++++=
-++++++
->  include/media/v4l2-fwnode.h           | 13 +++++++++++++
->  2 files changed, 48 insertions(+)
->=20
-> =20
-> +/**
-> + * v4l2_fwnode_reference_parse_sensor_common - parse common references on
-> + *					       sensors for async sub-devices
-> + * @dev: the device node the properties of which are parsed for referenc=
-es
-> + * @notifier: the async notifier where the async subdevs will be added
-> + *
-> + * Return: 0 on success
-> + *	   -ENOMEM if memory allocation failed
-> + *	   -EINVAL if property parsing failed
-> + */
+> +&ldb {
+> +       status = "okay";
+> +
+> +       lvds-channel@0 {
+> +               fsl,data-mapping = "spwg";
+> +               fsl,data-width = <18>;
+> +               status = "okay";
+> +
+> +               display-timings {
+> +                       native-mode = <&timing0>;
+> +                       timing0: timing0 {
+> +                               clock-frequency = <60000000>;
+> +                               hactive = <800>;
+> +                               vactive = <480>;
+> +                               hback-porch = <30>;
+> +                               hfront-porch = <30>;
+> +                               vback-porch = <5>;
+> +                               vfront-porch = <5>;
+> +                               hsync-len = <64>;
+> +                               vsync-len = <20>;
 
-Returns: would sound more correct to me, but it seems kernel is split
-on that.
+Please add the support of this panel to drivers/gpu/drm/panel/panel-simple.c.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---lCAWRPmW1mITcIfM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlm2cNoACgkQMOfwapXb+vJgZACcCkVn13IDbgYN+aUCh7kCVYQ+
-PjIAmgK5ZOmxTcoJB57+7kr6xAhYFos7
-=0Inh
------END PGP SIGNATURE-----
-
---lCAWRPmW1mITcIfM--
+Then you can refer its compatible in your board dts.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
