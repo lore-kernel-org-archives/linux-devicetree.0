@@ -1,138 +1,40 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v10 17/24] v4l: fwnode: Add a helper function for parsing
- generic references
-Date: Mon, 11 Sep 2017 12:59:27 +0300
-Message-ID: <20170911095927.femgxvok2wbe6zdk@valkosipuli.retiisi.org.uk>
-References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
- <20170911080008.21208-18-sakari.ailus@linux.intel.com>
- <e71bb2d0-d68d-0c9a-4234-482a2898a5fb@xs4all.nl>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v3] dt-bindings: add nutsboard vendor prefix
+Date: Mon, 11 Sep 2017 12:05:58 +0200
+Message-ID: <bd87c9fa-0576-01af-23cd-c5a3ef2056dc@suse.de>
+References: <1505099894-17187-1-git-send-email-onlywig@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e71bb2d0-d68d-0c9a-4234-482a2898a5fb@xs4all.nl>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505099894-17187-1-git-send-email-onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wig Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sz.lin-D4fb9hXD9d4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-Thanks for the review!
-
-On Mon, Sep 11, 2017 at 11:14:03AM +0200, Hans Verkuil wrote:
-> On 09/11/2017 10:00 AM, Sakari Ailus wrote:
-> > Add function v4l2_fwnode_reference_count() for counting external
-> > references and v4l2_fwnode_reference_parse() for parsing them as async
-> > sub-devices.
-> > 
-> > This can be done on e.g. flash or lens async sub-devices that are not part
-> > of but are associated with a sensor.
-> > 
-> > struct v4l2_async_notifier.max_subdevs field is added to contain the
-> > maximum number of sub-devices in a notifier to reflect the memory
-> > allocated for the subdevs array.
+Am 11.09.2017 um 05:18 schrieb Wig Cheng:
+> From: YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> This paragraph appears to be out-of-date.
-
-Will remove.
-
+> NutsBoard (http://nutsboard.org/) is an organization and focus
+> on ARM based embedded boards with open source software.
 > 
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-fwnode.c | 47 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > index d978f2d714ca..4821c4989119 100644
-> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > @@ -449,6 +449,53 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
-> >  }
-> >  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
-> >  
-> > +static int v4l2_fwnode_reference_parse(
-> > +	struct device *dev, struct v4l2_async_notifier *notifier,
-> > +	const char *prop)
-> > +{
-> > +	struct fwnode_reference_args args;
-> > +	unsigned int index = 0;
-> > +	int ret;
-> > +
-> > +	for (; !fwnode_property_get_reference_args(
-> > +		     dev_fwnode(dev), prop, NULL, 0, index, &args); index++)
-> > +		fwnode_handle_put(args.fwnode);
-> > +
-> 
-> If nothing is found (i.e. index == 0), shouldn't you just return here?
+> Signed-off-by: YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-You could. yes. It would actually simplify the code, I could just return
--ENOENT here.
+Reviewed-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-> 
-> > +	ret = v4l2_async_notifier_realloc(notifier,
-> > +					  notifier->num_subdevs + index);
-> > +	if (ret)
-> > +		return -ENOMEM;
-> > +
-> > +	for (ret = -ENOENT, index = 0;
-> 
-> There is no reason for the 'ret = -ENOENT' to be in the for(), just set it before
-> the 'for' statement.
-> 
-> > +	     !fwnode_property_get_reference_args(
-> > +		     dev_fwnode(dev), prop, NULL, 0, index, &args);
-> > +	     index++) {
-> > +		struct v4l2_async_subdev *asd;
-> > +
-> > +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-> > +			ret = -EINVAL;
-> > +			goto error;
-> > +		}
-> > +
-> > +		asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-> > +		if (!asd) {
-> > +			ret = -ENOMEM;
-> > +			goto error;
-> > +		}
-> > +
-> > +		notifier->subdevs[notifier->num_subdevs] = asd;
-> > +		asd->match.fwnode.fwnode = args.fwnode;
-> > +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> > +		notifier->num_subdevs++;
-> > +	}
-> 
-> If the loop doesn't find anything, then it still returns 0, not -ENOENT.
-> So why set ret to ENOENT? Something weird going on here.
-
-:-)
-
-I think -ENOENT would make sense indeed if there are no entries found.
-
-> 
-> I think you should also add a comment explaining this function.
-
-Yes. I had that in the header when it was exported, I'll add the same
-comments here.
-
-> 
-> > +
-> > +	return 0;
-> > +
-> > +error:
-> > +	fwnode_handle_put(args.fwnode);
-> > +	return ret;
-> > +}
-> > +
-> >  MODULE_LICENSE("GPL");
-> >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
-> >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
-> > 
-> 
+Thanks,
+Andreas
 
 -- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
