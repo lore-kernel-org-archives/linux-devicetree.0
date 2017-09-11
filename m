@@ -1,66 +1,96 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCHv4 3/5] dt-bindings: document the CEC GPIO bindings
-Date: Mon, 11 Sep 2017 09:42:03 +0200
-Message-ID: <4e7da7f9-4a54-975c-3fcb-7023bed8b6c6@xs4all.nl>
-References: <20170831110156.11018-1-hverkuil@xs4all.nl>
- <20170831110156.11018-4-hverkuil@xs4all.nl>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v9 23/24] dt: bindings: smiapp: Document lens-focus and
+ flash properties
+Date: Mon, 11 Sep 2017 10:45:50 +0300
+Message-ID: <20170911074550.5lzfh5r5g4z7fyjo@valkosipuli.retiisi.org.uk>
+References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
+ <20170908131822.31020-19-sakari.ailus@linux.intel.com>
+ <20170908133652.GR18365@amd>
+ <20170908134226.m5ts637dej7oa4jw@valkosipuli.retiisi.org.uk>
+ <20170908214544.GB27428@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170831110156.11018-4-hverkuil@xs4all.nl>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170908214544.GB27428@amd>
 Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ping!
-
-Still waiting for an Ack from the devicetree devs so this can be merged for 4.15.
-
-Regards,
-
-	Hans
-
-On 08/31/2017 01:01 PM, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil@cisco.com>
+On Fri, Sep 08, 2017 at 11:45:44PM +0200, Pavel Machek wrote:
+> On Fri 2017-09-08 16:42:26, Sakari Ailus wrote:
+> > Hi Pavel,
+> > 
+> > On Fri, Sep 08, 2017 at 03:36:52PM +0200, Pavel Machek wrote:
+> > > Hi!
+> > > 
+> > > > Document optional lens-focus and flash properties for the smiapp driver.
+> > > > 
+> > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > > > index 855e1faf73e2..a052969365d9 100644
+> > > > --- a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > > > +++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+> > > > @@ -27,6 +27,8 @@ Optional properties
+> > > >  - nokia,nvm-size: The size of the NVM, in bytes. If the size is not given,
+> > > >    the NVM contents will not be read.
+> > > >  - reset-gpios: XSHUTDOWN GPIO
+> > > > +- flash-leds: One or more phandles to refer to flash LEDs
+> > > > +- lens-focus: Phandle for lens focus
+> > > 
+> > > Should we simply reference the generic documentation here? If it needs
+> > > changing, it will be easier changing single place.
+> > 
+> > Good question.
+> > 
+> > Ideally the properties at least would never change; we do have a common
+> > parser for the properties which is part of the patchset so in theory it
+> > would be possible to change the documentation in a backward-compatible way.
+> > 
+> > I added these properties as well as all the other properties supported by
+> > the sensor driver are documented here. That has been the practice AFAIU,
+> > albeit omissions do happen occasionally.
+> > 
+> > The issue I see with omitting the documentation here is that the user
+> > otherwise won't know whether a driver uses a given property or not: it
+> > shouldn't be necessary to read driver code to write DT source.
 > 
-> Document the bindings for the cec-gpio module for hardware where the
-> CEC line and optionally the HPD line are connected to GPIO lines.
+> I see... OTOH documentation in central place _is_ a bit more verbose:
 > 
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> ---
->  .../devicetree/bindings/media/cec-gpio.txt         | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
+> +- flash-leds: An array of phandles, each referring to a flash LED, a sub-node
+> +  of the LED driver device node.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
-> new file mode 100644
-> index 000000000000..db20a7452dbd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
-> @@ -0,0 +1,22 @@
-> +* HDMI CEC GPIO driver
-> +
-> +The HDMI CEC GPIO module supports CEC implementations where the CEC line
-> +is hooked up to a pull-up GPIO line and - optionally - the HPD line is
-> +hooked up to another GPIO line.
-> +
-> +Required properties:
-> +  - compatible: value must be "cec-gpio"
-> +  - cec-gpio: gpio that the CEC line is connected to
-> +
-> +Optional property:
-> +  - hpd-gpio: gpio that the HPD line is connected to
-> +
-> +Example for the Raspberry Pi 3 where the CEC line is connected to
-> +pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
-> +connected to pin 11 aka BCM17:
-> +
-> +cec-gpio@7 {
-> +       compatible = "cec-gpio";
-> +       cec-gpio = <&gpio 7 GPIO_OPEN_DRAIN>;
-> +       hpd-gpio = <&gpio 17 GPIO_ACTIVE_HIGH>;
-> +};
+> What about:
 > 
+> flash-leds, lens-focus: see <reference to central place>
+> 
+> ?
+
+How about this?
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+index a052969365d9..33f10a94c381 100644
+--- a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
++++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+@@ -27,8 +27,8 @@ Optional properties
+ - nokia,nvm-size: The size of the NVM, in bytes. If the size is not given,
+   the NVM contents will not be read.
+ - reset-gpios: XSHUTDOWN GPIO
+-- flash-leds: One or more phandles to refer to flash LEDs
+-- lens-focus: Phandle for lens focus
++- flash-leds: See ../video-interfaces.txt
++- lens-focus: See ../video-interfaces.txt
+ 
+ 
+ Endpoint node mandatory properties
+
+I prefer to put them on separate lines as it's easier to read that way.
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
