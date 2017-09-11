@@ -1,162 +1,171 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drm/bridge: add Silicon Image SiI9234 driver
-Date: Mon, 11 Sep 2017 15:18:52 +0200
-Message-ID: <CAJKOXPcfOUGDYL0BEa2-XZkpnoOGb4QRvEyWFwbgRxjAXD0Rng@mail.gmail.com>
-References: <1504620099-20024-1-git-send-email-m.purski@samsung.com>
- <CGME20170905140209eucas1p1ee010819751b86ad8a41e5847c115e01@eucas1p1.samsung.com>
- <1504620099-20024-2-git-send-email-m.purski@samsung.com> <20170908170529.po5v6wuus4llwdan@kozik-lap>
- <a7c84f2c-855f-0e65-d794-d9a3331a6516@samsung.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v10 18/24] v4l: fwnode: Add a helper function to obtain
+ device / interger references
+Date: Mon, 11 Sep 2017 15:34:16 +0200
+Message-ID: <21d712c2-7608-7153-4421-2c12b90dcb7a@xs4all.nl>
+References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+ <20170911080008.21208-19-sakari.ailus@linux.intel.com>
+ <11c951eb-0315-0149-829e-ed73d748e783@xs4all.nl>
+ <20170911122820.fkbd2rnaddiestab@valkosipuli.retiisi.org.uk>
+ <2e2eba02-39bc-11e1-d9f1-b83a6f580667@xs4all.nl>
+ <20170911132710.mcgqn6tbiabzvpqq@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a7c84f2c-855f-0e65-d794-d9a3331a6516-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170911132710.mcgqn6tbiabzvpqq@valkosipuli.retiisi.org.uk>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 1:42 PM, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>> +       ctx->client[I2C_MHL] = client;
->>> +
->>> +       ctx->client[I2C_TPI] = i2c_new_dummy(adapter, I2C_TPI_ADDR);
->>> +       if (!ctx->client[I2C_TPI]) {
->>> +               dev_err(ctx->dev, "failed to create TPI client\n");
->>> +               return -ENODEV;
->>> +       }
->>> +
->>> +       ctx->client[I2C_HDMI] = i2c_new_dummy(adapter, I2C_HDMI_ADDR);
->>> +       if (!ctx->client[I2C_HDMI]) {
->>> +               dev_err(ctx->dev, "failed to create HDMI RX client\n");
->>> +               goto fail_tpi;
->>> +       }
->>> +
->>> +       ctx->client[I2C_CBUS] = i2c_new_dummy(adapter, I2C_CBUS_ADDR);
->>> +       if (!ctx->client[I2C_CBUS]) {
->>> +               dev_err(ctx->dev, "failed to create CBUS client\n");
->>> +               goto fail_hdmi;
->>> +       }
+On 09/11/2017 03:27 PM, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> On Mon, Sep 11, 2017 at 02:38:23PM +0200, Hans Verkuil wrote:
+>> On 09/11/2017 02:28 PM, Sakari Ailus wrote:
+>>> Hi Hans,
+>>>
+>>> Thanks for the review.
+>>>
+>>> On Mon, Sep 11, 2017 at 11:38:58AM +0200, Hans Verkuil wrote:
+>>>> Typo in subject: interger -> integer
+>>>>
+>>>> On 09/11/2017 10:00 AM, Sakari Ailus wrote:
+>>>>> v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
+>>>>> the device's own fwnode, 
+>>>>
+>>>> Sorry, you lost me here. Which device are we talking about?
+>>>
+>>> The fwnode related a struct device, in other words what dev_fwnode(dev)
+>>> gives you. This is either struct device.fwnode or struct
+>>> device.of_node.fwnode, depending on which firmware interface was used to
+>>> create the device.
+>>>
+>>> I'll add a note of this.
+>>>
+>>>>
+>>>>> it will follow child fwnodes with the given
+>>>>> property -- value pair and return the resulting fwnode.
+>>>>
+>>>> property-value pair (easier readable that way).
+>>>>
+>>>> You only describe v4l2_fwnode_reference_parse_int_prop(), not
+>>>> v4l2_fwnode_reference_parse_int_props().
+>>>
+>>> Yes, I think I changed the naming but forgot to update the commit. I'll do
+>>> that now.
+>>>
+>>>>
+>>>>>
+>>>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>>> ---
+>>>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 93 +++++++++++++++++++++++++++++++++++
+>>>>>  1 file changed, 93 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> index 4821c4989119..56eee5bbd3b5 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> @@ -496,6 +496,99 @@ static int v4l2_fwnode_reference_parse(
+>>>>>  	return ret;
+>>>>>  }
+>>>>>  
+>>>>> +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
+>>>>> +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
+>>>>> +	const char **props, unsigned int nprops)
+>>>>
+>>>> Need comments describing what this does.
+>>>
+>>> Yes. I'll also rename it (get -> read) for consistency with the async
+>>> changes.
 >>
->> You are using i2c_smbus_* calls. Why not converting to regmap_i2c? It is
->> preferred interface.
->
->
-> According to my search, there are only 5 drivers, which use regmap_i2c and
-> none of them in drm. If you think that it is really needed, could you please
-> explain
-> why?
-
-There are slightly more than five drivers:
-
-$ git grep regmap_init_i2c | wc -l
-352
-
-... and even more using regmap interface in generic (not i2c).
-
-I think this is really wanted because for free you get:
-1. locking,
-2. proper locking - with lockdep and nested mutexes :),
-3. caching of accesses,
-4. handling of endianness,
-5. optionally a trivial way of handling interrupts (regmap_irq_chip),
-
-Also this brings unified interface for most of the drivers regardless
-of protocol used beneath (I2C, SPI and even MMIO but for simple cases
-MMIO might not have much sense). This last argument actually brings
-the most benefit for me because it abstracts driver from trivial I2C
-implementation and it could allow even easy code-reuse for e.g. SPI
-version.
-
-
+>> Which async changes? Since the fwnode_handle that's returned is refcounted
+>> I wonder if 'get' isn't the right name in this case.
+> 
+> Right. True. I'll leave that as-is then.
+> 
 >>
->>> +
->>> +       return 0;
->>> +
->>> +fail_hdmi:
->>> +       i2c_unregister_device(ctx->client[I2C_HDMI]);
->>> +fail_tpi:
->>> +       i2c_unregister_device(ctx->client[I2C_TPI]);
->>> +
->>> +       return -ENODEV;
->>> +}
->>> +
->>> +static void sii9234_deinit_resources(struct sii9234 *ctx)
->>> +{
->>> +       i2c_unregister_device(ctx->client[I2C_CBUS]);
->>> +       i2c_unregister_device(ctx->client[I2C_HDMI]);
->>> +       i2c_unregister_device(ctx->client[I2C_TPI]);
->>> +}
->>> +
->>> +static inline struct sii9234 *bridge_to_sii9234(struct drm_bridge
->>> *bridge)
->>> +{
->>> +       return container_of(bridge, struct sii9234, bridge);
->>> +}
->>> +
->>> +static enum drm_mode_status sii9234_mode_valid(struct drm_bridge
->>> *bridge,
->>> +                                       const struct drm_display_mode
->>> *mode)
->>> +{
->>> +       if (mode->clock > MHL1_MAX_CLK)
->>> +               return MODE_CLOCK_HIGH;
->>> +
->>> +       return MODE_OK;
->>> +}
->>> +
->>> +static const struct drm_bridge_funcs sii9234_bridge_funcs = {
->>> +       .mode_valid = sii9234_mode_valid,
->>> +};
->>> +
->>> +static int sii9234_probe(struct i2c_client *client,
->>> +                                             const struct i2c_device_id
->>> *id)
->>> +{
->>> +       struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
->>> +       struct sii9234 *ctx;
->>> +       struct device *dev = &client->dev;
->>> +       int ret;
->>> +
->>> +       ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
->>> +       if (!ctx)
->>> +               return -ENOMEM;
->>> +
->>> +       ctx->dev = dev;
->>> +       mutex_init(&ctx->lock);
->>> +
->>> +       if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
->>> {
->>> +               dev_err(dev, "I2C adapter lacks SMBUS feature\n");
->>> +               return -EIO;
->>> +       }
->>> +
->>> +       if (!client->irq) {
->>> +               dev_err(dev, "no irq provided\n");
->>> +               return -EINVAL;
->>> +       }
->>> +
->>> +       irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
->>> +       ret = devm_request_threaded_irq(dev, client->irq, NULL,
->>> +                                       sii9234_irq_thread,
->>> +                                       IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
->>> +                                       "sii9234", ctx);
->>> +       if (ret < 0) {
->>> +               dev_err(dev, "failed to install IRQ handler\n");
->>> +               return ret;
->>> +       }
+>>>
+>>>>
+>>>>> +{
+>>>>> +	struct fwnode_reference_args fwnode_args;
+>>>>> +	unsigned int *args = fwnode_args.args;
+>>>>> +	struct fwnode_handle *child;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
+>>>>> +						 index, &fwnode_args);
+>>>>> +	if (ret)
+>>>>> +		return ERR_PTR(ret == -EINVAL ? -ENOENT : ret);
+>>>>
+>>>> Why map EINVAL to ENOENT? Needs a comment, either here or in the function description.
+>>>
+>>> fwnode_property_get_reference_args() returns currently a little bit
+>>> different error codes in ACPI / DT. This is worth documenting there and
+>>> fixing as well.
+>>>
+>>>>
+>>>>> +
+>>>>> +	for (fwnode = fwnode_args.fwnode;
+>>>>> +	     nprops; nprops--, fwnode = child, props++, args++) {
+>>>>
+>>>> I think you cram too much in this for-loop: fwnode, nprops, fwnode, props, args...
+>>>> It's hard to parse.
+>>>
+>>> Hmm. I'm not sure if that really helps; the function is just handling each
+>>> entry in the array and related array pointers are changed accordingly. The
+>>> fwnode = child assignment is there to move to the child node. I.e. what you
+>>> need for handling the loop itself.
+>>>
+>>> I can change this though if you think it really makes a difference for
+>>> better.
 >>
->> You are setting up interrupts before initialization of I2C. Can the
->> interrupt happen in this short window?
->
->
-> It can't happen, because in the previous line there is a status flag set to
-> IRQ_NOAUTOEN. IRQs are enabled in sii9234_cable_in() function which is
-> called after initialization of I2C.
+>> I think so, yes. I noticed you like complex for-loops :-)
+> 
+> I don't really see a difference. The loop increment will just move at the
+> end of the block inside the loop.
+> 
+>>
+>>>
+>>>>
+>>>> I would make this a 'while (nprops)' and write out all the other assignments,
+>>>> increments and decrements.
+>>>>
+>>>>> +		u32 val;
+>>>>> +
+>>>>> +		fwnode_for_each_child_node(fwnode, child) {
+>>>>> +			if (fwnode_property_read_u32(child, *props, &val))
+>>>>> +				continue;
+>>>>> +
+>>>>> +			if (val == *args)
+>>>>> +				break;
+>>>>
+>>>> I'm lost. This really needs comments and perhaps even an DT or ACPI example
+>>>> so you can see what exactly it is we're doing here.
+>>>
+>>> I'll add comments to the code. A good example will be ACPI documentation
+>>> for LEDs, see 17th patch in v9. That will go through the linux-pm tree so
+>>> it won't be available in the same tree for a while.
+>>
+>> Ideally an ACPI and an equivalent DT example would be nice to have, but I might
+>> be asking too much. I'm not that familiar with ACPI, so for me a DT example
+>> is easier.
+> 
+> This won't be useful on DT although you could technically use it. In DT you
+> can directly refer to any node but on ACPI you can just refer to devices,
+> hence this.
 
-Ah, okay, I missed that. Thanks!
+So this function will effectively only be used with acpi? That should be
+documented. I think that explains some of my confusion since I was trying
+to map this code to a device tree, without much success.
 
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Would you be happy with the leds.txt example? I think it's a good example
+> as it's directly related to this.
+
+Yes, that will work.
+
+Regards,
+
+	Hans
