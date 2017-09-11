@@ -1,47 +1,69 @@
 From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: rockchip: rk3288-vyasa: Add hdmi ddc-i2c-bus
-Date: Mon, 11 Sep 2017 13:56:22 +0530
-Message-ID: <1505118382-6023-2-git-send-email-jteki@openedev.com>
-References: <1505118382-6023-1-git-send-email-jteki@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505118382-6023-1-git-send-email-jteki@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: rockchip: rk3288-vyasa: Enable vops and hdmi
+ output
+Date: Mon, 11 Sep 2017 13:56:21 +0530
+Message-ID: <1505118382-6023-1-git-send-email-jteki@openedev.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-HDMI DDC bus is connected via i2c2 in rk3288-vyasa board,
-so add it and enable i2c22 node at same patch.
-
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/rk3288-vyasa.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/rk3288-vyasa.dts | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index f70a52f..fdafe5c 100644
+index 9d473fe..f70a52f 100644
 --- a/arch/arm/boot/dts/rk3288-vyasa.dts
 +++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -83,6 +83,7 @@
+@@ -82,6 +82,10 @@
+ 	cpu0-supply = <&vdd_cpu>;
  };
  
- &hdmi {
-+	ddc-i2c-bus = <&i2c2>;
- 	status = "okay";
- };
- 
-@@ -279,6 +280,10 @@
- 	};
- };
- 
-+&i2c2 {
++&hdmi {
 +	status = "okay";
 +};
 +
- &sdmmc {
+ &i2c0 {
+ 	clock-frequency = <400000>;
  	status = "okay";
+@@ -293,6 +297,22 @@
+ 	status = "okay";
+ };
  
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
++&vopl {
++	status = "okay";
++};
++
++&vopl_mmu {
++	status = "okay";
++};
++
+ &wdt {
+ 	status = "okay";
+ };
 -- 
 2.7.4
