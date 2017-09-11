@@ -1,62 +1,93 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/2] hwmon: add dt binding for max1619
-Date: Mon, 11 Sep 2017 12:58:57 -0700
-Message-ID: <20170911195857.GB2580@roeck-us.net>
-References: <20170911191649.3344-1-atull@kernel.org>
- <20170911191649.3344-2-atull@kernel.org>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: Re: [PATCH v3 1/2] i2c: davinci: Add PM Runtime Support
+Date: Mon, 11 Sep 2017 15:07:15 -0500
+Message-ID: <f185afb9-e877-1916-fcbc-c2a28f23b0cc@ti.com>
+References: <20170908175448.3367-1-fcooper@ti.com>
+ <20170908175448.3367-2-fcooper@ti.com>
+ <57153767-6dee-a5b5-548c-f7b0dc104b46@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170911191649.3344-2-atull@kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <57153767-6dee-a5b5-548c-f7b0dc104b46@ti.com>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, wsa@the-dreams.de, robh+dt@kernel.org, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com, vigneshr@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 02:16:49PM -0500, Alan Tull wrote:
-> Add new device tree binding for max1619.
+
+
+On 09/11/2017 06:29 AM, Sekhar Nori wrote:
+> On Friday 08 September 2017 11:24 PM, Franklin S Cooper Jr wrote:
+>> 66AK2G has I2C instances that are not apart of the ALWAYS_ON power domain
+>> like other Keystone 2 SoCs and OMAPL138. Therefore, pm_runtime
 > 
-> Signed-off-by: Alan Tull <atull@kernel.org>
-
-Technically that should already work, without explicit binding,
-or did the i2c core change lately ?
-
-Guenter
-
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  drivers/hwmon/max1619.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> unlike ?
 > 
-> diff --git a/drivers/hwmon/max1619.c b/drivers/hwmon/max1619.c
-> index a182789..76d9669 100644
-> --- a/drivers/hwmon/max1619.c
-> +++ b/drivers/hwmon/max1619.c
-> @@ -303,10 +303,20 @@ static const struct i2c_device_id max1619_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, max1619_id);
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id max1619_of_match[] = {
-> +	{ .compatible = "maxim,max1619", },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, max1619_of_match);
-> +#endif
-> +
->  static struct i2c_driver max1619_driver = {
->  	.class		= I2C_CLASS_HWMON,
->  	.driver = {
->  		.name	= "max1619",
-> +		.of_match_table = of_match_ptr(max1619_of_match),
->  	},
->  	.probe		= max1619_probe,
->  	.id_table	= max1619_id,
-> -- 
-> 2.7.4
+>> is required to insure the power domain used by the specific I2C instance is
+>> properly turned on along with its functional clock.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> ---
+>> Version 3 changes:
+>> Remove several statements that set clk to NULL
+>> Fix error path
+>>
+>>  drivers/i2c/busses/i2c-davinci.c | 64 +++++++++++++++++++++++++++++++++-------
+>>  1 file changed, 53 insertions(+), 11 deletions(-)
+> 
+>> @@ -802,12 +821,22 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>>  	dev->clk = devm_clk_get(&pdev->dev, NULL);
+>>  	if (IS_ERR(dev->clk))
+>>  		return PTR_ERR(dev->clk);
+>> -	clk_prepare_enable(dev->clk);
+>>  
+>>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>  	dev->base = devm_ioremap_resource(&pdev->dev, mem);
+>>  	if (IS_ERR(dev->base)) {
+>> -		r = PTR_ERR(dev->base);
+>> +		return PTR_ERR(dev->base);
+>> +	}
+>> +
+>> +	pm_runtime_set_autosuspend_delay(dev->dev,
+>> +					 DAVINCI_I2C_PM_TIMEOUT);
+>> +	pm_runtime_use_autosuspend(dev->dev);
+>> +
+>> +	pm_runtime_enable(dev->dev);
+>> +
+>> +	r = pm_runtime_get_sync(dev->dev);
+>> +	if (r < 0) {
+>> +		dev_err(dev->dev, "failed to runtime_get device: %d\n", r);
+>>  		goto err_unuse_clocks;
+> 
+> You end up doing a pm_runtime_put_sync() on failure here, instead of
+> pm_runtime_put_noidle() like rest of the patch.
+> 
+> May be handle this failure here instead of relying on the goto path.
+
+Ok
+> 
+>>  	}
+>>  
+>> @@ -849,27 +878,40 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>>  	if (r)
+>>  		goto err_unuse_clocks;
+>>  
+>> +	pm_runtime_mark_last_busy(dev->dev);
+>> +	pm_runtime_put_autosuspend(dev->dev);
+>> +
+>>  	return 0;
+>>  
+>>  err_unuse_clocks:
+>> -	clk_disable_unprepare(dev->clk);
+>> -	dev->clk = NULL;
+>> +	pm_runtime_dont_use_autosuspend(dev->dev);
+>> +	pm_runtime_put_sync(dev->dev);
+>> +	pm_runtime_disable(dev->dev);
+>> +
+>>  	return r;
+>>  }
+> 
+> Thanks,
+> Sekhar
 > 
