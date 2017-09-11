@@ -1,129 +1,81 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v9 02/24] v4l: async: Remove re-probing support
-Date: Mon, 11 Sep 2017 09:47:49 +0200
-Message-ID: <787019fe-7402-7edb-3de6-9a683de78d71@xs4all.nl>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
- <20170908131235.30294-3-sakari.ailus@linux.intel.com>
+From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH net-next 3/3] net: phy: realtek: add RTL8201F phy-id and functions
+Date: Mon, 11 Sep 2017 16:48:03 +0900
+Message-ID: <20170911164803.6720.4A936039@socionext.com>
+References: <CAJe_ZhciWBhw5npxEjTUGw2duS7DSfhzP5nzAOy_ig4-1XcPWw@mail.gmail.com> <20170909155517.GB19117@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170908131235.30294-3-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170909155517.GB19117-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mika.westerberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jongsung Kim <neidhard.kim-Hm3cg6mZ9cc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2017 03:11 PM, Sakari Ailus wrote:
-> Remove V4L2 async re-probing support. The re-probing support has been
-> there to support cases where the sub-devices require resources provided by
-> the main driver's hardware to function, such as clocks.
-> 
-> Reprobing has allowed unbinding and again binding the main driver without
-> explicilty unbinding the sub-device drivers. This is certainly not a
-> common need, and the responsibility will be the user's going forward.
-> 
-> An alternative could have been to introduce notifier specific locks.
-> Considering the complexity of the re-probing and that it isn't really a
-> solution to a problem but a workaround, remove re-probing instead.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Hi Andrew,
+Thank your for reviewing.
 
-I Acked the v8 version, but don't see my Ack here. Did you miss it?
+On Sat, 9 Sep 2017 17:55:17 +0200 <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
 
-Regards,
-
-	Hans
-
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 54 ------------------------------------
->  1 file changed, 54 deletions(-)
+> On Sat, Sep 09, 2017 at 09:03:05AM +0530, Jassi Brar wrote:
+> > On 9 September 2017 at 00:21, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > On 09/08/2017 06:02 AM, Kunihiko Hayashi wrote:
+> > >> From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >>
+> > >> Add RTL8201F phy-id and the related functions to the driver.
+> > >>
+> > >> The original patch is as follows:
+> > >> https://patchwork.kernel.org/patch/2538341/
+> > >>
+> > >> Signed-off-by: Jongsung Kim <neidhard.kim-Hm3cg6mZ9cc@public.gmane.org>
+> > >> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> > >> ---
+> > >>  drivers/net/phy/realtek.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+> > >>  1 file changed, 45 insertions(+)
+> > >>
+> > >> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+> > >> index 9cbe645..d9974ce 100644
+> > >> --- a/drivers/net/phy/realtek.c
+> > >> +++ b/drivers/net/phy/realtek.c
+> > >> @@ -29,10 +29,23 @@
+> > >>  #define RTL8211F_PAGE_SELECT 0x1f
+> > >>  #define RTL8211F_TX_DELAY    0x100
+> > >>
+> > >> +#define RTL8201F_ISR         0x1e
+> > >> +#define RTL8201F_PAGE_SELECT 0x1f
+> > >
+> > > We have a page select register define for the RTL8211F right above, so
+> > > surely we can make that a common definition?
+> > >
+> > That is just for the sake of consistency.
+> > I mean RTL8211 wouldn't look neat among everything else RTL8201.
+> > 
+> > Also the page-select offsets just _happen_ to be same value...
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index d741a8e0fdac..e109d9da4653 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -198,78 +198,24 @@ EXPORT_SYMBOL(v4l2_async_notifier_register);
->  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
->  {
->  	struct v4l2_subdev *sd, *tmp;
-> -	unsigned int notif_n_subdev = notifier->num_subdevs;
-> -	unsigned int n_subdev = min(notif_n_subdev, V4L2_MAX_SUBDEVS);
-> -	struct device **dev;
-> -	int i = 0;
->  
->  	if (!notifier->v4l2_dev)
->  		return;
->  
-> -	dev = kvmalloc_array(n_subdev, sizeof(*dev), GFP_KERNEL);
-> -	if (!dev) {
-> -		dev_err(notifier->v4l2_dev->dev,
-> -			"Failed to allocate device cache!\n");
-> -	}
-> -
->  	mutex_lock(&list_lock);
->  
->  	list_del(&notifier->list);
->  
->  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
-> -		struct device *d;
-> -
-> -		d = get_device(sd->dev);
-> -
->  		v4l2_async_cleanup(sd);
->  
-> -		/* If we handled USB devices, we'd have to lock the parent too */
-> -		device_release_driver(d);
-> -
->  		if (notifier->unbind)
->  			notifier->unbind(notifier, sd, sd->asd);
-> -
-> -		/*
-> -		 * Store device at the device cache, in order to call
-> -		 * put_device() on the final step
-> -		 */
-> -		if (dev)
-> -			dev[i++] = d;
-> -		else
-> -			put_device(d);
->  	}
->  
->  	mutex_unlock(&list_lock);
->  
-> -	/*
-> -	 * Call device_attach() to reprobe devices
-> -	 *
-> -	 * NOTE: If dev allocation fails, i is 0, and the whole loop won't be
-> -	 * executed.
-> -	 */
-> -	while (i--) {
-> -		struct device *d = dev[i];
-> -
-> -		if (d && device_attach(d) < 0) {
-> -			const char *name = "(none)";
-> -			int lock = device_trylock(d);
-> -
-> -			if (lock && d->driver)
-> -				name = d->driver->name;
-> -			dev_err(d, "Failed to re-probe to %s\n", name);
-> -			if (lock)
-> -				device_unlock(d);
-> -		}
-> -		put_device(d);
-> -	}
-> -	kvfree(dev);
-> -
->  	notifier->v4l2_dev = NULL;
-> -
-> -	/*
-> -	 * Don't care about the waiting list, it is initialised and populated
-> -	 * upon notifier registration.
-> -	 */
->  }
->  EXPORT_SYMBOL(v4l2_async_notifier_unregister);
->  
+> If you look at all the other supported PHYs, they all consistently use
+> the same page register across models. Marvell is always 22, mscc is
+> always 31, vitesse is always 31.
 > 
+> I would say it is a safe bet that all realtek PHYs will use 0x1f for
+> page select. So please add a patch which renames RTL8211F_PAGE_SELECT
+> to RTL821x_PAGE_SELECT.
+> 
+> It is best to do this now. I spent a while cleaning up the mess the
+> Marvell driver had got into with its page select code. Lots of
+> duplicate code and defines doing the same thing.
+> 
+> 	  Andrew
+
+I see. In case of renaming to RTL821x_PAGE_SELECT, 
+I think that I'll make a patch series as realtek PHY series including this
+patch independent from the series of MAC driver.
+
+---
+Best Regards,
+Kunihiko Hayashi
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
