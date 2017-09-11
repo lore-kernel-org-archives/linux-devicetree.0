@@ -1,120 +1,104 @@
-From: Jacob Chen <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 0/4] Add Rockchip RGA V4l2 support
-Date: Mon, 11 Sep 2017 18:47:51 +0800
-Message-ID: <CAFLEztQZVJycPydqUKF8ysvL0BceS5U6_zDLDctzYFuiVS+jqQ@mail.gmail.com>
-References: <1505126644-18396-1-git-send-email-jacob-chen@iotwrt.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v10 19/24] v4l: fwnode: Add convenience function for
+ parsing common external refs
+Date: Mon, 11 Sep 2017 14:06:34 +0300
+Message-ID: <20170911110634.cgwrhdvnvzgmvfuk@valkosipuli.retiisi.org.uk>
+References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+ <20170911080008.21208-20-sakari.ailus@linux.intel.com>
+ <c57c3f6b-aeb9-dc00-645b-0da2edad77b0@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505126644-18396-1-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c57c3f6b-aeb9-dc00-645b-0da2edad77b0@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Mon, Sep 11, 2017 at 11:47:11AM +0200, Hans Verkuil wrote:
+> On 09/11/2017 10:00 AM, Sakari Ailus wrote:
+> > Add v4l2_fwnode_parse_reference_sensor_common for parsing common
+> > sensor properties that refer to adjacent devices such as flash or lens
+> > driver chips.
+> > 
+> > As this is an association only, there's little a regular driver needs to
+> > know about these devices as such.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-fwnode.c | 35 +++++++++++++++++++++++++++++++++++
+> >  include/media/v4l2-fwnode.h           | 13 +++++++++++++
+> >  2 files changed, 48 insertions(+)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > index 56eee5bbd3b5..b9e60a0e8f86 100644
+> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > @@ -589,6 +589,41 @@ static int v4l2_fwnode_reference_parse_int_props(
+> >  	return ret;
+> >  }
+> >  
+> > +int v4l2_fwnode_reference_parse_sensor_common(
+> > +	struct device *dev, struct v4l2_async_notifier *notifier)
+> > +{
+> > +	static const char *led_props[] = { "led" };
+> > +	static const struct {
+> > +		const char *name;
+> > +		const char **props;
+> > +		unsigned int nprops;
+> > +	} props[] = {
+> > +		{ "flash-leds", led_props, ARRAY_SIZE(led_props) },
+> > +		{ "lens-focus", NULL, 0 },
+> > +	};
+> > +	unsigned int i;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(props); i++) {
+> > +		int ret;
+> > +
+> > +		if (props[i].props && is_acpi_node(dev_fwnode(dev)))
+> > +			ret = v4l2_fwnode_reference_parse_int_props(
+> > +				dev, notifier, props[i].name,
+> > +				props[i].props, props[i].nprops);
+> > +		else
+> > +			ret = v4l2_fwnode_reference_parse(
+> > +				dev, notifier, props[i].name);
+> > +		if (ret) {
+> > +			dev_warn(dev, "parsing property \"%s\" failed (%d)\n",
+> > +				 props[i].name, ret);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(v4l2_fwnode_reference_parse_sensor_common);
+> > +
+> >  MODULE_LICENSE("GPL");
+> >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
+> >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+> > diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> > index 3819a73c3c8a..bcec1ce101dc 100644
+> > --- a/include/media/v4l2-fwnode.h
+> > +++ b/include/media/v4l2-fwnode.h
+> > @@ -257,4 +257,17 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
+> >  			      struct v4l2_fwnode_endpoint *vep,
+> >  			      struct v4l2_async_subdev *asd));
+> >  
+> > +/**
+> > + * v4l2_fwnode_reference_parse_sensor_common - parse common references on
+> > + *					       sensors for async sub-devices
+> > + * @dev: the device node the properties of which are parsed for references
+> > + * @notifier: the async notifier where the async subdevs will be added
+> > + *
+> 
+> I think you should add a note that if this function returns 0 the
+> caller should remember to call v4l2_async_notifier_release. That is not
+> immediately obvious.
 
-v4l2-compliance result:
+I'll add that, plus a note to v4l2_async_notifier_release() as well.
 
-v4l2-compliance SHA   : not available
-
-Driver Info:
-        Driver name   : rockchip-rga
-        Card type     : rockchip-rga
-        Bus info      : platform:rga
-        Driver version: 4.13.0
-        Capabilities  : 0x84208000
-                Video Memory-to-Memory
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps   : 0x04208000
-                Video Memory-to-Memory
-                Streaming
-                Extended Pix Format
-
-Compliance test for device /dev/video0 (not using libv4l2):
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second video open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-        Control ioctls:
-                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-                test VIDIOC_QUERYCTRL: OK
-                test VIDIOC_G/S_CTRL: OK
-                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-                Standard Controls: 7 Private Controls: 0
-
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                test VIDIOC_G/S_PARM: OK (Not Supported)
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                fail: v4l2-test-formats.cpp(779):
-fmt_cap.g_colorspace() != col
-                test VIDIOC_S_FMT: FAIL
-                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-                fail: v4l2-test-formats.cpp(1273): doioctl(node,
-VIDIOC_G_SELECTION, &sel) != EI
-NVAL
-                test Cropping: OK (Not Supported)
-                fail: v4l2-test-formats.cpp(1273): doioctl(node,
-VIDIOC_G_SELECTION, &sel) != EI
-NVAL
-                test Composing: FAIL
-                test Scaling: OK
-
-        Codec ioctls:
-                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-        Buffer ioctls:
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-                test VIDIOC_EXPBUF: OK
-
-Test input 0:
-
-
-Total: 43, Succeeded: 41, Failed: 2, Warnings: 0
-root@linaro-alip:~#
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
