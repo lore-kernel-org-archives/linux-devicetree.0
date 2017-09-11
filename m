@@ -1,42 +1,37 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2] dt-bindings: vendor-prefixes: Add nutsboard to vendor
- prefix.
-Date: Sun, 10 Sep 2017 22:21:28 +0200
-Message-ID: <7c5e8e82-7a53-b3db-2c9b-cd831c95a3b8@suse.de>
-References: <1504957258-23334-1-git-send-email-onlywig@gmail.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 1/2] dt-bindings: arm: actions: Add CubieBoard6
+Date: Mon, 11 Sep 2017 02:58:04 +0200
+Message-ID: <20170911005805.10116-2-afaerber@suse.de>
+References: <20170911005805.10116-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504957258-23334-1-git-send-email-onlywig@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20170911005805.10116-1-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wig C <onlywig@gmail.com>, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, khilman@baylibre.com, treding@nvidia.com, jic23@kernel.org, marek.vasut@gmail.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Cc: Thomas Liau <thomas.liau@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, =?UTF-8?q?=E6=A2=85=E5=88=A9?= <harrymei@actions-semi.com>, support@cubietech.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Define a compatible string for Cubietech CubieBoard6.
 
-I think you mean "Add nutsboard vendor prefix" ("Add nutsboard to vendor
-prefixes" would be redundant with "vendor-prefixes:"), and the subject
-doesn't need a trailing dot - could be fixed when applying.
+Cc: support@cubietech.com
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ Documentation/devicetree/bindings/arm/actions.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Other than that,
-
-Am 09.09.2017 um 13:40 schrieb Wig C:
-> From: YuanCheng Cheng <onlywig@gmail.com>
-> 
-> NutsBoard (http://nutsboard.org/) is an organization and focus
-> on ARM based embedded boards with open source software.
-> 
-> Signed-off-by: YuanCheng Cheng <onlywig@gmail.com>
-
-Reviewed-by: Andreas Färber <afaerber@suse.de>
-
-Regards,
-Andreas
-
+diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
+index 3bc7ea575564..ced764a8549e 100644
+--- a/Documentation/devicetree/bindings/arm/actions.txt
++++ b/Documentation/devicetree/bindings/arm/actions.txt
+@@ -21,6 +21,7 @@ Boards:
+ 
+ Root node property compatible must contain, depending on board:
+ 
++ - Cubietech CubieBoard6: "cubietech,cubieboard6"
+  - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
+ 
+ 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+2.13.5
