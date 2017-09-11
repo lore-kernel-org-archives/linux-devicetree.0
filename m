@@ -1,60 +1,39 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v10 19/24] v4l: fwnode: Add convenience function for
- parsing common external refs
-Date: Mon, 11 Sep 2017 17:15:44 +0300
-Message-ID: <20170911141543.phkw3heyb2er2ozz@valkosipuli.retiisi.org.uk>
-References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
- <20170911080008.21208-20-sakari.ailus@linux.intel.com>
- <20170911111746.GC28095@amd>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/2] clk: renesas: cpg-mssr: add R8A7797 support
+Date: Mon, 11 Sep 2017 16:30:40 +0200
+Message-ID: <CAMuHMdWyahPE4mWPt5MTTj-qdtUTZFjZum0LnOR-8miif5vMdw@mail.gmail.com>
+References: <20170908213802.086308649@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170911111746.GC28095@amd>
-Sender: linux-media-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170908213802.086308649@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 01:17:46PM +0200, Pavel Machek wrote:
-> On Mon 2017-09-11 11:00:03, Sakari Ailus wrote:
-> > Add v4l2_fwnode_parse_reference_sensor_common for parsing common
-> > sensor properties that refer to adjacent devices such as flash or lens
-> > driver chips.
-> > 
-> > As this is an association only, there's little a regular driver needs to
-> > know about these devices as such.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-fwnode.c | 35 +++++++++++++++++++++++++++++++++++
-> >  include/media/v4l2-fwnode.h           | 13 +++++++++++++
-> >  2 files changed, 48 insertions(+)
-> > 
-> >  
-> > +/**
-> > + * v4l2_fwnode_reference_parse_sensor_common - parse common references on
-> > + *					       sensors for async sub-devices
-> > + * @dev: the device node the properties of which are parsed for references
-> > + * @notifier: the async notifier where the async subdevs will be added
-> > + *
-> > + * Return: 0 on success
-> > + *	   -ENOMEM if memory allocation failed
-> > + *	   -EINVAL if property parsing failed
-> > + */
-> 
-> Returns: would sound more correct to me, but it seems kernel is split
-> on that.
+On Fri, Sep 8, 2017 at 11:34 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add R-Car V3M (R8A77970) Clock Pulse Generator / Module Standby and
+> Software Reset support,  using the CPG/MSSR driver core and the common
+> R-Car Gen3 code.
+>
+> Based on the original (and large) patch by Daisuke Matsushita
+> <daisuke.matsushita.ns@hitachi.com>.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I think in V4L2 there are roughly as many of each instances. I'll keep it
-as it is.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in clk-renesas-for-v4.15.
 
-> 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+Gr{oetje,eeting}s,
 
-Thanks!
+                        Geert
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
