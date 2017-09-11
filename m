@@ -1,68 +1,59 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v10 18/24] v4l: fwnode: Add a helper function to obtain
- device / interger references
-Date: Mon, 11 Sep 2017 17:12:01 +0300
-Message-ID: <20170911141200.rxn36p7u77b2rzzs@valkosipuli.retiisi.org.uk>
+Subject: Re: [PATCH v10 19/24] v4l: fwnode: Add convenience function for
+ parsing common external refs
+Date: Mon, 11 Sep 2017 17:15:44 +0300
+Message-ID: <20170911141543.phkw3heyb2er2ozz@valkosipuli.retiisi.org.uk>
 References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
- <20170911080008.21208-19-sakari.ailus@linux.intel.com>
- <11c951eb-0315-0149-829e-ed73d748e783@xs4all.nl>
- <20170911122820.fkbd2rnaddiestab@valkosipuli.retiisi.org.uk>
- <2e2eba02-39bc-11e1-d9f1-b83a6f580667@xs4all.nl>
- <20170911132710.mcgqn6tbiabzvpqq@valkosipuli.retiisi.org.uk>
- <21d712c2-7608-7153-4421-2c12b90dcb7a@xs4all.nl>
+ <20170911080008.21208-20-sakari.ailus@linux.intel.com>
+ <20170911111746.GC28095@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <21d712c2-7608-7153-4421-2c12b90dcb7a@xs4all.nl>
+In-Reply-To: <20170911111746.GC28095@amd>
 Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 03:34:16PM +0200, Hans Verkuil wrote:
-> >>>>> +		u32 val;
-> >>>>> +
-> >>>>> +		fwnode_for_each_child_node(fwnode, child) {
-> >>>>> +			if (fwnode_property_read_u32(child, *props, &val))
-> >>>>> +				continue;
-> >>>>> +
-> >>>>> +			if (val == *args)
-> >>>>> +				break;
-> >>>>
-> >>>> I'm lost. This really needs comments and perhaps even an DT or ACPI example
-> >>>> so you can see what exactly it is we're doing here.
-> >>>
-> >>> I'll add comments to the code. A good example will be ACPI documentation
-> >>> for LEDs, see 17th patch in v9. That will go through the linux-pm tree so
-> >>> it won't be available in the same tree for a while.
-> >>
-> >> Ideally an ACPI and an equivalent DT example would be nice to have, but I might
-> >> be asking too much. I'm not that familiar with ACPI, so for me a DT example
-> >> is easier.
+On Mon, Sep 11, 2017 at 01:17:46PM +0200, Pavel Machek wrote:
+> On Mon 2017-09-11 11:00:03, Sakari Ailus wrote:
+> > Add v4l2_fwnode_parse_reference_sensor_common for parsing common
+> > sensor properties that refer to adjacent devices such as flash or lens
+> > driver chips.
 > > 
-> > This won't be useful on DT although you could technically use it. In DT you
-> > can directly refer to any node but on ACPI you can just refer to devices,
-> > hence this.
+> > As this is an association only, there's little a regular driver needs to
+> > know about these devices as such.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-fwnode.c | 35 +++++++++++++++++++++++++++++++++++
+> >  include/media/v4l2-fwnode.h           | 13 +++++++++++++
+> >  2 files changed, 48 insertions(+)
+> > 
+> >  
+> > +/**
+> > + * v4l2_fwnode_reference_parse_sensor_common - parse common references on
+> > + *					       sensors for async sub-devices
+> > + * @dev: the device node the properties of which are parsed for references
+> > + * @notifier: the async notifier where the async subdevs will be added
+> > + *
+> > + * Return: 0 on success
+> > + *	   -ENOMEM if memory allocation failed
+> > + *	   -EINVAL if property parsing failed
+> > + */
 > 
-> So this function will effectively only be used with acpi? That should be
-> documented. I think that explains some of my confusion since I was trying
-> to map this code to a device tree, without much success.
+> Returns: would sound more correct to me, but it seems kernel is split
+> on that.
 
-I'll add to the documentation of the function:
-
- * While it is technically possible to use this function on DT, it is only
- * meaningful on ACPI. On Device tree you can refer to any node in the tree but
- * on ACPI the references are limited to devices.
+I think in V4L2 there are roughly as many of each instances. I'll keep it
+as it is.
 
 > 
-> > Would you be happy with the leds.txt example? I think it's a good example
-> > as it's directly related to this.
-> 
-> Yes, that will work.
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-I'll add a separate patch that I'll post later on. The ACPI documentation
-should get merged first.
+Thanks!
 
 -- 
 Sakari Ailus
