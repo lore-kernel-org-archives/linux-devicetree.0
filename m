@@ -1,35 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: mt8173-xhci: add generic compatible
- and rename file
-Date: Mon, 11 Sep 2017 15:57:08 -0500
-Message-ID: <20170911205708.jh2y74asqvffgy4g@rob-hp-laptop>
-References: <33fa448238c0d95f0cfd6c2be3bd5c4e657a0cd4.1504092763.git.chunfeng.yun@mediatek.com>
- <0ef0bfd4f2544e57c7bdaea518c3fc75ae40b74f.1504092763.git.chunfeng.yun@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4] ARM: dts: stm32: change pinctrl bindings definition
+Date: Mon, 11 Sep 2017 16:05:29 -0500
+Message-ID: <20170911210529.2kbt6j54ohokmb4b@rob-hp-laptop>
+References: <1504104653-26804-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0ef0bfd4f2544e57c7bdaea518c3fc75ae40b74f.1504092763.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1504104653-26804-1-git-send-email-alexandre.torgue@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vikas.manocha@st.com, Benjamin Gaignard <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 07:34:10PM +0800, Chunfeng Yun wrote:
-> The mt8173-xhci.txt actually holds the bindings for all mediatek
-> SoCs with xHCI controller, so add a generic compatible and change
-> the name to mediatek,mtk-xhci.txt to reflect that.
+On Wed, Aug 30, 2017 at 04:50:52PM +0200, Alexandre Torgue wrote:
+> Initially each pin was declared in "include/dt-bindings/stm32<SOC>-pinfunc.h"
+> and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
+> Since this approach was approved, the number of supported MCU has
+> increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
+> file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
+> a new approach which consist to use a macro to define pin muxing in device
+> tree. All STM32 DT will use the common macro to define pinmux. Furthermore, it
+> will make maintenance and integration of new SOC easier.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../usb/{mt8173-xhci.txt => mediatek,mtk-xhci.txt} |   14 +++++++++++---
->  .../devicetree/bindings/usb/mt8173-mtu3.txt        |    2 +-
->  2 files changed, 12 insertions(+), 4 deletions(-)
->  rename Documentation/devicetree/bindings/usb/{mt8173-xhci.txt => mediatek,mtk-xhci.txt} (85%)
+> I made only one patch to avoid dependencies. Let me know if you prefer that I
+> split it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+It doesn't have to be one patch to go thru one tree. But I'm fine either 
+way.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
