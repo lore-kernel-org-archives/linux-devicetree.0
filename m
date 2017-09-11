@@ -1,42 +1,87 @@
-From: Alexander Aring <aring-jkUAjuhPggJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] linux-wpan: Add an IEEE 802.15.4 over LoRa Semtech
- SX1276/77/78/79 device driver
-Date: Mon, 11 Sep 2017 08:47:17 -0400
-Message-ID: <CAOHTApj2tkJ7Xju0LSYrgz_uDsR2L35j+QvXswXgnCRkdqHMKA@mail.gmail.com>
-References: <20170910093026.4386-1-starnight@g.ncu.edu.tw> <CAJuUDwtyf_TdGR34oKmLRgRU_jy+JtUSmSt1v_j20e+BwrfA7A@mail.gmail.com>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [RESEND PATCH v3 0/5] Add support for the STM32F7 I2C
+Date: Mon, 11 Sep 2017 14:55:19 +0200
+Message-ID: <CA+M3ks4y0u=ozKiq=xHFvcKJcBjDZDQysU6Mac+i1nEGTW6xOg@mail.gmail.com>
+References: <1504251255-20469-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJuUDwtyf_TdGR34oKmLRgRU_jy+JtUSmSt1v_j20e+BwrfA7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xue Liu <liuxuenetmail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jian-Hong Pan <starnight@g.ncu.edu.tw>, Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Schmidt <stefan-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-wpan - ML <linux-wpan-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1504251255-20469-1-git-send-email-pierre-yves.mordret@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+2017-09-01 9:34 GMT+02:00 Pierre-Yves MORDRET <pierre-yves.mordret@st.com>:
+> This patchset adds support for the I2C controller embedded in STM32F7xx S=
+oC.
+> It enables I2C transfer in interrupt mode with Standard-mode, Fast-mode a=
+nd
+> Fast-mode+ bus speed.
 
-On Mon, Sep 11, 2017 at 3:50 AM, Xue Liu <liuxuenetmail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hello Pan,
+Hi Wolfram,
+
+I notice that those patches aren't in pull request for 4.14 and not in
+i2c-next branch.
+What can we do to progress in this topic? Does issues/remarks still
+need to be fixed in this code ?
+
+Thanks for your advices,
+Benjamin
+
+> ---
+>  Version history:
+>     v3:
+>         * Move stm32f7_i2c_match above stm32f7_i2c_driver
+>         * of_device_get_match_data instead of of_match_device
+>         * Improve I2C Speed DT gathering
+>         * dev_err into dev_dbg for Arbitration loss
+>         * Remove useless space aligned
 >
-> From my point of view, it is not a good idea to write sx127x driver
-> for IEEE 802154. Because LoRa is not compatible with IEEE 802.15.4 in
-> PHY and MAC layer.
+>     v2:
+>         * Implement an I2C timings computation algorithm instead of stati=
+c
+>           values(bindings). Algorithm uses generic I2C SCL Falling/Rising
+>           bindings and System clock to compute its timings.
+>         * I2C Device Tree Update
+> ---
+> Pierre-Yves MORDRET (5):
+>   dt-bindings: i2c-stm32: Document the STM32F7 I2C bindings
+>   i2c: i2c-stm32f4: use generic definition of speed enum
+>   i2c: i2c-stm32f7: add driver
+>   ARM: dts: stm32: Add I2C1 support for STM32F746 SoC
+>   ARM: dts: stm32: Add I2C1 support for STM32F746 eval board
 >
+>  .../devicetree/bindings/i2c/i2c-stm32.txt          |  29 +-
+>  arch/arm/boot/dts/stm32746g-eval.dts               |   8 +
+>  arch/arm/boot/dts/stm32f746.dtsi                   |  22 +
+>  drivers/i2c/busses/Kconfig                         |  10 +
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-stm32.h                     |  20 +
+>  drivers/i2c/busses/i2c-stm32f4.c                   |  18 +-
+>  drivers/i2c/busses/i2c-stm32f7.c                   | 974 +++++++++++++++=
+++++++
+>  8 files changed, 1068 insertions(+), 14 deletions(-)
+>  create mode 100644 drivers/i2c/busses/i2c-stm32.h
+>  create mode 100644 drivers/i2c/busses/i2c-stm32f7.c
+>
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-This isn't true. The security layer is exactly the same and copied
-from IEEE 802.15.4.
-The rest of the mac layer is pretty simple. Simpler than IEEE
-802.15.4... for now.
 
-> I think it is better to make individual Phy and MAC layers for LoRa in
-> Linux kernel, where a sx127x driver will make sense.
 
-What about to introduce a new interface type? Then you can do a
-complete different parsing on this interface type and share the code
-what you need from 802.15.4
+--=20
+Benjamin Gaignard
 
-- Alex
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
