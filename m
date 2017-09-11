@@ -1,96 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [net-next PATCHv6 1/2] dt-bindings: net: Add DT bindings for
- Socionext Netsec
-Date: Mon, 11 Sep 2017 15:37:38 -0500
-Message-ID: <20170911203738.gco3nv2kynytkxuj@rob-hp-laptop>
-References: <1504088657-6102-1-git-send-email-jaswinder.singh@linaro.org>
- <1504088752-6204-1-git-send-email-jaswinder.singh@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] i2c: gpio: Convert to use descriptors
+Date: Mon, 11 Sep 2017 22:53:14 +0200
+Message-ID: <CACRpkdYePt_reWhVUDR9XZoR_Agscr8T9cEXk7XMpn9umO8yCg@mail.gmail.com>
+References: <20170910214424.14945-1-linus.walleij@linaro.org>
+ <20170910214424.14945-2-linus.walleij@linaro.org> <CAMuHMdXabvax2Wru8j+MC4X5F+z5hoUo1tEbX+zn2AUW6QENVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1504088752-6204-1-git-send-email-jaswinder.singh@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davem@davemloft.net, patches@linaro.org, arnd@arndb.de, mark.rutland@arm.com, andy@warmcat.com, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXabvax2Wru8j+MC4X5F+z5hoUo1tEbX+zn2AUW6QENVA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Steven Miao <realmz6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "adi-buildroot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <adi-buildroot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 03:55:52PM +0530, Jassi Brar wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Socionext NetSec Controller driver.
-> 
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> ---
->  .../devicetree/bindings/net/socionext-netsec.txt   | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
-> new file mode 100644
-> index 0000000..12d596c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
-> @@ -0,0 +1,46 @@
-> +* Socionext NetSec Ethernet Controller IP
-> +
-> +Required properties:
-> +- compatible: Should be "socionext,netsecv5"
+On Mon, Sep 11, 2017 at 1:27 PM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
 
-This should be SoC specific, or also have an SoC specific string.
+> FYI, I recently posted a series to deprecate (at least for DT) this error
+> prone indexing, in favor of using named GPIOs:
+>
+>     [PATCH/RFC 0/3] i2c: gpio: Add support for named gpios in DT
+>     http://www.spinics.net/lists/devicetree/msg191936.html
 
-> +- reg: Address and length of the register sets, the first is the main
-> +	registers, then the rdlar and tdlar regions for the SoC
-> +- interrupts: Should contain ethernet controller interrupt
-> +- clocks: phandle to any clocks to be switched by runtime_pm
-> +- phy-mode: See ethernet.txt file in the same directory
-> +- max-speed: See ethernet.txt file in the same directory
-> +- max-frame-size: See ethernet.txt file in the same directory, if 9000 or
-> +	above jumbo frames are enabled
-> +- local-mac-address: See ethernet.txt file in the same directory
-> +- phy-handle: phandle to select child phy
-> +
-> +Optional properties:
-> +- use-jumbo: Boolean property to suggest if jumbo packets should be used or not
+Grrr I seem to have fallen off the list and don't have these mails
+in my inbox ....
 
-Is this common or vendor specific. The former should refer to a common 
-doc. The latter should have a vendor prefix. I'd think the former makes 
-sense here.
+Anyways [1/3]:
 
-But then why do you need this and max-frame-size?
+>  Required properties:
+>   - compatible = "i2c-gpio";
+> - - gpios: sda and scl gpio
+> -
+> + - sda-gpios: gpio used for the sda signal
+> + - scl-gpios: gpio used for the scl signal
+> + - gpios: sda and scl gpio, alternative for {sda,scl}-gpios (deprecated)
 
-> +
-> +For the child phy
-> +
-> +- compatible "ethernet-phy-ieee802.3-c22" is needed
-> +- device_type "ethernet-phy"
-> +- reg: phy address
-> +
-> +
-> +Example:
-> +	eth0: ethernet {
-> +		compatible = "socionext,netsecv5";
-> +		reg = <0 0x31600000 0x10000>, <0 0x31618000 0x4000>, <0 0x3161c000 0x4000>;
-> +		interrupts = <0 163 0x4>;
-> +		clocks = <&clk_alw_0_8>;
-> +		phy-mode = "rgmii";
-> +		max-speed = <1000>;
-> +		max-frame-size = <9000>;
-> +		local-mac-address = [ a4 17 31 00 00 ed ];
-> +		phy-handle = <&ethphy0>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@1 {
-> +			device_type = "ethernet-phy";
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <1>;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Say that the GPIOs should *always* be flagged as open drain
+using e.g. (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN) as flags.
+
+>  Optional properties:
+>   - i2c-gpio,sda-open-drain: sda as open drain
+
+These should be deprecated. Nobody understands what they mean
+anyway, but they mean "I set this line up as open drain behind your
+back so don't try to do open drain emulation on me", which is just
+totally convoluted.
+
+The GPIO subsystems has ways to indicate this directly to the driver
+nowadays.
+
+Add an example?
+
+Patch [2/3]: needs to be rewritten on top of the descriptor code.
+(I can do it if you like.)
+
+Patch [3/3] should be:
+
++ sda-gpios = <&pfc 208 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++ scl-gpios = <&pfc 91 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
