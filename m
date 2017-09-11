@@ -1,50 +1,57 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 3/4] arm64: allwinner: h5: add compatible string
- for DE2 CCU
-Date: Mon, 11 Sep 2017 23:55:28 +0800
-Message-ID: <20170911155529.62891-4-icenowy@aosc.io>
-References: <20170911155529.62891-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v5 10/10] net: stmmac: dwmac-sun8i: Handle
+ integrated/external MDIOs
+Date: Mon, 11 Sep 2017 18:11:24 +0200
+Message-ID: <20170911161124.GD27599@lunn.ch>
+References: <20170908071156.5115-1-clabbe.montjoie@gmail.com>
+ <20170908071156.5115-11-clabbe.montjoie@gmail.com>
+ <20170908130520.GA11248@lunn.ch>
+ <20170908132632.GA3037@Red>
+ <20170908140020.GC25219@lunn.ch>
+ <20170908140832.GB3037@Red>
+ <20170908141736.GF25219@lunn.ch>
+ <20170908142825.GC3037@Red>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBDPE3LGQKGQEQCKU6HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170911155529.62891-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170908142825.GC3037@Red>
+Sender: netdev-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The DE2 CCU on Allwinner H5 SoC has a slightly different behavior than
-the one on H3, so the compatible string is not set in the common DTSI
-file.
+On Fri, Sep 08, 2017 at 04:28:25PM +0200, Corentin Labbe wrote:
+> On Fri, Sep 08, 2017 at 04:17:36PM +0200, Andrew Lunn wrote:
+> > > > Do you know why the reset times out/fails?
+> > > > 
+> > > 
+> > > Because there are nothing connected to it.
+> > 
+> > That should not be an issue. A read should just return 0xffff.  And it
+> > should return 0xffff fast. The timing of the MDIO protocol is fixed. A
+> > read or a write takes a fixed number of cycles, independent of if
+> > there is a device there or not. The bus data line has a pullup, so if
+> > you try to access a missing device, you automatically read 0xffff.
+> > 
+> 
+> Perhaps, but the reality is that with nothing connected to it, the reset of the MAC timeout.
+> Certainly, the MAC does not support finding no PHY.
 
-Add the compatible string of H5 DE2 CCU in H5 DTSI file.
+Are you sure this is not because of the clock and reset?
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
++                               #address-cells = <1>;
++                               #size-cells = <0>;
++                               int_mii_phy: ethernet-phy@1 {
++                                       compatible = "ethernet-phy-ieee802.3-c22";
++                                       reg = <1>;
++                                       clocks = <&ccu CLK_BUS_EPHY>;
++                                       resets = <&ccu RST_BUS_EPHY>;
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index d9a720bff05d..e237c05cfdb4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -98,6 +98,10 @@
- 	compatible = "allwinner,sun50i-h5-ccu";
- };
- 
-+&display_clocks {
-+	compatible = "allwinner,sun50i-h5-de2-clk";
-+};
-+
- &mmc0 {
- 	compatible = "allwinner,sun50i-h5-mmc",
- 		     "allwinner,sun50i-a64-mmc";
--- 
-2.13.5
+The way you describe it here, the clock and reset are for the PHY. But
+maybe it is actually for the bus? I can understand a bus timing out if
+it has no clock, or it is held in reset. Try enabling the clock and
+reset when the internal bus is selected, not when the PHY on the bus
+is selected.
+
+	Andrew
