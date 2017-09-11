@@ -1,59 +1,143 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add compatible for max1619
-Date: Mon, 11 Sep 2017 16:18:22 -0500
-Message-ID: <CANk1AXTnk5HDHHTOrT9xM9oUPf7rVpKir8QQKSVMaWOZwNASHQ@mail.gmail.com>
-References: <20170911191649.3344-1-atull@kernel.org> <CANk1AXRDaGAcU944+_NO6tAUzUgaxgV85CqjK9tMZgNbDwNG+g@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 05/17] ARM: dts: Add missing smartreflex node and binding
+ for omap4
+Date: Mon, 11 Sep 2017 16:39:24 -0500
+Message-ID: <20170911213924.eancjdiiauluejgl@rob-hp-laptop>
+References: <20170830151953.30856-1-tony@atomide.com>
+ <20170830151953.30856-6-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXRDaGAcU944+_NO6tAUzUgaxgV85CqjK9tMZgNbDwNG+g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Oleksij Rempel <bug-track@fisher-privat.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170830151953.30856-6-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Rafael J . Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 2:33 PM, Alan Tull <atull@kernel.org> wrote:
+On Wed, Aug 30, 2017 at 08:19:41AM -0700, Tony Lindgren wrote:
+> We are missing smartreflex device tree nodes for omap4 with
+> their related "ti,hwmods" properties that the SoC interconnect
+> code needs.
+> 
+> Note that this will only show up as a bug with "doesn't have
+> mpu register target base" boot errors when the legacy platform
+> data is removed.
+> 
+> And since we're missing the device tree binding for smartreflex,
+> let's also add it and document the existing omap3 use too.
+> 
+> Note that the related driver also needs to be updated to probe
+> using device tree and get the platform data passed to it using
+> auxdata with arch/arm/mach-omap2/pdata-quirks.c.
+> 
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/power/ti-smartreflex.txt   | 47 ++++++++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi                       | 21 ++++++++++
+>  2 files changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/ti-smartreflex.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/ti-smartreflex.txt b/Documentation/devicetree/bindings/power/ti-smartreflex.txt
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/ti-smartreflex.txt
+> @@ -0,0 +1,47 @@
+> +Texas Instruments SmartReflex binding
+> +
+> +SmartReflex is used to set and adjust the SoC operating points.
+> +
+> +
+> +Required properties:
+> +
+> +compatible: Shall be one of the following:
+> +	    "ti,omap3-smartreflex-core"
+> +	    "ti,omap3-smartreflex-iva"
+> +	    "ti,omap4-smartreflex-core"
+> +	    "ti,omap4-smartreflex-mpu"
+> +	    "ti,omap4-smartreflex-iva"
+> +
+> +reg: Shall contain the device instance IO range
+> +
+> +interrupts: Shall contain the device instance interrupt
+> +
+> +
+> +Optional properties:
+> +
+> +ti,hwmods: Shall contain the TI interconnect module name if needed
+> +	   by the SoC
+> +
+> +
+> +Example:
+> +
+> +	smartreflex_iva: smartreflex@4a0db000 {
+> +		compatible = "ti,omap4-smartreflex-iva";
+> +		reg = <0x4a0db000 0x80>;
+> +		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+> +		ti,hwmods = "smartreflex_iva";
+> +	};
+> +
+> +	smartreflex_core: smartreflex4a0dd000 {
+                                     ^ missing '@'
 
-Forget this - Guenter has pointed out that this patch is not needed,
-as the i2c layer handles this without needing the compatible added.
+> +		compatible = "ti,omap4-smartreflex-core";
+> +		reg = <0x4a0dd000 0x80>;
+> +		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +		ti,hwmods = "smartreflex_core";
+> +	};
+> +
+> +	smartreflex_mpu: smartreflex@4a0d9000 {
+> +		compatible = "ti,omap4-smartreflex-mpu";
+> +		reg = <0x4a0d9000 0x80>;
+> +		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> +		ti,hwmods = "smartreflex_mpu";
+> +	};
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -442,6 +442,27 @@
+>  			clock-frequency = <48000000>;
+>  		};
+>  
+> +		smartreflex_iva: smartreflex@4a0db000 {
+> +			compatible = "ti,omap4-smartreflex-iva";
+> +			reg = <0x4a0db000 0x80>;
+> +			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+> +			ti,hwmods = "smartreflex_iva";
+> +		};
+> +
+> +		smartreflex_core: smartreflex4a0dd000 {
 
-Alan
+Ditto. Build with W=2 and you should get a warning here.
 
-> On Mon, Sep 11, 2017 at 2:16 PM, Alan Tull <atull@kernel.org> wrote:
->
-> Add Oleksij Rempel
->
->> Add new device tree bindings document for max1619 device
->> including a new compatible string.
->>
->> Signed-off-by: Alan Tull <atull@kernel.org>
->> Cc: Jean Delvare <jdelvare@suse.com>
->> Cc: Guenter Roeck <linux@roeck-us.net>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> ---
->>  Documentation/devicetree/bindings/hwmon/max1619.txt | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/hwmon/max1619.txt
->>
->> diff --git a/Documentation/devicetree/bindings/hwmon/max1619.txt b/Documentation/devicetree/bindings/hwmon/max1619.txt
->> new file mode 100644
->> index 0000000..c70dbbe
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/hwmon/max1619.txt
->> @@ -0,0 +1,12 @@
->> +Bindings for MAX1619 Temperature Sensor
->> +
->> +Required properties:
->> +- compatible : "maxim,max1619"
->> +- reg        : I2C address, one of 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b, 0x4c, or
->> +               0x4d, 0x4e
->> +
->> +Example:
->> +       temp@4c {
->> +               compatible = "maxim,max1619";
->> +               reg = <0x4c>;
->> +       };
->> --
->> 2.7.4
->>
+With that fixed,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> +			compatible = "ti,omap4-smartreflex-core";
+> +			reg = <0x4a0dd000 0x80>;
+> +			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +			ti,hwmods = "smartreflex_core";
+> +		};
+> +
+> +		smartreflex_mpu: smartreflex@4a0d9000 {
+> +			compatible = "ti,omap4-smartreflex-mpu";
+> +			reg = <0x4a0d9000 0x80>;
+> +			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> +			ti,hwmods = "smartreflex_mpu";
+> +		};
+> +
+>  		hwspinlock: spinlock@4a0f6000 {
+>  			compatible = "ti,omap4-hwspinlock";
+>  			reg = <0x4a0f6000 0x1000>;
+> -- 
+> 2.14.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
