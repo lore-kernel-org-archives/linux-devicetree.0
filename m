@@ -1,96 +1,39 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v9 03/24] v4l: async: Use more intuitive names for
- internal functions
-Date: Mon, 11 Sep 2017 09:51:17 +0200
-Message-ID: <200dbf2a-bae6-2f35-220f-a312f838a827@xs4all.nl>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
- <20170908131235.30294-4-sakari.ailus@linux.intel.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: qspi: Add r8a7743/5 to the compatible list
+Date: Mon, 11 Sep 2017 09:57:38 +0200
+Message-ID: <CAMuHMdXjQHMH=jUkL9eaHzwGOTxKN9Zqpkcwoyrvzif0Z87-Xg@mail.gmail.com>
+References: <1504858035-3568-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170908131235.30294-4-sakari.ailus@linux.intel.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504858035-3568-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2017 03:11 PM, Sakari Ailus wrote:
-> Rename internal functions to make the names of the functions better
-> describe what they do.
-> 
-> 	Old name			New name
-> 	v4l2_async_test_notify	v4l2_async_match_notify
-> 	v4l2_async_belongs	v4l2_async_find_match
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+On Fri, Sep 8, 2017 at 10:07 AM, Fabrizio Castro
+<fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
 
-Same here, my Ack is missing. Please double-check my v8 comments: I
-Acked patches 2, 3, 7, 9, 10, 12, 13, 15, 16 of the v8 series.
+The oneline summary should be
 
-Regards,
+"dt-bindings: spi: rspi: Add r8a7743/5 to the compatible list"
 
-	Hans
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index e109d9da4653..831f185ecd47 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -60,8 +60,8 @@ static LIST_HEAD(subdev_list);
->  static LIST_HEAD(notifier_list);
->  static DEFINE_MUTEX(list_lock);
->  
-> -static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *notifier,
-> -						    struct v4l2_subdev *sd)
-> +static struct v4l2_async_subdev *v4l2_async_find_match(
-> +	struct v4l2_async_notifier *notifier, struct v4l2_subdev *sd)
->  {
->  	bool (*match)(struct v4l2_subdev *, struct v4l2_async_subdev *);
->  	struct v4l2_async_subdev *asd;
-> @@ -95,9 +95,9 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
->  	return NULL;
->  }
->  
-> -static int v4l2_async_test_notify(struct v4l2_async_notifier *notifier,
-> -				  struct v4l2_subdev *sd,
-> -				  struct v4l2_async_subdev *asd)
-> +static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
-> +				   struct v4l2_subdev *sd,
-> +				   struct v4l2_async_subdev *asd)
->  {
->  	int ret;
->  
-> @@ -175,11 +175,11 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
->  	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
->  		int ret;
->  
-> -		asd = v4l2_async_belongs(notifier, sd);
-> +		asd = v4l2_async_find_match(notifier, sd);
->  		if (!asd)
->  			continue;
->  
-> -		ret = v4l2_async_test_notify(notifier, sd, asd);
-> +		ret = v4l2_async_match_notify(notifier, sd, asd);
->  		if (ret < 0) {
->  			mutex_unlock(&list_lock);
->  			return ret;
-> @@ -236,9 +236,10 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
->  	INIT_LIST_HEAD(&sd->async_list);
->  
->  	list_for_each_entry(notifier, &notifier_list, list) {
-> -		struct v4l2_async_subdev *asd = v4l2_async_belongs(notifier, sd);
-> +		struct v4l2_async_subdev *asd = v4l2_async_find_match(notifier,
-> +								      sd);
->  		if (asd) {
-> -			int ret = v4l2_async_test_notify(notifier, sd, asd);
-> +			int ret = v4l2_async_match_notify(notifier, sd, asd);
->  			mutex_unlock(&list_lock);
->  			return ret;
->  		}
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
