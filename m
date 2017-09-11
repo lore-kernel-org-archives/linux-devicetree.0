@@ -1,57 +1,83 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH] of: add vendor prefix for Silicon Storage Technology Inc.
-Date: Mon, 11 Sep 2017 12:18:08 +0200
-Message-ID: <0cd76127-0463-701d-6db8-8b752fb17032@suse.de>
-References: <1505118623-3844-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 0/4] Add Rockchip RGA V4l2 support
+Date: Mon, 11 Sep 2017 18:44:00 +0800
+Message-ID: <1505126644-18396-1-git-send-email-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505118623-3844-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, SZ Lin <sz.lin@moxa.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch series add a v4l2 m2m drvier for rockchip RGA direct rendering based 2d graphics acceleration module.
 
-Nit: $subject should use "dt-bindings:" prefix.
+Recently I tried to add protduff support for gstreamer on rockchip platform, and i found that API 
+were not very suitable for my purpose. 
+It shouldn't go upstream until we can figure out what people need, 
 
-Am 11.09.2017 um 10:30 schrieb Fabrizio Castro:
-> Add Silicon Storage Technology Inc. to the list of devicetree
-> vendor prefixes.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 9f9a3d6..900c993 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -316,6 +316,7 @@ solomon        Solomon Systech Limited
->  sony	Sony Corporation
->  spansion	Spansion Inc.
->  sprd	Spreadtrum Communications Inc.
-> +sst	Silicon Storage Technology, Inc.
+change in V8:
+- remove protduff things
 
-Recurring question: What is this prefix being used for? This patch is
-apparently not part of any series.
+change in V6,V7:
+- correct warning in checkpatch.pl
 
-Otherwise looks okay,
+change in V5:
+- v4l2-compliance: handle invalid pxielformat 
+- v4l2-compliance: add subscribe_event
+- add colorspace support
 
-Reviewed-by: Andreas Färber <afaerber@suse.de>
+change in V4:
+- document the controls.
+- change according to Hans's comments
 
-Regards,
-Andreas
+change in V3:
+- rename the controls.
+- add pm_runtime support.
+- enable node by default.
+- correct spelling in documents.
 
->  st	STMicroelectronics
->  starry	Starry Electronic Technology (ShenZhen) Co., LTD
->  startek	Startek
+change in V2:
+- generalize the controls.
+- map buffers (10-50 us) in every cmd-run rather than in buffer-import to avoid get_free_pages failed on
+actively used systems.
+- remove status in dt-bindings examples.
+
+
+Jacob Chen (4):
+  rockchip/rga: v4l2 m2m support
+  ARM: dts: rockchip: add RGA device node for RK3288
+  arm64: dts: rockchip: add RGA device node for RK3399
+  dt-bindings: Document the Rockchip RGA bindings
+
+ .../devicetree/bindings/media/rockchip-rga.txt     |   33 +
+ arch/arm/boot/dts/rk3288.dtsi                      |   11 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   11 +
+ drivers/media/platform/Kconfig                     |   11 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/rockchip-rga/Makefile       |    3 +
+ drivers/media/platform/rockchip-rga/rga-buf.c      |  156 +++
+ drivers/media/platform/rockchip-rga/rga-hw.c       |  435 ++++++++
+ drivers/media/platform/rockchip-rga/rga-hw.h       |  437 +++++++++
+ drivers/media/platform/rockchip-rga/rga.c          | 1035 ++++++++++++++++++++
+ drivers/media/platform/rockchip-rga/rga.h          |  110 +++
+ 11 files changed, 2244 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
+ create mode 100644 drivers/media/platform/rockchip-rga/Makefile
+ create mode 100644 drivers/media/platform/rockchip-rga/rga-buf.c
+ create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.c
+ create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.h
+ create mode 100644 drivers/media/platform/rockchip-rga/rga.c
+ create mode 100644 drivers/media/platform/rockchip-rga/rga.h
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+2.7.4
