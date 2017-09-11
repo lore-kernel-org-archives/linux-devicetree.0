@@ -1,46 +1,86 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] ARM: dts: imx6dl-icore: Add LVDS support
-Date: Mon, 11 Sep 2017 08:25:31 -0300
-Message-ID: <CAOMZO5B0RAjdupLSe=S+tDEA-hpf-Si_4qjkcKC_ECX86PLScQ@mail.gmail.com>
-References: <1505121145-9507-1-git-send-email-jteki@openedev.com> <1505121145-9507-4-git-send-email-jteki@openedev.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 1/2] i2c: davinci: Add PM Runtime Support
+Date: Mon, 11 Sep 2017 16:59:10 +0530
+Message-ID: <57153767-6dee-a5b5-548c-f7b0dc104b46@ti.com>
+References: <20170908175448.3367-1-fcooper@ti.com>
+ <20170908175448.3367-2-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505121145-9507-4-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170908175448.3367-2-fcooper@ti.com>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, wsa@the-dreams.de, robh+dt@kernel.org, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com, vigneshr@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jagan,
+On Friday 08 September 2017 11:24 PM, Franklin S Cooper Jr wrote:
+> 66AK2G has I2C instances that are not apart of the ALWAYS_ON power domain
+> like other Keystone 2 SoCs and OMAPL138. Therefore, pm_runtime
 
-On Mon, Sep 11, 2017 at 6:12 AM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+unlike ?
 
-> +&ldb {
-> +       status = "okay";
+> is required to insure the power domain used by the specific I2C instance is
+> properly turned on along with its functional clock.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+> Version 3 changes:
+> Remove several statements that set clk to NULL
+> Fix error path
+> 
+>  drivers/i2c/busses/i2c-davinci.c | 64 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 53 insertions(+), 11 deletions(-)
+
+> @@ -802,12 +821,22 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>  	dev->clk = devm_clk_get(&pdev->dev, NULL);
+>  	if (IS_ERR(dev->clk))
+>  		return PTR_ERR(dev->clk);
+> -	clk_prepare_enable(dev->clk);
+>  
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	dev->base = devm_ioremap_resource(&pdev->dev, mem);
+>  	if (IS_ERR(dev->base)) {
+> -		r = PTR_ERR(dev->base);
+> +		return PTR_ERR(dev->base);
+> +	}
 > +
-> +       lvds-channel@0 {
-> +               fsl,data-mapping = "spwg";
-> +               fsl,data-width = <18>;
-> +               status = "okay";
+> +	pm_runtime_set_autosuspend_delay(dev->dev,
+> +					 DAVINCI_I2C_PM_TIMEOUT);
+> +	pm_runtime_use_autosuspend(dev->dev);
 > +
-> +               display-timings {
-> +                       native-mode = <&timing0>;
-> +                       timing0: timing0 {
-> +                               clock-frequency = <60000000>;
-> +                               hactive = <800>;
-> +                               vactive = <480>;
-> +                               hback-porch = <30>;
-> +                               hfront-porch = <30>;
-> +                               vback-porch = <5>;
-> +                               vfront-porch = <5>;
-> +                               hsync-len = <64>;
-> +                               vsync-len = <20>;
+> +	pm_runtime_enable(dev->dev);
+> +
+> +	r = pm_runtime_get_sync(dev->dev);
+> +	if (r < 0) {
+> +		dev_err(dev->dev, "failed to runtime_get device: %d\n", r);
+>  		goto err_unuse_clocks;
 
-Please add the support of this panel to drivers/gpu/drm/panel/panel-simple.c.
+You end up doing a pm_runtime_put_sync() on failure here, instead of
+pm_runtime_put_noidle() like rest of the patch.
 
-Then you can refer its compatible in your board dts.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+May be handle this failure here instead of relying on the goto path.
+
+>  	}
+>  
+> @@ -849,27 +878,40 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>  	if (r)
+>  		goto err_unuse_clocks;
+>  
+> +	pm_runtime_mark_last_busy(dev->dev);
+> +	pm_runtime_put_autosuspend(dev->dev);
+> +
+>  	return 0;
+>  
+>  err_unuse_clocks:
+> -	clk_disable_unprepare(dev->clk);
+> -	dev->clk = NULL;
+> +	pm_runtime_dont_use_autosuspend(dev->dev);
+> +	pm_runtime_put_sync(dev->dev);
+> +	pm_runtime_disable(dev->dev);
+> +
+>  	return r;
+>  }
+
+Thanks,
+Sekhar
