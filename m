@@ -1,33 +1,44 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: dts: stm32: change pinctrl bindings definition
-Date: Mon, 11 Sep 2017 16:07:21 -0500
-Message-ID: <20170911210721.ga6hjkksgzashzrc@rob-hp-laptop>
-References: <1504104653-26804-1-git-send-email-alexandre.torgue@st.com>
- <1504104653-26804-2-git-send-email-alexandre.torgue@st.com>
+Subject: Re: [PATCH 03/17] ARM: dts: Add missing properties for omap4 control
+ modules
+Date: Mon, 11 Sep 2017 16:08:58 -0500
+Message-ID: <20170911210858.dktyljqayibatgbf@rob-hp-laptop>
+References: <20170830151953.30856-1-tony@atomide.com>
+ <20170830151953.30856-4-tony@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1504104653-26804-2-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170830151953.30856-4-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vikas.manocha-qxv4g6HH51o@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 04:50:53PM +0200, Alexandre Torgue wrote:
-> Initially each pin was declared in "include/dt-bindings/stm32<SOC>-pinfunc.h"
-> and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
-> Since this approach was approved, the number of supported MCU has
-> increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
-> file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
-> a new approach which consist to use a macro to define pin muxing in device
-> tree. All STM32 will use the common macro to define pinmux. Furthermore, it
-> will make STM32 maintenance and integration of new SOC easier .
+On Wed, Aug 30, 2017 at 08:19:39AM -0700, Tony Lindgren wrote:
+> On omap4, we are missing several ti,hwmods properties and IO
+> ranges for system control modules. These are needed by the SoC
+> interconnect code.
 > 
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> Reviewed-by: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-> Reviewed-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Note that this will only show up as a bug with "doesn't have
+> mpu register target base" boot errors when the legacy platform
+> data is removed.
+> 
+> In order to add these, we need to move omap4_pmx_wkup to be a
+> child of omap4_padconf_wkup.
+> 
+> On omap4 there are separate modules for control module and
+> control module pads. For control module core, we have this
+> already configured except for the missing ti,hwmods and reg
+> entries.
+> 
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/omap/ctrl.txt          |  2 ++
+>  arch/arm/boot/dts/omap4.dtsi                       | 39 ++++++++++++++++------
+>  2 files changed, 31 insertions(+), 10 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
