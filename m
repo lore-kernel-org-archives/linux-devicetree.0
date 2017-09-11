@@ -1,132 +1,240 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv4 4/4] drm/tegra: add cec-notifier support
-Date: Mon, 11 Sep 2017 14:29:52 +0200
-Message-ID: <20170911122952.33980-5-hverkuil@xs4all.nl>
-References: <20170911122952.33980-1-hverkuil@xs4all.nl>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170911122952.33980-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v10 18/24] v4l: fwnode: Add a helper function to obtain
+ device / interger references
+Date: Mon, 11 Sep 2017 14:38:23 +0200
+Message-ID: <2e2eba02-39bc-11e1-d9f1-b83a6f580667@xs4all.nl>
+References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+ <20170911080008.21208-19-sakari.ailus@linux.intel.com>
+ <11c951eb-0315-0149-829e-ed73d748e783@xs4all.nl>
+ <20170911122820.fkbd2rnaddiestab@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170911122820.fkbd2rnaddiestab@valkosipuli.retiisi.org.uk>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+On 09/11/2017 02:28 PM, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> Thanks for the review.
+> 
+> On Mon, Sep 11, 2017 at 11:38:58AM +0200, Hans Verkuil wrote:
+>> Typo in subject: interger -> integer
+>>
+>> On 09/11/2017 10:00 AM, Sakari Ailus wrote:
+>>> v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
+>>> the device's own fwnode, 
+>>
+>> Sorry, you lost me here. Which device are we talking about?
+> 
+> The fwnode related a struct device, in other words what dev_fwnode(dev)
+> gives you. This is either struct device.fwnode or struct
+> device.of_node.fwnode, depending on which firmware interface was used to
+> create the device.
+> 
+> I'll add a note of this.
+> 
+>>
+>>> it will follow child fwnodes with the given
+>>> property -- value pair and return the resulting fwnode.
+>>
+>> property-value pair (easier readable that way).
+>>
+>> You only describe v4l2_fwnode_reference_parse_int_prop(), not
+>> v4l2_fwnode_reference_parse_int_props().
+> 
+> Yes, I think I changed the naming but forgot to update the commit. I'll do
+> that now.
+> 
+>>
+>>>
+>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>> ---
+>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 93 +++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 93 insertions(+)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> index 4821c4989119..56eee5bbd3b5 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> @@ -496,6 +496,99 @@ static int v4l2_fwnode_reference_parse(
+>>>  	return ret;
+>>>  }
+>>>  
+>>> +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
+>>> +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
+>>> +	const char **props, unsigned int nprops)
+>>
+>> Need comments describing what this does.
+> 
+> Yes. I'll also rename it (get -> read) for consistency with the async
+> changes.
 
-In order to support CEC the HDMI driver has to inform the CEC driver
-whenever the physical address changes. So when the EDID is read the
-CEC driver has to be informed and whenever the hotplug detect goes
-away.
+Which async changes? Since the fwnode_handle that's returned is refcounted
+I wonder if 'get' isn't the right name in this case.
 
-This is done through the cec-notifier framework.
+> 
+>>
+>>> +{
+>>> +	struct fwnode_reference_args fwnode_args;
+>>> +	unsigned int *args = fwnode_args.args;
+>>> +	struct fwnode_handle *child;
+>>> +	int ret;
+>>> +
+>>> +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
+>>> +						 index, &fwnode_args);
+>>> +	if (ret)
+>>> +		return ERR_PTR(ret == -EINVAL ? -ENOENT : ret);
+>>
+>> Why map EINVAL to ENOENT? Needs a comment, either here or in the function description.
+> 
+> fwnode_property_get_reference_args() returns currently a little bit
+> different error codes in ACPI / DT. This is worth documenting there and
+> fixing as well.
+> 
+>>
+>>> +
+>>> +	for (fwnode = fwnode_args.fwnode;
+>>> +	     nprops; nprops--, fwnode = child, props++, args++) {
+>>
+>> I think you cram too much in this for-loop: fwnode, nprops, fwnode, props, args...
+>> It's hard to parse.
+> 
+> Hmm. I'm not sure if that really helps; the function is just handling each
+> entry in the array and related array pointers are changed accordingly. The
+> fwnode = child assignment is there to move to the child node. I.e. what you
+> need for handling the loop itself.
+> 
+> I can change this though if you think it really makes a difference for
+> better.
 
-The link between the HDMI driver and the CEC driver is done through
-the hdmi_phandle in the tegra-cec node in the device tree.
+I think so, yes. I noticed you like complex for-loops :-)
 
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
----
- drivers/gpu/drm/tegra/Kconfig  | 1 +
- drivers/gpu/drm/tegra/drm.h    | 3 +++
- drivers/gpu/drm/tegra/hdmi.c   | 9 +++++++++
- drivers/gpu/drm/tegra/output.c | 6 ++++++
- 4 files changed, 19 insertions(+)
+> 
+>>
+>> I would make this a 'while (nprops)' and write out all the other assignments,
+>> increments and decrements.
+>>
+>>> +		u32 val;
+>>> +
+>>> +		fwnode_for_each_child_node(fwnode, child) {
+>>> +			if (fwnode_property_read_u32(child, *props, &val))
+>>> +				continue;
+>>> +
+>>> +			if (val == *args)
+>>> +				break;
+>>
+>> I'm lost. This really needs comments and perhaps even an DT or ACPI example
+>> so you can see what exactly it is we're doing here.
+> 
+> I'll add comments to the code. A good example will be ACPI documentation
+> for LEDs, see 17th patch in v9. That will go through the linux-pm tree so
+> it won't be available in the same tree for a while.
 
-diff --git a/drivers/gpu/drm/tegra/Kconfig b/drivers/gpu/drm/tegra/Kconfig
-index 2db29d67193d..c882918c2024 100644
---- a/drivers/gpu/drm/tegra/Kconfig
-+++ b/drivers/gpu/drm/tegra/Kconfig
-@@ -8,6 +8,7 @@ config DRM_TEGRA
- 	select DRM_PANEL
- 	select TEGRA_HOST1X
- 	select IOMMU_IOVA if IOMMU_SUPPORT
-+	select CEC_CORE if CEC_NOTIFIER
- 	help
- 	  Choose this option if you have an NVIDIA Tegra SoC.
- 
-diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
-index 6d6da01282f3..c0a18b60caf1 100644
---- a/drivers/gpu/drm/tegra/drm.h
-+++ b/drivers/gpu/drm/tegra/drm.h
-@@ -212,6 +212,8 @@ int tegra_dc_state_setup_clock(struct tegra_dc *dc,
- 			       struct clk *clk, unsigned long pclk,
- 			       unsigned int div);
- 
-+struct cec_notifier;
-+
- struct tegra_output {
- 	struct device_node *of_node;
- 	struct device *dev;
-@@ -219,6 +221,7 @@ struct tegra_output {
- 	struct drm_panel *panel;
- 	struct i2c_adapter *ddc;
- 	const struct edid *edid;
-+	struct cec_notifier *notifier;
- 	unsigned int hpd_irq;
- 	int hpd_gpio;
- 	enum of_gpio_flags hpd_gpio_flags;
-diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
-index cda0491ed6bf..fbf14e1efd0e 100644
---- a/drivers/gpu/drm/tegra/hdmi.c
-+++ b/drivers/gpu/drm/tegra/hdmi.c
-@@ -21,6 +21,8 @@
- 
- #include <sound/hda_verbs.h>
- 
-+#include <media/cec-notifier.h>
-+
- #include "hdmi.h"
- #include "drm.h"
- #include "dc.h"
-@@ -1720,6 +1722,10 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
- 		return PTR_ERR(hdmi->vdd);
- 	}
- 
-+	hdmi->output.notifier = cec_notifier_get(&pdev->dev);
-+	if (hdmi->output.notifier == NULL)
-+		return -ENOMEM;
-+
- 	hdmi->output.dev = &pdev->dev;
- 
- 	err = tegra_output_probe(&hdmi->output);
-@@ -1778,6 +1784,9 @@ static int tegra_hdmi_remove(struct platform_device *pdev)
- 
- 	tegra_output_remove(&hdmi->output);
- 
-+	if (hdmi->output.notifier)
-+		cec_notifier_put(hdmi->output.notifier);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index 595d1ec3e02e..57c052521a44 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -11,6 +11,8 @@
- #include <drm/drm_panel.h>
- #include "drm.h"
- 
-+#include <media/cec-notifier.h>
-+
- int tegra_output_connector_get_modes(struct drm_connector *connector)
- {
- 	struct tegra_output *output = connector_to_output(connector);
-@@ -33,6 +35,7 @@ int tegra_output_connector_get_modes(struct drm_connector *connector)
- 		edid = drm_get_edid(connector, output->ddc);
- 
- 	drm_mode_connector_update_edid_property(connector, edid);
-+	cec_notifier_set_phys_addr_from_edid(output->notifier, edid);
- 
- 	if (edid) {
- 		err = drm_add_edid_modes(connector, edid);
-@@ -68,6 +71,9 @@ tegra_output_connector_detect(struct drm_connector *connector, bool force)
- 			status = connector_status_connected;
- 	}
- 
-+	if (status != connector_status_connected)
-+		cec_notifier_phys_addr_invalidate(output->notifier);
-+
- 	return status;
- }
- 
--- 
-2.14.1
+Ideally an ACPI and an equivalent DT example would be nice to have, but I might
+be asking too much. I'm not that familiar with ACPI, so for me a DT example
+is easier.
+
+> 
+>>
+>>> +		}
+>>> +
+>>> +		fwnode_handle_put(fwnode);
+>>> +
+>>> +		if (!child) {
+>>> +			fwnode = ERR_PTR(-ENOENT);
+>>> +			break;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	return fwnode;
+>>> +}
+>>> +
+>>> +static int v4l2_fwnode_reference_parse_int_props(
+>>> +	struct device *dev, struct v4l2_async_notifier *notifier,
+>>> +	const char *prop, const char **props, unsigned int nprops)
+>>
+>> Needs comments describing what this does.
+> 
+> Will add.
+> 
+>>
+>>> +{
+>>> +	struct fwnode_handle *fwnode;
+>>> +	unsigned int index = 0;
+>>> +	int ret;
+>>> +
+>>> +	while (!IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
+>>> +				dev_fwnode(dev), prop, index, props,
+>>> +				nprops)))) {
+>>> +		fwnode_handle_put(fwnode);
+>>> +		index++;
+>>> +	}
+>>> +
+>>> +	if (PTR_ERR(fwnode) != -ENOENT)
+>>> +		return PTR_ERR(fwnode);
+>>
+>> Missing 'if (index == 0)'?
+> 
+> Yes, will add.
+> 
+>>
+>>> +
+>>> +	ret = v4l2_async_notifier_realloc(notifier,
+>>> +					  notifier->num_subdevs + index);
+>>> +	if (ret)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
+>>> +					 dev_fwnode(dev), prop, index, props,
+>>> +					 nprops))); ) {
+>>
+>> I'd add 'index++' in this for-loop. It's weird that it is missing.
+> 
+> Agreed, I'll move it there.
+> 
+>>
+>>> +		struct v4l2_async_subdev *asd;
+>>> +
+>>> +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
+>>> +			ret = -EINVAL;
+>>> +			goto error;
+>>> +		}
+>>> +
+>>> +		asd = kzalloc(sizeof(struct v4l2_async_subdev), GFP_KERNEL);
+>>> +		if (!asd) {
+>>> +			ret = -ENOMEM;
+>>> +			goto error;
+>>> +		}
+>>> +
+>>> +		notifier->subdevs[notifier->num_subdevs] = asd;
+>>> +		asd->match.fwnode.fwnode = fwnode;
+>>> +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+>>> +		notifier->num_subdevs++;
+>>> +
+>>> +		fwnode_handle_put(fwnode);
+>>> +
+>>> +		index++;
+>>> +	}
+>>> +
+>>> +	return PTR_ERR(fwnode) == -ENOENT ? 0 : PTR_ERR(fwnode);
+>>> +
+>>> +error:
+>>> +	fwnode_handle_put(fwnode);
+>>> +	return ret;
+>>> +}
+>>> +
+>>>  MODULE_LICENSE("GPL");
+>>>  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
+>>>  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+>>>
+> 
+
+Regards,
+
+	Hans
