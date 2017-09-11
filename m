@@ -1,226 +1,78 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v10 18/24] v4l: fwnode: Add a helper function to obtain
- device / interger references
-Date: Mon, 11 Sep 2017 15:28:20 +0300
-Message-ID: <20170911122820.fkbd2rnaddiestab@valkosipuli.retiisi.org.uk>
-References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
- <20170911080008.21208-19-sakari.ailus@linux.intel.com>
- <11c951eb-0315-0149-829e-ed73d748e783@xs4all.nl>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv4 0/4] tegra-cec: add Tegra HDMI CEC support
+Date: Mon, 11 Sep 2017 14:29:48 +0200
+Message-ID: <20170911122952.33980-1-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <11c951eb-0315-0149-829e-ed73d748e783@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-Thanks for the review.
-
-On Mon, Sep 11, 2017 at 11:38:58AM +0200, Hans Verkuil wrote:
-> Typo in subject: interger -> integer
-> 
-> On 09/11/2017 10:00 AM, Sakari Ailus wrote:
-> > v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
-> > the device's own fwnode, 
-> 
-> Sorry, you lost me here. Which device are we talking about?
-
-The fwnode related a struct device, in other words what dev_fwnode(dev)
-gives you. This is either struct device.fwnode or struct
-device.of_node.fwnode, depending on which firmware interface was used to
-create the device.
-
-I'll add a note of this.
-
-> 
-> > it will follow child fwnodes with the given
-> > property -- value pair and return the resulting fwnode.
-> 
-> property-value pair (easier readable that way).
-> 
-> You only describe v4l2_fwnode_reference_parse_int_prop(), not
-> v4l2_fwnode_reference_parse_int_props().
-
-Yes, I think I changed the naming but forgot to update the commit. I'll do
-that now.
-
-> 
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-fwnode.c | 93 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 93 insertions(+)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > index 4821c4989119..56eee5bbd3b5 100644
-> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > @@ -496,6 +496,99 @@ static int v4l2_fwnode_reference_parse(
-> >  	return ret;
-> >  }
-> >  
-> > +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
-> > +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
-> > +	const char **props, unsigned int nprops)
-> 
-> Need comments describing what this does.
-
-Yes. I'll also rename it (get -> read) for consistency with the async
-changes.
-
-> 
-> > +{
-> > +	struct fwnode_reference_args fwnode_args;
-> > +	unsigned int *args = fwnode_args.args;
-> > +	struct fwnode_handle *child;
-> > +	int ret;
-> > +
-> > +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
-> > +						 index, &fwnode_args);
-> > +	if (ret)
-> > +		return ERR_PTR(ret == -EINVAL ? -ENOENT : ret);
-> 
-> Why map EINVAL to ENOENT? Needs a comment, either here or in the function description.
-
-fwnode_property_get_reference_args() returns currently a little bit
-different error codes in ACPI / DT. This is worth documenting there and
-fixing as well.
-
-> 
-> > +
-> > +	for (fwnode = fwnode_args.fwnode;
-> > +	     nprops; nprops--, fwnode = child, props++, args++) {
-> 
-> I think you cram too much in this for-loop: fwnode, nprops, fwnode, props, args...
-> It's hard to parse.
-
-Hmm. I'm not sure if that really helps; the function is just handling each
-entry in the array and related array pointers are changed accordingly. The
-fwnode = child assignment is there to move to the child node. I.e. what you
-need for handling the loop itself.
-
-I can change this though if you think it really makes a difference for
-better.
-
-> 
-> I would make this a 'while (nprops)' and write out all the other assignments,
-> increments and decrements.
-> 
-> > +		u32 val;
-> > +
-> > +		fwnode_for_each_child_node(fwnode, child) {
-> > +			if (fwnode_property_read_u32(child, *props, &val))
-> > +				continue;
-> > +
-> > +			if (val == *args)
-> > +				break;
-> 
-> I'm lost. This really needs comments and perhaps even an DT or ACPI example
-> so you can see what exactly it is we're doing here.
-
-I'll add comments to the code. A good example will be ACPI documentation
-for LEDs, see 17th patch in v9. That will go through the linux-pm tree so
-it won't be available in the same tree for a while.
-
-> 
-> > +		}
-> > +
-> > +		fwnode_handle_put(fwnode);
-> > +
-> > +		if (!child) {
-> > +			fwnode = ERR_PTR(-ENOENT);
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	return fwnode;
-> > +}
-> > +
-> > +static int v4l2_fwnode_reference_parse_int_props(
-> > +	struct device *dev, struct v4l2_async_notifier *notifier,
-> > +	const char *prop, const char **props, unsigned int nprops)
-> 
-> Needs comments describing what this does.
-
-Will add.
-
-> 
-> > +{
-> > +	struct fwnode_handle *fwnode;
-> > +	unsigned int index = 0;
-> > +	int ret;
-> > +
-> > +	while (!IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
-> > +				dev_fwnode(dev), prop, index, props,
-> > +				nprops)))) {
-> > +		fwnode_handle_put(fwnode);
-> > +		index++;
-> > +	}
-> > +
-> > +	if (PTR_ERR(fwnode) != -ENOENT)
-> > +		return PTR_ERR(fwnode);
-> 
-> Missing 'if (index == 0)'?
-
-Yes, will add.
-
-> 
-> > +
-> > +	ret = v4l2_async_notifier_realloc(notifier,
-> > +					  notifier->num_subdevs + index);
-> > +	if (ret)
-> > +		return -ENOMEM;
-> > +
-> > +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
-> > +					 dev_fwnode(dev), prop, index, props,
-> > +					 nprops))); ) {
-> 
-> I'd add 'index++' in this for-loop. It's weird that it is missing.
-
-Agreed, I'll move it there.
-
-> 
-> > +		struct v4l2_async_subdev *asd;
-> > +
-> > +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-> > +			ret = -EINVAL;
-> > +			goto error;
-> > +		}
-> > +
-> > +		asd = kzalloc(sizeof(struct v4l2_async_subdev), GFP_KERNEL);
-> > +		if (!asd) {
-> > +			ret = -ENOMEM;
-> > +			goto error;
-> > +		}
-> > +
-> > +		notifier->subdevs[notifier->num_subdevs] = asd;
-> > +		asd->match.fwnode.fwnode = fwnode;
-> > +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> > +		notifier->num_subdevs++;
-> > +
-> > +		fwnode_handle_put(fwnode);
-> > +
-> > +		index++;
-> > +	}
-> > +
-> > +	return PTR_ERR(fwnode) == -ENOENT ? 0 : PTR_ERR(fwnode);
-> > +
-> > +error:
-> > +	fwnode_handle_put(fwnode);
-> > +	return ret;
-> > +}
-> > +
-> >  MODULE_LICENSE("GPL");
-> >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
-> >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
-> > 
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKVGhpcyBwYXRjaCBz
+ZXJpZXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgVGVncmEgQ0VDIGZ1bmN0aW9uYWxpdHkuCgpUaGlz
+IHY0IGhhcyBiZWVuIHJlYmFzZWQgdG8gdGhlIGxhdGVzdCA0LjE0IHByZS1yYzEgbWFpbmxpbmUu
+CgpQbGVhc2UgcmV2aWV3ISBPdGhlciB0aGFuIGZvciB0aGUgYmluZGluZ3MgdGhhdCBhcmUgbm93
+IEFja2VkIEkgaGF2ZSBub3QKcmVjZWl2ZWQgYW55IGZlZWRiYWNrLgoKVGhlIGZpcnN0IHBhdGNo
+IGRvY3VtZW50cyB0aGUgQ0VDIGJpbmRpbmdzLCB0aGUgc2Vjb25kIGFkZHMgc3VwcG9ydApmb3Ig
+dGhpcyB0byB0ZWdyYTEyNC5kdHNpIGFuZCBlbmFibGVzIGl0IGZvciB0aGUgSmV0c29uIFRLMS4K
+ClRoZSB0aGlyZCBwYXRjaCBhZGRzIHRoZSBDRUMgZHJpdmVyIGl0c2VsZiBhbmQgdGhlIGZpbmFs
+IHBhdGNoIGFkZHMKdGhlIGNlYyBub3RpZmllciBzdXBwb3J0IHRvIHRoZSBkcm0vdGVncmEgZHJp
+dmVyIGluIG9yZGVyIHRvIG5vdGlmeQp0aGUgQ0VDIGRyaXZlciB3aGVuZXZlciB0aGUgcGh5c2lj
+YWwgYWRkcmVzcyBjaGFuZ2VzLgoKSSBleHBlY3QgdGhhdCB0aGUgZHRzIGNoYW5nZXMgYXBwbHkg
+YXMgd2VsbCB0byB0aGUgVGVncmEgWDEvWDIgYW5kIHBvc3NpYmx5Cm90aGVyIFRlZ3JhIFNvQ3Ms
+IGJ1dCBJIGNhbiBvbmx5IHRlc3QgdGhpcyB3aXRoIG15IEpldHNvbiBUSzEgYm9hcmQuCgpUaGUg
+ZHQtYmluZGluZ3MgYW5kIHRoZSB0ZWdyYS1jZWMgZHJpdmVyIHdvdWxkIGdvIGluIHRocm91Z2gg
+dGhlIG1lZGlhCnN1YnN5c3RlbSwgdGhlIGRybS90ZWdyYSBwYXJ0IHRocm91Z2ggdGhlIGRybSBz
+dWJzeXN0ZW0gYW5kIHRoZSBkdHMKY2hhbmdlcyB0aHJvdWdoIChJIGd1ZXNzKSB0aGUgbGludXgt
+dGVncmEgZGV2ZWxvcGVycy4gTHVja2lseSB0aGV5IGFyZQphbGwgaW5kZXBlbmRlbnQgb2Ygb25l
+IGFub3RoZXIuCgpUbyB0ZXN0IHRoaXMgeW91IG5lZWQgdGhlIENFQyB1dGlsaXRpZXMgZnJvbSBn
+aXQ6Ly9saW51eHR2Lm9yZy92NGwtdXRpbHMuZ2l0LgoKVG8gYnVpbGQgdGhpczoKCmdpdCBjbG9u
+ZSBnaXQ6Ly9saW51eHR2Lm9yZy92NGwtdXRpbHMuZ2l0CmNkIHY0bC11dGlscwouL2Jvb3RzdHJh
+cC5zaDsgLi9jb25maWd1cmUKbWFrZQpzdWRvIG1ha2UgaW5zdGFsbCAjIG9wdGlvbmFsLCB5b3Ug
+cmVhbGx5IG9ubHkgbmVlZCB1dGlscy9jZWMqCgpUbyB0ZXN0OgoKY2VjLWN0bCAtLXBsYXliYWNr
+ICMgY29uZmlndXJlIGFzIHBsYXliYWNrIGRldmljZQpjZWMtY3RsIC1TICMgZGV0ZWN0IGFsbCBj
+b25uZWN0ZWQgQ0VDIGRldmljZXMKClNlZSBoZXJlIGZvciB0aGUgcHVibGljIENFQyBBUEk6Cgpo
+dHRwczovL2h2ZXJrdWlsLmhvbWUueHM0YWxsLm5sL3NwZWMvdWFwaS9jZWMvY2VjLWFwaS5odG1s
+CgpSZWdhcmRzLAoKCUhhbnMKCkNoYW5nZXMgc2luY2UgdjM6CgotIFVzZSB0aGUgbmV3IENFQ19D
+QVBfREVGQVVMVFMgZGVmaW5lCi0gVXNlIElTX0VSUihjZWMtPmFkYXApIGluc3RlYWQgb2YgSVNf
+RVJSX09SX05VTEwoY2VjLT5hZGFwKQogIChjZWNfYWxsb2NhdGVfYWRhcHRlciBuZXZlciByZXR1
+cm5zIGEgTlVMTCBwb2ludGVyKQotIERyb3AgdGhlIGRldmljZV9pbml0X3dha2V1cDogd2FrZXVw
+IGlzIG5vdCAoeWV0KSBzdXBwb3J0ZWQgYnkKICB0aGUgQ0VDIGZyYW1ld29yayBhbmQgSSBoYXZl
+IG5ldmVyIHRlc3RlZCBpdC4KCkhhbnMgVmVya3VpbCAoNCk6CiAgZHQtYmluZGluZ3M6IGRvY3Vt
+ZW50IHRoZSB0ZWdyYSBDRUMgYmluZGluZ3MKICBBUk06IHRlZ3JhOiBhZGQgQ0VDIHN1cHBvcnQg
+dG8gdGVncmExMjQuZHRzaQogIHRlZ3JhLWNlYzogYWRkIFRlZ3JhIEhETUkgQ0VDIGRyaXZlcgog
+IGRybS90ZWdyYTogYWRkIGNlYy1ub3RpZmllciBzdXBwb3J0CgogLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWVkaWEvdGVncmEtY2VjLnR4dCAgICAgICAgfCAgMjcgKysKIE1BSU5UQUlORVJTICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA4ICsKIGFyY2gvYXJtL2Jv
+b3QvZHRzL3RlZ3JhMTI0LWpldHNvbi10azEuZHRzICAgICAgICAgIHwgICA0ICsKIGFyY2gvYXJt
+L2Jvb3QvZHRzL3RlZ3JhMTI0LmR0c2kgICAgICAgICAgICAgICAgICAgIHwgIDEyICstCiBkcml2
+ZXJzL2dwdS9kcm0vdGVncmEvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBk
+cml2ZXJzL2dwdS9kcm0vdGVncmEvZHJtLmggICAgICAgICAgICAgICAgICAgICAgICB8ICAgMyAr
+CiBkcml2ZXJzL2dwdS9kcm0vdGVncmEvaGRtaS5jICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+OSArCiBkcml2ZXJzL2dwdS9kcm0vdGVncmEvb3V0cHV0LmMgICAgICAgICAgICAgICAgICAgICB8
+ICAgNiArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25maWcgICAgICAgICAgICAgICAgICAg
+ICB8ICAxMSArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL01ha2VmaWxlICAgICAgICAgICAgICAg
+ICAgICB8ICAgMiArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3RlZ3JhLWNlYy9NYWtlZmlsZSAg
+ICAgICAgICB8ICAgMSArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3RlZ3JhLWNlYy90ZWdyYV9j
+ZWMuYyAgICAgICB8IDUwMSArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvbWVkaWEvcGxh
+dGZvcm0vdGVncmEtY2VjL3RlZ3JhX2NlYy5oICAgICAgIHwgMTI3ICsrKysrKwogMTMgZmlsZXMg
+Y2hhbmdlZCwgNzExIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdGVncmEtY2VjLnR4
+dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdGVncmEtY2VjL01h
+a2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS90ZWdyYS1j
+ZWMvdGVncmFfY2VjLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL3BsYXRmb3Jt
+L3RlZ3JhLWNlYy90ZWdyYV9jZWMuaAoKLS0gCjIuMTQuMQoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
