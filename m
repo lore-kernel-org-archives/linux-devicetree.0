@@ -1,171 +1,75 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v10 18/24] v4l: fwnode: Add a helper function to obtain
- device / interger references
-Date: Mon, 11 Sep 2017 15:34:16 +0200
-Message-ID: <21d712c2-7608-7153-4421-2c12b90dcb7a@xs4all.nl>
-References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
- <20170911080008.21208-19-sakari.ailus@linux.intel.com>
- <11c951eb-0315-0149-829e-ed73d748e783@xs4all.nl>
- <20170911122820.fkbd2rnaddiestab@valkosipuli.retiisi.org.uk>
- <2e2eba02-39bc-11e1-d9f1-b83a6f580667@xs4all.nl>
- <20170911132710.mcgqn6tbiabzvpqq@valkosipuli.retiisi.org.uk>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v3 1/2] drm/bridge: add Silicon Image SiI9234 driver
+Date: Mon, 11 Sep 2017 15:39:54 +0200
+Message-ID: <626dfd33-a824-c480-16eb-bf677dcb3d26@samsung.com>
+References: <1504620099-20024-1-git-send-email-m.purski@samsung.com>
+ <CGME20170905140209eucas1p1ee010819751b86ad8a41e5847c115e01@eucas1p1.samsung.com>
+ <1504620099-20024-2-git-send-email-m.purski@samsung.com>
+ <20170908170529.po5v6wuus4llwdan@kozik-lap>
+ <a7c84f2c-855f-0e65-d794-d9a3331a6516@samsung.com>
+ <CAJKOXPcfOUGDYL0BEa2-XZkpnoOGb4QRvEyWFwbgRxjAXD0Rng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170911132710.mcgqn6tbiabzvpqq@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CAJKOXPcfOUGDYL0BEa2-XZkpnoOGb4QRvEyWFwbgRxjAXD0Rng@mail.gmail.com>
+Content-language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Maciej Purski <m.purski@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2017 03:27 PM, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Mon, Sep 11, 2017 at 02:38:23PM +0200, Hans Verkuil wrote:
->> On 09/11/2017 02:28 PM, Sakari Ailus wrote:
->>> Hi Hans,
->>>
->>> Thanks for the review.
->>>
->>> On Mon, Sep 11, 2017 at 11:38:58AM +0200, Hans Verkuil wrote:
->>>> Typo in subject: interger -> integer
->>>>
->>>> On 09/11/2017 10:00 AM, Sakari Ailus wrote:
->>>>> v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
->>>>> the device's own fwnode, 
->>>>
->>>> Sorry, you lost me here. Which device are we talking about?
->>>
->>> The fwnode related a struct device, in other words what dev_fwnode(dev)
->>> gives you. This is either struct device.fwnode or struct
->>> device.of_node.fwnode, depending on which firmware interface was used to
->>> create the device.
->>>
->>> I'll add a note of this.
->>>
->>>>
->>>>> it will follow child fwnodes with the given
->>>>> property -- value pair and return the resulting fwnode.
->>>>
->>>> property-value pair (easier readable that way).
->>>>
->>>> You only describe v4l2_fwnode_reference_parse_int_prop(), not
->>>> v4l2_fwnode_reference_parse_int_props().
->>>
->>> Yes, I think I changed the naming but forgot to update the commit. I'll do
->>> that now.
->>>
->>>>
->>>>>
->>>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>>>> ---
->>>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 93 +++++++++++++++++++++++++++++++++++
->>>>>  1 file changed, 93 insertions(+)
->>>>>
->>>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
->>>>> index 4821c4989119..56eee5bbd3b5 100644
->>>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
->>>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
->>>>> @@ -496,6 +496,99 @@ static int v4l2_fwnode_reference_parse(
->>>>>  	return ret;
->>>>>  }
->>>>>  
->>>>> +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
->>>>> +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
->>>>> +	const char **props, unsigned int nprops)
->>>>
->>>> Need comments describing what this does.
->>>
->>> Yes. I'll also rename it (get -> read) for consistency with the async
->>> changes.
->>
->> Which async changes? Since the fwnode_handle that's returned is refcounted
->> I wonder if 'get' isn't the right name in this case.
-> 
-> Right. True. I'll leave that as-is then.
-> 
->>
->>>
->>>>
->>>>> +{
->>>>> +	struct fwnode_reference_args fwnode_args;
->>>>> +	unsigned int *args = fwnode_args.args;
->>>>> +	struct fwnode_handle *child;
->>>>> +	int ret;
->>>>> +
->>>>> +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
->>>>> +						 index, &fwnode_args);
->>>>> +	if (ret)
->>>>> +		return ERR_PTR(ret == -EINVAL ? -ENOENT : ret);
->>>>
->>>> Why map EINVAL to ENOENT? Needs a comment, either here or in the function description.
->>>
->>> fwnode_property_get_reference_args() returns currently a little bit
->>> different error codes in ACPI / DT. This is worth documenting there and
->>> fixing as well.
->>>
->>>>
->>>>> +
->>>>> +	for (fwnode = fwnode_args.fwnode;
->>>>> +	     nprops; nprops--, fwnode = child, props++, args++) {
->>>>
->>>> I think you cram too much in this for-loop: fwnode, nprops, fwnode, props, args...
->>>> It's hard to parse.
->>>
->>> Hmm. I'm not sure if that really helps; the function is just handling each
->>> entry in the array and related array pointers are changed accordingly. The
->>> fwnode = child assignment is there to move to the child node. I.e. what you
->>> need for handling the loop itself.
->>>
->>> I can change this though if you think it really makes a difference for
->>> better.
->>
->> I think so, yes. I noticed you like complex for-loops :-)
-> 
-> I don't really see a difference. The loop increment will just move at the
-> end of the block inside the loop.
-> 
->>
->>>
->>>>
->>>> I would make this a 'while (nprops)' and write out all the other assignments,
->>>> increments and decrements.
->>>>
->>>>> +		u32 val;
->>>>> +
->>>>> +		fwnode_for_each_child_node(fwnode, child) {
->>>>> +			if (fwnode_property_read_u32(child, *props, &val))
->>>>> +				continue;
->>>>> +
->>>>> +			if (val == *args)
->>>>> +				break;
->>>>
->>>> I'm lost. This really needs comments and perhaps even an DT or ACPI example
->>>> so you can see what exactly it is we're doing here.
->>>
->>> I'll add comments to the code. A good example will be ACPI documentation
->>> for LEDs, see 17th patch in v9. That will go through the linux-pm tree so
->>> it won't be available in the same tree for a while.
->>
->> Ideally an ACPI and an equivalent DT example would be nice to have, but I might
->> be asking too much. I'm not that familiar with ACPI, so for me a DT example
->> is easier.
-> 
-> This won't be useful on DT although you could technically use it. In DT you
-> can directly refer to any node but on ACPI you can just refer to devices,
-> hence this.
-
-So this function will effectively only be used with acpi? That should be
-documented. I think that explains some of my confusion since I was trying
-to map this code to a device tree, without much success.
-
-> Would you be happy with the leds.txt example? I think it's a good example
-> as it's directly related to this.
-
-Yes, that will work.
-
-Regards,
-
-	Hans
+SGkgS3J6eXN6dG9mLAoKT24gMjAxNy0wOS0xMSAxNToxOCwgS3J6eXN6dG9mIEtvemxvd3NraSB3
+cm90ZToKPiBPbiBNb24sIFNlcCAxMSwgMjAxNyBhdCAxOjQyIFBNLCBNYWNpZWogUHVyc2tpIDxt
+LnB1cnNraUBzYW1zdW5nLmNvbT4gd3JvdGU6Cj4+Pj4gKyAgICAgICBjdHgtPmNsaWVudFtJMkNf
+TUhMXSA9IGNsaWVudDsKPj4+PiArCj4+Pj4gKyAgICAgICBjdHgtPmNsaWVudFtJMkNfVFBJXSA9
+IGkyY19uZXdfZHVtbXkoYWRhcHRlciwgSTJDX1RQSV9BRERSKTsKPj4+PiArICAgICAgIGlmICgh
+Y3R4LT5jbGllbnRbSTJDX1RQSV0pIHsKPj4+PiArICAgICAgICAgICAgICAgZGV2X2VycihjdHgt
+PmRldiwgImZhaWxlZCB0byBjcmVhdGUgVFBJIGNsaWVudFxuIik7Cj4+Pj4gKyAgICAgICAgICAg
+ICAgIHJldHVybiAtRU5PREVWOwo+Pj4+ICsgICAgICAgfQo+Pj4+ICsKPj4+PiArICAgICAgIGN0
+eC0+Y2xpZW50W0kyQ19IRE1JXSA9IGkyY19uZXdfZHVtbXkoYWRhcHRlciwgSTJDX0hETUlfQURE
+Uik7Cj4+Pj4gKyAgICAgICBpZiAoIWN0eC0+Y2xpZW50W0kyQ19IRE1JXSkgewo+Pj4+ICsgICAg
+ICAgICAgICAgICBkZXZfZXJyKGN0eC0+ZGV2LCAiZmFpbGVkIHRvIGNyZWF0ZSBIRE1JIFJYIGNs
+aWVudFxuIik7Cj4+Pj4gKyAgICAgICAgICAgICAgIGdvdG8gZmFpbF90cGk7Cj4+Pj4gKyAgICAg
+ICB9Cj4+Pj4gKwo+Pj4+ICsgICAgICAgY3R4LT5jbGllbnRbSTJDX0NCVVNdID0gaTJjX25ld19k
+dW1teShhZGFwdGVyLCBJMkNfQ0JVU19BRERSKTsKPj4+PiArICAgICAgIGlmICghY3R4LT5jbGll
+bnRbSTJDX0NCVVNdKSB7Cj4+Pj4gKyAgICAgICAgICAgICAgIGRldl9lcnIoY3R4LT5kZXYsICJm
+YWlsZWQgdG8gY3JlYXRlIENCVVMgY2xpZW50XG4iKTsKPj4+PiArICAgICAgICAgICAgICAgZ290
+byBmYWlsX2hkbWk7Cj4+Pj4gKyAgICAgICB9Cj4+PiBZb3UgYXJlIHVzaW5nIGkyY19zbWJ1c18q
+IGNhbGxzLiBXaHkgbm90IGNvbnZlcnRpbmcgdG8gcmVnbWFwX2kyYz8gSXQgaXMKPj4+IHByZWZl
+cnJlZCBpbnRlcmZhY2UuCj4+Cj4+IEFjY29yZGluZyB0byBteSBzZWFyY2gsIHRoZXJlIGFyZSBv
+bmx5IDUgZHJpdmVycywgd2hpY2ggdXNlIHJlZ21hcF9pMmMgYW5kCj4+IG5vbmUgb2YgdGhlbSBp
+biBkcm0uIElmIHlvdSB0aGluayB0aGF0IGl0IGlzIHJlYWxseSBuZWVkZWQsIGNvdWxkIHlvdSBw
+bGVhc2UKPj4gZXhwbGFpbgo+PiB3aHk/Cj4gVGhlcmUgYXJlIHNsaWdodGx5IG1vcmUgdGhhbiBm
+aXZlIGRyaXZlcnM6Cj4KPiAkIGdpdCBncmVwIHJlZ21hcF9pbml0X2kyYyB8IHdjIC1sCj4gMzUy
+Cj4KPiAuLi4gYW5kIGV2ZW4gbW9yZSB1c2luZyByZWdtYXAgaW50ZXJmYWNlIGluIGdlbmVyaWMg
+KG5vdCBpMmMpLgo+Cj4gSSB0aGluayB0aGlzIGlzIHJlYWxseSB3YW50ZWQgYmVjYXVzZSBmb3Ig
+ZnJlZSB5b3UgZ2V0Ogo+IDEuIGxvY2tpbmcsCj4gMi4gcHJvcGVyIGxvY2tpbmcgLSB3aXRoIGxv
+Y2tkZXAgYW5kIG5lc3RlZCBtdXRleGVzIDopLAo+IDMuIGNhY2hpbmcgb2YgYWNjZXNzZXMsCj4g
+NC4gaGFuZGxpbmcgb2YgZW5kaWFubmVzcywKPiA1LiBvcHRpb25hbGx5IGEgdHJpdmlhbCB3YXkg
+b2YgaGFuZGxpbmcgaW50ZXJydXB0cyAocmVnbWFwX2lycV9jaGlwKSwKPgo+IEFsc28gdGhpcyBi
+cmluZ3MgdW5pZmllZCBpbnRlcmZhY2UgZm9yIG1vc3Qgb2YgdGhlIGRyaXZlcnMgcmVnYXJkbGVz
+cwo+IG9mIHByb3RvY29sIHVzZWQgYmVuZWF0aCAoSTJDLCBTUEkgYW5kIGV2ZW4gTU1JTyBidXQg
+Zm9yIHNpbXBsZSBjYXNlcwo+IE1NSU8gbWlnaHQgbm90IGhhdmUgbXVjaCBzZW5zZSkuIFRoaXMg
+bGFzdCBhcmd1bWVudCBhY3R1YWxseSBicmluZ3MKPiB0aGUgbW9zdCBiZW5lZml0IGZvciBtZSBi
+ZWNhdXNlIGl0IGFic3RyYWN0cyBkcml2ZXIgZnJvbSB0cml2aWFsIEkyQwo+IGltcGxlbWVudGF0
+aW9uIGFuZCBpdCBjb3VsZCBhbGxvdyBldmVuIGVhc3kgY29kZS1yZXVzZSBmb3IgZS5nLiBTUEkK
+PiB2ZXJzaW9uLgoKUmVnbWFwIG1ha2Ugc2Vuc2UgZm9yIG11bHRpLWZ1bmN0aW9uIGNoaXBzLCB3
+aGljaCByZXF1aXJlIG1vcmUgdGhhbiBvbmUKY2xpZW50IGRyaXZlciAoc28gcHJvcGVyIGxvY2tp
+bmcgaXMgaW1wb3J0YW50KS4gSXQgYWxzbyBtYWtlcyBzZW5zZSBpZgp0aGUgY2hpcCBpcyBwcm9k
+dWNlZCBpbiBtb3JlIHRoYW4gb25lIGZsYXZvciAobGlrZSBpMmMsIHNwaSwgTU1JTywgZXRjKS4K
+Ck5vbmUgb2YgdGhlIGFib3ZlIHRha2VzIHBsYWNlIGluIHRoaXMgY2FzZS4uLiBTbyBpbiBjYXNl
+IG9mIHRoaXMgZHJpdmVyCnVzaW5nIHJlZ21hcCBpcyBJTUhPIGFuIG92ZXItZW5naW5lZXJpbmcu
+CgogPiAuLi4KCkJlc3QgcmVnYXJkcwotLSAKTWFyZWsgU3p5cHJvd3NraSwgUGhEClNhbXN1bmcg
+UiZEIEluc3RpdHV0ZSBQb2xhbmQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
