@@ -1,36 +1,39 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 2/4] dt-bindings: timer: Add Actions Semi S700
-Date: Mon, 11 Sep 2017 04:22:39 +0200
-Message-ID: <20170911022241.11603-3-afaerber@suse.de>
-References: <20170911022241.11603-1-afaerber@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170911022241.11603-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thomas Liau <thomas.liau@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, =?UTF-8?q?=E6=A2=85=E5=88=A9?= <harrymei@actions-semi.com>, support@cubietech.com, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Wig Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] dt-bindings: add nutsboard vendor prefix
+Date: Mon, 11 Sep 2017 11:18:14 +0800
+Message-ID: <1505099894-17187-1-git-send-email-onlywig@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sz.lin-D4fb9hXD9d4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define a compatible string for the Actions Semi S700 SoC timer.
+From: YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+NutsBoard (http://nutsboard.org/) is an organization and focus
+on ARM based embedded boards with open source software.
+
+Signed-off-by: YuanCheng Cheng <onlywig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/timer/actions,owl-timer.txt | 1 +
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/actions,owl-timer.txt b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
-index e3c28da80cb2..977054f87563 100644
---- a/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
-@@ -2,6 +2,7 @@ Actions Semi Owl Timer
- 
- Required properties:
- - compatible      :  "actions,s500-timer" for S500
-+                     "actions,s700-timer" for S700
-                      "actions,s900-timer" for S900
- - reg             :  Offset and length of the register set for the device.
- - interrupts      :  Should contain the interrupts.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 401ed98..3a16be8 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -234,6 +234,7 @@ nintendo	Nintendo
+ nlt	NLT Technologies, Ltd.
+ nokia	Nokia
+ nordic	Nordic Semiconductor
++nutsboard	NutsBoard
+ nuvoton	Nuvoton Technology Corporation
+ nvd	New Vision Display
+ nvidia	NVIDIA
 -- 
-2.13.5
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
