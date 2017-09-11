@@ -1,39 +1,69 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: add R8A77970 CPG core clock definitions
-Date: Mon, 11 Sep 2017 16:03:16 +0200
-Message-ID: <CAMuHMdVgir5ZriM+tcL6cHPCGcDg_oGtGaygdzGa3zLcO1aFvw@mail.gmail.com>
-References: <20170908213758.670316956@cogentembedded.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v10 18/24] v4l: fwnode: Add a helper function to obtain
+ device / interger references
+Date: Mon, 11 Sep 2017 17:12:01 +0300
+Message-ID: <20170911141200.rxn36p7u77b2rzzs@valkosipuli.retiisi.org.uk>
+References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+ <20170911080008.21208-19-sakari.ailus@linux.intel.com>
+ <11c951eb-0315-0149-829e-ed73d748e783@xs4all.nl>
+ <20170911122820.fkbd2rnaddiestab@valkosipuli.retiisi.org.uk>
+ <2e2eba02-39bc-11e1-d9f1-b83a6f580667@xs4all.nl>
+ <20170911132710.mcgqn6tbiabzvpqq@valkosipuli.retiisi.org.uk>
+ <21d712c2-7608-7153-4421-2c12b90dcb7a@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170908213758.670316956@cogentembedded.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <21d712c2-7608-7153-4421-2c12b90dcb7a@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 8, 2017 at 11:34 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add macros usable by the device tree sources to reference the R8A77970
-> CPG core clocks by index. The data come from the table 8.2c of R-Car
-> Series, 3rd Generation User's Manual: Hardware (Rev. 0.55, Jun. 30, 2017).
->
-> Based on the original (and large) patch by Daisuke Matsushita
-> <daisuke.matsushita.ns@hitachi.com>.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Mon, Sep 11, 2017 at 03:34:16PM +0200, Hans Verkuil wrote:
+> >>>>> +		u32 val;
+> >>>>> +
+> >>>>> +		fwnode_for_each_child_node(fwnode, child) {
+> >>>>> +			if (fwnode_property_read_u32(child, *props, &val))
+> >>>>> +				continue;
+> >>>>> +
+> >>>>> +			if (val == *args)
+> >>>>> +				break;
+> >>>>
+> >>>> I'm lost. This really needs comments and perhaps even an DT or ACPI example
+> >>>> so you can see what exactly it is we're doing here.
+> >>>
+> >>> I'll add comments to the code. A good example will be ACPI documentation
+> >>> for LEDs, see 17th patch in v9. That will go through the linux-pm tree so
+> >>> it won't be available in the same tree for a while.
+> >>
+> >> Ideally an ACPI and an equivalent DT example would be nice to have, but I might
+> >> be asking too much. I'm not that familiar with ACPI, so for me a DT example
+> >> is easier.
+> > 
+> > This won't be useful on DT although you could technically use it. In DT you
+> > can directly refer to any node but on ACPI you can just refer to devices,
+> > hence this.
+> 
+> So this function will effectively only be used with acpi? That should be
+> documented. I think that explains some of my confusion since I was trying
+> to map this code to a device tree, without much success.
 
-Thank you, will queue in clk-renesas-for-v4.15.
+I'll add to the documentation of the function:
 
-Gr{oetje,eeting}s,
+ * While it is technically possible to use this function on DT, it is only
+ * meaningful on ACPI. On Device tree you can refer to any node in the tree but
+ * on ACPI the references are limited to devices.
 
-                        Geert
+> 
+> > Would you be happy with the leds.txt example? I think it's a good example
+> > as it's directly related to this.
+> 
+> Yes, that will work.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I'll add a separate patch that I'll post later on. The ACPI documentation
+should get merged first.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
