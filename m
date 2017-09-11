@@ -1,39 +1,81 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] dt-bindings: display: Add Document for Rockchip
- Soc LVDS
-Date: Mon, 11 Sep 2017 15:13:56 -0500
-Message-ID: <20170911201356.2j65cvq6axqaa6f6@rob-hp-laptop>
-References: <1504351723-135876-1-git-send-email-hjc@rock-chips.com>
- <1504351729-135932-1-git-send-email-hjc@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 6/6] gpio: uniphier: add UniPhier GPIO controller
+ driver
+Date: Mon, 11 Sep 2017 15:15:15 -0500
+Message-ID: <20170911201515.d4vki3yhrywpmdvc@rob-hp-laptop>
+References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+ <1504784522-26841-7-git-send-email-yamada.masahiro@socionext.com>
+ <CAL_Jsq+Da1=myQGEpA_0f+dEU0Rk6RB3BJHVCzq0M0MyJ3UDoQ@mail.gmail.com>
+ <CAK7LNARwusK2i2mp7LE4AW28oYs81tWxgXG7pgBa-hu=2ZTW7A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1504351729-135932-1-git-send-email-hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAK7LNARwusK2i2mp7LE4AW28oYs81tWxgXG7pgBa-hu=2ZTW7A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, David Daney <david.daney@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 02, 2017 at 07:28:47PM +0800, Sandy Huang wrote:
-> This patch add Document for Rockchip Soc RK3288 LVDS,
-> This based on the patches from Mark yao and Heiko Stuebner.
+On Sat, Sep 09, 2017 at 12:14:45AM +0900, Masahiro Yamada wrote:
+> Hi Rob,
 > 
-> Signed-off-by: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Signed-off-by: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> Change the Signed-off order
 > 
->  .../bindings/display/rockchip/rockchip-lvds.txt    | 99 ++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
+> 2017-09-08 4:41 GMT+09:00 Rob Herring <robh+dt@kernel.org>:
+> > On Thu, Sep 7, 2017 at 6:42 AM, Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >> This GPIO controller device is used on UniPhier SoCs.
+> >>
+> >> It also serves as an interrupt controller, but interrupt signals are
+> >> just delivered to the parent irqchip without any latching or OR'ing.
+> >> This is implemented by using hierarchy IRQ domain.
+> >>
+> >> Implementation note:
+> >> Unfortunately, the IRQ mapping from this controller to the parent is
+> >> random. (48, 49, ..., 63, 154, 155, ...)
+> >> If "interrupts" property is used, IRQ resources may be statically
+> >> allocated when platform devices are populated from DT.  This can be
+> >> a problem for the hierarchy IRQ domain because IRQ allocation must
+> >> happen from the outer-most domain up to the root domain in order to
+> >> build up the stacked IRQ.  (https://lkml.org/lkml/2017/7/6/758)
+> >> Solutions to work around it could be to hard-code parent hwirqs or
+> >> to invent a driver-specific DT property.
+> >>
+> >> Here, the new API irq_domain_push_irq() was merged by v4.14-rc1.
+> >> It allows to add irq_data to the existing hierarchy.  It will help
+> >> to make this driver work whether the parent has already initialized
+> >> the hierarchy or not.
+> >>
+> >> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >> ---
+> >>
+> >> Changes in v4:
+> >>   - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
+> >>   - Reimplement irqchip part by using irq_domain_push_irq()
+> >>
+> >> Changes in v3:
+> >>   - Add .irq_set_affinity() hook
+> >>   - Use irq_domain_create_hierarchy() instead of legacy
+> >>     irq_domain_add_hierarchy()
+> >>
+> >> Changes in v2:
+> >>   - Remove +32 offset for parent interrupts to follow the GIC
+> >>     binding convention
+> >>   - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
+> >>   - Allocate gpio_chip statically because just one instance is
+> >>     supported
+> >>   - Fix suspend and resume hooks
+> >>
+> >>  .../devicetree/bindings/gpio/gpio-uniphier.txt     |  43 ++
+> >
+> > What happened to my ack? One line here more that before, but I'm not
+> > going to diff your patches for you.
+> 
+> I changed the binding for this version.
+> It includes a new one you have not acked yet.
+> 
+> Maybe I was too worried about it.
 
-I see this is already applied, but in the future please add acks when 
-posting new versions.
+Probably so, but I still don't know what you changed.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
