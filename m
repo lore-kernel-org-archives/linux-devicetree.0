@@ -1,266 +1,50 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH 4/4] arm64: dts: actions: Add S700 and CubieBoard7
-Date: Mon, 11 Sep 2017 04:22:41 +0200
-Message-ID: <20170911022241.11603-5-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 1/4] dt-bindings: arm: actions: Add S700 and CubieBoard7
+Date: Mon, 11 Sep 2017 04:22:38 +0200
+Message-ID: <20170911022241.11603-2-afaerber@suse.de>
 References: <20170911022241.11603-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170911022241.11603-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E6=A2=85=E5=88=A9?= <harrymei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, support-om/0PrzuAKC1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170911022241.11603-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Thomas Liau <thomas.liau@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, =?UTF-8?q?=E6=A2=85=E5=88=A9?= <harrymei@actions-semi.com>, support@cubietech.com, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Device Trees for S700 SoC and Cubietech CubieBoard7.
+Document the Actions Semi S700 SoC and the Cubietech CubieBoard7.
 
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/arm64/boot/dts/actions/Makefile             |   2 +
- arch/arm64/boot/dts/actions/s700-cubieboard7.dts |  47 +++++++
- arch/arm64/boot/dts/actions/s700.dtsi            | 164 +++++++++++++++++++++++
- 3 files changed, 213 insertions(+)
- create mode 100644 arch/arm64/boot/dts/actions/s700-cubieboard7.dts
- create mode 100644 arch/arm64/boot/dts/actions/s700.dtsi
+ Documentation/devicetree/bindings/arm/actions.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/actions/Makefile b/arch/arm64/boot/dts/actions/Makefile
-index 62922d688ce3..cfd7f2679feb 100644
---- a/arch/arm64/boot/dts/actions/Makefile
-+++ b/arch/arm64/boot/dts/actions/Makefile
-@@ -1,3 +1,5 @@
-+dtb-$(CONFIG_ARCH_ACTIONS) += s700-cubieboard7.dtb
-+
- dtb-$(CONFIG_ARCH_ACTIONS) += s900-bubblegum-96.dtb
+diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
+index ced764a8549e..544a8855fad5 100644
+--- a/Documentation/devicetree/bindings/arm/actions.txt
++++ b/Documentation/devicetree/bindings/arm/actions.txt
+@@ -25,6 +25,21 @@ Root node property compatible must contain, depending on board:
+  - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
  
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-new file mode 100644
-index 000000000000..e562f04c2490
---- /dev/null
-+++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-@@ -0,0 +1,47 @@
-+/*
-+ * Copyright (c) 2017 Andreas Färber
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
+ 
++S700 SoC
++========
 +
-+/dts-v1/;
++Required root node properties:
 +
-+#include "s700.dtsi"
++- compatible :  must contain "actions,s700"
 +
-+/ {
-+	compatible = "cubietech,cubieboard7", "actions,s700";
-+	model = "CubieBoard7";
 +
-+	aliases {
-+		serial3 = &uart3;
-+	};
++Boards:
 +
-+	chosen {
-+		stdout-path = "serial3:115200n8";
-+	};
++Root node property compatible must contain, depending on board:
 +
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
++ - Cubietech CubieBoard7: "cubietech,cubieboard7"
 +
-+	memory@1,e0000000 {
-+		device_type = "memory";
-+		reg = <0x1 0xe0000000 0x0 0x0>;
-+	};
 +
-+	uart3_clk: uart3-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <921600>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&timer {
-+	clocks = <&hosc>;
-+};
-+
-+&uart3 {
-+	status = "okay";
-+	clocks = <&uart3_clk>;
-+};
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-new file mode 100644
-index 000000000000..b54df405aaeb
---- /dev/null
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -0,0 +1,164 @@
-+/*
-+ * Copyright (c) 2017 Andreas Färber
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "actions,s700";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		secmon@1f000000 {
-+			reg = <0x0 0x1f000000 0x0 0x1000000>;
-+			no-map;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+		             <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+		             <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+		             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	hosc: hosc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gic: interrupt-controller@e00f1000 {
-+			compatible = "arm,gic-400";
-+			reg = <0x0 0xe00f1000 0x0 0x1000>,
-+			      <0x0 0xe00f2000 0x0 0x2000>,
-+			      <0x0 0xe00f4000 0x0 0x2000>,
-+			      <0x0 0xe00f6000 0x0 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+
-+		uart0: serial@e0120000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0120000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@e0122000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0122000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@e0124000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0124000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@e0126000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0126000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@e0128000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0128000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart5: serial@e012a000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe012a000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart6: serial@e012c000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe012c000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		timer: timer@e024c000 {
-+			compatible = "actions,s700-timer";
-+			reg = <0x0 0xe024c000 0x0 0x4000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "timer1";
-+		};
-+	};
-+};
+ S900 SoC
+ ========
+ 
 -- 
 2.13.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
