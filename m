@@ -1,30 +1,57 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 2/3] dt-bindings: PCI: Add definition of pcie wake irq
-Date: Mon, 11 Sep 2017 14:24:21 -0500
-Message-ID: <CAL_Jsq+n7B3d0BibVxj5yCTZuxJ_QYp9b0CGwc9envu9G8nSJA@mail.gmail.com>
-References: <20170911151029.25185-1-jeffy.chen@rock-chips.com> <20170911151029.25185-3-jeffy.chen@rock-chips.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 2/2] hwmon: add dt binding for max1619
+Date: Mon, 11 Sep 2017 14:32:26 -0500
+Message-ID: <CANk1AXS6dqswgQkERSWse8x7kO9CoQ5NT6K6Fs2_+wu4h6Mu9g@mail.gmail.com>
+References: <20170911191649.3344-1-atull@kernel.org> <20170911191649.3344-2-atull@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170911151029.25185-3-jeffy.chen@rock-chips.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170911191649.3344-2-atull@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Oleksij Rempel <bug-track@fisher-privat.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 10:10 AM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
-> Add an optional interrupt for PCIE_WAKE pin.
->
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> ---
->
-> Changes in v5:
-> Move to pci.txt
->
-> Changes in v3: None
-> Changes in v2: None
->
->  Documentation/devicetree/bindings/pci/pci.txt | 2 ++
->  1 file changed, 2 insertions(+)
+On Mon, Sep 11, 2017 at 2:16 PM, Alan Tull <atull@kernel.org> wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+Add Oleksij Rempel <bug-track@fisher-privat.net>
+
+> Add new device tree binding for max1619.
+>
+> Signed-off-by: Alan Tull <atull@kernel.org>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  drivers/hwmon/max1619.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/hwmon/max1619.c b/drivers/hwmon/max1619.c
+> index a182789..76d9669 100644
+> --- a/drivers/hwmon/max1619.c
+> +++ b/drivers/hwmon/max1619.c
+> @@ -303,10 +303,20 @@ static const struct i2c_device_id max1619_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, max1619_id);
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id max1619_of_match[] = {
+> +       { .compatible = "maxim,max1619", },
+> +       {},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, max1619_of_match);
+> +#endif
+> +
+>  static struct i2c_driver max1619_driver = {
+>         .class          = I2C_CLASS_HWMON,
+>         .driver = {
+>                 .name   = "max1619",
+> +               .of_match_table = of_match_ptr(max1619_of_match),
+>         },
+>         .probe          = max1619_probe,
+>         .id_table       = max1619_id,
+> --
+> 2.7.4
+>
