@@ -1,52 +1,65 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v9 18/24] as3645a: Switch to fwnode property API
-Date: Mon, 11 Sep 2017 23:10:49 +0200
-Message-ID: <eefe9707-0486-8440-1074-abb7c317dbe3@gmail.com>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
- <20170908131822.31020-14-sakari.ailus@linux.intel.com>
- <f6c79aff-dcc7-ee7d-e224-1f9bc6af1fee@gmail.com>
- <20170909213658.6hqbsn66q4xc2sex@valkosipuli.retiisi.org.uk>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 2/2] hwmon: add dt binding for max1619
+Date: Mon, 11 Sep 2017 16:12:26 -0500
+Message-ID: <CANk1AXR1vFDpkjGR2TXZJts=2fS=RsM7-4N-Xmw_EwGphh3rMg@mail.gmail.com>
+References: <20170911191649.3344-1-atull@kernel.org> <20170911191649.3344-2-atull@kernel.org>
+ <20170911195857.GB2580@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170909213658.6hqbsn66q4xc2sex@valkosipuli.retiisi.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170911195857.GB2580@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On 09/09/2017 11:36 PM, Sakari Ailus wrote:
-> Hi Jacek,
-> 
-> On Sat, Sep 09, 2017 at 09:06:41PM +0200, Jacek Anaszewski wrote:
->> Hi Sakari,
+On Mon, Sep 11, 2017 at 2:58 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Mon, Sep 11, 2017 at 02:16:49PM -0500, Alan Tull wrote:
+>> Add new device tree binding for max1619.
 >>
->> I've come across this patch only by a chance. I believe that merging
->> leds-as3645a.c patches via media tree is not going to be a persistent
->> pattern. At least we haven't agreed on that, and in any case I should
->> have a possibility to give my ack for this patch.
-> 
-> Correct. The reason the previous patches went through linux-media was
-> because these patches dependend on other patches only in linux-media at the
-> time. This is no longer the case (the three as3645a patches I'd like to get
-> in as fixes are another matter but let's discuss that separately).
-> 
+>> Signed-off-by: Alan Tull <atull@kernel.org>
+>
+> Technically that should already work, without explicit binding,
+> or did the i2c core change lately ?
+
+OK I see that now.  Yep, this change is not needed.  Thanks!
+
+>
+> Guenter
+>
+>> Cc: Jean Delvare <jdelvare@suse.com>
+>> Cc: Guenter Roeck <linux@roeck-us.net>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> ---
+>>  drivers/hwmon/max1619.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
 >>
->> Would you mind also adding linux-leds list on cc when touching areas
->> related to LED/flash devices?
-> 
-> I added this patch to this version of the set and missed cc'ing it to
-> linux-leds. I think I'll send it there separately once the 17th patch (ACPI
-> support) has been reviewed. The two are loosely related to the rest of the
-> patches in the set but there's no hard dependency.
-
-Right, they are loosely related, but cross-posting anything having "LED"
-in its contents to linux-leds list would be understandable if not
-desirable :-) Just to keep LED people in sync.
-
--- 
-Best regards,
-Jacek Anaszewski
+>> diff --git a/drivers/hwmon/max1619.c b/drivers/hwmon/max1619.c
+>> index a182789..76d9669 100644
+>> --- a/drivers/hwmon/max1619.c
+>> +++ b/drivers/hwmon/max1619.c
+>> @@ -303,10 +303,20 @@ static const struct i2c_device_id max1619_id[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(i2c, max1619_id);
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id max1619_of_match[] = {
+>> +     { .compatible = "maxim,max1619", },
+>> +     {},
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, max1619_of_match);
+>> +#endif
+>> +
+>>  static struct i2c_driver max1619_driver = {
+>>       .class          = I2C_CLASS_HWMON,
+>>       .driver = {
+>>               .name   = "max1619",
+>> +             .of_match_table = of_match_ptr(max1619_of_match),
+>>       },
+>>       .probe          = max1619_probe,
+>>       .id_table       = max1619_id,
+>> --
+>> 2.7.4
+>>
