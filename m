@@ -1,87 +1,72 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [RESEND PATCH v3 0/5] Add support for the STM32F7 I2C
-Date: Mon, 11 Sep 2017 14:55:19 +0200
-Message-ID: <CA+M3ks4y0u=ozKiq=xHFvcKJcBjDZDQysU6Mac+i1nEGTW6xOg@mail.gmail.com>
-References: <1504251255-20469-1-git-send-email-pierre-yves.mordret@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504251255-20469-1-git-send-email-pierre-yves.mordret@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/5] ARM: dts: rcar-gen2: Add reset control properties
+Date: Mon, 11 Sep 2017 15:09:54 +0200
+Message-ID: <1505135399-24840-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-09-01 9:34 GMT+02:00 Pierre-Yves MORDRET <pierre-yves.mordret@st.com>:
-> This patchset adds support for the I2C controller embedded in STM32F7xx S=
-oC.
-> It enables I2C transfer in interrupt mode with Standard-mode, Fast-mode a=
-nd
-> Fast-mode+ bus speed.
+	Hi Simon, Magnus,
 
-Hi Wolfram,
+This patch series describes the reset topology on all R-Car Gen2 Socs, like
+was done before for R-Car Gen3 and RZ/G1.
 
-I notice that those patches aren't in pull request for 4.14 and not in
-i2c-next branch.
-What can we do to progress in this topic? Does issues/remarks still
-need to be fixed in this code ?
+Resets usually match the corresponding module clocks.  Exceptions are:
+  - The audio module has resets for the Serial Sound Interfaces only,
+  - The display module has only a single reset for all DU channels, but
+    adding reset properties for the display is postponed upon request from
+    Laurent.
 
-Thanks for your advices,
-Benjamin
+Note that this patch series contains hardware description only.
+Actual reset policy is to be defined and implemented separately.
+Also, this is an optional feature, to be enabled explicitly using
+CONFIG_RESET_CONTROLLER=y.  When enabled, an on-SoC device can be reset
+easily using device_reset(), or by using the reset_control_*() API when
+more fine-grained control is desired.
 
-> ---
->  Version history:
->     v3:
->         * Move stm32f7_i2c_match above stm32f7_i2c_driver
->         * of_device_get_match_data instead of of_match_device
->         * Improve I2C Speed DT gathering
->         * dev_err into dev_dbg for Arbitration loss
->         * Remove useless space aligned
->
->     v2:
->         * Implement an I2C timings computation algorithm instead of stati=
-c
->           values(bindings). Algorithm uses generic I2C SCL Falling/Rising
->           bindings and System clock to compute its timings.
->         * I2C Device Tree Update
-> ---
-> Pierre-Yves MORDRET (5):
->   dt-bindings: i2c-stm32: Document the STM32F7 I2C bindings
->   i2c: i2c-stm32f4: use generic definition of speed enum
->   i2c: i2c-stm32f7: add driver
->   ARM: dts: stm32: Add I2C1 support for STM32F746 SoC
->   ARM: dts: stm32: Add I2C1 support for STM32F746 eval board
->
->  .../devicetree/bindings/i2c/i2c-stm32.txt          |  29 +-
->  arch/arm/boot/dts/stm32746g-eval.dts               |   8 +
->  arch/arm/boot/dts/stm32f746.dtsi                   |  22 +
->  drivers/i2c/busses/Kconfig                         |  10 +
->  drivers/i2c/busses/Makefile                        |   1 +
->  drivers/i2c/busses/i2c-stm32.h                     |  20 +
->  drivers/i2c/busses/i2c-stm32f4.c                   |  18 +-
->  drivers/i2c/busses/i2c-stm32f7.c                   | 974 +++++++++++++++=
-++++++
->  8 files changed, 1068 insertions(+), 14 deletions(-)
->  create mode 100644 drivers/i2c/busses/i2c-stm32.h
->  create mode 100644 drivers/i2c/busses/i2c-stm32f7.c
->
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Possible use cases are (not exhaustive):
+  - Reset a device before use, to make sure it's in a predefined state, and
+    doesn't depend on earlier configuration by e.g. the boot loader,
+  - Reset a device after detecting an anomaly,
+  - Reset a device to verify suspend/resume is handled correctly by the
+    driver in case the device would be part of a power domain on a
+    different/future SoC.
 
+This has been tested on r8a7790/lager, r8a7791/koelsch, r8a7792/blanche,
+and r8a7794/alt (r8a7793/gose was offline).
 
+Thanks for applying!
 
---=20
-Benjamin Gaignard
+Geert Uytterhoeven (5):
+  ARM: dts: r8a7790: Add reset control properties
+  ARM: dts: r8a7791: Add reset control properties
+  ARM: dts: r8a7792: Add reset control properties
+  ARM: dts: r8a7793: Add reset control properties
+  ARM: dts: r8a7794: Add reset control properties
 
-Graphic Study Group
+ arch/arm/boot/dts/r8a7790.dtsi | 76 +++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7791.dtsi | 82 ++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7792.dtsi | 45 +++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7793.dtsi | 62 ++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7794.dtsi | 64 +++++++++++++++++++++++++++++++++
+ 5 files changed, 329 insertions(+)
 
-Linaro.org =E2=94=82 Open source software for ARM SoCs
+-- 
+2.7.4
 
-Follow Linaro: Facebook | Twitter | Blog
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
