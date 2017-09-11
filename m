@@ -1,41 +1,41 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 14/17] ARM: dts: Add missing gpu node and binding for
- omap4
-Date: Mon, 11 Sep 2017 16:50:16 -0500
-Message-ID: <20170911215016.far2rpihdd423ybt@rob-hp-laptop>
-References: <20170830151953.30856-1-tony@atomide.com>
- <20170830151953.30856-15-tony@atomide.com>
+From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 10/13] openrisc: add simple_smp dts and defconfig for simulators
+Date: Tue, 12 Sep 2017 07:55:18 +0900
+Message-ID: <CAAfxs76zOKM3vs=9_vwpNnceua-THV=h6Y4xAtg-kU=wpRq46g@mail.gmail.com>
+References: <cover.1504129273.git.shorne@gmail.com> <37f0d48de4690694c18be3d32483dafee0730859.1504129273.git.shorne@gmail.com>
+ <20170911223712.GA31546@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170830151953.30856-15-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170911223712.GA31546@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 30, 2017 at 08:19:50AM -0700, Tony Lindgren wrote:
-> On omap4 we're missing the PowerVR SGX GPU node with it's related
-> "ti,hwmods" property that the SoC interconnect code needs.
-> 
-> Note that this will only show up as a bug with "doesn't have
-> mpu register target base" boot errors when the legacy platform
-> data is removed.
-> 
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/gpu/ti-powervr-sgx.txt     | 39 ++++++++++++++++++++++
+On Tue, Sep 12, 2017 at 7:37 AM, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> wrote:
+> On Thu 2017-08-31 07:03:11, Stafford Horne wrote:
+>> From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+>>
+[...]
+>> +++ b/arch/openrisc/boot/dts/simple_smp.dts
+>> @@ -0,0 +1,58 @@
+>> +/dts-v1/;
+>> +/ {
+>> +     compatible = "opencores,or1ksim";
+>
+> You may want to add some comment on top, explaining what this
+> is... and perhaps link to some page documenting how to set up
+> qemu/FPGAs?
 
-While the compatible strings should be TI specific, the doc shouldn't 
-be. 
+Sure, I can create an entry in Documentation/devicetree/binding
+documenting this since its been there for a while but was never properly
+documented.
 
->  arch/arm/boot/dts/omap4.dtsi                       |  7 ++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/ti-powervr-sgx.txt
+But, just to be clear, what do you mean by page?  Are you suggesting
+linking to a web page?  Or do you mean something in Documentation/...?
+
+-Stafford
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
