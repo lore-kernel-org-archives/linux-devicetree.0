@@ -1,91 +1,59 @@
-From: thor.thayer@linux.intel.com
-Subject: [[RESEND]PATCHv6 1/2] dt-bindings: i2c: Add Altera I2C Controller
-Date: Mon, 11 Sep 2017 16:17:19 -0500
-Message-ID: <1505164640-26413-1-git-send-email-thor.thayer@linux.intel.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add compatible for max1619
+Date: Mon, 11 Sep 2017 16:18:22 -0500
+Message-ID: <CANk1AXTnk5HDHHTOrT9xM9oUPf7rVpKir8QQKSVMaWOZwNASHQ@mail.gmail.com>
+References: <20170911191649.3344-1-atull@kernel.org> <CANk1AXRDaGAcU944+_NO6tAUzUgaxgV85CqjK9tMZgNbDwNG+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, thor.thayer@linux.intel.com, andy.shevchenko@gmail.com
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, mchehab@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANk1AXRDaGAcU944+_NO6tAUzUgaxgV85CqjK9tMZgNbDwNG+g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Alan Tull <atull@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Oleksij Rempel <bug-track@fisher-privat.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On Mon, Sep 11, 2017 at 2:33 PM, Alan Tull <atull@kernel.org> wrote:
 
-Add the documentation to support the Altera synthesizable
-logic I2C Controller in FPGA.
+Forget this - Guenter has pointed out that this patch is not needed,
+as the i2c layer handles this without needing the compatible added.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v2  Change the subject to identify dt-bindings
-    Add synthesizable logic to description.
-    Change compatible string to "altr,softip-i2c"
-    Make description of clock phandle singular since 1 clock.
-    Remove altr, from fifo-size
-    Specify fifo-size is in bytes.
-v3  Add version to compatible string "altr,softip-i2c-v1.0"
-    Add for use in FPGA in description.
-v4  No Change - Add Acked-by
-v5-6  No Change
----
- .../devicetree/bindings/i2c/i2c-altera.txt         | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
+Alan
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-altera.txt b/Documentation/devicetree/bindings/i2c/i2c-altera.txt
-new file mode 100644
-index 000000000000..767664f448ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-altera.txt
-@@ -0,0 +1,39 @@
-+* Altera I2C Controller
-+* This is Altera's synthesizable logic block I2C Controller for use
-+* in Altera's FPGAs.
-+
-+Required properties :
-+ - compatible : should be "altr,softip-i2c-v1.0"
-+ - reg        : Offset and length of the register set for the device
-+ - interrupts : <IRQ> where IRQ is the interrupt number.
-+ - clocks     : phandle to input clock.
-+ - #address-cells = <1>;
-+ - #size-cells = <0>;
-+
-+Recommended properties :
-+ - clock-frequency : desired I2C bus clock frequency in Hz.
-+
-+Optional properties :
-+ - fifo-size : Size of the RX and TX FIFOs in bytes.
-+ - Child nodes conforming to i2c bus binding
-+
-+Example :
-+
-+	i2c@100080000 {
-+		compatible = "altr,softip-i2c-v1.0";
-+		reg = <0x00000001 0x00080000 0x00000040>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 43 4>;
-+		clocks = <&clk_0>;
-+		clock-frequency = <100000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		fifo-size = <4>;
-+
-+		eeprom@51 {
-+			compatible = "atmel,24c32";
-+			reg = <0x51>;
-+			pagesize = <32>;
-+		};
-+	};
-+
--- 
-2.7.4
+> On Mon, Sep 11, 2017 at 2:16 PM, Alan Tull <atull@kernel.org> wrote:
+>
+> Add Oleksij Rempel
+>
+>> Add new device tree bindings document for max1619 device
+>> including a new compatible string.
+>>
+>> Signed-off-by: Alan Tull <atull@kernel.org>
+>> Cc: Jean Delvare <jdelvare@suse.com>
+>> Cc: Guenter Roeck <linux@roeck-us.net>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> ---
+>>  Documentation/devicetree/bindings/hwmon/max1619.txt | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/hwmon/max1619.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/max1619.txt b/Documentation/devicetree/bindings/hwmon/max1619.txt
+>> new file mode 100644
+>> index 0000000..c70dbbe
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/hwmon/max1619.txt
+>> @@ -0,0 +1,12 @@
+>> +Bindings for MAX1619 Temperature Sensor
+>> +
+>> +Required properties:
+>> +- compatible : "maxim,max1619"
+>> +- reg        : I2C address, one of 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b, 0x4c, or
+>> +               0x4d, 0x4e
+>> +
+>> +Example:
+>> +       temp@4c {
+>> +               compatible = "maxim,max1619";
+>> +               reg = <0x4c>;
+>> +       };
+>> --
+>> 2.7.4
+>>
