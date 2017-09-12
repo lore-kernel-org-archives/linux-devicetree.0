@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v12 15/26] v4l: async: Allow binding notifiers to sub-devices
-Date: Tue, 12 Sep 2017 16:41:49 +0300
-Message-ID: <20170912134200.19556-16-sakari.ailus@linux.intel.com>
+Subject: [PATCH v12 06/26] v4l: fwnode: Support generic parsing of graph endpoints, per port
+Date: Tue, 12 Sep 2017 16:41:40 +0300
+Message-ID: <20170912134200.19556-7-sakari.ailus@linux.intel.com>
 References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
@@ -10,362 +10,179 @@ To: linux-media@vger.kernel.org
 Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Registering a notifier has required the knowledge of struct v4l2_device
-for the reason that sub-devices generally are registered to the
-v4l2_device (as well as the media device, also available through
-v4l2_device).
-
-This information is not available for sub-device drivers at probe time.
-
-What this patch does is that it allows registering notifiers without
-having v4l2_device around. Instead the sub-device pointer is stored in the
-notifier. Once the sub-device of the driver that registered the notifier
-is registered, the notifier will gain the knowledge of the v4l2_device,
-and the binding of async sub-devices from the sub-device driver's notifier
-may proceed.
-
-The root notifier's complete callback is only called when all sub-device
-notifiers are completed.
+This is just like like v4l2_async_notifier_parse_fwnode_endpoints but it
+only parses endpoints on a single port. The behaviour is useful on devices
+that have both sinks and sources, in other words only some of these should
+be parsed.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/v4l2-core/v4l2-async.c | 219 ++++++++++++++++++++++++++++++-----
- include/media/v4l2-async.h           |  16 ++-
- 2 files changed, 204 insertions(+), 31 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 59 ++++++++++++++++++++++++++++++++---
+ include/media/v4l2-fwnode.h           | 59 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 113 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 4525b03d59c1..5082b01d2b96 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -53,6 +53,10 @@ static int v4l2_async_notifier_call_complete(struct v4l2_async_notifier *n)
- 	return n->ops->complete(n);
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index d978f2d714ca..44ee35f6aad5 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -398,9 +398,9 @@ static int v4l2_async_notifier_fwnode_parse_endpoint(
+ 	return ret == -ENOTCONN ? 0 : ret;
  }
  
-+static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
-+				   struct v4l2_subdev *sd,
-+				   struct v4l2_async_subdev *asd);
-+
- static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
- {
- #if IS_ENABLED(CONFIG_I2C)
-@@ -124,14 +128,128 @@ static struct v4l2_async_subdev *v4l2_async_find_match(
- 	return NULL;
- }
- 
-+/* Find the sub-device notifier registered by a sub-device driver. */
-+static struct v4l2_async_notifier *v4l2_async_find_subdev_notifier(
-+	struct v4l2_subdev *sd)
-+{
-+	struct v4l2_async_notifier *n;
-+
-+	list_for_each_entry(n, &notifier_list, list)
-+		if (n->sd == sd)
-+			return n;
-+
-+	return NULL;
-+}
-+
-+/* Return true if all sub-device notifiers are complete, false otherwise. */
-+static bool v4l2_async_subdev_notifiers_complete(
-+	struct v4l2_async_notifier *notifier)
-+{
-+	struct v4l2_subdev *sd;
-+
-+	if (!list_empty(&notifier->waiting))
-+		return false;
-+
-+	list_for_each_entry(sd, &notifier->done, async_list) {
-+		struct v4l2_async_notifier *subdev_notifier =
-+			v4l2_async_find_subdev_notifier(sd);
-+
-+		if (!subdev_notifier)
-+			continue;
-+
-+		if (!v4l2_async_subdev_notifiers_complete(subdev_notifier))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+/* Get v4l2_device related to the notifier if one can be found. */
-+static struct v4l2_device *v4l2_async_notifier_find_v4l2_dev(
-+	struct v4l2_async_notifier *notifier)
-+{
-+	while (notifier->parent)
-+		notifier = notifier->parent;
-+
-+	return notifier->v4l2_dev;
-+}
-+
-+/* Test all async sub-devices in a notifier for a match. */
-+static int v4l2_async_notifier_try_all_subdevs(
-+	struct v4l2_async_notifier *notifier)
-+{
-+	struct v4l2_subdev *sd;
-+
-+	if (!v4l2_async_notifier_find_v4l2_dev(notifier))
-+		return 0;
-+
-+again:
-+	list_for_each_entry(sd, &subdev_list, async_list) {
-+		struct v4l2_async_subdev *asd;
-+		int ret;
-+
-+		asd = v4l2_async_find_match(notifier, sd);
-+		if (!asd)
-+			continue;
-+
-+		ret = v4l2_async_match_notify(notifier, sd, asd);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * v4l2_async_match_notify() may lead to registering a
-+		 * new notifier and thus changing the async subdevs
-+		 * list. In order to proceed safely from here, restart
-+		 * parsing the list from the beginning.
-+		 */
-+		goto again;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Try completing a notifier. */
-+static int v4l2_async_notifier_try_complete(
-+	struct v4l2_async_notifier *notifier)
-+{
-+	do {
-+		int ret;
-+
-+		/* Any local async sub-devices left? */
-+		if (!list_empty(&notifier->waiting))
-+			return 0;
-+
-+		/*
-+		 * Any sub-device notifiers waiting for async subdevs
-+		 * to be bound?
-+		 */
-+		if (!v4l2_async_subdev_notifiers_complete(notifier))
-+			return 0;
-+
-+		/* Proceed completing the notifier */
-+		ret = v4l2_async_notifier_call_complete(notifier);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * Obtain notifier's parent. If there is one, repeat
-+		 * the process, otherwise we're done here.
-+		 */
-+	} while ((notifier = notifier->parent));
-+
-+	return 0;
-+}
-+
- static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
- 				   struct v4l2_subdev *sd,
- 				   struct v4l2_async_subdev *asd)
- {
-+	struct v4l2_async_notifier *subdev_notifier;
- 	int ret;
- 
--	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
--	if (ret < 0)
-+	ret = v4l2_device_register_subdev(
-+		v4l2_async_notifier_find_v4l2_dev(notifier), sd);
-+	if (ret)
- 		return ret;
- 
- 	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
-@@ -148,10 +266,20 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
- 	/* Move from the global subdevice list to notifier's done */
- 	list_move(&sd->async_list, &notifier->done);
- 
--	if (list_empty(&notifier->waiting))
--		return v4l2_async_notifier_call_complete(notifier);
-+	/*
-+	 * See if the sub-device has a notifier. If it does, proceed
-+	 * with checking for its async sub-devices.
-+	 */
-+	subdev_notifier = v4l2_async_find_subdev_notifier(sd);
-+	if (subdev_notifier && !subdev_notifier->parent) {
-+		subdev_notifier->parent = notifier;
-+		ret = v4l2_async_notifier_try_all_subdevs(subdev_notifier);
-+		if (ret)
-+			return ret;
-+	}
- 
--	return 0;
-+	/* Try completing the notifier and its parent(s). */
-+	return v4l2_async_notifier_try_complete(notifier);
- }
- 
- static void v4l2_async_cleanup(struct v4l2_subdev *sd)
-@@ -163,17 +291,15 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
- 	sd->dev = NULL;
- }
- 
--int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
--				 struct v4l2_async_notifier *notifier)
-+static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
- {
--	struct v4l2_subdev *sd, *tmp;
- 	struct v4l2_async_subdev *asd;
-+	int ret;
- 	int i;
- 
--	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
-+	if (notifier->num_subdevs > V4L2_MAX_SUBDEVS)
+-int v4l2_async_notifier_parse_fwnode_endpoints(
++static int __v4l2_async_notifier_parse_fwnode_endpoints(
+ 	struct device *dev, struct v4l2_async_notifier *notifier,
+-	size_t asd_struct_size,
++	size_t asd_struct_size, unsigned int port, bool has_port,
+ 	int (*parse_endpoint)(struct device *dev,
+ 			    struct v4l2_fwnode_endpoint *vep,
+ 			    struct v4l2_async_subdev *asd))
+@@ -413,10 +413,25 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
  		return -EINVAL;
  
--	notifier->v4l2_dev = v4l2_dev;
- 	INIT_LIST_HEAD(&notifier->waiting);
- 	INIT_LIST_HEAD(&notifier->done);
- 
-@@ -200,18 +326,10 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
- 
- 	mutex_lock(&list_lock);
- 
--	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
--		int ret;
--
--		asd = v4l2_async_find_match(notifier, sd);
--		if (!asd)
--			continue;
--
--		ret = v4l2_async_match_notify(notifier, sd, asd);
--		if (ret < 0) {
--			mutex_unlock(&list_lock);
--			return ret;
--		}
-+	ret = v4l2_async_notifier_try_all_subdevs(notifier);
-+	if (ret) {
-+		mutex_unlock(&list_lock);
-+		return ret;
- 	}
- 
- 	/* Keep also completed notifiers on the list */
-@@ -221,29 +339,70 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
- 
- 	return 0;
- }
+ 	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
+-				     dev_fwnode(dev), fwnode)); )
+-		if (fwnode_device_is_available(
++				     dev_fwnode(dev), fwnode)); ) {
++		if (!fwnode_device_is_available(
+ 			    fwnode_graph_get_port_parent(fwnode)))
+-			max_subdevs++;
++			continue;
 +
-+int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-+				 struct v4l2_async_notifier *notifier)
-+{
-+	if (WARN_ON(!v4l2_dev || notifier->sd))
-+		return -EINVAL;
++		if (has_port) {
++			struct fwnode_endpoint ep;
 +
-+	notifier->v4l2_dev = v4l2_dev;
++			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
++			if (ret) {
++				fwnode_handle_put(fwnode);
++				return ret;
++			}
 +
-+	return __v4l2_async_notifier_register(notifier);
-+}
- EXPORT_SYMBOL(v4l2_async_notifier_register);
- 
--void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
-+int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
-+					struct v4l2_async_notifier *notifier)
- {
--	struct v4l2_subdev *sd, *tmp;
-+	if (WARN_ON(!sd || notifier->v4l2_dev))
-+		return -EINVAL;
- 
--	if (!notifier->v4l2_dev)
--		return;
-+	notifier->sd = sd;
- 
--	mutex_lock(&list_lock);
-+	return __v4l2_async_notifier_register(notifier);
-+}
-+EXPORT_SYMBOL(v4l2_async_subdev_notifier_register);
- 
--	list_del(&notifier->list);
-+/* Unbind all sub-devices in the notifier tree. */
-+static void v4l2_async_notifier_unbind_all_subdevs(
-+	struct v4l2_async_notifier *notifier)
-+{
-+	struct v4l2_subdev *sd, *tmp;
- 
- 	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
-+		struct v4l2_async_notifier *subdev_notifier =
-+			v4l2_async_find_subdev_notifier(sd);
-+
-+		if (subdev_notifier)
-+			v4l2_async_notifier_unbind_all_subdevs(subdev_notifier);
-+
- 		v4l2_async_cleanup(sd);
- 
- 		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
--	}
- 
--	mutex_unlock(&list_lock);
-+		list_del(&sd->async_list);
-+		list_add(&sd->async_list, &subdev_list);
++			if (ep.port != port)
++				continue;
++		}
++		max_subdevs++;
 +	}
  
-+	notifier->parent = NULL;
-+	notifier->sd = NULL;
- 	notifier->v4l2_dev = NULL;
+ 	/* No subdevs to add? Return here. */
+ 	if (max_subdevs == notifier->max_subdevs)
+@@ -437,6 +452,17 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
+ 			break;
+ 		}
+ 
++		if (has_port) {
++			struct fwnode_endpoint ep;
++
++			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
++			if (ret)
++				break;
++
++			if (ep.port != port)
++				continue;
++		}
++
+ 		ret = v4l2_async_notifier_fwnode_parse_endpoint(
+ 			dev, notifier, fwnode, asd_struct_size, parse_endpoint);
+ 		if (ret < 0)
+@@ -447,8 +473,31 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
+ 
+ 	return ret;
  }
 +
-+void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
++int v4l2_async_notifier_parse_fwnode_endpoints(
++	struct device *dev, struct v4l2_async_notifier *notifier,
++	size_t asd_struct_size,
++	int (*parse_endpoint)(struct device *dev,
++			    struct v4l2_fwnode_endpoint *vep,
++			    struct v4l2_async_subdev *asd))
 +{
-+	if (!notifier->v4l2_dev && !notifier->sd)
-+		return;
-+
-+	mutex_lock(&list_lock);
-+
-+	v4l2_async_notifier_unbind_all_subdevs(notifier);
-+
-+	list_del(&notifier->list);
-+
-+	mutex_unlock(&list_lock);
++	return __v4l2_async_notifier_parse_fwnode_endpoints(
++		dev, notifier, asd_struct_size, 0, false, parse_endpoint);
 +}
- EXPORT_SYMBOL(v4l2_async_notifier_unregister);
+ EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
  
- void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier)
-diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-index 3bc8a7c0d83f..a13803a6371d 100644
---- a/include/media/v4l2-async.h
-+++ b/include/media/v4l2-async.h
-@@ -102,7 +102,9 @@ struct v4l2_async_notifier_operations {
-  * @num_subdevs: number of subdevices used in the subdevs array
-  * @max_subdevs: number of subdevices allocated in the subdevs array
-  * @subdevs:	array of pointers to subdevice descriptors
-- * @v4l2_dev:	pointer to struct v4l2_device
-+ * @v4l2_dev:	v4l2_device of the root notifier, NULL otherwise
-+ * @sd:		sub-device that registered the notifier, NULL otherwise
-+ * @parent:	parent notifier
-  * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
-  * @done:	list of struct v4l2_subdev, already probed
-  * @list:	member in a global list of notifiers
-@@ -113,6 +115,8 @@ struct v4l2_async_notifier {
- 	unsigned int max_subdevs;
- 	struct v4l2_async_subdev **subdevs;
- 	struct v4l2_device *v4l2_dev;
-+	struct v4l2_subdev *sd;
-+	struct v4l2_async_notifier *parent;
- 	struct list_head waiting;
- 	struct list_head done;
- 	struct list_head list;
-@@ -128,6 +132,16 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
- 				 struct v4l2_async_notifier *notifier);
- 
- /**
-+ * v4l2_async_subdev_notifier_register - registers a subdevice asynchronous
-+ *					 notifier for a sub-device
-+ *
-+ * @sd: pointer to &struct v4l2_subdev
-+ * @notifier: pointer to &struct v4l2_async_notifier
-+ */
-+int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
-+					struct v4l2_async_notifier *notifier);
++int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
++	struct device *dev, struct v4l2_async_notifier *notifier,
++	size_t asd_struct_size, unsigned int port,
++	int (*parse_endpoint)(struct device *dev,
++			    struct v4l2_fwnode_endpoint *vep,
++			    struct v4l2_async_subdev *asd))
++{
++	return __v4l2_async_notifier_parse_fwnode_endpoints(
++		dev, notifier, asd_struct_size, port, true, parse_endpoint);
++}
++EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
 +
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
+ MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index 31fb77e470fa..b2eed4f33e6a 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -257,4 +257,63 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
+ 			      struct v4l2_fwnode_endpoint *vep,
+ 			      struct v4l2_async_subdev *asd));
+ 
 +/**
-  * v4l2_async_notifier_unregister - unregisters a subdevice asynchronous notifier
-  *
-  * @notifier: pointer to &struct v4l2_async_notifier
++ * v4l2_async_notifier_parse_fwnode_endpoints_by_port - Parse V4L2 fwnode
++ *							endpoints of a port in a
++ *							device node
++ * @dev: the device the endpoints of which are to be parsed
++ * @notifier: notifier for @dev
++ * @asd_struct_size: size of the driver's async sub-device struct, including
++ *		     sizeof(struct v4l2_async_subdev). The &struct
++ *		     v4l2_async_subdev shall be the first member of
++ *		     the driver's async sub-device struct, i.e. both
++ *		     begin at the same memory address.
++ * @port: port number where endpoints are to be parsed
++ * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
++ *		    endpoint. Optional.
++ *		    Return: %0 on success
++ *			    %-ENOTCONN if the endpoint is to be skipped but this
++ *				       should not be considered as an error
++ *			    %-EINVAL if the endpoint configuration is invalid
++ *
++ * This function is just like @v4l2_async_notifier_parse_fwnode_endpoints with
++ * the exception that it only parses endpoints in a given port.
++ *
++ * Parse the fwnode endpoints of the @dev device on a given @port and populate
++ * the async sub-devices array of the notifier. The @parse_endpoint callback
++ * function is called for each endpoint with the corresponding async sub-device
++ * pointer to let the caller initialize the driver-specific part of the async
++ * sub-device structure.
++ *
++ * The notifier memory shall be zeroed before this function is called on the
++ * notifier.
++ *
++ * This function may not be called on a registered notifier and may be called on
++ * a notifier only once, per port.
++ *
++ * Do not change the notifier's subdevs array, take references to the subdevs
++ * array itself or change the notifier's num_subdevs field. This is because this
++ * function allocates and reallocates the subdevs array based on parsing
++ * endpoints.
++ *
++ * The @struct v4l2_fwnode_endpoint passed to the callback function
++ * @parse_endpoint is released once the function is finished. If there is a need
++ * to retain that configuration, the user needs to allocate memory for it.
++ *
++ * Any notifier populated using this function must be released with a call to
++ * v4l2_async_notifier_release() after it has been unregistered and the async
++ * sub-devices are no longer in use, even if the function returned an error.
++ *
++ * Return: %0 on success, including when no async sub-devices are found
++ *	   %-ENOMEM if memory allocation failed
++ *	   %-EINVAL if graph or endpoint parsing failed
++ *	   Other error codes as returned by @parse_endpoint
++ */
++int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
++	struct device *dev, struct v4l2_async_notifier *notifier,
++	size_t asd_struct_size, unsigned int port,
++	int (*parse_endpoint)(struct device *dev,
++			      struct v4l2_fwnode_endpoint *vep,
++			      struct v4l2_async_subdev *asd));
++
+ #endif /* _V4L2_FWNODE_H */
 -- 
 2.11.0
