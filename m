@@ -1,39 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
-Date: Tue, 12 Sep 2017 09:17:27 -0500
-Message-ID: <20170912141727.im7axya5ouxxtrl4@rob-hp-laptop>
-References: <1503392618-26853-1-git-send-email-anthony.kim@hideep.com>
- <1505114862-32489-1-git-send-email-anthony.kim@hideep.com>
+Subject: Re: [PATCH v3 5/6] remoteproc: qcom: Add support for q6v5-wcss pil
+Date: Tue, 12 Sep 2017 09:21:37 -0500
+Message-ID: <20170912142137.nzx2s7xcyde5d2js@rob-hp-laptop>
+References: <1504154734-12175-1-git-send-email-sricharan@codeaurora.org>
+ <1504154734-12175-6-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1505114862-32489-1-git-send-email-anthony.kim@hideep.com>
+In-Reply-To: <1504154734-12175-6-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anthony Kim <anthony.kim@hideep.com>
-Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, ohad@wizery.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 04:27:42PM +0900, Anthony Kim wrote:
-> The HiDeep touchscreen device is a capacitive multi-touch controller
-> mainly for multi-touch supported devices use. It use I2C interface for
-> communication to IC and provide axis X, Y, Z locations for ten finger
-> touch through input event interface to userspace.
+On Thu, Aug 31, 2017 at 10:15:33AM +0530, Sricharan R wrote:
+> IPQ8074 has an integrated Hexagon dsp core q6v5 and a wireless lan
+> (Lithium) IP. An mdt type single image format is used for the
+> firmware. So the mdt_load function can be directly used to load
+> the firmware. Also add the relevant resets required for this core.
 > 
-> It support the Crimson and the Lime two type IC. They are different
-> the number of channel supported and FW size. But the working protocol
-> is same.
-> 
-> Signed-off-by: Anthony Kim <anthony.kim@hideep.com>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 > ---
->  .../bindings/input/touchscreen/hideep.txt          |   42 +
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |  7 ++-
 
 Acked-by: Rob Herring <robh@kernel.org>
 
->  drivers/input/touchscreen/Kconfig                  |   11 +
->  drivers/input/touchscreen/Makefile                 |    1 +
->  drivers/input/touchscreen/hideep.c                 | 1274 ++++++++++++++++++++
->  5 files changed, 1329 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
->  create mode 100644 drivers/input/touchscreen/hideep.c
+>  drivers/remoteproc/Kconfig                         |  1 +
+>  drivers/remoteproc/qcom_q6v5_pil.c                 | 53 +++++++++++++++++++++-
+>  3 files changed, 59 insertions(+), 2 deletions(-)
