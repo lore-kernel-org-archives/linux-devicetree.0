@@ -1,132 +1,73 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] dt-bindings: nvmem: add description for UniPhier
- eFuse
-Date: Tue, 12 Sep 2017 11:15:46 -0500
-Message-ID: <20170912161546.q5xr5pfdxin3qujf@rob-hp-laptop>
-References: <1504221620-358-1-git-send-email-hayashibara.keiji@socionext.com>
- <1504221620-358-2-git-send-email-hayashibara.keiji@socionext.com>
- <CAK7LNASLh4vYqZhM9g2AL1uUtieviAmmWOp_Mzoj0zG=Ejz0cA@mail.gmail.com>
- <000001d32615$38e1b0c0$aaa51240$@socionext.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings
+ documentation
+Date: Tue, 12 Sep 2017 11:20:08 -0500
+Message-ID: <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
+References: <20170901065818.2037-1-fe@dev.tdt.de>
+ <20170901065818.2037-2-fe@dev.tdt.de>
+ <20170901142622.GC599@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <000001d32615$38e1b0c0$aaa51240$@socionext.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: 'Masahiro Yamada' <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <20170901142622.GC599@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Florian Eckert <fe@dev.tdt.de>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, jdelvare@suse.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 05, 2017 at 04:04:31PM +0900, Keiji Hayashibara wrote:
-> Hello Yamada-san,
-> 
-> Thank you for your comment.
-> 
-> > From: Masahiro Yamada [mailto:yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org]
-> > Sent: Monday, September 4, 2017 9:56 PM
+On Fri, Sep 01, 2017 at 07:26:22AM -0700, Guenter Roeck wrote:
+> On Fri, Sep 01, 2017 at 08:58:18AM +0200, Florian Eckert wrote:
+> > Document the devicetree bindings for the ltq-cputemp
 > > 
-> > 2017-09-01 8:20 GMT+09:00 Keiji Hayashibara
-> > <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> > > Add uniphier-efuse dt-bindings documentation.
-> > >
-> > > Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/nvmem/uniphier-efuse.txt   | 45
-> > ++++++++++++++++++++++
-> > >  1 file changed, 45 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
+> > Signed-off-by: Florian Eckert <fe@dev.tdt.de>
+> 
+> I see nothing special with the bindings, and they are in line with other lantiq
+> bindings, so I am taking the risk of accepting this patch (and the matching
+> driver) without waiting for explicit approval from Rob. Rob, scream at me if
+> that is not ok.
 
-> > > +Example:
-> > > +
-> > > +       soc-glue@5f900000 {
-> > > +               compatible = "socionext,uniphier-ld20-soc-glue-debug",
-> > > +                            "simple-mfd";
-> > > +               #address-cells = <1>;
-> > > +               #size-cells = <1>;
-> > > +               ranges = <0x0 0x5f900000 0x2000>;
-> > 
-> > 
-> > IMHO, I think an empty "ranges;" will clarify the code, but it is up to
-> > your taste.
-> > 
-> > 
-> > > +
-> > > +               efuse {
-> > > +                       compatible = "socionext,uniphier-efuse",
-> > > +                                    "syscon";
-> > 
-> > 
-> > You are adding a dedicated driver for "socionext,uniphier-efuse".
-> > 
-> > Then, "syscon" as well?
-> > 
-> 
-> Since I was using the syscon interface to implement the driver,
-> I specified "syscon". It's interface is syscon_node_to_regmap().
-> 
-> I will rethink this in v2.
-> 
-> > 
-> > 
-> > > +                       reg = <0x100 0xf00>;
-> > 
-> > 
-> > Not so many efuse registers exist on the SoC.
-> > 
-> > reg = <0x100 0x200>; will be enough.
-> > 
-> > 
-> > Or if you want to be strict to the hw spec, you can write as follows:
-> > 
-> >         soc-glue@5f900000 {
-> >                compatible = "socionext,uniphier-ld20-soc-glue-debug";
-> >                             "simple-mfd";
-> >                #address-cells = <1>;
-> >                #size-cells = <1>;
-> >                ranges = <0x0 0x5f900000 0x2000>;
-> > 
-> >                efuse@100 {
-> >                            compatible = "socionext,uniphier-efuse";
-> >                            reg = <0x100 0x28>;
-> >                };
-> > 
-> >                efuse@200 {
-> >                            compatible = "socionext,uniphier-efuse";
-> >                            reg = <0x200 0x68>;
-> >                };
-> >        };
-> > 
-> > 
-> > 
-> > 
-> > > +                       #address-cells = <1>;
-> > > +                       #size-cells = <1>;
-> > > +
-> > > +                       /* Data cells */
-> > > +                       usb_mon: usb_mon {
-> > > +                               reg = <0x154 0xc>;
-> > > +                       };
-> > 
-> > 
-> > This <0x154 0xc> represents 0x5f900254 in CPU address view.
-> > (0x5f900000 + 0x100 + 0x154)
-> > 
-> > So many ranges conversion, and how error-prone..
-> > 
-> 
-> Yes, indeed...
-> I will modify as below.
+Perhaps the existing one was not well reviewed.
 
-Please don't. A non-empty ranges is preferred. It limits the scope and 
-chance for errors (smaller range allows fewer possible values and 
-limits the chances of having address ranges duplicated in multiple 
-nodes). But yes, it does add the requirement of doing addition and/or 
-OR operations. I can't review whether the address ends up being correct 
-either way, but having non-empty ranges helps enforce the other things.
+> 
+> Thanks,
+> Guenter
+> 
+> > ---
+> >  Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
+> > new file mode 100644
+> > index 000000000000..33fd00a987c7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
+> > @@ -0,0 +1,10 @@
+> > +Lantiq cpu temperatur sensor
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+s/temperatur/temperature/
+
+> > +
+> > +Requires node properties:
+> > +- compatible value :
+> > +	"lantiq,cputemp"
+
+Kind of non-specific. How is this device even accessed without any other 
+property? 
+
+> > +
+> > +Example:
+> > +	cputemp@0 {
+
+unit-address without reg property is not valid.
+
+> > +		compatible = "lantiq,cputemp";
+> > +	};
+> > -- 
+> > 2.11.0
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
