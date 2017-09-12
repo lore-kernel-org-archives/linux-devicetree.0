@@ -1,11 +1,13 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 00/11] Add R8A77970/Eagle board support
-Date: Tue, 12 Sep 2017 23:37:16 +0300
-Message-ID: <20170912203716.238067587__7810.69774316183$1505250385$gmane$org@cogentembedded.com>
+Subject: [PATCH 04/11] soc: renesas: rcar-sysc: add R8A77970 support
+Date: Tue, 12 Sep 2017 23:37:20 +0300
+Message-ID: <20170912210518.203740259__39539.9203327999$1505250463$gmane$org@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline;
+ filename=soc-renesas-rcar-sysc-add-R8A77970-support.patch
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,27 +17,140 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add support for R-Car V3M (R8A77970) SoC power areas to the R-Car SYSC
+driver.
 
-   Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
-'renesas-devel-20170911v2-v4.13' tag. I'm adding the device tree support for
-the R8A77970-based Eagle board. The necessary SYS-DMAC, [H]SCIF, and EtherAVB
-bindings updates have been posted earlier.
+Based on the original (and large) patch by Daisuke Matsushita
+<daisuke.matsushita.ns@hitachi.com>.
 
-[01/11] soc: renesas: identify R-Car V3M
-[02/11] soc: renesas: rcar-rst: add R8A77970 support
-[03/11] dt-bindings: power: add R8A77970 SYSC power domain definitions
-[04/11] soc: renesas: rcar-sysc: add R8A77970 support
-[05/11] arm64: dts: renesas: initial R8A77970 SoC device tree
-[06/11] arm64: dts: renesas: r8a77970: add SYS-DMAC support
-[07/11] arm64: dts: renesas: r8a77970: add [H]SCIF support
-[08/11] arm64: dts: renesas: r8a77970: add EtherAVB support
-[09/11] arm64: renesas: document Eagle board
-[11/11] arm64: dts: renesas: initial Eagle board device tree
-[11/11] arm64: dts: renesas: eagle: add EtherAVB support
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-WBR, Sergei
+---
+ Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt |    1 
+ drivers/soc/renesas/Kconfig                                   |    5 +
+ drivers/soc/renesas/Makefile                                  |    1 
+ drivers/soc/renesas/r8a77970-sysc.c                           |   39 ++++++++++
+ drivers/soc/renesas/rcar-sysc.c                               |    3 
+ drivers/soc/renesas/rcar-sysc.h                               |    1 
+ 6 files changed, 50 insertions(+)
+
+Index: renesas/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+===================================================================
+--- renesas.orig/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
++++ renesas/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+@@ -17,6 +17,7 @@ Required properties:
+       - "renesas,r8a7794-sysc" (R-Car E2)
+       - "renesas,r8a7795-sysc" (R-Car H3)
+       - "renesas,r8a7796-sysc" (R-Car M3-W)
++      - "renesas,r8a77970-sysc" (R-Car V3M)
+       - "renesas,r8a77995-sysc" (R-Car D3)
+   - reg: Address start and address range for the device.
+   - #power-domain-cells: Must be 1.
+Index: renesas/drivers/soc/renesas/Kconfig
+===================================================================
+--- renesas.orig/drivers/soc/renesas/Kconfig
++++ renesas/drivers/soc/renesas/Kconfig
+@@ -14,6 +14,7 @@ config SOC_RENESAS
+ 	select SYSC_R8A7794 if ARCH_R8A7794
+ 	select SYSC_R8A7795 if ARCH_R8A7795
+ 	select SYSC_R8A7796 if ARCH_R8A7796
++	select SYSC_R8A77970 if ARCH_R8A77970
+ 	select SYSC_R8A77995 if ARCH_R8A77995
+ 
+ if SOC_RENESAS
+@@ -55,6 +56,10 @@ config SYSC_R8A7796
+ 	bool "R-Car M3-W System Controller support" if COMPILE_TEST
+ 	select SYSC_RCAR
+ 
++config SYSC_R8A77970
++	bool "R-Car V3M System Controller support" if COMPILE_TEST
++	select SYSC_RCAR
++
+ config SYSC_R8A77995
+ 	bool "R-Car D3 System Controller support" if COMPILE_TEST
+ 	select SYSC_RCAR
+Index: renesas/drivers/soc/renesas/Makefile
+===================================================================
+--- renesas.orig/drivers/soc/renesas/Makefile
++++ renesas/drivers/soc/renesas/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_SYSC_R8A7792)	+= r8a7792-sy
+ obj-$(CONFIG_SYSC_R8A7794)	+= r8a7794-sysc.o
+ obj-$(CONFIG_SYSC_R8A7795)	+= r8a7795-sysc.o
+ obj-$(CONFIG_SYSC_R8A7796)	+= r8a7796-sysc.o
++obj-$(CONFIG_SYSC_R8A77970)	+= r8a77970-sysc.o
+ obj-$(CONFIG_SYSC_R8A77995)	+= r8a77995-sysc.o
+ 
+ # Family
+Index: renesas/drivers/soc/renesas/r8a77970-sysc.c
+===================================================================
+--- /dev/null
++++ renesas/drivers/soc/renesas/r8a77970-sysc.c
+@@ -0,0 +1,39 @@
++/*
++ * Renesas R-Car V3M System Controller
++ *
++ * Copyright (C) 2017 Cogent Embedded Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/bug.h>
++#include <linux/kernel.h>
++
++#include <dt-bindings/power/r8a77970-sysc.h>
++
++#include "rcar-sysc.h"
++
++static const struct rcar_sysc_area r8a77970_areas[] __initconst = {
++	{ "always-on",	    0, 0, R8A77970_PD_ALWAYS_ON, -1, PD_ALWAYS_ON },
++	{ "ca53-scu",	0x140, 0, R8A77970_PD_CA53_SCU,	R8A77970_PD_ALWAYS_ON,
++	  PD_SCU },
++	{ "ca53-cpu0",	0x200, 0, R8A77970_PD_CA53_CPU0, R8A77970_PD_CA53_SCU,
++	  PD_CPU_NOCR },
++	{ "ca53-cpu1",	0x200, 1, R8A77970_PD_CA53_CPU1, R8A77970_PD_CA53_SCU,
++	  PD_CPU_NOCR },
++	{ "cr7",	0x240, 0, R8A77970_PD_CR7,	R8A77970_PD_ALWAYS_ON },
++	{ "a3ir",	0x180, 0, R8A77970_PD_A3IR,	R8A77970_PD_ALWAYS_ON },
++	{ "a2ir0",	0x400, 0, R8A77970_PD_A2IR0,	R8A77970_PD_ALWAYS_ON },
++	{ "a2ir1",	0x400, 1, R8A77970_PD_A2IR1,	R8A77970_PD_A2IR0 },
++	{ "a2ir2",	0x400, 2, R8A77970_PD_A2IR2,	R8A77970_PD_A2IR0 },
++	{ "a2ir3",	0x400, 3, R8A77970_PD_A2IR3,	R8A77970_PD_A2IR0 },
++	{ "a2sc0",	0x400, 4, R8A77970_PD_A2SC0,	R8A77970_PD_ALWAYS_ON },
++	{ "a2sc1",	0x400, 5, R8A77970_PD_A2SC1,	R8A77970_PD_A2SC0 },
++};
++
++const struct rcar_sysc_info r8a77970_sysc_info __initconst = {
++	.areas = r8a77970_areas,
++	.num_areas = ARRAY_SIZE(r8a77970_areas),
++};
+Index: renesas/drivers/soc/renesas/rcar-sysc.c
+===================================================================
+--- renesas.orig/drivers/soc/renesas/rcar-sysc.c
++++ renesas/drivers/soc/renesas/rcar-sysc.c
+@@ -284,6 +284,9 @@ static const struct of_device_id rcar_sy
+ #ifdef CONFIG_SYSC_R8A7796
+ 	{ .compatible = "renesas,r8a7796-sysc", .data = &r8a7796_sysc_info },
+ #endif
++#ifdef CONFIG_SYSC_R8A77970
++	{ .compatible = "renesas,r8a77970-sysc", .data = &r8a77970_sysc_info },
++#endif
+ #ifdef CONFIG_SYSC_R8A77995
+ 	{ .compatible = "renesas,r8a77995-sysc", .data = &r8a77995_sysc_info },
+ #endif
+Index: renesas/drivers/soc/renesas/rcar-sysc.h
+===================================================================
+--- renesas.orig/drivers/soc/renesas/rcar-sysc.h
++++ renesas/drivers/soc/renesas/rcar-sysc.h
+@@ -58,6 +58,7 @@ extern const struct rcar_sysc_info r8a77
+ extern const struct rcar_sysc_info r8a7794_sysc_info;
+ extern const struct rcar_sysc_info r8a7795_sysc_info;
+ extern const struct rcar_sysc_info r8a7796_sysc_info;
++extern const struct rcar_sysc_info r8a77970_sysc_info;
+ extern const struct rcar_sysc_info r8a77995_sysc_info;
