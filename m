@@ -1,47 +1,157 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 01/11] soc: renesas: identify R-Car V3M
-Date: Tue, 12 Sep 2017 23:37:17 +0300
-Message-ID: <20170912210506.997827638@cogentembedded.com>
+Subject: [PATCH 05/11] arm64: dts: renesas: initial R8A77970 SoC device tree
+Date: Tue, 12 Sep 2017 23:37:21 +0300
+Message-ID: <20170912210523.663877115@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=soc-renesas-identify-R-Car-V3M.patch
+Content-Disposition: inline; filename=arm64-dts-renesas-initial-R8A77970-SoC-device-tree.patch
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for identifying the R-Car V3M (R8A77970) SoC.
+The initial R8A77970 SoC device tree including Cortex-A53 CPU, GIC, timer,
+CPG, RST, and SYSC.
 
+Based on the original (and large) patch by Daisuke Matsushita
+<daisuke.matsushita.ns@hitachi.com>.
+
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
- drivers/soc/renesas/renesas-soc.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi |  126 ++++++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
 
-Index: renesas/drivers/soc/renesas/renesas-soc.c
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
 ===================================================================
---- renesas.orig/drivers/soc/renesas/renesas-soc.c
-+++ renesas/drivers/soc/renesas/renesas-soc.c
-@@ -144,6 +144,11 @@ static const struct renesas_soc soc_rcar
- 	.id	= 0x52,
- };
- 
-+static const struct renesas_soc soc_rcar_v3m __initconst __maybe_unused = {
-+	.family	= &fam_rcar_gen3,
-+	.id	= 0x54,
-+};
+--- /dev/null
++++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -0,0 +1,126 @@
++/*
++ * Device Tree Source for the r8a77970 SoC
++ *
++ * Copyright (C) 2016-2017 Renesas Electronics Corp.
++ * Copyright (C) 2017 Cogent Embedded, Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
- static const struct renesas_soc soc_rcar_d3 __initconst __maybe_unused = {
- 	.family	= &fam_rcar_gen3,
- 	.id	= 0x58,
-@@ -204,6 +209,9 @@ static const struct of_device_id renesas
- #ifdef CONFIG_ARCH_R8A7796
- 	{ .compatible = "renesas,r8a7796",	.data = &soc_rcar_m3_w },
- #endif
-+#ifdef CONFIG_ARCH_R8A77970
-+	{ .compatible = "renesas,r8a77970",	.data = &soc_rcar_v3m },
-+#endif
- #ifdef CONFIG_ARCH_R8A77995
- 	{ .compatible = "renesas,r8a77995",	.data = &soc_rcar_d3 },
- #endif
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
++#include <dt-bindings/power/r8a77970-sysc.h>
++
++/ {
++	compatible = "renesas,r8a77970";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		a53_0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0>;
++			clocks = <&cpg CPG_CORE 0>;
++			power-domains = <&sysc R8A77970_PD_CA53_CPU0>;
++			next-level-cache = <&L2_CA53>;
++			enable-method = "psci";
++		};
++
++		L2_CA53: cache-controller {
++			compatible = "cache";
++			power-domains = <&sysc R8A77970_PD_CA53_SCU>;
++			cache-unified;
++			cache-level = <2>;
++		};
++	};
++
++	extal_clk: extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board */
++		clock-frequency = <0>;
++	};
++
++	extalr_clk: extalr {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board */
++		clock-frequency = <0>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		interrupt-parent = <&gic>;
++
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		gic: interrupt-controller@f1010000 {
++			compatible = "arm,gic-400";
++			#interrupt-cells = <3>;
++			#address-cells = <0>;
++			interrupt-controller;
++			reg = <0 0xf1010000 0 0x1000>,
++			      <0 0xf1020000 0 0x20000>,
++			      <0 0xf1040000 0 0x20000>,
++			      <0 0xf1060000 0 0x20000>;
++			interrupts = <GIC_PPI 9	(GIC_CPU_MASK_SIMPLE(1) |
++				      IRQ_TYPE_LEVEL_HIGH)>;
++			clocks = <&cpg CPG_MOD 408>;
++			clock-names = "clk";
++			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
++			resets = <&cpg 408>;
++		};
++
++		timer {
++			compatible = "arm,armv8-timer";
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
++						  IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
++						  IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) |
++						  IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) |
++						  IRQ_TYPE_LEVEL_LOW)>;
++		};
++
++		cpg: clock-controller@e6150000 {
++			compatible = "renesas,r8a77970-cpg-mssr";
++			reg = <0 0xe6150000 0 0x1000>;
++			clocks = <&extal_clk>, <&extalr_clk>;
++			clock-names = "extal", "extalr";
++			#clock-cells = <2>;
++			#power-domain-cells = <0>;
++			#reset-cells = <1>;
++		};
++
++		rst: reset-controller@e6160000 {
++			compatible = "renesas,r8a77970-rst";
++			reg = <0 0xe6160000 0 0x200>;
++		};
++
++		sysc: system-controller@e6180000 {
++			compatible = "renesas,r8a77970-sysc";
++			reg = <0 0xe6180000 0 0x440>;
++			#power-domain-cells = <1>;
++		};
++
++		prr: chipid@fff00044 {
++			compatible = "renesas,prr";
++			reg = <0 0xfff00044 0 4>;
++		};
++	};
++};
