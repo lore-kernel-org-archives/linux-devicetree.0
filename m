@@ -1,41 +1,98 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH] et8ek8: Add support for flash and lens devices
-Date: Tue, 12 Sep 2017 14:06:45 +0300
-Message-ID: <20170912110645.npkpl4elmbrjavla@valkosipuli.retiisi.org.uk>
-References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
- <20170908131822.31020-18-sakari.ailus@linux.intel.com>
- <20170909214724.GA18677@amd>
- <20170911131831.GA12658@amd>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: as3645a flash userland interface
+Date: Tue, 12 Sep 2017 13:40:51 +0200
+Message-ID: <20170912114051.GA1655@amd>
+References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
+ <20170912084236.1154-25-sakari.ailus@linux.intel.com>
+ <20170912103628.GB27117@amd>
+ <20170912104720.ifyouc5pa5et6gzk@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170911131831.GA12658@amd>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
+In-Reply-To: <20170912104720.ifyouc5pa5et6gzk@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
 
-On Mon, Sep 11, 2017 at 03:18:31PM +0200, Pavel Machek wrote:
-> Parse async sub-devices by using
-> v4l2_subdev_fwnode_reference_parse_sensor_common().
-> 
-> These types devices aren't directly related to the sensor, but are
-> nevertheless handled by the et8ek8 driver due to the relationship of these
-> component to the main part of the camera module --- the sensor.
-> 
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> ---
-> 
-> This enables me to do autofocus on n900.
-> 
-> Depends on Sakari's series, so best solution would be to append it there.
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I added this after the smiapp driver changes.
+Hi!
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+> On Tue, Sep 12, 2017 at 12:36:28PM +0200, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > There were some changes to as3645a flash controller. Before we have
+> > stable interface we have to keep forever I want to ask:
+> >=20
+> > What directory are the flash controls in?
+> >=20
+> > /sys/class/leds/led-controller:flash ?
+> >=20
+> > Could we arrange for something less generic, like
+> >=20
+> > /sys/class/leds/main-camera:flash ?
+> >=20
+> > Thanks,
+>=20
+> The LEDs are called as3645a:flash and as3645a:indicator currently, based =
+on
+> the name of the LED controller's device node. There are no patches related
+> to this set though; these have already been merged.
+>=20
+> The label should be a "human readable string describing the device" (from
+> ePAPR, please excuse me for not having a newer spec), and the led common
+> bindings define it as:
+>=20
+> - label : The label for this LED. If omitted, the label is taken from the=
+ node
+>           name (excluding the unit address). It has to uniquely identify
+>           a device, i.e. no other LED class device can be assigned the sa=
+me
+>           label.
+
+Ok, can we set the label to "main_camera" for N9 and n950 cases?
+
+"as3645a:flash" is really wrong name for a LED. Information that
+as3645 is already present elsewhere in /sys. Information where the LED
+is and what it does is not.
+
+I'd like to have torch application that just writes
+/sys/class/leds/main_camera:white:flash/brightness . It should not
+need to know hardware details of differnet phones.
+
+> I don't think that you should be looking to use this to associate it with
+> the camera as such. The association information with the sensor is
+> available to the kernel but there's no interface that could meaningfully
+> expose it to the user right now.
+
+Yeah, I'm not looking for sensor association. I'm looking for
+reasonable userland interface.
+
+Thanks,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--0F1p//8PRICkK4MW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlm3x8MACgkQMOfwapXb+vJruACgvXqnXR5o/7rhska7wPeJDBrX
+7HkAn2hHmz2zVpyZQ5Xlo+9KKf03jVV1
+=9UsP
+-----END PGP SIGNATURE-----
+
+--0F1p//8PRICkK4MW--
