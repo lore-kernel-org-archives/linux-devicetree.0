@@ -1,455 +1,427 @@
-From: Eric Long <eric.long@spreadtrum.com>
-Subject: [PATCH v2 2/2] watchdog: Add Spreadtrum watchdog driver
-Date: Tue, 12 Sep 2017 19:40:09 +0800
-Message-ID: <48f1e10c508b4c174f2c41a6cef84011b65ff9b5.1505216059.git.eric.long@spreadtrum.com>
-References: <f3daa0f85dda0672c4b057e7f37c690365652e39.1505216059.git.eric.long@spreadtrum.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [RFC PATCH 1/1] iommu/arm-smmu: Add support for multiple TBU child
+	devices
+Date: Tue, 12 Sep 2017 17:31:07 +0530
+Message-ID: <1505217667-31184-1-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f3daa0f85dda0672c4b057e7f37c690365652e39.1505216059.git.eric.long@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: baolin.wang@linaro.org, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, eric.long@spreadtrum.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the watchdog driver for Spreadtrum SC9860 platform.
+ARM MMU-500 implements a TBU (uTLB) for each connected master
+besides a single TCU which controls and manages the address
+translations. Each of these TBUs can either be in the same
+power domain as the master, or they can have a independent
+power switch.
+This design addresses the challenges to control TBU power.
+Adding child devices for each TBUs present in the configuration
+lets us control the power and clocks to TLBs having individual
+power domains. The device link between master devices (such as,
+display, and GPU) and TBU devices ensures that the master takes
+care of powering the smmu as long as it's available.
+When the master is not available, the TBUs are identified with
+sid and powered on.
 
-Signed-off-by: Eric Long <eric.long@spreadtrum.com>
+Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
-Changes since v1:
- - Use pretimeout instead of own implementation.
- - Fix timeout loop when loading timeout values.
- - use the infrastructure to read and set "timeout-sec" property.
- - Add conditions when start or stop watchdog.
- - Change the position of enabling watchdog.
- - Other optimization.
----
- drivers/watchdog/Kconfig    |   8 +
- drivers/watchdog/Makefile   |   1 +
- drivers/watchdog/sprd_wdt.c | 384 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 393 insertions(+)
- create mode 100644 drivers/watchdog/sprd_wdt.c
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index c722cbf..ea07718 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -787,6 +787,14 @@ config UNIPHIER_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called uniphier_wdt.
+ - The idea behind this patch is to handle the distributed smmu
+   architectures, similar to MMU-500.
+ - Untested yet.
+ - There are still few instances where the correct tbu device has
+   to be referenced and thus powered on to handle TLB maintenance
+   operations.
+
+ .../devicetree/bindings/iommu/arm,smmu.txt         |  27 +++
+ drivers/iommu/arm-smmu.c                           | 191 +++++++++++++++++++--
+ 2 files changed, 205 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+index d97a6bc8e608..7cf67e75022e 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+@@ -98,6 +98,18 @@ conditions.
+                   accessed before master gets enabled and linked to its
+                   SMMU.
  
-+config SPRD_WATCHDOG
-+	tristate "Spreadtrum watchdog support"
-+	depends on ARCH_SPRD
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include support watchdog timer embedded
-+	  into the Spreadtrum system.
++- child nodes:    ARM MMU-500 implements a TBU (page table cache or TLB) for
++                  each connected master besides a single TCU that controls
++                  and manages the address translations.
++                  Each of the child nodes represents a TBU that is attached to
++                  the master. This child node will have following property:
 +
- # AVR32 Architecture
++  - compatibe:       must be "arm,mmu-500-tbu" for TBU child nodes of arm,mmu-500
++                     smmu.
++  - stream-id-range: array representing the starting stream id and the number
++                     of supported stream-ids. This gives information about
++                     the range of stream-ids that are supported by this TBU.
++
+ ** Deprecated properties:
  
- config AT32AP700X_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 56adf9f..187cca2 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -87,6 +87,7 @@ obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
- obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
- obj-$(CONFIG_STM32_WATCHDOG) += stm32_iwdg.o
- obj-$(CONFIG_UNIPHIER_WATCHDOG) += uniphier_wdt.o
-+obj-$(CONFIG_SPRD_WATCHDOG) += sprd_wdt.o
+ - mmu-masters (deprecated in favour of the generic "iommus" binding) :
+@@ -187,3 +199,18 @@ conditions.
+ 			 <&mmcc SMMU_MDP_AHB_CLK>;
+ 		clock-names = "bus", "iface";
+ 	};
++
++	smmu4: iommu {
++		compatible = "arm,mmu-500";
++		reg = <0xd00000 0x10000>;
++                ...
++                ...
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                tbu: tbu@0 {
++                         compatible = "arm,mmu-500-tbu";
++                         reg = <0>;
++                         stream-id-range = <0x0 0x400>;
++                };
++        };
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 14137e389071..ba84693e2de3 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -224,6 +224,8 @@ struct arm_smmu_device {
  
- # AVR32 Architecture
- obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
-diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
-new file mode 100644
-index 0000000..dedbca6fd
---- /dev/null
-+++ b/drivers/watchdog/sprd_wdt.c
-@@ -0,0 +1,384 @@
-+/*
-+ * Spreadtrum watchdog driver
-+ * Copyright (C) 2017 Spreadtrum - http://www.spreadtrum.com
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ */
+ 	/* IOMMU core code handle */
+ 	struct iommu_device		iommu;
 +
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/watchdog.h>
-+
-+#define WDT_LOAD_LOW		0x0
-+#define WDT_LOAD_HIGH		0x4
-+#define WDT_CTRL		0x8
-+#define WDT_INT_CLR		0xc
-+#define WDT_INT_RAW		0x10
-+#define WDT_INT_MSK		0x14
-+#define WDT_CNT_LOW		0x18
-+#define WDT_CNT_HIGH		0x1c
-+#define WDT_LOCK		0x20
-+#define WDT_IRQ_LOAD_LOW	0x2c
-+#define WDT_IRQ_LOAD_HIGH	0x30
-+
-+/* WDT_CTRL */
-+#define WDT_INT_EN_BIT		BIT(0)
-+#define WDT_CNT_EN_BIT		BIT(1)
-+#define WDT_NEW_VER_EN		BIT(2)
-+#define WDT_RST_EN_BIT		BIT(3)
-+
-+/* WDT_INT_CLR */
-+#define WDT_INT_CLEAR_BIT	BIT(0)
-+#define WDT_RST_CLEAR_BIT	BIT(3)
-+
-+/* WDT_INT_RAW */
-+#define WDT_INT_RAW_BIT		BIT(0)
-+#define WDT_RST_RAW_BIT		BIT(3)
-+#define WDT_LD_BUSY_BIT		BIT(4)
-+
-+#define WDT_CLK			32768
-+#define WDT_UNLOCK_KEY		0xe551
-+#define WDT_DEFAULT_PRETMROUT	3
-+
-+#define WDT_CNT_VALUE_SIZE	16
-+#define WDT_CNT_VALUE_MASK	GENMASK(15, 0)
-+#define WDT_LOAD_TIMEOUT_NUM	10000
-+
-+struct sprd_wdt {
-+	void __iomem *base;
-+	struct watchdog_device wdd;
-+	struct clk *enable;
-+	struct clk *rtc_enable;
-+	unsigned int irq;
++	struct list_head		tbu_list;
+ };
+ 
+ enum arm_smmu_context_fmt {
+@@ -333,6 +335,33 @@ static int __find_legacy_master_phandle(struct device *dev, void *data)
+ static struct platform_driver arm_smmu_driver;
+ static struct iommu_ops arm_smmu_ops;
+ 
++struct arm_smmu500_tbu {
++	struct device *dev;
++	u32 sid_range[2];
++	struct list_head list;
++	struct arm_smmu_device *smmu;
 +};
 +
-+static inline struct sprd_wdt *to_sprd_wdt(struct watchdog_device *wdd)
++static struct device *find_tbu(struct device *parent, u16 sid)
 +{
-+	return container_of(wdd, struct sprd_wdt, wdd);
-+}
++	struct arm_smmu_device *smmu = dev_get_drvdata(parent);
++	struct arm_smmu500_tbu *tbu;
++	u32 start, end;
++	struct device *dev = NULL;
 +
-+static inline void sprd_wdt_lock(void __iomem *addr)
-+{
-+	writel_relaxed(0x0, addr + WDT_LOCK);
-+}
++	list_for_each_entry(tbu, &smmu->tbu_list, list) {
++		start = tbu->sid_range[0];
++		end = start + tbu->sid_range[1];
 +
-+static inline void sprd_wdt_unlock(void __iomem *addr)
-+{
-+	writel_relaxed(WDT_UNLOCK_KEY, addr + WDT_LOCK);
-+}
-+
-+static inline bool sprd_wdt_is_running(struct sprd_wdt *wdt)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(wdt->base + WDT_CTRL);
-+	return val & WDT_NEW_VER_EN;
-+}
-+
-+static irqreturn_t sprd_wdt_isr(int irq, void *dev_id)
-+{
-+	struct sprd_wdt *wdt = (struct sprd_wdt *)dev_id;
-+
-+	sprd_wdt_unlock(wdt->base);
-+	writel_relaxed(WDT_INT_CLEAR_BIT, wdt->base + WDT_INT_CLR);
-+	sprd_wdt_lock(wdt->base);
-+	watchdog_notify_pretimeout(&wdt->wdd);
-+	return IRQ_HANDLED;
-+}
-+
-+static u32 sprd_wdt_get_cnt_value(struct sprd_wdt *wdt)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(wdt->base + WDT_CNT_HIGH) << WDT_CNT_VALUE_SIZE;
-+	val |= readl_relaxed(wdt->base + WDT_CNT_LOW) & WDT_CNT_VALUE_MASK;
-+
-+	return val;
-+}
-+
-+static int sprd_wdt_load_value(struct sprd_wdt *wdt, u32 timeout,
-+			       u32 pretimeout)
-+{
-+	u32 val, cnt = 0;
-+
-+	if (timeout < pretimeout)
-+		return -EINVAL;
-+
-+	if (!pretimeout)
-+		pretimeout = WDT_DEFAULT_PRETMROUT;
-+
-+	sprd_wdt_unlock(wdt->base);
-+	writel_relaxed(((timeout * WDT_CLK) >> WDT_CNT_VALUE_SIZE) &
-+		       WDT_CNT_VALUE_MASK, wdt->base + WDT_LOAD_HIGH);
-+	writel_relaxed(((timeout * WDT_CLK) & WDT_CNT_VALUE_MASK),
-+		       wdt->base + WDT_LOAD_LOW);
-+	writel_relaxed(((pretimeout * WDT_CLK) >> WDT_CNT_VALUE_SIZE) &
-+			WDT_CNT_VALUE_MASK, wdt->base + WDT_IRQ_LOAD_HIGH);
-+	writel_relaxed((pretimeout * WDT_CLK) & WDT_CNT_VALUE_MASK,
-+		       wdt->base + WDT_IRQ_LOAD_LOW);
-+	sprd_wdt_lock(wdt->base);
-+
-+	/*
-+	 * Waiting the load value operation done,
-+	 * it needs two or three RTC clock cycles.
-+	 */
-+	do {
-+		val = readl_relaxed(wdt->base + WDT_INT_RAW);
-+		if (!(val & WDT_LD_BUSY_BIT))
++		if (start <= sid && sid < end) {
++			dev = tbu->dev;
 +			break;
++		}
++	}
 +
-+		cpu_relax();
-+	} while (cnt++ < WDT_LOAD_TIMEOUT_NUM);
++	return dev;
++}
 +
-+	if (cnt >= WDT_LOAD_TIMEOUT_NUM)
-+		return -EBUSY;
+ static int arm_smmu_register_legacy_master(struct device *dev,
+ 					   struct arm_smmu_device **smmu)
+ {
+@@ -927,6 +956,7 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
+ 	if (!smmu || domain->type == IOMMU_DOMAIN_IDENTITY)
+ 		return;
+ 
++	/* TODO Get the TBU dev power it on; or turn on all the TBUs? */
+ 	ret = pm_runtime_get_sync(smmu->dev);
+ 	if (ret)
+ 		return;
+@@ -1379,6 +1409,8 @@ static int arm_smmu_add_device(struct device *dev)
+ 	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
+ 	struct device_link *link;
+ 	int i, ret;
++	u16 sid;
++	struct device *tbu_dev;
+ 
+ 	if (using_legacy_binding) {
+ 		ret = arm_smmu_register_legacy_master(dev, &smmu);
+@@ -1425,29 +1457,42 @@ static int arm_smmu_add_device(struct device *dev)
+ 	while (i--)
+ 		cfg->smendx[i] = INVALID_SMENDX;
+ 
+-	ret = pm_runtime_get_sync(smmu->dev);
++	/*
++	 * Find out the correct TBU for this master based on the
++	 * steamID, and then create the device link between them.
++	 */
++	/* TODO: Iterate over all the SIDs, and turn them on? */
++	sid = fwspec->ids[0];
++	tbu_dev = find_tbu(smmu->dev, sid);
++	if (!tbu_dev)
++		tbu_dev = smmu->dev;
++
++	ret = pm_runtime_get_sync(tbu_dev);
+ 	if (ret)
+ 		goto out_cfg_free;
+ 
+ 	ret = arm_smmu_master_alloc_smes(dev);
+ 	if (ret) {
+-		pm_runtime_put_sync(smmu->dev);
++		pm_runtime_put_sync(tbu_dev);
+ 		goto out_cfg_free;
+ 	}
+ 
+ 	iommu_device_link(&smmu->iommu, dev);
+ 
+-	pm_runtime_put_sync(smmu->dev);
++	pm_runtime_put_sync(tbu_dev);
+ 
+ 	/*
+ 	 * Establish the link between smmu and master, so that the
+ 	 * smmu gets runtime enabled/disabled as per the master's
+ 	 * needs.
++	 * TBU devices are children to the smmu device, so creating link
++	 * between TBU devices and master takes care of turning on the smmu
++	 * as well.
+ 	 */
+-	link = device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
++	link = device_link_add(dev, tbu_dev, DL_FLAG_PM_RUNTIME);
+ 	if (!link)
+ 		dev_warn(smmu->dev, "Unable to create device link between %s and %s\n",
+-			 dev_name(smmu->dev), dev_name(dev));
++			 dev_name(tbu_dev), dev_name(dev));
+ 
+ 	return 0;
+ 
+@@ -1464,6 +1509,8 @@ static void arm_smmu_remove_device(struct device *dev)
+ 	struct arm_smmu_master_cfg *cfg;
+ 	struct arm_smmu_device *smmu;
+ 	int ret;
++	u16 sid;
++	struct device *tbu_dev;
+ 
+ 	if (!fwspec || fwspec->ops != &arm_smmu_ops)
+ 		return;
+@@ -1476,15 +1523,20 @@ static void arm_smmu_remove_device(struct device *dev)
+ 	 * smmu is already purged at this point.
+ 	 * So enable the power to smmu explicitly.
+ 	 */
++	sid = fwspec->ids[0];
+ 
+-	ret = pm_runtime_get_sync(smmu->dev);
++	tbu_dev = find_tbu(smmu->dev, sid);
++	if (!tbu_dev)
++		tbu_dev = smmu->dev;
++
++	ret = pm_runtime_get_sync(tbu_dev);
+ 	if (ret)
+ 		return;
+ 
+ 	iommu_device_unlink(&smmu->iommu, dev);
+ 	arm_smmu_master_free_smes(fwspec);
+ 
+-	pm_runtime_put_sync(smmu->dev);
++	pm_runtime_put_sync(tbu_dev);
+ 
+ 	iommu_group_remove_device(dev);
+ 	kfree(fwspec->iommu_priv);
+@@ -2012,6 +2064,32 @@ struct arm_smmu_match_data {
+ };
+ MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+ 
++static const struct of_device_id arm_smmu_tbu_of_match[] = {
++	{ .compatible = "arm,mmu-500-tbu", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, arm_smmu_tbu_of_match);
++
++static int arm_smmu_tbu_register(struct device *dev, void *cookie)
++{
++	struct arm_smmu_device *smmu = cookie;
++	struct arm_smmu500_tbu *tbu;
++
++	if (!dev->driver) {
++		dev_err(dev, "TBU failed probe, SMMUV500 cannot continue!\n");
++		return -EINVAL;
++	}
++
++	tbu = dev_get_drvdata(dev);
++
++	INIT_LIST_HEAD(&tbu->list);
++	tbu->smmu = smmu;
++	list_add_tail(&tbu->list, &smmu->tbu_list);
++
 +	return 0;
 +}
 +
-+static void sprd_wdt_enable(struct sprd_wdt *wdt)
++
+ #ifdef CONFIG_ACPI
+ static int acpi_smmu_get_data(u32 model, struct arm_smmu_device *smmu)
+ {
+@@ -2140,6 +2218,7 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 	resource_size_t ioaddr;
+ 	struct arm_smmu_device *smmu;
+ 	struct device *dev = &pdev->dev;
++	struct arm_smmu500_tbu *tbu;
+ 	int num_irqs, i, err;
+ 
+ 	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
+@@ -2157,6 +2236,8 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 	if (err)
+ 		return err;
+ 
++	INIT_LIST_HEAD(&smmu->tbu_list);
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	ioaddr = res->start;
+ 	smmu->base = devm_ioremap_resource(dev, res);
+@@ -2194,16 +2275,32 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		smmu->irqs[i] = irq;
+ 	}
+ 
++	/* MMU 500 has one TCU and multiple TBU config */
++	if (of_device_is_compatible(dev->of_node, "arm,mmu-500")) {
++		err = of_platform_populate(dev->of_node, NULL, NULL, dev);
++		if (err) {
++			dev_err(dev, "failed to register TBU children\n");
++			return err;
++		}
++
++		err = device_for_each_child(dev, smmu, arm_smmu_tbu_register);
++		if (err)
++			return -EPROBE_DEFER;
++	}
++
+ 	err = arm_smmu_init_clocks(smmu);
+ 	if (err)
+ 		return err;
+ 
+ 	platform_set_drvdata(pdev, smmu);
++
+ 	pm_runtime_enable(dev);
+ 
+-	err = pm_runtime_get_sync(dev);
+-	if (err)
+-		return err;
++	/* enable all TBUs */
++	list_for_each_entry(tbu, &smmu->tbu_list, list)
++		err = pm_runtime_get_sync(tbu->dev);
++		if (err)
++			return err;
+ 
+ 	err = arm_smmu_device_cfg_probe(smmu);
+ 	if (err)
+@@ -2248,7 +2345,9 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 
+ 	arm_smmu_device_reset(smmu);
+ 	arm_smmu_test_smr_masks(smmu);
+-	pm_runtime_put_sync(dev);
++
++	list_for_each_entry(tbu, &smmu->tbu_list, list)
++		pm_runtime_put_sync(tbu->dev);
+ 
+ 	/*
+ 	 * For ACPI and generic DT bindings, an SMMU will be probed before
+@@ -2278,6 +2377,7 @@ static int arm_smmu_legacy_bus_init(void)
+ static int arm_smmu_device_remove(struct platform_device *pdev)
+ {
+ 	struct arm_smmu_device *smmu = platform_get_drvdata(pdev);
++	struct arm_smmu500_tbu *tbu;
+ 
+ 	if (!smmu)
+ 		return -ENODEV;
+@@ -2287,7 +2387,9 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
+ 
+ 	/* Turn the thing off */
+ 	writel(sCR0_CLIENTPD, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+-	pm_runtime_force_suspend(smmu->dev);
++
++	list_for_each_entry(tbu, &smmu->tbu_list, list)
++		pm_runtime_force_suspend(tbu->dev);
+ 
+ 	return 0;
+ }
+@@ -2336,7 +2438,70 @@ static int __maybe_unused arm_smmu_suspend(struct device *dev)
+ 	.remove	= arm_smmu_device_remove,
+ 	.shutdown = arm_smmu_device_shutdown,
+ };
+-module_platform_driver(arm_smmu_driver);
++
++static int arm_smmu_tbu_probe(struct platform_device *pdev)
 +{
-+	u32 val;
++	struct device *dev = &pdev->dev;
++	struct arm_smmu500_tbu *tbu;
++	int err;
 +
-+	clk_prepare_enable(wdt->enable);
-+	clk_prepare_enable(wdt->rtc_enable);
++	tbu = devm_kzalloc(dev, sizeof(*tbu), GFP_KERNEL);
++	if (!tbu)
++		return -ENOMEM;
 +
-+	sprd_wdt_unlock(wdt->base);
-+	val = readl_relaxed(wdt->base + WDT_CTRL);
-+	val |= WDT_NEW_VER_EN;
-+	writel_relaxed(val, wdt->base + WDT_CTRL);
-+	sprd_wdt_lock(wdt->base);
-+	set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
++	tbu->dev = &pdev->dev;
++
++	err = of_property_read_u32_array(dev->of_node, "stream-id-range",
++					 tbu->sid_range, 2);
++	if (err)
++		dev_err(dev, "failed to read stream id range\n");
++
++	pm_runtime_enable(dev);
++
++	dev_set_drvdata(dev, tbu);
++
++	return 0;
 +}
 +
-+static void sprd_wdt_disable(struct sprd_wdt *wdt)
++static int arm_smmu_tbu_remove(struct platform_device *pdev)
 +{
-+	sprd_wdt_unlock(wdt->base);
-+	writel_relaxed(0x0, wdt->base + WDT_CTRL);
-+	sprd_wdt_lock(wdt->base);
++	pm_runtime_disable(&pdev->dev);
 +
-+	clk_disable(wdt->enable);
-+	clk_disable(wdt->rtc_enable);
++	return 0;
 +}
 +
-+static int sprd_wdt_start(struct watchdog_device *wdd)
++static struct platform_driver arm_smmu_tbu_driver = {
++	.driver	= {
++		.name		= "arm-mmu-500-tbu",
++		.of_match_table	= of_match_ptr(arm_smmu_tbu_of_match),
++	},
++	.probe	= arm_smmu_tbu_probe,
++	.remove	= arm_smmu_tbu_remove,
++};
++
++static int __init arm_smmu_init(void)
 +{
-+	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-+	u32 val;
 +	int ret;
 +
-+	ret = sprd_wdt_load_value(wdt, wdd->timeout, wdd->pretimeout);
++	ret = platform_driver_register(&arm_smmu_tbu_driver);
 +	if (ret)
 +		return ret;
 +
-+	sprd_wdt_unlock(wdt->base);
-+	val = readl_relaxed(wdt->base + WDT_CTRL);
-+	val |= WDT_CNT_EN_BIT | WDT_INT_EN_BIT | WDT_RST_EN_BIT;
-+	writel_relaxed(val, wdt->base + WDT_CTRL);
-+	sprd_wdt_lock(wdt->base);
-+	set_bit(WDOG_HW_RUNNING, &wdd->status);
++	ret = platform_driver_register(&arm_smmu_driver);
++	if (ret)
++		platform_driver_unregister(&arm_smmu_tbu_driver);
 +
-+	return 0;
++	return ret;
 +}
 +
-+static int sprd_wdt_stop(struct watchdog_device *wdd)
++static void __init arm_smmu_exit(void)
 +{
-+	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-+	u32 val;
-+
-+	sprd_wdt_unlock(wdt->base);
-+	val = readl_relaxed(wdt->base + WDT_CTRL);
-+	val &= ~(WDT_CNT_EN_BIT | WDT_RST_EN_BIT | WDT_INT_EN_BIT);
-+	writel_relaxed(val, wdt->base + WDT_CTRL);
-+	sprd_wdt_lock(wdt->base);
-+	return 0;
++	platform_driver_unregister(&arm_smmu_driver);
++	platform_driver_unregister(&arm_smmu_tbu_driver);
 +}
 +
-+static int sprd_wdt_set_timeout(struct watchdog_device *wdd,
-+				u32 timeout)
-+{
-+	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-+
-+	wdd->timeout = timeout;
-+
-+	return sprd_wdt_load_value(wdt, timeout, wdd->pretimeout);
-+}
-+
-+static int sprd_wdt_set_pretimeout(struct watchdog_device *wdd,
-+				   u32 new_pretimeout)
-+{
-+	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-+
-+	wdd->pretimeout = new_pretimeout;
-+
-+	return sprd_wdt_load_value(wdt, wdd->timeout, new_pretimeout);
-+}
-+
-+static u32 sprd_wdt_get_timeleft(struct watchdog_device *wdd)
-+{
-+	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-+	u32 val;
-+
-+	val = sprd_wdt_get_cnt_value(wdt);
-+	val = val / WDT_CLK;
-+
-+	return val;
-+}
-+
-+static const struct watchdog_ops sprd_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = sprd_wdt_start,
-+	.stop = sprd_wdt_stop,
-+	.set_timeout = sprd_wdt_set_timeout,
-+	.set_pretimeout = sprd_wdt_set_pretimeout,
-+	.get_timeleft = sprd_wdt_get_timeleft,
-+};
-+
-+static const struct watchdog_info sprd_wdt_info = {
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_PRETIMEOUT |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING,
-+	.identity = "Spreadtrum Watchdog Timer",
-+};
-+
-+static int sprd_wdt_probe(struct platform_device *pdev)
-+{
-+	struct resource *wdt_res;
-+	struct sprd_wdt *wdt;
-+	int ret;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	wdt_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!wdt_res) {
-+		dev_err(&pdev->dev, "failed to memory resource\n");
-+		return -ENOMEM;
-+	}
-+
-+	wdt->base = devm_ioremap_nocache(&pdev->dev, wdt_res->start,
-+					 resource_size(wdt_res));
-+	if (!wdt->base)
-+		return -ENOMEM;
-+
-+	wdt->enable = devm_clk_get(&pdev->dev, "enable");
-+	if (IS_ERR(wdt->enable)) {
-+		dev_err(&pdev->dev, "can't get the enable clock\n");
-+		return PTR_ERR(wdt->enable);
-+	}
-+
-+	wdt->rtc_enable = devm_clk_get(&pdev->dev, "rtc_enable");
-+	if (IS_ERR(wdt->rtc_enable)) {
-+		dev_err(&pdev->dev, "can't get the rtc enable clock\n");
-+		return PTR_ERR(wdt->rtc_enable);
-+	}
-+
-+	wdt->irq = platform_get_irq(pdev, 0);
-+	if (wdt->irq < 0) {
-+		dev_err(&pdev->dev, "failed to get IRQ resource\n");
-+		return wdt->irq;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, wdt->irq, sprd_wdt_isr,
-+			       IRQF_NO_SUSPEND, "sprd-wdt", (void *)wdt);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register irq\n");
-+		return ret;
-+	}
-+
-+	wdt->wdd.info = &sprd_wdt_info;
-+	wdt->wdd.ops = &sprd_wdt_ops;
-+	wdt->wdd.parent = &pdev->dev;
-+
-+	sprd_wdt_enable(wdt);
-+
-+	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
-+
-+	ret = watchdog_register_device(&wdt->wdd);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register watchdog\n");
-+		return ret;
-+	}
-+	platform_set_drvdata(pdev, wdt);
-+
-+	return 0;
-+}
-+
-+static int sprd_wdt_remove(struct platform_device *pdev)
-+{
-+	struct sprd_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	if (sprd_wdt_is_running(wdt)) {
-+		sprd_wdt_stop(&wdt->wdd);
-+		sprd_wdt_disable(wdt);
-+	}
-+	watchdog_unregister_device(&wdt->wdd);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
-+{
-+	struct sprd_wdt *wdt = dev_get_drvdata(dev);
-+
-+	if (sprd_wdt_is_running(wdt)) {
-+		sprd_wdt_stop(&wdt->wdd);
-+		sprd_wdt_disable(wdt);
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
-+{
-+	struct watchdog_device *wdd = dev_get_drvdata(dev);
-+	struct sprd_wdt *wdt = dev_get_drvdata(dev);
-+
-+	if (watchdog_active(wdd) && !sprd_wdt_is_running(wdt)) {
-+		sprd_wdt_enable(wdt);
-+		sprd_wdt_start(&wdt->wdd);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops sprd_wdt_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(sprd_wdt_pm_suspend,
-+				sprd_wdt_pm_resume)
-+};
-+
-+static const struct of_device_id sprd_wdt_match_table[] = {
-+	{ .compatible = "sprd,sp9860-wdt", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sprd_wdt_match_table);
-+
-+static struct platform_driver sprd_watchdog_driver = {
-+	.probe	= sprd_wdt_probe,
-+	.remove	= sprd_wdt_remove,
-+	.driver	= {
-+		.name = "sprd-wdt",
-+		.of_match_table = sprd_wdt_match_table,
-+		.pm = &sprd_wdt_pm_ops,
-+	},
-+};
-+module_platform_driver(sprd_watchdog_driver);
-+
-+MODULE_AUTHOR("Eric Long <eric.long@spreadtrum.com>");
-+MODULE_DESCRIPTION("Spreadtrum Watchdog Timer Controller Driver");
-+MODULE_LICENSE("GPL v2");
++module_init(arm_smmu_init);
++module_exit(arm_smmu_exit);
+ 
+ IOMMU_OF_DECLARE(arm_smmuv1, "arm,smmu-v1", NULL);
+ IOMMU_OF_DECLARE(arm_smmuv2, "arm,smmu-v2", NULL);
 -- 
-1.9.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
