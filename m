@@ -1,98 +1,55 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: as3645a flash userland interface
-Date: Tue, 12 Sep 2017 13:40:51 +0200
-Message-ID: <20170912114051.GA1655@amd>
-References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
- <20170912084236.1154-25-sakari.ailus@linux.intel.com>
- <20170912103628.GB27117@amd>
- <20170912104720.ifyouc5pa5et6gzk@valkosipuli.retiisi.org.uk>
+From: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: watchdog: Add Spreadtrum watchdog documentation
+Date: Tue, 12 Sep 2017 19:40:08 +0800
+Message-ID: <f3daa0f85dda0672c4b057e7f37c690365652e39.1505216059.git.eric.long@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170912104720.ifyouc5pa5et6gzk@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, sre@kernel.org
+Content-Type: text/plain
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds the documentation for Spreadtrum watchdog driver.
 
---0F1p//8PRICkK4MW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+---
+changes since v1:
+ - No updates.
+---
+ .../devicetree/bindings/watchdog/sprd-wdt.txt         | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
 
-Hi!
+diff --git a/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+new file mode 100644
+index 0000000..aeaf3e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+@@ -0,0 +1,19 @@
++Spreadtrum SoCs Watchdog timer
++
++Required properties:
++- compatible : Should be "sprd,sp9860-wdt".
++- reg : Specifies base physical address and size of the registers.
++- interrupts : Exactly one interrupt specifier.
++- timeout-sec : Contain the default watchdog timeout in seconds.
++- clock-names : Contain the input clock names.
++- clocks : Phandles to input clocks.
++
++Example:
++	watchdog: watchdog@40310000 {
++		compatible = "sprd,sp9860-wdt";
++		reg = <0 0x40310000 0 0x1000>;
++		interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++		timeout-sec = <12>;
++		clock-names = "enable", "rtc_enable";
++		clocks = <&clk_aon_apb_gates1 8>, <&clk_aon_apb_rtc_gates 9>;
++	};
+-- 
+1.9.1
 
-> On Tue, Sep 12, 2017 at 12:36:28PM +0200, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > There were some changes to as3645a flash controller. Before we have
-> > stable interface we have to keep forever I want to ask:
-> >=20
-> > What directory are the flash controls in?
-> >=20
-> > /sys/class/leds/led-controller:flash ?
-> >=20
-> > Could we arrange for something less generic, like
-> >=20
-> > /sys/class/leds/main-camera:flash ?
-> >=20
-> > Thanks,
->=20
-> The LEDs are called as3645a:flash and as3645a:indicator currently, based =
-on
-> the name of the LED controller's device node. There are no patches related
-> to this set though; these have already been merged.
->=20
-> The label should be a "human readable string describing the device" (from
-> ePAPR, please excuse me for not having a newer spec), and the led common
-> bindings define it as:
->=20
-> - label : The label for this LED. If omitted, the label is taken from the=
- node
->           name (excluding the unit address). It has to uniquely identify
->           a device, i.e. no other LED class device can be assigned the sa=
-me
->           label.
-
-Ok, can we set the label to "main_camera" for N9 and n950 cases?
-
-"as3645a:flash" is really wrong name for a LED. Information that
-as3645 is already present elsewhere in /sys. Information where the LED
-is and what it does is not.
-
-I'd like to have torch application that just writes
-/sys/class/leds/main_camera:white:flash/brightness . It should not
-need to know hardware details of differnet phones.
-
-> I don't think that you should be looking to use this to associate it with
-> the camera as such. The association information with the sensor is
-> available to the kernel but there's no interface that could meaningfully
-> expose it to the user right now.
-
-Yeah, I'm not looking for sensor association. I'm looking for
-reasonable userland interface.
-
-Thanks,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---0F1p//8PRICkK4MW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlm3x8MACgkQMOfwapXb+vJruACgvXqnXR5o/7rhska7wPeJDBrX
-7HkAn2hHmz2zVpyZQ5Xlo+9KKf03jVV1
-=9UsP
------END PGP SIGNATURE-----
-
---0F1p//8PRICkK4MW--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
