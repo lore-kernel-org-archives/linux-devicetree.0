@@ -1,145 +1,191 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v11 11/24] v4l: async: Introduce helpers for calling async
- ops callbacks
-Date: Tue, 12 Sep 2017 11:39:32 +0200
-Message-ID: <a9e96a8c-25d2-109d-da22-a6771da6b68d@xs4all.nl>
-References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
- <20170912084236.1154-12-sakari.ailus@linux.intel.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] lmp92001: mfd: doc: Add support LMP92001
+Date: Tue, 12 Sep 2017 11:09:23 +0100
+Message-ID: <20170912110923.0f80c116@archlinux>
+References: <20170830182528.9479-1-s.abhisit@gmail.com>
+        <20170911215841.jaaipbdcf5hchjck@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170912084236.1154-12-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170911215841.jaaipbdcf5hchjck@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org, mike.looijmans-Oq418RWZeHk@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, jeff.dagenais-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, adi.reus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/17 10:42, Sakari Ailus wrote:
-> Add three helper functions to call async operations callbacks. Besides
-> simplifying callbacks, this allows async notifiers to have no ops set,
-> i.e. it can be left NULL.
+On Mon, 11 Sep 2017 16:58:41 -0500
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+> On Thu, Aug 31, 2017 at 01:25:28AM +0700, s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > From: Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > TI LMP92001 Analog System Monitor and Controller
+> > 
+> > 8-bit GPIOs.
+> > 12 DACs with 12-bit resolution.
+> > 
+> > The GPIOs and DACs are shared port function with Cy function pin to
+> > take control the pin suddenly from external hardware.
+> > DAC's referance voltage selectable for Internal/External.
+> > 
+> > 16 + 1 ADCs with 12-bit resolution.
+> > 
+> > Built-in internal Temperature Sensor on channel 17.
+> > Window Comparator Function is supported on channel 1-3 and 9-11 for
+> > monitoring with interrupt signal (pending to implement for interrupt).
+> > ADC's referance voltage selectable for Internal/External.
+> > 
+> > Signed-off-by: Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-iio-lmp920001  | 65 ++++++++++++++++++++++
+> >  .../devicetree/bindings/gpio/gpio-lmp92001.txt     | 22 ++++++++  
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-
-I'm sure I acked this already, but in case it was lost:
-
-Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-
-Regards,
-
-	Hans
-
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 49 ++++++++++++++++++++++++++----------
->  include/media/v4l2-async.h           |  1 +
->  2 files changed, 37 insertions(+), 13 deletions(-)
+> As Jonathan said, please split.
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index a2df85ea00f4..c34f93593b41 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -25,6 +25,34 @@
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
->  
-> +static int v4l2_async_notifier_call_bound(struct v4l2_async_notifier *n,
-> +					  struct v4l2_subdev *subdev,
-> +					  struct v4l2_async_subdev *asd)
-> +{
-> +	if (!n->ops || !n->ops->bound)
-> +		return 0;
-> +
-> +	return n->ops->bound(n, subdev, asd);
-> +}
-> +
-> +static void v4l2_async_notifier_call_unbind(struct v4l2_async_notifier *n,
-> +					    struct v4l2_subdev *subdev,
-> +					    struct v4l2_async_subdev *asd)
-> +{
-> +	if (!n->ops || !n->ops->unbind)
-> +		return;
-> +
-> +	n->ops->unbind(n, subdev, asd);
-> +}
-> +
-> +static int v4l2_async_notifier_call_complete(struct v4l2_async_notifier *n)
-> +{
-> +	if (!n->ops || !n->ops->complete)
-> +		return 0;
-> +
-> +	return n->ops->complete(n);
-> +}
-> +
->  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
->  {
->  #if IS_ENABLED(CONFIG_I2C)
-> @@ -102,16 +130,13 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
->  {
->  	int ret;
->  
-> -	if (notifier->ops->bound) {
-> -		ret = notifier->ops->bound(notifier, sd, asd);
-> -		if (ret < 0)
-> -			return ret;
-> -	}
-> +	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
-> +	if (ret < 0)
-> +		return ret;
->  
->  	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
->  	if (ret < 0) {
-> -		if (notifier->ops->unbind)
-> -			notifier->ops->unbind(notifier, sd, asd);
-> +		v4l2_async_notifier_call_unbind(notifier, sd, asd);
->  		return ret;
->  	}
->  
-> @@ -123,8 +148,8 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
->  	/* Move from the global subdevice list to notifier's done */
->  	list_move(&sd->async_list, &notifier->done);
->  
-> -	if (list_empty(&notifier->waiting) && notifier->ops->complete)
-> -		return notifier->ops->complete(notifier);
-> +	if (list_empty(&notifier->waiting))
-> +		return v4l2_async_notifier_call_complete(notifier);
->  
->  	return 0;
->  }
-> @@ -210,8 +235,7 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
->  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
->  		v4l2_async_cleanup(sd);
->  
-> -		if (notifier->ops->unbind)
-> -			notifier->ops->unbind(notifier, sd, sd->asd);
-> +		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
->  	}
->  
->  	mutex_unlock(&list_lock);
-> @@ -300,8 +324,7 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
->  
->  	v4l2_async_cleanup(sd);
->  
-> -	if (notifier->ops->unbind)
-> -		notifier->ops->unbind(notifier, sd, sd->asd);
-> +	v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
->  
->  	mutex_unlock(&list_lock);
->  }
-> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-> index 3c48f8b66d12..3bc8a7c0d83f 100644
-> --- a/include/media/v4l2-async.h
-> +++ b/include/media/v4l2-async.h
-> @@ -164,4 +164,5 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd);
->   * @sd: pointer to &struct v4l2_subdev
->   */
->  void v4l2_async_unregister_subdev(struct v4l2_subdev *sd);
-> +
->  #endif
+> >  .../bindings/iio/adc/ti-lmp92001-adc.txt           | 20 +++++++
+> >  .../bindings/iio/dac/ti-lmp92001-dac.txt           | 35 ++++++++++++
+> >  4 files changed, 142 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-lmp920001
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt  
 > 
+> [...]
+> 
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt b/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
+> > new file mode 100644
+> > index 000000000000..f9a18c492145
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
+> > @@ -0,0 +1,22 @@
+> > +* Texas Instruments' LMP92001 GPIOs
+> > +  
+> 
+> Need to state what this is a child of and refer to that binding doc. 
+> Same for the others.
+> 
+> > +Required properties:
+> > + - compatible: Must be set to "ti,lmp92001-gpio".
+> > + - reg: i2c chip address for the device.  
+> 
+> ? That's for the parent.
+> 
+> > + - gpio-controller: Marks the device node as a gpio controller.
+> > + - #gpio-cells : Should be two.  The first cell is the pin number and the
+> > +  second cell is used to specify the gpio polarity:
+> > +        0 = Active high
+> > +        1 = Active low
+> > +
+> > +Example:
+> > +lmp92001@20 {
+> > +        compatible = "ti,lmp92001";
+> > +        reg = <0x20>;
+> > +
+> > +        gpio-controller {  
+> 
+> Should be "gpio {"
+> 
+> > +                compatible = "ti,lmp92001-gpio";
+> > +                gpio-controller;
+> > +                #gpio-cells = <2>;
+> > +        };
+> > +};
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt b/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
+> > new file mode 100644
+> > index 000000000000..4565961bf511
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
+> > @@ -0,0 +1,20 @@
+> > +* Texas Instruments' LMP92001 ADCs
+> > +
+> > +Required properties:
+> > + - compatible: Must be set to "ti,lmp92001-adc".
+> > + - reg: i2c chip address for the device.
+> > + - ti,lmp92001-adc-mask: bit mask for which channel is enable.
+> > +        0 = Off
+> > +        1 = On
+> > +
+> > +Example:
+> > +lmp92001@20 {
+> > +        compatible = "ti,lmp92001";
+> > +        reg = <0x20>;
+> > +
+> > +        lmp92001-adc {  
+> 
+> adc {
+> 
+> > +                compatible = "ti,lmp92001-adc";
+> > +                ti,lmp92001-adc-mode = "continuous";  
+> 
+> Not documented and I believe we're going to add a common property for 
+> this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Possibly.  I'm not keen on it being explicitly controlled in general.
+It isn't a feature of the hardware in this case (I think) and as userspace
+control it is very hard for userspace to know what to do with it -
+normally it is better to put sufficient smarts in the driver to handle
+this transparently from either dt or userspace abi point of view.
+
+At a rough guess 10-25% of the hardware in IIO has a similar mode (possibly more)
+We expose it precisely 1 other driver at the moment (and to be honest
+I can't recall why we allowed it in there)  There are all sorts of optimizations
+that can be done in the driver if we don't make this a manual control.
+
+Jonathan
+
+> 
+> > +                ti,lmp92001-adc-mask = <0x00000079>;
+> > +        };
+> > +};
+> > diff --git a/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt b/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
+> > new file mode 100644
+> > index 000000000000..882db9ca92f5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
+> > @@ -0,0 +1,35 @@
+> > +* Texas Instruments' LMP92001 DACs
+> > +
+> > +Required properties:
+> > + - compatible: Must be set to "ti,lmp92001-dac".
+> > + - reg: i2c chip address for the device.
+> > + - ti,lmp92001-dac-hiz: hi-impedance control,
+> > +        1 = Forces all OUT[1:12] outputs to hi-z, 0 = normal
+> > + - ti,lmp92001-dac-outx:
+> > +        Cy = 0, 1 = will force associated OUTx outputs to VDD
+> > +        Cy = 0, 0 = will force associated OUTx outputs to GND
+> > + - ti,lmp92001-dac-gang: What group of Cy is governed to.
+> > +        -----------------------------------------
+> > +        |  Cy   | CDAC:GANG = 0 | CDAC:GANG = 1 |
+> > +        -----------------------------------------
+> > +        |  C1   |   OUT[1:4]    |    OUT[1:3]   |
+> > +        -----------------------------------------
+> > +        |  C2   |   OUT[5:6]    |    OUT[4:6]   |
+> > +        -----------------------------------------
+> > +        |  C3   |   OUT[7:8]    |    OUT[7:9]   |
+> > +        -----------------------------------------
+> > +        |  C4   |   OUT[9:12]   |    OUT[10:12] |
+> > +        -----------------------------------------
+> > +
+> > +Example:
+> > +lmp92001@20 {
+> > +        compatible = "ti,lmp92001";
+> > +        reg = <0x20>;
+> > +
+> > +        lmp92001-dac {  
+> 
+> dac {
+> 
+> > +                compatible = "ti,lmp92001-dac";
+> > +                ti,lmp92001-dac-hiz  = /bits/ 8 <0>;
+> > +                ti,lmp92001-dac-outx = /bits/ 8 <0>;
+> > +                ti,lmp92001-dac-gang = /bits/ 8 <0>;
+> > +        };
+> > +};
+> > -- 
+> > 2.13.0
+> >   
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
