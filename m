@@ -1,28 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/7] mfd: arizona: Remove audio bindings from MFD binding
- document
-Date: Tue, 12 Sep 2017 16:15:22 -0500
-Message-ID: <20170912211522.obvj4vnpm75diftq@rob-hp-laptop>
-References: <20170904154154.4395-1-ckeepax@opensource.cirrus.com>
- <20170904154154.4395-6-ckeepax@opensource.cirrus.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 11/11] arm64: dts: renesas: eagle: add EtherAVB support
+Date: Wed, 13 Sep 2017 00:18:08 +0300
+Message-ID: <a2e8db4a-bcc7-edd0-7abc-37a74922a624@cogentembedded.com>
+References: <20170912210547.471712392@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170904154154.4395-6-ckeepax@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170912210547.471712392@cogentembedded.com>
+Content-Language: en-MW
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 04, 2017 at 04:41:52PM +0100, Charles Keepax wrote:
-> Now the audio bindings have their own binding document update the main
-> MFD document to point to that file and remove the audio binding
-> documentation.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt | 40 +----------------------
->  1 file changed, 1 insertion(+), 39 deletions(-)
+On 09/12/2017 11:37 PM, Sergei Shtylyov wrote:
 
-Acked-by: Rob Herring <robh@kernel.org> 
+> Define the Eagle board  dependent part of the EtherAVB device node.
+> Enable DHCP  and NFS root for the kernel booting.
+> 
+> Based  on the original (and large) patch by Vladimir Barinov.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77970-eagle.dts |   15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> ===================================================================
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+[...]
+> @@ -43,3 +44,15 @@
+>  &scif0 {
+>  	status = "okay";
+>  };
+> +
+> +&avb {
+> +//	renesas,no-ether-link;
+
+    Oops, overlooked it, will fix!
+
+> +	phy-handle = <&phy0>;
+> +	status = "okay";
+> +
+> +	phy0: ethernet-phy@0 {
+> +		rxc-skew-ps = <1500>;
+> +		reg = <0>;
+> +		max-speed = <1000>;
+> +	};
+> +};
+
+MNR, Sergei
