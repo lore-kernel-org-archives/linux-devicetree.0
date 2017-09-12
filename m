@@ -1,58 +1,41 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: as3645a flash userland interface
-Date: Tue, 12 Sep 2017 13:47:20 +0300
-Message-ID: <20170912104720.ifyouc5pa5et6gzk@valkosipuli.retiisi.org.uk>
-References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
- <20170912084236.1154-25-sakari.ailus@linux.intel.com>
- <20170912103628.GB27117@amd>
+Subject: Re: [PATCH] et8ek8: Add support for flash and lens devices
+Date: Tue, 12 Sep 2017 14:06:45 +0300
+Message-ID: <20170912110645.npkpl4elmbrjavla@valkosipuli.retiisi.org.uk>
+References: <20170908131235.30294-1-sakari.ailus@linux.intel.com>
+ <20170908131822.31020-18-sakari.ailus@linux.intel.com>
+ <20170909214724.GA18677@amd>
+ <20170911131831.GA12658@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170912103628.GB27117@amd>
-Sender: linux-leds-owner@vger.kernel.org
+In-Reply-To: <20170911131831.GA12658@amd>
+Sender: linux-acpi-owner@vger.kernel.org
 To: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, sre@kernel.org
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Pavel,
 
-On Tue, Sep 12, 2017 at 12:36:28PM +0200, Pavel Machek wrote:
-> Hi!
+On Mon, Sep 11, 2017 at 03:18:31PM +0200, Pavel Machek wrote:
+> Parse async sub-devices by using
+> v4l2_subdev_fwnode_reference_parse_sensor_common().
 > 
-> There were some changes to as3645a flash controller. Before we have
-> stable interface we have to keep forever I want to ask:
+> These types devices aren't directly related to the sensor, but are
+> nevertheless handled by the et8ek8 driver due to the relationship of these
+> component to the main part of the camera module --- the sensor.
 > 
-> What directory are the flash controls in?
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 > 
-> /sys/class/leds/led-controller:flash ?
+> ---
 > 
-> Could we arrange for something less generic, like
+> This enables me to do autofocus on n900.
 > 
-> /sys/class/leds/main-camera:flash ?
-> 
-> Thanks,
+> Depends on Sakari's series, so best solution would be to append it there.
 
-The LEDs are called as3645a:flash and as3645a:indicator currently, based on
-the name of the LED controller's device node. There are no patches related
-to this set though; these have already been merged.
-
-The label should be a "human readable string describing the device" (from
-ePAPR, please excuse me for not having a newer spec), and the led common
-bindings define it as:
-
-- label : The label for this LED. If omitted, the label is taken from the node
-          name (excluding the unit address). It has to uniquely identify
-          a device, i.e. no other LED class device can be assigned the same
-          label.
-
-I don't think that you should be looking to use this to associate it with
-the camera as such. The association information with the sensor is
-available to the kernel but there's no interface that could meaningfully
-expose it to the user right now.
+I added this after the smiapp driver changes.
 
 -- 
-Regards,
-
 Sakari Ailus
 e-mail: sakari.ailus@iki.fi
