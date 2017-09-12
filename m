@@ -1,73 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings
- documentation
-Date: Tue, 12 Sep 2017 11:20:08 -0500
-Message-ID: <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
-References: <20170901065818.2037-1-fe@dev.tdt.de>
- <20170901065818.2037-2-fe@dev.tdt.de>
- <20170901142622.GC599@roeck-us.net>
+Subject: Re: [PATCH 1/2] drm: bridge: Add bindings for TI THS8134
+Date: Tue, 12 Sep 2017 11:39:58 -0500
+Message-ID: <20170912163958.xr5qxt5doqlk44dp@rob-hp-laptop>
+References: <20170901094038.4312-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170901142622.GC599@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Florian Eckert <fe@dev.tdt.de>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, jdelvare@suse.com
+In-Reply-To: <20170901094038.4312-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, dri-devel@lists.freedesktop.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 01, 2017 at 07:26:22AM -0700, Guenter Roeck wrote:
-> On Fri, Sep 01, 2017 at 08:58:18AM +0200, Florian Eckert wrote:
-> > Document the devicetree bindings for the ltq-cputemp
-> > 
-> > Signed-off-by: Florian Eckert <fe@dev.tdt.de>
-> 
-> I see nothing special with the bindings, and they are in line with other lantiq
-> bindings, so I am taking the risk of accepting this patch (and the matching
-> driver) without waiting for explicit approval from Rob. Rob, scream at me if
-> that is not ok.
-
-Perhaps the existing one was not well reviewed.
-
-> 
-> Thanks,
-> Guenter
-> 
-> > ---
-> >  Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
-> > new file mode 100644
-> > index 000000000000..33fd00a987c7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
-> > @@ -0,0 +1,10 @@
-> > +Lantiq cpu temperatur sensor
-
-s/temperatur/temperature/
-
-> > +
-> > +Requires node properties:
-> > +- compatible value :
-> > +	"lantiq,cputemp"
-
-Kind of non-specific. How is this device even accessed without any other 
-property? 
-
-> > +
-> > +Example:
-> > +	cputemp@0 {
-
-unit-address without reg property is not valid.
-
-> > +		compatible = "lantiq,cputemp";
-> > +	};
-> > -- 
-> > 2.11.0
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBTZXAgMDEsIDIwMTcgYXQgMTE6NDA6MzdBTSArMDIwMCwgTGludXMgV2FsbGVpaiB3
+cm90ZToKPiBUaGlzIGFkZHMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHRoZSBUZXhhcyBJbnN0
+cnVtZW50cwo+IFRIUzgxMzRBIGFuZCBUSFM4MTM0QiBWR0EgREFDcyBieSBleHRlbmRpbmcgYW5k
+IHJlbmFtaW5nIHRoZQo+IGV4aXN0aW5nIGJpbmRpbmdzIGZvciBUSFM4MTM1Lgo+IAo+IFRoZXNl
+IERBQ3MgYXJlIHVzZWQgZm9yIHRoZSBWR0Egb3V0cHV0cyBvbiB0aGUgQVJNIHJlZmVyZW5jZQo+
+IGRlc2lnbnMgc3VjaCBhcyBJbnRlZ3JhdG9yLCBWZXJzYXRpbGUgYW5kIFJlYWxWaWV3Lgo+IAo+
+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IENjOiBCYXJ0b3N6IEdvbGFzemV3c2tp
+IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxl
+aWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KPiAtLS0KPiAgLi4uL2Rpc3BsYXkvYnJpZGdl
+L3t0aSx0aHM4MTM1LnR4dCA9PiB0aSx0aHM4MTN4LnR4dH0gICAgICAgIHwgMTIgKysrKysrKyst
+LS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4g
+IHJlbmFtZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
+e3RpLHRoczgxMzUudHh0ID0+IHRpLHRoczgxM3gudHh0fSAoNzMlKQoKQWNrZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
