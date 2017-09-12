@@ -1,188 +1,250 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v12 06/26] v4l: fwnode: Support generic parsing of graph endpoints, per port
-Date: Tue, 12 Sep 2017 16:41:40 +0300
-Message-ID: <20170912134200.19556-7-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v12 01/26] v4l: fwnode: Move KernelDoc documentation to the header
+Date: Tue, 12 Sep 2017 16:41:35 +0300
+Message-ID: <20170912134200.19556-2-sakari.ailus@linux.intel.com>
 References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170912134200.19556-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is just like like v4l2_async_notifier_parse_fwnode_endpoints but it
-only parses endpoints on a single port. The behaviour is useful on devices
-that have both sinks and sources, in other words only some of these should
-be parsed.
+In V4L2 the practice is to have the KernelDoc documentation in the header
+and not in .c source code files. This consequently makes the V4L2 fwnode
+function documentation part of the Media documentation build.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Also correct the link related function and argument naming in
+documentation.
+
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 59 ++++++++++++++++++++++++++++++++---
- include/media/v4l2-fwnode.h           | 59 +++++++++++++++++++++++++++++++++++
- 2 files changed, 113 insertions(+), 5 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 75 --------------------------------
+ include/media/v4l2-fwnode.h           | 81 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 80 insertions(+), 76 deletions(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index d978f2d714ca..44ee35f6aad5 100644
+index 40b2fbfe8865..706f9e7b90f1 100644
 --- a/drivers/media/v4l2-core/v4l2-fwnode.c
 +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -398,9 +398,9 @@ static int v4l2_async_notifier_fwnode_parse_endpoint(
- 	return ret == -ENOTCONN ? 0 : ret;
+@@ -181,25 +181,6 @@ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
+ 		vep->bus_type = V4L2_MBUS_CSI1;
  }
  
--int v4l2_async_notifier_parse_fwnode_endpoints(
-+static int __v4l2_async_notifier_parse_fwnode_endpoints(
- 	struct device *dev, struct v4l2_async_notifier *notifier,
--	size_t asd_struct_size,
-+	size_t asd_struct_size, unsigned int port, bool has_port,
- 	int (*parse_endpoint)(struct device *dev,
- 			    struct v4l2_fwnode_endpoint *vep,
- 			    struct v4l2_async_subdev *asd))
-@@ -413,10 +413,25 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
- 		return -EINVAL;
- 
- 	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
--				     dev_fwnode(dev), fwnode)); )
--		if (fwnode_device_is_available(
-+				     dev_fwnode(dev), fwnode)); ) {
-+		if (!fwnode_device_is_available(
- 			    fwnode_graph_get_port_parent(fwnode)))
--			max_subdevs++;
-+			continue;
-+
-+		if (has_port) {
-+			struct fwnode_endpoint ep;
-+
-+			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
-+			if (ret) {
-+				fwnode_handle_put(fwnode);
-+				return ret;
-+			}
-+
-+			if (ep.port != port)
-+				continue;
-+		}
-+		max_subdevs++;
-+	}
- 
- 	/* No subdevs to add? Return here. */
- 	if (max_subdevs == notifier->max_subdevs)
-@@ -437,6 +452,17 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
- 			break;
- 		}
- 
-+		if (has_port) {
-+			struct fwnode_endpoint ep;
-+
-+			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
-+			if (ret)
-+				break;
-+
-+			if (ep.port != port)
-+				continue;
-+		}
-+
- 		ret = v4l2_async_notifier_fwnode_parse_endpoint(
- 			dev, notifier, fwnode, asd_struct_size, parse_endpoint);
- 		if (ret < 0)
-@@ -447,8 +473,31 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
- 
- 	return ret;
+-/**
+- * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
+- * @fwnode: pointer to the endpoint's fwnode handle
+- * @vep: pointer to the V4L2 fwnode data structure
+- *
+- * All properties are optional. If none are found, we don't set any flags. This
+- * means the port has a static configuration and no properties have to be
+- * specified explicitly. If any properties that identify the bus as parallel
+- * are found and slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if
+- * we recognise the bus as serial CSI-2 and clock-noncontinuous isn't set, we
+- * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
+- * reference to @fwnode.
+- *
+- * NOTE: This function does not parse properties the size of which is variable
+- * without a low fixed limit. Please use v4l2_fwnode_endpoint_alloc_parse() in
+- * new drivers instead.
+- *
+- * Return: 0 on success or a negative error code on failure.
+- */
+ int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 			       struct v4l2_fwnode_endpoint *vep)
+ {
+@@ -239,14 +220,6 @@ int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
  }
-+
-+int v4l2_async_notifier_parse_fwnode_endpoints(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	size_t asd_struct_size,
-+	int (*parse_endpoint)(struct device *dev,
-+			    struct v4l2_fwnode_endpoint *vep,
-+			    struct v4l2_async_subdev *asd))
-+{
-+	return __v4l2_async_notifier_parse_fwnode_endpoints(
-+		dev, notifier, asd_struct_size, 0, false, parse_endpoint);
-+}
- EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
+ EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_parse);
  
-+int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	size_t asd_struct_size, unsigned int port,
-+	int (*parse_endpoint)(struct device *dev,
-+			    struct v4l2_fwnode_endpoint *vep,
-+			    struct v4l2_async_subdev *asd))
-+{
-+	return __v4l2_async_notifier_parse_fwnode_endpoints(
-+		dev, notifier, asd_struct_size, port, true, parse_endpoint);
-+}
-+EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+-/*
+- * v4l2_fwnode_endpoint_free() - free the V4L2 fwnode acquired by
+- * v4l2_fwnode_endpoint_alloc_parse()
+- * @vep - the V4L2 fwnode the resources of which are to be released
+- *
+- * It is safe to call this function with NULL argument or on a V4L2 fwnode the
+- * parsing of which failed.
+- */
+ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep)
+ {
+ 	if (IS_ERR_OR_NULL(vep))
+@@ -257,29 +230,6 @@ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep)
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_free);
+ 
+-/**
+- * v4l2_fwnode_endpoint_alloc_parse() - parse all fwnode node properties
+- * @fwnode: pointer to the endpoint's fwnode handle
+- *
+- * All properties are optional. If none are found, we don't set any flags. This
+- * means the port has a static configuration and no properties have to be
+- * specified explicitly. If any properties that identify the bus as parallel
+- * are found and slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if
+- * we recognise the bus as serial CSI-2 and clock-noncontinuous isn't set, we
+- * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
+- * reference to @fwnode.
+- *
+- * v4l2_fwnode_endpoint_alloc_parse() has two important differences to
+- * v4l2_fwnode_endpoint_parse():
+- *
+- * 1. It also parses variable size data.
+- *
+- * 2. The memory it has allocated to store the variable size data must be freed
+- *    using v4l2_fwnode_endpoint_free() when no longer needed.
+- *
+- * Return: Pointer to v4l2_fwnode_endpoint if successful, on an error pointer
+- * on error.
+- */
+ struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+ 	struct fwnode_handle *fwnode)
+ {
+@@ -322,24 +272,6 @@ struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_alloc_parse);
+ 
+-/**
+- * v4l2_fwnode_endpoint_parse_link() - parse a link between two endpoints
+- * @__fwnode: pointer to the endpoint's fwnode at the local end of the link
+- * @link: pointer to the V4L2 fwnode link data structure
+- *
+- * Fill the link structure with the local and remote nodes and port numbers.
+- * The local_node and remote_node fields are set to point to the local and
+- * remote port's parent nodes respectively (the port parent node being the
+- * parent node of the port node if that node isn't a 'ports' node, or the
+- * grand-parent node of the port node otherwise).
+- *
+- * A reference is taken to both the local and remote nodes, the caller must use
+- * v4l2_fwnode_endpoint_put_link() to drop the references when done with the
+- * link.
+- *
+- * Return: 0 on success, or -ENOLINK if the remote endpoint fwnode can't be
+- * found.
+- */
+ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+ 			   struct v4l2_fwnode_link *link)
+ {
+@@ -374,13 +306,6 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fwnode_parse_link);
+ 
+-/**
+- * v4l2_fwnode_put_link() - drop references to nodes in a link
+- * @link: pointer to the V4L2 fwnode link data structure
+- *
+- * Drop references to the local and remote nodes in the link. This function
+- * must be called on every link parsed with v4l2_fwnode_parse_link().
+- */
+ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+ {
+ 	fwnode_handle_put(link->local_node);
 diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 31fb77e470fa..b2eed4f33e6a 100644
+index 7adec9851d9e..68eb22ba571b 100644
 --- a/include/media/v4l2-fwnode.h
 +++ b/include/media/v4l2-fwnode.h
-@@ -257,4 +257,63 @@ int v4l2_async_notifier_parse_fwnode_endpoints(
- 			      struct v4l2_fwnode_endpoint *vep,
- 			      struct v4l2_async_subdev *asd));
+@@ -113,13 +113,92 @@ struct v4l2_fwnode_link {
+ 	unsigned int remote_port;
+ };
  
 +/**
-+ * v4l2_async_notifier_parse_fwnode_endpoints_by_port - Parse V4L2 fwnode
-+ *							endpoints of a port in a
-+ *							device node
-+ * @dev: the device the endpoints of which are to be parsed
-+ * @notifier: notifier for @dev
-+ * @asd_struct_size: size of the driver's async sub-device struct, including
-+ *		     sizeof(struct v4l2_async_subdev). The &struct
-+ *		     v4l2_async_subdev shall be the first member of
-+ *		     the driver's async sub-device struct, i.e. both
-+ *		     begin at the same memory address.
-+ * @port: port number where endpoints are to be parsed
-+ * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
-+ *		    endpoint. Optional.
-+ *		    Return: %0 on success
-+ *			    %-ENOTCONN if the endpoint is to be skipped but this
-+ *				       should not be considered as an error
-+ *			    %-EINVAL if the endpoint configuration is invalid
++ * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
++ * @fwnode: pointer to the endpoint's fwnode handle
++ * @vep: pointer to the V4L2 fwnode data structure
 + *
-+ * This function is just like @v4l2_async_notifier_parse_fwnode_endpoints with
-+ * the exception that it only parses endpoints in a given port.
++ * All properties are optional. If none are found, we don't set any flags. This
++ * means the port has a static configuration and no properties have to be
++ * specified explicitly. If any properties that identify the bus as parallel
++ * are found and slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if
++ * we recognise the bus as serial CSI-2 and clock-noncontinuous isn't set, we
++ * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
++ * reference to @fwnode.
 + *
-+ * Parse the fwnode endpoints of the @dev device on a given @port and populate
-+ * the async sub-devices array of the notifier. The @parse_endpoint callback
-+ * function is called for each endpoint with the corresponding async sub-device
-+ * pointer to let the caller initialize the driver-specific part of the async
-+ * sub-device structure.
++ * NOTE: This function does not parse properties the size of which is variable
++ * without a low fixed limit. Please use v4l2_fwnode_endpoint_alloc_parse() in
++ * new drivers instead.
 + *
-+ * The notifier memory shall be zeroed before this function is called on the
-+ * notifier.
-+ *
-+ * This function may not be called on a registered notifier and may be called on
-+ * a notifier only once, per port.
-+ *
-+ * Do not change the notifier's subdevs array, take references to the subdevs
-+ * array itself or change the notifier's num_subdevs field. This is because this
-+ * function allocates and reallocates the subdevs array based on parsing
-+ * endpoints.
-+ *
-+ * The @struct v4l2_fwnode_endpoint passed to the callback function
-+ * @parse_endpoint is released once the function is finished. If there is a need
-+ * to retain that configuration, the user needs to allocate memory for it.
-+ *
-+ * Any notifier populated using this function must be released with a call to
-+ * v4l2_async_notifier_release() after it has been unregistered and the async
-+ * sub-devices are no longer in use, even if the function returned an error.
-+ *
-+ * Return: %0 on success, including when no async sub-devices are found
-+ *	   %-ENOMEM if memory allocation failed
-+ *	   %-EINVAL if graph or endpoint parsing failed
-+ *	   Other error codes as returned by @parse_endpoint
++ * Return: 0 on success or a negative error code on failure.
 + */
-+int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	size_t asd_struct_size, unsigned int port,
-+	int (*parse_endpoint)(struct device *dev,
-+			      struct v4l2_fwnode_endpoint *vep,
-+			      struct v4l2_async_subdev *asd));
+ int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 			       struct v4l2_fwnode_endpoint *vep);
 +
++/*
++ * v4l2_fwnode_endpoint_free() - free the V4L2 fwnode acquired by
++ * v4l2_fwnode_endpoint_alloc_parse()
++ * @vep - the V4L2 fwnode the resources of which are to be released
++ *
++ * It is safe to call this function with NULL argument or on a V4L2 fwnode the
++ * parsing of which failed.
++ */
++void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
++
++/**
++ * v4l2_fwnode_endpoint_alloc_parse() - parse all fwnode node properties
++ * @fwnode: pointer to the endpoint's fwnode handle
++ *
++ * All properties are optional. If none are found, we don't set any flags. This
++ * means the port has a static configuration and no properties have to be
++ * specified explicitly. If any properties that identify the bus as parallel
++ * are found and slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if
++ * we recognise the bus as serial CSI-2 and clock-noncontinuous isn't set, we
++ * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
++ * reference to @fwnode.
++ *
++ * v4l2_fwnode_endpoint_alloc_parse() has two important differences to
++ * v4l2_fwnode_endpoint_parse():
++ *
++ * 1. It also parses variable size data.
++ *
++ * 2. The memory it has allocated to store the variable size data must be freed
++ *    using v4l2_fwnode_endpoint_free() when no longer needed.
++ *
++ * Return: Pointer to v4l2_fwnode_endpoint if successful, on an error pointer
++ * on error.
++ */
+ struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+ 	struct fwnode_handle *fwnode);
+-void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
++
++/**
++ * v4l2_fwnode_parse_link() - parse a link between two endpoints
++ * @fwnode: pointer to the endpoint's fwnode at the local end of the link
++ * @link: pointer to the V4L2 fwnode link data structure
++ *
++ * Fill the link structure with the local and remote nodes and port numbers.
++ * The local_node and remote_node fields are set to point to the local and
++ * remote port's parent nodes respectively (the port parent node being the
++ * parent node of the port node if that node isn't a 'ports' node, or the
++ * grand-parent node of the port node otherwise).
++ *
++ * A reference is taken to both the local and remote nodes, the caller must use
++ * v4l2_fwnode_put_link() to drop the references when done with the
++ * link.
++ *
++ * Return: 0 on success, or -ENOLINK if the remote endpoint fwnode can't be
++ * found.
++ */
+ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+ 			   struct v4l2_fwnode_link *link);
++
++/**
++ * v4l2_fwnode_put_link() - drop references to nodes in a link
++ * @link: pointer to the V4L2 fwnode link data structure
++ *
++ * Drop references to the local and remote nodes in the link. This function
++ * must be called on every link parsed with v4l2_fwnode_parse_link().
++ */
+ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+ 
  #endif /* _V4L2_FWNODE_H */
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
