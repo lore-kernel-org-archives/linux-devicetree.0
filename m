@@ -1,37 +1,32 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 09/11] arm64: renesas: document Eagle board
-Date: Tue, 12 Sep 2017 23:37:25 +0300
-Message-ID: <20170912210540.129836169__15700.1468040564$1505340250$gmane$org@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/7] ASoC: arizona: Add audio device tree bindings
+Date: Tue, 12 Sep 2017 16:14:57 -0500
+Message-ID: <20170912211457.uenpih5b7bfdzv6j@rob-hp-laptop>
+References: <20170904154154.4395-1-ckeepax@opensource.cirrus.com>
+ <20170904154154.4395-4-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=arm64-renesas-document-Eagle-board.patch
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170904154154.4395-4-ckeepax@opensource.cirrus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-Document the Eagle device tree bindings, listing it as a supported board.
+On Mon, Sep 04, 2017 at 04:41:50PM +0100, Charles Keepax wrote:
+> In keeping with the style of the rest of this drivers device tree
+> bindings split the audio device tree bindings into their own document.
+> It should be noted this patch makes no change to the binding itself
+> just moves the documentation into a specific file for the audio
+> binding. For easy of merging a separate patch removes the current
+> documentation from the MFD binding documentation.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  .../devicetree/bindings/sound/wlf,arizona.txt      | 49 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/wlf,arizona.txt
 
-This allows to use checkpatch.pl to validate .dts files referring to the
-Eagle board.
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
- Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
- 1 file changed, 2 insertions(+)
-
-Index: renesas/Documentation/devicetree/bindings/arm/shmobile.txt
-===================================================================
---- renesas.orig/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ renesas/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -59,6 +59,8 @@ Boards:
-     compatible = "renesas,bockw", "renesas,r8a7778"
-   - Draak (RTP0RC77995SEB0010S)
-     compatible = "renesas,draak", "renesas,r8a77995"
-+  - Eagle (RTP0RC77970SEB0010S)
-+    compatible = "renesas,eagle", "renesas,r8a77970";
-   - Genmai (RTK772100BC00000BR)
-     compatible = "renesas,genmai", "renesas,r7s72100"
-   - GR-Peach (X28A-M01-E/F)
+Acked-by: Rob Herring <robh@kernel.org>
