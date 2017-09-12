@@ -1,505 +1,377 @@
-From: Eric Long <eric.long@spreadtrum.com>
-Subject: Re: [PATCH 2/2] watchdog: Add Spreadtrum watchdog driver
-Date: Tue, 12 Sep 2017 14:17:21 +0800
-Message-ID: <20170912061720.GA717@spreadtrum.com>
-References: <f3daa0f85dda0672c4b057e7f37c690365652e39.1504580649.git.eric.long@spreadtrum.com>
- <89f16b00247c8db0d33d7572e83770aeae23e4f2.1504580649.git.eric.long@spreadtrum.com>
- <201709110141.v8B1fRF8027712@TPSPAM01.spreadtrum.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201709110141.v8B1fRF8027712@TPSPAM01.spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "baolin.wang@linaro.org" <baolin.wang@linaro.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v11 05/24] v4l: fwnode: Support generic parsing of graph endpoints in a device
+Date: Tue, 12 Sep 2017 11:42:17 +0300
+Message-ID: <20170912084236.1154-6-sakari.ailus@linux.intel.com>
+References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170912084236.1154-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 09, 2017 at 03:32:48AM +0000, Guenter Roeck wrote:
-> On 09/05/2017 10:38 PM, Eric Long wrote:
-> > This patch adds the watchdog driver for Spreadtrum SC9860 platform.
-> > 
-> > Signed-off-by: Eric Long <eric.long@spreadtrum.com>
-> > ---
-> >   drivers/watchdog/Kconfig    |   8 +
-> >   drivers/watchdog/Makefile   |   1 +
-> >   drivers/watchdog/sprd_wdt.c | 366 ++++++++++++++++++++++++++++++++++++++++++++
-> >   3 files changed, 375 insertions(+)
-> >   create mode 100644 drivers/watchdog/sprd_wdt.c
-> > 
-> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > index c722cbf..ea07718 100644
-> > --- a/drivers/watchdog/Kconfig
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -787,6 +787,14 @@ config UNIPHIER_WATCHDOG
-> >   	  To compile this driver as a module, choose M here: the
-> >   	  module will be called uniphier_wdt.
-> >   
-> > +config SPRD_WATCHDOG
-> > +	tristate "Spreadtrum watchdog support"
-> > +	depends on ARCH_SPRD
-> > +	select WATCHDOG_CORE
-> > +	help
-> > +	  Say Y here to include support watchdog timer embedded
-> > +	  into the Spreadtrum system.
-> > +
-> >   # AVR32 Architecture
-> >   
-> >   config AT32AP700X_WDT
-> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> > index 56adf9f..187cca2 100644
-> > --- a/drivers/watchdog/Makefile
-> > +++ b/drivers/watchdog/Makefile
-> > @@ -87,6 +87,7 @@ obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
-> >   obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
-> >   obj-$(CONFIG_STM32_WATCHDOG) += stm32_iwdg.o
-> >   obj-$(CONFIG_UNIPHIER_WATCHDOG) += uniphier_wdt.o
-> > +obj-$(CONFIG_SPRD_WATCHDOG) += sprd_wdt.o
-> >   
-> >   # AVR32 Architecture
-> >   obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
-> > diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
-> > new file mode 100644
-> > index 0000000..6006bb4
-> > --- /dev/null
-> > +++ b/drivers/watchdog/sprd_wdt.c
-> > @@ -0,0 +1,366 @@
-> > +/*
-> > + * Spreadtrum watchdog driver
-> > + * Copyright (C) 2017 Spreadtrum - http://www.spreadtrum.com
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> > + * version 2 as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful, but
-> > + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> > + * General Public License for more details.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/err.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/watchdog.h>
-> > +
-> > +#define WDT_LOAD_LOW		0x0
-> > +#define WDT_LOAD_HIGH		0x4
-> > +#define WDT_CTRL		0x8
-> > +#define WDT_INT_CLR		0xc
-> > +#define WDT_INT_RAW		0x10
-> > +#define WDT_INT_MSK		0x14
-> > +#define WDT_CNT_LOW		0x18
-> > +#define WDT_CNT_HIGH		0x1c
-> > +#define WDT_LOCK		0x20
-> > +#define WDT_IRQ_LOAD_LOW	0x2c
-> > +#define WDT_IRQ_LOAD_HIGH	0x30
-> > +
-> > +/* WDT_CTRL */
-> > +#define WDT_INT_EN_BIT		BIT(0)
-> > +#define WDT_CNT_EN_BIT		BIT(1)
-> > +#define WDT_NEW_VER_EN		BIT(2)
-> > +#define WDT_RST_EN_BIT		BIT(3)
-> > +
-> > +/* WDT_INT_CLR */
-> > +#define WDT_INT_CLEAR_BIT	BIT(0)
-> > +#define WDT_RST_CLEAR_BIT	BIT(3)
-> > +
-> > +/* WDT_INT_RAW */
-> > +#define WDT_INT_RAW_BIT		BIT(0)
-> > +#define WDT_RST_RAW_BIT		BIT(3)
-> > +#define WDT_LD_BUSY_BIT		BIT(4)
-> > +
-> > +#define WDT_CLK			32768
-> > +#define WDT_UNLOCK_KEY		0xe551
-> > +#define WDT_IRQ_TMROUT_OFFSET	0x3
-> > +
-> > +#define WDT_CNT_VALUE_SIZE	16
-> > +#define WDT_CNT_VALUE_MASK	GENMASK(15, 0)
-> > +#define WDT_LOAD_TIMEOUT_NUM	10000
-> > +
-> > +struct sprd_wdt {
-> > +	void __iomem *base;
-> > +	struct watchdog_device wdd;
-> > +	struct clk *enable;
-> > +	struct clk *rtc_enable;
-> > +	u32 irq_tmr_out;
-> > +	u32 rst_tmr_out;
-> > +	unsigned int irq;
-> > +};
-> > +
-> > +static inline struct sprd_wdt *to_sprd_wdt(struct watchdog_device *wdd)
-> > +{
-> > +	return container_of(wdd, struct sprd_wdt, wdd);
-> > +}
-> > +
-> > +static inline void sprd_wdt_lock(void __iomem *addr)
-> > +{
-> > +	writel_relaxed(0x0, addr + WDT_LOCK);
-> > +}
-> > +
-> > +static inline void sprd_wdt_unlock(void __iomem *addr)
-> > +{
-> > +	writel_relaxed(WDT_UNLOCK_KEY, addr + WDT_LOCK);
-> > +}
-> > +
-> > +static irqreturn_t sprd_wdt_isr(int irq, void *dev_id)
-> > +{
-> > +	struct sprd_wdt *wdt = (struct sprd_wdt *)dev_id;
-> > +
-> > +	sprd_wdt_unlock(wdt->base);
-> > +	writel_relaxed(WDT_INT_CLEAR_BIT, wdt->base + WDT_INT_CLR);
-> > +	sprd_wdt_lock(wdt->base);
-> > +	watchdog_notify_pretimeout(&wdt->wdd);
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static u32 sprd_wdt_get_cnt_value(struct sprd_wdt *wdt)
-> > +{
-> > +	u32 val;
-> > +
-> > +	val = readl_relaxed(wdt->base + WDT_CNT_HIGH) << WDT_CNT_VALUE_SIZE;
-> > +	val |= readl_relaxed(wdt->base + WDT_CNT_LOW) & WDT_CNT_VALUE_MASK;
-> > +
-> > +	return val;
-> > +}
-> > +
-> > +static int sprd_wdt_load_value(struct sprd_wdt *wdt, u32 rst_value,
-> > +			       u32 irq_value)
-> > +{
-> > +	u32 val, cnt = 0;
-> > +
-> > +	sprd_wdt_unlock(wdt->base);
-> > +	writel_relaxed((rst_value >> WDT_CNT_VALUE_SIZE) & WDT_CNT_VALUE_MASK,
-> > +		       wdt->base + WDT_LOAD_HIGH);
-> > +	writel_relaxed((rst_value & WDT_CNT_VALUE_MASK),
-> > +		       wdt->base + WDT_LOAD_LOW);
-> > +	writel_relaxed((irq_value >> WDT_CNT_VALUE_SIZE) & WDT_CNT_VALUE_MASK,
-> > +		       wdt->base + WDT_IRQ_LOAD_HIGH);
-> > +	writel_relaxed(irq_value & WDT_CNT_VALUE_MASK,
-> > +		       wdt->base + WDT_IRQ_LOAD_LOW);
-> > +	sprd_wdt_lock(wdt->base);
-> > +
-> > +	/*
-> > +	 * Waiting the load value operation done,
-> > +	 * it needs two or three RTC clock cycles.
-> > +	 */
-> > +	do {
-> > +		val = readl_relaxed(wdt->base + WDT_INT_RAW);
-> > +		if (!(val & WDT_LD_BUSY_BIT))
-> > +			break;
-> > +
-> > +		cpu_relax();
-> > +	} while (cnt++ < WDT_LOAD_TIMEOUT_NUM);
-> 
-> This loop aborts when cnt >= WDT_LOAD_TIMEOUT_NUM, then increases cnt by 1.
-> 
-> > +
-> > +	if (cnt == WDT_LOAD_TIMEOUT_NUM)
-> 
-> ... meaning this condition will never be met.
-> 
+The current practice is that drivers iterate over their endpoints and
+parse each endpoint separately. This is very similar in a number of
+drivers, implement a generic function for the job. Driver specific matters
+can be taken into account in the driver specific callback.
 
-Yes, you are right, and I will fix it in the next version.
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/media/v4l2-core/v4l2-async.c  |  30 ++++++++
+ drivers/media/v4l2-core/v4l2-fwnode.c | 136 ++++++++++++++++++++++++++++++++++
+ include/media/v4l2-async.h            |  24 +++++-
+ include/media/v4l2-fwnode.h           |  56 ++++++++++++++
+ 4 files changed, 244 insertions(+), 2 deletions(-)
 
-> > +		return -EBUSY;
-> > +	return 0;
-> > +}
-> > +
-> > +static void sprd_wdt_enable(struct sprd_wdt *wdt)
-> > +{
-> > +	u32 val;
-> > +
-> > +	clk_prepare_enable(wdt->enable);
-> > +	clk_prepare_enable(wdt->rtc_enable);
-> > +
-> > +	sprd_wdt_unlock(wdt->base);
-> > +	val = readl_relaxed(wdt->base + WDT_CTRL);
-> > +	val |= WDT_NEW_VER_EN;
-> > +	writel_relaxed(val, wdt->base + WDT_CTRL);
-> > +	sprd_wdt_lock(wdt->base);
-> > +}
-> > +
-> > +static void sprd_wdt_disable(struct sprd_wdt *wdt)
-> > +{
-> > +	sprd_wdt_unlock(wdt->base);
-> > +	writel_relaxed(0x0, wdt->base + WDT_CTRL);
-> > +	sprd_wdt_lock(wdt->base);
-> > +
-> > +	clk_disable(wdt->enable);
-> > +	clk_disable(wdt->rtc_enable);
-> > +}
-> > +
-> > +static int sprd_wdt_start(struct watchdog_device *wdd)
-> > +{
-> > +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-> > +	u32 val;
-> > +	int ret;
-> > +
-> > +	ret = sprd_wdt_load_value(wdt, wdt->rst_tmr_out * WDT_CLK,
-> > +			(wdt->rst_tmr_out - wdt->irq_tmr_out) * WDT_CLK);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	sprd_wdt_unlock(wdt->base);
-> > +	val = readl_relaxed(wdt->base + WDT_CTRL);
-> > +	val |= WDT_CNT_EN_BIT | WDT_INT_EN_BIT | WDT_RST_EN_BIT;
-> > +	writel_relaxed(val, wdt->base + WDT_CTRL);
-> > +	sprd_wdt_lock(wdt->base);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int sprd_wdt_stop(struct watchdog_device *wdd)
-> > +{
-> > +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-> > +	u32 val;
-> > +
-> > +	sprd_wdt_unlock(wdt->base);
-> > +	val = readl_relaxed(wdt->base + WDT_CTRL);
-> > +	val &= ~(WDT_CNT_EN_BIT | WDT_RST_EN_BIT | WDT_INT_EN_BIT);
-> > +	writel_relaxed(val, wdt->base + WDT_CTRL);
-> > +	sprd_wdt_lock(wdt->base);
-> > +	return 0;
-> > +}
-> > +
-> > +static int sprd_wdt_set_timeout(struct watchdog_device *wdd,
-> > +				u32 timeout)
-> > +{
-> > +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-> > +
-> > +	if (timeout < wdt->irq_tmr_out) {
-> > +		dev_err(wdd->parent, "wrong timeout value\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> If there is a minimum timeout, the probe function should set min_timeout accordingly.
-> This function should not have to check the range, and it should not set a range error.
-> 
-> Also, wdd->timeout needs to be set here.
-> 
-
-You are right, it needs to set wdd->timeout, and I will use pretimerout instead of irq_tmr_out.
-
-> > +	return sprd_wdt_load_value(wdt, timeout * WDT_CLK,
-> > +			  (timeout - wdt->irq_tmr_out) * WDT_CLK);
-> > +}
-> > +
-> > +static u32 sprd_wdt_get_timeleft(struct watchdog_device *wdd)
-> > +{
-> > +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
-> > +	u32 val;
-> > +
-> > +	val = sprd_wdt_get_cnt_value(wdt);
-> > +	val = val / WDT_CLK;
-> > +
-> > +	return val;
-> > +}
-> > +
-> > +static const struct watchdog_ops sprd_wdt_ops = {
-> > +	.owner = THIS_MODULE,
-> > +	.start = sprd_wdt_start,
-> > +	.stop = sprd_wdt_stop,
-> > +	.set_timeout = sprd_wdt_set_timeout,
-> > +	.get_timeleft = sprd_wdt_get_timeleft,
-> > +};
-> > +
-> > +static const struct watchdog_info sprd_wdt_info = {
-> > +	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-> > +	.identity = "Spreadtrum Watchdog Timer",
-> > +};
-> > +
-> > +static int sprd_wdt_probe(struct platform_device *pdev)
-> > +{
-> > +	struct resource *wdt_res;
-> > +	struct sprd_wdt *wdt;
-> > +	u32 rst_tmr_out;
-> > +	int ret;
-> > +
-> > +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> > +	if (!wdt)
-> > +		return -ENOMEM;
-> > +
-> > +	wdt_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	if (!wdt_res) {
-> > +		dev_err(&pdev->dev, "failed to memory resource\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	wdt->base = devm_ioremap_nocache(&pdev->dev, wdt_res->start,
-> > +					 resource_size(wdt_res));
-> > +	if (!wdt->base)
-> > +		return -ENOMEM;
-> > +
-> > +	if (of_property_read_u32(pdev->dev.of_node, "timeout-sec",
-> > +				 &rst_tmr_out)) {
-> > +		dev_err(&pdev->dev, "can't get reset timeout\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> Please use the infrastructure to read and set this property.
-> 
-
-Yes, "timeout-sec" will be read out by watchdog_init_timeout.
-
-> > +
-> > +	wdt->enable = devm_clk_get(&pdev->dev, "enable");
-> > +	if (IS_ERR(wdt->enable)) {
-> > +		dev_err(&pdev->dev, "can't get the enable clock\n");
-> > +		return PTR_ERR(wdt->enable);
-> > +	}
-> > +
-> > +	wdt->rtc_enable = devm_clk_get(&pdev->dev, "rtc_enable");
-> > +	if (IS_ERR(wdt->rtc_enable)) {
-> > +		dev_err(&pdev->dev, "can't get the rtc enable clock\n");
-> > +		return PTR_ERR(wdt->rtc_enable);
-> > +	}
-> > +
-> > +	wdt->irq = platform_get_irq(pdev, 0);
-> > +	if (wdt->irq < 0) {
-> > +		dev_err(&pdev->dev, "failed to get IRQ resource\n");
-> > +		return wdt->irq;
-> > +	}
-> > +
-> > +	ret = devm_request_irq(&pdev->dev, wdt->irq, sprd_wdt_isr,
-> > +			       IRQF_NO_SUSPEND, "sprd-wdt", (void *)wdt);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "failed to register irq\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	wdt->rst_tmr_out = rst_tmr_out;
-> > +	wdt->irq_tmr_out = rst_tmr_out - WDT_IRQ_TMROUT_OFFSET;
-> 
-> Seems to me this is equivalent to pretimeout. Why not use the infrastructure ?
-> Besides, this can currently get negative (if timeout is set to 1 or 2 seconds.
-> 
-
-I will use pretimeout instead of irq_tmr_out.
-
-> > +	wdt->wdd.info = &sprd_wdt_info;
-> > +	wdt->wdd.ops = &sprd_wdt_ops;
-> > +	wdt->wdd.min_timeout = 1;
-> > +	wdt->wdd.max_timeout = rst_tmr_out;
-> > +	wdt->wdd.parent = &pdev->dev;
-> > +	set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
-> 
-> Is it ? The clocks are not enabled (yet), and the start function hasn't been called.
-> 
-> Presumably the idea is to start the watchdog unconditionally, but then it is stopped
-> after being opened and closed again, so I don't really understand the logic.
-> 
-
-OK, I will remove this line and I will set status bit as ACTIVE at sprd_wdt_enable.
-
-> > +	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
-> > +
-> > +	ret = watchdog_register_device(&wdt->wdd);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "failed to register watchdog\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, wdt);
-> > +
-> > +	sprd_wdt_enable(wdt);
-> > +
-> 
-> This is racy; at least in theory user space can open the watchdog device
-> immediately after it was registered, meaning the watchdog can be enabled
-> before this code is executed. Maybe that is safe, but it may as well result
-> in an error or hang since the clocks are still disabled.
-> 
-> Even more, WDOG_HW_RUNNING is set above, meaning the watchdog core will
-> schedule an immediate ping (or start since there is no ping function),
-> making this even more likely.
->
-
-I understood your point, and I will fix it in next version.
+diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+index 831f185ecd47..ad099b9bb71d 100644
+--- a/drivers/media/v4l2-core/v4l2-async.c
++++ b/drivers/media/v4l2-core/v4l2-async.c
+@@ -22,6 +22,7 @@
  
-> > +	return 0;
-> > +}
-> > +
-> > +static int sprd_wdt_remove(struct platform_device *pdev)
-> > +{
-> > +	struct sprd_wdt *wdt = platform_get_drvdata(pdev);
-> > +
-> > +	watchdog_unregister_device(&wdt->wdd);
-> > +
-> 
-> If the watchdog ws never opened, this won't stop the clocks.
-> 
-
-It should add one condition api here.
-
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
-> > +{
-> > +	struct sprd_wdt *wdt = dev_get_drvdata(dev);
-> > +
-> > +	sprd_wdt_stop(&wdt->wdd);
-> 
-> Why stop the watchdog if it isn't running ?
-> 
-
-It should add one condition to check if watchdog is running.
-
-> > +	sprd_wdt_disable(wdt);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
-> > +{
-> > +	struct sprd_wdt *wdt = dev_get_drvdata(dev);
-> > +
-> > +	sprd_wdt_enable(wdt);
-> > +	sprd_wdt_start(&wdt->wdd);
-> 
-> So on resume the watchdog is started unconditionally, even if it was
-> not running before ?
->
-
-It should add one condition to check if watchdog has been stop.
-Very appreciated for your comments.
+ #include <media/v4l2-async.h>
+ #include <media/v4l2-device.h>
++#include <media/v4l2-fwnode.h>
+ #include <media/v4l2-subdev.h>
  
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct dev_pm_ops sprd_wdt_pm_ops = {
-> > +	SET_SYSTEM_SLEEP_PM_OPS(
-> > +		sprd_wdt_pm_suspend,
-> > +		sprd_wdt_pm_resume)
-> > +};
-> > +
-> > +static const struct of_device_id sprd_wdt_match_table[] = {
-> > +	{ .compatible = "sprd,sp9860-wdt", },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, sprd_wdt_match_table);
-> > +
-> > +static struct platform_driver sprd_watchdog_driver = {
-> > +	.probe	= sprd_wdt_probe,
-> > +	.remove	= sprd_wdt_remove,
-> > +	.driver	= {
-> > +		.name = "sprd-wdt",
-> > +		.of_match_table = sprd_wdt_match_table,
-> > +		.pm = &sprd_wdt_pm_ops,
-> > +	},
-> > +};
-> > +module_platform_driver(sprd_watchdog_driver);
-> > +
-> > +MODULE_AUTHOR("Eric Long <eric.long@spreadtrum.com>");
-> > +MODULE_DESCRIPTION("Spreadtrum Watchdog Timer Controller Driver");
-> > +MODULE_LICENSE("GPL v2");
-> > 
-> 
+ static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+@@ -219,6 +220,35 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+ }
+ EXPORT_SYMBOL(v4l2_async_notifier_unregister);
+ 
++void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier)
++{
++	unsigned int i;
++
++	if (!notifier->max_subdevs)
++		return;
++
++	for (i = 0; i < notifier->num_subdevs; i++) {
++		struct v4l2_async_subdev *asd = notifier->subdevs[i];
++
++		switch (asd->match_type) {
++		case V4L2_ASYNC_MATCH_FWNODE:
++			fwnode_handle_put(asd->match.fwnode.fwnode);
++			break;
++		default:
++			WARN_ON_ONCE(1);
++		}
++
++		kfree(asd);
++	}
++
++	notifier->max_subdevs = 0;
++	notifier->num_subdevs = 0;
++
++	kvfree(notifier->subdevs);
++	notifier->subdevs = NULL;
++}
++EXPORT_SYMBOL_GPL(v4l2_async_notifier_release);
++
+ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
+ {
+ 	struct v4l2_async_notifier *notifier;
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 706f9e7b90f1..d978f2d714ca 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -19,6 +19,7 @@
+  */
+ #include <linux/acpi.h>
+ #include <linux/kernel.h>
++#include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/property.h>
+@@ -26,6 +27,7 @@
+ #include <linux/string.h>
+ #include <linux/types.h>
+ 
++#include <media/v4l2-async.h>
+ #include <media/v4l2-fwnode.h>
+ 
+ enum v4l2_fwnode_bus_type {
+@@ -313,6 +315,140 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+ 
++static int v4l2_async_notifier_realloc(struct v4l2_async_notifier *notifier,
++				       unsigned int max_subdevs)
++{
++	struct v4l2_async_subdev **subdevs;
++
++	if (max_subdevs <= notifier->max_subdevs)
++		return 0;
++
++	subdevs = kvmalloc_array(
++		max_subdevs, sizeof(*notifier->subdevs),
++		GFP_KERNEL | __GFP_ZERO);
++	if (!subdevs)
++		return -ENOMEM;
++
++	if (notifier->subdevs) {
++		memcpy(subdevs, notifier->subdevs,
++		       sizeof(*subdevs) * notifier->num_subdevs);
++
++		kvfree(notifier->subdevs);
++	}
++
++	notifier->subdevs = subdevs;
++	notifier->max_subdevs = max_subdevs;
++
++	return 0;
++}
++
++static int v4l2_async_notifier_fwnode_parse_endpoint(
++	struct device *dev, struct v4l2_async_notifier *notifier,
++	struct fwnode_handle *endpoint, unsigned int asd_struct_size,
++	int (*parse_endpoint)(struct device *dev,
++			    struct v4l2_fwnode_endpoint *vep,
++			    struct v4l2_async_subdev *asd))
++{
++	struct v4l2_async_subdev *asd;
++	struct v4l2_fwnode_endpoint *vep;
++	int ret = 0;
++
++	asd = kzalloc(asd_struct_size, GFP_KERNEL);
++	if (!asd)
++		return -ENOMEM;
++
++	asd->match.fwnode.fwnode =
++		fwnode_graph_get_remote_port_parent(endpoint);
++	if (!asd->match.fwnode.fwnode) {
++		dev_warn(dev, "bad remote port parent\n");
++		ret = -EINVAL;
++		goto out_err;
++	}
++
++	/* Ignore endpoints the parsing of which failed. */
++	vep = v4l2_fwnode_endpoint_alloc_parse(endpoint);
++	if (IS_ERR(vep)) {
++		ret = PTR_ERR(vep);
++		dev_warn(dev, "unable to parse V4L2 fwnode endpoint (%d)\n",
++			 ret);
++		goto out_err;
++	}
++
++	ret = parse_endpoint ? parse_endpoint(dev, vep, asd) : 0;
++	if (ret == -ENOTCONN)
++		dev_dbg(dev, "ignoring endpoint %u,%u\n", vep->base.port,
++			vep->base.id);
++	else if (ret < 0)
++		dev_warn(dev, "driver could not parse endpoint %u,%u (%d)\n",
++			 vep->base.port, vep->base.id, ret);
++	v4l2_fwnode_endpoint_free(vep);
++	if (ret < 0)
++		goto out_err;
++
++	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
++	notifier->subdevs[notifier->num_subdevs] = asd;
++	notifier->num_subdevs++;
++
++	return 0;
++
++out_err:
++	fwnode_handle_put(asd->match.fwnode.fwnode);
++	kfree(asd);
++
++	return ret == -ENOTCONN ? 0 : ret;
++}
++
++int v4l2_async_notifier_parse_fwnode_endpoints(
++	struct device *dev, struct v4l2_async_notifier *notifier,
++	size_t asd_struct_size,
++	int (*parse_endpoint)(struct device *dev,
++			    struct v4l2_fwnode_endpoint *vep,
++			    struct v4l2_async_subdev *asd))
++{
++	struct fwnode_handle *fwnode = NULL;
++	unsigned int max_subdevs = notifier->max_subdevs;
++	int ret;
++
++	if (WARN_ON(asd_struct_size < sizeof(struct v4l2_async_subdev)))
++		return -EINVAL;
++
++	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
++				     dev_fwnode(dev), fwnode)); )
++		if (fwnode_device_is_available(
++			    fwnode_graph_get_port_parent(fwnode)))
++			max_subdevs++;
++
++	/* No subdevs to add? Return here. */
++	if (max_subdevs == notifier->max_subdevs)
++		return 0;
++
++	ret = v4l2_async_notifier_realloc(notifier, max_subdevs);
++	if (ret)
++		return ret;
++
++	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
++				     dev_fwnode(dev), fwnode)); ) {
++		if (!fwnode_device_is_available(
++			    fwnode_graph_get_port_parent(fwnode)))
++			continue;
++
++		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
++			ret = -EINVAL;
++			break;
++		}
++
++		ret = v4l2_async_notifier_fwnode_parse_endpoint(
++			dev, notifier, fwnode, asd_struct_size, parse_endpoint);
++		if (ret < 0)
++			break;
++	}
++
++	fwnode_handle_put(fwnode);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+ MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+index c69d8c8a66d0..96fa1afc00dd 100644
+--- a/include/media/v4l2-async.h
++++ b/include/media/v4l2-async.h
+@@ -18,7 +18,6 @@ struct device;
+ struct device_node;
+ struct v4l2_device;
+ struct v4l2_subdev;
+-struct v4l2_async_notifier;
+ 
+ /* A random max subdevice number, used to allocate an array on stack */
+ #define V4L2_MAX_SUBDEVS 128U
+@@ -50,6 +49,10 @@ enum v4l2_async_match_type {
+  * @match:	union of per-bus type matching data sets
+  * @list:	used to link struct v4l2_async_subdev objects, waiting to be
+  *		probed, to a notifier->waiting list
++ *
++ * When this struct is used as a member in a driver specific struct,
++ * the driver specific struct shall contain the @struct
++ * v4l2_async_subdev as its first member.
+  */
+ struct v4l2_async_subdev {
+ 	enum v4l2_async_match_type match_type;
+@@ -78,7 +81,8 @@ struct v4l2_async_subdev {
+ /**
+  * struct v4l2_async_notifier - v4l2_device notifier data
+  *
+- * @num_subdevs: number of subdevices
++ * @num_subdevs: number of subdevices used in the subdevs array
++ * @max_subdevs: number of subdevices allocated in the subdevs array
+  * @subdevs:	array of pointers to subdevice descriptors
+  * @v4l2_dev:	pointer to struct v4l2_device
+  * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
+@@ -90,6 +94,7 @@ struct v4l2_async_subdev {
+  */
+ struct v4l2_async_notifier {
+ 	unsigned int num_subdevs;
++	unsigned int max_subdevs;
+ 	struct v4l2_async_subdev **subdevs;
+ 	struct v4l2_device *v4l2_dev;
+ 	struct list_head waiting;
+@@ -121,6 +126,21 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier);
+ 
+ /**
++ * v4l2_async_notifier_release - release notifier resources
++ * @notifier: the notifier the resources of which are to be released
++ *
++ * Release memory resources related to a notifier, including the async
++ * sub-devices allocated for the purposes of the notifier. The user is
++ * responsible for releasing the notifier's resources after calling
++ * @v4l2_async_notifier_parse_fwnode_endpoints.
++ *
++ * There is no harm from calling v4l2_async_notifier_release in other
++ * cases as long as its memory has been zeroed after it has been
++ * allocated.
++ */
++void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier);
++
++/**
+  * v4l2_async_register_subdev - registers a sub-device to the asynchronous
+  * 	subdevice framework
+  *
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index 68eb22ba571b..31fb77e470fa 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -25,6 +25,8 @@
+ #include <media/v4l2-mediabus.h>
+ 
+ struct fwnode_handle;
++struct v4l2_async_notifier;
++struct v4l2_async_subdev;
+ 
+ #define V4L2_FWNODE_CSI2_MAX_DATA_LANES	4
+ 
+@@ -201,4 +203,58 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+  */
+ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+ 
++/**
++ * v4l2_async_notifier_parse_fwnode_endpoints - Parse V4L2 fwnode endpoints in a
++ *						device node
++ * @dev: the device the endpoints of which are to be parsed
++ * @notifier: notifier for @dev
++ * @asd_struct_size: size of the driver's async sub-device struct, including
++ *		     sizeof(struct v4l2_async_subdev). The &struct
++ *		     v4l2_async_subdev shall be the first member of
++ *		     the driver's async sub-device struct, i.e. both
++ *		     begin at the same memory address.
++ * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
++ *		    endpoint. Optional.
++ *		    Return: %0 on success
++ *			    %-ENOTCONN if the endpoint is to be skipped but this
++ *				       should not be considered as an error
++ *			    %-EINVAL if the endpoint configuration is invalid
++ *
++ * Parse the fwnode endpoints of the @dev device and populate the async sub-
++ * devices array of the notifier. The @parse_endpoint callback function is
++ * called for each endpoint with the corresponding async sub-device pointer to
++ * let the caller initialize the driver-specific part of the async sub-device
++ * structure.
++ *
++ * The notifier memory shall be zeroed before this function is called on the
++ * notifier.
++ *
++ * This function may not be called on a registered notifier and may be called on
++ * a notifier only once.
++ *
++ * Do not change the notifier's subdevs array, take references to the subdevs
++ * array itself or change the notifier's num_subdevs field. This is because this
++ * function allocates and reallocates the subdevs array based on parsing
++ * endpoints.
++ *
++ * The @struct v4l2_fwnode_endpoint passed to the callback function
++ * @parse_endpoint is released once the function is finished. If there is a need
++ * to retain that configuration, the user needs to allocate memory for it.
++ *
++ * Any notifier populated using this function must be released with a call to
++ * v4l2_async_notifier_release() after it has been unregistered and the async
++ * sub-devices are no longer in use, even if the function returned an error.
++ *
++ * Return: %0 on success, including when no async sub-devices are found
++ *	   %-ENOMEM if memory allocation failed
++ *	   %-EINVAL if graph or endpoint parsing failed
++ *	   Other error codes as returned by @parse_endpoint
++ */
++int v4l2_async_notifier_parse_fwnode_endpoints(
++	struct device *dev, struct v4l2_async_notifier *notifier,
++	size_t asd_struct_size,
++	int (*parse_endpoint)(struct device *dev,
++			      struct v4l2_fwnode_endpoint *vep,
++			      struct v4l2_async_subdev *asd));
++
+ #endif /* _V4L2_FWNODE_H */
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
