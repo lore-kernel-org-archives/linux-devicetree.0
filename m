@@ -1,54 +1,65 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH/RFC 2/3] i2c: gpio: Add support for named gpios in DT
-Date: Wed, 13 Sep 2017 22:57:46 +0200
-Message-ID: <20170913205746.d22v4rhfuspyyakd@ninjato>
-References: <1503566474-5335-1-git-send-email-geert+renesas@glider.be>
- <1503566474-5335-3-git-send-email-geert+renesas@glider.be>
- <20170913205333.wjtmg6727bcsxjrg@ninjato>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] media:imx274 device tree binding file
+Date: Tue, 12 Sep 2017 11:42:08 -0500
+Message-ID: <20170912164208.gdsyrmovf337wc66@rob-hp-laptop>
+References: <20170901203243.25694-1-leonl@leopardimaging.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f2bqqvy4g72mtydt"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170913205333.wjtmg6727bcsxjrg@ninjato>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20170901203243.25694-1-leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 01, 2017 at 01:32:42PM -0700, Leon Luo wrote:
+> The binding file for imx274 CMOS sensor V4l2 driver
+> 
+> Signed-off-by: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+> ---
+> v4:
+>  - no changes
+> v3:
+>  - remove redundant properties and references
+>  - document 'reg' property
+> v2:
+>  - no changes
+> ---
+>  .../devicetree/bindings/media/i2c/imx274.txt       | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx274.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+> new file mode 100644
+> index 000000000000..1f03256b35db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+> @@ -0,0 +1,32 @@
+> +* Sony 1/2.5-Inch 8.51Mp CMOS Digital Image Sensor
+> +
+> +The Sony imx274 is a 1/2.5-inch CMOS active pixel digital image sensor with
+> +an active array size of 3864H x 2202V. It is programmable through I2C
+> +interface. The I2C address is fixed to 0x1a as per sensor data sheet.
+> +Image data is sent through MIPI CSI-2, which is configured as 4 lanes
+> +at 1440 Mbps.
+> +
+> +
+> +Required Properties:
+> +- compatible: value should be "sony,imx274" for imx274 sensor
+> +- reg: I2C bus address of the device
+> +
+> +Optional Properties:
+> +- reset-gpios: Sensor reset GPIO
+> +
+> +For further reading on port node refer to
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
 
---f2bqqvy4g72mtydt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You need to specify here exactly how many ports and endpoints for each 
+port. With that,
 
-On Wed, Sep 13, 2017 at 10:53:33PM +0200, Wolfram Sang wrote:
->=20
-> > +	/* Try deprecated unnamed gpios */
->=20
-> I think adding "(deprecated use)" or sth would be good.
-
-Where is my brown paper bag :)
-
-
---f2bqqvy4g72mtydt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlm5m8oACgkQFA3kzBSg
-KbY4uBAAgEGNlhjV7lr1Cd3yjIsVqeBelZCoM/i4wtmcj5Pg8E8wytMu3GSRM4Kw
-qXcFL7aGN63xGlH44PpDLQJ1u3gHrW1X7eVwMSqFKKhRHioD4NHRt+ajHNIDCQuC
-wztTayhV4Jq6sWV/MjXSsS/so0I8QEV98DE2GiSu4kn5wSSmooIZoVzFrufK2qa8
-0DEgKBfExuvB+aFfkNZlrgTEURQAXc929GlLA8jCvUPx27cCyDCNGE0xDfoZy3l4
-nVmkU2Ya9jv197rca7JaFimaSEzzLp1cvP6oE09c5Mkcs5vjgW8I5K1b115YUJWG
-Eodqcdbc6OiK0EEKxQdUL2Z4pYwithB8Sbg2J95mS8fXzGzlmIM5Xqlvy6pyZSZh
-sE9TWXBfh4KthH7d7sbKF57jjUdrdog6+WP7eGUSkKW1jzssrPMsFdD5XyE4Iap8
-PtCWQTPRy/hI+G5VaIwkOyDc648NsIi0aEbMqj8EM2HVQlMOTlwLRlTLhnForjcl
-RMh8T1oghPZf5ypMUwjYzuEPhfXwVcflO2guseJdTqKMPJyXP3CuiFVRCHVATaIs
-C7savJUgfWABNi+OzE3ZlFDVHbsU+JECSInGxz297UbI2oQ1l/YuiBt4HHf+PLua
-HOWYXwHhoAZLkyJMG52RkXOCdbwqlr/1J92uQ3XbE8gGpF91Ais=
-=HYQC
------END PGP SIGNATURE-----
-
---f2bqqvy4g72mtydt--
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
