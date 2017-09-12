@@ -1,111 +1,78 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv4 3/5] dt-bindings: document the CEC GPIO bindings
-Date: Tue, 12 Sep 2017 09:43:08 -0500
-Message-ID: <20170912144308.j53eclicbhay5dsz@rob-hp-laptop>
-References: <20170831110156.11018-1-hverkuil@xs4all.nl>
- <20170831110156.11018-4-hverkuil@xs4all.nl>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v4 6/6] gpio: uniphier: add UniPhier GPIO controller
+ driver
+Date: Tue, 12 Sep 2017 08:44:09 -0700
+Message-ID: <7e46f2a3-114f-0c34-d3c5-49e6422b9200@caviumnetworks.com>
+References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+ <1504784522-26841-7-git-send-email-yamada.masahiro@socionext.com>
+ <CACRpkdZLG=ezxj62R=WkULh2vfpQwqh8P-6FhtONzU7yRbyeuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170831110156.11018-4-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZLG=ezxj62R=WkULh2vfpQwqh8P-6FhtONzU7yRbyeuA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, David Daney <david.daney@cavium.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Masami Hiramatsu <mhiramat@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 01:01:54PM +0200, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+On 09/12/2017 07:03 AM, Linus Walleij wrote:
+> On Thu, Sep 7, 2017 at 1:42 PM, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
 > 
-> Document the bindings for the cec-gpio module for hardware where the
-> CEC line and optionally the HPD line are connected to GPIO lines.
+>> This GPIO controller device is used on UniPhier SoCs.
+>>
+>> It also serves as an interrupt controller, but interrupt signals are
+>> just delivered to the parent irqchip without any latching or OR'ing.
+>> This is implemented by using hierarchy IRQ domain.
+>>
+>> Implementation note:
+>> Unfortunately, the IRQ mapping from this controller to the parent is
+>> random. (48, 49, ..., 63, 154, 155, ...)
+>> If "interrupts" property is used, IRQ resources may be statically
+>> allocated when platform devices are populated from DT.  This can be
+>> a problem for the hierarchy IRQ domain because IRQ allocation must
+>> happen from the outer-most domain up to the root domain in order to
+>> build up the stacked IRQ.  (https://lkml.org/lkml/2017/7/6/758)
+>> Solutions to work around it could be to hard-code parent hwirqs or
+>> to invent a driver-specific DT property.
+>>
+>> Here, the new API irq_domain_push_irq() was merged by v4.14-rc1.
+>> It allows to add irq_data to the existing hierarchy.  It will help
+>> to make this driver work whether the parent has already initialized
+>> the hierarchy or not.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> ---
+>>
+>> Changes in v4:
+>>    - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
+>>    - Reimplement irqchip part by using irq_domain_push_irq()
 > 
-> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/cec-gpio.txt         | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
+> Awesome improvement. There was a build error and I also
+> would like David Daney to have a look at this so we know we
+> use things the right way,
+
+It looks correct to me.
+
+I haven't verified it, but I think the OF device-tree probing code for 
+the platform devices will automatically xlat-and-map all those irqs, so 
+that the  irq_domain_push_irq() is required to get the domain hierarchy 
+properly configured.  It would be similar to the PCI case where we 
+configure all the MSI-X and then do the irq_domain_push_irq() in the 
+Cavium ThunderX driver.
+
+If interrupt handling has been verified to work with this driver, I 
+would say that we are probably using things "the right way".
+
+David.
+
+
+
+> but overall I am happy after this
+> so I hope I will be able to apply next version.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
-> new file mode 100644
-> index 000000000000..db20a7452dbd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
-> @@ -0,0 +1,22 @@
-> +* HDMI CEC GPIO driver
-> +
-> +The HDMI CEC GPIO module supports CEC implementations where the CEC line
-> +is hooked up to a pull-up GPIO line and - optionally - the HPD line is
-> +hooked up to another GPIO line.
-> +
-> +Required properties:
-> +  - compatible: value must be "cec-gpio"
-> +  - cec-gpio: gpio that the CEC line is connected to
-
-cec-gpios
-
-> +
-> +Optional property:
-> +  - hpd-gpio: gpio that the HPD line is connected to
-
-hpd-gpios
-
-However, HPD is already part of the HDMI connector binding. Having it in 
-2 places would be wrong.
-
-I think we should have either:
-
-hdmi-connector {
-	compatible = 'hdmi-connector-a";
-	hpd-gpios = <...>;
-	cec-gpios = <...>;
-	ports {
-		// port to HDMI controller
-	...
-	};
-};
-
-Or:
-
-hdmi-connector {
-        compatible = 'hdmi-connector-a";
-        hpd-gpios = <...>;
-        cec = <&cec>;
-        ... 
-};
-
-cec: cec-gpio {
-	compatible = "cec-gpio";
-	cec-gpios = <...>;
-};
-
-My preference is probably the former. The latter just helps create a 
-device to bind to a driver, but DT is not the only way to create 
-devices. Then again, if you have a phandle to real CEC controllers in 
-the HDMI connector node, it may make sense to do the same thing with 
-cec-gpio. 
-
-> +
-> +Example for the Raspberry Pi 3 where the CEC line is connected to
-> +pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
-> +connected to pin 11 aka BCM17:
-> +
-> +cec-gpio@7 {
-
-unit address is not valid. Build your dts's with W=2.
-
-> +       compatible = "cec-gpio";
-> +       cec-gpio = <&gpio 7 GPIO_OPEN_DRAIN>;
-> +       hpd-gpio = <&gpio 17 GPIO_ACTIVE_HIGH>;
-> +};
-> -- 
-> 2.14.1
+> Yours,
+> Linus Walleij
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
