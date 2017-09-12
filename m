@@ -1,68 +1,145 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v11 13/24] v4l: async: Allow async notifier register call
- succeed with no subdevs
-Date: Tue, 12 Sep 2017 11:38:27 +0200
-Message-ID: <e803a034-b0c8-4f28-c4c2-ef964699d7e3@xs4all.nl>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v11 11/24] v4l: async: Introduce helpers for calling async
+ ops callbacks
+Date: Tue, 12 Sep 2017 11:39:32 +0200
+Message-ID: <a9e96a8c-25d2-109d-da22-a6771da6b68d@xs4all.nl>
 References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
- <20170912084236.1154-14-sakari.ailus@linux.intel.com>
+ <20170912084236.1154-12-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170912084236.1154-14-sakari.ailus@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170912084236.1154-12-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 09/12/17 10:42, Sakari Ailus wrote:
-> The information on how many async sub-devices would be bindable to a
-> notifier is typically dependent on information from platform firmware and
-> it's not driver's business to be aware of that.
+> Add three helper functions to call async operations callbacks. Besides
+> simplifying callbacks, this allows async notifiers to have no ops set,
+> i.e. it can be left NULL.
 > 
-> Many V4L2 main drivers are perfectly usable (and useful) without async
-> sub-devices and so if there aren't any around, just proceed call the
-> notifier's complete callback immediately without registering the notifier
-> itself.
-> 
-> If a driver needs to check whether there are async sub-devices available,
-> it can be done by inspecting the notifier's num_subdevs field which tells
-> the number of async sub-devices.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+I'm sure I acked this already, but in case it was lost:
+
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
 Regards,
 
 	Hans
 
 > ---
->  drivers/media/v4l2-core/v4l2-async.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  drivers/media/v4l2-core/v4l2-async.c | 49 ++++++++++++++++++++++++++----------
+>  include/media/v4l2-async.h           |  1 +
+>  2 files changed, 37 insertions(+), 13 deletions(-)
 > 
 > diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 7b396ff4302b..4525b03d59c1 100644
+> index a2df85ea00f4..c34f93593b41 100644
 > --- a/drivers/media/v4l2-core/v4l2-async.c
 > +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -170,14 +170,16 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
->  	struct v4l2_async_subdev *asd;
->  	int i;
+> @@ -25,6 +25,34 @@
+>  #include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-subdev.h>
 >  
-> -	if (!v4l2_dev || !notifier->num_subdevs ||
-> -	    notifier->num_subdevs > V4L2_MAX_SUBDEVS)
-> +	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
->  		return -EINVAL;
->  
->  	notifier->v4l2_dev = v4l2_dev;
->  	INIT_LIST_HEAD(&notifier->waiting);
->  	INIT_LIST_HEAD(&notifier->done);
->  
-> +	if (!notifier->num_subdevs)
-> +		return v4l2_async_notifier_call_complete(notifier);
+> +static int v4l2_async_notifier_call_bound(struct v4l2_async_notifier *n,
+> +					  struct v4l2_subdev *subdev,
+> +					  struct v4l2_async_subdev *asd)
+> +{
+> +	if (!n->ops || !n->ops->bound)
+> +		return 0;
 > +
->  	for (i = 0; i < notifier->num_subdevs; i++) {
->  		asd = notifier->subdevs[i];
+> +	return n->ops->bound(n, subdev, asd);
+> +}
+> +
+> +static void v4l2_async_notifier_call_unbind(struct v4l2_async_notifier *n,
+> +					    struct v4l2_subdev *subdev,
+> +					    struct v4l2_async_subdev *asd)
+> +{
+> +	if (!n->ops || !n->ops->unbind)
+> +		return;
+> +
+> +	n->ops->unbind(n, subdev, asd);
+> +}
+> +
+> +static int v4l2_async_notifier_call_complete(struct v4l2_async_notifier *n)
+> +{
+> +	if (!n->ops || !n->ops->complete)
+> +		return 0;
+> +
+> +	return n->ops->complete(n);
+> +}
+> +
+>  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+>  {
+>  #if IS_ENABLED(CONFIG_I2C)
+> @@ -102,16 +130,13 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
+>  {
+>  	int ret;
 >  
+> -	if (notifier->ops->bound) {
+> -		ret = notifier->ops->bound(notifier, sd, asd);
+> -		if (ret < 0)
+> -			return ret;
+> -	}
+> +	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
+>  	if (ret < 0) {
+> -		if (notifier->ops->unbind)
+> -			notifier->ops->unbind(notifier, sd, asd);
+> +		v4l2_async_notifier_call_unbind(notifier, sd, asd);
+>  		return ret;
+>  	}
+>  
+> @@ -123,8 +148,8 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
+>  	/* Move from the global subdevice list to notifier's done */
+>  	list_move(&sd->async_list, &notifier->done);
+>  
+> -	if (list_empty(&notifier->waiting) && notifier->ops->complete)
+> -		return notifier->ops->complete(notifier);
+> +	if (list_empty(&notifier->waiting))
+> +		return v4l2_async_notifier_call_complete(notifier);
+>  
+>  	return 0;
+>  }
+> @@ -210,8 +235,7 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+>  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
+>  		v4l2_async_cleanup(sd);
+>  
+> -		if (notifier->ops->unbind)
+> -			notifier->ops->unbind(notifier, sd, sd->asd);
+> +		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
+>  	}
+>  
+>  	mutex_unlock(&list_lock);
+> @@ -300,8 +324,7 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
+>  
+>  	v4l2_async_cleanup(sd);
+>  
+> -	if (notifier->ops->unbind)
+> -		notifier->ops->unbind(notifier, sd, sd->asd);
+> +	v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
+>  
+>  	mutex_unlock(&list_lock);
+>  }
+> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+> index 3c48f8b66d12..3bc8a7c0d83f 100644
+> --- a/include/media/v4l2-async.h
+> +++ b/include/media/v4l2-async.h
+> @@ -164,4 +164,5 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd);
+>   * @sd: pointer to &struct v4l2_subdev
+>   */
+>  void v4l2_async_unregister_subdev(struct v4l2_subdev *sd);
+> +
+>  #endif
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
