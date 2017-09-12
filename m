@@ -1,31 +1,111 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/6] remoteproc: qcom: Add support for q6v5-wcss pil
-Date: Tue, 12 Sep 2017 09:21:37 -0500
-Message-ID: <20170912142137.nzx2s7xcyde5d2js@rob-hp-laptop>
-References: <1504154734-12175-1-git-send-email-sricharan@codeaurora.org>
- <1504154734-12175-6-git-send-email-sricharan@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv4 3/5] dt-bindings: document the CEC GPIO bindings
+Date: Tue, 12 Sep 2017 09:43:08 -0500
+Message-ID: <20170912144308.j53eclicbhay5dsz@rob-hp-laptop>
+References: <20170831110156.11018-1-hverkuil@xs4all.nl>
+ <20170831110156.11018-4-hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1504154734-12175-6-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, ohad@wizery.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+In-Reply-To: <20170831110156.11018-4-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 10:15:33AM +0530, Sricharan R wrote:
-> IPQ8074 has an integrated Hexagon dsp core q6v5 and a wireless lan
-> (Lithium) IP. An mdt type single image format is used for the
-> firmware. So the mdt_load function can be directly used to load
-> the firmware. Also add the relevant resets required for this core.
+On Thu, Aug 31, 2017 at 01:01:54PM +0200, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Document the bindings for the cec-gpio module for hardware where the
+> CEC line and optionally the HPD line are connected to GPIO lines.
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |  7 ++-
+>  .../devicetree/bindings/media/cec-gpio.txt         | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
+> new file mode 100644
+> index 000000000000..db20a7452dbd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
+> @@ -0,0 +1,22 @@
+> +* HDMI CEC GPIO driver
+> +
+> +The HDMI CEC GPIO module supports CEC implementations where the CEC line
+> +is hooked up to a pull-up GPIO line and - optionally - the HPD line is
+> +hooked up to another GPIO line.
+> +
+> +Required properties:
+> +  - compatible: value must be "cec-gpio"
+> +  - cec-gpio: gpio that the CEC line is connected to
 
-Acked-by: Rob Herring <robh@kernel.org>
+cec-gpios
 
->  drivers/remoteproc/Kconfig                         |  1 +
->  drivers/remoteproc/qcom_q6v5_pil.c                 | 53 +++++++++++++++++++++-
->  3 files changed, 59 insertions(+), 2 deletions(-)
+> +
+> +Optional property:
+> +  - hpd-gpio: gpio that the HPD line is connected to
+
+hpd-gpios
+
+However, HPD is already part of the HDMI connector binding. Having it in 
+2 places would be wrong.
+
+I think we should have either:
+
+hdmi-connector {
+	compatible = 'hdmi-connector-a";
+	hpd-gpios = <...>;
+	cec-gpios = <...>;
+	ports {
+		// port to HDMI controller
+	...
+	};
+};
+
+Or:
+
+hdmi-connector {
+        compatible = 'hdmi-connector-a";
+        hpd-gpios = <...>;
+        cec = <&cec>;
+        ... 
+};
+
+cec: cec-gpio {
+	compatible = "cec-gpio";
+	cec-gpios = <...>;
+};
+
+My preference is probably the former. The latter just helps create a 
+device to bind to a driver, but DT is not the only way to create 
+devices. Then again, if you have a phandle to real CEC controllers in 
+the HDMI connector node, it may make sense to do the same thing with 
+cec-gpio. 
+
+> +
+> +Example for the Raspberry Pi 3 where the CEC line is connected to
+> +pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
+> +connected to pin 11 aka BCM17:
+> +
+> +cec-gpio@7 {
+
+unit address is not valid. Build your dts's with W=2.
+
+> +       compatible = "cec-gpio";
+> +       cec-gpio = <&gpio 7 GPIO_OPEN_DRAIN>;
+> +       hpd-gpio = <&gpio 17 GPIO_ACTIVE_HIGH>;
+> +};
+> -- 
+> 2.14.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
