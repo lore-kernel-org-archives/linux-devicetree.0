@@ -1,57 +1,46 @@
-From: Chaotian Jing <chaotian.jing@mediatek.com>
-Subject: [PATCH 10/12] mmc: mediatek: add latch-ck support
-Date: Tue, 12 Sep 2017 17:07:50 +0800
-Message-ID: <1505207272-16983-11-git-send-email-chaotian.jing@mediatek.com>
-References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v4 1/2] i2c: davinci: Add PM Runtime Support
+Date: Tue, 12 Sep 2017 17:14:42 +0800
+Message-ID: <CAMz4ku+_saDS8VBf1kXb+HMDqvx2O2o4qwcU4dEjFvtyE_9JKg@mail.gmail.com>
+References: <20170911201145.31257-1-fcooper@ti.com> <20170911201145.31257-2-fcooper@ti.com>
+ <CAMz4kuLGVes6a4iCF0VbG1ErWPR5at=HKgeGv3cMr1zv7aLzJg@mail.gmail.com> <021a99bb-3670-fff5-6835-b14d28827929@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chaotian Jing <chaotian.jing@mediatek.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <021a99bb-3670-fff5-6835-b14d28827929@ti.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Franklin S Cooper Jr <fcooper@ti.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com, vigneshr@ti.com
 List-Id: devicetree@vger.kernel.org
 
-some platform(eg.mt2701) does not support "stop clk fix", in
-this case, need set correct latch-ck to avoid crc error caused
-by stop clock block-internally.
+Hi,
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
----
- drivers/mmc/host/mtk-sd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 12 September 2017 at 16:48, Sekhar Nori <nsekhar@ti.com> wrote:
+> On Tuesday 12 September 2017 07:28 AM, Baolin Wang wrote:
+>>> @@ -802,13 +821,24 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+>>>         dev->clk = devm_clk_get(&pdev->dev, NULL);
+>>>         if (IS_ERR(dev->clk))
+>>>                 return PTR_ERR(dev->clk);
+>>> -       clk_prepare_enable(dev->clk);
+>
+>> You removed clk enable here, I think it can not work if we did not
+>> open CONFIG_PM macro. I think you should keep clk enable here, and set
+>
+> What do you mean by "open CONFIG_PM macro" ?
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 522fd0a..3328d59 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -378,6 +378,7 @@ struct msdc_host {
- 	u32 sclk;		/* SD/MS bus clock frequency */
- 	unsigned char timing;
- 	bool vqmmc_enabled;
-+	u32 latch_ck;
- 	u32 hs400_ds_delay;
- 	u32 hs200_cmd_int_delay; /* cmd internal delay for HS200/SDR104 */
- 	u32 hs400_cmd_int_delay; /* cmd internal delay for HS400 */
-@@ -1668,6 +1669,8 @@ static int msdc_tune_data(struct mmc_host *mmc, u32 opcode)
- 	if (host->dev_comp->pad_tune0)
- 		tune_reg = MSDC_PAD_TUNE0;
- 
-+	sdr_set_field(host->base + MSDC_PATCH_BIT, MSDC_INT_DAT_LATCH_CK_SEL,
-+		      host->latch_ck);
- 	sdr_clr_bits(host->base + MSDC_IOCON, MSDC_IOCON_DSPL);
- 	sdr_clr_bits(host->base + MSDC_IOCON, MSDC_IOCON_W_DSPL);
- 	for (i = 0 ; i < PAD_DELAY_MAX; i++) {
-@@ -1783,6 +1786,9 @@ static void msdc_hw_reset(struct mmc_host *mmc)
- static void msdc_of_property_parse(struct platform_device *pdev,
- 				   struct msdc_host *host)
- {
-+	of_property_read_u32(pdev->dev.of_node, "mediatek,latch-ck",
-+			     &host->latch_ck);
-+
- 	of_property_read_u32(pdev->dev.of_node, "hs400-ds-delay",
- 			     &host->hs400_ds_delay);
- 
+If you did not open CONFIG_PM macro, then the pm_runtime_xxx() will be
+dummy functions, but now the i2c driver can not work since you did not
+enable clock, right?
+
+>
+>> rpm active by pm_runtime_set_active() before issuing
+>> pm_runtime_enable().
+>
+> Can you explain why you want to do this instead of relying on
+> pm_runtime_get_sync() to enable clock?
+
+What I mean is you should compatible whether CONFIG_PM is enabled or not.
+
 -- 
-1.8.1.1.dirty
-
+Baolin.wang
+Best Regards
