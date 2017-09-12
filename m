@@ -1,57 +1,50 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARC: [plat-axs10x]: DTS: fix sdio ciu frequency
-Date: Tue, 12 Sep 2017 11:38:23 -0700
-Message-ID: <4df1bb54-5fa1-5089-7d96-799ccfc78fce@synopsys.com>
-References: <20170912182045.20941-1-Eugeniy.Paltsev@synopsys.com>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: as3645a flash userland interface
+Date: Tue, 12 Sep 2017 20:53:33 +0200
+Message-ID: <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
+References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
+ <20170912084236.1154-25-sakari.ailus@linux.intel.com>
+ <20170912103628.GB27117@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170912182045.20941-1-Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170912103628.GB27117@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2017 11:20 AM, Eugeniy Paltsev wrote:
-> DW sdio controller has external ciu clock divider controlled
-> via register in SDIO IP. It divides sdio_ref_clk
-> (which comes from CGU) by 16 for default. So default mmcclk
-> clock (which comes to sdk_in) is 25000000 Hz.
->
-> So fix wrong current value (50000000 Hz) to actual 25000000 Hz.
+Hi Pavel,
 
-Is this a preventive fix or there are known issues with what we have today.
-Is this triggered after addition of AXS clk driver ?
+On 09/12/2017 12:36 PM, Pavel Machek wrote:
+> Hi!
+> 
+> There were some changes to as3645a flash controller. Before we have
+> stable interface we have to keep forever I want to ask:
 
->
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
->   arch/arc/boot/dts/axs10x_mb.dtsi | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-> index 0ff7e07..7bdf581 100644
-> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
-> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-> @@ -44,7 +44,14 @@
->   
->   			mmcclk: mmcclk {
->   				compatible = "fixed-clock";
-> -				clock-frequency = <50000000>;
-> +				/*
-> +				 * DW sdio controller has external ciu clock divider
-> +				 * controlled via register in SDIO IP. It divides
-> +				 * sdio_ref_clk (which comes from CGU) by 16 for
-> +				 * default. So default mmcclk clock (which comes
-> +				 * to sdk_in) is 25000000 Hz.
-> +				 */
-> +				clock-frequency = <25000000>;
->   				#clock-cells = <0>;
->   			};
->   
+Note that we have already two LED flash class drivers - leds-max77693
+and leds-aat1290. They have been present in mainline for over two years
+now.
 
+> What directory are the flash controls in?
+> 
+> /sys/class/leds/led-controller:flash ?
+> 
+> Could we arrange for something less generic, like
+> 
+> /sys/class/leds/main-camera:flash ?
+
+I'd rather avoid overcomplicating this. LED class device name pattern
+is well defined to devicename:colour:function
+(see Documentation/leds/leds-class.txt, "LED Device Naming" section).
+
+In this case "flash" in place of the "function" segment makes the
+things clear enough I suppose.
+
+-- 
+Best regards,
+Jacek Anaszewski
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
