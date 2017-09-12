@@ -1,38 +1,131 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: drm/bridge: Document Cadence DSI
- bridge bindings
-Date: Tue, 12 Sep 2017 11:03:58 -0500
-Message-ID: <20170912160358.hmxnlctbeoe73j6g@rob-hp-laptop>
-References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
- <20170831155519.3704-2-boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v1 1/3] dt-bindings: nvmem: add description for UniPhier
+ eFuse
+Date: Tue, 12 Sep 2017 11:15:46 -0500
+Message-ID: <20170912161546.q5xr5pfdxin3qujf@rob-hp-laptop>
+References: <1504221620-358-1-git-send-email-hayashibara.keiji@socionext.com>
+ <1504221620-358-2-git-send-email-hayashibara.keiji@socionext.com>
+ <CAK7LNASLh4vYqZhM9g2AL1uUtieviAmmWOp_Mzoj0zG=Ejz0cA@mail.gmail.com>
+ <000001d32615$38e1b0c0$aaa51240$@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170831155519.3704-2-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <000001d32615$38e1b0c0$aaa51240$@socionext.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+To: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: 'Masahiro Yamada' <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 05:55:19PM +0200, Boris Brezillon wrote:
-> Document the bindings used for the Cadence DSI bridge.
+On Tue, Sep 05, 2017 at 04:04:31PM +0900, Keiji Hayashibara wrote:
+> Hello Yamada-san,
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> Changes in v3:
-> - Fix clock names in the example
-> - Document how to represent DSI devices that are controller through
->   an external bus like I2C or SPI
+> Thank you for your comment.
 > 
-> Changes in v2:
-> - None
-> ---
->  .../bindings/display/bridge/cdns,dsi.txt           | 109 +++++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+> > From: Masahiro Yamada [mailto:yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org]
+> > Sent: Monday, September 4, 2017 9:56 PM
+> > 
+> > 2017-09-01 8:20 GMT+09:00 Keiji Hayashibara
+> > <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> > > Add uniphier-efuse dt-bindings documentation.
+> > >
+> > > Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> > > ---
+> > >  .../devicetree/bindings/nvmem/uniphier-efuse.txt   | 45
+> > ++++++++++++++++++++++
+> > >  1 file changed, 45 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > +Example:
+> > > +
+> > > +       soc-glue@5f900000 {
+> > > +               compatible = "socionext,uniphier-ld20-soc-glue-debug",
+> > > +                            "simple-mfd";
+> > > +               #address-cells = <1>;
+> > > +               #size-cells = <1>;
+> > > +               ranges = <0x0 0x5f900000 0x2000>;
+> > 
+> > 
+> > IMHO, I think an empty "ranges;" will clarify the code, but it is up to
+> > your taste.
+> > 
+> > 
+> > > +
+> > > +               efuse {
+> > > +                       compatible = "socionext,uniphier-efuse",
+> > > +                                    "syscon";
+> > 
+> > 
+> > You are adding a dedicated driver for "socionext,uniphier-efuse".
+> > 
+> > Then, "syscon" as well?
+> > 
+> 
+> Since I was using the syscon interface to implement the driver,
+> I specified "syscon". It's interface is syscon_node_to_regmap().
+> 
+> I will rethink this in v2.
+> 
+> > 
+> > 
+> > > +                       reg = <0x100 0xf00>;
+> > 
+> > 
+> > Not so many efuse registers exist on the SoC.
+> > 
+> > reg = <0x100 0x200>; will be enough.
+> > 
+> > 
+> > Or if you want to be strict to the hw spec, you can write as follows:
+> > 
+> >         soc-glue@5f900000 {
+> >                compatible = "socionext,uniphier-ld20-soc-glue-debug";
+> >                             "simple-mfd";
+> >                #address-cells = <1>;
+> >                #size-cells = <1>;
+> >                ranges = <0x0 0x5f900000 0x2000>;
+> > 
+> >                efuse@100 {
+> >                            compatible = "socionext,uniphier-efuse";
+> >                            reg = <0x100 0x28>;
+> >                };
+> > 
+> >                efuse@200 {
+> >                            compatible = "socionext,uniphier-efuse";
+> >                            reg = <0x200 0x68>;
+> >                };
+> >        };
+> > 
+> > 
+> > 
+> > 
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <1>;
+> > > +
+> > > +                       /* Data cells */
+> > > +                       usb_mon: usb_mon {
+> > > +                               reg = <0x154 0xc>;
+> > > +                       };
+> > 
+> > 
+> > This <0x154 0xc> represents 0x5f900254 in CPU address view.
+> > (0x5f900000 + 0x100 + 0x154)
+> > 
+> > So many ranges conversion, and how error-prone..
+> > 
+> 
+> Yes, indeed...
+> I will modify as below.
+
+Please don't. A non-empty ranges is preferred. It limits the scope and 
+chance for errors (smaller range allows fewer possible values and 
+limits the chances of having address ranges duplicated in multiple 
+nodes). But yes, it does add the requirement of doing addition and/or 
+OR operations. I can't review whether the address ends up being correct 
+either way, but having non-empty ranges helps enforce the other things.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
