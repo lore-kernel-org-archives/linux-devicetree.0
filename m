@@ -1,52 +1,28 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 10/11] arm64: dts: renesas: initial Eagle board device
- tree
-Date: Wed, 13 Sep 2017 00:19:39 +0300
-Message-ID: <d6f9d5ef-4864-3ffb-9406-acd65bff10aa@cogentembedded.com>
-References: <20170912210543.810219167@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/7] ASoC: arizona: Add device tree binding doc for
+ volume limits
+Date: Tue, 12 Sep 2017 16:21:17 -0500
+Message-ID: <20170912212117.yv5bpqkrxmofg3o5@rob-hp-laptop>
+References: <20170904154154.4395-1-ckeepax@opensource.cirrus.com>
+ <20170904154154.4395-8-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170912210543.810219167@cogentembedded.com>
-Content-Language: en-MW
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170904154154.4395-8-ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2017 11:37 PM, Sergei Shtylyov wrote:
+On Mon, Sep 04, 2017 at 04:41:54PM +0100, Charles Keepax wrote:
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/sound/wlf,arizona.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-> Add the initial device  tree for  the R8A77970 SoC based Eagle board.
-> The board has 1 debug serial port (SCIF0); include support for it,
-> so that the serial console can work.
-> 
-> Based on the original (and large) patch by Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com>.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-[...]
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-> ===================================================================
-> --- /dev/null
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-> @@ -0,0 +1,45 @@
-[...]
-> +&extal_clk {
-> +	clock-frequency = <16666666>;
-> +};
-> +
-> +&extalr_clk {
-> +	clock-frequency = <32768>;
-> +};
-> +
-
-    Forgot to specify SCIF_CLK -- it's populated.
-
-> +&scif0 {
-> +	status = "okay";
-> +};
-
-MBR, Sergei
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
