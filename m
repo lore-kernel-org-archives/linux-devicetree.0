@@ -1,81 +1,58 @@
 From: Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v3 0/9] Mediatek MT2712 clock and scpsys support
-Date: Tue, 12 Sep 2017 15:21:40 +0800
-Message-ID: <1505200909-23552-1-git-send-email-weiyi.lu@mediatek.com>
+Subject: [PATCH v3 9/9] arm: dts: Add power controller device node of MT2712
+Date: Tue, 12 Sep 2017 15:21:49 +0800
+Message-ID: <1505200909-23552-10-git-send-email-weiyi.lu@mediatek.com>
+References: <1505200909-23552-1-git-send-email-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1505200909-23552-1-git-send-email-weiyi.lu@mediatek.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+Cc: James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, Weiyi Lu <weiyi.lu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This series is based on v4.13-next-soc and composed of
-clock control (PATCH 1-4) and scpsys control (PATCH 5-9)
+add power controller node for MT2712
 
-changes since v2:
-- ensure the clocks used by clocksource driver are registered
-  before clocksource init() by using CLK_OF_DECLARE()
-- correct the frequency of clk32k/clkrtc_ext/clkrtc_int
+Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-changes since v1:
-- Rebase to v4.13-next-soc.
-- Refine scpsys and infracfg for bus protection.
-
-Weiyi Lu (9):
-  dt-bindings: ARM: Mediatek: Document bindings for MT2712
-  clk: mediatek: Add dt-bindings for MT2712 clocks
-  clk: mediatek: Add MT2712 clock support
-  arm: dts: mt2712: Add clock controller device nodes
-  dt-bindings: soc: add MT2712 power dt-bindings
-  soc: mediatek: extend bus protection API
-  soc: mediatek: add dependent clock jpgdec/audio for scpsys
-  soc: mediatek: add MT2712 scpsys support
-  arm: dts: Add power controller device node of MT2712
-
- .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
- .../bindings/arm/mediatek/mediatek,bdpsys.txt      |    1 +
- .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
- .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
- .../bindings/arm/mediatek/mediatek,jpgdecsys.txt   |   22 +
- .../bindings/arm/mediatek/mediatek,mcucfg.txt      |   22 +
- .../bindings/arm/mediatek/mediatek,mfgcfg.txt      |   22 +
- .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
- .../bindings/arm/mediatek/mediatek,pericfg.txt     |    1 +
- .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
- .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
- .../bindings/arm/mediatek/mediatek,vencsys.txt     |    1 +
- .../devicetree/bindings/soc/mediatek/scpsys.txt    |    3 +
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |  131 ++
- drivers/clk/mediatek/Kconfig                       |   50 +
- drivers/clk/mediatek/Makefile                      |    8 +
- drivers/clk/mediatek/clk-mt2712-bdp.c              |  102 ++
- drivers/clk/mediatek/clk-mt2712-img.c              |   80 ++
- drivers/clk/mediatek/clk-mt2712-jpgdec.c           |   76 ++
- drivers/clk/mediatek/clk-mt2712-mfg.c              |   75 +
- drivers/clk/mediatek/clk-mt2712-mm.c               |  170 +++
- drivers/clk/mediatek/clk-mt2712-vdec.c             |   94 ++
- drivers/clk/mediatek/clk-mt2712-venc.c             |   77 ++
- drivers/clk/mediatek/clk-mt2712.c                  | 1435 ++++++++++++++++++++
- drivers/clk/mediatek/clk-mtk.h                     |    2 +
- drivers/clk/mediatek/clk-pll.c                     |   13 +-
- drivers/soc/mediatek/mtk-infracfg.c                |   32 +-
- drivers/soc/mediatek/mtk-scpsys.c                  |  199 ++-
- include/dt-bindings/clock/mt2712-clk.h             |  427 ++++++
- include/dt-bindings/power/mt2712-power.h           |   26 +
- include/linux/soc/mediatek/infracfg.h              |   12 +-
- 31 files changed, 3049 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,jpgdecsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mcucfg.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mfgcfg.txt
- create mode 100644 drivers/clk/mediatek/clk-mt2712-bdp.c
- create mode 100644 drivers/clk/mediatek/clk-mt2712-img.c
- create mode 100644 drivers/clk/mediatek/clk-mt2712-jpgdec.c
- create mode 100644 drivers/clk/mediatek/clk-mt2712-mfg.c
- create mode 100644 drivers/clk/mediatek/clk-mt2712-mm.c
- create mode 100644 drivers/clk/mediatek/clk-mt2712-vdec.c
- create mode 100644 drivers/clk/mediatek/clk-mt2712-venc.c
- create mode 100644 drivers/clk/mediatek/clk-mt2712.c
- create mode 100644 include/dt-bindings/clock/mt2712-clk.h
- create mode 100644 include/dt-bindings/power/mt2712-power.h
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+index 53547d9..3232e4e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/mt2712-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/power/mt2712-power.h>
+ #include "mt2712-pinfunc.h"
+ 
+ / {
+@@ -165,6 +166,21 @@
+ 		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+ 
++	scpsys: scpsys@10006000 {
++		compatible = "mediatek,mt2712-scpsys", "syscon";
++		#power-domain-cells = <1>;
++		reg = <0 0x10006000 0 0x1000>;
++		clocks = <&topckgen CLK_TOP_MM_SEL>,
++			 <&topckgen CLK_TOP_MFG_SEL>,
++			 <&topckgen CLK_TOP_VENC_SEL>,
++			 <&topckgen CLK_TOP_JPGDEC_SEL>,
++			 <&topckgen CLK_TOP_A1SYS_HP_SEL>,
++			 <&topckgen CLK_TOP_VDEC_SEL>;
++		clock-names = "mm", "mfg", "venc",
++			"jpgdec", "audio", "vdec";
++		infracfg = <&infracfg>;
++	};
++
+ 	uart5: serial@1000f000 {
+ 		compatible = "mediatek,mt2712-uart",
+ 			     "mediatek,mt6577-uart";
+-- 
+1.9.1
 
