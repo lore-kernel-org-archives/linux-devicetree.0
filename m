@@ -1,89 +1,105 @@
-From: StarNight <starnight@g.ncu.edu.tw>
-Subject: Re: [PATCH] linux-wpan: Add an IEEE 802.15.4 over LoRa Semtech
- SX1276/77/78/79 device driver
-Date: Wed, 13 Sep 2017 00:49:03 +0800
-Message-ID: <CAC=mGzg99eG4TBrRdHQMfof2_bE2tbVL-5QX6ny7L_Y4kmv00g@mail.gmail.com>
-References: <20170910093026.4386-1-starnight@g.ncu.edu.tw> <CAJuUDwtyf_TdGR34oKmLRgRU_jy+JtUSmSt1v_j20e+BwrfA7A@mail.gmail.com>
- <CAOHTApj2tkJ7Xju0LSYrgz_uDsR2L35j+QvXswXgnCRkdqHMKA@mail.gmail.com>
- <CAC=mGziO09oiNcYpYO6kHOcH_D0sypx8RvAML3OvnMUu9af+aQ@mail.gmail.com> <CAOHTApizcu5k572sik_Pp9XBOutLb24ZZZfqvr9x1DOdBB5rBA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 06/10] arm64: allwinner: a64: Add devicetree binding for
+ DMA controller
+Date: Tue, 12 Sep 2017 11:52:20 -0500
+Message-ID: <20170912165220.yj4bcpd4yg3wujyh@rob-hp-laptop>
+References: <20170903224100.17893-1-stefan.bruens@rwth-aachen.de>
+ <20170903224100.17893-7-stefan.bruens@rwth-aachen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOHTApizcu5k572sik_Pp9XBOutLb24ZZZfqvr9x1DOdBB5rBA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Aring <aring-jkUAjuhPggJWk0Htik3J/w@public.gmane.org>
-Cc: Xue Liu <liuxuenetmail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Schmidt <stefan-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-wpan - ML <linux-wpan-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170903224100.17893-7-stefan.bruens@rwth-aachen.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>
+Cc: devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Andre Przywara <andre.przywara@arm.com>, linux-kernel@vger.kernel.org, Code Kipper <codekipper@gmail.com>, linux-sunxi@googlegroups.com, dmaengine@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Sep 04, 2017 at 12:40:57AM +0200, Stefan Br=FCns wrote:
+> The A64 is register compatible with the H3, but has a different number
+> of dma channels and request ports.
+> =
 
-2017-09-12 5:13 GMT+08:00 Alexander Aring <aring-jkUAjuhPggJWk0Htik3J/w@public.gmane.org>:
-> Hi,
->
-> On Mon, Sep 11, 2017 at 11:17 AM, StarNight <starnight@g.ncu.edu.tw> wrote:
->> Hi,
->>
->> 2017-09-11 20:47 GMT+08:00 Alexander Aring <aring-jkUAjuhPggJWk0Htik3J/w@public.gmane.org>:
->>> Hi,
->>>
->>> On Mon, Sep 11, 2017 at 3:50 AM, Xue Liu <liuxuenetmail-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> Hello Pan,
->>>>
->>>> From my point of view, it is not a good idea to write sx127x driver
->>>> for IEEE 802154. Because LoRa is not compatible with IEEE 802.15.4 in
->>>> PHY and MAC layer.
->>>>
->>>
->>> This isn't true. The security layer is exactly the same and copied
->>> from IEEE 802.15.4.
->>> The rest of the mac layer is pretty simple. Simpler than IEEE
->>> 802.15.4... for now.
->>
->> That is the first reason why I write this driver.
->>
->> I also found "Transmission of IPv6 Packets over LoRaWAN" on IETF website
->> https://datatracker.ietf.org/doc/draft-vilajosana-lpwan-lora-hc/
->> However, it has been expired since 2017-01-09.
->> It is the second reason why I write this driver.
->>
->>>> I think it is better to make individual Phy and MAC layers for LoRa in
->>>> Linux kernel, where a sx127x driver will make sense.
->>>
->>> What about to introduce a new interface type? Then you can do a
->>> complete different parsing on this interface type and share the code
->>> what you need from 802.15.4
->>
->> So, will the suggestion be a new interface like "6LoWPAN over LoRaWAN"?
->>
->
-> You mixing L2 and 6LoWPAN here. L2 layer is 802.15.4, there we have
-> the device nodes "node", "monitor" and "coordinator" (not implemented
-> yet).
-> My idea is to add a Lora L2 interface type there and then you can
-> catch frames and make a "lora.c" file in net/mac802154 for lora frame
-> handling. If you need 802.15.4 stuff just use it then. This makes
-> sense, because Lora use some 802.15.4 stuff which is mostly the same.
+> Attach additional properties to the node to allow future reuse of the
+> compatible for controllers with different number of channels/requests.
+> =
 
-I have found this slide:
-LoRaWAN specification developments     by Nicolas Sornin
-https://www.ietf.org/mail-archive/web/lp-wan/current/pdfbVG486gGVD.pdf
-In the page 5:
-LoRaWAN1.0
-Close ALIGNMENT WITH IEEE 802.15.4 in order to preserve higher layers
+> If dma-requests is not specified, the register layout defined maximum
+> of 32 is used.
 
-Maybe, I can make a comparison list of IEEE 802.15.4 and LoRaWAN.
-This will be useful for lora.c
+This belongs in the binding.
 
-> For 6LoWPAN you need to make an implementation for Lora 6LoWPAN
-> adaptation, question is if we want to put that in net/ieee802154 :-/
-> or do e.g. "net/lora" (There you can put lora socket handling/6lowpan
-> adaptation etc.)
->
-> Will wait for Stefan's opinion according to that.
->
+> =
 
-Jian-Hong Pan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Stefan Br=FCns <stefan.bruens@rwth-aachen.de>
+> ---
+>  .../devicetree/bindings/dma/sun6i-dma.txt          | 26 ++++++++++++++++=
+++++++
+>  1 file changed, 26 insertions(+)
+> =
+
+> diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Docume=
+ntation/devicetree/bindings/dma/sun6i-dma.txt
+> index 6b267045f522..66195fb31296 100644
+> --- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> @@ -26,6 +26,32 @@ Example:
+>  		#dma-cells =3D <1>;
+>  	};
+>  =
+
+> +------------------------------------------------------------------------=
+------
+> +For A64 DMA controller:
+> +
+> +Required properties:
+> +- compatible:	"allwinner,sun50i-a64-dma"
+> +- dma-channels: Number of DMA channels supported by the controller.
+> +		Refer to Documentation/devicetree/bindings/dma/dma.txt
+
+dma.txt already explains what these properties are. You just need to =
+
+state what are valid values.
+
+> +- all properties above, i.e. reg, interrupts, clocks, resets and #dma-ce=
+lls
+> +
+> +Optional properties:
+> +- dma-requests: Number of DMA request signals supported by the controlle=
+r.
+> +		Refer to Documentation/devicetree/bindings/dma/dma.txt
+> +
+> +Example:
+> +	dma: dma-controller@01c02000 {
+
+Drop the leading 0. Building dtbs with W=3D2 will tell you this.
+
+> +		compatible =3D "allwinner,sun50i-a64-dma";
+> +		reg =3D <0x01c02000 0x1000>;
+> +		interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks =3D <&ccu CLK_BUS_DMA>;
+> +		dma-channels =3D <8>;
+> +		dma-requests =3D <27>;
+> +		resets =3D <&ccu RST_BUS_DMA>;
+> +		#dma-cells =3D <1>;
+> +	};
+> +------------------------------------------------------------------------=
+------
+> +
+>  Clients:
+>  =
+
+>  DMA clients connected to the A31 DMA controller must use the format
+> -- =
+
+> 2.14.1
+> =
