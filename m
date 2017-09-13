@@ -1,147 +1,185 @@
-From: "Keiji Hayashibara" <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: RE: [PATCH v1 1/3] dt-bindings: nvmem: add description for UniPhier eFuse
-Date: Wed, 13 Sep 2017 11:31:16 +0900
-Message-ID: <000301d32c38$5fe8a830$1fb9f890$@socionext.com>
-References: <1504221620-358-1-git-send-email-hayashibara.keiji@socionext.com> <1504221620-358-2-git-send-email-hayashibara.keiji@socionext.com> <CAK7LNASLh4vYqZhM9g2AL1uUtieviAmmWOp_Mzoj0zG=Ejz0cA@mail.gmail.com> <000001d32615$38e1b0c0$aaa51240$@socionext.com> <20170912161546.q5xr5pfdxin3qujf@rob-hp-laptop>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v3 4/6] [media] exynos-gsc: Add hardware rotation limits
+Date: Wed, 13 Sep 2017 11:33:45 +0900
+Message-ID: <bb025fcb-e316-dfe9-a8eb-8a9535f35b93@samsung.com>
+References: <1504850560-27950-1-git-send-email-hoegeun.kwon@samsung.com>
+        <CGME20170908060309epcas1p3d48dd0871d3fde02ba3c9921bbe5a7a6@epcas1p3.samsung.com>
+        <1504850560-27950-5-git-send-email-hoegeun.kwon@samsung.com>
+        <27b46679-e6c7-2471-f10e-3f0634178ebf@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-2022-jp"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170912161546.q5xr5pfdxin3qujf@rob-hp-laptop>
-Content-Language: ja
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?iso-2022-jp?B?WWFtYWRhLCBNYXNhaGlyby8bJEI7M0VEGyhCIBskQj8/OTAbKEI=?= <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?iso-2022-jp?B?SGF5YXNoaSwgS3VuaWhpa28vGyRCTlMbKEIgGyRCSy5JJxsoQg==?= <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?iso-2022-jp?B?T3dhZGEsIEtpeW9zaGkvGyRCQmdPQkVEGyhCIBskQkA2O1YbKEI=?= <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <27b46679-e6c7-2471-f10e-3f0634178ebf@samsung.com>
+Content-language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, mchehab@kernel.org
+Cc: inki.dae@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, m.szyprowski@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+Hi Sylwester,
 
-Thank you for your comment.
+On 09/11/2017 06:35 PM, Sylwester Nawrocki wrote:
+> On 09/08/2017 08:02 AM, Hoegeun Kwon wrote:
+>> The hardware rotation limits of gsc depends on SOC (Exynos
+>> 5250/5420/5433). Distinguish them and add them to the driver data.
+>>
+>> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+>> ---
+>>   drivers/media/platform/exynos-gsc/gsc-core.c | 96 
+>> ++++++++++++++++++++++++----
+>>   1 file changed, 83 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/exynos-gsc/gsc-core.c 
+>> b/drivers/media/platform/exynos-gsc/gsc-core.c
+>> index 4380150..8f8636e 100644
+>> --- a/drivers/media/platform/exynos-gsc/gsc-core.c
+>> +++ b/drivers/media/platform/exynos-gsc/gsc-core.c
+>> @@ -943,7 +943,37 @@ static irqreturn_t gsc_irq_handler(int irq, void 
+>> *priv)
+>>       return IRQ_HANDLED;
+>>   }
+>>   -static struct gsc_pix_max gsc_v_100_max = {
+>> +static struct gsc_pix_max gsc_v_5250_max = {
+>> +    .org_scaler_bypass_w    = 8192,
+>> +    .org_scaler_bypass_h    = 8192,
+>> +    .org_scaler_input_w    = 4800,
+>> +    .org_scaler_input_h    = 3344,
+>> +    .real_rot_dis_w        = 4800,
+>> +    .real_rot_dis_h        = 3344,
+>> +    .real_rot_en_w        = 2016,
+>> +    .real_rot_en_h        = 2016,
+>> +    .target_rot_dis_w    = 4800,
+>> +    .target_rot_dis_h    = 3344,
+>> +    .target_rot_en_w    = 2016,
+>> +    .target_rot_en_h    = 2016,
+>> +};
+>> +
+>> +static struct gsc_pix_max gsc_v_5420_max = {
+>> +    .org_scaler_bypass_w    = 8192,
+>> +    .org_scaler_bypass_h    = 8192,
+>> +    .org_scaler_input_w    = 4800,
+>> +    .org_scaler_input_h    = 3344,
+>> +    .real_rot_dis_w        = 4800,
+>> +    .real_rot_dis_h        = 3344,
+>> +    .real_rot_en_w        = 2048,
+>> +    .real_rot_en_h        = 2048,
+>> +    .target_rot_dis_w    = 4800,
+>> +    .target_rot_dis_h    = 3344,
+>> +    .target_rot_en_w    = 2016,
+>> +    .target_rot_en_h    = 2016,
+>> +};
+>> +
+>> +static struct gsc_pix_max gsc_v_5433_max = {
+>>       .org_scaler_bypass_w    = 8192,
+>>       .org_scaler_bypass_h    = 8192,
+>>       .org_scaler_input_w    = 4800,
+>> @@ -979,8 +1009,8 @@ static irqreturn_t gsc_irq_handler(int irq, void 
+>> *priv)
+>>       .target_h        = 2,  /* yuv420 : 2, others : 1 */
+>>   };
+>>   -static struct gsc_variant gsc_v_100_variant = {
+>> -    .pix_max        = &gsc_v_100_max,
+>> +static struct gsc_variant gsc_v_5250_variant = {
+>> +    .pix_max        = &gsc_v_5250_max,
+>>       .pix_min        = &gsc_v_100_min,
+>>       .pix_align        = &gsc_v_100_align,
+>>       .in_buf_cnt        = 32,
+>> @@ -992,12 +1022,48 @@ static irqreturn_t gsc_irq_handler(int irq, 
+>> void *priv)
+>>       .local_sc_down        = 2,
+>>   };
+>>   -static struct gsc_driverdata gsc_v_100_drvdata = {
+>> +static struct gsc_variant gsc_v_5420_variant = {
+>> +    .pix_max        = &gsc_v_5420_max,
+>> +    .pix_min        = &gsc_v_100_min,
+>> +    .pix_align        = &gsc_v_100_align,
+>> +    .in_buf_cnt        = 32,
+>> +    .out_buf_cnt        = 32,
+>> +    .sc_up_max        = 8,
+>> +    .sc_down_max        = 16,
+>> +    .poly_sc_down_max    = 4,
+>> +    .pre_sc_down_max    = 4,
+>> +    .local_sc_down        = 2,
+>> +};
+>> +
+>> +static struct gsc_variant gsc_v_5433_variant = {
+>> +    .pix_max        = &gsc_v_5433_max,
+>> +    .pix_min        = &gsc_v_100_min,
+>> +    .pix_align        = &gsc_v_100_align,
+>> +    .in_buf_cnt        = 32,
+>> +    .out_buf_cnt        = 32,
+>> +    .sc_up_max        = 8,
+>> +    .sc_down_max        = 16,
+>> +    .poly_sc_down_max    = 4,
+>> +    .pre_sc_down_max    = 4,
+>> +    .local_sc_down        = 2,
+>> +};
+>> +
+>> +static struct gsc_driverdata gsc_v_5250_drvdata = {
+>>       .variant = {
+>> -        [0] = &gsc_v_100_variant,
+>> -        [1] = &gsc_v_100_variant,
+>> -        [2] = &gsc_v_100_variant,
+>> -        [3] = &gsc_v_100_variant,
+>> +        [0] = &gsc_v_5250_variant,
+>> +        [1] = &gsc_v_5250_variant,
+>> +        [2] = &gsc_v_5250_variant,
+>> +        [3] = &gsc_v_5250_variant,
+>> +    },
+>> +    .num_entities = 4,
+>> +    .clk_names = { "gscl" },
+>> +    .num_clocks = 1,
+>> +};
+>> +
+>> +static struct gsc_driverdata gsc_v_5420_drvdata = {
+>> +    .variant = {
+>> +        [0] = &gsc_v_5420_variant,
+>> +        [1] = &gsc_v_5420_variant,
+>>       },
+>>       .num_entities = 4,
+>>       .clk_names = { "gscl" },
+>> @@ -1006,9 +1072,9 @@ static irqreturn_t gsc_irq_handler(int irq, 
+>> void *priv)
+>>     static struct gsc_driverdata gsc_5433_drvdata = {
+>>       .variant = {
+>> -        [0] = &gsc_v_100_variant,
+>> -        [1] = &gsc_v_100_variant,
+>> -        [2] = &gsc_v_100_variant,
+>> +        [0] = &gsc_v_5433_variant,
+>> +        [1] = &gsc_v_5433_variant,
+>> +        [2] = &gsc_v_5433_variant,
+>>       },
+>>       .num_entities = 3,
+>>       .clk_names = { "pclk", "aclk", "aclk_xiu", "aclk_gsclbend" },
+>> @@ -1017,8 +1083,12 @@ static irqreturn_t gsc_irq_handler(int irq, 
+>> void *priv)
+>>     static const struct of_device_id exynos_gsc_match[] = {
+>>       {
+>> -        .compatible = "samsung,exynos5-gsc",
+>> -        .data = &gsc_v_100_drvdata,
+>
+> Can you keep the "samsung,exynos5-gsc" entry with the gsc_v_5250_variant
+> data, so that it can work with "samsung,exynos5-gsc" compatible in DT
+> on both exynos5250 and exynos5420 SoCs?
+>
 
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Wednesday, September 13, 2017 1:16 AM
-> 
-> On Tue, Sep 05, 2017 at 04:04:31PM +0900, Keiji Hayashibara wrote:
-> > Hello Yamada-san,
-> >
-> > Thank you for your comment.
-> >
-> > > From: Masahiro Yamada [mailto:yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org]
-> > > Sent: Monday, September 4, 2017 9:56 PM
-> > >
-> > > 2017-09-01 8:20 GMT+09:00 Keiji Hayashibara
-> > > <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> > > > Add uniphier-efuse dt-bindings documentation.
-> > > >
-> > > > Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> > > > ---
-> > > >  .../devicetree/bindings/nvmem/uniphier-efuse.txt   | 45
-> > > ++++++++++++++++++++++
-> > > >  1 file changed, 45 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
-> 
-> > > > +Example:
-> > > > +
-> > > > +       soc-glue@5f900000 {
-> > > > +               compatible =
-> "socionext,uniphier-ld20-soc-glue-debug",
-> > > > +                            "simple-mfd";
-> > > > +               #address-cells = <1>;
-> > > > +               #size-cells = <1>;
-> > > > +               ranges = <0x0 0x5f900000 0x2000>;
-> > >
-> > >
-> > > IMHO, I think an empty "ranges;" will clarify the code, but it is up
-> > > to your taste.
-> > >
-> > >
-> > > > +
-> > > > +               efuse {
-> > > > +                       compatible = "socionext,uniphier-efuse",
-> > > > +                                    "syscon";
-> > >
-> > >
-> > > You are adding a dedicated driver for "socionext,uniphier-efuse".
-> > >
-> > > Then, "syscon" as well?
-> > >
-> >
-> > Since I was using the syscon interface to implement the driver, I
-> > specified "syscon". It's interface is syscon_node_to_regmap().
-> >
-> > I will rethink this in v2.
-> >
-> > >
-> > >
-> > > > +                       reg = <0x100 0xf00>;
-> > >
-> > >
-> > > Not so many efuse registers exist on the SoC.
-> > >
-> > > reg = <0x100 0x200>; will be enough.
-> > >
-> > >
-> > > Or if you want to be strict to the hw spec, you can write as follows:
-> > >
-> > >         soc-glue@5f900000 {
-> > >                compatible =
-> "socionext,uniphier-ld20-soc-glue-debug";
-> > >                             "simple-mfd";
-> > >                #address-cells = <1>;
-> > >                #size-cells = <1>;
-> > >                ranges = <0x0 0x5f900000 0x2000>;
-> > >
-> > >                efuse@100 {
-> > >                            compatible = "socionext,uniphier-efuse";
-> > >                            reg = <0x100 0x28>;
-> > >                };
-> > >
-> > >                efuse@200 {
-> > >                            compatible = "socionext,uniphier-efuse";
-> > >                            reg = <0x200 0x68>;
-> > >                };
-> > >        };
-> > >
-> > >
-> > >
-> > >
-> > > > +                       #address-cells = <1>;
-> > > > +                       #size-cells = <1>;
-> > > > +
-> > > > +                       /* Data cells */
-> > > > +                       usb_mon: usb_mon {
-> > > > +                               reg = <0x154 0xc>;
-> > > > +                       };
-> > >
-> > >
-> > > This <0x154 0xc> represents 0x5f900254 in CPU address view.
-> > > (0x5f900000 + 0x100 + 0x154)
-> > >
-> > > So many ranges conversion, and how error-prone..
-> > >
-> >
-> > Yes, indeed...
-> > I will modify as below.
-> 
-> Please don't. A non-empty ranges is preferred. It limits the scope and
-chance
-> for errors (smaller range allows fewer possible values and limits the
-> chances of having address ranges duplicated in multiple nodes). But yes,
-> it does add the requirement of doing addition and/or OR operations. I
-can't
-> review whether the address ends up being correct either way, but having
-> non-empty ranges helps enforce the other things.
+Thank you for your question.
 
-I see. 
-I will proceed with implementation by non-empty ranges.
+Exynos 5250 and 5420 have different hardware rotation limits.
+Exynos 5250 is '.real_rot_en_w/h = 2016' and 5420 is '.real_rot_en_w/h = 
+2048'.
 
-Best Regards,
-Keiji Hayashibara
+So my opinion they must have different compatible.
 
+Best regards,
+Hoegeun
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +        .compatible = "samsung,exynos5250-gsc",
+>> +        .data = &gsc_v_5250_drvdata,
+>> +    },
+>> +    {
+>> +        .compatible = "samsung,exynos5420-gsc",
+>> +        .data = &gsc_v_5420_drvdata,
+>>       },
+>
