@@ -1,75 +1,53 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] arm64: dts: renesas: r8a77995: add GPIO device nodes
-Date: Wed, 13 Sep 2017 12:06:39 +0000
-Message-ID: <TY1PR06MB09929D41838D1427F3D10210D86E0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1505285528-7033-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdX9qowD3039OxPyPoyUsnaq7e=kWyxqDdDqzz5RTZtSwQ@mail.gmail.com>
- <TY1PR06MB099246295272BBF0F08022C8D86E0@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <CAMuHMdUiZyK3xA=_rYjbAaSYhm=-p5Spug0mmLc=mf+pRfxgoA@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v4 4/4] [media] exynos-gsc: Add hardware rotation limits
+Date: Wed, 13 Sep 2017 14:13:45 +0200
+Message-ID: <509750b5-22d0-77ee-8295-0e52679e0d1e@samsung.com>
+References: <1505302915-15699-1-git-send-email-hoegeun.kwon@samsung.com>
+        <CGME20170913114215epcas2p346dd3987cf25481bc780e0eef8b91ed8@epcas2p3.samsung.com>
+        <1505302915-15699-5-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUiZyK3xA=_rYjbAaSYhm=-p5Spug0mmLc=mf+pRfxgoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: ja-JP
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1505302915-15699-5-git-send-email-hoegeun.kwon@samsung.com>
+Content-language: en-GB
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc: inki.dae@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, mchehab@kernel.org, m.szyprowski@samsung.com, robin.murphy@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBXZWRu
-ZXNkYXksIFNlcHRlbWJlciAxMywgMjAxNyA4OjQ4IFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwN
-Cj4gDQo+IE9uIFdlZCwgU2VwIDEzLCAyMDE3IGF0IDExOjM1IEFNLCBZb3NoaWhpcm8gU2hpbW9k
-YQ0KPiA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+PiBGcm9t
-OiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gPj4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTMs
-IDIwMTcgNjoyMiBQTQ0KPiA+PiBPbiBXZWQsIFNlcCAxMywgMjAxNyBhdCA4OjUyIEFNLCBZb3No
-aWhpcm8gU2hpbW9kYQ0KPiA+PiA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdy
-b3RlOg0KPiA+PiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk5NS5k
-dHNpDQo+ID4+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTk1LmR0
-c2kNCj4gPj4gPiBAQCAtMTM5LDYgKzEzOSwxMTggQEANCj4gPj4gPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDE+Ow0KPiA+PiA+ICAgICAgICAgICAgICAg
-ICB9Ow0KPiA+PiA+DQo+ID4+ID4gKyAgICAgICAgICAgICAgIGdwaW8wOiBncGlvQGU2MDUwMDAw
-IHsNCj4gPj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMs
-Z3Bpby1yOGE3Nzk5NSIsDQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICJyZW5lc2FzLHJjYXItZ2VuMy1ncGlvIiwNCj4gPj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgInJlbmVzYXMsZ3Bpby1yY2FyIjsNCj4gPj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICByZWcgPSA8MCAweGU2MDUwMDAwIDAgMHg1MD47DQo+ID4+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDQgSVJRX1RZUEVfTEVWRUxf
-SElHSD47DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47
-DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3Bpby1jb250cm9sbGVyOw0KPiA+PiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIGdwaW8tcmFuZ2VzID0gPCZwZmMgMCAwIDk+Ow0KPiA+
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47DQo+ID4+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+ID4+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcGcgQ1BHX01PRCA5MTI+Ow0KPiA+
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvd2VyLWRvbWFpbnMgPSA8JmNwZz47DQo+ID4+
-DQo+ID4+IEFsbCBub2RlcyBsYWNrIHRoZSBwb3dlciBkb21haW4gaW5kZXggKDMyLCB0byBiZSBy
-ZXBsYWNlZCBieQ0KPiA+PiBSOEE3Nzk5NV9QRF9BTFdBWVNfT04gbGF0ZXIpOg0KPiA+Pg0KPiA+
-PiAgICAgcG93ZXItZG9tYWlucyA9IDwmc3lzYyAzMj47DQo+ID4NCj4gPiBUaGUgcjhhNzc5OTUu
-ZHRzaSBmaWxlIGFscmVhZHkgdXNlcyBSOEE3Nzk5NV9QRF9BTFdBWVNfT04gaW4gc2NpZjIgbm9k
-ZS4NCj4gDQo+IEluIG15IHJlbmVzYXMtZHJpdmVycyBpdCBkb2VzLg0KPiBJbiBTaW1vbidzIHJl
-bmVzYXMvZGV2ZWwgaXQgZG9lc24ndCwgYXMgdGhlIFI4QTc3OTk1X1BEXyogZGVmaW5pdGlvbnMN
-Cj4gZ28gdXBzdHJlYW0gdGhyb3VnaCBhIGRpZmZlcmVudCBicmFuY2ggdGhhbiB0aGUgRFRTIGNo
-YW5nZXMuDQoNCkkgdW5kZXJzdG9vZCBpdC4NCg0KPiA+IFNvLCBzaG91bGQgSSBmaXggdGhpcyBw
-YXRjaCBsaWtlIHRoZSBmb2xsb3dpbmc/DQo+ID4NCj4gPiAgICAgIHBvd2VyLWRvbWFpbnMgPSA8
-JnN5c2MgUjhBNzc5OTVfUERfQUxXQVlTX09OPjsNCj4gDQo+IEZvciBub3cgeW91IHNob3VsZCB1
-c2UgMzIuDQo+IEhvd2V2ZXIsIGFzIHNvb24gYXMgU2ltb24gbWVyZ2VzIHY0LjE0LXJjMSBpbnRv
-IHJlbmVzYXMvZGV2ZWwsIHlvdQ0KPiBjYW4gc3RhcnQgb24gdXNpbmcgUjhBNzc5OTVfUERfQUxX
-QVlTX09OLg0KPiBBcyB0aGF0IGlzIGV4cGVjdGVkIHRvIGhhcHBlbiB0aGlzIE1vbmRheSwgaGUg
-Y2FuIGp1c3QgcG9zdHBvbmUgYXBwbHlpbmcNCj4geW91ciB1cGRhdGVkIHBhdGNoIHVudGlsIHRo
-ZW4sIHNvIEkgZG9uJ3QgdGhpbmsgdGhlcmUncyBhIG5lZWQgdG8gcmVzZW5kIGENCj4gdmVyc2lv
-biB3aXRoIGhhcmRjb2RlZCBudW1iZXJzLg0KDQpJIGdvdCBpdC4gU28sIEkgd2lsbCBub3QgcmVz
-ZW5kIHN1Y2ggdmVyc2lvbi4NCg0KPiBGb3IgUi1DYXIgVjNNIGl0J3MgZGlmZmVyZW50LCBhcyB0
-aGUgZGVmaW5pdGlvbnMgZm9yIHRoYXQgU29DIHdvbid0IGFwcGVhcg0KPiBpbiB1cHN0cmVhbSBm
-b3IgYW5vdGhlciBmdWxsIGN5Y2xlLCBpLmUuIGluIHY0LjE1LXJjMSB0aGUgZWFybGllc3QuDQoN
-ClRoYW5rIHlvdSBmb3IgdGhlIGluZm9ybWF0aW9uLiBJIGdvdCBpdC4NCg0KQmVzdCByZWdhcmRz
-LA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4g
-LS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsu
-b3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3Bs
-ZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91
-cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4N
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
+On 09/13/2017 01:41 PM, Hoegeun Kwon wrote:
+> @@ -1004,11 +1088,33 @@ static irqreturn_t gsc_irq_handler(int irq, void *priv)
+>   	.num_clocks = 1,
+>   };
+>   
+> +static struct gsc_driverdata gsc_v_5250_drvdata = {
+> +	.variant = {
+> +		[0] = &gsc_v_5250_variant,
+> +		[1] = &gsc_v_5250_variant,
+> +		[2] = &gsc_v_5250_variant,
+> +		[3] = &gsc_v_5250_variant,
+> +	},
+> +	.num_entities = 4,
+> +	.clk_names = { "gscl" },
+> +	.num_clocks = 1,
+> +};
+> +
+> +static struct gsc_driverdata gsc_v_5420_drvdata = {
+> +	.variant = {
+> +		[0] = &gsc_v_5420_variant,
+> +		[1] = &gsc_v_5420_variant,
+> +	},
+> +	.num_entities = 4,
+
+Shouldn't num_enities be 2 here? You don't need to resend, I can
+amend that when applying.
+
+> +	.clk_names = { "gscl" },
+> +	.num_clocks = 1,
+> +};
+> +
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sylwester
