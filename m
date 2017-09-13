@@ -1,94 +1,138 @@
 From: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: [PATCH v2 0/4] BCM283x Camera Receiver driver
-Date: Wed, 13 Sep 2017 16:07:45 +0100
-Message-ID: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
+Subject: [PATCH v2 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2 receiver
+Date: Wed, 13 Sep 2017 16:07:47 +0100
+Message-ID: <9ad8b23d5c394b64ed02f9a5ebc49209696a5ace.1505314390.git.dave.stevenson@raspberrypi.org>
+References: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
 Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
+In-Reply-To: <cover.1505314390.git.dave.stevenson@raspberrypi.org>
+References: <cover.1505314390.git.dave.stevenson@raspberrypi.org>
 Sender: linux-media-owner@vger.kernel.org
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc: Dave Stevenson <dave.stevenson@raspberrypi.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All.
+Document the DT bindings for the CSI2/CCP2 receiver peripheral
+(known as Unicam) on BCM283x SoCs.
 
-This is v2 for adding a V4L2 subdevice driver for the CSI2/CCP2 camera
-receiver peripheral on BCM283x, as used on Raspberry Pi.
-Sorry for the delay since v1 - other tasks assigned, got sucked
-into investigating why some devices were misbehaving, and
-picking up on new features that had been added to the tree (eg CCP2).
-
-v4l2-compliance results depend on the sensor subdevice connected to.
-I have results for TC358743, ADV7282M, and OV5647 that I'll
-send them as a follow up email.
-
-OV647 and ADV7282M are now working with this driver, as well as TC358743.
-v1 of the driver only supported continuous clock mode which Unicam was
-failing to lock on to correctly.
-The driver now checks the clock mode and adjusts termination accordingly.
-Something is still a little off for OV5647, but I'll investigate that
-later.
-
-As per the v1 discussion with Hans, I have added text describing the
-differences between this driver and the one in staging/vc04_service.
-Addressing some of the issues in the bcm2835-camera driver is on my to-do
-list, and I'll add similar text there when I'm dealing with that.
-
-For those wanting to see the driver in context,
-https://github.com/6by9/upstream-linux/tree/unicam is the linux-media
-tree with my mods on top. It also includes a couple of TC358743 and
-OV5647 driver updates that I'll send to the list in the next few days.
-
-Thanks in advance.
-  Dave
-
-Changes from v1 to v2:
-- Broken out a new helper function v4l2_fourcc2s as requested by Hans.
-- Documented difference between this driver and the bcm2835-camera driver
-  in staging/vc04_services.
-- Corrected handling of s_dv_timings and s_std to update the current format
-  but only if not streaming. This refactored some of the s_fmt code to
-  remove duplication.
-- Updated handling of sizeimage to include vertical padding. (Not updated
-  the bytesperline calcs as the app can override).
-- Added support for continuous clock mode (requires changes to lane
-  termination configuration).
-- Add support for CCP2 as Sakari's patches to support it have now been merged.
-  I don't have a suitable sensor to test it with at present, but all settings
-  have been taken from a known working configuration. If people would prefer
-  I remove this until it has been proved against hardware then I'm happy to
-  do so.
-- Updated DT bindings to use <data-lanes> on the Unicam node to set the
-  maximum number of lanes present instead of a having a custom property.
-  Documents the mandatory endpoint properties.
-- Removed RAW16 from the list of input formats as it isn't defined in the
-  CSI-2 spec. The peripheral can still unpack the other Bayer formats to
-  a 16 bit/pixel packing though.
-- Added a log-status handler to get the status from the sensor.
-- Automatically switch away from any interlaced formats reported via g_fmt,
-  or that are attempted to be set via try/s_fmt.
-- Addressed other more minor code review comments from v1.
-
-Dave Stevenson (4):
-  [media] v4l2-common: Add helper function for fourcc to string
-  [media] dt-bindings: Document BCM283x CSI2/CCP2 receiver
-  [media] bcm2835-unicam: Driver for CCP2/CSI2 camera interface
-  MAINTAINERS: Add entry for BCM2835 camera driver
-
- .../devicetree/bindings/media/bcm2835-unicam.txt   |  107 +
- MAINTAINERS                                        |    7 +
- drivers/media/platform/Kconfig                     |    1 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/bcm2835/Kconfig             |   14 +
- drivers/media/platform/bcm2835/Makefile            |    3 +
- drivers/media/platform/bcm2835/bcm2835-unicam.c    | 2192 ++++++++++++++++++++
- drivers/media/platform/bcm2835/vc4-regs-unicam.h   |  264 +++
- drivers/media/v4l2-core/v4l2-common.c              |   18 +
- include/media/v4l2-common.h                        |    3 +
- 10 files changed, 2610 insertions(+)
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+---
+ .../devicetree/bindings/media/bcm2835-unicam.txt   | 107 +++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
- create mode 100644 drivers/media/platform/bcm2835/Kconfig
- create mode 100644 drivers/media/platform/bcm2835/Makefile
- create mode 100644 drivers/media/platform/bcm2835/bcm2835-unicam.c
- create mode 100644 drivers/media/platform/bcm2835/vc4-regs-unicam.h
 
+diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+new file mode 100644
+index 0000000..2ee5af7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+@@ -0,0 +1,107 @@
++Broadcom BCM283x Camera Interface (Unicam)
++------------------------------------------
++
++The Unicam block on BCM283x SoCs is the receiver for either
++CSI-2 or CCP2 data from image sensors or similar devices.
++
++There are two camera drivers in the kernel for BCM283x - this one
++and bcm2835-camera (currently in staging).
++
++This driver is purely the kernel controlling the Unicam peripheral - there
++is no involvement with the VideoCore firmware. Unicam receives CSI-2
++(or CCP2) data and writes it into SDRAM. There is no additional processing
++performed.
++It should be possible to connect it to any sensor with a
++suitable output interface and V4L2 subdevice driver.
++
++bcm2835-camera uses the VideoCore firmware to control the sensor,
++Unicam, ISP, and various tuner control loops. Fully processed frames are
++delivered to the driver by the firmware. It only has sensor drivers
++for Omnivision OV5647, and Sony IMX219 sensors, and is closed source.
++
++The two drivers are mutually exclusive for the same Unicam instance.
++The firmware checks the device tree configuration during boot. If
++it finds device tree nodes called csi0 or csi1 then it will block the
++firmware from accessing the peripheral, and bcm2835-camera will
++not be able to stream data.
++It should be possible to use bcm2835-camera on one camera interface
++and bcm2835-unicam on the other interface if there is a need to.
++
++Required properties:
++===================
++- compatible	: must be "brcm,bcm2835-unicam".
++- reg		: physical base address and length of the register sets for the
++		  device.
++- interrupts	: should contain the IRQ line for this Unicam instance.
++- clocks	: list of clock specifiers, corresponding to entries in
++		  clock-names property.
++- clock-names	: must contain an "lp_clock" entry, matching entries
++		  in the clocks property.
++
++Unicam supports a single port node. It should contain one 'port' child node
++with child 'endpoint' node. Please refer to the bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Within the endpoint node, the following properties are mandatory:
++- remote-endpoint	: links to the source device endpoint.
++- data-lanes		: An array denoting how many data lanes are physically
++			  present for this CSI-2 receiver instance. This can
++			  be limited by either the SoC itself, or by the
++			  breakout on the platform.
++			  Lane reordering is not supported, so lanes must be
++			  in order, starting at 1.
++
++Lane reordering is not supported on the clock lane, so the optional property
++"clock-lane" will implicitly be <0>.
++Similarly lane inversion is not supported, therefore "lane-polarities" will
++implicitly be <0 0 0 0 0>.
++Neither of these values will be checked.
++
++Example:
++	csi1: csi@7e801000 {
++		compatible = "brcm,bcm2835-unicam";
++		reg = <0x7e801000 0x800>,
++		      <0x7e802004 0x4>;
++		interrupts = <2 7>;
++		clocks = <&clocks BCM2835_CLOCK_CAM1>;
++		clock-names = "lp_clock";
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			csi1_ep: endpoint {
++				remote-endpoint = <&tc358743_0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++
++	i2c0: i2c@7e205000 {
++
++		tc358743: csi-hdmi-bridge@0f {
++			compatible = "toshiba,tc358743";
++			reg = <0x0f>;
++			status = "okay";
++
++			clocks = <&tc358743_clk>;
++			clock-names = "refclk";
++
++			tc358743_clk: bridge-clk {
++				compatible = "fixed-clock";
++				#clock-cells = <0>;
++				clock-frequency = <27000000>;
++			};
++
++			port {
++				tc358743_0: endpoint {
++					remote-endpoint = <&csi1_ep>;
++					clock-lanes = <0>;
++					data-lanes = <1 2>;
++					clock-noncontinuous;
++					link-frequencies =
++						/bits/ 64 <297000000>;
++				};
++			};
++		};
++	};
 -- 
 2.7.4
