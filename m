@@ -1,76 +1,72 @@
-From: Chris Paterson <chris.paterson2@renesas.com>
-Subject: [PATCH 8/8] ARM: drs: iwg22m: Add SPI NOR support
-Date: Wed, 13 Sep 2017 18:05:41 +0100
-Message-ID: <1505322341-9480-9-git-send-email-chris.paterson2@renesas.com>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <chris.paterson2@renesas.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC PATCH 6/6] iommu/arm-smmu-v3: Avoid ILLEGAL setting of
+ STE.S1STALLD and CD.S
+Date: Wed, 13 Sep 2017 18:11:59 +0100
+Message-ID: <20170913171159.GB14955@arm.com>
+References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
+ <1504167642-14922-7-git-send-email-xieyisheng1@huawei.com>
+ <738977bb-4cd7-7d86-0ea0-0c88b6af721c@arm.com>
+ <20170913030643.GD12411@arm.com>
+ <2f952821-afc3-46dd-17eb-40e8626bd6e5@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2f952821-afc3-46dd-17eb-40e8626bd6e5@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Yisheng Xie <xieyisheng1@huawei.com>
+Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, robin.murphy@arm.com, robert.moore@intel.com, lv.zheng@intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@acpica.org, liubo95@huawei.com, chenjiankang1@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Wed, Sep 13, 2017 at 06:11:13PM +0800, Yisheng Xie wrote:
+> On 2017/9/13 11:06, Will Deacon wrote:
+> > On Tue, Sep 05, 2017 at 01:54:19PM +0100, Jean-Philippe Brucker wrote:
+> >> On 31/08/17 09:20, Yisheng Xie wrote:
+> >>> It is ILLEGAL to set STE.S1STALLD if STALL_MODEL is not 0b00, which
+> >>> means we should not disable stall mode if stall/terminate mode is not
+> >>> configuable.
+> >>>
+> >>> Meanwhile, it is also ILLEGAL when STALL_MODEL==0b10 && CD.S==0 which
+> >>> means if stall mode is force we should always set CD.S.
+> >>>
+> >>> This patch add ARM_SMMU_FEAT_TERMINATE feature bit for smmu, and use
+> >>> TERMINATE feature checking to ensue above ILLEGAL cases from happening.
+> >>>
+> >>> Signed-off-by: Yisheng Xie <xieyisheng1@huawei.com>
+> >>> ---
+> >>>  drivers/iommu/arm-smmu-v3.c | 22 ++++++++++++++++------
+> >>>  1 file changed, 16 insertions(+), 6 deletions(-)
+> >>>
+> >>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> >>> index dbda2eb..0745522 100644
+> >>> --- a/drivers/iommu/arm-smmu-v3.c
+> >>> +++ b/drivers/iommu/arm-smmu-v3.c
+> >>> @@ -55,6 +55,7 @@
+> >>>  #define IDR0_STALL_MODEL_SHIFT		24
+> >>>  #define IDR0_STALL_MODEL_MASK		0x3
+> >>>  #define IDR0_STALL_MODEL_STALL		(0 << IDR0_STALL_MODEL_SHIFT)
+> >>> +#define IDR0_STALL_MODEL_NS		(1 << IDR0_STALL_MODEL_SHIFT)
+> >>>  #define IDR0_STALL_MODEL_FORCE		(2 << IDR0_STALL_MODEL_SHIFT)
+> >>>  #define IDR0_TTENDIAN_SHIFT		21
+> >>>  #define IDR0_TTENDIAN_MASK		0x3
+> >>> @@ -766,6 +767,7 @@ struct arm_smmu_device {
+> >>>  #define ARM_SMMU_FEAT_SVM		(1 << 15)
+> >>>  #define ARM_SMMU_FEAT_HA		(1 << 16)
+> >>>  #define ARM_SMMU_FEAT_HD		(1 << 17)
+> >>> +#define ARM_SMMU_FEAT_TERMINATE		(1 << 18)
+> >>
+> >> I'd rather introduce something like "ARM_SMMU_FEAT_STALL_FORCE" instead.
+> >> Terminate model has another meaning, and is defined by a different bit in
+> >> IDR0.
+> > 
+> > Yes. What we need to do is:
+> > 
+> > - If STALL_MODEL is 0b00, then set S1STALLD
+> 
+> Yes, and within this case, we can only set the S1STALLD for masters which can
+> not stall in the future?
 
-Add support for the SPI NOR device used to boot up the system
-to the System on Module DT.
+Yeah, something like that. I'd probably predicate it on having afault
+handler registered too.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
----
-This patch is based on renesas-devel-20170913-v4.13.
-
-This patch is dependant on:
-- "of: add vendor prefix for Silicon Storage Technology Inc."
-- "doc: dt: mtd: Add sst25vf016b to the list of supported chip names"
-
-
- arch/arm/boot/dts/r8a7745-iwg22m.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7745-iwg22m.dtsi b/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
-index f7f9cef..ed9a8cf 100644
---- a/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
-+++ b/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
-@@ -39,6 +39,11 @@
- 		function = "mmc";
- 	};
- 
-+	qspi_pins: qspi {
-+		groups = "qspi_ctrl", "qspi_data2";
-+		function = "qspi";
-+	};
-+
- 	sdhi1_pins: sd1 {
- 		groups = "sdhi1_data4", "sdhi1_ctrl";
- 		function = "sdhi1";
-@@ -61,6 +66,27 @@
- 	status = "okay";
- };
- 
-+&qspi {
-+	pinctrl-0 = <&qspi_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	/* WARNING - This device contains the bootloader. Handle with care. */
-+	flash: flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "sst,sst25vf016b", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+		spi-tx-bus-width = <1>;
-+		spi-rx-bus-width = <1>;
-+		m25p,fast-read;
-+		spi-cpol;
-+		spi-cpha;
-+	};
-+};
-+
- &sdhi1 {
- 	pinctrl-0 = <&sdhi1_pins>;
- 	pinctrl-names = "default";
--- 
-1.9.1
+Will
