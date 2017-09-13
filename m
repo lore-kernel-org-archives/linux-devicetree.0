@@ -1,96 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3] clk: qcom: Add spmi_pmic clock divider support
-Date: Wed, 13 Sep 2017 12:40:32 -0500
-Message-ID: <20170913174032.u33zzo64ipk22vgp@rob-hp-laptop>
-References: <1504699207-9568-1-git-send-email-tirupath@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: stm32-dma: add a property to handle
+ STM32 DMAMUX
+Date: Wed, 13 Sep 2017 12:45:36 -0500
+Message-ID: <20170913174536.2hy6ubeef2s55t7y@rob-hp-laptop>
+References: <1504785168-26572-1-git-send-email-pierre-yves.mordret@st.com>
+ <1504785168-26572-4-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1504699207-9568-1-git-send-email-tirupath@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tirupathi Reddy <tirupath@codeaurora.org>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+In-Reply-To: <1504785168-26572-4-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 06, 2017 at 05:30:07PM +0530, Tirupathi Reddy wrote:
-> Clkdiv module provides a clock output on the PMIC with CXO as
-> the source. This clock can be routed through PMIC GPIOs. Add
-> a device driver to configure this clkdiv module.
+On Thu, Sep 07, 2017 at 01:52:47PM +0200, Pierre-Yves MORDRET wrote:
+> STM32 DMA controller has to exposed its number of request line to be
+> addressed via STM32 DMAMUX.
 > 
-> Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
 > ---
->  .../bindings/clock/clk-spmi-pmic-div.txt           |  51 +++
->  drivers/clk/qcom/Kconfig                           |   9 +
->  drivers/clk/qcom/Makefile                          |   1 +
->  drivers/clk/qcom/clk-spmi-pmic-div.c               | 342 +++++++++++++++++++++
->  4 files changed, 403 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
->  create mode 100644 drivers/clk/qcom/clk-spmi-pmic-div.c
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
-> new file mode 100644
-> index 0000000..8b84b32
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
-> @@ -0,0 +1,51 @@
-> +Qualcomm Technologies, Inc. SPMI PMIC clock divider (clkdiv)
-> +
-> +clkdiv configures the clock frequency of a set of outputs on the PMIC.
-> +These clocks are typically wired through alternate functions on
-> +gpio pins.
-> +
-> +=======================
-> +Properties
-> +=======================
-> +
-> +- compatible
-> +	Usage:      required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,spmi-clkdiv"
+>  Version history:
+>     v4:
+>         * get rid of st,dmamux property
+>         * number of DMA requests is exposed for DMAMUX
+>     v3:
+>         * None
+>     v2:
+>         * Typo fix
+> ---
+> ---
+>  Documentation/devicetree/bindings/dma/stm32-dma.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-If this is not a fallback, drop it.
-
-> +		    "qcom,pm8998-clkdiv"
-> +
-> +- reg
-> +	Usage:      required
-> +	Value type: <prop-encoded-array>
-> +	Definition: Addresses and sizes for the memory of this CLKDIV
-> +		    peripheral.
-> +
-> +- clocks:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: reference to the xo clock.
-> +
-> +- clock-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "xo".
-
-Missing #clock-cells
-
-> +
-> +=======
-> +Example
-> +=======
-> +
-> +pm8998_clk_divs: qcom,clkdiv@5b00 {
-
-clock@5b00
-
-> +	compatible = "qcom,pm8998-clkdiv";
-> +	reg = <0x5b00>;
-> +	#clock-cells = <1>;
-> +	clocks = <&xo_board>;
-> +	clock-names = "xo";
-> +
-> +	assigned-clocks = <&pm8998_clk_divs 1>,
-> +			  <&pm8998_clk_divs 2>,
-> +			  <&pm8998_clk_divs 3>;
-> +	assigned-clock-rates = <9600000>,
-> +			       <9600000>,
-> +			       <9600000>;
-> +};
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
