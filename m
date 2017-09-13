@@ -1,104 +1,52 @@
-From: Bob Liu <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 0/6] Add platform device SVM support for ARM SMMUv3
-Date: Wed, 13 Sep 2017 09:11:03 +0800
-Message-ID: <9d7083a7-fc67-26a3-0d3d-f1a5a4942eaf@huawei.com>
-References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
- <95d1a9e2-1816-ff7d-9a8d-98406a6c2c22@arm.com>
- <caf68193-6aff-1e1c-86cd-9cc7069b0e37@huawei.com>
- <2874a1f3-22f1-20d4-4009-50add127a10f@arm.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: exynos: Add clean name of compatible.
+Date: Wed, 13 Sep 2017 11:31:13 +0900
+Message-ID: <77404c7b-b54d-22e8-63b2-70401520b6e4@samsung.com>
+References: <CGME20170909195841epcas1p37badd9da52c773e6167523ebfb2ac7ae@epcas1p3.samsung.com>
+ <201709100314.wmGSSdNC%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2874a1f3-22f1-20d4-4009-50add127a10f-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, chenjiankang1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xieyisheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <201709100314.wmGSSdNC%fengguang.wu@intel.com>
+Content-language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: kbuild test robot <lkp@intel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org, kgene@kernel.org, kbuild-all@01.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 2017/9/6 17:57, Jean-Philippe Brucker wrote:
-> On 06/09/17 02:02, Bob Liu wrote:
->> On 2017/9/5 20:56, Jean-Philippe Brucker wrote:
->>> On 31/08/17 09:20, Yisheng Xie wrote:
->>>> Jean-Philippe has post a patchset for Adding PCIe SVM support to ARM SMMUv3:
->>>> https://www.spinics.net/lists/arm-kernel/msg565155.html
->>>>
->>>> But for some platform devices(aka on-chip integrated devices), there is also
->>>> SVM requirement, which works based on the SMMU stall mode.
->>>> Jean-Philippe has prepared a prototype patchset to support it:
->>>> git://linux-arm.org/linux-jpb.git svm/stall
->>>
->>> Only meant for testing at that point, and unfit even for an RFC.
->>>
->>
->> Sorry for the misunderstanding.
->> The PRI mode patches is in RFC even no hardware for testing, so I thought it's fine for "Stall mode" patches sent as RFC.
->> We have tested the Stall mode on our platform.
->> Anyway, I should confirm with you in advance.
->>
->> Btw, Would you consider the "stall mode" upstream at first? Since there is no hardware for testing the PRI mode.
->> (We can provide you the hardware which support SMMU stall mode if necessary.)
-> 
-> Yes. What's blocking the ATS, PRI and PASID patches at the moment is the
-> lack of endpoints for testing. There has been lots of discussion on the
-> API side since my first RFC and I'd like to resubmit the API changes soon.
-> It is the same API for ATS+PRI+PASID and SSID+Stall, so the backend
-> doesn't matter.
-> 
-> I'm considering upstreaming SSID+Stall first if it can be tested on
-> hardware (having direct access to it would certainly speed things up).
-> This would require some work in moving the PCI bits at the end of the
-> series. I can reserve some time in the coming months to do it, but I need
-> to know what to focus on. Are you able to test SSID as well?
-> 
-
-Update:
-Our current platform device has only one SSID register, so that have to do manually 
-switch(write different ssid to that register) if want to use by different processes.
-
-But we're going to have an new platform who's platform device can support multi ssid.
-
-Regards,
-Bob
-
->>>> We tested this patchset with some fixes on a on-chip integrated device. The
->>>> basic function is ok, so I just send them out for review, although this
->>>> patchset heavily depends on the former patchset (PCIe SVM support for ARM
->>>> SMMUv3), which is still under discussion.
->>>>
->>>> Patch Overview:
->>>> *1 to 3 prepare for device tree or acpi get the device stall ability and pasid bits
->>>> *4 is to realise the SVM function for platform device
->>>> *5 is fix a bug when test SVM function while SMMU donnot support this feature
->>>> *6 avoid ILLEGAL setting of STE and CD entry about stall
->>>>
->>>> Acctually here, I also have a question about SVM on SMMUv3:
->>>>
->>>> 1. Why the SVM feature on SMMUv3 depends on BTM feature? when bind a task to device,
->>>>    it will register a mmu_notify. Therefore, when a page range is invalid, we can
->>>>    send TLBI or ATC invalid without BTM?
->>>
->>> We could, but the end goal for SVM is to perfectly mirror the CPU page
->>> tables. So for platform SVM we would like to get rid of MMU notifiers
->>> entirely.
->>>
->>>> 2. According to ACPI IORT spec, named component specific data has a node flags field
->>>>    whoes bit0 is for Stall support. However, it do not have any field for pasid bit.
->>>>    Can we use other 5 bits[5:1] for pasid bit numbers, so we can have 32 pasid bit for
->>>>    a single platform device which should be enough, because SMMU only support 20 bit pasid
->>>>
->>
->> Any comment on this?
->> The ACPI IORT spec may need be updated?
-> 
-> I suppose that the Named Component Node could be used for SSID and stall
-> capability bits. Can't the ACPI namespace entries be extended to host
-> these capabilities in a more generic way? Platforms with different IOMMUs
-> might also need this information some day.
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDkvMTAvMjAxNyAwNDo1NyBBTSwga2J1aWxkIHRlc3Qgcm9ib3Qgd3JvdGU6Cj4gSGkgSG9l
+Z2V1biwKPgo+IFthdXRvIGJ1aWxkIHRlc3QgRVJST1Igb24gcm9iaC9mb3ItbmV4dF0KPiBbYWxz
+byBidWlsZCB0ZXN0IEVSUk9SIG9uIHY0LjEzIG5leHQtMjAxNzA5MDhdCj4gW2Nhbm5vdCBhcHBs
+eSB0byBkcm0tZXh5bm9zL2V4eW5vcy1kcm0vZm9yLW5leHRdCj4gW2lmIHlvdXIgcGF0Y2ggaXMg
+YXBwbGllZCB0byB0aGUgd3JvbmcgZ2l0IHRyZWUsIHBsZWFzZSBkcm9wIHVzIGEgbm90ZSB0byBo
+ZWxwIGltcHJvdmUgdGhlIHN5c3RlbV0KPgo+IHVybDogICAgaHR0cHM6Ly9naXRodWIuY29tLzBk
+YXktY2kvbGludXgvY29tbWl0cy9Ib2VnZXVuLUt3b24vZHJtLWV4eW5vcy1nc2MtU3VwcG9ydC10
+aGUtaGFyZHdhcmUtcm90YXRpb24tbGltaXRzLzIwMTcwOTEwLTAxNTE1NQo+IGJhc2U6ICAgaHR0
+cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvcm9iaC9saW51eC5n
+aXQgZm9yLW5leHQKPiBjb25maWc6IGFybS1hdDkxX2R0X2RlZmNvbmZpZyAoYXR0YWNoZWQgYXMg
+LmNvbmZpZykKPiBjb21waWxlcjogYXJtLWxpbnV4LWdudWVhYmktZ2NjIChEZWJpYW4gNi4xLjEt
+OSkgNi4xLjEgMjAxNjA3MDUKPiByZXByb2R1Y2U6Cj4gICAgICAgICAgd2dldCBodHRwczovL3Jh
+dy5naXRodWJ1c2VyY29udGVudC5jb20vaW50ZWwvbGtwLXRlc3RzL21hc3Rlci9zYmluL21ha2Uu
+Y3Jvc3MgLU8gfi9iaW4vbWFrZS5jcm9zcwo+ICAgICAgICAgIGNobW9kICt4IH4vYmluL21ha2Uu
+Y3Jvc3MKPiAgICAgICAgICAjIHNhdmUgdGhlIGF0dGFjaGVkIC5jb25maWcgdG8gbGludXggYnVp
+bGQgdHJlZQo+ICAgICAgICAgIG1ha2UuY3Jvc3MgQVJDSD1hcm0KPgo+IEFsbCBlcnJvcnMgKG5l
+dyBvbmVzIHByZWZpeGVkIGJ5ID4+KToKPgo+Pj4gRXJyb3I6IGFyY2gvYXJtL2Jvb3QvZHRzL2V4
+eW5vczUyNTAuZHRzaTo2NDAuNDAtNDEgc3ludGF4IGVycm9yCj4gICAgIEZBVEFMIEVSUk9SOiBV
+bmFibGUgdG8gcGFyc2UgaW5wdXQgdHJlZQoKVGhhbmsgeW91IGZvciB5b3VyIGNoZWNrLgoKVGhp
+cyBwcm9ibGVtIHdhcyBjYXVzZWQgYnkgdHlwb3MuCnZlcjMgaGFzIGJlZW4gbW9kaWZpZWQuCgpC
+ZXN0IHJlZ2FyZHMsCkhvZWdldW4KCj4KPiAtLS0KPiAwLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0
+cnVjdHVyZSAgICAgICAgICAgICAgICBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcgo+IGh0
+dHBzOi8vbGlzdHMuMDEub3JnL3BpcGVybWFpbC9rYnVpbGQtYWxsICAgICAgICAgICAgICAgICAg
+IEludGVsIENvcnBvcmF0aW9uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
