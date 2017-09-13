@@ -1,56 +1,137 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v3 4/6] [media] exynos-gsc: Add hardware rotation limits
-Date: Wed, 13 Sep 2017 18:28:02 +0900
-Message-ID: <21b6ae5d-a77b-3ab1-bc84-5f30e76fab50@samsung.com>
-References: <1504850560-27950-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170908060309epcas1p3d48dd0871d3fde02ba3c9921bbe5a7a6@epcas1p3.samsung.com>
- <1504850560-27950-5-git-send-email-hoegeun.kwon@samsung.com>
- <27b46679-e6c7-2471-f10e-3f0634178ebf@samsung.com>
- <bb025fcb-e316-dfe9-a8eb-8a9535f35b93@samsung.com>
- <a915a1f7-2c01-472b-b9ee-5367c488a89f@samsung.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v12 18/26] v4l: fwnode: Add a helper function for parsing
+ generic references
+Date: Wed, 13 Sep 2017 11:28:44 +0200
+Message-ID: <c85397c3-19f2-90be-4c5e-6214ca1294b8@xs4all.nl>
+References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
+ <20170912134200.19556-19-sakari.ailus@linux.intel.com>
+ <020b9c86-dd73-3516-4a0e-827db9680b55@xs4all.nl>
+ <20170913092430.cbdgerkhiuxakbxv@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <a915a1f7-2c01-472b-b9ee-5367c488a89f@samsung.com>
-Content-language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org, kgene@kernel.org, dri-devel@lists.freedesktop.org, mchehab@kernel.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170913092430.cbdgerkhiuxakbxv-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMTMvMjAxNyAwNjoxMSBQTSwgU3lsd2VzdGVyIE5hd3JvY2tpIHdyb3RlOgo+IEhpIEhv
-ZWdldW4sCj4KPiBPbiAwOS8xMy8yMDE3IDA0OjMzIEFNLCBIb2VnZXVuIEt3b24gd3JvdGU6Cj4+
-Pj4gQEAgLTEwMTcsOCArMTA4MywxMiBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgZ3NjX2lycV9oYW5k
-bGVyKGludCBpcnEsCj4+Pj4gdm9pZCAqcHJpdikKPj4+PiAgICAgICBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZCBleHlub3NfZ3NjX21hdGNoW10gPSB7Cj4+Pj4gICAgICAgICB7Cj4+
-Pj4gLSAgICAgICAgLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1LWdzYyIsCj4+Pj4gLSAg
-ICAgICAgLmRhdGEgPSAmZ3NjX3ZfMTAwX2RydmRhdGEsCj4+PiBDYW4geW91IGtlZXAgdGhlICJz
-YW1zdW5nLGV4eW5vczUtZ3NjIiBlbnRyeSB3aXRoIHRoZSBnc2Nfdl81MjUwX3ZhcmlhbnQKPj4+
-IGRhdGEsIHNvIHRoYXQgaXQgY2FuIHdvcmsgd2l0aCAic2Ftc3VuZyxleHlub3M1LWdzYyIgY29t
-cGF0aWJsZSBpbiBEVAo+Pj4gb24gYm90aCBleHlub3M1MjUwIGFuZCBleHlub3M1NDIwIFNvQ3M/
-Cj4+Pgo+PiBUaGFuayB5b3UgZm9yIHlvdXIgcXVlc3Rpb24uCj4+Cj4+IEV4eW5vcyA1MjUwIGFu
-ZCA1NDIwIGhhdmUgZGlmZmVyZW50IGhhcmR3YXJlIHJvdGF0aW9uIGxpbWl0cy4KPj4gRXh5bm9z
-IDUyNTAgaXMgJy5yZWFsX3JvdF9lbl93L2ggPSAyMDE2JyBhbmQgNTQyMCBpcyAnLnJlYWxfcm90
-X2VuX3cvaCA9Cj4+IDIwNDgnLgo+Pgo+PiBTbyBteSBvcGluaW9uIHRoZXkgbXVzdCBoYXZlIGRp
-ZmZlcmVudCBjb21wYXRpYmxlLgo+IEkgdGhpbmsgdGhlcmUgaXMgc29tZSBtaXN1bmRlcnN0YW5k
-aW5nLCBtdSBzdWdnZXN0aW9uIHdhcyB0byBrZWVwIHRoZQo+ICJzYW1zdW5nLGV4eW5vczUtZ3Nj
-IiBjb21wYXRpYmxlIGVudHJ5IGluIGFkZGl0aW9uIHRvIHRoZSBuZXcgaW50cm9kdWNlZAo+IG9u
-ZXM6ICJzYW1zdW5nLGV4eW5vczUyNTAtZ3NjIiBhbmQgInNhbXN1bmcsZXh5bm9zNTQyMC1nc2Mi
-LiBUaGF0J3MgaW4KPiBvcmRlciB0byBtYWtlIHlvdXIgY2hhbmdlcyBwb3NzaWJseSBiYWNrd2Fy
-ZCBjb21wYXRpYmxlLCBpbiB0aGVvcnkKPiB0aGUgdXBkYXRlZCBkcml2ZXIgc2hvdWxkIHN0aWxs
-IHdvcmsgd2l0aG91dCBjaGFuZ2VzIGluIGR0cy4KCgpUaGFuayB5b3UgYWdhaW4gZm9yIHlvdXIg
-ZXhwbGFuYXRpb24uCgpZZXMsIEkgdW5kZXJzdG9vZC4KSSB3aWxsIGtlZXAgInNhbXN1bmcsZXh5
-bm9zNS1nc2MiIGNvbXBhdGlibGUsCmFuZCBhZGQgRXh5bm9zIDUyNTAvNTQyMC81NDMzIGNvbXBh
-dGlibGUuCgpCZXN0IHJlZ2FyZHMsCkhvZWdldW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 09/13/17 11:24, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> Thanks for the review!
+> 
+> On Wed, Sep 13, 2017 at 09:27:34AM +0200, Hans Verkuil wrote:
+>> On 09/12/2017 03:41 PM, Sakari Ailus wrote:
+>>> Add function v4l2_fwnode_reference_count() for counting external
+>>
+>> ???? There is no function v4l2_fwnode_reference_count()?!
+> 
+> It got removed during the revisions but the commit message was not changed
+> accordingly, I do that now.
+> 
+>>
+>>> references and v4l2_fwnode_reference_parse() for parsing them as async
+>>> sub-devices.
+>>>
+>>> This can be done on e.g. flash or lens async sub-devices that are not part
+>>> of but are associated with a sensor.
+>>>
+>>> struct v4l2_async_notifier.max_subdevs field is added to contain the
+>>> maximum number of sub-devices in a notifier to reflect the memory
+>>> allocated for the subdevs array.
+>>
+>> You forgot to remove this outdated paragraph.
+> 
+> Oops. Removed it now.
+> 
+>>
+>>>
+>>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>> ---
+>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 69 +++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 69 insertions(+)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> index 44ee35f6aad5..a32473f95be1 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> @@ -498,6 +498,75 @@ int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
+>>>  
+>>> +/*
+>>> + * v4l2_fwnode_reference_parse - parse references for async sub-devices
+>>> + * @dev: the device node the properties of which are parsed for references
+>>> + * @notifier: the async notifier where the async subdevs will be added
+>>> + * @prop: the name of the property
+>>> + *
+>>> + * Return: 0 on success
+>>> + *	   -ENOENT if no entries were found
+>>> + *	   -ENOMEM if memory allocation failed
+>>> + *	   -EINVAL if property parsing failed
+>>> + */
+>>> +static int v4l2_fwnode_reference_parse(
+>>> +	struct device *dev, struct v4l2_async_notifier *notifier,
+>>> +	const char *prop)
+>>> +{
+>>> +	struct fwnode_reference_args args;
+>>> +	unsigned int index;
+>>> +	int ret;
+>>> +
+>>> +	for (index = 0;
+>>> +	     !(ret = fwnode_property_get_reference_args(
+>>> +		       dev_fwnode(dev), prop, NULL, 0, index, &args));
+>>> +	     index++)
+>>> +		fwnode_handle_put(args.fwnode);
+>>> +
+>>> +	if (!index)
+>>> +		return -ENOENT;
+>>> +
+>>> +	/*
+>>> +	 * To-do: handle -ENODATA when "device property: Align return
+>>> +	 * codes of acpi_fwnode_get_reference_with_args" is merged.
+>>> +	 */
+>>> +	if (ret != -ENOENT && ret != -ENODATA)
+>>
+>> So while that patch referenced in the To-do above is not merged yet,
+>> what does fwnode_property_get_reference_args return? ENOENT or ENODATA?
+>> Or ENOENT now and ENODATA later? Or vice versa?
+>>
+>> I can't tell based on that information whether this code is correct or not.
+>>
+>> The comment needs to explain this a bit better.
+> 
+> I'll add this:
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> index a32473f95be1..74fcc3ba9ebd 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -529,6 +529,9 @@ static int v4l2_fwnode_reference_parse(
+>  	/*
+>  	 * To-do: handle -ENODATA when "device property: Align return
+>  	 * codes of acpi_fwnode_get_reference_with_args" is merged.
+
+So after this patch referred to in the To-do is applied it will only
+return ENODATA?
+
+In that case, change 'handle' to 'handle only'.
+
+> +	 * Right now, both -ENODATA and -ENOENT signal the end of
+> +	 * references where only a single error code should be used
+> +	 * for the purpose.
+>  	 */
+>  	if (ret != -ENOENT && ret != -ENODATA)
+>  		return ret;
+> 
+
+Regards,
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
