@@ -1,153 +1,149 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v12 18/26] v4l: fwnode: Add a helper function for parsing
- generic references
-Date: Wed, 13 Sep 2017 12:32:17 +0200
-Message-ID: <d65c204d-fa3a-9b24-7ef2-0faa3d6dda0e@xs4all.nl>
-References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
- <20170912134200.19556-19-sakari.ailus@linux.intel.com>
- <020b9c86-dd73-3516-4a0e-827db9680b55@xs4all.nl>
- <20170913092430.cbdgerkhiuxakbxv@valkosipuli.retiisi.org.uk>
- <c85397c3-19f2-90be-4c5e-6214ca1294b8@xs4all.nl>
- <20170913100714.5qy32qly3vlxguxz@valkosipuli.retiisi.org.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2] arm64: dts: renesas: r8a77995: add GPIO device nodes
+Date: Wed, 13 Sep 2017 19:33:59 +0900
+Message-ID: <1505298839-17435-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170913100714.5qy32qly3vlxguxz@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/17 12:07, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Wed, Sep 13, 2017 at 11:28:44AM +0200, Hans Verkuil wrote:
->> On 09/13/17 11:24, Sakari Ailus wrote:
->>> Hi Hans,
->>>
->>> Thanks for the review!
->>>
->>> On Wed, Sep 13, 2017 at 09:27:34AM +0200, Hans Verkuil wrote:
->>>> On 09/12/2017 03:41 PM, Sakari Ailus wrote:
->>>>> Add function v4l2_fwnode_reference_count() for counting external
->>>>
->>>> ???? There is no function v4l2_fwnode_reference_count()?!
->>>
->>> It got removed during the revisions but the commit message was not changed
->>> accordingly, I do that now.
->>>
->>>>
->>>>> references and v4l2_fwnode_reference_parse() for parsing them as async
->>>>> sub-devices.
->>>>>
->>>>> This can be done on e.g. flash or lens async sub-devices that are not part
->>>>> of but are associated with a sensor.
->>>>>
->>>>> struct v4l2_async_notifier.max_subdevs field is added to contain the
->>>>> maximum number of sub-devices in a notifier to reflect the memory
->>>>> allocated for the subdevs array.
->>>>
->>>> You forgot to remove this outdated paragraph.
->>>
->>> Oops. Removed it now.
->>>
->>>>
->>>>>
->>>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>>>> ---
->>>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 69 +++++++++++++++++++++++++++++++++++
->>>>>  1 file changed, 69 insertions(+)
->>>>>
->>>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
->>>>> index 44ee35f6aad5..a32473f95be1 100644
->>>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
->>>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
->>>>> @@ -498,6 +498,75 @@ int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
->>>>>  }
->>>>>  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
->>>>>  
->>>>> +/*
->>>>> + * v4l2_fwnode_reference_parse - parse references for async sub-devices
->>>>> + * @dev: the device node the properties of which are parsed for references
->>>>> + * @notifier: the async notifier where the async subdevs will be added
->>>>> + * @prop: the name of the property
->>>>> + *
->>>>> + * Return: 0 on success
->>>>> + *	   -ENOENT if no entries were found
->>>>> + *	   -ENOMEM if memory allocation failed
->>>>> + *	   -EINVAL if property parsing failed
->>>>> + */
->>>>> +static int v4l2_fwnode_reference_parse(
->>>>> +	struct device *dev, struct v4l2_async_notifier *notifier,
->>>>> +	const char *prop)
->>>>> +{
->>>>> +	struct fwnode_reference_args args;
->>>>> +	unsigned int index;
->>>>> +	int ret;
->>>>> +
->>>>> +	for (index = 0;
->>>>> +	     !(ret = fwnode_property_get_reference_args(
->>>>> +		       dev_fwnode(dev), prop, NULL, 0, index, &args));
->>>>> +	     index++)
->>>>> +		fwnode_handle_put(args.fwnode);
->>>>> +
->>>>> +	if (!index)
->>>>> +		return -ENOENT;
->>>>> +
->>>>> +	/*
->>>>> +	 * To-do: handle -ENODATA when "device property: Align return
->>>>> +	 * codes of acpi_fwnode_get_reference_with_args" is merged.
->>>>> +	 */
->>>>> +	if (ret != -ENOENT && ret != -ENODATA)
->>>>
->>>> So while that patch referenced in the To-do above is not merged yet,
->>>> what does fwnode_property_get_reference_args return? ENOENT or ENODATA?
->>>> Or ENOENT now and ENODATA later? Or vice versa?
->>>>
->>>> I can't tell based on that information whether this code is correct or not.
->>>>
->>>> The comment needs to explain this a bit better.
->>>
->>> I'll add this:
->>>
->>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
->>> index a32473f95be1..74fcc3ba9ebd 100644
->>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
->>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
->>> @@ -529,6 +529,9 @@ static int v4l2_fwnode_reference_parse(
->>>  	/*
->>>  	 * To-do: handle -ENODATA when "device property: Align return
->>>  	 * codes of acpi_fwnode_get_reference_with_args" is merged.
->>
->> So after this patch referred to in the To-do is applied it will only
->> return ENODATA?
->>
->> In that case, change 'handle' to 'handle only'.
-> 
-> That depends a bit in which form the patch will be eventually accepted. The
-> underlying issue there is that different error codes are used to signal
-> conditions for out-of-bounds access and missing entry. After aligning them
-> the code here can be updated.
+This patch adds GPIO device nodes for r8a77995.
 
-Ah. In that case I'd drop the 'To-do' sentence.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ Changes from v1:
+  - Change power-domains property in each node.
+  - Add Reviewed-by (Thanks Geert-san!).
 
-> 
->>
->>> +	 * Right now, both -ENODATA and -ENOENT signal the end of
->>> +	 * references where only a single error code should be used
->>> +	 * for the purpose.
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 112 ++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-And add something like: "This might change in the future, in which
-case this code should be updated."
-
->>>  	 */
->>>  	if (ret != -ENOENT && ret != -ENODATA)
->>>  		return ret;
->>>
-> 
-
-Regards,
-
-	Hans
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index 84b6bd5..d7756256 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -139,6 +139,118 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		gpio0: gpio@e6050000 {
++			compatible = "renesas,gpio-r8a77995",
++				     "renesas,rcar-gen3-gpio",
++				     "renesas,gpio-rcar";
++			reg = <0 0xe6050000 0 0x50>;
++			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 0 9>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 912>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 912>;
++		};
++
++		gpio1: gpio@e6051000 {
++			compatible = "renesas,gpio-r8a77995",
++				     "renesas,rcar-gen3-gpio",
++				     "renesas,gpio-rcar";
++			reg = <0 0xe6051000 0 0x50>;
++			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 32 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 911>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 911>;
++		};
++
++		gpio2: gpio@e6052000 {
++			compatible = "renesas,gpio-r8a77995",
++				     "renesas,rcar-gen3-gpio",
++				     "renesas,gpio-rcar";
++			reg = <0 0xe6052000 0 0x50>;
++			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 64 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 910>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 910>;
++		};
++
++		gpio3: gpio@e6053000 {
++			compatible = "renesas,gpio-r8a77995",
++				     "renesas,rcar-gen3-gpio",
++				     "renesas,gpio-rcar";
++			reg = <0 0xe6053000 0 0x50>;
++			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 96 10>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 909>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 909>;
++		};
++
++		gpio4: gpio@e6054000 {
++			compatible = "renesas,gpio-r8a77995",
++				     "renesas,rcar-gen3-gpio",
++				     "renesas,gpio-rcar";
++			reg = <0 0xe6054000 0 0x50>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 128 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 908>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 908>;
++		};
++
++		gpio5: gpio@e6055000 {
++			compatible = "renesas,gpio-r8a77995",
++				     "renesas,rcar-gen3-gpio",
++				     "renesas,gpio-rcar";
++			reg = <0 0xe6055000 0 0x50>;
++			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 160 21>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 907>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 907>;
++		};
++
++		gpio6: gpio@e6055400 {
++			compatible = "renesas,gpio-r8a77995",
++				     "renesas,rcar-gen3-gpio",
++				     "renesas,gpio-rcar";
++			reg = <0 0xe6055400 0 0x50>;
++			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 192 14>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 906>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 906>;
++		};
++
+ 		scif2: serial@e6e88000 {
+ 			compatible = "renesas,scif-r8a77995",
+ 				     "renesas,rcar-gen3-scif", "renesas,scif";
+-- 
+1.9.1
