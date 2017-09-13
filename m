@@ -1,141 +1,75 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v12 15/26] v4l: async: Allow binding notifiers to
- sub-devices
-Date: Wed, 13 Sep 2017 11:25:27 +0200
-Message-ID: <3cb2b5ad-97e2-0f60-d4a3-2f36431dc358@xs4all.nl>
-References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
- <20170912134200.19556-16-sakari.ailus@linux.intel.com>
- <575bf15b-62d2-3a51-d550-d462578471f7@xs4all.nl>
- <20170913082901.fbxxphn7s3ljn3mc@valkosipuli.retiisi.org.uk>
+From: <yinbo.zhu@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1088a: Add USB support
+Date: Wed, 13 Sep 2017 17:10:09 +0800
+Message-ID: <20170913091009.21448-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170913082901.fbxxphn7s3ljn3mc-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yinbo.zhu@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Catalin Marinas )" <catalin.marinas@arm.com>, "Will Deacon )" <will.deacon@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Harninder Rai <harninder.rai@nxp.com>, Raghav Dogra <raghav.dogra@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/17 10:29, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Wed, Sep 13, 2017 at 09:17:08AM +0200, Hans Verkuil wrote:
->> On 09/12/2017 03:41 PM, Sakari Ailus wrote:
->>> Registering a notifier has required the knowledge of struct v4l2_device
->>> for the reason that sub-devices generally are registered to the
->>> v4l2_device (as well as the media device, also available through
->>> v4l2_device).
->>>
->>> This information is not available for sub-device drivers at probe time.
->>>
->>> What this patch does is that it allows registering notifiers without
->>> having v4l2_device around. Instead the sub-device pointer is stored in the
->>> notifier. Once the sub-device of the driver that registered the notifier
->>> is registered, the notifier will gain the knowledge of the v4l2_device,
->>> and the binding of async sub-devices from the sub-device driver's notifier
->>> may proceed.
->>>
->>> The root notifier's complete callback is only called when all sub-device
->>> notifiers are completed.
->>>
->>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>
->> Just two small comments (see below).
->>
->> After changing those (the first is up to you) you can add my:
->>
->> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> 
-> Thanks; please see my comments below.
-> 
-> ...
-> 
->>> +/* Return true if all sub-device notifiers are complete, false otherwise. */
->>> +static bool v4l2_async_subdev_notifiers_complete(
->>> +	struct v4l2_async_notifier *notifier)
->>> +{
->>> +	struct v4l2_subdev *sd;
->>> +
->>> +	if (!list_empty(&notifier->waiting))
->>> +		return false;
->>> +
->>> +	list_for_each_entry(sd, &notifier->done, async_list) {
->>> +		struct v4l2_async_notifier *subdev_notifier =
->>> +			v4l2_async_find_subdev_notifier(sd);
->>> +
->>> +		if (!subdev_notifier)
->>> +			continue;
->>> +
->>> +		if (!v4l2_async_subdev_notifiers_complete(subdev_notifier))
->>
->> I think it is better to change this to:
->>
->> 		if (subdev_notifier &&
->> 		    !v4l2_async_subdev_notifiers_complete(subdev_notifier))
->>
->> and drop this if..continue above. That's a bit overkill in this simple case.
->>
->> It's up to you, though.
-> 
-> Yes, makes sense.
-> 
-> ...
-> 
->>> +/* Try completing a notifier. */
->>> +static int v4l2_async_notifier_try_complete(
->>> +	struct v4l2_async_notifier *notifier)
->>> +{
->>> +	do {
->>> +		int ret;
->>> +
->>> +		/* Any local async sub-devices left? */
->>> +		if (!list_empty(&notifier->waiting))
->>> +			return 0;
->>> +
->>> +		/*
->>> +		 * Any sub-device notifiers waiting for async subdevs
->>> +		 * to be bound?
->>> +		 */
->>> +		if (!v4l2_async_subdev_notifiers_complete(notifier))
->>> +			return 0;
->>> +
->>> +		/* Proceed completing the notifier */
->>> +		ret = v4l2_async_notifier_call_complete(notifier);
->>> +		if (ret < 0)
->>> +			return ret;
->>> +
->>> +		/*
->>> +		 * Obtain notifier's parent. If there is one, repeat
->>> +		 * the process, otherwise we're done here.
->>> +		 */
->>> +	} while ((notifier = notifier->parent));
->>
->> I'd change this to:
->>
->> 		notifier = notifier->parent;
->> 	} while (notifier);
->>
->> Assignment in a condition is frowned upon, and there is no need to do that
->> here.
-> 
-> Wouldn't that equally apply to any statement with side effects? In other
-> words, what you're suggesting for patch 19? :-)
+From: "yinbo.zhu" <yinbo.zhu@nxp.com>
 
-I don't like it there either, but rewriting that would make the code quite a
-bit longer and you enter a gray area between 'no side-effects' and 'readability'.
-In cases like that I tend to accept the preference of the author of the code.
+Fix the issue that usb is not detected on ls1088ardb
 
-In the case of this do...while the 'no side-effects' version is just as readable
-if not more so than the 'side-effect' version.
+Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 20 ++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-At least, that's my reasoning.
-
-Regards,
-
-	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+index 213abb72de93..6c3c3bc4b681 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+@@ -118,6 +118,14 @@
+ 	status = "okay";
+ };
+ 
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
+ &esdhc {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index c144d06a6e33..c23fede8cf5d 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -359,6 +359,26 @@
+ 			status = "disabled";
+ 		};
+ 
++		usb0: usb3@3100000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x3100000 0x0 0x10000>;
++			interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
++			dr_mode = "host";
++			snps,quirk-frame-length-adjustment = <0x20>;
++			snps,dis_rxdet_inp3_quirk;
++			status = "disabled";
++		};
++
++		usb1: usb3@3110000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x3110000 0x0 0x10000>;
++			interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
++			dr_mode = "host";
++			snps,quirk-frame-length-adjustment = <0x20>;
++			snps,dis_rxdet_inp3_quirk;
++			status = "disabled";
++		};
++
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1088a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>,
+-- 
+2.14.1
