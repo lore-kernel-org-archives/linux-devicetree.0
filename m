@@ -1,37 +1,42 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 1/2] dt-bindings: arm: actions: Add CubieBoard6
-Date: Mon, 11 Sep 2017 02:58:04 +0200
-Message-ID: <20170911005805.10116-2-afaerber@suse.de>
-References: <20170911005805.10116-1-afaerber@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170911005805.10116-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
-Cc: Thomas Liau <thomas.liau@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, =?UTF-8?q?=E6=A2=85=E5=88=A9?= <harrymei@actions-semi.com>, support@cubietech.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/8] ARM: renesas: Latest r8a774[35] dts updates
+Date: Wed, 13 Sep 2017 18:05:33 +0100
+Message-ID: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define a compatible string for Cubietech CubieBoard6.
+This series contains multiple additions to the r8a774[35] device trees.
 
-Cc: support@cubietech.com
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- Documentation/devicetree/bindings/arm/actions.txt | 1 +
- 1 file changed, 1 insertion(+)
+I've bundled them into a series to help avoid merge issues due to multiple
+changes to the same files. Hopefully this doesn't add too much confusion!
 
-diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
-index 3bc7ea575564..ced764a8549e 100644
---- a/Documentation/devicetree/bindings/arm/actions.txt
-+++ b/Documentation/devicetree/bindings/arm/actions.txt
-@@ -21,6 +21,7 @@ Boards:
- 
- Root node property compatible must contain, depending on board:
- 
-+ - Cubietech CubieBoard6: "cubietech,cubieboard6"
-  - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
- 
- 
+
+Kind regards, Chris
+
+
+Fabrizio Castro (8):
+  ARM: dts: r8a7745: Add APMU node and second CPU core
+  ARM: dts: r8a7745: Add SDHI controllers
+  ARM: dts: iwg22m: Enable SDHI1 controller
+  ARM: dts: iwg22d: Enable SDHI0 controller
+  ARM: dts: r8a7743: Add QSPI support
+  ARM: dts: iwg20m: Add SPI NOR support
+  ARM: dts: r8a7745: Add QSPI support
+  ARM: drs: iwg22m: Add SPI NOR support
+
+ arch/arm/boot/dts/r8a7743-iwg20m.dtsi       | 26 ++++++++++
+ arch/arm/boot/dts/r8a7743.dtsi              | 17 +++++++
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 37 ++++++++++++++
+ arch/arm/boot/dts/r8a7745-iwg22m.dtsi       | 43 +++++++++++++++++
+ arch/arm/boot/dts/r8a7745.dtsi              | 75 +++++++++++++++++++++++++++++
+ 5 files changed, 198 insertions(+)
+
 -- 
-2.13.5
+1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
