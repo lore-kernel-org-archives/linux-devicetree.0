@@ -1,149 +1,141 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2] arm64: dts: renesas: r8a77995: add GPIO device nodes
-Date: Wed, 13 Sep 2017 19:33:59 +0900
-Message-ID: <1505298839-17435-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
+        <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Subject: [PATCH 1/2] arm64: dts: r8a7795: add thermal cooling management
+Date: Wed, 13 Sep 2017 12:59:08 +0200
+Message-ID: <20170913105909.13230-2-niklas.soderlund+renesas@ragnatech.se>
+References: <20170913105909.13230-1-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170913105909.13230-1-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds GPIO device nodes for r8a77995.
+Add nodes and properties for thermal cooling management support.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 ---
- Changes from v1:
-  - Change power-domains property in each node.
-  - Add Reviewed-by (Thanks Geert-san!).
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 40 ++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 112 ++++++++++++++++++++++++++++++
- 1 file changed, 112 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index 84b6bd5..d7756256 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -139,6 +139,118 @@
- 			#power-domain-cells = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 0ccac86bccc6b6f0..1818fd20660d0315 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -53,6 +53,7 @@
+ 				<&cluster0_opp_tb3>, <&cluster0_opp_tb4>,
+ 				<&cluster0_opp_tb5>, <&cluster0_opp_tb6>,
+ 				<&cluster0_opp_tb7>;
++			#cooling-cells = <2>;
  		};
  
-+		gpio0: gpio@e6050000 {
-+			compatible = "renesas,gpio-r8a77995",
-+				     "renesas,rcar-gen3-gpio",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6050000 0 0x50>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 0 9>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 912>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 912>;
-+		};
+ 		a57_1: cpu@1 {
+@@ -67,6 +68,7 @@
+ 				<&cluster0_opp_tb3>, <&cluster0_opp_tb4>,
+ 				<&cluster0_opp_tb5>, <&cluster0_opp_tb6>,
+ 				<&cluster0_opp_tb7>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		a57_2: cpu@2 {
+@@ -81,6 +83,7 @@
+ 				<&cluster0_opp_tb3>, <&cluster0_opp_tb4>,
+ 				<&cluster0_opp_tb5>, <&cluster0_opp_tb6>,
+ 				<&cluster0_opp_tb7>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		a57_3: cpu@3 {
+@@ -95,6 +98,7 @@
+ 				<&cluster0_opp_tb3>, <&cluster0_opp_tb4>,
+ 				<&cluster0_opp_tb5>, <&cluster0_opp_tb6>,
+ 				<&cluster0_opp_tb7>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		a53_0: cpu@100 {
+@@ -2821,12 +2825,24 @@
+ 				thermal-sensors = <&tsc 0>;
+ 
+ 				trips {
++					sensor1_passive: sensor1-passive {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
+ 					sensor1_crit: sensor1-crit {
+ 						temperature = <120000>;
+ 						hysteresis = <2000>;
+ 						type = "critical";
+ 					};
+ 				};
 +
-+		gpio1: gpio@e6051000 {
-+			compatible = "renesas,gpio-r8a77995",
-+				     "renesas,rcar-gen3-gpio",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6051000 0 0x50>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 32 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 911>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 911>;
-+		};
++				cooling-maps {
++					map0 {
++						trip = <&sensor1_passive>;
++						cooling-device = <&a57_0 4 4>;
++					};
++				};
+ 			};
+ 
+ 			sensor_thermal2: sensor-thermal2 {
+@@ -2835,12 +2851,24 @@
+ 				thermal-sensors = <&tsc 1>;
+ 
+ 				trips {
++					sensor2_passive: sensor2-passive {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
+ 					sensor2_crit: sensor2-crit {
+ 						temperature = <120000>;
+ 						hysteresis = <2000>;
+ 						type = "critical";
+ 					};
+ 				};
 +
-+		gpio2: gpio@e6052000 {
-+			compatible = "renesas,gpio-r8a77995",
-+				     "renesas,rcar-gen3-gpio",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6052000 0 0x50>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 64 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 910>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 910>;
-+		};
++				cooling-maps {
++					map0 {
++						trip = <&sensor2_passive>;
++						cooling-device = <&a57_0 4 4>;
++					};
++				};
+ 			};
+ 
+ 			sensor_thermal3: sensor-thermal3 {
+@@ -2849,12 +2877,24 @@
+ 				thermal-sensors = <&tsc 2>;
+ 
+ 				trips {
++					sensor3_passive: sensor3-passive {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
+ 					sensor3_crit: sensor3-crit {
+ 						temperature = <120000>;
+ 						hysteresis = <2000>;
+ 						type = "critical";
+ 					};
+ 				};
 +
-+		gpio3: gpio@e6053000 {
-+			compatible = "renesas,gpio-r8a77995",
-+				     "renesas,rcar-gen3-gpio",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6053000 0 0x50>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 96 10>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 909>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 909>;
-+		};
-+
-+		gpio4: gpio@e6054000 {
-+			compatible = "renesas,gpio-r8a77995",
-+				     "renesas,rcar-gen3-gpio",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6054000 0 0x50>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 128 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 908>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 908>;
-+		};
-+
-+		gpio5: gpio@e6055000 {
-+			compatible = "renesas,gpio-r8a77995",
-+				     "renesas,rcar-gen3-gpio",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055000 0 0x50>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 160 21>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 907>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 907>;
-+		};
-+
-+		gpio6: gpio@e6055400 {
-+			compatible = "renesas,gpio-r8a77995",
-+				     "renesas,rcar-gen3-gpio",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055400 0 0x50>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 192 14>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 906>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 906>;
-+		};
-+
- 		scif2: serial@e6e88000 {
- 			compatible = "renesas,scif-r8a77995",
- 				     "renesas,rcar-gen3-scif", "renesas,scif";
++				cooling-maps {
++					map0 {
++						trip = <&sensor3_passive>;
++						cooling-device = <&a57_0 4 4>;
++					};
++				};
+ 			};
+ 		};
+ 	};
 -- 
-1.9.1
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
