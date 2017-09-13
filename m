@@ -1,97 +1,131 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCHv4 3/5] dt-bindings: document the CEC GPIO bindings
-Date: Wed, 13 Sep 2017 10:21:07 +0200
-Message-ID: <30a2fa9d-1aa9-84c1-7842-05167eee73d3@xs4all.nl>
-References: <20170831110156.11018-1-hverkuil@xs4all.nl>
- <20170831110156.11018-4-hverkuil@xs4all.nl>
- <20170912144308.j53eclicbhay5dsz@rob-hp-laptop>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v12 15/26] v4l: async: Allow binding notifiers to
+ sub-devices
+Date: Wed, 13 Sep 2017 11:29:02 +0300
+Message-ID: <20170913082901.fbxxphn7s3ljn3mc@valkosipuli.retiisi.org.uk>
+References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
+ <20170912134200.19556-16-sakari.ailus@linux.intel.com>
+ <575bf15b-62d2-3a51-d550-d462578471f7@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170912144308.j53eclicbhay5dsz@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <575bf15b-62d2-3a51-d550-d462578471f7-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMTIvMjAxNyAwNDo0MyBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVGh1LCBBdWcg
-MzEsIDIwMTcgYXQgMDE6MDE6NTRQTSArMDIwMCwgSGFucyBWZXJrdWlsIHdyb3RlOgo+PiBGcm9t
-OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4+Cj4+IERvY3VtZW50IHRo
-ZSBiaW5kaW5ncyBmb3IgdGhlIGNlYy1ncGlvIG1vZHVsZSBmb3IgaGFyZHdhcmUgd2hlcmUgdGhl
-Cj4+IENFQyBsaW5lIGFuZCBvcHRpb25hbGx5IHRoZSBIUEQgbGluZSBhcmUgY29ubmVjdGVkIHRv
-IEdQSU8gbGluZXMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEhhbnMgVmVya3VpbCA8aGFucy52ZXJr
-dWlsQGNpc2NvLmNvbT4KPj4gLS0tCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9j
-ZWMtZ3Bpby50eHQgICAgICAgICB8IDIyICsrKysrKysrKysrKysrKysrKysrKysKPj4gIDEgZmls
-ZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NlYy1ncGlvLnR4dAo+Pgo+PiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NlYy1ncGlv
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZWMtZ3Bpby50
-eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAwLi5kYjIwYTc0
-NTJkYmQKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVkaWEvY2VjLWdwaW8udHh0Cj4+IEBAIC0wLDAgKzEsMjIgQEAKPj4gKyogSERN
-SSBDRUMgR1BJTyBkcml2ZXIKPj4gKwo+PiArVGhlIEhETUkgQ0VDIEdQSU8gbW9kdWxlIHN1cHBv
-cnRzIENFQyBpbXBsZW1lbnRhdGlvbnMgd2hlcmUgdGhlIENFQyBsaW5lCj4+ICtpcyBob29rZWQg
-dXAgdG8gYSBwdWxsLXVwIEdQSU8gbGluZSBhbmQgLSBvcHRpb25hbGx5IC0gdGhlIEhQRCBsaW5l
-IGlzCj4+ICtob29rZWQgdXAgdG8gYW5vdGhlciBHUElPIGxpbmUuCj4+ICsKPj4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6Cj4+ICsgIC0gY29tcGF0aWJsZTogdmFsdWUgbXVzdCBiZSAiY2VjLWdwaW8i
-Cj4+ICsgIC0gY2VjLWdwaW86IGdwaW8gdGhhdCB0aGUgQ0VDIGxpbmUgaXMgY29ubmVjdGVkIHRv
-Cj4gCj4gY2VjLWdwaW9zCgpXaWxsIGNoYW5nZS4KCj4gCj4+ICsKPj4gK09wdGlvbmFsIHByb3Bl
-cnR5Ogo+PiArICAtIGhwZC1ncGlvOiBncGlvIHRoYXQgdGhlIEhQRCBsaW5lIGlzIGNvbm5lY3Rl
-ZCB0bwo+IAo+IGhwZC1ncGlvcwoKV2lsbCBjaGFuZ2UuCgo+IAo+IEhvd2V2ZXIsIEhQRCBpcyBh
-bHJlYWR5IHBhcnQgb2YgdGhlIEhETUkgY29ubmVjdG9yIGJpbmRpbmcuIEhhdmluZyBpdCBpbiAK
-PiAyIHBsYWNlcyB3b3VsZCBiZSB3cm9uZy4KCk5vLiBUaGlzIGlzIG5vdCBhbiBIRE1JIHJlY2Vp
-dmVyL3RyYW5zbWl0dGVyLiBUaGVyZSBhcmUgdHdvIHVzZS1jYXNlcyBmb3IgdGhpcwpkcml2ZXI6
-CgoxKSBGb3IgSERNSSByZWNlaXZlcnMvdHJhbnNtaXR0ZXJzIHRoYXQgY29ubmVjdCB0aGUgQ0VD
-IHBpbiBvZiBhbiBIRE1JIGNvbm5lY3RvcgogICB0byBhIEdQSU8gcGluLiBJbiB0aGF0IGNhc2Ug
-dGhlIEhQRCBnb2VzIHRvIHRoZSBIRE1JIHRyYW5zbWl0dGVyL3JlY2VpdmVyIGFuZAogICBub3Qg
-dG8gdGhpcyBkcml2ZXIuIEFzIHlvdSBzYXksIHRoYXQgd291bGQgbm90IG1ha2UgYW55IHNlbnNl
-LgoKICAgQnV0IGN1cnJlbnRseSBubyBzdWNoIGRldmljZXMgYXJlIGluIHRoZSBrZXJuZWwgKEkg
-a25vdyB0aGV5IGV4aXN0LCB0aG91Z2gpLgogICBPbmNlIHN1Y2ggYSBkcml2ZXIgd291bGQgYXBw
-ZWFyIGluIHRoZSBrZXJuZWwgdGhlbiB0aGVzZSBiaW5kaW5ncyBuZWVkIHRvIGJlCiAgIGV4dGVu
-ZGVkIHdpdGggYW4gaGRtaS1waGFuZGxlLgoKMikgVGhpcyBkcml2ZXIgaXMgdXNlZCBmb3IgZGVi
-dWdnaW5nIENFQyBsaWtlIHRoaXM6CgoJaHR0cHM6Ly9odmVya3VpbC5ob21lLnhzNGFsbC5ubC9y
-cGkzLWNlYy5qcGcKCiAgIEhlcmUgdGhlIENFQyBwaW4gb2YgYW4gSERNSSBicmVha291dCBjb25u
-ZWN0b3IgaXMgaG9va2VkIHVwIHRvIGEgUmFzcGJlcnJ5IFBpCiAgIEdQSU8gcGluIGFuZCB0aGUg
-UlBpIG1vbml0b3JzIGl0LiBJdCdzIGEgY2hlYXAgYnV0IHZlcnkgZWZmZWN0aXZlIENFQyBhbmFs
-eXplci4KICAgSW4gdGhpcyB1c2UtY2FzZSBpdCBpcyB2ZXJ5IGhlbHBmdWwgdG8gYWxzbyBtb25p
-dG9yIHRoZSBIUEQgcGluIHNpbmNlIHNvbWUKICAgZGlzcGxheXMgZG8gd2VpcmQgdGhpbmdzIHdp
-dGggdGhlIEhQRCBhbmQga25vd2luZyB0aGUgc3RhdGUgb2YgdGhlIEhQRCBoZWxwcwogICBhIGxv
-dCB3aGVuIGRlYnVnZ2luZyBDRUMgcHJvYmxlbXMuIEl0J3Mgb3B0aW9uYWwgYW5kIGl0IG9ubHkg
-bW9uaXRvcnMgdGhlIHBpbi4KCiAgIEFjdHVhbGx5LCB0aGVyZSBkb2VzIG5vdCBoYXZlIHRvIGJl
-IGFuIEhETUkgY29ubmVjdG9yIGludm9sdmVkIGF0IGFsbDogeW91IGNhbgogICBtYWtlIHR3byBj
-ZWMtZ3BpbyBpbnN0YW5jZXMgYW5kIGp1c3QgY29ubmVjdCB0aGUgdHdvIEdQSU8gcGlucyB0b2dl
-dGhlciBpbgogICBvcmRlciB0byBlbXVsYXRlIHR3byBDRUMgYWRhcHRlcnMgYW5kIHBsYXkgd2l0
-aCB0aGF0LgoKPiAKPiBJIHRoaW5rIHdlIHNob3VsZCBoYXZlIGVpdGhlcjoKPiAKPiBoZG1pLWNv
-bm5lY3RvciB7Cj4gCWNvbXBhdGlibGUgPSAnaGRtaS1jb25uZWN0b3ItYSI7Cj4gCWhwZC1ncGlv
-cyA9IDwuLi4+Owo+IAljZWMtZ3Bpb3MgPSA8Li4uPjsKPiAJcG9ydHMgewo+IAkJLy8gcG9ydCB0
-byBIRE1JIGNvbnRyb2xsZXIKPiAJLi4uCj4gCX07Cj4gfTsKPiAKPiBPcjoKPiAKPiBoZG1pLWNv
-bm5lY3RvciB7Cj4gICAgICAgICBjb21wYXRpYmxlID0gJ2hkbWktY29ubmVjdG9yLWEiOwo+ICAg
-ICAgICAgaHBkLWdwaW9zID0gPC4uLj47Cj4gICAgICAgICBjZWMgPSA8JmNlYz47Cj4gICAgICAg
-ICAuLi4gCj4gfTsKPiAKPiBjZWM6IGNlYy1ncGlvIHsKPiAJY29tcGF0aWJsZSA9ICJjZWMtZ3Bp
-byI7Cj4gCWNlYy1ncGlvcyA9IDwuLi4+Owo+IH07Cj4gCj4gTXkgcHJlZmVyZW5jZSBpcyBwcm9i
-YWJseSB0aGUgZm9ybWVyLiBUaGUgbGF0dGVyIGp1c3QgaGVscHMgY3JlYXRlIGEgCj4gZGV2aWNl
-IHRvIGJpbmQgdG8gYSBkcml2ZXIsIGJ1dCBEVCBpcyBub3QgdGhlIG9ubHkgd2F5IHRvIGNyZWF0
-ZSAKPiBkZXZpY2VzLiBUaGVuIGFnYWluLCBpZiB5b3UgaGF2ZSBhIHBoYW5kbGUgdG8gcmVhbCBD
-RUMgY29udHJvbGxlcnMgaW4gCj4gdGhlIEhETUkgY29ubmVjdG9yIG5vZGUsIGl0IG1heSBtYWtl
-IHNlbnNlIHRvIGRvIHRoZSBzYW1lIHRoaW5nIHdpdGggCj4gY2VjLWdwaW8uIAo+IAo+PiArCj4+
-ICtFeGFtcGxlIGZvciB0aGUgUmFzcGJlcnJ5IFBpIDMgd2hlcmUgdGhlIENFQyBsaW5lIGlzIGNv
-bm5lY3RlZCB0bwo+PiArcGluIDI2IGFrYSBCQ003IGFrYSBDRTEgb24gdGhlIEdQSU8gcGluIGhl
-YWRlciBhbmQgdGhlIEhQRCBsaW5lIGlzCj4+ICtjb25uZWN0ZWQgdG8gcGluIDExIGFrYSBCQ00x
-NzoKPj4gKwo+PiArY2VjLWdwaW9ANyB7Cj4gCj4gdW5pdCBhZGRyZXNzIGlzIG5vdCB2YWxpZC4g
-QnVpbGQgeW91ciBkdHMncyB3aXRoIFc9Mi4KCkknbGwgZG8gdGhhdC4KCj4gCj4+ICsgICAgICAg
-Y29tcGF0aWJsZSA9ICJjZWMtZ3BpbyI7Cj4+ICsgICAgICAgY2VjLWdwaW8gPSA8JmdwaW8gNyBH
-UElPX09QRU5fRFJBSU4+Owo+PiArICAgICAgIGhwZC1ncGlvID0gPCZncGlvIDE3IEdQSU9fQUNU
-SVZFX0hJR0g+Owo+PiArfTsKPj4gLS0gCj4+IDIuMTQuMQoKUmVnYXJkcywKCglIYW5zCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Hans,
+
+On Wed, Sep 13, 2017 at 09:17:08AM +0200, Hans Verkuil wrote:
+> On 09/12/2017 03:41 PM, Sakari Ailus wrote:
+> > Registering a notifier has required the knowledge of struct v4l2_device
+> > for the reason that sub-devices generally are registered to the
+> > v4l2_device (as well as the media device, also available through
+> > v4l2_device).
+> > 
+> > This information is not available for sub-device drivers at probe time.
+> > 
+> > What this patch does is that it allows registering notifiers without
+> > having v4l2_device around. Instead the sub-device pointer is stored in the
+> > notifier. Once the sub-device of the driver that registered the notifier
+> > is registered, the notifier will gain the knowledge of the v4l2_device,
+> > and the binding of async sub-devices from the sub-device driver's notifier
+> > may proceed.
+> > 
+> > The root notifier's complete callback is only called when all sub-device
+> > notifiers are completed.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
+> Just two small comments (see below).
+> 
+> After changing those (the first is up to you) you can add my:
+> 
+> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+
+Thanks; please see my comments below.
+
+...
+
+> > +/* Return true if all sub-device notifiers are complete, false otherwise. */
+> > +static bool v4l2_async_subdev_notifiers_complete(
+> > +	struct v4l2_async_notifier *notifier)
+> > +{
+> > +	struct v4l2_subdev *sd;
+> > +
+> > +	if (!list_empty(&notifier->waiting))
+> > +		return false;
+> > +
+> > +	list_for_each_entry(sd, &notifier->done, async_list) {
+> > +		struct v4l2_async_notifier *subdev_notifier =
+> > +			v4l2_async_find_subdev_notifier(sd);
+> > +
+> > +		if (!subdev_notifier)
+> > +			continue;
+> > +
+> > +		if (!v4l2_async_subdev_notifiers_complete(subdev_notifier))
+> 
+> I think it is better to change this to:
+> 
+> 		if (subdev_notifier &&
+> 		    !v4l2_async_subdev_notifiers_complete(subdev_notifier))
+> 
+> and drop this if..continue above. That's a bit overkill in this simple case.
+> 
+> It's up to you, though.
+
+Yes, makes sense.
+
+...
+
+> > +/* Try completing a notifier. */
+> > +static int v4l2_async_notifier_try_complete(
+> > +	struct v4l2_async_notifier *notifier)
+> > +{
+> > +	do {
+> > +		int ret;
+> > +
+> > +		/* Any local async sub-devices left? */
+> > +		if (!list_empty(&notifier->waiting))
+> > +			return 0;
+> > +
+> > +		/*
+> > +		 * Any sub-device notifiers waiting for async subdevs
+> > +		 * to be bound?
+> > +		 */
+> > +		if (!v4l2_async_subdev_notifiers_complete(notifier))
+> > +			return 0;
+> > +
+> > +		/* Proceed completing the notifier */
+> > +		ret = v4l2_async_notifier_call_complete(notifier);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +
+> > +		/*
+> > +		 * Obtain notifier's parent. If there is one, repeat
+> > +		 * the process, otherwise we're done here.
+> > +		 */
+> > +	} while ((notifier = notifier->parent));
+> 
+> I'd change this to:
+> 
+> 		notifier = notifier->parent;
+> 	} while (notifier);
+> 
+> Assignment in a condition is frowned upon, and there is no need to do that
+> here.
+
+Wouldn't that equally apply to any statement with side effects? In other
+words, what you're suggesting for patch 19? :-)
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
