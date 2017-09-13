@@ -1,185 +1,79 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v3 4/6] [media] exynos-gsc: Add hardware rotation limits
-Date: Wed, 13 Sep 2017 11:33:45 +0900
-Message-ID: <bb025fcb-e316-dfe9-a8eb-8a9535f35b93@samsung.com>
-References: <1504850560-27950-1-git-send-email-hoegeun.kwon@samsung.com>
-        <CGME20170908060309epcas1p3d48dd0871d3fde02ba3c9921bbe5a7a6@epcas1p3.samsung.com>
-        <1504850560-27950-5-git-send-email-hoegeun.kwon@samsung.com>
-        <27b46679-e6c7-2471-f10e-3f0634178ebf@samsung.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 6/6] iommu/arm-smmu-v3: Avoid ILLEGAL setting of
+	STE.S1STALLD and CD.S
+Date: Wed, 13 Sep 2017 04:06:44 +0100
+Message-ID: <20170913030643.GD12411@arm.com>
+References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
+	<1504167642-14922-7-git-send-email-xieyisheng1@huawei.com>
+	<738977bb-4cd7-7d86-0ea0-0c88b6af721c@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <27b46679-e6c7-2471-f10e-3f0634178ebf@samsung.com>
-Content-language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, mchehab@kernel.org
-Cc: inki.dae@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, m.szyprowski@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <738977bb-4cd7-7d86-0ea0-0c88b6af721c-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xieyisheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, chenjiankang1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Tue, Sep 05, 2017 at 01:54:19PM +0100, Jean-Philippe Brucker wrote:
+> On 31/08/17 09:20, Yisheng Xie wrote:
+> > It is ILLEGAL to set STE.S1STALLD if STALL_MODEL is not 0b00, which
+> > means we should not disable stall mode if stall/terminate mode is not
+> > configuable.
+> > 
+> > Meanwhile, it is also ILLEGAL when STALL_MODEL==0b10 && CD.S==0 which
+> > means if stall mode is force we should always set CD.S.
+> > 
+> > This patch add ARM_SMMU_FEAT_TERMINATE feature bit for smmu, and use
+> > TERMINATE feature checking to ensue above ILLEGAL cases from happening.
+> > 
+> > Signed-off-by: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/iommu/arm-smmu-v3.c | 22 ++++++++++++++++------
+> >  1 file changed, 16 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> > index dbda2eb..0745522 100644
+> > --- a/drivers/iommu/arm-smmu-v3.c
+> > +++ b/drivers/iommu/arm-smmu-v3.c
+> > @@ -55,6 +55,7 @@
+> >  #define IDR0_STALL_MODEL_SHIFT		24
+> >  #define IDR0_STALL_MODEL_MASK		0x3
+> >  #define IDR0_STALL_MODEL_STALL		(0 << IDR0_STALL_MODEL_SHIFT)
+> > +#define IDR0_STALL_MODEL_NS		(1 << IDR0_STALL_MODEL_SHIFT)
+> >  #define IDR0_STALL_MODEL_FORCE		(2 << IDR0_STALL_MODEL_SHIFT)
+> >  #define IDR0_TTENDIAN_SHIFT		21
+> >  #define IDR0_TTENDIAN_MASK		0x3
+> > @@ -766,6 +767,7 @@ struct arm_smmu_device {
+> >  #define ARM_SMMU_FEAT_SVM		(1 << 15)
+> >  #define ARM_SMMU_FEAT_HA		(1 << 16)
+> >  #define ARM_SMMU_FEAT_HD		(1 << 17)
+> > +#define ARM_SMMU_FEAT_TERMINATE		(1 << 18)
+> 
+> I'd rather introduce something like "ARM_SMMU_FEAT_STALL_FORCE" instead.
+> Terminate model has another meaning, and is defined by a different bit in
+> IDR0.
 
-On 09/11/2017 06:35 PM, Sylwester Nawrocki wrote:
-> On 09/08/2017 08:02 AM, Hoegeun Kwon wrote:
->> The hardware rotation limits of gsc depends on SOC (Exynos
->> 5250/5420/5433). Distinguish them and add them to the driver data.
->>
->> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
->> ---
->>   drivers/media/platform/exynos-gsc/gsc-core.c | 96 
->> ++++++++++++++++++++++++----
->>   1 file changed, 83 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/media/platform/exynos-gsc/gsc-core.c 
->> b/drivers/media/platform/exynos-gsc/gsc-core.c
->> index 4380150..8f8636e 100644
->> --- a/drivers/media/platform/exynos-gsc/gsc-core.c
->> +++ b/drivers/media/platform/exynos-gsc/gsc-core.c
->> @@ -943,7 +943,37 @@ static irqreturn_t gsc_irq_handler(int irq, void 
->> *priv)
->>       return IRQ_HANDLED;
->>   }
->>   -static struct gsc_pix_max gsc_v_100_max = {
->> +static struct gsc_pix_max gsc_v_5250_max = {
->> +    .org_scaler_bypass_w    = 8192,
->> +    .org_scaler_bypass_h    = 8192,
->> +    .org_scaler_input_w    = 4800,
->> +    .org_scaler_input_h    = 3344,
->> +    .real_rot_dis_w        = 4800,
->> +    .real_rot_dis_h        = 3344,
->> +    .real_rot_en_w        = 2016,
->> +    .real_rot_en_h        = 2016,
->> +    .target_rot_dis_w    = 4800,
->> +    .target_rot_dis_h    = 3344,
->> +    .target_rot_en_w    = 2016,
->> +    .target_rot_en_h    = 2016,
->> +};
->> +
->> +static struct gsc_pix_max gsc_v_5420_max = {
->> +    .org_scaler_bypass_w    = 8192,
->> +    .org_scaler_bypass_h    = 8192,
->> +    .org_scaler_input_w    = 4800,
->> +    .org_scaler_input_h    = 3344,
->> +    .real_rot_dis_w        = 4800,
->> +    .real_rot_dis_h        = 3344,
->> +    .real_rot_en_w        = 2048,
->> +    .real_rot_en_h        = 2048,
->> +    .target_rot_dis_w    = 4800,
->> +    .target_rot_dis_h    = 3344,
->> +    .target_rot_en_w    = 2016,
->> +    .target_rot_en_h    = 2016,
->> +};
->> +
->> +static struct gsc_pix_max gsc_v_5433_max = {
->>       .org_scaler_bypass_w    = 8192,
->>       .org_scaler_bypass_h    = 8192,
->>       .org_scaler_input_w    = 4800,
->> @@ -979,8 +1009,8 @@ static irqreturn_t gsc_irq_handler(int irq, void 
->> *priv)
->>       .target_h        = 2,  /* yuv420 : 2, others : 1 */
->>   };
->>   -static struct gsc_variant gsc_v_100_variant = {
->> -    .pix_max        = &gsc_v_100_max,
->> +static struct gsc_variant gsc_v_5250_variant = {
->> +    .pix_max        = &gsc_v_5250_max,
->>       .pix_min        = &gsc_v_100_min,
->>       .pix_align        = &gsc_v_100_align,
->>       .in_buf_cnt        = 32,
->> @@ -992,12 +1022,48 @@ static irqreturn_t gsc_irq_handler(int irq, 
->> void *priv)
->>       .local_sc_down        = 2,
->>   };
->>   -static struct gsc_driverdata gsc_v_100_drvdata = {
->> +static struct gsc_variant gsc_v_5420_variant = {
->> +    .pix_max        = &gsc_v_5420_max,
->> +    .pix_min        = &gsc_v_100_min,
->> +    .pix_align        = &gsc_v_100_align,
->> +    .in_buf_cnt        = 32,
->> +    .out_buf_cnt        = 32,
->> +    .sc_up_max        = 8,
->> +    .sc_down_max        = 16,
->> +    .poly_sc_down_max    = 4,
->> +    .pre_sc_down_max    = 4,
->> +    .local_sc_down        = 2,
->> +};
->> +
->> +static struct gsc_variant gsc_v_5433_variant = {
->> +    .pix_max        = &gsc_v_5433_max,
->> +    .pix_min        = &gsc_v_100_min,
->> +    .pix_align        = &gsc_v_100_align,
->> +    .in_buf_cnt        = 32,
->> +    .out_buf_cnt        = 32,
->> +    .sc_up_max        = 8,
->> +    .sc_down_max        = 16,
->> +    .poly_sc_down_max    = 4,
->> +    .pre_sc_down_max    = 4,
->> +    .local_sc_down        = 2,
->> +};
->> +
->> +static struct gsc_driverdata gsc_v_5250_drvdata = {
->>       .variant = {
->> -        [0] = &gsc_v_100_variant,
->> -        [1] = &gsc_v_100_variant,
->> -        [2] = &gsc_v_100_variant,
->> -        [3] = &gsc_v_100_variant,
->> +        [0] = &gsc_v_5250_variant,
->> +        [1] = &gsc_v_5250_variant,
->> +        [2] = &gsc_v_5250_variant,
->> +        [3] = &gsc_v_5250_variant,
->> +    },
->> +    .num_entities = 4,
->> +    .clk_names = { "gscl" },
->> +    .num_clocks = 1,
->> +};
->> +
->> +static struct gsc_driverdata gsc_v_5420_drvdata = {
->> +    .variant = {
->> +        [0] = &gsc_v_5420_variant,
->> +        [1] = &gsc_v_5420_variant,
->>       },
->>       .num_entities = 4,
->>       .clk_names = { "gscl" },
->> @@ -1006,9 +1072,9 @@ static irqreturn_t gsc_irq_handler(int irq, 
->> void *priv)
->>     static struct gsc_driverdata gsc_5433_drvdata = {
->>       .variant = {
->> -        [0] = &gsc_v_100_variant,
->> -        [1] = &gsc_v_100_variant,
->> -        [2] = &gsc_v_100_variant,
->> +        [0] = &gsc_v_5433_variant,
->> +        [1] = &gsc_v_5433_variant,
->> +        [2] = &gsc_v_5433_variant,
->>       },
->>       .num_entities = 3,
->>       .clk_names = { "pclk", "aclk", "aclk_xiu", "aclk_gsclbend" },
->> @@ -1017,8 +1083,12 @@ static irqreturn_t gsc_irq_handler(int irq, 
->> void *priv)
->>     static const struct of_device_id exynos_gsc_match[] = {
->>       {
->> -        .compatible = "samsung,exynos5-gsc",
->> -        .data = &gsc_v_100_drvdata,
->
-> Can you keep the "samsung,exynos5-gsc" entry with the gsc_v_5250_variant
-> data, so that it can work with "samsung,exynos5-gsc" compatible in DT
-> on both exynos5250 and exynos5420 SoCs?
->
+Yes. What we need to do is:
 
-Thank you for your question.
+- If STALL_MODEL is 0b00, then set S1STALLD
+- If STALL_MODEL is 0b01, then we're ok (in future, avoiding trying to use
+  stalls, even for masters that claim to support it)
+- If STALL_MODEL is 0b10, then force all PCI devices and any platform
+  devices that don't claim to support stalls into bypass (depending on
+  disable_bypass).
 
-Exynos 5250 and 5420 have different hardware rotation limits.
-Exynos 5250 is '.real_rot_en_w/h = 2016' and 5420 is '.real_rot_en_w/h = 
-2048'.
+Reasonable? We could actually knock up a fix for mainline to do most of
+this already.
 
-So my opinion they must have different compatible.
-
-Best regards,
-Hoegeun
-
->> +        .compatible = "samsung,exynos5250-gsc",
->> +        .data = &gsc_v_5250_drvdata,
->> +    },
->> +    {
->> +        .compatible = "samsung,exynos5420-gsc",
->> +        .data = &gsc_v_5420_drvdata,
->>       },
->
+Will
