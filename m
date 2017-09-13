@@ -1,85 +1,88 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a77995: draak: enable EthernetAVB
-Date: Wed, 13 Sep 2017 21:18:39 +0900
-Message-ID: <1505305119-4257-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1505305119-4257-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 05/11] arm64: dts: renesas: initial R8A77970 SoC device
+ tree
+Date: Wed, 13 Sep 2017 16:02:23 +0300
+Message-ID: <c6b61146-615c-239a-49b5-a7814e51fb8e@cogentembedded.com>
+References: <20170912210523.663877115@cogentembedded.com>
+ <CAMuHMdUzO_oHscsLntd0VaKAOCXU00MyidvZ_A-rR2+UHtKc9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505305119-4257-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUzO_oHscsLntd0VaKAOCXU00MyidvZ_A-rR2+UHtKc9w@mail.gmail.com>
+Content-Language: en-MW
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables EthernetAVB for R-Car D3 draak board.
+On 09/13/2017 11:59 AM, Geert Uytterhoeven wrote:
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+>> The initial R8A77970 SoC device tree including Cortex-A53 CPU, GIC, timer,
+>> CPG, RST, and SYSC.
+>>
+>> Based on the original (and large) patch by Daisuke Matsushita
+>> <daisuke.matsushita.ns@hitachi.com>.
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>>   arch/arm64/boot/dts/renesas/r8a77970.dtsi |  126 ++++++++++++++++++++++++++++++
+>>   1 file changed, 126 insertions(+)
+>>
+>> Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+>> ===================================================================
+>> --- /dev/null
+>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+>> @@ -0,0 +1,126 @@
+>> +/*
+>> + * Device Tree Source for the r8a77970 SoC
+>> + *
+>> + * Copyright (C) 2016-2017 Renesas Electronics Corp.
+>> + * Copyright (C) 2017 Cogent Embedded, Inc.
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public License
+>> + * version 2.  This program is licensed "as is" without any warranty of any
+>> + * kind, whether express or implied.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> 
+> arm-gic.h includes irq.h.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index 19c5462..9c5a790 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -11,6 +11,7 @@
- 
- /dts-v1/;
- #include "r8a77995.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Renesas Draak board based on r8a77995";
-@@ -18,6 +19,7 @@
- 
- 	aliases {
- 		serial0 = &scif2;
-+		ethernet0 = &avb;
- 	};
- 
- 	chosen {
-@@ -37,6 +39,14 @@
- };
- 
- &pfc {
-+	avb0_pins: avb {
-+		mux {
-+			groups = "avb0_link", "avb0_phy_int", "avb0_mdc",
-+				 "avb0_mii";
-+			function = "avb0";
-+		};
-+	};
-+
- 	scif2_pins: scif2 {
- 		groups = "scif2_data";
- 		function = "scif2";
-@@ -44,6 +54,21 @@
- 
- };
- 
-+&avb {
-+	pinctrl-0 = <&avb0_pins>;
-+	pinctrl-names = "default";
-+	renesas,no-ether-link;
-+	phy-handle = <&phy0>;
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		rxc-skew-ps = <1500>;
-+		reg = <0>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
- &scif2 {
- 	pinctrl-0 = <&scif2_pins>;
- 	pinctrl-names = "default";
--- 
-1.9.1
+    I prefer to explicitly #include what's needed, so I'd leave this alone if 
+you don't mind...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+>> +#include <dt-bindings/power/r8a77970-sysc.h>
+> 
+> You can avoid the dependency on the above header, which will go upstream
+> through a different branch, by hardcoding the power area indices for the
+> initial submission, like you already did for the CPG core clocks.
+
+    OK.
+
+>> +
+>> +/ {
+>> +       compatible = "renesas,r8a77970";
+>> +       #address-cells = <2>;
+>> +       #size-cells = <2>;
+>> +
+>> +       psci {
+>> +               compatible = "arm,psci-1.0";
+> 
+> PSCI 1.0 is backwards compatible with PSI 0.2:
+> 
+>      compatible = "arm,psci-1.0", "arm,psci-0.2";
+
+    OK.
+
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+
+MBR, Sergei
