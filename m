@@ -1,55 +1,40 @@
-From: Stafford Horne <shorne@gmail.com>
-Subject: Re: [PATCH 10/13] openrisc: add simple_smp dts and defconfig for
- simulators
-Date: Wed, 13 Sep 2017 07:15:35 +0900
-Message-ID: <20170912221535.GT2609@lianli.shorne-pla.net>
-References: <cover.1504129273.git.shorne@gmail.com>
- <37f0d48de4690694c18be3d32483dafee0730859.1504129273.git.shorne@gmail.com>
- <20170911223712.GA31546@amd>
- <CAAfxs76zOKM3vs=9_vwpNnceua-THV=h6Y4xAtg-kU=wpRq46g@mail.gmail.com>
- <20170912074702.GA25921@amd>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] gpio: rcar: Add r8a77995 (R-Car D3) support
+Date: Wed, 13 Sep 2017 15:48:49 +0900
+Message-ID: <1505285329-6881-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170912074702.GA25921@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: LKML <linux-kernel@vger.kernel.org>, Openrisc <openrisc@lists.librecores.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonas Bonn <jonas@southpole.se>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 12, 2017 at 09:47:02AM +0200, Pavel Machek wrote:
-> On Tue 2017-09-12 07:55:18, Stafford Horne wrote:
-> > On Tue, Sep 12, 2017 at 7:37 AM, Pavel Machek <pavel@ucw.cz> wrote:
-> > > On Thu 2017-08-31 07:03:11, Stafford Horne wrote:
-> > >> From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-> > >>
-> > [...]
-> > >> +++ b/arch/openrisc/boot/dts/simple_smp.dts
-> > >> @@ -0,0 +1,58 @@
-> > >> +/dts-v1/;
-> > >> +/ {
-> > >> +     compatible = "opencores,or1ksim";
-> > >
-> > > You may want to add some comment on top, explaining what this
-> > > is... and perhaps link to some page documenting how to set up
-> > > qemu/FPGAs?
-> > 
-> > Sure, I can create an entry in Documentation/devicetree/binding
-> > documenting this since its been there for a while but was never properly
-> > documented.
-> 
-> Yep, Documentation/devicetree should be mandatory.
-> 
-> > But, just to be clear, what do you mean by page?  Are you suggesting
-> > linking to a web page?  Or do you mean something in Documentation/...?
-> 
-> Whatever works for you. Maybe Documentation/ would be better...
+This patch adds binding for r8a77995 (R-Car D3). This SoC can use
+"renesas,rcar-gen3-gpio" fallback compatibility. So, this patch
+doesn't modify the gpio-rcar driver.
 
-Actually, I forgot, we have something but its here:
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-  arch/openrisc/README.openrisc
+diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+index 51c86f6..2a1579e 100644
+--- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -14,6 +14,7 @@ Required Properties:
+     - "renesas,gpio-r8a7794": for R8A7794 (R-Car E2) compatible GPIO controller.
+     - "renesas,gpio-r8a7795": for R8A7795 (R-Car H3) compatible GPIO controller.
+     - "renesas,gpio-r8a7796": for R8A7796 (R-Car M3-W) compatible GPIO controller.
++    - "renesas,gpio-r8a77995": for R8A77995 (R-Car D3) compatible GPIO controller.
+     - "renesas,rcar-gen1-gpio": for a generic R-Car Gen1 GPIO controller.
+     - "renesas,rcar-gen2-gpio": for a generic R-Car Gen2 or RZ/G1 GPIO controller.
+     - "renesas,rcar-gen3-gpio": for a generic R-Car Gen3 GPIO controller.
+-- 
+1.9.1
 
-I'll work on some patches to move that to Documentation/ and clean it up.
-
- -Stafford
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
