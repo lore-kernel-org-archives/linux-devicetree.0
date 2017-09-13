@@ -1,77 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/12] mmc: dt-bindings: update Mediatek MMC bindings
-Date: Wed, 13 Sep 2017 09:10:26 -0500
-Message-ID: <20170913141026.43oh4n4foipmahsk@rob-hp-laptop>
-References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
- <1505207272-16983-2-git-send-email-chaotian.jing@mediatek.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings
+ documentation
+Date: Wed, 13 Sep 2017 07:12:34 -0700
+Message-ID: <20170913141234.GA27765@roeck-us.net>
+References: <20170901065818.2037-1-fe@dev.tdt.de>
+ <20170901065818.2037-2-fe@dev.tdt.de>
+ <20170901142622.GC599@roeck-us.net>
+ <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1505207272-16983-2-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+In-Reply-To: <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Florian Eckert <fe@dev.tdt.de>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, jdelvare@suse.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 12, 2017 at 05:07:41PM +0800, Chaotian Jing wrote:
-> Change the comptiable for support of multi-platform
-> Add description for reg
-> Add description for source_cg
-> Add description for mediatek,latch-ck
-
-This is at least the 3rd patch with exactly the same vague subject. 
-Please make the subject somewhat unique.
-
+On Tue, Sep 12, 2017 at 11:20:08AM -0500, Rob Herring wrote:
+> On Fri, Sep 01, 2017 at 07:26:22AM -0700, Guenter Roeck wrote:
+> > On Fri, Sep 01, 2017 at 08:58:18AM +0200, Florian Eckert wrote:
+> > > Document the devicetree bindings for the ltq-cputemp
+> > > 
+> > > Signed-off-by: Florian Eckert <fe@dev.tdt.de>
+> > 
+> > I see nothing special with the bindings, and they are in line with other lantiq
+> > bindings, so I am taking the risk of accepting this patch (and the matching
+> > driver) without waiting for explicit approval from Rob. Rob, scream at me if
+> > that is not ok.
 > 
-> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+> Perhaps the existing one was not well reviewed.
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 4182ea3..405cd06 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
->  and the properties used by the msdc driver.
->  
->  Required properties:
-> -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
-> +- compatible: value should be either of the following.
-> +	"mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
-> +	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
-> +	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
-> +	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-> +- reg: physical base address of the controller and length
->  - interrupts: Should contain MSDC interrupt number
-> -- clocks: MSDC source clock, HCLK
-> -- clock-names: "source", "hclk"
-> +- clocks: MSDC source clock, HCLK, source_cg
-> +- clock-names: "source", "hclk", "source_cg"
+Bummer. Should teach me to never accept DT patches without your review.
+I owe you a beer or two.
 
-All chips support source_cg? That's not backwards compatible for 
-existing compatible strings if the driver requires it.
+Guenter
 
->  - pinctrl-names: should be "default", "state_uhs"
->  - pinctrl-0: should contain default/high speed pin ctrl
->  - pinctrl-1: should contain uhs mode pin ctrl
-> @@ -30,6 +35,8 @@ Optional properties:
->  - mediatek,hs400-cmd-resp-sel-rising:  HS400 command response sample selection
->  				       If present,HS400 command responses are sampled on rising edges.
->  				       If not present,HS400 command responses are sampled on falling edges.
-> +- mediatek,latch-ck: Some projects do not support enhance_rx, need set correct latch-ck to avoid data crc
-
-What's a project?
-
-> +		     error caused by stop clock(fifo full)
->  
->  Examples:
->  mmc0: mmc@11230000 {
-> -- 
-> 1.8.1.1.dirty
+> > 
+> > Thanks,
+> > Guenter
+> > 
+> > > ---
+> > >  Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
+> > > new file mode 100644
+> > > index 000000000000..33fd00a987c7
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
+> > > @@ -0,0 +1,10 @@
+> > > +Lantiq cpu temperatur sensor
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> s/temperatur/temperature/
+> 
+> > > +
+> > > +Requires node properties:
+> > > +- compatible value :
+> > > +	"lantiq,cputemp"
+> 
+> Kind of non-specific. How is this device even accessed without any other 
+> property? 
+> 
+> > > +
+> > > +Example:
+> > > +	cputemp@0 {
+> 
+> unit-address without reg property is not valid.
+> 
+> > > +		compatible = "lantiq,cputemp";
+> > > +	};
+> > > -- 
+> > > 2.11.0
+> > > 
+> > > --
+> > > To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
+> > > the body of a message to majordomo@vger.kernel.org
+> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
