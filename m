@@ -1,57 +1,78 @@
-From: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 1/4] [media] exynos-gsc: Add compatible for Exynos 5250
- and 5420 specific version
-Date: Wed, 13 Sep 2017 20:41:52 +0900
-Message-ID: <1505302915-15699-2-git-send-email-hoegeun.kwon@samsung.com>
-References: <1505302915-15699-1-git-send-email-hoegeun.kwon@samsung.com>
-        <CGME20170913114214epcas2p3158b964f9eec03fa24b4e8f6b919c2cb@epcas2p3.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1505302915-15699-1-git-send-email-hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77995: add GPIO device nodes
+Date: Wed, 13 Sep 2017 13:48:26 +0200
+Message-ID: <CAMuHMdUiZyK3xA=_rYjbAaSYhm=-p5Spug0mmLc=mf+pRfxgoA@mail.gmail.com>
+References: <1505285528-7033-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdX9qowD3039OxPyPoyUsnaq7e=kWyxqDdDqzz5RTZtSwQ@mail.gmail.com> <TY1PR06MB099246295272BBF0F08022C8D86E0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <TY1PR06MB099246295272BBF0F08022C8D86E0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Exynos 5250 and 5420 have different hardware rotation limits.
-Since we have to distinguish between these two, we add different
-compatible(samsung,exynos5250-gsc and samsung,exynos5420-gsc).
+Hi Shimoda-san,
 
-Signed-off-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/media/exynos5-gsc.txt | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+On Wed, Sep 13, 2017 at 11:35 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>> From: Geert Uytterhoeven
+>> Sent: Wednesday, September 13, 2017 6:22 PM
+>> On Wed, Sep 13, 2017 at 8:52 AM, Yoshihiro Shimoda
+>> <yoshihiro.shimoda.uh@renesas.com> wrote:
+>> > --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+>> > +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+>> > @@ -139,6 +139,118 @@
+>> >                         #power-domain-cells = <1>;
+>> >                 };
+>> >
+>> > +               gpio0: gpio@e6050000 {
+>> > +                       compatible = "renesas,gpio-r8a77995",
+>> > +                                    "renesas,rcar-gen3-gpio",
+>> > +                                    "renesas,gpio-rcar";
+>> > +                       reg = <0 0xe6050000 0 0x50>;
+>> > +                       interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+>> > +                       #gpio-cells = <2>;
+>> > +                       gpio-controller;
+>> > +                       gpio-ranges = <&pfc 0 0 9>;
+>> > +                       #interrupt-cells = <2>;
+>> > +                       interrupt-controller;
+>> > +                       clocks = <&cpg CPG_MOD 912>;
+>> > +                       power-domains = <&cpg>;
+>>
+>> All nodes lack the power domain index (32, to be replaced by
+>> R8A77995_PD_ALWAYS_ON later):
+>>
+>>     power-domains = <&sysc 32>;
+>
+> The r8a77995.dtsi file already uses R8A77995_PD_ALWAYS_ON in scif2 node.
 
-diff --git a/Documentation/devicetree/bindings/media/exynos5-gsc.txt b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-index 26ca25b..0d4fdae 100644
---- a/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-+++ b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-@@ -3,8 +3,11 @@
- G-Scaler is used for scaling and color space conversion on EXYNOS5 SoCs.
- 
- Required properties:
--- compatible: should be "samsung,exynos5-gsc" (for Exynos 5250, 5420 and
--	      5422 SoCs) or "samsung,exynos5433-gsc" (Exynos 5433)
-+- compatible: should be one of
-+	      "samsung,exynos5250-gsc"
-+	      "samsung,exynos5420-gsc"
-+	      "samsung,exynos5433-gsc"
-+	      "samsung,exynos5-gsc" (deprecated)
- - reg: should contain G-Scaler physical address location and length.
- - interrupts: should contain G-Scaler interrupt number
- 
-@@ -15,7 +18,7 @@ Optional properties:
- Example:
- 
- gsc_0:  gsc@0x13e00000 {
--	compatible = "samsung,exynos5-gsc";
-+	compatible = "samsung,exynos5250-gsc";
- 	reg = <0x13e00000 0x1000>;
- 	interrupts = <0 85 0>;
- };
--- 
-1.9.1
+In my renesas-drivers it does.
+In Simon's renesas/devel it doesn't, as the R8A77995_PD_* definitions
+go upstream through a different branch than the DTS changes.
+
+> So, should I fix this patch like the following?
+>
+>      power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+
+For now you should use 32.
+However, as soon as Simon merges v4.14-rc1 into renesas/devel, you
+can start on using R8A77995_PD_ALWAYS_ON.
+As that is expected to happen this Monday, he can just postpone applying
+your updated patch until then, so I don't think there's a need to resend a
+version with hardcoded numbers.
+
+For R-Car V3M it's different, as the definitions for that SoC won't appear
+in upstream for another full cycle, i.e. in v4.15-rc1 the earliest.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
