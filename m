@@ -1,44 +1,83 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v12 06/26] v4l: fwnode: Support generic parsing of graph
- endpoints, per port
-Date: Wed, 13 Sep 2017 11:18:21 +0300
-Message-ID: <20170913081821.4kqf2kfmkidkaqah@valkosipuli.retiisi.org.uk>
-References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
- <20170912134200.19556-7-sakari.ailus@linux.intel.com>
- <0b73f576-c37b-ad58-6f74-71ffc3f8f176@xs4all.nl>
- <a6cdf6cb-6abc-ac3b-274d-e8b43e2ac2c6@xs4all.nl>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v5 7/7] dt-bindings: serial: document rs485 bindings for various devices
+Date: Wed, 13 Sep 2017 10:18:33 +0200
+Message-ID: <20170913081833.2740-8-u.kleine-koenig@pengutronix.de>
+References: <20170913081833.2740-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <a6cdf6cb-6abc-ac3b-274d-e8b43e2ac2c6-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <20170913081833.2740-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Atmel USART, Freescale UARTs and OMAP UART all support the rs485 binding
+described in rs485.txt, this commit just makes that explicit.
 
-Thanks for the review.
+Acked-by: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/serial/atmel-usart.txt  | 1 +
+ Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 1 +
+ Documentation/devicetree/bindings/serial/fsl-lpuart.txt   | 1 +
+ Documentation/devicetree/bindings/serial/omap_serial.txt  | 1 +
+ 4 files changed, 4 insertions(+)
 
-On Wed, Sep 13, 2017 at 09:06:11AM +0200, Hans Verkuil wrote:
-> On 09/13/2017 09:01 AM, Hans Verkuil wrote:
-> > On 09/12/2017 03:41 PM, Sakari Ailus wrote:
-> >> This is just like like v4l2_async_notifier_parse_fwnode_endpoints but it
-> >> only parses endpoints on a single port. The behaviour is useful on devices
-> >> that have both sinks and sources, in other words only some of these should
-> >> be parsed.
-> 
-> I forgot to mention that I think the log message can be improved: it is not
-> clear why you would only parse some of the ports for devices that have both
-> sinks and sources. That should be explained better. And probably also in the
-> header documentation.
-
-I'll add both.
-
+diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+index e6e6142e33ac..7c0d6b2f53e4 100644
+--- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
++++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+@@ -24,6 +24,7 @@ Optional properties:
+ 	- dma-names: "rx" for RX channel, "tx" for TX channel.
+ - atmel,fifo-size: maximum number of data the RX and TX FIFOs can store for FIFO
+   capable USARTs.
++- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
+ 
+ <chip> compatible description:
+ - at91rm9200:  legacy USART support
+diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+index 574c3a2c77d5..860a9559839a 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+@@ -9,6 +9,7 @@ Optional properties:
+ - fsl,irda-mode : Indicate the uart supports irda mode
+ - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
+                   in DCE mode by default.
++- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
+ 
+ Please check Documentation/devicetree/bindings/serial/serial.txt
+ for the complete list of generic properties.
+diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+index a1252a047f78..59567b51cf09 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+@@ -16,6 +16,7 @@ Required properties:
+ Optional properties:
+ - dmas: A list of two dma specifiers, one for each entry in dma-names.
+ - dma-names: should contain "tx" and "rx".
++- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
+ 
+ Note: Optional properties for DMA support. Write them both or both not.
+ 
+diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
+index 7a71b5de77d6..43eac675f21f 100644
+--- a/Documentation/devicetree/bindings/serial/omap_serial.txt
++++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
+@@ -19,6 +19,7 @@ Optional properties:
+ - dmas : DMA specifier, consisting of a phandle to the DMA controller
+          node and a DMA channel number.
+ - dma-names : "rx" for receive channel, "tx" for transmit channel.
++- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
+ 
+ Example:
+ 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
