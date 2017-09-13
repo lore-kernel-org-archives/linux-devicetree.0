@@ -1,42 +1,97 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 10/13] openrisc: add simple_smp dts and defconfig for simulators
-Date: Tue, 12 Sep 2017 07:55:18 +0900
-Message-ID: <CAAfxs76zOKM3vs=9_vwpNnceua-THV=h6Y4xAtg-kU=wpRq46g@mail.gmail.com>
-References: <cover.1504129273.git.shorne@gmail.com> <37f0d48de4690694c18be3d32483dafee0730859.1504129273.git.shorne@gmail.com>
- <20170911223712.GA31546@amd>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] spi: Add ADI driver for Spreadtrum platform
+Date: Wed, 13 Sep 2017 14:45:48 -0500
+Message-ID: <20170913194548.qsyfyyboitz3mpcr@rob-hp-laptop>
+References: <d1c5720eccf12ee5ea6bffcbe4c1555680638fcc.1504859001.git.baolin.wang@spreadtrum.com>
+ <4573c724b795c569e1ccea2a1a4f6c0bdd602744.1504859001.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170911223712.GA31546@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4573c724b795c569e1ccea2a1a4f6c0bdd602744.1504859001.git.baolin.wang@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: broonie@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 12, 2017 at 7:37 AM, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> wrote:
-> On Thu 2017-08-31 07:03:11, Stafford Horne wrote:
->> From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
->>
+On Fri, Sep 08, 2017 at 04:33:42PM +0800, Baolin Wang wrote:
+> This patch adds ADI driver based on SPI framework for
+> Spreadtrum SC9860 platform.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+> ---
+
 [...]
->> +++ b/arch/openrisc/boot/dts/simple_smp.dts
->> @@ -0,0 +1,58 @@
->> +/dts-v1/;
->> +/ {
->> +     compatible = "opencores,or1ksim";
->
-> You may want to add some comment on top, explaining what this
-> is... and perhaps link to some page documenting how to set up
-> qemu/FPGAs?
 
-Sure, I can create an entry in Documentation/devicetree/binding
-documenting this since its been there for a while but was never properly
-documented.
+> +++ b/drivers/spi/spi-sprd-adi.c
+> @@ -0,0 +1,419 @@
+> +/*
+> + * Copyright (C) 2017 Spreadtrum Communications Inc.
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 
-But, just to be clear, what do you mean by page?  Are you suggesting
-linking to a web page?  Or do you mean something in Documentation/...?
+Kernel code should generally not be MIT license.
 
--Stafford
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> +static int sprd_adi_drain_fifo(struct sprd_adi *sadi)
+> +{
+> +	u32 timeout = ADI_FIFO_DRAIN_TIMEOUT;
+> +	u32 sts;
+> +
+> +	do {
+> +		sts = readl_relaxed(sadi->base + REG_ADI_ARM_FIFO_STS);
+> +		if (sts & BIT_FIFO_EMPTY)
+> +			break;
+> +
+> +		cpu_relax();
+> +	} while (--timeout);
+
+You can use readl_poll_timeout.
+
+> +
+> +	if (timeout == 0) {
+> +		dev_err(sadi->dev, "drain write fifo timeout\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int sprd_adi_fifo_is_full(struct sprd_adi *sadi)
+> +{
+> +	return readl_relaxed(sadi->base + REG_ADI_ARM_FIFO_STS) & BIT_FIFO_FULL;
+> +}
+> +
+> +static int sprd_adi_read(struct sprd_adi *sadi, u32 reg_paddr, u32 *read_val)
+> +{
+> +	int read_timeout = ADI_READ_TIMEOUT;
+> +	u32 val, rd_addr;
+> +
+> +	/*
+> +	 * Set the physical register address need to read into RD_CMD register,
+> +	 * then ADI controller will start to transfer automatically.
+> +	 */
+> +	writel_relaxed(reg_paddr, sadi->base + REG_ADI_RD_CMD);
+> +
+> +	/*
+> +	 * Wait read operation complete, the BIT_RD_CMD_BUSY will be set
+> +	 * simultaneously when writing read command to register, and the
+> +	 * BIT_RD_CMD_BUSY will be cleared after the read operation is
+> +	 * completed.
+> +	 */
+> +	do {
+> +		val = readl_relaxed(sadi->base + REG_ADI_RD_DATA);
+> +		if (!(val & BIT_RD_CMD_BUSY))
+> +			break;
+> +
+> +		cpu_relax();
+> +	} while (--read_timeout);
+
+readl_poll_timeout
+
+> +
+> +	if (read_timeout == 0) {
+> +		dev_err(sadi->dev, "ADI read timeout\n");
+> +		return -EBUSY;
+> +	}
