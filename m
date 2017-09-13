@@ -1,94 +1,84 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v5 0/3] gpio: uniphier: UniPhier GPIO driver
-Date: Wed, 13 Sep 2017 17:56:27 +0900
-Message-ID: <1505292990-22957-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, linux-gpio@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, David Daney <david.daney@cavium.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 05/11] arm64: dts: renesas: initial R8A77970 SoC device tree
+Date: Wed, 13 Sep 2017 10:59:48 +0200
+Message-ID: <CAMuHMdUzO_oHscsLntd0VaKAOCXU00MyidvZ_A-rR2+UHtKc9w@mail.gmail.com>
+References: <20170912210523.663877115@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170912210523.663877115@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sergei,
 
-This series adds UniPhier GPIO driver.
+On Tue, Sep 12, 2017 at 10:37 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> The initial R8A77970 SoC device tree including Cortex-A53 CPU, GIC, timer,
+> CPG, RST, and SYSC.
+>
+> Based on the original (and large) patch by Daisuke Matsushita
+> <daisuke.matsushita.ns@hitachi.com>.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77970.dtsi |  126 ++++++++++++++++++++++++++++++
+>  1 file changed, 126 insertions(+)
+>
+> Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> ===================================================================
+> --- /dev/null
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> @@ -0,0 +1,126 @@
+> +/*
+> + * Device Tree Source for the r8a77970 SoC
+> + *
+> + * Copyright (C) 2016-2017 Renesas Electronics Corp.
+> + * Copyright (C) 2017 Cogent Embedded, Inc.
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
 
-The interrupt controller part is implemented by using hierarchy irqdomain.
+arm-gic.h includes irq.h.
 
-My problem is mapping of IRQ from this controller to the parent
-irqchip is not contiguous.
+> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +#include <dt-bindings/power/r8a77970-sysc.h>
 
-  IRQ line of GPIO  --->  Parent interrupt
-        0           --->     48
-        1           --->     49
-                ...
-        15          --->     63
-        16          --->    154
-        17          --->    155
-                ...
-        20          --->    158
-        21          --->    217
-        22          --->    218
-                ...
+You can avoid the dependency on the above header, which will go upstream
+through a different branch, by hardcoding the power area indices for the
+initial submission, like you already did for the CPG core clocks.
 
-At first, I tried to hard-code parent irq numbers because it easily avoids
-the statically allocated IRQ resource problem.
-(https://lkml.org/lkml/2017/7/6/758)
-But, hard-coding interrupts made Linus Walleij unhappy.
+> +
+> +/ {
+> +       compatible = "renesas,r8a77970";
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       psci {
+> +               compatible = "arm,psci-1.0";
 
-In v4, I tried to use the new API irq_domain_push_irq().
-I needed to change it to make it work for DT, but seems controversial
-in the irqdomain subsystem review.
+PSCI 1.0 is backwards compatible with PSI 0.2:
 
-In v5, I came up with another solution.  The idea is simple.
-.alloc() hook can call of_irq_parse_one() to retrieve the irq information
-from DT property.
-If virq is already allocated, we can simply dispose it and re-alloc it
-in hierarchy domain manner.
+    compatible = "arm,psci-1.0", "arm,psci-0.2";
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Changes in v5:
-  - Split into a separate patch for DT binding
-  - Add a new patch to export of_phandle_args_to_fwspec
-  - Split DT binding into a separate file
-  - v4 depends on some patches that change irq_domain_push_irq(), but
-    they got negative feedback in the irqdomain subsystem review.
-    Yet another approach here.  Parse "interrupts" property in
-    .alloc() hook.  If the parent IRQ is already mapped, dispose it
-    and re-alloc in irqdomain manner.
+Gr{oetje,eeting}s,
 
-Changes in v4:
-  - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
-  - Reimplement irqchip part by using irq_domain_push_irq()
+                        Geert
 
-Changes in v3:
-  - Add .irq_set_affinity() hook
-  - Use irq_domain_create_hierarchy() instead of legacy
-    irq_domain_add_hierarchy()
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Changes in v2:
-  - Remove +32 offset for parent interrupts to follow the GIC
-    binding convention
-  - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
-  - Allocate gpio_chip statically because just one instance is
-    supported
-  - Fix suspend and resume hooks
-
-Masahiro Yamada (3):
-  irqdomain: export of_phandle_args_to_fwspec
-  dt-bindings: gpio: uniphier: add UniPhier GPIO binding
-  gpio: uniphier: add UniPhier GPIO controller driver
-
- .../devicetree/bindings/gpio/gpio-uniphier.txt     |  43 ++
- MAINTAINERS                                        |   1 +
- drivers/gpio/Kconfig                               |   8 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-uniphier.c                       | 504 +++++++++++++++++++++
- include/dt-bindings/gpio/uniphier-gpio.h           |  18 +
- include/linux/irqdomain.h                          |   2 +
- kernel/irq/irqdomain.c                             |   5 +-
- 8 files changed, 580 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
- create mode 100644 drivers/gpio/gpio-uniphier.c
- create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
-
--- 
-2.7.4
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
