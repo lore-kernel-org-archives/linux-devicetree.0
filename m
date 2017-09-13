@@ -1,26 +1,28 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] DT: net: document Bluetooth bindings in one place
-Date: Wed, 13 Sep 2017 11:21:13 -0500
-Message-ID: <20170913162113.exrujqwdecq524zf@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/3] dt-bindings: soc: qcom: Add local-bd-address
+ property to WCNSS-BT
+Date: Wed, 13 Sep 2017 11:21:47 -0500
+Message-ID: <20170913162147.chbv4yhcoqiuddbv@rob-hp-laptop>
 References: <1504637923-21652-1-git-send-email-loic.poulain@linaro.org>
+ <1504637923-21652-2-git-send-email-loic.poulain@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1504637923-21652-1-git-send-email-loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lpoulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1504637923-21652-2-git-send-email-loic.poulain@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Loic Poulain <loic.poulain@linaro.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 05, 2017 at 08:58:41PM +0200, Loic Poulain wrote:
-> From: lpoulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, Sep 05, 2017 at 08:58:42PM +0200, Loic Poulain wrote:
+> Add optional local-bd-address property which is a 6-byte array
+> storing the assigned BD address. Since having a unique BD address
+> is critical, a per-device property value should be allocated.
+> This property is usually added by the boot loader which has access
+> to the provisioned data.
 > 
-> In the same way as Ethernet, gather the Bluetooth related bindings in
-> one file. Introduce the bluetooth-bd-address property which can be used
-> to store the assigned BD address.
-> 
-> Signed-off-by: lpoulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
 > ---
 >  v2: Set device as unconfigured if default address detected
 >      Add warning if BD addr retrieved from DT
@@ -34,8 +36,7 @@ On Tue, Sep 05, 2017 at 08:58:41PM +0200, Loic Poulain wrote:
 >      Add bluetooth.txt for common BT bindings
 >      expect local-bd-address in little-endian format
 > 
->  Documentation/devicetree/bindings/net/bluetooth.txt | 5 +++++
->  1 file changed, 5 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/bluetooth.txt
+>  Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
