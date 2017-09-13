@@ -1,139 +1,48 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v12 18/26] v4l: fwnode: Add a helper function for parsing
- generic references
-Date: Wed, 13 Sep 2017 09:27:34 +0200
-Message-ID: <020b9c86-dd73-3516-4a0e-827db9680b55@xs4all.nl>
-References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
- <20170912134200.19556-19-sakari.ailus@linux.intel.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/2] Renesas R8A77970 CPG/MSSR clock support
+Date: Wed, 13 Sep 2017 09:28:29 +0200
+Message-ID: <20170913072829.GB6756@verge.net.au>
+References: <20170908213418.823028011@cogentembedded.com>
+ <CAMuHMdUy_UGZsa87e-=SuYutt5sXd4ZTiZKLfLGfD2css3RPcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170912134200.19556-19-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUy_UGZsa87e-=SuYutt5sXd4ZTiZKLfLGfD2css3RPcw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2017 03:41 PM, Sakari Ailus wrote:
-> Add function v4l2_fwnode_reference_count() for counting external
-
-???? There is no function v4l2_fwnode_reference_count()?!
-
-> references and v4l2_fwnode_reference_parse() for parsing them as async
-> sub-devices.
+On Mon, Sep 11, 2017 at 04:38:43PM +0200, Geert Uytterhoeven wrote:
+> Hi Sergei,
 > 
-> This can be done on e.g. flash or lens async sub-devices that are not part
-> of but are associated with a sensor.
+> On Fri, Sep 8, 2017 at 11:34 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> >    Here's the set of 2 patches against the 'clk-next' branch of CLK group's
+> > 'linux.git' repo.
 > 
-> struct v4l2_async_notifier.max_subdevs field is added to contain the
-> maximum number of sub-devices in a notifier to reflect the memory
-> allocated for the subdevs array.
-
-You forgot to remove this outdated paragraph.
-
+> Thank you, looks good!
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  drivers/media/v4l2-core/v4l2-fwnode.c | 69 +++++++++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
+> > As the DT patches in the R8A77970/Eagle board support series
+> > depend on the patch #1 of this series, it might make sense to merge this patch
+> > to the 'renesas.git' repo as well...
+> >
+> > [1/2] dt-bindings: clock: add R8A77970 CPG core clock definitions
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index 44ee35f6aad5..a32473f95be1 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -498,6 +498,75 @@ int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
->  }
->  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
->  
-> +/*
-> + * v4l2_fwnode_reference_parse - parse references for async sub-devices
-> + * @dev: the device node the properties of which are parsed for references
-> + * @notifier: the async notifier where the async subdevs will be added
-> + * @prop: the name of the property
-> + *
-> + * Return: 0 on success
-> + *	   -ENOENT if no entries were found
-> + *	   -ENOMEM if memory allocation failed
-> + *	   -EINVAL if property parsing failed
-> + */
-> +static int v4l2_fwnode_reference_parse(
-> +	struct device *dev, struct v4l2_async_notifier *notifier,
-> +	const char *prop)
-> +{
-> +	struct fwnode_reference_args args;
-> +	unsigned int index;
-> +	int ret;
-> +
-> +	for (index = 0;
-> +	     !(ret = fwnode_property_get_reference_args(
-> +		       dev_fwnode(dev), prop, NULL, 0, index, &args));
-> +	     index++)
-> +		fwnode_handle_put(args.fwnode);
-> +
-> +	if (!index)
-> +		return -ENOENT;
-> +
-> +	/*
-> +	 * To-do: handle -ENODATA when "device property: Align return
-> +	 * codes of acpi_fwnode_get_reference_with_args" is merged.
-> +	 */
-> +	if (ret != -ENOENT && ret != -ENODATA)
-
-So while that patch referenced in the To-do above is not merged yet,
-what does fwnode_property_get_reference_args return? ENOENT or ENODATA?
-Or ENOENT now and ENODATA later? Or vice versa?
-
-I can't tell based on that information whether this code is correct or not.
-
-The comment needs to explain this a bit better.
-
-> +		return ret;
-> +
-> +	ret = v4l2_async_notifier_realloc(notifier,
-> +					  notifier->num_subdevs + index);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (index = 0; !fwnode_property_get_reference_args(
-> +		     dev_fwnode(dev), prop, NULL, 0, index, &args);
-> +	     index++) {
-> +		struct v4l2_async_subdev *asd;
-> +
-> +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-> +			ret = -EINVAL;
-> +			goto error;
-> +		}
-> +
-> +		asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-> +		if (!asd) {
-> +			ret = -ENOMEM;
-> +			goto error;
-> +		}
-> +
-> +		notifier->subdevs[notifier->num_subdevs] = asd;
-> +		asd->match.fwnode.fwnode = args.fwnode;
-> +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> +		notifier->num_subdevs++;
-> +	}
-> +
-> +	return 0;
-> +
-> +error:
-> +	fwnode_handle_put(args.fwnode);
-> +	return ret;
-> +}
-> +
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
->  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> The modern way to avoid this dependency is to use hardcoded numbers in
+> the initial submission of the DTS, cfr.
+> https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git/commit/?h=arm64-dt-for-v4.15&id=d917e0b24811eadeba419ba7318b967ee15933b3
 > 
+> After the definitions have hit upstream, you can replace the hardcoded
+> numbers by symbols, cfr.
+> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=topic/r8a77995-integration&id=d3f6987db28a4657bf3304eeeb8e2cd8dd510ad0
+> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=topic/r8a77995-integration&id=81426223583d5575767c77684be28c40034785bd
+> 
+> So I don't think Simon will merge the core clock definitions patch, unless
+> you plan to submit a full DTS describing the whole SoC in the initial
+> submissiong.
 
-Regards,
-
-	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I would prefer if the DT patches followed the scheme described by
+Geert such that they do not depend on any part of this series. I expect
+that will allow the smoothest path for acceptance of those patches.
