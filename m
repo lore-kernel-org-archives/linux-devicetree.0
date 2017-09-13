@@ -1,72 +1,181 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 7/7] dt-bindings: serial: document rs485 bindings for
- various devices
-Date: Wed, 13 Sep 2017 11:54:28 +0200
-Message-ID: <20170913095428.xryd526xjyuiecab@pengutronix.de>
-References: <20170913081833.2740-1-u.kleine-koenig@pengutronix.de>
- <20170913081833.2740-8-u.kleine-koenig@pengutronix.de>
- <f0f3971d-3166-ee28-7978-a958f7b7835e@gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v12 19/26] v4l: fwnode: Add a helper function to obtain
+ device / interger references
+Date: Wed, 13 Sep 2017 13:04:50 +0300
+Message-ID: <20170913100449.7pgg6pdglo3b43ml@valkosipuli.retiisi.org.uk>
+References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
+ <20170912134200.19556-20-sakari.ailus@linux.intel.com>
+ <f92245da-0823-c95e-2208-b038f1bbb869@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f0f3971d-3166-ee28-7978-a958f7b7835e-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Arkver <ian.arkver.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <f92245da-0823-c95e-2208-b038f1bbb869@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 10:52:30AM +0100, Ian Arkver wrote:
-> On 13/09/17 09:18, Uwe Kleine-König wrote:
-> > Atmel USART, Freescale UARTs and OMAP UART all support the rs485 binding
-> > described in rs485.txt, this commit just makes that explicit.
-> > 
-> > Acked-by: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >   Documentation/devicetree/bindings/serial/atmel-usart.txt  | 1 +
-> >   Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 1 +
-> >   Documentation/devicetree/bindings/serial/fsl-lpuart.txt   | 1 +
-> >   Documentation/devicetree/bindings/serial/omap_serial.txt  | 1 +
-> >   4 files changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
-> > index e6e6142e33ac..7c0d6b2f53e4 100644
-> > --- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
-> > +++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
-> > @@ -24,6 +24,7 @@ Optional properties:
-> >   	- dma-names: "rx" for RX channel, "tx" for TX channel.
-> >   - atmel,fifo-size: maximum number of data the RX and TX FIFOs can store for FIFO
-> >     capable USARTs.
-> > +- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
-> >   <chip> compatible description:
-> >   - at91rm9200:  legacy USART support
-> > diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> > index 574c3a2c77d5..860a9559839a 100644
-> > --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> > +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> > @@ -9,6 +9,7 @@ Optional properties:
-> >   - fsl,irda-mode : Indicate the uart supports irda mode
-> >   - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
-> >                     in DCE mode by default.
-> > +- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
+Hi Hans,
+
+On Wed, Sep 13, 2017 at 09:57:52AM +0200, Hans Verkuil wrote:
+> The subject still has the 'interger' typo.
 > 
-> imx.c ignores the values in delay_rts_before_send and delay_rts_after_send,
-> so maybe we shouldn't mention rs485-rts-delay here?
+> On 09/12/2017 03:41 PM, Sakari Ailus wrote:
+> > v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
+> > the device's own fwnode, it will follow child fwnodes with the given
+> > property -- value pair and return the resulting fwnode.
+> 
+> As suggested before: 'property-value' is easier to read than ' -- '.
 
-I have a patch here fixing that. Hmm, even without this implemented it
-is IMHO fine to document it here.
+Oops. I must have missed some of your comments while making changes.
+Apologies for that.
 
-Best regards
-Uwe
+> 
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-fwnode.c | 145 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 145 insertions(+)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > index a32473f95be1..a07599a8f647 100644
+> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > @@ -567,6 +567,151 @@ static int v4l2_fwnode_reference_parse(
+> >  	return ret;
+> >  }
+> >  
+> > +/*
+> > + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
+> > + *					arguments
+> > + * @dev: struct device pointer
+> > + * @notifier: notifier for @dev
+> > + * @prop: the name of the property
+> 
+> @index is not documented.
+
+Fixed.
+
+> 
+> > + * @props: the array of integer property names
+> > + * @nprops: the number of integer properties
+> 
+> properties -> property names in @props
+
+Fixed.
+
+> 
+> > + *
+> > + * Find fwnodes referred to by a property @prop, then under that iteratively
+> > + * follow each child node which has a property the value matches the integer
+> 
+> "the value" -> "whose value" or "with a value that"
+> 
+> At least, I think that's what you mean here.
+> 
+> How is @props/@nprops used?
+> 
+> > + * argument at an index.
+> 
+> I assume this should be "the @index"?
+
+Um, no. This is the index to the @props array. I'll clarify the
+documentation for this function.
+
+> 
+> > + *
+> > + * Return: 0 on success
+> > + *	   -ENOENT if no entries (or the property itself) were found
+> > + *	   -EINVAL if property parsing otherwisefailed
+> 
+> Missing space before "failed"
+
+Fixed.
+
+> 
+> > + *	   -ENOMEM if memory allocation failed
+> > + */
+> > +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
+> > +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
+> > +	const char **props, unsigned int nprops)
+> > +{
+> > +	struct fwnode_reference_args fwnode_args;
+> > +	unsigned int *args = fwnode_args.args;
+> > +	struct fwnode_handle *child;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Obtain remote fwnode as well as the integer arguments.
+> > +	 *
+> > +	 * To-do: handle -ENODATA when "device property: Align return
+> > +	 * codes of acpi_fwnode_get_reference_with_args" is merged.
+> > +	 */
+> > +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
+> > +						 index, &fwnode_args);
+> > +	if (ret)
+> > +		return ERR_PTR(ret == -ENODATA ? -ENOENT : ret);
+> > +
+> > +	/*
+> > +	 * Find a node in the tree under the referred fwnode corresponding the
+> 
+> the -> to the
+
+Fixed.
+
+> 
+> > +	 * integer arguments.
+> > +	 */
+> > +	fwnode = fwnode_args.fwnode;
+> > +	while (nprops) {
+> 
+> This can be 'while (nprops--) {'.
+
+Changed.
+
+> 
+> > +		u32 val;
+> > +
+> > +		/* Loop over all child nodes under fwnode. */
+> > +		fwnode_for_each_child_node(fwnode, child) {
+> > +			if (fwnode_property_read_u32(child, *props, &val))
+> > +				continue;
+> > +
+> > +			/* Found property, see if its value matches. */
+> > +			if (val == *args)
+> > +				break;
+> > +		}
+> > +
+> > +		fwnode_handle_put(fwnode);
+> > +
+> > +		/* No property found; return an error here. */
+> > +		if (!child) {
+> > +			fwnode = ERR_PTR(-ENOENT);
+> > +			break;
+> > +		}
+> > +
+> > +		props++;
+> > +		args++;
+> > +		fwnode = child;
+> > +		nprops--;
+> > +	}
+> > +
+> > +	return fwnode;
+> > +}
+> 
+> You really need to add an ACPI example as comment for this source code.
+
+I can copy the relevant portions of the LED flash example, and remove them
+once the example is merged to mainline. That example really doesn't belong
+here though.
+
+> 
+> I still don't understand the code. I know you pointed me to an example,
+> but I can't remember/find what it was. Either copy the example here or
+> point to the file containing the example (copying is best IMHO).
+
+:-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
