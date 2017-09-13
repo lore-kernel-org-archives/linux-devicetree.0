@@ -1,142 +1,148 @@
-Return-Path: <SRS0=sIrt=AW=google.com=wak@kernel.org>
+Return-Path: <SRS0=ik3/=AO=redhat.com=hdegoede@kernel.org>
+Subject: Re: [PATCH v2 10/11] staging: typec: fusb302: Hook up mux support
+ using tcpc_gen_mux support
+References: <20170905164221.11266-1-hdegoede@redhat.com>
+ <20170905164221.11266-11-hdegoede@redhat.com>
+ <20170912222027.hzpejmmxkwbw6seu@rob-hp-laptop>
+ <e3c8476e-9795-804b-b09f-812045d58976@redhat.com>
+ <CAL_JsqLNByxG-S1hokoVVA7xeouQdTNkCOouGp=r8h8Sx5BMxw@mail.gmail.com>
+ <df2008cc-a73a-5898-1ade-e0c90c759584@redhat.com>
+ <CAL_JsqJ=tonhAWp7eO79zTOzV6mu0ER6hPMigqyB754L1Z2UhA@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e442bb48-a038-4e2e-6950-4220e28692d3@redhat.com>
+Date: Wed, 13 Sep 2017 17:48:25 +0200
 MIME-Version: 1.0
-References: <20170905202339.20732-1-wak@google.com> <20170921095930.4b473f91@bbrezillon>
-In-Reply-To: <20170921095930.4b473f91@bbrezillon>
-From: William Kennington <wak@google.com>
-Date: Thu, 21 Sep 2017 19:15:13 +0000
-Message-ID: <CAPnigKmBujCoKdtXwnK6YsU=YvXM+MaDvDvKpUXEVgHzOC-VEw@mail.gmail.com>
-Subject: Re: [PATCH] mtd: powernv: Support MTD_NO_ERASE
-Content-Type: multipart/alternative; boundary="001a1141ad8418d9150559b7eac4"
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyril Bur <cyrilbur@gmail.com>, mpe@ellerman.id.au
+In-Reply-To: <CAL_JsqJ=tonhAWp7eO79zTOzV6mu0ER6hPMigqyB754L1Z2UhA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux USB List <linux-usb@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a1141ad8418d9150559b7eac4
-Content-Type: text/plain; charset="UTF-8"
+Hi,
 
-+Cyril Bur and
+On 13-09-17 17:07, Rob Herring wrote:
+> On Wed, Sep 13, 2017 at 9:06 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi,
+>>
+>>
+>> On 13-09-17 15:38, Rob Herring wrote:
+>>>
+>>> On Wed, Sep 13, 2017 at 3:56 AM, Hans de Goede <hdegoede@redhat.com>
+>>> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>>
+>>>> On 13-09-17 00:20, Rob Herring wrote:
+>>>>>
+>>>>>
+>>>>> On Tue, Sep 05, 2017 at 06:42:20PM +0200, Hans de Goede wrote:
+>>>>>>
+>>>>>>
+>>>>>> Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
+>>>>>> to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
+>>>>>>
+>>>>>> Also document the mux-names used by the generic tcpc_mux_dev code in
+>>>>>> our devicetree bindings.
+>>>>>>
+>>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>>> Cc: devicetree@vger.kernel.org
+>>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>>>> ---
+>>>>>>     Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
+>>>>>>     drivers/staging/typec/fusb302/fusb302.c               | 11
+>>>>>> ++++++++++-
+>>>>>>     2 files changed, 13 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>>>>> b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>>>>> index 472facfa5a71..63d639eadacd 100644
+>>>>>> --- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>>>>> @@ -6,6 +6,9 @@ Required properties :
+>>>>>>     - interrupts             : Interrupt specifier
+>>>>>>       Optional properties :
+>>>>>> +- mux-controls           : List of mux-ctrl-specifiers containing 1 or
+>>>>>> 2
+>>>>>> muxes
+>>>>>> +- mux-names              : "type-c-mode-mux" when using 1 mux, or
+>>>>>> +                           "type-c-mode-mux", "usb-role-mux" when
+>>>>>> using
+>>>>>> 2 muxes
+>>>>>
+>>>>>
+>>>>>
+>>>>> I'm not sure this is the right place for this. The mux is outside the
+>>>>> FUSB302. In a type-C connector node or USB phy node would make more
+>>>>> sense to me.
+>>>>
+>>>>
+>>>>
+>>>> The mux certainly does not belong in the USB phy node, it sits between
+>>>> the
+>>>> USB PHY
+>>>> and the Type-C connector and can for example also mux the Type-C pins to
+>>>> a
+>>>> Display
+>>>> Port PHY.
+>>>
+>>>
+>>> Thinking about this some more, the mux(es) should be its own node(s).
+>>> Then the question is where to put the nodes.
+>>
+>>
+>> Right, the mux will be its own node per
+>> Documentation/devicetree/bindings/mux/mux-controller.txt
+>> the bindings bit this patch is adding is only adding phandles pointing
+>> to that mux-node as the fusb302 "consumes" the mux functionality.
+>>
+>> So as such (the fusb302 is the component which should control the mux)
+>> I do believe that the bindings this patch adds are correct.
+> 
+> Humm, that's not how the mux binding works. The mux controller is what
+> drives the mux select lines and is the provider. The consumer is the
+> mux device itself. What decides the mux state is determined by what
+> you are muxing, not which node has mux-controls property.
+> 
+> By putting mux-controls in fusb302 node, you are saying fusb302 is a
+> mux (or contains a mux).
+> 
+> 
+>>>> As for putting it in a type-C connector node, currently we do not have
+>>>> such
+>>>> a node,
+>>>
+>>>
+>>> Well, you should. Type-C connectors are certainly complicated enough
+>>> that we'll need one. Plus we already require connector nodes for
+>>> display outputs, so what do we do once you add display muxing?
+>>
+>>
+>> An interesting question, I'm working on this for x86 + ACPI boards actually,
+>> not a board using DT I've been adding DT bindings docs for device-properties
+>> I use because that seems like the right thing to do where the binding is
+>> obvious
+>> (which I believe it is in this case as the fusb302 is the mux consumer) and
+>> because the device-property code should work the same on x86 + ACPI
+>> (where some platform-specific drivers attach the device properties) and
+>> on e.g. ARM + DT.
+>>
+>> The rest should probably be left to be figured out when an actual DT
+>> using device using the fusb302 or another Type-C controller shows up.
+> 
+> Well this is a new one (maybe, I suppose others have sneaked by). If
+> ACPI folks want to use DT bindings, then what do I care. But I have no
+> interest in reviewing ACPI properties. The whole notion of sharing
+> bindings between DT and ACPI beyond anything trivial is flawed IMO.
+> The ptifalls have been discussed multiple times before, so I'm not
+> going to repeat them here.
 
-Not sure what you mean by mainline, but the commit is in the master branch
-at
-https://github.com/open-power/skiboot/commit/ba99af9b149d02438347b055e6e7d6bd15e33551
+Ok, so shall I just drop the Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+part of this patch then ?
 
-I'm unsure about the documentation of the properties as I'm not really the
-maintainer of any of the code on either side. I just added this DT property
-for plumbing through the NO_ERASE flag. I added Cyril and Michael as they
-both work closely with this driver and could comment better than I could.
+Regards,
 
-- William
-
-On Thu, Sep 21, 2017 at 12:59 AM Boris Brezillon <
-boris.brezillon@free-electrons.com> wrote:
-
-> +the DT maintainers
->
-> On Tue,  5 Sep 2017 13:23:39 -0700
-> "William A. Kennington III" <wak@google.com> wrote:
->
-> > As of skiboot@ba99af9b149d02438347b055e6e7d6bd15e33551, we now support
->
-> I didn't find this commit in mainline.
->
-> > adding a device tree entry which marks a flash device as not needing
-> > erase. This patch adds support for setting MTD_NO_ERASE on powernvflash
-> > devices which have the property no-erase.
-> >
-> > Signed-off-by: William A. Kennington III <wak@google.com>
-> > ---
-> >  drivers/mtd/devices/powernv_flash.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/mtd/devices/powernv_flash.c
-> b/drivers/mtd/devices/powernv_flash.c
-> > index f5396f26ddb4..fab9f9121b4c 100644
-> > --- a/drivers/mtd/devices/powernv_flash.c
-> > +++ b/drivers/mtd/devices/powernv_flash.c
-> > @@ -196,6 +196,8 @@ static int powernv_flash_set_driver_info(struct
-> device *dev,
-> >       mtd->name = of_get_property(dev->of_node, "name", NULL);
-> >       mtd->type = MTD_NORFLASH;
-> >       mtd->flags = MTD_WRITEABLE;
-> > +     if (of_property_read_bool(dev->of_node, "no-erase"))
-> > +             mtd->flags |= MTD_NO_ERASE;
->
-> I don't see this property document in a DT binding doc, which is
-> mandatory. Actually, there's no DT bindings doc at all for the
-> 'ibm,opal-flash' device in mainline, is this normal?
->
-> >       mtd->size = size;
-> >       mtd->erasesize = erase_size;
-> >       mtd->writebufsize = mtd->writesize = 1;
->
->
-
---001a1141ad8418d9150559b7eac4
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">+Cyril Bur and=C2=A0<div><br></div><div>Not sure what you =
-mean by mainline, but the commit is in the master branch at</div><div><a hr=
-ef=3D"https://github.com/open-power/skiboot/commit/ba99af9b149d02438347b055=
-e6e7d6bd15e33551" target=3D"_blank">https://github.com/open-power/skiboot/c=
-ommit/ba99af9b149d02438347b055e6e7d6bd15e33551</a><br></div><div><br></div>=
-<div>I&#39;m unsure about the documentation of the properties as I&#39;m no=
-t really the maintainer of any of the code on either side. I just added thi=
-s DT property for plumbing through the NO_ERASE flag. I added Cyril and Mic=
-hael as they both work closely with this driver and could comment better th=
-an I could.</div><div><br></div><div>- William</div><br><div class=3D"gmail=
-_quote"><div dir=3D"ltr">On Thu, Sep 21, 2017 at 12:59 AM Boris Brezillon &=
-lt;<a href=3D"mailto:boris.brezillon@free-electrons.com" target=3D"_blank">=
-boris.brezillon@free-electrons.com</a>&gt; wrote:<br></div><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pad=
-ding-left:1ex">+the DT maintainers<br>
-<br>
-On Tue,=C2=A0 5 Sep 2017 13:23:39 -0700<br>
-&quot;William A. Kennington III&quot; &lt;<a href=3D"mailto:wak@google.com"=
- target=3D"_blank">wak@google.com</a>&gt; wrote:<br>
-<br>
-&gt; As of skiboot@ba99af9b149d02438347b055e6e7d6bd15e33551, we now support=
-<br>
-<br>
-I didn&#39;t find this commit in mainline.<br>
-<br>
-&gt; adding a device tree entry which marks a flash device as not needing<b=
-r>
-&gt; erase. This patch adds support for setting MTD_NO_ERASE on powernvflas=
-h<br>
-&gt; devices which have the property no-erase.<br>
-&gt;<br>
-&gt; Signed-off-by: William A. Kennington III &lt;<a href=3D"mailto:wak@goo=
-gle.com" target=3D"_blank">wak@google.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 drivers/mtd/devices/powernv_flash.c | 2 ++<br>
-&gt;=C2=A0 1 file changed, 2 insertions(+)<br>
-&gt;<br>
-&gt; diff --git a/drivers/mtd/devices/powernv_flash.c b/drivers/mtd/devices=
-/powernv_flash.c<br>
-&gt; index f5396f26ddb4..fab9f9121b4c 100644<br>
-&gt; --- a/drivers/mtd/devices/powernv_flash.c<br>
-&gt; +++ b/drivers/mtd/devices/powernv_flash.c<br>
-&gt; @@ -196,6 +196,8 @@ static int powernv_flash_set_driver_info(struct de=
-vice *dev,<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0mtd-&gt;name =3D of_get_property(dev-&gt;of_=
-node, &quot;name&quot;, NULL);<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0mtd-&gt;type =3D MTD_NORFLASH;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0mtd-&gt;flags =3D MTD_WRITEABLE;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (of_property_read_bool(dev-&gt;of_node, &quot;=
-no-erase&quot;))<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mtd-&gt;flags |=3D MT=
-D_NO_ERASE;<br>
-<br>
-I don&#39;t see this property document in a DT binding doc, which is<br>
-mandatory. Actually, there&#39;s no DT bindings doc at all for the<br>
-&#39;ibm,opal-flash&#39; device in mainline, is this normal?<br>
-<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0mtd-&gt;size =3D size;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0mtd-&gt;erasesize =3D erase_size;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0mtd-&gt;writebufsize =3D mtd-&gt;writesize =
-=3D 1;<br>
-<br>
-</blockquote></div></div>
-
---001a1141ad8418d9150559b7eac4--
+Hans
