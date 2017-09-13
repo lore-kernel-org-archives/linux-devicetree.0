@@ -1,230 +1,94 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 10/11] staging: typec: fusb302: Hook up mux support
- using tcpc_gen_mux support
-Date: Wed, 13 Sep 2017 10:07:59 -0500
-Message-ID: <CAL_JsqJ=tonhAWp7eO79zTOzV6mu0ER6hPMigqyB754L1Z2UhA@mail.gmail.com>
-References: <20170905164221.11266-1-hdegoede@redhat.com> <20170905164221.11266-11-hdegoede@redhat.com>
- <20170912222027.hzpejmmxkwbw6seu@rob-hp-laptop> <e3c8476e-9795-804b-b09f-812045d58976@redhat.com>
- <CAL_JsqLNByxG-S1hokoVVA7xeouQdTNkCOouGp=r8h8Sx5BMxw@mail.gmail.com> <df2008cc-a73a-5898-1ade-e0c90c759584@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <df2008cc-a73a-5898-1ade-e0c90c759584@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux USB List <linux-usb@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: [PATCH v2 0/4] BCM283x Camera Receiver driver
+Date: Wed, 13 Sep 2017 16:07:45 +0100
+Message-ID: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 9:06 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi,
->
->
-> On 13-09-17 15:38, Rob Herring wrote:
->>
->> On Wed, Sep 13, 2017 at 3:56 AM, Hans de Goede <hdegoede@redhat.com>
->> wrote:
->>>
->>> Hi,
->>>
->>>
->>> On 13-09-17 00:20, Rob Herring wrote:
->>>>
->>>>
->>>> On Tue, Sep 05, 2017 at 06:42:20PM +0200, Hans de Goede wrote:
->>>>>
->>>>>
->>>>> Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
->>>>> to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
->>>>>
->>>>> Also document the mux-names used by the generic tcpc_mux_dev code in
->>>>> our devicetree bindings.
->>>>>
->>>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>> Cc: devicetree@vger.kernel.org
->>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>> ---
->>>>>    Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
->>>>>    drivers/staging/typec/fusb302/fusb302.c               | 11
->>>>> ++++++++++-
->>>>>    2 files changed, 13 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>>>> b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>>>> index 472facfa5a71..63d639eadacd 100644
->>>>> --- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>>>> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>>>> @@ -6,6 +6,9 @@ Required properties :
->>>>>    - interrupts             : Interrupt specifier
->>>>>      Optional properties :
->>>>> +- mux-controls           : List of mux-ctrl-specifiers containing 1 or
->>>>> 2
->>>>> muxes
->>>>> +- mux-names              : "type-c-mode-mux" when using 1 mux, or
->>>>> +                           "type-c-mode-mux", "usb-role-mux" when
->>>>> using
->>>>> 2 muxes
->>>>
->>>>
->>>>
->>>> I'm not sure this is the right place for this. The mux is outside the
->>>> FUSB302. In a type-C connector node or USB phy node would make more
->>>> sense to me.
->>>
->>>
->>>
->>> The mux certainly does not belong in the USB phy node, it sits between
->>> the
->>> USB PHY
->>> and the Type-C connector and can for example also mux the Type-C pins to
->>> a
->>> Display
->>> Port PHY.
->>
->>
->> Thinking about this some more, the mux(es) should be its own node(s).
->> Then the question is where to put the nodes.
->
->
-> Right, the mux will be its own node per
-> Documentation/devicetree/bindings/mux/mux-controller.txt
-> the bindings bit this patch is adding is only adding phandles pointing
-> to that mux-node as the fusb302 "consumes" the mux functionality.
->
-> So as such (the fusb302 is the component which should control the mux)
-> I do believe that the bindings this patch adds are correct.
+Hi All.
 
-Humm, that's not how the mux binding works. The mux controller is what
-drives the mux select lines and is the provider. The consumer is the
-mux device itself. What decides the mux state is determined by what
-you are muxing, not which node has mux-controls property.
+This is v2 for adding a V4L2 subdevice driver for the CSI2/CCP2 camera
+receiver peripheral on BCM283x, as used on Raspberry Pi.
+Sorry for the delay since v1 - other tasks assigned, got sucked
+into investigating why some devices were misbehaving, and
+picking up on new features that had been added to the tree (eg CCP2).
 
-By putting mux-controls in fusb302 node, you are saying fusb302 is a
-mux (or contains a mux).
+v4l2-compliance results depend on the sensor subdevice connected to.
+I have results for TC358743, ADV7282M, and OV5647 that I'll
+send them as a follow up email.
 
+OV647 and ADV7282M are now working with this driver, as well as TC358743.
+v1 of the driver only supported continuous clock mode which Unicam was
+failing to lock on to correctly.
+The driver now checks the clock mode and adjusts termination accordingly.
+Something is still a little off for OV5647, but I'll investigate that
+later.
 
->>> As for putting it in a type-C connector node, currently we do not have
->>> such
->>> a node,
->>
->>
->> Well, you should. Type-C connectors are certainly complicated enough
->> that we'll need one. Plus we already require connector nodes for
->> display outputs, so what do we do once you add display muxing?
->
->
-> An interesting question, I'm working on this for x86 + ACPI boards actually,
-> not a board using DT I've been adding DT bindings docs for device-properties
-> I use because that seems like the right thing to do where the binding is
-> obvious
-> (which I believe it is in this case as the fusb302 is the mux consumer) and
-> because the device-property code should work the same on x86 + ACPI
-> (where some platform-specific drivers attach the device properties) and
-> on e.g. ARM + DT.
->
-> The rest should probably be left to be figured out when an actual DT
-> using device using the fusb302 or another Type-C controller shows up.
+As per the v1 discussion with Hans, I have added text describing the
+differences between this driver and the one in staging/vc04_service.
+Addressing some of the issues in the bcm2835-camera driver is on my to-do
+list, and I'll add similar text there when I'm dealing with that.
 
-Well this is a new one (maybe, I suppose others have sneaked by). If
-ACPI folks want to use DT bindings, then what do I care. But I have no
-interest in reviewing ACPI properties. The whole notion of sharing
-bindings between DT and ACPI beyond anything trivial is flawed IMO.
-The ptifalls have been discussed multiple times before, so I'm not
-going to repeat them here.
+For those wanting to see the driver in context,
+https://github.com/6by9/upstream-linux/tree/unicam is the linux-media
+tree with my mods on top. It also includes a couple of TC358743 and
+OV5647 driver updates that I'll send to the list in the next few days.
 
+Thanks in advance.
+  Dave
 
->>> the closest thing we do have to a node describing it is actually the
->>> fusb302
->>> node
->>> itself. E.g. it may also contain a regulator to turn Vbus on / off
->>> (already
->>> there
->>> in the code, but I forgot to document this when I added the missing DT
->>> bindings
->>> doc for the fusb302 with a previous patch).
->>
->>
->> Either you can have a vbus-supply property in connector node or it can
->> be implied that the controller chip provides that. For example, HDMI
->> connectors have a hpd-gpios property if HPD is connected to GPIO or
->> they have nothing and it's implicit that the HDMI encoder handles HPD.
->>
->>
->>> Also these properties:
->>>
->>>>>    - fcs,max-sink-microvolt : Maximum voltage to negotiate when
->>>>> configured
->>>>> as sink
->>>>>    - fcs,max-sink-microamp  : Maximum current to negotiate when
->>>>> configured
->>>>> as sink
->>>>>    - fcs,max-sink-microwatt : Maximum power to negotiate when
->>>>> configured
->>>>> as sink
->>>
->>>
->>>
->>> Have more to do with the charger-IC used (which determines the limits)
->>> then
->>> with
->>> the fusb302 itself, but the fusb302 needs to know these as it negotiates
->>> the
->>> limits.
->>
->>
->> Those should probably be elsewhere and not be fusb302 specific. I did
->> ack that, but it was a single node for a single component which is
->> fine. But once we start adding more external pieces we need to pay
->> more attention to the overall structure.
->>
->>> Likewise the fusb302 negotiates how the data pins will be used and thus
->>> to
->>> which pins
->>> on the SoC the mux should mux the data pins.
->>>
->>> TL;DR: The fusb302 does all the negotiation and ties all the Type-C
->>> connected
->>> ICs together, so this seems like the right place for it (it certainly is
->>> the
->>> natural place to put these from a driver code pov).
->>
->>
->> Things in DT should follow what the h/w design looks like which is not
->> necessarily aligned with the driver structure. If the USB PD chip
->> needs information from the charger, then we need a kernel interface
->> for that.
->
->
-> Well this really is board specific data, the charger IC may be handle
-> for example up to 17V, but if the board is only designed for 12V then
-> we should only negotiate up to 12V because the board may have voltage
-> overprotection circuitry which trips at say 14V. This is actually the
-> case with the 2 x86 boards with a Type-C connector and fusb302 Type-C
-> controller I have, the charger on there can handle upto 17V according
-> to its datasheet but Windows never negotiates more then 12V, even when
-> attaching a Type-C charger which can do 5V, 9V or 14V, Windows choses 9V.
+Changes from v1 to v2:
+- Broken out a new helper function v4l2_fourcc2s as requested by Hans.
+- Documented difference between this driver and the bcm2835-camera driver
+  in staging/vc04_services.
+- Corrected handling of s_dv_timings and s_std to update the current format
+  but only if not streaming. This refactored some of the s_fmt code to
+  remove duplication.
+- Updated handling of sizeimage to include vertical padding. (Not updated
+  the bytesperline calcs as the app can override).
+- Added support for continuous clock mode (requires changes to lane
+  termination configuration).
+- Add support for CCP2 as Sakari's patches to support it have now been merged.
+  I don't have a suitable sensor to test it with at present, but all settings
+  have been taken from a known working configuration. If people would prefer
+  I remove this until it has been proved against hardware then I'm happy to
+  do so.
+- Updated DT bindings to use <data-lanes> on the Unicam node to set the
+  maximum number of lanes present instead of a having a custom property.
+  Documents the mandatory endpoint properties.
+- Removed RAW16 from the list of input formats as it isn't defined in the
+  CSI-2 spec. The peripheral can still unpack the other Bayer formats to
+  a 16 bit/pixel packing though.
+- Added a log-status handler to get the status from the sensor.
+- Automatically switch away from any interlaced formats reported via g_fmt,
+  or that are attempted to be set via try/s_fmt.
+- Addressed other more minor code review comments from v1.
 
-Just as the fusb302 can have board specific properties, so can a charger IC.
+Dave Stevenson (4):
+  [media] v4l2-common: Add helper function for fourcc to string
+  [media] dt-bindings: Document BCM283x CSI2/CCP2 receiver
+  [media] bcm2835-unicam: Driver for CCP2/CSI2 camera interface
+  MAINTAINERS: Add entry for BCM2835 camera driver
 
-> So it is the Type-C controller which does the negotiating and
-> the limits may be stricter then the maximum ratings of the
-> charger IC, so I guess my earlier remark of this coming from the
-> charger IC was not accurate and having this info in the Type-C controller
-> node is the right thing to do, sorry about that.
->
->> My concern here is not so much this binding in particular, but rather
->> that we handle Type-C connectors in a common way and not adhoc with
->> each platform doing things their own way. Otherwise, we end up with a
->> mess of platform specific bindings like charger/battery bindings
->> (though there's some work improving those).
->
->
-> I understand, but see my remark about me working on this on
-> X86 / ACPI boards. One advantage of this, is that the device-properties
-> are being set by platform drivers living under drivers/platform/x86,
-> so if the need arises they can be changed without breaking any ABI as
-> in my use-case they are 100% kernel internal stuff.
+ .../devicetree/bindings/media/bcm2835-unicam.txt   |  107 +
+ MAINTAINERS                                        |    7 +
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/bcm2835/Kconfig             |   14 +
+ drivers/media/platform/bcm2835/Makefile            |    3 +
+ drivers/media/platform/bcm2835/bcm2835-unicam.c    | 2192 ++++++++++++++++++++
+ drivers/media/platform/bcm2835/vc4-regs-unicam.h   |  264 +++
+ drivers/media/v4l2-core/v4l2-common.c              |   18 +
+ include/media/v4l2-common.h                        |    3 +
+ 10 files changed, 2610 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+ create mode 100644 drivers/media/platform/bcm2835/Kconfig
+ create mode 100644 drivers/media/platform/bcm2835/Makefile
+ create mode 100644 drivers/media/platform/bcm2835/bcm2835-unicam.c
+ create mode 100644 drivers/media/platform/bcm2835/vc4-regs-unicam.h
 
-Then don't document this stuff as DT bindings when it is not really.
-
-Rob
+-- 
+2.7.4
