@@ -1,83 +1,85 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 10/11] staging: typec: fusb302: Hook up mux support
- using tcpc_gen_mux support
-Date: Wed, 13 Sep 2017 10:56:49 +0200
-Message-ID: <e3c8476e-9795-804b-b09f-812045d58976@redhat.com>
-References: <20170905164221.11266-1-hdegoede@redhat.com>
- <20170905164221.11266-11-hdegoede@redhat.com>
- <20170912222027.hzpejmmxkwbw6seu@rob-hp-laptop>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v5 2/3] dt-bindings: gpio: uniphier: add UniPhier GPIO binding
+Date: Wed, 13 Sep 2017 17:56:29 +0900
+Message-ID: <1505292990-22957-3-git-send-email-yamada.masahiro@socionext.com>
+References: <1505292990-22957-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <20170912222027.hzpejmmxkwbw6seu@rob-hp-laptop>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1505292990-22957-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, linux-gpio@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, David Daney <david.daney@cavium.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This GPIO controller is used on UniPhier SoC family.
 
-On 13-09-17 00:20, Rob Herring wrote:
-> On Tue, Sep 05, 2017 at 06:42:20PM +0200, Hans de Goede wrote:
->> Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
->> to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
->>
->> Also document the mux-names used by the generic tcpc_mux_dev code in
->> our devicetree bindings.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
->>   drivers/staging/typec/fusb302/fusb302.c               | 11 ++++++++++-
->>   2 files changed, 13 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->> index 472facfa5a71..63d639eadacd 100644
->> --- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->> @@ -6,6 +6,9 @@ Required properties :
->>   - interrupts             : Interrupt specifier
->>   
->>   Optional properties :
->> +- mux-controls           : List of mux-ctrl-specifiers containing 1 or 2 muxes
->> +- mux-names              : "type-c-mode-mux" when using 1 mux, or
->> +                           "type-c-mode-mux", "usb-role-mux" when using 2 muxes
-> 
-> I'm not sure this is the right place for this. The mux is outside the
-> FUSB302. In a type-C connector node or USB phy node would make more
-> sense to me.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-The mux certainly does not belong in the USB phy node, it sits between the USB PHY
-and the Type-C connector and can for example also mux the Type-C pins to a Display
-Port PHY.
 
-As for putting it in a type-C connector node, currently we do not have such a node,
-the closest thing we do have to a node describing it is actually the fusb302 node
-itself. E.g. it may also contain a regulator to turn Vbus on / off (already there
-in the code, but I forgot to document this when I added the missing DT bindings
-doc for the fusb302 with a previous patch).
+ .../devicetree/bindings/gpio/gpio-uniphier.txt     | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
 
-Also these properties:
-
->>   - fcs,max-sink-microvolt : Maximum voltage to negotiate when configured as sink
->>   - fcs,max-sink-microamp  : Maximum current to negotiate when configured as sink
->>   - fcs,max-sink-microwatt : Maximum power to negotiate when configured as sink
-
-Have more to do with the charger-IC used (which determines the limits) then with
-the fusb302 itself, but the fusb302 needs to know these as it negotiates the limits.
-
-Likewise the fusb302 negotiates how the data pins will be used and thus to which pins
-on the SoC the mux should mux the data pins.
-
-TL;DR: The fusb302 does all the negotiation and ties all the Type-C connected
-ICs together, so this seems like the right place for it (it certainly is the
-natural place to put these from a driver code pov).
-
-Regards,
-
-Hans
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+new file mode 100644
+index 0000000..0a371bdd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+@@ -0,0 +1,43 @@
++UniPhier GPIO controller
++
++Required properties:
++- compatible: Should be "socionext,uniphier-gpio".
++- reg: Specifies offset and length of the register set for the device.
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Should be 2.  The first cell is the pin number and the second
++  cell is used to specify optional parameters.
++- interrupt-parent: Specifies the parent interrupt controller.
++- interrupts: Specifies interrupts connected to the parent interrupt controller.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells: Should be 2.  The first cell defines the interrupt number.
++  The second cell bits[3:0] is used to specify trigger type as follows:
++    1 = low-to-high edge triggered
++    2 = high-to-low edge triggered
++    4 = active high level-sensitive
++    8 = active low level-sensitive
++  Valid combinations are 1, 2, 3, 4, 8.
++- ngpios: Specifies the number of GPIO lines.
++- gpio-ranges: Mapping to pin controller pins (as described in gpio.txt)
++
++Optional properties:
++- gpio-ranges-group-names: Used for named gpio ranges (as described in gpio.txt)
++
++Example:
++	gpio: gpio@55000000 {
++		compatible = "socionext,uniphier-gpio";
++		reg = <0x55000000 0x200>;
++		interrupt-parent = <&aidet>;
++		interrupts = <48 0>, <49 0>, <50 0>, <51 0>,
++			     <52 0>, <53 0>, <54 0>, <55 0>,
++			     <56 0>, <57 0>, <58 0>, <59 0>,
++			     <60 0>, <61 0>, <62 0>, <63 0>,
++			     <154 0>, <155 0>, <156 0>, <157 0>,
++			     <158 0>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-ranges = <&pinctrl 0 0 0>;
++		gpio-ranges-group-names = "gpio_range";
++		ngpios = <248>;
++	};
+-- 
+2.7.4
