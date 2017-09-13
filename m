@@ -1,32 +1,45 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 03/11] dt-bindings: power: add R8A77970 SYSC power domain
- definitions
-Date: Wed, 13 Sep 2017 10:13:56 +0200
-Message-ID: <20170913081356.GK6756@verge.net.au>
-References: <20170912210514.517628239@cogentembedded.com>
- <CAMuHMdUgVX719XfgM+7gwkmrfhjc-JjqKOadFz1asNUP+6apUg@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v12 06/26] v4l: fwnode: Support generic parsing of graph
+ endpoints, per port
+Date: Wed, 13 Sep 2017 11:18:21 +0300
+Message-ID: <20170913081821.4kqf2kfmkidkaqah@valkosipuli.retiisi.org.uk>
+References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
+ <20170912134200.19556-7-sakari.ailus@linux.intel.com>
+ <0b73f576-c37b-ad58-6f74-71ffc3f8f176@xs4all.nl>
+ <a6cdf6cb-6abc-ac3b-274d-e8b43e2ac2c6@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUgVX719XfgM+7gwkmrfhjc-JjqKOadFz1asNUP+6apUg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <a6cdf6cb-6abc-ac3b-274d-e8b43e2ac2c6-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 10:11:31AM +0200, Geert Uytterhoeven wrote:
-> On Tue, Sep 12, 2017 at 10:37 PM, Sergei Shtylyov
-> <sergei.shtylyov@cogentembedded.com> wrote:
-> > Add macros usable by the device tree sources to reference R8A77970 SYSC
-> > power domains by index.
-> >
-> > Based on the original (and large) patch by Daisuke Matsushita
-> > <daisuke.matsushita.ns@hitachi.com>.
-> >
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Hans,
 
-Thanks, applied.
+Thanks for the review.
+
+On Wed, Sep 13, 2017 at 09:06:11AM +0200, Hans Verkuil wrote:
+> On 09/13/2017 09:01 AM, Hans Verkuil wrote:
+> > On 09/12/2017 03:41 PM, Sakari Ailus wrote:
+> >> This is just like like v4l2_async_notifier_parse_fwnode_endpoints but it
+> >> only parses endpoints on a single port. The behaviour is useful on devices
+> >> that have both sinks and sources, in other words only some of these should
+> >> be parsed.
+> 
+> I forgot to mention that I think the log message can be improved: it is not
+> clear why you would only parse some of the ports for devices that have both
+> sinks and sources. That should be explained better. And probably also in the
+> header documentation.
+
+I'll add both.
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
