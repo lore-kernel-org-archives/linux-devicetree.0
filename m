@@ -1,96 +1,67 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v4 6/6] gpio: uniphier: add UniPhier GPIO controller driver
-Date: Wed, 13 Sep 2017 17:31:26 +0900
-Message-ID: <CAK7LNAQpO+NYu2uOwEx+c1srabO8=uOjQ-9+sh6-Q1eDP0TOSA@mail.gmail.com>
-References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
- <1504784522-26841-7-git-send-email-yamada.masahiro@socionext.com>
- <CACRpkdZLG=ezxj62R=WkULh2vfpQwqh8P-6FhtONzU7yRbyeuA@mail.gmail.com> <7e46f2a3-114f-0c34-d3c5-49e6422b9200@caviumnetworks.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 04/11] soc: renesas: rcar-sysc: add R8A77970 support
+Date: Wed, 13 Sep 2017 10:36:23 +0200
+Message-ID: <CAMuHMdXLbg2WwtWvG+zBa5MOT3qXr2Fv-U4AJ0=eLfE2VG1LKg@mail.gmail.com>
+References: <20170912210518.203740259@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7e46f2a3-114f-0c34-d3c5-49e6422b9200-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170912210518.203740259@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi.
+Hi Sergei,
 
-2017-09-13 0:44 GMT+09:00 David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>:
-> On 09/12/2017 07:03 AM, Linus Walleij wrote:
->>
->> On Thu, Sep 7, 2017 at 1:42 PM, Masahiro Yamada
->> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->>
->>> This GPIO controller device is used on UniPhier SoCs.
->>>
->>> It also serves as an interrupt controller, but interrupt signals are
->>> just delivered to the parent irqchip without any latching or OR'ing.
->>> This is implemented by using hierarchy IRQ domain.
->>>
->>> Implementation note:
->>> Unfortunately, the IRQ mapping from this controller to the parent is
->>> random. (48, 49, ..., 63, 154, 155, ...)
->>> If "interrupts" property is used, IRQ resources may be statically
->>> allocated when platform devices are populated from DT.  This can be
->>> a problem for the hierarchy IRQ domain because IRQ allocation must
->>> happen from the outer-most domain up to the root domain in order to
->>> build up the stacked IRQ.  (https://lkml.org/lkml/2017/7/6/758)
->>> Solutions to work around it could be to hard-code parent hwirqs or
->>> to invent a driver-specific DT property.
->>>
->>> Here, the new API irq_domain_push_irq() was merged by v4.14-rc1.
->>> It allows to add irq_data to the existing hierarchy.  It will help
->>> to make this driver work whether the parent has already initialized
->>> the hierarchy or not.
->>>
->>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->>> ---
->>>
->>> Changes in v4:
->>>    - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
->>>    - Reimplement irqchip part by using irq_domain_push_irq()
->>
->>
->> Awesome improvement. There was a build error and I also
->> would like David Daney to have a look at this so we know we
->> use things the right way,
+On Tue, Sep 12, 2017 at 10:37 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add support for R-Car V3M (R8A77970) SoC power areas to the R-Car SYSC
+> driver.
 >
+> Based on the original (and large) patch by Daisuke Matsushita
+> <daisuke.matsushita.ns@hitachi.com>.
 >
-> It looks correct to me.
->
-> I haven't verified it, but I think the OF device-tree probing code for the
-> platform devices will automatically xlat-and-map all those irqs, so that the
-> irq_domain_push_irq() is required to get the domain hierarchy properly
-> configured.  It would be similar to the PCI case where we configure all the
-> MSI-X and then do the irq_domain_push_irq() in the Cavium ThunderX driver.
->
-> If interrupt handling has been verified to work with this driver, I would
-> say that we are probably using things "the right way".
->
-> David.
->
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-V4 depends on 5 patches that got negative feedback in irqdomain subsystem.
-One more problem for this approach is to virtual IRQs are statically
-allocated during the driver probe.
-This looks a step backward to me.
-Recently, gpio_irqchip migrated to on-the-fly allocation in case some
-controllers may have lots of
-GPIO lines.
+> --- /dev/null
+> +++ renesas/drivers/soc/renesas/r8a77970-sysc.c
+> @@ -0,0 +1,39 @@
 
+> +#include <linux/bug.h>
 
-Finally, I came up with another (I think, better) solution.
-I think v5 is less controversial,
-and works very well in on-the-fly manner.
+I think this include is no longer needed since commit c7acec713d14c6ce
+("kernel.h: handle pointers to arrays better in container_of()").
 
-I am sending it shortly...
+> +static const struct rcar_sysc_area r8a77970_areas[] __initconst = {
 
+> +       { "a3ir",       0x180, 0, R8A77970_PD_A3IR,     R8A77970_PD_ALWAYS_ON },
+> +       { "a2ir0",      0x400, 0, R8A77970_PD_A2IR0,    R8A77970_PD_ALWAYS_ON },
+> +       { "a2ir1",      0x400, 1, R8A77970_PD_A2IR1,    R8A77970_PD_A2IR0 },
+> +       { "a2ir2",      0x400, 2, R8A77970_PD_A2IR2,    R8A77970_PD_A2IR0 },
+> +       { "a2ir3",      0x400, 3, R8A77970_PD_A2IR3,    R8A77970_PD_A2IR0 },
+> +       { "a2sc0",      0x400, 4, R8A77970_PD_A2SC0,    R8A77970_PD_ALWAYS_ON },
+> +       { "a2sc1",      0x400, 5, R8A77970_PD_A2SC1,    R8A77970_PD_A2SC0 },
 
--- 
-Best Regards
-Masahiro Yamada
+According to Figure 9.2(b) "Power domain structure (R-Car V3M)" and Table 9.4
+"Power domains", all of A2IR[0-3] and A2SC[01] are direct children of A3IR.
+
+BTW, the bit indices "4" resp. "5" for A2SC[01] don't match Section 9.2.5
+"Power Control Registers for A2IR" (which uses "0" resp. "1"), but I assume
+that's just a typo in the datasheet, as those would conflict with A2IR[01], and
+the would conflict with the documentation for other R-Car Gen3 SoCs.
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
