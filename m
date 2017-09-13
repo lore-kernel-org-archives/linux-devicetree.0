@@ -1,59 +1,57 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] ARM: dts: rcar-gen2: Add reset control properties
-Date: Wed, 13 Sep 2017 09:36:03 +0200
-Message-ID: <20170913073602.GD6756@verge.net.au>
-References: <1505135399-24840-1-git-send-email-geert+renesas@glider.be>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ravb: document R8A77970 bindings
+Date: Wed, 13 Sep 2017 09:39:02 +0200
+Message-ID: <20170913073901.GE6756@verge.net.au>
+References: <20170912200228.015376134@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1505135399-24840-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170912200228.015376134@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 03:09:54PM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
+On Tue, Sep 12, 2017 at 11:02:08PM +0300, Sergei Shtylyov wrote:
+> R-Car V3M (R8A77970) SoC also has the R-Car gen3 compatible EtherAVB
+> device, so document  the SoC specific bindings.
 > 
-> This patch series describes the reset topology on all R-Car Gen2 Socs, like
-> was done before for R-Car Gen3 and RZ/G1.
-> 
-> Resets usually match the corresponding module clocks.  Exceptions are:
->   - The audio module has resets for the Serial Sound Interfaces only,
->   - The display module has only a single reset for all DU channels, but
->     adding reset properties for the display is postponed upon request from
->     Laurent.
-> 
-> Note that this patch series contains hardware description only.
-> Actual reset policy is to be defined and implemented separately.
-> Also, this is an optional feature, to be enabled explicitly using
-> CONFIG_RESET_CONTROLLER=y.  When enabled, an on-SoC device can be reset
-> easily using device_reset(), or by using the reset_control_*() API when
-> more fine-grained control is desired.
-> 
-> Possible use cases are (not exhaustive):
->   - Reset a device before use, to make sure it's in a predefined state, and
->     doesn't depend on earlier configuration by e.g. the boot loader,
->   - Reset a device after detecting an anomaly,
->   - Reset a device to verify suspend/resume is handled correctly by the
->     driver in case the device would be part of a power domain on a
->     different/future SoC.
-> 
-> This has been tested on r8a7790/lager, r8a7791/koelsch, r8a7792/blanche,
-> and r8a7794/alt (r8a7793/gose was offline).
-> 
-> Thanks for applying!
-> 
-> Geert Uytterhoeven (5):
->   ARM: dts: r8a7790: Add reset control properties
->   ARM: dts: r8a7791: Add reset control properties
->   ARM: dts: r8a7792: Add reset control properties
->   ARM: dts: r8a7793: Add reset control properties
->   ARM: dts: r8a7794: Add reset control properties
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks, applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
+> The patch is against DaveM's 'net-next.git' repo but I wouldn't mind if it's
+> applied to 'net.git' instead. :-)
+
+Personally I would prefer net-next, but I don't feel strongly about this.
+If you want it considered for net then I think it is likely that you will
+need to repost it with the appropriate patch prefix.
+
+> 
+>  Documentation/devicetree/bindings/net/renesas,ravb.txt |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> Index: net-next/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> ===================================================================
+> --- net-next.orig/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ net-next/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>  
+>        - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
+>        - "renesas,etheravb-r8a7796" for the R8A7796 SoC.
+> +      - "renesas,etheravb-r8a77970" for the R8A77970 SoC.
+>        - "renesas,etheravb-rcar-gen3" as a fallback for the above
+>  		R-Car Gen3 devices.
+>  
+> @@ -40,7 +41,7 @@ Optional properties:
+>  - interrupt-parent: the phandle for the interrupt controller that services
+>  		    interrupts for this device.
+>  - interrupt-names: A list of interrupt names.
+> -		   For the R8A779[56] SoCs this property is mandatory;
+> +		   For the R-Car Gen 3 SoCs this property is mandatory;
+>  		   it should include one entry per channel, named "ch%u",
+>  		   where %u is the channel number ranging from 0 to 24.
+>  		   For other SoCs this property is optional; if present
+> 
