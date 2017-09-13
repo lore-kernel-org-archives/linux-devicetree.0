@@ -1,94 +1,97 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v5 1/7] serial: Add common rs485 device tree parsing function
-Date: Wed, 13 Sep 2017 10:18:27 +0200
-Message-ID: <20170913081833.2740-2-u.kleine-koenig@pengutronix.de>
-References: <20170913081833.2740-1-u.kleine-koenig@pengutronix.de>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCHv4 3/5] dt-bindings: document the CEC GPIO bindings
+Date: Wed, 13 Sep 2017 10:21:07 +0200
+Message-ID: <30a2fa9d-1aa9-84c1-7842-05167eee73d3@xs4all.nl>
+References: <20170831110156.11018-1-hverkuil@xs4all.nl>
+ <20170831110156.11018-4-hverkuil@xs4all.nl>
+ <20170912144308.j53eclicbhay5dsz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170913081833.2740-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170912144308.j53eclicbhay5dsz@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Several drivers have the same device tree parsing code. Create
-a common helper function for it.
-
-This patch bases on work done by Sascha Hauer.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/tty/serial/serial_core.c | 36 ++++++++++++++++++++++++++++++++++++
- include/linux/serial_core.h      |  5 +++++
- 2 files changed, 41 insertions(+)
-
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 3a14cccbd7ff..f4e6c8662987 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -3026,5 +3026,41 @@ EXPORT_SYMBOL(uart_resume_port);
- EXPORT_SYMBOL(uart_add_one_port);
- EXPORT_SYMBOL(uart_remove_one_port);
- 
-+/**
-+ * of_get_rs485_mode() - Implement parsing rs485 properties
-+ * @np: uart node
-+ * @rs485conf: output parameter
-+ *
-+ * This function implements the device tree binding described in
-+ * Documentation/devicetree/bindings/serial/rs485.txt.
-+ */
-+void of_get_rs485_mode(struct device_node *np, struct serial_rs485 *rs485conf)
-+{
-+	u32 rs485_delay[2];
-+	int ret;
-+
-+	ret = of_property_read_u32_array(np, "rs485-rts-delay", rs485_delay, 2);
-+	if (!ret) {
-+		rs485conf->delay_rts_before_send = rs485_delay[0];
-+		rs485conf->delay_rts_after_send = rs485_delay[1];
-+	} else {
-+		rs485conf->delay_rts_before_send = 0;
-+		rs485conf->delay_rts_after_send = 0;
-+	}
-+
-+	/*
-+	 * clear full-duplex and enabled flags to get to a defined state with
-+	 * the two following properties.
-+	 */
-+	rs485conf->flags &= ~(SER_RS485_RX_DURING_TX | SER_RS485_ENABLED);
-+
-+	if (of_property_read_bool(np, "rs485-rx-during-tx"))
-+		rs485conf->flags |= SER_RS485_RX_DURING_TX;
-+
-+	if (of_property_read_bool(np, "linux,rs485-enabled-at-boot-time"))
-+		rs485conf->flags |= SER_RS485_ENABLED;
-+}
-+EXPORT_SYMBOL_GPL(of_get_rs485_mode);
-+
- MODULE_DESCRIPTION("Serial driver core");
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 5553e04e59c9..37b044e78333 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -501,4 +501,9 @@ static inline int uart_handle_break(struct uart_port *port)
- 					 (cflag) & CRTSCTS || \
- 					 !((cflag) & CLOCAL))
- 
-+/*
-+ * Common device tree parsing helpers
-+ */
-+void of_get_rs485_mode(struct device_node *np, struct serial_rs485 *rs485conf);
-+
- #endif /* LINUX_SERIAL_CORE_H */
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDkvMTIvMjAxNyAwNDo0MyBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVGh1LCBBdWcg
+MzEsIDIwMTcgYXQgMDE6MDE6NTRQTSArMDIwMCwgSGFucyBWZXJrdWlsIHdyb3RlOgo+PiBGcm9t
+OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4+Cj4+IERvY3VtZW50IHRo
+ZSBiaW5kaW5ncyBmb3IgdGhlIGNlYy1ncGlvIG1vZHVsZSBmb3IgaGFyZHdhcmUgd2hlcmUgdGhl
+Cj4+IENFQyBsaW5lIGFuZCBvcHRpb25hbGx5IHRoZSBIUEQgbGluZSBhcmUgY29ubmVjdGVkIHRv
+IEdQSU8gbGluZXMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEhhbnMgVmVya3VpbCA8aGFucy52ZXJr
+dWlsQGNpc2NvLmNvbT4KPj4gLS0tCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9j
+ZWMtZ3Bpby50eHQgICAgICAgICB8IDIyICsrKysrKysrKysrKysrKysrKysrKysKPj4gIDEgZmls
+ZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NlYy1ncGlvLnR4dAo+Pgo+PiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NlYy1ncGlv
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZWMtZ3Bpby50
+eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAwLi5kYjIwYTc0
+NTJkYmQKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWVkaWEvY2VjLWdwaW8udHh0Cj4+IEBAIC0wLDAgKzEsMjIgQEAKPj4gKyogSERN
+SSBDRUMgR1BJTyBkcml2ZXIKPj4gKwo+PiArVGhlIEhETUkgQ0VDIEdQSU8gbW9kdWxlIHN1cHBv
+cnRzIENFQyBpbXBsZW1lbnRhdGlvbnMgd2hlcmUgdGhlIENFQyBsaW5lCj4+ICtpcyBob29rZWQg
+dXAgdG8gYSBwdWxsLXVwIEdQSU8gbGluZSBhbmQgLSBvcHRpb25hbGx5IC0gdGhlIEhQRCBsaW5l
+IGlzCj4+ICtob29rZWQgdXAgdG8gYW5vdGhlciBHUElPIGxpbmUuCj4+ICsKPj4gK1JlcXVpcmVk
+IHByb3BlcnRpZXM6Cj4+ICsgIC0gY29tcGF0aWJsZTogdmFsdWUgbXVzdCBiZSAiY2VjLWdwaW8i
+Cj4+ICsgIC0gY2VjLWdwaW86IGdwaW8gdGhhdCB0aGUgQ0VDIGxpbmUgaXMgY29ubmVjdGVkIHRv
+Cj4gCj4gY2VjLWdwaW9zCgpXaWxsIGNoYW5nZS4KCj4gCj4+ICsKPj4gK09wdGlvbmFsIHByb3Bl
+cnR5Ogo+PiArICAtIGhwZC1ncGlvOiBncGlvIHRoYXQgdGhlIEhQRCBsaW5lIGlzIGNvbm5lY3Rl
+ZCB0bwo+IAo+IGhwZC1ncGlvcwoKV2lsbCBjaGFuZ2UuCgo+IAo+IEhvd2V2ZXIsIEhQRCBpcyBh
+bHJlYWR5IHBhcnQgb2YgdGhlIEhETUkgY29ubmVjdG9yIGJpbmRpbmcuIEhhdmluZyBpdCBpbiAK
+PiAyIHBsYWNlcyB3b3VsZCBiZSB3cm9uZy4KCk5vLiBUaGlzIGlzIG5vdCBhbiBIRE1JIHJlY2Vp
+dmVyL3RyYW5zbWl0dGVyLiBUaGVyZSBhcmUgdHdvIHVzZS1jYXNlcyBmb3IgdGhpcwpkcml2ZXI6
+CgoxKSBGb3IgSERNSSByZWNlaXZlcnMvdHJhbnNtaXR0ZXJzIHRoYXQgY29ubmVjdCB0aGUgQ0VD
+IHBpbiBvZiBhbiBIRE1JIGNvbm5lY3RvcgogICB0byBhIEdQSU8gcGluLiBJbiB0aGF0IGNhc2Ug
+dGhlIEhQRCBnb2VzIHRvIHRoZSBIRE1JIHRyYW5zbWl0dGVyL3JlY2VpdmVyIGFuZAogICBub3Qg
+dG8gdGhpcyBkcml2ZXIuIEFzIHlvdSBzYXksIHRoYXQgd291bGQgbm90IG1ha2UgYW55IHNlbnNl
+LgoKICAgQnV0IGN1cnJlbnRseSBubyBzdWNoIGRldmljZXMgYXJlIGluIHRoZSBrZXJuZWwgKEkg
+a25vdyB0aGV5IGV4aXN0LCB0aG91Z2gpLgogICBPbmNlIHN1Y2ggYSBkcml2ZXIgd291bGQgYXBw
+ZWFyIGluIHRoZSBrZXJuZWwgdGhlbiB0aGVzZSBiaW5kaW5ncyBuZWVkIHRvIGJlCiAgIGV4dGVu
+ZGVkIHdpdGggYW4gaGRtaS1waGFuZGxlLgoKMikgVGhpcyBkcml2ZXIgaXMgdXNlZCBmb3IgZGVi
+dWdnaW5nIENFQyBsaWtlIHRoaXM6CgoJaHR0cHM6Ly9odmVya3VpbC5ob21lLnhzNGFsbC5ubC9y
+cGkzLWNlYy5qcGcKCiAgIEhlcmUgdGhlIENFQyBwaW4gb2YgYW4gSERNSSBicmVha291dCBjb25u
+ZWN0b3IgaXMgaG9va2VkIHVwIHRvIGEgUmFzcGJlcnJ5IFBpCiAgIEdQSU8gcGluIGFuZCB0aGUg
+UlBpIG1vbml0b3JzIGl0LiBJdCdzIGEgY2hlYXAgYnV0IHZlcnkgZWZmZWN0aXZlIENFQyBhbmFs
+eXplci4KICAgSW4gdGhpcyB1c2UtY2FzZSBpdCBpcyB2ZXJ5IGhlbHBmdWwgdG8gYWxzbyBtb25p
+dG9yIHRoZSBIUEQgcGluIHNpbmNlIHNvbWUKICAgZGlzcGxheXMgZG8gd2VpcmQgdGhpbmdzIHdp
+dGggdGhlIEhQRCBhbmQga25vd2luZyB0aGUgc3RhdGUgb2YgdGhlIEhQRCBoZWxwcwogICBhIGxv
+dCB3aGVuIGRlYnVnZ2luZyBDRUMgcHJvYmxlbXMuIEl0J3Mgb3B0aW9uYWwgYW5kIGl0IG9ubHkg
+bW9uaXRvcnMgdGhlIHBpbi4KCiAgIEFjdHVhbGx5LCB0aGVyZSBkb2VzIG5vdCBoYXZlIHRvIGJl
+IGFuIEhETUkgY29ubmVjdG9yIGludm9sdmVkIGF0IGFsbDogeW91IGNhbgogICBtYWtlIHR3byBj
+ZWMtZ3BpbyBpbnN0YW5jZXMgYW5kIGp1c3QgY29ubmVjdCB0aGUgdHdvIEdQSU8gcGlucyB0b2dl
+dGhlciBpbgogICBvcmRlciB0byBlbXVsYXRlIHR3byBDRUMgYWRhcHRlcnMgYW5kIHBsYXkgd2l0
+aCB0aGF0LgoKPiAKPiBJIHRoaW5rIHdlIHNob3VsZCBoYXZlIGVpdGhlcjoKPiAKPiBoZG1pLWNv
+bm5lY3RvciB7Cj4gCWNvbXBhdGlibGUgPSAnaGRtaS1jb25uZWN0b3ItYSI7Cj4gCWhwZC1ncGlv
+cyA9IDwuLi4+Owo+IAljZWMtZ3Bpb3MgPSA8Li4uPjsKPiAJcG9ydHMgewo+IAkJLy8gcG9ydCB0
+byBIRE1JIGNvbnRyb2xsZXIKPiAJLi4uCj4gCX07Cj4gfTsKPiAKPiBPcjoKPiAKPiBoZG1pLWNv
+bm5lY3RvciB7Cj4gICAgICAgICBjb21wYXRpYmxlID0gJ2hkbWktY29ubmVjdG9yLWEiOwo+ICAg
+ICAgICAgaHBkLWdwaW9zID0gPC4uLj47Cj4gICAgICAgICBjZWMgPSA8JmNlYz47Cj4gICAgICAg
+ICAuLi4gCj4gfTsKPiAKPiBjZWM6IGNlYy1ncGlvIHsKPiAJY29tcGF0aWJsZSA9ICJjZWMtZ3Bp
+byI7Cj4gCWNlYy1ncGlvcyA9IDwuLi4+Owo+IH07Cj4gCj4gTXkgcHJlZmVyZW5jZSBpcyBwcm9i
+YWJseSB0aGUgZm9ybWVyLiBUaGUgbGF0dGVyIGp1c3QgaGVscHMgY3JlYXRlIGEgCj4gZGV2aWNl
+IHRvIGJpbmQgdG8gYSBkcml2ZXIsIGJ1dCBEVCBpcyBub3QgdGhlIG9ubHkgd2F5IHRvIGNyZWF0
+ZSAKPiBkZXZpY2VzLiBUaGVuIGFnYWluLCBpZiB5b3UgaGF2ZSBhIHBoYW5kbGUgdG8gcmVhbCBD
+RUMgY29udHJvbGxlcnMgaW4gCj4gdGhlIEhETUkgY29ubmVjdG9yIG5vZGUsIGl0IG1heSBtYWtl
+IHNlbnNlIHRvIGRvIHRoZSBzYW1lIHRoaW5nIHdpdGggCj4gY2VjLWdwaW8uIAo+IAo+PiArCj4+
+ICtFeGFtcGxlIGZvciB0aGUgUmFzcGJlcnJ5IFBpIDMgd2hlcmUgdGhlIENFQyBsaW5lIGlzIGNv
+bm5lY3RlZCB0bwo+PiArcGluIDI2IGFrYSBCQ003IGFrYSBDRTEgb24gdGhlIEdQSU8gcGluIGhl
+YWRlciBhbmQgdGhlIEhQRCBsaW5lIGlzCj4+ICtjb25uZWN0ZWQgdG8gcGluIDExIGFrYSBCQ00x
+NzoKPj4gKwo+PiArY2VjLWdwaW9ANyB7Cj4gCj4gdW5pdCBhZGRyZXNzIGlzIG5vdCB2YWxpZC4g
+QnVpbGQgeW91ciBkdHMncyB3aXRoIFc9Mi4KCkknbGwgZG8gdGhhdC4KCj4gCj4+ICsgICAgICAg
+Y29tcGF0aWJsZSA9ICJjZWMtZ3BpbyI7Cj4+ICsgICAgICAgY2VjLWdwaW8gPSA8JmdwaW8gNyBH
+UElPX09QRU5fRFJBSU4+Owo+PiArICAgICAgIGhwZC1ncGlvID0gPCZncGlvIDE3IEdQSU9fQUNU
+SVZFX0hJR0g+Owo+PiArfTsKPj4gLS0gCj4+IDIuMTQuMQoKUmVnYXJkcywKCglIYW5zCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
