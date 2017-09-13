@@ -1,253 +1,159 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH 5/5] lmp92001: mfd: doc: Add support LMP92001
-Date: Sun, 10 Sep 2017 15:45:44 +0100
-Message-ID: <20170910154544.1349162b@archlinux>
-References: <20170830182528.9479-1-s.abhisit@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 10/11] staging: typec: fusb302: Hook up mux support
+ using tcpc_gen_mux support
+Date: Wed, 13 Sep 2017 09:17:28 -0700
+Message-ID: <20170913161728.GA436@roeck-us.net>
+References: <20170905164221.11266-1-hdegoede@redhat.com>
+ <20170905164221.11266-11-hdegoede@redhat.com>
+ <20170912222027.hzpejmmxkwbw6seu@rob-hp-laptop>
+ <e3c8476e-9795-804b-b09f-812045d58976@redhat.com>
+ <CAL_JsqLNByxG-S1hokoVVA7xeouQdTNkCOouGp=r8h8Sx5BMxw@mail.gmail.com>
+ <df2008cc-a73a-5898-1ade-e0c90c759584@redhat.com>
+ <CAL_JsqJ=tonhAWp7eO79zTOzV6mu0ER6hPMigqyB754L1Z2UhA@mail.gmail.com>
+ <e442bb48-a038-4e2e-6950-4220e28692d3@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170830182528.9479-1-s.abhisit@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: s.abhisit@gmail.com
-Cc: linus.walleij@linaro.org, robh@kernel.org, lee.jones@linaro.org, Jonathan.Cameron@huawei.com, pmeerw@pmeerw.net, jacopo@jmondi.org, linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, fabrice.gasnier@st.com, akinobu.mita@gmail.com, marek.vasut+renesas@gmail.com, jacopo+renesas@jmondi.org, mike.looijmans@topic.nl, peda@axentia.se, jeff.dagenais@gmail.com, linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lukas@wunner.de, adi.reus@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <e442bb48-a038-4e2e-6950-4220e28692d3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Aug 2017 01:25:28 +0700
-s.abhisit@gmail.com wrote:
-
-> From: Abhisit Sangjan <s.abhisit@gmail.com>
+On Wed, Sep 13, 2017 at 05:48:25PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> TI LMP92001 Analog System Monitor and Controller
+> On 13-09-17 17:07, Rob Herring wrote:
+> >On Wed, Sep 13, 2017 at 9:06 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> >>Hi,
+> >>
+> >>
+> >>On 13-09-17 15:38, Rob Herring wrote:
+> >>>
+> >>>On Wed, Sep 13, 2017 at 3:56 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>>wrote:
+> >>>>
+> >>>>Hi,
+> >>>>
+> >>>>
+> >>>>On 13-09-17 00:20, Rob Herring wrote:
+> >>>>>
+> >>>>>
+> >>>>>On Tue, Sep 05, 2017 at 06:42:20PM +0200, Hans de Goede wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>>Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
+> >>>>>>to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
+> >>>>>>
+> >>>>>>Also document the mux-names used by the generic tcpc_mux_dev code in
+> >>>>>>our devicetree bindings.
+> >>>>>>
+> >>>>>>Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >>>>>>Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >>>>>>Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >>>>>>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>>>>>---
+> >>>>>>    Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
+> >>>>>>    drivers/staging/typec/fusb302/fusb302.c               | 11
+> >>>>>>++++++++++-
+> >>>>>>    2 files changed, 13 insertions(+), 1 deletion(-)
+> >>>>>>
+> >>>>>>diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+> >>>>>>b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+> >>>>>>index 472facfa5a71..63d639eadacd 100644
+> >>>>>>--- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+> >>>>>>+++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+> >>>>>>@@ -6,6 +6,9 @@ Required properties :
+> >>>>>>    - interrupts             : Interrupt specifier
+> >>>>>>      Optional properties :
+> >>>>>>+- mux-controls           : List of mux-ctrl-specifiers containing 1 or
+> >>>>>>2
+> >>>>>>muxes
+> >>>>>>+- mux-names              : "type-c-mode-mux" when using 1 mux, or
+> >>>>>>+                           "type-c-mode-mux", "usb-role-mux" when
+> >>>>>>using
+> >>>>>>2 muxes
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>>I'm not sure this is the right place for this. The mux is outside the
+> >>>>>FUSB302. In a type-C connector node or USB phy node would make more
+> >>>>>sense to me.
+> >>>>
+> >>>>
+> >>>>
+> >>>>The mux certainly does not belong in the USB phy node, it sits between
+> >>>>the
+> >>>>USB PHY
+> >>>>and the Type-C connector and can for example also mux the Type-C pins to
+> >>>>a
+> >>>>Display
+> >>>>Port PHY.
+> >>>
+> >>>
+> >>>Thinking about this some more, the mux(es) should be its own node(s).
+> >>>Then the question is where to put the nodes.
+> >>
+> >>
+> >>Right, the mux will be its own node per
+> >>Documentation/devicetree/bindings/mux/mux-controller.txt
+> >>the bindings bit this patch is adding is only adding phandles pointing
+> >>to that mux-node as the fusb302 "consumes" the mux functionality.
+> >>
+> >>So as such (the fusb302 is the component which should control the mux)
+> >>I do believe that the bindings this patch adds are correct.
+> >
+> >Humm, that's not how the mux binding works. The mux controller is what
+> >drives the mux select lines and is the provider. The consumer is the
+> >mux device itself. What decides the mux state is determined by what
+> >you are muxing, not which node has mux-controls property.
+> >
+> >By putting mux-controls in fusb302 node, you are saying fusb302 is a
+> >mux (or contains a mux).
+> >
+> >
+> >>>>As for putting it in a type-C connector node, currently we do not have
+> >>>>such
+> >>>>a node,
+> >>>
+> >>>
+> >>>Well, you should. Type-C connectors are certainly complicated enough
+> >>>that we'll need one. Plus we already require connector nodes for
+> >>>display outputs, so what do we do once you add display muxing?
+> >>
+> >>
+> >>An interesting question, I'm working on this for x86 + ACPI boards actually,
+> >>not a board using DT I've been adding DT bindings docs for device-properties
+> >>I use because that seems like the right thing to do where the binding is
+> >>obvious
+> >>(which I believe it is in this case as the fusb302 is the mux consumer) and
+> >>because the device-property code should work the same on x86 + ACPI
+> >>(where some platform-specific drivers attach the device properties) and
+> >>on e.g. ARM + DT.
+> >>
+> >>The rest should probably be left to be figured out when an actual DT
+> >>using device using the fusb302 or another Type-C controller shows up.
+> >
+> >Well this is a new one (maybe, I suppose others have sneaked by). If
+> >ACPI folks want to use DT bindings, then what do I care. But I have no
+> >interest in reviewing ACPI properties. The whole notion of sharing
+> >bindings between DT and ACPI beyond anything trivial is flawed IMO.
+> >The ptifalls have been discussed multiple times before, so I'm not
+> >going to repeat them here.
 > 
-> 8-bit GPIOs.
-> 12 DACs with 12-bit resolution.
+> Ok, so shall I just drop the Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+> part of this patch then ?
 > 
-> The GPIOs and DACs are shared port function with Cy function pin to
-> take control the pin suddenly from external hardware.
-> DAC's referance voltage selectable for Internal/External.
-> 
-> 16 + 1 ADCs with 12-bit resolution.
-> 
-> Built-in internal Temperature Sensor on channel 17.
-> Window Comparator Function is supported on channel 1-3 and 9-11 for
-> monitoring with interrupt signal (pending to implement for interrupt).
-> ADC's referance voltage selectable for Internal/External.
-> 
+FWIW, Android (where the fusb302 driver is coming from) does use dt.
+On the other side I assume they won't jump on the new mux handling
+immediately. I won't have time to look into it myself, so whatever
+is done here may not match the "real" dt use case. Given that, maybe
+it does make sense to drop the bindings part and revisit once it
+becomes relevant.
 
-I would break this patch up somewhat.  Have a set of DT patches separate
-from any sysfs attribute documentation.
-
-> Signed-off-by: Abhisit Sangjan <s.abhisit@gmail.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio-lmp920001  | 65 ++++++++++++++++++++++
->  .../devicetree/bindings/gpio/gpio-lmp92001.txt     | 22 ++++++++
->  .../bindings/iio/adc/ti-lmp92001-adc.txt           | 20 +++++++
->  .../bindings/iio/dac/ti-lmp92001-dac.txt           | 35 ++++++++++++
->  4 files changed, 142 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-lmp920001
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-lmp920001 b/Documentation/ABI/testing/sysfs-bus-iio-lmp920001
-> new file mode 100644
-> index 000000000000..f0965e7d823f
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-lmp920001
-> @@ -0,0 +1,65 @@
-> +What:           /sys/bus/iio/devices/iio:deviceX/gang
-> +Date:           August 2016
-> +KernelVersion:  4.12
-> +Contact:        Abhisit Sangjan <s.abhisit@gmail.com>
-> +Description:
-> +                Controls the association of analog output channels OUTx with
-> +                asynchronous control inputs Cy for DAC.
-> +                Can be either:
-> +                - "0"
-> +                - "1"
-> +
-> +                        Cy to OUTx Assignment
-> +                ----------------------------------
-> +                | Cy | CDAC:GANG=0 | CDAC:GANG=1 |
-> +                ----------------------------------
-> +                | C1 | OUT[1:4]    | OUT[1:3]    |
-> +                ----------------------------------
-> +                | C2 | OUT[5:6]    | OUT[4:6]    |
-> +                ----------------------------------
-> +                | C3 | OUT[7:8]    | OUT[7:9]    |
-> +                ----------------------------------
-> +                | C4 | OUT[9:12]   | OUT[10:12]  |
-> +                ----------------------------------
-> +
-> +What:           /sys/bus/iio/devices/iio:deviceX/outx
-> +Date:           August 2016
-> +KernelVersion:  4.12
-> +Contact:        Abhisit Sangjan <s.abhisit@gmail.com>
-> +Description:
-> +                The pin output mode for DAC.
-> +                Can be either:
-> +                - "hiz" = High impedance state.
-> +                - "dac" = DAC output.
-> +                - "0" = Drive it to low.
-> +                - "1" = Drive it to high.
-
-Two options here - consider the hiz 0 and 1 to be powerdown
-modes in which case use the standard interfaces for them, or
-take the view the 0 1 choice is to allow this device to
-act as a gpio chip and support that explicitly.
-
-> +
-> +What:           /sys/bus/iio/devices/iio:deviceX/vref
-> +Date:           August 2016
-> +KernelVersion:  4.12
-> +Contact:        Abhisit Sangjan <s.abhisit@gmail.com>
-> +Description:
-> +                This is voltage reference source for DACs.
-> +                Can be either:
-> +                - "external"
-> +                - "internal"
-
-It is rare for userspace control of this to make sense.  Tends to be
-the case that there is only one right answer for a given piece of
-hardware.
-
-> +
-> +What:           /sys/devices/.../iio:deviceX/en
-> +Date:           August 2016
-> +KernelVersion:  4.12
-> +Contact:        Abhisit Sangjan <s.abhisit@gmail.com>
-> +Description:
-> +                This is ADC Conversion Enable for each channel.
-> +                Can be either:
-> +                - "enable"
-> +                - "disable"
-
-If you want this fine control use the buffered interfaces rather
-than sysfs.  I don't want to add this complexity to the sysfs
-interface.  For sysfs if nothing outside sysfs is going on (e.g.
-no buffered capture) it should be read an attribute get the answer
-without having to configure other elements manually.
-
-Also as currently documented, you only have one such file per
-iio:device which seems unlikely to be what you were aiming for.
-
-
-> +
-> +What:           /sys/devices/.../iio:deviceX/vref
-
-Here twice...
-
-> +Date:           August 2016
-> +KernelVersion:  4.12
-> +Contact:        Abhisit Sangjan <s.abhisit@gmail.com>
-> +Description:
-> +                This is voltage reference source for ADCs.
-> +                Can be either:
-> +                - "external"
-> +                - "internal"
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt b/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
-> new file mode 100644
-> index 000000000000..f9a18c492145
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
-> @@ -0,0 +1,22 @@
-> +* Texas Instruments' LMP92001 GPIOs
-> +
-> +Required properties:
-> + - compatible: Must be set to "ti,lmp92001-gpio".
-> + - reg: i2c chip address for the device.
-> + - gpio-controller: Marks the device node as a gpio controller.
-> + - #gpio-cells : Should be two.  The first cell is the pin number and the
-> +  second cell is used to specify the gpio polarity:
-> +        0 = Active high
-> +        1 = Active low
-> +
-> +Example:
-> +lmp92001@20 {
-> +        compatible = "ti,lmp92001";
-> +        reg = <0x20>;
-> +
-> +        gpio-controller {
-> +                compatible = "ti,lmp92001-gpio";
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +        };
-> +};
-> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt b/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
-> new file mode 100644
-> index 000000000000..4565961bf511
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
-> @@ -0,0 +1,20 @@
-> +* Texas Instruments' LMP92001 ADCs
-> +
-> +Required properties:
-> + - compatible: Must be set to "ti,lmp92001-adc".
-> + - reg: i2c chip address for the device.
-> + - ti,lmp92001-adc-mask: bit mask for which channel is enable.
-> +        0 = Off
-> +        1 = On
-> +
-> +Example:
-> +lmp92001@20 {
-> +        compatible = "ti,lmp92001";
-> +        reg = <0x20>;
-> +
-> +        lmp92001-adc {
-> +                compatible = "ti,lmp92001-adc";
-> +                ti,lmp92001-adc-mode = "continuous";
-> +                ti,lmp92001-adc-mask = <0x00000079>;
-> +        };
-> +};
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt b/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
-> new file mode 100644
-> index 000000000000..882db9ca92f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
-> @@ -0,0 +1,35 @@
-> +* Texas Instruments' LMP92001 DACs
-> +
-> +Required properties:
-> + - compatible: Must be set to "ti,lmp92001-dac".
-> + - reg: i2c chip address for the device.
-> + - ti,lmp92001-dac-hiz: hi-impedance control,
-> +        1 = Forces all OUT[1:12] outputs to hi-z, 0 = normal
-
-Why?
-
-> + - ti,lmp92001-dac-outx:
-> +        Cy = 0, 1 = will force associated OUTx outputs to VDD
-> +        Cy = 0, 0 = will force associated OUTx outputs to GND
-
-Clashes with the above?  I'm not sure why you would want these to
-be device tree bindings at all.
-
-> + - ti,lmp92001-dac-gang: What group of Cy is governed to.
-> +        -----------------------------------------
-> +        |  Cy   | CDAC:GANG = 0 | CDAC:GANG = 1 |
-> +        -----------------------------------------
-> +        |  C1   |   OUT[1:4]    |    OUT[1:3]   |
-> +        -----------------------------------------
-> +        |  C2   |   OUT[5:6]    |    OUT[4:6]   |
-> +        -----------------------------------------
-> +        |  C3   |   OUT[7:8]    |    OUT[7:9]   |
-> +        -----------------------------------------
-> +        |  C4   |   OUT[9:12]   |    OUT[10:12] |
-> +        -----------------------------------------
-
-This last one is an ugly bit of hardware, so probably fine
-to have in DT.
-> +
-> +Example:
-> +lmp92001@20 {
-> +        compatible = "ti,lmp92001";
-> +        reg = <0x20>;
-> +
-> +        lmp92001-dac {
-> +                compatible = "ti,lmp92001-dac";
-> +                ti,lmp92001-dac-hiz  = /bits/ 8 <0>;
-> +                ti,lmp92001-dac-outx = /bits/ 8 <0>;
-> +                ti,lmp92001-dac-gang = /bits/ 8 <0>;
-> +        };
-> +};
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
