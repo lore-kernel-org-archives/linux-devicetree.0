@@ -1,56 +1,66 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH] ARC: [plat-axs10x]: DTS: fix sdio ciu frequency
-Date: Wed, 13 Sep 2017 15:14:45 +0000
-Message-ID: <1505315684.30546.32.camel@synopsys.com>
-References: <20170912182045.20941-1-Eugeniy.Paltsev@synopsys.com>
-         <4df1bb54-5fa1-5089-7d96-799ccfc78fce@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings documentation
+Date: Wed, 13 Sep 2017 10:25:51 -0500
+Message-ID: <CAL_Jsq+udc2p_jqQN+m4R69zW=7RBfJCDrQgNXOiMycErP43LQ@mail.gmail.com>
+References: <20170901065818.2037-1-fe@dev.tdt.de> <20170901065818.2037-2-fe@dev.tdt.de>
+ <20170901142622.GC599@roeck-us.net> <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
+ <a5a2e95a1fb671eb59459542af122d6e@dev.tdt.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4df1bb54-5fa1-5089-7d96-799ccfc78fce@synopsys.com>
-Content-Language: en-US
-Content-ID: <FED833E94A97B6449297767EABCD2C61@internal.synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a5a2e95a1fb671eb59459542af122d6e-W9Oo8bkYgz6ELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Eckert <fe-W9Oo8bkYgz6ELgA04lAiVw@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux HWMON List <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE3LTA5LTEyIGF0IDExOjM4IC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+
-IE9uIDA5LzEyLzIwMTcgMTE6MjAgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gPiBEVyBz
-ZGlvIGNvbnRyb2xsZXIgaGFzIGV4dGVybmFsIGNpdSBjbG9jayBkaXZpZGVyIGNvbnRyb2xsZWQN
-Cj4gPiB2aWEgcmVnaXN0ZXIgaW4gU0RJTyBJUC4gSXQgZGl2aWRlcyBzZGlvX3JlZl9jbGsNCj4g
-PiAod2hpY2ggY29tZXMgZnJvbSBDR1UpIGJ5IDE2IGZvciBkZWZhdWx0LiBTbyBkZWZhdWx0IG1t
-Y2Nsaw0KPiA+IGNsb2NrICh3aGljaCBjb21lcyB0byBzZGtfaW4pIGlzIDI1MDAwMDAwIEh6Lg0K
-PiA+IA0KPiA+IFNvIGZpeCB3cm9uZyBjdXJyZW50IHZhbHVlICg1MDAwMDAwMCBIeikgdG8gYWN0
-dWFsIDI1MDAwMDAwIEh6Lg0KPiANCj4gSXMgdGhpcyBhIHByZXZlbnRpdmUgZml4IG9yIHRoZXJl
-IGFyZSBrbm93biBpc3N1ZXMgd2l0aCB3aGF0IHdlIGhhdmUgdG9kYXkuDQoNClllcywgaXQncyBr
-aW5kYSBhIHByZXZlbnRpdmUgZml4Lg0KV2UgY2hlY2sgYXhzMTB4wqBjaXUgZnJlcXVlbmN5IHdo
-ZW4gd2UgZm91bmQgd2hhdCBoc2RrwqBjaXUgZnJlcXVlbmN5IHdhcyB3cm9uZw0KYW5kIGZvdW5k
-IHRoYXQgaXQgaXMgd3JpbmcgdG9vLg0KDQpJIHRyaWVkIHRvIHJ1biBTRCBzdHJlc3MgdGVzdCB3
-aXRoIHdyb25nIGNpdcKgZnJlcXVlbmN5ICg1MDAwMDAwMCBIeikgYW5kIGl0IHBhc3NlZA0Kc3Vj
-Y2Vzc2Z1bGx5LCBidXQgd2UgbXVzdCB0YWtlIGludG8gYWNjb3VudCB0aGUgZmFjdCB0aGF0IGl0
-IGRlcGVuZHMgb24gU0QNCmNhcmQgaXRzZWxmLiBGb3IgZXhhbXBsZTogdGhpcyBTRCBjYXJkIG1v
-c3RseSB3b3JrcyBmaW5lIG9uIEhTREsgd2l0aCBjaXXCoA0KZnJlcXVlbmN5IDh4IHRpbWVzwqBo
-aWdoZXIgdGhhbiBleHBlY3RlZCENCg0KQWxleGV5IHNheXMgdGhhdCBoZSBmYWNlZCB3aXRoIHVu
-c3RhYmxlIFNEIGNhcmQgd29yayBvbiBheHMxMDMgZWFybGllciBidXQNCmhlIGRpZG4ndCBzYXZl
-IGFueSBhcnRpZmFjdHMgYWJvdXQgaXQuDQoNCj4gSXMgdGhpcyB0cmlnZ2VyZWQgYWZ0ZXIgYWRk
-aXRpb24gb2YgQVhTIGNsayBkcml2ZXIgPw0KTm8uDQoNCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+DQo+ID4gLS0t
-DQo+ID4gwqAgYXJjaC9hcmMvYm9vdC9kdHMvYXhzMTB4X21iLmR0c2kgfCA5ICsrKysrKysrLQ0K
-PiA+IMKgIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4g
-PiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhzMTB4X21iLmR0c2kgYi9h
-cmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzaQ0KPiA+IGluZGV4IDBmZjdlMDcuLjdiZGY1
-ODEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhzMTB4X21iLmR0c2kNCj4g
-PiArKysgYi9hcmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzaQ0KPiA+IEBAIC00NCw3ICs0
-NCwxNCBAQA0KPiA+IMKgwqANCj4gPiDCoMKgCQkJbW1jY2xrOiBtbWNjbGsgew0KPiA+IMKgwqAJ
-CQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gLQkJCQljbG9jay1mcmVxdWVuY3kg
-PSA8NTAwMDAwMDA+Ow0KPiA+ICsJCQkJLyoNCj4gPiArCQkJCcKgKiBEVyBzZGlvIGNvbnRyb2xs
-ZXIgaGFzIGV4dGVybmFsIGNpdSBjbG9jayBkaXZpZGVyDQo+ID4gKwkJCQnCoCogY29udHJvbGxl
-ZCB2aWEgcmVnaXN0ZXIgaW4gU0RJTyBJUC4gSXQgZGl2aWRlcw0KPiA+ICsJCQkJwqAqIHNkaW9f
-cmVmX2NsayAod2hpY2ggY29tZXMgZnJvbSBDR1UpIGJ5IDE2IGZvcg0KPiA+ICsJCQkJwqAqIGRl
-ZmF1bHQuIFNvIGRlZmF1bHQgbW1jY2xrIGNsb2NrICh3aGljaCBjb21lcw0KPiA+ICsJCQkJwqAq
-IHRvIHNka19pbikgaXMgMjUwMDAwMDAgSHouDQo+ID4gKwkJCQnCoCovDQo+ID4gKwkJCQljbG9j
-ay1mcmVxdWVuY3kgPSA8MjUwMDAwMDA+Ow0KPiA+IMKgwqAJCQkJI2Nsb2NrLWNlbGxzID0gPDA+
-Ow0KPiA+IMKgwqAJCQl9Ow0KPiA+IMKgwqANCj4gDQo+IA0KLS0gDQrCoEV1Z2VuaXkgUGFsdHNl
-dg==
+On Wed, Sep 13, 2017 at 12:36 AM, Florian Eckert <fe-W9Oo8bkYgz6ELgA04lAiVw@public.gmane.org> wrote:
+> Hello Rob
+>
+>>> > --- /dev/null
+>>> > +++ b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
+>>> > @@ -0,0 +1,10 @@
+>>> > +Lantiq cpu temperatur sensor
+>>
+>>
+>> s/temperatur/temperature/
+>
+>
+> Will update this in a follow up page based on the old one. So no v4?
+>
+>>
+>>> > +
+>>> > +Requires node properties:
+>>> > +- compatible value :
+>>> > +     "lantiq,cputemp"
+>>
+>>
+>> Kind of non-specific. How is this device even accessed without any other
+>> property?
+>
+>
+> It does not need any further properties. If this is set in the device tree
+> then the driver is loaded.
+
+DT is not the only way to instantiate drivers.
+
+What I meant is how do you access the hardware? That should be evident
+from the binding and it is not.
+
+Looking at the driver, you have some memory mapped system control
+registers which get ioremapped in arch/mips/lantiq/xway/sysctrl.c and
+accesses thru some platform specific macros. That is not the ideal way
+to do things as we use syscon and regmap for such things. But that's
+all mostly kernel details not so relevant to the DT binding.
+
+For DT, I'd expect this is a child node of the sysctrl block with a
+reg property value of <0x40 4> (along with any other child devices).
+You could also not even put this in DT and the system controller can
+have it's own driver that instantiates the child device for this
+driver.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
