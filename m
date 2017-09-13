@@ -1,33 +1,30 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] dt-bindings: net: renesas-ravb: Add support for R8A77995 RAVB
-Date: Wed, 13 Sep 2017 21:17:40 +0900
-Message-ID: <1505305060-4192-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/2] arm64: dts: renesas: r8a77995 and draak: add support EthernetAVB
+Date: Wed, 13 Sep 2017 21:18:37 +0900
+Message-ID: <1505305119-4257-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a new compatible string for the R8A77995 (R-Car D3) RAVB.
+This patch is based on the renesas-drivers.git /
+renesas-drivers-2017-09-05-v4.13 tag.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
- 1 file changed, 1 insertion(+)
+Yoshihiro Shimoda (2):
+  arm64: dts: renesas: r8a77995: Add EthernetAVB device node
+  arm64: dts: renesas: r8a77995: draak: enable EthernetAVB
 
-diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-index 1672353..ae2213f 100644
---- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-+++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-@@ -17,6 +17,7 @@ Required properties:
- 
-       - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
-       - "renesas,etheravb-r8a7796" for the R8A7796 SoC.
-+      - "renesas,etheravb-r8a77995" for the R8A77995 SoC.
-       - "renesas,etheravb-rcar-gen3" as a fallback for the above
- 		R-Car Gen3 devices.
- 
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 25 ++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi      | 45 ++++++++++++++++++++++++++
+ 2 files changed, 70 insertions(+)
+
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
