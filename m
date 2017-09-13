@@ -1,130 +1,95 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v12 15/26] v4l: async: Allow binding notifiers to
- sub-devices
-Date: Wed, 13 Sep 2017 11:29:02 +0300
-Message-ID: <20170913082901.fbxxphn7s3ljn3mc@valkosipuli.retiisi.org.uk>
-References: <20170912134200.19556-1-sakari.ailus@linux.intel.com>
- <20170912134200.19556-16-sakari.ailus@linux.intel.com>
- <575bf15b-62d2-3a51-d550-d462578471f7@xs4all.nl>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v4 6/6] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Wed, 13 Sep 2017 17:31:26 +0900
+Message-ID: <CAK7LNAQpO+NYu2uOwEx+c1srabO8=uOjQ-9+sh6-Q1eDP0TOSA@mail.gmail.com>
+References: <1504784522-26841-1-git-send-email-yamada.masahiro@socionext.com>
+ <1504784522-26841-7-git-send-email-yamada.masahiro@socionext.com>
+ <CACRpkdZLG=ezxj62R=WkULh2vfpQwqh8P-6FhtONzU7yRbyeuA@mail.gmail.com> <7e46f2a3-114f-0c34-d3c5-49e6422b9200@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <575bf15b-62d2-3a51-d550-d462578471f7-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <7e46f2a3-114f-0c34-d3c5-49e6422b9200-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi.
 
-On Wed, Sep 13, 2017 at 09:17:08AM +0200, Hans Verkuil wrote:
-> On 09/12/2017 03:41 PM, Sakari Ailus wrote:
-> > Registering a notifier has required the knowledge of struct v4l2_device
-> > for the reason that sub-devices generally are registered to the
-> > v4l2_device (as well as the media device, also available through
-> > v4l2_device).
-> > 
-> > This information is not available for sub-device drivers at probe time.
-> > 
-> > What this patch does is that it allows registering notifiers without
-> > having v4l2_device around. Instead the sub-device pointer is stored in the
-> > notifier. Once the sub-device of the driver that registered the notifier
-> > is registered, the notifier will gain the knowledge of the v4l2_device,
-> > and the binding of async sub-devices from the sub-device driver's notifier
-> > may proceed.
-> > 
-> > The root notifier's complete callback is only called when all sub-device
-> > notifiers are completed.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> 
-> Just two small comments (see below).
-> 
-> After changing those (the first is up to you) you can add my:
-> 
-> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+2017-09-13 0:44 GMT+09:00 David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>:
+> On 09/12/2017 07:03 AM, Linus Walleij wrote:
+>>
+>> On Thu, Sep 7, 2017 at 1:42 PM, Masahiro Yamada
+>> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>>
+>>> This GPIO controller device is used on UniPhier SoCs.
+>>>
+>>> It also serves as an interrupt controller, but interrupt signals are
+>>> just delivered to the parent irqchip without any latching or OR'ing.
+>>> This is implemented by using hierarchy IRQ domain.
+>>>
+>>> Implementation note:
+>>> Unfortunately, the IRQ mapping from this controller to the parent is
+>>> random. (48, 49, ..., 63, 154, 155, ...)
+>>> If "interrupts" property is used, IRQ resources may be statically
+>>> allocated when platform devices are populated from DT.  This can be
+>>> a problem for the hierarchy IRQ domain because IRQ allocation must
+>>> happen from the outer-most domain up to the root domain in order to
+>>> build up the stacked IRQ.  (https://lkml.org/lkml/2017/7/6/758)
+>>> Solutions to work around it could be to hard-code parent hwirqs or
+>>> to invent a driver-specific DT property.
+>>>
+>>> Here, the new API irq_domain_push_irq() was merged by v4.14-rc1.
+>>> It allows to add irq_data to the existing hierarchy.  It will help
+>>> to make this driver work whether the parent has already initialized
+>>> the hierarchy or not.
+>>>
+>>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>>> ---
+>>>
+>>> Changes in v4:
+>>>    - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
+>>>    - Reimplement irqchip part by using irq_domain_push_irq()
+>>
+>>
+>> Awesome improvement. There was a build error and I also
+>> would like David Daney to have a look at this so we know we
+>> use things the right way,
+>
+>
+> It looks correct to me.
+>
+> I haven't verified it, but I think the OF device-tree probing code for the
+> platform devices will automatically xlat-and-map all those irqs, so that the
+> irq_domain_push_irq() is required to get the domain hierarchy properly
+> configured.  It would be similar to the PCI case where we configure all the
+> MSI-X and then do the irq_domain_push_irq() in the Cavium ThunderX driver.
+>
+> If interrupt handling has been verified to work with this driver, I would
+> say that we are probably using things "the right way".
+>
+> David.
+>
 
-Thanks; please see my comments below.
+V4 depends on 5 patches that got negative feedback in irqdomain subsystem.
+One more problem for this approach is to virtual IRQs are statically
+allocated during the driver probe.
+This looks a step backward to me.
+Recently, gpio_irqchip migrated to on-the-fly allocation in case some
+controllers may have lots of
+GPIO lines.
 
-...
 
-> > +/* Return true if all sub-device notifiers are complete, false otherwise. */
-> > +static bool v4l2_async_subdev_notifiers_complete(
-> > +	struct v4l2_async_notifier *notifier)
-> > +{
-> > +	struct v4l2_subdev *sd;
-> > +
-> > +	if (!list_empty(&notifier->waiting))
-> > +		return false;
-> > +
-> > +	list_for_each_entry(sd, &notifier->done, async_list) {
-> > +		struct v4l2_async_notifier *subdev_notifier =
-> > +			v4l2_async_find_subdev_notifier(sd);
-> > +
-> > +		if (!subdev_notifier)
-> > +			continue;
-> > +
-> > +		if (!v4l2_async_subdev_notifiers_complete(subdev_notifier))
-> 
-> I think it is better to change this to:
-> 
-> 		if (subdev_notifier &&
-> 		    !v4l2_async_subdev_notifiers_complete(subdev_notifier))
-> 
-> and drop this if..continue above. That's a bit overkill in this simple case.
-> 
-> It's up to you, though.
+Finally, I came up with another (I think, better) solution.
+I think v5 is less controversial,
+and works very well in on-the-fly manner.
 
-Yes, makes sense.
+I am sending it shortly...
 
-...
-
-> > +/* Try completing a notifier. */
-> > +static int v4l2_async_notifier_try_complete(
-> > +	struct v4l2_async_notifier *notifier)
-> > +{
-> > +	do {
-> > +		int ret;
-> > +
-> > +		/* Any local async sub-devices left? */
-> > +		if (!list_empty(&notifier->waiting))
-> > +			return 0;
-> > +
-> > +		/*
-> > +		 * Any sub-device notifiers waiting for async subdevs
-> > +		 * to be bound?
-> > +		 */
-> > +		if (!v4l2_async_subdev_notifiers_complete(notifier))
-> > +			return 0;
-> > +
-> > +		/* Proceed completing the notifier */
-> > +		ret = v4l2_async_notifier_call_complete(notifier);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +
-> > +		/*
-> > +		 * Obtain notifier's parent. If there is one, repeat
-> > +		 * the process, otherwise we're done here.
-> > +		 */
-> > +	} while ((notifier = notifier->parent));
-> 
-> I'd change this to:
-> 
-> 		notifier = notifier->parent;
-> 	} while (notifier);
-> 
-> Assignment in a condition is frowned upon, and there is no need to do that
-> here.
-
-Wouldn't that equally apply to any statement with side effects? In other
-words, what you're suggesting for patch 19? :-)
 
 -- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
