@@ -1,44 +1,57 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v3 5/6] remoteproc: qcom: Add support for q6v5-wcss pil
-Date: Wed, 13 Sep 2017 15:03:50 +0530
-Message-ID: <f0c049c8-a891-ebb1-d90d-7d94befb513b@codeaurora.org>
-References: <1504154734-12175-1-git-send-email-sricharan@codeaurora.org>
- <1504154734-12175-6-git-send-email-sricharan@codeaurora.org>
- <20170912142137.nzx2s7xcyde5d2js@rob-hp-laptop>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: r8a77995: add GPIO device nodes
+Date: Wed, 13 Sep 2017 09:35:00 +0000
+Message-ID: <TY1PR06MB099246295272BBF0F08022C8D86E0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1505285528-7033-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdX9qowD3039OxPyPoyUsnaq7e=kWyxqDdDqzz5RTZtSwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170912142137.nzx2s7xcyde5d2js@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: bjorn.andersson@linaro.org, ohad@wizery.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdX9qowD3039OxPyPoyUsnaq7e=kWyxqDdDqzz5RTZtSwQ@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 9/12/2017 7:51 PM, Rob Herring wrote:
-> On Thu, Aug 31, 2017 at 10:15:33AM +0530, Sricharan R wrote:
->> IPQ8074 has an integrated Hexagon dsp core q6v5 and a wireless lan
->> (Lithium) IP. An mdt type single image format is used for the
->> firmware. So the mdt_load function can be directly used to load
->> the firmware. Also add the relevant resets required for this core.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |  7 ++-
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-
-  Thanks !!
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBXZWRu
+ZXNkYXksIFNlcHRlbWJlciAxMywgMjAxNyA2OjIyIFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwN
+Cj4gDQo+IE9uIFdlZCwgU2VwIDEzLCAyMDE3IGF0IDg6NTIgQU0sIFlvc2hpaGlybyBTaGltb2Rh
+DQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gVGhpcyBw
+YXRjaCBhZGRzIEdQSU8gZGV2aWNlIG5vZGVzIGZvciByOGE3Nzk5NS4NCj4gPg0KPiA+IFNpZ25l
+ZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2Fz
+LmNvbT4NCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4gDQo+ID4gLS0tIGEvYXJjaC9h
+cm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTk1LmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5OTUuZHRzaQ0KPiA+IEBAIC0xMzksNiArMTM5LDExOCBA
+QA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MT47
+DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiArICAgICAgICAgICAgICAgZ3BpbzA6
+IGdwaW9AZTYwNTAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
+PSAicmVuZXNhcyxncGlvLXI4YTc3OTk1IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgInJlbmVzYXMscmNhci1nZW4zLWdwaW8iLA0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAicmVuZXNhcyxncGlvLXJjYXIiOw0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4ZTYwNTAwMDAgMCAweDUwPjsNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNCBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjZ3Bpby1jZWxscyA9IDwyPjsNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICBncGlvLWNvbnRyb2xsZXI7DQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgZ3Bpby1yYW5nZXMgPSA8JnBmYyAwIDAgOT47DQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwyPjsNCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICBpbnRlcnJ1cHQtY29udHJvbGxlcjsNCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICBjbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDkxMj47DQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgcG93ZXItZG9tYWlucyA9IDwmY3BnPjsNCj4gDQo+IEFsbCBub2RlcyBsYWNrIHRoZSBw
+b3dlciBkb21haW4gaW5kZXggKDMyLCB0byBiZSByZXBsYWNlZCBieQ0KPiBSOEE3Nzk5NV9QRF9B
+TFdBWVNfT04gbGF0ZXIpOg0KPiANCj4gICAgIHBvd2VyLWRvbWFpbnMgPSA8JnN5c2MgMzI+Ow0K
+DQpUaGUgcjhhNzc5OTUuZHRzaSBmaWxlIGFscmVhZHkgdXNlcyBSOEE3Nzk5NV9QRF9BTFdBWVNf
+T04gaW4gc2NpZjIgbm9kZS4NClNvLCBzaG91bGQgSSBmaXggdGhpcyBwYXRjaCBsaWtlIHRoZSBm
+b2xsb3dpbmc/DQoNCiAgICAgcG93ZXItZG9tYWlucyA9IDwmc3lzYyBSOEE3Nzk5NV9QRF9BTFdB
+WVNfT04+Ow0KDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVzZXRzID0gPCZjcGcgOTEy
+PjsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gDQo+IFdpdGggdGhhdCBmaXhlZDoNCj4gUmV2
+aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQoN
+ClRoYW5rIHlvdSBmb3IgdGhlIHJldmlldyENCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNo
+aW1vZGENCg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3Rz
+IG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+IA0KPiBJbiBw
+ZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2Vs
+ZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0
+IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
