@@ -1,56 +1,56 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings
- documentation
-Date: Wed, 13 Sep 2017 08:12:34 -0700
-Message-ID: <20170913151234.GH27765@roeck-us.net>
-References: <20170901065818.2037-1-fe@dev.tdt.de>
- <20170901065818.2037-2-fe@dev.tdt.de>
- <20170901142622.GC599@roeck-us.net>
- <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
- <a5a2e95a1fb671eb59459542af122d6e@dev.tdt.de>
- <20170913141258.GB27765@roeck-us.net>
- <5da3b25f6eec79f103ef880100a403f7@dev.tdt.de>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH] ARC: [plat-axs10x]: DTS: fix sdio ciu frequency
+Date: Wed, 13 Sep 2017 15:14:45 +0000
+Message-ID: <1505315684.30546.32.camel@synopsys.com>
+References: <20170912182045.20941-1-Eugeniy.Paltsev@synopsys.com>
+         <4df1bb54-5fa1-5089-7d96-799ccfc78fce@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5da3b25f6eec79f103ef880100a403f7@dev.tdt.de>
+In-Reply-To: <4df1bb54-5fa1-5089-7d96-799ccfc78fce@synopsys.com>
+Content-Language: en-US
+Content-ID: <FED833E94A97B6449297767EABCD2C61@internal.synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Eckert <fe@dev.tdt.de>
-Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, jdelvare@suse.com, Guenter Roeck <groeck7@gmail.com>
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 04:42:33PM +0200, Florian Eckert wrote:
-> >>>
-> >>>>> +
-> >>>>> +Requires node properties:
-> >>>>> +- compatible value :
-> >>>>> +	"lantiq,cputemp"
-> >>>
-> >>>Kind of non-specific. How is this device even accessed without any other
-> >>>property?
-> >>
-> >>It does not need any further properties. If this is set in the device
-> >>tree
-> >>then the driver is loaded.
-> >>After loading the temperature could be read from "/sys/class/hwmon".
-> >>Let me know what should i do to get this fixed?
-> >>
-> 
-> What about with this is this OK from your side or do I have do to something?
-> So I only update "s/temperatur/temperature/" with an follow-up patch based
-> the current linux-next tree?
-> 
-
-Also s/cputemp@0/cputemp/ if I understand Rob's comment correctly.
-
-Question for Rob: The driver checks the SOC version and bails out
-if the version is not vr9 v1.2. Should that be expressed in DT ?
-
-Guenter
-
-> Thanks
-> 
-> Florian
-> 
-> 
+T24gVHVlLCAyMDE3LTA5LTEyIGF0IDExOjM4IC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+
+IE9uIDA5LzEyLzIwMTcgMTE6MjAgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gPiBEVyBz
+ZGlvIGNvbnRyb2xsZXIgaGFzIGV4dGVybmFsIGNpdSBjbG9jayBkaXZpZGVyIGNvbnRyb2xsZWQN
+Cj4gPiB2aWEgcmVnaXN0ZXIgaW4gU0RJTyBJUC4gSXQgZGl2aWRlcyBzZGlvX3JlZl9jbGsNCj4g
+PiAod2hpY2ggY29tZXMgZnJvbSBDR1UpIGJ5IDE2IGZvciBkZWZhdWx0LiBTbyBkZWZhdWx0IG1t
+Y2Nsaw0KPiA+IGNsb2NrICh3aGljaCBjb21lcyB0byBzZGtfaW4pIGlzIDI1MDAwMDAwIEh6Lg0K
+PiA+IA0KPiA+IFNvIGZpeCB3cm9uZyBjdXJyZW50IHZhbHVlICg1MDAwMDAwMCBIeikgdG8gYWN0
+dWFsIDI1MDAwMDAwIEh6Lg0KPiANCj4gSXMgdGhpcyBhIHByZXZlbnRpdmUgZml4IG9yIHRoZXJl
+IGFyZSBrbm93biBpc3N1ZXMgd2l0aCB3aGF0IHdlIGhhdmUgdG9kYXkuDQoNClllcywgaXQncyBr
+aW5kYSBhIHByZXZlbnRpdmUgZml4Lg0KV2UgY2hlY2sgYXhzMTB4wqBjaXUgZnJlcXVlbmN5IHdo
+ZW4gd2UgZm91bmQgd2hhdCBoc2RrwqBjaXUgZnJlcXVlbmN5IHdhcyB3cm9uZw0KYW5kIGZvdW5k
+IHRoYXQgaXQgaXMgd3JpbmcgdG9vLg0KDQpJIHRyaWVkIHRvIHJ1biBTRCBzdHJlc3MgdGVzdCB3
+aXRoIHdyb25nIGNpdcKgZnJlcXVlbmN5ICg1MDAwMDAwMCBIeikgYW5kIGl0IHBhc3NlZA0Kc3Vj
+Y2Vzc2Z1bGx5LCBidXQgd2UgbXVzdCB0YWtlIGludG8gYWNjb3VudCB0aGUgZmFjdCB0aGF0IGl0
+IGRlcGVuZHMgb24gU0QNCmNhcmQgaXRzZWxmLiBGb3IgZXhhbXBsZTogdGhpcyBTRCBjYXJkIG1v
+c3RseSB3b3JrcyBmaW5lIG9uIEhTREsgd2l0aCBjaXXCoA0KZnJlcXVlbmN5IDh4IHRpbWVzwqBo
+aWdoZXIgdGhhbiBleHBlY3RlZCENCg0KQWxleGV5IHNheXMgdGhhdCBoZSBmYWNlZCB3aXRoIHVu
+c3RhYmxlIFNEIGNhcmQgd29yayBvbiBheHMxMDMgZWFybGllciBidXQNCmhlIGRpZG4ndCBzYXZl
+IGFueSBhcnRpZmFjdHMgYWJvdXQgaXQuDQoNCj4gSXMgdGhpcyB0cmlnZ2VyZWQgYWZ0ZXIgYWRk
+aXRpb24gb2YgQVhTIGNsayBkcml2ZXIgPw0KTm8uDQoNCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+DQo+ID4gLS0t
+DQo+ID4gwqAgYXJjaC9hcmMvYm9vdC9kdHMvYXhzMTB4X21iLmR0c2kgfCA5ICsrKysrKysrLQ0K
+PiA+IMKgIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4g
+PiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhzMTB4X21iLmR0c2kgYi9h
+cmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzaQ0KPiA+IGluZGV4IDBmZjdlMDcuLjdiZGY1
+ODEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcmMvYm9vdC9kdHMvYXhzMTB4X21iLmR0c2kNCj4g
+PiArKysgYi9hcmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzaQ0KPiA+IEBAIC00NCw3ICs0
+NCwxNCBAQA0KPiA+IMKgwqANCj4gPiDCoMKgCQkJbW1jY2xrOiBtbWNjbGsgew0KPiA+IMKgwqAJ
+CQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gLQkJCQljbG9jay1mcmVxdWVuY3kg
+PSA8NTAwMDAwMDA+Ow0KPiA+ICsJCQkJLyoNCj4gPiArCQkJCcKgKiBEVyBzZGlvIGNvbnRyb2xs
+ZXIgaGFzIGV4dGVybmFsIGNpdSBjbG9jayBkaXZpZGVyDQo+ID4gKwkJCQnCoCogY29udHJvbGxl
+ZCB2aWEgcmVnaXN0ZXIgaW4gU0RJTyBJUC4gSXQgZGl2aWRlcw0KPiA+ICsJCQkJwqAqIHNkaW9f
+cmVmX2NsayAod2hpY2ggY29tZXMgZnJvbSBDR1UpIGJ5IDE2IGZvcg0KPiA+ICsJCQkJwqAqIGRl
+ZmF1bHQuIFNvIGRlZmF1bHQgbW1jY2xrIGNsb2NrICh3aGljaCBjb21lcw0KPiA+ICsJCQkJwqAq
+IHRvIHNka19pbikgaXMgMjUwMDAwMDAgSHouDQo+ID4gKwkJCQnCoCovDQo+ID4gKwkJCQljbG9j
+ay1mcmVxdWVuY3kgPSA8MjUwMDAwMDA+Ow0KPiA+IMKgwqAJCQkJI2Nsb2NrLWNlbGxzID0gPDA+
+Ow0KPiA+IMKgwqAJCQl9Ow0KPiA+IMKgwqANCj4gDQo+IA0KLS0gDQrCoEV1Z2VuaXkgUGFsdHNl
+dg==
