@@ -1,42 +1,56 @@
-From: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: [PATCH v2 4/4] MAINTAINERS: Add entry for BCM2835 camera driver
-Date: Wed, 13 Sep 2017 16:07:49 +0100
-Message-ID: <26dd3226e90f6adaec834c27ada2bfcb573af913.1505314390.git.dave.stevenson@raspberrypi.org>
-References: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings
+ documentation
+Date: Wed, 13 Sep 2017 08:12:34 -0700
+Message-ID: <20170913151234.GH27765@roeck-us.net>
+References: <20170901065818.2037-1-fe@dev.tdt.de>
+ <20170901065818.2037-2-fe@dev.tdt.de>
+ <20170901142622.GC599@roeck-us.net>
+ <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
+ <a5a2e95a1fb671eb59459542af122d6e@dev.tdt.de>
+ <20170913141258.GB27765@roeck-us.net>
+ <5da3b25f6eec79f103ef880100a403f7@dev.tdt.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
-In-Reply-To: <cover.1505314390.git.dave.stevenson@raspberrypi.org>
-References: <cover.1505314390.git.dave.stevenson@raspberrypi.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5da3b25f6eec79f103ef880100a403f7@dev.tdt.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Eckert <fe@dev.tdt.de>
+Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, jdelvare@suse.com, Guenter Roeck <groeck7@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Wed, Sep 13, 2017 at 04:42:33PM +0200, Florian Eckert wrote:
+> >>>
+> >>>>> +
+> >>>>> +Requires node properties:
+> >>>>> +- compatible value :
+> >>>>> +	"lantiq,cputemp"
+> >>>
+> >>>Kind of non-specific. How is this device even accessed without any other
+> >>>property?
+> >>
+> >>It does not need any further properties. If this is set in the device
+> >>tree
+> >>then the driver is loaded.
+> >>After loading the temperature could be read from "/sys/class/hwmon".
+> >>Let me know what should i do to get this fixed?
+> >>
+> 
+> What about with this is this OK from your side or do I have do to something?
+> So I only update "s/temperatur/temperature/" with an follow-up patch based
+> the current linux-next tree?
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index eb930eb..b47ddaa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2713,6 +2713,13 @@ S:	Maintained
- N:	bcm2835
- F:	drivers/staging/vc04_services
- 
-+BROADCOM BCM2835 CAMERA DRIVER
-+M:	Dave Stevenson <dave.stevenson@raspberrypi.org>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	drivers/media/platform/bcm2835/
-+F:	Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-+
- BROADCOM BCM47XX MIPS ARCHITECTURE
- M:	Hauke Mehrtens <hauke@hauke-m.de>
- M:	Rafał Miłecki <zajec5@gmail.com>
--- 
-2.7.4
+Also s/cputemp@0/cputemp/ if I understand Rob's comment correctly.
+
+Question for Rob: The driver checks the SOC version and bails out
+if the version is not vr9 v1.2. Should that be expressed in DT ?
+
+Guenter
+
+> Thanks
+> 
+> Florian
+> 
+> 
