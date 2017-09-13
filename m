@@ -1,72 +1,359 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [RFC PATCH 6/6] iommu/arm-smmu-v3: Avoid ILLEGAL setting of
- STE.S1STALLD and CD.S
-Date: Wed, 13 Sep 2017 18:11:59 +0100
-Message-ID: <20170913171159.GB14955@arm.com>
-References: <1504167642-14922-1-git-send-email-xieyisheng1@huawei.com>
- <1504167642-14922-7-git-send-email-xieyisheng1@huawei.com>
- <738977bb-4cd7-7d86-0ea0-0c88b6af721c@arm.com>
- <20170913030643.GD12411@arm.com>
- <2f952821-afc3-46dd-17eb-40e8626bd6e5@huawei.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 06/14] irqchip: add initial support for ompic
+Date: Wed, 13 Sep 2017 18:21:39 +0100
+Message-ID: <86h8w6see4.fsf@arm.com>
+References: <20170910064926.5874-1-shorne@gmail.com>
+        <20170910064926.5874-7-shorne@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2f952821-afc3-46dd-17eb-40e8626bd6e5@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Yisheng Xie <xieyisheng1@huawei.com>
-Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, robin.murphy@arm.com, robert.moore@intel.com, lv.zheng@intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@acpica.org, liubo95@huawei.com, chenjiankang1@huawei.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170910064926.5874-7-shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Stafford Horne's
+        message of "Sun, 10 Sep 2017 15:49:18 +0900")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 06:11:13PM +0800, Yisheng Xie wrote:
-> On 2017/9/13 11:06, Will Deacon wrote:
-> > On Tue, Sep 05, 2017 at 01:54:19PM +0100, Jean-Philippe Brucker wrote:
-> >> On 31/08/17 09:20, Yisheng Xie wrote:
-> >>> It is ILLEGAL to set STE.S1STALLD if STALL_MODEL is not 0b00, which
-> >>> means we should not disable stall mode if stall/terminate mode is not
-> >>> configuable.
-> >>>
-> >>> Meanwhile, it is also ILLEGAL when STALL_MODEL==0b10 && CD.S==0 which
-> >>> means if stall mode is force we should always set CD.S.
-> >>>
-> >>> This patch add ARM_SMMU_FEAT_TERMINATE feature bit for smmu, and use
-> >>> TERMINATE feature checking to ensue above ILLEGAL cases from happening.
-> >>>
-> >>> Signed-off-by: Yisheng Xie <xieyisheng1@huawei.com>
-> >>> ---
-> >>>  drivers/iommu/arm-smmu-v3.c | 22 ++++++++++++++++------
-> >>>  1 file changed, 16 insertions(+), 6 deletions(-)
-> >>>
-> >>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> >>> index dbda2eb..0745522 100644
-> >>> --- a/drivers/iommu/arm-smmu-v3.c
-> >>> +++ b/drivers/iommu/arm-smmu-v3.c
-> >>> @@ -55,6 +55,7 @@
-> >>>  #define IDR0_STALL_MODEL_SHIFT		24
-> >>>  #define IDR0_STALL_MODEL_MASK		0x3
-> >>>  #define IDR0_STALL_MODEL_STALL		(0 << IDR0_STALL_MODEL_SHIFT)
-> >>> +#define IDR0_STALL_MODEL_NS		(1 << IDR0_STALL_MODEL_SHIFT)
-> >>>  #define IDR0_STALL_MODEL_FORCE		(2 << IDR0_STALL_MODEL_SHIFT)
-> >>>  #define IDR0_TTENDIAN_SHIFT		21
-> >>>  #define IDR0_TTENDIAN_MASK		0x3
-> >>> @@ -766,6 +767,7 @@ struct arm_smmu_device {
-> >>>  #define ARM_SMMU_FEAT_SVM		(1 << 15)
-> >>>  #define ARM_SMMU_FEAT_HA		(1 << 16)
-> >>>  #define ARM_SMMU_FEAT_HD		(1 << 17)
-> >>> +#define ARM_SMMU_FEAT_TERMINATE		(1 << 18)
-> >>
-> >> I'd rather introduce something like "ARM_SMMU_FEAT_STALL_FORCE" instead.
-> >> Terminate model has another meaning, and is defined by a different bit in
-> >> IDR0.
-> > 
-> > Yes. What we need to do is:
-> > 
-> > - If STALL_MODEL is 0b00, then set S1STALLD
-> 
-> Yes, and within this case, we can only set the S1STALLD for masters which can
-> not stall in the future?
+On Sun, Sep 10 2017 at  3:49:18 pm BST, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+>
+> IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
+> described in the Multicore support section of the OpenRISC 1.2
+> proposed architecture specification:
+>
+>   https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
+>
+> Each OpenRISC core contains a full interrupt controller which is used in
+> the SMP architecture for interrupt balancing.  This IPI device, the
+> ompic, is the only external device required for enabling SMP on
+> OpenRISC.
+>
+> Pending ops are stored in a memory bit mask which can allow multiple
+> pending operations to be set and serviced at a time. This is mostly
+> borrowed from the alpha IPI implementation.
+>
+> Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+> [shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
+> Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>
+> Changes since v1
+>  - Added openrisc, prefix
+>  - Clarified 8 bytes per cpu
+>  - Removed #interrupt-cells as this will not be an irq parent
+>  - Changed ops to be percpu
+>  - Added DTS and intialization failure validations
+>
+>  .../interrupt-controller/openrisc,ompic.txt        |  19 ++
+>  arch/openrisc/Kconfig                              |   1 +
+>  drivers/irqchip/Kconfig                            |   3 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-ompic.c                        | 205 +++++++++++++++++++++
+>  5 files changed, 229 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+>  create mode 100644 drivers/irqchip/irq-ompic.c
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+> new file mode 100644
+> index 000000000000..346e6042d62f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+> @@ -0,0 +1,19 @@
+> +Open Multi-Processor Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible : This should be "openrisc,ompic"
+> +- reg : Specifies base physical address and size of the register space. The
+> +  size is based on the number of cores the controller has been configured
+> +  to handle, this should be set to 8 bytes per cpu core.
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- interrupts : Specifies the interrupt line to which the ompic is wired.
+> +
+> +Example:
+> +
+> +ompic: ompic {
+> +	compatible = "openrisc,ompic";
+> +	reg = <0x98000000 16>;
+> +	interrupt-controller;
+> +	interrupts = <1>;
+> +};
+> diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
+> index b49acda5e8f4..34eb4e90f56c 100644
+> --- a/arch/openrisc/Kconfig
+> +++ b/arch/openrisc/Kconfig
+> @@ -30,6 +30,7 @@ config OPENRISC
+>  	select NO_BOOTMEM
+>  	select ARCH_USE_QUEUED_SPINLOCKS
+>  	select ARCH_USE_QUEUED_RWLOCKS
+> +	select OMPIC if SMP
+>  
+>  config CPU_BIG_ENDIAN
+>  	def_bool y
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index f1fd5f44d1d4..0e4c96c90b86 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -145,6 +145,9 @@ config CLPS711X_IRQCHIP
+>  	select SPARSE_IRQ
+>  	default y
+>  
+> +config OMPIC
+> +	bool
+> +
+>  config OR1K_PIC
+>  	bool
+>  	select IRQ_DOMAIN
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index e88d856cc09c..123047d7a20d 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
+>  obj-$(CONFIG_METAG)			+= irq-metag-ext.o
+>  obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
+>  obj-$(CONFIG_CLPS711X_IRQCHIP)		+= irq-clps711x.o
+> +obj-$(CONFIG_OMPIC)			+= irq-ompic.o
+>  obj-$(CONFIG_OR1K_PIC)			+= irq-or1k-pic.o
+>  obj-$(CONFIG_ORION_IRQCHIP)		+= irq-orion.o
+>  obj-$(CONFIG_OMAP_IRQCHIP)		+= irq-omap-intc.o
+> diff --git a/drivers/irqchip/irq-ompic.c b/drivers/irqchip/irq-ompic.c
+> new file mode 100644
+> index 000000000000..cd2616b6639b
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-ompic.c
+> @@ -0,0 +1,205 @@
+> +/*
+> + * Open Multi-Processor Interrupt Controller driver
+> + *
+> + * Copyright (C) 2014 Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+> + * Copyright (C) 2017 Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + *
+> + * The ompic device handles IPI communication because cores in mulicore
+> + * OpenRISC systems.
 
-Yeah, something like that. I'd probably predicate it on having afault
-handler registered too.
+Should the above read "between cores"?
 
-Will
+> + *
+> + * Registers
+> + *
+> + * For each CPU the ompic has 2 registers. The control register for sending
+> + * and acking IPIs and the status register for receiving IPIs. The register
+> + * layouts are as follows:
+> + *
+> + *  Control register
+> + *  +---------+---------+----------+---------+
+> + *  | 31      | 30      | 29 .. 16 | 15 .. 0 |
+> + *  ----------+---------+----------+----------
+> + *  | IRQ ACK | IRQ GEN | DST CORE | DATA    |
+> + *  +---------+---------+----------+---------+
+> + *
+> + *  Status register
+> + *  +----------+-------------+----------+---------+
+> + *  | 31       | 30          | 29 .. 16 | 15 .. 0 |
+> + *  -----------+-------------+----------+---------+
+> + *  | Reserved | IRQ Pending | SRC CORE | DATA    |
+> + *  +----------+-------------+----------+---------+
+> + *
+> + * Architecture
+> + *
+> + * - The ompic generates a level interrupt to the CPU PIC when a message is
+> + *   ready.  Messages are delivered via the memory bus.
+> + * - The ompic does not have any interrupt input lines.
+> + * - The ompic is wired to the same irq line on each core.
+> + * - Devices are wired to the same irq line on each core.
+> + *
+> + *   +---------+                         +---------+
+> + *   | CPU     |                         | CPU     |
+> + *   |  Core 0 |<==\ (memory access) /==>|  Core 1 |
+> + *   |  [ PIC ]|   |                 |   |  [ PIC ]|
+> + *   +----^-^--+   |                 |   +----^-^--+
+> + *        | |      v                 v        | |
+> + *   <====|=|=================================|=|==> (memory bus)
+> + *        | |      ^                  ^       | |
+> + *  (ipi  | +------|---------+--------|-------|-+ (device irq)
+> + *   irq  |        |         |        |       |
+> + *  core0)| +------|---------|--------|-------+ (ipi irq core1)
+> + *        | |      |         |        |
+> + *   +----o-o-+    |    +--------+    |
+> + *   | ompic  |<===/    | Device |<===/
+> + *   |  IPI   |         +--------+
+> + *   +--------+*
+> + *
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/ioport.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/smp.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +
+> +#include <linux/irqchip.h>
+> +
+> +#define OMPIC_CPUBYTES		8
+> +#define OMPIC_CTRL(cpu)		(0x0 + (cpu * OMPIC_CPUBYTES))
+> +#define OMPIC_STAT(cpu)		(0x4 + (cpu * OMPIC_CPUBYTES))
+> +
+> +#define OMPIC_CTRL_IRQ_ACK	(1 << 31)
+> +#define OMPIC_CTRL_IRQ_GEN	(1 << 30)
+> +#define OMPIC_CTRL_DST(cpu)	(((cpu) & 0x3fff) << 16)
+> +
+> +#define OMPIC_STAT_IRQ_PENDING	(1 << 30)
+> +
+> +#define OMPIC_DATA(x)		((x) & 0xffff)
+> +
+> +DEFINE_PER_CPU(unsigned long, ops);
+> +
+> +static void __iomem *ompic_base;
+> +
+> +static inline u32 ompic_readreg(void __iomem *base, loff_t offset)
+> +{
+> +	return ioread32be(base + offset);
+> +}
+> +
+> +static void ompic_writereg(void __iomem *base, loff_t offset, u32 data)
+> +{
+> +	iowrite32be(data, base + offset);
+> +}
+> +
+> +void ompic_raise_softirq(const struct cpumask *mask, unsigned int ipi_msg)
+
+Please make this static.
+
+> +{
+> +	unsigned int dst_cpu;
+> +	unsigned int src_cpu = smp_processor_id();
+> +
+> +	for_each_cpu(dst_cpu, mask) {
+> +		set_bit(ipi_msg, &per_cpu(ops, dst_cpu));
+> +
+> +		/*
+> +		 * On OpenRISC the atomic set_bit() call implies a memory
+> +		 * barrier.  Otherwise we would need: smp_wmb(); paired
+> +		 * with the read in ompic_ipi_handler.
+> +		 */
+
+One last question on this, because the architecture document is terribly
+unclear: If you have CPU0 doing an atomic operation A0, CPU1 seeing A0
+and doeing another atomic A1 (the set_bit above) followed by an IPI to
+CPU2, is CPU2 *guaranteed* to observe both A0 *and* A1? Because that's
+required by the IPI semantics, and you wouldn't see that kind of issue
+with only two CPUs.
+
+> +
+> +		ompic_writereg(ompic_base, OMPIC_CTRL(src_cpu),
+> +			       OMPIC_CTRL_IRQ_GEN |
+> +			       OMPIC_CTRL_DST(dst_cpu) |
+> +			       OMPIC_DATA(1));
+> +	}
+> +}
+> +
+> +irqreturn_t ompic_ipi_handler(int irq, void *dev_id)
+
+This should be static.
+
+> +{
+> +	unsigned int cpu = smp_processor_id();
+> +	unsigned long *pending_ops = &per_cpu(ops, cpu);
+> +	unsigned long ops;
+> +
+> +	ompic_writereg(ompic_base, OMPIC_CTRL(cpu), OMPIC_CTRL_IRQ_ACK);
+> +	while ((ops = xchg(pending_ops, 0)) != 0) {
+> +
+> +		/*
+> +		 * On OpenRISC the atomic xchg() call implies a memory
+> +		 * barrier.  Otherwise we may need an smp_rmb(); paired
+> +		 * with the write in ompic_raise_softirq.
+> +		 */
+> +
+> +		do {
+> +			unsigned long ipi_msg;
+> +
+> +			ipi_msg = __ffs(ops);
+> +			ops &= ~(1UL << ipi_msg);
+> +
+> +			handle_IPI(ipi_msg);
+> +		} while (ops);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static struct irqaction ompi_ipi_irqaction = {
+> +	.handler =      ompic_ipi_handler,
+> +	.flags =        IRQF_PERCPU,
+> +	.name =         "ompic_ipi",
+> +};
+> +
+> +int __init ompic_of_init(struct device_node *node, struct device_node *parent)
+
+static again.
+
+> +{
+> +	struct resource res;
+> +	int irq;
+> +	int ret;
+> +
+> +	/* Validate the DT */
+> +	if (ompic_base) {
+> +		pr_err("ompic: duplicate ompic's are not supported");
+> +		return -EEXIST;
+> +	}
+> +
+> +	if (of_address_to_resource(node, 0, &res)) {
+> +		pr_err("ompic: reg property requires an address and size");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (resource_size(&res) < (num_possible_cpus() * OMPIC_CPUBYTES)) {
+> +		pr_err("ompic: reg size, currently %d must be at least %d",
+> +			resource_size(&res),
+> +			(num_possible_cpus() * OMPIC_CPUBYTES));
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Setup the device */
+> +	ompic_base = ioremap(res.start, resource_size(&res));
+> +	if (IS_ERR(ompic_base)) {
+> +		pr_err("ompic: unable to map registers");
+> +		return PTR_ERR(ompic_base);
+> +	}
+> +
+> +	irq = irq_of_parse_and_map(node, 0);
+> +	if (irq <= 0) {
+> +		pr_err("ompic: unable to parse device irq");
+> +		ret = -EINVAL;
+> +		goto out_unmap;
+> +	}
+> +
+> +	ret = setup_irq(irq, &ompi_ipi_irqaction);
+> +	if (ret)
+> +		goto out_irq_disp;
+> +
+> +	set_smp_cross_call(ompic_raise_softirq);
+> +
+> +	return 0;
+> +
+> +out_irq_disp:
+> +	irq_dispose_mapping(irq);
+> +out_unmap:
+> +	iounmap(ompic_base);
+> +	ompic_base = NULL;
+> +	return ret;
+> +}
+> +IRQCHIP_DECLARE(ompic, "openrisc,ompic", ompic_of_init);
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
