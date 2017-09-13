@@ -1,42 +1,69 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: stm32-dma: add a property to handle
- STM32 DMAMUX
-Date: Wed, 13 Sep 2017 12:45:36 -0500
-Message-ID: <20170913174536.2hy6ubeef2s55t7y@rob-hp-laptop>
-References: <1504785168-26572-1-git-send-email-pierre-yves.mordret@st.com>
- <1504785168-26572-4-git-send-email-pierre-yves.mordret@st.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: as3645a flash userland interface
+Date: Wed, 13 Sep 2017 19:53:08 +0200
+Message-ID: <21824758-28a1-7007-6db5-86a900025d14@gmail.com>
+References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
+ <20170912084236.1154-25-sakari.ailus@linux.intel.com>
+ <20170912103628.GB27117@amd> <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
+ <20170912215529.GA17218@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1504785168-26572-4-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170912215529.GA17218@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 07, 2017 at 01:52:47PM +0200, Pierre-Yves MORDRET wrote:
-> STM32 DMA controller has to exposed its number of request line to be
-> addressed via STM32 DMAMUX.
+On 09/12/2017 11:55 PM, Pavel Machek wrote:
+> On Tue 2017-09-12 20:53:33, Jacek Anaszewski wrote:
+>> Hi Pavel,
+>>
+>> On 09/12/2017 12:36 PM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>> There were some changes to as3645a flash controller. Before we have
+>>> stable interface we have to keep forever I want to ask:
+>>
+>> Note that we have already two LED flash class drivers - leds-max77693
+>> and leds-aat1290. They have been present in mainline for over two years
+>> now.
 > 
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-> ---
->  Version history:
->     v4:
->         * get rid of st,dmamux property
->         * number of DMA requests is exposed for DMAMUX
->     v3:
->         * None
->     v2:
->         * Typo fix
-> ---
-> ---
->  Documentation/devicetree/bindings/dma/stm32-dma.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Well.. that's ok. No change there is neccessary.
+> 
+>>> What directory are the flash controls in?
+>>>
+>>> /sys/class/leds/led-controller:flash ?
+>>>
+>>> Could we arrange for something less generic, like
+>>>
+>>> /sys/class/leds/main-camera:flash ?
+>>
+>> I'd rather avoid overcomplicating this. LED class device name pattern
+>> is well defined to devicename:colour:function
+>> (see Documentation/leds/leds-class.txt, "LED Device Naming" section).
+>>
+>> In this case "flash" in place of the "function" segment makes the
+>> things clear enough I suppose.
+> 
+> It does not.
+> 
+> Phones usually have two cameras, front and back, and these days both
+> cameras have their flash.
+> 
+> And poor userspace flashlight application can not know if as3645
+> drivers front LED or back LED. Thus, I'd set devicename to
+> front-camera or main-camera -- because that's what it is associated
+> with. Userspace does not care what hardware drives the LED, but needs
+> to know if it is front or back camera.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The name of a LED flash class device isn't fixed and is derived
+from DT label property. Name in the example of some DT bindings
+will not force people to apply similar pattern for the other
+drivers and even for the related one. No worry about having
+to keep anything forever basing on that.
+
+-- 
+Best regards,
+Jacek Anaszewski
