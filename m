@@ -1,125 +1,53 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-        <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: r8a7796: add thermal cooling management
-Date: Wed, 13 Sep 2017 12:59:09 +0200
-Message-ID: <20170913105909.13230-3-niklas.soderlund+renesas@ragnatech.se>
-References: <20170913105909.13230-1-niklas.soderlund+renesas@ragnatech.se>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v4 0/4] Exynos-gsc: Support the hardware rotation limits
+Date: Wed, 13 Sep 2017 20:41:51 +0900
+Message-ID: <1505302915-15699-1-git-send-email-hoegeun.kwon@samsung.com>
+References: <CGME20170913114214epcas2p11a7b99e0c69236a87506e3c5db4858fa@epcas2p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170913105909.13230-1-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: inki.dae@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, mchehab@kernel.org, s.nawrocki@samsung.com, m.szyprowski@samsung.com, robin.murphy@arm.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes and properties for thermal cooling management support.
-
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 38 ++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 2905a3b953aab145..0b805dc30925e9be 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -53,6 +53,7 @@
- 				<&cluster0_opp_tb3>, <&cluster0_opp_tb4>,
- 				<&cluster0_opp_tb5>, <&cluster0_opp_tb6>,
- 				<&cluster0_opp_tb7>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		a57_1: cpu@1 {
-@@ -67,6 +68,7 @@
- 				<&cluster0_opp_tb3>, <&cluster0_opp_tb4>,
- 				<&cluster0_opp_tb5>, <&cluster0_opp_tb6>,
- 				<&cluster0_opp_tb7>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		a53_0: cpu@100 {
-@@ -2116,12 +2118,24 @@
- 				thermal-sensors = <&tsc 0>;
- 
- 				trips {
-+					sensor1_passive: sensor1-passive {
-+						temperature = <95000>;
-+						hysteresis = <2000>;
-+						type = "passive";
-+					};
- 					sensor1_crit: sensor1-crit {
- 						temperature = <120000>;
- 						hysteresis = <2000>;
- 						type = "critical";
- 					};
- 				};
-+
-+				cooling-maps {
-+					map0 {
-+						trip = <&sensor1_passive>;
-+						cooling-device = <&a57_0 5 5>;
-+					};
-+				};
- 			};
- 
- 			sensor_thermal2: sensor-thermal2 {
-@@ -2130,12 +2144,24 @@
- 				thermal-sensors = <&tsc 1>;
- 
- 				trips {
-+					sensor2_passive: sensor2-passive {
-+						temperature = <95000>;
-+						hysteresis = <2000>;
-+						type = "passive";
-+					};
- 					sensor2_crit: sensor2-crit {
- 						temperature = <120000>;
- 						hysteresis = <2000>;
- 						type = "critical";
- 					};
- 				};
-+
-+				cooling-maps {
-+					map0 {
-+						trip = <&sensor2_passive>;
-+						cooling-device = <&a57_0 5 5>;
-+					};
-+				};
- 			};
- 
- 			sensor_thermal3: sensor-thermal3 {
-@@ -2144,12 +2170,24 @@
- 				thermal-sensors = <&tsc 2>;
- 
- 				trips {
-+					sensor3_passive: sensor3-passive {
-+						temperature = <95000>;
-+						hysteresis = <2000>;
-+						type = "passive";
-+					};
- 					sensor3_crit: sensor3-crit {
- 						temperature = <120000>;
- 						hysteresis = <2000>;
- 						type = "critical";
- 					};
- 				};
-+
-+				cooling-maps {
-+					map0 {
-+						trip = <&sensor3_passive>;
-+						cooling-device = <&a57_0 5 5>;
-+					};
-+				};
- 			};
- 		};
- 
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gYWxsLAoKRnJpc3QsIHRoYW5rcyBLcnp5c3p0b2YsIFJvYmluIGFuZCBTeWx3ZXN0ZXIu
+CgpUaGUgZ3NjYWxlciBoYXMgaGFyZHdhcmUgcm90YXRpb24gbGltaXRzLiBTbyB0aGlzIHBhdGNo
+IHNldCBzdXBwb3J0CnRoZSByb3RhdGUgaGFyZHdhcmUgbGltaXRzIG9mIGdzYy4KCkNoYW5nZXMg
+Zm9yIFY0OgotIEZpeGVkIHRoZSBtb3N0IHNwZWNpZmljIGNvbXBhdGlibGUgY29tZSBmaXJzdCBp
+biBkZXZpY2UgdHJlZS4KLSBLZXB0IGNvbXBhdGlibGUoInNhbXN1bmcsZXh5bm9zNS1nc2MiKSBp
+biB0aGVyIGRyaXZlci4KLSBBZGRlZCBtYXJrIGNvbXBhdGlibGUoInNhbXN1bmcsZXh5bm9zNS1n
+c2MiKSBhcyBkZXByZWNhdGVkLgotIEFkZGVkIHByaW50IGRtZXNnIGlmIHlvdXIgZHJpdmVyIHVz
+ZXMgY29tcGF0aWJsZSgic2Ftc3VuZywgZXh5bm9zNS1nc2MiKS4KLSBSZW1vdmVkIHRoZSBwYXRj
+aCA1LCA2IG9mIHZlcjMuCgpDaGFuZ2VzIGZvciBWMzoKLSBGaXhlZCBvZl9tYXRjaF9ub2RlKCkg
+dG8gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCkgaW4gZHJtIGdzYyBkcml2ZXIuCi0gQWRkZWQg
+aGFyZHdhcmUgcm90YXRpb24gbGltaXRzIGZvciBnc2MgZHJpdmVyIG9mIHY0bDIuCi0gQWRkZWQg
+dGhlIHJlbW92ZSB1bm5lY2Vzc2FyeSBjb21wYXRpYmxlIGZvciBEVCBkb2N1bWVudCBhbmQgRXh5
+bm9zIGR0cy4KCkNoYW5nZXMgZm9yIFYyOgotIEFkZGVkIHRoZSBpbnRlcmZhY2UgaW5mbyBpbiBi
+aW5kaW5nIGRvY3VtZW50LgotIEFkZGVkIGNsZWFuIG5hbWUgb2YgY29tcGF0aWJsZSBpbiBFeHlu
+b3MgZHRzLgotIEFkZGVkIG1heGltdW0gc3VwcG9ydGVkIHBpY3R1cmUgc2l6ZSBoYXJkY29kZWQg
+aW50byBkcml2ZXIuCgpCZXN0IHJlZ2FyZHMsCkhvZWdldW4KCkhvZWdldW4gS3dvbiAoNCk6CiAg
+W21lZGlhXSBleHlub3MtZ3NjOiBBZGQgY29tcGF0aWJsZSBmb3IgRXh5bm9zIDUyNTAgYW5kIDU0
+MjAgc3BlY2lmaWMKICAgIHZlcnNpb24KICBBUk06IGR0czogZXh5bm9zOiBBZGQgY2xlYW4gbmFt
+ZSBvZiBjb21wYXRpYmxlLgogIGRybS9leHlub3MvZ3NjOiBBZGQgaGFyZHdhcmUgcm90YXRpb24g
+bGltaXRzCiAgW21lZGlhXSBleHlub3MtZ3NjOiBBZGQgaGFyZHdhcmUgcm90YXRpb24gbGltaXRz
+CgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvZXh5bm9zNS1nc2MudHh0ICAgICAgfCAg
+IDkgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAuZHRzaSAgICAgICAgICAgICAgICAg
+IHwgICA4ICstCiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kgICAgICAgICAgICAg
+ICAgICB8ICAgNCArLQogZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2dzYy5jICAg
+ICAgICAgICAgfCAxMDQgKysrKysrKysrKysrLS0tLS0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+ZXh5bm9zLWdzYy9nc2MtY29yZS5jICAgICAgIHwgMTI3ICsrKysrKysrKysrKysrKysrKysrLQog
+aW5jbHVkZS91YXBpL2RybS9leHlub3NfZHJtLmggICAgICAgICAgICAgICAgICAgICAgfCAgIDIg
+KwogNiBmaWxlcyBjaGFuZ2VkLCAyMTEgaW5zZXJ0aW9ucygrKSwgNDMgZGVsZXRpb25zKC0pCgot
+LSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
