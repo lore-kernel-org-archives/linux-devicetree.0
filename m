@@ -1,65 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings documentation
-Date: Wed, 13 Sep 2017 10:25:51 -0500
-Message-ID: <CAL_Jsq+udc2p_jqQN+m4R69zW=7RBfJCDrQgNXOiMycErP43LQ@mail.gmail.com>
-References: <20170901065818.2037-1-fe@dev.tdt.de> <20170901065818.2037-2-fe@dev.tdt.de>
- <20170901142622.GC599@roeck-us.net> <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
- <a5a2e95a1fb671eb59459542af122d6e@dev.tdt.de>
+From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] of: add vendor prefix for Silicon Storage Technology Inc.
+Date: Wed, 13 Sep 2017 15:27:01 +0000
+Message-ID: <SG2PR06MB0694CBEF430ABA5E6AF79505B76E0@SG2PR06MB0694.apcprd06.prod.outlook.com>
+References: <1505118623-3844-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <0cd76127-0463-701d-6db8-8b752fb17032@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a5a2e95a1fb671eb59459542af122d6e-W9Oo8bkYgz6ELgA04lAiVw@public.gmane.org>
+In-Reply-To: <0cd76127-0463-701d-6db8-8b752fb17032-l3A5Bk7waGM@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Eckert <fe-W9Oo8bkYgz6ELgA04lAiVw@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux HWMON List <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
+To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 12:36 AM, Florian Eckert <fe-W9Oo8bkYgz6ELgA04lAiVw@public.gmane.org> wrote:
-> Hello Rob
->
->>> > --- /dev/null
->>> > +++ b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
->>> > @@ -0,0 +1,10 @@
->>> > +Lantiq cpu temperatur sensor
->>
->>
->> s/temperatur/temperature/
->
->
-> Will update this in a follow up page based on the old one. So no v4?
->
->>
->>> > +
->>> > +Requires node properties:
->>> > +- compatible value :
->>> > +     "lantiq,cputemp"
->>
->>
->> Kind of non-specific. How is this device even accessed without any other
->> property?
->
->
-> It does not need any further properties. If this is set in the device tree
-> then the driver is loaded.
-
-DT is not the only way to instantiate drivers.
-
-What I meant is how do you access the hardware? That should be evident
-from the binding and it is not.
-
-Looking at the driver, you have some memory mapped system control
-registers which get ioremapped in arch/mips/lantiq/xway/sysctrl.c and
-accesses thru some platform specific macros. That is not the ideal way
-to do things as we use syscon and regmap for such things. But that's
-all mostly kernel details not so relevant to the DT binding.
-
-For DT, I'd expect this is a child node of the sysctrl block with a
-reg property value of <0x40 4> (along with any other child devices).
-You could also not even put this in DT and the system controller can
-have it's own driver that instantiates the child device for this
-driver.
-
-Rob
+SGVsbG8gQW5kcmVhcywNCg0KPiBGcm9tOiBBbmRyZWFzIEbDpHJiZXIgW21haWx0bzphZmFlcmJl
+ckBzdXNlLmRlXQ0KPiBTZW50OiAxMSBTZXB0ZW1iZXIgMjAxNyAxMToxOA0KPiANCj4gSGksDQo+
+IA0KPiBOaXQ6ICRzdWJqZWN0IHNob3VsZCB1c2UgImR0LWJpbmRpbmdzOiIgcHJlZml4Lg0KDQpE
+byB5b3UgdGhpbmsgdGhlcmUgbmVlZHMgdG8gYmUgYSB2MiBmb3IgdGhpcz8gT3IgY2FuIHRoaXMg
+YmUgY2hhbmdlZCB3aGVuIGFwcGxpZWQ/DQoNCj4gDQo+IEFtIDExLjA5LjIwMTcgdW0gMTA6MzAg
+c2NocmllYiBGYWJyaXppbyBDYXN0cm86DQo+ID4gQWRkIFNpbGljb24gU3RvcmFnZSBUZWNobm9s
+b2d5IEluYy4gdG8gdGhlIGxpc3Qgb2YgZGV2aWNldHJlZSB2ZW5kb3INCj4gPiBwcmVmaXhlcy4N
+Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJv
+QGJwLnJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
+MSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4gPiBpbmRleCA5ZjlhM2Q2
+Li45MDBjOTkzIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4gPiBAQCAtMzE2LDYgKzMxNiw3IEBA
+IHNvbG9tb24gICAgICAgIFNvbG9tb24gU3lzdGVjaCBMaW1pdGVkDQo+ID4gIHNvbnkJU29ueSBD
+b3Jwb3JhdGlvbg0KPiA+ICBzcGFuc2lvbglTcGFuc2lvbiBJbmMuDQo+ID4gIHNwcmQJU3ByZWFk
+dHJ1bSBDb21tdW5pY2F0aW9ucyBJbmMuDQo+ID4gK3NzdAlTaWxpY29uIFN0b3JhZ2UgVGVjaG5v
+bG9neSwgSW5jLg0KPiANCj4gUmVjdXJyaW5nIHF1ZXN0aW9uOiBXaGF0IGlzIHRoaXMgcHJlZml4
+IGJlaW5nIHVzZWQgZm9yPyBUaGlzIHBhdGNoIGlzDQo+IGFwcGFyZW50bHkgbm90IHBhcnQgb2Yg
+YW55IHNlcmllcy4NCg0KV2UgYXJlIGFib3V0IHRvIHN1Ym1pdCBhIHBhdGNoIHRvIGFkZCBhbiBz
+c3QgZmxhc2ggZGV2aWNlIHRvIGEgZGV2aWNlIHRyZWUuIENoZWNrcGF0Y2gga2lja3Mgb2ZmIGJl
+Y2F1c2Ugc3N0IGlzbid0IHByZXNlbnQgaW4gdmVuZG9yLXByZWZpeGVzLnR4dCwgaGVuY2UgdGhp
+cyBwYXRjaC4NCg0KPiANCj4gT3RoZXJ3aXNlIGxvb2tzIG9rYXksDQo+IA0KPiBSZXZpZXdlZC1i
+eTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KDQpUaGFuayB5b3UhDQoNCktp
+bmQgcmVnYXJkcywgQ2hyaXMNCg0KPiANCj4gUmVnYXJkcywNCj4gQW5kcmVhcw0KPiANCj4gPiAg
+c3QJU1RNaWNyb2VsZWN0cm9uaWNzDQo+ID4gIHN0YXJyeQlTdGFycnkgRWxlY3Ryb25pYyBUZWNo
+bm9sb2d5IChTaGVuWmhlbikgQ28uLCBMVEQNCj4gPiAgc3RhcnRlawlTdGFydGVrDQo+IA0KPiAt
+LQ0KPiBTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2Vy
+bWFueQ0KPiBHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9y
+dG9uIEhSQiAyMTI4NCAoQUcNCj4gTsO8cm5iZXJnKQ0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
