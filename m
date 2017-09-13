@@ -1,80 +1,60 @@
-From: Guenter Roeck <linux@roeck-us.net>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings
  documentation
-Date: Wed, 13 Sep 2017 07:12:34 -0700
-Message-ID: <20170913141234.GA27765@roeck-us.net>
+Date: Wed, 13 Sep 2017 07:12:58 -0700
+Message-ID: <20170913141258.GB27765@roeck-us.net>
 References: <20170901065818.2037-1-fe@dev.tdt.de>
  <20170901065818.2037-2-fe@dev.tdt.de>
  <20170901142622.GC599@roeck-us.net>
  <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
+ <a5a2e95a1fb671eb59459542af122d6e@dev.tdt.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Florian Eckert <fe@dev.tdt.de>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, jdelvare@suse.com
+In-Reply-To: <a5a2e95a1fb671eb59459542af122d6e-W9Oo8bkYgz6ELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Eckert <fe-W9Oo8bkYgz6ELgA04lAiVw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 12, 2017 at 11:20:08AM -0500, Rob Herring wrote:
-> On Fri, Sep 01, 2017 at 07:26:22AM -0700, Guenter Roeck wrote:
-> > On Fri, Sep 01, 2017 at 08:58:18AM +0200, Florian Eckert wrote:
-> > > Document the devicetree bindings for the ltq-cputemp
-> > > 
-> > > Signed-off-by: Florian Eckert <fe@dev.tdt.de>
-> > 
-> > I see nothing special with the bindings, and they are in line with other lantiq
-> > bindings, so I am taking the risk of accepting this patch (and the matching
-> > driver) without waiting for explicit approval from Rob. Rob, scream at me if
-> > that is not ok.
+On Wed, Sep 13, 2017 at 07:36:16AM +0200, Florian Eckert wrote:
+> Hello Rob
 > 
-> Perhaps the existing one was not well reviewed.
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
+> >>> @@ -0,0 +1,10 @@
+> >>> +Lantiq cpu temperatur sensor
+> >
+> >s/temperatur/temperature/
 > 
-Bummer. Should teach me to never accept DT patches without your review.
-I owe you a beer or two.
+> Will update this in a follow up page based on the old one. So no v4?
+> 
+Please send a follow-up patch.
 
+Thanks,
 Guenter
 
-> > 
-> > Thanks,
-> > Guenter
-> > 
-> > > ---
-> > >  Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
-> > > new file mode 100644
-> > > index 000000000000..33fd00a987c7
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/hwmon/ltq-cputemp.txt
-> > > @@ -0,0 +1,10 @@
-> > > +Lantiq cpu temperatur sensor
+> >
+> >>> +
+> >>> +Requires node properties:
+> >>> +- compatible value :
+> >>> +	"lantiq,cputemp"
+> >
+> >Kind of non-specific. How is this device even accessed without any other
+> >property?
 > 
-> s/temperatur/temperature/
+> It does not need any further properties. If this is set in the device tree
+> then the driver is loaded.
+> After loading the temperature could be read from "/sys/class/hwmon".
 > 
-> > > +
-> > > +Requires node properties:
-> > > +- compatible value :
-> > > +	"lantiq,cputemp"
+> Let me know what should i do to get this fixed?
 > 
-> Kind of non-specific. How is this device even accessed without any other 
-> property? 
+> Thanks for feedback
 > 
-> > > +
-> > > +Example:
-> > > +	cputemp@0 {
+> Florian
 > 
-> unit-address without reg property is not valid.
-> 
-> > > +		compatible = "lantiq,cputemp";
-> > > +	};
-> > > -- 
-> > > 2.11.0
-> > > 
-> > > --
-> > > To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
-> > > the body of a message to majordomo@vger.kernel.org
-> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
