@@ -1,28 +1,34 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v3 2/3] mmc: sdhci-omap: Add OMAP SDHCI driver
-Date: Thu, 14 Sep 2017 10:26:35 +0300
-Message-ID: <cdb5251f-e725-e5ca-0c36-a3b2544ffbdc@intel.com>
-References: <20170906114556.32532-1-kishon@ti.com>
- <20170906114556.32532-3-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20170906114556.32532-3-kishon@ti.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/2] stm32 clocksource driver rework
+Date: Thu, 14 Sep 2017 09:56:50 +0200
+Message-ID: <1505375812-19037-1-git-send-email-benjamin.gaignard@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/17 14:45, Kishon Vijay Abraham I wrote:
-> Create a new sdhci-omap driver to configure the eMMC/SD/SDIO controller
-> in TI's OMAP SoCs making use of the SDHCI core library. For OMAP specific
-> configurations, populate sdhci_ops with OMAP specific callbacks and use
-> SDHCI quirks.
-> Enable only high speed mode for both SD and eMMC here and add other
-> UHS mode support later.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+These patch implements clocksource and clockevent by using only one hardware block.
+It also limits usage of clocksource to 32 bits timers because 16 bits ones
+aren't enough accurate.
+Series includes minor clean up in structures, function prototypes and driver name.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Since 16 bits timers become useless it also removes them from stm32f4 and
+stm32f7 devicetree.
+
+Benjamin Gaignard (2):
+  clocksource: stm32: rework driver to use only one timer
+  arm: dts: stm32: remove useless clocksource nodes
+
+ arch/arm/boot/dts/stm32f429.dtsi  |  32 -----
+ arch/arm/boot/dts/stm32f746.dtsi  |  32 -----
+ drivers/clocksource/timer-stm32.c | 259 +++++++++++++++++++++++---------------
+ 3 files changed, 155 insertions(+), 168 deletions(-)
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
