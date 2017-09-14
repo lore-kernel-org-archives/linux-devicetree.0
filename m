@@ -1,52 +1,28 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] dt-bindings: nand: denali: reduce the register space in the
- example
-Date: Thu, 14 Sep 2017 16:17:36 +0900
-Message-ID: <1505373456-24047-1-git-send-email-yamada.masahiro@socionext.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v3 2/3] mmc: sdhci-omap: Add OMAP SDHCI driver
+Date: Thu, 14 Sep 2017 10:26:35 +0300
+Message-ID: <cdb5251f-e725-e5ca-0c36-a3b2544ffbdc@intel.com>
+References: <20170906114556.32532-1-kishon@ti.com>
+ <20170906114556.32532-3-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Oleksij Rempel <o.rempel@pengutronix.de>, Boris Brezillon <boris.brezillon@free-electrons.com>, Dinh Nguyen <dinguyen@kernel.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Marek Vasut <marek.vasut@gmail.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170906114556.32532-3-kishon@ti.com>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This example allocates too much for register regions.  Especially,
-there are only two registers in the "nand_data" interface of this
-hardware (ADDR: 0x00, DATA: 0x10).
+On 06/09/17 14:45, Kishon Vijay Abraham I wrote:
+> Create a new sdhci-omap driver to configure the eMMC/SD/SDIO controller
+> in TI's OMAP SoCs making use of the SDHCI core library. For OMAP specific
+> configurations, populate sdhci_ops with OMAP specific callbacks and use
+> SDHCI quirks.
+> Enable only high speed mode for both SD and eMMC here and add other
+> UHS mode support later.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- Documentation/devicetree/bindings/mtd/denali-nand.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index 504291d..0ee8edb 100644
---- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -29,7 +29,7 @@ nand: nand@ff900000 {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 	compatible = "altr,socfpga-denali-nand";
--	reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
-+	reg = <0xff900000 0x20>, <0xffb80000 0x1000>;
- 	reg-names = "nand_data", "denali_reg";
- 	interrupts = <0 144 4>;
- };
--- 
-2.7.4
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
