@@ -1,72 +1,44 @@
-From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: bcm283x: Fix console path on RPi3
-Date: Thu, 14 Sep 2017 22:48:00 +0200
-Message-ID: <1505422080-14336-1-git-send-email-loic.poulain@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v1 2/3] cpufreq: rockchip: add support for rk3328 soc
+Date: Thu, 14 Sep 2017 14:24:37 -0700
+Message-ID: <20170914212437.GC11836@ubuntu>
+References: <1503477632-9661-1-git-send-email-cl@rock-chips.com>
+ <1503477632-9661-3-git-send-email-cl@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1503477632-9661-3-git-send-email-cl@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: cl@rock-chips.com
+Cc: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, rocky.hao@rock-chips.com, afaerber@suse.de, fabio.estevam@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, kever.yang@rock-chips.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Contrary to other RPi devices, RPi3 uses uart0 to communicate with
-the BCM43438 bluetooth controller. uart1 is then used for the console.
-Today, the console configuration is inherited from the bcm283x dtsi
-(bootargs) which is not the correct one for the RPi3. This leads to
-routing issue and confuses the Bluetooth controller with unexpected
-data.
+On 23-08-17, 16:40, cl@rock-chips.com wrote:
+> From: Liang Chen <cl@rock-chips.com>
+> 
+> Add compatible rockchip,rk3328 to the machines table to
+> launch cpufreq-dt driver for rk3328 soc.
+> 
+> Signed-off-by: Liang Chen <cl@rock-chips.com>
+> ---
+>  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> index 1c26292..f16c3ba 100644
+> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> @@ -76,6 +76,7 @@
+>  	{ .compatible = "rockchip,rk3188", },
+>  	{ .compatible = "rockchip,rk3228", },
+>  	{ .compatible = "rockchip,rk3288", },
+> +	{ .compatible = "rockchip,rk3328", },
+>  	{ .compatible = "rockchip,rk3366", },
+>  	{ .compatible = "rockchip,rk3368", },
+>  	{ .compatible = "rockchip,rk3399", },
 
-This patch introduces chosen/stdout path to configure console to uart0
-on bcm283x family and overwrite it to uart1 in the RPi3 dts.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Create serial0/1 aliases referring to uart0 ant uart1 paths.
-Remove unneeded earlyprintk.
-
-Fixes: 4188ea2aeb6d ("ARM: bcm283x: Define UART pinmuxing on board level")
-Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 5 +++++
- arch/arm/boot/dts/bcm283x.dtsi        | 7 ++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-index 20725ca..f1c0811 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -8,6 +8,11 @@
- 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
- 	model = "Raspberry Pi 3 Model B";
- 
-+	chosen {
-+		/* 8250 auxiliar UART instead of pl011 */
-+		stdout-path = "serial1:115200n8";
-+	};
-+
- 	memory {
- 		reg = <0 0x40000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 431dcfc..013431e 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -20,8 +20,13 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
- 	chosen {
--		bootargs = "earlyprintk console=ttyAMA0";
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	thermal-zones {
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
