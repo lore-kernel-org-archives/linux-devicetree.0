@@ -1,57 +1,121 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: [RFC 0/2] backlight: pwm_bl: support linear brightness to human eye
-Date: Thu, 14 Sep 2017 09:01:33 -0700
-Message-ID: <CAD=FV=VnrEdbh35TTSOc8-SuicENutXKPBdENumrKZEMLRSRyA@mail.gmail.com>
-References: <20170904153504.27963-1-enric.balletbo@collabora.com>
- <239c9153-c0ea-319c-b554-3c727b75c8cd@linaro.org> <000001d32664$db62b2a0$922817e0$@gmail.com>
- <CAD=FV=WohimLMHQTp=iTaggvfoO+yqZTiJZkSdO2UyEr33TRpQ@mail.gmail.com>
- <f6eb109d-96f3-4978-93b0-2b8506189e45@linaro.org> <CAD=FV=W4qH2JzskqU4VsH_1RU687DNsngsBB_zRbUeZRWptkAQ@mail.gmail.com>
- <CAFqH_53hL_UCVQg2p8sdsGaoyWOou9a3Kd5H7MVMVLumH5_cAg@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: AT91: fix DT duplicate node name
+Date: Thu, 14 Sep 2017 18:53:30 +0200
+Message-ID: <e5868359-8708-3d17-df8c-b04ad3624df0@microchip.com>
+References: <cover.1504037038.git.mirq-linux@rere.qmqm.pl>
+ <910fee2eb99b2d95e59fa6b997645b498f167022.1504037038.git.mirq-linux@rere.qmqm.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFqH_53hL_UCVQg2p8sdsGaoyWOou9a3Kd5H7MVMVLumH5_cAg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Lee Jones <lee.jones@linaro.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexandru M Stan <amstan@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <910fee2eb99b2d95e59fa6b997645b498f167022.1504037038.git.mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 29/08/2017 at 22:08, Michał Mirosław wrote:
+> Fix following warning at bootup:
+> 
+> device-tree: Duplicate name in fb@0x00500000, renamed to "display#1"
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/at91sam9m10g45ek.dts | 48 +++++++++++++++++-----------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> index 9cf1f5163fbd..272af5867403 100644
+> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> @@ -223,30 +223,6 @@
+>  		fb0: fb@0x00500000 {
+>  			display = <&display0>;
+>  			status = "okay";
+> -
+> -			display0: display {
 
-On Thu, Sep 14, 2017 at 3:46 AM, Enric Balletbo Serra
-<eballetbo@gmail.com> wrote:
-> Based on this seems reasonable maintain current implementation to not
-> break backward compability. Even, I think makes sense improve current
-> implementation by adding somekind of piecewise linear concept to the
-> brightness levels, similar to Doug's suggestion. So if we want, i.e,
-> 256 levels or more, instead of specify the full table in the DT we can
-> only specify some points in DT but the driver can expose to userspace
-> more steps (how many?) between two brightness levels.
+Michał, thanks for your patch.
 
-It seems sane to me.  Personally I'd say that if you're using
-piecewise linear you just pick a number of levels to expose, perhaps
-16383, or 32767, or 65535) and expose that many levels for everyone.
-It's possible that bumping the brightness up by "1" will not actually
-change a hardware register, but that seems like it would be fine,
-right?
+Actually the DT binding requires this:
+Documentation/devicetree/bindings/video/atmel,lcdc.txt
 
-Probably you'd want to require some sort of dt change to enable
-piecewise linear since it seems plausible that you could break
-existing boards if you started interpolating.
+So it's somehow a bigger issue.
+Moreover, several boards have exactly the same arrangement than the
+at91sam9m10g45ek, so you probably need to modify them all at the same time.
 
-> Of course, this
-> doesn't makes the live of the future users easier but I think will
-> make the live of the current users of this interface more flexible
-> (specially when you want lots of levels)
->
-> Then, to make the user live easier, there is the thing about human
-> perception, we can move brightness-levels to be optional and fall to
-> apply the human perception code if it's not specified. Here the thing
-> and point of discussion is, if the cie1931 is the right algorithm to
-> do the 'magic' in the driver. From what I investigated seems that is
-> but I might be wrong.
+After a brief look at drivers/video/fbdev/atmel_lcdfb.c it seems that
+the name of the node is not so much important, so we can modify it
+(something like display0: lcd-display {}) .
 
-I don't personally know, so hopefully someone else can comment.
+I suggest that you modify the binding, the board files affected and
+re-submit a patch.
+
+Best regards,
+
+> -				bits-per-pixel = <32>;
+> -				atmel,lcdcon-backlight;
+> -				atmel,dmacon = <0x1>;
+> -				atmel,lcdcon2 = <0x80008002>;
+> -				atmel,guard-time = <9>;
+> -				atmel,lcd-wiring-mode = "RGB";
+> -
+> -				display-timings {
+> -					native-mode = <&timing0>;
+> -					timing0: timing0 {
+> -						clock-frequency = <9000000>;
+> -						hactive = <480>;
+> -						vactive = <272>;
+> -						hback-porch = <1>;
+> -						hfront-porch = <1>;
+> -						vback-porch = <40>;
+> -						vfront-porch = <1>;
+> -						hsync-len = <45>;
+> -						vsync-len = <1>;
+> -					};
+> -				};
+> -			};
+>  		};
+>  
+>  		nand0: nand@40000000 {
+> @@ -293,6 +269,30 @@
+>  		};
+>  	};
+>  
+> +	display0: display {
+> +		bits-per-pixel = <32>;
+> +		atmel,lcdcon-backlight;
+> +		atmel,dmacon = <0x1>;
+> +		atmel,lcdcon2 = <0x80008002>;
+> +		atmel,guard-time = <9>;
+> +		atmel,lcd-wiring-mode = "RGB";
+> +
+> +		display-timings {
+> +			native-mode = <&timing0>;
+> +			timing0: 480x272 {
+> +				clock-frequency = <9000000>;
+> +				hactive = <480>;
+> +				vactive = <272>;
+> +				hback-porch = <1>;
+> +				hfront-porch = <1>;
+> +				vback-porch = <40>;
+> +				vfront-porch = <1>;
+> +				hsync-len = <45>;
+> +				vsync-len = <1>;
+> +			};
+> +		};
+> +	};
+> +
+>  	pwmleds {
+>  		compatible = "pwm-leds";
+>  
+> 
 
 
--Doug
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
