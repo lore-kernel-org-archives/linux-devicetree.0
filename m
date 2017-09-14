@@ -1,49 +1,113 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v4 4/4] [media] exynos-gsc: Add hardware rotation limits
-Date: Thu, 14 Sep 2017 09:55:48 +0900
-Message-ID: <8171b8d8-f14b-21ba-9e3b-7c6a2e442f3d@samsung.com>
-References: <1505302915-15699-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170913114215epcas2p346dd3987cf25481bc780e0eef8b91ed8@epcas2p3.samsung.com>
- <1505302915-15699-5-git-send-email-hoegeun.kwon@samsung.com>
- <509750b5-22d0-77ee-8295-0e52679e0d1e@samsung.com>
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] spi: Add ADI driver for Spreadtrum platform
+Date: Thu, 14 Sep 2017 09:50:55 +0800
+Message-ID: <CAMz4kuK+cLc07CGifhShYr8ODpM+DL8_ShEH9jk3m59zM46u6A@mail.gmail.com>
+References: <d1c5720eccf12ee5ea6bffcbe4c1555680638fcc.1504859001.git.baolin.wang@spreadtrum.com>
+ <4573c724b795c569e1ccea2a1a4f6c0bdd602744.1504859001.git.baolin.wang@spreadtrum.com>
+ <20170913194548.qsyfyyboitz3mpcr@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <509750b5-22d0-77ee-8295-0e52679e0d1e@samsung.com>
-Content-language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, catalin.marinas@arm.com, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kgene@kernel.org, krzk@kernel.org, mchehab@kernel.org, robin.murphy@arm.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170913194548.qsyfyyboitz3mpcr@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMTMvMjAxNyAwOToxMyBQTSwgU3lsd2VzdGVyIE5hd3JvY2tpIHdyb3RlOgo+IE9uIDA5
-LzEzLzIwMTcgMDE6NDEgUE0sIEhvZWdldW4gS3dvbiB3cm90ZToKPj4gQEAgLTEwMDQsMTEgKzEw
-ODgsMzMgQEAgc3RhdGljIGlycXJldHVybl90IGdzY19pcnFfaGFuZGxlcihpbnQgaXJxLCAKPj4g
-dm9pZCAqcHJpdikKPj4gICAgICAgLm51bV9jbG9ja3MgPSAxLAo+PiAgIH07Cj4+ICAgK3N0YXRp
-YyBzdHJ1Y3QgZ3NjX2RyaXZlcmRhdGEgZ3NjX3ZfNTI1MF9kcnZkYXRhID0gewo+PiArICAgIC52
-YXJpYW50ID0gewo+PiArICAgICAgICBbMF0gPSAmZ3NjX3ZfNTI1MF92YXJpYW50LAo+PiArICAg
-ICAgICBbMV0gPSAmZ3NjX3ZfNTI1MF92YXJpYW50LAo+PiArICAgICAgICBbMl0gPSAmZ3NjX3Zf
-NTI1MF92YXJpYW50LAo+PiArICAgICAgICBbM10gPSAmZ3NjX3ZfNTI1MF92YXJpYW50LAo+PiAr
-ICAgIH0sCj4+ICsgICAgLm51bV9lbnRpdGllcyA9IDQsCj4+ICsgICAgLmNsa19uYW1lcyA9IHsg
-ImdzY2wiIH0sCj4+ICsgICAgLm51bV9jbG9ja3MgPSAxLAo+PiArfTsKPj4gKwo+PiArc3RhdGlj
-IHN0cnVjdCBnc2NfZHJpdmVyZGF0YSBnc2Nfdl81NDIwX2RydmRhdGEgPSB7Cj4+ICsgICAgLnZh
-cmlhbnQgPSB7Cj4+ICsgICAgICAgIFswXSA9ICZnc2Nfdl81NDIwX3ZhcmlhbnQsCj4+ICsgICAg
-ICAgIFsxXSA9ICZnc2Nfdl81NDIwX3ZhcmlhbnQsCj4+ICsgICAgfSwKPj4gKyAgICAubnVtX2Vu
-dGl0aWVzID0gNCwKPgo+IFNob3VsZG4ndCBudW1fZW5pdGllcyBiZSAyIGhlcmU/IFlvdSBkb24n
-dCBuZWVkIHRvIHJlc2VuZCwgSSBjYW4KPiBhbWVuZCB0aGF0IHdoZW4gYXBwbHlpbmcuCj4KCgpZ
-ZXMsIG51bV9lbml0aWVzIGlzIDIuClNvcnJ5IEkgbWFkZSBhIG1pc3Rha2UuCgpUaGFua3MgU3ls
-d2VzdGVyLgoKQmVzdCByZWdhcmRzLApIb2VnZXVuCgo+PiArICAgIC5jbGtfbmFtZXMgPSB7ICJn
-c2NsIiB9LAo+PiArICAgIC5udW1fY2xvY2tzID0gMSwKPj4gK307Cj4+ICsKPgo+IC0tIAo+IFJl
-Z2FyZHMsCj4gU3lsd2VzdGVyCj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+Hi Rob,
+
+On 14 September 2017 at 03:45, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Sep 08, 2017 at 04:33:42PM +0800, Baolin Wang wrote:
+>> This patch adds ADI driver based on SPI framework for
+>> Spreadtrum SC9860 platform.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> ---
+>
+> [...]
+>
+>> +++ b/drivers/spi/spi-sprd-adi.c
+>> @@ -0,0 +1,419 @@
+>> +/*
+>> + * Copyright (C) 2017 Spreadtrum Communications Inc.
+>> + *
+>> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>
+> Kernel code should generally not be MIT license.
+
+OK. Will fix in next version.
+
+>
+> [...]
+>
+>> +static int sprd_adi_drain_fifo(struct sprd_adi *sadi)
+>> +{
+>> +     u32 timeout = ADI_FIFO_DRAIN_TIMEOUT;
+>> +     u32 sts;
+>> +
+>> +     do {
+>> +             sts = readl_relaxed(sadi->base + REG_ADI_ARM_FIFO_STS);
+>> +             if (sts & BIT_FIFO_EMPTY)
+>> +                     break;
+>> +
+>> +             cpu_relax();
+>> +     } while (--timeout);
+>
+> You can use readl_poll_timeout.
+
+The readl_poll_timeout() function might be sleep, but we can not sleep
+when reading/writing data through ADI controller, since the routine is
+under hardware spinlock protection. Moreover it is usually very quick
+to jump the loop and we no need to sleep here.
+
+>
+>> +
+>> +     if (timeout == 0) {
+>> +             dev_err(sadi->dev, "drain write fifo timeout\n");
+>> +             return -EBUSY;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int sprd_adi_fifo_is_full(struct sprd_adi *sadi)
+>> +{
+>> +     return readl_relaxed(sadi->base + REG_ADI_ARM_FIFO_STS) & BIT_FIFO_FULL;
+>> +}
+>> +
+>> +static int sprd_adi_read(struct sprd_adi *sadi, u32 reg_paddr, u32 *read_val)
+>> +{
+>> +     int read_timeout = ADI_READ_TIMEOUT;
+>> +     u32 val, rd_addr;
+>> +
+>> +     /*
+>> +      * Set the physical register address need to read into RD_CMD register,
+>> +      * then ADI controller will start to transfer automatically.
+>> +      */
+>> +     writel_relaxed(reg_paddr, sadi->base + REG_ADI_RD_CMD);
+>> +
+>> +     /*
+>> +      * Wait read operation complete, the BIT_RD_CMD_BUSY will be set
+>> +      * simultaneously when writing read command to register, and the
+>> +      * BIT_RD_CMD_BUSY will be cleared after the read operation is
+>> +      * completed.
+>> +      */
+>> +     do {
+>> +             val = readl_relaxed(sadi->base + REG_ADI_RD_DATA);
+>> +             if (!(val & BIT_RD_CMD_BUSY))
+>> +                     break;
+>> +
+>> +             cpu_relax();
+>> +     } while (--read_timeout);
+>
+> readl_poll_timeout
+
+The same reason as above. Thanks for your comments.
+
+-- 
+Baolin.wang
+Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
