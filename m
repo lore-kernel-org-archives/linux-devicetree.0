@@ -1,48 +1,49 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] dt-bindings: net: renesas-ravb: Add support for R8A77995
- RAVB
-Date: Thu, 14 Sep 2017 00:11:12 +0000
-Message-ID: <TY1PR06MB09928CA5EC51D95B135AE662D86F0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1505305060-4192-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1f4763ea-9f8a-03a6-1215-69b96c404590@cogentembedded.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v4 4/4] [media] exynos-gsc: Add hardware rotation limits
+Date: Thu, 14 Sep 2017 09:55:48 +0900
+Message-ID: <8171b8d8-f14b-21ba-9e3b-7c6a2e442f3d@samsung.com>
+References: <1505302915-15699-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170913114215epcas2p346dd3987cf25481bc780e0eef8b91ed8@epcas2p3.samsung.com>
+ <1505302915-15699-5-git-send-email-hoegeun.kwon@samsung.com>
+ <509750b5-22d0-77ee-8295-0e52679e0d1e@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1f4763ea-9f8a-03a6-1215-69b96c404590-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: ja-JP
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <509750b5-22d0-77ee-8295-0e52679e0d1e@samsung.com>
+Content-language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, catalin.marinas@arm.com, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kgene@kernel.org, krzk@kernel.org, mchehab@kernel.org, robin.murphy@arm.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8hDQoNCj4gRnJvbTogU2VyZ2VpIFNodHlseW92DQo+IFNlbnQ6IFRodXJzZGF5LCBTZXB0
-ZW1iZXIgMTQsIDIwMTcgMTowMiBBTQ0KPiANCj4gSGVsbG8hDQo+IA0KPiBPbiAwOS8xMy8yMDE3
-IDAzOjE3IFBNLCBZb3NoaWhpcm8gU2hpbW9kYSB3cm90ZToNCj4gDQo+ID4gQWRkIGEgbmV3IGNv
-bXBhdGlibGUgc3RyaW5nIGZvciB0aGUgUjhBNzc5OTUgKFItQ2FyIEQzKSBSQVZCLg0KPiA+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hpaGlyby5zaGltb2RhLnVo
-QHJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL25ldC9yZW5lc2FzLHJhdmIudHh0IHwgMSArDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbmV0L3JlbmVzYXMscmF2Yi50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbmV0L3JlbmVzYXMscmF2Yi50eHQNCj4gPiBpbmRleCAxNjcyMzUz
-Li5hZTIyMTNmIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9uZXQvcmVuZXNhcyxyYXZiLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9uZXQvcmVuZXNhcyxyYXZiLnR4dA0KPiA+IEBAIC0xNyw2ICsxNyw3IEBA
-IFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4NCj4gPiAgICAgICAgIC0gInJlbmVzYXMsZXRoZXJh
-dmItcjhhNzc5NSIgZm9yIHRoZSBSOEE3Nzk1IFNvQy4NCj4gPiAgICAgICAgIC0gInJlbmVzYXMs
-ZXRoZXJhdmItcjhhNzc5NiIgZm9yIHRoZSBSOEE3Nzk2IFNvQy4NCj4gPiArICAgICAgLSAicmVu
-ZXNhcyxldGhlcmF2Yi1yOGE3Nzk5NSIgZm9yIHRoZSBSOEE3Nzk5NSBTb0MuDQo+IA0KPiAgICAg
-VGhhdCB3b3VsZCBjb25mbGljdCB3aXRoIHRoZSBSOEE3Nzk3MCBiaW5kaW5ncyBwYXRjaCBwb3N0
-ZWQgYnkgbWUNCj4geWVzdGVyZGF5LiBQbGVhc2UgcmVzcGluIGF0b3Agb2YgaXQuDQoNClllcywg
-SSBzdWJtaXR0ZWQgdjIgcGF0Y2ggbm93Lg0KDQo+ID4gICAgICAgICAtICJyZW5lc2FzLGV0aGVy
-YXZiLXJjYXItZ2VuMyIgYXMgYSBmYWxsYmFjayBmb3IgdGhlIGFib3ZlDQo+ID4gICAJCVItQ2Fy
-IEdlbjMgZGV2aWNlcy4NCj4gPg0KPiANCj4gICAgIE9uZSBtb3JlIGZyYWdtZW50IGlzIG5lZWRl
-ZCBoZXJlLCBhYm91dCB0aGUgbWFuZGF0b3J5ICdpbnRlcnJ1cHQtbmFtZXMiDQo+IHByb3AuIE15
-IHBhdGNoIG1ha2VzIHRoaXMgY2hhbmdlIHVubmVjZXNzYXJ5LCBob3dldmVyLi4uDQoNCkkgdW5k
-ZXJzdG9vZCBpdC4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiBNQlIs
-IFNlcmdlaQ0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDkvMTMvMjAxNyAwOToxMyBQTSwgU3lsd2VzdGVyIE5hd3JvY2tpIHdyb3RlOgo+IE9uIDA5
+LzEzLzIwMTcgMDE6NDEgUE0sIEhvZWdldW4gS3dvbiB3cm90ZToKPj4gQEAgLTEwMDQsMTEgKzEw
+ODgsMzMgQEAgc3RhdGljIGlycXJldHVybl90IGdzY19pcnFfaGFuZGxlcihpbnQgaXJxLCAKPj4g
+dm9pZCAqcHJpdikKPj4gICAgICAgLm51bV9jbG9ja3MgPSAxLAo+PiAgIH07Cj4+ICAgK3N0YXRp
+YyBzdHJ1Y3QgZ3NjX2RyaXZlcmRhdGEgZ3NjX3ZfNTI1MF9kcnZkYXRhID0gewo+PiArICAgIC52
+YXJpYW50ID0gewo+PiArICAgICAgICBbMF0gPSAmZ3NjX3ZfNTI1MF92YXJpYW50LAo+PiArICAg
+ICAgICBbMV0gPSAmZ3NjX3ZfNTI1MF92YXJpYW50LAo+PiArICAgICAgICBbMl0gPSAmZ3NjX3Zf
+NTI1MF92YXJpYW50LAo+PiArICAgICAgICBbM10gPSAmZ3NjX3ZfNTI1MF92YXJpYW50LAo+PiAr
+ICAgIH0sCj4+ICsgICAgLm51bV9lbnRpdGllcyA9IDQsCj4+ICsgICAgLmNsa19uYW1lcyA9IHsg
+ImdzY2wiIH0sCj4+ICsgICAgLm51bV9jbG9ja3MgPSAxLAo+PiArfTsKPj4gKwo+PiArc3RhdGlj
+IHN0cnVjdCBnc2NfZHJpdmVyZGF0YSBnc2Nfdl81NDIwX2RydmRhdGEgPSB7Cj4+ICsgICAgLnZh
+cmlhbnQgPSB7Cj4+ICsgICAgICAgIFswXSA9ICZnc2Nfdl81NDIwX3ZhcmlhbnQsCj4+ICsgICAg
+ICAgIFsxXSA9ICZnc2Nfdl81NDIwX3ZhcmlhbnQsCj4+ICsgICAgfSwKPj4gKyAgICAubnVtX2Vu
+dGl0aWVzID0gNCwKPgo+IFNob3VsZG4ndCBudW1fZW5pdGllcyBiZSAyIGhlcmU/IFlvdSBkb24n
+dCBuZWVkIHRvIHJlc2VuZCwgSSBjYW4KPiBhbWVuZCB0aGF0IHdoZW4gYXBwbHlpbmcuCj4KCgpZ
+ZXMsIG51bV9lbml0aWVzIGlzIDIuClNvcnJ5IEkgbWFkZSBhIG1pc3Rha2UuCgpUaGFua3MgU3ls
+d2VzdGVyLgoKQmVzdCByZWdhcmRzLApIb2VnZXVuCgo+PiArICAgIC5jbGtfbmFtZXMgPSB7ICJn
+c2NsIiB9LAo+PiArICAgIC5udW1fY2xvY2tzID0gMSwKPj4gK307Cj4+ICsKPgo+IC0tIAo+IFJl
+Z2FyZHMsCj4gU3lsd2VzdGVyCj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
