@@ -1,80 +1,143 @@
-From: Stewart Smith <stewart@linux.vnet.ibm.com>
-Subject: [PATCH] drivers: of: static DT reservations incorrectly added to dynamic list
-Date: Thu, 14 Sep 2017 20:24:15 +1000
-Message-ID: <20170914102415.26395-1-stewart@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: obh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Stewart Smith <stewart@linux.vnet.ibm.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: as3645a flash userland interface
+Date: Thu, 14 Sep 2017 13:28:25 +0300
+Message-ID: <fe79ac76-5458-94ca-ba61-b1d57dd7c468@linux.intel.com>
+References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
+ <20170912084236.1154-25-sakari.ailus@linux.intel.com>
+ <20170912103628.GB27117@amd> <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
+ <20170912215529.GA17218@amd> <21824758-28a1-7007-6db5-86a900025d14@gmail.com>
+ <CGME20170914092415epcas2p26c049a698851778673034c16afb290b9@epcas2p2.samsung.com>
+ <4bf12e8e-beff-0199-cdee-4a52ebe7cdaf@samsung.com>
+ <20170914100718.GA3843@amd>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="rFGVvDL23ikOeRt0JaKfX988RiQMeOQDP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170914100718.GA3843@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There are two types of memory reservations firmware can ask the kernel
-to make in the device tree: static and dynamic.
-See Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--rFGVvDL23ikOeRt0JaKfX988RiQMeOQDP
+Content-Type: multipart/mixed; boundary="NwRtuWsBTtP1pw2mxu4LG2TQRi1mr3GsV";
+ protected-headers="v1"
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>,
+ linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org,
+ laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Message-ID: <fe79ac76-5458-94ca-ba61-b1d57dd7c468-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: as3645a flash userland interface
+References: <20170912084236.1154-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+ <20170912084236.1154-25-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+ <20170912103628.GB27117@amd> <7b679cb3-ce58-e1d1-60bf-995896bf46eb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ <20170912215529.GA17218@amd> <21824758-28a1-7007-6db5-86a900025d14-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ <CGME20170914092415epcas2p26c049a698851778673034c16afb290b9-X0/kTFf5ohZqW5MlFJXMulaTQe2KTcn/@public.gmane.org>
+ <4bf12e8e-beff-0199-cdee-4a52ebe7cdaf-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+ <20170914100718.GA3843@amd>
+In-Reply-To: <20170914100718.GA3843@amd>
 
-If you have greater than 16 entries in /reserved-memory (as we do on
-POWER9 systems) you would get this scary looking error message:
-[    0.000000] OF: reserved mem: not enough space all defined regions.
+--NwRtuWsBTtP1pw2mxu4LG2TQRi1mr3GsV
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-This is harmless if all your reservations are static (which with OPAL on
-POWER9, they are).
+Hi Pavel and others,
 
-It is not harmless if you have any dynamic reservations after the 16th.
+On 09/14/17 13:07, Pavel Machek wrote:
+> Hi!
+>=20
+>>>>>> What directory are the flash controls in?
+>>>>>>
+>>>>>> /sys/class/leds/led-controller:flash ?
+>>>>>>
+>>>>>> Could we arrange for something less generic, like
+>>>>>>
+>>>>>> /sys/class/leds/main-camera:flash ?
+>>>>>
+>>>>> I'd rather avoid overcomplicating this. LED class device name patte=
+rn
+>>>>> is well defined to devicename:colour:function
+>>>>> (see Documentation/leds/leds-class.txt, "LED Device Naming" section=
+).
+>>>>>
+>>>>> In this case "flash" in place of the "function" segment makes the
+>>>>> things clear enough I suppose.
+>>>>
+>>>> It does not.
+>>>>
+>>>> Phones usually have two cameras, front and back, and these days both=
 
-In the first pass over the fdt to find reservations, the child nodes of
-/reserved-memory are added to a static array in of_reserved_mem.c so that
-memory can be reserved in a 2nd pass. The array has 16 entries. This is why,
-on my dual socket POWER9 system, I get that error 4 times with 20 static
-reservations.
+>>>> cameras have their flash.
+>>>>
+>>>> And poor userspace flashlight application can not know if as3645
+>>>> drivers front LED or back LED. Thus, I'd set devicename to
+>>>> front-camera or main-camera -- because that's what it is associated
+>>>> with. Userspace does not care what hardware drives the LED, but need=
+s
+>>>> to know if it is front or back camera.
+>>>
+>>> The name of a LED flash class device isn't fixed and is derived
+>> >from DT label property. Name in the example of some DT bindings
+>>> will not force people to apply similar pattern for the other
+>>> drivers and even for the related one. No worry about having
+>>> to keep anything forever basing on that.
+>>
+>> Isn't the V4L2 subdev/Media Controller API supposed to provide means
+>> for associating flash LEDs with camera sensors? You seem to be=20
 
-We don't have a problem on ppc though, as in arch/powerpc/kernel/prom.c
-we look at the new style /reserved-ranges property to do reservations,
-and this logic was introduced in 0962e8004e974 (well before any powernv
-system shipped).
+It should, and will, but doesn't do that yet. The information will soon
+available to the kernel but even that's not yet in mainline.
 
-Google shows up no occurances of that exact error message, so we're probably
-safe in that no machine that people use has memory not being reserved when
-it should be.
+insisting
+>> on using the sysfs leds interface for that, which is not a primary
+>> interface for camera flash AFAICT.
+>=20
+> a) subdev/media controller API currently does not provide such means.
+>=20
+> b) if we have /sys/class/leds interface to userland, it should be
+> useful.
+>=20
+> c) having flashlight application going through media controller API is
+> a bad joke.
 
-The fix is simple, as there's a different code path for static and dynamic
-allocations, we just don't add the region to the list if it's static. Since
-it's a static *OR* dynamic region, this is a perfectly valid thing to do
-(although I have not checked every real world device tree on the planet
-for this condition)
+d) V4L2 sub-devices are always related to a master device (that usually
+has the DMA engine). In the absence of that, there will be no sub-device
+node either. In other words, if you don't have a camera, you won't have
+a sub-device. And it's perfectly possible to have a flash LED without a
+camera.
 
-Fixes: 3f0c8206644836e4f10a6b9fc47cda6a9a372f9b
-Signed-off-by: Stewart Smith <stewart@linux.vnet.ibm.com>
----
-NOTE: I've done only fairly limited testing of this on POWER, I
-certainly haven't tested on ARM or *anything* with dynamic
-allocations. So, testing and comments welcome.
----
- drivers/of/fdt.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+For what's worth, I think there was a Nokia (S30 ?) phone long, long
+time ago with a torch LED but no camera. 1100 maybe? The old one, not
+the new one.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index ce30c9a588a4..a9a44099ed69 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -587,7 +587,7 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
- 	phys_addr_t base, size;
- 	int len;
- 	const __be32 *prop;
--	int nomap, first = 1;
-+	int nomap;
- 
- 	prop = of_get_flat_dt_prop(node, "reg", &len);
- 	if (!prop)
-@@ -614,10 +614,6 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
- 				uname, &base, (unsigned long)size / SZ_1M);
- 
- 		len -= t_len;
--		if (first) {
--			fdt_reserved_mem_save_node(node, uname, base, size);
--			first = 0;
--		}
- 	}
- 	return 0;
- }
--- 
-2.13.5
+--=20
+Regards,
+
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+
+
+--NwRtuWsBTtP1pw2mxu4LG2TQRi1mr3GsV--
+
+--rFGVvDL23ikOeRt0JaKfX988RiQMeOQDP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEAREIAB0WIQTw0Dd6DU8lp5I47+VtQDYbbijBkwUCWbpZyQAKCRBtQDYbbijB
+kwS5AP0UU6vmsmp9D+Mf0ruBcZvusVSSTht2k7kROrIJI+65IAD/bJvt5TUuCNvN
+UNCr6FvPnGcqavDYIZsAM57ovjhX4BE=
+=LkLl
+-----END PGP SIGNATURE-----
+
+--rFGVvDL23ikOeRt0JaKfX988RiQMeOQDP--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
