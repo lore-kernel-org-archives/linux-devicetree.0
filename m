@@ -1,50 +1,52 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 8/8] ARM: drs: iwg22m: Add SPI NOR support
-Date: Thu, 14 Sep 2017 07:07:01 +0000
-Message-ID: <KL1PR06MB1702D65F9959E43ACA9789F8B86F0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-9-git-send-email-chris.paterson2@renesas.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] dt-bindings: nand: denali: reduce the register space in the
+ example
+Date: Thu, 14 Sep 2017 16:17:36 +0900
+Message-ID: <1505373456-24047-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1505322341-9480-9-git-send-email-chris.paterson2@renesas.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Oleksij Rempel <o.rempel@pengutronix.de>, Boris Brezillon <boris.brezillon@free-electrons.com>, Dinh Nguyen <dinguyen@kernel.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Marek Vasut <marek.vasut@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This example allocates too much for register regions.  Especially,
+there are only two registers in the "nand_data" interface of this
+hardware (ADDR: 0x00, DATA: 0x10).
 
-> -----Original Message-----
-> From: devicetree-owner@vger.kernel.org [mailto:devicetree-
-> owner@vger.kernel.org] On Behalf Of Chris Paterson
-> Sent: 13 September 2017 18:06
-> To: Simon Horman <horms@verge.net.au>
-> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
-> Russell King <linux@armlinux.org.uk>; Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com>; devicetree@vger.kernel.org; linux-renes=
-as-
-> soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Chris Paterson
-> <Chris.Paterson2@renesas.com>
-> Subject: [PATCH 8/8] ARM: drs: iwg22m: Add SPI NOR support
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Subject should be " ARM: dts: iwg22m: Add SPI NOR support"
+ Documentation/devicetree/bindings/mtd/denali-nand.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->
-> Add support for the SPI NOR device used to boot up the system to the Syst=
-em on
-> Module DT.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-
+diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+index 504291d..0ee8edb 100644
+--- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+@@ -29,7 +29,7 @@ nand: nand@ff900000 {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 	compatible = "altr,socfpga-denali-nand";
+-	reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
++	reg = <0xff900000 0x20>, <0xffb80000 0x1000>;
+ 	reg-names = "nand_data", "denali_reg";
+ 	interrupts = <0 144 4>;
+ };
+-- 
+2.7.4
 
 
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
