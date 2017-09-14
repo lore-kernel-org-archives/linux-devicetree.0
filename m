@@ -1,84 +1,55 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 01/18] dt: arm: shmobile: add M3ULCB Kingfisher board
- DT bindings
-Date: Thu, 14 Sep 2017 17:19:03 +0200
-Message-ID: <CAMuHMdXQrOh3=JXwnaVvari7HC463iPOZYZp1OT8fap=agYBRw@mail.gmail.com>
-References: <1505398720-4535-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdXtp0w071eAes0Khpi4jHkkgpZ36vbnReGsNWZ-73qa0g@mail.gmail.com> <0bbc8962-c7f3-3889-1add-9984fa8cea88@cogentembedded.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 1/5] dt-bindings: i2c-stm32: Document the STM32F7 I2C
+ bindings
+Date: Thu, 14 Sep 2017 17:38:20 +0200
+Message-ID: <20170914153820.idq7t5gtlkcfbk6w@ninjato>
+References: <1505399319-14782-1-git-send-email-pierre-yves.mordret@st.com>
+ <1505399319-14782-2-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0bbc8962-c7f3-3889-1add-9984fa8cea88-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ykkdeei2w4oh5ic6"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1505399319-14782-2-git-send-email-pierre-yves.mordret@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
 
-On Thu, Sep 14, 2017 at 5:00 PM, Vladimir Barinov
-<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> On 14.09.2017 17:55, Geert Uytterhoeven wrote:
->> On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
->> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
->>> Add M3ULCB Kingfisher Device tree bindings Documentation, listing it as a
->>> supported board.
->>>
->>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>> ---
->>> Changes in version 2:
->>> - added own compatible value "shimafuji,kingfisher"
->>
->> Thanks for the update!
->>
->>> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
->>> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
->>> @@ -85,6 +85,8 @@ Boards:
->>>       compatible = "renesas,lager", "renesas,r8a7790"
->>>     - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
->>>       compatible = "renesas,m3ulcb", "renesas,r8a7796";
->>> +  - M3ULCB Kingfisher (SBEV-RCAR-KF-M03)
->>> +    compatible = "shimafuji,kingfisher", "renesas,m3ulcb",
->>> "renesas,r8a7796";
->>>     - Marzen (R0P7779A00010S)
->>>       compatible = "renesas,marzen", "renesas,r8a7779"
->>>     - Porter (M2-LCDP)
->>
->> As Kingfisher is an extension board, I meant to have a separate entry for
->> it,
->> not tied to M3ULCB or H3ULCB:
->>
->>    - M3ULCB Kingfisher (SBEV-RCAR-KF-M03)
+--ykkdeei2w4oh5ic6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, bogus "M3ULCB" above.
+On Thu, Sep 14, 2017 at 04:28:35PM +0200, Pierre-Yves MORDRET wrote:
+> This patch adds the documentation of device tree bindings for STM32F7 I2C
+>=20
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
->>      compatible = "shimafuji,kingfisher"
->>
->> That way you don't need to list it twice (the board part number is the
->> same
->> for M3ULCB Kingfisher and H3ULCB Kingfisher anyway).
->> Do you agree?
->
-> Sorry for misunderstanding.
->
-> Do you mean to add such entry:
->
->   - Kingfisher (SBEV-RCAR-KF-M03)
->     compatible = "shimafuji,kingfisher"
+Applied to for-next, thanks!
 
-Exactly.
 
-Gr{oetje,eeting}s,
+--ykkdeei2w4oh5ic6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlm6omgACgkQFA3kzBSg
+KbZ7GA/8DCgrJHEwiRz9PiSjGUytd3iYJbFkKUGjZai8/c13FaFiCykrUvpUqKMv
+LAKJRO8O0LN/WwklzDyp7Lum9ZrHqtHZjMLDc0yy6oxD9RYs3BCBB3g82RqyjZ0r
+YGPKceXSXINo4YfNlW3p+qZ+ZM/lq5v0qBq34hciq4lU4Jb3mJJq5vQEDV+gOWW7
+Hci0zl8xV7Z0UfUG8OhiN+BYAZe50F29A8XRdJS7CY1AlizB+LzgW/0v2nzf4AZ/
+99nDI5x/OtqBTaZ9pem4IZrpSTvN9pzujviUihzKCxhS0qzReJRGSMv4kdS8MsX5
+rUKxfagiWe5Dd21pKDmm2cmb7oOKU0Fr5AflLK3edAEyxd/QNMeVqrPZbXR/hq6i
+9EbTvmxK0W3Jv7+c2bVEL+TFHkAVVG4638pTzpeXzFII0bdcphz7/V5qBG9DwuaB
+YVK3D6DXT6UhuJkUQJ/2fQHLpPqSOL7C/twXRXY9joNJZ/11nl64DdZ/ejq6RJD3
+W/JjdkRGIZQ0tnD8kCYO1pBEflP1bmq9eyelCL5U8cCM7wpHY0400o9vJcZO/u5+
+IK3oKvoOiWH8MW1ZFFgniopj4+PSOkGpHyKk1v4LxAdByGmMEecm+NM+gA+lQZwu
+0HMln6B3GnOYC4dxbM91cLtTP+7oTA7vbHbZnerw/obRt4wAijI=
+=wNWH
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ykkdeei2w4oh5ic6--
