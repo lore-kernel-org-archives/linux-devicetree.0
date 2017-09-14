@@ -1,102 +1,73 @@
-From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v7 5/5] iommu/arm-smmu-v3:Enable ACPI based HiSilicon erratum 161010801
-Date: Thu, 14 Sep 2017 13:57:56 +0100
-Message-ID: <20170914125756.14836-6-shameerali.kolothum.thodi@huawei.com>
-References: <20170914125756.14836-1-shameerali.kolothum.thodi@huawei.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: as3645a flash userland interface
+Date: Thu, 14 Sep 2017 15:16:29 +0200
+Message-ID: <82a4a519-e402-8eae-0352-e3e287fc508f@samsung.com>
+References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
+        <20170912084236.1154-25-sakari.ailus@linux.intel.com>
+        <20170912103628.GB27117@amd>
+        <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
+        <20170912215529.GA17218@amd>
+        <21824758-28a1-7007-6db5-86a900025d14@gmail.com>
+        <CGME20170914092415epcas2p26c049a698851778673034c16afb290b9@epcas2p2.samsung.com>
+        <4bf12e8e-beff-0199-cdee-4a52ebe7cdaf@samsung.com>
+        <20170914100718.GA3843@amd>
+        <1f34a891-edb1-251c-86a8-ba4a90c485d3@samsung.com>
+        <20170914115323.GA1850@amd>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170914125756.14836-1-shameerali.kolothum.thodi@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, sudeep.holla@arm.com, will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org, mark.rutland@arm.com, hanjun.guo@linaro.org
-Cc: gabriele.paoloni@huawei.com, john.garry@huawei.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, devel@acpica.org, linuxarm@huawei.com, wangzhou1@hisilicon.com, guohanjun@huawei.com, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20170914115323.GA1850@amd>
+Content-language: en-GB
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The HiSilicon erratum 161010801 describes the limitation of HiSilicon
-platforms Hip06/Hip07 to support the SMMU mappings for MSI transactions.
+On 09/14/2017 01:53 PM, Pavel Machek wrote:
+> On Thu 2017-09-14 13:01:19, Sylwester Nawrocki wrote:
+>> On 09/14/2017 12:07 PM, Pavel Machek wrote:
+>>>> Isn't the V4L2 subdev/Media Controller API supposed to provide means
+>>>> for associating flash LEDs with camera sensors? You seem to be insisting
+>>>> on using the sysfs leds interface for that, which is not a primary
+>>>> interface for camera flash AFAICT.
+>>>
+>>> a) subdev/media controller API currently does not provide such means.
+>>
+>> Yes, but it should, that's what it was designed for AFAIK.
+>>
+>>> b) if we have /sys/class/leds interface to userland, it should be
+>>> useful.
+>>
+>> At the same time we shouldn't overcomplicate it with the camera
+>> functionality.
+> 
+> I'm advocating adding label = "main_camera" into the .dts. That's all.
+> 
+>>> c) having flashlight application going through media controller API is
+>>> a bad joke.
+>>
+>> It doesn't have to, maybe I misunderstood what you exactly ask for.
+>> Nevertheless what's missing is some user visible name/label for each
+>> flash LED, right? Currently enumerating flash LEDs can be done by looking
+>> at the function part of /sys/class/leds/<led-controller>:<colour>:
+>> <function> path.
+>>
+>> Could additional information be appended to the <function> part, so
+>> user can identify which LED is which? E.g. "flash(rear)", "flash(front)",
+>> etc. This could be achieved by simply adding label property in DT.
+>> Or is the list of supported <function> strings already standardized?
+> 
+> label = "flash_main_camera" would work for me, yes. And yes, I'd
+> prefer to do this before 4.14 release, so that userland-visible
+> interface does not change.
 
-On these platforms GICv3 ITS translator is presented with the deviceID
-by extending the MSI payload data to 64 bits to include the deviceID.
-Hence, the PCIe controller on this platforms has to differentiate the
-MSI payload against other DMA payload and has to modify the MSI payload.
-This basically makes it difficult for this platforms to have a SMMU
-translation for MSI.
+Looking at existing label entries in DT (git grep label.*led
+-- arch/arm/boot/dts | sed 's\^.*label\label\' | sort | uniq)
+I can't see why something like this couldn't be added.
+Or label = "as3645a::flash_main_camera" so we abide the LED device
+naming rules described in Documentation/leds/leds-class.txt.
 
-This patch implements a quirk to reserve the hw msi regions in the
-smmu-v3 driver which means these address regions will not be
-translated and will be excluded from iova allocations.
-
-Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-[John: add DT support]
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/iommu/arm-smmu-v3.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 568c400..8503f4d 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -608,6 +608,7 @@ struct arm_smmu_device {
- 
- #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
- #define ARM_SMMU_OPT_PAGE0_REGS_ONLY	(1 << 1)
-+#define ARM_SMMU_OPT_RESV_HW_MSI	(1 << 2)
- 	u32				options;
- 
- 	struct arm_smmu_cmdq		cmdq;
-@@ -674,6 +675,7 @@ struct arm_smmu_option_prop {
- 
- static struct arm_smmu_option_prop arm_smmu_options[] = {
- 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
-+	{ ARM_SMMU_OPT_RESV_HW_MSI, "hisilicon,broken-untranslated-msi" },
- 	{ ARM_SMMU_OPT_PAGE0_REGS_ONLY, "cavium,cn9900-broken-page1-regspace"},
- 	{ 0, NULL},
- };
-@@ -1934,14 +1936,29 @@ static void arm_smmu_get_resv_regions(struct device *dev,
- 				      struct list_head *head)
- {
- 	struct iommu_resv_region *region;
-+	struct arm_smmu_master_data *master = dev->iommu_fwspec->iommu_priv;
-+	struct arm_smmu_device *smmu = master->smmu;
- 	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-+	int resv = 0;
- 
--	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
--					 prot, IOMMU_RESV_SW_MSI);
--	if (!region)
--		return;
-+	if ((smmu->options & ARM_SMMU_OPT_RESV_HW_MSI)) {
- 
--	list_add_tail(&region->list, head);
-+		resv = iommu_dma_get_msi_resv_regions(dev, head);
-+
-+		if (resv < 0) {
-+			dev_warn(dev, "HW MSI region resv failed: %d\n", resv);
-+			return;
-+		}
-+	}
-+
-+	if (!resv) {
-+		region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
-+						 prot, IOMMU_RESV_SW_MSI);
-+		if (!region)
-+			return;
-+
-+		list_add_tail(&region->list, head);
-+	}
- 
- 	iommu_dma_get_resv_regions(dev, head);
- }
-@@ -2667,6 +2684,7 @@ static void acpi_smmu_get_options(u32 model, struct arm_smmu_device *smmu)
- 		break;
- 	case ACPI_IORT_SMMU_HISILICON_HI161X:
- 		smmu->options |= ARM_SMMU_OPT_SKIP_PREFETCH;
-+		smmu->options |= ARM_SMMU_OPT_RESV_HW_MSI;
- 		break;
- 	}
- 
 -- 
-1.9.1
-
-
+Regards,
+Sylwester
