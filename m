@@ -1,98 +1,68 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [patch v5 2/2] dt-bindings: mfd: Add Device Tree bindings for
- Mellanox programmable devices
-Date: Thu, 14 Sep 2017 13:51:40 +0100
-Message-ID: <20170914125140.2a7cwmgm7pzk6zuk@dell>
-References: <1505371738-128683-1-git-send-email-vadimp@mellanox.com>
- <1505371738-128683-3-git-send-email-vadimp@mellanox.com>
- <20170914123824.us56wefi3di345mh@dell>
+From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Subject: [PATCH v7 1/5] Doc: iommu/arm-smmu-v3: Add workaround for HiSilicon erratum 161010801
+Date: Thu, 14 Sep 2017 13:57:52 +0100
+Message-ID: <20170914125756.14836-2-shameerali.kolothum.thodi@huawei.com>
+References: <20170914125756.14836-1-shameerali.kolothum.thodi@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170914123824.us56wefi3di345mh@dell>
-Sender: platform-driver-x86-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: robh+dt@kernel.org, pavel@ucw.cz, devicetree@vger.kernel.org, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, jiri@resnulli.us, gregkh@linuxfoundation.org, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170914125756.14836-1-shameerali.kolothum.thodi@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, sudeep.holla@arm.com, will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org, mark.rutland@arm.com, hanjun.guo@linaro.org
+Cc: gabriele.paoloni@huawei.com, john.garry@huawei.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, devel@acpica.org, linuxarm@huawei.com, wangzhou1@hisilicon.com, guohanjun@huawei.com, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Sep 2017, Lee Jones wrote:
+From: John Garry <john.garry@huawei.com>
 
-> On Thu, 14 Sep 2017, Vadim Pasternak wrote:
-> 
-> > The mlxreg a multifunction device driver handling LEDs, events, exposing
-> > through sysfs reset signal, and reset causes info. These components share
-> > a common register space.
-> > 
-> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> > ---
-> > v4->v5:
-> >  Comments pointed out by Rob:
-> >  - Avoid duplications in reg;
-> >  - Remove unnecessary details in description;
-> >  - Do not use names like phandels;
-> >  Changes added by Vadim:
-> >  - Combine hotplug nodes interrupt aggregation, register offset and mask
-> >    properties into hotplug-spec properties;
-> >  - Combine reset, cause, etc subnodes register offset, mask and effective
-> >    bit properties into attr-spec properties;
-> > v3->v4:
-> >  Comments pointed out by Rob:
-> >  - Make a separate patch /devicetree/bindings/vendor-prefixes.txt;
-> >  - Add .txt to Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> >    and send it within this series;
-> >  - Modify "compatible" property;
-> >  - Modify explanation for "deferred" property;
-> >  - Describe each subnode by its own section;
-> >  - Don't use underscore in attribute names;
-> > ---
-> >  .../bindings/mfd/mellanox,mlxreg-core.txt          | 165 +++++++++++++++++++++
-> >  1 file changed, 165 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core.txt
-> 
-> Wow!  I have never seen a binding like this before.
-> 
-> > diff --git a/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core.txt b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core.txt
-> > new file mode 100644
-> > index 0000000..1e3cce5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core.txt
-> > @@ -0,0 +1,165 @@
-> > +Mellanox programmable device control.
-> > +-------------------------------------
-> > +This binding defines the device control interface over for Mellanox BMC based
-> > +switches.
-> > +
-> > +Required properties:
-> > +- compatible =  "mellanox,mlxreg-i2c" or
-> > +		"mellanox,mlxreg-i2c-16"
-> > +
-> > +- #address-cells : must be 1;
-> > +- #size-cells : must be 0;
-> > +- reg : I2C address;
-> > +
-> > +Optional properties:
-> > +- interrupt-parent : phandle of parent interrupt controller;
-> > +- interrupts : interrupt line;
-> > +- deferred : I2C deferred bus phandle;
-> > +	     I2C bus activation order enforce for the cases when hot-plug
-> > +	     devices are attached to I2C bus, which is initialized after the
-> > +	     I2C bus, where programmable device is attached;
-> 
-> Dependencies aren't usually expressed in DT.
-> 
-> Why can't this be done pragmatically?
-> 
-> Usually we try to interrogate a device that we depend on and if it's
-> not present, we return -EPROBE_DEFER and try again latter.
+The HiSilicon erratum 161010801 describes the limitation of HiSilicon platforms
+hip06/hip07 to support the SMMU mappings for MSI transactions.
 
-Actually, thinking about this.  Are these hierarchical?
+On these platforms, GICv3 ITS translator is presented with the deviceID
+by extending the MSI payload data to 64 bits to include the deviceID.
+Hence, the PCIe controller on this platforms has to differentiate the MSI
+payload against other DMA payload and has to modify the MSI payload.
+This basically makes it difficult for this platforms to have a SMMU
+translation for MSI.
 
-If so, they would be better represented as a sub-node.
+This patch adds a SMMUv3 binding to flag that the SMMU breaks msi
+translation at ITS.
 
+Also, the arm64 silicon errata is updated with this same erratum.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+---
+ Documentation/arm64/silicon-errata.txt                  | 1 +
+ Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
+index 66e8ce1..02816b1 100644
+--- a/Documentation/arm64/silicon-errata.txt
++++ b/Documentation/arm64/silicon-errata.txt
+@@ -70,6 +70,7 @@ stable kernels.
+ |                |                 |                 |                             |
+ | Hisilicon      | Hip0{5,6,7}     | #161010101      | HISILICON_ERRATUM_161010101 |
+ | Hisilicon      | Hip0{6,7}       | #161010701      | N/A                         |
++| Hisilicon      | Hip0{6,7}       | #161010801      | N/A                         |
+ |                |                 |                 |                             |
+ | Qualcomm Tech. | Falkor v1       | E1003           | QCOM_FALKOR_ERRATUM_1003    |
+ | Qualcomm Tech. | Falkor v1       | E1009           | QCOM_FALKOR_ERRATUM_1009    |
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+index c9abbf3..1f5f7f9 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+@@ -55,6 +55,9 @@ the PCIe specification.
+ - hisilicon,broken-prefetch-cmd
+                     : Avoid sending CMD_PREFETCH_* commands to the SMMU.
+ 
++- hisilicon,broken-untranslated-msi
++                    : Reserve ITS HW region to avoid translating msi.
++
+ - cavium,cn9900-broken-page1-regspace
+                     : Replaces all page 1 offsets used for EVTQ_PROD/CONS,
+ 		      PRIQ_PROD/CONS register access with page 0 offsets.
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.9.1
+
+
