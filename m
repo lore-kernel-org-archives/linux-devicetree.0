@@ -1,55 +1,66 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v1 2/2] ARM: socfpga: dtsi: add dw-wdt reset lines
-Date: Thu, 14 Sep 2017 10:14:02 +0200
-Message-ID: <20170914081402.7893-2-o.rempel@pengutronix.de>
-References: <20170914081402.7893-1-o.rempel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170914081402.7893-1-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, Dinh Nguyen <dinguyen@opensource.altera.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v1 1/2] watchdog: dw_wdt: add stop watchdog operation
+Date: Thu, 14 Sep 2017 10:14:01 +0200
+Message-ID: <20170914081402.7893-1-o.rempel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Dinh Nguyen <dinguyen@opensource.altera.com>
-Cc: linux-arm-kernel@lists.infradead.org
+The only way of stopping the watchdog is by resetting it.
+Add the watchdog op for stopping the device and reset if
+a reset line is provided.
+
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/arm/boot/dts/socfpga.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/watchdog/dw_wdt.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 7e24dc8e82d4..6e49cee084b8 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -924,6 +924,7 @@
- 			reg = <0xffd02000 0x1000>;
- 			interrupts = <0 171 4>;
- 			clocks = <&osc1>;
-+			resets = <&rst L4WD0_RESET>;
- 			status = "disabled";
- 		};
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index 36be987ff9ef..50d8a6a5b5ac 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -135,6 +135,21 @@ static int dw_wdt_start(struct watchdog_device *wdd)
+ 	return 0;
+ }
  
-@@ -932,6 +933,7 @@
- 			reg = <0xffd03000 0x1000>;
- 			interrupts = <0 172 4>;
- 			clocks = <&osc1>;
-+			resets = <&rst L4WD1_RESET>;
- 			status = "disabled";
- 		};
- 	};
++static int dw_wdt_stop(struct watchdog_device *wdd)
++{
++	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
++
++	if (IS_ERR(dw_wdt->rst)) {
++		dev_warn(wdd->parent, "No reset line. Will not stop.\n");
++		return PTR_ERR(dw_wdt->rst);
++	}
++
++	reset_control_assert(dw_wdt->rst);
++	reset_control_deassert(dw_wdt->rst);
++
++	return 0;
++}
++
+ static int dw_wdt_restart(struct watchdog_device *wdd,
+ 			  unsigned long action, void *data)
+ {
+@@ -173,6 +188,7 @@ static const struct watchdog_info dw_wdt_ident = {
+ static const struct watchdog_ops dw_wdt_ops = {
+ 	.owner		= THIS_MODULE,
+ 	.start		= dw_wdt_start,
++	.stop		= dw_wdt_stop,
+ 	.ping		= dw_wdt_ping,
+ 	.set_timeout	= dw_wdt_set_timeout,
+ 	.get_timeleft	= dw_wdt_get_timeleft,
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
