@@ -1,143 +1,73 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: as3645a flash userland interface
-Date: Thu, 14 Sep 2017 13:28:25 +0300
-Message-ID: <fe79ac76-5458-94ca-ba61-b1d57dd7c468@linux.intel.com>
-References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
- <20170912084236.1154-25-sakari.ailus@linux.intel.com>
- <20170912103628.GB27117@amd> <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
- <20170912215529.GA17218@amd> <21824758-28a1-7007-6db5-86a900025d14@gmail.com>
- <CGME20170914092415epcas2p26c049a698851778673034c16afb290b9@epcas2p2.samsung.com>
- <4bf12e8e-beff-0199-cdee-4a52ebe7cdaf@samsung.com>
- <20170914100718.GA3843@amd>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2] pinctrl: sh-pfc: r8a77995: Add USB2.0 host support
+Date: Thu, 14 Sep 2017 19:29:21 +0900
+Message-ID: <1505384961-1445-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="rFGVvDL23ikOeRt0JaKfX988RiQMeOQDP"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170914100718.GA3843@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---rFGVvDL23ikOeRt0JaKfX988RiQMeOQDP
-Content-Type: multipart/mixed; boundary="NwRtuWsBTtP1pw2mxu4LG2TQRi1mr3GsV";
- protected-headers="v1"
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>,
- linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org,
- laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Message-ID: <fe79ac76-5458-94ca-ba61-b1d57dd7c468-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: as3645a flash userland interface
-References: <20170912084236.1154-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
- <20170912084236.1154-25-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
- <20170912103628.GB27117@amd> <7b679cb3-ce58-e1d1-60bf-995896bf46eb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- <20170912215529.GA17218@amd> <21824758-28a1-7007-6db5-86a900025d14-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- <CGME20170914092415epcas2p26c049a698851778673034c16afb290b9-X0/kTFf5ohZqW5MlFJXMulaTQe2KTcn/@public.gmane.org>
- <4bf12e8e-beff-0199-cdee-4a52ebe7cdaf-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
- <20170914100718.GA3843@amd>
-In-Reply-To: <20170914100718.GA3843@amd>
+From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 
---NwRtuWsBTtP1pw2mxu4LG2TQRi1mr3GsV
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ Changes from v1:
+  - Rebase this patch on renesas-drivers' 2017-09-05 tag +
+    https://patchwork.kernel.org/patch/9952291/ patch.
 
-Hi Pavel and others,
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-On 09/14/17 13:07, Pavel Machek wrote:
-> Hi!
->=20
->>>>>> What directory are the flash controls in?
->>>>>>
->>>>>> /sys/class/leds/led-controller:flash ?
->>>>>>
->>>>>> Could we arrange for something less generic, like
->>>>>>
->>>>>> /sys/class/leds/main-camera:flash ?
->>>>>
->>>>> I'd rather avoid overcomplicating this. LED class device name patte=
-rn
->>>>> is well defined to devicename:colour:function
->>>>> (see Documentation/leds/leds-class.txt, "LED Device Naming" section=
-).
->>>>>
->>>>> In this case "flash" in place of the "function" segment makes the
->>>>> things clear enough I suppose.
->>>>
->>>> It does not.
->>>>
->>>> Phones usually have two cameras, front and back, and these days both=
-
->>>> cameras have their flash.
->>>>
->>>> And poor userspace flashlight application can not know if as3645
->>>> drivers front LED or back LED. Thus, I'd set devicename to
->>>> front-camera or main-camera -- because that's what it is associated
->>>> with. Userspace does not care what hardware drives the LED, but need=
-s
->>>> to know if it is front or back camera.
->>>
->>> The name of a LED flash class device isn't fixed and is derived
->> >from DT label property. Name in the example of some DT bindings
->>> will not force people to apply similar pattern for the other
->>> drivers and even for the related one. No worry about having
->>> to keep anything forever basing on that.
->>
->> Isn't the V4L2 subdev/Media Controller API supposed to provide means
->> for associating flash LEDs with camera sensors? You seem to be=20
-
-It should, and will, but doesn't do that yet. The information will soon
-available to the kernel but even that's not yet in mainline.
-
-insisting
->> on using the sysfs leds interface for that, which is not a primary
->> interface for camera flash AFAICT.
->=20
-> a) subdev/media controller API currently does not provide such means.
->=20
-> b) if we have /sys/class/leds interface to userland, it should be
-> useful.
->=20
-> c) having flashlight application going through media controller API is
-> a bad joke.
-
-d) V4L2 sub-devices are always related to a master device (that usually
-has the DMA engine). In the absence of that, there will be no sub-device
-node either. In other words, if you don't have a camera, you won't have
-a sub-device. And it's perfectly possible to have a flash LED without a
-camera.
-
-For what's worth, I think there was a Nokia (S30 ?) phone long, long
-time ago with a torch LED but no camera. 1100 maybe? The old one, not
-the new one.
-
---=20
-Regards,
-
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-
-
---NwRtuWsBTtP1pw2mxu4LG2TQRi1mr3GsV--
-
---rFGVvDL23ikOeRt0JaKfX988RiQMeOQDP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEAREIAB0WIQTw0Dd6DU8lp5I47+VtQDYbbijBkwUCWbpZyQAKCRBtQDYbbijB
-kwS5AP0UU6vmsmp9D+Mf0ruBcZvusVSSTht2k7kROrIJI+65IAD/bJvt5TUuCNvN
-UNCr6FvPnGcqavDYIZsAM57ovjhX4BE=
-=LkLl
------END PGP SIGNATURE-----
-
---rFGVvDL23ikOeRt0JaKfX988RiQMeOQDP--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+index 0e803e9..dbe6b1c 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+@@ -1295,6 +1295,15 @@ enum {
+ 	SCIF_CLK_MARK,
+ };
+ 
++/* - USB0 ------------------------------------------------------------------- */
++static const unsigned int usb0_pins[] = {
++	/* PWEN, OVC */
++	RCAR_GP_PIN(0, 0), RCAR_GP_PIN(0, 1),
++};
++static const unsigned int usb0_mux[] = {
++	USB0_PWEN_MARK, USB0_OVC_MARK,
++};
++
+ static const struct sh_pfc_pin_group pinmux_groups[] = {
+ 	SH_PFC_PIN_GROUP(avb0_link),
+ 	SH_PFC_PIN_GROUP(avb0_magic),
+@@ -1342,6 +1351,7 @@ enum {
+ 	SH_PFC_PIN_GROUP(scif5_data_b),
+ 	SH_PFC_PIN_GROUP(scif5_clk_b),
+ 	SH_PFC_PIN_GROUP(scif_clk),
++	SH_PFC_PIN_GROUP(usb0),
+ };
+ 
+ static const char * const avb0_groups[] = {
+@@ -1428,6 +1438,10 @@ enum {
+ 	"scif_clk",
+ };
+ 
++static const char * const usb0_groups[] = {
++	"usb0",
++};
++
+ static const struct sh_pfc_function pinmux_functions[] = {
+ 	SH_PFC_FUNCTION(avb0),
+ 	SH_PFC_FUNCTION(i2c0),
+@@ -1442,6 +1456,7 @@ enum {
+ 	SH_PFC_FUNCTION(scif4),
+ 	SH_PFC_FUNCTION(scif5),
+ 	SH_PFC_FUNCTION(scif_clk),
++	SH_PFC_FUNCTION(usb0),
+ };
+ 
+ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+-- 
+1.9.1
