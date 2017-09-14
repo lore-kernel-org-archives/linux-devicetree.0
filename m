@@ -1,112 +1,85 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] spi: Add ADI driver for Spreadtrum platform
-Date: Thu, 14 Sep 2017 09:50:55 +0800
-Message-ID: <CAMz4kuK+cLc07CGifhShYr8ODpM+DL8_ShEH9jk3m59zM46u6A@mail.gmail.com>
-References: <d1c5720eccf12ee5ea6bffcbe4c1555680638fcc.1504859001.git.baolin.wang@spreadtrum.com>
- <4573c724b795c569e1ccea2a1a4f6c0bdd602744.1504859001.git.baolin.wang@spreadtrum.com>
- <20170913194548.qsyfyyboitz3mpcr@rob-hp-laptop>
+From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 01/12] mmc: dt-bindings: update Mediatek MMC bindings
+Date: Thu, 14 Sep 2017 10:10:21 +0800
+Message-ID: <1505355021.8308.4.camel@mhfsdcap03>
+References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
+         <1505207272-16983-2-git-send-email-chaotian.jing@mediatek.com>
+         <20170913141026.43oh4n4foipmahsk@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170913194548.qsyfyyboitz3mpcr@rob-hp-laptop>
+In-Reply-To: <20170913141026.43oh4n4foipmahsk@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, 2017-09-13 at 09:10 -0500, Rob Herring wrote:
+> On Tue, Sep 12, 2017 at 05:07:41PM +0800, Chaotian Jing wrote:
+> > Change the comptiable for support of multi-platform
+> > Add description for reg
+> > Add description for source_cg
+> > Add description for mediatek,latch-ck
+> 
+> This is at least the 3rd patch with exactly the same vague subject. 
+> Please make the subject somewhat unique.
+> 
+Thx, will change the subject at next version
+> > 
+> > Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
+> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > index 4182ea3..405cd06 100644
+> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
+> >  and the properties used by the msdc driver.
+> >  
+> >  Required properties:
+> > -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
+> > +- compatible: value should be either of the following.
+> > +	"mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+> > +	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+> > +	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+> > +	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+> > +- reg: physical base address of the controller and length
+> >  - interrupts: Should contain MSDC interrupt number
+> > -- clocks: MSDC source clock, HCLK
+> > -- clock-names: "source", "hclk"
+> > +- clocks: MSDC source clock, HCLK, source_cg
+> > +- clock-names: "source", "hclk", "source_cg"
+> 
+> All chips support source_cg? That's not backwards compatible for 
+> existing compatible strings if the driver requires it.
+Not all chips support source_cg, for chips which do not support
+source_cg, no need source_cg here, and the driver will parse it
+to know if current chip support it.
+> 
+> >  - pinctrl-names: should be "default", "state_uhs"
+> >  - pinctrl-0: should contain default/high speed pin ctrl
+> >  - pinctrl-1: should contain uhs mode pin ctrl
+> > @@ -30,6 +35,8 @@ Optional properties:
+> >  - mediatek,hs400-cmd-resp-sel-rising:  HS400 command response sample selection
+> >  				       If present,HS400 command responses are sampled on rising edges.
+> >  				       If not present,HS400 command responses are sampled on falling edges.
+> > +- mediatek,latch-ck: Some projects do not support enhance_rx, need set correct latch-ck to avoid data crc
+> 
+> What's a project?
+eg, MT2701
+> 
+> > +		     error caused by stop clock(fifo full)
+> >  
+> >  Examples:
+> >  mmc0: mmc@11230000 {
+> > -- 
+> > 1.8.1.1.dirty
+> > 
 
-On 14 September 2017 at 03:45, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Sep 08, 2017 at 04:33:42PM +0800, Baolin Wang wrote:
->> This patch adds ADI driver based on SPI framework for
->> Spreadtrum SC9860 platform.
->>
->> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->> ---
->
-> [...]
->
->> +++ b/drivers/spi/spi-sprd-adi.c
->> @@ -0,0 +1,419 @@
->> +/*
->> + * Copyright (C) 2017 Spreadtrum Communications Inc.
->> + *
->> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->
-> Kernel code should generally not be MIT license.
 
-OK. Will fix in next version.
-
->
-> [...]
->
->> +static int sprd_adi_drain_fifo(struct sprd_adi *sadi)
->> +{
->> +     u32 timeout = ADI_FIFO_DRAIN_TIMEOUT;
->> +     u32 sts;
->> +
->> +     do {
->> +             sts = readl_relaxed(sadi->base + REG_ADI_ARM_FIFO_STS);
->> +             if (sts & BIT_FIFO_EMPTY)
->> +                     break;
->> +
->> +             cpu_relax();
->> +     } while (--timeout);
->
-> You can use readl_poll_timeout.
-
-The readl_poll_timeout() function might be sleep, but we can not sleep
-when reading/writing data through ADI controller, since the routine is
-under hardware spinlock protection. Moreover it is usually very quick
-to jump the loop and we no need to sleep here.
-
->
->> +
->> +     if (timeout == 0) {
->> +             dev_err(sadi->dev, "drain write fifo timeout\n");
->> +             return -EBUSY;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int sprd_adi_fifo_is_full(struct sprd_adi *sadi)
->> +{
->> +     return readl_relaxed(sadi->base + REG_ADI_ARM_FIFO_STS) & BIT_FIFO_FULL;
->> +}
->> +
->> +static int sprd_adi_read(struct sprd_adi *sadi, u32 reg_paddr, u32 *read_val)
->> +{
->> +     int read_timeout = ADI_READ_TIMEOUT;
->> +     u32 val, rd_addr;
->> +
->> +     /*
->> +      * Set the physical register address need to read into RD_CMD register,
->> +      * then ADI controller will start to transfer automatically.
->> +      */
->> +     writel_relaxed(reg_paddr, sadi->base + REG_ADI_RD_CMD);
->> +
->> +     /*
->> +      * Wait read operation complete, the BIT_RD_CMD_BUSY will be set
->> +      * simultaneously when writing read command to register, and the
->> +      * BIT_RD_CMD_BUSY will be cleared after the read operation is
->> +      * completed.
->> +      */
->> +     do {
->> +             val = readl_relaxed(sadi->base + REG_ADI_RD_DATA);
->> +             if (!(val & BIT_RD_CMD_BUSY))
->> +                     break;
->> +
->> +             cpu_relax();
->> +     } while (--read_timeout);
->
-> readl_poll_timeout
-
-The same reason as above. Thanks for your comments.
-
--- 
-Baolin.wang
-Best Regards
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
