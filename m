@@ -1,65 +1,71 @@
-From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v1 1/2] watchdog: dw_wdt: add stop watchdog operation
-Date: Thu, 14 Sep 2017 10:14:01 +0200
-Message-ID: <20170914081402.7893-1-o.rempel@pengutronix.de>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: nand: denali: reduce the register space in
+ the example
+Date: Thu, 14 Sep 2017 17:16:12 +0900
+Message-ID: <CAK7LNAS9PZM49HJJRegQ9C+nrHKJntvHeURqO5Y07L5_dJpTeQ@mail.gmail.com>
+References: <1505373456-24047-1-git-send-email-yamada.masahiro@socionext.com> <3c17c272-40ec-4eeb-0dc3-59a64400e6f8@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3c17c272-40ec-4eeb-0dc3-59a64400e6f8-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Hi.
 
-The only way of stopping the watchdog is by resetting it.
-Add the watchdog op for stopping the device and reset if
-a reset line is provided.
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- drivers/watchdog/dw_wdt.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+2017-09-14 17:04 GMT+09:00 Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
+> Hi,
+>
+> i assume arch/arm/boot/dts/socfpga.dtsi should be update as well. Right?
 
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index 36be987ff9ef..50d8a6a5b5ac 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -135,6 +135,21 @@ static int dw_wdt_start(struct watchdog_device *wdd)
- 	return 0;
- }
- 
-+static int dw_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
-+
-+	if (IS_ERR(dw_wdt->rst)) {
-+		dev_warn(wdd->parent, "No reset line. Will not stop.\n");
-+		return PTR_ERR(dw_wdt->rst);
-+	}
-+
-+	reset_control_assert(dw_wdt->rst);
-+	reset_control_deassert(dw_wdt->rst);
-+
-+	return 0;
-+}
-+
- static int dw_wdt_restart(struct watchdog_device *wdd,
- 			  unsigned long action, void *data)
- {
-@@ -173,6 +188,7 @@ static const struct watchdog_info dw_wdt_ident = {
- static const struct watchdog_ops dw_wdt_ops = {
- 	.owner		= THIS_MODULE,
- 	.start		= dw_wdt_start,
-+	.stop		= dw_wdt_stop,
- 	.ping		= dw_wdt_ping,
- 	.set_timeout	= dw_wdt_set_timeout,
- 	.get_timeleft	= dw_wdt_get_timeleft,
+I think so.
+(also arch/arm/boot/dts/socfpga_arria10.dtsi in the same way)
+
+The wrong property "dma-mask" was removed by
+commit 60d920d32ca40660e382cf9ccbc236599a49e607.
+
+
+
+> On 14.09.2017 09:17, Masahiro Yamada wrote:
+>>
+>> This example allocates too much for register regions.  Especially,
+>> there are only two registers in the "nand_data" interface of this
+>> hardware (ADDR: 0x00, DATA: 0x10).
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>> ---
+>>
+>>   Documentation/devicetree/bindings/mtd/denali-nand.txt | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> index 504291d..0ee8edb 100644
+>> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> @@ -29,7 +29,7 @@ nand: nand@ff900000 {
+>>         #address-cells = <1>;
+>>         #size-cells = <1>;
+>>         compatible = "altr,socfpga-denali-nand";
+>> -       reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
+>> +       reg = <0xff900000 0x20>, <0xffb80000 0x1000>;
+>>         reg-names = "nand_data", "denali_reg";
+>>         interrupts = <0 144 4>;
+>>   };
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-2.11.0
-
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
