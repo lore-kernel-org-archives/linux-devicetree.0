@@ -1,409 +1,145 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 06/14] irqchip: add initial support for ompic
-Date: Thu, 14 Sep 2017 15:54:02 +0900
-Message-ID: <20170914065402.GU2609@lianli.shorne-pla.net>
-References: <20170910064926.5874-1-shorne@gmail.com>
- <20170910064926.5874-7-shorne@gmail.com>
- <86h8w6see4.fsf@arm.com>
+From: Florian Eckert <fe@dev.tdt.de>
+Subject: Re: [PATCH v3 2/2] hwmon: (ltq-cputemp) add devicetree bindings
+ documentation
+Date: Thu, 14 Sep 2017 09:06:30 +0200
+Message-ID: <b6c6310ff0fde9d0df29a57fcd229591@dev.tdt.de>
+References: <20170901065818.2037-1-fe@dev.tdt.de>
+ <20170901065818.2037-2-fe@dev.tdt.de> <20170901142622.GC599@roeck-us.net>
+ <20170912162008.y2dp3llaikkp3l45@rob-hp-laptop>
+ <a5a2e95a1fb671eb59459542af122d6e@dev.tdt.de>
+ <CAL_Jsq+udc2p_jqQN+m4R69zW=7RBfJCDrQgNXOiMycErP43LQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <86h8w6see4.fsf-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+udc2p_jqQN+m4R69zW=7RBfJCDrQgNXOiMycErP43LQ@mail.gmail.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux HWMON List <linux-hwmon@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 06:21:39PM +0100, Marc Zyngier wrote:
-> On Sun, Sep 10 2017 at  3:49:18 pm BST, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> >
-> > IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
-> > described in the Multicore support section of the OpenRISC 1.2
-> > proposed architecture specification:
-> >
-> >   https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
-> >
-> > Each OpenRISC core contains a full interrupt controller which is used in
-> > the SMP architecture for interrupt balancing.  This IPI device, the
-> > ompic, is the only external device required for enabling SMP on
-> > OpenRISC.
-> >
-> > Pending ops are stored in a memory bit mask which can allow multiple
-> > pending operations to be set and serviced at a time. This is mostly
-> > borrowed from the alpha IPI implementation.
-> >
-> > Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> > [shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
-> > Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >
-> > Changes since v1
-> >  - Added openrisc, prefix
-> >  - Clarified 8 bytes per cpu
-> >  - Removed #interrupt-cells as this will not be an irq parent
-> >  - Changed ops to be percpu
-> >  - Added DTS and intialization failure validations
-> >
-> >  .../interrupt-controller/openrisc,ompic.txt        |  19 ++
-> >  arch/openrisc/Kconfig                              |   1 +
-> >  drivers/irqchip/Kconfig                            |   3 +
-> >  drivers/irqchip/Makefile                           |   1 +
-> >  drivers/irqchip/irq-ompic.c                        | 205 +++++++++++++++++++++
-> >  5 files changed, 229 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
-> >  create mode 100644 drivers/irqchip/irq-ompic.c
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
-> > new file mode 100644
-> > index 000000000000..346e6042d62f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
-> > @@ -0,0 +1,19 @@
-> > +Open Multi-Processor Interrupt Controller
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : This should be "openrisc,ompic"
-> > +- reg : Specifies base physical address and size of the register space. The
-> > +  size is based on the number of cores the controller has been configured
-> > +  to handle, this should be set to 8 bytes per cpu core.
-> > +- interrupt-controller : Identifies the node as an interrupt controller
-> > +- interrupts : Specifies the interrupt line to which the ompic is wired.
-> > +
-> > +Example:
-> > +
-> > +ompic: ompic {
-> > +	compatible = "openrisc,ompic";
-> > +	reg = <0x98000000 16>;
-> > +	interrupt-controller;
-> > +	interrupts = <1>;
-> > +};
-> > diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
-> > index b49acda5e8f4..34eb4e90f56c 100644
-> > --- a/arch/openrisc/Kconfig
-> > +++ b/arch/openrisc/Kconfig
-> > @@ -30,6 +30,7 @@ config OPENRISC
-> >  	select NO_BOOTMEM
-> >  	select ARCH_USE_QUEUED_SPINLOCKS
-> >  	select ARCH_USE_QUEUED_RWLOCKS
-> > +	select OMPIC if SMP
-> >  
-> >  config CPU_BIG_ENDIAN
-> >  	def_bool y
-> > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> > index f1fd5f44d1d4..0e4c96c90b86 100644
-> > --- a/drivers/irqchip/Kconfig
-> > +++ b/drivers/irqchip/Kconfig
-> > @@ -145,6 +145,9 @@ config CLPS711X_IRQCHIP
-> >  	select SPARSE_IRQ
-> >  	default y
-> >  
-> > +config OMPIC
-> > +	bool
-> > +
-> >  config OR1K_PIC
-> >  	bool
-> >  	select IRQ_DOMAIN
-> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> > index e88d856cc09c..123047d7a20d 100644
-> > --- a/drivers/irqchip/Makefile
-> > +++ b/drivers/irqchip/Makefile
-> > @@ -17,6 +17,7 @@ obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
-> >  obj-$(CONFIG_METAG)			+= irq-metag-ext.o
-> >  obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
-> >  obj-$(CONFIG_CLPS711X_IRQCHIP)		+= irq-clps711x.o
-> > +obj-$(CONFIG_OMPIC)			+= irq-ompic.o
-> >  obj-$(CONFIG_OR1K_PIC)			+= irq-or1k-pic.o
-> >  obj-$(CONFIG_ORION_IRQCHIP)		+= irq-orion.o
-> >  obj-$(CONFIG_OMAP_IRQCHIP)		+= irq-omap-intc.o
-> > diff --git a/drivers/irqchip/irq-ompic.c b/drivers/irqchip/irq-ompic.c
-> > new file mode 100644
-> > index 000000000000..cd2616b6639b
-> > --- /dev/null
-> > +++ b/drivers/irqchip/irq-ompic.c
-> > @@ -0,0 +1,205 @@
-> > +/*
-> > + * Open Multi-Processor Interrupt Controller driver
-> > + *
-> > + * Copyright (C) 2014 Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> > + * Copyright (C) 2017 Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > + *
-> > + * This file is licensed under the terms of the GNU General Public License
-> > + * version 2.  This program is licensed "as is" without any warranty of any
-> > + * kind, whether express or implied.
-> > + *
-> > + * The ompic device handles IPI communication because cores in mulicore
-> > + * OpenRISC systems.
+Hello Rob
+
+>>>> > +
+>>>> > +Requires node properties:
+>>>> > +- compatible value :
+>>>> > +     "lantiq,cputemp"
+>>> 
+>>> 
+>>> Kind of non-specific. How is this device even accessed without any 
+>>> other
+>>> property?
+>> 
+>> 
+>> It does not need any further properties. If this is set in the device 
+>> tree
+>> then the driver is loaded.
 > 
-> Should the above read "between cores"?
-
-Yes, it should be, I am bad with these kind of typos.
-
-> > + *
-> > + * Registers
-> > + *
-> > + * For each CPU the ompic has 2 registers. The control register for sending
-> > + * and acking IPIs and the status register for receiving IPIs. The register
-> > + * layouts are as follows:
-> > + *
-> > + *  Control register
-> > + *  +---------+---------+----------+---------+
-> > + *  | 31      | 30      | 29 .. 16 | 15 .. 0 |
-> > + *  ----------+---------+----------+----------
-> > + *  | IRQ ACK | IRQ GEN | DST CORE | DATA    |
-> > + *  +---------+---------+----------+---------+
-> > + *
-> > + *  Status register
-> > + *  +----------+-------------+----------+---------+
-> > + *  | 31       | 30          | 29 .. 16 | 15 .. 0 |
-> > + *  -----------+-------------+----------+---------+
-> > + *  | Reserved | IRQ Pending | SRC CORE | DATA    |
-> > + *  +----------+-------------+----------+---------+
-> > + *
-> > + * Architecture
-> > + *
-> > + * - The ompic generates a level interrupt to the CPU PIC when a message is
-> > + *   ready.  Messages are delivered via the memory bus.
-> > + * - The ompic does not have any interrupt input lines.
-> > + * - The ompic is wired to the same irq line on each core.
-> > + * - Devices are wired to the same irq line on each core.
-> > + *
-> > + *   +---------+                         +---------+
-> > + *   | CPU     |                         | CPU     |
-> > + *   |  Core 0 |<==\ (memory access) /==>|  Core 1 |
-> > + *   |  [ PIC ]|   |                 |   |  [ PIC ]|
-> > + *   +----^-^--+   |                 |   +----^-^--+
-> > + *        | |      v                 v        | |
-> > + *   <====|=|=================================|=|==> (memory bus)
-> > + *        | |      ^                  ^       | |
-> > + *  (ipi  | +------|---------+--------|-------|-+ (device irq)
-> > + *   irq  |        |         |        |       |
-> > + *  core0)| +------|---------|--------|-------+ (ipi irq core1)
-> > + *        | |      |         |        |
-> > + *   +----o-o-+    |    +--------+    |
-> > + *   | ompic  |<===/    | Device |<===/
-> > + *   |  IPI   |         +--------+
-> > + *   +--------+*
-> > + *
-> > + */
-> > +
-> > +#include <linux/io.h>
-> > +#include <linux/ioport.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/smp.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_address.h>
-> > +
-> > +#include <linux/irqchip.h>
-> > +
-> > +#define OMPIC_CPUBYTES		8
-> > +#define OMPIC_CTRL(cpu)		(0x0 + (cpu * OMPIC_CPUBYTES))
-> > +#define OMPIC_STAT(cpu)		(0x4 + (cpu * OMPIC_CPUBYTES))
-> > +
-> > +#define OMPIC_CTRL_IRQ_ACK	(1 << 31)
-> > +#define OMPIC_CTRL_IRQ_GEN	(1 << 30)
-> > +#define OMPIC_CTRL_DST(cpu)	(((cpu) & 0x3fff) << 16)
-> > +
-> > +#define OMPIC_STAT_IRQ_PENDING	(1 << 30)
-> > +
-> > +#define OMPIC_DATA(x)		((x) & 0xffff)
-> > +
-> > +DEFINE_PER_CPU(unsigned long, ops);
-> > +
-> > +static void __iomem *ompic_base;
-> > +
-> > +static inline u32 ompic_readreg(void __iomem *base, loff_t offset)
-> > +{
-> > +	return ioread32be(base + offset);
-> > +}
-> > +
-> > +static void ompic_writereg(void __iomem *base, loff_t offset, u32 data)
-> > +{
-> > +	iowrite32be(data, base + offset);
-> > +}
-> > +
-> > +void ompic_raise_softirq(const struct cpumask *mask, unsigned int ipi_msg)
+> DT is not the only way to instantiate drivers.
 > 
-> Please make this static.
+> What I meant is how do you access the hardware? That should be evident
+> from the binding and it is not.
 
-OK
+Agree with our statement.
 
-> > +{
-> > +	unsigned int dst_cpu;
-> > +	unsigned int src_cpu = smp_processor_id();
-> > +
-> > +	for_each_cpu(dst_cpu, mask) {
-> > +		set_bit(ipi_msg, &per_cpu(ops, dst_cpu));
-> > +
-> > +		/*
-> > +		 * On OpenRISC the atomic set_bit() call implies a memory
-> > +		 * barrier.  Otherwise we would need: smp_wmb(); paired
-> > +		 * with the read in ompic_ipi_handler.
-> > +		 */
 > 
-> One last question on this, because the architecture document is terribly
-> unclear: If you have CPU0 doing an atomic operation A0, CPU1 seeing A0
-> and doeing another atomic A1 (the set_bit above) followed by an IPI to
-> CPU2, is CPU2 *guaranteed* to observe both A0 *and* A1? Because that's
-> required by the IPI semantics, and you wouldn't see that kind of issue
-> with only two CPUs.
+> Looking at the driver, you have some memory mapped system control
+> registers which get ioremapped in arch/mips/lantiq/xway/sysctrl.c and
+> accesses thru some platform specific macros. That is not the ideal way
+> to do things as we use syscon and regmap for such things. But that's
+> all mostly kernel details not so relevant to the DT binding.
 
-Could you suggest an architecture document that makes this case clear?
+For lanitq xrx200 this is all i have. So if i have to use syscon and 
+regmap i am also not sure how to handle this.
 
-I believe this will not be a problem, but:
-  1. If this needs to be clear in the architecture document I can propose
-     changes.
-  2. To be clear is this the scenario you mean..
+> For DT, I'd expect this is a child node of the sysctrl block with a
+> reg property value of <0x40 4> (along with any other child devices).
+> You could also not even put this in DT and the system controller can
+> have it's own driver that instantiates the child device for this
+> driver.
 
-CASE1 - A0 and A1 are to different locations?
-  A0 - writes to some unrelated global location?
+Yes this would be the best practice. But the hardware designer for what 
+ever reason
+placed the Register for the temperature sensors into the CGU (Clock 
+Generation Unit) section!
+And the Register is also shared with some other stuff which is not only 
+assign for temperature
+stuff! I am not sure how to handle this in the device tree.
 
-CPU0                       CPU1                     CPU2
- A0:atomic store (global)
-                           A1:set_bit (ops[CPU2])
-                           IPI
-                                                    read (A0,A1)
+This is a Register description extract from the data sheet
 
+GPHY Configuration Register 01
+This register configures the booting options of GPHY1 IP.
 
-OR
+Offset 0x0040
+Reset Value 0x01FC0000
 
-CASE2 - A0 and A1 are to the same location.
-  A0 - writes to the same location as A1
+31: RES
+30: 100FX_H
+29: 100FX_F
+28: 10BT_F
+27: 10BT_H
+26: 100BT_F
+25: 100BT_H
+24: 1000BT_F
+23: 1000BT_H
+22: RES
+21: RES
+19: TEMP_PD <--- NEEDED Power down the Temperature Sensor
+18: TEMP_HL <--- NEEDED Indicate temperature higher than 128 C
+17: TEMP    <--- NEEDED Value
+16: TEMP    <--- NEEDED Value
+15: TEMP    <--- NEEDED Value
+14: TEMP    <--- NEEDED Value
+13: TEMP    <--- NEEDED Value
+12: TEMP    <--- NEEDED Value
+11: TEMP    <--- NEEDED Value
+10: TEMP    <--- NEEDED Value
+09: TEMP    <--- NEEDED Value
+08: RES
+07: RES
+06: SPI_Delay
+05: SPI_Delay
+04: AHB_EnD
+03: DMA_OR
+02: RES
+01: RES
+00: RES
 
-CPU0                       CPU1                     CPU2
- A0:set_bit (ops[CPU2])
-                           A1:set_bit (ops[CPU2])
-                           IPI
-                                                    read (A0,A1)
- IPI
+And that is a dts tree from LEDE/Openwrt for lantiq
+URL:
+https://github.com/lede-project/source/blob/c88770c766fdc5599efc4672bca230017f52e8e4/target/linux/lantiq/dts/vr9.dtsi#L54
 
+Extraction:
+	sram@1F000000 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "lantiq,sram", "simple-bus";
+		reg = <0x1F000000 0x800000>;
+		ranges = <0x0 0x1F000000 0x7FFFFF>;
 
-OR - something else?
+		eiu0: eiu@101000 {
+			#interrupt-cells = <1>;
+			interrupt-controller;
+			compatible = "lantiq,eiu-xway";
+			reg = <0x101000 0x1000>;
+			interrupt-parent = <&icu0>;
+			lantiq,eiu-irqs = <166 135 66 40 41 42>;
+		};
 
-In both cases CPU2 would be able to see the results of both atomic
-operations.  All, cpus in the OpenRISC system snoop for memory writes to
-enable cash coherency, so each CPU would see each write once it is synced
-to memory (there is a single memory bus).  This is not limited to atomic
-operations, but the atomic operations provide a syncrhonization point
-accross all CPUs.
+		pmu0: pmu@102000 {
+			compatible = "lantiq,pmu-xway";
+			reg = <0x102000 0x1000>;
+		};
 
-> > +
-> > +		ompic_writereg(ompic_base, OMPIC_CTRL(src_cpu),
-> > +			       OMPIC_CTRL_IRQ_GEN |
-> > +			       OMPIC_CTRL_DST(dst_cpu) |
-> > +			       OMPIC_DATA(1));
-> > +	}
-> > +}
-> > +
-> > +irqreturn_t ompic_ipi_handler(int irq, void *dev_id)
-> 
-> This should be static.
+		cgu0: cgu@103000 {
+			compatible = "lantiq,cgu-xway";
+			reg = <0x103000 0x1000>;
+-> This is the place to add the binding?
+		};
 
-OK
+Sorry for the noise but i am unsure how to do this.
+Thanks for help
 
-> > +{
-> > +	unsigned int cpu = smp_processor_id();
-> > +	unsigned long *pending_ops = &per_cpu(ops, cpu);
-> > +	unsigned long ops;
-> > +
-> > +	ompic_writereg(ompic_base, OMPIC_CTRL(cpu), OMPIC_CTRL_IRQ_ACK);
-> > +	while ((ops = xchg(pending_ops, 0)) != 0) {
-> > +
-> > +		/*
-> > +		 * On OpenRISC the atomic xchg() call implies a memory
-> > +		 * barrier.  Otherwise we may need an smp_rmb(); paired
-> > +		 * with the write in ompic_raise_softirq.
-> > +		 */
-> > +
-> > +		do {
-> > +			unsigned long ipi_msg;
-> > +
-> > +			ipi_msg = __ffs(ops);
-> > +			ops &= ~(1UL << ipi_msg);
-> > +
-> > +			handle_IPI(ipi_msg);
-> > +		} while (ops);
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static struct irqaction ompi_ipi_irqaction = {
-> > +	.handler =      ompic_ipi_handler,
-> > +	.flags =        IRQF_PERCPU,
-> > +	.name =         "ompic_ipi",
-> > +};
-> > +
-> > +int __init ompic_of_init(struct device_node *node, struct device_node *parent)
-> 
-> static again.
-
-OK
-
-> > +{
-> > +	struct resource res;
-> > +	int irq;
-> > +	int ret;
-> > +
-> > +	/* Validate the DT */
-> > +	if (ompic_base) {
-> > +		pr_err("ompic: duplicate ompic's are not supported");
-> > +		return -EEXIST;
-> > +	}
-> > +
-> > +	if (of_address_to_resource(node, 0, &res)) {
-> > +		pr_err("ompic: reg property requires an address and size");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (resource_size(&res) < (num_possible_cpus() * OMPIC_CPUBYTES)) {
-> > +		pr_err("ompic: reg size, currently %d must be at least %d",
-> > +			resource_size(&res),
-> > +			(num_possible_cpus() * OMPIC_CPUBYTES));
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Setup the device */
-> > +	ompic_base = ioremap(res.start, resource_size(&res));
-> > +	if (IS_ERR(ompic_base)) {
-> > +		pr_err("ompic: unable to map registers");
-> > +		return PTR_ERR(ompic_base);
-> > +	}
-> > +
-> > +	irq = irq_of_parse_and_map(node, 0);
-> > +	if (irq <= 0) {
-> > +		pr_err("ompic: unable to parse device irq");
-> > +		ret = -EINVAL;
-> > +		goto out_unmap;
-> > +	}
-> > +
-> > +	ret = setup_irq(irq, &ompi_ipi_irqaction);
-> > +	if (ret)
-> > +		goto out_irq_disp;
-> > +
-> > +	set_smp_cross_call(ompic_raise_softirq);
-> > +
-> > +	return 0;
-> > +
-> > +out_irq_disp:
-> > +	irq_dispose_mapping(irq);
-> > +out_unmap:
-> > +	iounmap(ompic_base);
-> > +	ompic_base = NULL;
-> > +	return ret;
-> > +}
-> > +IRQCHIP_DECLARE(ompic, "openrisc,ompic", ompic_of_init);
->
-
-Thanks for your time!
-
- -Stafford
-
-ps: Frank Zappa rocks :)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
