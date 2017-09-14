@@ -1,90 +1,102 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: as3645a flash userland interface
-Date: Thu, 14 Sep 2017 13:53:23 +0200
-Message-ID: <20170914115323.GA1850@amd>
-References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
- <20170912084236.1154-25-sakari.ailus@linux.intel.com>
- <20170912103628.GB27117@amd>
- <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
- <20170912215529.GA17218@amd>
- <21824758-28a1-7007-6db5-86a900025d14@gmail.com>
- <CGME20170914092415epcas2p26c049a698851778673034c16afb290b9@epcas2p2.samsung.com>
- <4bf12e8e-beff-0199-cdee-4a52ebe7cdaf@samsung.com>
- <20170914100718.GA3843@amd>
- <1f34a891-edb1-251c-86a8-ba4a90c485d3@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+Date: Thu, 14 Sep 2017 13:54:29 +0200
+Message-ID: <20170914115429.cjulb2s74xsppx5j@flea.lan>
+References: <20170904130335.23280-1-maxime.ripard@free-electrons.com>
+ <20170904130335.23280-3-maxime.ripard@free-electrons.com>
+ <20170912182339.GA27713@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+        protocol="application/pgp-signature"; boundary="4julbau6b7y4g5px"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1f34a891-edb1-251c-86a8-ba4a90c485d3-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170912182339.GA27713-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---+HP7ph2BbKc20aGI
+--4julbau6b7y4g5px
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu 2017-09-14 13:01:19, Sylwester Nawrocki wrote:
-> On 09/14/2017 12:07 PM, Pavel Machek wrote:
-> >>Isn't the V4L2 subdev/Media Controller API supposed to provide means
-> >>for associating flash LEDs with camera sensors? You seem to be insisting
-> >>on using the sysfs leds interface for that, which is not a primary
-> >>interface for camera flash AFAICT.
-> >
-> >a) subdev/media controller API currently does not provide such means.
->=20
-> Yes, but it should, that's what it was designed for AFAIK.
->=20
-> >b) if we have /sys/class/leds interface to userland, it should be
-> >useful.
->=20
-> At the same time we shouldn't overcomplicate it with the camera
-> functionality.
+Hi Benoit,
 
-I'm advocating adding label =3D "main_camera" into the .dts. That's all.
+Thanks for your comments,
 
-> >c) having flashlight application going through media controller API is
-> >a bad joke.
+On Tue, Sep 12, 2017 at 01:23:39PM -0500, Benoit Parrot wrote:
+> > +static int csi2rx_probe(struct platform_device *pdev)
+> > +{
+> > +	struct v4l2_async_subdev **subdevs;
+> > +	struct csi2rx_priv *csi2rx;
+> > +	unsigned int i;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Since the v4l2_subdev structure is embedded in our
+> > +	 * csi2rx_priv structure, and that the structure is exposed to
+> > +	 * the user-space, we cannot just use the devm_variant
+> > +	 * here. Indeed, that would lead to a use-after-free in a
+> > +	 * open() - unbind - close() pattern.
+> > +	 */
+> > +	csi2rx =3D kzalloc(sizeof(*csi2rx), GFP_KERNEL);
+> > +	if (!csi2rx)
+> > +		return -ENOMEM;
+> > +	platform_set_drvdata(pdev, csi2rx);
+> > +	csi2rx->dev =3D &pdev->dev;
+
+[snip]
+
+> > +
+> > +	subdevs =3D devm_kzalloc(csi2rx->dev, sizeof(*subdevs), GFP_KERNEL);
+> > +	if (!subdevs) {
+> > +		ret =3D -ENOMEM;
+> > +		goto err_free_priv;
+> > +	}
+> > +	subdevs[0] =3D &csi2rx->asd;
+> > +
 >=20
-> It doesn't have to, maybe I misunderstood what you exactly ask for.
-> Nevertheless what's missing is some user visible name/label for each
-> flash LED, right? Currently enumerating flash LEDs can be done by looking
-> at the function part of /sys/class/leds/<led-controller>:<colour>:
-> <function> path.
->=20
-> Could additional information be appended to the <function> part, so
-> user can identify which LED is which? E.g. "flash(rear)", "flash(front)",
-> etc. This could be achieved by simply adding label property in DT.
-> Or is the list of supported <function> strings already standardized?
+> Shouldn't the comment related to lifetime of memory allocation be
+> also applied here?  A reference to the "subdevs" pointer is taken
+> internally so it might suffer the same fate.  Not sure how many
+> "struct v4l2_async_subdev **subdevs" we would end up needing but
+> since here we are only dealing with one, why not just make it a
+> member of the struct csi2rx_priv object.
 
-label =3D "flash_main_camera" would work for me, yes. And yes, I'd
-prefer to do this before 4.14 release, so that userland-visible
-interface does not change.
+As far as I know, only the notifier will use that array. The notifier
+will be removed before that array is de-allocated, and the user-space
+never has access to it, so I'm not sure the same issue arises here.
 
-								Pavel
+Maxime
+
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
---+HP7ph2BbKc20aGI
+--4julbau6b7y4g5px
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlm6bbMACgkQMOfwapXb+vLs5ACfSHGpLyqkbp6oPuWYh9pfwq6S
-9RkAmwabXDg4cqAZMqZP9Si2IOvyxCDb
-=yM0y
+iQIcBAEBAgAGBQJZum30AAoJEBx+YmzsjxAgVOQP/1vzRMZMFO5ReFVx3vZxWIr2
+YTMxhomI5HzOiEkMT/WMPQRjBLOrSEKWI0/3jlAZs8gSd8LnbpGvYjt/Hpy8ZgTq
+u2slLUTQMCbhXot0IoxVI/bnWjKttktU2Mms89JjgSC3EnQo5LmCQJ8E+dSx4KGA
++zouqAgw6y+phKSV8iyy6C5jf/NK8QPFTaDRz0jqc7998GLjBUwlNTbu+ljrtAW8
+Qst5aNF2cYQI+dlHomIeXsaewOZHeIHib/+VTB1+rdqMPTwXBrwJL6Q7P9v5eAMb
+cwmwFYVLM6UeOohPH2P2M0Nhsx2zezm/TCeuINPHwvA1hj//R7S2e+EGuAvpRJR0
+68KFNNKXciSdkR+/Se8qC3lnMjmPRi6fqLS6EFYQS4uK/liIHio9HUmfXTDxFHE+
+JvXu9uhJm8+pAWwJ65rjc2rBoGr124WbW/xXnhnsCxkjCLsOd3bR3uNj3mvz1G5i
+I90BWynYTbIvEq2KO8JOsZz9Ns2rQlFf5bgpywpOdNDE52GmQWe9Ud36bVYbWgVy
+otiOEnSgG+QWGcv9u7LLmO47ujChn6dGDbyrJwJwrolmpboHfXktLjzunGf8XCOj
+hL7q5EOxFt0ssnvUN+czfK7v6LRd4+X61flgv+weLQXzkaoMRgnJbpStvW9TBKvK
+rcbRfMKz4RGGvVlDRxUH
+=xEOr
 -----END PGP SIGNATURE-----
 
---+HP7ph2BbKc20aGI--
+--4julbau6b7y4g5px--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
