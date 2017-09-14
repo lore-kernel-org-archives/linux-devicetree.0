@@ -1,123 +1,43 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Add Spreadtrum ADI controller documentation
-Date: Thu, 14 Sep 2017 10:11:46 +0800
-Message-ID: <CAMz4kuKJCo1bpnvVsJCz5Was_+6W=VQfFxCqbXF+J6jnY7QKLg@mail.gmail.com>
-References: <d1c5720eccf12ee5ea6bffcbe4c1555680638fcc.1504859001.git.baolin.wang@spreadtrum.com>
- <20170913195119.es5weqo3rbjbgsyl@rob-hp-laptop>
+From: Sandy Huang <hjc@rock-chips.com>
+Subject: [PATCH 0/3] Add support rockchip RGB output interface
+Date: Thu, 14 Sep 2017 11:43:14 +0800
+Message-ID: <1505360594-196508-1-git-send-email-hjc@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170913195119.es5weqo3rbjbgsyl@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 14 September 2017 at 03:51, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Sep 08, 2017 at 04:33:41PM +0800, Baolin Wang wrote:
->> This patch adds the binding documentation for Spreadtrum ADI
->> controller device.
->>
->> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->> ---
->> Changes since v1:
->>  - Add more documentation the 'sprd,hw-channels' property and why need
->>  one hardware spinlock.
->> ---
->>  .../devicetree/bindings/spi/spi-sprd-adi.txt       |   58 ++++++++++++++++++++
->>  1 file changed, 58 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt b/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
->> new file mode 100644
->> index 0000000..0f76336
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
->> @@ -0,0 +1,58 @@
->> +Spreadtrum ADI controller based on SPI framework
->
-> "SPI framework" is not relevant to bindings.
-
-OK, I will remove this in next version.
-
->
->> +
->> +ADI is the abbreviation of Anolog-Digital interface, which is used to access
->> +analog chip (such as PMIC) from digital chip. ADI controller follows the SPI
->> +framework for its hardware implementation is alike to SPI bus and its timing
->> +is compatile to SPI timing.
->> +
->> +ADI controller has 50 channels including 2 software read/write channels and
->> +48 hardware channels to access analog chip. For 2 software read/write channels,
->> +users should set ADI registers to access analog chip. For hardware channels,
->> +we can configure them to allow other hardware components to use it independently,
->> +which means we can just link one analog chip address to one hardware channel,
->> +then users can access the mapped analog chip address by this hardware channel
->> +triggered by hardware components instead of ADI software channels.
->> +
->> +Thus we introduce one property named "sprd,hw-channels" to configure hardware
->> +channels, the first value specifies the hardware channel id which is used to
->> +transfer data triggered by hardware automatically, and the second value specifies
->> +the analog chip address where user want to access by hardware components.
->> +
->> +Another hand since we have multi-subsystems will use unique ADI to access analog
->
-> Drop "Another hand"
-
-OK.
-
->
->> +chip, when one system is reading/writing data by ADI software channels, that
->> +should be under one hardware spinlock protection to prevent other systems from
->> +reading/writing data by ADI software channels at the same time, or two parallel
->> +routine of setting ADI registers will make ADI controller registers chaos to
->> +lead incorrect results. Then we need one hardware spinlock to synchronize between
->> +the multiple subsystems.
->> +
->> +Required properties:
->> +- compatible: Should be "sprd,sc9860-adi".
->> +- reg: Offset and length of ADI-SPI controller register space.
->> +- hwlocks: Reference to a phandle of a hwlock provider node.
->> +- hwlock-names: Reference to hwlock name strings defined in the same order
->> +     as the hwlocks, should be "adi".
->> +- #address-cells: Number of cells required to define a chip select address
->> +     on the ADI-SPI bus. Should be set to 1.
->> +- #size-cells: Size of cells required to define a chip select address size
->> +     on the ADI-SPI bus. Should be set to 0.
->> +
->> +Optional properties:
->> +- sprd,hw-channels: The first value specifies the hardware channel id which
->> +     is used to transfer data triggered by hardware automatically, and
->> +     the second value specifies the analog chip address where user want
->> +     to access by hardware components.
->
-> Need to say this is an array of values up to ? channels.
-
-OK. Will add in next version.
-
->
-> I wonder if this should be a slave property. Is there a relationship
-
-It is not a slave property, it is used to configure ADI controller to
-support to access analog chip by hardware automatically.
-
-> between the SPI address (i.e. chip select) and the "analog chip
-
-I think they are not related. The "analog chip address" is like the
-offset address of one SPI slave (analog chip can be recognized as one
-SPI slave).
-
-> address"? It sounds like the h/w channels are a protocol specific to a
-> particular PMIC/MFD that this controller supports.
-
-Yes. Very appreciated for your comments.
-
--- 
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaGVzIGFkZCBzdXBwb3J0IHNvbWUgcm9ja2NoaXAgU29jIGxpa2UgcnYxMTA4LCB0
+aGUgVk9QIGNhbiBkaXJlY3RseQpvdXRwdXQgcGFyYWxsZWwgYW5kIHNlcmlhbCBSR0IgZGF0YSB0
+byBwYW5lbCBvciB0byBjb252ZXJzaW9uIGNoaXAuIFNvIHdlIGFkZAp0aGlzIGRyaXZlciB0byBw
+cm9iZSBlbmNvZGVyIGFuZCBjb25uZWN0b3IgdG8gc3VwcG9ydCB0aGlzIGNhc2UuCgpTYW5keSBI
+dWFuZyAoMyk6CiAgZHQtYmluZGluZ3M6IEFkZCBkb2N1bWVudCBmb3Igcm9ja2NoaXAgUkdCIG91
+dHB1dCBpbnRlcmZhY2UKICBkcm0vcm9ja2NoaXA6IEFkZCBzdXBwb3J0IGZvciBSb2NrY2hpcCBT
+b2MgUkdCIG91dHB1dCBpbnRlcmZhY2UKICBkcm0vcm9ja2NoaXA6IHZvcDogQWRkIG1vcmUgUkdC
+IG91dHB1dCBpbnRlcmZhY2UgdHlwZQoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3Jv
+Y2tjaGlwLXJnYi50eHQgICAgIHwgIDgwICsrKysrCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+S2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
+aXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5jICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5oICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9k
+cm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5oICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dw
+dS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfcmdiLmMgICAgICAgICAgICB8IDMyNyArKysrKysrKysr
+KysrKysrKysrKysKIDcgZmlsZXMgY2hhbmdlZCwgNDIyIGluc2VydGlvbnMoKykKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2Nr
+Y2hpcC9yb2NrY2hpcC1yZ2IudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L3JvY2tjaGlwL3JvY2tjaGlwX3JnYi5jCgotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
