@@ -1,153 +1,55 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [RESEND PATCH v3 3/5] i2c: i2c-stm32f7: add driver
-Date: Thu, 14 Sep 2017 10:11:11 +0200
-Message-ID: <63ecfac9-990b-e6c5-d9bf-7708bacc10d2@st.com>
-References: <1504251255-20469-1-git-send-email-pierre-yves.mordret@st.com>
- <1504251255-20469-4-git-send-email-pierre-yves.mordret@st.com>
- <20170913212639.2zyvg24364ovwfxh@ninjato>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v1 2/2] ARM: socfpga: dtsi: add dw-wdt reset lines
+Date: Thu, 14 Sep 2017 10:14:02 +0200
+Message-ID: <20170914081402.7893-2-o.rempel@pengutronix.de>
+References: <20170914081402.7893-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170913212639.2zyvg24364ovwfxh@ninjato>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170914081402.7893-1-o.rempel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, Dinh Nguyen <dinguyen@opensource.altera.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Dinh Nguyen <dinguyen@opensource.altera.com>
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/arm/boot/dts/socfpga.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 09/13/2017 11:26 PM, Wolfram Sang wrote:
-> Hi,
-> 
-> thanks for this driver!
-> 
->> +/**
->> + * struct stm32f7_i2c_spec - private i2c specification timing
->> + * @rate: I2C bus speed (Hz)
->> + * @rate_min: 80% of I2C bus speed (Hz)
->> + * @rate_max: 120% of I2C bus speed (Hz)
-> 
-> You would generate a clock which is higher than the requested one?
-> This is highly unusual. Any special reason?
-
-Well. I allow the clock to be higher than expected.
-Looking at I2C spec again it turns out the mode specifies the max: no overshoot
-of the clock. I will lock max to 100% then.
-Will be fixed
-
-> 
->> + * @fall_max: Max fall time of both SDA and SCL signals (ns)
->> + * @rise_max: Max rise time of both SDA and SCL signals (ns)
->> + * @hddat_min: Min data hold time (ns)
->> + * @vddat_max: Max data valid time (ns)
->> + * @sudat_min: Min data setup time (ns)
->> + * @l_min: Min low period of the SCL clock (ns)
->> + * @h_min: Min high period of the SCL clock (ns)
->> + */
->> +static struct stm32f7_i2c_spec i2c_specs[] = {
->> +	[STM32_I2C_SPEED_STANDARD] = {
->> +		.rate = 100000,
->> +		.rate_min = 8000,
-> 
-> This is not 80%. Typo?
-
-Yep. This is a typo
-
-> 
->> +		.rate_max = 120000,
->> +		.fall_max = 300,
->> +		.rise_max = 1000,
->> +		.hddat_min = 0,
->> +		.vddat_max = 3450,
->> +		.sudat_min = 250,
->> +		.l_min = 4700,
->> +		.h_min = 4000,
->> +	},
-> 
-> ...
-> 
->> +	/*
->> +	 * Among Prescaler possibilities discovered above figures out SCL Low
->> +	 * and High Period. Provided:
->> +	 * - SCL Low Period has to be higher than Low Period of tehs SCL Clock
-> 
-> tehs?
-
-Oops.
-
-> 
->> +	 *   defined by I2C Specification. I2C Clock has to be lower than
->> +	 *   (SCL Low Period - Analog/Digital filters) / 4.
->> +	 * - SCL High Period has to be lower than High Period of the SCL Clock
->> +	 *   defined by I2C Specification
->> +	 * - I2C Clock has to be lower than SCL High Period
->> +	 */
-> 
-> ...
-> 
->> +	/* NACK received */
->> +	if (status & STM32F7_I2C_ISR_NACKF) {
->> +		dev_dbg(i2c_dev->dev, "<%s>: Receive NACK\n", __func__);
->> +		writel_relaxed(STM32F7_I2C_ICR_NACKCF, base + STM32F7_I2C_ICR);
->> +		f7_msg->result = -EBADE;
-> 
-> -ENXIO (see Documentation/i2c/fault-codes)
-
-OK
-
-> 
-> ...
-> 
->> +	timeout = wait_for_completion_timeout(&i2c_dev->complete,
->> +					      i2c_dev->adap.timeout);
->> +	ret = f7_msg->result;
->> +
->> +	if (!timeout) {
->> +		dev_dbg(i2c_dev->dev, "Access to slave 0x%x timed out\n",
->> +			i2c_dev->msg->addr);
->> +		ret = -ETIMEDOUT;
->> +	}
-> 
-> Could you rename the variable to time_left? It looks strange, basically:
-> 
-> 	if (!timeout)
-> 		return -ETIMEDOUT
-> 
-
-okay
-
-> ...
-> 
->> +	adap->retries = 0;
-> 
-> Why no retries when you check for arbitration lost?
-> 
->> +	adap->algo = &stm32f7_i2c_algo;
->> +	adap->dev.parent = &pdev->dev;
->> +	adap->dev.of_node = pdev->dev.of_node;
->> +
->> +	init_completion(&i2c_dev->complete);
->> +
->> +	ret = i2c_add_adapter(adap);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to add adapter\n");
-> 
-> Please remove, the core will print info when adding fails.
-> 
-
-I will
-
-> 
-> Rest looks good!
-
-Great !
-
-> 
-> Thanks,
-> 
->    Wolfram
-> 
-
-Thanks
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 7e24dc8e82d4..6e49cee084b8 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -924,6 +924,7 @@
+ 			reg = <0xffd02000 0x1000>;
+ 			interrupts = <0 171 4>;
+ 			clocks = <&osc1>;
++			resets = <&rst L4WD0_RESET>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -932,6 +933,7 @@
+ 			reg = <0xffd03000 0x1000>;
+ 			interrupts = <0 172 4>;
+ 			clocks = <&osc1>;
++			resets = <&rst L4WD1_RESET>;
+ 			status = "disabled";
+ 		};
+ 	};
+-- 
+2.11.0
