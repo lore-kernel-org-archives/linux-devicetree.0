@@ -1,85 +1,77 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v4 1/5] dt-bindings: i2c-stm32: Document the STM32F7 I2C bindings
-Date: Thu, 14 Sep 2017 16:28:35 +0200
-Message-ID: <1505399319-14782-2-git-send-email-pierre-yves.mordret@st.com>
-References: <1505399319-14782-1-git-send-email-pierre-yves.mordret@st.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] watchdog: dw_wdt: add stop watchdog operation
+Date: Thu, 14 Sep 2017 07:43:45 -0700
+Message-ID: <20170914144345.GA7337@roeck-us.net>
+References: <20170914081402.7893-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505399319-14782-1-git-send-email-pierre-yves.mordret@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170914081402.7893-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the documentation of device tree bindings for STM32F7 I2C
+On Thu, Sep 14, 2017 at 10:14:01AM +0200, Oleksij Rempel wrote:
+> From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> The only way of stopping the watchdog is by resetting it.
+> Add the watchdog op for stopping the device and reset if
+> a reset line is provided.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  drivers/watchdog/dw_wdt.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index 36be987ff9ef..50d8a6a5b5ac 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -135,6 +135,21 @@ static int dw_wdt_start(struct watchdog_device *wdd)
+>  	return 0;
+>  }
+>  
+> +static int dw_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> +
+> +	if (IS_ERR(dw_wdt->rst)) {
+> +		dev_warn(wdd->parent, "No reset line. Will not stop.\n");
+> +		return PTR_ERR(dw_wdt->rst);
+> +	}
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Version history:
-    v4:
-    v3:
-        * None
-    v2:
-        * Remove i2c-timing binding in order to use generic bindings SCL
-          Rising and Falling time instead
----
----
- .../devicetree/bindings/i2c/i2c-stm32.txt          | 29 +++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
+This is a change in behavior. Previously, with no stop function,
+the watchdog core would keep pinging the watchdog in this situation.
+Now it would end up spitting a warning and resetting the system.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
-index 78eaf7b..3b54899 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
-@@ -1,7 +1,9 @@
- * I2C controller embedded in STMicroelectronics STM32 I2C platform
- 
- Required properties :
--- compatible : Must be "st,stm32f4-i2c"
-+- compatible : Must be one of the following
-+  - "st,stm32f4-i2c"
-+  - "st,stm32f7-i2c"
- - reg : Offset and length of the register set for the device
- - interrupts : Must contain the interrupt id for I2C event and then the
-   interrupt id for I2C error.
-@@ -14,8 +16,16 @@ Required properties :
- 
- Optional properties :
- - clock-frequency : Desired I2C bus clock frequency in Hz. If not specified,
--  the default 100 kHz frequency will be used. As only Normal and Fast modes
--  are supported, possible values are 100000 and 400000.
-+  the default 100 kHz frequency will be used.
-+  For STM32F4 SoC Standard-mode and Fast-mode are supported, possible values are
-+  100000 and 400000.
-+  For STM32F7 SoC, Standard-mode, Fast-mode and Fast-mode Plus are supported,
-+  possible values are 100000, 400000 and 1000000.
-+- i2c-scl-rising-time-ns : Only for STM32F7, I2C SCL Rising time for the board
-+  (default: 25)
-+- i2c-scl-falling-time-ns : Only for STM32F7, I2C SCL Falling time for the board
-+  (default: 10)
-+  I2C Timings are derived from these 2 values
- 
- Example :
- 
-@@ -31,3 +41,16 @@ Example :
- 		pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
- 		pinctrl-names = "default";
- 	};
-+
-+	i2c@40005400 {
-+		compatible = "st,stm32f7-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x40005400 0x400>;
-+		interrupts = <31>,
-+			     <32>;
-+		resets = <&rcc STM32F7_APB1_RESET(I2C1)>;
-+		clocks = <&rcc 1 CLK_I2C1>;
-+		pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
-+		pinctrl-names = "default";
-+	};
--- 
-2.7.4
+> +
+> +	reset_control_assert(dw_wdt->rst);
+> +	reset_control_deassert(dw_wdt->rst);
+> +
+> +	return 0;
+> +}
+> +
+>  static int dw_wdt_restart(struct watchdog_device *wdd,
+>  			  unsigned long action, void *data)
+>  {
+> @@ -173,6 +188,7 @@ static const struct watchdog_info dw_wdt_ident = {
+>  static const struct watchdog_ops dw_wdt_ops = {
+>  	.owner		= THIS_MODULE,
+>  	.start		= dw_wdt_start,
+> +	.stop		= dw_wdt_stop,
+>  	.ping		= dw_wdt_ping,
+>  	.set_timeout	= dw_wdt_set_timeout,
+>  	.get_timeleft	= dw_wdt_get_timeleft,
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
