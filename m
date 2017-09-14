@@ -1,60 +1,125 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 6/8] pinctrl: sh-pfc: r8a77995: Add USB2.0 host support
-Date: Thu, 14 Sep 2017 09:35:46 +0000
-Message-ID: <TY1PR06MB09922F8C146BCB91568C9F05D86F0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1502281187-24068-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdW27kVU2cB=iL-H7t44KeEboL+Ki0zvxkavRpZCepYuLw@mail.gmail.com>
- <TY1PR06MB0992563B4C992762105E8590D89C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [patch v5 1/2] mfd: Add Mellanox regmap core driver
+Date: Thu, 14 Sep 2017 10:43:14 +0100
+Message-ID: <20170914094314.qadkjvc6kup2nchx@dell>
+References: <1505371738-128683-1-git-send-email-vadimp@mellanox.com>
+ <1505371738-128683-2-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <TY1PR06MB0992563B4C992762105E8590D89C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, TAKESHI KIHARA <takeshi.kihara.df@renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1505371738-128683-2-git-send-email-vadimp@mellanox.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: robh+dt@kernel.org, pavel@ucw.cz, devicetree@vger.kernel.org, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, jiri@resnulli.us, gregkh@linuxfoundation.org, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IFlvc2hpaGlybyBTaGltb2RhDQo+IFNlbnQ6IFdlZG5l
-c2RheSwgQXVndXN0IDMwLCAyMDE3IDEwOjA3IFBNDQo+IA0KPiBIaSBHZWVydC1zYW4sDQo+IA0K
-PiBJJ20gc29ycnkuIEkgbWlzc2VkIHRoaXMgZW1haWwuLi4NCj4gDQo+ID4gRnJvbTogR2VlcnQg
-VXl0dGVyaG9ldmVuDQo+ID4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgMTYsIDIwMTcgODoxMSBQ
-TQ0KPiA+DQo+ID4gSGkgU2hpbW9kYS1zYW4sIEtpaGFyYS1zYW4sDQo+ID4NCj4gPiBPbiBXZWQs
-IEF1ZyA5LCAyMDE3IGF0IDI6MTkgUE0sIFlvc2hpaGlybyBTaGltb2RhDQo+ID4gPHlvc2hpaGly
-by5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+IEZyb206IFRha2VzaGkgS2lo
-YXJhIDx0YWtlc2hpLmtpaGFyYS5kZkByZW5lc2FzLmNvbT4NCj4gPiA+DQo+ID4gPiBTaWduZWQt
-b2ZmLWJ5OiBUYWtlc2hpIEtpaGFyYSA8dGFrZXNoaS5raWhhcmEuZGZAcmVuZXNhcy5jb20+DQo+
-ID4gPiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hpbW9kYSA8eW9zaGloaXJvLnNoaW1vZGEu
-dWhAcmVuZXNhcy5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2ZXJzL3BpbmN0cmwvc2gtcGZj
-L3BmYy1yOGE3Nzk5NS5jIHwgMTUgKysrKysrKysrKysrKysrDQo+ID4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDE1IGluc2VydGlvbnMoKykNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
-aW5jdHJsL3NoLXBmYy9wZmMtcjhhNzc5OTUuYyBiL2RyaXZlcnMvcGluY3RybC9zaC1wZmMvcGZj
-LXI4YTc3OTk1LmMNCj4gPiA+IGluZGV4IDllYjBjZWYuLjVjMGE5NGYgMTAwNjQ0DQo+ID4gPiAt
-LS0gYS9kcml2ZXJzL3BpbmN0cmwvc2gtcGZjL3BmYy1yOGE3Nzk5NS5jDQo+ID4gPiArKysgYi9k
-cml2ZXJzL3BpbmN0cmwvc2gtcGZjL3BmYy1yOGE3Nzk5NS5jDQo+ID4gPiBAQCAtMTMwMiw2ICsx
-MzAyLDE1IEBAIGVudW0gew0KPiA+ID4gICAgICAgICBTQ0lGX0NMS19NQVJLLA0KPiA+ID4gIH07
-DQo+ID4gPg0KPiA+ID4gKy8qIC0gVVNCMCAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tICovDQo+ID4gPiArc3RhdGljIGNv
-bnN0IHVuc2lnbmVkIGludCB1c2IwX3BpbnNbXSA9IHsNCj4gPiA+ICsgICAgICAgLyogUFdFTiwg
-T1ZDICovDQo+ID4gPiArICAgICAgIFJDQVJfR1BfUElOKDAsIDApLCBSQ0FSX0dQX1BJTigwLCAx
-KSwNCj4gPiA+ICt9Ow0KPiA+ID4gK3N0YXRpYyBjb25zdCB1bnNpZ25lZCBpbnQgdXNiMF9tdXhb
-XSA9IHsNCj4gPiA+ICsgICAgICAgVVNCMF9QV0VOX01BUkssIFVTQjBfT1ZDX01BUkssDQo+ID4g
-PiArfTsNCj4gPg0KPiA+IFdoYXQgYWJvdXQgVVNCMF9JRFBVIGFuZCBVU0IwX0lESU4/DQo+ID4g
-QXJlIHRoZXkgbmVlZGVkIGZvciBub3JtYWwgb3BlcmF0aW9uLCBvciBjYW4gdGhleSBiZSBhZGRl
-ZCBsYXRlcj8NCj4gDQo+IEkgZG9uJ3Qga25vdyBhYm91dCB0aGVzZSBwaW5zLiBUaGUgZGF0YXNo
-ZWV0IGRvZXNuJ3QgbWVudGlvbiB1c2FnZSBpbiBVU0Igc2VjdGlvbnMuLi4NCj4gU28sIEknbSBh
-c2tpbmcgSFcgdGVhbSBub3cuIChJIHRoaW5rIHRoZXkgY2FuIGJlIGFkZGVkIGxhdGVyLikNCg0K
-SFcgdGVhbSBzYWlkIGl0IGlzIGFuIGVycm9yIGluIHdyaXRpbmcsIGFuZCB0aGVzZSBwaW5zIGRl
-c2NyaXB0aW9ucyB3aWxsIGJlDQpyZW1vdmVkIGluIHRoZSBmdXR1cmUuIFNvLCBJIHdpbGwgcmVi
-YXNlIHRoaXMgcGF0Y2ggb24gZXRoZXJldmIgcGZjIHBhdGNoIHdoaWNoIEkgc2VudC4NCg0KQmVz
-dCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiBCZXN0IHJlZ2FyZHMsDQo+IFlvc2hp
-aGlybyBTaGltb2RhDQo+IA0KPiA+IFRoYW5rcyENCj4gPg0KPiA+IEdye29ldGplLGVldGluZ31z
-LA0KPiA+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gPg0KPiA+IC0tDQo+
-ID4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEz
-MiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiA+DQo+ID4gSW4gcGVyc29uYWwgY29udmVyc2F0
-aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0K
-PiA+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1l
-ciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
+On Thu, 14 Sep 2017, Vadim Pasternak wrote:
+
+> This patch adds core regmap platform driver for Mellanox BMC cards with
+> the programmable devices based chassis control. The device logics,
+> controlled by software includes:
+> - Interrupt handling for chassis, ASIC, CPU events;
+> - LED handling;
+> - Exposes through sysfs mux, reset signals, reset cause notification;
+> The patch provides support for the access to programmable device through
+> the register map and allows dynamic device tree manipulation at runtime
+> for removable devices.
+> 
+> This driver requires activator driver, which responsibility is to create
+> register map and pass it to regmap core. Such activator could be based for
+> example on I2C, SPI or MMIO interface.
+> 
+> Drivers exposes the number of hwmon attributes to sysfs according to the
+> attribute groups, defined in the device tree. These attributes will be
+> located for example in /sys/class/hwmon/hwmonX folder, which is a symbolic
+> link to for example:
+> /sys/bus/i2c/devices/4-0072/mlxreg-core.1138/hwmon/hwmon10.
+> The attributes are divided to the groups, like in the below example:
+>  MUX nodes
+>  - safe_bios_disable
+>  - spi_burn_bios_ci
+>  - spi_burn_ncsi
+>  - uart_sel
+>  Reset nodes:
+>  - sys_power_cycle
+>  - bmc_upgrade
+>  - asic_reset
+>  Cause of reset nodes:
+>  - cpu_kernel_panic
+>  - cpu_shutdown
+>  - bmc_warm_reset
+>  General purpose RW nodes:
+>  - version
+> 
+> Drivers also probes LED and hotplug drivers, in case device tree
+> description contains LED and hotplug nodes.
+> 
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+> v4->v5:
+>  Comments pointed out by Lee:
+>  - Remove mlxreg-i2c module from the patchset;
+>  Changes added by Vadim:
+>  - Remove include/linux/platform_data/mlxreg.h from the patcheset, since
+>    it have been sent with
+>  - Modify dts parsing routines;
+>  - Disable compliation of_update_property if CONFIG_COMPILE_TEST is set;
+> v3->v4:
+>  Comments pointed out by Lee:
+>  - Split interrupt related logic into separate module and place this logic
+>    within the existing Mellanox hotplug driver. Move for this reason this
+>    driver from drivers/platform/x86 to drivers/platform/mellanox folder;
+>  Comments pointed out by Rob:
+>  - Make a separate patch /devicetree/bindings/vendor-prefixes.txt;
+>  - Add .txt to Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
+>    and send it within this series;
+>  - Modify "compatible" property;
+>  - Modify explanation for "deferred" property;
+>  - Describe each subnode by its own section;
+>  - Don't use underscore in attribute names;
+>  Changes added by Vadim:
+>  - Add mlxreg_hotplug_device and mlxreg_core_item structures to mlxreg.h
+>    and modify mlxreg_core_led_platform_data structure;
+> v2->v3:
+>  Changes added by Vadim:
+>  - Change name of field led data in struct mlxreg_core_led_platform_data
+>    in mlxreg.h;
+>  - fix data position assignment in mlxreg_core_get;
+>  - update name of field led data in mlxreg_core_set_led;
+> v1->v2:
+>  Comments pointed out by Pavel:
+>  - Remove extra new line in mellanox,mlxreg-core;
+>  - Replace three NOT with one in mlxreg_core_attr_show;
+>  - Make error message in mlxreg_core_work_helper shorter;
+>  - Make attribute assignment more readable;
+>  - Separate mellanox,mlxreg-core file for sending to DT maintainers.
+>  Comments pointed out by Jacek:
+>  - Since  brightness_set_blocking is used instead of
+>    brightness_set, three fields from mlxreg_core_led_data are removed.
+> ---
+>  MAINTAINERS               |   6 +
+>  drivers/mfd/Kconfig       |  14 +
+>  drivers/mfd/Makefile      |   1 +
+>  drivers/mfd/mlxreg-core.c | 843 ++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 864 insertions(+)
+>  create mode 100644 drivers/mfd/mlxreg-core.c
+
+I thought we agreed that this was not an MFD driver?
+
+If it doesn't use the MFD framework, it's not an MFD driver.
+
+Looking at it very briefly, it appears at though it should actually be
+split up.  In your commit message you say that this is a platform
+driver that does LED handling and deals with the regmap and HWMON
+subsystem.
+
+I suggest moving the core code into /drivers/platform/* and split the
+other sections into their own drivers within their own subsystems.
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
