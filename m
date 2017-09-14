@@ -1,30 +1,63 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: rk3288-vyasa: Enable vops and hdmi output
-Date: Fri, 15 Sep 2017 00:10:44 +0200
-Message-ID: <6354334.UcDICnMmPf@phil>
-References: <1505118382-6023-1-git-send-email-jteki@openedev.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] dt-bindings: trivial: Add RTCs
+Date: Fri, 15 Sep 2017 01:17:16 +0200
+Message-ID: <20170914231716.10959-1-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505118382-6023-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add remaining trivial RTC bindings.
 
-Am Montag, 11. September 2017, 13:56:21 CEST schrieb Jagan Teki:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/trivial-devices.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I've applied both for 4.15, but folded both patches into one and adjusted
-the commit message.
+diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+index af284fbd4d23..e3992013133e 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/trivial-devices.txt
+@@ -41,6 +41,7 @@ dallas,ds1338		I2C RTC with 56-Byte NV RAM
+ dallas,ds1340		I2C RTC with Trickle Charger
+ dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
+ dallas,ds1631		High-Precision Digital Thermometer
++dallas,ds1672		Dallas DS1672 Real-time Clock
+ dallas,ds1682		Total-Elapsed-Time Recorder with Alarm
+ dallas,ds1775		Tiny Digital Thermometer and Thermostat
+ dallas,ds3232		Extremely Accurate I²C RTC with Integrated Crystal and SRAM
+@@ -56,6 +57,7 @@ domintech,dmard10	DMARD10: 3-axis Accelerometer
+ epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+ epson,rx8025		High-Stability. I2C-Bus INTERFACE REAL TIME CLOCK MODULE
+ epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
++emmicro,em3027		EM Microelectronic EM3027 Real-time Clock
+ fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
+ fsl,mc13892		MC13892: Power Management Integrated Circuit (PMIC) for i.MX35/51
+ fsl,mma7660		MMA7660FC: 3-Axis Orientation/Motion Detection Sensor
+@@ -67,6 +69,8 @@ gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire In
+ infineon,slb9635tt	Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
+ infineon,slb9645tt	Infineon SLB9645 I2C TPM (new protocol, max 400khz)
+ isil,isl1208		Intersil ISL1208 Low Power RTC with Battery Backed SRAM
++isil,isl1218		Intersil ISL1218 Low Power RTC with Battery Backed SRAM
++isil,isl12022		Intersil ISL12022 Real-time Clock
+ isil,isl29028		Intersil ISL29028 Ambient Light and Proximity Sensor
+ isil,isl29030		Intersil ISL29030 Ambient Light and Proximity Sensor
+ maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
+@@ -155,6 +159,7 @@ nxp,pca9556		Octal SMBus and I2C registered interface
+ nxp,pca9557		8-bit I2C-bus and SMBus I/O port with reset
+ nxp,pcf2127		Real-time clock
+ nxp,pcf2129		Real-time clock
++nxp,pcf8523		Real-time Clock
+ nxp,pcf8563		Real-time clock/calendar
+ nxp,pcf85063		Tiny Real-Time Clock
+ oki,ml86v7667		OKI ML86V7667 video decoder
+-- 
+2.14.1
 
-
-Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
