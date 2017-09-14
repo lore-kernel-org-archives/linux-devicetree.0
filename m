@@ -1,98 +1,65 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: as3645a flash userland interface
-Date: Thu, 14 Sep 2017 12:07:18 +0200
-Message-ID: <20170914100718.GA3843@amd>
-References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
- <20170912084236.1154-25-sakari.ailus@linux.intel.com>
- <20170912103628.GB27117@amd>
- <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
- <20170912215529.GA17218@amd>
- <21824758-28a1-7007-6db5-86a900025d14@gmail.com>
- <CGME20170914092415epcas2p26c049a698851778673034c16afb290b9@epcas2p2.samsung.com>
- <4bf12e8e-beff-0199-cdee-4a52ebe7cdaf@samsung.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] watchdog: dw_wdt: add stop watchdog operation
+Date: Thu, 14 Sep 2017 12:17:39 +0200
+Message-ID: <1505384259.10100.2.camel@pengutronix.de>
+References: <20170914081402.7893-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4bf12e8e-beff-0199-cdee-4a52ebe7cdaf-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170914081402.7893-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Oleksij,
 
---sm4nu43k4a2Rpi4c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2017-09-14 at 10:14 +0200, Oleksij Rempel wrote:
+> From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> The only way of stopping the watchdog is by resetting it.
+> Add the watchdog op for stopping the device and reset if
+> a reset line is provided.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  drivers/watchdog/dw_wdt.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index 36be987ff9ef..50d8a6a5b5ac 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -135,6 +135,21 @@ static int dw_wdt_start(struct watchdog_device
+> *wdd)
+>  	return 0;
+>  }
+>  
+> +static int dw_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> +
+> +	if (IS_ERR(dw_wdt->rst)) {
 
-Hi!
+	if (!dw_wdt->rst) {
 
-> >>>>What directory are the flash controls in?
-> >>>>
-> >>>>/sys/class/leds/led-controller:flash ?
-> >>>>
-> >>>>Could we arrange for something less generic, like
-> >>>>
-> >>>>/sys/class/leds/main-camera:flash ?
-> >>>
-> >>>I'd rather avoid overcomplicating this. LED class device name pattern
-> >>>is well defined to devicename:colour:function
-> >>>(see Documentation/leds/leds-class.txt, "LED Device Naming" section).
-> >>>
-> >>>In this case "flash" in place of the "function" segment makes the
-> >>>things clear enough I suppose.
-> >>
-> >>It does not.
-> >>
-> >>Phones usually have two cameras, front and back, and these days both
-> >>cameras have their flash.
-> >>
-> >>And poor userspace flashlight application can not know if as3645
-> >>drivers front LED or back LED. Thus, I'd set devicename to
-> >>front-camera or main-camera -- because that's what it is associated
-> >>with. Userspace does not care what hardware drives the LED, but needs
-> >>to know if it is front or back camera.
-> >
-> >The name of a LED flash class device isn't fixed and is derived
-> >from DT label property. Name in the example of some DT bindings
-> >will not force people to apply similar pattern for the other
-> >drivers and even for the related one. No worry about having
-> >to keep anything forever basing on that.
->=20
-> Isn't the V4L2 subdev/Media Controller API supposed to provide means
-> for associating flash LEDs with camera sensors? You seem to be insisting
-> on using the sysfs leds interface for that, which is not a primary
-> interface for camera flash AFAICT.
+Since commit 65a3b6935d92 ("watchdog: dw_wdt: get reset lines from dt"),
+the reset control is requested as optional, meaning dw_wdt->rst == NULL
+if the reset line is not present. If an error is value is stored into
+dw_wdt->rst, the probe function does not succeed.
 
-a) subdev/media controller API currently does not provide such means.
+> +		dev_warn(wdd->parent, "No reset line. Will not
+> stop.\n");
+> +		return PTR_ERR(dw_wdt->rst);
+> +	}
 
-b) if we have /sys/class/leds interface to userland, it should be
-useful.
-
-c) having flashlight application going through media controller API is
-a bad joke.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---sm4nu43k4a2Rpi4c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlm6VNYACgkQMOfwapXb+vIu4wCfcERX0wrdAVt5HeogfBdgba5W
-SnIAnReSCKgIbWpDTsfX3/BRFNgx6t/C
-=MD5V
------END PGP SIGNATURE-----
-
---sm4nu43k4a2Rpi4c--
+regards
+Philipp
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
