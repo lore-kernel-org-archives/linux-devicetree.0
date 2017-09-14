@@ -1,46 +1,153 @@
-From: Oleksij Rempel <ore@pengutronix.de>
-Subject: Re: [PATCH] dt-bindings: nand: denali: reduce the register space in
- the example
-Date: Thu, 14 Sep 2017 10:04:32 +0200
-Message-ID: <3c17c272-40ec-4eeb-0dc3-59a64400e6f8@pengutronix.de>
-References: <1505373456-24047-1-git-send-email-yamada.masahiro@socionext.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [RESEND PATCH v3 3/5] i2c: i2c-stm32f7: add driver
+Date: Thu, 14 Sep 2017 10:11:11 +0200
+Message-ID: <63ecfac9-990b-e6c5-d9bf-7708bacc10d2@st.com>
+References: <1504251255-20469-1-git-send-email-pierre-yves.mordret@st.com>
+ <1504251255-20469-4-git-send-email-pierre-yves.mordret@st.com>
+ <20170913212639.2zyvg24364ovwfxh@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505373456-24047-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <20170913212639.2zyvg24364ovwfxh@ninjato>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mtd@lists.infradead.org
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Dinh Nguyen <dinguyen@kernel.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-i assume arch/arm/boot/dts/socfpga.dtsi should be update as well. Right?
 
-On 14.09.2017 09:17, Masahiro Yamada wrote:
-> This example allocates too much for register regions.  Especially,
-> there are only two registers in the "nand_data" interface of this
-> hardware (ADDR: 0x00, DATA: 0x10).
+On 09/13/2017 11:26 PM, Wolfram Sang wrote:
+> Hi,
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> thanks for this driver!
 > 
->   Documentation/devicetree/bindings/mtd/denali-nand.txt | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>> +/**
+>> + * struct stm32f7_i2c_spec - private i2c specification timing
+>> + * @rate: I2C bus speed (Hz)
+>> + * @rate_min: 80% of I2C bus speed (Hz)
+>> + * @rate_max: 120% of I2C bus speed (Hz)
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> index 504291d..0ee8edb 100644
-> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> @@ -29,7 +29,7 @@ nand: nand@ff900000 {
->   	#address-cells = <1>;
->   	#size-cells = <1>;
->   	compatible = "altr,socfpga-denali-nand";
-> -	reg = <0xff900000 0x100000>, <0xffb80000 0x10000>;
-> +	reg = <0xff900000 0x20>, <0xffb80000 0x1000>;
->   	reg-names = "nand_data", "denali_reg";
->   	interrupts = <0 144 4>;
->   };
+> You would generate a clock which is higher than the requested one?
+> This is highly unusual. Any special reason?
+
+Well. I allow the clock to be higher than expected.
+Looking at I2C spec again it turns out the mode specifies the max: no overshoot
+of the clock. I will lock max to 100% then.
+Will be fixed
+
 > 
+>> + * @fall_max: Max fall time of both SDA and SCL signals (ns)
+>> + * @rise_max: Max rise time of both SDA and SCL signals (ns)
+>> + * @hddat_min: Min data hold time (ns)
+>> + * @vddat_max: Max data valid time (ns)
+>> + * @sudat_min: Min data setup time (ns)
+>> + * @l_min: Min low period of the SCL clock (ns)
+>> + * @h_min: Min high period of the SCL clock (ns)
+>> + */
+>> +static struct stm32f7_i2c_spec i2c_specs[] = {
+>> +	[STM32_I2C_SPEED_STANDARD] = {
+>> +		.rate = 100000,
+>> +		.rate_min = 8000,
+> 
+> This is not 80%. Typo?
+
+Yep. This is a typo
+
+> 
+>> +		.rate_max = 120000,
+>> +		.fall_max = 300,
+>> +		.rise_max = 1000,
+>> +		.hddat_min = 0,
+>> +		.vddat_max = 3450,
+>> +		.sudat_min = 250,
+>> +		.l_min = 4700,
+>> +		.h_min = 4000,
+>> +	},
+> 
+> ...
+> 
+>> +	/*
+>> +	 * Among Prescaler possibilities discovered above figures out SCL Low
+>> +	 * and High Period. Provided:
+>> +	 * - SCL Low Period has to be higher than Low Period of tehs SCL Clock
+> 
+> tehs?
+
+Oops.
+
+> 
+>> +	 *   defined by I2C Specification. I2C Clock has to be lower than
+>> +	 *   (SCL Low Period - Analog/Digital filters) / 4.
+>> +	 * - SCL High Period has to be lower than High Period of the SCL Clock
+>> +	 *   defined by I2C Specification
+>> +	 * - I2C Clock has to be lower than SCL High Period
+>> +	 */
+> 
+> ...
+> 
+>> +	/* NACK received */
+>> +	if (status & STM32F7_I2C_ISR_NACKF) {
+>> +		dev_dbg(i2c_dev->dev, "<%s>: Receive NACK\n", __func__);
+>> +		writel_relaxed(STM32F7_I2C_ICR_NACKCF, base + STM32F7_I2C_ICR);
+>> +		f7_msg->result = -EBADE;
+> 
+> -ENXIO (see Documentation/i2c/fault-codes)
+
+OK
+
+> 
+> ...
+> 
+>> +	timeout = wait_for_completion_timeout(&i2c_dev->complete,
+>> +					      i2c_dev->adap.timeout);
+>> +	ret = f7_msg->result;
+>> +
+>> +	if (!timeout) {
+>> +		dev_dbg(i2c_dev->dev, "Access to slave 0x%x timed out\n",
+>> +			i2c_dev->msg->addr);
+>> +		ret = -ETIMEDOUT;
+>> +	}
+> 
+> Could you rename the variable to time_left? It looks strange, basically:
+> 
+> 	if (!timeout)
+> 		return -ETIMEDOUT
+> 
+
+okay
+
+> ...
+> 
+>> +	adap->retries = 0;
+> 
+> Why no retries when you check for arbitration lost?
+> 
+>> +	adap->algo = &stm32f7_i2c_algo;
+>> +	adap->dev.parent = &pdev->dev;
+>> +	adap->dev.of_node = pdev->dev.of_node;
+>> +
+>> +	init_completion(&i2c_dev->complete);
+>> +
+>> +	ret = i2c_add_adapter(adap);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Failed to add adapter\n");
+> 
+> Please remove, the core will print info when adding fails.
+> 
+
+I will
+
+> 
+> Rest looks good!
+
+Great !
+
+> 
+> Thanks,
+> 
+>    Wolfram
+> 
+
+Thanks
