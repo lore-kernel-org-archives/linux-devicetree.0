@@ -1,97 +1,181 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 06/14] irqchip: add initial support for ompic
-Date: Thu, 14 Sep 2017 19:31:46 +0100
-Message-ID: <86vaklqgh9.fsf@arm.com>
-References: <20170910064926.5874-1-shorne@gmail.com>
-        <20170910064926.5874-7-shorne@gmail.com> <86h8w6see4.fsf@arm.com>
-        <20170914065402.GU2609@lianli.shorne-pla.net>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Thu, 14 Sep 2017 21:40:53 +0300
+Message-ID: <1580072.HvWFtpbqJt@avalon>
+References: <20170904130335.23280-1-maxime.ripard@free-electrons.com> <20170904130335.23280-2-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170914065402.GU2609@lianli.shorne-pla.net> (Stafford Horne's
-        message of "Thu, 14 Sep 2017 15:54:02 +0900")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stafford Horne <shorne@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Openrisc <openrisc@lists.librecores.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonas Bonn <jonas@southpole.se>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170904130335.23280-2-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 14 2017 at  3:54:02 pm BST, Stafford Horne <shorne@gmail.com> wrote:
-> On Wed, Sep 13, 2017 at 06:21:39PM +0100, Marc Zyngier wrote:
+Hi Maxime,
 
-[...]
+Thank you for the patch.
 
->> > +{
->> > +	unsigned int dst_cpu;
->> > +	unsigned int src_cpu = smp_processor_id();
->> > +
->> > +	for_each_cpu(dst_cpu, mask) {
->> > +		set_bit(ipi_msg, &per_cpu(ops, dst_cpu));
->> > +
->> > +		/*
->> > +		 * On OpenRISC the atomic set_bit() call implies a memory
->> > +		 * barrier.  Otherwise we would need: smp_wmb(); paired
->> > +		 * with the read in ompic_ipi_handler.
->> > +		 */
->> 
->> One last question on this, because the architecture document is terribly
->> unclear: If you have CPU0 doing an atomic operation A0, CPU1 seeing A0
->> and doeing another atomic A1 (the set_bit above) followed by an IPI to
->> CPU2, is CPU2 *guaranteed* to observe both A0 *and* A1? Because that's
->> required by the IPI semantics, and you wouldn't see that kind of issue
->> with only two CPUs.
->
-> Could you suggest an architecture document that makes this case clear?
->
-> I believe this will not be a problem, but:
->   1. If this needs to be clear in the architecture document I can propose
->      changes.
->   2. To be clear is this the scenario you mean..
->
-> CASE1 - A0 and A1 are to different locations?
->   A0 - writes to some unrelated global location?
->
-> CPU0                       CPU1                     CPU2
->  A0:atomic store (global)
->                            A1:set_bit (ops[CPU2])
->                            IPI
->                                                     read (A0,A1)
->
->
-> OR
->
-> CASE2 - A0 and A1 are to the same location.
->   A0 - writes to the same location as A1
->
-> CPU0                       CPU1                     CPU2
->  A0:set_bit (ops[CPU2])
->                            A1:set_bit (ops[CPU2])
->                            IPI
->                                                     read (A0,A1)
->  IPI
+On Monday, 4 September 2017 16:03:34 EEST Maxime Ripard wrote:
+> The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
+> 4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
+> the hardware implementation.
+> 
+> It can operate with an external D-PHY, an internal one or no D-PHY at all
+> in some configurations.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/cdns-csi2rx.txt      | 98 +++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt new file mode
+> 100644
+> index 000000000000..2395030d8c72
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> @@ -0,0 +1,98 @@
+> +Cadence MIPI-CSI2 RX controller
+> +===============================
+> +
+> +The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4
+> CSI
+> +lanes in input, and 4 different pixel streams in output.
+> +
+> +Required properties:
+> +  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
+> +  - reg: base address and size of the memory mapped region
+> +  - clocks: phandles to the clocks driving the controller
+> +  - clock-names: must contain:
+> +    * sys_clk: main clock
+> +    * p_clk: register bank clock
+> +    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
+> +                         implemented in hardware, between 0 and 3
+> +
+> +Optional properties:
+> +  - phys: phandle to the external D-PHY, phy-names must be provided
+> +  - phy-names: must contain dphy, if the implementation uses an
+> +               external D-PHY
+> +
+> +Required subnodes:
+> +  - ports: A ports node with endpoint definitions as defined in
+> +           Documentation/devicetree/bindings/media/video-interfaces.txt.
+> The
+> +           first port subnode should be the input endpoint, the next ones
+> the
+> +           output, one for each stream supported by the CSI2-RX controller.
+> +           The ports ID must be the stream output number used in the
+> +           implementation, plus 1.
 
-I think this covers both cases I had in mind.
+This sounds a bit unclear to me. How about the following ?
 
->
->
-> OR - something else?
->
-> In both cases CPU2 would be able to see the results of both atomic
-> operations.  All, cpus in the OpenRISC system snoop for memory writes to
-> enable cash coherency, so each CPU would see each write once it is synced
-> to memory (there is a single memory bus).  This is not limited to atomic
-> operations, but the atomic operations provide a syncrhonization point
-> accross all CPUs.
+  - ports: A ports node with one port child node per device input and output
+           port, in accordance with the video interface bindings defined in
+           Documentation/devicetree/bindings/media/video-interfaces.txt. The
+           port nodes numbered as follows.
 
-OK. It would be good if the architecture document had something about
-transitivity of writes on SMP (maybe it has, I only went through it
-pretty quickly). But overall, the above will work correctly.
+           Port	Description
+           -----------------------------
+           0	CSI-2 input
+           1	Stream 0 output
+           2	Stream 1 output
+           3	Stream 2 output
+           4	Stream 3 output
 
-> ps: Frank Zappa rocks :)
+           The stream output port nodes are optional if they are not connected
+           to anything at the hardware level.
 
-His music certainly does! ;-)
+> +
+> +Example:
+> +
+> +csi2rx: csi-bridge@0d060000 {
+> +	compatible = "cdns,csi2rx";
+> +	reg = <0x0d060000 0x1000>;
+> +	clocks = <&byteclock>, <&byteclock>
+> +		 <&coreclock>, <&coreclock>,
+> +		 <&coreclock>, <&coreclock>;
+> +	clock-names = "sys_clk", "p_clk",
+> +		      "pixel_if0_clk", "pixel_if1_clk",
+> +		      "pixel_if2_clk", "pixel_if3_clk";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
 
-Thanks,
+Those two properties are not needed as the endpoint isn't numbered. Same for 
+all other ports below.
 
-        M.
+With this fixed and the ports node description clarified,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> +			reg = <0>;
+> +
+> +			csi2rx_in_sensor: endpoint {
+> +				remote-endpoint = <&sensor_out_csi2rx>;
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +
+> +			csi2rx_out_grabber0: endpoint {
+> +				remote-endpoint = <&grabber0_in_csi2rx>;
+> +			};
+> +		};
+> +
+> +		port@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <2>;
+> +
+> +			csi2rx_out_grabber1: endpoint {
+> +				remote-endpoint = <&grabber1_in_csi2rx>;
+> +			};
+> +		};
+> +
+> +		port@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <3>;
+> +
+> +			csi2rx_out_grabber2: endpoint {
+> +				remote-endpoint = <&grabber2_in_csi2rx>;
+> +			};
+> +		};
+> +
+> +		port@4 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <4>;
+> +
+> +			csi2rx_out_grabber3: endpoint {
+> +				remote-endpoint = <&grabber3_in_csi2rx>;
+> +			};
+> +		};
+> +	};
+> +};
+
+
 -- 
-Jazz is not dead. It just smells funny.
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
