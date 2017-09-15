@@ -1,84 +1,49 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
-Date: Fri, 15 Sep 2017 13:06:09 +0200
-Message-ID: <20170915110609.GL3924@verge.net.au>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
- <20170915074551.GF3924@verge.net.au>
- <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
- <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+Subject: Re: [PATCH v2 01/18] dt: arm: shmobile: add M3ULCB Kingfisher board
+ DT bindings
+Date: Fri, 15 Sep 2017 13:15:51 +0200
+Message-ID: <20170915111551.GM3924@verge.net.au>
+References: <1505398720-4535-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+In-Reply-To: <1505398720-4535-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 15, 2017 at 08:57:53AM +0000, Fabrizio Castro wrote:
-> Hi Simon, Geert,
+On Thu, Sep 14, 2017 at 05:18:40PM +0300, Vladimir Barinov wrote:
+> Add M3ULCB Kingfisher Device tree bindings Documentation, listing it as a
+> supported board.
 > 
-> > -----Original Message-----
-> > From: linux-renesas-soc-owner@vger.kernel.org [mailto:linux-renesas-soc-owner@vger.kernel.org] On Behalf Of Geert
-> > Uytterhoeven
-> > Sent: 15 September 2017 09:05
-> > To: Simon Horman <horms@verge.net.au>; Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Cc: Chris Paterson <Chris.Paterson2@renesas.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> > Magnus Damm <magnus.damm@gmail.com>; Russell King <linux@armlinux.org.uk>; devicetree@vger.kernel.org; Linux-Renesas
-> > <linux-renesas-soc@vger.kernel.org>; linux-arm-kernel@lists.infradead.org; Geert Uytterhoeven <geert+renesas@glider.be>
-> > Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
-> >
-> > Hi Simon, Fabrizio,
-> >
-> > On Fri, Sep 15, 2017 at 9:45 AM, Simon Horman <horms@verge.net.au> wrote:
-> > > On Wed, Sep 13, 2017 at 06:05:34PM +0100, Chris Paterson wrote:
-> > >> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >>
-> > >> Add DT node for the Advanced Power Management Unit (APMU), add the
-> > >> second CPU core, and use "renesas,apmu" as "enable-method".
-> > >>
-> > >> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-> > >> ---
-> > >> This patch is based on renesas-devel-20170913-v4.13.
-> > >
-> > > Hi,
-> > >
-> > > with reference to "[PATCH v3 0/3] ARM: renesas: Enable SMP on R-Car E2"
-> > > is the CNTVOFF initialised in the boot loader of boards (in upstream)
-> > > for this SoC? If not I expect you will have trouble with the arch timer
-> > > on secondary CPU cores.
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> ---
+> Changes in version 2:
+> - added own compatible value "shimafuji,kingfisher"
 > 
-> I can confirm that this patch relies on:
-> * "ARM: Add definition for monitor mode", and
-> * "ARM: shmobile: rcar-gen2: Make sure CNTVOFF is initialized on CA7/15 "
-> as the bootloader doesn't initialize CNTVOFF.
-> 
-> >
-> > Exactly my question.
-> >
-> > Fabrizio: Given your feedback on "[PATCH v3 0/3] ARM: renesas: Enable SMP on
-> > R-Car E2", I think SMP enablement on RZ/G1E has to be postponed until "ARM:
-> > shmobile: rcar-gen2: Make sure CNTVOFF is initialized on CA7/15" has been
-> > accepted upstream.
-> 
-> You are right, somehow we missed the comment made by Simon on Monday:
-> 
-> " I would like to deffer the third and last patch until v4.16 to avoid
-> an awkward branch dependency on the above - the branches are different
-> even though the tree is the same. Please resubmit this patch once the
-> above dependencies are present in an rc release, which at this stage
-> I expect to be v4.15-rc1."
-> 
-> Apologies for this, we will send this patch later on, once both patches have been
-> accepted upstream.
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-No problem, I will mark this one as deferred.
+I would refer if the patch subject was something like:
 
-> Simon, is this going to make the application of the remaining patches
-> problematic?  Please, let me (or Chris) know if you want us to rebase and
-> resend without this patch.
+ARM: shmobile: Document M3ULCB Kingfisher board DT bindings
 
-No, I don't think you need to rebase and repost due to this.
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+> index ae75cb3..89bd3a6 100644
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -85,6 +85,8 @@ Boards:
+>      compatible = "renesas,lager", "renesas,r8a7790"
+>    - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
+>      compatible = "renesas,m3ulcb", "renesas,r8a7796";
+> +  - M3ULCB Kingfisher (SBEV-RCAR-KF-M03)
+> +    compatible = "shimafuji,kingfisher", "renesas,m3ulcb", "renesas,r8a7796";
+>    - Marzen (R0P7779A00010S)
+>      compatible = "renesas,marzen", "renesas,r8a7779"
+>    - Porter (M2-LCDP)
+> -- 
+> 1.9.1
+> 
