@@ -1,235 +1,125 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v13 18/25] v4l: fwnode: Add a helper function to obtain device / integer references
-Date: Fri, 15 Sep 2017 17:17:17 +0300
-Message-ID: <20170915141724.23124-19-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v13 19/25] v4l: fwnode: Add convenience function for parsing common external refs
+Date: Fri, 15 Sep 2017 17:17:18 +0300
+Message-ID: <20170915141724.23124-20-sakari.ailus@linux.intel.com>
 References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915141724.23124-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
-the device's own fwnode, it will follow child fwnodes with the given
-property-value pair and return the resulting fwnode.
+Add v4l2_fwnode_parse_reference_sensor_common for parsing common
+sensor properties that refer to adjacent devices such as flash or lens
+driver chips.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+As this is an association only, there's little a regular driver needs to
+know about these devices as such.
+
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
- 1 file changed, 201 insertions(+)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 35 +++++++++++++++++++++++++++++++++++
+ include/media/v4l2-async.h            |  3 ++-
+ include/media/v4l2-fwnode.h           | 21 +++++++++++++++++++++
+ 3 files changed, 58 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 65e84ea1cc35..968a345a288f 100644
+index 968a345a288f..7de2fd195e19 100644
 --- a/drivers/media/v4l2-core/v4l2-fwnode.c
 +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -567,6 +567,207 @@ static int v4l2_fwnode_reference_parse(
+@@ -768,6 +768,41 @@ static int v4l2_fwnode_reference_parse_int_props(
  	return ret;
  }
  
-+/*
-+ * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
-+ *					arguments
-+ * @dev: struct device pointer
-+ * @notifier: notifier for @dev
-+ * @prop: the name of the property
-+ * @index: the index of the reference to get
-+ * @props: the array of integer property names
-+ * @nprops: the number of integer property names in @nprops
-+ *
-+ * Find fwnodes referred to by a property @prop, then under that
-+ * iteratively, @nprops times, follow each child node which has a
-+ * property in @props array at a given child index the value of which
-+ * matches the integer argument at an index.
-+ *
-+ * For example, if this function was called with arguments and values
-+ * @dev corresponding to device "SEN", @prop == "flash-leds", @index
-+ * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
-+ * it would return the node marked with THISONE. The @dev argument in
-+ * the ASL below.
-+ *
-+ *	Device (LED)
-+ *	{
-+ *		Name (_DSD, Package () {
-+ *			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-+ *			Package () {
-+ *				Package () { "led0", "LED0" },
-+ *				Package () { "led1", "LED1" },
-+ *			}
-+ *		})
-+ *		Name (LED0, Package () {
-+ *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+ *			Package () {
-+ *				Package () { "led", 0 },
-+ *			}
-+ *		})
-+ *		Name (LED1, Package () {
-+ *			// THISONE
-+ *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+ *			Package () {
-+ *				Package () { "led", 1 },
-+ *			}
-+ *		})
-+ *	}
-+ *
-+ *	Device (SEN)
-+ *	{
-+ *		Name (_DSD, Package () {
-+ *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+ *			Package () {
-+ *				Package () {
-+ *					"flash-leds",
-+ *					Package () { ^LED, 0, ^LED, 1 },
-+ *				}
-+ *			}
-+ *		})
-+ *	}
-+ *
-+ * where
-+ *
-+ *	LED	LED driver device
-+ *	LED0	First LED
-+ *	LED1	Second LED
-+ *	SEN	Camera sensor device (or another device the LED is
-+ *		related to)
-+ *
-+ * Return: 0 on success
-+ *	   -ENOENT if no entries (or the property itself) were found
-+ *	   -EINVAL if property parsing otherwise failed
-+ *	   -ENOMEM if memory allocation failed
-+ */
-+static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
-+	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
-+	const char **props, unsigned int nprops)
++int v4l2_async_notifier_parse_fwnode_sensor_common(
++	struct device *dev, struct v4l2_async_notifier *notifier)
 +{
-+	struct fwnode_reference_args fwnode_args;
-+	unsigned int *args = fwnode_args.args;
-+	struct fwnode_handle *child;
-+	int ret;
++	static const char *led_props[] = { "led" };
++	static const struct {
++		const char *name;
++		const char **props;
++		unsigned int nprops;
++	} props[] = {
++		{ "flash-leds", led_props, ARRAY_SIZE(led_props) },
++		{ "lens-focus", NULL, 0 },
++	};
++	unsigned int i;
 +
-+	/*
-+	 * Obtain remote fwnode as well as the integer arguments.
-+	 *
-+	 * Note that right now both -ENODATA and -ENOENT may signal
-+	 * out-of-bounds access. Return -ENOENT in that case.
-+	 */
-+	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
-+						 index, &fwnode_args);
-+	if (ret)
-+		return ERR_PTR(ret == -ENODATA ? -ENOENT : ret);
++	for (i = 0; i < ARRAY_SIZE(props); i++) {
++		int ret;
 +
-+	/*
-+	 * Find a node in the tree under the referred fwnode corresponding the
-+	 * integer arguments.
-+	 */
-+	fwnode = fwnode_args.fwnode;
-+	while (nprops--) {
-+		u32 val;
-+
-+		/* Loop over all child nodes under fwnode. */
-+		fwnode_for_each_child_node(fwnode, child) {
-+			if (fwnode_property_read_u32(child, *props, &val))
-+				continue;
-+
-+			/* Found property, see if its value matches. */
-+			if (val == *args)
-+				break;
++		if (props[i].props && is_acpi_node(dev_fwnode(dev)))
++			ret = v4l2_fwnode_reference_parse_int_props(
++				dev, notifier, props[i].name,
++				props[i].props, props[i].nprops);
++		else
++			ret = v4l2_fwnode_reference_parse(
++				dev, notifier, props[i].name);
++		if (ret && ret != -ENOENT) {
++			dev_warn(dev, "parsing property \"%s\" failed (%d)\n",
++				 props[i].name, ret);
++			return ret;
 +		}
-+
-+		fwnode_handle_put(fwnode);
-+
-+		/* No property found; return an error here. */
-+		if (!child) {
-+			fwnode = ERR_PTR(-ENOENT);
-+			break;
-+		}
-+
-+		props++;
-+		args++;
-+		fwnode = child;
 +	}
 +
-+	return fwnode;
++	return 0;
 +}
-+
-+/*
-+ * v4l2_fwnode_reference_parse_int_props - parse references for async sub-devices
-+ * @dev: struct device pointer
-+ * @notifier: notifier for @dev
-+ * @prop: the name of the property
-+ * @props: the array of integer property names
-+ * @nprops: the number of integer properties
-+ *
-+ * Use v4l2_fwnode_reference_get_int_prop to find fwnodes through reference in
-+ * property @prop with integer arguments with child nodes matching in properties
-+ * @props. Then, set up V4L2 async sub-devices for those fwnodes in the notifier
-+ * accordingly.
-+ *
-+ * While it is technically possible to use this function on DT, it is only
-+ * meaningful on ACPI. On Device tree you can refer to any node in the tree but
-+ * on ACPI the references are limited to devices.
-+ *
-+ * Return: 0 on success
-+ *	   -ENOENT if no entries (or the property itself) were found
-+ *	   -EINVAL if property parsing otherwisefailed
-+ *	   -ENOMEM if memory allocation failed
-+ */
-+static int v4l2_fwnode_reference_parse_int_props(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	const char *prop, const char **props, unsigned int nprops)
-+{
-+	struct fwnode_handle *fwnode;
-+	unsigned int index;
-+	int ret;
-+
-+	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
-+					 dev_fwnode(dev), prop, index, props,
-+					 nprops))); index++)
-+		fwnode_handle_put(fwnode);
-+
-+	/*
-+	 * Note that right now both -ENODATA and -ENOENT may signal
-+	 * out-of-bounds access. Return the error in cases other than that.
-+	 */
-+	if (PTR_ERR(fwnode) != -ENOENT && PTR_ERR(fwnode) != -ENODATA)
-+		return PTR_ERR(fwnode);
-+
-+	ret = v4l2_async_notifier_realloc(notifier,
-+					  notifier->num_subdevs + index);
-+	if (ret)
-+		return -ENOMEM;
-+
-+	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
-+					 dev_fwnode(dev), prop, index, props,
-+					 nprops))); index++) {
-+		struct v4l2_async_subdev *asd;
-+
-+		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-+			ret = -EINVAL;
-+			goto error;
-+		}
-+
-+		asd = kzalloc(sizeof(struct v4l2_async_subdev), GFP_KERNEL);
-+		if (!asd) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		notifier->subdevs[notifier->num_subdevs] = asd;
-+		asd->match.fwnode.fwnode = fwnode;
-+		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-+		notifier->num_subdevs++;
-+	}
-+
-+	return PTR_ERR(fwnode) == -ENOENT ? 0 : PTR_ERR(fwnode);
-+
-+error:
-+	fwnode_handle_put(fwnode);
-+	return ret;
-+}
++EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_sensor_common);
 +
  MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+ MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+ MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+index a13803a6371d..378e20e3b44d 100644
+--- a/include/media/v4l2-async.h
++++ b/include/media/v4l2-async.h
+@@ -155,7 +155,8 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier);
+  * Release memory resources related to a notifier, including the async
+  * sub-devices allocated for the purposes of the notifier. The user is
+  * responsible for releasing the notifier's resources after calling
+- * @v4l2_async_notifier_parse_fwnode_endpoints.
++ * @v4l2_async_notifier_parse_fwnode_endpoints or
++ * @v4l2_fwnode_reference_parse_sensor_common.
+  *
+  * There is no harm from calling v4l2_async_notifier_release in other
+  * cases as long as its memory has been zeroed after it has been
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index 83afac48ea6b..7f315383c0ae 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -318,4 +318,25 @@ int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+ 			      struct v4l2_fwnode_endpoint *vep,
+ 			      struct v4l2_async_subdev *asd));
+ 
++/**
++ * v4l2_fwnode_reference_parse_sensor_common - parse common references on
++ *					       sensors for async sub-devices
++ * @dev: the device node the properties of which are parsed for references
++ * @notifier: the async notifier where the async subdevs will be added
++ *
++ * Parse common sensor properties for remote devices related to the
++ * sensor and set up async sub-devices for them.
++ *
++ * Any notifier populated using this function must be released with a call to
++ * v4l2_async_notifier_release() after it has been unregistered and the async
++ * sub-devices are no longer in use, even in the case the function returned an
++ * error.
++ *
++ * Return: 0 on success
++ *	   -ENOMEM if memory allocation failed
++ *	   -EINVAL if property parsing failed
++ */
++int v4l2_async_notifier_parse_fwnode_sensor_common(
++	struct device *dev, struct v4l2_async_notifier *notifier);
++
+ #endif /* _V4L2_FWNODE_H */
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
