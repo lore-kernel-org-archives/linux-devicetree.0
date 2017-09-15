@@ -1,82 +1,75 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
-Date: Fri, 15 Sep 2017 08:57:53 +0000
-Message-ID: <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
- <20170915074551.GF3924@verge.net.au>
- <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/7] dt-bindings: gpu: mali-utgard: add optional supply regulator
+Date: Fri, 15 Sep 2017 11:01:45 +0200
+Message-ID: <11237143.FSQKKME6IQ@phil>
+References: <20170905105739.8330-1-heiko@sntech.de> <5517832.4TA9c0NYD6@diego> <20170913143415.fcds556hdqwnhsvm@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170913143415.fcds556hdqwnhsvm@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2ltb24sIEdlZXJ0LA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
-IGxpbnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LXJl
-bmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEdlZXJ0DQo+IFV5
-dHRlcmhvZXZlbg0KPiBTZW50OiAxNSBTZXB0ZW1iZXIgMjAxNyAwOTowNQ0KPiBUbzogU2ltb24g
-SG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNh
-c3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gQ2M6IENocmlzIFBhdGVyc29uIDxDaHJpcy5QYXRlcnNv
-bjJAcmVuZXNhcy5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBS
-dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+IE1hZ251cyBEYW1tIDxtYWdudXMuZGFt
-bUBnbWFpbC5jb20+OyBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybWxpbnV4Lm9yZy51az47IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMaW51eC1SZW5lc2FzDQo+IDxsaW51eC1yZW5lc2FzLXNv
-Y0B2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0ggMS84XSBBUk06IGR0czogcjhhNzc0NTogQWRkIEFQTVUgbm9kZSBhbmQgc2Vj
-b25kIENQVSBjb3JlDQo+DQo+IEhpIFNpbW9uLCBGYWJyaXppbywNCj4NCj4gT24gRnJpLCBTZXAg
-MTUsIDIwMTcgYXQgOTo0NSBBTSwgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+IHdy
-b3RlOg0KPiA+IE9uIFdlZCwgU2VwIDEzLCAyMDE3IGF0IDA2OjA1OjM0UE0gKzAxMDAsIENocmlz
-IFBhdGVyc29uIHdyb3RlOg0KPiA+PiBGcm9tOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNh
-c3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPj4NCj4gPj4gQWRkIERUIG5vZGUgZm9yIHRoZSBBZHZh
-bmNlZCBQb3dlciBNYW5hZ2VtZW50IFVuaXQgKEFQTVUpLCBhZGQgdGhlDQo+ID4+IHNlY29uZCBD
-UFUgY29yZSwgYW5kIHVzZSAicmVuZXNhcyxhcG11IiBhcyAiZW5hYmxlLW1ldGhvZCIuDQo+ID4+
-DQo+ID4+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJw
-LnJlbmVzYXMuY29tPg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYXRlcnNvbiA8Y2hyaXMu
-cGF0ZXJzb24yQHJlbmVzYXMuY29tPg0KPiA+PiAtLS0NCj4gPj4gVGhpcyBwYXRjaCBpcyBiYXNl
-ZCBvbiByZW5lc2FzLWRldmVsLTIwMTcwOTEzLXY0LjEzLg0KPiA+DQo+ID4gSGksDQo+ID4NCj4g
-PiB3aXRoIHJlZmVyZW5jZSB0byAiW1BBVENIIHYzIDAvM10gQVJNOiByZW5lc2FzOiBFbmFibGUg
-U01QIG9uIFItQ2FyIEUyIg0KPiA+IGlzIHRoZSBDTlRWT0ZGIGluaXRpYWxpc2VkIGluIHRoZSBi
-b290IGxvYWRlciBvZiBib2FyZHMgKGluIHVwc3RyZWFtKQ0KPiA+IGZvciB0aGlzIFNvQz8gSWYg
-bm90IEkgZXhwZWN0IHlvdSB3aWxsIGhhdmUgdHJvdWJsZSB3aXRoIHRoZSBhcmNoIHRpbWVyDQo+
-ID4gb24gc2Vjb25kYXJ5IENQVSBjb3Jlcy4NCg0KSSBjYW4gY29uZmlybSB0aGF0IHRoaXMgcGF0
-Y2ggcmVsaWVzIG9uOg0KKiAiQVJNOiBBZGQgZGVmaW5pdGlvbiBmb3IgbW9uaXRvciBtb2RlIiwg
-YW5kDQoqICJBUk06IHNobW9iaWxlOiByY2FyLWdlbjI6IE1ha2Ugc3VyZSBDTlRWT0ZGIGlzIGlu
-aXRpYWxpemVkIG9uIENBNy8xNSAiDQphcyB0aGUgYm9vdGxvYWRlciBkb2Vzbid0IGluaXRpYWxp
-emUgQ05UVk9GRi4NCg0KPg0KPiBFeGFjdGx5IG15IHF1ZXN0aW9uLg0KPg0KPiBGYWJyaXppbzog
-R2l2ZW4geW91ciBmZWVkYmFjayBvbiAiW1BBVENIIHYzIDAvM10gQVJNOiByZW5lc2FzOiBFbmFi
-bGUgU01QIG9uDQo+IFItQ2FyIEUyIiwgSSB0aGluayBTTVAgZW5hYmxlbWVudCBvbiBSWi9HMUUg
-aGFzIHRvIGJlIHBvc3Rwb25lZCB1bnRpbCAiQVJNOg0KPiBzaG1vYmlsZTogcmNhci1nZW4yOiBN
-YWtlIHN1cmUgQ05UVk9GRiBpcyBpbml0aWFsaXplZCBvbiBDQTcvMTUiIGhhcyBiZWVuDQo+IGFj
-Y2VwdGVkIHVwc3RyZWFtLg0KDQpZb3UgYXJlIHJpZ2h0LCBzb21laG93IHdlIG1pc3NlZCB0aGUg
-Y29tbWVudCBtYWRlIGJ5IFNpbW9uIG9uIE1vbmRheToNCg0KIiBJIHdvdWxkIGxpa2UgdG8gZGVm
-ZmVyIHRoZSB0aGlyZCBhbmQgbGFzdCBwYXRjaCB1bnRpbCB2NC4xNiB0byBhdm9pZA0KYW4gYXdr
-d2FyZCBicmFuY2ggZGVwZW5kZW5jeSBvbiB0aGUgYWJvdmUgLSB0aGUgYnJhbmNoZXMgYXJlIGRp
-ZmZlcmVudA0KZXZlbiB0aG91Z2ggdGhlIHRyZWUgaXMgdGhlIHNhbWUuIFBsZWFzZSByZXN1Ym1p
-dCB0aGlzIHBhdGNoIG9uY2UgdGhlDQphYm92ZSBkZXBlbmRlbmNpZXMgYXJlIHByZXNlbnQgaW4g
-YW4gcmMgcmVsZWFzZSwgd2hpY2ggYXQgdGhpcyBzdGFnZQ0KSSBleHBlY3QgdG8gYmUgdjQuMTUt
-cmMxLiINCg0KQXBvbG9naWVzIGZvciB0aGlzLCB3ZSB3aWxsIHNlbmQgdGhpcyBwYXRjaCBsYXRl
-ciBvbiwgb25jZSBib3RoIHBhdGNoZXMgaGF2ZSBiZWVuDQphY2NlcHRlZCB1cHN0cmVhbS4NCg0K
-U2ltb24sIGlzIHRoaXMgZ29pbmcgdG8gbWFrZSB0aGUgYXBwbGljYXRpb24gb2YgdGhlIHJlbWFp
-bmluZyBwYXRjaGVzIHByb2JsZW1hdGljPw0KUGxlYXNlLCBsZXQgbWUgKG9yIENocmlzKSBrbm93
-IGlmIHlvdSB3YW50IHVzIHRvIHJlYmFzZSBhbmQgcmVzZW5kIHdpdGhvdXQgdGhpcw0KcGF0Y2gu
-DQoNCkJlc3QgcmVnYXJkcywNCkZhYnJpemlvDQoNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+
-DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRl
-cmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGlu
-dXgtbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNh
-bCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5n
-IHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtl
-IHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFs
-ZHMNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBN
-aWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4g
-UmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3
-MDkuDQo=
+Am Mittwoch, 13. September 2017, 09:34:15 CEST schrieb Rob Herring:
+> On Wed, Sep 13, 2017 at 12:12:24AM +0200, Heiko Stübner wrote:
+> > Hi Rob,
+> > 
+> > Am Dienstag, 12. September 2017, 17:09:20 CEST schrieb Rob Herring:
+> > > On Tue, Sep 05, 2017 at 12:57:34PM +0200, Heiko Stuebner wrote:
+> > > > Mali GPUs have a separate supplying regulator in a lot of socs,
+> > > > so describe a mali-supply property. The already described
+> > > > operating points will likely also need access to this regulator.
+> > > > 
+> > > > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > > > ---
+> > > > 
+> > > >  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> > > > b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt index
+> > > > 3b7f6f72f032..bcaa640c883f 100644
+> > > > --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> > > > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> > > > 
+> > > > @@ -39,6 +39,9 @@ Optional properties:
+> > > >      Memory region to allocate from, as defined in
+> > > >      Documentation/devicetree/bindi/reserved-memory/reserved-memory.txt
+> > > > 
+> > > > +  - mali-supply : Phandle to regulator for the Mali device. Refer to
+> > > > +    Documentation/devicetree/bindings/regulator/regulator.txt for
+> > > > details.
+> > > 
+> > > Wouldn't a power domain be more appropriate?
+> > 
+> > At least on Rockchip socs there is a power-domain, but also the separate 
+> > additional regulator. See the similar mali-midgard binding.
+> 
+> And that regulator's state is independent of the power domain's state? 
+>
+> But I guess OPPs need a regulator. Really we should allow OPPs to be 
+> tied to the power domain. Maybe we do, I can't keep up with the ever 
+> evolving PM stuff.
+
+Yep, the external gpu regulator state is completely independent of the
+power-domain inside the soc and is most of the time one of the regulators
+coming from the external pmic or sometimes even a completely separate
+i2c-connected ic.
+
+It's the same for the cpu cores on Rockchip socs, they have power-domains
+for controlling the actual on/off state and need separate supplying
+i2c-connected regulators that still have to be enabled on their own.
+
+
+> So, given we already have it for midgard,
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Thanks, added for v2.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
