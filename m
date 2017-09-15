@@ -1,42 +1,21 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 0/5] Align and document return values of phandle and
- reference parsing for OF and ACPI
-Date: Fri, 15 Sep 2017 14:57:35 -0500
-Message-ID: <CAL_JsqKZVN+X0F3Z8s6Qv+ioh8LBDjNe277MAw30T3CXXTUV1Q@mail.gmail.com>
-References: <20170914122914.14122-1-sakari.ailus@linux.intel.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 2/2] arm: dts: stm32: remove useless clocksource nodes
+Date: Fri, 15 Sep 2017 23:03:47 +0200
+Message-ID: <20170915210347.GA1831@mai>
+References: <1505375812-19037-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1505375812-19037-3-git-send-email-benjamin.gaignard@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170914122914.14122-1-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1505375812-19037-3-git-send-email-benjamin.gaignard@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, tglx@linutronix.de, ludovic.barre@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 14, 2017 at 7:29 AM, Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> Hi everyone,
->
-> I recently came across a difference in behaviour of OF phandle parsing and
-> ACPI reference parsing, both of which can soon be accessed using
-> fwnode_property_get_reference_args.
->
-> The main change in this proposal touches OF, and specifically the change
-> is about using -ENODATA to tell that the phandle reference list entry that
-> was accessed does not exist. -ENOENT was used previously, but the same
-> error code was also used to tell that a phandle was empty, making it
-> impossible for the caller to figure out which of the two was the case.
->
-> I'm sending the set as RFC. In my limited testing I have found no ill
-> effects.
->
-> These patches are on top of linux-next.
->
-> Comments on the approach and the changes themselves would be most welcome.
+On Thu, Sep 14, 2017 at 09:56:52AM +0200, Benjamin Gaignard wrote:
+> 16 bits timers aren't accurate enough to be used as
+> clocksource, remove them from stm32f4 and stm32f7 devicetree.
 
-It's not really valid to both have a variable count (and hence need to
-retrieve it) and use blank phandle entries. The whole point of blank
-entries is to have a fixed length and know what each index corresponds
-too. Do you have an example where we hit this?
-
-Rob
+Do you really want to remove the description? The timers are disabled, aren't they?
