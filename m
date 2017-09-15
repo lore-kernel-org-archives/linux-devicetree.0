@@ -1,39 +1,28 @@
-From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 5/5] dt: watchdog: Document compatibility with JZ4780
-Date: Fri, 15 Sep 2017 21:20:40 +0200
-Message-ID: <20170915192040.27768-1-malat@debian.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/8] Add Renesas R8A77970/Eagle board support
+Date: Fri, 15 Sep 2017 22:43:18 +0300
+Message-ID: <20170915193718.359780292@cogentembedded.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Suggested-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
----
-Changes in v2:
-* Document the new compatible string
+Hello.
 
- Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+   Here's the set of 8 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20170915-v4.13' tag. I'm adding the device tree support for
+the R8A77970-based Eagle board. Already merged patches will not be reposted.
+The necessary SYS-DMAC, [H]SCIF, and EtherAVB bindings updates have been
+posted earlier.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-index e27763ef0049..1a56061bfb06 100644
---- a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-@@ -1,7 +1,7 @@
--Ingenic Watchdog Timer (WDT) Controller for JZ4740
-+Ingenic Watchdog Timer (WDT) Controller for JZ4740 & JZ4780
- 
- Required properties:
--compatible: "ingenic,jz4740-watchdog"
-+compatible: "ingenic,jz4740-watchdog" or "ingenic,jz4780-watchdog"
- reg: Register address and length for watchdog registers
- 
- Example:
--- 
-2.11.0
+[1/8] soc: renesas: rcar-sysc: add R8A77970 support
+[2/8] arm64: dts: renesas: initial R8A77970 SoC device tree
+[3/8] arm64: dts: renesas: r8a77970: add SYS-DMAC support
+[4/8] arm64: dts: renesas: r8a77970: add [H]SCIF support
+[5/8] arm64: dts: renesas: r8a77970: add EtherAVB support
+[6/8] arm64: renesas: document Eagle board bindings
+[7/8] arm64: dts: renesas: initial Eagle board device tree
+[8/8] arm64: dts: renesas: eagle: add EtherAVB support
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+WBR, Sergei
