@@ -1,106 +1,125 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v13 22/25] et8ek8: Add support for flash and lens devices
-Date: Fri, 15 Sep 2017 17:17:21 +0300
-Message-ID: <20170915141724.23124-23-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v13 23/25] ov5670: Add support for flash and lens devices
+Date: Fri, 15 Sep 2017 17:17:22 +0300
+Message-ID: <20170915141724.23124-24-sakari.ailus@linux.intel.com>
 References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915141724.23124-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
-
-From: Pavel Machek <pavel@ucw.cz>
 
 Parse async sub-devices by using
 v4l2_subdev_fwnode_reference_parse_sensor_common().
 
-These types devices aren't directly related to the sensor, but are
-nevertheless handled by the et8ek8 driver due to the relationship of these
-component to the main part of the camera module --- the sensor.
-
-[Sakari Ailus: Rename fwnode function, check for ret < 0 only.]
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- drivers/media/i2c/et8ek8/et8ek8_driver.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov5670.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/i2c/et8ek8/et8ek8_driver.c b/drivers/media/i2c/et8ek8/et8ek8_driver.c
-index c14f0fd6ded3..0ef1b8025935 100644
---- a/drivers/media/i2c/et8ek8/et8ek8_driver.c
-+++ b/drivers/media/i2c/et8ek8/et8ek8_driver.c
-@@ -34,10 +34,12 @@
- #include <linux/sort.h>
- #include <linux/v4l2-mediabus.h>
- 
-+#include <media/v4l2-async.h>
- #include <media/media-entity.h>
+diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
+index 6f7a1d6d2200..a791701fa2b9 100644
+--- a/drivers/media/i2c/ov5670.c
++++ b/drivers/media/i2c/ov5670.c
+@@ -18,6 +18,7 @@
+ #include <linux/pm_runtime.h>
  #include <media/v4l2-ctrls.h>
  #include <media/v4l2-device.h>
- #include <media/v4l2-subdev.h>
 +#include <media/v4l2-fwnode.h>
  
- #include "et8ek8_reg.h"
- 
-@@ -46,6 +48,7 @@
- #define ET8EK8_MAX_MSG		8
- 
- struct et8ek8_sensor {
-+	struct v4l2_async_notifier notifier;
- 	struct v4l2_subdev subdev;
+ #define OV5670_REG_CHIP_ID		0x300a
+ #define OV5670_CHIP_ID			0x005670
+@@ -1807,6 +1808,7 @@ static const struct ov5670_mode supported_modes[] = {
+ struct ov5670 {
+ 	struct v4l2_subdev sd;
  	struct media_pad pad;
- 	struct v4l2_mbus_framefmt format;
-@@ -1446,6 +1449,11 @@ static int et8ek8_probe(struct i2c_client *client,
- 	sensor->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 	sensor->subdev.internal_ops = &et8ek8_internal_ops;
++	struct v4l2_async_notifier notifier;
  
-+	ret = v4l2_async_notifier_parse_fwnode_sensor_common(
-+		&client->dev, &sensor->notifier);
-+	if (ret < 0)
-+		goto err_release;
+ 	struct v4l2_ctrl_handler ctrl_handler;
+ 	/* V4L2 Controls */
+@@ -2473,11 +2475,13 @@ static int ov5670_probe(struct i2c_client *client)
+ 		return -EINVAL;
+ 
+ 	ov5670 = devm_kzalloc(&client->dev, sizeof(*ov5670), GFP_KERNEL);
+-	if (!ov5670) {
+-		ret = -ENOMEM;
+-		err_msg = "devm_kzalloc() error";
+-		goto error_print;
+-	}
++	if (!ov5670)
++		return -ENOMEM;
 +
- 	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
- 	ret = media_entity_pads_init(&sensor->subdev.entity, 1, &sensor->pad);
- 	if (ret < 0) {
-@@ -1453,18 +1461,27 @@ static int et8ek8_probe(struct i2c_client *client,
- 		goto err_mutex;
++	ret = v4l2_async_notifier_parse_fwnode_sensor_common(
++		&client->dev, &ov5670->notifier);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&ov5670->sd, client, &ov5670_subdev_ops);
+@@ -2486,7 +2490,7 @@ static int ov5670_probe(struct i2c_client *client)
+ 	ret = ov5670_identify_module(ov5670);
+ 	if (ret) {
+ 		err_msg = "ov5670_identify_module() error";
+-		goto error_print;
++		goto error_release_notifier;
  	}
  
-+	ret = v4l2_async_subdev_notifier_register(&sensor->subdev,
-+						  &sensor->notifier);
-+	if (ret)
-+		goto err_entity;
-+
- 	ret = v4l2_async_register_subdev(&sensor->subdev);
- 	if (ret < 0)
--		goto err_entity;
-+		goto err_async;
+ 	mutex_init(&ov5670->mutex);
+@@ -2513,11 +2517,18 @@ static int ov5670_probe(struct i2c_client *client)
+ 		goto error_handler_free;
+ 	}
  
- 	dev_dbg(dev, "initialized!\n");
++	ret = v4l2_async_subdev_notifier_register(&ov5670->sd,
++						  &ov5670->notifier);
++	if (ret) {
++		err_msg = "can't register async notifier";
++		goto error_entity_cleanup;
++	}
++
+ 	/* Async register for subdev */
+ 	ret = v4l2_async_register_subdev(&ov5670->sd);
+ 	if (ret < 0) {
+ 		err_msg = "v4l2_async_register_subdev() error";
+-		goto error_entity_cleanup;
++		goto error_unregister_notifier;
+ 	}
+ 
+ 	ov5670->streaming = false;
+@@ -2533,6 +2544,9 @@ static int ov5670_probe(struct i2c_client *client)
  
  	return 0;
  
-+err_async:
-+	v4l2_async_notifier_unregister(&sensor->notifier);
- err_entity:
- 	media_entity_cleanup(&sensor->subdev.entity);
- err_mutex:
- 	mutex_destroy(&sensor->power_lock);
-+err_release:
-+	v4l2_async_notifier_release(&sensor->notifier);
++error_unregister_notifier:
++	v4l2_async_notifier_unregister(&ov5670->notifier);
++
+ error_entity_cleanup:
+ 	media_entity_cleanup(&ov5670->sd.entity);
+ 
+@@ -2542,7 +2556,8 @@ static int ov5670_probe(struct i2c_client *client)
+ error_mutex_destroy:
+ 	mutex_destroy(&ov5670->mutex);
+ 
+-error_print:
++error_release_notifier:
++	v4l2_async_notifier_release(&ov5670->notifier);
+ 	dev_err(&client->dev, "%s: %s %d\n", __func__, err_msg, ret);
+ 
  	return ret;
- }
+@@ -2554,6 +2569,8 @@ static int ov5670_remove(struct i2c_client *client)
+ 	struct ov5670 *ov5670 = to_ov5670(sd);
  
-@@ -1480,6 +1497,8 @@ static int __exit et8ek8_remove(struct i2c_client *client)
- 	}
- 
- 	v4l2_device_unregister_subdev(&sensor->subdev);
-+	v4l2_async_notifier_unregister(&sensor->notifier);
-+	v4l2_async_notifier_release(&sensor->notifier);
- 	device_remove_file(&client->dev, &dev_attr_priv_mem);
- 	v4l2_ctrl_handler_free(&sensor->ctrl_handler);
- 	v4l2_async_unregister_subdev(&sensor->subdev);
+ 	v4l2_async_unregister_subdev(sd);
++	v4l2_async_notifier_unregister(&ov5670->notifier);
++	v4l2_async_notifier_release(&ov5670->notifier);
+ 	media_entity_cleanup(&sd->entity);
+ 	v4l2_ctrl_handler_free(sd->ctrl_handler);
+ 	mutex_destroy(&ov5670->mutex);
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
