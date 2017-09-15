@@ -1,59 +1,120 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 0/8] ARM: dts: rockchip: add Utgard Mali nodes for some socs
-Date: Fri, 15 Sep 2017 11:18:04 +0200
-Message-ID: <20170915091812.13368-1-heiko@sntech.de>
+Subject: [PATCH v2 7/8] ARM: dts: rockchip: add gpu nodes on rk3066/rk3188
+Date: Fri, 15 Sep 2017 11:18:11 +0200
+Message-ID: <20170915091812.13368-8-heiko@sntech.de>
+References: <20170915091812.13368-1-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915091812.13368-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a mali-supply similar to the Midgard binding, the
-compatibles for 3 Rockchip socs and the nodes for these.
+The old Cortex-A9 socs use Mali400 GPUs with 4 pixel processors.
+This adds the core gpu nodes with the per-soc interrupts but sharing
+the core node.
 
-The rk3036 and rk3188 gpus were tested, on the boards that
-get their gpus enabled, using the current Lima resurrection
-project and were able to probe the gpus sucessfully and draw
-a nice red-triangle in an off-screen application.
+Rockchip SoCs use only one clock to supply the GPUs
 
-The only special thing Rockchip Malis do, is that all MMUs have
-a shared interrupt and all PPs also have a shared interrupt, but
-that works out well with the current binding.
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3066a.dtsi | 24 ++++++++++++++++++++++++
+ arch/arm/boot/dts/rk3188.dtsi  | 24 ++++++++++++++++++++++++
+ arch/arm/boot/dts/rk3xxx.dtsi  | 11 +++++++++++
+ 3 files changed, 59 insertions(+)
 
-
-changes in v2:
-- adapt to Rob's comment for the compatibles, not sure how I could miss
-  the long compatible list at the top in the first place :-)
-- add Rob's Ack for patch 2 and adapt styling to match the other properties
-- add power-domains as optional property
-
-
-The power-domains are missing from the actual devicetree patches for now,
-as the rk3036 does not have any and I just submitted power-domain support
-for rk3188 in a separate series. So while the rk3188 needs a power-domain
-it's driver is still in-flight :-)
-
-
-Heiko Stuebner (8):
-  dt-bindings: gpu: mali-utgard: Add Rockchip Utgard Malis
-  dt-bindings: gpu: mali-utgard: add optional supply regulator
-  dt-bindings: gpu: mali-utgard: add optional power-domain reference
-  ARM: dts: rockchip: add rk3036 gpu node
-  ARM: dts: rockchip: enable the gpu on rk3036-kylin boards
-  ARM: dts: rockchip: add rk322x gpu node
-  ARM: dts: rockchip: add gpu nodes on rk3066/rk3188
-  ARM: dts: rockchip: enable gpu on rk3188-radxarock
-
- .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 16 +++++++++++++++
- arch/arm/boot/dts/rk3036-kylin.dts                 |  5 +++++
- arch/arm/boot/dts/rk3036.dtsi                      | 19 +++++++++++++++++
- arch/arm/boot/dts/rk3066a.dtsi                     | 24 ++++++++++++++++++++++
- arch/arm/boot/dts/rk3188-radxarock.dts             |  4 ++++
- arch/arm/boot/dts/rk3188.dtsi                      | 24 ++++++++++++++++++++++
- arch/arm/boot/dts/rk322x.dtsi                      | 21 +++++++++++++++++++
- arch/arm/boot/dts/rk3xxx.dtsi                      | 11 ++++++++++
- 8 files changed, 124 insertions(+)
-
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index f50481fd8e5c..b76119dd5733 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -610,6 +610,30 @@
+ 	};
+ };
+ 
++&gpu {
++	compatible = "rockchip,rk3066-mali", "arm,mali-400";
++	interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "gp",
++			  "gpmmu",
++			  "pp0",
++			  "pp0mmu",
++			  "pp1",
++			  "pp1mmu",
++			  "pp2",
++			  "pp2mmu",
++			  "pp3",
++			  "pp3mmu";
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_xfer>;
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index 1399bc04ea77..9e24d0ffadac 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -553,6 +553,30 @@
+ 	interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
+ };
+ 
++&gpu {
++	compatible = "rockchip,rk3188-mali", "arm,mali-400";
++	interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "gp",
++			  "gpmmu",
++			  "pp0",
++			  "pp0mmu",
++			  "pp1",
++			  "pp1mmu",
++			  "pp2",
++			  "pp2mmu",
++			  "pp3",
++			  "pp3mmu";
++};
++
+ &i2c0 {
+ 	compatible = "rockchip,rk3188-i2c";
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 4aa6f60d6a22..49584b6a4195 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -117,6 +117,17 @@
+ 		clock-output-names = "xin24m";
+ 	};
+ 
++	gpu: gpu@10090000 {
++		compatible = "arm,mali-400";
++		reg = <0x10090000 0x10000>;
++		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
++		clock-names = "core", "bus";
++		assigned-clocks = <&cru ACLK_GPU>;
++		assigned-clock-rates = <100000000>;
++		resets = <&cru SRST_GPU>;
++		status = "disabled";
++	};
++
+ 	L2: l2-cache-controller@10138000 {
+ 		compatible = "arm,pl310-cache";
+ 		reg = <0x10138000 0x1000>;
 -- 
 2.14.1
 
