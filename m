@@ -1,60 +1,84 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 4/8] ARM: dts: rockchip: add rk3036 gpu node
-Date: Fri, 15 Sep 2017 11:18:08 +0200
-Message-ID: <20170915091812.13368-5-heiko@sntech.de>
-References: <20170915091812.13368-1-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915091812.13368-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
+Date: Fri, 15 Sep 2017 13:06:09 +0200
+Message-ID: <20170915110609.GL3924@verge.net.au>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
+ <20170915074551.GF3924@verge.net.au>
+ <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
+ <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The rk3036 uses a Mali400 GPU with one pixel processor.
-This adds the core node for it, which can be enabled
-in board devicetrees.
+On Fri, Sep 15, 2017 at 08:57:53AM +0000, Fabrizio Castro wrote:
+> Hi Simon, Geert,
+> 
+> > -----Original Message-----
+> > From: linux-renesas-soc-owner@vger.kernel.org [mailto:linux-renesas-soc-owner@vger.kernel.org] On Behalf Of Geert
+> > Uytterhoeven
+> > Sent: 15 September 2017 09:05
+> > To: Simon Horman <horms@verge.net.au>; Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Cc: Chris Paterson <Chris.Paterson2@renesas.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> > Magnus Damm <magnus.damm@gmail.com>; Russell King <linux@armlinux.org.uk>; devicetree@vger.kernel.org; Linux-Renesas
+> > <linux-renesas-soc@vger.kernel.org>; linux-arm-kernel@lists.infradead.org; Geert Uytterhoeven <geert+renesas@glider.be>
+> > Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
+> >
+> > Hi Simon, Fabrizio,
+> >
+> > On Fri, Sep 15, 2017 at 9:45 AM, Simon Horman <horms@verge.net.au> wrote:
+> > > On Wed, Sep 13, 2017 at 06:05:34PM +0100, Chris Paterson wrote:
+> > >> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > >>
+> > >> Add DT node for the Advanced Power Management Unit (APMU), add the
+> > >> second CPU core, and use "renesas,apmu" as "enable-method".
+> > >>
+> > >> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > >> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > >> ---
+> > >> This patch is based on renesas-devel-20170913-v4.13.
+> > >
+> > > Hi,
+> > >
+> > > with reference to "[PATCH v3 0/3] ARM: renesas: Enable SMP on R-Car E2"
+> > > is the CNTVOFF initialised in the boot loader of boards (in upstream)
+> > > for this SoC? If not I expect you will have trouble with the arch timer
+> > > on secondary CPU cores.
+> 
+> I can confirm that this patch relies on:
+> * "ARM: Add definition for monitor mode", and
+> * "ARM: shmobile: rcar-gen2: Make sure CNTVOFF is initialized on CA7/15 "
+> as the bootloader doesn't initialize CNTVOFF.
+> 
+> >
+> > Exactly my question.
+> >
+> > Fabrizio: Given your feedback on "[PATCH v3 0/3] ARM: renesas: Enable SMP on
+> > R-Car E2", I think SMP enablement on RZ/G1E has to be postponed until "ARM:
+> > shmobile: rcar-gen2: Make sure CNTVOFF is initialized on CA7/15" has been
+> > accepted upstream.
+> 
+> You are right, somehow we missed the comment made by Simon on Monday:
+> 
+> " I would like to deffer the third and last patch until v4.16 to avoid
+> an awkward branch dependency on the above - the branches are different
+> even though the tree is the same. Please resubmit this patch once the
+> above dependencies are present in an rc release, which at this stage
+> I expect to be v4.15-rc1."
+> 
+> Apologies for this, we will send this patch later on, once both patches have been
+> accepted upstream.
 
-Rockchip Mali GPUs use only one clock line for both bus and core.
+No problem, I will mark this one as deferred.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/rk3036.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> Simon, is this going to make the application of the remaining patches
+> problematic?  Please, let me (or Chris) know if you want us to rebase and
+> resend without this patch.
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 4916c65e0ace..5b084c0143ce 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -152,6 +152,25 @@
- 		};
- 	};
- 
-+	gpu: gpu@10090000 {
-+		compatible = "rockchip,rk3036-mali", "arm,mali-400";
-+		reg = <0x10090000 0x10000>;
-+		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "gp",
-+				  "gpmmu",
-+				  "pp0",
-+				  "pp0mmu";
-+		assigned-clocks = <&cru SCLK_GPU>;
-+		assigned-clock-rates = <100000000>;
-+		clocks = <&cru SCLK_GPU>, <&cru SCLK_GPU>;
-+		clock-names = "core", "bus";
-+		resets = <&cru SRST_GPU>;
-+		status = "disabled";
-+	};
-+
- 	vop: vop@10118000 {
- 		compatible = "rockchip,rk3036-vop";
- 		reg = <0x10118000 0x19c>;
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No, I don't think you need to rebase and repost due to this.
