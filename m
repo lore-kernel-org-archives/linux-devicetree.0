@@ -1,71 +1,43 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH] dt-bindings: RTC: merge ds1339 in ds1307 documentation
-Date: Fri, 15 Sep 2017 03:45:51 +0200
-Message-ID: <20170915014551.22664-2-alexandre.belloni@free-electrons.com>
-References: <20170915014551.22664-1-alexandre.belloni@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170915014551.22664-1-alexandre.belloni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rtc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: Re: [PATCH 1/5] dt-bindings: rockchip-thermal: Support the RV1108 SoC
+ compatible
+Date: Fri, 15 Sep 2017 09:49:11 +0800
+Message-ID: <12073627-41af-3480-6379-839e07f5e8f3@rock-chips.com>
+References: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
+ <1503570475-7850-2-git-send-email-rocky.hao@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1503570475-7850-2-git-send-email-rocky.hao@rock-chips.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Rocky Hao <rocky.hao@rock-chips.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, cl@rock-chips.com, william.wu@rock-chips.com, jay.xu@rock-chips.com, xxx@rock-chips.com, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Now that there is documentation for the ds1307 and compatible RTCs, merge
-the ds1339 documentation in it.
+Hi Rocky,
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- .../devicetree/bindings/rtc/dallas,ds1339.txt          | 18 ------------------
- Documentation/devicetree/bindings/rtc/rtc-ds1307.txt   |  6 ++++++
- 2 files changed, 6 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+在 2017年08月24日 18:27, Rocky Hao 写道:
+> Add a new compatible for thermal founding on RV1108 SoCs.
+>
+> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
+> ---
+>   Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> index e3a6234fb1ac..43d744e5305e 100644
+> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> @@ -2,6 +2,7 @@
+>   
+>   Required properties:
+>   - compatible : should be "rockchip,<name>-tsadc"
+> +   "rockchip,rv1108-tsadc": found on RV1108 SoCs
 
-diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-deleted file mode 100644
-index 916f57601a8f..000000000000
---- a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--* Dallas DS1339		I2C Serial Real-Time Clock
--
--Required properties:
--- compatible: Should contain "dallas,ds1339".
--- reg: I2C address for chip
--
--Optional properties:
--- trickle-resistor-ohms : Selected resistor for trickle charger
--	Values usable for ds1339 are 250, 2000, 4000
--	Should be given if trickle charger should be enabled
--- trickle-diode-disable : Do not use internal trickle charger diode
--	Should be given if internal trickle charger diode should be disabled
--Example:
--	ds1339: rtc@68 {
--		compatible = "dallas,ds1339";
--		trickle-resistor-ohms = <250>;
--		reg = <0x68>;
--	};
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-index d1a820e25cb9..2eacc17a9b8d 100644
---- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-@@ -26,6 +26,11 @@ Optional properties:
- - clock-output-names: From common clock binding to override the default output
-                       clock name
- - wakeup-source: Enables wake up of host system on alarm
-+- trickle-resistor-ohms : Selected resistor for trickle charger
-+	Values usable for ds1339 are 250, 2000, 4000
-+	Should be given if trickle charger should be enabled
-+- trickle-diode-disable : Do not use internal trickle charger diode
-+	Should be given if internal trickle charger diode should be disabled
- 
- Example:
- 	rtc1: ds1339@68 {
-@@ -33,5 +38,6 @@ Example:
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio4>;
- 		interrupts = <20 0>;
-+		trickle-resistor-ohms = <250>;
- 	};
- 
--- 
-2.14.1
+According to the order,  we should put the string after the 
+"rockchip,rk3399-tsadc"..., not here.
+>      "rockchip,rk3228-tsadc": found on RK3228 SoCs
+>      "rockchip,rk3288-tsadc": found on RK3288 SoCs
+>      "rockchip,rk3328-tsadc": found on RK3328 SoCs
