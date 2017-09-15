@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v13 12/25] v4l: async: Register sub-devices before calling bound callback
-Date: Fri, 15 Sep 2017 17:17:11 +0300
-Message-ID: <20170915141724.23124-13-sakari.ailus@linux.intel.com>
+Subject: [PATCH v13 13/25] v4l: async: Allow async notifier register call succeed with no subdevs
+Date: Fri, 15 Sep 2017 17:17:12 +0300
+Message-ID: <20170915141724.23124-14-sakari.ailus@linux.intel.com>
 References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
@@ -10,37 +10,47 @@ To: linux-media@vger.kernel.org
 Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Register the sub-device before calling the notifier's bound callback.
-Doing this the other way around is problematic as the struct v4l2_device
-has not assigned for the sub-device yet and may be required by the bound
-callback.
+The information on how many async sub-devices would be bindable to a
+notifier is typically dependent on information from platform firmware and
+it's not driver's business to be aware of that.
+
+Many V4L2 main drivers are perfectly usable (and useful) without async
+sub-devices and so if there aren't any around, just proceed call the
+notifier's complete callback immediately without registering the notifier
+itself.
+
+If a driver needs to check whether there are async sub-devices available,
+it can be done by inspecting the notifier's num_subdevs field which tells
+the number of async sub-devices.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/media/v4l2-core/v4l2-async.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/v4l2-core/v4l2-async.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index c35d04b9122f..9895b610e2a0 100644
+index 9895b610e2a0..4be2f16af051 100644
 --- a/drivers/media/v4l2-core/v4l2-async.c
 +++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -130,13 +130,13 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
- {
- 	int ret;
+@@ -170,14 +170,16 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+ 	struct v4l2_async_subdev *asd;
+ 	int i;
  
--	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
-+	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
- 	if (ret < 0)
- 		return ret;
+-	if (!v4l2_dev || !notifier->num_subdevs ||
+-	    notifier->num_subdevs > V4L2_MAX_SUBDEVS)
++	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
+ 		return -EINVAL;
  
--	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
-+	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
- 	if (ret < 0) {
--		v4l2_async_notifier_call_unbind(notifier, sd, asd);
-+		v4l2_device_unregister_subdev(sd);
- 		return ret;
- 	}
+ 	notifier->v4l2_dev = v4l2_dev;
+ 	INIT_LIST_HEAD(&notifier->waiting);
+ 	INIT_LIST_HEAD(&notifier->done);
+ 
++	if (!notifier->num_subdevs)
++		return v4l2_async_notifier_call_complete(notifier);
++
+ 	for (i = 0; i < notifier->num_subdevs; i++) {
+ 		asd = notifier->subdevs[i];
  
 -- 
 2.11.0
