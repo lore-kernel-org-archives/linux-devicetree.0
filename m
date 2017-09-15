@@ -1,236 +1,108 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 2/2] as3645a: Switch to fwnode property API
-Date: Fri, 15 Sep 2017 17:40:52 +0300
-Message-ID: <20170915144052.25903-3-sakari.ailus@linux.intel.com>
-References: <20170915144052.25903-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170915144052.25903-1-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, jacek.anaszewski@gmail.com, mika.westerberg@intel.com, rafael@kernel.org
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH 6/8] ARM: dts: iwg20m: Add SPI NOR support
+Date: Fri, 15 Sep 2017 15:12:04 +0000
+Message-ID: <TY1PR06MB070286FFE608AAB042B6E7DCB76C0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-7-git-send-email-chris.paterson2@renesas.com>
+ <20170915083517.GJ3924@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170915083517.GJ3924@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Switch the as3645a from OF to the fwnode property API. Also add ACPI
-support.
+Hello Simon,
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/leds/leds-as3645a.c | 81 +++++++++++++++++++++++++--------------------
- 1 file changed, 46 insertions(+), 35 deletions(-)
+> From: devicetree-owner@vger.kernel.org [mailto:devicetree-
+> owner@vger.kernel.org] On Behalf Of Simon Horman
+> Sent: 15 September 2017 09:35
+>=20
+> On Wed, Sep 13, 2017 at 06:05:39PM +0100, Chris Paterson wrote:
+> > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >
+> > Add support for the SPI NOR device used to boot up the system to the
+> > System on Module DT.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > ---
+> > This patch is based on renesas-devel-20170913-v4.13.
+> >
+> > This patch is dependant on:
+> > - "of: add vendor prefix for Silicon Storage Technology Inc."
+> > - "doc: dt: mtd: Add sst25vf016b to the list of supported chip names"
+> >
+> >
+> >  arch/arm/boot/dts/r8a7743-iwg20m.dtsi | 26
+> ++++++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> > b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> > index 4119737..75a8ca5 100644
+> > --- a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> > @@ -44,6 +44,11 @@
+> >  		function =3D "mmc";
+> >  	};
+> >
+> > +	qspi_pins: qspi {
+> > +		groups =3D "qspi_ctrl", "qspi_data2";
+> > +		function =3D "qspi";
+> > +	};
+> > +
+> >  	sdhi0_pins: sd0 {
+> >  		groups =3D "sdhi0_data4", "sdhi0_ctrl";
+> >  		function =3D "sdhi0";
+> > @@ -61,6 +66,27 @@
+> >  	status =3D "okay";
+> >  };
+> >
+> > +&qspi {
+> > +	pinctrl-0 =3D <&qspi_pins>;
+> > +	pinctrl-names =3D "default";
+> > +
+> > +	status =3D "okay";
+> > +
+> > +	/* WARNING - This device contains the bootloader. Handle with care.
+> */
+> > +	flash: flash@0 {
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <1>;
+> > +		compatible =3D "sst,sst25vf016b", "jedec,spi-nor";
+> > +		reg =3D <0>;
+> > +		spi-max-frequency =3D <50000000>;
+> > +		spi-tx-bus-width =3D <1>;
+> > +		spi-rx-bus-width =3D <1>;
+> > +		m25p,fast-read;
+> > +		spi-cpol;
+> > +		spi-cpha;
+> > +	};
+>=20
+> Does the device have partitions?
+> If so, should they be described here?
 
-diff --git a/drivers/leds/leds-as3645a.c b/drivers/leds/leds-as3645a.c
-index 605e0c64e974..2e73c3f818f1 100644
---- a/drivers/leds/leds-as3645a.c
-+++ b/drivers/leds/leds-as3645a.c
-@@ -25,7 +25,7 @@
- #include <linux/leds.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
--#include <linux/of.h>
-+#include <linux/property.h>
- #include <linux/slab.h>
- 
- #include <media/v4l2-flash-led-class.h>
-@@ -148,8 +148,8 @@ struct as3645a {
- 	struct v4l2_flash *vf;
- 	struct v4l2_flash *vfind;
- 
--	struct device_node *flash_node;
--	struct device_node *indicator_node;
-+	struct fwnode_handle *flash_node;
-+	struct fwnode_handle *indicator_node;
- 
- 	struct as3645a_config cfg;
- 
-@@ -492,30 +492,33 @@ static int as3645a_detect(struct as3645a *flash)
- 
- static int as3645a_parse_node(struct as3645a *flash,
- 			      struct as3645a_names *names,
--			      struct device_node *node)
-+			      struct fwnode_handle *fwnode)
- {
- 	struct as3645a_config *cfg = &flash->cfg;
--	struct device_node *child;
-+	struct fwnode_handle *child;
- 	const char *name;
-+	const char *str;
- 	int rval;
- 
--	for_each_child_of_node(node, child) {
-+	fwnode_for_each_child_node(fwnode, child) {
- 		u32 id = 0;
- 
--		of_property_read_u32(child, "reg", &id);
-+		fwnode_property_read_u32(
-+			child, is_of_node(child) ? "reg" : "led", &id);
- 
- 		switch (id) {
- 		case AS_LED_FLASH:
--			flash->flash_node = of_node_get(child);
-+			flash->flash_node = child;
- 			break;
- 		case AS_LED_INDICATOR:
--			flash->indicator_node = of_node_get(child);
-+			flash->indicator_node = child;
- 			break;
- 		default:
- 			dev_warn(&flash->client->dev,
- 				 "unknown LED %u encountered, ignoring\n", id);
- 			break;
- 		}
-+		fwnode_handle_get(child);
- 	}
- 
- 	if (!flash->flash_node) {
-@@ -523,14 +526,18 @@ static int as3645a_parse_node(struct as3645a *flash,
- 		return -ENODEV;
- 	}
- 
--	rval = of_property_read_string(flash->flash_node, "label", &name);
--	if (!rval)
-+	rval = fwnode_property_read_string(flash->flash_node, "label", &name);
-+	if (!rval) {
- 		strlcpy(names->flash, name, sizeof(names->flash));
--	else
-+	} else if (is_of_node(fwnode)) {
- 		snprintf(names->flash, sizeof(names->flash),
--			 "%s:flash", node->name);
-+			 "%s:flash", to_of_node(fwnode)->name);
-+	} else {
-+		dev_err(&flash->client->dev, "flash node has no label!\n");
-+		return -EINVAL;
-+	}
- 
--	rval = of_property_read_u32(flash->flash_node, "flash-timeout-us",
-+	rval = fwnode_property_read_u32(flash->flash_node, "flash-timeout-us",
- 				    &cfg->flash_timeout_us);
- 	if (rval < 0) {
- 		dev_err(&flash->client->dev,
-@@ -538,7 +545,7 @@ static int as3645a_parse_node(struct as3645a *flash,
- 		goto out_err;
- 	}
- 
--	rval = of_property_read_u32(flash->flash_node, "flash-max-microamp",
-+	rval = fwnode_property_read_u32(flash->flash_node, "flash-max-microamp",
- 				    &cfg->flash_max_ua);
- 	if (rval < 0) {
- 		dev_err(&flash->client->dev,
-@@ -546,7 +553,7 @@ static int as3645a_parse_node(struct as3645a *flash,
- 		goto out_err;
- 	}
- 
--	rval = of_property_read_u32(flash->flash_node, "led-max-microamp",
-+	rval = fwnode_property_read_u32(flash->flash_node, "led-max-microamp",
- 				    &cfg->assist_max_ua);
- 	if (rval < 0) {
- 		dev_err(&flash->client->dev,
-@@ -554,10 +561,10 @@ static int as3645a_parse_node(struct as3645a *flash,
- 		goto out_err;
- 	}
- 
--	of_property_read_u32(flash->flash_node, "voltage-reference",
-+	fwnode_property_read_u32(flash->flash_node, "voltage-reference",
- 			     &cfg->voltage_reference);
- 
--	of_property_read_u32(flash->flash_node, "ams,input-max-microamp",
-+	fwnode_property_read_u32(flash->flash_node, "ams,input-max-microamp",
- 			     &cfg->peak);
- 	cfg->peak = AS_PEAK_mA_TO_REG(cfg->peak);
- 
-@@ -567,14 +574,18 @@ static int as3645a_parse_node(struct as3645a *flash,
- 		goto out_err;
- 	}
- 
--	rval = of_property_read_string(flash->indicator_node, "label", &name);
--	if (!rval)
-+	rval = fwnode_property_read_string(flash->indicator_node, "label", &name);
-+	if (!rval) {
- 		strlcpy(names->indicator, name, sizeof(names->indicator));
--	else
-+	} else if (is_of_node(fwnode)) {
- 		snprintf(names->indicator, sizeof(names->indicator),
--			 "%s:indicator", node->name);
-+			 "%s:indicator", to_of_node(fwnode)->name);
-+	} else {
-+		dev_err(&flash->client->dev, "flash node has no label!\n");
-+		return -EINVAL;
-+	}
- 
--	rval = of_property_read_u32(flash->indicator_node, "led-max-microamp",
-+	rval = fwnode_property_read_u32(flash->indicator_node, "led-max-microamp",
- 				    &cfg->indicator_max_ua);
- 	if (rval < 0) {
- 		dev_err(&flash->client->dev,
-@@ -585,8 +596,8 @@ static int as3645a_parse_node(struct as3645a *flash,
- 	return 0;
- 
- out_err:
--	of_node_put(flash->flash_node);
--	of_node_put(flash->indicator_node);
-+	fwnode_handle_put(flash->flash_node);
-+	fwnode_handle_put(flash->indicator_node);
- 
- 	return rval;
- }
-@@ -667,14 +678,14 @@ static int as3645a_v4l2_setup(struct as3645a *flash)
- 	strlcpy(cfgind.dev_name, flash->iled_cdev.name, sizeof(cfg.dev_name));
- 
- 	flash->vf = v4l2_flash_init(
--		&flash->client->dev, of_fwnode_handle(flash->flash_node),
--		&flash->fled, NULL, &cfg);
-+		&flash->client->dev, flash->flash_node, &flash->fled, NULL,
-+		&cfg);
- 	if (IS_ERR(flash->vf))
- 		return PTR_ERR(flash->vf);
- 
- 	flash->vfind = v4l2_flash_indicator_init(
--		&flash->client->dev, of_fwnode_handle(flash->indicator_node),
--		&flash->iled_cdev, &cfgind);
-+		&flash->client->dev, flash->indicator_node, &flash->iled_cdev,
-+		&cfgind);
- 	if (IS_ERR(flash->vfind)) {
- 		v4l2_flash_release(flash->vf);
- 		return PTR_ERR(flash->vfind);
-@@ -689,7 +700,7 @@ static int as3645a_probe(struct i2c_client *client)
- 	struct as3645a *flash;
- 	int rval;
- 
--	if (client->dev.of_node == NULL)
-+	if (!dev_fwnode(&client->dev))
- 		return -ENODEV;
- 
- 	flash = devm_kzalloc(&client->dev, sizeof(*flash), GFP_KERNEL);
-@@ -698,7 +709,7 @@ static int as3645a_probe(struct i2c_client *client)
- 
- 	flash->client = client;
- 
--	rval = as3645a_parse_node(flash, &names, client->dev.of_node);
-+	rval = as3645a_parse_node(flash, &names, dev_fwnode(&client->dev));
- 	if (rval < 0)
- 		return rval;
- 
-@@ -730,8 +741,8 @@ static int as3645a_probe(struct i2c_client *client)
- 	mutex_destroy(&flash->mutex);
- 
- out_put_nodes:
--	of_node_put(flash->flash_node);
--	of_node_put(flash->indicator_node);
-+	fwnode_handle_put(flash->flash_node);
-+	fwnode_handle_put(flash->indicator_node);
- 
- 	return rval;
- }
-@@ -749,8 +760,8 @@ static int as3645a_remove(struct i2c_client *client)
- 
- 	mutex_destroy(&flash->mutex);
- 
--	of_node_put(flash->flash_node);
--	of_node_put(flash->indicator_node);
-+	fwnode_handle_put(flash->flash_node);
-+	fwnode_handle_put(flash->indicator_node);
- 
- 	return 0;
- }
--- 
-2.11.0
+We aren't confident that all devices will come with the same partitions, so=
+ decided not to add any here.
 
+Kind regards, Chris
+
+>=20
+> > +};
+> > +
+> >  &sdhi0 {
+> >  	pinctrl-0 =3D <&sdhi0_pins>;
+> >  	pinctrl-names =3D "default";
+> > --
+> > 1.9.1
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in =
+the
+> body of a message to majordomo@vger.kernel.org More majordomo info at
+> http://vger.kernel.org/majordomo-info.html
