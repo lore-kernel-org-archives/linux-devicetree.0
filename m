@@ -1,46 +1,55 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH 1/5] dt-bindings: Explicitely mark Exynos HDMI DDC node as
- deprecated
-Date: Fri, 15 Sep 2017 11:11:19 +0200
-Message-ID: <1505466683-32148-2-git-send-email-m.szyprowski@samsung.com>
-References: <1505466683-32148-1-git-send-email-m.szyprowski@samsung.com>
-        <CGME20170915091139eucas1p2d3ee5da70946b4f377242642af117635@eucas1p2.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1505466683-32148-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 1/8] dt-bindings: gpu: mali-utgard: Add Rockchip Utgard Malis
+Date: Fri, 15 Sep 2017 11:18:05 +0200
+Message-ID: <20170915091812.13368-2-heiko@sntech.de>
+References: <20170915091812.13368-1-heiko@sntech.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915091812.13368-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 2b7681326dc2 ("drm/exynos: hdmi: remove the i2c drivers and use")
-merged to v3.15 kernel added a required 'ddc' property to Exynos HDMI
-device tree bindings, which should point to i2c bus used for handling DDC
-(mainly reading display's EDID information). Since that commit
-separate node with "samsung,exynos4210-hdmiddc" compatible is no longer
-needed, so mark it finally as deprecated.
+Some (older or lower power) Rockchip socs use Utgard-based Mali-GPUs.
+So add the necessary compatibles for them. As the setup is the same for
+all of them (needing only the additional reset line), they get added in
+a somewhat condensed form, to not inflate the document unnecessary.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt b/Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt
-index 41eee971562b..6f807e523ccb 100644
---- a/Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt
-+++ b/Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt
-@@ -1,9 +1,12 @@
- Device-Tree bindings for hdmiddc driver
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index b4ebd56d03f3..24aacafb2594 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -13,6 +13,10 @@ Required properties:
+       + allwinner,sun50i-h5-mali
+       + amlogic,meson-gxbb-mali
+       + amlogic,meson-gxl-mali
++      + rockchip,rk3036-mali
++      + rockchip,rk3066-mali
++      + rockchip,rk3188-mali
++      + rockchip,rk3228-mali
+       + stericsson,db8500-mali
  
-+This binding is deprecated. Please use 'ddc' property in Exynos HDMI
-+node (see exynos_hdmi.txt for details).
+   - reg: Physical base address and length of the GPU registers
+@@ -63,6 +67,10 @@ to specify one more vendor-specific compatible, among:
+     Required properties:
+       * resets: phandle to the reset line for the GPU
+ 
++  - Rockchip variants:
++    Required properties:
++      * resets: phandle to the reset line for the GPU
 +
- Required properties:
- - compatible: value should be one of the following
- 	1) "samsung,exynos5-hdmiddc" <DEPRECATED>
--	2) "samsung,exynos4210-hdmiddc"
-+	2) "samsung,exynos4210-hdmiddc" <DEPRECATED>
- 
- - reg: I2C address of the hdmiddc device.
- 
+   - stericsson,db8500-mali
+     Required properties:
+       * interrupt-names and interrupts:
 -- 
-1.9.1
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
