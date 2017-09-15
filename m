@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 7/8] ARM: dts: rockchip: add gpu nodes on rk3066/rk3188
-Date: Fri, 15 Sep 2017 11:18:11 +0200
-Message-ID: <20170915091812.13368-8-heiko@sntech.de>
+Subject: [PATCH v2 2/8] dt-bindings: gpu: mali-utgard: add optional supply regulator
+Date: Fri, 15 Sep 2017 11:18:06 +0200
+Message-ID: <20170915091812.13368-3-heiko@sntech.de>
 References: <20170915091812.13368-1-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170915091812.13368-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
@@ -10,111 +10,31 @@ To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The old Cortex-A9 socs use Mali400 GPUs with 4 pixel processors.
-This adds the core gpu nodes with the per-soc interrupts but sharing
-the core node.
-
-Rockchip SoCs use only one clock to supply the GPUs
+Mali GPUs have a separate supplying regulator in a lot of socs,
+so describe a mali-supply property. The already described
+operating points will likely also need access to this regulator.
 
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3066a.dtsi | 24 ++++++++++++++++++++++++
- arch/arm/boot/dts/rk3188.dtsi  | 24 ++++++++++++++++++++++++
- arch/arm/boot/dts/rk3xxx.dtsi  | 11 +++++++++++
- 3 files changed, 59 insertions(+)
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index f50481fd8e5c..b76119dd5733 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -610,6 +610,30 @@
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index 24aacafb2594..25ebf4140e69 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -44,6 +44,10 @@ Optional properties:
+     Memory region to allocate from, as defined in
+     Documentation/devicetree/bindi/reserved-memory/reserved-memory.txt
  
-+&gpu {
-+	compatible = "rockchip,rk3066-mali", "arm,mali-400";
-+	interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "gp",
-+			  "gpmmu",
-+			  "pp0",
-+			  "pp0mmu",
-+			  "pp1",
-+			  "pp1mmu",
-+			  "pp2",
-+			  "pp2mmu",
-+			  "pp3",
-+			  "pp3mmu";
-+};
++  - mali-supply:
++    Phandle to regulator for the Mali device, as defined in
++    Documentation/devicetree/bindings/regulator/regulator.txt for details.
 +
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_xfer>;
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index 1399bc04ea77..9e24d0ffadac 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -553,6 +553,30 @@
- 	interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
- };
- 
-+&gpu {
-+	compatible = "rockchip,rk3188-mali", "arm,mali-400";
-+	interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "gp",
-+			  "gpmmu",
-+			  "pp0",
-+			  "pp0mmu",
-+			  "pp1",
-+			  "pp1mmu",
-+			  "pp2",
-+			  "pp2mmu",
-+			  "pp3",
-+			  "pp3mmu";
-+};
-+
- &i2c0 {
- 	compatible = "rockchip,rk3188-i2c";
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 4aa6f60d6a22..49584b6a4195 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -117,6 +117,17 @@
- 		clock-output-names = "xin24m";
- 	};
- 
-+	gpu: gpu@10090000 {
-+		compatible = "arm,mali-400";
-+		reg = <0x10090000 0x10000>;
-+		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
-+		clock-names = "core", "bus";
-+		assigned-clocks = <&cru ACLK_GPU>;
-+		assigned-clock-rates = <100000000>;
-+		resets = <&cru SRST_GPU>;
-+		status = "disabled";
-+	};
-+
- 	L2: l2-cache-controller@10138000 {
- 		compatible = "arm,pl310-cache";
- 		reg = <0x10138000 0x1000>;
+   - operating-points-v2:
+     Operating Points for the GPU, as defined in
+     Documentation/devicetree/bindings/opp/opp.txt
 -- 
 2.14.1
 
