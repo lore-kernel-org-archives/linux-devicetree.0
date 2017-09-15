@@ -1,38 +1,43 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v13 08/25] omap3isp: Fix check for our own sub-devices
-Date: Fri, 15 Sep 2017 17:17:07 +0300
-Message-ID: <20170915141724.23124-9-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v13 09/25] omap3isp: Print the name of the entity where no source pads could be found
+Date: Fri, 15 Sep 2017 17:17:08 +0300
+Message-ID: <20170915141724.23124-10-sakari.ailus@linux.intel.com>
 References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915141724.23124-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We only want to link sub-devices that were bound to the async notifier the
-isp driver registered but there may be other sub-devices in the
-v4l2_device as well. Check for the correct async notifier.
+If no source pads are found in an entity, print the name of the entity.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 ---
- drivers/media/platform/omap3isp/isp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/omap3isp/isp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-index a546cf774d40..3b1a9cd0e591 100644
+index 3b1a9cd0e591..9a694924e46e 100644
 --- a/drivers/media/platform/omap3isp/isp.c
 +++ b/drivers/media/platform/omap3isp/isp.c
-@@ -2155,7 +2155,7 @@ static int isp_subdev_notifier_complete(struct v4l2_async_notifier *async)
- 		return ret;
+@@ -1669,8 +1669,8 @@ static int isp_link_entity(
+ 			break;
+ 	}
+ 	if (i == entity->num_pads) {
+-		dev_err(isp->dev, "%s: no source pad in external entity\n",
+-			__func__);
++		dev_err(isp->dev, "%s: no source pad in external entity %s\n",
++			__func__, entity->name);
+ 		return -EINVAL;
+ 	}
  
- 	list_for_each_entry(sd, &v4l2_dev->subdevs, list) {
--		if (!sd->asd)
-+		if (sd->notifier != &isp->notifier)
- 			continue;
- 
- 		ret = isp_link_entity(isp, &sd->entity,
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
