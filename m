@@ -1,25 +1,66 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 3/3] powerpc/5200: dts: digsy_mtc.dts: fix rv3029
- compatible
-Date: Fri, 15 Sep 2017 09:13:26 +0200
-Message-ID: <20170915091326.4b93bde1@crub>
-References: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
-        <20170915020004.24272-3-alexandre.belloni@free-electrons.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 04/11] soc: renesas: rcar-sysc: add R8A77970 support
+Date: Fri, 15 Sep 2017 09:25:05 +0200
+Message-ID: <20170915072504.GA3924@verge.net.au>
+References: <20170912210518.203740259@cogentembedded.com>
+ <CAMuHMdXLbg2WwtWvG+zBa5MOT3qXr2Fv-U4AJ0=eLfE2VG1LKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170915020004.24272-3-alexandre.belloni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXLbg2WwtWvG+zBa5MOT3qXr2Fv-U4AJ0=eLfE2VG1LKg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Sep 2017 04:00:04 +0200
-Alexandre Belloni alexandre.belloni@free-electrons.com wrote:
+On Wed, Sep 13, 2017 at 10:36:23AM +0200, Geert Uytterhoeven wrote:
+> Hi Sergei,
+> 
+> On Tue, Sep 12, 2017 at 10:37 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> > Add support for R-Car V3M (R8A77970) SoC power areas to the R-Car SYSC
+> > driver.
+> >
+> > Based on the original (and large) patch by Daisuke Matsushita
+> > <daisuke.matsushita.ns@hitachi.com>.
+> >
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> > --- /dev/null
+> > +++ renesas/drivers/soc/renesas/r8a77970-sysc.c
+> > @@ -0,0 +1,39 @@
+> 
+> > +#include <linux/bug.h>
+> 
+> I think this include is no longer needed since commit c7acec713d14c6ce
+> ("kernel.h: handle pointers to arrays better in container_of()").
+> 
+> > +static const struct rcar_sysc_area r8a77970_areas[] __initconst = {
+> 
+> > +       { "a3ir",       0x180, 0, R8A77970_PD_A3IR,     R8A77970_PD_ALWAYS_ON },
+> > +       { "a2ir0",      0x400, 0, R8A77970_PD_A2IR0,    R8A77970_PD_ALWAYS_ON },
+> > +       { "a2ir1",      0x400, 1, R8A77970_PD_A2IR1,    R8A77970_PD_A2IR0 },
+> > +       { "a2ir2",      0x400, 2, R8A77970_PD_A2IR2,    R8A77970_PD_A2IR0 },
+> > +       { "a2ir3",      0x400, 3, R8A77970_PD_A2IR3,    R8A77970_PD_A2IR0 },
+> > +       { "a2sc0",      0x400, 4, R8A77970_PD_A2SC0,    R8A77970_PD_ALWAYS_ON },
+> > +       { "a2sc1",      0x400, 5, R8A77970_PD_A2SC1,    R8A77970_PD_A2SC0 },
+> 
+> According to Figure 9.2(b) "Power domain structure (R-Car V3M)" and Table 9.4
+> "Power domains", all of A2IR[0-3] and A2SC[01] are direct children of A3IR.
+> 
+> BTW, the bit indices "4" resp. "5" for A2SC[01] don't match Section 9.2.5
+> "Power Control Registers for A2IR" (which uses "0" resp. "1"), but I assume
+> that's just a typo in the datasheet, as those would conflict with A2IR[01], and
+> the would conflict with the documentation for other R-Car Gen3 SoCs.
+> 
+> With the above fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->The proper compatible for rv3029 is microcrystal,rv3029.
->
->Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Sergei,
 
-Acked-by: Anatolij Gustschin <agust@denx.de>
+please address Geert's review and repost when you are ready.
+I believe patches 1-3 of this series have been applied.
+I have marked patches 4 (this one) onwards as "Changes Requested"
+indicating that I expect all those patches to be reposted when you are ready.
