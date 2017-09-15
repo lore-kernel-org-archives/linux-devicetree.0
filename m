@@ -1,86 +1,616 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: Re: [PATCH 2/5] thermal: rockchip: Support the RV1108 SoC in thermal
- driver
-Date: Fri, 15 Sep 2017 10:10:03 +0800
-Message-ID: <341e8e9b-21c7-f418-b744-8c18737cb026@rock-chips.com>
-References: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
- <1503570475-7850-3-git-send-email-rocky.hao@rock-chips.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: dac: ds4422/ds4424 dac driver
+Date: Thu, 14 Sep 2017 19:23:08 -0700
+Message-ID: <20170914192308.341199ff@archlinux>
+References: <20170914202449.31283-1-Ismail.Kose@maximintegrated.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1503570475-7850-3-git-send-email-rocky.hao@rock-chips.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rocky Hao <rocky.hao@rock-chips.com>
-Cc: mark.rutland@arm.com, huangtao@rock-chips.com, heiko@sntech.de, devicetree@vger.kernel.org, catalin.marinas@arm.com, shawn.lin@rock-chips.com, linux-pm@vger.kernel.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, edubezval@gmail.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, william.wu@rock-chips.com, rui.zhang@intel.com, jay.xu@rock-chips.com, xxx@rock-chips.com, cl@rock-chips.com, wxt@rock-chips.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170914202449.31283-1-Ismail.Kose@maximintegrated.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ismail Kose <Ismail.Kose@maximintegrated.com>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, vilhelm.gray@gmail.com, linus.walleij@linaro.org, jeff.dagenais@gmail.com, fabrice.gasnier@st.com, gwenhael.goavec-merou@trabucayre.com, peda@axentia.se, maxime.roussinbelanger@gmail.com, mike.looijmans@topic.nl, ihkose@gmail.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9ja3ksCgrlnKggMjAxN+W5tDA45pyIMjTml6UgMTg6MjcsIFJvY2t5IEhhbyDlhpnpgZM6
-Cj4gUlYxMTA4IFNPQyBoYXMgb25lIFRlbXBlcmF0dXJlIFNlbnNvciBmb3IgQ1BVLgo+Cj4gU2ln
-bmVkLW9mZi1ieTogUm9ja3kgSGFvIDxyb2NreS5oYW9Acm9jay1jaGlwcy5jb20+Cj4gLS0tCj4g
-ICBkcml2ZXJzL3RoZXJtYWwvcm9ja2NoaXBfdGhlcm1hbC5jIHwgNjcgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysKPiAgIDEgZmlsZSBjaGFuZ2VkLCA2NyBpbnNlcnRpb25z
-KCspCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy90aGVybWFsL3JvY2tjaGlwX3RoZXJtYWwuYyBi
-L2RyaXZlcnMvdGhlcm1hbC9yb2NrY2hpcF90aGVybWFsLmMKPiBpbmRleCA5ZGEzZTE4MTkyMTAu
-LjI5OWE4YWRlNzFmYSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3RoZXJtYWwvcm9ja2NoaXBfdGhl
-cm1hbC5jCj4gKysrIGIvZHJpdmVycy90aGVybWFsL3JvY2tjaGlwX3RoZXJtYWwuYwo+IEBAIC0y
-NDIsNiArMjQyLDQ1IEBAIHN0cnVjdCB0c2FkY190YWJsZSB7Cj4gICAJaW50IHRlbXA7Cj4gICB9
-Owo+ICAgCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgdHNhZGNfdGFibGUgcnYxMTA4X3RhYmxlW10g
-PSB7Cj4gKwl7MCwgLTQwMDAwfSwKPiArCXszNzQsIC00MDAwMH0sCj4gKwl7MzgyLCAtMzUwMDB9
-LAo+ICsJezM4OSwgLTMwMDAwfSwKPiArCXszOTcsIC0yNTAwMH0sCj4gKwl7NDA1LCAtMjAwMDB9
-LAo+ICsJezQxMywgLTE1MDAwfSwKPiArCXs0MjEsIC0xMDAwMH0sCj4gKwl7NDI5LCAtNTAwMH0s
-Cj4gKwl7NDM2LCAwfSwKPiArCXs0NDQsIDUwMDB9LAo+ICsJezQ1MiwgMTAwMDB9LAo+ICsJezQ2
-MCwgMTUwMDB9LAo+ICsJezQ2OCwgMjAwMDB9LAo+ICsJezQ3NiwgMjUwMDB9LAo+ICsJezQ4Mywg
-MzAwMDB9LAo+ICsJezQ5MSwgMzUwMDB9LAo+ICsJezQ5OSwgNDAwMDB9LAo+ICsJezUwNywgNDUw
-MDB9LAo+ICsJezUxNSwgNTAwMDB9LAo+ICsJezUyMywgNTUwMDB9LAo+ICsJezUzMSwgNjAwMDB9
-LAo+ICsJezUzOSwgNjUwMDB9LAo+ICsJezU0NywgNzAwMDB9LAo+ICsJezU1NSwgNzUwMDB9LAo+
-ICsJezU2MiwgODAwMDB9LAo+ICsJezU3MCwgODUwMDB9LAo+ICsJezU3OCwgOTAwMDB9LAo+ICsJ
-ezU4NiwgOTUwMDB9LAo+ICsJezU5NCwgMTAwMDAwfSwKPiArCXs2MDIsIDEwNTAwMH0sCj4gKwl7
-NjEwLCAxMTAwMDB9LAo+ICsJezYxOCwgMTE1MDAwfSwKPiArCXs2MjYsIDEyMDAwMH0sCj4gKwl7
-NjM0LCAxMjUwMDB9LAo+ICsJe1RTQURDVjJfREFUQV9NQVNLLCAxMjUwMDB9LAo+ICt9Owo+ICsK
-CiBGcm9tIHRoZSBSVjExMDggVFJNIHNhaWQsICB0aGlzIHRhYmxlIHdhcyB1c2VkIGZvciAgdGhl
-IG5lZ2F0aXZlIAp0ZW1wZXJhdHVyZSBjb2VmZmljaWVudC4KQnV0IHRoZSBkZWZhdWx0IHRhYmxl
-IGlzIHBvc2l0aXZlIHRlbXBlcmF0dXJlIGNvZWZmaWNpZW50LCB3aHk/CkkgdGhpbmsgeW91IGRv
-bid0IG5lZWQgdG8gdXNlIHRoZSBuZWdhdGl2ZSB0ZW1wZXJhdHVyZSBjb2VmZmljaWVudC4KCj4g
-ICBzdGF0aWMgY29uc3Qgc3RydWN0IHRzYWRjX3RhYmxlIHJrMzIyOF9jb2RlX3RhYmxlW10gPSB7
-Cj4gICAJezAsIC00MDAwMH0sCj4gICAJezU4OCwgLTQwMDAwfSwKPiBAQCAtNzc5LDYgKzgxOCwz
-MCBAQCBzdGF0aWMgdm9pZCBya190c2FkY3YyX3RzaHV0X21vZGUoaW50IGNobiwgdm9pZCBfX2lv
-bWVtICpyZWdzLAo+ICAgCXdyaXRlbF9yZWxheGVkKHZhbCwgcmVncyArIFRTQURDVjJfSU5UX0VO
-KTsKPiAgIH0KPiAgIAo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJvY2tjaGlwX3RzYWRjX2NoaXAg
-cnYxMTA4X3RzYWRjX2RhdGEgPSB7Cj4gKwkuY2huX2lkW1NFTlNPUl9DUFVdID0gMCwgLyogY3B1
-IHNlbnNvciBpcyBjaGFubmVsIDAgKi8KPiArCS5jaG5fbnVtID0gMSwgLyogb25lIGNoYW5uZWwg
-Zm9yIHRzYWRjICovCj4gKwo+ICsJLnRzaHV0X21vZGUgPSBUU0hVVF9NT0RFX0dQSU8sIC8qIGRl
-ZmF1bHQgVFNIVVQgdmlhIEdQSU8gZ2l2ZSBQTUlDICovCj4gKwkudHNodXRfcG9sYXJpdHkgPSBU
-U0hVVF9MT1dfQUNUSVZFLCAvKiBkZWZhdWx0IFRTSFVUIExPVyBBQ1RJVkUgKi8KPiArCS50c2h1
-dF90ZW1wID0gOTUwMDAsCj4gKwo+ICsJLmluaXRpYWxpemUgPSBya190c2FkY3YyX2luaXRpYWxp
-emUsCj4gKwkuaXJxX2FjayA9IHJrX3RzYWRjdjNfaXJxX2FjaywKPiArCS5jb250cm9sID0gcmtf
-dHNhZGN2M19jb250cm9sLAoKSWYgeW91IHdpbGwgdXNlIHRoZSBwb3NpdGl2ZSB0ZW1wZXJhdHVy
-ZSBjb2VmZmljaWVudCwgd2UgbmVlZCBjaGFuZ2UgaXQuCgouY29udHJvbCA9IHJrX3RzYWRjdjJf
-Y29udHJvbCwKCgoKPiArCS5nZXRfdGVtcCA9IHJrX3RzYWRjdjJfZ2V0X3RlbXAsCj4gKwkuc2V0
-X2FsYXJtX3RlbXAgPSBya190c2FkY3YyX2FsYXJtX3RlbXAsCj4gKwkuc2V0X3RzaHV0X3RlbXAg
-PSBya190c2FkY3YyX3RzaHV0X3RlbXAsCj4gKwkuc2V0X3RzaHV0X21vZGUgPSBya190c2FkY3Yy
-X3RzaHV0X21vZGUsCj4gKwo+ICsJLnRhYmxlID0gewo+ICsJCS5pZCA9IHJ2MTEwOF90YWJsZSwK
-PiArCQkubGVuZ3RoID0gQVJSQVlfU0laRShydjExMDhfdGFibGUpLAo+ICsJCS5kYXRhX21hc2sg
-PSBUU0FEQ1YyX0RBVEFfTUFTSywKPiArCQkubW9kZSA9IEFEQ19JTkNSRU1FTlQsCgpEaXR0bwoK
-LUNhZXNhcgoKCj4gKwl9LAo+ICt9Owo+ICsKPiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgcm9ja2No
-aXBfdHNhZGNfY2hpcCByazMyMjhfdHNhZGNfZGF0YSA9IHsKPiAgIAkuY2huX2lkW1NFTlNPUl9D
-UFVdID0gMCwgLyogY3B1IHNlbnNvciBpcyBjaGFubmVsIDAgKi8KPiAgIAkuY2huX251bSA9IDEs
-IC8qIG9uZSBjaGFubmVsIGZvciB0c2FkYyAqLwo+IEBAIC05MjgsNiArOTkxLDEwIEBAIHN0YXRp
-YyB2b2lkIHJrX3RzYWRjdjJfdHNodXRfbW9kZShpbnQgY2huLCB2b2lkIF9faW9tZW0gKnJlZ3Ms
-Cj4gICAKPiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX3JvY2tjaGlwX3Ro
-ZXJtYWxfbWF0Y2hbXSA9IHsKPiAgIAl7Cj4gKwkJLmNvbXBhdGlibGUgPSAicm9ja2NoaXAscnYx
-MTA4LXRzYWRjIiwKPiArCQkuZGF0YSA9ICh2b2lkICopJnJ2MTEwOF90c2FkY19kYXRhLAo+ICsJ
-fSwKPiArCXsKPiAgIAkJLmNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMjI4LXRzYWRjIiwKPiAg
-IAkJLmRhdGEgPSAodm9pZCAqKSZyazMyMjhfdHNhZGNfZGF0YSwKPiAgIAl9LAoKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, 14 Sep 2017 13:24:49 -0700
+Ismail Kose <Ismail.Kose@maximintegrated.com> wrote:
+
+> From: "Ismail H. Kose" <ihkose@gmail.com>
+> 
+> This patch provides an iio device driver for DS4422/DS4424 chips that support
+> two/four channel 7-bit Sink/Source Current DAC.
+> 
+> The driver supports device tree and platform files for the configurations.
+
+So silly question to start things off.  Do you actually have users for this
+who are using platform data still?  If not there is no obligation at all
+to provide platform data configuration.  If you do then it's fine to provide
+support.
+
+> 
+> Datasheet publicly available at:
+> https://datasheets.maximintegrated.com/en/ds/DS4422-DS4424.pdf
+> 
+> Signed-off-by: Ismail Kose <Ismail.Kose@maximintegrated.com>
+> ---
+
+This is version 2 of the driver? So should have [PATCH V2] at the
+start of the subject and a revision history here under the cut line
+but above the stats.
+
+>  drivers/iio/dac/Kconfig        |   9 +
+>  drivers/iio/dac/Makefile       |   1 +
+>  drivers/iio/dac/ds4424.c       | 476 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/iio/dac/ds4424.h |  24 +++
+
+Given this is platform data only, it now belongs in /include/linux/platform_data.
+(a change that occurred a few years back)
+
+>  4 files changed, 510 insertions(+)
+>  create mode 100644 drivers/iio/dac/ds4424.c
+>  create mode 100644 include/linux/iio/dac/ds4424.h
+> 
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index 25bed2d7d2b9..db6ceba1c76f 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -310,4 +310,13 @@ config VF610_DAC
+>  	  This driver can also be built as a module. If so, the module will
+>  	  be called vf610_dac.
+>  
+> +config DS4424
+> +	tristate "Maxim Integrated DS4422/DS4424 DAC driver"
+> +	depends on I2C
+> +	help
+> +	  If you say yes here you get support for Maxim chips DS4422, DS4424.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called ds4424.
+> +
+>  endmenu
+> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+> index 603587cc2f07..f29f929a0587 100644
+> --- a/drivers/iio/dac/Makefile
+> +++ b/drivers/iio/dac/Makefile
+> @@ -33,3 +33,4 @@ obj-$(CONFIG_MCP4922) += mcp4922.o
+>  obj-$(CONFIG_STM32_DAC_CORE) += stm32-dac-core.o
+>  obj-$(CONFIG_STM32_DAC) += stm32-dac.o
+>  obj-$(CONFIG_VF610_DAC) += vf610_dac.o
+> +obj-$(CONFIG_DS4424) += ds4424.o
+> diff --git a/drivers/iio/dac/ds4424.c b/drivers/iio/dac/ds4424.c
+> new file mode 100644
+> index 000000000000..8765bf20ab62
+> --- /dev/null
+> +++ b/drivers/iio/dac/ds4424.c
+> @@ -0,0 +1,476 @@
+> +/*
+> + * Maxim Integrated
+> + * 7-bit, Multi-Channel Sink/Source Current DAC Driver
+> + * Copyright (C) 2017 Maxim Integrated
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/err.h>
+> +#include <linux/delay.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/driver.h>
+> +#include <linux/iio/machine.h>
+> +#include <linux/iio/consumer.h>
+> +#include <linux/iio/dac/ds4424.h>
+> +
+> +#define DS4424_DAC_ADDR(chan)   ((chan) + 0xf8)
+> +#define DS4424_SOURCE_I		1
+> +#define DS4424_SINK_I		0
+> +
+> +#define DS4424_CHANNEL(chan) { \
+> +	.type = IIO_CURRENT, \
+> +	.indexed = 1, \
+> +	.output = 1, \
+> +	.channel = chan, \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_OFFSET), \
+> +	.address = DS4424_DAC_ADDR(chan), \
+> +	.scan_type = { \
+> +		.sign = 'u', \
+> +		.realbits = 8, \
+> +		.storagebits = 8, \
+> +		}, \
+> +}
+> +
+> +union ds4424_raw_data {
+> +	struct {
+> +		u8 dx:7;
+> +		u8 source_bit:1;  /* 1 is source, 0 is sink */
+> +	};
+> +	u8 bits;
+> +};
+> +
+> +enum ds4424_device_ids {
+> +	ID_DS4422,
+> +	ID_DS4424,
+> +};
+> +
+> +struct ds4424_data {
+> +	struct i2c_client *client;
+> +	struct mutex lock;
+> +	uint16_t raw[DS4424_MAX_DAC_CHANNELS];
+> +	__maybe_unused uint16_t save[DS4424_MAX_DAC_CHANNELS];
+> +	uint32_t rfs_res[DS4424_MAX_DAC_CHANNELS];
+> +	struct regulator *vcc_reg;
+> +};
+> +
+> +static struct iio_map ds4424_iio_maps[] = {
+> +	{	.consumer_dev_name = "ds4424_dac-consumer-dev_name-1",
+> +		.consumer_channel = "ds4424_dac1",
+> +		.adc_channel_label = "OUT1"
+> +	},
+> +	{
+> +		.consumer_dev_name = "ds4424_dac-consumer-dev_name-2",
+> +		.consumer_channel = "ds4424_dac2",
+> +		.adc_channel_label = "OUT2"
+> +	},
+> +	{
+> +		.consumer_dev_name = "ds4424_dac-consumer-dev_name-3",
+> +		.consumer_channel = "ds4424_dac3",
+> +		.adc_channel_label = "OUT3"
+> +	},
+> +	{
+> +		.consumer_dev_name = "ds4424_dac-consumer-dev_name-4",
+> +		.consumer_channel = "ds4424_dac4",
+> +		.adc_channel_label = "OUT4"
+> +	},
+> +	{ },
+
+This doesn't belong in the driver at all.  Could you describe what the
+intent of this map is?
+
+> +};
+> +
+> +
+> +static const struct ds4424_pdata ds4424_pdata = {
+> +	.rfs_res = {400, 800, 1000, 1600},
+> +	.dac_iio_map = ds4424_iio_maps,
+> +};
+> +
+> +static const struct iio_chan_spec ds4424_channels[] = {
+> +	DS4424_CHANNEL(0),
+> +	DS4424_CHANNEL(1),
+> +	DS4424_CHANNEL(2),
+> +	DS4424_CHANNEL(3),
+> +};
+> +
+> +static int ds4424_get_value(struct iio_dev *indio_dev,
+> +			     int *val, int channel)
+> +{
+> +	struct ds4424_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	mutex_lock(&data->lock);
+> +	ret = i2c_smbus_write_byte_data(data->client,
+> +			DS4424_DAC_ADDR(channel), 1);
+> +	if (ret < 0)
+> +		goto fail;
+> +
+> +	ret = i2c_smbus_read_byte_data(data->client, 1);
+> +	if (ret < 0)
+> +		goto fail;
+> +
+> +	*val = ret;
+> +	mutex_unlock(&data->lock);
+> +	return 0;
+> +
+> +fail:
+> +	mutex_unlock(&data->lock);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * DS4424 DAC control register 8 bits
+> + * [7]		0: to sink; 1: to source
+> + * [6:0]	steps to sink/source
+> + * bit[7] looks like a sign bit, but the value of the register is
+> + * not a complemental code considering the bit[6:0] is a absolute
+> + * distance from the zero point.
+> + */
+> +
+> +/*
+> + * val is positive if sourcing
+> + *  val is negative if sinking
+> + *  val can be -127 to 127
+> + */
+> +static int ds4424_set_value(struct iio_dev *indio_dev,
+> +			     int val, struct iio_chan_spec const *chan)
+> +{
+> +	struct ds4424_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (val < 0 || val > U8_MAX)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&data->lock);
+> +	ret = i2c_smbus_write_byte_data(data->client,
+> +			DS4424_DAC_ADDR(chan->channel), val);
+> +	if (ret < 0) {
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	data->raw[chan->channel] = val;
+> +	mutex_unlock(&data->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ds4424_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *chan,
+> +			   int *val, int *val2, long mask)
+> +{
+> +	union ds4424_raw_data raw;
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = ds4424_get_value(indio_dev, val, chan->channel);
+> +		if (ret < 0) {
+> +			pr_err("%s : ds4424_get_value returned %d\n",
+> +							__func__, ret);
+> +			return ret;
+> +		}
+> +		raw.bits = *val;
+> +		*val = raw.dx;
+> +		if (raw.source_bit == DS4424_SINK_I)
+> +			*val = -*val;
+> +		return IIO_VAL_INT;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ds4424_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int val, int val2, long mask)
+> +{
+> +	union ds4424_raw_data raw;
+> +
+> +	if (val2 != 0)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +
+> +		if (val > S8_MAX || val < S8_MIN)
+> +			return -EINVAL;
+> +
+> +		if (val > 0) {
+> +			raw.source_bit = DS4424_SOURCE_I;
+> +			raw.dx = val;
+> +		} else {
+> +			raw.source_bit = DS4424_SINK_I;
+> +			raw.dx = -val;
+> +		}
+> +
+> +		return ds4424_set_value(indio_dev, raw.bits, chan);
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ds4424_verify_chip(struct iio_dev *indio_dev)
+> +{
+> +	int ret = 0, val;
+> +
+> +	ret = ds4424_get_value(indio_dev, &val, DS4424_DAC_ADDR(0));
+> +	if (ret < 0)
+> +		dev_err(&indio_dev->dev,
+> +				"ds4424 i2c read failed. ret: %d\n", ret);
+
+The error message could more informative of 'what read' failed.
+Either that or get rid of it entirely as it provides very little information.
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused ds4424_suspend(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct ds4424_data *data = iio_priv(indio_dev);
+> +	int ret = 0;
+> +	u32 i;
+> +
+> +	for (i = 0; i < indio_dev->num_channels; i++) {
+> +		data->save[i] = data->raw[i];
+> +		ret = ds4424_set_value(indio_dev, 0,
+> +				&indio_dev->channels[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused ds4424_resume(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct ds4424_data *data = iio_priv(indio_dev);
+> +	int ret = 0;
+> +	u32 i;
+> +
+> +	for (i = 0; i < indio_dev->num_channels; i++) {
+> +		ret = ds4424_set_value(indio_dev, data->save[i],
+> +				&indio_dev->channels[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +	return ret;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(ds4424_pm_ops, ds4424_suspend, ds4424_resume);
+> +
+> +static const struct iio_info ds4424_info = {
+> +	.read_raw = ds4424_read_raw,
+> +	.write_raw = ds4424_write_raw,
+> +	.driver_module = THIS_MODULE,
+
+Specifying .driver_module is now handled by some macro magic.
+Don't worry about this though, I'll just fix it up when applying
+(this cycle) as the code for that change is only in my branches for
+the next cycle.
+
+> +};
+> +
+> +#ifdef CONFIG_OF
+> +static int ds4424_parse_dt(struct iio_dev *indio_dev)
+> +{
+> +	int ret;
+> +	int len;
+> +	int count;
+> +	struct property *prop;
+> +	struct ds4424_data *data = iio_priv(indio_dev);
+> +	struct device_node *node = indio_dev->dev.of_node;
+> +
+> +	if (!node) {
+> +		pr_info("%s:%d ds4424 DT not found\n", __func__, __LINE__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	prop = of_find_property(node, "maxim,rfs-resistors-ohms", &len);
+
+This binding needs documenting.  Given you had documentation in v1 it is
+a little surprising not to see it here.
+
+> +	if (!prop) {
+> +		pr_err("ds4424 maxim,rfs-resistor not found in DT.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (len != (DS4424_MAX_DAC_CHANNELS * sizeof(uint32_t))) {
+> +		pr_err("ds4424 maxim,rfs-resistor length in DT not valid.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = of_property_read_u32_array(node, "maxim,rfs-resistors-ohms",
+> +				 data->rfs_res, DS4424_MAX_DAC_CHANNELS);
+> +	if (ret < 0) {
+> +		pr_err("ds4424 reading maxim,rfs-resistors from DT failed.\n");
+> +		return ret;
+> +	}
+> +
+> +	pr_info("ds4424 maxim,rfs-resistors: %d, %d, %d, %d\n",
+> +			data->rfs_res[0], data->rfs_res[1],
+> +			data->rfs_res[2], data->rfs_res[3]);
+> +
+> +	count = of_property_count_strings(node, "maxim,dac-iio-map");
+> +	if (count < 0) {
+> +		pr_info("ds4424 maxim,dac-iio-map not found in DT\n");
+> +		return count;
+> +	}
+> +
+> +	if (count != DS4424_MAX_DAC_CHANNELS * 3 &&
+> +		count != DS4424_MAX_DAC_CHANNELS * 3) {
+> +		pr_info("ds4424 maxim,dac-iio-map in DT not valid.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#else
+> +static int ds4424_parse_dt(struct iio_dev *indio_dev)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif
+> +
+> +static int ds4424_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	const struct ds4424_pdata *pdata;
+> +	struct ds4424_data *data;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	if (!indio_dev) {
+> +		dev_err(&client->dev, "iio dev alloc failed.\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	data = iio_priv(indio_dev);
+> +	i2c_set_clientdata(client, indio_dev);
+> +	data->client = client;
+> +	indio_dev->name = id->name;
+> +	indio_dev->dev.of_node = client->dev.of_node;
+> +	indio_dev->dev.parent = &client->dev;
+> +
+> +	if (client->dev.of_node) {
+> +		indio_dev->dev.of_node = client->dev.of_node;
+> +		ret = ds4424_parse_dt(indio_dev);
+> +		if (ret < 0) {
+> +			dev_err(&client->dev,
+> +					"%s - of_node error\n", __func__);
+> +			return -EINVAL;
+> +		}
+> +	} else {
+> +		pdata = client->dev.platform_data;
+> +		if (!pdata) {
+> +			dev_err(&client->dev,
+> +				"dts/platform data not found.\n");
+> +			pdata = &ds4424_pdata;
+> +		}
+> +
+> +		pdata = client->dev.platform_data;
+> +		memcpy(data->rfs_res, pdata->rfs_res,
+> +			sizeof(uint32_t) * DS4424_MAX_DAC_CHANNELS);
+> +	}
+> +
+> +	data->vcc_reg = devm_regulator_get(&client->dev, "vcc");
+> +	if (IS_ERR(data->vcc_reg)) {
+> +		ret = PTR_ERR(data->vcc_reg);
+> +		dev_err(&client->dev,
+> +			"Failed to get vcc-supply regulator: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mutex_init(&data->lock);
+> +	ret = regulator_enable(data->vcc_reg);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev,
+> +				"Unable to enable the regulator.\n");
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(1000, 1200);
+> +	ret = ds4424_verify_chip(indio_dev);
+> +	if (ret < 0)
+> +		return -ENXIO;
+> +
+> +	switch (id->driver_data) {
+> +	case ID_DS4422:
+> +		indio_dev->num_channels = DS4422_MAX_DAC_CHANNELS;
+> +		break;
+> +	case ID_DS4424:
+> +		indio_dev->num_channels = DS4424_MAX_DAC_CHANNELS;
+> +		break;
+> +	default:
+> +		dev_err(&client->dev,
+> +				"ds4424: Invalid chip id.\n");
+> +		indio_dev->num_channels = DS4424_MAX_DAC_CHANNELS;
+
+I would fault out here rather than effectively guessing..  The configuration
+is inconsistent so we shouldn't just try to carry on.
+
+> +		break;
+> +	}
+> +
+> +	indio_dev->channels = ds4424_channels;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &ds4424_info;
+> +
+> +	ret = iio_map_array_register(indio_dev, ds4424_pdata.dac_iio_map);
+> +	if (ret < 0)
+> +		goto err_iio_map_register;
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev,
+> +				"iio_device_register failed. ret: %d\n", ret);
+> +		goto err_iio_dev_register;
+> +	}
+> +
+> +	return ret;
+> +
+> +err_iio_map_register:
+> +	regulator_disable(data->vcc_reg);
+> +
+> +err_iio_dev_register:
+> +	iio_map_array_unregister(indio_dev);
+> +	return ret;
+> +}
+> +
+> +static int ds4424_remove(struct i2c_client *client)
+> +{
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct ds4424_data *data = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	iio_map_array_unregister(indio_dev);
+> +	regulator_disable(data->vcc_reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id ds4424_id[] = {
+> +	{ "ds4422", ID_DS4422 },
+> +	{ "ds4424", ID_DS4424 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ds4424_id);
+> +
+> +static const struct of_device_id ds4424_of_match[] = {
+> +	{ .compatible = "maxim,ds4422" },
+> +	{ .compatible = "maxim,ds4424" },
+> +	{ }
+> +};
+> +
+
+For consistency don't have a blank line here.
+
+> +MODULE_DEVICE_TABLE(of, ds4424_of_match);
+> +
+> +static struct i2c_driver ds4424_driver = {
+> +	.driver = {
+> +		.name	= "ds4424",
+> +		.of_match_table = ds4424_of_match,
+> +		.pm     = &ds4424_pm_ops,
+> +	},
+> +	.probe		= ds4424_probe,
+> +	.remove		= ds4424_remove,
+> +	.id_table	= ds4424_id,
+> +};
+> +module_i2c_driver(ds4424_driver);
+> +
+> +MODULE_DESCRIPTION("Maxim DS4424 DAC Driver");
+> +MODULE_AUTHOR("Ismail H. Kose <ismail.kose@maximintegrated.com>");
+> +MODULE_AUTHOR("Vishal Sood <vishal.sood@maximintegrated.com>");
+> +MODULE_AUTHOR("David Jung <david.jung@maximintegrated.com>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/iio/dac/ds4424.h b/include/linux/iio/dac/ds4424.h
+> new file mode 100644
+> index 000000000000..2c814118df38
+> --- /dev/null
+> +++ b/include/linux/iio/dac/ds4424.h
+> @@ -0,0 +1,24 @@
+> +/*
+> + * Maxim Integrated
+> + * 7-bit, Multi-Channel Sink/Source Current DAC Driver
+> + * Copyright (C) 2017 Maxim Integrated
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef IIO_DAC_DS4424_H_
+> +#define IIO_DAC_DS4424_H_
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/machine.h>
+> +
+> +#define DS4422_MAX_DAC_CHANNELS		2
+> +#define DS4424_MAX_DAC_CHANNELS		4
+> +
+> +struct ds4424_pdata {
+> +	const char *vcc_supply_name;
+> +	uint32_t rfs_res[DS4424_MAX_DAC_CHANNELS];
+> +	struct iio_map *dac_iio_map;
+> +};
+> +#endif /* IIO_DAC_DS4424_H_ */
