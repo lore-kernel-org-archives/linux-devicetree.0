@@ -1,66 +1,32 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 04/11] soc: renesas: rcar-sysc: add R8A77970 support
-Date: Fri, 15 Sep 2017 09:25:05 +0200
-Message-ID: <20170915072504.GA3924@verge.net.au>
-References: <20170912210518.203740259@cogentembedded.com>
- <CAMuHMdXLbg2WwtWvG+zBa5MOT3qXr2Fv-U4AJ0=eLfE2VG1LKg@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a77995: add GPIO device nodes
+Date: Fri, 15 Sep 2017 09:27:55 +0200
+Message-ID: <20170915072755.GB3924@verge.net.au>
+References: <1505298839-17435-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXLbg2WwtWvG+zBa5MOT3qXr2Fv-U4AJ0=eLfE2VG1LKg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1505298839-17435-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 10:36:23AM +0200, Geert Uytterhoeven wrote:
-> Hi Sergei,
+On Wed, Sep 13, 2017 at 07:33:59PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds GPIO device nodes for r8a77995.
 > 
-> On Tue, Sep 12, 2017 at 10:37 PM, Sergei Shtylyov
-> <sergei.shtylyov@cogentembedded.com> wrote:
-> > Add support for R-Car V3M (R8A77970) SoC power areas to the R-Car SYSC
-> > driver.
-> >
-> > Based on the original (and large) patch by Daisuke Matsushita
-> > <daisuke.matsushita.ns@hitachi.com>.
-> >
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Changes from v1:
+>   - Change power-domains property in each node.
+>   - Add Reviewed-by (Thanks Geert-san!).
 > 
-> > --- /dev/null
-> > +++ renesas/drivers/soc/renesas/r8a77970-sysc.c
-> > @@ -0,0 +1,39 @@
-> 
-> > +#include <linux/bug.h>
-> 
-> I think this include is no longer needed since commit c7acec713d14c6ce
-> ("kernel.h: handle pointers to arrays better in container_of()").
-> 
-> > +static const struct rcar_sysc_area r8a77970_areas[] __initconst = {
-> 
-> > +       { "a3ir",       0x180, 0, R8A77970_PD_A3IR,     R8A77970_PD_ALWAYS_ON },
-> > +       { "a2ir0",      0x400, 0, R8A77970_PD_A2IR0,    R8A77970_PD_ALWAYS_ON },
-> > +       { "a2ir1",      0x400, 1, R8A77970_PD_A2IR1,    R8A77970_PD_A2IR0 },
-> > +       { "a2ir2",      0x400, 2, R8A77970_PD_A2IR2,    R8A77970_PD_A2IR0 },
-> > +       { "a2ir3",      0x400, 3, R8A77970_PD_A2IR3,    R8A77970_PD_A2IR0 },
-> > +       { "a2sc0",      0x400, 4, R8A77970_PD_A2SC0,    R8A77970_PD_ALWAYS_ON },
-> > +       { "a2sc1",      0x400, 5, R8A77970_PD_A2SC1,    R8A77970_PD_A2SC0 },
-> 
-> According to Figure 9.2(b) "Power domain structure (R-Car V3M)" and Table 9.4
-> "Power domains", all of A2IR[0-3] and A2SC[01] are direct children of A3IR.
-> 
-> BTW, the bit indices "4" resp. "5" for A2SC[01] don't match Section 9.2.5
-> "Power Control Registers for A2IR" (which uses "0" resp. "1"), but I assume
-> that's just a typo in the datasheet, as those would conflict with A2IR[01], and
-> the would conflict with the documentation for other R-Car Gen3 SoCs.
-> 
-> With the above fixed:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 112 ++++++++++++++++++++++++++++++
 
-Sergei,
-
-please address Geert's review and repost when you are ready.
-I believe patches 1-3 of this series have been applied.
-I have marked patches 4 (this one) onwards as "Changes Requested"
-indicating that I expect all those patches to be reposted when you are ready.
+Thanks, applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
