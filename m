@@ -1,33 +1,149 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/8] ARM: dts: r8a7745: Add SDHI controllers
-Date: Fri, 15 Sep 2017 09:54:15 +0200
-Message-ID: <20170915075415.GG3924@verge.net.au>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-3-git-send-email-chris.paterson2@renesas.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH] arm64: dts: move berlin SoC files from marvell dir to
+ synaptics dir
+Date: Fri, 15 Sep 2017 15:54:26 +0800
+Message-ID: <20170915155426.17fdf674@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1505322341-9480-3-git-send-email-chris.paterson2@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Paterson <chris.paterson2@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, Arnd Bergmann <arnd@arndb.de>, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 06:05:35PM +0100, Chris Paterson wrote:
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
-> Add the SDHI controllers to the r8a7745 device tree.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
 
-Thanks, applied.
+Move and update device tree files as part of transition from Marvell
+berlin to Synaptics berlin.
 
-> ---
-> This patch is based on renesas-devel-20170913-v4.13.
-> 
-> This patch is dependant on:
-> - "dt-bindings: mmc: sh_mmcif: Document r8a7745 DT bindings"
+The changes are to:
+ * rename dts/marvell/berlin4ct.dtsi to synaptics/berlin4ct.dtsi, and
+   update SoC to be "syna,berlin"
+ * rename dts/marvell/berlin4ct-stb.dts to synaptics/berlin4ct-stb.dts
+   and update board name string.
+ * rename dts/marvell/berlin4ct-dmp.dts to synaptics/berlin4ct-dmp.dts
+   and update board name string.
+ * Update dts/marvell/Makefile not to build berlin dtbs
 
-I think that should be "[PATCH v3] mmc: renesas_sdhi: Add r8a7743/5 support"
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ arch/arm64/boot/dts/marvell/Makefile                         | 4 ----
+ arch/arm64/boot/dts/synaptics/Makefile                       | 7 +++++++
+ arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-dmp.dts | 7 ++++---
+ arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-stb.dts | 7 ++++---
+ arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct.dtsi    | 5 +++--
+ 5 files changed, 18 insertions(+), 12 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/synaptics/Makefile
+ rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-dmp.dts (90%)
+ rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-stb.dts (90%)
+ rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct.dtsi (98%)
+
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+index 6cff81eeaae2..28f94a95c2fc 100644
+--- a/arch/arm64/boot/dts/marvell/Makefile
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -1,7 +1,3 @@
+-# Berlin SoC Family
+-dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
+-dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
+-
+ # Mvebu SoC Family
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
+diff --git a/arch/arm64/boot/dts/synaptics/Makefile b/arch/arm64/boot/dts/synaptics/Makefile
+new file mode 100644
+index 000000000000..e2e81dd476ad
+--- /dev/null
++++ b/arch/arm64/boot/dts/synaptics/Makefile
+@@ -0,0 +1,7 @@
++# Berlin SoC Family
++dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
++dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
++
++always		:= $(dtb-y)
++subdir-y	:= $(dts-dirs)
++clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts b/arch/arm64/boot/dts/synaptics/berlin4ct-dmp.dts
+similarity index 90%
+rename from arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+rename to arch/arm64/boot/dts/synaptics/berlin4ct-dmp.dts
+index fae6c6924705..8c6bef792d34 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
++++ b/arch/arm64/boot/dts/synaptics/berlin4ct-dmp.dts
+@@ -1,7 +1,8 @@
+ /*
++ * Copyright (C) 2017 Synaptics Incorporated
+  * Copyright (C) 2015 Marvell Technology Group Ltd.
+  *
+- * Author: Jisheng Zhang <jszhang@marvell.com>
++ * Author: Jisheng Zhang <jszhang@kernel.org>
+  *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPLv2 or the X11 license, at your option. Note that this dual
+@@ -47,8 +48,8 @@
+ #include "berlin4ct.dtsi"
+ 
+ / {
+-	model = "Marvell BG4CT DMP board";
+-	compatible = "marvell,berlin4ct-dmp", "marvell,berlin4ct", "marvell,berlin";
++	model = "Synaptics BG4CT DMP board";
++	compatible = "syna,berlin4ct-dmp", "marvell,berlin4ct-dmp", "marvell,berlin4ct", "marvell,berlin";
+ 
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts b/arch/arm64/boot/dts/synaptics/berlin4ct-stb.dts
+similarity index 90%
+rename from arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
+rename to arch/arm64/boot/dts/synaptics/berlin4ct-stb.dts
+index d47edad13e68..ef18bf2d3542 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
++++ b/arch/arm64/boot/dts/synaptics/berlin4ct-stb.dts
+@@ -1,7 +1,8 @@
+ /*
++ * Copyright (C) 2017 Synaptics Incorporated
+  * Copyright (C) 2015 Marvell Technology Group Ltd.
+  *
+- * Author: Jisheng Zhang <jszhang@marvell.com>
++ * Author: Jisheng Zhang <jszhang@kernel.org>
+  *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPLv2 or the X11 license, at your option. Note that this dual
+@@ -47,8 +48,8 @@
+ #include "berlin4ct.dtsi"
+ 
+ / {
+-	model = "Marvell BG4CT STB board";
+-	compatible = "marvell,berlin4ct-stb", "marvell,berlin4ct", "marvell,berlin";
++	model = "Synaptics BG4CT STB board";
++	compatible = "syna,berlin4ct-stb", "marvell,berlin4ct-stb", "marvell,berlin4ct", "marvell,berlin";
+ 
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/synaptics/berlin4ct.dtsi
+similarity index 98%
+rename from arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+rename to arch/arm64/boot/dts/synaptics/berlin4ct.dtsi
+index d6b800fd26d0..642ea37a25ae 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/synaptics/berlin4ct.dtsi
+@@ -1,7 +1,8 @@
+ /*
++ * Copyright (C) 2017 Synaptics Incorporated
+  * Copyright (C) 2015 Marvell Technology Group Ltd.
+  *
+- * Author: Jisheng Zhang <jszhang@marvell.com>
++ * Author: Jisheng Zhang <jszhang@kernel.org>
+  *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPLv2 or the X11 license, at your option. Note that this dual
+@@ -45,7 +46,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+ / {
+-	compatible = "marvell,berlin4ct", "marvell,berlin";
++	compatible = "syna,berlin", "marvell,berlin4ct", "marvell,berlin";
+ 	interrupt-parent = <&gic>;
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+-- 
+2.14.1
