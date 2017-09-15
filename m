@@ -1,53 +1,38 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] scripts/dtc: update dtx_diff cpp and dts include paths to
- match build
-Date: Fri, 15 Sep 2017 17:42:48 -0500
-Message-ID: <CAL_JsqJDvhH7+4mHfvUhOnc9tsHw49P=+FjVtWCErNnKrH9-zA@mail.gmail.com>
-References: <1505513779-11315-1-git-send-email-frowand.list@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505513779-11315-1-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/5] usb: usb251xb: Add USB2517i hub support and fix some bugs
+Date: Sat, 16 Sep 2017 02:31:08 +0300
+Message-ID: <20170915233113.17855-1-fancer.lancer@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 15, 2017 at 5:16 PM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+Primarily it was intended to just add USB2517 hub support to the driver.
+But after tests a bug and inconistency were discovered. So it was decided
+to perform following changes:
 
-I feel like we just had the same subject. Can you make it more specific.
+Changelog v1:
+- Add USB2517/i hub specifics support to the driver
+- Fix property_u32 NULL-pointer dereference
+- Add new {bus,self}-max-{power,curret} dts properties
+- Replace legacy GPIO API usage with descriptor-based one
 
-> Update dtx_diff include paths in the same manner as:
-> commit b12869a8d519 ("of: remove drivers/of/testcase-data from
-> include search path for CPP"), commit 5ffa2aed389c ("of: remove
-> arch/$(SRCARCH)/boot/dts from include search path for CPP"), and
-> commit 50f9ddaf64e1 ("of: search scripts/dtc/include-prefixes path
-> for both CPP and DTC").
+Serge Semin (5):
+  usb: usb251xb: Add USB2517/i hub support
+  usb: usb251xb: Fix property_u32 NULL pointer dereference
+  usb: usb251xb: Add max power/current dts nodes
+  usb: usb251xb: Use GPIO descriptor consumer interface
+  usb: usb251xb: Add copyrights
 
-We need a better way for this to stop happening besides me remembering
-in reviews...
+ Documentation/devicetree/bindings/usb/usb251xb.txt |  12 +-
+ drivers/usb/misc/usb251xb.c                        | 154 +++++++++++++++------
+ 2 files changed, 123 insertions(+), 43 deletions(-)
 
-Perhaps a separate file of include paths that all tools can use?
+-- 
+2.12.0
 
->
-> Remove proposed include path kernel/dts/, which was never implemented
-> for the dtb build.
->
-> For the diff case, each source file is compiled separately.  For
-> each of those compiles, provide the location of the source file
-> as an include path, not the location of both source files.
->
-> ---
->
-> The referenced commits b12869a8d519, 5ffa2aed389c, 50f9ddaf64e1
-> are in v4.14-rc1.  No stable kernels need this patch.
->
->  scripts/dtc/dtx_diff |   22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
->
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-
-This is going to get dropped.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
