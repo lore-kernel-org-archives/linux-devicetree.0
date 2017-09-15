@@ -1,72 +1,71 @@
 From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH] dt-bindings: RTC: Add bindings for m41t80 and compatibles
-Date: Fri, 15 Sep 2017 03:45:50 +0200
-Message-ID: <20170915014551.22664-1-alexandre.belloni@free-electrons.com>
+Subject: [PATCH] dt-bindings: RTC: merge ds1339 in ds1307 documentation
+Date: Fri, 15 Sep 2017 03:45:51 +0200
+Message-ID: <20170915014551.22664-2-alexandre.belloni@free-electrons.com>
+References: <20170915014551.22664-1-alexandre.belloni@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170915014551.22664-1-alexandre.belloni@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rtc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The ST M41T80 family of RTC are not trivial devices, document them.
+Now that there is documentation for the ds1307 and compatible RTCs, merge
+the ds1339 documentation in it.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 ---
- .../devicetree/bindings/rtc/rtc-m41t80.txt         | 32 ++++++++++++++++++++++
- .../devicetree/bindings/trivial-devices.txt        |  2 --
- 2 files changed, 32 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-m41t80.txt
+ .../devicetree/bindings/rtc/dallas,ds1339.txt          | 18 ------------------
+ Documentation/devicetree/bindings/rtc/rtc-ds1307.txt   |  6 ++++++
+ 2 files changed, 6 insertions(+), 18 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-m41t80.txt b/Documentation/devicetree/bindings/rtc/rtc-m41t80.txt
-new file mode 100644
-index 000000000000..12add61e5687
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-m41t80.txt
-@@ -0,0 +1,32 @@
-+ST M41T80 family of RTC and compatible
-+
-+Required properties:
-+- compatible: should be one of:
-+	"st,m41t62",
-+	"st,m41t65",
-+	"st,m41t80",
-+	"st,m41t81",
-+	"st,m41t81s",
-+	"st,m41t82",
-+	"st,m41t83",
-+	"st,m41t84",
-+	"st,m41t85",
-+	"st,m41t87",
-+	"microcrystal,rv4162",
-+- reg: I2C bus address of the device
-+
-+Optional properties:
-+- interrupt-parent: phandle for the interrupt controller.
-+- interrupts: rtc alarm interrupt.
-+- clock-output-names: From common clock binding to override the default output
-+                      clock name
-+- wakeup-source: Enables wake up of host system on alarm
-+
-+Example:
-+	rtc@68 {
-+		compatible = "st,m41t80";
-+		reg = <0x68>;
-+		interrupt-parent = <&UIC0>;
-+		interrupts = <0x9 0x8>;
-+	};
-+
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index 4353151367a1..4b169caab0eb 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -175,8 +175,6 @@ sii,s35390a		2-wire CMOS real-time clock
- silabs,si7020		Relative Humidity and Temperature Sensors
- skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
- st,24c256		i2c serial eeprom  (24cxx)
--st,m41t62		Serial real-time clock (RTC) with alarm
--st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
- taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
- ti,ads7828		8-Channels, 12-bit ADC
- ti,ads7830		8-Channels, 8-bit ADC
+diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+deleted file mode 100644
+index 916f57601a8f..000000000000
+--- a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
++++ /dev/null
+@@ -1,18 +0,0 @@
+-* Dallas DS1339		I2C Serial Real-Time Clock
+-
+-Required properties:
+-- compatible: Should contain "dallas,ds1339".
+-- reg: I2C address for chip
+-
+-Optional properties:
+-- trickle-resistor-ohms : Selected resistor for trickle charger
+-	Values usable for ds1339 are 250, 2000, 4000
+-	Should be given if trickle charger should be enabled
+-- trickle-diode-disable : Do not use internal trickle charger diode
+-	Should be given if internal trickle charger diode should be disabled
+-Example:
+-	ds1339: rtc@68 {
+-		compatible = "dallas,ds1339";
+-		trickle-resistor-ohms = <250>;
+-		reg = <0x68>;
+-	};
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+index d1a820e25cb9..2eacc17a9b8d 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+@@ -26,6 +26,11 @@ Optional properties:
+ - clock-output-names: From common clock binding to override the default output
+                       clock name
+ - wakeup-source: Enables wake up of host system on alarm
++- trickle-resistor-ohms : Selected resistor for trickle charger
++	Values usable for ds1339 are 250, 2000, 4000
++	Should be given if trickle charger should be enabled
++- trickle-diode-disable : Do not use internal trickle charger diode
++	Should be given if internal trickle charger diode should be disabled
+ 
+ Example:
+ 	rtc1: ds1339@68 {
+@@ -33,5 +38,6 @@ Example:
+ 		reg = <0x68>;
+ 		interrupt-parent = <&gpio4>;
+ 		interrupts = <20 0>;
++		trickle-resistor-ohms = <250>;
+ 	};
+ 
 -- 
 2.14.1
