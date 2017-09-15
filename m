@@ -1,171 +1,106 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v13 21/25] smiapp: Add support for flash and lens devices
-Date: Fri, 15 Sep 2017 17:17:20 +0300
-Message-ID: <20170915141724.23124-22-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v13 22/25] et8ek8: Add support for flash and lens devices
+Date: Fri, 15 Sep 2017 17:17:21 +0300
+Message-ID: <20170915141724.23124-23-sakari.ailus@linux.intel.com>
 References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915141724.23124-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
+
+From: Pavel Machek <pavel@ucw.cz>
 
 Parse async sub-devices by using
 v4l2_subdev_fwnode_reference_parse_sensor_common().
 
 These types devices aren't directly related to the sensor, but are
-nevertheless handled by the smiapp driver due to the relationship of these
+nevertheless handled by the et8ek8 driver due to the relationship of these
 component to the main part of the camera module --- the sensor.
 
-This does not yet address providing the user space with information on how
-to associate the sensor or lens devices but the kernel now has the
-necessary information to do that.
-
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+[Sakari Ailus: Rename fwnode function, check for ret < 0 only.]
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/media/i2c/smiapp/smiapp-core.c | 38 +++++++++++++++++++++++++++-------
- drivers/media/i2c/smiapp/smiapp.h      |  4 +++-
- 2 files changed, 33 insertions(+), 9 deletions(-)
+ drivers/media/i2c/et8ek8/et8ek8_driver.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 700f433261d0..a4735a96ea41 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -31,7 +31,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/smiapp.h>
--#include <linux/v4l2-mediabus.h>
+diff --git a/drivers/media/i2c/et8ek8/et8ek8_driver.c b/drivers/media/i2c/et8ek8/et8ek8_driver.c
+index c14f0fd6ded3..0ef1b8025935 100644
+--- a/drivers/media/i2c/et8ek8/et8ek8_driver.c
++++ b/drivers/media/i2c/et8ek8/et8ek8_driver.c
+@@ -34,10 +34,12 @@
+ #include <linux/sort.h>
+ #include <linux/v4l2-mediabus.h>
+ 
 +#include <media/v4l2-async.h>
- #include <media/v4l2-fwnode.h>
+ #include <media/media-entity.h>
+ #include <media/v4l2-ctrls.h>
  #include <media/v4l2-device.h>
+ #include <media/v4l2-subdev.h>
++#include <media/v4l2-fwnode.h>
  
-@@ -2887,17 +2887,24 @@ static int smiapp_probe(struct i2c_client *client,
- 	v4l2_i2c_subdev_init(&sensor->src->sd, client, &smiapp_ops);
- 	sensor->src->sd.internal_ops = &smiapp_internal_src_ops;
+ #include "et8ek8_reg.h"
  
-+	rval = v4l2_async_notifier_parse_fwnode_sensor_common(
+@@ -46,6 +48,7 @@
+ #define ET8EK8_MAX_MSG		8
+ 
+ struct et8ek8_sensor {
++	struct v4l2_async_notifier notifier;
+ 	struct v4l2_subdev subdev;
+ 	struct media_pad pad;
+ 	struct v4l2_mbus_framefmt format;
+@@ -1446,6 +1449,11 @@ static int et8ek8_probe(struct i2c_client *client,
+ 	sensor->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 	sensor->subdev.internal_ops = &et8ek8_internal_ops;
+ 
++	ret = v4l2_async_notifier_parse_fwnode_sensor_common(
 +		&client->dev, &sensor->notifier);
-+	if (rval < 0)
-+		return rval;
++	if (ret < 0)
++		goto err_release;
 +
- 	sensor->vana = devm_regulator_get(&client->dev, "vana");
- 	if (IS_ERR(sensor->vana)) {
- 		dev_err(&client->dev, "could not get regulator for vana\n");
--		return PTR_ERR(sensor->vana);
-+		rval = PTR_ERR(sensor->vana);
-+		goto out_release_async_notifier;
+ 	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
+ 	ret = media_entity_pads_init(&sensor->subdev.entity, 1, &sensor->pad);
+ 	if (ret < 0) {
+@@ -1453,18 +1461,27 @@ static int et8ek8_probe(struct i2c_client *client,
+ 		goto err_mutex;
  	}
  
- 	sensor->ext_clk = devm_clk_get(&client->dev, NULL);
- 	if (IS_ERR(sensor->ext_clk)) {
- 		dev_err(&client->dev, "could not get clock (%ld)\n",
- 			PTR_ERR(sensor->ext_clk));
--		return -EPROBE_DEFER;
-+		rval = -EPROBE_DEFER;
-+		goto out_release_async_notifier;
- 	}
- 
- 	rval = clk_set_rate(sensor->ext_clk, sensor->hwcfg->ext_clk);
-@@ -2905,17 +2912,19 @@ static int smiapp_probe(struct i2c_client *client,
- 		dev_err(&client->dev,
- 			"unable to set clock freq to %u\n",
- 			sensor->hwcfg->ext_clk);
--		return rval;
-+		goto out_release_async_notifier;
- 	}
- 
- 	sensor->xshutdown = devm_gpiod_get_optional(&client->dev, "xshutdown",
- 						    GPIOD_OUT_LOW);
--	if (IS_ERR(sensor->xshutdown))
--		return PTR_ERR(sensor->xshutdown);
-+	if (IS_ERR(sensor->xshutdown)) {
-+		rval = PTR_ERR(sensor->xshutdown);
-+		goto out_release_async_notifier;
-+	}
- 
- 	rval = smiapp_power_on(&client->dev);
- 	if (rval < 0)
--		return rval;
-+		goto out_release_async_notifier;
- 
- 	rval = smiapp_identify_module(sensor);
- 	if (rval) {
-@@ -3092,9 +3101,14 @@ static int smiapp_probe(struct i2c_client *client,
- 	if (rval < 0)
- 		goto out_media_entity_cleanup;
- 
-+	rval = v4l2_async_subdev_notifier_register(&sensor->src->sd,
-+						   &sensor->notifier);
-+	if (rval)
-+		goto out_media_entity_cleanup;
++	ret = v4l2_async_subdev_notifier_register(&sensor->subdev,
++						  &sensor->notifier);
++	if (ret)
++		goto err_entity;
 +
- 	rval = v4l2_async_register_subdev(&sensor->src->sd);
- 	if (rval < 0)
--		goto out_media_entity_cleanup;
-+		goto out_unregister_async_notifier;
+ 	ret = v4l2_async_register_subdev(&sensor->subdev);
+ 	if (ret < 0)
+-		goto err_entity;
++		goto err_async;
  
- 	pm_runtime_set_active(&client->dev);
- 	pm_runtime_get_noresume(&client->dev);
-@@ -3105,6 +3119,9 @@ static int smiapp_probe(struct i2c_client *client,
+ 	dev_dbg(dev, "initialized!\n");
  
  	return 0;
  
-+out_unregister_async_notifier:
++err_async:
 +	v4l2_async_notifier_unregister(&sensor->notifier);
-+
- out_media_entity_cleanup:
- 	media_entity_cleanup(&sensor->src->sd.entity);
- 
-@@ -3114,6 +3131,9 @@ static int smiapp_probe(struct i2c_client *client,
- out_power_off:
- 	smiapp_power_off(&client->dev);
- 
-+out_release_async_notifier:
+ err_entity:
+ 	media_entity_cleanup(&sensor->subdev.entity);
+ err_mutex:
+ 	mutex_destroy(&sensor->power_lock);
++err_release:
 +	v4l2_async_notifier_release(&sensor->notifier);
-+
- 	return rval;
+ 	return ret;
  }
  
-@@ -3124,6 +3144,8 @@ static int smiapp_remove(struct i2c_client *client)
- 	unsigned int i;
+@@ -1480,6 +1497,8 @@ static int __exit et8ek8_remove(struct i2c_client *client)
+ 	}
  
- 	v4l2_async_unregister_subdev(subdev);
+ 	v4l2_device_unregister_subdev(&sensor->subdev);
 +	v4l2_async_notifier_unregister(&sensor->notifier);
 +	v4l2_async_notifier_release(&sensor->notifier);
- 
- 	pm_runtime_disable(&client->dev);
- 	if (!pm_runtime_status_suspended(&client->dev))
-diff --git a/drivers/media/i2c/smiapp/smiapp.h b/drivers/media/i2c/smiapp/smiapp.h
-index f74d695018b9..be92cb5713f4 100644
---- a/drivers/media/i2c/smiapp/smiapp.h
-+++ b/drivers/media/i2c/smiapp/smiapp.h
-@@ -20,9 +20,10 @@
- #define __SMIAPP_PRIV_H_
- 
- #include <linux/mutex.h>
-+#include <media/i2c/smiapp.h>
-+#include <media/v4l2-async.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-subdev.h>
--#include <media/i2c/smiapp.h>
- 
- #include "smiapp-pll.h"
- #include "smiapp-reg.h"
-@@ -172,6 +173,7 @@ struct smiapp_subdev {
-  * struct smiapp_sensor - Main device structure
-  */
- struct smiapp_sensor {
-+	struct v4l2_async_notifier notifier;
- 	/*
- 	 * "mutex" is used to serialise access to all fields here
- 	 * except v4l2_ctrls at the end of the struct. "mutex" is also
+ 	device_remove_file(&client->dev, &dev_attr_priv_mem);
+ 	v4l2_ctrl_handler_free(&sensor->ctrl_handler);
+ 	v4l2_async_unregister_subdev(&sensor->subdev);
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
