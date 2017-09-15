@@ -1,43 +1,61 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: Re: [PATCH 1/5] dt-bindings: rockchip-thermal: Support the RV1108 SoC
- compatible
-Date: Fri, 15 Sep 2017 09:49:11 +0800
-Message-ID: <12073627-41af-3480-6379-839e07f5e8f3@rock-chips.com>
-References: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
- <1503570475-7850-2-git-send-email-rocky.hao@rock-chips.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/3] RTC: rv3029: fix vendor string
+Date: Fri, 15 Sep 2017 04:00:02 +0200
+Message-ID: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1503570475-7850-2-git-send-email-rocky.hao@rock-chips.com>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Rocky Hao <rocky.hao@rock-chips.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, cl@rock-chips.com, william.wu@rock-chips.com, jay.xu@rock-chips.com, xxx@rock-chips.com, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rocky,
+The vendor string for Microcrystal is microcrystal.
 
-在 2017年08月24日 18:27, Rocky Hao 写道:
-> Add a new compatible for thermal founding on RV1108 SoCs.
->
-> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
-> ---
->   Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> index e3a6234fb1ac..43d744e5305e 100644
-> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> @@ -2,6 +2,7 @@
->   
->   Required properties:
->   - compatible : should be "rockchip,<name>-tsadc"
-> +   "rockchip,rv1108-tsadc": found on RV1108 SoCs
+Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/trivial-devices.txt | 2 +-
+ drivers/rtc/rtc-rv3029c2.c                            | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-According to the order,  we should put the string after the 
-"rockchip,rk3399-tsadc"..., not here.
->      "rockchip,rk3228-tsadc": found on RK3228 SoCs
->      "rockchip,rk3288-tsadc": found on RK3288 SoCs
->      "rockchip,rk3328-tsadc": found on RK3328 SoCs
+diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+index af284fbd4d23..aae37352c574 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/trivial-devices.txt
+@@ -72,7 +72,6 @@ isil,isl29030		Intersil ISL29030 Ambient Light and Proximity Sensor
+ maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
+ maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
+ maxim,max6625		9-Bit/12-Bit Temperature Sensors with I²C-Compatible Serial Interface
+-mc,rv3029c2		Real Time Clock Module with I2C-Bus
+ mcube,mc3230		mCube 3-axis 8-bit digital accelerometer
+ memsic,mxc6225		MEMSIC 2-axis 8-bit digital accelerometer
+ microchip,mcp4531-502	Microchip 7-bit Single I2C Digital Potentiometer (5k)
+@@ -141,6 +140,7 @@ microchip,mcp4662-503	Microchip 8-bit Dual I2C Digital Potentiometer with NV Mem
+ microchip,mcp4662-104	Microchip 8-bit Dual I2C Digital Potentiometer with NV Memory (100k)
+ microchip,tc654		PWM Fan Speed Controller With Fan Fault Detection
+ microchip,tc655		PWM Fan Speed Controller With Fan Fault Detection
++microcrystal,rv3029	Real Time Clock Module with I2C-Bus
+ miramems,da226		MiraMEMS DA226 2-axis 14-bit digital accelerometer
+ miramems,da280		MiraMEMS DA280 3-axis 14-bit digital accelerometer
+ miramems,da311		MiraMEMS DA311 3-axis 12-bit digital accelerometer
+diff --git a/drivers/rtc/rtc-rv3029c2.c b/drivers/rtc/rtc-rv3029c2.c
+index aa09771de04f..cfe3aece51d1 100644
+--- a/drivers/rtc/rtc-rv3029c2.c
++++ b/drivers/rtc/rtc-rv3029c2.c
+@@ -876,6 +876,8 @@ static const struct i2c_device_id rv3029_id[] = {
+ MODULE_DEVICE_TABLE(i2c, rv3029_id);
+ 
+ static const struct of_device_id rv3029_of_match[] = {
++	{ .compatible = "microcrystal,rv3029" },
++	/* Backward compatibility only, do not use compatibles below: */
+ 	{ .compatible = "rv3029" },
+ 	{ .compatible = "rv3029c2" },
+ 	{ .compatible = "mc,rv3029c2" },
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
