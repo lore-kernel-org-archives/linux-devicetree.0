@@ -1,61 +1,40 @@
 From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] arm64: dts: r8a7795: r8a7796: add thermal cooling
- management
-Date: Fri, 15 Sep 2017 09:37:22 +0200
-Message-ID: <20170915073722.GE3924@verge.net.au>
-References: <20170913105909.13230-1-niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
+Date: Fri, 15 Sep 2017 09:45:51 +0200
+Message-ID: <20170915074551.GF3924@verge.net.au>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170913105909.13230-1-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+In-Reply-To: <1505322341-9480-2-git-send-email-chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 12:59:07PM +0200, Niklas Söderlund wrote:
-> Hi,
-> 
-> This series adds support for for using CPUFreq as a cooling device for 
-> the A57 CUP:s on Renesas H3 and M3-W SoC:s. It depends on Simon Horman's 
-> topic/rcar-gen3-cpufreq branch [1] and is tested on-top the latest 
-> renesas-drivers on H3 and M3-W. For test results and test procedure 
-> please see:
-> 
->    http://elinux.org/R-Car/Tests:rcar_gen3_thermal
+[Cc Geert]
 
-My cpufreq work needs revising to address review from both Geert and
-yourself. I will try to address this in the near future. In the mean time
-I have marked this series as Deferred.
+On Wed, Sep 13, 2017 at 06:05:34PM +0100, Chris Paterson wrote:
+> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> 
+> Add DT node for the Advanced Power Management Unit (APMU), add the
+> second CPU core, and use "renesas,apmu" as "enable-method".
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+> This patch is based on renesas-devel-20170913-v4.13.
 
-> Few notes on the specific values used in this series and why they might 
-> need to be changed.
-> 
-> - The trip point temperature of 95000 used is the most conservative one 
->   from the BSP and maybe should be set at 110000 which is the most 
->   aggressive one in the BSP.
-> 
-> - The cooling states described in all cooling-maps nodes might be 
->   subject to change depending on the out-come of the ongoing review 
->   process of Simon's work. It should use the highest possible cooling 
->   state so if the number of states change due review of his work this 
->   should be reflected in this series.
-> 
-> 1.  https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git
-> 
-> Niklas Söderlund (2):
->   arm64: dts: r8a7795: add thermal cooling management
->   arm64: dts: r8a7796: add thermal cooling management
-> 
->  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 40 ++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 38 ++++++++++++++++++++++++++++++
->  2 files changed, 78 insertions(+)
-> 
-> -- 
-> 2.14.1
-> 
+Hi,
+
+with reference to "[PATCH v3 0/3] ARM: renesas: Enable SMP on R-Car E2"
+is the CNTVOFF initialised in the boot loader of boards (in upstream)
+for this SoC? If not I expect you will have trouble with the arch timer
+on secondary CPU cores.
+
+The patch itself looks good to me.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
