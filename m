@@ -1,49 +1,40 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH 2/3] ARM: dts: at91: usb_a9g20: fix rtc node
-Date: Fri, 15 Sep 2017 09:08:31 +0200
-Message-ID: <bf64c774-9057-d73e-8f39-7fcc5f32725c@microchip.com>
-References: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
- <20170915020004.24272-2-alexandre.belloni@free-electrons.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: dac: ds4422/ds4424 dac driver
+Date: Fri, 15 Sep 2017 09:11:31 +0200
+Message-ID: <CACRpkdYDV-kS-VgvvssU4s6Hrg-5MQ5Xh3v3NNxZWMhAwDXxxQ@mail.gmail.com>
+References: <20170914202449.31283-1-Ismail.Kose@maximintegrated.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170915020004.24272-2-alexandre.belloni@free-electrons.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-rtc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Ellerman <mpe@ellerman.id.au>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170914202449.31283-1-Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ismail Kose <Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, William Breathitt Gray <vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Francois Dagenais <jeff.dagenais-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, gwenhael.goavec-merou-W7CSdorvuhNZroRs9YW3xA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, =?UTF-8?Q?Maxime_Roussin=2DB=C3=A9langer?= <maxime.roussinbelanger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, "Ismail H. KOSE" <ihkose-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TaqPxH82wqD4g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/09/2017 at 04:00, Alexandre Belloni wrote:
-> The rv3029 compatible is missing its vendor string, add it.
-> Also fix the node name to be a proper generic name.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+On Thu, Sep 14, 2017 at 10:24 PM, Ismail Kose
+<Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org> wrote:
 
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> +struct ds4424_pdata {
+> +       const char *vcc_supply_name;
 
-> ---
->  arch/arm/boot/dts/usb_a9g20_common.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/usb_a9g20_common.dtsi b/arch/arm/boot/dts/usb_a9g20_common.dtsi
-> index 088c2c3685ab..81c3fe0465d9 100644
-> --- a/arch/arm/boot/dts/usb_a9g20_common.dtsi
-> +++ b/arch/arm/boot/dts/usb_a9g20_common.dtsi
-> @@ -20,8 +20,8 @@
->  	};
->  
->  	i2c-gpio-0 {
-> -		rv3029c2@56 {
-> -			compatible = "rv3029c2";
-> +		rtc@56 {
-> +			compatible = "microcrystal,rv3029";
->  			reg = <0x56>;
->  		};
->  	};
-> 
+Should not be needed at all, get the supply directly from the device tree.
 
+> +       uint32_t rfs_res[DS4424_MAX_DAC_CHANNELS];
+> +       struct iio_map *dac_iio_map;
+> +};
 
--- 
-Nicolas Ferre
+Drop this entire platform data file and move all these fields
+you still need into struct ds4424_data.
+
+If you have legacy kernels still using platform data, that's too
+bad, we will not maintain them upstream and not merge new
+board files using platform data normally, use device tree or ACPI
+DSTD only please.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
