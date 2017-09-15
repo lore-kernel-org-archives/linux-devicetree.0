@@ -1,40 +1,49 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
-Date: Fri, 15 Sep 2017 09:45:51 +0200
-Message-ID: <20170915074551.GF3924@verge.net.au>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: [PATCH] arm64: dt marvell: extend AP806 system controller size
+Date: Fri, 15 Sep 2017 10:50:07 +0300
+Message-ID: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch@tkos.co.il>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1505322341-9480-2-git-send-email-chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[Cc Geert]
+Extend the container size to 0x2000 to include the gpio controller at
+offset 0x1040.
 
-On Wed, Sep 13, 2017 at 06:05:34PM +0100, Chris Paterson wrote:
-> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> 
-> Add DT node for the Advanced Power Management Unit (APMU), add the
-> second CPU core, and use "renesas,apmu" as "enable-method".
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
-> This patch is based on renesas-devel-20170913-v4.13.
+While at it, add start address notation to the gpio node name to match
+its 'offset' property.
 
-Hi,
+Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+---
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-with reference to "[PATCH v3 0/3] ARM: renesas: Enable SMP on R-Car E2"
-is the CNTVOFF initialised in the boot loader of boards (in upstream)
-for this SoC? If not I expect you will have trouble with the arch timer
-on secondary CPU cores.
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 4d360713ed12..30d48ecf46e0 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -254,7 +254,7 @@
+ 
+ 			ap_syscon: system-controller@6f4000 {
+ 				compatible = "syscon", "simple-mfd";
+-				reg = <0x6f4000 0x1000>;
++				reg = <0x6f4000 0x2000>;
+ 
+ 				ap_clk: clock {
+ 					compatible = "marvell,ap806-clock";
+@@ -265,7 +265,7 @@
+ 					compatible = "marvell,ap806-pinctrl";
+ 				};
+ 
+-				ap_gpio: gpio {
++				ap_gpio: gpio@1040 {
+ 					compatible = "marvell,armada-8k-gpio";
+ 					offset = <0x1040>;
+ 					ngpios = <20>;
+-- 
+2.14.1
 
-The patch itself looks good to me.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
