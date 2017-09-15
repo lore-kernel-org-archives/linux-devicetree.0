@@ -1,47 +1,59 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5 0/4] Add Broadcom STB USB phy driver
-Date: Fri, 15 Sep 2017 16:49:58 -0700
-Message-ID: <5DDF9572-B2D1-4316-B307-14749365221E@gmail.com>
-References: <1503683495-11766-1-git-send-email-alcooperx@gmail.com> <f4625f5e-db00-ebcc-4618-6f00247edfab@gmail.com> <f7bb89bf-1a09-891c-4ae5-3dc2e4b38d97@ti.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 5/5] usb: usb251xb: Add copyrights
+Date: Fri, 15 Sep 2017 16:53:13 -0700
+Message-ID: <20170915235313.GA14637@kroah.com>
+References: <20170915233113.17855-1-fancer.lancer@gmail.com>
+ <20170915233113.17855-6-fancer.lancer@gmail.com>
+ <20170915234028.GA7681@kroah.com>
+ <20170915234517.GA21291@mobilestation>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f7bb89bf-1a09-891c-4ae5-3dc2e4b38d97-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170915234517.GA21291@mobilestation>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On September 4, 2017 11:11:47 PM PDT, Kishon Vijay Abraham I <kishon@ti=2Ec=
-om> wrote:
->Florian,
->
->On Saturday 02 September 2017 07:46 AM, Florian Fainelli wrote:
->>=20
->>=20
->> On 08/25/2017 10:51 AM, Al Cooper wrote:
->>> Add a new USB Phy driver for Broadcom STB SoCs=2E This driver
->>> supports Broadcom STB ARM SoCs=2E This driver in
->>> combination with the Broadcom STB ohci, ehci and xhci
->>> drivers will enable USB1=2E1, USB2=2E0 and USB3=2E0 support=2E
->>> This Phy driver also supports the Broadcom BDC gadget
->>> driver=2E
->>=20
->> Thanks Al! Kishon, feel free to merge everything through your tree
->there
->> should not be any conflicts with drivers/soc/bcm/brcmstb/common=2Ec and
->> include/linux/soc/brcmstb/brcmstb=2Eh=2E
->
->I'll start merging once 4=2E14 -rc1 is tagged=2E
+On Sat, Sep 16, 2017 at 02:45:17AM +0300, Serge Semin wrote:
+> On Fri, Sep 15, 2017 at 04:40:28PM -0700, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> > On Sat, Sep 16, 2017 at 02:31:13AM +0300, Serge Semin wrote:
+> > > Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  drivers/usb/misc/usb251xb.c | 1 +
+> > >  1 file changed, 1 insertions(+), 0 deletion(-)
+> > 
+> > I can't take patches without any changelog text, sorry.
+> > 
+> 
+> I'll merge it into the previous patch then. There is nothing to changeloging here. 
+> 
+> > > 
+> > > diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> > > index 1d47acd09..43afa04ad 100644
+> > > --- a/drivers/usb/misc/usb251xb.c
+> > > +++ b/drivers/usb/misc/usb251xb.c
+> > > @@ -3,6 +3,7 @@
+> > >   * Configuration via SMBus.
+> > >   *
+> > >   * Copyright (c) 2017 SKIDATA AG
+> > > + * Copyright (c) 2017 T-platforms
+> > 
+> > I don't see the connection between a random company, and a random
+> > gmail.com email address.  Please explain :)
+> 
+> Why do you see gmail.com only? I cc-ed this patchset to my work email:
+> Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org
+> Do I really need to send it from my work e-mail? I have met such rule before.
 
-OK, does not that mean we will be missing this driver in 4=2E14? I suppose=
- that's fine=2E Thanks!
-Hi Kishon,
---=20
-Florian
+The authorship of these patches are coming from a gmail.com address, how
+do I know what that relates to some random email you cc: on the patch :)
+
+thanks,
+
+greg k-h
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
