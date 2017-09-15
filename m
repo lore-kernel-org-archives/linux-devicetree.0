@@ -1,76 +1,46 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] dt-bindings: gpu: mali-utgard: add optional supply regulator
-Date: Fri, 15 Sep 2017 11:01:45 +0200
-Message-ID: <11237143.FSQKKME6IQ@phil>
-References: <20170905105739.8330-1-heiko@sntech.de> <5517832.4TA9c0NYD6@diego> <20170913143415.fcds556hdqwnhsvm@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170913143415.fcds556hdqwnhsvm@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH 1/5] dt-bindings: Explicitely mark Exynos HDMI DDC node as
+ deprecated
+Date: Fri, 15 Sep 2017 11:11:19 +0200
+Message-ID: <1505466683-32148-2-git-send-email-m.szyprowski@samsung.com>
+References: <1505466683-32148-1-git-send-email-m.szyprowski@samsung.com>
+        <CGME20170915091139eucas1p2d3ee5da70946b4f377242642af117635@eucas1p2.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1505466683-32148-1-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 13. September 2017, 09:34:15 CEST schrieb Rob Herring:
-> On Wed, Sep 13, 2017 at 12:12:24AM +0200, Heiko Stübner wrote:
-> > Hi Rob,
-> > 
-> > Am Dienstag, 12. September 2017, 17:09:20 CEST schrieb Rob Herring:
-> > > On Tue, Sep 05, 2017 at 12:57:34PM +0200, Heiko Stuebner wrote:
-> > > > Mali GPUs have a separate supplying regulator in a lot of socs,
-> > > > so describe a mali-supply property. The already described
-> > > > operating points will likely also need access to this regulator.
-> > > > 
-> > > > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > > > ---
-> > > > 
-> > > >  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > > > b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt index
-> > > > 3b7f6f72f032..bcaa640c883f 100644
-> > > > --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > > > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > > > 
-> > > > @@ -39,6 +39,9 @@ Optional properties:
-> > > >      Memory region to allocate from, as defined in
-> > > >      Documentation/devicetree/bindi/reserved-memory/reserved-memory.txt
-> > > > 
-> > > > +  - mali-supply : Phandle to regulator for the Mali device. Refer to
-> > > > +    Documentation/devicetree/bindings/regulator/regulator.txt for
-> > > > details.
-> > > 
-> > > Wouldn't a power domain be more appropriate?
-> > 
-> > At least on Rockchip socs there is a power-domain, but also the separate 
-> > additional regulator. See the similar mali-midgard binding.
-> 
-> And that regulator's state is independent of the power domain's state? 
->
-> But I guess OPPs need a regulator. Really we should allow OPPs to be 
-> tied to the power domain. Maybe we do, I can't keep up with the ever 
-> evolving PM stuff.
+Commit 2b7681326dc2 ("drm/exynos: hdmi: remove the i2c drivers and use")
+merged to v3.15 kernel added a required 'ddc' property to Exynos HDMI
+device tree bindings, which should point to i2c bus used for handling DDC
+(mainly reading display's EDID information). Since that commit
+separate node with "samsung,exynos4210-hdmiddc" compatible is no longer
+needed, so mark it finally as deprecated.
 
-Yep, the external gpu regulator state is completely independent of the
-power-domain inside the soc and is most of the time one of the regulators
-coming from the external pmic or sometimes even a completely separate
-i2c-connected ic.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-It's the same for the cpu cores on Rockchip socs, they have power-domains
-for controlling the actual on/off state and need separate supplying
-i2c-connected regulators that still have to be enabled on their own.
-
-
-> So, given we already have it for midgard,
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Thanks, added for v2.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt b/Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt
+index 41eee971562b..6f807e523ccb 100644
+--- a/Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt
++++ b/Documentation/devicetree/bindings/display/exynos/exynos_hdmiddc.txt
+@@ -1,9 +1,12 @@
+ Device-Tree bindings for hdmiddc driver
+ 
++This binding is deprecated. Please use 'ddc' property in Exynos HDMI
++node (see exynos_hdmi.txt for details).
++
+ Required properties:
+ - compatible: value should be one of the following
+ 	1) "samsung,exynos5-hdmiddc" <DEPRECATED>
+-	2) "samsung,exynos4210-hdmiddc"
++	2) "samsung,exynos4210-hdmiddc" <DEPRECATED>
+ 
+ - reg: I2C address of the hdmiddc device.
+ 
+-- 
+1.9.1
