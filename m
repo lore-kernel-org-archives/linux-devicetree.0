@@ -1,31 +1,25 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: RTC: add stericsson,coh901331 bindings
-Date: Fri, 15 Sep 2017 09:13:13 +0200
-Message-ID: <CACRpkda_nFtEqRiciJ-fytbEpBB2NkChpNDb4GKcaYO-MjoXEw@mail.gmail.com>
-References: <20170915001952.13170-1-alexandre.belloni@free-electrons.com>
+From: Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH 3/3] powerpc/5200: dts: digsy_mtc.dts: fix rv3029
+ compatible
+Date: Fri, 15 Sep 2017 09:13:26 +0200
+Message-ID: <20170915091326.4b93bde1@crub>
+References: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
+        <20170915020004.24272-3-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915001952.13170-1-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170915020004.24272-3-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 15, 2017 at 2:19 AM, Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On Fri, 15 Sep 2017 04:00:04 +0200
+Alexandre Belloni alexandre.belloni@free-electrons.com wrote:
 
-> Add device tree bindings for the ST-Ericsson COH 901 331 Real Time Clock
+>The proper compatible for rv3029 is microcrystal,rv3029.
 >
-> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 
-Oh this was merged so far back in the day that we were even lax
-about adding bindings properly. Too bad, sorry about it.
-
-Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Anatolij Gustschin <agust@denx.de>
