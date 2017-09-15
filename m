@@ -1,168 +1,89 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 2/8] arm64: dts: renesas: initial R8A77970 SoC device tree
-Date: Fri, 15 Sep 2017 22:43:20 +0300
-Message-ID: <20170915194425.473842426@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 3/8] arm64: dts: renesas: r8a77970: add SYS-DMAC support
+Date: Fri, 15 Sep 2017 22:43:21 +0300
+Message-ID: <20170915194429.260616486@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=arm64-dts-renesas-initial-R8A77970-SoC-device-tree-v2.patch
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=arm64-dts-renesas-r8a77970-add-SYS-DMAC-support-v2.patch
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The initial R8A77970 SoC device tree including Cortex-A53 CPU, GIC, timer,
-CPG, RST, and SYSC.
+Describe SYS-DMAC1/2 in the R8A77970 device tree.
 
 Based on the original (and large) patch by Daisuke Matsushita
-<daisuke.matsushita.ns-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>.
+<daisuke.matsushita.ns@hitachi.com>.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 ---
 Changes in version 2:
-- removed #include <dt-bindings/clock/r8a77970-cpg-mssr.h>, replacing the
-  #define's from it with the bare numbers;
-- declared PSCI 0.2 compatibility in the PSCI node;
+- replaced  the use of the SYSC power domain #define's with the bare numbers;
+- refreshed the patch;
 - added Geert's tag.
 
- arch/arm64/boot/dts/renesas/r8a77970.dtsi |  125 ++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi |   48 ++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
 Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
 ===================================================================
---- /dev/null
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
 +++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -0,0 +1,125 @@
-+/*
-+ * Device Tree Source for the r8a77970 SoC
-+ *
-+ * Copyright (C) 2016-2017 Renesas Electronics Corp.
-+ * Copyright (C) 2017 Cogent Embedded, Inc.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
+@@ -121,5 +121,53 @@
+ 			compatible = "renesas,prr";
+ 			reg = <0 0xfff00044 0 4>;
+ 		};
 +
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+
-+/ {
-+	compatible = "renesas,r8a77970";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	psci {
-+		compatible = "arm,psci-1.0", "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		a53_0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0>;
-+			clocks = <&cpg CPG_CORE 0>;
-+			power-domains = <&sysc 5>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
-+		L2_CA53: cache-controller {
-+			compatible = "cache";
-+			power-domains = <&sysc 21>;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+	};
-+
-+	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board */
-+		clock-frequency = <0>;
-+	};
-+
-+	extalr_clk: extalr {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board */
-+		clock-frequency = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gic: interrupt-controller@f1010000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0 0xf1010000 0 0x1000>,
-+			      <0 0xf1020000 0 0x20000>,
-+			      <0 0xf1040000 0 0x20000>,
-+			      <0 0xf1060000 0 0x20000>;
-+			interrupts = <GIC_PPI 9	(GIC_CPU_MASK_SIMPLE(1) |
-+				      IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&cpg CPG_MOD 408>;
-+			clock-names = "clk";
++		dmac1: dma-controller@e7300000 {
++			compatible = "renesas,dmac-r8a77970",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe7300000 0 0x10000>;
++			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					  "ch0", "ch1", "ch2", "ch3",
++					  "ch4", "ch5", "ch6", "ch7";
++			clocks = <&cpg CPG_MOD 218>;
++			clock-names = "fck";
 +			power-domains = <&sysc 32>;
-+			resets = <&cpg 408>;
++			resets = <&cpg 218>;
++			#dma-cells = <1>;
++			dma-channels = <8>;
 +		};
 +
-+		timer {
-+			compatible = "arm,armv8-timer";
-+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
-+						  IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
-+						  IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) |
-+						  IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) |
-+						  IRQ_TYPE_LEVEL_LOW)>;
++		dmac2: dma-controller@e7310000 {
++			compatible = "renesas,dmac-r8a77970",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe7310000 0 0x10000>;
++			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					  "ch0", "ch1", "ch2", "ch3",
++					  "ch4", "ch5", "ch6", "ch7";
++			clocks = <&cpg CPG_MOD 217>;
++			clock-names = "fck";
++			power-domains = <&sysc 32>;
++			resets = <&cpg 217>;
++			#dma-cells = <1>;
++			dma-channels = <8>;
 +		};
-+
-+		cpg: clock-controller@e6150000 {
-+			compatible = "renesas,r8a77970-cpg-mssr";
-+			reg = <0 0xe6150000 0 0x1000>;
-+			clocks = <&extal_clk>, <&extalr_clk>;
-+			clock-names = "extal", "extalr";
-+			#clock-cells = <2>;
-+			#power-domain-cells = <0>;
-+			#reset-cells = <1>;
-+		};
-+
-+		rst: reset-controller@e6160000 {
-+			compatible = "renesas,r8a77970-rst";
-+			reg = <0 0xe6160000 0 0x200>;
-+		};
-+
-+		sysc: system-controller@e6180000 {
-+			compatible = "renesas,r8a77970-sysc";
-+			reg = <0 0xe6180000 0 0x440>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		prr: chipid@fff00044 {
-+			compatible = "renesas,prr";
-+			reg = <0 0xfff00044 0 4>;
-+		};
-+	};
-+};
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ 	};
+ };
