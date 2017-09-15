@@ -1,61 +1,37 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/3] RTC: rv3029: fix vendor string
-Date: Fri, 15 Sep 2017 04:00:02 +0200
-Message-ID: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: [PATCH 2/3] ARM: dts: at91: usb_a9g20: fix rtc node
+Date: Fri, 15 Sep 2017 04:00:03 +0200
+Message-ID: <20170915020004.24272-2-alexandre.belloni@free-electrons.com>
+References: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rtc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Ellerman <mpe@ellerman.id.au>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The vendor string for Microcrystal is microcrystal.
+The rv3029 compatible is missing its vendor string, add it.
+Also fix the node name to be a proper generic name.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 ---
- Documentation/devicetree/bindings/trivial-devices.txt | 2 +-
- drivers/rtc/rtc-rv3029c2.c                            | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/usb_a9g20_common.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index af284fbd4d23..aae37352c574 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -72,7 +72,6 @@ isil,isl29030		Intersil ISL29030 Ambient Light and Proximity Sensor
- maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
- maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
- maxim,max6625		9-Bit/12-Bit Temperature Sensors with I²C-Compatible Serial Interface
--mc,rv3029c2		Real Time Clock Module with I2C-Bus
- mcube,mc3230		mCube 3-axis 8-bit digital accelerometer
- memsic,mxc6225		MEMSIC 2-axis 8-bit digital accelerometer
- microchip,mcp4531-502	Microchip 7-bit Single I2C Digital Potentiometer (5k)
-@@ -141,6 +140,7 @@ microchip,mcp4662-503	Microchip 8-bit Dual I2C Digital Potentiometer with NV Mem
- microchip,mcp4662-104	Microchip 8-bit Dual I2C Digital Potentiometer with NV Memory (100k)
- microchip,tc654		PWM Fan Speed Controller With Fan Fault Detection
- microchip,tc655		PWM Fan Speed Controller With Fan Fault Detection
-+microcrystal,rv3029	Real Time Clock Module with I2C-Bus
- miramems,da226		MiraMEMS DA226 2-axis 14-bit digital accelerometer
- miramems,da280		MiraMEMS DA280 3-axis 14-bit digital accelerometer
- miramems,da311		MiraMEMS DA311 3-axis 12-bit digital accelerometer
-diff --git a/drivers/rtc/rtc-rv3029c2.c b/drivers/rtc/rtc-rv3029c2.c
-index aa09771de04f..cfe3aece51d1 100644
---- a/drivers/rtc/rtc-rv3029c2.c
-+++ b/drivers/rtc/rtc-rv3029c2.c
-@@ -876,6 +876,8 @@ static const struct i2c_device_id rv3029_id[] = {
- MODULE_DEVICE_TABLE(i2c, rv3029_id);
+diff --git a/arch/arm/boot/dts/usb_a9g20_common.dtsi b/arch/arm/boot/dts/usb_a9g20_common.dtsi
+index 088c2c3685ab..81c3fe0465d9 100644
+--- a/arch/arm/boot/dts/usb_a9g20_common.dtsi
++++ b/arch/arm/boot/dts/usb_a9g20_common.dtsi
+@@ -20,8 +20,8 @@
+ 	};
  
- static const struct of_device_id rv3029_of_match[] = {
-+	{ .compatible = "microcrystal,rv3029" },
-+	/* Backward compatibility only, do not use compatibles below: */
- 	{ .compatible = "rv3029" },
- 	{ .compatible = "rv3029c2" },
- 	{ .compatible = "mc,rv3029c2" },
+ 	i2c-gpio-0 {
+-		rv3029c2@56 {
+-			compatible = "rv3029c2";
++		rtc@56 {
++			compatible = "microcrystal,rv3029";
+ 			reg = <0x56>;
+ 		};
+ 	};
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
