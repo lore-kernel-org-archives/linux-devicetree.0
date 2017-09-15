@@ -1,181 +1,82 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCHv4 3/5] dt-bindings: document the CEC GPIO bindings
-Date: Fri, 15 Sep 2017 10:40:53 +0200
-Message-ID: <89739d22-bce2-e31e-fd00-5e7c2fae2148@xs4all.nl>
-References: <20170831110156.11018-1-hverkuil@xs4all.nl>
- <20170831110156.11018-4-hverkuil@xs4all.nl>
- <20170912144308.j53eclicbhay5dsz@rob-hp-laptop>
- <30a2fa9d-1aa9-84c1-7842-05167eee73d3@xs4all.nl>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
+Date: Fri, 15 Sep 2017 08:57:53 +0000
+Message-ID: <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
+ <20170915074551.GF3924@verge.net.au>
+ <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <30a2fa9d-1aa9-84c1-7842-05167eee73d3-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 09/13/17 10:21, Hans Verkuil wrote:
-> On 09/12/2017 04:43 PM, Rob Herring wrote:
->> On Thu, Aug 31, 2017 at 01:01:54PM +0200, Hans Verkuil wrote:
->>> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->>>
->>> Document the bindings for the cec-gpio module for hardware where the
->>> CEC line and optionally the HPD line are connected to GPIO lines.
->>>
->>> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/media/cec-gpio.txt         | 22 ++++++++++++++++++++++
->>>  1 file changed, 22 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
->>> new file mode 100644
->>> index 000000000000..db20a7452dbd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
->>> @@ -0,0 +1,22 @@
->>> +* HDMI CEC GPIO driver
->>> +
->>> +The HDMI CEC GPIO module supports CEC implementations where the CEC line
->>> +is hooked up to a pull-up GPIO line and - optionally - the HPD line is
->>> +hooked up to another GPIO line.
->>> +
->>> +Required properties:
->>> +  - compatible: value must be "cec-gpio"
->>> +  - cec-gpio: gpio that the CEC line is connected to
->>
->> cec-gpios
-> 
-> Will change.
-> 
->>
->>> +
->>> +Optional property:
->>> +  - hpd-gpio: gpio that the HPD line is connected to
->>
->> hpd-gpios
-> 
-> Will change.
-> 
->>
->> However, HPD is already part of the HDMI connector binding. Having it in 
->> 2 places would be wrong.
-> 
-> No. This is not an HDMI receiver/transmitter. There are two use-cases for this
-> driver:
-> 
-> 1) For HDMI receivers/transmitters that connect the CEC pin of an HDMI connector
->    to a GPIO pin. In that case the HPD goes to the HDMI transmitter/receiver and
->    not to this driver. As you say, that would not make any sense.
-> 
->    But currently no such devices are in the kernel (I know they exist, though).
->    Once such a driver would appear in the kernel then these bindings need to be
->    extended with an hdmi-phandle.
-> 
-> 2) This driver is used for debugging CEC like this:
-> 
-> 	https://hverkuil.home.xs4all.nl/rpi3-cec.jpg
-> 
->    Here the CEC pin of an HDMI breakout connector is hooked up to a Raspberry Pi
->    GPIO pin and the RPi monitors it. It's a cheap but very effective CEC analyzer.
->    In this use-case it is very helpful to also monitor the HPD pin since some
->    displays do weird things with the HPD and knowing the state of the HPD helps
->    a lot when debugging CEC problems. It's optional and it only monitors the pin.
-> 
->    Actually, there does not have to be an HDMI connector involved at all: you can
->    make two cec-gpio instances and just connect the two GPIO pins together in
->    order to emulate two CEC adapters and play with that.
-
-Is it OK to define a binding but not (yet) implement it? I have seen that in other
-bindings (well, OK, one other binding :-) ). If that is fine, then I can write the
-following:
-
-----------------------------------------------------------------
-Required properties:
-  - compatible: value must be "cec-gpio".
-  - cec-gpios: gpio that the CEC line is connected to.
-
-If the CEC line is associated with an HDMI receiver/transmitter, then the following
-property is also required:
-
-  - hdmi-phandle - phandle to the HDMI controller, see also cec.txt.
-
-If the CEC line is not associated with an HDMI receiver/transmitter, then the
-following property is optional:
-
-  - hpd-gpios: gpio that the HPD line is connected to.
-----------------------------------------------------------------
-
-I have plans to support hdmi-phandle in the driver, but that probably won't be ready
-in time for 4.15.
-
-Regards,
-
-	Hans
-
-> 
->>
->> I think we should have either:
->>
->> hdmi-connector {
->> 	compatible = 'hdmi-connector-a";
->> 	hpd-gpios = <...>;
->> 	cec-gpios = <...>;
->> 	ports {
->> 		// port to HDMI controller
->> 	...
->> 	};
->> };
->>
->> Or:
->>
->> hdmi-connector {
->>         compatible = 'hdmi-connector-a";
->>         hpd-gpios = <...>;
->>         cec = <&cec>;
->>         ... 
->> };
->>
->> cec: cec-gpio {
->> 	compatible = "cec-gpio";
->> 	cec-gpios = <...>;
->> };
->>
->> My preference is probably the former. The latter just helps create a 
->> device to bind to a driver, but DT is not the only way to create 
->> devices. Then again, if you have a phandle to real CEC controllers in 
->> the HDMI connector node, it may make sense to do the same thing with 
->> cec-gpio. 
->>
->>> +
->>> +Example for the Raspberry Pi 3 where the CEC line is connected to
->>> +pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
->>> +connected to pin 11 aka BCM17:
->>> +
->>> +cec-gpio@7 {
->>
->> unit address is not valid. Build your dts's with W=2.
-> 
-> I'll do that.
-> 
->>
->>> +       compatible = "cec-gpio";
->>> +       cec-gpio = <&gpio 7 GPIO_OPEN_DRAIN>;
->>> +       hpd-gpio = <&gpio 17 GPIO_ACTIVE_HIGH>;
->>> +};
->>> -- 
->>> 2.14.1
-> 
-> Regards,
-> 
-> 	Hans
-> 
-
+SGkgU2ltb24sIEdlZXJ0LA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
+IGxpbnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LXJl
+bmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEdlZXJ0DQo+IFV5
+dHRlcmhvZXZlbg0KPiBTZW50OiAxNSBTZXB0ZW1iZXIgMjAxNyAwOTowNQ0KPiBUbzogU2ltb24g
+SG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNh
+c3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gQ2M6IENocmlzIFBhdGVyc29uIDxDaHJpcy5QYXRlcnNv
+bjJAcmVuZXNhcy5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBS
+dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+IE1hZ251cyBEYW1tIDxtYWdudXMuZGFt
+bUBnbWFpbC5jb20+OyBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybWxpbnV4Lm9yZy51az47IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMaW51eC1SZW5lc2FzDQo+IDxsaW51eC1yZW5lc2FzLXNv
+Y0B2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
+IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+IFN1YmplY3Q6
+IFJlOiBbUEFUQ0ggMS84XSBBUk06IGR0czogcjhhNzc0NTogQWRkIEFQTVUgbm9kZSBhbmQgc2Vj
+b25kIENQVSBjb3JlDQo+DQo+IEhpIFNpbW9uLCBGYWJyaXppbywNCj4NCj4gT24gRnJpLCBTZXAg
+MTUsIDIwMTcgYXQgOTo0NSBBTSwgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+IHdy
+b3RlOg0KPiA+IE9uIFdlZCwgU2VwIDEzLCAyMDE3IGF0IDA2OjA1OjM0UE0gKzAxMDAsIENocmlz
+IFBhdGVyc29uIHdyb3RlOg0KPiA+PiBGcm9tOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNh
+c3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPj4NCj4gPj4gQWRkIERUIG5vZGUgZm9yIHRoZSBBZHZh
+bmNlZCBQb3dlciBNYW5hZ2VtZW50IFVuaXQgKEFQTVUpLCBhZGQgdGhlDQo+ID4+IHNlY29uZCBD
+UFUgY29yZSwgYW5kIHVzZSAicmVuZXNhcyxhcG11IiBhcyAiZW5hYmxlLW1ldGhvZCIuDQo+ID4+
+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJw
+LnJlbmVzYXMuY29tPg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYXRlcnNvbiA8Y2hyaXMu
+cGF0ZXJzb24yQHJlbmVzYXMuY29tPg0KPiA+PiAtLS0NCj4gPj4gVGhpcyBwYXRjaCBpcyBiYXNl
+ZCBvbiByZW5lc2FzLWRldmVsLTIwMTcwOTEzLXY0LjEzLg0KPiA+DQo+ID4gSGksDQo+ID4NCj4g
+PiB3aXRoIHJlZmVyZW5jZSB0byAiW1BBVENIIHYzIDAvM10gQVJNOiByZW5lc2FzOiBFbmFibGUg
+U01QIG9uIFItQ2FyIEUyIg0KPiA+IGlzIHRoZSBDTlRWT0ZGIGluaXRpYWxpc2VkIGluIHRoZSBi
+b290IGxvYWRlciBvZiBib2FyZHMgKGluIHVwc3RyZWFtKQ0KPiA+IGZvciB0aGlzIFNvQz8gSWYg
+bm90IEkgZXhwZWN0IHlvdSB3aWxsIGhhdmUgdHJvdWJsZSB3aXRoIHRoZSBhcmNoIHRpbWVyDQo+
+ID4gb24gc2Vjb25kYXJ5IENQVSBjb3Jlcy4NCg0KSSBjYW4gY29uZmlybSB0aGF0IHRoaXMgcGF0
+Y2ggcmVsaWVzIG9uOg0KKiAiQVJNOiBBZGQgZGVmaW5pdGlvbiBmb3IgbW9uaXRvciBtb2RlIiwg
+YW5kDQoqICJBUk06IHNobW9iaWxlOiByY2FyLWdlbjI6IE1ha2Ugc3VyZSBDTlRWT0ZGIGlzIGlu
+aXRpYWxpemVkIG9uIENBNy8xNSAiDQphcyB0aGUgYm9vdGxvYWRlciBkb2Vzbid0IGluaXRpYWxp
+emUgQ05UVk9GRi4NCg0KPg0KPiBFeGFjdGx5IG15IHF1ZXN0aW9uLg0KPg0KPiBGYWJyaXppbzog
+R2l2ZW4geW91ciBmZWVkYmFjayBvbiAiW1BBVENIIHYzIDAvM10gQVJNOiByZW5lc2FzOiBFbmFi
+bGUgU01QIG9uDQo+IFItQ2FyIEUyIiwgSSB0aGluayBTTVAgZW5hYmxlbWVudCBvbiBSWi9HMUUg
+aGFzIHRvIGJlIHBvc3Rwb25lZCB1bnRpbCAiQVJNOg0KPiBzaG1vYmlsZTogcmNhci1nZW4yOiBN
+YWtlIHN1cmUgQ05UVk9GRiBpcyBpbml0aWFsaXplZCBvbiBDQTcvMTUiIGhhcyBiZWVuDQo+IGFj
+Y2VwdGVkIHVwc3RyZWFtLg0KDQpZb3UgYXJlIHJpZ2h0LCBzb21laG93IHdlIG1pc3NlZCB0aGUg
+Y29tbWVudCBtYWRlIGJ5IFNpbW9uIG9uIE1vbmRheToNCg0KIiBJIHdvdWxkIGxpa2UgdG8gZGVm
+ZmVyIHRoZSB0aGlyZCBhbmQgbGFzdCBwYXRjaCB1bnRpbCB2NC4xNiB0byBhdm9pZA0KYW4gYXdr
+d2FyZCBicmFuY2ggZGVwZW5kZW5jeSBvbiB0aGUgYWJvdmUgLSB0aGUgYnJhbmNoZXMgYXJlIGRp
+ZmZlcmVudA0KZXZlbiB0aG91Z2ggdGhlIHRyZWUgaXMgdGhlIHNhbWUuIFBsZWFzZSByZXN1Ym1p
+dCB0aGlzIHBhdGNoIG9uY2UgdGhlDQphYm92ZSBkZXBlbmRlbmNpZXMgYXJlIHByZXNlbnQgaW4g
+YW4gcmMgcmVsZWFzZSwgd2hpY2ggYXQgdGhpcyBzdGFnZQ0KSSBleHBlY3QgdG8gYmUgdjQuMTUt
+cmMxLiINCg0KQXBvbG9naWVzIGZvciB0aGlzLCB3ZSB3aWxsIHNlbmQgdGhpcyBwYXRjaCBsYXRl
+ciBvbiwgb25jZSBib3RoIHBhdGNoZXMgaGF2ZSBiZWVuDQphY2NlcHRlZCB1cHN0cmVhbS4NCg0K
+U2ltb24sIGlzIHRoaXMgZ29pbmcgdG8gbWFrZSB0aGUgYXBwbGljYXRpb24gb2YgdGhlIHJlbWFp
+bmluZyBwYXRjaGVzIHByb2JsZW1hdGljPw0KUGxlYXNlLCBsZXQgbWUgKG9yIENocmlzKSBrbm93
+IGlmIHlvdSB3YW50IHVzIHRvIHJlYmFzZSBhbmQgcmVzZW5kIHdpdGhvdXQgdGhpcw0KcGF0Y2gu
+DQoNCkJlc3QgcmVnYXJkcywNCkZhYnJpemlvDQoNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRl
+cmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGlu
+dXgtbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNh
+bCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5n
+IHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtl
+IHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFs
+ZHMNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBN
+aWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4g
+UmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3
+MDkuDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
