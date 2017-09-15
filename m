@@ -1,54 +1,86 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 4/9] dt-bindings: add power-domain header for RK3066 SoCs
-Date: Fri, 15 Sep 2017 10:33:52 +0200
-Message-ID: <20170915083357.11296-5-heiko@sntech.de>
-References: <20170915083357.11296-1-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915083357.11296-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 6/8] ARM: dts: iwg20m: Add SPI NOR support
+Date: Fri, 15 Sep 2017 10:35:17 +0200
+Message-ID: <20170915083517.GJ3924@verge.net.au>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-7-git-send-email-chris.paterson2@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1505322341-9480-7-git-send-email-chris.paterson2@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Paterson <chris.paterson2@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add rk3066 power-domains as described by the TRM.
+On Wed, Sep 13, 2017 at 06:05:39PM +0100, Chris Paterson wrote:
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Add support for the SPI NOR device used to boot up the system
+> to the System on Module DT.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> ---
+> This patch is based on renesas-devel-20170913-v4.13.
+> 
+> This patch is dependant on:
+> - "of: add vendor prefix for Silicon Storage Technology Inc."
+> - "doc: dt: mtd: Add sst25vf016b to the list of supported chip names"
+> 
+> 
+>  arch/arm/boot/dts/r8a7743-iwg20m.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> index 4119737..75a8ca5 100644
+> --- a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> @@ -44,6 +44,11 @@
+>  		function = "mmc";
+>  	};
+>  
+> +	qspi_pins: qspi {
+> +		groups = "qspi_ctrl", "qspi_data2";
+> +		function = "qspi";
+> +	};
+> +
+>  	sdhi0_pins: sd0 {
+>  		groups = "sdhi0_data4", "sdhi0_ctrl";
+>  		function = "sdhi0";
+> @@ -61,6 +66,27 @@
+>  	status = "okay";
+>  };
+>  
+> +&qspi {
+> +	pinctrl-0 = <&qspi_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	status = "okay";
+> +
+> +	/* WARNING - This device contains the bootloader. Handle with care. */
+> +	flash: flash@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "sst,sst25vf016b", "jedec,spi-nor";
+> +		reg = <0>;
+> +		spi-max-frequency = <50000000>;
+> +		spi-tx-bus-width = <1>;
+> +		spi-rx-bus-width = <1>;
+> +		m25p,fast-read;
+> +		spi-cpol;
+> +		spi-cpha;
+> +	};
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- include/dt-bindings/power/rk3066-power.h | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 include/dt-bindings/power/rk3066-power.h
+Does the device have partitions?
+If so, should they be described here?
 
-diff --git a/include/dt-bindings/power/rk3066-power.h b/include/dt-bindings/power/rk3066-power.h
-new file mode 100644
-index 000000000000..dd9bbd35c274
---- /dev/null
-+++ b/include/dt-bindings/power/rk3066-power.h
-@@ -0,0 +1,21 @@
-+#ifndef __DT_BINDINGS_POWER_RK3066_POWER_H__
-+#define __DT_BINDINGS_POWER_RK3066_POWER_H__
-+
-+/* VD_CORE */
-+#define RK3066_PD_A9_0		0
-+#define RK3066_PD_A9_1		1
-+#define RK3066_PD_DBG		4
-+#define RK3066_PD_SCU		5
-+
-+/* VD_LOGIC */
-+#define RK3066_PD_VIDEO		6
-+#define RK3066_PD_VIO		7
-+#define RK3066_PD_GPU		8
-+#define RK3066_PD_PERI		9
-+#define RK3066_PD_CPU		10
-+#define RK3066_PD_ALIVE		11
-+
-+/* VD_PMU */
-+#define RK3066_PD_RTC		12
-+
-+#endif
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +};
+> +
+>  &sdhi0 {
+>  	pinctrl-0 = <&sdhi0_pins>;
+>  	pinctrl-names = "default";
+> -- 
+> 1.9.1
+> 
