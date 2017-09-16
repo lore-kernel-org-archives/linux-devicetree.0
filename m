@@ -1,61 +1,100 @@
-From: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/9] dt-bindings: add compatibles for rk3066/rk3188 power
- controllers
-Date: Sat, 16 Sep 2017 23:04:48 +0200
-Message-ID: <c2f4f70e-e5e7-9432-035d-fdf885eb53d0@gmail.com>
-References: <20170915083357.11296-1-heiko@sntech.de>
- <20170915083357.11296-6-heiko@sntech.de>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 1/6] dt-bindings: update the Allwinner GPADC device
+ tree binding for H3
+Date: Sat, 16 Sep 2017 15:12:24 -0700
+Message-ID: <20170916151224.777e5b56@archlinux>
+References: <20170914145251.21784-1-icenowy@aosc.io>
+        <20170914145251.21784-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915083357.11296-6-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Content-Language: fr
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170914145251.21784-2-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Heiko,
+On Thu, 14 Sep 2017 22:52:46 +0800
+Icenowy Zheng <icenowy@aosc.io> wrote:
 
-There are a few copy/paste errors in the documentation.
-
-
-Le 15/09/2017 à 10:33, Heiko Stuebner a écrit :
-> Add the compatible values for the power-domain controllers found on
-> rk3066 and rk3188.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Allwinner H3 features a thermal sensor like the one in A33, but has its
+> register re-arranged, the clock divider moved to CCU (originally the
+> clock divider is in ADC) and added a pair of bus clock and reset.
+> 
+> Update the binding document to cover H3.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->   Documentation/devicetree/bindings/soc/rockchip/power_domain.txt | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> index 301d2a9bc1b8..1c42c5b7ca6a 100644
-> --- a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> @@ -5,6 +5,8 @@ powered up/down by software based on different application scenes to save power.
->   
->   Required properties for power domain controller:
->   - compatible: Should be one of the following.
-> +	"rockchip,rk3066-power-controller" - for RK3288 SoCs.
-> +	"rockchip,rk3188-power-controller" - for RK3288 SoCs.
-These should be for RK3066 and RK3188.
->   	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
->   	"rockchip,rk3328-power-controller" - for RK3328 SoCs.
->   	"rockchip,rk3366-power-controller" - for RK3366 SoCs.
-> @@ -17,6 +19,8 @@ Required properties for power domain controller:
->   
->   Required properties for power domain sub nodes:
->   - reg: index of the power domain, should use macros in:
-> +	"include/dt-bindings/power/rk3066-power.h" - for RK3288 type power domain.
-> +	"include/dt-bindings/power/rk3188-power.h" - for RK3288 type power domain.
-Same here.
->   	"include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
->   	"include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
->   	"include/dt-bindings/power/rk3366-power.h" - for RK3366 type power domain.
-Julien
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Changes in v4:
+> - Add nvmem calibration data (not yet used by the driver)
+> Changes in v3:
+> - Clock name changes.
+> - Example node name changes.
+> - Add interupts (not yet used by the driver).
+> 
+>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 30 ++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> index badff3611a98..6c470d584bf9 100644
+> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> @@ -4,12 +4,26 @@ The Allwinner SoCs all have an ADC that can also act as a thermal sensor
+>  and sometimes as a touchscreen controller.
+>  
+>  Required properties:
+> -  - compatible: "allwinner,sun8i-a33-ths",
+> +  - compatible: must contain one of the following compatibles:
+> +		- "allwinner,sun8i-a33-ths"
+> +		- "allwinner,sun8i-h3-ths"
+>    - reg: mmio address range of the chip,
+>    - #thermal-sensor-cells: shall be 0,
+>    - #io-channel-cells: shall be 0,
+>  
+> -Example:
+> +Optional properties:
+> +  - nvmem-cells: A phandle to the calibration data provided by a nvmem device.
+> +                 If unspecified default values shall be used.
+> +  - nvmem-cell-names: Should be "calibration-data"
+
+I think a cross reference to the nvmem binding docs would be good here.
+It wasn't something I could remember coming across before.  Obviously
+grep gets you there quickly enough, but a cross reference would be even
+better.
+
+Also would it make sense to have an example with these in?
+
+Jonathan
+> +
+> +Required properties for the following compatibles:
+> +		- "allwinner,sun8i-h3-ths"
+> +  - clocks: the bus clock and the input clock of the ADC,
+> +  - clock-names: should be "bus" and "mod",
+> +  - resets: the bus reset of the ADC,
+> +  - interrupts: the sampling interrupt of the ADC,
+> +
+> +Example for A33:
+>  	ths: ths@01c25000 {
+>  		compatible = "allwinner,sun8i-a33-ths";
+>  		reg = <0x01c25000 0x100>;
+> @@ -17,6 +31,18 @@ Example:
+>  		#io-channel-cells = <0>;
+>  	};
+>  
+> +Example for H3:
+> +	ths: thermal-sensor@1c25000 {
+> +		compatible = "allwinner,sun8i-h3-ths";
+> +		reg = <0x01c25000 0x400>;
+> +		clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
+> +		clock-names = "bus", "mod";
+> +		resets = <&ccu RST_BUS_THS>;
+> +		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> +		#thermal-sensor-cells = <0>;
+> +		#io-channel-cells = <0>;
+> +	};
+> +
+>  sun4i, sun5i and sun6i SoCs are also supported via the older binding:
+>  
+>  sun4i resistive touchscreen controller
