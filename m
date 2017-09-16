@@ -1,78 +1,95 @@
-From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/9 v2] usb: usb251xb: Add 5,6,7 ports boost settings
-Date: Sat, 16 Sep 2017 13:42:15 +0300
-Message-ID: <20170916104220.3742-5-fancer.lancer@gmail.com>
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH 5/9 v2] usb: usb251xb: Add battery enable setting flag
+Date: Sat, 16 Sep 2017 13:42:16 +0300
+Message-ID: <20170916104220.3742-6-fancer.lancer@gmail.com>
 References: <20170915233113.17855-1-fancer.lancer@gmail.com>
  <20170916104220.3742-1-fancer.lancer@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170916104220.3742-1-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170916104220.3742-1-fancer.lancer@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: richard.leitner@skidata.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-USB electrical signaling drive strength boost bit is also supported
-by USB2517 hub. Since it got three addition ports, the designers
-needed to add one more register for initialization. It turned out
-to be formerly reserved 0xF7. As before we just initialize it with
-default zeros.
+Battery charging settings are supported by USB251xb hubs only.
+USB2517i isn't one of them. So we need to reflect it within the
+device-specific data structure. The driver doesn't support dts
+property to change this setting, but instead defaults it with zero.
+So the flag isn't used anywhere in the driver, but still can be helpful
+in future, when necessity of corresponding dts setting arises.
 
-Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/usb/misc/usb251xb.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/usb/misc/usb251xb.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 3de0de93b..44fa7d084 100644
+index 44fa7d084..0834729d1 100644
 --- a/drivers/usb/misc/usb251xb.c
 +++ b/drivers/usb/misc/usb251xb.c
-@@ -94,8 +94,10 @@
+@@ -164,54 +164,63 @@ struct usb251xb {
+ struct usb251xb_data {
+ 	u16 product_id;
+ 	u8 port_cnt;
++	bool bat_support;
+ 	char product_str[USB251XB_STRING_BUFSIZE / 2]; /* ASCII string */
+ };
  
- #define USB251XB_ADDR_BOOST_UP	0xF6
- #define USB251XB_DEF_BOOST_UP	0x00
--#define USB251XB_ADDR_BOOST_X	0xF8
--#define USB251XB_DEF_BOOST_X	0x00
-+#define USB251XB_ADDR_BOOST_57	0xF7
-+#define USB251XB_DEF_BOOST_57	0x00
-+#define USB251XB_ADDR_BOOST_14	0xF8
-+#define USB251XB_DEF_BOOST_14	0x00
+ static const struct usb251xb_data usb2512b_data = {
+ 	.product_id = 0x2512,
+ 	.port_cnt = 2,
++	.bat_support = true,
+ 	.product_str = "USB2512B",
+ };
  
- #define USB251XB_ADDR_PORT_SWAP	0xFA
- #define USB251XB_DEF_PORT_SWAP	0x00
-@@ -149,7 +151,8 @@ struct usb251xb {
- 	char serial[USB251XB_STRING_BUFSIZE];
- 	u8  bat_charge_en;
- 	u8  boost_up;
--	u8  boost_x;
-+	u8  boost_57;
-+	u8  boost_14;
- 	u8  port_swap;
- 	u8  port_map12;
- 	u8  port_map34;
-@@ -280,7 +283,8 @@ static int usb251xb_connect(struct usb251xb *hub)
- 	       USB251XB_STRING_BUFSIZE);
- 	i2c_wb[USB251XB_ADDR_BATTERY_CHARGING_ENABLE] = hub->bat_charge_en;
- 	i2c_wb[USB251XB_ADDR_BOOST_UP]          = hub->boost_up;
--	i2c_wb[USB251XB_ADDR_BOOST_X]           = hub->boost_x;
-+	i2c_wb[USB251XB_ADDR_BOOST_57]          = hub->boost_57;
-+	i2c_wb[USB251XB_ADDR_BOOST_14]          = hub->boost_14;
- 	i2c_wb[USB251XB_ADDR_PORT_SWAP]         = hub->port_swap;
- 	i2c_wb[USB251XB_ADDR_PORT_MAP_12]       = hub->port_map12;
- 	i2c_wb[USB251XB_ADDR_PORT_MAP_34]       = hub->port_map34;
-@@ -517,7 +521,8 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	hub->max_current_bp = USB251XB_DEF_MAX_CURRENT_BUS;
- 	hub->bat_charge_en = USB251XB_DEF_BATTERY_CHARGING_ENABLE;
- 	hub->boost_up = USB251XB_DEF_BOOST_UP;
--	hub->boost_x = USB251XB_DEF_BOOST_X;
-+	hub->boost_57 = USB251XB_DEF_BOOST_57;
-+	hub->boost_14 = USB251XB_DEF_BOOST_14;
- 	hub->port_swap = USB251XB_DEF_PORT_SWAP;
- 	hub->port_map12 = USB251XB_DEF_PORT_MAP_12;
- 	hub->port_map34 = USB251XB_DEF_PORT_MAP_34;
+ static const struct usb251xb_data usb2512bi_data = {
+ 	.product_id = 0x2512,
+ 	.port_cnt = 2,
++	.bat_support = true,
+ 	.product_str = "USB2512Bi",
+ };
+ 
+ static const struct usb251xb_data usb2513b_data = {
+ 	.product_id = 0x2513,
+ 	.port_cnt = 3,
++	.bat_support = true,
+ 	.product_str = "USB2513B",
+ };
+ 
+ static const struct usb251xb_data usb2513bi_data = {
+ 	.product_id = 0x2513,
+ 	.port_cnt = 3,
++	.bat_support = true,
+ 	.product_str = "USB2513Bi",
+ };
+ 
+ static const struct usb251xb_data usb2514b_data = {
+ 	.product_id = 0x2514,
+ 	.port_cnt = 4,
++	.bat_support = true,
+ 	.product_str = "USB2514B",
+ };
+ 
+ static const struct usb251xb_data usb2514bi_data = {
+ 	.product_id = 0x2514,
+ 	.port_cnt = 4,
++	.bat_support = true,
+ 	.product_str = "USB2514Bi",
+ };
+ 
+ static const struct usb251xb_data usb2517_data = {
+ 	.product_id = 0x2517,
+ 	.port_cnt = 7,
++	.bat_support = false,
+ 	.product_str = "USB2517",
+ };
+ 
+ static const struct usb251xb_data usb2517i_data = {
+ 	.product_id = 0x2517,
+ 	.port_cnt = 7,
++	.bat_support = false,
+ 	.product_str = "USB2517i",
+ };
+ 
 -- 
 2.12.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
