@@ -1,7 +1,7 @@
 From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 7/9 v2] usb: usb251xb: Fix property_u32 NULL pointer dereference
-Date: Sat, 16 Sep 2017 13:42:18 +0300
-Message-ID: <20170916104220.3742-8-fancer.lancer@gmail.com>
+Subject: [PATCH 9/9 v2] usb: usb251xb: Use GPIO descriptor consumer interface
+Date: Sat, 16 Sep 2017 13:42:20 +0300
+Message-ID: <20170916104220.3742-10-fancer.lancer@gmail.com>
 References: <20170915233113.17855-1-fancer.lancer@gmail.com>
  <20170916104220.3742-1-fancer.lancer@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,61 +11,133 @@ To: richard.leitner@skidata.com, gregkh@linuxfoundation.org, robh+dt@kernel.org,
 Cc: Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The methods like of_property_read_u32 utilizing the specified
-pointer permit only the pointer to a preallocated u32 storage as the
-third argument. As a result the driver crashes on NULL pointer
-dereference in case if "oc-delay-us" or "power-on-time-ms" declared
-in dts file.
+The driver used to be developed with legacy GPIO API support. It's
+better to use descriptor-based interface for several reasons. First
+of all the legacy API doesn't support the ACTIVE_LOW/HIGH flag of dts
+nodes, which is essential since different hardware may have different
+GPIOs connectivity including the logical value inversion. Secondly,
+by requesting the reset GPIO descriptor the driver prevent the other
+applications from changing its value. And last but not least the
+legacy GPIO interface should be avoided in the new code due to it
+obsolescence.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/usb/misc/usb251xb.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/usb/usb251xb.txt |  2 +-
+ drivers/usb/misc/usb251xb.c                        | 34 +++++++++-------------
+ 2 files changed, 15 insertions(+), 21 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+index dd59a32e7..7c981d556 100644
+--- a/Documentation/devicetree/bindings/usb/usb251xb.txt
++++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+@@ -8,10 +8,10 @@ Required properties :
+ 	"microchip,usb2512b", "microchip,usb2512bi", "microchip,usb2513b",
+ 	"microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi",
+ 	"microchip,usb2517", "microchip,usb2517i"
+- - reset-gpios : Should specify the gpio for hub reset
+  - reg : I2C address on the selected bus (default is <0x2C>)
+ 
+ Optional properties :
++ - reset-gpios : Should specify the gpio for hub reset
+  - skip-config : Skip Hub configuration, but only send the USB-Attach command
+  - vendor-id : Set USB Vendor ID of the hub (16 bit, default is 0x0424)
+  - product-id : Set USB Product ID of the hub (16 bit, default depends on type)
 diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 51cc53ddc..c308b0006 100644
+index 71994b883..c2dd9742f 100644
 --- a/drivers/usb/misc/usb251xb.c
 +++ b/drivers/usb/misc/usb251xb.c
-@@ -348,7 +348,7 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	struct device *dev = hub->dev;
- 	struct device_node *np = dev->of_node;
- 	int len, err, i;
--	u32 *property_u32 = NULL;
-+	u32 property_u32 = 0;
- 	const u32 *cproperty_u32;
- 	const char *cproperty_char;
- 	char str[USB251XB_STRING_BUFSIZE / 2];
-@@ -425,16 +425,16 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	if (of_get_property(np, "dynamic-power-switching", NULL))
- 		hub->conf_data2 |= BIT(7);
+@@ -3,6 +3,7 @@
+  * Configuration via SMBus.
+  *
+  * Copyright (c) 2017 SKIDATA AG
++ * Copyright (c) 2017 T-platforms
+  *
+  * This work is based on the USB3503 driver by Dongjin Kim and
+  * a not-accepted patch by Fabien Lahoudere, see:
+@@ -20,12 +21,11 @@
+  */
  
--	if (!of_property_read_u32(np, "oc-delay-us", property_u32)) {
--		if (*property_u32 == 100) {
-+	if (!of_property_read_u32(np, "oc-delay-us", &property_u32)) {
-+		if (property_u32 == 100) {
- 			/* 100 us*/
- 			hub->conf_data2 &= ~BIT(5);
- 			hub->conf_data2 &= ~BIT(4);
--		} else if (*property_u32 == 4000) {
-+		} else if (property_u32 == 4000) {
- 			/* 4 ms */
- 			hub->conf_data2 &= ~BIT(5);
- 			hub->conf_data2 |= BIT(4);
--		} else if (*property_u32 == 16000) {
-+		} else if (property_u32 == 16000) {
- 			/* 16 ms */
- 			hub->conf_data2 |= BIT(5);
- 			hub->conf_data2 |= BIT(4);
-@@ -498,8 +498,8 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ #include <linux/delay.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/nls.h>
+ #include <linux/of_device.h>
+-#include <linux/of_gpio.h>
+ #include <linux/slab.h>
+ 
+ /* Internal Register Set Addresses & Default Values acc. to DS00001692C */
+@@ -127,7 +127,7 @@ struct usb251xb {
+ 	struct device *dev;
+ 	struct i2c_client *i2c;
+ 	u8 skip_config;
+-	int gpio_reset;
++	struct gpio_desc *gpio_reset;
+ 	u16 vendor_id;
+ 	u16 product_id;
+ 	u16 device_id;
+@@ -235,13 +235,13 @@ static const struct usb251xb_data usb2517i_data = {
+ 
+ static void usb251xb_reset(struct usb251xb *hub, int state)
+ {
+-	if (!gpio_is_valid(hub->gpio_reset))
++	if (!hub->gpio_reset)
+ 		return;
+ 
+-	gpio_set_value_cansleep(hub->gpio_reset, state);
++	gpiod_set_value_cansleep(hub->gpio_reset, state);
+ 
+ 	/* wait for hub recovery/stabilization */
+-	if (state)
++	if (!state)
+ 		usleep_range(500, 750);	/* >=500us at power on */
+ 	else
+ 		usleep_range(1, 10);	/* >=1us at power down */
+@@ -260,7 +260,7 @@ static int usb251xb_connect(struct usb251xb *hub)
+ 		i2c_wb[0] = 0x01;
+ 		i2c_wb[1] = USB251XB_STATUS_COMMAND_ATTACH;
+ 
+-		usb251xb_reset(hub, 1);
++		usb251xb_reset(hub, 0);
+ 
+ 		err = i2c_smbus_write_i2c_block_data(hub->i2c,
+ 				USB251XB_ADDR_STATUS_COMMAND, 2, i2c_wb);
+@@ -310,7 +310,7 @@ static int usb251xb_connect(struct usb251xb *hub)
+ 	i2c_wb[USB251XB_ADDR_PORT_MAP_7]        = hub->port_map7;
+ 	i2c_wb[USB251XB_ADDR_STATUS_COMMAND] = USB251XB_STATUS_COMMAND_ATTACH;
+ 
+-	usb251xb_reset(hub, 1);
++	usb251xb_reset(hub, 0);
+ 
+ 	/* write registers */
+ 	for (i = 0; i < (USB251XB_I2C_REG_SZ / USB251XB_I2C_WRITE_SZ); i++) {
+@@ -363,19 +363,13 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 	else
+ 		hub->skip_config = 0;
+ 
+-	hub->gpio_reset = of_get_named_gpio(np, "reset-gpios", 0);
+-	if (hub->gpio_reset == -EPROBE_DEFER)
++	hub->gpio_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
++	if (PTR_ERR(hub->gpio_reset) == -EPROBE_DEFER) {
+ 		return -EPROBE_DEFER;
+-	if (gpio_is_valid(hub->gpio_reset)) {
+-		err = devm_gpio_request_one(dev, hub->gpio_reset,
+-					    GPIOF_OUT_INIT_LOW,
+-					    "usb251xb reset");
+-		if (err) {
+-			dev_err(dev,
+-				"unable to request GPIO %d as reset pin (%d)\n",
+-				hub->gpio_reset, err);
+-			return err;
+-		}
++	} else if (IS_ERR(hub->gpio_reset)) {
++		err = PTR_ERR(hub->gpio_reset);
++		dev_err(dev, "unable to request GPIO reset pin (%d)\n", err);
++		return err;
  	}
  
- 	hub->power_on_time = USB251XB_DEF_POWER_ON_TIME;
--	if (!of_property_read_u32(np, "power-on-time-ms", property_u32))
--		hub->power_on_time = min_t(u8, *property_u32 / 2, 255);
-+	if (!of_property_read_u32(np, "power-on-time-ms", &property_u32))
-+		hub->power_on_time = min_t(u8, property_u32 / 2, 255);
- 
- 	if (of_property_read_u16_array(np, "language-id", &hub->lang_id, 1))
- 		hub->lang_id = USB251XB_DEF_LANGUAGE_ID;
+ 	if (of_property_read_u16_array(np, "vendor-id", &hub->vendor_id, 1))
 -- 
 2.12.0
