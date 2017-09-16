@@ -1,55 +1,84 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv5 2/5] cec-ioc-dqevent.rst: document new
- CEC_EVENT_PIN_HPD_LOW/HIGH events
-Date: Sat, 16 Sep 2017 16:28:24 +0200
-Message-ID: <20170916142827.5878-3-hverkuil@xs4all.nl>
-References: <20170916142827.5878-1-hverkuil@xs4all.nl>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: update dtx_diff cpp and dts include paths to
+ match build
+Date: Sat, 16 Sep 2017 10:52:34 -0700
+Message-ID: <59BD64E2.9000605@gmail.com>
+References: <1505513779-11315-1-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqJDvhH7+4mHfvUhOnc9tsHw49P=+FjVtWCErNnKrH9-zA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170916142827.5878-1-hverkuil@xs4all.nl>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJDvhH7+4mHfvUhOnc9tsHw49P=+FjVtWCErNnKrH9-zA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKRG9jdW1lbnQgdGhl
-c2UgbmV3IENFQyBldmVudHMuCgpTaWduZWQtb2ZmLWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVy
-a3VpbEBjaXNjby5jb20+Ci0tLQogRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL2NlYy9jZWMtaW9j
-LWRxZXZlbnQucnN0IHwgMTggKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTgg
-aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vbWVkaWEvdWFwaS9jZWMv
-Y2VjLWlvYy1kcWV2ZW50LnJzdCBiL0RvY3VtZW50YXRpb24vbWVkaWEvdWFwaS9jZWMvY2VjLWlv
-Yy1kcWV2ZW50LnJzdAppbmRleCBkYjYxNWUzNDA1YzAuLjMyYjQ3NzYzZjVhNiAxMDA2NDQKLS0t
-IGEvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL2NlYy9jZWMtaW9jLWRxZXZlbnQucnN0CisrKyBi
-L0RvY3VtZW50YXRpb24vbWVkaWEvdWFwaS9jZWMvY2VjLWlvYy1kcWV2ZW50LnJzdApAQCAtMTYw
-LDYgKzE2MCwyNCBAQCBpdCBpcyBndWFyYW50ZWVkIHRoYXQgdGhlIHN0YXRlIGRpZCBjaGFuZ2Ug
-aW4gYmV0d2VlbiB0aGUgdHdvIGV2ZW50cy4KICAgICAgIC0gR2VuZXJhdGVkIGlmIHRoZSBDRUMg
-cGluIGdvZXMgZnJvbSBhIGxvdyB2b2x0YWdlIHRvIGEgaGlnaCB2b2x0YWdlLgogICAgICAgICBP
-bmx5IGFwcGxpZXMgdG8gYWRhcHRlcnMgdGhhdCBoYXZlIHRoZSBgYENFQ19DQVBfTU9OSVRPUl9Q
-SU5gYAogCWNhcGFiaWxpdHkgc2V0LgorICAgICogLi4gX2BDRUMtRVZFTlQtUElOLUhQRC1MT1dg
-OgorCisgICAgICAtIGBgQ0VDX0VWRU5UX1BJTl9IUERfTE9XYGAKKyAgICAgIC0gNQorICAgICAg
-LSBHZW5lcmF0ZWQgaWYgdGhlIEhQRCBwaW4gZ29lcyBmcm9tIGEgaGlnaCB2b2x0YWdlIHRvIGEg
-bG93IHZvbHRhZ2UuCisgICAgICAgIE9ubHkgYXBwbGllcyB0byBhZGFwdGVycyB0aGF0IGhhdmUg
-dGhlIGBgQ0VDX0NBUF9NT05JVE9SX1BJTmBgCisJY2FwYWJpbGl0eSBzZXQuIFdoZW4gb3Blbigp
-IGlzIGNhbGxlZCwgdGhlIEhQRCBwaW4gY2FuIGJlIHJlYWQgYW5kCisJdGhlIEhQRCBpcyBsb3cs
-IHRoZW4gYW4gaW5pdGlhbCBldmVudCB3aWxsIGJlIGdlbmVyYXRlZCBmb3IgdGhhdAorCWZpbGVo
-YW5kbGUuCisgICAgKiAuLiBfYENFQy1FVkVOVC1QSU4tSFBELUhJR0hgOgorCisgICAgICAtIGBg
-Q0VDX0VWRU5UX1BJTl9IUERfSElHSGBgCisgICAgICAtIDYKKyAgICAgIC0gR2VuZXJhdGVkIGlm
-IHRoZSBIUEQgcGluIGdvZXMgZnJvbSBhIGxvdyB2b2x0YWdlIHRvIGEgaGlnaCB2b2x0YWdlLgor
-ICAgICAgICBPbmx5IGFwcGxpZXMgdG8gYWRhcHRlcnMgdGhhdCBoYXZlIHRoZSBgYENFQ19DQVBf
-TU9OSVRPUl9QSU5gYAorCWNhcGFiaWxpdHkgc2V0LiBXaGVuIG9wZW4oKSBpcyBjYWxsZWQsIHRo
-ZSBIUEQgcGluIGNhbiBiZSByZWFkIGFuZAorCXRoZSBIUEQgaXMgaGlnaCwgdGhlbiBhbiBpbml0
-aWFsIGV2ZW50IHdpbGwgYmUgZ2VuZXJhdGVkIGZvciB0aGF0CisJZmlsZWhhbmRsZS4KIAogCiAu
-LiB0YWJ1bGFyY29sdW1uczo6IHxwezYuMGNtfXxwezAuNmNtfXxwezEwLjljbX18Ci0tIAoyLjE0
-LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 09/15/17 15:42, Rob Herring wrote:
+> On Fri, Sep 15, 2017 at 5:16 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> 
+> I feel like we just had the same subject. Can you make it more specific.
+
+Yes, the previous one was pretty much the same words, but the one line
+description is not an exact match.  I will come up with a more unique
+subject.
+
+
+>> Update dtx_diff include paths in the same manner as:
+>> commit b12869a8d519 ("of: remove drivers/of/testcase-data from
+>> include search path for CPP"), commit 5ffa2aed389c ("of: remove
+>> arch/$(SRCARCH)/boot/dts from include search path for CPP"), and
+>> commit 50f9ddaf64e1 ("of: search scripts/dtc/include-prefixes path
+>> for both CPP and DTC").
+> 
+> We need a better way for this to stop happening besides me remembering
+> in reviews...
+
+Yep, me remembering in reviews.  Which I have.  :-)
+
+
+> Perhaps a separate file of include paths that all tools can use?
+
+I considered that with the very first version of dtx_diff.  At the time,
+I expected changes to the include path to be very rare.  I still have
+that expectation looking forward.
+
+I considered having dtx_diff scrape the include paths out of Makefile.lib,
+but that seemed fragile and kludgey.  I could create a shell script that
+outputs the include paths,  Then Makefile.lib and dtx_diff could use
+that script to get the include paths.
+
+
+>> Remove proposed include path kernel/dts/, which was never implemented
+>> for the dtb build.
+>>
+>> For the diff case, each source file is compiled separately.  For
+>> each of those compiles, provide the location of the source file
+>> as an include path, not the location of both source files.
+>>
+>> ---
+>>
+>> The referenced commits b12869a8d519, 5ffa2aed389c, 50f9ddaf64e1
+>> are in v4.14-rc1.  No stable kernels need this patch.
+>>
+>>  scripts/dtc/dtx_diff |   22 +++++++++-------------
+>>  1 file changed, 9 insertions(+), 13 deletions(-)
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> 
+> This is going to get dropped.
+> 
+> Rob
+
+I am assuming the drop is because of the request to have a common
+file for all tools to source for the include paths.  I'll re-spin
+to implement that.
+
+-Frank
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
