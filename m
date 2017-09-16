@@ -1,85 +1,133 @@
-From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 8/9 v2] usb: usb251xb: Add max power/current dts property support
-Date: Sat, 16 Sep 2017 13:42:19 +0300
-Message-ID: <20170916104220.3742-9-fancer.lancer@gmail.com>
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH 6/9 v2] usb: usb251xb: Add USB2517 LED settings
+Date: Sat, 16 Sep 2017 13:42:17 +0300
+Message-ID: <20170916104220.3742-7-fancer.lancer@gmail.com>
 References: <20170915233113.17855-1-fancer.lancer@gmail.com>
  <20170916104220.3742-1-fancer.lancer@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170916104220.3742-1-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170916104220.3742-1-fancer.lancer@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: richard.leitner@skidata.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This parameters may be varied in accordance with hardware specifics.
-So lets add the corresponding settings to the usb251x driver dts
-specification.
+USB2517 supports two LED modes: USB mode (default) and speed indication
+mode. The last one can be switched on by corresponding dts property.
+Since USB251xb hubs doesn't support LEDs settings, we need to ignore
+this setting.
 
-Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- Documentation/devicetree/bindings/usb/usb251xb.txt   |  6 ++++++
- drivers/usb/misc/usb251xb.c                          | 20 ++++++++++++++++----
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/usb/usb251xb.txt         |  1 +
+ drivers/usb/misc/usb251xb.c                                | 14 +++++++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-index 3d84626d3..dd59a32e7 100644
+index 1682d4087..3d84626d3 100644
 --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
 +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-@@ -44,6 +44,12 @@ Optional properties :
- 	device connected.
-  - sp-disabled-ports : Specifies the ports which will be self-power disabled
-  - bp-disabled-ports : Specifies the ports which will be bus-power disabled
-+ - sp-max-{power,current} : Indicates the power/current consumed by hub from
-+	an upstream port (VBUS) when operation as a self-powered hub. The value
-+	is given in mA in a 0 - 100 range (default is 1mA).
-+ - bp-max-{power,current} : Indicates the power/current consumed by hub from
-+	an upstream port (VBUS) when operation as a bus-powered hub. The value
-+	is given in mA in a 0 - 510 range (default is 100mA).
-  - power-on-time-ms : Specifies the time it takes from the time the host
- 	initiates the power-on sequence to a port until the port has adequate
- 	power. The value is given in ms in a 0 - 510 range (default is 100ms).
+@@ -37,6 +37,7 @@ Optional properties :
+ 	an invalid value is given, the default is used instead.
+  - compound-device : indicate the hub is part of a compound device
+  - port-mapping-mode : enable port mapping mode
++ - speed-led-mode : led speed indiation mode selection (usb2517 only)
+  - string-support : enable string descriptor support (required for manufacturer,
+ 	product and serial string configuration)
+  - non-removable-ports : Should specify the ports which have a non-removable
 diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index c308b0006..71994b883 100644
+index 0834729d1..51cc53ddc 100644
 --- a/drivers/usb/misc/usb251xb.c
 +++ b/drivers/usb/misc/usb251xb.c
-@@ -497,6 +497,22 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 		}
- 	}
+@@ -49,7 +49,7 @@
+ #define USB251XB_ADDR_CONFIG_DATA_2	0x07
+ #define USB251XB_DEF_CONFIG_DATA_2	0x20
+ #define USB251XB_ADDR_CONFIG_DATA_3	0x08
+-#define USB251XB_DEF_CONFIG_DATA_3	0x02
++#define USB251XB_DEF_CONFIG_DATA_3	0x00
  
-+	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
-+	if (!of_property_read_u32(np, "sp-max-power", &property_u32))
-+		hub->max_power_sp = min_t(u8, property_u32 / 2, 50);
+ #define USB251XB_ADDR_NON_REMOVABLE_DEVICES	0x09
+ #define USB251XB_DEF_NON_REMOVABLE_DEVICES	0x00
+@@ -164,6 +164,7 @@ struct usb251xb {
+ struct usb251xb_data {
+ 	u16 product_id;
+ 	u8 port_cnt;
++	bool led_support;
+ 	bool bat_support;
+ 	char product_str[USB251XB_STRING_BUFSIZE / 2]; /* ASCII string */
+ };
+@@ -171,6 +172,7 @@ struct usb251xb_data {
+ static const struct usb251xb_data usb2512b_data = {
+ 	.product_id = 0x2512,
+ 	.port_cnt = 2,
++	.led_support = false,
+ 	.bat_support = true,
+ 	.product_str = "USB2512B",
+ };
+@@ -178,6 +180,7 @@ static const struct usb251xb_data usb2512b_data = {
+ static const struct usb251xb_data usb2512bi_data = {
+ 	.product_id = 0x2512,
+ 	.port_cnt = 2,
++	.led_support = false,
+ 	.bat_support = true,
+ 	.product_str = "USB2512Bi",
+ };
+@@ -185,6 +188,7 @@ static const struct usb251xb_data usb2512bi_data = {
+ static const struct usb251xb_data usb2513b_data = {
+ 	.product_id = 0x2513,
+ 	.port_cnt = 3,
++	.led_support = false,
+ 	.bat_support = true,
+ 	.product_str = "USB2513B",
+ };
+@@ -192,6 +196,7 @@ static const struct usb251xb_data usb2513b_data = {
+ static const struct usb251xb_data usb2513bi_data = {
+ 	.product_id = 0x2513,
+ 	.port_cnt = 3,
++	.led_support = false,
+ 	.bat_support = true,
+ 	.product_str = "USB2513Bi",
+ };
+@@ -199,6 +204,7 @@ static const struct usb251xb_data usb2513bi_data = {
+ static const struct usb251xb_data usb2514b_data = {
+ 	.product_id = 0x2514,
+ 	.port_cnt = 4,
++	.led_support = false,
+ 	.bat_support = true,
+ 	.product_str = "USB2514B",
+ };
+@@ -206,6 +212,7 @@ static const struct usb251xb_data usb2514b_data = {
+ static const struct usb251xb_data usb2514bi_data = {
+ 	.product_id = 0x2514,
+ 	.port_cnt = 4,
++	.led_support = false,
+ 	.bat_support = true,
+ 	.product_str = "USB2514Bi",
+ };
+@@ -213,6 +220,7 @@ static const struct usb251xb_data usb2514bi_data = {
+ static const struct usb251xb_data usb2517_data = {
+ 	.product_id = 0x2517,
+ 	.port_cnt = 7,
++	.led_support = true,
+ 	.bat_support = false,
+ 	.product_str = "USB2517",
+ };
+@@ -220,6 +228,7 @@ static const struct usb251xb_data usb2517_data = {
+ static const struct usb251xb_data usb2517i_data = {
+ 	.product_id = 0x2517,
+ 	.port_cnt = 7,
++	.led_support = true,
+ 	.bat_support = false,
+ 	.product_str = "USB2517i",
+ };
+@@ -443,6 +452,9 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 	if (of_get_property(np, "port-mapping-mode", NULL))
+ 		hub->conf_data3 |= BIT(3);
+ 
++	if (data->led_support && of_get_property(np, "speed-led-mode", NULL))
++		hub->conf_data3 |= BIT(1);
 +
-+	hub->max_power_bp = USB251XB_DEF_MAX_POWER_BUS;
-+	if (!of_property_read_u32(np, "bp-max-power", &property_u32))
-+		hub->max_power_bp = min_t(u8, property_u32 / 2, 255);
-+
-+	hub->max_current_sp = USB251XB_DEF_MAX_CURRENT_SELF;
-+	if (!of_property_read_u32(np, "sp-max-current", &property_u32))
-+		hub->max_current_sp = min_t(u8, property_u32 / 2, 50);
-+
-+	hub->max_current_bp = USB251XB_DEF_MAX_CURRENT_BUS;
-+	if (!of_property_read_u32(np, "bp-max-current", &property_u32))
-+		hub->max_current_bp = min_t(u8, property_u32 / 2, 255);
-+
- 	hub->power_on_time = USB251XB_DEF_POWER_ON_TIME;
- 	if (!of_property_read_u32(np, "power-on-time-ms", &property_u32))
- 		hub->power_on_time = min_t(u8, property_u32 / 2, 255);
-@@ -536,10 +552,6 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	/* The following parameters are currently not exposed to devicetree, but
- 	 * may be as soon as needed.
- 	 */
--	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
--	hub->max_power_bp = USB251XB_DEF_MAX_POWER_BUS;
--	hub->max_current_sp = USB251XB_DEF_MAX_CURRENT_SELF;
--	hub->max_current_bp = USB251XB_DEF_MAX_CURRENT_BUS;
- 	hub->bat_charge_en = USB251XB_DEF_BATTERY_CHARGING_ENABLE;
- 	hub->boost_up = USB251XB_DEF_BOOST_UP;
- 	hub->boost_57 = USB251XB_DEF_BOOST_57;
+ 	if (of_get_property(np, "string-support", NULL))
+ 		hub->conf_data3 |= BIT(0);
+ 
 -- 
 2.12.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
