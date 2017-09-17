@@ -1,98 +1,55 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v4 2/2] ARM: dts: exynos: Add HDMI and Sil9234 to Trats2
- board
-Date: Sun, 17 Sep 2017 09:43:22 +0200
-Message-ID: <20170917074322.GA27936@kozik-book>
-References: <1505201648-9240-1-git-send-email-m.purski@samsung.com>
- <CGME20170912073505eucas1p2e4fb706c97e406a0f46282af66e8f90c@eucas1p2.samsung.com>
- <1505201648-9240-3-git-send-email-m.purski@samsung.com>
+From: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 3/5] dt-bindings: mfd: Add bindings for the keys as subnode of PMIC
+Date: Sun, 17 Sep 2017 16:00:50 +0800
+Message-ID: <1505635252-27716-4-git-send-email-chen.zhong@mediatek.com>
+References: <1505635252-27716-1-git-send-email-chen.zhong@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1505201648-9240-3-git-send-email-m.purski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505635252-27716-1-git-send-email-chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 12, 2017 at 09:34:08AM +0200, Maciej Purski wrote:
-> Add HDMI and Sil9234 MHL converter to Trats2 board.
-> Following in SoC devices have been enabled:
-> - HDMI (HDMI signal encoder),
-> - Mixer (video buffer scanout device),
-> - I2C_5 bus (used for HDMI DDC)
-> - I2C_8 bus (used for HDMI_PHY control).
-> 
-> Based on previous work by:
-> Tomasz Stanislawski <t.stanislaws@samsung.com>
-> 
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4412-trats2.dts | 112 ++++++++++++++++++++++++++++++++
->  1 file changed, 112 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-> index 35e9b94..742e02a 100644
-> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> @@ -18,6 +18,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/clock/maxim,max77686.h>
-> +#include <dt-bindings/pinctrl/samsung.h>
->  
->  / {
->  	model = "Samsung Trats 2 based on Exynos4412";
-> @@ -97,6 +98,34 @@
->  			gpio = <&gpj0 5 GPIO_ACTIVE_HIGH>;
->  			enable-active-high;
->  		};
-> +
-> +		vsil12: voltage-regulator-6 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "VSIL_1.2V";
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1200000>;
-> +			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +			vin-supply = <&buck7_reg>;
-> +		};
-> +
-> +		vcc33mhl: voltage-regulator-7 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "VCC_3.3_MHL";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +		};
-> +
-> +		vcc18mhl: voltage-regulator-8 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "VCC_1.8_MHL";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +		};
->  	};
->  
->  	gpio-keys {
-> @@ -229,6 +258,36 @@
->  		};
->  	};
->  
-> +	i2c-mhl {
-> +		compatible = "i2c-gpio";
-> +		gpios = <&gpf0 4 GPIO_ACTIVE_HIGH &gpf0 6 GPIO_ACTIVE_HIGH>;
+This patch adds documentation for device tree bindings for keys support
+as the subnode of MT6397/MT6323 PMIC.
 
-Please split it like in other nodes:
-	gpios = <...>, <...>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/mt6397.txt |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-AFAIR they should work the same so keep it consistent.
+diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+index 522a3bb..d1df77f 100644
+--- a/Documentation/devicetree/bindings/mfd/mt6397.txt
++++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+@@ -7,6 +7,7 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
+ - GPIO
+ - Clock
+ - LED
++- Keys
+ 
+ It is interfaced to host controller using SPI interface by a proprietary hardware
+ called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
+@@ -40,6 +41,11 @@ Optional subnodes:
+ 		- compatible: "mediatek,mt6323-led"
+ 	see Documentation/devicetree/bindings/leds/leds-mt6323.txt
+ 
++- keys
++	Required properties:
++		- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
++	see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
++
+ Example:
+ 	pwrap: pwrap@1000f000 {
+ 		compatible = "mediatek,mt8135-pwrap";
+-- 
+1.7.9.5
 
-Rest looks good but the bindings have to be accepted first.
-
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
