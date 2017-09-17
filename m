@@ -1,64 +1,48 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv6 3/5] dt-bindings: document the CEC GPIO bindings
-Date: Sun, 17 Sep 2017 12:15:44 +0200
-Message-ID: <20170917101546.16993-4-hverkuil@xs4all.nl>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCHv6 5/5] MAINTAINERS: add cec-gpio entry
+Date: Sun, 17 Sep 2017 12:15:46 +0200
+Message-ID: <20170917101546.16993-6-hverkuil@xs4all.nl>
 References: <20170917101546.16993-1-hverkuil@xs4all.nl>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170917101546.16993-1-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170917101546.16993-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Document the bindings for the cec-gpio module for hardware where the
-CEC line and optionally the HPD line are connected to GPIO lines.
+Add an entry for the CEC GPIO driver.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/media/cec-gpio.txt         | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
-new file mode 100644
-index 000000000000..46a0bac8b3b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
-@@ -0,0 +1,32 @@
-+* HDMI CEC GPIO driver
+diff --git a/MAINTAINERS b/MAINTAINERS
+index eb930ebecfcb..5ef0d34ef502 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3205,6 +3205,15 @@ F:	include/uapi/linux/cec.h
+ F:	include/uapi/linux/cec-funcs.h
+ F:	Documentation/devicetree/bindings/media/cec.txt
+ 
++CEC GPIO DRIVER
++M:	Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
++L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++T:	git git://linuxtv.org/media_tree.git
++W:	http://linuxtv.org
++S:	Supported
++F:	drivers/media/platform/cec-gpio/
++F:	Documentation/devicetree/bindings/media/cec-gpio.txt
 +
-+The HDMI CEC GPIO module supports CEC implementations where the CEC line
-+is hooked up to a pull-up GPIO line and - optionally - the HPD line is
-+hooked up to another GPIO line.
-+
-+Required properties:
-+  - compatible: value must be "cec-gpio".
-+  - cec-gpios: gpio that the CEC line is connected to. The line should be
-+    tagged as open drain.
-+
-+If the CEC line is associated with an HDMI receiver/transmitter, then the
-+following property is also required:
-+
-+  - hdmi-phandle - phandle to the HDMI controller, see also cec.txt.
-+
-+If the CEC line is not associated with an HDMI receiver/transmitter, then
-+the following property is optional:
-+
-+  - hpd-gpios: gpio that the HPD line is connected to.
-+
-+Example for the Raspberry Pi 3 where the CEC line is connected to
-+pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
-+connected to pin 11 aka BCM17:
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+cec-gpio {
-+       compatible = "cec-gpio";
-+       cec-gpios = <&gpio 7 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+       hpd-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-+};
+ CELL BROADBAND ENGINE ARCHITECTURE
+ M:	Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+ L:	linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 -- 
 2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
