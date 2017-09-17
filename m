@@ -1,93 +1,129 @@
-From: Guy Shapiro <guy.shapiro@mobi-wize.com>
-Subject: Re: [PATCH v7 0/3] nvmem: upstream snvs_lpgpr driver
-Date: Sun, 17 Sep 2017 10:35:47 +0300
-Message-ID: <6081c4e0-b9f3-7fae-624d-d3515a509b67@mobi-wize.com>
-References: <20170620070932.10353-1-o.rempel@pengutronix.de>
- <07198c02-ac87-ec1f-accd-75ad6fd0ac30@pengutronix.de>
- <e0abdef9-91af-8c7b-957c-b55be48ca7b4@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/4] arm: dts: exynos: add exynos5420 cpu
+ capacity-dmips-mhz information
+Date: Sun, 17 Sep 2017 09:37:05 +0200
+Message-ID: <20170917073705.GC19716@kozik-book>
+References: <20170830144120.9312-1-dietmar.eggemann@arm.com>
+ <20170830144120.9312-3-dietmar.eggemann@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e0abdef9-91af-8c7b-957c-b55be48ca7b4@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Oleksij Rempel <ore@pengutronix.de>, Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170830144120.9312-3-dietmar.eggemann@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/07/2017 12:01, Srinivas Kandagatla wrote:
->
-> On 18/07/17 05:52, Oleksij Rempel wrote:
->> Hallo all,
->>
->> Here Gentle Ping to the Old King ;)
->>
->> DT is already ACKed.
->
-> Thanks for patience, As this is a new driver it will be queued for 4.14 j=
-ust before 4.13-rc5 is released.
->
-> thanks,
-> srini =
+On Wed, Aug 30, 2017 at 03:41:18PM +0100, Dietmar Eggemann wrote:
+> The following 'capacity-dmips-mhz' dt property values are used:
+> 
+> Cortex-A15: 1024, Cortex-A7: 539
+> 
+> They have been derived from the cpu_efficiency values:
+> 
+> Cortex-A15: 3891, Cortex-A7: 2048
+> 
+> by scaling them so that the Cortex-A15s (big cores) use 1024.
+> 
+> The cpu_efficiency values were originally derived from the "Big.LITTLE
+> Processing with ARM Cortex™-A15 & Cortex-A7" white paper
+> (http://www.cl.cam.ac.uk/~rdm34/big.LITTLE.pdf). Table 1 lists 1.9x
+> (3891/2048) as the Cortex-A15 vs Cortex-A7 performance ratio for the
+> Dhrystone benchmark.
+> 
+> The following platforms are affected once cpu-invariant accounting
+> support is re-connected to the task scheduler:
+> 
+> arndale-octa, peach-pi, peach-pit, smdk5420
+> 
+> The patch has been tested on Samsung Chromebook 2 13" (peach-pi, Exynos
+> 5800).
+> 
+> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+> 1024
+> 1024
+> 1024
+> 1024
+> 389
+> 389
+> 389
+> 389
+> 
+> The Cortex-A15 vs Cortex-A7 performance ratio is 1024/389 = 2.63.
+> 
+> The values derived with the 'cpu_efficiency/clock-frequency dt property'
+> solution are:
+> 
+> $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+> 1535
+> 1535
+> 1535
+> 1535
+> 448
+> 448
+> 448
+> 448
+> 
+> The Cortex-A15 vs Cortex-A7 performance ratio is 1535/448 = 3.43.
+> 
+> The discrepancy between 2.63 and 3.43 is due to the false assumption
+> when using the 'cpu_efficiency/clock-frequency dt property' solution
+> that the max cpu frequency of the little cpus is 1 GHZ and not 1.3 GHz.
+> The Cortex-A7 cluster runs with a max cpu frequency of 1.3 GHZ whereas
+> the 'clock-frequency' property value is set to 1 GHz.
+> 
+> 3.43/1.3 = 2.64
+> 
+> $ cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
+> 1800000
+> 1800000
+> 1800000
+> 1800000
+> 1300000 <-- max cpu frequency of the Cortex-A7s (little cores)
+> 1300000
+> 1300000
+> 1300000
+> 
+> Running another benchmark (single-threaded sysbench affine to the
+> individual cpus) with performance cpufreq governor on the Samsung
+> Chromebook 2 13" showed the following numbers:
+> 
+> $ for i in `seq 0 7`; do taskset -c $i sysbench --test=cpu
+>   --num-threads=1 --max-time=10 run | grep "total number of events:";
+>   done
+> 
+> total number of events: 1083
+> total number of events: 1085
+> total number of events: 1085
+> total number of events: 1085
+> total number of events: 454
+> total number of events: 454
+> total number of events: 454
+> total number of events: 454
+> 
+> The Cortex-A15 vs Cortex-A7 performance ratio is 2.39, i.e. very close
+> to the one derived from the Dhrystone based one of the "Big.LITTLE
+> Processing with ARM Cortex™-A15 & Cortex-A7" white paper (2.63).
+> 
+> We don't aim for exact values for the cpu capacity values. Besides the
+> CPI (Cycles Per Instruction), the instruction mix and whether the system
+> runs cpu-bound or memory-bound has an impact on the cpu capacity values
+> derived from these benchmark results.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> ---
+>  arch/arm/boot/dts/exynos5420-cpus.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 
-Looks like this patchset is not included in 4.14-rc1.
-Is it still on someone's queue?
->>
->> On 20.06.2017 09:09, Oleksij Rempel wrote:
->>> changes v7:
->>> =A0- split imx6ul patch and squash it with with main patches.
->>> =A0- spell fixes in the binding documentation
->>> =A0- return regmap_bulk_read directly.
->>>
->>> changes v6:
->>> =A0- check if device is writable by reading GPR_SL and GPR_HL bits
->>> =A0- use regmap_bulk_* functions instead of while() { regmap_read/write=
- }
->>> =A0- add patch for imx6ul
->>>
->>> changes v5:
->>> =A0- use dcfg->offset instead of priv->offset.
->>>
->>> changes v4:
->>> =A0- change dependencies in Kconfig
->>> =A0- remove unused includes and order them alphabetically
->>> =A0- set MODULE_LICENSE =3D GPL v2
->>> =A0- remove unused int err variable
->>>
->>> changes v3:
->>> =A0- remove regmap and offset properties.
->>>
->>> changes v2:
->>> =A0- correct typos: Registe, parrent...
->>>
->>> Oleksij Rempel (3):
->>> =A0 nvmem: dt: document SNVS LPGPR binding
->>> =A0 nvmem: add snvs_lpgpr driver
->>> =A0 ARM: dts: imx6qdl.dtsi/imx6ul.dtsi: add "fsl,imx6q-snvs-lpgpr" node
->>>
->>> =A0.../devicetree/bindings/nvmem/snvs-lpgpr.txt=A0=A0=A0=A0=A0=A0 |=A0 =
-20 +++
->>> =A0arch/arm/boot/dts/imx6qdl.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 |=A0=A0 4 +
->>> =A0arch/arm/boot/dts/imx6ul.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 |=A0=A0 4 +
->>> =A0drivers/nvmem/Kconfig=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=A0 10 ++
->>> =A0drivers/nvmem/Makefile=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=A0=A0 2 +
->>> =A0drivers/nvmem/snvs_lpgpr.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 | 155 +++++++++++++++++++++
->>> =A06 files changed, 195 insertions(+)
->>> =A0create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgp=
-r.txt
->>> =A0create mode 100644 drivers/nvmem/snvs_lpgpr.c
->>>
+Thanks, applied (with s/arm/ARM/ change in subject).
+
+Best regards,
+Krzysztof
