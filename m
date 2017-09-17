@@ -1,68 +1,28 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 3/5] input: mouse: Add DT bindings for GPIO mice
-Date: Sun, 17 Sep 2017 13:14:43 +0200
-Message-ID: <20170917111445.30880-4-linus.walleij@linaro.org>
-References: <20170917111445.30880-1-linus.walleij@linaro.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170917111445.30880-1-linus.walleij@linaro.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: dts: stm32: remove useless clocksource nodes
+Date: Sun, 17 Sep 2017 15:34:23 +0200
+Message-ID: <CA+M3ks6WjdJ-z5pcfXDk7va5CS0zQ6gud85GGHRS9zh2d6YSuQ@mail.gmail.com>
+References: <1505375812-19037-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1505375812-19037-3-git-send-email-benjamin.gaignard@linaro.org> <20170915210347.GA1831@mai>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915210347.GA1831@mai>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds DT bindings for simple mice attached to GPIO lines.
-As the properties are very general and pertains to all mice I
-can think of, we use very generic names for the 4-7 GPIO lines,
-"up", "down" etc.
+2017-09-15 23:03 GMT+02:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On Thu, Sep 14, 2017 at 09:56:52AM +0200, Benjamin Gaignard wrote:
+>> 16 bits timers aren't accurate enough to be used as
+>> clocksource, remove them from stm32f4 and stm32f7 devicetree.
+>
+> Do you really want to remove the description? The timers are disabled, aren't they?
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-This patch is inspired by the existance of a GPIO mouse driver
-with no in-kernel users.
----
- .../devicetree/bindings/input/gpio-mouse.txt       | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/gpio-mouse.txt
-
-diff --git a/Documentation/devicetree/bindings/input/gpio-mouse.txt b/Documentation/devicetree/bindings/input/gpio-mouse.txt
-new file mode 100644
-index 000000000000..82622a439745
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/gpio-mouse.txt
-@@ -0,0 +1,32 @@
-+Device-Tree bindings for GPIO attached mice
-+
-+This simply uses standard GPIO handles to define a simple mouse connected
-+to 4-7 GPIO lines.
-+
-+Required properties:
-+	- compatible: must be "gpio-mouse"
-+	- scan-interval: The scanning interval in milliseconds
-+	- up-gpios: GPIO line phandle to the line indicating "up"
-+	- down-gpios: GPIO line phandle to the line indicating "down"
-+	- left-gpios: GPIO line phandle to the line indicating "left"
-+	- right-gpios: GPIO line phandle to the line indicating "right"
-+
-+Optional properties:
-+	- button-left-gpios: GPIO line handle to the left mouse button
-+	- button-middle-gpios: GPIO line handle to the middle mouse button
-+	- button-right-gpios: GPIO line handle to the right mouse button
-+Example:
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+gpio-mouse {
-+	compatible = "gpio-keys";
-+	scan-interval = <50>;
-+	up-gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
-+	down-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
-+	left-gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
-+	right-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-+	button-left-gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
-+	button-middle-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
-+	button-right-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.13.5
-
+Yes because they are 16 bits timers and they won't be accepted anymore in
+driver's probe function.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
