@@ -1,60 +1,106 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm64: allwinner: h5: add compatible
- string for DE2 CCU
-Date: Sun, 17 Sep 2017 12:35:37 +1000
-Message-ID: <CAGRGNgVNTvUtu47dQafHkRrW8wQDyT84NTZ=sWT+S3o6zpwAog@mail.gmail.com>
-References: <20170911155529.62891-1-icenowy@aosc.io> <20170911155529.62891-4-icenowy@aosc.io>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: [PATCH v2 00/10] dmaengine: sun6i: Fixes for H3/A83T,
+ enable A64
+Date: Sun, 17 Sep 2017 05:19:46 +0200
+Message-ID: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de>
+Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBDV767GQKGQEJXNNNUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRBZGT67GQKGQEQD5JFHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170911155529.62891-4-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
+Commit 3a03ea763a67 ("dmaengine: sun6i: Add support for Allwinner A83T
+(sun8i) variant") and commit f008db8c00c1 ("dmaengine: sun6i: Add support f=
+or
+Allwinner H3 (sun8i) variant") added support for the A83T resp. H3, but mis=
+sed
+some differences between the original A31 and A83T/H3.
 
-On Tue, Sep 12, 2017 at 1:55 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> The DE2 CCU on Allwinner H5 SoC has a slightly different behavior than
-> the one on H3, so the compatible string is not set in the common DTSI
-> file.
->
-> Add the compatible string of H5 DE2 CCU in H5 DTSI file.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> index d9a720bff05d..e237c05cfdb4 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> @@ -98,6 +98,10 @@
->         compatible = "allwinner,sun50i-h5-ccu";
->  };
->
-> +&display_clocks {
-> +       compatible = "allwinner,sun50i-h5-de2-clk";
-> +};
-> +
+The first patch adds a callback to the controller config to set the clock
+autogating register of different SoC generations, i.e. A31, A23+A83T, H3+la=
+ter,
+and uses it to for the correct clock autogating setting.
 
-This is what I get for reviewing before reading the full patch set.
+The second patch adds a callback for the burst length setting in the channe=
+l
+config register, which has different field offsets and new burst widths/len=
+gths,
+which differs between H3 and earlier generations
 
-Shouldn't this be rolled into the previous patch?
+The third patch restructures some code required for the fourth patch and ad=
+ds the
+burst lengths to the controller config.
 
-Thanks,
+The fourth patch adds the burst widths to the config and adds the handling =
+of the
+H3 specific burst widths.
 
--- 
-Julian Calaby
+Patch 5 restructures the code to decouple some controller details (e.g. cha=
+nnel
+count) from the compatible string/the config.
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+Patches 6, 7 and 8 introduce and use the "dma-chans" property for the A64. =
+Although
+register compatible to the H3, the channel count differs and thus it requir=
+es a
+new compatible. To avoid introduction of new compatibles for each minor var=
+iation,
+anything but the register model is moved to devicetree properties. There
+is at least one SoC (R40) which can then reuse the A64 compatible, the same
+would have worked for A83T+V3s.
+
+Patches 9 and 10 add the DMA controller node to the devicetree and add the =
+DMA
+controller reference to the SPI nodes.
+
+This patch series could be called v2, but the patches were split and signif=
+icantly
+restructured, thus listing changes individually is not to meaningful.
+
+Changes in v2:
+- Use callback for autogating instead of variable for different SoC generat=
+ions
+- Use controller specific callback for burst length setting
+- Store burst lengths in config instead of device structure
+- Store burst widths in config
+- Set default number of dma-request if not provided in config or devicetree
+
+Stefan Br=C3=BCns (10):
+  dmaengine: sun6i: Correct setting of clock autogating register for
+    A83T/H3
+  dmaengine: sun6i: Correct burst length field offsets for H3
+  dmaengine: sun6i: Restructure code to allow extension for new SoCs
+  dmaengine: sun6i: Enable additional burst lengths/widths on H3
+  dmaengine: sun6i: Move number of pchans/vchans/request to device
+    struct
+  arm64: allwinner: a64: Add devicetree binding for DMA controller
+  dmaengine: sun6i: Retrieve channel count/max request from devicetree
+  dmaengine: sun6i: Add support for Allwinner A64 and compatibles
+  arm64: allwinner: a64: Add device node for DMA controller
+  arm64: allwinner: a64: add dma controller references to spi nodes
+
+ .../devicetree/bindings/dma/sun6i-dma.txt          |  26 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  15 ++
+ drivers/dma/sun6i-dma.c                            | 265 ++++++++++++++++-=
+----
+ 3 files changed, 248 insertions(+), 58 deletions(-)
+
+--=20
+2.14.1
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
