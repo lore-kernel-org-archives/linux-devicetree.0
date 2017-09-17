@@ -1,21 +1,61 @@
-From: danilova-BRuST1UeAFW60SSGTRrYaA@public.gmane.org
-Subject: The only way to boost your mental awareness
-Date: Sat, 16 Sep 2017 10:16:08 +0200
-Message-ID: <574673ED-F81D-DA77-7894-3836803F5DF9@prom-centr.ru>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: des-O6qDPcD9fQI@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, design-+ap7oDRIOFuZwrEEVYXsW9AswbaBtrod@public.gmane.org
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: sun8i: h3/h5: add DE2 CCU device
+ node for H3
+Date: Sun, 17 Sep 2017 12:34:25 +1000
+Message-ID: <CAGRGNgXj6sNHzYv9zsTWSD+FULA0x4-J51ytD=mHLZb_ch-y_g@mail.gmail.com>
+References: <20170911155529.62891-1-icenowy@aosc.io> <20170911155529.62891-3-icenowy@aosc.io>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBRV667GQKGQEOKD5R4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170911155529.62891-3-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-V2hhdCBtYWtlcyB0aGVzZSBtaW5kIHN0aW11bGF0b3JzIGJldHRlciB0aGFuIHRoZSByZXN0Pw0K
-SXQncyByYXRoZXIgc2ltcGxlOg0KdGhleSBoYXZlIGEgc3RyYXRlZ2ljYWxseSBzZWxlY3RlZCBz
-ZXQgb2YgZWZmZWN0aXZlIGFuZCBuYXR1cmFsIGluZ3JlZGllbnRzDQp3aGlsZSB0aGUgb3RoZXIg
-Y29tcGFuaWVzIGJhc2UgdGhlaXIgZm9ybXVsYXMgb24gdGhlaW5lIGFuZCB1bm5hbWVkIGFjdGl2
-ZSBpbmdyZWRpZW50cy4NCmh0dHA6Ly9uem1ocC50aGF0d2hpdGVob3VzZS54eXovbWZyY21qDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Icenowy,
+
+On Tue, Sep 12, 2017 at 1:55 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> The DE2 in H3/H5 has a clock control unit in it, and the behavior is
+> slightly different between H3 and H5.
+>
+> Add the common parts in H3/H5 DTSI, and add the compatible string in H3
+> DTSI.
+>
+> The compatible string of H5 DE2 CCU will be added in a separated patch.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-h3.dtsi    |  4 ++++
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 14 ++++++++++++++
+>  2 files changed, 18 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> index 11240a8313c2..76a4cbc99bdb 100644
+> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> @@ -85,6 +87,18 @@
+>                 #size-cells = <1>;
+>                 ranges;
+>
+> +               display_clocks: clock@1000000 {
+> +                       /* compatible is in per SoC .dtsi file */
+
+I don't know device tree very well, but shouldn't this node be
+disabled so that it doesn't do anything weird on H5? Or are nodes
+without compatibles ignored?
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
