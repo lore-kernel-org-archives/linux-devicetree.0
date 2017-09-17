@@ -1,511 +1,143 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v7 4/6] ARM: meson: Add SMP bringup code for Meson8 and Meson8b
-Date: Sun, 17 Sep 2017 18:45:21 +0200
-Message-ID: <20170917164523.6970-5-martin.blumenstingl@googlemail.com>
-References: <20170917164523.6970-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170917164523.6970-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: Document how to refer to LEDs from remote nodes
+Date: Sun, 17 Sep 2017 18:57:09 +0200
+Message-ID: <6baeee56-480b-00b9-4c84-e65dc7c42301@gmail.com>
+References: <20170915144052.25903-1-sakari.ailus@linux.intel.com>
+ <20170915144052.25903-2-sakari.ailus@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170915144052.25903-2-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, mika.westerberg@intel.com, rafael@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the necessary SMP-operations and startup code to use the
-additional cores on the Amlogic Meson8/Meson8m2 (both are using the same
-sequence) and Meson8b (using a slightly difference sequence) SoCs.
+Hi Sakari,
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-[add Meson8/Meson8m2 support and allow taking CPU cores offline as well]
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/Makefile             |   1 +
- arch/arm/mach-meson/Kconfig   |   1 +
- arch/arm/mach-meson/Makefile  |   1 +
- arch/arm/mach-meson/platsmp.c | 440 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 443 insertions(+)
- create mode 100644 arch/arm/mach-meson/platsmp.c
+Thanks for the patch.
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 47d3a1ab08d2..82faa958ab88 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -147,6 +147,7 @@ textofs-$(CONFIG_SA1111) := 0x00208000
- endif
- textofs-$(CONFIG_ARCH_MSM8X60) := 0x00208000
- textofs-$(CONFIG_ARCH_MSM8960) := 0x00208000
-+textofs-$(CONFIG_ARCH_MESON) := 0x00208000
- textofs-$(CONFIG_ARCH_AXXIA) := 0x00308000
- 
- # Machine directory name.  This list is sorted alphanumerically
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index ee30511849ca..a0c64762d961 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -9,6 +9,7 @@ menuconfig ARCH_MESON
- 	select PINCTRL_MESON
- 	select COMMON_CLK
- 	select COMMON_CLK_AMLOGIC
-+	select HAVE_ARM_SCU if SMP
- 
- if ARCH_MESON
- 
-diff --git a/arch/arm/mach-meson/Makefile b/arch/arm/mach-meson/Makefile
-index 9d7380eeeedd..bc26c85a7e8f 100644
---- a/arch/arm/mach-meson/Makefile
-+++ b/arch/arm/mach-meson/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_ARCH_MESON) += meson.o
-+obj-$(CONFIG_SMP) += platsmp.o
-diff --git a/arch/arm/mach-meson/platsmp.c b/arch/arm/mach-meson/platsmp.c
-new file mode 100644
-index 000000000000..2555f9056a33
---- /dev/null
-+++ b/arch/arm/mach-meson/platsmp.c
-@@ -0,0 +1,440 @@
-+/*
-+ * Copyright (C) 2015 Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-+ * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/smp.h>
-+#include <linux/mfd/syscon.h>
-+
-+#include <asm/cacheflush.h>
-+#include <asm/cp15.h>
-+#include <asm/smp_scu.h>
-+#include <asm/smp_plat.h>
-+
-+#define MESON_SMP_SRAM_CPU_CTRL_REG		(0x00)
-+#define MESON_SMP_SRAM_CPU_CTRL_ADDR_REG(c)	(0x04 + ((c - 1) << 2))
-+
-+#define MESON_CPU_AO_RTI_PWR_A9_CNTL0		(0x00)
-+#define MESON_CPU_AO_RTI_PWR_A9_CNTL1		(0x04)
-+#define MESON_CPU_AO_RTI_PWR_A9_MEM_PD0		(0x14)
-+
-+#define MESON_CPU_PWR_A9_CNTL0_M(c)		(0x03 << ((c * 2) + 16))
-+#define MESON_CPU_PWR_A9_CNTL1_M(c)		(0x03 << ((c + 1) << 1))
-+#define MESON_CPU_PWR_A9_MEM_PD0_M(c)		(0x0f << (32 - (c * 4)))
-+#define MESON_CPU_PWR_A9_CNTL1_ST(c)		(0x01 << (c + 16))
-+
-+static void __iomem *sram_base;
-+static void __iomem *scu_base;
-+static struct regmap *pmu;
-+
-+static struct reset_control *meson_smp_get_core_reset(int cpu)
-+{
-+	struct device_node *np = of_get_cpu_node(cpu, 0);
-+
-+	return of_reset_control_get_exclusive(np, NULL);
-+}
-+
-+static void meson_smp_set_cpu_ctrl(int cpu, bool on_off)
-+{
-+	u32 val = readl(sram_base + MESON_SMP_SRAM_CPU_CTRL_REG);
-+
-+	if (on_off)
-+		val |= BIT(cpu);
-+	else
-+		val &= ~BIT(cpu);
-+
-+	/* keep bit 0 always enabled */
-+	val |= BIT(0);
-+
-+	writel(val, sram_base + MESON_SMP_SRAM_CPU_CTRL_REG);
-+}
-+
-+static void __init meson_smp_prepare_cpus(const char *scu_compatible,
-+					  const char *pmu_compatible,
-+					  const char *sram_compatible)
-+{
-+	static struct device_node *node;
-+
-+	/* SMP SRAM */
-+	node = of_find_compatible_node(NULL, NULL, sram_compatible);
-+	if (!node) {
-+		pr_err("Missing SRAM node\n");
-+		return;
-+	}
-+
-+	sram_base = of_iomap(node, 0);
-+	if (!sram_base) {
-+		pr_err("Couldn't map SRAM registers\n");
-+		return;
-+	}
-+
-+	/* PMU */
-+	pmu = syscon_regmap_lookup_by_compatible(pmu_compatible);
-+	if (IS_ERR(pmu)) {
-+		pr_err("Couldn't map PMU registers\n");
-+		return;
-+	}
-+
-+	/* SCU */
-+	node = of_find_compatible_node(NULL, NULL, scu_compatible);
-+	if (!node) {
-+		pr_err("Missing SCU node\n");
-+		return;
-+	}
-+
-+	scu_base = of_iomap(node, 0);
-+	if (!scu_base) {
-+		pr_err("Couln't map SCU registers\n");
-+		return;
-+	}
-+
-+	scu_enable(scu_base);
-+}
-+
-+static void __init meson8b_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	meson_smp_prepare_cpus("arm,cortex-a5-scu", "amlogic,meson8b-pmu",
-+			       "amlogic,meson8b-smp-sram");
-+}
-+
-+static void __init meson8_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	meson_smp_prepare_cpus("arm,cortex-a9-scu", "amlogic,meson8-pmu",
-+			       "amlogic,meson8-smp-sram");
-+}
-+
-+static void meson_smp_begin_secondary_boot(unsigned int cpu)
-+{
-+	/*
-+	 * Set the entry point before powering on the CPU through the SCU. This
-+	 * is needed if the CPU is in "warm" state (= after rebooting the
-+	 * system without power-cycling, or when taking the CPU offline and
-+	 * then taking it online again.
-+	 */
-+	writel(__pa_symbol(secondary_startup),
-+	       sram_base + MESON_SMP_SRAM_CPU_CTRL_ADDR_REG(cpu));
-+
-+	/*
-+	 * SCU Power on CPU (needs to be done before starting the CPU,
-+	 * otherwise the secondary CPU will not start).
-+	 */
-+	scu_cpu_power_enable(scu_base, cpu);
-+}
-+
-+static int meson_smp_finalize_secondary_boot(unsigned int cpu)
-+{
-+	unsigned long timeout;
-+
-+	timeout = jiffies + (10 * HZ);
-+	while (readl(sram_base + MESON_SMP_SRAM_CPU_CTRL_ADDR_REG(cpu))) {
-+		if (!time_before(jiffies, timeout)) {
-+			pr_err("Timeout while waiting for CPU%d status\n",
-+			       cpu);
-+			return -ETIMEDOUT;
-+		}
-+	}
-+
-+	writel(__pa_symbol(secondary_startup),
-+	       sram_base + MESON_SMP_SRAM_CPU_CTRL_ADDR_REG(cpu));
-+
-+	meson_smp_set_cpu_ctrl(cpu, true);
-+
-+	return 0;
-+}
-+
-+static int meson8_smp_boot_secondary(unsigned int cpu,
-+				     struct task_struct *idle)
-+{
-+	struct reset_control *rstc;
-+	int ret;
-+
-+	rstc = meson_smp_get_core_reset(cpu);
-+	if (IS_ERR(rstc)) {
-+		pr_err("Couldn't get the reset controller for CPU%d\n", cpu);
-+		return PTR_ERR(rstc);
-+	}
-+
-+	meson_smp_begin_secondary_boot(cpu);
-+
-+	/* Reset enable */
-+	ret = reset_control_assert(rstc);
-+	if (ret) {
-+		pr_err("Failed to assert CPU%d reset\n", cpu);
-+		goto out;
-+	}
-+
-+	/* CPU power ON */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL1,
-+				 MESON_CPU_PWR_A9_CNTL1_M(cpu), 0);
-+	if (ret < 0) {
-+		pr_err("Couldn't wake up CPU%d\n", cpu);
-+		goto out;
-+	}
-+
-+	udelay(10);
-+
-+	/* Isolation disable */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0, BIT(cpu),
-+				 0);
-+	if (ret < 0) {
-+		pr_err("Error when disabling isolation of CPU%d\n", cpu);
-+		goto out;
-+	}
-+
-+	/* Reset disable */
-+	ret = reset_control_deassert(rstc);
-+	if (ret) {
-+		pr_err("Failed to de-assert CPU%d reset\n", cpu);
-+		goto out;
-+	}
-+
-+	ret = meson_smp_finalize_secondary_boot(cpu);
-+	if (ret)
-+		goto out;
-+
-+out:
-+	reset_control_put(rstc);
-+
-+	return 0;
-+}
-+
-+static int meson8b_smp_boot_secondary(unsigned int cpu,
-+				     struct task_struct *idle)
-+{
-+	struct reset_control *rstc;
-+	int ret;
-+	u32 val;
-+
-+	rstc = meson_smp_get_core_reset(cpu);
-+	if (IS_ERR(rstc)) {
-+		pr_err("Couldn't get the reset controller for CPU%d\n", cpu);
-+		return PTR_ERR(rstc);
-+	}
-+
-+	meson_smp_begin_secondary_boot(cpu);
-+
-+	/* CPU power UP */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0,
-+				 MESON_CPU_PWR_A9_CNTL0_M(cpu), 0);
-+	if (ret < 0) {
-+		pr_err("Couldn't power up CPU%d\n", cpu);
-+		goto out;
-+	}
-+
-+	udelay(5);
-+
-+	/* Reset enable */
-+	ret = reset_control_assert(rstc);
-+	if (ret) {
-+		pr_err("Failed to assert CPU%d reset\n", cpu);
-+		goto out;
-+	}
-+
-+	/* Memory power UP */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_MEM_PD0,
-+				 MESON_CPU_PWR_A9_MEM_PD0_M(cpu), 0);
-+	if (ret < 0) {
-+		pr_err("Couldn't power up the memory for CPU%d\n", cpu);
-+		goto out;
-+	}
-+
-+	/* Wake up CPU */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL1,
-+				 MESON_CPU_PWR_A9_CNTL1_M(cpu), 0);
-+	if (ret < 0) {
-+		pr_err("Couldn't wake up CPU%d\n", cpu);
-+		goto out;
-+	}
-+
-+	udelay(10);
-+
-+	ret = regmap_read_poll_timeout(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL1, val,
-+				       val & MESON_CPU_PWR_A9_CNTL1_ST(cpu),
-+				       10, 10000);
-+	if (ret) {
-+		pr_err("Timeout while polling PMU for CPU%d status\n", cpu);
-+		goto out;
-+	}
-+
-+	/* Isolation disable */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0, BIT(cpu),
-+				 0);
-+	if (ret < 0) {
-+		pr_err("Error when disabling isolation of CPU%d\n", cpu);
-+		goto out;
-+	}
-+
-+	/* Reset disable */
-+	ret = reset_control_deassert(rstc);
-+	if (ret) {
-+		pr_err("Failed to de-assert CPU%d reset\n", cpu);
-+		goto out;
-+	}
-+
-+	ret = meson_smp_finalize_secondary_boot(cpu);
-+	if (ret)
-+		goto out;
-+
-+out:
-+	reset_control_put(rstc);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_HOTPLUG_CPU
-+static void meson8_smp_cpu_die(unsigned int cpu)
-+{
-+	meson_smp_set_cpu_ctrl(cpu, false);
-+
-+	v7_exit_coherency_flush(louis);
-+
-+	scu_power_mode(scu_base, SCU_PM_POWEROFF);
-+
-+	dsb();
-+	wfi();
-+
-+	/* we should never get here */
-+	WARN_ON(1);
-+}
-+
-+static int meson8_smp_cpu_kill(unsigned int cpu)
-+{
-+	int ret, power_mode;
-+	unsigned long timeout;
-+
-+	timeout = jiffies + (50 * HZ);
-+	do {
-+		power_mode = scu_get_cpu_power_mode(scu_base, cpu);
-+
-+		if (power_mode == SCU_PM_POWEROFF)
-+			break;
-+
-+		usleep_range(10000, 15000);
-+	} while (time_before(jiffies, timeout));
-+
-+	if (power_mode != SCU_PM_POWEROFF) {
-+		pr_err("Error while waiting for SCU power-off on CPU%d\n",
-+		       cpu);
-+		return -ETIMEDOUT;
-+	}
-+
-+	msleep(30);
-+
-+	/* Isolation enable */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0, BIT(cpu),
-+				 0x3);
-+	if (ret < 0) {
-+		pr_err("Error when enabling isolation for CPU%d\n", cpu);
-+		return ret;
-+	}
-+
-+	udelay(10);
-+
-+	/* CPU power OFF */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL1,
-+				 MESON_CPU_PWR_A9_CNTL1_M(cpu), 0x3);
-+	if (ret < 0) {
-+		pr_err("Couldn't change sleep status of CPU%d\n", cpu);
-+		return ret;
-+	}
-+
-+	return 1;
-+}
-+
-+static int meson8b_smp_cpu_kill(unsigned int cpu)
-+{
-+	int ret, power_mode, count = 5000;
-+
-+	do {
-+		power_mode = scu_get_cpu_power_mode(scu_base, cpu);
-+
-+		if (power_mode == SCU_PM_POWEROFF)
-+			break;
-+
-+		udelay(10);
-+	} while (++count);
-+
-+	if (power_mode != SCU_PM_POWEROFF) {
-+		pr_err("Error while waiting for SCU power-off on CPU%d\n",
-+		       cpu);
-+		return -ETIMEDOUT;
-+	}
-+
-+	udelay(10);
-+
-+	/* CPU power DOWN */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0,
-+				 MESON_CPU_PWR_A9_CNTL0_M(cpu), 0x3);
-+	if (ret < 0) {
-+		pr_err("Couldn't power down CPU%d\n", cpu);
-+		return ret;
-+	}
-+
-+	/* Isolation enable */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0, BIT(cpu),
-+				 0x3);
-+	if (ret < 0) {
-+		pr_err("Error when enabling isolation for CPU%d\n", cpu);
-+		return ret;
-+	}
-+
-+	udelay(10);
-+
-+	/* Sleep status */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL1,
-+				 MESON_CPU_PWR_A9_CNTL1_M(cpu), 0x3);
-+	if (ret < 0) {
-+		pr_err("Couldn't change sleep status of CPU%d\n", cpu);
-+		return ret;
-+	}
-+
-+	/* Memory power DOWN */
-+	ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_MEM_PD0,
-+				 MESON_CPU_PWR_A9_MEM_PD0_M(cpu), 0xf);
-+	if (ret < 0) {
-+		pr_err("Couldn't power down the memory of CPU%d\n", cpu);
-+		return ret;
-+	}
-+
-+	return 1;
-+}
-+#endif
-+
-+static struct smp_operations meson8_smp_ops __initdata = {
-+	.smp_prepare_cpus	= meson8_smp_prepare_cpus,
-+	.smp_boot_secondary	= meson8_smp_boot_secondary,
-+#ifdef CONFIG_HOTPLUG_CPU
-+	.cpu_die		= meson8_smp_cpu_die,
-+	.cpu_kill		= meson8_smp_cpu_kill,
-+#endif
-+};
-+
-+static struct smp_operations meson8b_smp_ops __initdata = {
-+	.smp_prepare_cpus	= meson8b_smp_prepare_cpus,
-+	.smp_boot_secondary	= meson8b_smp_boot_secondary,
-+#ifdef CONFIG_HOTPLUG_CPU
-+	.cpu_die		= meson8_smp_cpu_die,
-+	.cpu_kill		= meson8b_smp_cpu_kill,
-+#endif
-+};
-+
-+CPU_METHOD_OF_DECLARE(meson8_smp, "amlogic,meson8-smp", &meson8_smp_ops);
-+CPU_METHOD_OF_DECLARE(meson8b_smp, "amlogic,meson8b-smp", &meson8b_smp_ops);
+On 09/15/2017 04:40 PM, Sakari Ailus wrote:
+> Document referring to LEDs from remote device nodes, such as from camera
+> sensors.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  Documentation/acpi/dsd/leds.txt | 94 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/acpi/dsd/leds.txt
+> 
+> diff --git a/Documentation/acpi/dsd/leds.txt b/Documentation/acpi/dsd/leds.txt
+> new file mode 100644
+> index 000000000000..894c82274f53
+> --- /dev/null
+> +++ b/Documentation/acpi/dsd/leds.txt
+> @@ -0,0 +1,94 @@
+> +Describing and referring to LEDs in ACPI
+> +
+> +Individual LEDs are described by hierarchical data extension [6] nodes
+> +under the device node, the LED driver chip. The "led" property in the
+> +LED specific nodes tells the numerical ID of each individual LED. The
+> +"led" property is used here in a similar fashion as the "reg" property
+> +in DT. [3]
+> +
+> +Referring to LEDs in Device tree is documented in [4], in "flash-leds"
+> +property documentation. In short, LEDs are directly referred to by
+> +using phandles.
+> +
+> +While Device tree allows referring to any node in the tree[1], in ACPI
+> +references are limited to device nodes only [2]. For this reason using
+> +the same mechanism on ACPI is not possible.
+> +
+> +ACPI allows (as does DT) using integer arguments after the reference.
+> +A combination of the LED driver device reference and an integer
+> +argument, referring to the "led" property of the relevant LED, are
+> +use to individual LEDs.
+
+s/are use/is used/ ? (in a sense "combination of ... and .. is used")
+
+s/to individual/to describe individual/
+
+(or another verb, I'm not sure what exactly you intended it to be)
+
+ The value of the LED property is a contract
+> +between the firmware and software, it uniquely identifies the LED
+> +driver outputs.
+> +
+> +An ASL example of a camera sensor device and a LED driver device for two
+> +LEDs. Objects not relevant for LEDs or the references to them have been
+> +omitted.
+> +
+> +	Device (LED)
+> +	{
+> +		Name (_DSD, Package () {
+> +			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> +			Package () {
+> +				Package () { "led0", LED0 },
+> +				Package () { "led1", LED1 },
+> +			}
+> +		})
+> +		Name (LED0, Package () {
+> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +			Package () {
+> +				Package () { "led", 0 },
+> +				Package () { "flash-max-microamp", 1000000 },
+> +				Package () { "flash-timeout-us", 200000 },
+> +				Package () { "led-max-microamp", 100000 },
+> +				Package () { "label", "led:salama" },
+> +			}
+> +		})
+> +		Name (LED1, Package () {
+> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +			Package () {
+> +				Package () { "led", 1 },
+> +				Package () { "led-max-microamp", 10000 },
+> +				Package () { "label", "led:huomiovalo" },
+> +			}
+> +		})
+> +	}
+> +
+> +	Device (SEN)
+> +	{
+> +		Name (_DSD, Package () {
+> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +			Package () {
+> +				Package () {
+> +					"flash-leds",
+> +					Package () { ^LED, 0, ^LED, 1 },
+> +				}
+> +			}
+> +		})
+> +	}
+> +
+> +where
+> +
+> +	LED	LED driver device
+> +	LED0	First LED
+> +	LED1	Second LED
+> +	SEN	Camera sensor device (or another device the LED is
+> +		related to)
+> +
+> +[1] Device tree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
+> +
+> +[2] Advanced Configuration and Power Interface Specification.
+> +    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
+> +    referenced 2016-10-04.
+> +
+> +[3] Documentation/devicetree/bindings/leds/common.txt
+> +
+> +[4] Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +[5] Device Properties UUID For _DSD.
+> +    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
+> +    referenced 2016-10-04.
+> +
+> +[6] Hierarchical Data Extension UUID For _DSD.
+> +    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.pdf>,
+> +    referenced 2016-10-04.
+> 
+
 -- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jacek Anaszewski
