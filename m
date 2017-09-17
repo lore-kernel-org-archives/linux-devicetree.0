@@ -1,143 +1,142 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 1/2] ACPI: Document how to refer to LEDs from remote nodes
-Date: Sun, 17 Sep 2017 18:57:09 +0200
-Message-ID: <6baeee56-480b-00b9-4c84-e65dc7c42301@gmail.com>
-References: <20170915144052.25903-1-sakari.ailus@linux.intel.com>
- <20170915144052.25903-2-sakari.ailus@linux.intel.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] initialize (multiple) PHYs in xhci-plat
+Date: Sun, 17 Sep 2017 22:51:31 +0200
+Message-ID: <CAFBinCCRM1e08styDV8uodkhonTUPyZrQAdYRz_bfUMe-YP1Rg@mail.gmail.com>
+References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170915144052.25903-2-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, mika.westerberg@intel.com, rafael@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170903213829.6589-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hello Mathias, Hello Greg,
 
-Thanks for the patch.
+On Sun, Sep 3, 2017 at 11:38 PM, Martin Blumenstingl
+<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> This series is the outcome of a discussion with Felipe Balbi,
+> see [0] and [1].
+> The quick-summary of this is:
+> - dwc3 already takes one USB2 and one USB3 PHY and initializes these
+>   correct
+> - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
+>   ohci-platform.c) do not have a limitation on the number of PHYs - they
+>   support one PHY per actual host port
+> - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
+>   or three USB2 ports enabled on the internal root-hub. The SoCs also
+>   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
+>   internally "connected" to the dwc3 roothub) need to be powered on,
+>   otherwise USB devices cannot be enumerated (even if just one PHY is
+>   disabled and if the device is plugged into another, enabled port)
+>
+> In my first attempt to get USB supported on the GXL and GXM SoCs I tried
+> to work-around the problem that I could not pass multiple PHYs to the
+> dwc3 controller.
+> This was rejected by Rob Herring (which was definitely the thing to do in
+> my opinion), see [2]
+>
+> This series adds a new "platform-roothub". This can be configured through
+> devicetree by passing a child-node with "reg = <0>" to the USB
+> controller. Additionally there has to be a child-node for each port on
+> the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
+> property. This allows modeling the root-hub in devicetree similar to the
+> USB device binding (documented in devicetree/bindings/usb/usb-device.txt)
+> This avoids and backwards-compatibility problems (which was a concern
+> regardless of the solution, see [3]) since the binding for the root-hub
+> was previously not specified (and we're not using the "phys" property of
+> the controller, which might have served different purposes before,
+> depending on the drivers).
+>
+> Additionally this integrates the new platform-roothub into xhci-plat.c
+> which automatically enables it for the dwc3 driver (in host-mode).
+>
+>
+> Changes since RFCv3 at [6]:
+> - moved the DT binding change from patch #3 to patch #1 as suggested
+>   by Rob Herring (and slightly adjusted the commit message to account
+>   for that)
+> - added Tested-by from Chunfeng Yun (who confirmed that the whole
+>   concept and implementation works fine on Mediatek SoCs - many thanks
+>   again!) to patch #2
+> - added Rob Herring's ACK to patches 1 and 3
+> - dropped RFC status (RFCv3 -> PATCH v4)
+I just wanted to rebase this to v4.14-rc1 (now that this is out) -
+however I noticed that v4 still applies to v4.14-rc1 cleanly (the
+patches are still identical to v4 after rebasing).
 
-On 09/15/2017 04:40 PM, Sakari Ailus wrote:
-> Document referring to LEDs from remote device nodes, such as from camera
-> sensors.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  Documentation/acpi/dsd/leds.txt | 94 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/acpi/dsd/leds.txt
-> 
-> diff --git a/Documentation/acpi/dsd/leds.txt b/Documentation/acpi/dsd/leds.txt
-> new file mode 100644
-> index 000000000000..894c82274f53
-> --- /dev/null
-> +++ b/Documentation/acpi/dsd/leds.txt
-> @@ -0,0 +1,94 @@
-> +Describing and referring to LEDs in ACPI
-> +
-> +Individual LEDs are described by hierarchical data extension [6] nodes
-> +under the device node, the LED driver chip. The "led" property in the
-> +LED specific nodes tells the numerical ID of each individual LED. The
-> +"led" property is used here in a similar fashion as the "reg" property
-> +in DT. [3]
-> +
-> +Referring to LEDs in Device tree is documented in [4], in "flash-leds"
-> +property documentation. In short, LEDs are directly referred to by
-> +using phandles.
-> +
-> +While Device tree allows referring to any node in the tree[1], in ACPI
-> +references are limited to device nodes only [2]. For this reason using
-> +the same mechanism on ACPI is not possible.
-> +
-> +ACPI allows (as does DT) using integer arguments after the reference.
-> +A combination of the LED driver device reference and an integer
-> +argument, referring to the "led" property of the relevant LED, are
-> +use to individual LEDs.
+we have an ACK from the devicetree maintainers and a "Tested-by" for a
+Mediatek (= non-Amlogic) SoC.
+I already have patches for the Amlogic GXL/GXM platforms queued, those
+are just waiting on this series.
 
-s/are use/is used/ ? (in a sense "combination of ... and .. is used")
+what is still missing to get this series into v4.15?
 
-s/to individual/to describe individual/
+> Changes since RFCv2 at [5]:
+> - split phy_{init,exit} and phy_power_{on,off} handling. up until RFCv2
+>   I called phy_init plus phy_power_on in platform_roothub_power_on and
+>   phy_power_off plus phy_exit in platform_roothub_power_off. However,
+>   Chunfeng Yun (a Mediatek SoC developer - many thanks for testing my
+>   series and providing great feedback) reported that only using
+>   phy_power_off (and omitting phy_exit) during system suspend fixes an
+>   issue where USB devices would be re-enumerated when resuming. His
+>   original problem description: "In order to keep link state on mt8173,
+>   we just power off all phys(not exit) when system enter suspend, then
+>   power on them again (needn't init, otherwise device will be
+>   disconnected) when system resume, this can avoid re-enumerating
+>   device.". This fix affects patch #2 and #3 as we now have
+>   platform_roothub_init (which calls phy_init internally),
+>   platform_roothub_power_on (which calls phy_power_on internally),
+>   platform_roothub_power_off (which calls phy_power_off internally) and
+>   platform_roothub_exit (which calls phy_exit internally). suspend and
+>   resume only call platform_roothub_power_{on,off} to prevent the issue
+>   described by Chunfeng Yun (unfortunately I cannot test this because
+>   the Amlogic platform currently does not support system suspend).
+> - dropped two struct forward declarations from platform-roothub.h which
+>   are not used in the header file (thanks to Chunfeng Yun for spotting
+>   this)
+>
+> Changes since RFCv1 at [4]:
+> - split the usb-xhci dt-binding documentation into a separate patch
+> - fixed a typo ("usb-phy" -> "phys" in the dt-binding example)
+> - rebased to apply against latest usb-next
+>
+>
+> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001945.html
+> [1] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001947.html
+> [2] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/001818.html
+> [3] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001948.html
+> [4] http://marc.info/?l=linux-usb&m=148414866303604&w=2
+> [5] https://www.spinics.net/lists/linux-usb/msg158967.html
+> [6] https://www.spinics.net/lists/devicetree/msg190426.html
+>
+> Martin Blumenstingl (3):
+>   dt-bindings: usb: add the documentation for USB root-hub
+>   usb: host: add a generic platform USB roothub driver
+>   usb: host: xhci: plat: integrate the platform-roothub
+>
+>  .../devicetree/bindings/usb/usb-roothub.txt        |  46 ++++++
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt |   7 +
+>  drivers/usb/host/Kconfig                           |   4 +
+>  drivers/usb/host/Makefile                          |   2 +
+>  drivers/usb/host/platform-roothub.c                | 180 +++++++++++++++++++++
+>  drivers/usb/host/platform-roothub.h                |  12 ++
+>  drivers/usb/host/xhci-plat.c                       |  35 +++-
+>  drivers/usb/host/xhci.h                            |   2 +
+>  8 files changed, 286 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
+>  create mode 100644 drivers/usb/host/platform-roothub.c
+>  create mode 100644 drivers/usb/host/platform-roothub.h
+>
+> --
+> 2.14.1
+>
 
-(or another verb, I'm not sure what exactly you intended it to be)
-
- The value of the LED property is a contract
-> +between the firmware and software, it uniquely identifies the LED
-> +driver outputs.
-> +
-> +An ASL example of a camera sensor device and a LED driver device for two
-> +LEDs. Objects not relevant for LEDs or the references to them have been
-> +omitted.
-> +
-> +	Device (LED)
-> +	{
-> +		Name (_DSD, Package () {
-> +			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> +			Package () {
-> +				Package () { "led0", LED0 },
-> +				Package () { "led1", LED1 },
-> +			}
-> +		})
-> +		Name (LED0, Package () {
-> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +			Package () {
-> +				Package () { "led", 0 },
-> +				Package () { "flash-max-microamp", 1000000 },
-> +				Package () { "flash-timeout-us", 200000 },
-> +				Package () { "led-max-microamp", 100000 },
-> +				Package () { "label", "led:salama" },
-> +			}
-> +		})
-> +		Name (LED1, Package () {
-> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +			Package () {
-> +				Package () { "led", 1 },
-> +				Package () { "led-max-microamp", 10000 },
-> +				Package () { "label", "led:huomiovalo" },
-> +			}
-> +		})
-> +	}
-> +
-> +	Device (SEN)
-> +	{
-> +		Name (_DSD, Package () {
-> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +			Package () {
-> +				Package () {
-> +					"flash-leds",
-> +					Package () { ^LED, 0, ^LED, 1 },
-> +				}
-> +			}
-> +		})
-> +	}
-> +
-> +where
-> +
-> +	LED	LED driver device
-> +	LED0	First LED
-> +	LED1	Second LED
-> +	SEN	Camera sensor device (or another device the LED is
-> +		related to)
-> +
-> +[1] Device tree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
-> +
-> +[2] Advanced Configuration and Power Interface Specification.
-> +    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
-> +    referenced 2016-10-04.
-> +
-> +[3] Documentation/devicetree/bindings/leds/common.txt
-> +
-> +[4] Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +[5] Device Properties UUID For _DSD.
-> +    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
-> +    referenced 2016-10-04.
-> +
-> +[6] Hierarchical Data Extension UUID For _DSD.
-> +    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.pdf>,
-> +    referenced 2016-10-04.
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
+Have a great week!
+Regards,
+Martin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
