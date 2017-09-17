@@ -1,99 +1,55 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 6/7] dt-bindings: i2c: i2c-gpio: Add support for named gpios
-Date: Sun, 17 Sep 2017 11:39:05 +0200
-Message-ID: <20170917093906.16325-7-linus.walleij@linaro.org>
-References: <20170917093906.16325-1-linus.walleij@linaro.org>
+Subject: Re: [PATCHv5 3/5] dt-bindings: document the CEC GPIO bindings
+Date: Sun, 17 Sep 2017 11:47:51 +0200
+Message-ID: <CACRpkdbApdos=mKJQZq8xfOM6O3hDS20gOc+0hGEkD7WqtQh5w@mail.gmail.com>
+References: <20170916142827.5878-1-hverkuil@xs4all.nl> <20170916142827.5878-4-hverkuil@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170917093906.16325-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170916142827.5878-4-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, adi-buildroot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, geert.renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas () glider ! be>
+On Sat, Sep 16, 2017 at 4:28 PM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>
+> Document the bindings for the cec-gpio module for hardware where the
+> CEC line and optionally the HPD line are connected to GPIO lines.
+>
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-The current i2c-gpio DT bindings use a single unnamed "gpios" property
-to refer to the SDA and SCL signal lines by index.  This is error-prone
-for the casual DT writer and reviewer, as one has to look up the order
-in the DT bindings.
+Just to make things explicit:
 
-Fix this by amending the DT bindings to use two separate named gpios
-properties, and deprecate the old unnamed variant.
+> +Required properties:
+> +  - compatible: value must be "cec-gpio".
+> +  - cec-gpios: gpio that the CEC line is connected to.
 
-Take this opportunity to clearly deprecate the "i2c-gpio,sda-open-drain"
-and "i2c-gpio,scl-open-drain" flags as well. The commit describes
-in detail what these flags actually mean, and why they should not be
-used in new device trees.
+Add "The line should be tagged as open drain."
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-[Augmented to what I and Rob would like]
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Create a special section for the deprecated bindings
-- Also deprecate the open drain bool properties
-- Update the example to use the new style of bindings
----
- Documentation/devicetree/bindings/i2c/i2c-gpio.txt | 32 ++++++++++++++++------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+> +Example for the Raspberry Pi 3 where the CEC line is connected to
+> +pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
+> +connected to pin 11 aka BCM17:
+> +
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-index 4f8ec947c6bd..38a05562d1d2 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
-@@ -2,25 +2,39 @@ Device-Tree bindings for i2c gpio driver
- 
- Required properties:
- 	- compatible = "i2c-gpio";
--	- gpios: sda and scl gpio
--
-+	- sda-gpios: gpio used for the sda signal, this should be flagged as
-+	  active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
-+	  from <dt-bindings/gpio/gpio.h> since the signal is by definition
-+	  open drain.
-+	- scl-gpios: gpio used for the scl signal, this should be flagged as
-+	  active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
-+	  from <dt-bindings/gpio/gpio.h> since the signal is by definition
-+	  open drain.
- 
- Optional properties:
--	- i2c-gpio,sda-open-drain: sda as open drain
--	- i2c-gpio,scl-open-drain: scl as open drain
- 	- i2c-gpio,scl-output-only: scl as output only
- 	- i2c-gpio,delay-us: delay between GPIO operations (may depend on each platform)
- 	- i2c-gpio,timeout-ms: timeout to get data
- 
-+Deprecated properties, do not use in new device tree sources:
-+	- gpios: sda and scl gpio, alternative for {sda,scl}-gpios
-+	- i2c-gpio,sda-open-drain: this means that something outside of our
-+	  control has put the GPIO line used for SDA into open drain mode, and
-+	  that something is not the GPIO chip. It is essentially an
-+	  inconsistency flag.
-+	- i2c-gpio,scl-open-drain: this means that something outside of our
-+	  control has put the GPIO line used for SCL into open drain mode, and
-+	  that something is not the GPIO chip. It is essentially an
-+	  inconsistency flag.
-+
- Example nodes:
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- i2c@0 {
- 	compatible = "i2c-gpio";
--	gpios = <&pioA 23 0 /* sda */
--		 &pioA 24 0 /* scl */
--		>;
--	i2c-gpio,sda-open-drain;
--	i2c-gpio,scl-open-drain;
-+	sda-gpios = <&pioA 23 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+	scl-gpios = <&pioA 24 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
- 	i2c-gpio,delay-us = <2>;	/* ~100 kHz */
- 	#address-cells = <1>;
- 	#size-cells = <0>;
--- 
-2.13.5
+#include <dt-bindings/gpio/gpio.h>
 
+> +cec-gpio {
+> +       compatible = "cec-gpio";
+> +       cec-gpio = <&gpio 7 GPIO_OPEN_DRAIN>;
+
+cec-gpios = <&gpio 7 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+
+> +       hpd-gpio = <&gpio 17 GPIO_ACTIVE_HIGH>;
+
+hpd-gpios = ..
+
+With these fixups:
+Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
