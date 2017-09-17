@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH v2 07/10] dmaengine: sun6i: Retrieve channel
- count/max request from devicetree
-Date: Sun, 17 Sep 2017 05:19:53 +0200
-Message-ID: <20170917031956.28010-8-stefan.bruens@rwth-aachen.de>
+Subject: [PATCH v2 10/10] arm64: allwinner: a64: add dma
+ controller references to spi nodes
+Date: Sun, 17 Sep 2017 05:19:56 +0200
+Message-ID: <20170917031956.28010-11-stefan.bruens@rwth-aachen.de>
 References: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de>
 Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDIYL7P2SAMRB3GT67GQKGQEA3NJLRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRB36T67GQKGQEPNFFOUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170917031956.28010-1-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,88 +21,40 @@ To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To avoid introduction of a new compatible for each small SoC/DMA controller
-variation, move the definition of the channel count to the devicetree.
+The spi controller nodes omit the dma controller/channel references, add
+it.
 
-The number of vchans is no longer explicit, but limited by the highest
-port/DMA request number. The result is a slight overallocation for SoCs
-with a sparse port mapping.
+This does not yet enable DMA for SPI transfers, as the spi-sun6i driver
+lacks support for DMA, but always uses PIO to the FIFO.
 
 Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 ---
- drivers/dma/sun6i-dma.c | 37 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index 245a147f718f..b5ecc97a0d5a 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -42,6 +42,9 @@
-=20
- #define DMA_STAT		0x30
-=20
-+/* Offset between DMA_IRQ_EN and DMA_IRQ_STAT limits number of channels */
-+#define DMA_MAX_CHANNELS	(DMA_IRQ_CHAN_NR * 0x10 / 4)
-+
- /*
-  * sun8i specific registers
-  */
-@@ -65,7 +68,8 @@
- #define DMA_CHAN_LLI_ADDR	0x08
-=20
- #define DMA_CHAN_CUR_CFG	0x0c
--#define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & 0x1f)
-+#define DMA_CHAN_MAX_DRQ		0x1f
-+#define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & DMA_CHAN_MAX_DRQ)
- #define DMA_CHAN_CFG_SRC_IO_MODE	BIT(5)
- #define DMA_CHAN_CFG_SRC_LINEAR_MODE	(0 << 5)
- #define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
-@@ -1157,6 +1161,7 @@ MODULE_DEVICE_TABLE(of, sun6i_dma_match);
- static int sun6i_dma_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *device;
-+	struct device_node *np =3D pdev->dev.of_node;
- 	struct sun6i_dma_dev *sdc;
- 	struct resource *res;
- 	int ret, i;
-@@ -1232,6 +1237,36 @@ static int sun6i_dma_probe(struct platform_device *p=
-dev)
- 	sdc->num_vchans =3D sdc->cfg->nr_max_vchans;
- 	sdc->max_request =3D sdc->cfg->nr_max_requests;
-=20
-+	ret =3D of_property_read_u32(np, "dma-channels", &sdc->num_pchans);
-+	if (ret && !sdc->num_pchans) {
-+		dev_err(&pdev->dev, "Can't get dma-channels.\n");
-+		return ret;
-+	}
-+
-+	if (sdc->num_pchans > DMA_MAX_CHANNELS) {
-+		dev_err(&pdev->dev, "Number of dma-channels out of range.\n");
-+		return -EINVAL;
-+	}
-+
-+	ret =3D of_property_read_u32(np, "dma-requests", &sdc->max_request);
-+	if (ret && !sdc->max_request) {
-+		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
-+			 DMA_CHAN_MAX_DRQ);
-+		sdc->max_request =3D DMA_CHAN_MAX_DRQ;
-+	}
-+
-+	if (sdc->max_request > DMA_CHAN_MAX_DRQ) {
-+		dev_err(&pdev->dev, "Value of dma-requests out of range.\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * If the number of vchans is not specified, derive it from the
-+	 * highest port number, at most one channel per port and direction.
-+	 */
-+	if (!sdc->num_vchans)
-+		sdc->num_vchans =3D 2 * (sdc->max_request + 1);
-+
- 	sdc->pchans =3D devm_kcalloc(&pdev->dev, sdc->num_pchans,
- 				   sizeof(struct sun6i_pchan), GFP_KERNEL);
- 	if (!sdc->pchans)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boo=
+t/dts/allwinner/sun50i-a64.dtsi
+index 4f060ecdb061..ec71c48b393d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -476,6 +476,8 @@
+ 			interrupts =3D <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks =3D <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
+ 			clock-names =3D "ahb", "mod";
++			dmas =3D <&dma 23>, <&dma 23>;
++			dma-names =3D "rx", "tx";
+ 			pinctrl-names =3D "default";
+ 			pinctrl-0 =3D <&spi0_pins>;
+ 			resets =3D <&ccu RST_BUS_SPI0>;
+@@ -491,6 +493,8 @@
+ 			interrupts =3D <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks =3D <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
+ 			clock-names =3D "ahb", "mod";
++			dmas =3D <&dma 24>, <&dma 24>;
++			dma-names =3D "rx", "tx";
+ 			pinctrl-names =3D "default";
+ 			pinctrl-0 =3D <&spi1_pins>;
+ 			resets =3D <&ccu RST_BUS_SPI1>;
 --=20
 2.14.1
 
