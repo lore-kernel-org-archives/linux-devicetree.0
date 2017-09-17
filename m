@@ -1,90 +1,68 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Fix console path on RPi3
-Date: Sun, 17 Sep 2017 12:39:52 +0200 (CEST)
-Message-ID: <940601883.58031.1505644792507@email.1und1.de>
-References: <1505422080-14336-1-git-send-email-loic.poulain@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505422080-14336-1-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 3/5] input: mouse: Add DT bindings for GPIO mice
+Date: Sun, 17 Sep 2017 13:14:43 +0200
+Message-ID: <20170917111445.30880-4-linus.walleij@linaro.org>
+References: <20170917111445.30880-1-linus.walleij@linaro.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170917111445.30880-1-linus.walleij@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
+Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Loic,
+This adds DT bindings for simple mice attached to GPIO lines.
+As the properties are very general and pertains to all mice I
+can think of, we use very generic names for the 4-7 GPIO lines,
+"up", "down" etc.
 
-> Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 14. September 2017 um 22:48 geschrieben:
-> 
-> 
-> Contrary to other RPi devices, RPi3 uses uart0 to communicate with
-> the BCM43438 bluetooth controller. uart1 is then used for the console.
-> Today, the console configuration is inherited from the bcm283x dtsi
-> (bootargs) which is not the correct one for the RPi3. This leads to
-> routing issue and confuses the Bluetooth controller with unexpected
-> data.
-> 
-> This patch introduces chosen/stdout path to configure console to uart0
-> on bcm283x family and overwrite it to uart1 in the RPi3 dts.
-> 
-> Create serial0/1 aliases referring to uart0 ant uart1 paths.
-> Remove unneeded earlyprintk.
-> 
-> Fixes: 4188ea2aeb6d ("ARM: bcm283x: Define UART pinmuxing on board level")
-> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 5 +++++
->  arch/arm/boot/dts/bcm283x.dtsi        | 7 ++++++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> index 20725ca..f1c0811 100644
-> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> @@ -8,6 +8,11 @@
->  	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
->  	model = "Raspberry Pi 3 Model B";
->  
-> +	chosen {
-> +		/* 8250 auxiliar UART instead of pl011 */
-> +		stdout-path = "serial1:115200n8";
-> +	};
-> +
->  	memory {
->  		reg = <0 0x40000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> index 431dcfc..013431e 100644
-> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> @@ -20,8 +20,13 @@
->  	#address-cells = <1>;
->  	#size-cells = <1>;
->  
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +	};
-> +
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+This patch is inspired by the existance of a GPIO mouse driver
+with no in-kernel users.
+---
+ .../devicetree/bindings/input/gpio-mouse.txt       | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-mouse.txt
 
-looks good, but since the bcm2835-rpi-zero-w.dts also defines this, please remove it there.
+diff --git a/Documentation/devicetree/bindings/input/gpio-mouse.txt b/Documentation/devicetree/bindings/input/gpio-mouse.txt
+new file mode 100644
+index 000000000000..82622a439745
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/gpio-mouse.txt
+@@ -0,0 +1,32 @@
++Device-Tree bindings for GPIO attached mice
++
++This simply uses standard GPIO handles to define a simple mouse connected
++to 4-7 GPIO lines.
++
++Required properties:
++	- compatible: must be "gpio-mouse"
++	- scan-interval: The scanning interval in milliseconds
++	- up-gpios: GPIO line phandle to the line indicating "up"
++	- down-gpios: GPIO line phandle to the line indicating "down"
++	- left-gpios: GPIO line phandle to the line indicating "left"
++	- right-gpios: GPIO line phandle to the line indicating "right"
++
++Optional properties:
++	- button-left-gpios: GPIO line handle to the left mouse button
++	- button-middle-gpios: GPIO line handle to the middle mouse button
++	- button-right-gpios: GPIO line handle to the right mouse button
++Example:
++
++#include <dt-bindings/gpio/gpio.h>
++
++gpio-mouse {
++	compatible = "gpio-keys";
++	scan-interval = <50>;
++	up-gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
++	down-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
++	left-gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
++	right-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
++	button-left-gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
++	button-middle-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
++	button-right-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
++};
+-- 
+2.13.5
 
->  	chosen {
-> -		bootargs = "earlyprintk console=ttyAMA0";
-> +		stdout-path = "serial0:115200n8";
->  	};
->  
->  	thermal-zones {
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
