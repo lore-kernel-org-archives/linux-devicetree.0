@@ -1,86 +1,82 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 4/7] clocksource: sh_cmt: Remove support for "renesas,cmt-32*"
-Date: Mon, 18 Sep 2017 15:46:44 +0200
-Message-ID: <1505742407-31576-5-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 1/7] dt-bindings: timer: renesas,cmt: Fix SoC-specific compatible values
+Date: Mon, 18 Sep 2017 15:46:41 +0200
+Message-ID: <1505742407-31576-2-git-send-email-geert+renesas@glider.be>
 References: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505742407-31576-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <damm+renesas@opensource.se>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Remove driver matching support for the unused "renesas,cmt-32" and
-"renesas,cmt-32-fast" compatible values, cfr. commit 203bb3479958c48a
-("devicetree: bindings: Remove unused 32-bit CMT bindings").
+While the new family-specific compatible values introduced by commit
+6f54cc1adcc8957f ("devicetree: bindings: R-Car Gen2 CMT0 and CMT1
+bindings") use the recommended order "<vendor>,<family>-<device>", the
+new SoC-specific compatible values still use the old and deprecated
+order "<vendor>,<device>-<soc>".
 
-As this removes the last user of SH_CMT_32BIT_FAST, all support for this
-variant is removed from the driver.
+Switch the SoC-specific compatible values to the recommended order while
+there are no upstream users of these compatible values yet.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Fixes: 7f03a0ecfdc786c1 ("devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings")
+Fixes: 63d9e8ca0dd4bfa4 ("devicetree: bindings: Deprecate property, update example")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v3:
   - New.
 ---
- drivers/clocksource/sh_cmt.c | 20 --------------------
- 1 file changed, 20 deletions(-)
+ .../devicetree/bindings/timer/renesas,cmt.txt      | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
-index 45af436483f39cb0..8546736e3bc8e961 100644
---- a/drivers/clocksource/sh_cmt.c
-+++ b/drivers/clocksource/sh_cmt.c
-@@ -66,7 +66,6 @@ struct sh_cmt_device;
- enum sh_cmt_model {
- 	SH_CMT_16BIT,
- 	SH_CMT_32BIT,
--	SH_CMT_32BIT_FAST,
- 	SH_CMT_48BIT,
- 	SH_CMT0_RCAR_GEN2,
- 	SH_CMT1_RCAR_GEN2,
-@@ -203,16 +202,6 @@ static const struct sh_cmt_info sh_cmt_info[] = {
- 		.read_count = sh_cmt_read32,
- 		.write_count = sh_cmt_write32,
- 	},
--	[SH_CMT_32BIT_FAST] = {
--		.model = SH_CMT_32BIT_FAST,
--		.width = 32,
--		.overflow_bit = SH_CMT32_CMCSR_CMF,
--		.clear_bits = ~(SH_CMT32_CMCSR_CMF | SH_CMT32_CMCSR_OVF),
--		.read_control = sh_cmt_read16,
--		.write_control = sh_cmt_write16,
--		.read_count = sh_cmt_read32,
--		.write_count = sh_cmt_write32,
--	},
- 	[SH_CMT_48BIT] = {
- 		.model = SH_CMT_48BIT,
- 		.channels_mask = 0x3f,
-@@ -890,13 +879,6 @@ static int sh_cmt_setup_channel(struct sh_cmt_channel *ch, unsigned int index,
- 	case SH_CMT_48BIT:
- 		ch->ioctrl = cmt->mapbase + 0x10 + ch->hwidx * 0x10;
- 		break;
--	case SH_CMT_32BIT_FAST:
--		/*
--		 * The 32-bit "fast" timer has a single channel at hwidx 5 but
--		 * is located at offset 0x40 instead of 0x60 for some reason.
--		 */
--		ch->ioctrl = cmt->mapbase + 0x40;
--		break;
- 	case SH_CMT0_RCAR_GEN2:
- 	case SH_CMT1_RCAR_GEN2:
- 		ch->iostart = cmt->mapbase + ch->hwidx * 0x100;
-@@ -952,8 +934,6 @@ static const struct platform_device_id sh_cmt_id_table[] = {
- MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+index 6ca6b9e582a0e803..d740989eb56981cb 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+@@ -20,16 +20,16 @@ Required Properties:
+ 		(CMT1 on sh73a0 and r8a7740)
+ 		This is a fallback for the above renesas,cmt-48-* entries.
  
- static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
--	{ .compatible = "renesas,cmt-32", .data = &sh_cmt_info[SH_CMT_32BIT] },
--	{ .compatible = "renesas,cmt-32-fast", .data = &sh_cmt_info[SH_CMT_32BIT_FAST] },
- 	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
- 	{ .compatible = "renesas,cmt-48-gen2", .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2] },
- 	{ .compatible = "renesas,rcar-gen2-cmt0", .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2] },
+-    - "renesas,cmt0-r8a73a4" for the 32-bit CMT0 device included in r8a73a4.
+-    - "renesas,cmt1-r8a73a4" for the 48-bit CMT1 device included in r8a73a4.
+-    - "renesas,cmt0-r8a7790" for the 32-bit CMT0 device included in r8a7790.
+-    - "renesas,cmt1-r8a7790" for the 48-bit CMT1 device included in r8a7790.
+-    - "renesas,cmt0-r8a7791" for the 32-bit CMT0 device included in r8a7791.
+-    - "renesas,cmt1-r8a7791" for the 48-bit CMT1 device included in r8a7791.
+-    - "renesas,cmt0-r8a7793" for the 32-bit CMT0 device included in r8a7793.
+-    - "renesas,cmt1-r8a7793" for the 48-bit CMT1 device included in r8a7793.
+-    - "renesas,cmt0-r8a7794" for the 32-bit CMT0 device included in r8a7794.
+-    - "renesas,cmt1-r8a7794" for the 48-bit CMT1 device included in r8a7794.
++    - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
++    - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
++    - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
++    - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
++    - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
++    - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
++    - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
++    - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
++    - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
++    - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
+ 
+     - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2.
+     - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2.
+@@ -46,7 +46,7 @@ Required Properties:
+ Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt0-r8a7790", "renesas,rcar-gen2-cmt0";
++		compatible = "renesas,r8a7790-cmt0", "renesas,rcar-gen2-cmt0";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
+@@ -55,7 +55,7 @@ Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 	};
+ 
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt1-r8a7790", "renesas,rcar-gen2-cmt1";
++		compatible = "renesas,r8a7790-cmt1", "renesas,rcar-gen2-cmt1";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
