@@ -1,44 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] drm/bridge: add Silicon Image SiI9234 driver
-Date: Mon, 18 Sep 2017 17:30:07 -0500
-Message-ID: <20170918223007.tfcagib2ml2gbi5d@rob-hp-laptop>
-References: <1505201648-9240-1-git-send-email-m.purski@samsung.com>
- <CGME20170912073457eucas1p1333fbdc4f14ee460be38018d3d1379bf@eucas1p1.samsung.com>
- <1505201648-9240-2-git-send-email-m.purski@samsung.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add Spreadtrum watchdog
+ documentation
+Date: Mon, 18 Sep 2017 17:31:11 -0500
+Message-ID: <20170918223111.ywopvesfqodxh2ah@rob-hp-laptop>
+References: <f3daa0f85dda0672c4b057e7f37c690365652e39.1505216059.git.eric.long@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1505201648-9240-2-git-send-email-m.purski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, krzk@kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+In-Reply-To: <f3daa0f85dda0672c4b057e7f37c690365652e39.1505216059.git.eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 12, 2017 at 09:34:07AM +0200, Maciej Purski wrote:
-> SiI9234 transmitter converts eTMDS/HDMI signal to MHL 1.0.
-> It is controlled via I2C bus. Its interaction with other
-> devices in video pipeline is performed mainly on HW level.
-> The only interaction it does on device driver level is
-> filtering-out unsupported video modes, it exposes drm_bridge
-> interface to perform this operation.
+On Tue, Sep 12, 2017 at 07:40:08PM +0800, Eric Long wrote:
+> This patch adds the documentation for Spreadtrum watchdog driver.
 > 
-> This patch is based on the code refactored by Tomasz Stanislawski
-> <t.stanislaws@samsung.com>, which was initially developed by:
-> Adam Hampson <ahampson@sta.samsung.com>
-> Erik Gilling <konkers@android.com>
-> Shankar Bandal <shankar.b@samsung.com>
-> Dharam Kumar <dharam.kr@samsung.com>
-> 
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+> Signed-off-by: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 > ---
->  .../devicetree/bindings/display/bridge/sii9234.txt |  49 +
+> changes since v1:
+>  - No updates.
+> ---
+>  .../devicetree/bindings/watchdog/sprd-wdt.txt         | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/gpu/drm/bridge/Kconfig                     |   8 +
->  drivers/gpu/drm/bridge/Makefile                    |   1 +
->  drivers/gpu/drm/bridge/sii9234.c                   | 996 +++++++++++++++++++++
->  4 files changed, 1054 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/sii9234.txt
->  create mode 100644 drivers/gpu/drm/bridge/sii9234.c
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
