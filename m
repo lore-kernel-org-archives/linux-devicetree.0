@@ -1,28 +1,25 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] ravb: document R8A77970 bindings
-Date: Mon, 18 Sep 2017 11:38:28 -0700 (PDT)
-Message-ID: <20170918.113828.1780561294605005940.davem@davemloft.net>
-References: <20170912200228.015376134@cogentembedded.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] dt-bindings: net: renesas-ravb: Add support for
+ R8A77995 RAVB
+Date: Mon, 18 Sep 2017 11:41:58 -0700 (PDT)
+Message-ID: <20170918.114158.395246113471075001.davem@davemloft.net>
+References: <1505347598-4156-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170912200228.015376134-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1505347598-4156-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: yoshihiro.shimoda.uh@renesas.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Date: Tue, 12 Sep 2017 23:02:08 +0300
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Date: Thu, 14 Sep 2017 09:06:38 +0900
 
-> R-Car V3M (R8A77970) SoC also has the R-Car gen3 compatible EtherAVB
-> device, so document  the SoC specific bindings.
+> Add a new compatible string for the R8A77995 (R-Car D3) RAVB.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
 Applied to net-next.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
