@@ -1,134 +1,106 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/2] ARM: smccc-call: Use r12 to route secure monitor calls on TI platforms
-Date: Mon, 18 Sep 2017 15:50:04 -0500
-Message-ID: <20170918205005.30235-1-afd@ti.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RESEND PATCH v2 4/6] dt: bindings: as3645a: Improve label
+ documentation, DT example
+Date: Mon, 18 Sep 2017 22:54:07 +0200
+Message-ID: <20170918205407.GA1849@amd>
+References: <20170918102349.8935-1-sakari.ailus@linux.intel.com>
+ <20170918102349.8935-5-sakari.ailus@linux.intel.com>
+ <20170918105655.GA14591@amd>
+ <20170918144923.dnhrxkirle3fvdfo@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170918144923.dnhrxkirle3fvdfo@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, jacek.anaszewski@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Our ROM Secure Monitor(SM) uses the value in r12 to determine which
-service is being requested by an SMC call. This inline with the ARM
-recommended SMC Calling Convention(SMCCC), which partitions the values
-in R0 for this task, OP-TEE's SM follows the ARM recommended convention.
 
-We need a way to signal that a call is for the OP-TEE SM and not for
-the ROM SM in a way that is safe for the ROM SM, in case it is still
-present. We do this by putting a value of 0x200 in r12 when the call
-is for OP-TEE or any other ARM by modifying the SMCCC caller function.
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There are four combinations of events:
+On Mon 2017-09-18 17:49:23, Sakari Ailus wrote:
+> Hi Pavel,
+>=20
+> On Mon, Sep 18, 2017 at 12:56:55PM +0200, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > Specify the exact label used if the label property is omitted in DT, =
+as
+> > > well as use label in the example that conforms to LED device naming.
+> > >=20
+> > > @@ -69,11 +73,11 @@ Example
+> > >  			flash-max-microamp =3D <320000>;
+> > >  			led-max-microamp =3D <60000>;
+> > >  			ams,input-max-microamp =3D <1750000>;
+> > > -			label =3D "as3645a:flash";
+> > > +			label =3D "as3645a:white:flash";
+> > >  		};
+> > >  		indicator@1 {
+> > >  			reg =3D <0x1>;
+> > >  			led-max-microamp =3D <10000>;
+> > > -			label =3D "as3645a:indicator";
+> > > +			label =3D "as3645a:red:indicator";
+> > >  		};
+> > >  	};
+> >=20
+> > Ok, but userspace still has no chance to determine if this is flash
+> > from main camera or flash for front camera; todays smartphones have
+> > flashes on both cameras.
+> >=20
+> > So.. Can I suggset as3645a:white:main_camera_flash or main_flash or
+> > ....?
+>=20
+> If there's just a single one in the device, could you use that?
+>=20
+> Even if we name this so for N9 (and N900), the application still would on=
+ly
+> work with the two devices.
 
-If the ROM SM is present and we make a legacy style SMC call, as we
-do in early boot, the call will not have r12 set to 0x200 as these
-calls go through existing mach-omap2/ SMC handlers, so all is well.
+Well, I'd plan to name it on other devices, too.
 
-If the ROM SM is present and we make an SMCCC style call, r12 will be
-set to 0x200 and ROM SM will see this as an invalid service call and
-safely return to the normal world.
+> My suggestion would be to look for a flash LED, and perhaps the maximum
+> current as well. That should generally work better than assumptions on the
+> label.
 
-If OP-TEE is present and we make a legacy style SMC call, r12 will
-not be set to 0x200, and OP-TEE will emulate the functionality that
-the call is requesting.
+If you just look for flash LED, you don't know if it is front one or
+back one. Its true that if you have just one flash it is usually on
+the back camera, but you can't know if maybe driver is not available
+for the main flash.
 
-If OP-TEE is present and we make an SMCC style call, r12 is checked
-and as it will be 0x200 we can ignore it and treat the rest of the
-registers in the standard SMCCC way.
+Lets get this right, please "main_camera_flash" is 12 bytes more than
+"flash", and it saves application logic.. more than 12 bytes, I'm sure.=20
 
-To eliminate the need for other platforms to load this r12 sentinel
-value on every SMC call we add a TI specific SMC function that
-can be selected by users at run-time on TI platforms.
+> For association with a particular camera --- in the long run I'd propose =
+to
+> use Media controller / property API for that in the long run. We don't ha=
+ve
+> that yet though.
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
----
- arch/arm/kernel/armksyms.c   |  1 +
- arch/arm/kernel/smccc-call.S | 25 +++++++++++++++++++++++++
- include/linux/arm-smccc.h    | 16 ++++++++++++++++
- 3 files changed, 42 insertions(+)
+We don't have that yet. Plus simple applications may not want to talk
+v4l2 ioctls....
 
-diff --git a/arch/arm/kernel/armksyms.c b/arch/arm/kernel/armksyms.c
-index 5266fd9ad6b4..6216c4678137 100644
---- a/arch/arm/kernel/armksyms.c
-+++ b/arch/arm/kernel/armksyms.c
-@@ -182,4 +182,5 @@ EXPORT_SYMBOL(__pv_offset);
- #ifdef CONFIG_HAVE_ARM_SMCCC
- EXPORT_SYMBOL(__arm_smccc_smc);
- EXPORT_SYMBOL(__arm_smccc_hvc);
-+EXPORT_SYMBOL(arm_ti_smccc_smc);
- #endif
-diff --git a/arch/arm/kernel/smccc-call.S b/arch/arm/kernel/smccc-call.S
-index e5d43066b889..7a30c253f284 100644
---- a/arch/arm/kernel/smccc-call.S
-+++ b/arch/arm/kernel/smccc-call.S
-@@ -43,6 +43,21 @@ UNWIND(	.save	{r4-r7})
- UNWIND(	.fnend)
- 	.endm
- 
-+	.macro TI_SMCCC instr
-+UNWIND(	.fnstart)
-+	mov	r12, sp
-+	push	{r4-r11}
-+UNWIND(	.save	{r4-r11})
-+	ldm	r12, {r4-r7}
-+	mov	r12, #0x200
-+	\instr
-+	pop	{r4-r11}
-+	ldr	r12, [sp, #(4 * 4)]
-+	stm	r12, {r0-r3}
-+	bx	lr
-+UNWIND(	.fnend)
-+	.endm
-+
- /*
-  * void smccc_smc(unsigned long a0, unsigned long a1, unsigned long a2,
-  *		  unsigned long a3, unsigned long a4, unsigned long a5,
-@@ -62,3 +77,13 @@ ENDPROC(__arm_smccc_smc)
- ENTRY(__arm_smccc_hvc)
- 	SMCCC SMCCC_HVC
- ENDPROC(__arm_smccc_hvc)
-+
-+/*
-+ * void ti_smccc_smc(unsigned long a0, unsigned long a1, unsigned long a2,
-+ *		     unsigned long a3, unsigned long a4, unsigned long a5,
-+ *		     unsigned long a6, unsigned long a7,
-+ *		     struct arm_smccc_res *res)
-+ */
-+ENTRY(arm_ti_smccc_smc)
-+	TI_SMCCC SMCCC_SMC
-+ENDPROC(arm_ti_smccc_smc)
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index 4c5bca38c653..5254c03b784a 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -130,5 +130,21 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
- 
- #define arm_smccc_hvc_quirk(...) __arm_smccc_hvc(__VA_ARGS__)
- 
-+/**
-+ * arm_ti_smccc_smc() - make TI SMC calls
-+ * @a0-a7: arguments passed in registers 0 to 7
-+ * @res: result values from registers 0 to 3
-+ *
-+ * This function is used to make TI style SMC calls following a TI proprietary
-+ * SMC Call. The content of the supplied params are copied to registers 0 to 7
-+ * and register 12 is set to a sentinel value prior to the SMC instruction.
-+ * The return values are updated with the content from register 0 to 3 on
-+ * return from the SMC instruction.
-+ */
-+asmlinkage void arm_ti_smccc_smc(unsigned long a0, unsigned long a1,
-+			unsigned long a2, unsigned long a3, unsigned long a4,
-+			unsigned long a5, unsigned long a6, unsigned long a7,
-+			struct arm_smccc_res *res);
-+
- #endif /*__ASSEMBLY__*/
- #endif /*__LINUX_ARM_SMCCC_H*/
--- 
-2.14.1
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlnAMm8ACgkQMOfwapXb+vKPigCaAx2L6G1ehx1bKrHjBe6YxTfb
+KrUAoIx20jUf7Eo83qf+6CdWJ6Ea49gq
+=z1/K
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
