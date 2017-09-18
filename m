@@ -1,64 +1,164 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC/PATCH v4 1/4] Document nexus nodes/specifier remapping
-Date: Mon, 18 Sep 2017 12:44:38 -0500
-Message-ID: <CAL_Jsq+qRm=iAhQz6Ro3SAU45JEK8KNWpRBcXuRt47r8ncYYwQ@mail.gmail.com>
-References: <20170811154236.12891-1-stephen.boyd@linaro.org> <20170811154236.12891-2-stephen.boyd@linaro.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: Document how to refer to LEDs from remote nodes
+Date: Mon, 18 Sep 2017 20:14:10 +0200
+Message-ID: <59f91a5f-bad2-b4a1-ae41-58073ba395b0@gmail.com>
+References: <20170915144052.25903-1-sakari.ailus@linux.intel.com>
+ <20170915144052.25903-2-sakari.ailus@linux.intel.com>
+ <6baeee56-480b-00b9-4c84-e65dc7c42301@gmail.com>
+ <20170918103419.qo3sw5vufqojj3vm@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170811154236.12891-2-stephen.boyd@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, "devicetree-spec@vger.kernel.org" <devicetree-spec@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170918103419.qo3sw5vufqojj3vm@valkosipuli.retiisi.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, mika.westerberg@intel.com, rafael@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 11, 2017 at 10:42 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> Document the generic nexus node properties. This can be used by
-> any specifier that conforms to #<specifier>-cells where they
-> want to support remapping phandle lists through nexus nodes. This
-> is similar to interrupt remapping, but slightly different because
-> we don't consider unit addresses when doing mappings. This is
-> mostly a copy/paste of the interrupt specification, with the unit
-> address parts removed and generalized to any specifier. There's
-> also the addition of a pass through mechanism to make things more
-> compact if desired in the mapping table.
+Hi Sakari,
 
-Sorry for the slow response.
+On 09/18/2017 12:34 PM, Sakari Ailus wrote:
+> Hi Jacek,
+> 
+> Thanks for the feedback.
+> 
+> On Sun, Sep 17, 2017 at 06:57:09PM +0200, Jacek Anaszewski wrote:
+>> Hi Sakari,
+>>
+>> Thanks for the patch.
+>>
+>> On 09/15/2017 04:40 PM, Sakari Ailus wrote:
+>>> Document referring to LEDs from remote device nodes, such as from camera
+>>> sensors.
+>>>
+>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>> ---
+>>>  Documentation/acpi/dsd/leds.txt | 94 +++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 94 insertions(+)
+>>>  create mode 100644 Documentation/acpi/dsd/leds.txt
+>>>
+>>> diff --git a/Documentation/acpi/dsd/leds.txt b/Documentation/acpi/dsd/leds.txt
+>>> new file mode 100644
+>>> index 000000000000..894c82274f53
+>>> --- /dev/null
+>>> +++ b/Documentation/acpi/dsd/leds.txt
+>>> @@ -0,0 +1,94 @@
+>>> +Describing and referring to LEDs in ACPI
+>>> +
+>>> +Individual LEDs are described by hierarchical data extension [6] nodes
+>>> +under the device node, the LED driver chip. The "led" property in the
+>>> +LED specific nodes tells the numerical ID of each individual LED. The
+>>> +"led" property is used here in a similar fashion as the "reg" property
+>>> +in DT. [3]
+>>> +
+>>> +Referring to LEDs in Device tree is documented in [4], in "flash-leds"
+>>> +property documentation. In short, LEDs are directly referred to by
+>>> +using phandles.
+>>> +
+>>> +While Device tree allows referring to any node in the tree[1], in ACPI
+>>> +references are limited to device nodes only [2]. For this reason using
+>>> +the same mechanism on ACPI is not possible.
+>>> +
+>>> +ACPI allows (as does DT) using integer arguments after the reference.
+>>> +A combination of the LED driver device reference and an integer
+>>> +argument, referring to the "led" property of the relevant LED, are
+>>> +use to individual LEDs.
+>>
+>> s/are use/is used/ ? (in a sense "combination of ... and .. is used")
+>>
+>> s/to individual/to describe individual/
+>>
+>> (or another verb, I'm not sure what exactly you intended it to be)
+> 
+> I'll use "is used to identify", for this is what it essentially is for.
 
-I'm still wondering how/if we can merge interrupts as part of this
-(both the spec and parsing implementation). Could we simply require
-that #address-cells is 0 or do we even need this distinction? If the
-usecase is connectors, then we should typically be able to set
-#address-cells to 0. Perhaps you could have a custom PCI connector
-with additional signals and the slot/connector node would have the PCI
-address. In this case, we would have #address-cells, but having them
-and ignoring the address cells via the mask would still work.
+With that:
 
-Also, I don't see any issue if we allow the -map-pass-thru property
-for interrupts.
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
->
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->
-> I still need to write the blurb about what this is all about, but
-> I wanted to send this out now to get early feedback. Some starting
-> points:
->
->  1) Replace child/parent with incoming/outgoing everywhere?
+>>  The value of the LED property is a contract
+>>> +between the firmware and software, it uniquely identifies the LED
+>>> +driver outputs.
+>>> +
+>>> +An ASL example of a camera sensor device and a LED driver device for two
+>>> +LEDs. Objects not relevant for LEDs or the references to them have been
+>>> +omitted.
+>>> +
+>>> +	Device (LED)
+>>> +	{
+>>> +		Name (_DSD, Package () {
+>>> +			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+>>> +			Package () {
+>>> +				Package () { "led0", LED0 },
+>>> +				Package () { "led1", LED1 },
+>>> +			}
+>>> +		})
+>>> +		Name (LED0, Package () {
+>>> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>>> +			Package () {
+>>> +				Package () { "led", 0 },
+>>> +				Package () { "flash-max-microamp", 1000000 },
+>>> +				Package () { "flash-timeout-us", 200000 },
+>>> +				Package () { "led-max-microamp", 100000 },
+>>> +				Package () { "label", "led:salama" },
+>>> +			}
+>>> +		})
+>>> +		Name (LED1, Package () {
+>>> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>>> +			Package () {
+>>> +				Package () { "led", 1 },
+>>> +				Package () { "led-max-microamp", 10000 },
+>>> +				Package () { "label", "led:huomiovalo" },
+>>> +			}
+>>> +		})
+>>> +	}
+>>> +
+>>> +	Device (SEN)
+>>> +	{
+>>> +		Name (_DSD, Package () {
+>>> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>>> +			Package () {
+>>> +				Package () {
+>>> +					"flash-leds",
+>>> +					Package () { ^LED, 0, ^LED, 1 },
+>>> +				}
+>>> +			}
+>>> +		})
+>>> +	}
+>>> +
+>>> +where
+>>> +
+>>> +	LED	LED driver device
+>>> +	LED0	First LED
+>>> +	LED1	Second LED
+>>> +	SEN	Camera sensor device (or another device the LED is
+>>> +		related to)
+>>> +
+>>> +[1] Device tree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
+>>> +
+>>> +[2] Advanced Configuration and Power Interface Specification.
+>>> +    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
+>>> +    referenced 2016-10-04.
+>>> +
+>>> +[3] Documentation/devicetree/bindings/leds/common.txt
+>>> +
+>>> +[4] Documentation/devicetree/bindings/media/video-interfaces.txt
+>>> +
+>>> +[5] Device Properties UUID For _DSD.
+>>> +    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
+>>> +    referenced 2016-10-04.
+>>> +
+>>> +[6] Hierarchical Data Extension UUID For _DSD.
+>>> +    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.pdf>,
+>>> +    referenced 2016-10-04.
+>>>
+>>
+>> -- 
+>> Best regards,
+>> Jacek Anaszewski
+> 
 
-Parent/child is more common, so I think that's fine.
-
->
->  2) Make a pretty picture to describe remapping phandle+specifiers
->     similar to the interrupt hierarchy diagram?
-
-Pictures are always nice, but I don't think required.
-
->
->  3) Come up with some better name than <specifier>? Kernel-doc uses <list>
->     but I'm not sure that's any better.
-
-specifier seems fine to me.
-
-Rob
+-- 
+Best regards,
+Jacek Anaszewski
