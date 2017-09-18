@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 03/10] dmaengine: sun6i: Restructure code
- to allow extension for new SoCs
-Date: Mon, 18 Sep 2017 10:08:55 +0200
-Message-ID: <20170918080855.yxxfcfg2yttpyi5y@flea.lan>
+Subject: Re: [PATCH v2 04/10] dmaengine: sun6i: Enable
+ additional burst lengths/widths on H3
+Date: Mon, 18 Sep 2017 10:09:27 +0200
+Message-ID: <20170918080927.ghfahn2xwz52hmsx@flea.lan>
 References: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de>
- <20170917031956.28010-4-stefan.bruens@rwth-aachen.de>
+ <20170917031956.28010-5-stefan.bruens@rwth-aachen.de>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dix4vvap7hvwuzv2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGH67XGQKGQEZQVCWOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="yi6pq3fxiamd3slb"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOH67XGQKGQEEUYSTLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170917031956.28010-4-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+In-Reply-To: <20170917031956.28010-5-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,21 +24,17 @@ Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY7
 List-Id: devicetree@vger.kernel.org
 
 
---dix4vvap7hvwuzv2
+--yi6pq3fxiamd3slb
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 17, 2017 at 05:19:49AM +0200, Stefan Br=C3=BCns wrote:
-> The current code mixes three distinct operations when transforming
-> the slave config to register settings:
+On Sun, Sep 17, 2017 at 05:19:50AM +0200, Stefan Br=C3=BCns wrote:
+> The H3 supports bursts lengths of 1, 4, 8 and 16 transfers, each with
+> a width of 1, 2, 4 or 8 bytes.
 >=20
->   1. special handling of DMA_SLAVE_BUSWIDTH_UNDEFINED, maxburst =3D=3D 0
->   2. range checking
->   3. conversion of raw to register values
->=20
-> As the range checks depend on the specific SoC, move these out of the
-> conversion to distinct operations.
+> The register value for the the width is log2-encoded, change the
+> conversion function to provide the correct value for width =3D=3D 8.
 >=20
 > Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 
@@ -58,24 +54,24 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---dix4vvap7hvwuzv2
+--yi6pq3fxiamd3slb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZv38XAAoJEBx+YmzsjxAgDjkP/j3HZhePfBAo/C8Rxv2MQFlm
-qK5o62XFog06/CrB21Xhy+37XJOfgXpR6nw/LTSmSFETAXm5VNAh+4+K2YvaSqz9
-xcy+esyLbJ2fzq9cme02LRrtq2j0xXge2klr9hxYbS84M2qpeuGV9Nh4zwVL2bH+
-ktZ7Sp0KfRhf6H3+QpZF/iuk3NKWHMDsUQVd5mm1Vrpsg4FcR2i498fq6rp660Sl
-z1dd//3mKfRQCbhjJfZzFCnmtnfMwf6KfFXZzlkVS5eZ2sCKkd4G6hB34F2gZ3aY
-QUdZdMnkNsRbrZNKI2hVsgUCktMcqQiRvTfQf4ILYFWM/7GTz3ns3tsEioHdYvYQ
-WQ6jENM50ErZoQX7Y0GSGDvAL761QOELmAoogo2/FCA9yC1rL99/Qvzn+msl8Qk2
-FX26I1tjoQoaf9Py3BxIHYBlgZ34xMO7nCoZAOj+genU1GuSqeJFP09UsJY/bs7T
-jI98RKMcr5e+6n9dW9MVGqWLK8+ivbt1NuD3IdHOFx9ubZivRZMdTpWsNrEmLTaE
-RKiOXg6zdVLcfkmLfg37ZTgzqi7CTK96IQniOQiqOLcAU23NB6DUUlx+dBMTbzOl
-ncKXUMlAhp2/dxfJPoa7U59JSDFKDBnbu0yBsQ6iivBtiV+p0fVN2WbNk9I3ALme
-n2JxSiPfTITpB5Vx+KnK
-=n5sy
+iQIcBAEBAgAGBQJZv383AAoJEBx+YmzsjxAgiYEQAIUate2SUMU7+uPJtMQE+Q1x
+9vDTGXMsuIT+BoOw8CTaYO5iciNfSGLvHpl+nh8hr2Fw1Cn+Pz12Ss1gwO5YeYbc
+yEkNcmPArL3+pGYeFFPkWAEWRPa6gIJZ2VIxBhKo5JOt9bC7POaEypt07RUVT5M9
+aIYxVA6/oncQ3KaBp5jYNntPGE9HwuBI73vgI/poOhybqPy9zZqZbzqG49e1WQ5i
+jt3MBaYvFIgGj3p5bKef0ozu1GAbq9ucbPOjmShSJJxhMZj6+hRUW4oeuegNY7EG
+l7hKEJh4iIIIwtAs+r0tyeNhv93xY90vfRlZzsBiq+g+ojQThAkGIONUcZ0qK5B5
+0qQsWx+iN721M+KrIHe+qW+GfW8Z5bOmRmUwcTUBFqjIPNMr89u5jhYJJdjuSGs6
+aZ2VcZpseIZ/Rm8MrAanIgvVMYbJvAYjrR0guAhM3Hjp6hXG6lMYFcTQVOrVnhbk
+NIZ8OankKb4m+Am4CTppm9/jgrcnVWi/oYhyRM4wrtKGvdKKzJO/0Xq5UcFenRCi
+Lap96eXxegI4DLbcmd6vtRJWS3IOSBDju4U6AMXb6JsmIegf9+pXrVQA0jlA0mdu
+WJpaCmFItYNZat08W6jfpu3sUvD1/ub8dSIrZofvE/s1J65BcXlFhQZWycBk7Sq8
+mvl8cnD4RsjeILjz3M0g
+=E0Sp
 -----END PGP SIGNATURE-----
 
---dix4vvap7hvwuzv2--
+--yi6pq3fxiamd3slb--
