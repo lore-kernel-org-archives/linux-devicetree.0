@@ -1,47 +1,70 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [RESEND PATCH v4 3/3] ARM: dts: exynos: Remove the display-timing
- and delay from rinato dts
-Date: Mon, 18 Sep 2017 11:54:24 +0900
-Message-ID: <1505703264-6704-1-git-send-email-hoegeun.kwon@samsung.com>
-References: <CGME20170918025448epcas2p22a44b6c8efeac613e7e90c3c49b3eb8a@epcas2p2.samsung.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 5/9] dt-bindings: add compatibles for rk3066/rk3188 power controllers
+Date: Mon, 18 Sep 2017 08:29:54 +0200
+Message-ID: <13237503.R9C4DGAk4Y@phil>
+References: <20170915083357.11296-1-heiko@sntech.de> <20170915083357.11296-6-heiko@sntech.de> <c2f4f70e-e5e7-9432-035d-fdf885eb53d0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: krzk@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, kgene@kernel.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c2f4f70e-e5e7-9432-035d-fdf885eb53d0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-IFRoZSBkaXNwbGF5LXRpbWluZyBhbmQgZGVsYXkgYXJlIGluY2x1ZGVkIGluIHRoZSBwYW5lbCBk
-cml2ZXIuIFNvIGl0CiBzaG91bGQgYmUgcmVtb3ZlZCBpbiBkdHMuCgpTaWduZWQtb2ZmLWJ5OiBI
-b2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4KLS0tCgpIaSBLcnp5c3p0b2Ys
-CgpUaGlzIHBhdGNoIHdhcyByZWJhc2VkIHRvIHRoZSBtYWlubGluZSAodjQuMTQtcmMxKS4KCkJl
-c3QgcmVnYXJkcywKSG9lZ2V1bgoKIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAtcmluYXRv
-LmR0cyB8IDIyIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAyMiBkZWxl
-dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3MzMjUwLXJpbmF0
-by5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3MzMjUwLXJpbmF0by5kdHMKaW5kZXggMGI0
-NTQ2Ny4uZmY3OTJmZiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zMzI1MC1y
-aW5hdG8uZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAtcmluYXRvLmR0cwpA
-QCAtMjI3LDI4ICsyMjcsNiBAQAogCQl2Y2ktc3VwcGx5ID0gPCZsZG8yMF9yZWc+OwogCQlyZXNl
-dC1ncGlvcyA9IDwmZ3BlMCAxIEdQSU9fQUNUSVZFX0xPVz47CiAJCXRlLWdwaW9zID0gPCZncHgw
-IDYgR1BJT19BQ1RJVkVfSElHSD47Ci0JCXBvd2VyLW9uLWRlbGF5PSA8MzA+OwotCQlwb3dlci1v
-ZmYtZGVsYXk9IDwxMjA+OwotCQlyZXNldC1kZWxheSA9IDw1PjsKLQkJaW5pdC1kZWxheSA9IDwx
-MDA+OwotCQlmbGlwLWhvcml6b250YWw7Ci0JCWZsaXAtdmVydGljYWw7Ci0JCXBhbmVsLXdpZHRo
-LW1tID0gPDI5PjsKLQkJcGFuZWwtaGVpZ2h0LW1tID0gPDI5PjsKLQotCQlkaXNwbGF5LXRpbWlu
-Z3MgewotCQkJdGltaW5nLTAgewotCQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDw0NjAwMDAwPjsKLQkJ
-CQloYWN0aXZlID0gPDMyMD47Ci0JCQkJdmFjdGl2ZSA9IDwzMjA+OwotCQkJCWhmcm9udC1wb3Jj
-aCA9IDwxPjsKLQkJCQloYmFjay1wb3JjaCA9IDwxPjsKLQkJCQloc3luYy1sZW4gPSA8MT47Ci0J
-CQkJdmZyb250LXBvcmNoID0gPDE1MD47Ci0JCQkJdmJhY2stcG9yY2ggPSA8MT47Ci0JCQkJdnN5
-bmMtbGVuID0gPDI+OwotCQkJfTsKLQkJfTsKIAl9OwogfTsKIAotLSAKMS45LjEKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Am Samstag, 16. September 2017, 23:04:48 CEST schrieb Julien Chauveau:
+> Hello Heiko,
+> 
+> There are a few copy/paste errors in the documentation.
+> 
+> 
+> Le 15/09/2017 à 10:33, Heiko Stuebner a écrit :
+> > Add the compatible values for the power-domain controllers found on
+> > rk3066 and rk3188.
+> >
+> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > ---
+> >   Documentation/devicetree/bindings/soc/rockchip/power_domain.txt | 4 ++++
+> >   1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+> > index 301d2a9bc1b8..1c42c5b7ca6a 100644
+> > --- a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+> > +++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+> > @@ -5,6 +5,8 @@ powered up/down by software based on different application scenes to save power.
+> >   
+> >   Required properties for power domain controller:
+> >   - compatible: Should be one of the following.
+> > +	"rockchip,rk3066-power-controller" - for RK3288 SoCs.
+> > +	"rockchip,rk3188-power-controller" - for RK3288 SoCs.
+> These should be for RK3066 and RK3188.
+> >   	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
+> >   	"rockchip,rk3328-power-controller" - for RK3328 SoCs.
+> >   	"rockchip,rk3366-power-controller" - for RK3366 SoCs.
+> > @@ -17,6 +19,8 @@ Required properties for power domain controller:
+> >   
+> >   Required properties for power domain sub nodes:
+> >   - reg: index of the power domain, should use macros in:
+> > +	"include/dt-bindings/power/rk3066-power.h" - for RK3288 type power domain.
+> > +	"include/dt-bindings/power/rk3188-power.h" - for RK3288 type power domain.
+> Same here.
+
+bah ... thanks for noticing. Will fix in a v2 shortly.
+
+
+Thanks
+Heiko
+
+> >   	"include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
+> >   	"include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
+> >   	"include/dt-bindings/power/rk3366-power.h" - for RK3366 type power domain.
+> Julien
+> 
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
