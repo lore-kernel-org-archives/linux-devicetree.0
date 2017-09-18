@@ -1,70 +1,34 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 4/6] dt: bindings: as3645a: Improve label
- documentation, DT example
-Date: Mon, 18 Sep 2017 17:49:23 +0300
-Message-ID: <20170918144923.dnhrxkirle3fvdfo@valkosipuli.retiisi.org.uk>
-References: <20170918102349.8935-1-sakari.ailus@linux.intel.com>
- <20170918102349.8935-5-sakari.ailus@linux.intel.com>
- <20170918105655.GA14591@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170918105655.GA14591@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH 2/2] dts: Enable building of LWN's Display5 board
+Date: Mon, 18 Sep 2017 16:59:25 +0200
+Message-ID: <1505746765-965-2-git-send-email-lukma@denx.de>
+References: <1505746765-965-1-git-send-email-lukma@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1505746765-965-1-git-send-email-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>, fabio.estevam@nxp.com, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+This commit enables building of display5 related dtbs.
 
-On Mon, Sep 18, 2017 at 12:56:55PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > Specify the exact label used if the label property is omitted in DT, as
-> > well as use label in the example that conforms to LED device naming.
-> > 
-> > @@ -69,11 +73,11 @@ Example
-> >  			flash-max-microamp = <320000>;
-> >  			led-max-microamp = <60000>;
-> >  			ams,input-max-microamp = <1750000>;
-> > -			label = "as3645a:flash";
-> > +			label = "as3645a:white:flash";
-> >  		};
-> >  		indicator@1 {
-> >  			reg = <0x1>;
-> >  			led-max-microamp = <10000>;
-> > -			label = "as3645a:indicator";
-> > +			label = "as3645a:red:indicator";
-> >  		};
-> >  	};
-> 
-> Ok, but userspace still has no chance to determine if this is flash
-> from main camera or flash for front camera; todays smartphones have
-> flashes on both cameras.
-> 
-> So.. Can I suggset as3645a:white:main_camera_flash or main_flash or
-> ....?
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+---
+ arch/arm/boot/dts/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-If there's just a single one in the device, could you use that?
-
-Even if we name this so for N9 (and N900), the application still would only
-work with the two devices.
-
-My suggestion would be to look for a flash LED, and perhaps the maximum
-current as well. That should generally work better than assumptions on the
-label.
-
-For association with a particular camera --- in the long run I'd propose to
-use Media controller / property API for that in the long run. We don't have
-that yet though.
-
-Cc Jacek, too.
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4b17f35..c293bbb 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -400,6 +400,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-cm-fx6.dtb \
+ 	imx6q-cubox-i.dtb \
+ 	imx6q-dfi-fs700-m60.dtb \
++	imx6q-display5-tianma-tm070-1280x768.dtb \
++	imx6q-display5-mitsubishi-aa070-800x480.dtb \
+ 	imx6q-dmo-edmqmx6.dtb \
+ 	imx6q-evi.dtb \
+ 	imx6q-gk802.dtb \
 -- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
