@@ -1,7 +1,7 @@
 From: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
-Subject: [v5 01/12] soc/fsl/qbman: Add common routine for QBMan private allocations
-Date: Mon, 18 Sep 2017 16:39:36 -0400
-Message-ID: <1505767187-4596-2-git-send-email-roy.pledge@nxp.com>
+Subject: [v5 07/12] soc/fsl/qbman: Fix ARM32 typo
+Date: Mon, 18 Sep 2017 16:39:42 -0400
+Message-ID: <1505767187-4596-8-git-send-email-roy.pledge@nxp.com>
 References: <1505767187-4596-1-git-send-email-roy.pledge@nxp.com>
 Reply-To: <roy.pledge-3arQi8VN3Tc@public.gmane.org>
 Mime-Version: 1.0
@@ -10,130 +10,33 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1505767187-4596-1-git-send-email-roy.pledge-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: leoyang.li-3arQi8VN3Tc@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, madalin.bucur-3arQi8VN3Tc@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
+Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, madalin.bucur-3arQi8VN3Tc@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Claudiu Manoil <claudiu.manoil-3arQi8VN3Tc@public.gmane.org>, Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The QBMan device uses several memory regions to manage frame
-queues and buffers. Add a common routine for extracting and
-initializing these reserved memory areas.
+From: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+The Kconfig symbol for 32bit ARM is 'ARM', not 'ARM32'.
+
+Signed-off-by: Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Claudiu Manoil <claudiu.manoil-3arQi8VN3Tc@public.gmane.org>
 Signed-off-by: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
 ---
- drivers/soc/fsl/qbman/Makefile   |  2 +-
- drivers/soc/fsl/qbman/dpaa_sys.c | 78 ++++++++++++++++++++++++++++++++++++++++
- drivers/soc/fsl/qbman/dpaa_sys.h |  4 +++
- 3 files changed, 83 insertions(+), 1 deletion(-)
- create mode 100644 drivers/soc/fsl/qbman/dpaa_sys.c
+ drivers/soc/fsl/qbman/dpaa_sys.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/fsl/qbman/Makefile b/drivers/soc/fsl/qbman/Makefile
-index 7ae199f..3cbd08a 100644
---- a/drivers/soc/fsl/qbman/Makefile
-+++ b/drivers/soc/fsl/qbman/Makefile
-@@ -1,6 +1,6 @@
- obj-$(CONFIG_FSL_DPAA)                          += bman_ccsr.o qman_ccsr.o \
- 						   bman_portal.o qman_portal.o \
--						   bman.o qman.o
-+						   bman.o qman.o dpaa_sys.o
- 
- obj-$(CONFIG_FSL_BMAN_TEST)                     += bman-test.o
- bman-test-y                                      = bman_test.o
-diff --git a/drivers/soc/fsl/qbman/dpaa_sys.c b/drivers/soc/fsl/qbman/dpaa_sys.c
-new file mode 100644
-index 0000000..9436aa8
---- /dev/null
-+++ b/drivers/soc/fsl/qbman/dpaa_sys.c
-@@ -0,0 +1,78 @@
-+/* Copyright 2017 NXP Semiconductor, Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *	 notice, this list of conditions and the following disclaimer in the
-+ *	 documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of NXP Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote products
-+ *	 derived from this software without specific prior written permission.
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY NXP Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL NXP Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#include <linux/dma-mapping.h>
-+#include "dpaa_sys.h"
-+
-+/*
-+ * Initialize a devices private memory region
-+ */
-+int qbman_init_private_mem(struct device *dev, int idx, dma_addr_t *addr,
-+				size_t *size)
-+{
-+	int ret;
-+	struct device_node *mem_node;
-+	u64 size64;
-+
-+	ret = of_reserved_mem_device_init_by_idx(dev, dev->of_node, idx);
-+	if (ret) {
-+		dev_err(dev,
-+			"of_reserved_mem_device_init_by_idx(%d) failed 0x%x\n",
-+			idx, ret);
-+		return -ENODEV;
-+	}
-+	mem_node = of_parse_phandle(dev->of_node, "memory-region", 0);
-+	if (mem_node) {
-+		ret = of_property_read_u64(mem_node, "size", &size64);
-+		if (ret) {
-+			dev_err(dev, "of_address_to_resource fails 0x%x\n",
-+			        ret);
-+			return -ENODEV;
-+		}
-+		*size = size64;
-+	} else {
-+		dev_err(dev, "No memory-region found for index %d\n", idx);
-+		return -ENODEV;
-+	}
-+
-+	if (!dma_zalloc_coherent(dev, *size, addr, 0)) {
-+		dev_err(dev, "DMA Alloc memory failed\n");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Disassociate the reserved memory area from the device
-+	 * because a device can only have one DMA memory area. This
-+	 * should be fine since the memory is allocated and initialized
-+	 * and only ever accessed by the QBMan device from now on
-+	 */
-+	of_reserved_mem_device_release(dev);
-+	return 0;
-+}
 diff --git a/drivers/soc/fsl/qbman/dpaa_sys.h b/drivers/soc/fsl/qbman/dpaa_sys.h
-index 2ce394a..676af82 100644
+index 4b1a467..61cfdb3 100644
 --- a/drivers/soc/fsl/qbman/dpaa_sys.h
 +++ b/drivers/soc/fsl/qbman/dpaa_sys.h
-@@ -102,4 +102,8 @@ static inline u8 dpaa_cyc_diff(u8 ringsize, u8 first, u8 last)
- /* Offset applied to genalloc pools due to zero being an error return */
- #define DPAA_GENALLOC_OFF	0x80000000
- 
-+/* Initialize the devices private memory region */
-+int qbman_init_private_mem(struct device *dev, int idx, dma_addr_t *addr,
-+				size_t *size);
-+
- #endif	/* __DPAA_SYS_H */
+@@ -53,7 +53,7 @@ static inline void dpaa_flush(void *p)
+ {
+ #ifdef CONFIG_PPC
+ 	flush_dcache_range((unsigned long)p, (unsigned long)p+64);
+-#elif defined(CONFIG_ARM32)
++#elif defined(CONFIG_ARM)
+ 	__cpuc_flush_dcache_area(p, 64);
+ #elif defined(CONFIG_ARM64)
+ 	__flush_dcache_area(p, 64);
 -- 
 2.7.4
 
