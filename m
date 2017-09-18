@@ -1,43 +1,58 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] ARC: reset: introduce AXS10x reset driver
-Date: Mon, 18 Sep 2017 14:07:21 +0200
-Message-ID: <1505736441.9807.8.camel@pengutronix.de>
-References: <20170914142842.12225-1-Eugeniy.Paltsev@synopsys.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [RESEND PATCH v4 0/2] add thermal nodes for UniPhier SoCs
+Date: Mon, 18 Sep 2017 21:10:23 +0900
+Message-ID: <CAK7LNATX2bNGDTgEHrv9gjah_4ZXrTjRg45hPVOze774RB1_wg@mail.gmail.com>
+References: <1504508317-12076-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170914142842.12225-1-Eugeniy.Paltsev@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1504508317-12076-1-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-09-14 at 17:28 +0300, Eugeniy Paltsev wrote:
-> ARC AXS10x boards support custom IP-block which allows to control
-> reset signals of selected peripherals. For example DW GMAC, etc...
-> This block is controlled via memory-mapped register (AKA CREG) which
-> represents up-to 32 reset lines. This regiter is self-clearing so we
-> don't need to deassert line after reset.
-> 
-> As of today only the following lines are used:
->  - DW GMAC - line 5
-> 
-> > Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
-> Changes v1 -> v2:
->   * The creg reset register is self-clearing so we don't need to clear it
->     manually. Fixed it.
->   * Use reset callback instead of assert/deassert pair.
->   * Rename reset node in documentation to "reset-controller" for consistency
->     with the other bindings.
->   * Use devm_reset_controller_register instead of reset_controller_register
-> 
-> NOTE:
->     This driver couldn't be replaced by reset-simple driver as we mustn't
->     read from reset register or clear it.
+2017-09-04 15:58 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> This series adds thermal nodes for UniPhier PXs2 and LD20 SoCs.
+>
+> Resending the patches to apply the missing comments,
+> please ignore previous v4.
+>
+> Changes since v3:
+> - use the dt-bindings header to replace the limit values with THERMAL_NO_LIMIT
+> - add the calibration value to uniphier-pxs2.dtsi
+> - move the calibration value to uniphier-ld20.dtsi
+>
+> Changes since v2:
+> - add the calibration value to device tree for LD20 reference board
+>
+> Changes since v1:
+> - separate from driver's patchset[1]
+> - add cooling-maps nodes on the device tree
+> - fix an interrupt trigger to set 'level-triggered' according to
+>   hardware specification
+> - bring up threshold temperature for LD20 according to the spec sheet
+> - add cpuN labels for reference in cooling-device property on PXs2 dts
+>
+> [1] https://lkml.org/lkml/2017/6/28/170
+>
+> Kunihiko Hayashi (2):
+>   ARM: dts: uniphier: add nodes of thermal monitor and thermal zone for
+>     PXs2
+>   arm64: dts: uniphier: add nodes of thermal monitor and thermal zone
+>     for LD20
+>
+>  arch/arm/boot/dts/uniphier-pxs2.dtsi             | 47 ++++++++++++++++++++++--
+>  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 45 +++++++++++++++++++++++
+>  2 files changed, 88 insertions(+), 4 deletions(-)
+>
 
-Thanks, I've applied this patch to the reset/next branch.
+Series, applied to linux-uniphier.  Thanks!
 
-regards
-Philipp
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
