@@ -1,69 +1,109 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] iio: adc: sun4i-gpadc-iio: rework code for
- supporting newer THS variants
-Date: Mon, 18 Sep 2017 09:36:01 +0200
-Message-ID: <20170918073601.oiqshnhhl7yb6fv2@flea.lan>
-References: <20170914145251.21784-1-icenowy@aosc.io>
- <20170914145251.21784-4-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v4 1/6] dt-bindings: update the Allwinner
+ GPADC device tree binding for H3
+Date: Mon, 18 Sep 2017 15:36:43 +0800
+Message-ID: <310CE549-B8CE-4C0C-95B1-B545E38BDAF5@aosc.io>
+References: <20170914145251.21784-1-icenowy@aosc.io> <20170914145251.21784-2-icenowy@aosc.io> <20170918073336.j7finend3g76chsu@flea.lan>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="k6i73kubcroskaqa"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170914145251.21784-4-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHXP7XGQKGQEYK5M2OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170918073336.j7finend3g76chsu-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---k6i73kubcroskaqa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 14, 2017 at 10:52:48PM +0800, Icenowy Zheng wrote:
-> The SoCs after H3 has newer thermal sensor ADCs, which have two clock
-> inputs (bus clock and sampling clock) and a reset. The registers are
-> also re-arranged.
->=20
-> This commit reworks the code, adds the process of the clocks and
-> resets, and allows the sampling start/end code and the position of value
-> readout register to be altered.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+=E4=BA=8E 2017=E5=B9=B49=E6=9C=8818=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883:=
+33:36, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Thu, Sep 14, 2017 at 10:52:46PM +0800, Icenowy Zheng wrote:
+>> Allwinner H3 features a thermal sensor like the one in A33, but has
+>its
+>> register re-arranged, the clock divider moved to CCU (originally the
+>> clock divider is in ADC) and added a pair of bus clock and reset.
+>>=20
+>> Update the binding document to cover H3.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>> Changes in v4:
+>> - Add nvmem calibration data (not yet used by the driver)
+>> Changes in v3:
+>> - Clock name changes.
+>> - Example node name changes.
+>> - Add interupts (not yet used by the driver).
+>>=20
+>>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 30
+>++++++++++++++++++++--
+>>  1 file changed, 28 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+>b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+>> index badff3611a98..6c470d584bf9 100644
+>> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+>> @@ -4,12 +4,26 @@ The Allwinner SoCs all have an ADC that can also
+>act as a thermal sensor
+>>  and sometimes as a touchscreen controller.
+>> =20
+>>  Required properties:
+>> -  - compatible: "allwinner,sun8i-a33-ths",
+>> +  - compatible: must contain one of the following compatibles:
+>> +		- "allwinner,sun8i-a33-ths"
+>> +		- "allwinner,sun8i-h3-ths"
+>>    - reg: mmio address range of the chip,
+>>    - #thermal-sensor-cells: shall be 0,
+>>    - #io-channel-cells: shall be 0,
+>> =20
+>> -Example:
+>> +Optional properties:
+>> +  - nvmem-cells: A phandle to the calibration data provided by a
+>nvmem device.
+>> +                 If unspecified default values shall be used.
+>> +  - nvmem-cell-names: Should be "calibration-data"
+>
+>I'd prefer to have which sensor it applies to here. It wouldn't change
+>anything for the H3, but it definitely does for example for the A83t
+>that has two sensors, one for each cluster, and one for the GPU, each
+>with calibration data.
+>
+>What about cluster0-calibration?
 
-Please split that into separate commits.
+The calibration data is in fact a 2 word (8 bytes) zone,
+which is reserved for 4 sensors on all SoCs, even on H3.
+It's half word per sensor.
 
-Maxime
+I prefer to just assume a 2 word cell for every SoC.
+
+>
+>> +
+>> +Required properties for the following compatibles:
+>> +		- "allwinner,sun8i-h3-ths"
+>> +  - clocks: the bus clock and the input clock of the ADC,
+>> +  - clock-names: should be "bus" and "mod",
+>> +  - resets: the bus reset of the ADC,
+>> +  - interrupts: the sampling interrupt of the ADC,
+>
+>For resets and interrupts, you should list all of them. If there's
+>only one, then there's no point telling which one it is.
+>
+>
+>Thanks,
+>Maxime
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---k6i73kubcroskaqa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZv3dhAAoJEBx+YmzsjxAghGYQAKSCmBG//hWKCq+3bvDpF9o4
-Cky+KRpV5SnFUbMO9cOXDcen64zm8mjkPeXGxcDsS6QVSsoqYm+5mxJ6ckR0OPT8
-2TNzxEY5qoYlOGEbEcrg38XqjiOhQHAZYYNLQq9iMzl14u8ObKjMya2eTM6nemHR
-bAPQ3ZsY3P0wyxMzoYJsylF7pcA4J8tELmbwPa3HDHSY0l0lWloiiXeIt2iev5NR
-4nURX8JN+6j9V75ii4YRpeTLox8H8vDbbLsBrg4tb83BGzP1rZH/0o9PqSuw3cw5
-i4hGsSGyGIvhMiWjXNb5p+I/16dypTV2n2dBzWpQOpjl9P6Sc0gSNURsHUeN6vIl
-IAqja1PScGEs+1qDKQhAr/qo5NJcZaS/6aJzVVpvREewMViqF6YLqfr+SwZ0keBr
-6OAFb5iLChFPa/QRBrOd0biHOIhjKKOeEf/nAh4drFkOhQGNqZNFHkgPwCyl+p/L
-av0D1C3m8etq3jc05iKw8yJJVacIUJ2iqOQSv5Ees0Ms6XFrXhl7Jn1qs3IGoiDR
-SvPl+SCXaPG9V9ohADJ1KWm+BmI6Hf/7WAV03oY1EHHlE8Ww/+/ft6wQ02lG43yS
-kTp3YI+r2W7ns891tSNfd5kx8josEs48N1365KWUSCV53tthowEAer8LbtaUDutx
-JMPRzaCmQeotldLje2AP
-=s+J3
------END PGP SIGNATURE-----
-
---k6i73kubcroskaqa--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
