@@ -1,42 +1,104 @@
-From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RESENT PATCH v9 1/2] ASoC: rt5514: Add devicetree bindings for
- rt5514-spi
-Date: Mon, 18 Sep 2017 19:20:07 +0800
-Message-ID: <59BFABE7.5050904@rock-chips.com>
-References: <20170906025010.10750-1-jeffy.chen@rock-chips.com> <20170913172452.rqy2umufkuh26fzj@rob-hp-laptop> <59BF1FCD.3060501@rock-chips.com> <1972340.u0BEiYTrvM@phil>
+From: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Subject: Re: [PATCH 2/2] phy: exynos5-usbdrd: Calibrate LOS levels for
+ exynos5420/5800
+Date: Mon, 18 Sep 2017 13:27:14 +0200
+Message-ID: <96001441-2a67-ac9c-a606-eac66138d09e@samsung.com>
+References: <1505728934-6200-1-git-send-email-andrzej.p@samsung.com>
+        <CGME20170918100944eucas1p2735d3d6a6ee562b927fb9dfaeb0d4090@eucas1p2.samsung.com>
+        <1505729371-6509-1-git-send-email-andrzej.p@samsung.com>
+        <87y3pcmgv6.fsf@linux.intel.com>
+        <e1e1b4e5-0678-faaf-e97b-b18095342af2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1972340.u0BEiYTrvM@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <e1e1b4e5-0678-faaf-e97b-b18095342af2@ti.com>
+Content-language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+W dniu 18.09.2017 o 13:06, Kishon Vijay Abraham I pisze:
+> Hi,
+> 
+> On Monday 18 September 2017 04:08 PM, Felipe Balbi wrote:
+>>
+>> Hi,
+>>
+>> Andrzej Pietrasiewicz <andrzej.p@samsung.com> writes:
+>>> From: Vivek Gautam <gautam.vivek@samsung.com>
+>>>
+>>> Adding phy calibration sequence for USB 3.0 DRD PHY present on
+>>> Exynos5420/5800 systems.
 
-Thanks for your reply.
+<snip>
 
-On 09/18/2017 05:30 PM, Heiko Stuebner wrote:
->>>> > >>
->>>> > >>-- compatible : "realtek,rt5514".
->>>> > >>+- compatible : "realtek,rt5514" or "realtek,rt5514", "realtek,rt5514-i2c".
->>> > >
->>> > >There's no need for the -spi or -i2c compatibles. This is implied by
->>> > >being a child of those controllers.
->> >heiko mentioned i should add it in the binding in:
->> >https://patchwork.kernel.org/patch/9918987/
-> If you add a new compatible you need to add it to the binding. I think what
-> Rob means is, that both the i2c and spi side can have the_same_
-> compatible without the -i2c or -spi, as you can check wether they are
-> children of either a spi or i2c controller in the code itself.
->
-ok, got it.
+>>>   
+>>> +static int exynos5_usbdrd_phy_reset(struct phy *phy)
+>>> +{
+>>> +	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+>>> +	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+>>> +
+>>> +	return exynos5420_usbdrd_phy_calibrate(phy_drd);
+>>> +}
+>>> +
+>>>   static const struct phy_ops exynos5_usbdrd_phy_ops = {
+>>>   	.init		= exynos5_usbdrd_phy_init,
+>>>   	.exit		= exynos5_usbdrd_phy_exit,
+>>>   	.power_on	= exynos5_usbdrd_phy_power_on,
+>>>   	.power_off	= exynos5_usbdrd_phy_power_off,
+>>> +	.reset		= exynos5_usbdrd_phy_reset,
+>>>   	.owner		= THIS_MODULE,
+>>>   };
+>>>   
+>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>> index 03474d3..1d5836e 100644
+>>> --- a/drivers/usb/dwc3/core.c
+>>> +++ b/drivers/usb/dwc3/core.c
+>>> @@ -156,9 +156,10 @@ static void __dwc3_set_mode(struct work_struct *work)
+>>>   		} else {
+>>>   			if (dwc->usb2_phy)
+>>>   				otg_set_vbus(dwc->usb2_phy->otg, true);
+>>> -			if (dwc->usb2_generic_phy)
+>>> +			if (dwc->usb2_generic_phy) {
+>>>   				phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
+>>> -
+>>> +				phy_reset(dwc->usb2_generic_phy);
+>>
+>> it doesn't look like this is the best place to reset the phy. Also,
+> 
+> right, phy_reset is done during initialization before phy_power_on/phy_init or
+> in error cases.
+> 
+>> ->reset() doesn't seem to match correctly with a calibration. That seems
+>> to be more fitting to a ->power_on() or ->init() implementation.
+> 
+> yeah, the initial patch seems to calibrate in phy_init(). Not sure why it's
+> modified.
 
-i sent a new patch to check the bus_type instead :)
+The original patch used a hack like below, in xhci_plat_probe():
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++       /* Initialize and power-on USB 3.0 PHY */
++       xhci->shared_hcd->phy->init_count = 0;
++       ret = phy_init(xhci->shared_hcd->phy);
++       if (ret)
++               goto dealloc_usb3_hcd;
++
++       xhci->shared_hcd->phy->power_count = 0;
++       ret = phy_power_on(xhci->shared_hcd->phy);
++       if (ret) {
++               phy_exit(xhci->shared_hcd->phy);
++               goto dealloc_usb3_hcd;
++       }
++
+
+Manually setting init_count to 0 in order for the subsequent phy_init() to
+happen probably does not look good.
+
+The calibration is clearly needed. However, I don't have any strong opinions
+on from which place exactly to trigger the calibration process.
+The original patch did not make it upstream, but if that patch is ok,
+it is perfectly fine with me to drop my version and take that one instead.
+
+Andrzej
