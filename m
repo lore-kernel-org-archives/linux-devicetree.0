@@ -1,51 +1,187 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH] ARM: dts: dra7: Set a default parent to mcasp3_ahclkx_mux
-Date: Mon, 18 Sep 2017 17:03:45 +0530
-Message-ID: <c1d80795-f86c-23e4-5a6b-4829c0f9f8a0@ti.com>
-References: <1504705172-17781-1-git-send-email-j-keerthy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504705172-17781-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, t-kristo@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 1/5] ARM: dts: imx6qdl-icore: Add Sound card support
+Date: Mon, 18 Sep 2017 16:58:29 +0530
+Message-ID: <1505734113-9708-1-git-send-email-jteki@openedev.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
+Linux Sound card now uses generic simple-audio-card, so add
+the same along with related audmux and codec(via u2c3) for
+i.CoreM6 QDL module boards.
 
-On Wednesday 06 September 2017 07:09 PM, Keerthy wrote:
-> Assign a default parent to mcasp3_ahclkx_mux clock using
-> the assigned-clock-parents property. This is helpful in
-> cases like kexec where in the clock parent can be something
-> other than the value at reset.
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v5:
+- Add adumux
+- Update simple-audio-card,widgets
+- Add ssi1 fsl,mode
+- Add #sound-dai-cells in codec
+Changes for v4:
+- Moved sgtl5000 node into dtsi instead of multiple copies of
+  same in dts files
+Changes for v3:
+- Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
+Changes for v2:
+- Use proper [label:] node-name[@unit-address] for codec
 
-Hi Tony,
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 97 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
-A gentle ping on this.
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+index 56d0c5d..9682ae2 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -42,6 +42,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/sound/fsl-imx-audmux.h>
+ 
+ / {
+ 	memory {
+@@ -55,6 +56,25 @@
+ 		default-brightness-level = <7>;
+ 	};
+ 
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++
++	reg_2p5v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "2P5V";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
+ 	reg_3p3v: regulator-3p3v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "3P3V";
+@@ -87,6 +107,59 @@
+ 		#clock-cells = <0>;
+ 		clock-frequency = <25000000>;  /* 25MHz for example */
+ 	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "imx6qdl-icore-sgtl5000";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&dailink_master>;
++		simple-audio-card,frame-master = <&dailink_master>;
++		simple-audio-card,widgets =
++			"Microphone", "Mic Jack",
++			"Headphone", "Headphone Jack",
++			"Line", "Line In Jack",
++			"Speaker", "Line Out Jack",
++			"Speaker", "Ext Spk";
++		simple-audio-card,routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"Headphone Jack", "HP_OUT";
++
++		simple-audio-card,cpu {
++			sound-dai = <&ssi1>;
++		};
++
++		dailink_master: simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++		};
++	};
++};
++
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
++
++
++	audmux_ssi1 {
++		fsl,audmux-port = <MX51_AUDMUX_PORT1_SSI0>;
++		fsl,port-config = <
++			(IMX_AUDMUX_V2_PTCR_TFSDIR |
++			IMX_AUDMUX_V2_PTCR_TFSEL(MX51_AUDMUX_PORT4) |
++			IMX_AUDMUX_V2_PTCR_TCLKDIR |
++			IMX_AUDMUX_V2_PTCR_TCSEL(MX51_AUDMUX_PORT4) |
++			IMX_AUDMUX_V2_PTCR_SYN)
++			IMX_AUDMUX_V2_PDCR_RXDSEL(MX51_AUDMUX_PORT4)
++		>;
++	};
++
++	audmux_aud4 {
++		fsl,audmux-port = <MX51_AUDMUX_PORT4>;
++		fsl,port-config = <
++			IMX_AUDMUX_V2_PTCR_SYN
++			IMX_AUDMUX_V2_PDCR_RXDSEL(MX51_AUDMUX_PORT1_SSI0)
++		>;
++	};
+ };
+ 
+ &can1 {
+@@ -141,6 +214,16 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
++
++	sgtl5000: codec@a {
++		#sound-dai-cells = <0>;
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_2p5v>;
++		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
++	};
+ };
+ 
+ &pwm3 {
+@@ -149,6 +232,11 @@
+ 	status = "okay";
+ };
+ 
++&ssi1 {
++	fsl,mode = "i2s-slave";
++	status = "okay";
++};
++
+ &uart4 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart4>;
+@@ -178,6 +266,15 @@
+ };
+ 
+ &iomuxc {
++	pinctrl_audmux: audmux {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT20__AUD4_TXC  0x130b0
++			MX6QDL_PAD_DISP0_DAT21__AUD4_TXD 0x110b0
++			MX6QDL_PAD_DISP0_DAT22__AUD4_TXFS  0x130b0
++			MX6QDL_PAD_DISP0_DAT23__AUD4_RXD  0x130b0
++		>;
++	};
++
+ 	pinctrl_enet: enetgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN	0x1b0b0
+-- 
+2.7.4
 
-Regards,
-Keerthy
-
-> 
-> Suggested-by: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  arch/arm/boot/dts/dra7xx-clocks.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> index cf229df..e62b628 100644
-> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> @@ -1817,6 +1817,8 @@
->  		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atl_clkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
->  		ti,bit-shift = <24>;
->  		reg = <0x1868>;
-> +		assigned-clocks = <&mcasp3_ahclkx_mux>;
-> +		assigned-clock-parents = <&abe_24m_fclk>;
->  	};
->  
->  	mcasp3_aux_gfclk_mux: mcasp3_aux_gfclk_mux@1868 {
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
