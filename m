@@ -1,122 +1,55 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
-Date: Mon, 18 Sep 2017 11:06:11 +0200
-Message-ID: <20170918110611.2375e976@bbrezillon>
-References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
- <c17e158a-3e37-8ae6-e31c-7ed89429166a@codeaurora.org>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] arm64: dts: renesas: Add Support for R-Car D3 and
+ Draak
+Date: Mon, 18 Sep 2017 11:09:12 +0200
+Message-ID: <20170918090909.GF4644@verge.net.au>
+References: <1500555277-22921-1-git-send-email-geert+renesas@glider.be>
+ <20170727151622.GG16143@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <c17e158a-3e37-8ae6-e31c-7ed89429166a@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Sproul <sproul@cadence.com>, Neil Webb <neilw@cadence.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170727151622.GG16143-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCA3IFNlcCAyMDE3IDE1OjA2OjEzICswNTMwCkFyY2hpdCBUYW5lamEgPGFyY2hpdHRA
-Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgoKPiBIaSwKPiAKPiBPbiAwOC8zMS8yMDE3IDA5OjI1IFBN
-LCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBBZGQgYSBkcml2ZXIgZm9yIENhZGVuY2UgRFBJ
-IC0+IERTSSBicmlkZ2UuCj4gPiAKPiA+IFRoaXMgZHJpdmVyIG9ubHkgc3VwcG9ydCBhIHN1YnNl
-dCBvZiBDYWRlbmNlIERTSSBicmlkZ2UgY2FwYWJpbGl0aWVzLgo+ID4gCj4gPiBIZXJlIGlzIGEg
-bm9uLWV4aGF1c3RpdmUgbGlzdCBvZiBtaXNzaW5nIGZlYXR1cmVzOgo+ID4gICAqIGJ1cnN0IG1v
-ZGUKPiA+ICAgKiBkeW5hbWljIGNvbmZpZ3VyYXRpb24gb2YgdGhlIERQSFkgYmFzZWQgb24gdGhl
-Cj4gPiAgICogc3VwcG9ydCBmb3IgYWRkaXRpb25hbCBpbnB1dCBpbnRlcmZhY2VzIChTREkgaW5w
-dXQpCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemls
-bG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+IC0tLQo+ID4gQ2hhbmdlcyBpbiB2MzoKPiA+IC0g
-cmVwbGFjZSBtYWdpYyB2YWx1ZXMgYnkgcmVhbCB0aW1pbmcgY2FsY3VsYXRpb24uIFRoZSBEUEhZ
-IFBMTCBjbG9jawo+ID4gICAgaXMgc3RpbGwgaGFyZGNvZGVkIHNpbmNlIHdlIGRvbid0IGhhdmUg
-YSB3b3JraW5nIERQSFkgYmxvY2sgeWV0LCBhbmQKPiA+ICAgIHRoaXMgaXMgdGhlIHBpZWNlIG9m
-IEhXIHdlIG5lZWQgdG8gZHluYW1pY2FsbHkgY29uZmlndXJlIHRoZSBQTEwKPiA+ICAgIHJhdGUg
-YmFzZWQgb24gdGhlIGRpc3BsYXkgcmVmcmVzaCByYXRlIGFuZCB0aGUgcmVzb2x1dGlvbi4KPiA+
-IC0gcGFyc2UgRFNJIGRldmljZXMgcmVwcmVzZW50ZWQgd2l0aCB0aGUgT0YtZ3JhcGguIFRoaXMg
-aXMgbmVlZGVkIHRvCj4gPiAgICBzdXBwb3J0IERTSSBkZXZpY2VzIGNvbnRyb2xsZWQgdGhyb3Vn
-aCBhbiBleHRlcm5hbCBidXMgbGlrZSBJMkMgb3IKPiA+ICAgIFNQSS4KPiA+IC0gdXNlIHRoZSBE
-Uk0gcGFuZWwtYnJpZGdlIGluZnJhc3RydWN0dXJlIHRvIHNpbXBsaWZ5IHRoZSBEUk0gcGFuZWwK
-PiA+ICAgIGxvZ2ljCj4gPiAKPiA+IENoYW5nZXMgaW4gdjI6Cj4gPiAtIHJlYmFzZSBvbiB2NC4x
-Mi1yYzEgYW5kIGFkYXB0IHRvIGRyaXZlciB0byB0aGUgZHJtX2JyaWRnZSBBUEkgY2hhbmdlcwo+
-ID4gLSByZXR1cm4gdGhlIGNvcnJlY3QgZXJyb3Igd2hlbiBkZXZtX2Nsa19nZXQoc3lzY2xrKSBm
-YWlscwo+ID4gLSBhZGQgbWlzc2luZyBkZXBlbmRzIG9uIE9GIGFuZCBzZWxlY3QgRFJNX1BBTkVM
-IGluIHRoZSBLY29uZmlnIGVudHJ5Cj4gPiAtLS0KPiA+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRn
-ZS9LY29uZmlnICAgIHwgICAgOSArCj4gPiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZp
-bGUgICB8ICAgIDEgKwo+ID4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NkbnMtZHNpLmMgfCAx
-MDkwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiA+ICAgMyBmaWxlcyBj
-aGFuZ2VkLCAxMTAwIGluc2VydGlvbnMoKykKPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1kc2kuYwo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmln
-Cj4gPiBpbmRleCBhZGY5YWUwZTBiN2MuLjg4YzMyNGIxMmUxNiAxMDA2NDQKPiA+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9LY29uZmlnCj4gPiBAQCAtMjUsNiArMjUsMTUgQEAgY29uZmlnIERSTV9BTkFMT0dJWF9B
-Tlg3OFhYCj4gPiAgIAkgIHRoZSBIRE1JIG91dHB1dCBvZiBhbiBhcHBsaWNhdGlvbiBwcm9jZXNz
-b3IgdG8gTXlEUAo+ID4gICAJICBvciBEaXNwbGF5UG9ydC4KPiA+ICAgCj4gPiArY29uZmlnIERS
-TV9DRE5TX0RTSQo+ID4gKwl0cmlzdGF0ZSAiQ2FkZW5jZSBEUEkvRFNJIGJyaWRnZSIKPiA+ICsJ
-c2VsZWN0IERSTV9LTVNfSEVMUEVSCj4gPiArCXNlbGVjdCBEUk1fTUlQSV9EU0kKPiA+ICsJc2Vs
-ZWN0IERSTV9QQU5FTAo+ID4gKwlkZXBlbmRzIG9uIE9GCj4gPiArCWhlbHAKPiA+ICsJICBTdXBw
-b3J0IENhZGVuY2UgRFBJIHRvIERTSSBicmlkZ2UuICAKPiAKPiBNYXliZSB3ZSBjYW4gYnJpZWZs
-eSBtZW50aW9uIGhlcmUgdGhhdCBpdCdzIGEgaW50ZXJuYWwgYnJpZGdlL0lQLCBhbmQgbm90IGFu
-IGV4dGVybmFsIGNoaXA/CgpTdXJlLgoKPiAKPiA+ICsKPiA+ICAgY29uZmlnIERSTV9EVU1CX1ZH
-QV9EQUMKPiA+ICAgCXRyaXN0YXRlICJEdW1iIFZHQSBEQUMgQnJpZGdlIHN1cHBvcnQiCj4gPiAg
-IAlkZXBlbmRzIG9uIE9GCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9N
-YWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUKPiA+IGluZGV4IGRlZmNm
-MWU3Y2ExYy4uNzdiNjVlOGVjZjU5IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9NYWtlZmlsZQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZQo+
-ID4gQEAgLTEsNCArMSw1IEBACj4gPiAgIG9iai0kKENPTkZJR19EUk1fQU5BTE9HSVhfQU5YNzhY
-WCkgKz0gYW5hbG9naXgtYW54Nzh4eC5vCj4gPiArb2JqLSQoQ09ORklHX0RSTV9DRE5TX0RTSSkg
-Kz0gY2Rucy1kc2kubwo+ID4gICBvYmotJChDT05GSUdfRFJNX0RVTUJfVkdBX0RBQykgKz0gZHVt
-Yi12Z2EtZGFjLm8KPiA+ICAgb2JqLSQoQ09ORklHX0RSTV9MVkRTX0VOQ09ERVIpICs9IGx2ZHMt
-ZW5jb2Rlci5vCj4gPiAgIG9iai0kKENPTkZJR19EUk1fTUVHQUNISVBTX1NURFBYWFhYX0dFX0I4
-NTBWM19GVykgKz0gbWVnYWNoaXBzLXN0ZHB4eHh4LWdlLWI4NTB2My1mdy5vCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jZG5zLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9jZG5zLWRzaS5jICAKPiAKPiA8c25pcD4KPiAKPiA+ICsKPiA+ICtzdGF0aWMgdm9p
-ZCBjZG5zX2RzaV9icmlkZ2VfZGlzYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ID4g
-K3sKPiA+ICsJc3RydWN0IGNkbnNfZHNpX2lucHV0ICppbnB1dCA9IGJyaWRnZV90b19jZG5zX2Rz
-aV9pbnB1dChicmlkZ2UpOwo+ID4gKwlzdHJ1Y3QgY2Ruc19kc2kgKmRzaSA9IGlucHV0X3RvX2Rz
-aShpbnB1dCk7Cj4gPiArCXUzMiB2YWw7Cj4gPiArCj4gPiArCXZhbCA9IHJlYWRsKGRzaS0+cmVn
-cyArIE1DVExfTUFJTl9EQVRBX0NUTCk7Cj4gPiArCXZhbCAmPSB+KElGX1ZJRF9TRUxFQ1RfTUFT
-SyB8IElGX1ZJRF9NT0RFIHwgVklEX0VOIHwgSE9TVF9FT1RfR0VOIHwKPiA+ICsJCSBESVNQX0VP
-VF9HRU4pOyAgCj4gCj4gSSBzZWUgc29tZSB0cnVuY2F0aW9uIHJlbGF0ZWQgc3BhcnNlIHdhcm5p
-bmdzIGhlcmUgYW5kIGEgY291cGxlIG9mIG90aGVyIHBsYWNlcwo+IHdoZW4gYnVpbGRpbmcgYWdh
-aW5zdCBhcm0zMi4gVGhvc2Ugd291bGQgYmUgbmljZSB0byBmaXguCgpJJ2xsIGhhdmUgYSBsb29r
-LgoKCj4gPiArc3RhdGljIGludCBjZG5zX2RzaV9hdHRhY2goc3RydWN0IG1pcGlfZHNpX2hvc3Qg
-Kmhvc3QsCj4gPiArCQkJICAgc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZGV2KQo+ID4gK3sKPiA+
-ICsJc3RydWN0IGNkbnNfZHNpICpkc2kgPSB0b19jZG5zX2RzaShob3N0KTsKPiA+ICsJc3RydWN0
-IGNkbnNfZHNpX291dHB1dCAqb3V0cHV0ID0gJmRzaS0+b3V0cHV0Owo+ID4gKwlzdHJ1Y3QgY2Ru
-c19kc2lfaW5wdXQgKmlucHV0ID0gJmRzaS0+aW5wdXQ7Cj4gPiArCXN0cnVjdCBkcm1fYnJpZGdl
-ICpicmlkZ2U7Cj4gPiArCXN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsOwo+ID4gKwlzdHJ1Y3QgZGV2
-aWNlX25vZGUgKm5wOwo+ID4gKwlpbnQgcmV0Owo+ID4gKwo+ID4gKwkvKgo+ID4gKwkgKiBXZSBj
-dXJyZW50bHkgZG8gbm90IHN1cHBvcnQgY29ubmVjdGluZyBzZXZlcmFsIERTSSBkZXZpY2VzIHRv
-IHRoZQo+ID4gKwkgKiBzYW1lIGhvc3QuIEluIG9yZGVyIHRvIHN1cHBvcnQgdGhhdCB3ZSdkIG5l
-ZWQgdGhlIERSTSBicmlkZ2UKPiA+ICsJICogZnJhbWV3b3JrIHRvIGFsbG93IGR5bmFtaWMgcmVj
-b25maWd1cmF0aW9uIG9mIHRoZSBicmlkZ2UgY2hhaW4uCj4gPiArCSAqLwo+ID4gKwlpZiAob3V0
-cHV0LT5kZXYpCj4gPiArCQlyZXR1cm4gLUVCVVNZOwo+ID4gKwo+ID4gKwkvKiBXZSBkbyBub3Qg
-c3VwcG9ydCBidXJzdCBtb2RlIHlldC4gKi8KPiA+ICsJaWYgKGRldi0+bW9kZV9mbGFncyAmIE1J
-UElfRFNJX01PREVfVklERU9fQlVSU1QpCj4gPiArCQlyZXR1cm4gLUVOT1RTVVBQOwo+ID4gKwo+
-ID4gKwkvKgo+ID4gKwkgKiBUaGUgaG9zdCA8LT4gZGV2aWNlIGxpbmsgbWlnaHQgYmUgZGVzY3Jp
-YmVkIHVzaW5nIGFuIE9GLWdyYXBoCj4gPiArCSAqIHJlcHJlc2VudGF0aW9uLCBpbiB0aGlzIGNh
-c2Ugd2UgZXh0cmFjdCB0aGUgZGV2aWNlIG9mX25vZGUgZnJvbQo+ID4gKwkgKiB0aGlzIHJlcHJl
-c2VudGF0aW9uLCBvdGhlcndpc2Ugd2UgdXNlIGRzaWRldi0+ZGV2Lm9mX25vZGUgd2hpY2gKPiA+
-ICsJICogc2hvdWxkIGhhdmUgYmVlbiBmaWxsZWQgYnkgdGhlIGNvcmUuCj4gPiArCSAqLwo+ID4g
-KwlucCA9IG9mX2dyYXBoX2dldF9yZW1vdGVfbm9kZShkc2ktPmJhc2UuZGV2LT5vZl9ub2RlLCBE
-U0lfT1VUUFVUX1BPUlQsCj4gPiArCQkJCSAgICAgIGRldi0+Y2hhbm5lbCk7Cj4gPiArCWlmICgh
-bnApCj4gPiArCQlucCA9IG9mX25vZGVfZ2V0KGRldi0+ZGV2Lm9mX25vZGUpOyA+ICsKPiA+ICsJ
-cGFuZWwgPSBvZl9kcm1fZmluZF9wYW5lbChucCk7Cj4gPiArCWlmIChwYW5lbCkgewo+ID4gKwkJ
-YnJpZGdlID0gZHJtX3BhbmVsX2JyaWRnZV9hZGQocGFuZWwsIERSTV9NT0RFX0NPTk5FQ1RPUl9E
-U0kpOwo+ID4gKwl9IGVsc2Ugewo+ID4gKwkJYnJpZGdlID0gb2ZfZHJtX2ZpbmRfYnJpZGdlKGRl
-di0+ZGV2Lm9mX25vZGUpOwo+ID4gKwkJaWYgKCFicmlkZ2UpCj4gPiArCQkJYnJpZGdlID0gRVJS
-X1BUUigtRUlOVkFMKTsKPiA+ICsJfQo+ID4gKwo+ID4gKwlvZl9ub2RlX3B1dChucCk7ICAKPiAK
-PiBJdCB3b3VsZCBoYXZlIGJlZW4gbmljZSB0byB1c2UgZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJp
-ZGdlKCkgaGVyZSwgYnV0IEkgZ3Vlc3MKPiB5b3UgY291bGRuJ3QgdXNlIGl0IGJlY2F1c2UgeW91
-IGhhdmUgdG8gaGFuZGxlIGJvdGggT0YtZ3JhcGggYmFzZWQgbGlua3MsIGFuZAo+IGNoaWxkcmVu
-IGRpcmVjdGx5IHVuZGVyIHRoZSBob3N0IERTSSBidXMuCgpZZXAuCgpUaGFua3MgZm9yIHlvdSBy
-ZXZpZXcsIGFuZCBzb3JyeSBmb3IgdGFraW5nIHNvIGxvbmcgdG8gcmVwbHkuCgpCb3JpcwpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Jul 27, 2017 at 05:16:23PM +0200, Simon Horman wrote:
+> On Thu, Jul 20, 2017 at 02:54:33PM +0200, Geert Uytterhoeven wrote:
+> > 	Hi Simon, Magnus,
+> > 
+> > This patch series adds minimal support for the R-Car D3 SoC and the
+> > Draak development board, allowing to boot from a ramdisk using a serial
+> > console.
+> > 
+> >   - The first two patches add DT sources for R-Car D3 and Draak.
+> >     Due to the use of hardcoded constants, they have no further (build)
+> >     dependencies (obviously there is a runtime dependency).
+> >   - The last two patches replace the hardcoded constants by symbols from
+> >     DT binding headers, and thus depend on those headers.  Hence it
+> >     should be postponed to v4.15.
+> > 
+> > For proper operation, this depends on the 3 series I have just sent:
+> >   - [PATCH 0/3] arm64: renesas: Base R-Car D3 support,
+> 
+> I have applied the above patchset for v4.14.
+> 
+> >   - [PATCH 0/4] soc: renesas: Add R-Car D3 support,
+> 
+> And this one too.
+> 
+> >   - [PATCH 0/4] clk: renesas: Add R-Car D3 support.
+> 
+> And this one seems to have been acked, so I assume you will
+> apply it once you are back from holidays.
+> 
+> So I have applied the first two patches for v4.14.
+> Please repost the remaining two after v4.13-rc6 at which time I should
+> be able to queue them up for v4.15.
+
+I have now done so.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
