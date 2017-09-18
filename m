@@ -1,70 +1,99 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 5/9] dt-bindings: add compatibles for rk3066/rk3188 power controllers
-Date: Mon, 18 Sep 2017 08:29:54 +0200
-Message-ID: <13237503.R9C4DGAk4Y@phil>
-References: <20170915083357.11296-1-heiko@sntech.de> <20170915083357.11296-6-heiko@sntech.de> <c2f4f70e-e5e7-9432-035d-fdf885eb53d0@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 1/6] dt-bindings: update the Allwinner
+ GPADC device tree binding for H3
+Date: Mon, 18 Sep 2017 09:33:36 +0200
+Message-ID: <20170918073336.j7finend3g76chsu@flea.lan>
+References: <20170914145251.21784-1-icenowy@aosc.io>
+ <20170914145251.21784-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c2f4f70e-e5e7-9432-035d-fdf885eb53d0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="45wuklk6dqzrqgab"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUPN7XGQKGQEWQ6LCAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170914145251.21784-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 16. September 2017, 23:04:48 CEST schrieb Julien Chauveau:
-> Hello Heiko,
+
+--45wuklk6dqzrqgab
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Thu, Sep 14, 2017 at 10:52:46PM +0800, Icenowy Zheng wrote:
+> Allwinner H3 features a thermal sensor like the one in A33, but has its
+> register re-arranged, the clock divider moved to CCU (originally the
+> clock divider is in ADC) and added a pair of bus clock and reset.
 > 
-> There are a few copy/paste errors in the documentation.
+> Update the binding document to cover H3.
 > 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+> Changes in v4:
+> - Add nvmem calibration data (not yet used by the driver)
+> Changes in v3:
+> - Clock name changes.
+> - Example node name changes.
+> - Add interupts (not yet used by the driver).
 > 
-> Le 15/09/2017 à 10:33, Heiko Stuebner a écrit :
-> > Add the compatible values for the power-domain controllers found on
-> > rk3066 and rk3188.
-> >
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
-> >   Documentation/devicetree/bindings/soc/rockchip/power_domain.txt | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> > index 301d2a9bc1b8..1c42c5b7ca6a 100644
-> > --- a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> > +++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> > @@ -5,6 +5,8 @@ powered up/down by software based on different application scenes to save power.
-> >   
-> >   Required properties for power domain controller:
-> >   - compatible: Should be one of the following.
-> > +	"rockchip,rk3066-power-controller" - for RK3288 SoCs.
-> > +	"rockchip,rk3188-power-controller" - for RK3288 SoCs.
-> These should be for RK3066 and RK3188.
-> >   	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
-> >   	"rockchip,rk3328-power-controller" - for RK3328 SoCs.
-> >   	"rockchip,rk3366-power-controller" - for RK3366 SoCs.
-> > @@ -17,6 +19,8 @@ Required properties for power domain controller:
-> >   
-> >   Required properties for power domain sub nodes:
-> >   - reg: index of the power domain, should use macros in:
-> > +	"include/dt-bindings/power/rk3066-power.h" - for RK3288 type power domain.
-> > +	"include/dt-bindings/power/rk3188-power.h" - for RK3288 type power domain.
-> Same here.
-
-bah ... thanks for noticing. Will fix in a v2 shortly.
-
-
-Thanks
-Heiko
-
-> >   	"include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
-> >   	"include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
-> >   	"include/dt-bindings/power/rk3366-power.h" - for RK3366 type power domain.
-> Julien
+>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 30 ++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
 > 
-> 
+> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> index badff3611a98..6c470d584bf9 100644
+> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+> @@ -4,12 +4,26 @@ The Allwinner SoCs all have an ADC that can also act as a thermal sensor
+>  and sometimes as a touchscreen controller.
+>  
+>  Required properties:
+> -  - compatible: "allwinner,sun8i-a33-ths",
+> +  - compatible: must contain one of the following compatibles:
+> +		- "allwinner,sun8i-a33-ths"
+> +		- "allwinner,sun8i-h3-ths"
+>    - reg: mmio address range of the chip,
+>    - #thermal-sensor-cells: shall be 0,
+>    - #io-channel-cells: shall be 0,
+>  
+> -Example:
+> +Optional properties:
+> +  - nvmem-cells: A phandle to the calibration data provided by a nvmem device.
+> +                 If unspecified default values shall be used.
+> +  - nvmem-cell-names: Should be "calibration-data"
+
+I'd prefer to have which sensor it applies to here. It wouldn't change
+anything for the H3, but it definitely does for example for the A83t
+that has two sensors, one for each cluster, and one for the GPU, each
+with calibration data.
+
+What about cluster0-calibration?
+
+> +
+> +Required properties for the following compatibles:
+> +		- "allwinner,sun8i-h3-ths"
+> +  - clocks: the bus clock and the input clock of the ADC,
+> +  - clock-names: should be "bus" and "mod",
+> +  - resets: the bus reset of the ADC,
+> +  - interrupts: the sampling interrupt of the ADC,
+
+For resets and interrupts, you should list all of them. If there's
+only one, then there's no point telling which one it is.
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--45wuklk6dqzrqgab--
