@@ -1,101 +1,42 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v2] scripts/dtc: dtx_diff - 2nd update of include dts paths to
-Date: Mon, 18 Sep 2017 13:14:44 -0700
-Message-ID: <1505765684-16066-1-git-send-email-frowand.list@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] dt-bindings: iio: adc: mcp320x: Update for
+ mcp3550/1/3
+Date: Mon, 18 Sep 2017 15:27:05 -0500
+Message-ID: <20170918202705.xunpkrn7wllvzbp3@rob-hp-laptop>
+References: <cover.1504807204.git.lukas@wunner.de>
+ <f5899af5ef548c618ac14950301f6bc8eff6e9ba.1504807204.git.lukas@wunner.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f5899af5ef548c618ac14950301f6bc8eff6e9ba.1504807204.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Oskar Andero <oskar.andero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Soeren Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+On Sat, Sep 09, 2017 at 08:32:41PM +0200, Lukas Wunner wrote:
+> All chips supported by this driver clock data out on the falling edge
+> and latch data in on the rising edge, hence SPI mode (0,0) or (1,1)
+> must be used.
+> 
+> Furthermore, none of the chips has an internal reference voltage
+> regulator, so an external supply is always required and needs to be
+> specified in the device tree lest the IIO "scale" in sysfs cannot be
+> calculated.
+> 
+> Document these requirements in the device tree binding, add compatible
+> strings for the newly supported mcp3550/1/3 and explain that SPI mode
+> (0,0) should be preferred for these chips.
+> 
+> Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+> ---
+> Changes since v1:
+> - Move support for continuous conversion mode to separate patch
+>   which is marked informational / not for merging. (Rob, Jonathan)
+> 
+>  Documentation/devicetree/bindings/iio/adc/mcp320x.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 
-Update dtx_diff include paths in the same manner as:
-commit b12869a8d519 ("of: remove drivers/of/testcase-data from
-include search path for CPP"), commit 5ffa2aed389c ("of: remove
-arch/$(SRCARCH)/boot/dts from include search path for CPP"), and
-commit 50f9ddaf64e1 ("of: search scripts/dtc/include-prefixes path
-for both CPP and DTC").
-
-Remove proposed include path kernel/dts/, which was never implemented
-for the dtb build.
-
-For the diff case, each source file is compiled separately.  For
-each of those compiles, provide the location of the source file
-as an include path, not the location of both source files.
-
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
-
-The referenced commits b12869a8d519, 5ffa2aed389c, 50f9ddaf64e1
-are in v4.14-rc1.  No stable kernels need this patch.
-
-changes from v1:
-   - update summary commit message, since there is a very similar message
-     for b4b201d88b7c: dtx_diff - update include dts paths to match build
-   - move signed-off-by to above "---"
-
- scripts/dtc/dtx_diff |   22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
-
-diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
-index f9a3d8d23c64..8c4fbad2055e 100755
---- a/scripts/dtc/dtx_diff
-+++ b/scripts/dtc/dtx_diff
-@@ -86,6 +86,7 @@ eod
- compile_to_dts() {
- 
- 	dtx="$1"
-+	dtc_include="$2"
- 
- 	if [ -d "${dtx}" ] ; then
- 
-@@ -113,7 +114,7 @@ compile_to_dts() {
- 		# -----  input is DTS (source)
- 
- 		if ( cpp ${cpp_flags} -x assembler-with-cpp ${dtx} \
--			| ${DTC} -I dts ) ; then
-+			| ${DTC} ${dtc_include} -I dts ) ; then
- 			return
- 		fi
- 
-@@ -320,18 +321,13 @@ fi
- 
- cpp_flags="\
- 	-nostdinc                                  \
--	-I${srctree}/arch/${ARCH}/boot/dts         \
- 	-I${srctree}/scripts/dtc/include-prefixes  \
--	-I${srctree}/drivers/of/testcase-data      \
- 	-undef -D__DTS__"
- 
--dtc_flags="\
--	-i ${srctree}/arch/${ARCH}/boot/dts/ \
--	-i ${srctree}/kernel/dts             \
--	${dtx_path_1_dtc_include}            \
--	${dtx_path_2_dtc_include}"
--
--DTC="${DTC} ${dtc_flags} -O dts -qq -f ${dtc_sort} -o -"
-+DTC="\
-+	${DTC}                                     \
-+	-i ${srctree}/scripts/dtc/include-prefixes \
-+	-O dts -qq -f ${dtc_sort} -o -"
- 
- 
- # -----  do the diff or decompile
-@@ -339,11 +335,11 @@ DTC="${DTC} ${dtc_flags} -O dts -qq -f ${dtc_sort} -o -"
- if (( ${cmd_diff} )) ; then
- 
- 	diff ${diff_flags} --label "${dtx_file_1}" --label "${dtx_file_2}" \
--		<(compile_to_dts "${dtx_file_1}") \
--		<(compile_to_dts "${dtx_file_2}")
-+		<(compile_to_dts "${dtx_file_1}" "${dtx_path_1_dtc_include}") \
-+		<(compile_to_dts "${dtx_file_2}" "${dtx_path_2_dtc_include}")
- 
- else
- 
--	compile_to_dts "${dtx_file_1}"
-+	compile_to_dts "${dtx_file_1}" "${dtx_path_1_dtc_include}"
- 
- fi
--- 
-Frank Rowand <frank.rowand@sony.com>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
