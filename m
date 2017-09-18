@@ -1,28 +1,26 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 4/8] arm64: dts: renesas: r8a77970: add [H]SCIF support
-Date: Mon, 18 Sep 2017 10:49:46 +0200
-Message-ID: <CAMuHMdVTrZdi7CKUX9vrD14TvawVotsxvqM43J61FDHsS6OsnA@mail.gmail.com>
-References: <20170915194433.872217806@cogentembedded.com>
+Subject: Re: [PATCH v3 01/18] arm: shmobile: Document Kingfisher board DT bindings
+Date: Mon, 18 Sep 2017 10:51:39 +0200
+Message-ID: <CAMuHMdUEZC1NwCn47Du-e7fQen366s0PXr+a=jdoDijYUqb0kw@mail.gmail.com>
+References: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170915194433.872217806@cogentembedded.com>
+In-Reply-To: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 15, 2017 at 9:43 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Describe [H]SCIF ports in the R8A77970 device tree.
->
-> Based on the original (and large) patch by Daisuke Matsushita
-> <daisuke.matsushita.ns@hitachi.com>.
+On Sat, Sep 16, 2017 at 8:48 PM, Vladimir Barinov
+<vladimir.barinov@cogentembedded.com> wrote:
+> Add Kingfisher Device tree bindings Documentation, listing it as a
+> supported board.
+> Kingfisher is the H3ULCB/M3ULCB extension board.
 >
 > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
