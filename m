@@ -1,150 +1,54 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] ARM: dts: stm32: Add lptimer definitions to stm32h743
-Date: Mon, 18 Sep 2017 15:16:55 +0200
-Message-ID: <1505740615-24920-1-git-send-email-fabrice.gasnier@st.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 2/2] clk: Add Aspeed G5 clock driver
+Date: Mon, 18 Sep 2017 22:49:44 +0930
+Message-ID: <CACPK8XeYWj_bx3qysjCQXJgdR6xWONAg09peJc-=ajX8UtFO_Q@mail.gmail.com>
+References: <20170823060957.31167-1-joel@jms.id.au> <20170823060957.31167-2-joel@jms.id.au>
+ <1505446920.4080.13.camel@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alexandre.torgue-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1505446920.4080.13.camel@aj.id.au>
+Sender: linux-clk-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, Rick Altherr <raltherr@google.com>, Ryan Chen <ryan_chen@aspeedtech.com>
 List-Id: devicetree@vger.kernel.org
 
-Add lptimer definitions, depending on features they provide:
-- lptimer1 & 2 can act as PWM, trigger and encoder/counter
-- lptimer3 can act as PWM and trigger
-- lptimer4 & 5 can act as PWM
+On Fri, Sep 15, 2017 at 1:12 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
+> On Wed, 2017-08-23 at 15:39 +0930, Joel Stanley wrote:
+>> This driver supports the ast2500 and derivative BMC SoCs from Aspeed.
+>>
+>> All of the important clocks are supported, with most non-essential ones
+>> also implemented where information is available. I am working with
+>> Aspeed to clear up some of the missing information, including the
+>> missing parent-sibling relationships.
+>>
+>> We need to know the rate of the apb clock in order to correctly program
+>> the clocksource driver, so the apb and it's parents are created in the
+>> CLK_OF_DECLARE_DRIVER callback.
+>>
+>> The rest of the clocks are created at normal driver probe time. I
+>> followed the Gemini driver's lead with using the regmap where I could,
+>> but also having a pointer to the base address for use with the common
+>> clock callbacks.
+>>
+>> > Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> ---
+>>  drivers/clk/Kconfig                      |  12 +
+>>  drivers/clk/Makefile                     |   1 +
+>>  drivers/clk/clk-aspeed.c                 | 547 +++++++++++++++++++++++++++++++
+>
+> The patch subject suggests the implementation is specific to the G5
+> series SoC, but the name of the driver is generic. How similar are the
+> G4 and G5 clock devices? Is the intent to expand the implementation to
+> also cover the G4 series, or should this be renamed to something more
+> specific?
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
----
- arch/arm/boot/dts/stm32h743.dtsi | 103 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+The intent is to cover the G4 platforms with the same driver. I sent
+this version along early to get feedback on the structure.
 
-diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-index 58ec227..de54123 100644
---- a/arch/arm/boot/dts/stm32h743.dtsi
-+++ b/arch/arm/boot/dts/stm32h743.dtsi
-@@ -66,6 +66,32 @@
- 			clocks = <&timer_clk>;
- 		};
- 
-+		lptimer1: timer@0x40002400 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x40002400 0x400>;
-+			clocks = <&timer_clk>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				status = "disabled";
-+			};
-+
-+			trigger@0 {
-+				compatible = "st,stm32-lptimer-trigger";
-+				reg = <0>;
-+				status = "disabled";
-+			};
-+
-+			counter {
-+				compatible = "st,stm32-lptimer-counter";
-+				status = "disabled";
-+			};
-+		};
-+
- 		usart2: serial@40004400 {
- 			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
- 			reg = <0x40004400 0x400>;
-@@ -172,6 +198,83 @@
- 			};
- 		};
- 
-+		lptimer2: timer@0x58002400 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x58002400 0x400>;
-+			clocks = <&timer_clk>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				status = "disabled";
-+			};
-+
-+			trigger@1 {
-+				compatible = "st,stm32-lptimer-trigger";
-+				reg = <1>;
-+				status = "disabled";
-+			};
-+
-+			counter {
-+				compatible = "st,stm32-lptimer-counter";
-+				status = "disabled";
-+			};
-+		};
-+
-+		lptimer3: timer@0x58002800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x58002800 0x400>;
-+			clocks = <&timer_clk>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				status = "disabled";
-+			};
-+
-+			trigger@2 {
-+				compatible = "st,stm32-lptimer-trigger";
-+				reg = <2>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		lptimer4: timer@0x58002c00 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x58002c00 0x400>;
-+			clocks = <&timer_clk>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				status = "disabled";
-+			};
-+		};
-+
-+		lptimer5: timer@0x58003000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-lptimer";
-+			reg = <0x58003000 0x400>;
-+			clocks = <&timer_clk>;
-+			clock-names = "mux";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm-lp";
-+				status = "disabled";
-+			};
-+		};
-+
- 		adc_3: adc@58026000 {
- 			compatible = "st,stm32h7-adc-core";
- 			reg = <0x58026000 0x400>;
--- 
-1.9.1
+As it turns out, it was simple to get the G4 going with the same code.
+I'll send a v2 in the next day or so.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+
+Joel
