@@ -1,39 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
-Date: Mon, 18 Sep 2017 14:03:59 -0500
-Message-ID: <20170918190359.ukynrfnbci7d6v2h@rob-hp-laptop>
-References: <1505114862-32489-1-git-send-email-anthony.kim@hideep.com>
- <1505363804-6827-1-git-send-email-anthony.kim@hideep.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] media:imx274 device tree binding file
+Date: Mon, 18 Sep 2017 14:08:38 -0500
+Message-ID: <20170918190838.bjgvwgdlmgzpvu5l@rob-hp-laptop>
+References: <20170915074952.22148-1-leonl@leopardimaging.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1505363804-6827-1-git-send-email-anthony.kim@hideep.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Anthony Kim <anthony.kim@hideep.com>
-Cc: dmitry.torokhov@gmail.com, lkp@intel.com, kbuild-all@01.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170915074952.22148-1-leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 14, 2017 at 01:36:44PM +0900, Anthony Kim wrote:
-> The HiDeep touchscreen device is a capacitive multi-touch controller
-> mainly for multi-touch supported devices use. It use I2C interface for
-> communication to IC and provide axis X, Y, Z locations for ten finger
-> touch through input event interface to userspace.
+On Fri, Sep 15, 2017 at 03:49:51PM +0800, Leon Luo wrote:
+> The binding file for imx274 CMOS sensor V4l2 driver
 > 
-> It support the Crimson and the Lime two type IC. They are different
-> the number of channel supported and FW size. But the working protocol
-> is same.
-> 
-> Signed-off-by: Anthony Kim <anthony.kim@hideep.com>
+> Signed-off-by: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
 > ---
->  .../bindings/input/touchscreen/hideep.txt          |   42 +
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+> v5:
+>  - add 'port' and 'endpoint' information
+> v4:
+>  - no changes
+> v3:
+>  - remove redundant properties and references
+>  - document 'reg' property
+> v2:
+>  - no changes
+> ---
+>  .../devicetree/bindings/media/i2c/imx274.txt       | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx274.txt
 
-Please add acks when posting new versions.
-
->  drivers/input/touchscreen/Kconfig                  |   11 +
->  drivers/input/touchscreen/Makefile                 |    1 +
->  drivers/input/touchscreen/hideep.c                 | 1274 ++++++++++++++++++++
->  5 files changed, 1329 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
->  create mode 100644 drivers/input/touchscreen/hideep.c
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
