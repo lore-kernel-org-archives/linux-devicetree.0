@@ -1,61 +1,48 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: as3645a flash userland interface
-Date: Mon, 18 Sep 2017 12:12:04 +0300
-Message-ID: <20170918091204.245dewmyruxtfhyb@valkosipuli.retiisi.org.uk>
-References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
- <20170912084236.1154-25-sakari.ailus@linux.intel.com>
- <20170912103628.GB27117@amd>
- <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: exynos: Add dwc3 SUSPHY quirk
+Date: Mon, 18 Sep 2017 12:02:13 +0200
+Message-ID: <1505728934-6200-2-git-send-email-andrzej.p@samsung.com>
+References: <1505728934-6200-1-git-send-email-andrzej.p@samsung.com>
+        <CGME20170918100230eucas1p29fae00c53f1106af1961a6e269740b2f@eucas1p2.samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7b679cb3-ce58-e1d1-60bf-995896bf46eb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-reply-to: <1505728934-6200-1-git-send-email-andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Odroid XU4 board does not enumerate SuperSpeed devices.
+This patch makes exynos5 series chips use USB SUSPHY quirk,
+which solves the problem.
 
-On Tue, Sep 12, 2017 at 08:53:33PM +0200, Jacek Anaszewski wrote:
-> Hi Pavel,
-> 
-> On 09/12/2017 12:36 PM, Pavel Machek wrote:
-> > Hi!
-> > 
-> > There were some changes to as3645a flash controller. Before we have
-> > stable interface we have to keep forever I want to ask:
-> 
-> Note that we have already two LED flash class drivers - leds-max77693
-> and leds-aat1290. They have been present in mainline for over two years
-> now.
-> 
-> > What directory are the flash controls in?
-> > 
-> > /sys/class/leds/led-controller:flash ?
-> > 
-> > Could we arrange for something less generic, like
-> > 
-> > /sys/class/leds/main-camera:flash ?
-> 
-> I'd rather avoid overcomplicating this. LED class device name pattern
-> is well defined to devicename:colour:function
-> (see Documentation/leds/leds-class.txt, "LED Device Naming" section).
-> 
-> In this case "flash" in place of the "function" segment makes the
-> things clear enough I suppose.
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos54xx.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Oh. I have to admit I've completely missed this. :-o
-
-I'll address this in v2 of the as3645a fixes, plus submit related V4L2
-flash class documentation fixes a little later.
-
+diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+index 0389e8a..8ca4fef 100644
+--- a/arch/arm/boot/dts/exynos54xx.dtsi
++++ b/arch/arm/boot/dts/exynos54xx.dtsi
+@@ -134,6 +134,7 @@
+ 				interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&usbdrd_phy0 0>, <&usbdrd_phy0 1>;
+ 				phy-names = "usb2-phy", "usb3-phy";
++				snps,dis_u3_susphy_quirk;
+ 			};
+ 		};
+ 
+@@ -154,6 +155,7 @@
+ 				reg = <0x12400000 0x10000>;
+ 				phys = <&usbdrd_phy1 0>, <&usbdrd_phy1 1>;
+ 				phy-names = "usb2-phy", "usb3-phy";
++				snps,dis_u3_susphy_quirk;
+ 			};
+ 		};
+ 
 -- 
-Regards,
+1.9.1
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
