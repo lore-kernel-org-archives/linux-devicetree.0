@@ -1,87 +1,48 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] arm64: Add initial Actions Semi S700 and CubieBoard7
- support
-Date: Mon, 18 Sep 2017 23:50:11 +0200
-Message-ID: <6beabaab-d95f-4ac9-96f1-7c1c98bd7811@linaro.org>
-References: <20170911022241.11603-1-afaerber@suse.de>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v10 20/24] dt: bindings: smiapp: Document lens-focus and
+ flash properties
+Date: Tue, 19 Sep 2017 00:56:22 +0300
+Message-ID: <ef8edab3-5b55-c298-2a40-72b5e22586ea@linux.intel.com>
+References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+ <20170911080008.21208-21-sakari.ailus@linux.intel.com>
+ <20170918210028.67sbpuetdh5j7wpf@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170911022241.11603-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5qKF5Yip?= <harrymei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, support-om/0PrzuAKC1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ahha Lee <lee-om/0PrzuAKC1Z/+hSey0Gg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170918210028.67sbpuetdh5j7wpf@rob-hp-laptop>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, linux-acpi@vger.kernel.org, mika.westerberg@intel.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+Hi Rob,
 
+Rob Herring wrote:
+> On Mon, Sep 11, 2017 at 11:00:04AM +0300, Sakari Ailus wrote:
+>> Document optional lens-focus and flash properties for the smiapp driver.
+>>
+>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> ---
+>>  Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
+>>  1 file changed, 2 insertions(+)
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-On 11/09/2017 04:22, Andreas Färber wrote:
-> Hello,
-> 
-> This series prepares the Actions Semi S700 SoC and Cubietech CubieBoard7.
-> It boots equally far as the S900 based Bubblegum-96 these patches are based on,
-> i.e. into an initrd with serial and all four cores up.
-> 
-> I have not yet managed to download the CubieBoard7 sources from Baidu, and the
-> Mega download has not yet been fixed, so this is based on the S700 datasheet
-> and /proc/device-tree/ from the preinstalled Android.
-> 
-> Lacking sources and instructions to replace the bootloader on eMMC or to try
-> booting from SD, the only working way I've found to boot mainline kernels
-> appears to be booting into Android, then issuing "reboot bootloader". U-Boot
-> is lacking the saveenv command, so it wasn't possible to change the bootdelay
-> to facilitate this.
-> 
-> Cf. https://en.opensuse.org/HCL:CubieBoard7
-> 
-> Work branch:
-> https://github.com/afaerber/linux/commits/bg96-next
-> 
-> Have a lot of fun!
-> 
-> Cheers,
-> Andreas
-> 
-> Cc: Ahha Lee <lee-om/0PrzuAKC1Z/+hSey0Gg@public.gmane.org>
-> Cc: support-om/0PrzuAKC1Z/+hSey0Gg@public.gmane.org
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> 
-> Andreas Färber (4):
->   dt-bindings: arm: actions: Add S700 and CubieBoard7
->   dt-bindings: timer: Add Actions Semi S700
->   clocksource: owl: Prepare S700
->   arm64: dts: actions: Add S700 and CubieBoard7
-> 
->  Documentation/devicetree/bindings/arm/actions.txt  |  15 ++
->  .../bindings/timer/actions,owl-timer.txt           |   1 +
+Thanks for the ack. There have been since a few iterations of the set, 
+and the corresponding patch in v13 has minor changes to this:
 
-Usually sub system maintainers are also Cc'ed with Dt bindings
-definitions and usage.
+<URL:http://www.spinics.net/lists/linux-media/msg121929.html>
 
->  arch/arm64/boot/dts/actions/Makefile               |   2 +
->  arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |  47 ++++++
->  arch/arm64/boot/dts/actions/s700.dtsi              | 164 +++++++++++++++++++++
->  drivers/clocksource/owl-timer.c                    |   1 +
->  6 files changed, 230 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/actions/s700-cubieboard7.dts
->  create mode 100644 arch/arm64/boot/dts/actions/s700.dtsi
-> 
+Essentially "flash" was renamed to "flash-leds" as the current flash 
+devices we have are all LEDs and the referencing assumes LED framework's 
+ways to describe LEDs. The same change is present in the patch adding 
+the property to video-interfaces.txt:
 
+<URL:http://www.spinics.net/lists/linux-media/msg121924.html>
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Regards,
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+sakari.ailus@linux.intel.com
