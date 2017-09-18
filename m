@@ -1,103 +1,52 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] dmaengine: sun6i: Add support for
- Allwinner A64 and compatibles
-Date: Mon, 18 Sep 2017 10:19:28 +0200
-Message-ID: <20170918081928.eex7njub6atasj6x@flea.lan>
-References: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de>
- <20170917031956.28010-9-stefan.bruens@rwth-aachen.de>
+Subject: Re: [PATCH v4 4/6] iio: adc: sun4i-gpadc-iio: add
+ support for H3 thermal sensor
+Date: Mon, 18 Sep 2017 10:24:02 +0200
+Message-ID: <20170918082402.fa5mg2ucqouh3ti5@flea.lan>
+References: <20170914145251.21784-1-icenowy@aosc.io>
+ <20170914145251.21784-5-icenowy@aosc.io>
+ <445ea236-35e9-8d5a-e580-b2bdcf5f7776@free-electrons.com>
+ <0b395ea1743a14a62855fc2a2dc74411@aosc.io>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7jsgfwzuw3d76rey"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKED73GQKGQECXHMLQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="yc6aqu6lsph33767"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLEF73GQKGQEJHR4FUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170917031956.28010-9-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+In-Reply-To: <0b395ea1743a14a62855fc2a2dc74411-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---7jsgfwzuw3d76rey
+--yc6aqu6lsph33767
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 17, 2017 at 05:19:54AM +0200, Stefan Br=C3=BCns wrote:
-> The A64 SoC has the same dma engine as the H3 (sun8i), with a
-> reduced amount of physical channels. To allow future reuse of the
-> compatible, leave the channel count etc. in the config data blank
-> and retrieve it from the devicetree.
->=20
-> Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> ---
->  drivers/dma/sun6i-dma.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->=20
-> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> index b5ecc97a0d5a..118b29bb1eac 100644
-> --- a/drivers/dma/sun6i-dma.c
-> +++ b/drivers/dma/sun6i-dma.c
-> @@ -1127,6 +1127,28 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =
-=3D {
->  			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
->  };
-> =20
-> +/*
-> + * The A64 binding uses the number of dma channels from the
-> + * device tree node.
-> + */
-> +static struct sun6i_dma_config sun50i_a64_dma_cfg =3D {
-> +	.nr_max_channels =3D 0,
-> +	.nr_max_requests =3D 0,
-> +	.nr_max_vchans   =3D 0,
+On Sat, Sep 16, 2017 at 06:14:08PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> > The H3 apparently supports IRQs, why do you not support them for the
+> > temperature? They might be broken as it is on A33 but then it might be a
+> > good idea to write it down in a comment in the driver (and not adding
+> > the unused registers in the header file) or at least in the commit log.
+> > 
+> > 3) Now that you have support for clocks, wouldn't it be a good idea to
+> > disable them during suspend?
+> 
+> Interesting... It's meaningful to disable the mod clock during suspend.
 
-Those are the default values. I appreciate that you wanted them here
-for documentation, but the comment above already fills up that role
-fine.
-
-Once removed,
-
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+All clocks, actually. And put the device back into reset.
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---7jsgfwzuw3d76rey
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZv4GQAAoJEBx+YmzsjxAgYO4P/27KzOO88B+VhRLJFpJniksI
-7wadM1dwgWtvQ3S0zeAW7fdyYjL8hnUrjJtVzbebtyFW1dFLdB2kk3PCnGxeMMP7
-zoR2+oczT/g4iYmYEVKKAfHtrW96uAvN3Zigid8piR9UBhb6H+nIS2cKbEK6uuhY
-NUpb3R2BDDO87y2IcN9aFfQkO5IDQcjkZ4H/6Jw471izZBlKOCMSDy6GR1K4Xlfa
-JlARdA3fWrhP7wsw8cqxR61dfLZZ6Hvc2QC4VF2+aapKtVuhheDKrQgJwhdm6ZgN
-siJENIvmtN52MOOtq8ZVou7IXeqhDCAqc3j/jQFvSEhHYNIjghRhc0I99JlA34n8
-Xi6k9Pef+Z0WJ3/+8XXDSLjie0EEZ7NUu9ehZZGMsnojhHwaO4wrU1+3AP3iLMCO
-qMQUK3FCgdoI49wb47Fx1+nsjdkRtTvF4ekcR9M11O4nH/53lFkDDsHH0cXmqhFR
-u4eG4KDFmuHg8ngggSHroglmcGJhejvxUEe6ANPks5Drzv6WdPAI1D7YHcxqgzTb
-3lcOqB2OEI78jfOtAmIMBnDdMRDwPdjHmkYtft3bFuvLWdzwnd6XJ6Y/tn97lBOo
-qSoDeCvFJW93BViqvb/sfHcHhm52m8UkzN1D9wtjgFPFBHVtwjnWV8PLt757JCzO
-IsPQNmjuEwDSCTvefRMQ
-=/aMA
------END PGP SIGNATURE-----
-
---7jsgfwzuw3d76rey--
+--yc6aqu6lsph33767--
