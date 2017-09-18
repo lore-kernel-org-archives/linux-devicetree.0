@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 04/10] dmaengine: sun6i: Enable
- additional burst lengths/widths on H3
-Date: Mon, 18 Sep 2017 10:09:27 +0200
-Message-ID: <20170918080927.ghfahn2xwz52hmsx@flea.lan>
+Subject: Re: [PATCH v2 06/10] arm64: allwinner: a64: Add
+ devicetree binding for DMA controller
+Date: Mon, 18 Sep 2017 10:11:34 +0200
+Message-ID: <20170918081134.obpoaiwd7dgzdcak@flea.lan>
 References: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de>
- <20170917031956.28010-5-stefan.bruens@rwth-aachen.de>
+ <20170917031956.28010-7-stefan.bruens@rwth-aachen.de>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yi6pq3fxiamd3slb"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOH67XGQKGQEEUYSTLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="h4xpe5swv5okxfft"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBN777XGQKGQEJKPMYYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170917031956.28010-5-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+In-Reply-To: <20170917031956.28010-7-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,20 +24,56 @@ Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY7
 List-Id: devicetree@vger.kernel.org
 
 
---yi6pq3fxiamd3slb
+--h4xpe5swv5okxfft
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 17, 2017 at 05:19:50AM +0200, Stefan Br=C3=BCns wrote:
-> The H3 supports bursts lengths of 1, 4, 8 and 16 transfers, each with
-> a width of 1, 2, 4 or 8 bytes.
+On Sun, Sep 17, 2017 at 05:19:52AM +0200, Stefan Br=C3=BCns wrote:
+> The A64 is register compatible with the H3, but has a different number
+> of dma channels and request ports.
 >=20
-> The register value for the the width is log2-encoded, change the
-> conversion function to provide the correct value for width =3D=3D 8.
+> Attach additional properties to the node to allow future reuse of the
+> compatible for controllers with different number of channels/requests.
+>=20
+> If dma-requests is not specified, the register layout defined maximum
+> of 32 is used.
 >=20
 > Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/dma/sun6i-dma.txt          | 26 ++++++++++++++++=
+++++++
+>  1 file changed, 26 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Docume=
+ntation/devicetree/bindings/dma/sun6i-dma.txt
+> index 98fbe1a5c6dd..6ebc79f95202 100644
+> --- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> @@ -27,6 +27,32 @@ Example:
+>  		#dma-cells =3D <1>;
+>  	};
+> =20
+> +------------------------------------------------------------------------=
+------
+> +For A64 DMA controller:
+> +
+> +Required properties:
+> +- compatible:	"allwinner,sun50i-a64-dma"
+> +- dma-channels: Number of DMA channels supported by the controller.
+> +		Refer to Documentation/devicetree/bindings/dma/dma.txt
+> +- all properties above, i.e. reg, interrupts, clocks, resets and #dma-ce=
+lls
+> +
+> +Optional properties:
+> +- dma-requests: Number of DMA request signals supported by the controlle=
+r.
+> +		Refer to Documentation/devicetree/bindings/dma/dma.txt
 
+You're error'ing out if dma-requests, so it isn't optional. I guess we
+should just make it mandatory.
+
+Once done,
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Maxime
@@ -54,24 +90,24 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---yi6pq3fxiamd3slb
+--h4xpe5swv5okxfft
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZv383AAoJEBx+YmzsjxAgiYEQAIUate2SUMU7+uPJtMQE+Q1x
-9vDTGXMsuIT+BoOw8CTaYO5iciNfSGLvHpl+nh8hr2Fw1Cn+Pz12Ss1gwO5YeYbc
-yEkNcmPArL3+pGYeFFPkWAEWRPa6gIJZ2VIxBhKo5JOt9bC7POaEypt07RUVT5M9
-aIYxVA6/oncQ3KaBp5jYNntPGE9HwuBI73vgI/poOhybqPy9zZqZbzqG49e1WQ5i
-jt3MBaYvFIgGj3p5bKef0ozu1GAbq9ucbPOjmShSJJxhMZj6+hRUW4oeuegNY7EG
-l7hKEJh4iIIIwtAs+r0tyeNhv93xY90vfRlZzsBiq+g+ojQThAkGIONUcZ0qK5B5
-0qQsWx+iN721M+KrIHe+qW+GfW8Z5bOmRmUwcTUBFqjIPNMr89u5jhYJJdjuSGs6
-aZ2VcZpseIZ/Rm8MrAanIgvVMYbJvAYjrR0guAhM3Hjp6hXG6lMYFcTQVOrVnhbk
-NIZ8OankKb4m+Am4CTppm9/jgrcnVWi/oYhyRM4wrtKGvdKKzJO/0Xq5UcFenRCi
-Lap96eXxegI4DLbcmd6vtRJWS3IOSBDju4U6AMXb6JsmIegf9+pXrVQA0jlA0mdu
-WJpaCmFItYNZat08W6jfpu3sUvD1/ub8dSIrZofvE/s1J65BcXlFhQZWycBk7Sq8
-mvl8cnD4RsjeILjz3M0g
-=E0Sp
+iQIcBAEBAgAGBQJZv3+2AAoJEBx+YmzsjxAgp/4QAKPdySi93mLQnDCjsdpOT7qf
+/9Z7gILHg4xLn0Cin6dP3OgPsZlmY4heoylBOLd4yPEr+Tg4CVJy1OpXppmN6dc2
+DQaswqy/sHaz8xgm+GOEWP/OxFSQ33LC2NMUfhDPqjBbEVGq9Xs+wQfK6JKZhE78
+RBb4lb10ow9RVuxTef2KKpH8oxCnnauYgl5xhaiKilLyjSAmA8ZwilWwGzmwsdPA
+0IuV1GdvCaA6z+zQxBob4wQW3ZyO3/tavqDiRDc7ND9OXkTr1ptskc1A7ZHn/QKu
+7Prmixm8XOGZ9crgLiQ1+Gh668Ey++rtxUA0sR6Rf6QZSILMzdsuFdjxKCClehvE
+CzlIhS5hbiH4NeJqt2Q07RLdcx1Ss4fGWG+H0ALobicURYih1M6eLbOfj5aqnC+5
+PmQIrsDx9j5/el0Vg9XmFGtG5xf6Jc3322hnQDqDG4KPxSZHMANCdi7uVS9hVnyv
+Skt54TZ3HF/hETH67q54fHNSInCMX/19XSTA7EainuEmv2Ys4e7ExuH00dnztltU
+VgkOiyWJpz69ZSQB8yYSuTHMMEjZFXMLp4y4PE2Au3RZtRRyBn/8BkqUn7n5j1Jw
+Ef2zTwuc0MAoRVdHLyU8PMPro1WylttfdJpRd0KPKTSzIBrJNcqjILmUengA8Pzr
+R2iqOYMY1PIt5YpurYTE
+=N6gM
 -----END PGP SIGNATURE-----
 
---yi6pq3fxiamd3slb--
+--h4xpe5swv5okxfft--
