@@ -1,89 +1,56 @@
-From: Roy Pledge <roy.pledge@nxp.com>
-Subject: [v5 05/12] soc/fsl/qbman: Drop set/clear_bits usage
-Date: Mon, 18 Sep 2017 16:39:40 -0400
-Message-ID: <1505767187-4596-6-git-send-email-roy.pledge@nxp.com>
+From: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
+Subject: [v5 02/12] soc/fsl/qbman: Use shared-dma-pool for BMan private memory allocations
+Date: Mon, 18 Sep 2017 16:39:37 -0400
+Message-ID: <1505767187-4596-3-git-send-email-roy.pledge@nxp.com>
 References: <1505767187-4596-1-git-send-email-roy.pledge@nxp.com>
-Reply-To: roy.pledge@nxp.com
+Reply-To: <roy.pledge-3arQi8VN3Tc@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1505767187-4596-1-git-send-email-roy.pledge@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: leoyang.li@nxp.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, arnd@arndb.de, madalin.bucur@nxp.com, catalin.marinas@arm.com, Roy Pledge <roy.pledge@nxp.com>, linux@armlinux.org.uk, oss@buserror.net, Claudiu Manoil <claudiu.manoil@nxp.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505767187-4596-1-git-send-email-roy.pledge-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: leoyang.li-3arQi8VN3Tc@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, madalin.bucur-3arQi8VN3Tc@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+Use the shared-memory-pool mechanism for free buffer proxy record
+area allocation.
 
-Replace PPC specific set/clear_bits API with standard
-bit twiddling so driver is portalable outside PPC.
-
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
+Signed-off-by: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
 ---
- drivers/soc/fsl/qbman/bman.c | 2 +-
- drivers/soc/fsl/qbman/qman.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/soc/fsl/qbman/bman_ccsr.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/soc/fsl/qbman/bman.c b/drivers/soc/fsl/qbman/bman.c
-index 604e45c..ff8998f 100644
---- a/drivers/soc/fsl/qbman/bman.c
-+++ b/drivers/soc/fsl/qbman/bman.c
-@@ -616,7 +616,7 @@ int bman_p_irqsource_add(struct bman_portal *p, u32 bits)
- 	unsigned long irqflags;
+diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
+index eaa9585..05c4223 100644
+--- a/drivers/soc/fsl/qbman/bman_ccsr.c
++++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+@@ -201,6 +201,21 @@ static int fsl_bman_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
  
- 	local_irq_save(irqflags);
--	set_bits(bits & BM_PIRQ_VISIBLE, &p->irq_sources);
-+	p->irq_sources |= bits & BM_PIRQ_VISIBLE;
- 	bm_out(&p->p, BM_REG_IER, p->irq_sources);
- 	local_irq_restore(irqflags);
- 	return 0;
-diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
-index 1bcfc51..25419e1 100644
---- a/drivers/soc/fsl/qbman/qman.c
-+++ b/drivers/soc/fsl/qbman/qman.c
-@@ -908,12 +908,12 @@ static inline int qm_mc_result_timeout(struct qm_portal *portal,
++	/*
++	 * If FBPR memory wasn't defined using the qbman compatible string
++	 * try using the of_reserved_mem_device method
++	 */
++	if (!fbpr_a) {
++		ret = qbman_init_private_mem(dev, 0, &fbpr_a, &fbpr_sz);
++		if (ret) {
++			dev_err(dev, "qbman_init_private_mem() failed 0x%x\n",
++				ret);
++			return -ENODEV;
++		}
++	}
++
++	dev_dbg(dev, "Allocated FBPR 0x%llx 0x%zx\n", fbpr_a, fbpr_sz);
++
+ 	bm_set_memory(fbpr_a, fbpr_sz);
  
- static inline void fq_set(struct qman_fq *fq, u32 mask)
- {
--	set_bits(mask, &fq->flags);
-+	fq->flags |= mask;
- }
- 
- static inline void fq_clear(struct qman_fq *fq, u32 mask)
- {
--	clear_bits(mask, &fq->flags);
-+	fq->flags &= ~mask;
- }
- 
- static inline int fq_isset(struct qman_fq *fq, u32 mask)
-@@ -1574,7 +1574,7 @@ void qman_p_irqsource_add(struct qman_portal *p, u32 bits)
- 	unsigned long irqflags;
- 
- 	local_irq_save(irqflags);
--	set_bits(bits & QM_PIRQ_VISIBLE, &p->irq_sources);
-+	p->irq_sources |= bits & QM_PIRQ_VISIBLE;
- 	qm_out(&p->p, QM_REG_IER, p->irq_sources);
- 	local_irq_restore(irqflags);
- }
-@@ -1597,7 +1597,7 @@ void qman_p_irqsource_remove(struct qman_portal *p, u32 bits)
- 	 */
- 	local_irq_save(irqflags);
- 	bits &= QM_PIRQ_VISIBLE;
--	clear_bits(bits, &p->irq_sources);
-+	p->irq_sources &= ~bits;
- 	qm_out(&p->p, QM_REG_IER, p->irq_sources);
- 	ier = qm_in(&p->p, QM_REG_IER);
- 	/*
+ 	err_irq = platform_get_irq(pdev, 0);
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
