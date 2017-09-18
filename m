@@ -1,85 +1,85 @@
-From: =?iso-8859-1?Q?Br=FCns=2C_Stefan?= <Stefan.Bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH v2 06/10] arm64: allwinner: a64: Add
- devicetree binding for DMA controller
-Date: Mon, 18 Sep 2017 13:38:50 +0000
-Message-ID: <13822703.glkPkggzn6@sbruens-linux>
-References: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de>
- <20170917031956.28010-7-stefan.bruens@rwth-aachen.de>
- <20170918081134.obpoaiwd7dgzdcak@flea.lan>
-Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDIYL7P2SAMRB3EY77GQKGQENYMDY6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170918081134.obpoaiwd7dgzdcak-ZC1Zs529Oq4@public.gmane.org>
-Content-Language: en-US
-Content-ID: <29E16918749D36448517A33892830162-KnNo0XtUZUuELgA04lAiVw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/2] irqchip: meson: add support for the gpio interrupt controller
+Date: Mon, 18 Sep 2017 15:46:07 +0200
+Message-ID: <20170918134610.17743-1-jbrunet@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Montag, 18. September 2017 10:11:34 CEST Maxime Ripard wrote:
-> On Sun, Sep 17, 2017 at 05:19:52AM +0200, Stefan Br=C3=BCns wrote:
-> > The A64 is register compatible with the H3, but has a different number
-> > of dma channels and request ports.
-> >=20
-> > Attach additional properties to the node to allow future reuse of the
-> > compatible for controllers with different number of channels/requests.
-> >=20
-> > If dma-requests is not specified, the register layout defined maximum
-> > of 32 is used.
-> >=20
-> > Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> > ---
-> >=20
-> >  .../devicetree/bindings/dma/sun6i-dma.txt          | 26
-> >  ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> > b/Documentation/devicetree/bindings/dma/sun6i-dma.txt index
-> > 98fbe1a5c6dd..6ebc79f95202 100644
-> > --- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> >=20
-> > @@ -27,6 +27,32 @@ Example:
-> >  		#dma-cells =3D <1>;
-> >  =09
-> >  	};
-> >=20
-> > +----------------------------------------------------------------------=
----
-> > ----- +For A64 DMA controller:
-> > +
-> > +Required properties:
-> > +- compatible:	"allwinner,sun50i-a64-dma"
-> > +- dma-channels: Number of DMA channels supported by the controller.
-> > +		Refer to Documentation/devicetree/bindings/dma/dma.txt
-> > +- all properties above, i.e. reg, interrupts, clocks, resets and
-> > #dma-cells +
-> > +Optional properties:
-> > +- dma-requests: Number of DMA request signals supported by the
-> > controller.
-> > +		Refer to Documentation/devicetree/bindings/dma/dma.txt
->=20
-> You're error'ing out if dma-requests, so it isn't optional. I guess we
-> should just make it mandatory.
+This patch series adds support for the GPIO interrupt controller found on
+Amlogic's meson SoC families.
 
-No, it defaults to DMA_CHAN_MAX_DRQ =3D 31, see patch 07/10.
+Unlike what the name suggests, this controller is not part of the SoC
+GPIO subsystem. It is a separate controller which can watch almost all
+gpio pads of the SoC and generate and interrupt from it. "Almost" because
+there are always exceptions and some specific gpios (TEST_N) lack this
+capability.
 
-Kind regards,
+Hardware wise, the controller is a 256 to 8 router with a filtering block
+to select edge or level input and the polarity of the signal. We can't
+setup the filtring to generate a signal on both the high and low polarity
+so, ATM, IRQ_TYPE_EDGE_BOTH is not supported.
 
-Stefan
+The number of interrupt line routed to the controller depends on the SoC,
+and essentially the total number of GPIO available on the different gpio
+controllers of the SoC.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+This series has been tested on Amlogic S905-P200 board with the front
+panel power button. Also tested on the Nanopi-k2 with the ethernet PHY
+interrupt pin.
+
+This work is derived from the previous work of Carlo Caione [1].
+
+Changes since RFC : [2]
+* Remove interrupt property in device tree: the controller cannot
+  generate interrupts on its own and is merely routing the interrupt to
+  the GIC, therefore it should not use the interrupt property. This data
+  is now stored directly in the driver, same as the pinctrl data.
+* Improve compatibility checking of meson pinctrl on its interrupt
+  parent to activate gpio_to_irq callback
+* Drop IRQ_BOTH hack. Need more work to have an acceptable solution for
+  this
+
+Changes since v1 : [3]
+* Correct mistake in patch 4 when no compatible
+  controller is found. Sorry for the inconvenience.
+
+Changes since v2: [4]
+* Address Marc's comment on the irqchip driver from v2
+* Drop all gpio subsystem related patches. This will be dealt with
+  separately.
+
+Changes since v3: [5]
+* Replace "upstream" irq with "channel" irq
+* Improve documentation a bit.
+* Drop DT patches: these will be sent later on to the DT maintainer
+  if/when the driver is accepted.
+
+[1] : https://lkml.kernel.org/r/1448987062-31225-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+[2] : https://lkml.kernel.org/r/1475593708-10526-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+[3] : https://lkml.kernel.org/r/1476871709-8359-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+[4] : https://lkml.kernel.org/r/1476890480-8884-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+[5] : https://lkml.kernel.org/r/20170615161804.32658-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+
+Jerome Brunet (2):
+  dt-bindings: interrupt-controller: add DT binding for meson GPIO
+    interrupt controller
+  irqchip: meson: add support for gpio interrupt controller
+
+ .../amlogic,meson-gpio-intc.txt                    |  35 ++
+ drivers/irqchip/Kconfig                            |   8 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-meson-gpio.c                   | 414 +++++++++++++++++++++
+ 4 files changed, 458 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+ create mode 100644 drivers/irqchip/irq-meson-gpio.c
+
+-- 
+2.13.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
