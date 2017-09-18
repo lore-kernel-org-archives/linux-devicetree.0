@@ -1,51 +1,55 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: foundation-v8: Enable PSCI mode
-Date: Mon, 18 Sep 2017 17:12:48 +0100
-Message-ID: <20170918161248.GB5106@leverpostej>
-References: <20170918153832.16356-1-daniel.thompson@linaro.org>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH v2] ARC: reset: introduce AXS10x reset driver
+Date: Mon, 18 Sep 2017 09:14:38 -0700
+Message-ID: <ce7885ab-b87e-ca07-234f-b63811afd86c@synopsys.com>
+References: <20170914142842.12225-1-Eugeniy.Paltsev@synopsys.com>
+ <1505736441.9807.8.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170918153832.16356-1-daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1505736441.9807.8.camel@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Philipp,
 
-On Mon, Sep 18, 2017 at 04:38:32PM +0100, Daniel Thompson wrote:
-> Currently if the Foundation model is running ARM Trusted Firmware then
-> the kernel, which is configured to use spin tables, cannot start secondary
-> processors or "power off" the simulation.
+On 09/18/2017 05:07 AM, Philipp Zabel wrote:
+> On Thu, 2017-09-14 at 17:28 +0300, Eugeniy Paltsev wrote:
+>> ARC AXS10x boards support custom IP-block which allows to control
+>> reset signals of selected peripherals. For example DW GMAC, etc...
+>> This block is controlled via memory-mapped register (AKA CREG) which
+>> represents up-to 32 reset lines. This regiter is self-clearing so we
+>> don't need to deassert line after reset.
+>>
+>> As of today only the following lines are used:
+>>   - DW GMAC - line 5
+>>
+>>> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+>> ---
+>> Changes v1 -> v2:
+>>    * The creg reset register is self-clearing so we don't need to clear it
+>>      manually. Fixed it.
+>>    * Use reset callback instead of assert/deassert pair.
+>>    * Rename reset node in documentation to "reset-controller" for consistency
+>>      with the other bindings.
+>>    * Use devm_reset_controller_register instead of reset_controller_register
+>>
+>> NOTE:
+>>      This driver couldn't be replaced by reset-simple driver as we mustn't
+>>      read from reset register or clear it.
 > 
-> Add a couple of labels to the include file, and introduce a new .dts
-> file that uses these to override the enable-method.
-> 
-> Signed-off-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Thanks, I've applied this patch to the reset/next branch.
 
-This looks good, but has the unfortunate effect of leaving the
-(irrelevant) cpu-release-addr property in the PSCI dts files, as that's
-in the underlying dtsi file.
+Will it be OK for you to apply the corresponding DT update for platform - that way 
+I don't have to keep track of when ur branch hits mainline etc.
 
-Could we split spin-table / PSCI parts into separate dtsi files?
+The chances of any ensuing conflicts are pretty rare - and easy to resolve if at all.
 
-e.g. have:
+If so, Eugeniy can send the patch ur way !
 
-* foundation-v8.dtsi
-* foundation-v8-gicv{2,3}.dtsi
-* foundation-v8-{psci,spin-table}.dtsi
-
-... and then combine those to build the dts files we want.
-
-FWIW, with that:
-
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thx,
+-Vineet
