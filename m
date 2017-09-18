@@ -1,43 +1,33 @@
-From: Fabien DESSENNE <fabien.dessenne@st.com>
-Subject: Re: [PATCH v3 0/3] STM32 CRYP crypto driver
-Date: Mon, 18 Sep 2017 09:40:02 +0000
-Message-ID: <7be8c468-2e95-c781-3af3-d411acc80598@st.com>
-References: <1503047946-27799-1-git-send-email-fabien.dessenne@st.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v3 01/18] arm: shmobile: Document Kingfisher board DT
+ bindings
+Date: Mon, 18 Sep 2017 11:13:15 +0200
+Message-ID: <20170918091314.GH4644@verge.net.au>
+References: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdUEZC1NwCn47Du-e7fQen366s0PXr+a=jdoDijYUqb0kw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503047946-27799-1-git-send-email-fabien.dessenne@st.com>
-Content-Language: en-US
-Content-ID: <8BDBEBD1600EBF48A5C5DAF1F4620718@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Benjamin GAIGNARD <benjamin.gaignard@st.com>, Lionel DEBIEVE <lionel.debieve@st.com>, Ludovic BARRE <ludovic.barre@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUEZC1NwCn47Du-e7fQen366s0PXr+a=jdoDijYUqb0kw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SnVzdCBhIGdlbnRsZSBwaW5nIC4uLiBvciBoYXZlIEkgbWlzc2VkIG91dCBvbiBhIHJlcGx5Pw0K
-DQoNCk9uIDE4LzA4LzE3IDExOjE5LCBGYWJpZW4gRGVzc2VubmUgd3JvdGU6DQo+IFRoaXMgc2V0
-IG9mIHBhdGNoZXMgYWRkcyBhIG5ldyBjcnlwdG8gZHJpdmVyIGZvciBTVE1pY3JvZWxlY3Ryb25p
-Y3Mgc3RtMzIgSFcuDQo+IFRoaXMgZHJpdmVycyB1c2VzIHRoZSBjcnlwdG8gQVBJIGFuZCBwcm92
-aWRlcyB3aXRoIEhXLWVuYWJsZWQgQUVBRCBhbmQgYmxvY2sNCj4gY2lwaGVyIGFsZ29yaXRobXMu
-DQo+IEl0IG1ha2VzIHVzZSBvZiB0aGUgY3J5cHRvIGVuZ2luZSB3aGljaCBpcyB1cGdyYWRlZCBp
-biBvcmRlciB0byBzdXBwb3J0IEFFQUQNCj4gcmVxdWVzdHMuDQo+DQo+IFRoaXMgZHJpdmVyIHdh
-cyBzdWNjZXNzZnVsbHkgdGVzdGVkIHdpdGggdGNyeXB0IC8gdGVzdG1nci4NCj4NCj4gQ2hhbmdl
-cyBzaW5jZSB2MzoNCj4gLSB1cGRhdGUgZHQtYmluZGluZ3Mgd2l0aCBSb2IgSGVycmluZyByZW1h
-cmtzDQo+DQo+IENoYW5nZXMgc2luY2UgdjI6DQo+IC0gdXBkYXRlIGR0LWJpbmRpbmdzIChpbnRl
-cnJ1cHRzIGRlc2NyaXB0aW9uKQ0KPiAtIHJlYmFzZSBvbiBTVE0zMiBjcnlwdG8gcGF0Y2hlcyAo
-TC4gRGViaWV2ZSA6IHVwZGF0ZSBDUkMzMiArIGFkZCBIQVNIKQ0KPg0KPiBGYWJpZW4gRGVzc2Vu
-bmUgKDMpOg0KPiAgICBjcnlwdG86IGVuZ2luZSAtIHBlcm1pdCB0byBlbnF1ZXVlIGFlYWRfcmVx
-dWVzdA0KPiAgICBkdC1iaW5kaW5nczogRG9jdW1lbnQgU1RNMzIgQ1JZUCBiaW5kaW5ncw0KPiAg
-ICBjcnlwdG86IHN0bTMyIC0gU3VwcG9ydCBmb3IgU1RNMzIgQ1JZUCBjcnlwdG8gbW9kdWxlDQo+
-DQo+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvY3J5cHRvL3N0LHN0bTMyLWNyeXAudHh0ICAg
-fCAgIDE5ICsNCj4gICBjcnlwdG8vY3J5cHRvX2VuZ2luZS5jICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAxMDEgKw0KPiAgIGRyaXZlcnMvY3J5cHRvL3N0bTMyL0tjb25maWcgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAgOSArDQo+ICAgZHJpdmVycy9jcnlwdG8vc3RtMzIvTWFrZWZp
-bGUgICAgICAgICAgICAgICAgICAgICAgfCAgICAzICstDQo+ICAgZHJpdmVycy9jcnlwdG8vc3Rt
-MzIvc3RtMzItY3J5cC5jICAgICAgICAgICAgICAgICAgfCAxOTYyICsrKysrKysrKysrKysrKysr
-KysrDQo+ICAgaW5jbHVkZS9jcnlwdG8vZW5naW5lLmggICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgIDE2ICsNCj4gICA2IGZpbGVzIGNoYW5nZWQsIDIxMDkgaW5zZXJ0aW9ucygrKSwgMSBk
-ZWxldGlvbigtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvY3J5cHRvL3N0LHN0bTMyLWNyeXAudHh0DQo+ICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvY3J5cHRvL3N0bTMyL3N0bTMyLWNyeXAuYw0KPg0K
+On Mon, Sep 18, 2017 at 10:51:39AM +0200, Geert Uytterhoeven wrote:
+> On Sat, Sep 16, 2017 at 8:48 PM, Vladimir Barinov
+> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> > Add Kingfisher Device tree bindings Documentation, listing it as a
+> > supported board.
+> > Kingfisher is the H3ULCB/M3ULCB extension board.
+> >
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Thanks, applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
