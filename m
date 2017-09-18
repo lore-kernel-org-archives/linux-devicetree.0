@@ -1,164 +1,196 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 1/2] ACPI: Document how to refer to LEDs from remote nodes
-Date: Mon, 18 Sep 2017 20:14:10 +0200
-Message-ID: <59f91a5f-bad2-b4a1-ae41-58073ba395b0@gmail.com>
-References: <20170915144052.25903-1-sakari.ailus@linux.intel.com>
- <20170915144052.25903-2-sakari.ailus@linux.intel.com>
- <6baeee56-480b-00b9-4c84-e65dc7c42301@gmail.com>
- <20170918103419.qo3sw5vufqojj3vm@valkosipuli.retiisi.org.uk>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] [media] bcm2835-unicam: Driver for CCP2/CSI2 camera interface
+Date: Mon, 18 Sep 2017 11:18:52 -0700
+Message-ID: <87k20vswdv.fsf@anholt.net>
+References: <cover.1505140980.git.dave.stevenson@raspberrypi.org> <0d4dc119a2ba4917e0fecfe5084425830ec53ccb.1505314390.git.dave.stevenson@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170918103419.qo3sw5vufqojj3vm@valkosipuli.retiisi.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, mika.westerberg@intel.com, rafael@kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0d4dc119a2ba4917e0fecfe5084425830ec53ccb.1505314390.git.dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 09/18/2017 12:34 PM, Sakari Ailus wrote:
-> Hi Jacek,
-> 
-> Thanks for the feedback.
-> 
-> On Sun, Sep 17, 2017 at 06:57:09PM +0200, Jacek Anaszewski wrote:
->> Hi Sakari,
->>
->> Thanks for the patch.
->>
->> On 09/15/2017 04:40 PM, Sakari Ailus wrote:
->>> Document referring to LEDs from remote device nodes, such as from camera
->>> sensors.
->>>
->>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>> ---
->>>  Documentation/acpi/dsd/leds.txt | 94 +++++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 94 insertions(+)
->>>  create mode 100644 Documentation/acpi/dsd/leds.txt
->>>
->>> diff --git a/Documentation/acpi/dsd/leds.txt b/Documentation/acpi/dsd/leds.txt
->>> new file mode 100644
->>> index 000000000000..894c82274f53
->>> --- /dev/null
->>> +++ b/Documentation/acpi/dsd/leds.txt
->>> @@ -0,0 +1,94 @@
->>> +Describing and referring to LEDs in ACPI
->>> +
->>> +Individual LEDs are described by hierarchical data extension [6] nodes
->>> +under the device node, the LED driver chip. The "led" property in the
->>> +LED specific nodes tells the numerical ID of each individual LED. The
->>> +"led" property is used here in a similar fashion as the "reg" property
->>> +in DT. [3]
->>> +
->>> +Referring to LEDs in Device tree is documented in [4], in "flash-leds"
->>> +property documentation. In short, LEDs are directly referred to by
->>> +using phandles.
->>> +
->>> +While Device tree allows referring to any node in the tree[1], in ACPI
->>> +references are limited to device nodes only [2]. For this reason using
->>> +the same mechanism on ACPI is not possible.
->>> +
->>> +ACPI allows (as does DT) using integer arguments after the reference.
->>> +A combination of the LED driver device reference and an integer
->>> +argument, referring to the "led" property of the relevant LED, are
->>> +use to individual LEDs.
->>
->> s/are use/is used/ ? (in a sense "combination of ... and .. is used")
->>
->> s/to individual/to describe individual/
->>
->> (or another verb, I'm not sure what exactly you intended it to be)
-> 
-> I'll use "is used to identify", for this is what it essentially is for.
+Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> writes:
+> diff --git a/drivers/media/platform/bcm2835/bcm2835-unicam.c b/drivers/me=
+dia/platform/bcm2835/bcm2835-unicam.c
+> new file mode 100644
+> index 0000000..5b1adc3
+> --- /dev/null
+> +++ b/drivers/media/platform/bcm2835/bcm2835-unicam.c
+> @@ -0,0 +1,2192 @@
+> +/*
+> + * BCM2835 Unicam capture Driver
+> + *
+> + * Copyright (C) 2017 - Raspberry Pi (Trading) Ltd.
+> + *
+> + * Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+> + *
+> + * Based on TI am437x driver by Benoit Parrot and Lad, Prabhakar and
+> + * TI CAL camera interface driver by Benoit Parrot.
+> + *
 
-With that:
+Possible future improvement: this description of the driver is really
+nice and could be turned into kernel-doc.
 
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> + * There are two camera drivers in the kernel for BCM283x - this one
+> + * and bcm2835-camera (currently in staging).
+> + *
+> + * This driver is purely the kernel control the Unicam peripheral - there
 
->>  The value of the LED property is a contract
->>> +between the firmware and software, it uniquely identifies the LED
->>> +driver outputs.
->>> +
->>> +An ASL example of a camera sensor device and a LED driver device for two
->>> +LEDs. Objects not relevant for LEDs or the references to them have been
->>> +omitted.
->>> +
->>> +	Device (LED)
->>> +	{
->>> +		Name (_DSD, Package () {
->>> +			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
->>> +			Package () {
->>> +				Package () { "led0", LED0 },
->>> +				Package () { "led1", LED1 },
->>> +			}
->>> +		})
->>> +		Name (LED0, Package () {
->>> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->>> +			Package () {
->>> +				Package () { "led", 0 },
->>> +				Package () { "flash-max-microamp", 1000000 },
->>> +				Package () { "flash-timeout-us", 200000 },
->>> +				Package () { "led-max-microamp", 100000 },
->>> +				Package () { "label", "led:salama" },
->>> +			}
->>> +		})
->>> +		Name (LED1, Package () {
->>> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->>> +			Package () {
->>> +				Package () { "led", 1 },
->>> +				Package () { "led-max-microamp", 10000 },
->>> +				Package () { "label", "led:huomiovalo" },
->>> +			}
->>> +		})
->>> +	}
->>> +
->>> +	Device (SEN)
->>> +	{
->>> +		Name (_DSD, Package () {
->>> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->>> +			Package () {
->>> +				Package () {
->>> +					"flash-leds",
->>> +					Package () { ^LED, 0, ^LED, 1 },
->>> +				}
->>> +			}
->>> +		})
->>> +	}
->>> +
->>> +where
->>> +
->>> +	LED	LED driver device
->>> +	LED0	First LED
->>> +	LED1	Second LED
->>> +	SEN	Camera sensor device (or another device the LED is
->>> +		related to)
->>> +
->>> +[1] Device tree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
->>> +
->>> +[2] Advanced Configuration and Power Interface Specification.
->>> +    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
->>> +    referenced 2016-10-04.
->>> +
->>> +[3] Documentation/devicetree/bindings/leds/common.txt
->>> +
->>> +[4] Documentation/devicetree/bindings/media/video-interfaces.txt
->>> +
->>> +[5] Device Properties UUID For _DSD.
->>> +    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
->>> +    referenced 2016-10-04.
->>> +
->>> +[6] Hierarchical Data Extension UUID For _DSD.
->>> +    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.pdf>,
->>> +    referenced 2016-10-04.
->>>
->>
->> -- 
->> Best regards,
->> Jacek Anaszewski
-> 
+Maybe "This driver directly controls..."?
 
--- 
-Best regards,
-Jacek Anaszewski
+> + * is no involvement with the VideoCore firmware. Unicam receives CSI-2
+> + * or CCP2 data and writes it into SDRAM. The only processing options are
+> + * to repack Bayer data into an alternate format, and applying windowing
+> + * (currently not implemented).
+> + * It should be possible to connect it to any sensor with a
+> + * suitable output interface and V4L2 subdevice driver.
+> + *
+> + * bcm2835-camera uses with the VideoCore firmware to control the sensor,
+
+"uses the"
+
+> + * Unicam, ISP, and all tuner control loops. Fully processed frames are
+> + * delivered to the driver by the firmware. It only has sensor drivers
+> + * for Omnivision OV5647, and Sony IMX219 sensors.
+> + *
+> + * The two drivers are mutually exclusive for the same Unicam instance.
+> + * The VideoCore firmware checks the device tree configuration during bo=
+ot.
+> + * If it finds device tree nodes called csi0 or csi1 it will block the
+> + * firmware from accessing the peripheral, and bcm2835-camera will
+> + * not be able to stream data.
+
+Thanks for describing this here!
+
+> +/*
+> + * The peripheral can unpack and repack between several of
+> + * the Bayer raw formats, so any Bayer format can be advertised
+> + * as the same Bayer order in each of the supported bit depths.
+> + * Use lower case to avoid clashing with V4L2_PIX_FMT_SGBRG8
+> + * formats.
+> + */
+> +#define PIX_FMT_ALL_BGGR  v4l2_fourcc('b', 'g', 'g', 'r')
+> +#define PIX_FMT_ALL_RGGB  v4l2_fourcc('r', 'g', 'g', 'b')
+> +#define PIX_FMT_ALL_GBRG  v4l2_fourcc('g', 'b', 'r', 'g')
+> +#define PIX_FMT_ALL_GRBG  v4l2_fourcc('g', 'r', 'b', 'g')
+
+Should thes fourccs be defined in a common v4l2 header, to reserve it
+from clashing with others later?
+
+This is really the only question I have about this driver before seeing
+it merged.  As far as me wearing my platform maintainer hat, I'm happy
+with the driver, and my other little notes are optional.
+
+> +static int unicam_probe(struct platform_device *pdev)
+> +{
+> +	struct unicam_cfg *unicam_cfg;
+> +	struct unicam_device *unicam;
+> +	struct v4l2_ctrl_handler *hdl;
+> +	struct resource	*res;
+> +	int ret;
+> +
+> +	unicam =3D devm_kzalloc(&pdev->dev, sizeof(*unicam), GFP_KERNEL);
+> +	if (!unicam)
+> +		return -ENOMEM;
+> +
+> +	unicam->pdev =3D pdev;
+> +	unicam_cfg =3D &unicam->cfg;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	unicam_cfg->base =3D devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(unicam_cfg->base)) {
+> +		unicam_err(unicam, "Failed to get main io block\n");
+> +		return PTR_ERR(unicam_cfg->base);
+> +	}
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	unicam_cfg->clk_gate_base =3D devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(unicam_cfg->clk_gate_base)) {
+> +		unicam_err(unicam, "Failed to get 2nd io block\n");
+> +		return PTR_ERR(unicam_cfg->clk_gate_base);
+> +	}
+> +
+> +	unicam->clock =3D devm_clk_get(&pdev->dev, "lp_clock");
+> +	if (IS_ERR(unicam->clock)) {
+> +		unicam_err(unicam, "Failed to get clock\n");
+> +		return PTR_ERR(unicam->clock);
+> +	}
+> +
+> +	ret =3D platform_get_irq(pdev, 0);
+> +	if (ret <=3D 0) {
+> +		dev_err(&pdev->dev, "No IRQ resource\n");
+> +		return -ENODEV;
+> +	}
+> +	unicam_cfg->irq =3D ret;
+> +
+> +	ret =3D devm_request_irq(&pdev->dev, unicam_cfg->irq, unicam_isr, 0,
+> +			       "unicam_capture0", unicam);
+
+Looks like there's no need to keep "irq" in the device private struct.
+
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Unable to request interrupt\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret =3D v4l2_device_register(&pdev->dev, &unicam->v4l2_dev);
+> +	if (ret) {
+> +		unicam_err(unicam,
+> +			   "Unable to register v4l2 device.\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Reserve space for the controls */
+> +	hdl =3D &unicam->ctrl_handler;
+> +	ret =3D v4l2_ctrl_handler_init(hdl, 16);
+> +	if (ret < 0)
+> +		goto probe_out_v4l2_unregister;
+> +	unicam->v4l2_dev.ctrl_handler =3D hdl;
+> +
+> +	/* set the driver data in platform device */
+> +	platform_set_drvdata(pdev, unicam);
+> +
+> +	ret =3D of_unicam_connect_subdevs(unicam);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to connect subdevs\n");
+> +		goto free_hdl;
+> +	}
+> +
+> +	/* Enabling module functional clock */
+> +	pm_runtime_enable(&pdev->dev);
+
+I think pm_runtime is only controlling the power domain for the PHY, not
+the clock (which you're handling manually).
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlnADgwACgkQtdYpNtH8
+nugY2hAAnB2B60CdeULaewvf8c3ybeWyHWeCc4g4AUj5b160qkPgBtqFI8gXcljS
+bPMJTu5j3A3pdYZEbOs+Nt6020do1jxSnYZMPsynLWPTvDGjKFbGbxnDp+GZhPFR
+EATtg+QY+ciF/+eoEtuUZ/dF/RjkHAzqeqvpsqKaD/R6PQPJX/KjlrKxRx1OQsQq
+pdHQlHGqRZ1Yo3xqELBGL/cZJvB9YLd1/8f1rR4vqagn/JcctUl/vFal26VWxPyW
+9phf8q92wYtS92/sejvda12PASbAVU2Cwru6aqfuWcsgWCw44/nKC6DDgwxvjhzk
+heSBkbsYP8xI9bWHIa2xGZP45GPzXYRrGQpJdACJ5ku70sPoQSv3uv7pZaGTl+Ih
+ISam7ZkuEC5uMrVfj6KOPFVD4jVb+jcZ6dEP53GWlQ2bE5OEPiBKjWVXC6rryzpI
+mPa0eca9eyz4fipv02TADj0hY3XlZQymGqoc3KR2o85FeG698mHBy5RGRfhjcHCG
+PqhSl1JE9v+UxSQ1GvFtChlEYcuU3j5/zHJC+XjOThfDYX9woXPhgGGc95kicHWp
+Ge87+g5DQLUVz5wbmIjT2sTFNi/1Z7NabFAAs/HdhoMM70Iytk4s5WIVzrukhlha
+Pfm+Eejd1u09ONrrLwMrNrVtYXcJp6nIBK+xTeIXydvTWbFEXfY=
+=bhxb
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
