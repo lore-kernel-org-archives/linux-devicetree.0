@@ -1,36 +1,72 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] hwmon: add dt binding for max1619
-Date: Mon, 18 Sep 2017 16:11:24 -0500
-Message-ID: <20170918211124.jvvl75mznwf3n6sk@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add compatible for max1619
+Date: Mon, 18 Sep 2017 16:12:37 -0500
+Message-ID: <20170918211237.kirrnxlhqdgm2rdl@rob-hp-laptop>
 References: <20170911191649.3344-1-atull@kernel.org>
- <20170911191649.3344-2-atull@kernel.org>
- <20170911195857.GB2580@roeck-us.net>
+ <CANk1AXRDaGAcU944+_NO6tAUzUgaxgV85CqjK9tMZgNbDwNG+g@mail.gmail.com>
+ <CANk1AXTnk5HDHHTOrT9xM9oUPf7rVpKir8QQKSVMaWOZwNASHQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170911195857.GB2580-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CANk1AXTnk5HDHHTOrT9xM9oUPf7rVpKir8QQKSVMaWOZwNASHQ@mail.gmail.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Alan Tull <atull@kernel.org>
+Cc: linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Oleksij Rempel <bug-track@fisher-privat.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 12:58:57PM -0700, Guenter Roeck wrote:
-> On Mon, Sep 11, 2017 at 02:16:49PM -0500, Alan Tull wrote:
-> > Add new device tree binding for max1619.
-> > 
-> > Signed-off-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Mon, Sep 11, 2017 at 04:18:22PM -0500, Alan Tull wrote:
+> On Mon, Sep 11, 2017 at 2:33 PM, Alan Tull <atull@kernel.org> wrote:
 > 
-> Technically that should already work, without explicit binding,
-> or did the i2c core change lately ?
+> Forget this - Guenter has pointed out that this patch is not needed,
+> as the i2c layer handles this without needing the compatible added.
 
-There was some work in that direction IIRC.
+The binding is needed regardless.
 
-We don't really want to rely on that behavior and should have DT match 
-strings.
+This could be in trivial-devices.txt instead. Either way,
+
+Acked-by: Rob Herring <robh@kernel.org>
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> 
+> Alan
+> 
+> > On Mon, Sep 11, 2017 at 2:16 PM, Alan Tull <atull@kernel.org> wrote:
+> >
+> > Add Oleksij Rempel
+> >
+> >> Add new device tree bindings document for max1619 device
+> >> including a new compatible string.
+> >>
+> >> Signed-off-by: Alan Tull <atull@kernel.org>
+> >> Cc: Jean Delvare <jdelvare@suse.com>
+> >> Cc: Guenter Roeck <linux@roeck-us.net>
+> >> Cc: Rob Herring <robh+dt@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/hwmon/max1619.txt | 12 ++++++++++++
+> >>  1 file changed, 12 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/hwmon/max1619.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/hwmon/max1619.txt b/Documentation/devicetree/bindings/hwmon/max1619.txt
+> >> new file mode 100644
+> >> index 0000000..c70dbbe
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/hwmon/max1619.txt
+> >> @@ -0,0 +1,12 @@
+> >> +Bindings for MAX1619 Temperature Sensor
+> >> +
+> >> +Required properties:
+> >> +- compatible : "maxim,max1619"
+> >> +- reg        : I2C address, one of 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b, 0x4c, or
+> >> +               0x4d, 0x4e
+> >> +
+> >> +Example:
+> >> +       temp@4c {
+> >> +               compatible = "maxim,max1619";
+> >> +               reg = <0x4c>;
+> >> +       };
+> >> --
+> >> 2.7.4
+> >>
