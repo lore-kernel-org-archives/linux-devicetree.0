@@ -1,51 +1,28 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [[RESEND]PATCHv6 2/2] i2c: altera: Add Altera I2C Controller
- driver
-Date: Mon, 18 Sep 2017 15:04:34 -0500
-Message-ID: <3f9fe0a6-0e8d-7038-28e6-eacc6ed2e7ad@linux.intel.com>
-References: <1505164640-26413-1-git-send-email-thor.thayer@linux.intel.com>
- <1505164640-26413-2-git-send-email-thor.thayer@linux.intel.com>
- <20170913205038.ndlkaivkdgxa3ee2@ninjato>
-Reply-To: thor.thayer@linux.intel.com
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv6 3/5] dt-bindings: document the CEC GPIO bindings
+Date: Mon, 18 Sep 2017 15:01:38 -0500
+Message-ID: <CAL_JsqL47W337yMbGuYPFbo8ROJzZHLNvX+rufw1uBNjnwgzgg@mail.gmail.com>
+References: <20170917101546.16993-1-hverkuil@xs4all.nl> <20170917101546.16993-4-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170913205038.ndlkaivkdgxa3ee2@ninjato>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.shevchenko@gmail.com, davem@davemloft.net, gregkh@linuxfoundation.org, mchehab@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170917101546.16993-4-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2017 03:50 PM, Wolfram Sang wrote:
-> On Mon, Sep 11, 2017 at 04:17:20PM -0500, thor.thayer@linux.intel.com wrote:
->> From: Thor Thayer <thor.thayer@linux.intel.com>
->>
->> Add driver support for the Altera I2C Controller. The I2C
->> controller is soft IP for use in FPGAs.
->>
->> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> ---
-> 
-> Applied to for-next (will be in v4.14), thanks!
-> 
->> +	if (finish) {
->> +		/* Wait for the Core to finish */
->> +		ret = readl_poll_timeout_atomic(idev->base + ALTR_I2C_STATUS,
-> 
-> I wonder a bit about polling in an interrupt handler (maybe threaded
-> irqs?) but we can fix that later, I think.
-> 
+On Sun, Sep 17, 2017 at 5:15 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> From: Hans Verkuil <hans.verkuil@cisco.com>
+>
+> Document the bindings for the cec-gpio module for hardware where the
+> CEC line and optionally the HPD line are connected to GPIO lines.
+>
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../devicetree/bindings/media/cec-gpio.txt         | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/cec-gpio.txt
 
-Yes, based on your previous feedback, I changed to a threaded IRQ as 
-shown below. The altr_i2c_isr_quick wakes up this IRQ handler if the 
-status is non-zero.
-
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, irq, altr_i2c_isr_quick,
-+					altr_i2c_isr, IRQF_ONESHOT,
-+					pdev->name, idev);
-
-Thanks for the review and applying the patch!
+Reviewed-by: Rob Herring <robh@kernel.org>
