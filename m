@@ -1,72 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: add compatible for max1619
-Date: Mon, 18 Sep 2017 16:12:37 -0500
-Message-ID: <20170918211237.kirrnxlhqdgm2rdl@rob-hp-laptop>
-References: <20170911191649.3344-1-atull@kernel.org>
- <CANk1AXRDaGAcU944+_NO6tAUzUgaxgV85CqjK9tMZgNbDwNG+g@mail.gmail.com>
- <CANk1AXTnk5HDHHTOrT9xM9oUPf7rVpKir8QQKSVMaWOZwNASHQ@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] [RESEND] of: provide of_n_{addr,size}_cells wrappers
+ for !CONFIG_OF
+Date: Mon, 18 Sep 2017 16:28:04 -0500
+Message-ID: <CAL_JsqLGhQQOt_Ads2+JpVW=gRDOi141iEh-aWLFmTkg9p62XQ@mail.gmail.com>
+References: <20170911200805.3363318-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANk1AXTnk5HDHHTOrT9xM9oUPf7rVpKir8QQKSVMaWOZwNASHQ@mail.gmail.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Oleksij Rempel <bug-track@fisher-privat.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170911200805.3363318-1-arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 04:18:22PM -0500, Alan Tull wrote:
-> On Mon, Sep 11, 2017 at 2:33 PM, Alan Tull <atull@kernel.org> wrote:
-> 
-> Forget this - Guenter has pointed out that this patch is not needed,
-> as the i2c layer handles this without needing the compatible added.
+On Mon, Sep 11, 2017 at 3:07 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> The pci-rcar driver is enabled for compile tests, and this has
+> shown that the driver cannot build without CONFIG_OF,
+> following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
+> interrupt mapping when possible":
+>
+> drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
+> drivers/pci/host/pcie-rcar.c:1039:2: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
+>   parser->pna = of_n_addr_cells(node);
+>   ^
+> As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+> supposed to build fine, which we can achieve if we make the
+> declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+> and provide an empty inline function otherwise, as we do for
+> a lot of other of interfaces.
+>
+> This lets us build the rcar_pci driver again without CONFIG_OF
+> for build testing. All platforms using this driver select OF,
+> so this doesn't change anything for the users.
 
-The binding is needed regardless.
+Sorry, I keep missing this. It's a flaw in my mail filtering...
 
-This could be in trivial-devices.txt instead. Either way,
-
-Acked-by: Rob Herring <robh@kernel.org>
+There's a patch series[1] to factor out pci_dma_range_parser_init of
+the driver which should also fix this. I'd prefer not to take this
+because ideally all address parsing should be within the DT core code.
 
 Rob
 
-> 
-> Alan
-> 
-> > On Mon, Sep 11, 2017 at 2:16 PM, Alan Tull <atull@kernel.org> wrote:
-> >
-> > Add Oleksij Rempel
-> >
-> >> Add new device tree bindings document for max1619 device
-> >> including a new compatible string.
-> >>
-> >> Signed-off-by: Alan Tull <atull@kernel.org>
-> >> Cc: Jean Delvare <jdelvare@suse.com>
-> >> Cc: Guenter Roeck <linux@roeck-us.net>
-> >> Cc: Rob Herring <robh+dt@kernel.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/hwmon/max1619.txt | 12 ++++++++++++
-> >>  1 file changed, 12 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/hwmon/max1619.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/hwmon/max1619.txt b/Documentation/devicetree/bindings/hwmon/max1619.txt
-> >> new file mode 100644
-> >> index 0000000..c70dbbe
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/hwmon/max1619.txt
-> >> @@ -0,0 +1,12 @@
-> >> +Bindings for MAX1619 Temperature Sensor
-> >> +
-> >> +Required properties:
-> >> +- compatible : "maxim,max1619"
-> >> +- reg        : I2C address, one of 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b, 0x4c, or
-> >> +               0x4d, 0x4e
-> >> +
-> >> +Example:
-> >> +       temp@4c {
-> >> +               compatible = "maxim,max1619";
-> >> +               reg = <0x4c>;
-> >> +       };
-> >> --
-> >> 2.7.4
-> >>
+[1] https://patchwork.kernel.org/patch/9927541/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
