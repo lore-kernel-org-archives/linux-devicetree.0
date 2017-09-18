@@ -1,70 +1,45 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 6/6] ARM: sun8i: h3: add partial CPU
- thermal zone
-Date: Mon, 18 Sep 2017 10:27:03 +0200
-Message-ID: <20170918082703.riqntqilakzhirc5@flea.lan>
-References: <20170914145251.21784-1-icenowy@aosc.io>
- <20170914145251.21784-7-icenowy@aosc.io>
- <b41a80ec-23d5-a614-f6cc-d09c5a459e03@free-electrons.com>
- <20170916151734.10968b7a@archlinux>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dmmblfkwzntjwbo4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYUG73GQKGQE6A5GVHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170916151734.10968b7a@archlinux>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH 2/2] dt: bindings: media: Document data lane numbering without lane reordering
+Date: Mon, 18 Sep 2017 11:25:05 +0300
+Message-ID: <1505723105-16238-3-git-send-email-sakari.ailus@linux.intel.com>
+References: <1505723105-16238-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505723105-16238-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Most devices do not support lane reordering and in many cases the
+documentation of the data-lanes property is incomplete for such devices.
+Document that in case the lane reordering isn't supported, monotonically
+incremented values from 0 or 1 shall be used.
 
---dmmblfkwzntjwbo4
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/media/video-interfaces.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Hi Jonathan,
-
-On Sat, Sep 16, 2017 at 03:17:34PM -0700, Jonathan Cameron wrote:
-> On Sat, 16 Sep 2017 12:05:49 +0200
-> Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > Hi Icenowy,
-> > 
-> > On 14/09/2017 16:52, Icenowy Zheng wrote:
-> > > Because of the restriction of the OF thermal framework, the thermal
-> > > sensor will fail to probe if the thermal zone doesn't exist.
-> > >   
-> > 
-> > Oh no, that's not good.
-> > 
-> > We discussed about it on IRC and I even proposed a patch for it, telling
-> > you I would post it on the mailing list soon after. Of course, I forgot
-> > and you definitely should have yelled at me for not doing it :)
-> > 
-> > I won't be able to test the patch soon. I can send it to you so that you
-> > can test it and integrate it in your patch series so it won't block you.
-> > Otherwise, we'll have to wait for a week or two for me to test it.
-> > 
-> > Thanks and sorry for forgetting to post the patch you need,
-> > Quentin
-> 
-> Other this outstanding issue I'm happy with the series, so hopefully
-> with Quentin's patch added we should be good to merge this one.
-
-We will at least need a v5.
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index 4e0527d..fc1964e 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -111,7 +111,10 @@ Optional endpoint properties
+   determines the logical lane number, while the value of an entry indicates
+   physical lane, e.g. for 2-lane MIPI CSI-2 bus we could have
+   "data-lanes = <1 2>;", assuming the clock lane is on hardware lane 0.
+-  This property is valid for serial busses only (e.g. MIPI CSI-2).
++  If the hardware does not support lane reordering, monotonically
++  incremented values shall be used from 0 or 1 onwards, depending on
++  whether or not there is also a clock lane. This property is valid for
++  serial busses only (e.g. MIPI CSI-2).
+ - clock-lanes: an array of physical clock lane indexes. Position of an entry
+   determines the logical lane number, while the value of an entry indicates
+   physical lane, e.g. for a MIPI CSI-2 bus we could have "clock-lanes = <0>;",
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---dmmblfkwzntjwbo4--
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
