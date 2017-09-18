@@ -1,39 +1,50 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] dts: Enable building of LWN's Display5 board
-Date: Mon, 18 Sep 2017 13:07:42 -0300
-Message-ID: <CAOMZO5DLuVfpHuMhJsP5G8oiAAKgZbXFATSme6wEtDJpTP5tXA@mail.gmail.com>
-References: <1505746765-965-1-git-send-email-lukma@denx.de> <1505746765-965-2-git-send-email-lukma@denx.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: foundation-v8: Enable PSCI mode
+Date: Mon, 18 Sep 2017 17:12:48 +0100
+Message-ID: <20170918161248.GB5106@leverpostej>
+References: <20170918153832.16356-1-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505746765-965-2-git-send-email-lukma-ynQEQJNshbs@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170918153832.16356-1-daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+Hi Daniel,
 
-On Mon, Sep 18, 2017 at 11:59 AM, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org> wrote:
-> This commit enables building of display5 related dtbs.
->
-> Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 4b17f35..c293bbb 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -400,6 +400,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->         imx6q-cm-fx6.dtb \
->         imx6q-cubox-i.dtb \
->         imx6q-dfi-fs700-m60.dtb \
-> +       imx6q-display5-tianma-tm070-1280x768.dtb \
-> +       imx6q-display5-mitsubishi-aa070-800x480.dtb \
+On Mon, Sep 18, 2017 at 04:38:32PM +0100, Daniel Thompson wrote:
+> Currently if the Foundation model is running ARM Trusted Firmware then
+> the kernel, which is configured to use spin tables, cannot start secondary
+> processors or "power off" the simulation.
+> 
+> Add a couple of labels to the include file, and introduce a new .dts
+> file that uses these to override the enable-method.
+> 
+> Signed-off-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This should be part of the first patch.
+This looks good, but has the unfortunate effect of leaving the
+(irrelevant) cpu-release-addr property in the PSCI dts files, as that's
+in the underlying dtsi file.
+
+Could we split spin-table / PSCI parts into separate dtsi files?
+
+e.g. have:
+
+* foundation-v8.dtsi
+* foundation-v8-gicv{2,3}.dtsi
+* foundation-v8-{psci,spin-table}.dtsi
+
+... and then combine those to build the dts files we want.
+
+FWIW, with that:
+
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
