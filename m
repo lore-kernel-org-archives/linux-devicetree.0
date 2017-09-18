@@ -1,39 +1,64 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RESEND PATCH v4 3/3] ARM: dts: exynos: Remove the
- display-timing and delay from rinato dts
-Date: Mon, 18 Sep 2017 19:06:20 +0200
-Message-ID: <20170918170620.zwxjxqnvnudw6m47@kozik-lap>
-References: <CGME20170918025448epcas2p22a44b6c8efeac613e7e90c3c49b3eb8a@epcas2p2.samsung.com>
- <1505703264-6704-1-git-send-email-hoegeun.kwon@samsung.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC/PATCH v4 1/4] Document nexus nodes/specifier remapping
+Date: Mon, 18 Sep 2017 12:44:38 -0500
+Message-ID: <CAL_Jsq+qRm=iAhQz6Ro3SAU45JEK8KNWpRBcXuRt47r8ncYYwQ@mail.gmail.com>
+References: <20170811154236.12891-1-stephen.boyd@linaro.org> <20170811154236.12891-2-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1505703264-6704-1-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, a.hajda@samsung.com, inki.dae@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170811154236.12891-2-stephen.boyd@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, "devicetree-spec@vger.kernel.org" <devicetree-spec@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 11:54:24AM +0900, Hoegeun Kwon wrote:
->  The display-timing and delay are included in the panel driver. So it
->  should be removed in dts.
-> 
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+On Fri, Aug 11, 2017 at 10:42 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> Document the generic nexus node properties. This can be used by
+> any specifier that conforms to #<specifier>-cells where they
+> want to support remapping phandle lists through nexus nodes. This
+> is similar to interrupt remapping, but slightly different because
+> we don't consider unit addresses when doing mappings. This is
+> mostly a copy/paste of the interrupt specification, with the unit
+> address parts removed and generalized to any specifier. There's
+> also the addition of a pass through mechanism to make things more
+> compact if desired in the mapping table.
+
+Sorry for the slow response.
+
+I'm still wondering how/if we can merge interrupts as part of this
+(both the spec and parsing implementation). Could we simply require
+that #address-cells is 0 or do we even need this distinction? If the
+usecase is connectors, then we should typically be able to set
+#address-cells to 0. Perhaps you could have a custom PCI connector
+with additional signals and the slot/connector node would have the PCI
+address. In this case, we would have #address-cells, but having them
+and ignoring the address cells via the mask would still work.
+
+Also, I don't see any issue if we allow the -map-pass-thru property
+for interrupts.
+
+>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
 > ---
-> 
-> Hi Krzysztof,
-> 
-> This patch was rebased to the mainline (v4.14-rc1).
-> 
-> Best regards,
-> Hoegeun
-> 
->  arch/arm/boot/dts/exynos3250-rinato.dts | 22 ----------------------
->  1 file changed, 22 deletions(-)
-> 
+>
+> I still need to write the blurb about what this is all about, but
+> I wanted to send this out now to get early feedback. Some starting
+> points:
+>
+>  1) Replace child/parent with incoming/outgoing everywhere?
 
-Thanks, applied.
+Parent/child is more common, so I think that's fine.
 
-Best regards,
-Krzysztof
+>
+>  2) Make a pretty picture to describe remapping phandle+specifiers
+>     similar to the interrupt hierarchy diagram?
+
+Pictures are always nice, but I don't think required.
+
+>
+>  3) Come up with some better name than <specifier>? Kernel-doc uses <list>
+>     but I'm not sure that's any better.
+
+specifier seems fine to me.
+
+Rob
