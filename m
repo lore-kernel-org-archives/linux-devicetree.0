@@ -1,55 +1,39 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/4] arm64: dts: renesas: Add Support for R-Car D3 and
- Draak
-Date: Mon, 18 Sep 2017 11:09:12 +0200
-Message-ID: <20170918090909.GF4644@verge.net.au>
-References: <1500555277-22921-1-git-send-email-geert+renesas@glider.be>
- <20170727151622.GG16143@verge.net.au>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 4/8] arm64: dts: renesas: r8a77970: add [H]SCIF support
+Date: Mon, 18 Sep 2017 11:15:03 +0200
+Message-ID: <20170918091502.GI4644@verge.net.au>
+References: <20170915194433.872217806@cogentembedded.com>
+ <CAMuHMdVTrZdi7CKUX9vrD14TvawVotsxvqM43J61FDHsS6OsnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170727151622.GG16143-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CAMuHMdVTrZdi7CKUX9vrD14TvawVotsxvqM43J61FDHsS6OsnA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 27, 2017 at 05:16:23PM +0200, Simon Horman wrote:
-> On Thu, Jul 20, 2017 at 02:54:33PM +0200, Geert Uytterhoeven wrote:
-> > 	Hi Simon, Magnus,
-> > 
-> > This patch series adds minimal support for the R-Car D3 SoC and the
-> > Draak development board, allowing to boot from a ramdisk using a serial
-> > console.
-> > 
-> >   - The first two patches add DT sources for R-Car D3 and Draak.
-> >     Due to the use of hardcoded constants, they have no further (build)
-> >     dependencies (obviously there is a runtime dependency).
-> >   - The last two patches replace the hardcoded constants by symbols from
-> >     DT binding headers, and thus depend on those headers.  Hence it
-> >     should be postponed to v4.15.
-> > 
-> > For proper operation, this depends on the 3 series I have just sent:
-> >   - [PATCH 0/3] arm64: renesas: Base R-Car D3 support,
+On Mon, Sep 18, 2017 at 10:49:46AM +0200, Geert Uytterhoeven wrote:
+> On Fri, Sep 15, 2017 at 9:43 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> > Describe [H]SCIF ports in the R8A77970 device tree.
+> >
+> > Based on the original (and large) patch by Daisuke Matsushita
+> > <daisuke.matsushita.ns@hitachi.com>.
+> >
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
-> I have applied the above patchset for v4.14.
-> 
-> >   - [PATCH 0/4] soc: renesas: Add R-Car D3 support,
-> 
-> And this one too.
-> 
-> >   - [PATCH 0/4] clk: renesas: Add R-Car D3 support.
-> 
-> And this one seems to have been acked, so I assume you will
-> apply it once you are back from holidays.
-> 
-> So I have applied the first two patches for v4.14.
-> Please repost the remaining two after v4.13-rc6 at which time I should
-> be able to queue them up for v4.15.
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I have now done so.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, applied.
