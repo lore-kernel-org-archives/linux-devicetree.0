@@ -1,177 +1,101 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 1/3] dt-bindings: hwmon: pmbus: Add Maxim MAX31785
- documentation
-Date: Mon, 18 Sep 2017 13:15:28 -0700
-Message-ID: <20170918201528.GA27615@roeck-us.net>
-References: <20170908043919.6924-1-andrew@aj.id.au>
- <20170908043919.6924-2-andrew@aj.id.au>
- <20170918192638.4xqszyj466lrnpbz@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170918192638.4xqszyj466lrnpbz@rob-hp-laptop>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Jeffery <andrew@aj.id.au>, linux-hwmon@vger.kernel.org, mark.rutland@arm.com, jdelvare@suse.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, mspinler@linux.vnet.ibm.com, msbarth@linux.vnet.ibm.com, openbmc@lists.ozlabs.org
+From: frowand.list@gmail.com
+Subject: [PATCH v2] scripts/dtc: dtx_diff - 2nd update of include dts paths to
+Date: Mon, 18 Sep 2017 13:14:44 -0700
+Message-ID: <1505765684-16066-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 02:26:38PM -0500, Rob Herring wrote:
-> On Fri, Sep 08, 2017 at 02:39:17PM +1000, Andrew Jeffery wrote:
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> >  .../devicetree/bindings/hwmon/pmbus/max31785.txt   | 158 +++++++++++++++++++++
-> 
-> I think this needs to be located by what it does (fan control), not what 
-> interface it has (pmbus).
-> 
-> I'm not all that happy with hwmon either because things here seem to 
-> just be based on being Linux hwmon devices which is sometimes arbitrary. 
-> 
-The chip also measures temperatures. Other PMBus chips may do fan control,
-measure temperatures, measure and/or control voltages, current, power ...
-Strictly speaking pretty much all PMBus chips are multi-function devices.
-I personally don't really care if the documentation is spread across
-several directories, but even here this is already challenging.
+From: Frank Rowand <frank.rowand@sony.com>
 
-Only solution I can think of would be to create separate documents for each
-functionality, ie here one for the device itself, one for fan control,
-and one for temperature control (if that needs separate bindings). That
-would be similar to mfd. But then we would still have to sort out where
-to store the various bindings. Like iio, in subdirectories ? Like mfd,
-in the matching subsystems ? If so, what to do if there is no matching
-subsystem ?
+Update dtx_diff include paths in the same manner as:
+commit b12869a8d519 ("of: remove drivers/of/testcase-data from
+include search path for CPP"), commit 5ffa2aed389c ("of: remove
+arch/$(SRCARCH)/boot/dts from include search path for CPP"), and
+commit 50f9ddaf64e1 ("of: search scripts/dtc/include-prefixes path
+for both CPP and DTC").
 
-Lots of questions. I'll be happy to spend some time sorting it out,
-but I would need some directions.
+Remove proposed include path kernel/dts/, which was never implemented
+for the dtb build.
 
-Thanks,
-Guenter
+For the diff case, each source file is compiled separately.  For
+each of those compiles, provide the location of the source file
+as an include path, not the location of both source files.
 
-> >  1 file changed, 158 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/max31785.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/max31785.txt b/Documentation/devicetree/bindings/hwmon/pmbus/max31785.txt
-> > new file mode 100644
-> > index 000000000000..af9578e7742c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/pmbus/max31785.txt
-> > @@ -0,0 +1,158 @@
-> > +Bindings for the Maxim MAX31785 Intelligent Fan Controller
-> > +==========================================================
-> > +
-> > +Reference:
-> > +
-> > +https://datasheets.maximintegrated.com/en/ds/MAX31785.pdf
-> > +
-> > +Required properties:
-> > +- compatible     : One of "maxim,max31785" or "maxim,max31785a"
-> > +- reg            : I2C address, one of 0x52, 0x53, 0x54, 0x55.
-> > +- #address-cells : Must be 1
-> > +- #size-cells    : Must be 0
-> > +- #thermal-sensor-cells  : Should be 1. The device supports:
-> > +                           - One internal sensor
-> > +                           - Four external I2C digital sensors
-> > +                           - Six external thermal diodes
-> 
-> You should define the IDs here, not just how many of each type.
-> 
-> > +
-> > +Optional properties:
-> > +- use-stored-presence    : Do not treat the devicetree description as canon for
-> > +                           fan presence (the 'installed' bit of FAN_CONFIG_*).
-> > +                           Instead, rely on the on the default value store of
-> > +                           the device to populate it.
-> 
-> Boolean? Please be explicit.
-> 
-> Needs a vendor prefix.
-> 
-> > +
-> > +Capabilities are configured through subnodes of the controller's node.
-> > +
-> > +Fans
-> > +----
-> > +
-> > +Only fans with subnodes present will be considered as installed. If
-> > +use-stored-presence is present in the parent node, then only fans that are both
-> > +defined in the devicetree and have their installed bit set are considered
-> > +installed.
-> > +
-> > +Required subnode properties:
-> > +- compatible             : Must be "pmbus-fan"
-> 
-> "pmbus" is a property of the controller, not the fan, right? We should 
-> have compatibles along the lines of the type of fan like 4-wire, 3-wire, 
-> etc. 
-> 
-> > +- reg                    : The PMBus page the properties apply to.
-> > +- #cooling-cells         : Should be 2. See the thermal bindings at [1].
-> > +- maxim,fan-rotor-input  : The type of rotor measurement provided to the
-> > +                           controller. Must be either "tach" for tachometer
-> > +                           pulses or "lock" for a locked-rotor signal.
-> > +- maxim,fan-lock-polarity: Required iff maxim,fan-rotor-input is "lock". Valid
-> > +                           values are "low" for active low, "high" for active
-> > +                           high.
-> > +
-> > +Optional subnode properties:
-> > +- fan-mode               : "rpm" or "pwm". Default value is "pwm".
-> > +- tach-pulses            : Tachometer pulses per revolution. Valid values are
-> > +                           1, 2, 3 or 4. The default is 1.
-> > +- cooling-min-level      : Smallest cooling state accepted. See [1].
-> > +- cooling-max-level      : Largest cooling state accepted. See [1].
-> > +- maxim,fan-no-fault-ramp: Do not ramp the fan to 100% PWM duty on detecting a
-> > +                           fan fault
-> > +- maxim,fan-startup      : The number of rotations required before taking
-> > +                           emergency action for an unresponsive fan and driving
-> > +                           it with 100% or 0% PWM duty, depending on the state
-> > +                           of maxim,fan-no-fault-ramp. Valid values are 0
-> > +                           (automatic spin-up disabled), 2, 4, or 8. Default
-> > +                           value is 0.
-> > +- maxim,fan-health       : Enable automated fan health check
-> > +- maxim,fan-ramp         : Configures how fast the device ramps the PWM duty
-> > +                           cycle from one value to another. Valid values are 0
-> > +                           to 7 inclusive, with values 0 - 2 configuring a
-> > +                           1000ms update rate and 1 - 3% duty respective duty
-> > +                           increase, and 3 - 7 a 200ms update rate with a 1 -
-> > +                           5% respective duty increase. Default value is 0.
-> > +- maxim,fan-no-watchdog  : Do not ramp fan to 100% PWM duty on failure to
-> > +                           update desired fan rate inside 10s. This implies
-> > +                           maxim,tmp-no-fault-ramp
-> > +- maxim,tmp-no-fault-ramp: Do not ramp fan to 100% PWM duty on temperature
-> > +                           sensor fault detection. This implies
-> > +                           maxim,fan-no-watchdog
-> > +- maxim,tmp-hysteresis   : The temperature hysteresis used to determine
-> > +                           transitions to lower fan speed bands in the
-> > +                           temperature/fan rate lookup table. Valid values are
-> > +                           2, 4, 6 or 8 (degrees celcius). Default value is 2.
-> > +- maxim,fan-dual-tach    : Enable dual tachometer functionality
-> > +- maxim,fan-pwm-freq     : The PWM frequency. Valid values are 30, 50, 100, 150
-> > +                           and 25000 (Hz). Default value is 30Hz.
-> > +- maxim,fan-lookup-table : A 16-element cell array of alternating temperature
-> > +                           and rate values representing the look up table. The
-> > +                           rate units are set through the fan-mode property.
-> > +- maxim,fan-fault-pin-mon: Ramp fans to 100% PWM duty when the FAULT pin is
-> > +                           asserted
-> 
-> In general, I think a good portion of these should be either implied by 
-> a fan compatible string or be part of a common fan binding.
-> 
-> > +
-> > +Temperature
-> > +-----------
-> > +
-> > +Required subnode properties:
-> > +- compatible    : Must be "pmbus-temperature"
-> > +- reg           : The PMBus page the properties apply to.
-> > +
-> > +Optional subnode properties:
-> > +- maxim,tmp-offset      : Valid values are 0 - 30 (degrees celcius) inclusive.
-> > +                          Default value is 0.
-> > +- maxim,tmp-fans        : An array of phandles to fans controlled by the
-> > +                          current temperature sensor.
-> 
-> Is this a feature of the Maxim chip or just a mapping of temperature 
-> sensors to fans. The latter should be a common property.
-> 
-> Rob
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
+
+The referenced commits b12869a8d519, 5ffa2aed389c, 50f9ddaf64e1
+are in v4.14-rc1.  No stable kernels need this patch.
+
+changes from v1:
+   - update summary commit message, since there is a very similar message
+     for b4b201d88b7c: dtx_diff - update include dts paths to match build
+   - move signed-off-by to above "---"
+
+ scripts/dtc/dtx_diff |   22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
+
+diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
+index f9a3d8d23c64..8c4fbad2055e 100755
+--- a/scripts/dtc/dtx_diff
++++ b/scripts/dtc/dtx_diff
+@@ -86,6 +86,7 @@ eod
+ compile_to_dts() {
+ 
+ 	dtx="$1"
++	dtc_include="$2"
+ 
+ 	if [ -d "${dtx}" ] ; then
+ 
+@@ -113,7 +114,7 @@ compile_to_dts() {
+ 		# -----  input is DTS (source)
+ 
+ 		if ( cpp ${cpp_flags} -x assembler-with-cpp ${dtx} \
+-			| ${DTC} -I dts ) ; then
++			| ${DTC} ${dtc_include} -I dts ) ; then
+ 			return
+ 		fi
+ 
+@@ -320,18 +321,13 @@ fi
+ 
+ cpp_flags="\
+ 	-nostdinc                                  \
+-	-I${srctree}/arch/${ARCH}/boot/dts         \
+ 	-I${srctree}/scripts/dtc/include-prefixes  \
+-	-I${srctree}/drivers/of/testcase-data      \
+ 	-undef -D__DTS__"
+ 
+-dtc_flags="\
+-	-i ${srctree}/arch/${ARCH}/boot/dts/ \
+-	-i ${srctree}/kernel/dts             \
+-	${dtx_path_1_dtc_include}            \
+-	${dtx_path_2_dtc_include}"
+-
+-DTC="${DTC} ${dtc_flags} -O dts -qq -f ${dtc_sort} -o -"
++DTC="\
++	${DTC}                                     \
++	-i ${srctree}/scripts/dtc/include-prefixes \
++	-O dts -qq -f ${dtc_sort} -o -"
+ 
+ 
+ # -----  do the diff or decompile
+@@ -339,11 +335,11 @@ DTC="${DTC} ${dtc_flags} -O dts -qq -f ${dtc_sort} -o -"
+ if (( ${cmd_diff} )) ; then
+ 
+ 	diff ${diff_flags} --label "${dtx_file_1}" --label "${dtx_file_2}" \
+-		<(compile_to_dts "${dtx_file_1}") \
+-		<(compile_to_dts "${dtx_file_2}")
++		<(compile_to_dts "${dtx_file_1}" "${dtx_path_1_dtc_include}") \
++		<(compile_to_dts "${dtx_file_2}" "${dtx_path_2_dtc_include}")
+ 
+ else
+ 
+-	compile_to_dts "${dtx_file_1}"
++	compile_to_dts "${dtx_file_1}" "${dtx_path_1_dtc_include}"
+ 
+ fi
+-- 
+Frank Rowand <frank.rowand@sony.com>
