@@ -1,56 +1,87 @@
-From: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
-Subject: [v5 02/12] soc/fsl/qbman: Use shared-dma-pool for BMan private memory allocations
-Date: Mon, 18 Sep 2017 16:39:37 -0400
-Message-ID: <1505767187-4596-3-git-send-email-roy.pledge@nxp.com>
-References: <1505767187-4596-1-git-send-email-roy.pledge@nxp.com>
-Reply-To: <roy.pledge-3arQi8VN3Tc@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 06/14] irqchip: add initial support for ompic
+Date: Mon, 18 Sep 2017 15:43:39 -0500
+Message-ID: <20170918204339.gvfenavdi4frdnqe@rob-hp-laptop>
+References: <20170910064926.5874-1-shorne@gmail.com>
+ <20170910064926.5874-7-shorne@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505767187-4596-1-git-send-email-roy.pledge-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: leoyang.li-3arQi8VN3Tc@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, madalin.bucur-3arQi8VN3Tc@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170910064926.5874-7-shorne@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stafford Horne <shorne@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Openrisc <openrisc@lists.librecores.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jonas Bonn <jonas@southpole.se>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use the shared-memory-pool mechanism for free buffer proxy record
-area allocation.
+On Sun, Sep 10, 2017 at 03:49:18PM +0900, Stafford Horne wrote:
+> From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+> 
+> IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
+> described in the Multicore support section of the OpenRISC 1.2
+> proposed architecture specification:
+> 
+>   https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
+> 
+> Each OpenRISC core contains a full interrupt controller which is used in
+> the SMP architecture for interrupt balancing.  This IPI device, the
+> ompic, is the only external device required for enabling SMP on
+> OpenRISC.
+> 
+> Pending ops are stored in a memory bit mask which can allow multiple
+> pending operations to be set and serviced at a time. This is mostly
+> borrowed from the alpha IPI implementation.
+> 
+> Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+> [shorne@gmail.com: converted ops to bitmask, wrote commit message]
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
+> ---
+> 
+> Changes since v1
+>  - Added openrisc, prefix
+>  - Clarified 8 bytes per cpu
+>  - Removed #interrupt-cells as this will not be an irq parent
 
-Signed-off-by: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
----
- drivers/soc/fsl/qbman/bman_ccsr.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+You should still have #interrupt-cells as that is required with 
+"interrupt-controller". It could be 0 though.
 
-diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
-index eaa9585..05c4223 100644
---- a/drivers/soc/fsl/qbman/bman_ccsr.c
-+++ b/drivers/soc/fsl/qbman/bman_ccsr.c
-@@ -201,6 +201,21 @@ static int fsl_bman_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	/*
-+	 * If FBPR memory wasn't defined using the qbman compatible string
-+	 * try using the of_reserved_mem_device method
-+	 */
-+	if (!fbpr_a) {
-+		ret = qbman_init_private_mem(dev, 0, &fbpr_a, &fbpr_sz);
-+		if (ret) {
-+			dev_err(dev, "qbman_init_private_mem() failed 0x%x\n",
-+				ret);
-+			return -ENODEV;
-+		}
-+	}
-+
-+	dev_dbg(dev, "Allocated FBPR 0x%llx 0x%zx\n", fbpr_a, fbpr_sz);
-+
- 	bm_set_memory(fbpr_a, fbpr_sz);
- 
- 	err_irq = platform_get_irq(pdev, 0);
--- 
-2.7.4
+>  - Changed ops to be percpu
+>  - Added DTS and intialization failure validations
+> 
+>  .../interrupt-controller/openrisc,ompic.txt        |  19 ++
+>  arch/openrisc/Kconfig                              |   1 +
+>  drivers/irqchip/Kconfig                            |   3 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-ompic.c                        | 205 +++++++++++++++++++++
+>  5 files changed, 229 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+>  create mode 100644 drivers/irqchip/irq-ompic.c
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+> new file mode 100644
+> index 000000000000..346e6042d62f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
+> @@ -0,0 +1,19 @@
+> +Open Multi-Processor Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible : This should be "openrisc,ompic"
+> +- reg : Specifies base physical address and size of the register space. The
+> +  size is based on the number of cores the controller has been configured
+> +  to handle, this should be set to 8 bytes per cpu core.
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- interrupts : Specifies the interrupt line to which the ompic is wired.
+> +
+> +Example:
+> +
+> +ompic: ompic {
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+interrupt-controller@98000000 {
+
+> +	compatible = "openrisc,ompic";
+> +	reg = <0x98000000 16>;
+> +	interrupt-controller;
+> +	interrupts = <1>;
+> +};
