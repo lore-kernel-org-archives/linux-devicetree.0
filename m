@@ -1,22 +1,21 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 01/18] arm: shmobile: Document Kingfisher board DT bindings
-Date: Mon, 18 Sep 2017 10:51:39 +0200
-Message-ID: <CAMuHMdUEZC1NwCn47Du-e7fQen366s0PXr+a=jdoDijYUqb0kw@mail.gmail.com>
-References: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH] dt: Add vendor prefix 'shimafuji'
+Date: Mon, 18 Sep 2017 10:52:57 +0200
+Message-ID: <CAMuHMdVvKenEdeqe5Y3qgiOa6AoB3E=QTFnzq9XqVogN=ikGXA@mail.gmail.com>
+References: <1505398710-4496-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
+In-Reply-To: <1505398710-4496-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 16, 2017 at 8:48 PM, Vladimir Barinov
+On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
 <vladimir.barinov@cogentembedded.com> wrote:
-> Add Kingfisher Device tree bindings Documentation, listing it as a
-> supported board.
-> Kingfisher is the H3ULCB/M3ULCB extension board.
+> Add Shimafuji Electric, Inc. to the list of device tree vendor
+> prefixes
 >
 > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 
