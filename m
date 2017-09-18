@@ -1,71 +1,310 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RESEND PATCH v2 4/6] dt: bindings: as3645a: Improve label
- documentation, DT example
-Date: Mon, 18 Sep 2017 12:56:55 +0200
-Message-ID: <20170918105655.GA14591@amd>
-References: <20170918102349.8935-1-sakari.ailus@linux.intel.com>
- <20170918102349.8935-5-sakari.ailus@linux.intel.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] phy: exynos5-usbdrd: Calibrate LOS levels for
+ exynos5420/5800
+Date: Mon, 18 Sep 2017 16:36:33 +0530
+Message-ID: <e1e1b4e5-0678-faaf-e97b-b18095342af2@ti.com>
+References: <1505728934-6200-1-git-send-email-andrzej.p@samsung.com>
+ <CGME20170918100944eucas1p2735d3d6a6ee562b927fb9dfaeb0d4090@eucas1p2.samsung.com>
+ <1505729371-6509-1-git-send-email-andrzej.p@samsung.com>
+ <87y3pcmgv6.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170918102349.8935-5-sakari.ailus@linux.intel.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87y3pcmgv6.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Monday 18 September 2017 04:08 PM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> writes:
+>> From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Adding phy calibration sequence for USB 3.0 DRD PHY present on
+>> Exynos5420/5800 systems.
+>> This calibration facilitates setting certain PHY parameters viz.
+>> the Loss-of-Signal (LOS) Detector Threshold Level, as well as
+>> Tx-Vboost-Level for Super-Speed operations.
+>> Additionally we also set proper time to wait for RxDetect measurement,
+>> for desired PHY reference clock, so as to solve issue with enumeration
+>> of few USB 3.0 devices, like Samsung SUM-TSB16S 3.0 USB drive
+>> on the controller.
+>>
+>> We are using CR_port for this purpose to send required data
+>> to override the LOS values.
+>>
+>> On testing with USB 3.0 devices on USB 3.0 port present on
+>> SMDK5420, and peach-pit boards should see following message:
+>> usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
+>>
+>> and without this patch, should see below shown message:
+>> usb 1-1: new high-speed USB device number 2 using xhci-hcd
+>>
+>> [Also removed unnecessary extra lines in the register macro definitions]
+>>
+>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> [adapted to use phy_reset as entry point]
+>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  drivers/phy/samsung/phy-exynos5-usbdrd.c | 183 +++++++++++++++++++++++++++++++
+>>  drivers/usb/dwc3/core.c                  |   8 +-
+>>  2 files changed, 189 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>> index 7c41daa..f7de067 100644
+>> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>> @@ -89,7 +89,17 @@
+>>  #define PHYCLKRST_COMMONONN			BIT(0)
+>>  
+>>  #define EXYNOS5_DRD_PHYREG0			0x14
+>> +#define PHYREG0_SSC_REF_CLK_SEL			BIT(21)
+>> +#define PHYREG0_SSC_RANGE			BIT(20)
+>> +#define PHYREG0_CR_WRITE			BIT(19)
+>> +#define PHYREG0_CR_READ				BIT(18)
+>> +#define PHYREG0_CR_DATA_IN(_x)			((_x) << 2)
+>> +#define PHYREG0_CR_CAP_DATA			BIT(1)
+>> +#define PHYREG0_CR_CAP_ADDR			BIT(0)
+>> +
+>>  #define EXYNOS5_DRD_PHYREG1			0x18
+>> +#define PHYREG1_CR_DATA_OUT(_x)			((_x) << 1)
+>> +#define PHYREG1_CR_ACK				BIT(0)
+>>  
+>>  #define EXYNOS5_DRD_PHYPARAM0			0x1c
+>>  
+>> @@ -118,6 +128,25 @@
+>>  #define EXYNOS5_DRD_PHYRESUME			0x34
+>>  #define EXYNOS5_DRD_LINKPORT			0x44
+>>  
+>> +/* USB 3.0 DRD PHY SS Function Control Reg; accessed by CR_PORT */
+>> +#define EXYNOS5_DRD_PHYSS_LOSLEVEL_OVRD_IN		(0x15)
+>> +#define LOSLEVEL_OVRD_IN_LOS_BIAS_5420			(0x5 << 13)
+>> +#define LOSLEVEL_OVRD_IN_LOS_BIAS_DEFAULT		(0x0 << 13)
+>> +#define LOSLEVEL_OVRD_IN_EN				(0x1 << 10)
+>> +#define LOSLEVEL_OVRD_IN_LOS_LEVEL_DEFAULT		(0x9 << 0)
+>> +
+>> +#define EXYNOS5_DRD_PHYSS_TX_VBOOSTLEVEL_OVRD_IN	(0x12)
+>> +#define TX_VBOOSTLEVEL_OVRD_IN_VBOOST_5420		(0x5 << 13)
+>> +#define TX_VBOOSTLEVEL_OVRD_IN_VBOOST_DEFAULT		(0x4 << 13)
+>> +
+>> +#define EXYNOS5_DRD_PHYSS_LANE0_TX_DEBUG		(0x1010)
+>> +#define LANE0_TX_DEBUG_RXDET_MEAS_TIME_19M2_20M		(0x4 << 4)
+>> +#define LANE0_TX_DEBUG_RXDET_MEAS_TIME_24M		(0x8 << 4)
+>> +#define LANE0_TX_DEBUG_RXDET_MEAS_TIME_25M_26M		(0x8 << 4)
+>> +#define LANE0_TX_DEBUG_RXDET_MEAS_TIME_48M_50M_52M	(0x20 << 4)
+>> +#define LANE0_TX_DEBUG_RXDET_MEAS_TIME_62M5		(0x20 << 4)
+>> +#define LANE0_TX_DEBUG_RXDET_MEAS_TIME_96M_100M		(0x40 << 4)
+>> +
+>>  #define KHZ	1000
+>>  #define MHZ	(KHZ * KHZ)
+>>  
+>> @@ -526,6 +555,151 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
+>>  	return 0;
+>>  }
+>>  
+>> +static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
+>> +						u32 val, u32 cmd)
+>> +{
+>> +	u32 usec = 100;
+>> +	unsigned int result;
+>> +
+>> +	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+>> +
+>> +	do {
+>> +		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+>> +		if (result & PHYREG1_CR_ACK)
+>> +			break;
+>> +
+>> +		udelay(1);
+>> +	} while (usec-- > 0);
+>> +
+>> +	if (!usec) {
+>> +		dev_err(phy_drd->dev,
+>> +			"CRPORT handshake timeout1 (0x%08x)\n", val);
+>> +		return -ETIME;
+>> +	}
+>> +
+>> +	usec = 100;
+>> +
+>> +	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+>> +
+>> +	do {
+>> +		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
+>> +		if (!(result & PHYREG1_CR_ACK))
+>> +			break;
+>> +
+>> +		udelay(1);
+>> +	} while (usec-- > 0);
+>> +
+>> +	if (!usec) {
+>> +		dev_err(phy_drd->dev,
+>> +			"CRPORT handshake timeout2 (0x%08x)\n", val);
+>> +		return -ETIME;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int crport_ctrl_write(struct exynos5_usbdrd_phy *phy_drd,
+>> +						u32 addr, u32 data)
+>> +{
+>> +	int ret;
+>> +
+>> +	/* Write Address */
+>> +	writel(PHYREG0_CR_DATA_IN(addr),
+>> +		phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+>> +	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(addr),
+>> +				PHYREG0_CR_CAP_ADDR);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* Write Data */
+>> +	writel(PHYREG0_CR_DATA_IN(data),
+>> +		phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+>> +	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(data),
+>> +				PHYREG0_CR_CAP_DATA);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(data),
+>> +				PHYREG0_CR_WRITE);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +/*
+>> + * Calibrate few PHY parameters using CR_PORT register to meet
+>> + * SuperSpeed requirements on Exynos5420 and Exynos5800 systems,
+>> + * which have 28nm USB 3.0 DRD PHY.
+>> + */
+>> +static int exynos5420_usbdrd_phy_calibrate(struct exynos5_usbdrd_phy *phy_drd)
+>> +{
+>> +	unsigned int temp;
+>> +	int ret = 0;
+>> +
+>> +	/*
+>> +	 * Change los_bias to (0x5) for 28nm PHY from a
+>> +	 * default value (0x0); los_level is set as default
+>> +	 * (0x9) as also reflected in los_level[30:26] bits
+>> +	 * of PHYPARAM0 register.
+>> +	 */
+>> +	temp = LOSLEVEL_OVRD_IN_LOS_BIAS_5420 |
+>> +		LOSLEVEL_OVRD_IN_EN |
+>> +		LOSLEVEL_OVRD_IN_LOS_LEVEL_DEFAULT;
+>> +	ret = crport_ctrl_write(phy_drd,
+>> +				EXYNOS5_DRD_PHYSS_LOSLEVEL_OVRD_IN,
+>> +				temp);
+>> +	if (ret) {
+>> +		dev_err(phy_drd->dev,
+>> +		 "Failed setting Loss-of-Signal level for SuperSpeed\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Set tx_vboost_lvl to (0x5) for 28nm PHY Tuning,
+>> +	 * to raise Tx signal level from its default value of (0x4)
+>> +	 */
+>> +	temp = TX_VBOOSTLEVEL_OVRD_IN_VBOOST_5420;
+>> +	ret = crport_ctrl_write(phy_drd,
+>> +				EXYNOS5_DRD_PHYSS_TX_VBOOSTLEVEL_OVRD_IN,
+>> +				temp);
+>> +	if (ret) {
+>> +		dev_err(phy_drd->dev,
+>> +		 "Failed setting Tx-Vboost-Level for SuperSpeed\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Set proper time to wait for RxDetect measurement, for
+>> +	 * desired reference clock of PHY, by tuning the CR_PORT
+>> +	 * register LANE0.TX_DEBUG which is internal to PHY.
+>> +	 * This fixes issue with few USB 3.0 devices, which are
+>> +	 * not detected (not even generate interrupts on the bus
+>> +	 * on insertion) without this change.
+>> +	 * e.g. Samsung SUM-TSB16S 3.0 USB drive.
+>> +	 */
+>> +	switch (phy_drd->extrefclk) {
+>> +	case EXYNOS5_FSEL_50MHZ:
+>> +		temp = LANE0_TX_DEBUG_RXDET_MEAS_TIME_48M_50M_52M;
+>> +		break;
+>> +	case EXYNOS5_FSEL_20MHZ:
+>> +	case EXYNOS5_FSEL_19MHZ2:
+>> +		temp = LANE0_TX_DEBUG_RXDET_MEAS_TIME_19M2_20M;
+>> +		break;
+>> +	case EXYNOS5_FSEL_24MHZ:
+>> +	default:
+>> +		temp = LANE0_TX_DEBUG_RXDET_MEAS_TIME_24M;
+>> +		break;
+>> +	}
+>> +
+>> +	ret = crport_ctrl_write(phy_drd,
+>> +				EXYNOS5_DRD_PHYSS_LANE0_TX_DEBUG,
+>> +				temp);
+>> +	if (ret)
+>> +		dev_err(phy_drd->dev,
+>> +		 "Failed setting RxDetect measurement time for SuperSpeed\n");
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  static struct phy *exynos5_usbdrd_phy_xlate(struct device *dev,
+>>  					struct of_phandle_args *args)
+>>  {
+>> @@ -537,11 +711,20 @@ static struct phy *exynos5_usbdrd_phy_xlate(struct device *dev,
+>>  	return phy_drd->phys[args->args[0]].phy;
+>>  }
+>>  
+>> +static int exynos5_usbdrd_phy_reset(struct phy *phy)
+>> +{
+>> +	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+>> +	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+>> +
+>> +	return exynos5420_usbdrd_phy_calibrate(phy_drd);
+>> +}
+>> +
+>>  static const struct phy_ops exynos5_usbdrd_phy_ops = {
+>>  	.init		= exynos5_usbdrd_phy_init,
+>>  	.exit		= exynos5_usbdrd_phy_exit,
+>>  	.power_on	= exynos5_usbdrd_phy_power_on,
+>>  	.power_off	= exynos5_usbdrd_phy_power_off,
+>> +	.reset		= exynos5_usbdrd_phy_reset,
+>>  	.owner		= THIS_MODULE,
+>>  };
+>>  
+>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>> index 03474d3..1d5836e 100644
+>> --- a/drivers/usb/dwc3/core.c
+>> +++ b/drivers/usb/dwc3/core.c
+>> @@ -156,9 +156,10 @@ static void __dwc3_set_mode(struct work_struct *work)
+>>  		} else {
+>>  			if (dwc->usb2_phy)
+>>  				otg_set_vbus(dwc->usb2_phy->otg, true);
+>> -			if (dwc->usb2_generic_phy)
+>> +			if (dwc->usb2_generic_phy) {
+>>  				phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
+>> -
+>> +				phy_reset(dwc->usb2_generic_phy);
+> 
+> it doesn't look like this is the best place to reset the phy. Also,
 
-Hi!
+right, phy_reset is done during initialization before phy_power_on/phy_init or
+in error cases.
 
-> Specify the exact label used if the label property is omitted in DT, as
-> well as use label in the example that conforms to LED device naming.
->=20
-> @@ -69,11 +73,11 @@ Example
->  			flash-max-microamp =3D <320000>;
->  			led-max-microamp =3D <60000>;
->  			ams,input-max-microamp =3D <1750000>;
-> -			label =3D "as3645a:flash";
-> +			label =3D "as3645a:white:flash";
->  		};
->  		indicator@1 {
->  			reg =3D <0x1>;
->  			led-max-microamp =3D <10000>;
-> -			label =3D "as3645a:indicator";
-> +			label =3D "as3645a:red:indicator";
->  		};
->  	};
+> ->reset() doesn't seem to match correctly with a calibration. That seems
+> to be more fitting to a ->power_on() or ->init() implementation.
 
-Ok, but userspace still has no chance to determine if this is flash
-=66rom main camera or flash for front camera; todays smartphones have
-flashes on both cameras.
+yeah, the initial patch seems to calibrate in phy_init(). Not sure why it's
+modified.
 
-So.. Can I suggset as3645a:white:main_camera_flash or main_flash or
-=2E...?
-
-Thanks,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlm/pncACgkQMOfwapXb+vJuqgCdH1bee2vh9lyEEt7Sa5YX50g3
-kpIAnivXE1m31wGFd/GP2m0D6V2Srk5D
-=UP2N
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
