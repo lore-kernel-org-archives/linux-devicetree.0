@@ -1,421 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] arm: dts: add Nuvoton NPCM750 device tree
-Date: Mon, 18 Sep 2017 14:46:25 -0500
-Message-ID: <20170918194625.xz5y7tkemjnbwunh@rob-hp-laptop>
-References: <20170909015308.30001-1-brendanhiggins@google.com>
- <20170909015308.30001-3-brendanhiggins@google.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] memory: ti-emif-sram: introduce relocatable
+ suspend/resume handlers
+Date: Mon, 18 Sep 2017 14:57:36 -0500
+Message-ID: <d68b90bb-fa93-24e5-08f0-ab6d7bd2df22@ti.com>
+References: <20170724212454.27574-1-d-gerlach@ti.com>
+ <20170724212454.27574-3-d-gerlach@ti.com>
+ <20170831140332.GD23750@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170909015308.30001-3-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170831140332.GD23750-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 08, 2017 at 06:53:07PM -0700, Brendan Higgins wrote:
-> Add a common device tree for all Nuvoton NPCM750 BMCs and a board
-> specific device tree for the NPCM750 (Poleg) evaluation board.
+Russell,
+On 08/31/2017 09:03 AM, Russell King - ARM Linux wrote:
+> On Mon, Jul 24, 2017 at 04:24:54PM -0500, Dave Gerlach wrote:
+>> diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+>> index 608008229c7d..46a7a6c41db7 100644
+>> --- a/arch/arm/kernel/asm-offsets.c
+>> +++ b/arch/arm/kernel/asm-offsets.c
+>> @@ -28,6 +28,7 @@
+>>  #include <asm/vdso_datapage.h>
+>>  #include <asm/hardware/cache-l2x0.h>
+>>  #include <linux/kbuild.h>
+>> +#include <linux/ti-emif-sram.h>
+>>  
+>>  /*
+>>   * Make sure that the compiler and target are compatible.
+>> @@ -183,5 +184,8 @@ int main(void)
+>>  #ifdef CONFIG_VDSO
+>>    DEFINE(VDSO_DATA_SIZE,	sizeof(union vdso_data_store));
+>>  #endif
+>> +  BLANK();
+>> +  ti_emif_offsets();
+>> +
+>>    return 0; 
+>>  }
 > 
-> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../arm/cpu-enable-method/nuvoton,npcm7xx-smp      |  42 +++++
->  .../devicetree/bindings/arm/npcm/npcm.txt          |   6 +
->  arch/arm/boot/dts/nuvoton-npcm750-evb.dts          |  57 +++++++
->  arch/arm/boot/dts/nuvoton-npcm750.dtsi             | 177 +++++++++++++++++++++
->  include/dt-bindings/clock/nuvoton,npcm7xx-clks.h   |  39 +++++
->  5 files changed, 321 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp
->  create mode 100644 Documentation/devicetree/bindings/arm/npcm/npcm.txt
->  create mode 100644 arch/arm/boot/dts/nuvoton-npcm750-evb.dts
->  create mode 100644 arch/arm/boot/dts/nuvoton-npcm750.dtsi
->  create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
+> This doesn't make me happy - I've been thinking about this for some time,
+> and I think it's completely wrong for drivers to hook into asm-offsets.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp
-> new file mode 100644
-> index 000000000000..e81f85b400cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp
-> @@ -0,0 +1,42 @@
-> +=========================================================
-> +Secondary CPU enable-method "nuvoton,npcm7xx-smp" binding
-> +=========================================================
-> +
-> +To apply to all CPUs, a single "nuvoton,npcm7xx-smp" enable method should be
-> +defined in the "cpus" node.
-> +
-> +Enable method name:	"nuvoton,npcm7xx-smp"
-> +Compatible machines:	"nuvoton,npcm750"
-> +Compatible CPUs:	"arm,cortex-a9"
-> +Related properties:	(none)
-> +
-> +Note:
-> +This enable method needs valid nodes compatible with "arm,cortex-a9-scu" and
-> +"nuvoton,npcm750-gcr".
-> +
-> +Example:
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		enable-method = "nuvoton,npcm7xx-smp";
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a9";
-> +			clocks = <&clk NPCM7XX_CLK_CPU>;
-> +			clock-names = "clk_cpu";
-> +			reg = <0>;
-> +			next-level-cache = <&L2>;
-> +		};
-> +
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a9";
-> +			clocks = <&clk NPCM7XX_CLK_CPU>;
-> +			clock-names = "clk_cpu";
-> +			reg = <1>;
-> +			next-level-cache = <&L2>;
-> +		};
-> +	};
-> +
-> diff --git a/Documentation/devicetree/bindings/arm/npcm/npcm.txt b/Documentation/devicetree/bindings/arm/npcm/npcm.txt
-> new file mode 100644
-> index 000000000000..2d87d9ecea85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/npcm/npcm.txt
-> @@ -0,0 +1,6 @@
-> +NPCM Platforms Device Tree Bindings
-> +-----------------------------------
-> +NPCM750 SoC
-> +Required root node properties:
-> +	- compatible = "nuvoton,npcm750";
-> +
-> diff --git a/arch/arm/boot/dts/nuvoton-npcm750-evb.dts b/arch/arm/boot/dts/nuvoton-npcm750-evb.dts
-> new file mode 100644
-> index 000000000000..e54a870d3ee0
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/nuvoton-npcm750-evb.dts
-> @@ -0,0 +1,57 @@
-> +/*
-> + * DTS file for all NPCM750 SoCs
-> + *
-> + * Copyright 2012 Tomer Maimon <tomer.maimon-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +#include "nuvoton-npcm750.dtsi"
-> +
-> +/ {
-> +	model = "Nuvoton npcm750 Development Board (Device Tree)";
-> +	compatible = "nuvoton,npcm750";
-> +
-> +	chosen {
-> +		stdout-path = &serial3;
-
-stdout-path is a path string, not a phandle.
-
-> +		bootargs = "earlyprintk=serial,serial3,115200";
-
-That's not valid bootargs with mainline.
-
-> +	};
-> +
-> +	memory {
-> +		reg = <0 0x40000000>;
-> +	};
-> +
-> +	cpus {
-> +		enable-method = "nuvoton,npcm7xx-smp";
-
-This is not a board specific property. Belongs in the SoC dtsi.
-
-> +	};
-> +};
-> +
-> +&clk {
-> +	status = "okay";
-
-Pretty sure you'd always want the clock controller enabled.
-
-> +};
-> +
-> +&watchdog1 {
-> +	status = "okay";
-> +};
-> +
-> +&serial0 {
-> +	status = "okay";
-> +};
-> +
-> +&serial1 {
-> +	status = "okay";
-> +};
-> +
-> +&serial2 {
-> +	status = "okay";
-> +};
-> +
-> +&serial3 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/nuvoton-npcm750.dtsi b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
-> new file mode 100644
-> index 000000000000..bca96b3ae9d3
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
-> @@ -0,0 +1,177 @@
-> +/*
-> + * DTSi file for the NPCM750 SoC
-> + *
-> + * Copyright 2012 Tomer Maimon <tomer.maimon-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include "skeleton.dtsi"
-
-Don't use skeleton.dtsi. We want to remove it.
-
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/nuvoton,npcm7xx-clks.h>
-> +
-> +/ {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	interrupt-parent = <&gic>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a9";
-> +			clocks = <&clk NPCM7XX_CLK_CPU>;
-> +			clock-names = "clk_cpu";
-> +			reg = <0>;
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a9";
-> +			clocks = <&clk NPCM7XX_CLK_CPU>;
-> +			clock-names = "clk_cpu";
-> +			reg = <1>;
-> +			next-level-cache = <&l2>;
-> +		};
-> +	};
-> +
-> +	gcr: gcr@f0800000 {
-> +		compatible = "nuvoton,npcm750-gcr", "syscon",
-> +			"simple-mfd";
-> +		reg = <0xf0800000 0x1000>;
-> +	};
-> +
-> +	scu: scu@f03fe000 {
-> +		compatible = "arm,cortex-a9-scu";
-> +		reg = <0xf03fe000 0x1000>;
-> +	};
-> +
-> +	l2: l2-cache@f03fc000 {
-
-cache-controller@...
-
-> +		compatible = "arm,pl310-cache";
-> +		reg = <0xf03fc000 0x1000>;
-> +		interrupts = <0 21 4>;
-> +		cache-unified;
-> +		cache-level = <2>;
-> +		clocks = <&clk NPCM7XX_CLK_AXI>;
-> +	};
-> +
-> +	gic: interrupt-controller@f03ff000 {
-> +		compatible = "arm,cortex-a9-gic";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		reg = <0xf03ff000 0x1000>,
-> +		    <0xf03fe100 0x100>;
-> +	};
-> +
-> +	clk: clock-controller@f0801000 {
-> +		compatible = "nuvoton,npcm750-clk";
-> +		#clock-cells = <1>;
-> +		reg = <0xf0801000 0x1000>;
-> +	};
-
-All these memory mapped peripherals should be under a bus/soc node
-
-> +
-> +	/* external clock signal rg1refck, supplied by the phy */
-> +	clk-rg1refck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <125000000>;
-> +	};
-> +
-> +	/* external clock signal rg2refck, supplied by the phy */
-> +	clk-rg2refck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <125000000>;
-> +	};
-> +
-> +	clk-xin {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <50000000>;
-> +	};
-> +
-> +	timer@f03fe600 {
-> +		compatible = "arm,cortex-a9-twd-timer";
-> +		reg = <0xf03fe600 0x20>;
-> +		interrupts = <1 13 0x304>;
-> +		clocks = <&clk NPCM7XX_CLK_TIMER>;
-> +	};
-> +
-> +	apb {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "simple-bus";
-> +		interrupt-parent = <&gic>;
-> +		ranges;
-
-It's preferred to have actual values here and limit the address range of 
-the bus.
-
-> +
-> +		timer0: timer@f0000000 {
-> +			compatible = "nuvoton,npcm750-timer";
-> +			interrupts = <0 32 4>;
-> +			reg = <0xf0000000 0x1000>;
-> +			clocks = <&clk NPCM7XX_CLK_TIMER>;
-> +		};
-> +
-> +		watchdog0: watchdog@f0008000 {
-> +			compatible = "nuvoton,npcm750-wdt";
-> +			interrupts = <0 47 4>;
-> +			reg = <0xf0008000 0x1000>;
-> +			status = "disabled";
-> +			clocks = <&clk NPCM7XX_CLK_TIMER>;
-> +		};
-> +
-> +		watchdog1: watchdog@f0009000 {
-> +			compatible = "nuvoton,npcm750-wdt";
-> +			interrupts = <0 48 4>;
-> +			reg = <0xf0009000 0x1000>;
-> +			status = "disabled";
-> +			clocks = <&clk NPCM7XX_CLK_TIMER>;
-> +		};
-> +
-> +		watchdog2: watchdog@f000a000 {
-> +			compatible = "nuvoton,npcm750-wdt";
-> +			interrupts = <0 49 4>;
-> +			reg = <0xf000a000 0x1000>;
-> +			status = "disabled";
-> +			clocks = <&clk NPCM7XX_CLK_TIMER>;
-> +		};
-> +
-> +		serial0: serial0@f0001000 {
-> +			compatible = "nuvoton,npcm750-uart";
-> +			reg = <0xf0001000 0x1000>;
-> +			clocks = <&clk NPCM7XX_CLK_UART_CORE>;
-> +			interrupts = <0 2 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		serial1: serial1@f0002000 {
-> +			compatible = "nuvoton,npcm750-uart";
-> +			reg = <0xf0002000 0x1000>;
-> +			clocks = <&clk NPCM7XX_CLK_UART_CORE>;
-> +			interrupts = <0 3 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		serial2: serial2@f0003000 {
-> +			compatible = "nuvoton,npcm750-uart";
-> +			reg = <0xf0003000 0x1000>;
-> +			clocks = <&clk NPCM7XX_CLK_UART_CORE>;
-> +			interrupts = <0 4 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		serial3: serial3@f0004000 {
-> +			compatible = "nuvoton,npcm750-uart";
-> +			reg = <0xf0004000 0x1000>;
-> +			clocks = <&clk NPCM7XX_CLK_UART_CORE>;
-> +			interrupts = <0 5 4>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
-> new file mode 100644
-> index 000000000000..c69d3bbf7e42
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
-> @@ -0,0 +1,39 @@
-> +/*
-> + * Copyright (C) 2016 Nuvoton Technologies,  tali.perry-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_NPCM7XX_H
-> +#define _DT_BINDINGS_CLK_NPCM7XX_H
-> +
-> +#define NPCM7XX_CLK_PLL0	0
-> +#define NPCM7XX_CLK_PLL1	1
-> +#define NPCM7XX_CLK_PLL2	2
-> +#define NPCM7XX_CLK_GFX		3
-> +#define NPCM7XX_CLK_APB1	4
-> +#define NPCM7XX_CLK_APB2	5
-> +#define NPCM7XX_CLK_APB3	6
-> +#define NPCM7XX_CLK_APB4	7
-> +#define NPCM7XX_CLK_APB5	8
-> +#define NPCM7XX_CLK_MC		9
-> +#define NPCM7XX_CLK_CPU		10
-> +#define NPCM7XX_CLK_SPI0	11
-> +#define NPCM7XX_CLK_SPI3	12
-> +#define NPCM7XX_CLK_SPIX	13
-> +#define NPCM7XX_CLK_UART_CORE	14
-> +#define NPCM7XX_CLK_TIMER	15
-> +#define NPCM7XX_CLK_HOST_UART	16
-> +#define NPCM7XX_CLK_MMC		17
-> +#define NPCM7XX_CLK_SDHC	18
-> +#define NPCM7XX_CLK_ADC		19
-> +#define NPCM7XX_CLK_GFX_MEM	20
-> +#define NPCM7XX_CLK_USB_BRIDGE	21
-> +#define NPCM7XX_CLK_AXI		22
-> +#define NPCM7XX_CLK_AHB		23
-> +#define NPCM7XX_CLK_EMC		24
-> +#define NPCM7XX_CLK_GMAC	25
-> +
-> +#endif
-> -- 
-> 2.14.1.581.gf28d330327-goog
+> Looking at the top-level Kbuild file, it looks like it would be easy
+> for emif to auto-generate its own offsets.h header - it looks like it's
+> a matter of using linux/kbuild.h to get the definitions, compiling to
+> assembly (using $(call if_changed_dep,cc_s_c)) and then converting the
+> assembly to the header file format ( using
+> $(call filechk,offsets,__ASM_OFFSETS_H__), replacing __ASM_OFFSETS_H__
+> with a more appropriate symbol.)
 > 
+> Could you please check whether this is possible, so we don't end up
+> needing to hook lots of driver-specific assembly offsets stuff into
+> the arch files?
+> 
+
+I was able to try this out and was successful, I will send an updated version
+that generates a local emif-asm-offsets.h. Thanks for the suggestion.
+
+Regards,
+Dave
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
