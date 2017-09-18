@@ -1,147 +1,123 @@
 From: Roy Pledge <roy.pledge@nxp.com>
-Subject: [v5 04/12] dt-bindings: soc/fsl: Update reserved memory binding for
- QBMan
-Date: Mon, 18 Sep 2017 16:39:39 -0400
-Message-ID: <1505767187-4596-5-git-send-email-roy.pledge@nxp.com>
+Subject: [v5 10/12] soc/fsl/qbman: different register offsets on ARM
+Date: Mon, 18 Sep 2017 16:39:45 -0400
+Message-ID: <1505767187-4596-11-git-send-email-roy.pledge@nxp.com>
 References: <1505767187-4596-1-git-send-email-roy.pledge@nxp.com>
-Reply-To: roy.pledge@nxp.com
+Reply-To: <roy.pledge@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1505767187-4596-1-git-send-email-roy.pledge@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: leoyang.li@nxp.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, arnd@arndb.de, madalin.bucur@nxp.com, catalin.marinas@arm.com, Roy Pledge <roy.pledge@nxp.com>, linux@armlinux.org.uk, oss@buserror.net
+Cc: oss@buserror.net, madalin.bucur@nxp.com, catalin.marinas@arm.com, linux@armlinux.org.uk, arnd@arndb.de, mark.rutland@arm.com, Claudiu Manoil <claudiu.manoil@nxp.com>, Roy Pledge <roy.pledge@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Updates the QMan and BMan device tree bindings for reserved memory
-nodes. This makes the reserved memory allocation compatible with
-the shared-dma-pool usage.
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
 ---
- Documentation/devicetree/bindings/soc/fsl/bman.txt | 12 +++++-----
- Documentation/devicetree/bindings/soc/fsl/qman.txt | 26 ++++++++++++++++------
- 2 files changed, 26 insertions(+), 12 deletions(-)
+ drivers/soc/fsl/qbman/bman.c | 22 ++++++++++++++++++++++
+ drivers/soc/fsl/qbman/qman.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/bman.txt b/Documentation/devicetree/bindings/soc/fsl/bman.txt
-index 47ac834..48eed14 100644
---- a/Documentation/devicetree/bindings/soc/fsl/bman.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/bman.txt
-@@ -65,8 +65,8 @@ to the respective BMan instance
- BMan Private Memory Node
+diff --git a/drivers/soc/fsl/qbman/bman.c b/drivers/soc/fsl/qbman/bman.c
+index 5dbb5cc..2e6e682 100644
+--- a/drivers/soc/fsl/qbman/bman.c
++++ b/drivers/soc/fsl/qbman/bman.c
+@@ -35,6 +35,27 @@
  
- BMan requires a contiguous range of physical memory used for the backing store
--for BMan Free Buffer Proxy Records (FBPR). This memory is reserved/allocated as a
--node under the /reserved-memory node
-+for BMan Free Buffer Proxy Records (FBPR). This memory is reserved/allocated as
-+a node under the /reserved-memory node.
+ /* Portal register assists */
  
- The BMan FBPR memory node must be named "bman-fbpr"
- 
-@@ -75,7 +75,9 @@ PROPERTIES
- - compatible
- 	Usage:		required
- 	Value type:	<stringlist>
--	Definition:	Must inclide "fsl,bman-fbpr"
-+	Definition:	PPC platforms: Must include "fsl,bman-fbpr"
-+			ARM platforms: Must include "shared-dma-pool"
-+				       as well as the "no-map" property
- 
- The following constraints are relevant to the FBPR private memory:
- 	- The size must be 2^(size + 1), with size = 11..33. That is 4 KiB to
-@@ -100,10 +102,10 @@ The example below shows a BMan FBPR dynamic allocation memory node
- 		ranges;
- 
- 		bman_fbpr: bman-fbpr {
--			compatible = "fsl,bman-fbpr";
--			alloc-ranges = <0 0 0x10 0>;
-+			compatible = "shared-mem-pool";
- 			size = <0 0x1000000>;
- 			alignment = <0 0x1000000>;
-+			no-map;
- 		};
- 	};
- 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/qman.txt b/Documentation/devicetree/bindings/soc/fsl/qman.txt
-index 556ebb8..ee96afd 100644
---- a/Documentation/devicetree/bindings/soc/fsl/qman.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/qman.txt
-@@ -60,6 +60,12 @@ are located at offsets 0xbf8 and 0xbfc
- 	Value type:	<prop-encoded-array>
- 	Definition:	Reference input clock. Its frequency is half of the
- 			platform clock
-+- memory-regions
-+	Usage:		Required for ARM
-+	Value type:	<phandle array>
-+	Definition:	List of phandles referencing the QMan private memory
-+			nodes (described below). The qman-fqd node must be
-+			first followed by qman-pfdr node. Only used on ARM
- 
- Devices connected to a QMan instance via Direct Connect Portals (DCP) must link
- to the respective QMan instance
-@@ -74,7 +80,9 @@ QMan Private Memory Nodes
- 
- QMan requires two contiguous range of physical memory used for the backing store
- for QMan Frame Queue Descriptor (FQD) and Packed Frame Descriptor Record (PFDR).
--This memory is reserved/allocated as a nodes under the /reserved-memory node
-+This memory is reserved/allocated as a node under the /reserved-memory node.
++#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
++/* Cache-inhibited register offsets */
++#define BM_REG_RCR_PI_CINH	0x3000
++#define BM_REG_RCR_CI_CINH	0x3100
++#define BM_REG_RCR_ITR		0x3200
++#define BM_REG_CFG		0x3300
++#define BM_REG_SCN(n)		(0x3400 + ((n) << 6))
++#define BM_REG_ISR		0x3e00
++#define BM_REG_IER		0x3e40
++#define BM_REG_ISDR		0x3e80
++#define BM_REG_IIR		0x3ec0
 +
-+For additional details about reserved memory regions see reserved-memory.txt
++/* Cache-enabled register offsets */
++#define BM_CL_CR		0x0000
++#define BM_CL_RR0		0x0100
++#define BM_CL_RR1		0x0140
++#define BM_CL_RCR		0x1000
++#define BM_CL_RCR_PI_CENA	0x3000
++#define BM_CL_RCR_CI_CENA	0x3100
++
++#else
+ /* Cache-inhibited register offsets */
+ #define BM_REG_RCR_PI_CINH	0x0000
+ #define BM_REG_RCR_CI_CINH	0x0004
+@@ -53,6 +74,7 @@
+ #define BM_CL_RCR		0x1000
+ #define BM_CL_RCR_PI_CENA	0x3000
+ #define BM_CL_RCR_CI_CENA	0x3100
++#endif
  
- The QMan FQD memory node must be named "qman-fqd"
+ /*
+  * Portal modes.
+diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
+index 8934c27..7cb7bad 100644
+--- a/drivers/soc/fsl/qbman/qman.c
++++ b/drivers/soc/fsl/qbman/qman.c
+@@ -41,6 +41,43 @@
  
-@@ -83,7 +91,9 @@ PROPERTIES
- - compatible
- 	Usage:		required
- 	Value type:	<stringlist>
--	Definition:	Must inclide "fsl,qman-fqd"
-+	Definition:	PPC platforms: Must include "fsl,qman-fqd"
-+			ARM platforms: Must include "shared-dma-pool"
-+				       as well as the "no-map" property
+ /* Portal register assists */
  
- The QMan PFDR memory node must be named "qman-pfdr"
++#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
++/* Cache-inhibited register offsets */
++#define QM_REG_EQCR_PI_CINH	0x3000
++#define QM_REG_EQCR_CI_CINH	0x3040
++#define QM_REG_EQCR_ITR		0x3080
++#define QM_REG_DQRR_PI_CINH	0x3100
++#define QM_REG_DQRR_CI_CINH	0x3140
++#define QM_REG_DQRR_ITR		0x3180
++#define QM_REG_DQRR_DCAP	0x31C0
++#define QM_REG_DQRR_SDQCR	0x3200
++#define QM_REG_DQRR_VDQCR	0x3240
++#define QM_REG_DQRR_PDQCR	0x3280
++#define QM_REG_MR_PI_CINH	0x3300
++#define QM_REG_MR_CI_CINH	0x3340
++#define QM_REG_MR_ITR		0x3380
++#define QM_REG_CFG		0x3500
++#define QM_REG_ISR		0x3600
++#define QM_REG_IER		0x3640
++#define QM_REG_ISDR		0x3680
++#define QM_REG_IIR		0x36C0
++#define QM_REG_ITPR		0x3740
++
++/* Cache-enabled register offsets */
++#define QM_CL_EQCR		0x0000
++#define QM_CL_DQRR		0x1000
++#define QM_CL_MR		0x2000
++#define QM_CL_EQCR_PI_CENA	0x3000
++#define QM_CL_EQCR_CI_CENA	0x3040
++#define QM_CL_DQRR_PI_CENA	0x3100
++#define QM_CL_DQRR_CI_CENA	0x3140
++#define QM_CL_MR_PI_CENA	0x3300
++#define QM_CL_MR_CI_CENA	0x3340
++#define QM_CL_CR		0x3800
++#define QM_CL_RR0		0x3900
++#define QM_CL_RR1		0x3940
++
++#else
+ /* Cache-inhibited register offsets */
+ #define QM_REG_EQCR_PI_CINH	0x0000
+ #define QM_REG_EQCR_CI_CINH	0x0004
+@@ -75,6 +112,7 @@
+ #define QM_CL_CR		0x3800
+ #define QM_CL_RR0		0x3900
+ #define QM_CL_RR1		0x3940
++#endif
  
-@@ -92,7 +102,9 @@ PROPERTIES
- - compatible
- 	Usage:		required
- 	Value type:	<stringlist>
--	Definition:	Must inclide "fsl,qman-pfdr"
-+	Definition:	PPC platforms: Must include "fsl,qman-pfdr"
-+			ARM platforms: Must include "shared-dma-pool"
-+				       as well as the "no-map" property
- 
- The following constraints are relevant to the FQD and PFDR private memory:
- 	- The size must be 2^(size + 1), with size = 11..29. That is 4 KiB to
-@@ -117,16 +129,16 @@ The example below shows a QMan FQD and a PFDR dynamic allocation memory nodes
- 		ranges;
- 
- 		qman_fqd: qman-fqd {
--			compatible = "fsl,qman-fqd";
--			alloc-ranges = <0 0 0x10 0>;
-+			compatible = "shared-dma-pool";
- 			size = <0 0x400000>;
- 			alignment = <0 0x400000>;
-+			no-map;
- 		};
- 		qman_pfdr: qman-pfdr {
--			compatible = "fsl,qman-pfdr";
--			alloc-ranges = <0 0 0x10 0>;
-+			compatible = "shared-dma-pool";
- 			size = <0 0x2000000>;
- 			alignment = <0 0x2000000>;
-+			no-map;
- 		};
- 	};
- 
+ /*
+  * BTW, the drivers (and h/w programming model) already obtain the required
 -- 
 2.7.4
