@@ -1,38 +1,61 @@
-From: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCHv3 0/3] arm64: dts: add ls2088a and 1088a pcie DT nodes
-Date: Mon, 18 Sep 2017 09:52:17 +0000
-Message-ID: <AM5PR0402MB2771422484B12A966BC06B9D84630@AM5PR0402MB2771.eurprd04.prod.outlook.com>
-References: <20170918093223.33364-1-Zhiqiang.Hou@nxp.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: as3645a flash userland interface
+Date: Mon, 18 Sep 2017 12:12:04 +0300
+Message-ID: <20170918091204.245dewmyruxtfhyb@valkosipuli.retiisi.org.uk>
+References: <20170912084236.1154-1-sakari.ailus@linux.intel.com>
+ <20170912084236.1154-25-sakari.ailus@linux.intel.com>
+ <20170912103628.GB27117@amd>
+ <7b679cb3-ce58-e1d1-60bf-995896bf46eb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170918093223.33364-1-Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <7b679cb3-ce58-e1d1-60bf-995896bf46eb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24sDQoNClRoZSBMUzEwODggYW5kIExTMjA4OCBkcml2ZXIgcGF0Y2ggc2V0IGhhcyBi
-ZWVuIGFwcGxpZWQgdG8gTGludXgtbmV4dC4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
-LQ0KPiBGcm9tOiBaaGlxaWFuZyBIb3UgW21haWx0bzpaaGlxaWFuZy5Ib3VAbnhwLmNvbV0NCj4g
-U2VudDogMjAxN8TqOdTCMTjI1SAxNzozMg0KPiBUbzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gcm9iaCtkdEBrZXJu
-ZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207DQo+
-IHdpbGwuZGVhY29uQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IFByYWJoYWthciBLdXNo
-d2FoYQ0KPiA8cHJhYmhha2FyLmt1c2h3YWhhQG54cC5jb20+DQo+IENjOiBaLnEuIEhvdSA8emhp
-cWlhbmcuaG91QG54cC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSHYzIDAvM10gYXJtNjQ6IGR0czog
-YWRkIGxzMjA4OGEgYW5kIDEwODhhIHBjaWUgRFQgbm9kZXMNCj4gDQo+IEZyb206IEhvdSBaaGlx
-aWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+IA0KPiBBZGQgR0lDdjMgSVRTIERUIG5vZGUg
-Zm9yIGxzMTA4OGEsIGJlY2F1c2UgdGhlIFBDSWUgbm9kZXMgbXVzdCBoYXZlIGENCj4gbXNpLXBh
-cmVudC4NCj4gDQo+IEhvdSBaaGlxaWFuZyAoMyk6DQo+ICAgYXJtNjQ6IGR0czogbHMyMDg4YTog
-YWRkIHBjaWUgc3VwcG9ydA0KPiAgIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBnaWN2MyBJVFMg
-RFQgbm9kZQ0KPiAgIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBQQ0llIGNvbnRyb2xsZXIgRFQg
-bm9kZXMNCj4gDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS5k
-dHNpIHwgODINCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gYXJjaC9hcm02NC9ib290
-L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4OGEuZHRzaSB8ICA0ICsrDQo+ICAyIGZpbGVzIGNoYW5n
-ZWQsIDg2IGluc2VydGlvbnMoKykNCj4gDQo+IC0tDQo+IDIuMTQuMQ0KDQpUaGFua3MsDQpaaGlx
-aWFuZw0K
+Hi Jacek,
+
+On Tue, Sep 12, 2017 at 08:53:33PM +0200, Jacek Anaszewski wrote:
+> Hi Pavel,
+> 
+> On 09/12/2017 12:36 PM, Pavel Machek wrote:
+> > Hi!
+> > 
+> > There were some changes to as3645a flash controller. Before we have
+> > stable interface we have to keep forever I want to ask:
+> 
+> Note that we have already two LED flash class drivers - leds-max77693
+> and leds-aat1290. They have been present in mainline for over two years
+> now.
+> 
+> > What directory are the flash controls in?
+> > 
+> > /sys/class/leds/led-controller:flash ?
+> > 
+> > Could we arrange for something less generic, like
+> > 
+> > /sys/class/leds/main-camera:flash ?
+> 
+> I'd rather avoid overcomplicating this. LED class device name pattern
+> is well defined to devicename:colour:function
+> (see Documentation/leds/leds-class.txt, "LED Device Naming" section).
+> 
+> In this case "flash" in place of the "function" segment makes the
+> things clear enough I suppose.
+
+Oh. I have to admit I've completely missed this. :-o
+
+I'll address this in v2 of the as3645a fixes, plus submit related V4L2
+flash class documentation fixes a little later.
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
