@@ -1,149 +1,37 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 06/14] irqchip: add initial support for ompic
-Date: Mon, 18 Sep 2017 15:29:58 -0500
-Message-ID: <20170918202958.sayo3t7xnok3do72@rob-hp-laptop>
-References: <20170910064926.5874-1-shorne@gmail.com>
- <20170910064926.5874-7-shorne@gmail.com>
- <86h8w6see4.fsf@arm.com>
- <20170914065402.GU2609@lianli.shorne-pla.net>
+Subject: Re: [PATCH v5 2/3] arm: dts: add Nuvoton NPCM750 device tree
+Date: Mon, 18 Sep 2017 15:37:33 -0500
+Message-ID: <CAL_Jsq+R6WXgHqYHypc49YAPVu_GH1SJ6LSKwcL-J_8Sc_aCmQ@mail.gmail.com>
+References: <20170909015308.30001-1-brendanhiggins@google.com>
+ <20170909015308.30001-3-brendanhiggins@google.com> <20170918194625.xz5y7tkemjnbwunh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170914065402.GU2609-Uk7Bhu+bUQgm0WYXfsLZQReHL2rgt/dS@public.gmane.org>
+In-Reply-To: <20170918194625.xz5y7tkemjnbwunh@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 14, 2017 at 03:54:02PM +0900, Stafford Horne wrote:
-> On Wed, Sep 13, 2017 at 06:21:39PM +0100, Marc Zyngier wrote:
-> > On Sun, Sep 10 2017 at  3:49:18 pm BST, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> > >
-> > > IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
-> > > described in the Multicore support section of the OpenRISC 1.2
-> > > proposed architecture specification:
-> > >
-> > >   https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
-> > >
-> > > Each OpenRISC core contains a full interrupt controller which is used in
-> > > the SMP architecture for interrupt balancing.  This IPI device, the
-> > > ompic, is the only external device required for enabling SMP on
-> > > OpenRISC.
-> > >
-> > > Pending ops are stored in a memory bit mask which can allow multiple
-> > > pending operations to be set and serviced at a time. This is mostly
-> > > borrowed from the alpha IPI implementation.
-> > >
-> > > Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> > > [shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
-> > > Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >
-> > > Changes since v1
-> > >  - Added openrisc, prefix
-> > >  - Clarified 8 bytes per cpu
-> > >  - Removed #interrupt-cells as this will not be an irq parent
-> > >  - Changed ops to be percpu
-> > >  - Added DTS and intialization failure validations
-> > >
-> > >  .../interrupt-controller/openrisc,ompic.txt        |  19 ++
-> > >  arch/openrisc/Kconfig                              |   1 +
-> > >  drivers/irqchip/Kconfig                            |   3 +
-> > >  drivers/irqchip/Makefile                           |   1 +
-> > >  drivers/irqchip/irq-ompic.c                        | 205 +++++++++++++++++++++
-> > >  5 files changed, 229 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
-> > >  create mode 100644 drivers/irqchip/irq-ompic.c
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
-> > > new file mode 100644
-> > > index 000000000000..346e6042d62f
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
-> > > @@ -0,0 +1,19 @@
-> > > +Open Multi-Processor Interrupt Controller
-> > > +
-> > > +Required properties:
-> > > +
-> > > +- compatible : This should be "openrisc,ompic"
-> > > +- reg : Specifies base physical address and size of the register space. The
-> > > +  size is based on the number of cores the controller has been configured
-> > > +  to handle, this should be set to 8 bytes per cpu core.
-> > > +- interrupt-controller : Identifies the node as an interrupt controller
-> > > +- interrupts : Specifies the interrupt line to which the ompic is wired.
-> > > +
-> > > +Example:
-> > > +
-> > > +ompic: ompic {
-> > > +	compatible = "openrisc,ompic";
-> > > +	reg = <0x98000000 16>;
-> > > +	interrupt-controller;
-> > > +	interrupts = <1>;
-> > > +};
-> > > diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
-> > > index b49acda5e8f4..34eb4e90f56c 100644
-> > > --- a/arch/openrisc/Kconfig
-> > > +++ b/arch/openrisc/Kconfig
-> > > @@ -30,6 +30,7 @@ config OPENRISC
-> > >  	select NO_BOOTMEM
-> > >  	select ARCH_USE_QUEUED_SPINLOCKS
-> > >  	select ARCH_USE_QUEUED_RWLOCKS
-> > > +	select OMPIC if SMP
-> > >  
-> > >  config CPU_BIG_ENDIAN
-> > >  	def_bool y
-> > > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> > > index f1fd5f44d1d4..0e4c96c90b86 100644
-> > > --- a/drivers/irqchip/Kconfig
-> > > +++ b/drivers/irqchip/Kconfig
-> > > @@ -145,6 +145,9 @@ config CLPS711X_IRQCHIP
-> > >  	select SPARSE_IRQ
-> > >  	default y
-> > >  
-> > > +config OMPIC
-> > > +	bool
-> > > +
-> > >  config OR1K_PIC
-> > >  	bool
-> > >  	select IRQ_DOMAIN
-> > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> > > index e88d856cc09c..123047d7a20d 100644
-> > > --- a/drivers/irqchip/Makefile
-> > > +++ b/drivers/irqchip/Makefile
-> > > @@ -17,6 +17,7 @@ obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
-> > >  obj-$(CONFIG_METAG)			+= irq-metag-ext.o
-> > >  obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
-> > >  obj-$(CONFIG_CLPS711X_IRQCHIP)		+= irq-clps711x.o
-> > > +obj-$(CONFIG_OMPIC)			+= irq-ompic.o
-> > >  obj-$(CONFIG_OR1K_PIC)			+= irq-or1k-pic.o
-> > >  obj-$(CONFIG_ORION_IRQCHIP)		+= irq-orion.o
-> > >  obj-$(CONFIG_OMAP_IRQCHIP)		+= irq-omap-intc.o
-> > > diff --git a/drivers/irqchip/irq-ompic.c b/drivers/irqchip/irq-ompic.c
-> > > new file mode 100644
-> > > index 000000000000..cd2616b6639b
-> > > --- /dev/null
-> > > +++ b/drivers/irqchip/irq-ompic.c
-> > > @@ -0,0 +1,205 @@
-> > > +/*
-> > > + * Open Multi-Processor Interrupt Controller driver
-> > > + *
-> > > + * Copyright (C) 2014 Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> > > + * Copyright (C) 2017 Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > + *
-> > > + * This file is licensed under the terms of the GNU General Public License
-> > > + * version 2.  This program is licensed "as is" without any warranty of any
-> > > + * kind, whether express or implied.
-> > > + *
-> > > + * The ompic device handles IPI communication because cores in mulicore
-> > > + * OpenRISC systems.
-> > 
-> > Should the above read "between cores"?
-> 
-> Yes, it should be, I am bad with these kind of typos.
+On Mon, Sep 18, 2017 at 2:46 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Sep 08, 2017 at 06:53:07PM -0700, Brendan Higgins wrote:
+>> Add a common device tree for all Nuvoton NPCM750 BMCs and a board
+>> specific device tree for the NPCM750 (Poleg) evaluation board.
 
-And "multi-core"
+[...]
+
+>> +/ {
+>> +     model = "Nuvoton npcm750 Development Board (Device Tree)";
+>> +     compatible = "nuvoton,npcm750";
+>> +
+>> +     chosen {
+>> +             stdout-path = &serial3;
+>
+> stdout-path is a path string, not a phandle.
+
+Sorry, it's Monday and my brain is not working. This is fine.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
