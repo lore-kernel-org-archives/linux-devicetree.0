@@ -1,59 +1,63 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 4/8] ARM: dts: iwg22d: Enable SDHI0 controller
-Date: Mon, 18 Sep 2017 16:26:24 +0000
-Message-ID: <TY1PR06MB08952278EF3A13B4CDBD568CC0630@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-5-git-send-email-chris.paterson2@renesas.com>
- <20170915080530.GH3924@verge.net.au>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2] ARC: reset: introduce AXS10x reset driver
+Date: Mon, 18 Sep 2017 18:51:24 +0200
+Message-ID: <1505753484.9807.18.camel@pengutronix.de>
+References: <20170914142842.12225-1-Eugeniy.Paltsev@synopsys.com>
+         <1505736441.9807.8.camel@pengutronix.de>
+         <ce7885ab-b87e-ca07-234f-b63811afd86c@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170915080530.GH3924@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ce7885ab-b87e-ca07-234f-b63811afd86c@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2ltb24sDQoNCkFwb2xvZ2llcyBmb3IgdGhlIGRlbGF5IGluIGdldHRpbmcgYmFjayB0byB5
-b3UuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2ltb24gSG9ybWFu
-IFttYWlsdG86aG9ybXNAdmVyZ2UubmV0LmF1XQ0KPiBTZW50OiAxNSBTZXB0ZW1iZXIgMjAxNyAw
-OTowNg0KPiBUbzogQ2hyaXMgUGF0ZXJzb24gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT4N
-Cj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1h
-cmsucnV0bGFuZEBhcm0uY29tPjsgTWFnbnVzIERhbW0gPG1hZ251cy5kYW1tQGdtYWlsLmNvbT47
-DQo+IFJ1c3NlbGwgS2luZyA8bGludXhAYXJtbGludXgub3JnLnVrPjsgRmFicml6aW8gQ2FzdHJv
-IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtcmVuZXNhcy0NCj4gc29jQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNC84XSBBUk06
-IGR0czogaXdnMjJkOiBFbmFibGUgU0RISTAgY29udHJvbGxlcg0KPg0KPiBPbiBXZWQsIFNlcCAx
-MywgMjAxNyBhdCAwNjowNTozN1BNICswMTAwLCBDaHJpcyBQYXRlcnNvbiB3cm90ZToNCj4gPiBG
-cm9tOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4g
-Pg0KPiA+IEVuYWJsZSB0aGUgU0RISTAgY29udHJvbGxlciBvbiBpV2F2ZSBSWi9HMUUgY2Fycmll
-ciBib2FyZC4NCj4NCj4gLi4uDQo+DQo+ID4gQEAgLTYzLDMgKzg4LDE1IEBADQo+ID4gIG1pY3Jl
-bCxsZWQtbW9kZSA9IDwxPjsNCj4gPiAgfTsNCj4gPiAgfTsNCj4gPiArDQo+ID4gKyZzZGhpMCB7
-DQo+ID4gK3BpbmN0cmwtMCA9IDwmc2RoaTBfcGlucz47DQo+ID4gK3BpbmN0cmwtMSA9IDwmc2Ro
-aTBfcGluc191aHM+Ow0KPiA+ICtwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAic3RhdGVfdWhz
-IjsNCj4gPiArDQo+ID4gK3ZtbWMtc3VwcGx5ID0gPCZyZWdfM3Azdj47DQo+ID4gK3ZxbW1jLXN1
-cHBseSA9IDwmdmNjcV9zZGhpMD47DQo+ID4gK2NkLWdwaW9zID0gPCZncGlvNiA2IEdQSU9fQUNU
-SVZFX0xPVz47DQo+DQo+IEkgdGFrZSB0aGF0IHRoZSBhYnNlbmNlIG9mIGEgd3AtZ3BpbyBtZWFu
-cyB0aGF0IHRoYXQgdGhpcyBpcyBhIMK1U0Qgc2xvdC4NCj4gQ291bGQgeW91IGhlbHAgbWUgYnkg
-ZG9jdW1lbnRpbmcgdGhpcyBjb3JyZWN0bHkgb24NCj4gaHR0cDovL2VsaW51eC5vcmcvaW5kZXgu
-cGhwP3RpdGxlPVJlbmVzYXMtTU1DLUVuYWJsZWQtU3BlZWRzID8NCj4NCj4gRm9yIHNvbWUgcmVh
-c29uIEkgdGhvdWdodCB0aGF0IFNESEkwIHdhc24ndCBleHBvc2VkIGF0IGFsbCwgc28gSSBndWVz
-cw0KPiBteSByZWFkaW5nIG9mIHRoZSBkb2N1bWVudGF0aW9uIHdhcyBpbmNvcnJlY3QuDQo+DQo+
-DQo+IEkgdGhpbmsgeW91IGFsc28gd2FudCBzZC11aHMtc2RyNTAgaGVyZSB0b28uDQo+IFlvdSBj
-YW4gdGVzdCBpdCBieSByZW1vdmluZyB0aGUgc2QtdWhzLXNkcjEwNCBwcm9wZXJ0eS4NCg0KV2hp
-bHN0IHBsYXlpbmcgd2l0aCB1aHMgcHJvcGVydGllcyBJIGhhdmUgbm90aWNlZCB0aGF0IHdpdGgg
-dGhlIHZlcnNpb24gb2YgdGhlIERUIEkgd2FzIHVzaW5nIEkgY291bGRuJ3QgcHV0IHNkaGkwIGlu
-dG8gYW4gdWhzIG1vZGUgYW5kIHRoYXQgd2FzIGRvd24gdG8gdGhlIGZhY3QgdGhhdCB0aGUgZHJp
-dmVyIHdhc24ndCBkcml2aW5nIHRoZSByZWd1bGF0b3IgdG8gMS44Vi4gVGhpcyBoYXBwZW5zIGJl
-Y2F1c2UgKGluIG15IGNhc2UpIHRoZSBwb3dlciByZWd1bGF0b3IgZ2V0cyBwcm9iZWQgYWZ0ZXIg
-dGhlIHNkaGkgZG9lcywgYW5kIHRoZSBzZGhpIGNvZGUgZG9lc24ndCBzZWVtIHRvIGRlYWwgd2l0
-aCBpdC4gQW0gSSB0aGUgb25seSBvbmUgd2l0aCB0aGlzIHByb2JsZW0gb3IgaXMgaXQgYSBrbm93
-biBwcm9ibGVtPw0KDQpUaGFua3MsDQpGYWJyaXppbw0KDQo+DQo+ID4gK3NkLXVocy1zZHIxMDQ7
-DQo+ID4gK3N0YXR1cyA9ICJva2F5IjsNCj4gPiArfTsNCj4gPiAtLQ0KPiA+IDEuOS4xDQo+ID4N
-Cg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxs
-Ym9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVn
-aXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDku
-DQo=
+Hi Vineet,
+
+On Mon, 2017-09-18 at 09:14 -0700, Vineet Gupta wrote:
+> Hi Philipp,
+> 
+> On 09/18/2017 05:07 AM, Philipp Zabel wrote:
+> > On Thu, 2017-09-14 at 17:28 +0300, Eugeniy Paltsev wrote:
+> > > ARC AXS10x boards support custom IP-block which allows to control
+> > > reset signals of selected peripherals. For example DW GMAC, etc...
+> > > This block is controlled via memory-mapped register (AKA CREG) which
+> > > represents up-to 32 reset lines. This regiter is self-clearing so we
+> > > don't need to deassert line after reset.
+> > > 
+> > > As of today only the following lines are used:
+> > >   - DW GMAC - line 5
+> > > 
+> > > > Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> > > 
+> > > ---
+> > > Changes v1 -> v2:
+> > >    * The creg reset register is self-clearing so we don't need to clear it
+> > >      manually. Fixed it.
+> > >    * Use reset callback instead of assert/deassert pair.
+> > >    * Rename reset node in documentation to "reset-controller" for consistency
+> > >      with the other bindings.
+> > >    * Use devm_reset_controller_register instead of reset_controller_register
+> > > 
+> > > NOTE:
+> > >      This driver couldn't be replaced by reset-simple driver as we mustn't
+> > >      read from reset register or clear it.
+> > 
+> > Thanks, I've applied this patch to the reset/next branch.
+> 
+> Will it be OK for you to apply the corresponding DT update for platform - that way 
+> I don't have to keep track of when ur branch hits mainline etc.
+> 
+> The chances of any ensuing conflicts are pretty rare - and easy to resolve if at all.
+>
+> If so, Eugeniy can send the patch ur way !
+
+Maybe it is better to do this the other way around? I can put this patch
+on a stable reset/arc branch for you to merge before applying the reset
+DT updates.
+
+regards
+Philipp
