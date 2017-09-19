@@ -1,202 +1,93 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v13 21/25] smiapp: Add support for flash and lens devices
-Date: Tue, 19 Sep 2017 15:20:34 +0300
-Message-ID: <20170919122034.ux6refntfviofx3y@paasikivi.fi.intel.com>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
- <20170915141724.23124-22-sakari.ailus@linux.intel.com>
- <1881974.bD6jRInLY1@avalon>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCHv2 1/2] dt-bindings: adi,adv7511.txt: document cec clock
+Date: Tue, 19 Sep 2017 15:27:09 +0300
+Message-ID: <f977c9ce-6258-7ec9-ef2b-45ad02e5ada6@cogentembedded.com>
+References: <20170919073331.29007-1-hverkuil@xs4all.nl>
+ <20170919073331.29007-2-hverkuil@xs4all.nl>
+ <505bc74f-6563-ab1d-9aab-7893410aef7e@cogentembedded.com>
+ <74b252c8-c1eb-8498-7b9b-54604fe2806a@cisco.com>
+ <e68cffb1-346c-2018-9048-3f8523903809@cogentembedded.com>
+ <7bfcd125-db23-61e3-2bc9-67e5c11f27fa@xs4all.nl>
+ <ce0588ed-eb3f-0008-0608-b54aefeee704@cogentembedded.com>
+ <82f72432-51fa-722b-b1c7-d6f7ea6ae758@xs4all.nl>
+ <5c8f3625-26f3-8c6e-d42a-def8251a9ac6@cogentembedded.com>
+ <aa9c5c0e-c2c8-7913-0e6c-4b150ff09a9b@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1881974.bD6jRInLY1@avalon>
+In-Reply-To: <aa9c5c0e-c2c8-7913-0e6c-4b150ff09a9b@cisco.com>
+Content-Language: en-MW
 Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+To: Hans Verkuil <hansverk@cisco.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, linux-renesas-soc@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On 09/19/2017 01:59 PM, Hans Verkuil wrote:
 
-On Tue, Sep 19, 2017 at 03:08:25PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
+>>>>>>>>> From: Hans Verkuil <hans.verkuil@cisco.com>
+>>>>>>>>>
+>>>>>>>>> Document the cec clock binding.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+>>>>>>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>>>>>>> ---
+>>>>>>>>>       Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 4 ++++
+>>>>>>>>>       1 file changed, 4 insertions(+)
+>>>>>>>>>
+>>>>>>>>> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>>>>> index 06668bca7ffc..4497ae054d49 100644
+>>>>>>>>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>>>>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>>>>> @@ -68,6 +68,8 @@ Optional properties:
+>>>>>>>>>       - adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
+>>>>>>>>>         generator. The chip will rely on the sync signals in the DSI data lanes,
+>>>>>>>>>         rather than generate its own timings for HDMI output.
+>>>>>>>>> +- clocks: from common clock binding: handle to CEC clock.
+>>>>>>>>
+>>>>>>>>         It's called "phandle" in the DT speak. :-)
+>>>>>>>>         Are you sure the clock specifier would always be absent?
+>>>>>>>
+>>>>>>> Sorry? I don't understand the question. Did you mean: "can be absent?"?
+>>>>>>
+>>>>>>        No, you only say that there'll be the clock phandle only. The clock
+>>>>>> specifier may follow the phandle for the clock devices that have
+>>>>>> "#clock-cells" prop != 0.
+>>>>>
+>>>>> I have to say that I just copy-and-pasted this from other bindings.
+>>>>
+>>>>       :-)
+>>>>
+>>>>> Would this be better?
+>>>>>
+>>>>> - clocks: list of clock specifiers, corresponding to entries in
+>>>>>      the clock-names property;
+>>>>
+>>>>       Didn't you say that there'll be only one clock, "cec"? If so, there's
+>>>> gonna  be a single clock phandle+specifier pair. They always go in pairs. :-)
+>>>>
+>>>>> - clock-names: from common clock binding: must be "cec".
+>>>
+>>> - clocks: cec clock phandle, corresponding to the clock-names entry.
+>>
+>>      The clock phandle and specifier.
+>>
+>>> - clock-names: from common clock binding: must be "cec".
+>>>
+>>> This OK?
+>>
+>>      Well, you seem to be going in circles, the above was almost the same as
+>> the original prop description...
 > 
-> Thank you for the patch.
+> - clocks: from common clock binding: reference to the CEC clock.
+> - clock-names: from common clock binding: must be "cec".
 > 
-> On Friday, 15 September 2017 17:17:20 EEST Sakari Ailus wrote:
-> > Parse async sub-devices by using
-> > v4l2_subdev_fwnode_reference_parse_sensor_common().
-> > 
-> > These types devices aren't directly related to the sensor, but are
-> > nevertheless handled by the smiapp driver due to the relationship of these
-> > component to the main part of the camera module --- the sensor.
-> > 
-> > This does not yet address providing the user space with information on how
-> > to associate the sensor or lens devices but the kernel now has the
-> > necessary information to do that.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> 
-> Something is bothering me here, not so much in the contents of the patch 
-> itself than in its nature. There are four patches in this series that add 
-> support for flash and lens devices to the smiapp, et8ek8, ov5670 and ov13858 
-> drivers. We have way more sensor drivers than that, and I don't really want to 
-> patch them all to support flash and lens. I believe a less intrusive approach, 
-> more focussed on the V4L2 core, is needed.
+> This avoids the whole issue of having just a phandle or a phandle + specifier.
 
-You could move this to the framework, yes. Nothing prevents that. Perhaps a
-flag telling the framework whether this should be done? Just being
-opportunistic might work as well.
+    OK, let's go with this one. Thank you!
 
-> 
-> > ---
-> >  drivers/media/i2c/smiapp/smiapp-core.c | 38 ++++++++++++++++++++++++-------
-> >  drivers/media/i2c/smiapp/smiapp.h      |  4 +++-
-> >  2 files changed, 33 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/media/i2c/smiapp/smiapp-core.c
-> > b/drivers/media/i2c/smiapp/smiapp-core.c index 700f433261d0..a4735a96ea41
-> > 100644
-> > --- a/drivers/media/i2c/smiapp/smiapp-core.c
-> > +++ b/drivers/media/i2c/smiapp/smiapp-core.c
-> > @@ -31,7 +31,7 @@
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/smiapp.h>
-> > -#include <linux/v4l2-mediabus.h>
-> > +#include <media/v4l2-async.h>
-> >  #include <media/v4l2-fwnode.h>
-> >  #include <media/v4l2-device.h>
-> > 
-> > @@ -2887,17 +2887,24 @@ static int smiapp_probe(struct i2c_client *client,
-> >  	v4l2_i2c_subdev_init(&sensor->src->sd, client, &smiapp_ops);
-> >  	sensor->src->sd.internal_ops = &smiapp_internal_src_ops;
-> > 
-> > +	rval = v4l2_async_notifier_parse_fwnode_sensor_common(
-> > +		&client->dev, &sensor->notifier);
-> > +	if (rval < 0)
-> > +		return rval;
-> > +
-> >  	sensor->vana = devm_regulator_get(&client->dev, "vana");
-> >  	if (IS_ERR(sensor->vana)) {
-> >  		dev_err(&client->dev, "could not get regulator for vana\n");
-> > -		return PTR_ERR(sensor->vana);
-> > +		rval = PTR_ERR(sensor->vana);
-> > +		goto out_release_async_notifier;
-> >  	}
-> > 
-> >  	sensor->ext_clk = devm_clk_get(&client->dev, NULL);
-> >  	if (IS_ERR(sensor->ext_clk)) {
-> >  		dev_err(&client->dev, "could not get clock (%ld)\n",
-> >  			PTR_ERR(sensor->ext_clk));
-> > -		return -EPROBE_DEFER;
-> > +		rval = -EPROBE_DEFER;
-> > +		goto out_release_async_notifier;
-> >  	}
-> > 
-> >  	rval = clk_set_rate(sensor->ext_clk, sensor->hwcfg->ext_clk);
-> > @@ -2905,17 +2912,19 @@ static int smiapp_probe(struct i2c_client *client,
-> >  		dev_err(&client->dev,
-> >  			"unable to set clock freq to %u\n",
-> >  			sensor->hwcfg->ext_clk);
-> > -		return rval;
-> > +		goto out_release_async_notifier;
-> >  	}
-> > 
-> >  	sensor->xshutdown = devm_gpiod_get_optional(&client->dev, "xshutdown",
-> >  						    GPIOD_OUT_LOW);
-> > -	if (IS_ERR(sensor->xshutdown))
-> > -		return PTR_ERR(sensor->xshutdown);
-> > +	if (IS_ERR(sensor->xshutdown)) {
-> > +		rval = PTR_ERR(sensor->xshutdown);
-> > +		goto out_release_async_notifier;
-> > +	}
-> > 
-> >  	rval = smiapp_power_on(&client->dev);
-> >  	if (rval < 0)
-> > -		return rval;
-> > +		goto out_release_async_notifier;
-> > 
-> >  	rval = smiapp_identify_module(sensor);
-> >  	if (rval) {
-> > @@ -3092,9 +3101,14 @@ static int smiapp_probe(struct i2c_client *client,
-> >  	if (rval < 0)
-> >  		goto out_media_entity_cleanup;
-> > 
-> > +	rval = v4l2_async_subdev_notifier_register(&sensor->src->sd,
-> > +						   &sensor->notifier);
-> > +	if (rval)
-> > +		goto out_media_entity_cleanup;
-> > +
-> >  	rval = v4l2_async_register_subdev(&sensor->src->sd);
-> >  	if (rval < 0)
-> > -		goto out_media_entity_cleanup;
-> > +		goto out_unregister_async_notifier;
-> > 
-> >  	pm_runtime_set_active(&client->dev);
-> >  	pm_runtime_get_noresume(&client->dev);
-> > @@ -3105,6 +3119,9 @@ static int smiapp_probe(struct i2c_client *client,
-> > 
-> >  	return 0;
-> > 
-> > +out_unregister_async_notifier:
-> > +	v4l2_async_notifier_unregister(&sensor->notifier);
-> > +
-> >  out_media_entity_cleanup:
-> >  	media_entity_cleanup(&sensor->src->sd.entity);
-> > 
-> > @@ -3114,6 +3131,9 @@ static int smiapp_probe(struct i2c_client *client,
-> >  out_power_off:
-> >  	smiapp_power_off(&client->dev);
-> > 
-> > +out_release_async_notifier:
-> > +	v4l2_async_notifier_release(&sensor->notifier);
-> > +
-> >  	return rval;
-> >  }
-> > 
-> > @@ -3124,6 +3144,8 @@ static int smiapp_remove(struct i2c_client *client)
-> >  	unsigned int i;
-> > 
-> >  	v4l2_async_unregister_subdev(subdev);
-> > +	v4l2_async_notifier_unregister(&sensor->notifier);
-> > +	v4l2_async_notifier_release(&sensor->notifier);
-> > 
-> >  	pm_runtime_disable(&client->dev);
-> >  	if (!pm_runtime_status_suspended(&client->dev))
-> > diff --git a/drivers/media/i2c/smiapp/smiapp.h
-> > b/drivers/media/i2c/smiapp/smiapp.h index f74d695018b9..be92cb5713f4 100644
-> > --- a/drivers/media/i2c/smiapp/smiapp.h
-> > +++ b/drivers/media/i2c/smiapp/smiapp.h
-> > @@ -20,9 +20,10 @@
-> >  #define __SMIAPP_PRIV_H_
-> > 
-> >  #include <linux/mutex.h>
-> > +#include <media/i2c/smiapp.h>
-> > +#include <media/v4l2-async.h>
-> >  #include <media/v4l2-ctrls.h>
-> >  #include <media/v4l2-subdev.h>
-> > -#include <media/i2c/smiapp.h>
-> > 
-> >  #include "smiapp-pll.h"
-> >  #include "smiapp-reg.h"
-> > @@ -172,6 +173,7 @@ struct smiapp_subdev {
-> >   * struct smiapp_sensor - Main device structure
-> >   */
-> >  struct smiapp_sensor {
-> > +	struct v4l2_async_notifier notifier;
-> >  	/*
-> >  	 * "mutex" is used to serialise access to all fields here
-> >  	 * except v4l2_ctrls at the end of the struct. "mutex" is also
-> 
-> 
-> -- 
 > Regards,
 > 
-> Laurent Pinchart
-> 
+> 	Hans
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+MBR, Sergei
