@@ -1,36 +1,97 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH ] phy: rcar-gen2: Add r8a7743/5 support
-Date: Tue, 19 Sep 2017 16:58:14 +0200
-Message-ID: <CAMuHMdW8x-7LVGgJr1GQfMJurfW=0Ky71K18zc+x5_XHMC6VxA@mail.gmail.com>
-References: <1503568773-41410-1-git-send-email-biju.das@bp.renesas.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v13 13/25] v4l: async: Allow async notifier register call
+ succeed with no subdevs
+Date: Tue, 19 Sep 2017 17:58:32 +0300
+Message-ID: <20170919145831.uztphjdtd3fdxzvr@valkosipuli.retiisi.org.uk>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
+ <20170915141724.23124-14-sakari.ailus@linux.intel.com>
+ <1674305.pu9Ti8eC3U@avalon>
+ <2068881.oMWDSm4mNc@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1503568773-41410-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2068881.oMWDSm4mNc@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 24, 2017 at 11:59 AM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> Add USB PHY support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5)
-> USB PHY is identical to the R-Car Gen2 family.
->
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Hi Laurent,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+On Tue, Sep 19, 2017 at 03:52:02PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Tuesday, 19 September 2017 15:04:43 EEST Laurent Pinchart wrote:
+> > Hi Sakari,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Friday, 15 September 2017 17:17:12 EEST Sakari Ailus wrote:
+> > > The information on how many async sub-devices would be bindable to a
+> > > notifier is typically dependent on information from platform firmware and
+> > > it's not driver's business to be aware of that.
+> > > 
+> > > Many V4L2 main drivers are perfectly usable (and useful) without async
+> > > sub-devices and so if there aren't any around, just proceed call the
+> > > notifier's complete callback immediately without registering the notifier
+> > > itself.
+> > > 
+> > > If a driver needs to check whether there are async sub-devices available,
+> > > it can be done by inspecting the notifier's num_subdevs field which tells
+> > > the number of async sub-devices.
+> > > 
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> I take this back.
+> 
+> > > ---
+> > > 
+> > >  drivers/media/v4l2-core/v4l2-async.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> > > b/drivers/media/v4l2-core/v4l2-async.c index 9895b610e2a0..4be2f16af051
+> > > 100644
+> > > --- a/drivers/media/v4l2-core/v4l2-async.c
+> > > +++ b/drivers/media/v4l2-core/v4l2-async.c
+> > > @@ -170,14 +170,16 @@ int v4l2_async_notifier_register(struct v4l2_device
+> > > *v4l2_dev, struct v4l2_async_subdev *asd;
+> > > 
+> > >  	int i;
+> > > 
+> > > -	if (!v4l2_dev || !notifier->num_subdevs ||
+> > > -	    notifier->num_subdevs > V4L2_MAX_SUBDEVS)
+> > > +	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
+> > > 
+> > >  		return -EINVAL;
+> > >  	
+> > >  	notifier->v4l2_dev = v4l2_dev;
+> > >  	INIT_LIST_HEAD(&notifier->waiting);
+> > >  	INIT_LIST_HEAD(&notifier->done);
+> > > 
+> > > +	if (!notifier->num_subdevs)
+> > > +		return v4l2_async_notifier_call_complete(notifier);
+> > > +
+> 
+> This skips adding the notifier to the notifier_list. Won't this result in an 
+> oops when calling list_del(&notifier->list) in 
+> v4l2_async_notifier_unregister() ?
 
-Gr{oetje,eeting}s,
+Good point. I'll add initialising the list head to the register function,
+with an appropriate comment.
 
-                        Geert
+> 
+> > >  	for (i = 0; i < notifier->num_subdevs; i++) {
+> > >  	
+> > >  		asd = notifier->subdevs[i];
+> 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+-- 
+Regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
