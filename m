@@ -1,216 +1,464 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 3/4] [media] bcm2835-unicam: Driver for CCP2/CSI2
- camera interface
-Date: Tue, 19 Sep 2017 12:20:17 +0200
-Message-ID: <d9f7334d-df40-5cd6-93c8-b753f41aa56d@xs4all.nl>
-References: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
- <0d4dc119a2ba4917e0fecfe5084425830ec53ccb.1505314390.git.dave.stevenson@raspberrypi.org>
- <87k20vswdv.fsf@anholt.net>
- <CAAoAYcMbSzr7_rtNke2hDKfp+a-vvP0be7_UhrJEgUCfgpfMtQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAAoAYcMbSzr7_rtNke2hDKfp+a-vvP0be7_UhrJEgUCfgpfMtQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Stefan Wahren <stefan.wahren@i2se.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Tirupathi Reddy <tirupath@codeaurora.org>
+Subject: [PATCH V5] clk: qcom: Add spmi_pmic clock divider support
+Date: Tue, 19 Sep 2017 16:04:46 +0530
+Message-ID: <1505817286-12445-1-git-send-email-tirupath@codeaurora.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: sboyd@codeaurora.org
+Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Tirupathi Reddy <tirupath@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/17 11:50, Dave Stevenson wrote:
-> Hi Eric.
-> 
-> Thanks for the review.
-> 
-> On 18 September 2017 at 19:18, Eric Anholt <eric@anholt.net> wrote:
->> Dave Stevenson <dave.stevenson@raspberrypi.org> writes:
->>> diff --git a/drivers/media/platform/bcm2835/bcm2835-unicam.c b/drivers/media/platform/bcm2835/bcm2835-unicam.c
->>> new file mode 100644
->>> index 0000000..5b1adc3
->>> --- /dev/null
->>> +++ b/drivers/media/platform/bcm2835/bcm2835-unicam.c
->>> @@ -0,0 +1,2192 @@
->>> +/*
->>> + * BCM2835 Unicam capture Driver
->>> + *
->>> + * Copyright (C) 2017 - Raspberry Pi (Trading) Ltd.
->>> + *
->>> + * Dave Stevenson <dave.stevenson@raspberrypi.org>
->>> + *
->>> + * Based on TI am437x driver by Benoit Parrot and Lad, Prabhakar and
->>> + * TI CAL camera interface driver by Benoit Parrot.
->>> + *
->>
->> Possible future improvement: this description of the driver is really
->> nice and could be turned into kernel-doc.
-> 
-> Documentation?! Surely not :-)
-> For now I'll leave it as a task for another day.
-> 
->>> + * There are two camera drivers in the kernel for BCM283x - this one
->>> + * and bcm2835-camera (currently in staging).
->>> + *
->>> + * This driver is purely the kernel control the Unicam peripheral - there
->>
->> Maybe "This driver directly controls..."?
-> 
-> Will do in v3.
-> 
->>> + * is no involvement with the VideoCore firmware. Unicam receives CSI-2
->>> + * or CCP2 data and writes it into SDRAM. The only processing options are
->>> + * to repack Bayer data into an alternate format, and applying windowing
->>> + * (currently not implemented).
->>> + * It should be possible to connect it to any sensor with a
->>> + * suitable output interface and V4L2 subdevice driver.
->>> + *
->>> + * bcm2835-camera uses with the VideoCore firmware to control the sensor,
->>
->> "uses the"
-> 
-> Will do in v3.
-> 
->>> + * Unicam, ISP, and all tuner control loops. Fully processed frames are
->>> + * delivered to the driver by the firmware. It only has sensor drivers
->>> + * for Omnivision OV5647, and Sony IMX219 sensors.
->>> + *
->>> + * The two drivers are mutually exclusive for the same Unicam instance.
->>> + * The VideoCore firmware checks the device tree configuration during boot.
->>> + * If it finds device tree nodes called csi0 or csi1 it will block the
->>> + * firmware from accessing the peripheral, and bcm2835-camera will
->>> + * not be able to stream data.
->>
->> Thanks for describing this here!
->>
->>> +/*
->>> + * The peripheral can unpack and repack between several of
->>> + * the Bayer raw formats, so any Bayer format can be advertised
->>> + * as the same Bayer order in each of the supported bit depths.
->>> + * Use lower case to avoid clashing with V4L2_PIX_FMT_SGBRG8
->>> + * formats.
->>> + */
->>> +#define PIX_FMT_ALL_BGGR  v4l2_fourcc('b', 'g', 'g', 'r')
->>> +#define PIX_FMT_ALL_RGGB  v4l2_fourcc('r', 'g', 'g', 'b')
->>> +#define PIX_FMT_ALL_GBRG  v4l2_fourcc('g', 'b', 'r', 'g')
->>> +#define PIX_FMT_ALL_GRBG  v4l2_fourcc('g', 'r', 'b', 'g')
->>
->> Should thes fourccs be defined in a common v4l2 header, to reserve it
->> from clashing with others later?
-> 
-> I'm only using them as flags and probably in a manner that nothing
-> else is likely to copy, so it seems a little excessive to put them in
-> a common header.
-> Perhaps it's better to switch to 0xFFFFFFF0 to 0xFFFFFFF3 or other
-> value that won't come up as a fourcc under any normal circumstance.
-> Any thoughts from other people?
+Clkdiv module provides a clock output on the PMIC with CXO as
+the source. This clock can be routed through PMIC GPIOs. Add
+a device driver to configure this clkdiv module.
 
-I think that's better, yes.
+Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
+---
+ .../bindings/clock/clk-spmi-pmic-div.txt           |  56 ++++
+ drivers/clk/qcom/Kconfig                           |   9 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/clk-spmi-pmic-div.c               | 343 +++++++++++++++++++++
+ 4 files changed, 409 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
+ create mode 100644 drivers/clk/qcom/clk-spmi-pmic-div.c
 
-> 
->> This is really the only question I have about this driver before seeing
->> it merged.  As far as me wearing my platform maintainer hat, I'm happy
->> with the driver, and my other little notes are optional.
->>
->>> +static int unicam_probe(struct platform_device *pdev)
->>> +{
->>> +     struct unicam_cfg *unicam_cfg;
->>> +     struct unicam_device *unicam;
->>> +     struct v4l2_ctrl_handler *hdl;
->>> +     struct resource *res;
->>> +     int ret;
->>> +
->>> +     unicam = devm_kzalloc(&pdev->dev, sizeof(*unicam), GFP_KERNEL);
->>> +     if (!unicam)
->>> +             return -ENOMEM;
->>> +
->>> +     unicam->pdev = pdev;
->>> +     unicam_cfg = &unicam->cfg;
->>> +
->>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +     unicam_cfg->base = devm_ioremap_resource(&pdev->dev, res);
->>> +     if (IS_ERR(unicam_cfg->base)) {
->>> +             unicam_err(unicam, "Failed to get main io block\n");
->>> +             return PTR_ERR(unicam_cfg->base);
->>> +     }
->>> +
->>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->>> +     unicam_cfg->clk_gate_base = devm_ioremap_resource(&pdev->dev, res);
->>> +     if (IS_ERR(unicam_cfg->clk_gate_base)) {
->>> +             unicam_err(unicam, "Failed to get 2nd io block\n");
->>> +             return PTR_ERR(unicam_cfg->clk_gate_base);
->>> +     }
->>> +
->>> +     unicam->clock = devm_clk_get(&pdev->dev, "lp_clock");
->>> +     if (IS_ERR(unicam->clock)) {
->>> +             unicam_err(unicam, "Failed to get clock\n");
->>> +             return PTR_ERR(unicam->clock);
->>> +     }
->>> +
->>> +     ret = platform_get_irq(pdev, 0);
->>> +     if (ret <= 0) {
->>> +             dev_err(&pdev->dev, "No IRQ resource\n");
->>> +             return -ENODEV;
->>> +     }
->>> +     unicam_cfg->irq = ret;
->>> +
->>> +     ret = devm_request_irq(&pdev->dev, unicam_cfg->irq, unicam_isr, 0,
->>> +                            "unicam_capture0", unicam);
->>
->> Looks like there's no need to keep "irq" in the device private struct.
-> 
-> Agreed. I'll remove in v3.
-> 
->>> +     if (ret) {
->>> +             dev_err(&pdev->dev, "Unable to request interrupt\n");
->>> +             return -EINVAL;
->>> +     }
->>> +
->>> +     ret = v4l2_device_register(&pdev->dev, &unicam->v4l2_dev);
->>> +     if (ret) {
->>> +             unicam_err(unicam,
->>> +                        "Unable to register v4l2 device.\n");
->>> +             return ret;
->>> +     }
->>> +
->>> +     /* Reserve space for the controls */
->>> +     hdl = &unicam->ctrl_handler;
->>> +     ret = v4l2_ctrl_handler_init(hdl, 16);
->>> +     if (ret < 0)
->>> +             goto probe_out_v4l2_unregister;
->>> +     unicam->v4l2_dev.ctrl_handler = hdl;
->>> +
->>> +     /* set the driver data in platform device */
->>> +     platform_set_drvdata(pdev, unicam);
->>> +
->>> +     ret = of_unicam_connect_subdevs(unicam);
->>> +     if (ret) {
->>> +             dev_err(&pdev->dev, "Failed to connect subdevs\n");
->>> +             goto free_hdl;
->>> +     }
->>> +
->>> +     /* Enabling module functional clock */
->>> +     pm_runtime_enable(&pdev->dev);
->>
->> I think pm_runtime is only controlling the power domain for the PHY, not
->> the clock (which you're handling manually).
-> 
-> You're right. Copy and paste from the driver I'd based this on.
-> Will correct in v3.
-> 
->   Dave
-> 
+diff --git a/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
+new file mode 100644
+index 0000000..e37a136
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
+@@ -0,0 +1,56 @@
++Qualcomm Technologies, Inc. SPMI PMIC clock divider (clkdiv)
++
++clkdiv configures the clock frequency of a set of outputs on the PMIC.
++These clocks are typically wired through alternate functions on
++gpio pins.
++
++=======================
++Properties
++=======================
++
++- compatible
++	Usage:      required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,spmi-clkdiv"
++		    "qcom,pm8998-clkdiv"
++
++- reg
++	Usage:      required
++	Value type: <prop-encoded-array>
++	Definition: Addresses and sizes for the memory of this CLKDIV
++		    peripheral.
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: reference to the xo clock.
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "xo".
++
++- clock-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: shall contain 1.
++
++=======
++Example
++=======
++
++pm8998_clk_divs: qcom,clock@5b00 {
++	compatible = "qcom,pm8998-clkdiv";
++	reg = <0x5b00>;
++	#clock-cells = <1>;
++	clocks = <&xo_board>;
++	clock-names = "xo";
++
++	assigned-clocks = <&pm8998_clk_divs 1>,
++			  <&pm8998_clk_divs 2>,
++			  <&pm8998_clk_divs 3>;
++	assigned-clock-rates = <9600000>,
++			       <9600000>,
++			       <9600000>;
++};
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 9f6c278..dd5b18e 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -196,3 +196,12 @@ config MSM_MMCC_8996
+ 	  Support for the multimedia clock controller on msm8996 devices.
+ 	  Say Y if you want to support multimedia devices such as display,
+ 	  graphics, video encode/decode, camera, etc.
++
++config SPMI_PMIC_CLKDIV
++	tristate "spmi pmic clkdiv driver"
++	depends on (COMMON_CLK_QCOM && SPMI) || COMPILE_TEST
++	help
++	  This driver supports the clkdiv functionality on the Qualcomm
++	  Technologies, Inc. SPMI PMIC. It configures the frequency of
++	  clkdiv outputs on the PMIC. These clocks are typically wired
++	  through alternate functions on gpio pins.
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 3f3aff2..4d4c62b 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -33,3 +33,4 @@ obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
+ obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
+ obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
+ obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
++obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
+diff --git a/drivers/clk/qcom/clk-spmi-pmic-div.c b/drivers/clk/qcom/clk-spmi-pmic-div.c
+new file mode 100644
+index 0000000..af343ad
+--- /dev/null
++++ b/drivers/clk/qcom/clk-spmi-pmic-div.c
+@@ -0,0 +1,343 @@
++/* Copyright (c) 2017, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/bitops.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/log2.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++#define REG_DIV_CTL1			0x43
++#define DIV_CTL1_DIV_FACTOR_MASK	GENMASK(2, 0)
++
++#define REG_EN_CTL			0x46
++#define REG_EN_MASK			BIT(7)
++
++#define ENABLE_DELAY_NS(cxo_ns, div)	((2 + 3 * div) * cxo_ns)
++#define DISABLE_DELAY_NS(cxo_ns, div)	((3 * div) * cxo_ns)
++
++#define CLK_SPMI_PMIC_DIV_OFFSET	1
++
++#define CLKDIV_XO_DIV_1_0		0
++#define CLKDIV_XO_DIV_1			1
++#define CLKDIV_XO_DIV_2			2
++#define CLKDIV_XO_DIV_4			3
++#define CLKDIV_XO_DIV_8			4
++#define CLKDIV_XO_DIV_16		5
++#define CLKDIV_XO_DIV_32		6
++#define CLKDIV_XO_DIV_64		7
++#define CLKDIV_MAX_ALLOWED		8
++
++struct clkdiv {
++	struct regmap		*regmap;
++	u16			base;
++	spinlock_t		lock;
++
++	/* clock properties */
++	struct clk_hw		hw;
++	unsigned int		div_factor;
++	unsigned int		cxo_period_ns;
++};
++
++static inline struct clkdiv *to_clkdiv(struct clk_hw *hw)
++{
++	return container_of(hw, struct clkdiv, hw);
++}
++
++static inline unsigned int div_factor_to_div(unsigned int div_factor)
++{
++	if (div_factor == CLKDIV_XO_DIV_1_0)
++		return 1;
++
++	return 1 << (div_factor - CLK_SPMI_PMIC_DIV_OFFSET);
++}
++
++static inline unsigned int div_to_div_factor(unsigned int div)
++{
++	return min(ilog2(div) + CLK_SPMI_PMIC_DIV_OFFSET,
++		   CLKDIV_MAX_ALLOWED - 1);
++}
++
++static bool is_spmi_pmic_clkdiv_enabled(struct clkdiv *clkdiv)
++{
++	unsigned int val = 0;
++
++	regmap_read(clkdiv->regmap, clkdiv->base + REG_EN_CTL,
++			 &val);
++	return (val & REG_EN_MASK) ? true : false;
++}
++
++static int spmi_pmic_clkdiv_set_enable_state(struct clkdiv *clkdiv,
++			bool enable_state)
++{
++	int rc;
++
++	rc = regmap_update_bits(clkdiv->regmap, clkdiv->base + REG_EN_CTL,
++				REG_EN_MASK,
++				(enable_state == true) ? REG_EN_MASK : 0);
++	if (rc)
++		return rc;
++
++	if (enable_state == true)
++		ndelay(ENABLE_DELAY_NS(clkdiv->cxo_period_ns,
++				div_factor_to_div(clkdiv->div_factor)));
++	else
++		ndelay(DISABLE_DELAY_NS(clkdiv->cxo_period_ns,
++				div_factor_to_div(clkdiv->div_factor)));
++
++	return rc;
++}
++
++static int spmi_pmic_clkdiv_config_freq_div(struct clkdiv *clkdiv,
++			unsigned int div)
++{
++	unsigned int div_factor;
++	unsigned long flags;
++	bool enabled;
++	int rc;
++
++	div_factor = div_to_div_factor(div);
++
++	spin_lock_irqsave(&clkdiv->lock, flags);
++
++	enabled = is_spmi_pmic_clkdiv_enabled(clkdiv);
++	if (enabled) {
++		rc = spmi_pmic_clkdiv_set_enable_state(clkdiv, false);
++		if (rc)
++			goto fail;
++	}
++
++	rc = regmap_update_bits(clkdiv->regmap,
++				clkdiv->base + REG_DIV_CTL1,
++				DIV_CTL1_DIV_FACTOR_MASK, div_factor);
++	if (rc)
++		goto fail;
++
++	clkdiv->div_factor = div_factor;
++
++	if (enabled)
++		rc = spmi_pmic_clkdiv_set_enable_state(clkdiv, true);
++
++fail:
++	spin_unlock_irqrestore(&clkdiv->lock, flags);
++	return rc;
++}
++
++static int clk_spmi_pmic_div_enable(struct clk_hw *hw)
++{
++	struct clkdiv *clkdiv = to_clkdiv(hw);
++	unsigned long flags;
++	int rc;
++
++	spin_lock_irqsave(&clkdiv->lock, flags);
++	rc = spmi_pmic_clkdiv_set_enable_state(clkdiv, true);
++	spin_unlock_irqrestore(&clkdiv->lock, flags);
++
++	return rc;
++}
++
++static void clk_spmi_pmic_div_disable(struct clk_hw *hw)
++{
++	struct clkdiv *clkdiv = to_clkdiv(hw);
++	unsigned long flags;
++
++	spin_lock_irqsave(&clkdiv->lock, flags);
++	spmi_pmic_clkdiv_set_enable_state(clkdiv, false);
++	spin_unlock_irqrestore(&clkdiv->lock, flags);
++}
++
++static long clk_spmi_pmic_div_round_rate(struct clk_hw *hw, unsigned long rate,
++			unsigned long *parent_rate)
++{
++	unsigned long new_rate;
++	unsigned int div, div_factor;
++
++	div = DIV_ROUND_UP(*parent_rate, rate);
++	div_factor = div_to_div_factor(div);
++	new_rate = *parent_rate / div_factor_to_div(div_factor);
++
++	return new_rate;
++}
++
++static unsigned long clk_spmi_pmic_div_recalc_rate(struct clk_hw *hw,
++			unsigned long parent_rate)
++{
++	struct clkdiv *clkdiv = to_clkdiv(hw);
++	unsigned long rate;
++
++	rate = parent_rate / div_factor_to_div(clkdiv->div_factor);
++
++	return rate;
++}
++
++static int clk_spmi_pmic_div_set_rate(struct clk_hw *hw, unsigned long rate,
++			unsigned long parent_rate)
++{
++	struct clkdiv *clkdiv = to_clkdiv(hw);
++
++	return spmi_pmic_clkdiv_config_freq_div(clkdiv, parent_rate / rate);
++}
++
++static const struct clk_ops clk_spmi_pmic_div_ops = {
++	.enable = clk_spmi_pmic_div_enable,
++	.disable = clk_spmi_pmic_div_disable,
++	.set_rate = clk_spmi_pmic_div_set_rate,
++	.recalc_rate = clk_spmi_pmic_div_recalc_rate,
++	.round_rate = clk_spmi_pmic_div_round_rate,
++};
++
++struct spmi_pmic_div_clk_cc {
++	struct clk_hw	**div_clks;
++	int		nclks;
++};
++
++#define SPMI_PMIC_CLKDIV_MIN_INDEX	1
++
++static struct clk_hw *spmi_pmic_div_clk_hw_get(struct of_phandle_args *clkspec,
++				      void *data)
++{
++	struct spmi_pmic_div_clk_cc *clk_cc = data;
++	unsigned int idx = (clkspec->args[0] - SPMI_PMIC_CLKDIV_MIN_INDEX);
++
++	if (idx < 0 || idx >= clk_cc->nclks) {
++		pr_err("%s: index value %u is invalid; allowed range: [%d, %d]\n",
++		       __func__, clkspec->args[0], SPMI_PMIC_CLKDIV_MIN_INDEX,
++		       clk_cc->nclks);
++		return ERR_PTR(-EINVAL);
++	}
++
++	return clk_cc->div_clks[idx];
++}
++
++#define SPMI_PMIC_DIV_CLK_SIZE		0x100
++
++static const struct of_device_id spmi_pmic_clkdiv_match_table[] = {
++	{
++		.compatible = "qcom,spmi-clkdiv",
++		.data =  (void *)(uintptr_t)1,		/* Generic */
++	},
++	{
++		.compatible = "qcom,pm8998-clkdiv",
++		.data =  (void *)(uintptr_t)3,		/* 3 div_clks */
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, spmi_pmic_clkdiv_match_table);
++
++static int spmi_pmic_clkdiv_probe(struct platform_device *pdev)
++{
++	struct spmi_pmic_div_clk_cc *clk_cc;
++	struct clk_init_data init = {};
++	struct clkdiv *clkdiv;
++	struct clk *cxo;
++	struct regmap *regmap;
++	struct device *dev = &pdev->dev;
++	const char *parent_name;
++	int nclks, i, rc, cxo_hz;
++	u32 start;
++
++	rc = of_property_read_u32(dev->of_node, "reg", &start);
++	if (rc < 0) {
++		dev_err(dev, "reg property reading failed\n");
++		return rc;
++	}
++
++	regmap = dev_get_regmap(dev->parent, NULL);
++	if (!regmap) {
++		dev_err(dev, "Couldn't get parent's regmap\n");
++		return -EINVAL;
++	}
++
++	nclks = (uintptr_t)of_match_node(spmi_pmic_clkdiv_match_table,
++					 dev->of_node)->data;
++
++	clkdiv = devm_kcalloc(dev, nclks, sizeof(*clkdiv), GFP_KERNEL);
++	if (!clkdiv)
++		return -ENOMEM;
++
++	clk_cc = devm_kzalloc(&pdev->dev, sizeof(*clk_cc), GFP_KERNEL);
++	if (!clk_cc)
++		return -ENOMEM;
++
++	clk_cc->div_clks = devm_kcalloc(&pdev->dev, nclks,
++					sizeof(*clk_cc->div_clks), GFP_KERNEL);
++	if (!clk_cc->div_clks)
++		return -ENOMEM;
++
++	cxo = clk_get(dev, "xo");
++	if (IS_ERR(cxo)) {
++		rc = PTR_ERR(cxo);
++		if (rc != -EPROBE_DEFER)
++			dev_err(dev, "failed to get xo clock");
++		return rc;
++	}
++	cxo_hz = clk_get_rate(cxo);
++	clk_put(cxo);
++
++	parent_name = of_clk_get_parent_name(dev->of_node, 0);
++	if (!parent_name) {
++		dev_err(dev, "missing parent clock\n");
++		return -ENODEV;
++	}
++
++	init.parent_names = &parent_name;
++	init.num_parents = parent_name ? 1 : 0;
++	init.ops = &clk_spmi_pmic_div_ops;
++	init.flags = 0;
++
++	for (i = 0; i < nclks; i++) {
++		spin_lock_init(&clkdiv[i].lock);
++		clkdiv[i].base = start + i * SPMI_PMIC_DIV_CLK_SIZE;
++		clkdiv[i].regmap = regmap;
++		clkdiv[i].cxo_period_ns = NSEC_PER_SEC / cxo_hz;
++		init.name = kasprintf(GFP_KERNEL, "div_clk%d", i + 1);
++		clkdiv[i].hw.init = &init;
++		rc = devm_clk_hw_register(dev, &clkdiv[i].hw);
++		kfree(init.name); /* clock framework made a copy of the name */
++		if (rc)
++			return rc;
++
++		clk_cc->div_clks[i] = &clkdiv[i].hw;
++	}
++
++	clk_cc->nclks = nclks;
++	rc = of_clk_add_hw_provider(pdev->dev.of_node, spmi_pmic_div_clk_hw_get,
++				    clk_cc);
++	return rc;
++}
++
++static int spmi_pmic_clkdiv_remove(struct platform_device *pdev)
++{
++	of_clk_del_provider(pdev->dev.of_node);
++
++	return 0;
++}
++
++static struct platform_driver spmi_pmic_clkdiv_driver = {
++	.driver		= {
++		.name	= "qcom,spmi-pmic-clkdiv",
++		.of_match_table = spmi_pmic_clkdiv_match_table,
++	},
++	.probe		= spmi_pmic_clkdiv_probe,
++	.remove		= spmi_pmic_clkdiv_remove,
++};
++module_platform_driver(spmi_pmic_clkdiv_driver);
++
++MODULE_DESCRIPTION("QCOM SPMI PMIC clkdiv driver");
++MODULE_LICENSE("GPL v2");
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-Dave, I plan to review this Friday or Monday. It would help me if you could
-post a v3 before Friday so that I'm reviewing the latest code.
-
-It would be great if you can also post your tc358743 patches. I have an RPi
-with a tc358743 attached, so it would be very useful if I can review and test
-both this driver and the tc358743 changes.
-
-I also have a selfish motive: I want to do a CEC demo next week during the
-Kernel Recipes conference with my RPi/tc358743 and your driver. It's nice if
-I can use the latest version for that.
-
-Regards,
-
-	Hans
