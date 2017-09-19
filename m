@@ -1,78 +1,39 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: exynos: Add dwc3 SUSPHY quirk
-Date: Tue, 19 Sep 2017 19:10:00 +0100
-Message-ID: <fcefaaab-b99c-a8cc-9684-98cc3c4d803e@arm.com>
-References: <1505728934-6200-1-git-send-email-andrzej.p@samsung.com>
- <CGME20170918100230eucas1p29fae00c53f1106af1961a6e269740b2f@eucas1p2.samsung.com>
- <1505728934-6200-2-git-send-email-andrzej.p@samsung.com>
- <20170919174038.2sspjvadt6ggka65@kozik-lap>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 2/2] hwmon: add dt binding for max1619
+Date: Tue, 19 Sep 2017 13:11:22 -0500
+Message-ID: <CANk1AXQr1RzB9THosy+_8VPz4-GLzHSZYtGqf59S97aBThhaZA@mail.gmail.com>
+References: <20170911191649.3344-1-atull@kernel.org> <20170911191649.3344-2-atull@kernel.org>
+ <20170911195857.GB2580@roeck-us.net> <20170918211124.jvvl75mznwf3n6sk@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170919174038.2sspjvadt6ggka65@kozik-lap>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20170918211124.jvvl75mznwf3n6sk@rob-hp-laptop>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19/09/17 18:40, Krzysztof Kozlowski wrote:
-> On Mon, Sep 18, 2017 at 12:02:13PM +0200, Andrzej Pietrasiewicz wrote:
->> Odroid XU4 board does not enumerate SuperSpeed devices.
->> This patch makes exynos5 series chips use USB SUSPHY quirk,
->> which solves the problem.
+On Mon, Sep 18, 2017 at 4:11 PM, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Sep 11, 2017 at 12:58:57PM -0700, Guenter Roeck wrote:
+>> On Mon, Sep 11, 2017 at 02:16:49PM -0500, Alan Tull wrote:
+>> > Add new device tree binding for max1619.
+>> >
+>> > Signed-off-by: Alan Tull <atull@kernel.org>
 >>
->> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/exynos54xx.dtsi | 2 ++
->>  1 file changed, 2 insertions(+)
-> 
-> Makes sense to me... was it tested also on XU3 and XU?
+>> Technically that should already work, without explicit binding,
+>> or did the i2c core change lately ?
+>
+> There was some work in that direction IIRC.
 
-Well, it at least doesn't make USB3 on my XU any more or less broken
-than it was before ;) (both ports still report an over-current condition
-even with nothing plugged in - I suspect there's probably still some
-pinctrl/regulator stuff missing)
+Yes, after Guenter replied I tried it without this patch and it
+worked.  i2c drivers can have a 'detect' function that can check part
+id, etc.  If detection succeeds, it will fill in the device name in
+i2c_board_info->type and the i2c-core will enumerate using that.
 
-Robin.
+Alan
 
-> 
-> Best regards,
-> Krzysztof
-> 
->>
->> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
->> index 0389e8a..8ca4fef 100644
->> --- a/arch/arm/boot/dts/exynos54xx.dtsi
->> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
->> @@ -134,6 +134,7 @@
->>  				interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
->>  				phys = <&usbdrd_phy0 0>, <&usbdrd_phy0 1>;
->>  				phy-names = "usb2-phy", "usb3-phy";
->> +				snps,dis_u3_susphy_quirk;
->>  			};
->>  		};
->>  
->> @@ -154,6 +155,7 @@
->>  				reg = <0x12400000 0x10000>;
->>  				phys = <&usbdrd_phy1 0>, <&usbdrd_phy1 1>;
->>  				phy-names = "usb2-phy", "usb3-phy";
->> +				snps,dis_u3_susphy_quirk;
->>  			};
->>  		};
->>  
->> -- 
->> 1.9.1
->>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> We don't really want to rely on that behavior and should have DT match
+> strings.
+>
+> Rob
