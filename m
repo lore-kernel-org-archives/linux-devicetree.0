@@ -1,44 +1,89 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [RESEND PATCH v2 0/5] K2G: Add QSPI support
-Date: Tue, 19 Sep 2017 16:26:00 +0530
-Message-ID: <20170919105605.18533-1-vigneshr@ti.com>
+From: Hans Verkuil <hansverk@cisco.com>
+Subject: Re: [PATCHv2 1/2] dt-bindings: adi,adv7511.txt: document cec clock
+Date: Tue, 19 Sep 2017 12:59:13 +0200
+Message-ID: <aa9c5c0e-c2c8-7913-0e6c-4b150ff09a9b@cisco.com>
+References: <20170919073331.29007-1-hverkuil@xs4all.nl>
+ <20170919073331.29007-2-hverkuil@xs4all.nl>
+ <505bc74f-6563-ab1d-9aab-7893410aef7e@cogentembedded.com>
+ <74b252c8-c1eb-8498-7b9b-54604fe2806a@cisco.com>
+ <e68cffb1-346c-2018-9048-3f8523903809@cogentembedded.com>
+ <7bfcd125-db23-61e3-2bc9-67e5c11f27fa@xs4all.nl>
+ <ce0588ed-eb3f-0008-0608-b54aefeee704@cogentembedded.com>
+ <82f72432-51fa-722b-b1c7-d6f7ea6ae758@xs4all.nl>
+ <5c8f3625-26f3-8c6e-d42a-def8251a9ac6@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <5c8f3625-26f3-8c6e-d42a-def8251a9ac6@cogentembedded.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, linux-renesas-soc@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
-The patches enhance the existing cadence-quadspi driver to support
-loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
+On 09/19/17 12:42, Sergei Shtylyov wrote:
+> On 9/19/2017 1:35 PM, Hans Verkuil wrote:
+> 
+>>>>>>>> From: Hans Verkuil <hans.verkuil@cisco.com>
+>>>>>>>>
+>>>>>>>> Document the cec clock binding.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+>>>>>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>>>>>> ---
+>>>>>>>>      Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 4 ++++
+>>>>>>>>      1 file changed, 4 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>>>> index 06668bca7ffc..4497ae054d49 100644
+>>>>>>>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>>>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>>>> @@ -68,6 +68,8 @@ Optional properties:
+>>>>>>>>      - adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
+>>>>>>>>        generator. The chip will rely on the sync signals in the DSI data lanes,
+>>>>>>>>        rather than generate its own timings for HDMI output.
+>>>>>>>> +- clocks: from common clock binding: handle to CEC clock.
+>>>>>>>
+>>>>>>>        It's called "phandle" in the DT speak. :-)
+>>>>>>>        Are you sure the clock specifier would always be absent?
+>>>>>>
+>>>>>> Sorry? I don't understand the question. Did you mean: "can be absent?"?
+>>>>>
+>>>>>       No, you only say that there'll be the clock phandle only. The clock
+>>>>> specifier may follow the phandle for the clock devices that have
+>>>>> "#clock-cells" prop != 0.
+>>>>
+>>>> I have to say that I just copy-and-pasted this from other bindings.
+>>>
+>>>      :-)
+>>>
+>>>> Would this be better?
+>>>>
+>>>> - clocks: list of clock specifiers, corresponding to entries in
+>>>>     the clock-names property;
+>>>
+>>>      Didn't you say that there'll be only one clock, "cec"? If so, there's
+>>> gonna  be a single clock phandle+specifier pair. They always go in pairs. :-)
+>>>
+>>>> - clock-names: from common clock binding: must be "cec".
+>>
+>> - clocks: cec clock phandle, corresponding to the clock-names entry.
+> 
+>     The clock phandle and specifier.
+> 
+>> - clock-names: from common clock binding: must be "cec".
+>>
+>> This OK?
+> 
+>     Well, you seem to be going in circles, the above was almost the same as 
+> the original prop description...
 
-Change log:
+- clocks: from common clock binding: reference to the CEC clock.
+- clock-names: from common clock binding: must be "cec".
 
-Resend:
-* Rebase to latest linux-next.
-* Collect Acked-bys
+This avoids the whole issue of having just a phandle or a phandle + specifier.
 
-v2:
-* Drop DT patches. Will be sent as separate series as requested by
- maintainer.
-* Split binding docs into separate patches.
-* Address comments by Rob Herring.
+Regards,
 
-
-Vignesh R (5):
-  mtd: spi-nor: cadence-quadspi: Add TI 66AK2G SoC specific compatible
-  mtd: spi-nor: cadence-quadspi: add a delay in write sequence
-  mtd: spi-nor: cadence-quadspi: Add new binding to enable loop-back
-    circuit
-  mtd: spi-nor: cadence-quadspi: Add support to enable loop-back clock
-    circuit
-  mtd: spi-nor: cadence-quadspi: Add runtime PM support
-
- .../devicetree/bindings/mtd/cadence-quadspi.txt    |  7 +++-
- drivers/mtd/spi-nor/cadence-quadspi.c              | 46 ++++++++++++++++++++--
- 2 files changed, 49 insertions(+), 4 deletions(-)
-
--- 
-2.14.1
+	Hans
