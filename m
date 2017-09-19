@@ -1,79 +1,61 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "spi: rspi: Add r8a7743/5 to the compatible list" to the spi tree
-Date: Tue, 19 Sep 2017 14:47:29 +0100
-Message-ID: <E1duIs5-0008U8-I2@debutante>
-References: <1504858035-3568-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504858035-3568-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
+Date: Tue, 19 Sep 2017 15:48:14 +0200
+Message-ID: <20170919154814.02485818@bbrezillon>
+References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
+ <70f446c1-64d8-928c-4ea7-aa16dda12253@ti.com>
+ <20170919152533.78fb2b3e@bbrezillon>
+ <2ccf3816-8a98-5626-7e4e-1dd13f167811@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2ccf3816-8a98-5626-7e4e-1dd13f167811@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, dri-devel@lists.freedesktop.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Neil Webb <neilw@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   spi: rspi: Add r8a7743/5 to the compatible list
-
-has been applied to the spi tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 10c1705eced11d6ad710fddcdb57aaa9f85a6f98 Mon Sep 17 00:00:00 2001
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Date: Fri, 8 Sep 2017 09:07:15 +0100
-Subject: [PATCH] spi: rspi: Add r8a7743/5 to the compatible list
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/spi-rspi.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-index 8f4169f63936..3b02b3a7cfb2 100644
---- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-@@ -5,11 +5,14 @@ Required properties:
- 		     "renesas,rspi-<soctype>", "renesas,rspi" as fallback.
- 		     For Renesas Serial Peripheral Interface on RZ/A1H:
- 		     "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
--		     For Quad Serial Peripheral Interface on R-Car Gen2:
-+		     For Quad Serial Peripheral Interface on R-Car Gen2 and
-+		     RZ/G1 devices:
- 		     "renesas,qspi-<soctype>", "renesas,qspi" as fallback.
- 		     Examples with soctypes are:
- 		        - "renesas,rspi-sh7757" (SH)
- 			- "renesas,rspi-r7s72100" (RZ/A1H)
-+			- "renesas,qspi-r8a7743" (RZ/G1M)
-+			- "renesas,qspi-r8a7745" (RZ/G1E)
- 			- "renesas,qspi-r8a7790" (R-Car H2)
- 			- "renesas,qspi-r8a7791" (R-Car M2-W)
- 			- "renesas,qspi-r8a7792" (R-Car V2H)
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCAxOSBTZXAgMjAxNyAxNjozODozMSArMDMwMApUb21pIFZhbGtlaW5lbiA8dG9taS52
+YWxrZWluZW5AdGkuY29tPiB3cm90ZToKCj4g77u/Cj4gVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFu
+ZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNz
+IElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCj4gCj4gT24gMTkv
+MDkvMTcgMTY6MjUsIEJvcmlzIEJyZXppbGxvbiB3cm90ZToKPiA+IE9uIFR1ZSwgMTkgU2VwIDIw
+MTcgMTU6NTk6MjAgKzAzMDAKPiA+IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5j
+b20+IHdyb3RlOgo+ID4gICAKPiA+PiDvu79IaSBCb3JpcywKPiA+Pgo+ID4+Cj4gPj4gVGV4YXMg
+SW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2ku
+IFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhl
+bHNpbmtpCj4gPj4KPiA+PiBPbiAzMS8wOC8xNyAxODo1NSwgQm9yaXMgQnJlemlsbG9uIHdyb3Rl
+OiAgCj4gPj4+IEFkZCBhIGRyaXZlciBmb3IgQ2FkZW5jZSBEUEkgLT4gRFNJIGJyaWRnZS4KPiA+
+Pj4KPiA+Pj4gVGhpcyBkcml2ZXIgb25seSBzdXBwb3J0IGEgc3Vic2V0IG9mIENhZGVuY2UgRFNJ
+IGJyaWRnZSBjYXBhYmlsaXRpZXMuCj4gPj4+Cj4gPj4+IEhlcmUgaXMgYSBub24tZXhoYXVzdGl2
+ZSBsaXN0IG9mIG1pc3NpbmcgZmVhdHVyZXM6Cj4gPj4+ICAqIGJ1cnN0IG1vZGUKPiA+Pj4gICog
+ZHluYW1pYyBjb25maWd1cmF0aW9uIG9mIHRoZSBEUEhZIGJhc2VkIG9uIHRoZQo+ID4+PiAgKiBz
+dXBwb3J0IGZvciBhZGRpdGlvbmFsIGlucHV0IGludGVyZmFjZXMgKFNESSBpbnB1dCkKPiA+Pj4K
+PiA+Pj4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJl
+ZS1lbGVjdHJvbnMuY29tPiAgICAKPiA+Pgo+ID4+IDxzbmlwPgo+ID4+ICAKPiA+Pj4gKwlkc2kt
+PnBjbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgInBjbGsiKTsKPiA+Pj4gKwlpZiAoSVNf
+RVJSKGRzaS0+cGNsaykpCj4gPj4+ICsJCXJldHVybiBQVFJfRVJSKGRzaS0+cGNsayk7ICAgIAo+
+ID4+Cj4gPj4gV2hhdCdzIHRoZSBwdXJwb3NlIG9mIHBjbGs/IElzbid0IHRoYXQgbm9ybWFsbHkg
+ZGVhbHQgd2l0aCB0aGUgbm9ybWFsCj4gPj4gbW9kZXNldHRpbmcsIGVuYWJsZWQgd2l0aCB0aGUg
+dmlkZW8gc3RyZWFtPyBIb3cgY291bGQgaXQgZXZlbiBiZSBlbmFibGVkCj4gPj4gaGVyZSwgd2l0
+aG91dCBhbnlvbmUgc2V0dGluZyB0aGUgcmF0ZT8gIAo+ID4gCj4gPiBJdCdzIHRoZSBwZXJpcGhl
+cmFsIGNsb2NrLCBub3QgdGhlIHBpeGVsIGNsb2NrLCBhbmQgQUZBSVUgaXQgaGFzIHRvIGJlCj4g
+PiBlbmFibGVkIGJlZm9yZSBhY2Nlc3NpbmcgRFNJIHJlZ2lzdGVycy4gIAo+IAo+IElzIHRoYXQg
+dGhlIGRzaV9wX2Nsaz8gSSBjYW4ndCBmaW5kICJwZXJpcGhlcmFsIGNsb2NrIiBpbiB0aGUgc3Bl
+Y3MuCgpZZXAsIGl0IGlzIGRzaV9wX2NsayAodGhlIEFQQiBjbG9jaykuCgo+IAo+IEkgdGhpbmsg
+Y2FsbGluZyBpdCAicGNsayIgaW4gYSBkaXNwbGF5IGRyaXZlciBpcyB2ZXJ5IGNvbmZ1c2luZywg
+YXMKPiBwY2xrLCBhdCBsZWFzdCBmb3IgbWUsIGFsd2F5cyBtZWFucyBwaXhlbCBjbG9jayA9KS4K
+CkkgY2FuIHJlbmFtZSBpdCBpZiB5b3UgcHJlZmVyLiBXaGF0IG5hbWUgd291bGQgeW91IGxpa2Ug
+dG8gc2VlPwphYnBfY2xrPyBwZXJpcGhfY2xrPyBTb21ldGhpbmcgZWxzZT8KCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
