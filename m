@@ -1,85 +1,190 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/2] ARM64: dts: meson-gxm: Add Vega S96 board
-Date: Tue, 19 Sep 2017 14:05:47 +0200
-Message-ID: <1505822748-23431-2-git-send-email-narmstrong@baylibre.com>
-References: <1505822748-23431-1-git-send-email-narmstrong@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v13 21/25] smiapp: Add support for flash and lens devices
+Date: Tue, 19 Sep 2017 15:08:25 +0300
+Message-ID: <1881974.bD6jRInLY1@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <20170915141724.23124-22-sakari.ailus@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505822748-23431-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170915141724.23124-22-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org, support-QbXJUBtoW2jby3iVrkZq2A@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Tronsmart Vega S96 is a TV box derived from Amlogic q200 reference design.
+Hi Sakari,
 
-Cc: support-QbXJUBtoW2jby3iVrkZq2A@public.gmane.org
-Signed-off-by: Oleg <balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org>
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/Makefile               |  1 +
- arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts | 39 ++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
+Thank you for the patch.
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 7a9f48c..a6c4a06 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-new file mode 100644
-index 0000000..ba74240
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-@@ -0,0 +1,39 @@
-+/*
-+ * Copyright (c) 2017 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-+ * Copyright (c) 2017 Oleg <balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org>
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxm.dtsi"
-+#include "meson-gx-p23x-q20x.dtsi"
-+
-+/ {
-+	compatible = "tronsmart,vega-s96", "amlogic,s912", "amlogic,meson-gxm";
-+	model = "Tronsmart Vega S96";
-+
-+};
-+
-+&ethmac {
-+	pinctrl-0 = <&eth_pins>;
-+	pinctrl-names = "default";
-+
-+	/* Select external PHY by default */
-+	phy-handle = <&external_phy>;
-+
-+	amlogic,tx-delay-ns = <2>;
-+
-+	/* External PHY is in RGMII */
-+	phy-mode = "rgmii";
-+};
-+
-+&external_mdio {
-+	external_phy: ethernet-phy@0 {
-+		compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
-+		reg = <0>;
-+		max-speed = <1000>;
-+	};
-+};
+On Friday, 15 September 2017 17:17:20 EEST Sakari Ailus wrote:
+> Parse async sub-devices by using
+> v4l2_subdev_fwnode_reference_parse_sensor_common().
+> 
+> These types devices aren't directly related to the sensor, but are
+> nevertheless handled by the smiapp driver due to the relationship of these
+> component to the main part of the camera module --- the sensor.
+> 
+> This does not yet address providing the user space with information on how
+> to associate the sensor or lens devices but the kernel now has the
+> necessary information to do that.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+Something is bothering me here, not so much in the contents of the patch 
+itself than in its nature. There are four patches in this series that add 
+support for flash and lens devices to the smiapp, et8ek8, ov5670 and ov13858 
+drivers. We have way more sensor drivers than that, and I don't really want to 
+patch them all to support flash and lens. I believe a less intrusive approach, 
+more focussed on the V4L2 core, is needed.
+
+> ---
+>  drivers/media/i2c/smiapp/smiapp-core.c | 38 ++++++++++++++++++++++++-------
+>  drivers/media/i2c/smiapp/smiapp.h      |  4 +++-
+>  2 files changed, 33 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/smiapp/smiapp-core.c
+> b/drivers/media/i2c/smiapp/smiapp-core.c index 700f433261d0..a4735a96ea41
+> 100644
+> --- a/drivers/media/i2c/smiapp/smiapp-core.c
+> +++ b/drivers/media/i2c/smiapp/smiapp-core.c
+> @@ -31,7 +31,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+>  #include <linux/smiapp.h>
+> -#include <linux/v4l2-mediabus.h>
+> +#include <media/v4l2-async.h>
+>  #include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-device.h>
+> 
+> @@ -2887,17 +2887,24 @@ static int smiapp_probe(struct i2c_client *client,
+>  	v4l2_i2c_subdev_init(&sensor->src->sd, client, &smiapp_ops);
+>  	sensor->src->sd.internal_ops = &smiapp_internal_src_ops;
+> 
+> +	rval = v4l2_async_notifier_parse_fwnode_sensor_common(
+> +		&client->dev, &sensor->notifier);
+> +	if (rval < 0)
+> +		return rval;
+> +
+>  	sensor->vana = devm_regulator_get(&client->dev, "vana");
+>  	if (IS_ERR(sensor->vana)) {
+>  		dev_err(&client->dev, "could not get regulator for vana\n");
+> -		return PTR_ERR(sensor->vana);
+> +		rval = PTR_ERR(sensor->vana);
+> +		goto out_release_async_notifier;
+>  	}
+> 
+>  	sensor->ext_clk = devm_clk_get(&client->dev, NULL);
+>  	if (IS_ERR(sensor->ext_clk)) {
+>  		dev_err(&client->dev, "could not get clock (%ld)\n",
+>  			PTR_ERR(sensor->ext_clk));
+> -		return -EPROBE_DEFER;
+> +		rval = -EPROBE_DEFER;
+> +		goto out_release_async_notifier;
+>  	}
+> 
+>  	rval = clk_set_rate(sensor->ext_clk, sensor->hwcfg->ext_clk);
+> @@ -2905,17 +2912,19 @@ static int smiapp_probe(struct i2c_client *client,
+>  		dev_err(&client->dev,
+>  			"unable to set clock freq to %u\n",
+>  			sensor->hwcfg->ext_clk);
+> -		return rval;
+> +		goto out_release_async_notifier;
+>  	}
+> 
+>  	sensor->xshutdown = devm_gpiod_get_optional(&client->dev, "xshutdown",
+>  						    GPIOD_OUT_LOW);
+> -	if (IS_ERR(sensor->xshutdown))
+> -		return PTR_ERR(sensor->xshutdown);
+> +	if (IS_ERR(sensor->xshutdown)) {
+> +		rval = PTR_ERR(sensor->xshutdown);
+> +		goto out_release_async_notifier;
+> +	}
+> 
+>  	rval = smiapp_power_on(&client->dev);
+>  	if (rval < 0)
+> -		return rval;
+> +		goto out_release_async_notifier;
+> 
+>  	rval = smiapp_identify_module(sensor);
+>  	if (rval) {
+> @@ -3092,9 +3101,14 @@ static int smiapp_probe(struct i2c_client *client,
+>  	if (rval < 0)
+>  		goto out_media_entity_cleanup;
+> 
+> +	rval = v4l2_async_subdev_notifier_register(&sensor->src->sd,
+> +						   &sensor->notifier);
+> +	if (rval)
+> +		goto out_media_entity_cleanup;
+> +
+>  	rval = v4l2_async_register_subdev(&sensor->src->sd);
+>  	if (rval < 0)
+> -		goto out_media_entity_cleanup;
+> +		goto out_unregister_async_notifier;
+> 
+>  	pm_runtime_set_active(&client->dev);
+>  	pm_runtime_get_noresume(&client->dev);
+> @@ -3105,6 +3119,9 @@ static int smiapp_probe(struct i2c_client *client,
+> 
+>  	return 0;
+> 
+> +out_unregister_async_notifier:
+> +	v4l2_async_notifier_unregister(&sensor->notifier);
+> +
+>  out_media_entity_cleanup:
+>  	media_entity_cleanup(&sensor->src->sd.entity);
+> 
+> @@ -3114,6 +3131,9 @@ static int smiapp_probe(struct i2c_client *client,
+>  out_power_off:
+>  	smiapp_power_off(&client->dev);
+> 
+> +out_release_async_notifier:
+> +	v4l2_async_notifier_release(&sensor->notifier);
+> +
+>  	return rval;
+>  }
+> 
+> @@ -3124,6 +3144,8 @@ static int smiapp_remove(struct i2c_client *client)
+>  	unsigned int i;
+> 
+>  	v4l2_async_unregister_subdev(subdev);
+> +	v4l2_async_notifier_unregister(&sensor->notifier);
+> +	v4l2_async_notifier_release(&sensor->notifier);
+> 
+>  	pm_runtime_disable(&client->dev);
+>  	if (!pm_runtime_status_suspended(&client->dev))
+> diff --git a/drivers/media/i2c/smiapp/smiapp.h
+> b/drivers/media/i2c/smiapp/smiapp.h index f74d695018b9..be92cb5713f4 100644
+> --- a/drivers/media/i2c/smiapp/smiapp.h
+> +++ b/drivers/media/i2c/smiapp/smiapp.h
+> @@ -20,9 +20,10 @@
+>  #define __SMIAPP_PRIV_H_
+> 
+>  #include <linux/mutex.h>
+> +#include <media/i2c/smiapp.h>
+> +#include <media/v4l2-async.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-subdev.h>
+> -#include <media/i2c/smiapp.h>
+> 
+>  #include "smiapp-pll.h"
+>  #include "smiapp-reg.h"
+> @@ -172,6 +173,7 @@ struct smiapp_subdev {
+>   * struct smiapp_sensor - Main device structure
+>   */
+>  struct smiapp_sensor {
+> +	struct v4l2_async_notifier notifier;
+>  	/*
+>  	 * "mutex" is used to serialise access to all fields here
+>  	 * except v4l2_ctrls at the end of the struct. "mutex" is also
+
+
 -- 
-1.9.1
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
