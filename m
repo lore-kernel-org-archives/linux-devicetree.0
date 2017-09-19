@@ -1,37 +1,189 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH] dt-bindings: clk: stm32h7: fix clock-cell size
-Date: Tue, 19 Sep 2017 13:44:06 +0200
-Message-ID: <1505821446-6847-1-git-send-email-gabriel.fernandez@st.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v13 07/25] rcar-vin: Use generic parser for parsing fwnode endpoints
+Date: Tue, 19 Sep 2017 14:53:16 +0300
+Message-ID: <3549838.F21OCYHXEu@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <20170915141724.23124-8-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com, gabriel.fernandez.st@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915141724.23124-8-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Hi Sakari,
 
-The clock-cell size is 1 on stm32h7 plaform.
+Thank you for the patch.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Fixes: 3e4d618b0722 ("clk: stm32h7: Add stm32h743 clock driver")
----
- Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Friday, 15 September 2017 17:17:06 EEST Sakari Ailus wrote:
+> Instead of using driver implementation, use
 
-diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
-index a135504..cac24ee 100644
---- a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
-+++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
-@@ -32,7 +32,7 @@ Example:
- 		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
- 		reg = <0x58024400 0x400>;
- 		#reset-cells = <1>;
--		#clock-cells = <2>;
-+		#clock-cells = <1>;
- 		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
- 
- 		st,syscfg = <&pwrcfg>;
+Same comment as for patch 06/25.
+
+> v4l2_async_notifier_parse_fwnode_endpoints() to parse the fwnode endpoints
+> of the device.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/media/platform/rcar-vin/rcar-core.c | 112 ++++++++-----------------
+>  drivers/media/platform/rcar-vin/rcar-dma.c  |  10 +--
+>  drivers/media/platform/rcar-vin/rcar-v4l2.c |  14 ++--
+>  drivers/media/platform/rcar-vin/rcar-vin.h  |   4 +-
+>  4 files changed, 48 insertions(+), 92 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c
+> b/drivers/media/platform/rcar-vin/rcar-core.c index
+> 142de447aaaa..62b4a94f9a39 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+
+[snip]
+
+> @@ -120,117 +121,70 @@ static int rvin_digital_notify_bound(struct
+
+[snip]
+
+> -static int rvin_digitial_parse_v4l2(struct rvin_dev *vin,
+> -				    struct device_node *ep,
+> -				    struct v4l2_mbus_config *mbus_cfg)
+> +static int rvin_digital_parse_v4l2(struct device *dev,
+> +				   struct v4l2_fwnode_endpoint *vep,
+> +				   struct v4l2_async_subdev *asd)
+>  {
+> -	struct v4l2_fwnode_endpoint v4l2_ep;
+> -	int ret;
+> +	struct rvin_dev *vin = dev_get_drvdata(dev);
+
+Doesn't this show that we miss a context argument to the callback function ? 
+Storing the context in device driver data is probably OK if the driver parsing 
+the endpoints controls the struct device, but is that always the case ?
+
+> +	struct rvin_graph_entity *rvge =
+> +		container_of(asd, struct rvin_graph_entity, asd);
+> 
+> -	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
+> -	if (ret) {
+> -		vin_err(vin, "Could not parse v4l2 endpoint\n");
+> -		return -EINVAL;
+> -	}
+> +	if (vep->base.port || vep->base.id)
+> +		return -ENOTCONN;
+> 
+> -	mbus_cfg->type = v4l2_ep.bus_type;
+> +	rvge->mbus_cfg.type = vep->bus_type;
+> 
+> -	switch (mbus_cfg->type) {
+> +	switch (rvge->mbus_cfg.type) {
+>  	case V4L2_MBUS_PARALLEL:
+>  		vin_dbg(vin, "Found PARALLEL media bus\n");
+> -		mbus_cfg->flags = v4l2_ep.bus.parallel.flags;
+> +		rvge->mbus_cfg.flags = vep->bus.parallel.flags;
+>  		break;
+>  	case V4L2_MBUS_BT656:
+>  		vin_dbg(vin, "Found BT656 media bus\n");
+> -		mbus_cfg->flags = 0;
+> +		rvge->mbus_cfg.flags = 0;
+>  		break;
+>  	default:
+>  		vin_err(vin, "Unknown media bus type\n");
+>  		return -EINVAL;
+>  	}
+> 
+> -	return 0;
+> -}
+> -
+> -static int rvin_digital_graph_parse(struct rvin_dev *vin)
+> -{
+> -	struct device_node *ep, *np;
+> -	int ret;
+> -
+> -	vin->digital.asd.match.fwnode.fwnode = NULL;
+> -	vin->digital.subdev = NULL;
+> -
+> -	/*
+> -	 * Port 0 id 0 is local digital input, try to get it.
+> -	 * Not all instances can or will have this, that is OK
+> -	 */
+> -	ep = of_graph_get_endpoint_by_regs(vin->dev->of_node, 0, 0);
+> -	if (!ep)
+> -		return 0;
+> -
+> -	np = of_graph_get_remote_port_parent(ep);
+> -	if (!np) {
+> -		vin_err(vin, "No remote parent for digital input\n");
+> -		of_node_put(ep);
+> -		return -EINVAL;
+> -	}
+> -	of_node_put(np);
+> -
+> -	ret = rvin_digitial_parse_v4l2(vin, ep, &vin->digital.mbus_cfg);
+> -	of_node_put(ep);
+> -	if (ret)
+> -		return ret;
+> -
+> -	vin->digital.asd.match.fwnode.fwnode = of_fwnode_handle(np);
+> -	vin->digital.asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
+> +	vin->digital = rvge;
+> 
+>  	return 0;
+>  }
+> 
+>  static int rvin_digital_graph_init(struct rvin_dev *vin)
+>  {
+> -	struct v4l2_async_subdev **subdevs = NULL;
+>  	int ret;
+> 
+> -	ret = rvin_digital_graph_parse(vin);
+> +	ret = v4l2_async_notifier_parse_fwnode_endpoints(
+> +		vin->dev, &vin->notifier,
+> +		sizeof(struct rvin_graph_entity), rvin_digital_parse_v4l2);
+>  	if (ret)
+>  		return ret;
+> 
+> -	if (!vin->digital.asd.match.fwnode.fwnode) {
+> -		vin_dbg(vin, "No digital subdevice found\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	/* Register the subdevices notifier. */
+> -	subdevs = devm_kzalloc(vin->dev, sizeof(*subdevs), GFP_KERNEL);
+> -	if (subdevs == NULL)
+> -		return -ENOMEM;
+> -
+> -	subdevs[0] = &vin->digital.asd;
+> -
+> -	vin_dbg(vin, "Found digital subdevice %pOF\n",
+> -		to_of_node(subdevs[0]->match.fwnode.fwnode));
+> +	if (vin->digital)
+> +		vin_dbg(vin, "Found digital subdevice %pOF\n",
+> +			to_of_node(
+> +				vin->digital->asd.match.fwnode.fwnode));
+
+Isn't this is a change in behaviour ? The driver currently returns -ENODEV 
+when no digital subdev is found.
+
+> -	vin->notifier.num_subdevs = 1;
+> -	vin->notifier.subdevs = subdevs;
+>  	vin->notifier.bound = rvin_digital_notify_bound;
+>  	vin->notifier.unbind = rvin_digital_notify_unbind;
+>  	vin->notifier.complete = rvin_digital_notify_complete;
+> -
+>  	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
+>  	if (ret < 0) {
+>  		vin_err(vin, "Notifier registration failed\n");
+
+
+[snip]
+
 -- 
-1.9.1
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
