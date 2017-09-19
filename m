@@ -1,36 +1,137 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] openrisc: dts: or1ksim: Add stdout-path
-Date: Tue, 19 Sep 2017 23:00:24 +0900
-Message-ID: <20170919140024.32563-1-shorne@gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v13 17/25] v4l: fwnode: Add a helper function for parsing generic references
+Date: Tue, 19 Sep 2017 17:01:38 +0300
+Message-ID: <1662065.mUdkDygaDL@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <2639286.bLnehYdF9o@avalon> <20170919130453.ii5kz54qxlot4of2@paasikivi.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170919130453.ii5kz54qxlot4of2-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-During reviews of the OpenRISC SMP patch series it was suggested to add
-stdout-path to the SMP dts file.  Add stdout-path to our other dts files
-to be a good example.
+Hi Sakari,
 
-Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/openrisc/boot/dts/or1ksim.dts | 1 +
- 1 file changed, 1 insertion(+)
+On Tuesday, 19 September 2017 16:04:53 EEST Sakari Ailus wrote:
+> On Tue, Sep 19, 2017 at 03:19:59PM +0300, Laurent Pinchart wrote:
+> > On Friday, 15 September 2017 17:17:16 EEST Sakari Ailus wrote:
+> > > Add function v4l2_fwnode_reference_parse() for parsing them as async
+> > > sub-devices. This can be done on e.g. flash or lens async sub-devices
+> > > that are not part of but are associated with a sensor.
+> > > 
+> > > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > > ---
+> > > 
+> > >  drivers/media/v4l2-core/v4l2-fwnode.c | 69 ++++++++++++++++++++++++++++
+> > >  1 file changed, 69 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > b/drivers/media/v4l2-core/v4l2-fwnode.c index 44ee35f6aad5..65e84ea1cc35
+> > > 100644
+> > > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > > @@ -498,6 +498,75 @@ int
+> > > v4l2_async_notifier_parse_fwnode_endpoints_by_port( }
+> > > 
+> > >  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
+> > > 
+> > > +/*
+> > > + * v4l2_fwnode_reference_parse - parse references for async sub-devices
+> > > + * @dev: the device node the properties of which are parsed for
+> > > references
+> > > + * @notifier: the async notifier where the async subdevs will be added
+> > > + * @prop: the name of the property
+> > > + *
+> > > + * Return: 0 on success
+> > > + *	   -ENOENT if no entries were found
+> > > + *	   -ENOMEM if memory allocation failed
+> > > + *	   -EINVAL if property parsing failed
+> > > + */
+> > > +static int v4l2_fwnode_reference_parse(
+> > > +	struct device *dev, struct v4l2_async_notifier *notifier,
+> > > +	const char *prop)
+> > > +{
+> > > +	struct fwnode_reference_args args;
+> > > +	unsigned int index;
+> > > +	int ret;
+> > > +
+> > > +	for (index = 0;
+> > > +	     !(ret = fwnode_property_get_reference_args(
+> > > +		       dev_fwnode(dev), prop, NULL, 0, index, &args));
+> > > +	     index++)
+> > > +		fwnode_handle_put(args.fwnode);
+> > 
+> > This seems to indicate that the fwnode API is missing a function to count
+> > the number of references in a property. Should that be fixed ?
+> 
+> I can send a patch adding that.
+> 
+> OF has one available but it's only for cases where the number of integer
+> arguments isn't fixed.
 
-diff --git a/arch/openrisc/boot/dts/or1ksim.dts b/arch/openrisc/boot/dts/or1ksim.dts
-index 5d4f9027afaf..ecc30968cbcb 100644
---- a/arch/openrisc/boot/dts/or1ksim.dts
-+++ b/arch/openrisc/boot/dts/or1ksim.dts
-@@ -7,6 +7,7 @@
- 
- 	chosen {
- 		bootargs = "console=uart,mmio,0x90000000,115200";
-+		stdout-path = &serial0;
- 	};
- 
- 	memory@0 {
+Yes, in all other cases the size of one reference is known (it's the sum of 
+the sizes of all arguments), so the number of references can be computed with 
+size(property) / size(reference).
+
+> > The rest looks OK to me.
+> > 
+> > > +	if (!index)
+> > > +		return -ENOENT;
+> > > +
+> > > +	/*
+> > > +	 * Note that right now both -ENODATA and -ENOENT may signal
+> > > +	 * out-of-bounds access. Return the error in cases other than that.
+> > > +	 */
+> > > +	if (ret != -ENOENT && ret != -ENODATA)
+> > > +		return ret;
+> > > +
+> > > +	ret = v4l2_async_notifier_realloc(notifier,
+> > > +					  notifier->num_subdevs + index);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	for (index = 0; !fwnode_property_get_reference_args(
+> > > +		     dev_fwnode(dev), prop, NULL, 0, index, &args);
+> > > +	     index++) {
+> > > +		struct v4l2_async_subdev *asd;
+> > > +
+> > > +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
+> > > +			ret = -EINVAL;
+> > > +			goto error;
+> > > +		}
+> > > +
+> > > +		asd = kzalloc(sizeof(*asd), GFP_KERNEL);
+> > > +		if (!asd) {
+> > > +			ret = -ENOMEM;
+> > > +			goto error;
+> > > +		}
+> > > +
+> > > +		notifier->subdevs[notifier->num_subdevs] = asd;
+> > > +		asd->match.fwnode.fwnode = args.fwnode;
+> > > +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+> > > +		notifier->num_subdevs++;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +
+> > > +error:
+> > > +	fwnode_handle_put(args.fwnode);
+> > > +	return ret;
+> > > +}
+> > > +
+> > > 
+> > >  MODULE_LICENSE("GPL");
+> > >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+> > >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+
+
 -- 
-2.13.5
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
