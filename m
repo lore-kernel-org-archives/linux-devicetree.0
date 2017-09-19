@@ -1,444 +1,520 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] clocksource: stm32: rework driver to use only one timer
-Date: Tue, 19 Sep 2017 09:59:03 +0200
-Message-ID: <CA+M3ks45pUwv=dL6Gd6=Nvm1y5zRvtsFEU1bFoHht0xUDc3UVw@mail.gmail.com>
-References: <1505375812-19037-1-git-send-email-benjamin.gaignard@linaro.org>
- <1505375812-19037-2-git-send-email-benjamin.gaignard@linaro.org> <9e5cae53-0a57-f2e9-cbb1-dde484619fca@linaro.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v13 05/25] v4l: fwnode: Support generic parsing of graph
+ endpoints in a device
+Date: Tue, 19 Sep 2017 10:03:27 +0200
+Message-ID: <a17ab793-b859-f04a-2dff-d8f6a314e9bf@xs4all.nl>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
+ <20170915141724.23124-6-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9e5cae53-0a57-f2e9-cbb1-dde484619fca-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170915141724.23124-6-sakari.ailus@linux.intel.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2017-09-18 23:30 GMT+02:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> On 14/09/2017 09:56, Benjamin Gaignard wrote:
->> Rework driver code to use only one timer for both clocksource
->> and clockevent.
->> This patch also forbids to use 16 bits timers because they are
->> not enough accurate.
->> Do some clean up in structures and functions names too.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Hi Benjamin,
->
-> I have a few comments below. Can you when reposting split this patch
-> into smaller changes ?
+On 09/15/2017 04:17 PM, Sakari Ailus wrote:
+> Add two functions for parsing devices graph endpoints:
+> v4l2_async_notifier_parse_fwnode_endpoints and
+> v4l2_async_notifier_parse_fwnode_endpoints_by_port. The former iterates
+> over all endpoints whereas the latter only iterates over the endpoints in
+> a given port.
+> 
+> The former is mostly useful for existing drivers that currently implement
+> the iteration over all the endpoints themselves whereas the latter is
+> especially intended for devices with both sinks and sources: async
+> sub-devices for external devices connected to the device's sources will
+> have already been set up, or they are part of the master device.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-async.c  |  30 ++++++
+>  drivers/media/v4l2-core/v4l2-fwnode.c | 185 ++++++++++++++++++++++++++++++++++
+>  include/media/v4l2-async.h            |  24 ++++-
+>  include/media/v4l2-fwnode.h           | 117 +++++++++++++++++++++
+>  4 files changed, 354 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 831f185ecd47..bf0215dde616 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -22,6 +22,7 @@
+>  
+>  #include <media/v4l2-async.h>
+>  #include <media/v4l2-device.h>
+> +#include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-subdev.h>
+>  
+>  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+> @@ -219,6 +220,35 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+>  }
+>  EXPORT_SYMBOL(v4l2_async_notifier_unregister);
+>  
+> +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier)
+> +{
+> +	unsigned int i;
+> +
+> +	if (!notifier->max_subdevs)
+> +		return;
+> +
+> +	for (i = 0; i < notifier->num_subdevs; i++) {
+> +		struct v4l2_async_subdev *asd = notifier->subdevs[i];
+> +
+> +		switch (asd->match_type) {
+> +		case V4L2_ASYNC_MATCH_FWNODE:
+> +			fwnode_handle_put(asd->match.fwnode.fwnode);
+> +			break;
+> +		default:
+> +			WARN_ON_ONCE(true);
 
-Not so easy because I change the way of how the hardware is used to be able
-to provide clocksource and clockevent on the same hardware block.
+Please add a break here.
 
->
-> Also, can you consider using the timer-of API ?
+> +		}
+> +
+> +		kfree(asd);
+> +	}
+> +
+> +	notifier->max_subdevs = 0;
+> +	notifier->num_subdevs = 0;
+> +
+> +	kvfree(notifier->subdevs);
+> +	notifier->subdevs = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_release);
+> +
+>  int v4l2_async_register_subdev(struct v4l2_subdev *sd)
+>  {
+>  	struct v4l2_async_notifier *notifier;
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> index 706f9e7b90f1..44ee35f6aad5 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -19,6 +19,7 @@
+>   */
+>  #include <linux/acpi.h>
+>  #include <linux/kernel.h>
+> +#include <linux/mm.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/property.h>
+> @@ -26,6 +27,7 @@
+>  #include <linux/string.h>
+>  #include <linux/types.h>
+>  
+> +#include <media/v4l2-async.h>
+>  #include <media/v4l2-fwnode.h>
+>  
+>  enum v4l2_fwnode_bus_type {
+> @@ -313,6 +315,189 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+>  
+> +static int v4l2_async_notifier_realloc(struct v4l2_async_notifier *notifier,
+> +				       unsigned int max_subdevs)
+> +{
+> +	struct v4l2_async_subdev **subdevs;
+> +
+> +	if (max_subdevs <= notifier->max_subdevs)
+> +		return 0;
+> +
+> +	subdevs = kvmalloc_array(
+> +		max_subdevs, sizeof(*notifier->subdevs),
+> +		GFP_KERNEL | __GFP_ZERO);
+> +	if (!subdevs)
+> +		return -ENOMEM;
+> +
+> +	if (notifier->subdevs) {
+> +		memcpy(subdevs, notifier->subdevs,
+> +		       sizeof(*subdevs) * notifier->num_subdevs);
+> +
+> +		kvfree(notifier->subdevs);
+> +	}
+> +
+> +	notifier->subdevs = subdevs;
+> +	notifier->max_subdevs = max_subdevs;
+> +
+> +	return 0;
+> +}
+> +
+> +static int v4l2_async_notifier_fwnode_parse_endpoint(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	struct fwnode_handle *endpoint, unsigned int asd_struct_size,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			    struct v4l2_fwnode_endpoint *vep,
+> +			    struct v4l2_async_subdev *asd))
+> +{
+> +	struct v4l2_async_subdev *asd;
+> +	struct v4l2_fwnode_endpoint *vep;
+> +	int ret = 0;
+> +
+> +	asd = kzalloc(asd_struct_size, GFP_KERNEL);
+> +	if (!asd)
+> +		return -ENOMEM;
+> +
+> +	asd->match.fwnode.fwnode =
+> +		fwnode_graph_get_remote_port_parent(endpoint);
+> +	if (!asd->match.fwnode.fwnode) {
+> +		dev_warn(dev, "bad remote port parent\n");
+> +		ret = -EINVAL;
+> +		goto out_err;
+> +	}
+> +
+> +	/* Ignore endpoints the parsing of which failed. */
+> +	vep = v4l2_fwnode_endpoint_alloc_parse(endpoint);
+> +	if (IS_ERR(vep)) {
+> +		ret = PTR_ERR(vep);
+> +		dev_warn(dev, "unable to parse V4L2 fwnode endpoint (%d)\n",
+> +			 ret);
+> +		goto out_err;
+> +	}
+> +
+> +	ret = parse_endpoint ? parse_endpoint(dev, vep, asd) : 0;
+> +	if (ret == -ENOTCONN)
+> +		dev_dbg(dev, "ignoring endpoint %u,%u\n", vep->base.port,
+> +			vep->base.id);
+> +	else if (ret < 0)
+> +		dev_warn(dev, "driver could not parse endpoint %u,%u (%d)\n",
+> +			 vep->base.port, vep->base.id, ret);
+> +	v4l2_fwnode_endpoint_free(vep);
+> +	if (ret < 0)
+> +		goto out_err;
+> +
+> +	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+> +	notifier->subdevs[notifier->num_subdevs] = asd;
+> +	notifier->num_subdevs++;
+> +
+> +	return 0;
+> +
+> +out_err:
+> +	fwnode_handle_put(asd->match.fwnode.fwnode);
+> +	kfree(asd);
+> +
+> +	return ret == -ENOTCONN ? 0 : ret;
+> +}
+> +
+> +static int __v4l2_async_notifier_parse_fwnode_endpoints(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	size_t asd_struct_size, unsigned int port, bool has_port,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			    struct v4l2_fwnode_endpoint *vep,
+> +			    struct v4l2_async_subdev *asd))
+> +{
+> +	struct fwnode_handle *fwnode = NULL;
+> +	unsigned int max_subdevs = notifier->max_subdevs;
+> +	int ret;
+> +
+> +	if (WARN_ON(asd_struct_size < sizeof(struct v4l2_async_subdev)))
+> +		return -EINVAL;
+> +
+> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
+> +				     dev_fwnode(dev), fwnode)); ) {
 
-Is it just about using TIMER_OF_DECLARE ? or do you have something
-else in mind ?
+You can replace this by:
 
->
-> Thanks.
->
->   -- Daniel
->
->> ---
->>  drivers/clocksource/timer-stm32.c | 259 +++++++++++++++++++++++--------=
--------
->>  1 file changed, 155 insertions(+), 104 deletions(-)
->>
->> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/tim=
-er-stm32.c
->> index 8f24237..648c10a 100644
->> --- a/drivers/clocksource/timer-stm32.c
->> +++ b/drivers/clocksource/timer-stm32.c
->> @@ -16,175 +16,226 @@
->>  #include <linux/of_irq.h>
->>  #include <linux/clk.h>
->>  #include <linux/reset.h>
->> +#include <linux/sched_clock.h>
->> +#include <linux/slab.h>
->>
->>  #define TIM_CR1              0x00
->>  #define TIM_DIER     0x0c
->>  #define TIM_SR               0x10
->>  #define TIM_EGR              0x14
->> +#define TIM_CNT              0x24
->>  #define TIM_PSC              0x28
->>  #define TIM_ARR              0x2c
->> +#define TIM_CCR1     0x34
->>
->>  #define TIM_CR1_CEN  BIT(0)
->> -#define TIM_CR1_OPM  BIT(3)
->> +#define TIM_CR1_UDIS BIT(1)
->>  #define TIM_CR1_ARPE BIT(7)
->>
->> -#define TIM_DIER_UIE BIT(0)
->> -
->> -#define TIM_SR_UIF   BIT(0)
->> +#define TIM_DIER_CC1IE       BIT(1)
->>
->>  #define TIM_EGR_UG   BIT(0)
->>
->> -struct stm32_clock_event_ddata {
->> +struct stm32_clock_event {
->>       struct clock_event_device evtdev;
->>       unsigned periodic_top;
->> -     void __iomem *base;
->> +     void __iomem *regs;
->>  };
->>
->>  static int stm32_clock_event_shutdown(struct clock_event_device *evtdev=
-)
->>  {
->> -     struct stm32_clock_event_ddata *data =3D
->> -             container_of(evtdev, struct stm32_clock_event_ddata, evtde=
-v);
->> -     void *base =3D data->base;
->> +     struct stm32_clock_event *ce =3D
->> +             container_of(evtdev, struct stm32_clock_event, evtdev);
->> +
->> +     writel_relaxed(0, ce->regs + TIM_DIER);
->>
->> -     writel_relaxed(0, base + TIM_CR1);
->
-> Why this change? TIM_CR1 -> TIM_DIER? A 16b to 32b change?
+	while ((fwnode = fwnode_graph_get_next_endpoint(dev_fwnode(dev), fwnode))) {
 
-No it is because I use the interrupt from the comparator instead of the cou=
-nter.
-With this patch clocksource will use the 32 bits counter of the hardware bl=
-ock
-to provide the clock and comparator is generate interrupt for the event.
-That change quite a lot the code, sorry.
+> +		if (!fwnode_device_is_available(
+> +			    fwnode_graph_get_port_parent(fwnode)))
+> +			continue;
+> +
+> +		if (has_port) {
+> +			struct fwnode_endpoint ep;
+> +
+> +			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
+> +			if (ret) {
+> +				fwnode_handle_put(fwnode);
+> +				return ret;
+> +			}
+> +
+> +			if (ep.port != port)
+> +				continue;
+> +		}
+> +		max_subdevs++;
+> +	}
+> +
+> +	/* No subdevs to add? Return here. */
+> +	if (max_subdevs == notifier->max_subdevs)
+> +		return 0;
+> +
+> +	ret = v4l2_async_notifier_realloc(notifier, max_subdevs);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
+> +				     dev_fwnode(dev), fwnode)); ) {
 
+Same here: this can be a 'while'.
 
->
->>       return 0;
->>  }
->>
->> -static int stm32_clock_event_set_periodic(struct clock_event_device *ev=
-tdev)
->> +static int stm32_clock_event_set_next_event(unsigned long evt,
->> +                                         struct clock_event_device *evt=
-dev)
->>  {
->> -     struct stm32_clock_event_ddata *data =3D
->> -             container_of(evtdev, struct stm32_clock_event_ddata, evtde=
-v);
->> -     void *base =3D data->base;
->> +     struct stm32_clock_event *ce =3D
->> +             container_of(evtdev, struct stm32_clock_event, evtdev);
->> +     unsigned long cnt;
->> +
->> +     cnt =3D readl_relaxed(ce->regs + TIM_CNT);
->> +     writel_relaxed(cnt + evt, ce->regs + TIM_CCR1);
->> +     writel_relaxed(TIM_DIER_CC1IE, ce->regs + TIM_DIER);
->>
->> -     writel_relaxed(data->periodic_top, base + TIM_ARR);
->> -     writel_relaxed(TIM_CR1_ARPE | TIM_CR1_CEN, base + TIM_CR1);
->>       return 0;
->>  }
->>
->> -static int stm32_clock_event_set_next_event(unsigned long evt,
->> -                                         struct clock_event_device *evt=
-dev)
->> +static int stm32_clock_event_set_periodic(struct clock_event_device *ev=
-tdev)
->>  {
->> -     struct stm32_clock_event_ddata *data =3D
->> -             container_of(evtdev, struct stm32_clock_event_ddata, evtde=
-v);
->> +     struct stm32_clock_event *ce =3D
->> +             container_of(evtdev, struct stm32_clock_event, evtdev);
->>
->> -     writel_relaxed(evt, data->base + TIM_ARR);
->> -     writel_relaxed(TIM_CR1_ARPE | TIM_CR1_OPM | TIM_CR1_CEN,
->> -                    data->base + TIM_CR1);
->> +     return stm32_clock_event_set_next_event(ce->periodic_top, evtdev);
->> +}
->>
->> -     return 0;
->> +static int stm32_clock_event_set_oneshot(struct clock_event_device *evt=
-dev)
->> +{
->> +     return stm32_clock_event_set_next_event(0, evtdev);
->>  }
->>
->>  static irqreturn_t stm32_clock_event_handler(int irq, void *dev_id)
->>  {
->> -     struct stm32_clock_event_ddata *data =3D dev_id;
->> +     struct stm32_clock_event *ce =3D dev_id;
->> +
->> +     writel_relaxed(0, ce->regs + TIM_SR);
->>
->> -     writel_relaxed(0, data->base + TIM_SR);
->> +     if (clockevent_state_periodic(&ce->evtdev))
->> +             stm32_clock_event_set_periodic(&ce->evtdev);
->
-> nit: else condition to prevent an extra check
+> +		if (!fwnode_device_is_available(
+> +			    fwnode_graph_get_port_parent(fwnode)))
+> +			continue;
+> +
+> +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		if (has_port) {
+> +			struct fwnode_endpoint ep;
+> +
+> +			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
+> +			if (ret)
+> +				break;
+> +
+> +			if (ep.port != port)
+> +				continue;
+> +		}
+> +
+> +		ret = v4l2_async_notifier_fwnode_parse_endpoint(
+> +			dev, notifier, fwnode, asd_struct_size, parse_endpoint);
+> +		if (ret < 0)
+> +			break;
+> +	}
+> +
+> +	fwnode_handle_put(fwnode);
+> +
+> +	return ret;
+> +}
+> +
+> +int v4l2_async_notifier_parse_fwnode_endpoints(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	size_t asd_struct_size,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			    struct v4l2_fwnode_endpoint *vep,
+> +			    struct v4l2_async_subdev *asd))
+> +{
+> +	return __v4l2_async_notifier_parse_fwnode_endpoints(
+> +		dev, notifier, asd_struct_size, 0, false, parse_endpoint);
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
+> +
+> +int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	size_t asd_struct_size, unsigned int port,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			    struct v4l2_fwnode_endpoint *vep,
+> +			    struct v4l2_async_subdev *asd))
+> +{
+> +	return __v4l2_async_notifier_parse_fwnode_endpoints(
+> +		dev, notifier, asd_struct_size, port, true, parse_endpoint);
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
+> +
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
+>  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+> index c69d8c8a66d0..96fa1afc00dd 100644
+> --- a/include/media/v4l2-async.h
+> +++ b/include/media/v4l2-async.h
+> @@ -18,7 +18,6 @@ struct device;
+>  struct device_node;
+>  struct v4l2_device;
+>  struct v4l2_subdev;
+> -struct v4l2_async_notifier;
+>  
+>  /* A random max subdevice number, used to allocate an array on stack */
+>  #define V4L2_MAX_SUBDEVS 128U
+> @@ -50,6 +49,10 @@ enum v4l2_async_match_type {
+>   * @match:	union of per-bus type matching data sets
+>   * @list:	used to link struct v4l2_async_subdev objects, waiting to be
+>   *		probed, to a notifier->waiting list
+> + *
+> + * When this struct is used as a member in a driver specific struct,
+> + * the driver specific struct shall contain the @struct
+> + * v4l2_async_subdev as its first member.
+>   */
+>  struct v4l2_async_subdev {
+>  	enum v4l2_async_match_type match_type;
+> @@ -78,7 +81,8 @@ struct v4l2_async_subdev {
+>  /**
+>   * struct v4l2_async_notifier - v4l2_device notifier data
+>   *
+> - * @num_subdevs: number of subdevices
+> + * @num_subdevs: number of subdevices used in the subdevs array
+> + * @max_subdevs: number of subdevices allocated in the subdevs array
+>   * @subdevs:	array of pointers to subdevice descriptors
+>   * @v4l2_dev:	pointer to struct v4l2_device
+>   * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
+> @@ -90,6 +94,7 @@ struct v4l2_async_subdev {
+>   */
+>  struct v4l2_async_notifier {
+>  	unsigned int num_subdevs;
+> +	unsigned int max_subdevs;
+>  	struct v4l2_async_subdev **subdevs;
+>  	struct v4l2_device *v4l2_dev;
+>  	struct list_head waiting;
+> @@ -121,6 +126,21 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+>  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier);
+>  
+>  /**
+> + * v4l2_async_notifier_release - release notifier resources
+> + * @notifier: the notifier the resources of which are to be released
+> + *
+> + * Release memory resources related to a notifier, including the async
+> + * sub-devices allocated for the purposes of the notifier. The user is
+> + * responsible for releasing the notifier's resources after calling
+> + * @v4l2_async_notifier_parse_fwnode_endpoints.
+> + *
+> + * There is no harm from calling v4l2_async_notifier_release in other
+> + * cases as long as its memory has been zeroed after it has been
+> + * allocated.
+> + */
+> +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier);
+> +
+> +/**
+>   * v4l2_async_register_subdev - registers a sub-device to the asynchronous
+>   * 	subdevice framework
+>   *
+> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> index 68eb22ba571b..83afac48ea6b 100644
+> --- a/include/media/v4l2-fwnode.h
+> +++ b/include/media/v4l2-fwnode.h
+> @@ -25,6 +25,8 @@
+>  #include <media/v4l2-mediabus.h>
+>  
+>  struct fwnode_handle;
+> +struct v4l2_async_notifier;
+> +struct v4l2_async_subdev;
+>  
+>  #define V4L2_FWNODE_CSI2_MAX_DATA_LANES	4
+>  
+> @@ -201,4 +203,119 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+>   */
+>  void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+>  
+> +/**
+> + * v4l2_async_notifier_parse_fwnode_endpoints - Parse V4L2 fwnode endpoints in a
+> + *						device node
+> + * @dev: the device the endpoints of which are to be parsed
+> + * @notifier: notifier for @dev
+> + * @asd_struct_size: size of the driver's async sub-device struct, including
+> + *		     sizeof(struct v4l2_async_subdev). The &struct
+> + *		     v4l2_async_subdev shall be the first member of
+> + *		     the driver's async sub-device struct, i.e. both
+> + *		     begin at the same memory address.
+> + * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
+> + *		    endpoint. Optional.
+> + *		    Return: %0 on success
+> + *			    %-ENOTCONN if the endpoint is to be skipped but this
+> + *				       should not be considered as an error
+> + *			    %-EINVAL if the endpoint configuration is invalid
+> + *
+> + * Parse the fwnode endpoints of the @dev device and populate the async sub-
+> + * devices array of the notifier. The @parse_endpoint callback function is
+> + * called for each endpoint with the corresponding async sub-device pointer to
+> + * let the caller initialize the driver-specific part of the async sub-device
+> + * structure.
+> + *
+> + * The notifier memory shall be zeroed before this function is called on the
+> + * notifier.
+> + *
+> + * This function may not be called on a registered notifier and may be called on
+> + * a notifier only once.
+> + *
+> + * Do not change the notifier's subdevs array, take references to the subdevs
+> + * array itself or change the notifier's num_subdevs field. This is because this
+> + * function allocates and reallocates the subdevs array based on parsing
+> + * endpoints.
+> + *
+> + * The @struct v4l2_fwnode_endpoint passed to the callback function
+> + * @parse_endpoint is released once the function is finished. If there is a need
+> + * to retain that configuration, the user needs to allocate memory for it.
+> + *
+> + * Any notifier populated using this function must be released with a call to
+> + * v4l2_async_notifier_release() after it has been unregistered and the async
+> + * sub-devices are no longer in use, even if the function returned an error.
+> + *
+> + * Return: %0 on success, including when no async sub-devices are found
+> + *	   %-ENOMEM if memory allocation failed
+> + *	   %-EINVAL if graph or endpoint parsing failed
+> + *	   Other error codes as returned by @parse_endpoint
+> + */
+> +int v4l2_async_notifier_parse_fwnode_endpoints(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	size_t asd_struct_size,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			      struct v4l2_fwnode_endpoint *vep,
+> +			      struct v4l2_async_subdev *asd));
+> +
+> +/**
+> + * v4l2_async_notifier_parse_fwnode_endpoints_by_port - Parse V4L2 fwnode
+> + *							endpoints of a port in a
+> + *							device node
+> + * @dev: the device the endpoints of which are to be parsed
+> + * @notifier: notifier for @dev
+> + * @asd_struct_size: size of the driver's async sub-device struct, including
+> + *		     sizeof(struct v4l2_async_subdev). The &struct
+> + *		     v4l2_async_subdev shall be the first member of
+> + *		     the driver's async sub-device struct, i.e. both
+> + *		     begin at the same memory address.
+> + * @port: port number where endpoints are to be parsed
+> + * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
+> + *		    endpoint. Optional.
+> + *		    Return: %0 on success
+> + *			    %-ENOTCONN if the endpoint is to be skipped but this
+> + *				       should not be considered as an error
+> + *			    %-EINVAL if the endpoint configuration is invalid
+> + *
+> + * This function is just like @v4l2_async_notifier_parse_fwnode_endpoints with
+> + * the exception that it only parses endpoints in a given port. This is useful
+> + * on devices that have both sinks and sources: the async sub-devices connected
 
-OK
+on -> for
 
->
->> -     data->evtdev.event_handler(&data->evtdev);
->> +     if (clockevent_state_oneshot(&ce->evtdev))
->> +             stm32_clock_event_shutdown(&ce->evtdev);
->> +
->> +     ce->evtdev.event_handler(&ce->evtdev);
->>
->>       return IRQ_HANDLED;
->>  }
->>
->> -static struct stm32_clock_event_ddata clock_event_ddata =3D {
->> -     .evtdev =3D {
->> -             .name =3D "stm32 clockevent",
->> -             .features =3D CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERI=
-ODIC,
->> -             .set_state_shutdown =3D stm32_clock_event_shutdown,
->> -             .set_state_periodic =3D stm32_clock_event_set_periodic,
->> -             .set_state_oneshot =3D stm32_clock_event_shutdown,
->> -             .tick_resume =3D stm32_clock_event_shutdown,
->> -             .set_next_event =3D stm32_clock_event_set_next_event,
->> -             .rating =3D 200,
->> -     },
->> -};
->> +static int __init stm32_clockevent_init(struct device_node *np,
->> +                                     void __iomem *base,
->> +                                     struct clk *clk, int irq)
->> +{
->> +     struct stm32_clock_event *ce;
->> +     unsigned long rate;
->> +     int err;
->> +
->> +     ce =3D kzalloc(sizeof(*ce), GFP_KERNEL);
->> +     if (!ce)
->> +             return -ENOMEM;
->> +
->> +     ce->regs =3D base;
->> +     ce->evtdev.name =3D "stm32_clockevent";
->> +     ce->evtdev.features =3D CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PE=
-RIODIC;
->> +     ce->evtdev.set_state_shutdown =3D stm32_clock_event_shutdown;
->> +     ce->evtdev.set_state_periodic =3D stm32_clock_event_set_periodic;
->> +     ce->evtdev.set_state_oneshot =3D stm32_clock_event_set_oneshot;
->> +     ce->evtdev.tick_resume =3D stm32_clock_event_shutdown;
->> +     ce->evtdev.set_next_event =3D stm32_clock_event_set_next_event;
->> +     ce->evtdev.rating =3D 200;
->>
->> -static int __init stm32_clockevent_init(struct device_node *np)
->> +     rate =3D clk_get_rate(clk);
->> +     ce->periodic_top =3D DIV_ROUND_CLOSEST(rate, HZ);
->> +
->> +     writel_relaxed(0, ce->regs + TIM_DIER);
->> +     writel_relaxed(0, ce->regs + TIM_SR);
->> +
->> +     err =3D request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
->> +                       "stm32 clockevent", ce);
->> +     if (err) {
->> +             kfree(ce);
->> +             return err;
->> +     }
->> +
->> +     clockevents_config_and_register(&ce->evtdev, rate, 0x60, ~0U);
->> +
->> +     return 0;
->> +}
->> +
->> +static void __iomem *stm32_timer_cnt __read_mostly;
->> +static u64 notrace stm32_read_sched_clock(void)
->> +{
->> +     return readl_relaxed(stm32_timer_cnt);
->> +}
->> +
->> +static int __init stm32_clocksource_init(struct device_node *node,
->> +                                      void __iomem *regs,
->> +                                      struct clk *clk)
->> +{
->> +     unsigned long rate;
->> +
->> +     rate =3D clk_get_rate(clk);
->> +
->> +     writel_relaxed(~0U, regs + TIM_ARR);
->> +     writel_relaxed(0, regs + TIM_PSC);
->> +     writel_relaxed(0, regs + TIM_SR);
->> +     writel_relaxed(0, regs + TIM_DIER);
->> +     writel_relaxed(0, regs + TIM_SR);
->> +     writel_relaxed(TIM_CR1_ARPE | TIM_CR1_UDIS, regs + TIM_CR1);
->> +
->> +     /* Make sure that registers are updated */
->> +     writel_relaxed(TIM_EGR_UG, regs + TIM_EGR);
->> +
->> +     /* Enable controller */
->> +     writel_relaxed(TIM_CR1_ARPE | TIM_CR1_UDIS | TIM_CR1_CEN,
->> +                    regs + TIM_CR1);
->> +
->> +     stm32_timer_cnt =3D regs + TIM_CNT;
->> +     sched_clock_register(stm32_read_sched_clock, 32, rate);
->> +
->> +     return clocksource_mmio_init(stm32_timer_cnt, "stm32_timer",
->> +                                  rate, 250, 32, clocksource_mmio_readl=
-_up);
->> +}
->> +
->> +static int __init stm32_timer_init(struct device_node *node)
->>  {
->> -     struct stm32_clock_event_ddata *data =3D &clock_event_ddata;
->> -     struct clk *clk;
->>       struct reset_control *rstc;
->> -     unsigned long rate, max_delta;
->> -     int irq, ret, bits, prescaler =3D 1;
->> +     void __iomem *timer_base;
->> +     unsigned long max_arr;
->> +     struct clk *clk;
->> +     int irq, err;
->>
->> -     clk =3D of_clk_get(np, 0);
->> -     if (IS_ERR(clk)) {
->> -             ret =3D PTR_ERR(clk);
->> -             pr_err("failed to get clock for clockevent (%d)\n", ret);
->> -             goto err_clk_get;
->> +     timer_base =3D of_io_request_and_map(node, 0, of_node_full_name(no=
-de));
->> +     if (IS_ERR(timer_base)) {
->> +             pr_err("Can't map registers\n");
->> +             goto out;
->>       }
->>
->> -     ret =3D clk_prepare_enable(clk);
->> -     if (ret) {
->> -             pr_err("failed to enable timer clock for clockevent (%d)\n=
-",
->> -                    ret);
->> -             goto err_clk_enable;
->> +     irq =3D irq_of_parse_and_map(node, 0);
->> +     if (irq <=3D 0) {
->> +             pr_err("Can't parse IRQ\n");
->> +             goto out_unmap;
->>       }
->>
->> -     rate =3D clk_get_rate(clk);
->
-> Why not pass the rate to clkevt_init and clksrc_init instead of clk? So
-> clk_get_rate() is not called twice.
+> + * to sources have already been set up by another driver (on capture devices).
 
-I will change that in v3
+on -> for
 
->
->> +     clk =3D of_clk_get(node, 0);
->> +     if (IS_ERR(clk)) {
->> +             pr_err("Can't get timer clock\n");
->> +             goto out_unmap;
->> +     }
->>
->> -     rstc =3D of_reset_control_get(np, NULL);
->> +     rstc =3D of_reset_control_get(node, NULL);
->>       if (!IS_ERR(rstc)) {
->>               reset_control_assert(rstc);
->>               reset_control_deassert(rstc);
->>       }
->>
->> -     data->base =3D of_iomap(np, 0);
->> -     if (!data->base) {
->> -             ret =3D -ENXIO;
->> -             pr_err("failed to map registers for clockevent\n");
->> -             goto err_iomap;
->> -     }
->> -
->> -     irq =3D irq_of_parse_and_map(np, 0);
->> -     if (!irq) {
->> -             ret =3D -EINVAL;
->> -             pr_err("%pOF: failed to get irq.\n", np);
->> -             goto err_get_irq;
->> +     err =3D clk_prepare_enable(clk);
->> +     if (err) {
->> +             pr_err("Couldn't enable parent clock\n");
->> +             goto out_clk;
->>       }
->>
->>       /* Detect whether the timer is 16 or 32 bits */
->> -     writel_relaxed(~0U, data->base + TIM_ARR);
->> -     max_delta =3D readl_relaxed(data->base + TIM_ARR);
->> -     if (max_delta =3D=3D ~0U) {
->> -             prescaler =3D 1;
->> -             bits =3D 32;
->> -     } else {
->> -             prescaler =3D 1024;
->> -             bits =3D 16;
->> +     writel_relaxed(~0U, timer_base + TIM_ARR);
->> +     max_arr =3D readl_relaxed(timer_base + TIM_ARR);
->> +     if (max_arr !=3D ~0U) {
->> +             err =3D -EINVAL;
->> +             pr_err("32 bits timer is needed\n");
->> +             goto out_unprepare;
->>       }
->> -     writel_relaxed(0, data->base + TIM_ARR);
->> -
->> -     writel_relaxed(prescaler - 1, data->base + TIM_PSC);
->> -     writel_relaxed(TIM_EGR_UG, data->base + TIM_EGR);
->> -     writel_relaxed(TIM_DIER_UIE, data->base + TIM_DIER);
->> -     writel_relaxed(0, data->base + TIM_SR);
->> -
->> -     data->periodic_top =3D DIV_ROUND_CLOSEST(rate, prescaler * HZ);
->>
->> -     clockevents_config_and_register(&data->evtdev,
->> -                                     DIV_ROUND_CLOSEST(rate, prescaler)=
-,
->> -                                     0x1, max_delta);
->> +     err =3D stm32_clocksource_init(node, timer_base, clk);
->> +     if (err)
->> +             goto out_unprepare;
->>
->> -     ret =3D request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
->> -                     "stm32 clockevent", data);
->> -     if (ret) {
->> -             pr_err("%pOF: failed to request irq.\n", np);
->> -             goto err_get_irq;
->> -     }
->> -
->> -     pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
->> -                     np, bits);
->> +     err =3D stm32_clockevent_init(node, timer_base, clk, irq);
->> +     if (err)
->> +             goto out_unprepare;
->>
->> -     return ret;
->> +     return 0;
->>
->> -err_get_irq:
->> -     iounmap(data->base);
->> -err_iomap:
->> +out_unprepare:
->>       clk_disable_unprepare(clk);
->> -err_clk_enable:
->> +out_clk:
->>       clk_put(clk);
->> -err_clk_get:
->> -     return ret;
->> +out_unmap:
->> +     iounmap(timer_base);
->> +out:
->> +     return err;
->>  }
->>
->> -TIMER_OF_DECLARE(stm32, "st,stm32-timer", stm32_clockevent_init);
->> +CLOCKSOURCE_OF_DECLARE(stm32, "st,stm32-timer", stm32_timer_init);
->
-> CLOCKSOURCE_OF_DECLARE is deprecated, keep using TIMER_OF_DECLARE.
+So if I understand this correctly for devices with both sinks and sources you use
+this function to just parse the sink ports. And you have to give explicit port
+numbers since you can't tell from parsing the device tree if a port is a sink or
+source port, right? Only the driver knows this.
 
-OK
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> + *
+> + * Parse the fwnode endpoints of the @dev device on a given @port and populate
+> + * the async sub-devices array of the notifier. The @parse_endpoint callback
+> + * function is called for each endpoint with the corresponding async sub-device
+> + * pointer to let the caller initialize the driver-specific part of the async
+> + * sub-device structure.
+> + *
+> + * The notifier memory shall be zeroed before this function is called on the
+> + * notifier the first time.
+> + *
+> + * This function may not be called on a registered notifier and may be called on
+> + * a notifier only once per port.
+> + *
+> + * Do not change the notifier's subdevs array, take references to the subdevs
+> + * array itself or change the notifier's num_subdevs field. This is because this
+> + * function allocates and reallocates the subdevs array based on parsing
+> + * endpoints.
+> + *
+> + * The @struct v4l2_fwnode_endpoint passed to the callback function
+> + * @parse_endpoint is released once the function is finished. If there is a need
+> + * to retain that configuration, the user needs to allocate memory for it.
+> + *
+> + * Any notifier populated using this function must be released with a call to
+> + * v4l2_async_notifier_release() after it has been unregistered and the async
+> + * sub-devices are no longer in use, even if the function returned an error.
+> + *
+> + * Return: %0 on success, including when no async sub-devices are found
+> + *	   %-ENOMEM if memory allocation failed
+> + *	   %-EINVAL if graph or endpoint parsing failed
+> + *	   Other error codes as returned by @parse_endpoint
+> + */
+> +int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	size_t asd_struct_size, unsigned int port,
+> +	int (*parse_endpoint)(struct device *dev,
+> +			      struct v4l2_fwnode_endpoint *vep,
+> +			      struct v4l2_async_subdev *asd));
+> +
+>  #endif /* _V4L2_FWNODE_H */
+> 
+
+Regards,
+
+	Hans
