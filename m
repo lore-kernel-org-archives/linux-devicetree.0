@@ -1,59 +1,197 @@
-From: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Subject: [PATCH 4/5] arm64: dts: ls1012a: Add PCIe controller DT node
-Date: Tue, 19 Sep 2017 17:26:57 +0800
-Message-ID: <20170919092658.22482-5-Zhiqiang.Hou@nxp.com>
-References: <20170919092658.22482-1-Zhiqiang.Hou@nxp.com>
+From: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] [media] bcm2835-unicam: Driver for CCP2/CSI2
+ camera interface
+Date: Tue, 19 Sep 2017 10:50:50 +0100
+Message-ID: <CAAoAYcMbSzr7_rtNke2hDKfp+a-vvP0be7_UhrJEgUCfgpfMtQ@mail.gmail.com>
+References: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
+ <0d4dc119a2ba4917e0fecfe5084425830ec53ccb.1505314390.git.dave.stevenson@raspberrypi.org>
+ <87k20vswdv.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170919092658.22482-1-Zhiqiang.Hou@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, shawnguo@kernel.org, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, roy.zang@nxp.com
-Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87k20vswdv.fsf-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Hi Eric.
 
-Add PCIe controller node for ls1012a platform.
+Thanks for the review.
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+On 18 September 2017 at 19:18, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> writes:
+>> diff --git a/drivers/media/platform/bcm2835/bcm2835-unicam.c b/drivers/media/platform/bcm2835/bcm2835-unicam.c
+>> new file mode 100644
+>> index 0000000..5b1adc3
+>> --- /dev/null
+>> +++ b/drivers/media/platform/bcm2835/bcm2835-unicam.c
+>> @@ -0,0 +1,2192 @@
+>> +/*
+>> + * BCM2835 Unicam capture Driver
+>> + *
+>> + * Copyright (C) 2017 - Raspberry Pi (Trading) Ltd.
+>> + *
+>> + * Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+>> + *
+>> + * Based on TI am437x driver by Benoit Parrot and Lad, Prabhakar and
+>> + * TI CAL camera interface driver by Benoit Parrot.
+>> + *
+>
+> Possible future improvement: this description of the driver is really
+> nice and could be turned into kernel-doc.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index a7698ac7264b..140570d45ff3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -478,5 +478,29 @@
- 			msi-controller;
- 			interrupts = <0 126 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-+
-+		pcie@3400000 {
-+			compatible = "fsl,ls1012a-pcie", "snps,dw-pcie";
-+			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-+			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
-+			reg-names = "regs", "config";
-+			interrupts = <0 118 0x4>, /* controller interrupt */
-+				     <0 117 0x4>; /* PME interrupt */
-+			interrupt-names = "aer", "pme";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			num-lanes = <4>;
-+			bus-range = <0x0 0xff>;
-+			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
-+				  0x82000000 0x0 0x40000000 0x40 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-+			msi-parent = <&msi>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0000 0 0 1 &gic 0 110 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 111 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- };
--- 
-2.14.1
+Documentation?! Surely not :-)
+For now I'll leave it as a task for another day.
+
+>> + * There are two camera drivers in the kernel for BCM283x - this one
+>> + * and bcm2835-camera (currently in staging).
+>> + *
+>> + * This driver is purely the kernel control the Unicam peripheral - there
+>
+> Maybe "This driver directly controls..."?
+
+Will do in v3.
+
+>> + * is no involvement with the VideoCore firmware. Unicam receives CSI-2
+>> + * or CCP2 data and writes it into SDRAM. The only processing options are
+>> + * to repack Bayer data into an alternate format, and applying windowing
+>> + * (currently not implemented).
+>> + * It should be possible to connect it to any sensor with a
+>> + * suitable output interface and V4L2 subdevice driver.
+>> + *
+>> + * bcm2835-camera uses with the VideoCore firmware to control the sensor,
+>
+> "uses the"
+
+Will do in v3.
+
+>> + * Unicam, ISP, and all tuner control loops. Fully processed frames are
+>> + * delivered to the driver by the firmware. It only has sensor drivers
+>> + * for Omnivision OV5647, and Sony IMX219 sensors.
+>> + *
+>> + * The two drivers are mutually exclusive for the same Unicam instance.
+>> + * The VideoCore firmware checks the device tree configuration during boot.
+>> + * If it finds device tree nodes called csi0 or csi1 it will block the
+>> + * firmware from accessing the peripheral, and bcm2835-camera will
+>> + * not be able to stream data.
+>
+> Thanks for describing this here!
+>
+>> +/*
+>> + * The peripheral can unpack and repack between several of
+>> + * the Bayer raw formats, so any Bayer format can be advertised
+>> + * as the same Bayer order in each of the supported bit depths.
+>> + * Use lower case to avoid clashing with V4L2_PIX_FMT_SGBRG8
+>> + * formats.
+>> + */
+>> +#define PIX_FMT_ALL_BGGR  v4l2_fourcc('b', 'g', 'g', 'r')
+>> +#define PIX_FMT_ALL_RGGB  v4l2_fourcc('r', 'g', 'g', 'b')
+>> +#define PIX_FMT_ALL_GBRG  v4l2_fourcc('g', 'b', 'r', 'g')
+>> +#define PIX_FMT_ALL_GRBG  v4l2_fourcc('g', 'r', 'b', 'g')
+>
+> Should thes fourccs be defined in a common v4l2 header, to reserve it
+> from clashing with others later?
+
+I'm only using them as flags and probably in a manner that nothing
+else is likely to copy, so it seems a little excessive to put them in
+a common header.
+Perhaps it's better to switch to 0xFFFFFFF0 to 0xFFFFFFF3 or other
+value that won't come up as a fourcc under any normal circumstance.
+Any thoughts from other people?
+
+> This is really the only question I have about this driver before seeing
+> it merged.  As far as me wearing my platform maintainer hat, I'm happy
+> with the driver, and my other little notes are optional.
+>
+>> +static int unicam_probe(struct platform_device *pdev)
+>> +{
+>> +     struct unicam_cfg *unicam_cfg;
+>> +     struct unicam_device *unicam;
+>> +     struct v4l2_ctrl_handler *hdl;
+>> +     struct resource *res;
+>> +     int ret;
+>> +
+>> +     unicam = devm_kzalloc(&pdev->dev, sizeof(*unicam), GFP_KERNEL);
+>> +     if (!unicam)
+>> +             return -ENOMEM;
+>> +
+>> +     unicam->pdev = pdev;
+>> +     unicam_cfg = &unicam->cfg;
+>> +
+>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +     unicam_cfg->base = devm_ioremap_resource(&pdev->dev, res);
+>> +     if (IS_ERR(unicam_cfg->base)) {
+>> +             unicam_err(unicam, "Failed to get main io block\n");
+>> +             return PTR_ERR(unicam_cfg->base);
+>> +     }
+>> +
+>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> +     unicam_cfg->clk_gate_base = devm_ioremap_resource(&pdev->dev, res);
+>> +     if (IS_ERR(unicam_cfg->clk_gate_base)) {
+>> +             unicam_err(unicam, "Failed to get 2nd io block\n");
+>> +             return PTR_ERR(unicam_cfg->clk_gate_base);
+>> +     }
+>> +
+>> +     unicam->clock = devm_clk_get(&pdev->dev, "lp_clock");
+>> +     if (IS_ERR(unicam->clock)) {
+>> +             unicam_err(unicam, "Failed to get clock\n");
+>> +             return PTR_ERR(unicam->clock);
+>> +     }
+>> +
+>> +     ret = platform_get_irq(pdev, 0);
+>> +     if (ret <= 0) {
+>> +             dev_err(&pdev->dev, "No IRQ resource\n");
+>> +             return -ENODEV;
+>> +     }
+>> +     unicam_cfg->irq = ret;
+>> +
+>> +     ret = devm_request_irq(&pdev->dev, unicam_cfg->irq, unicam_isr, 0,
+>> +                            "unicam_capture0", unicam);
+>
+> Looks like there's no need to keep "irq" in the device private struct.
+
+Agreed. I'll remove in v3.
+
+>> +     if (ret) {
+>> +             dev_err(&pdev->dev, "Unable to request interrupt\n");
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     ret = v4l2_device_register(&pdev->dev, &unicam->v4l2_dev);
+>> +     if (ret) {
+>> +             unicam_err(unicam,
+>> +                        "Unable to register v4l2 device.\n");
+>> +             return ret;
+>> +     }
+>> +
+>> +     /* Reserve space for the controls */
+>> +     hdl = &unicam->ctrl_handler;
+>> +     ret = v4l2_ctrl_handler_init(hdl, 16);
+>> +     if (ret < 0)
+>> +             goto probe_out_v4l2_unregister;
+>> +     unicam->v4l2_dev.ctrl_handler = hdl;
+>> +
+>> +     /* set the driver data in platform device */
+>> +     platform_set_drvdata(pdev, unicam);
+>> +
+>> +     ret = of_unicam_connect_subdevs(unicam);
+>> +     if (ret) {
+>> +             dev_err(&pdev->dev, "Failed to connect subdevs\n");
+>> +             goto free_hdl;
+>> +     }
+>> +
+>> +     /* Enabling module functional clock */
+>> +     pm_runtime_enable(&pdev->dev);
+>
+> I think pm_runtime is only controlling the power domain for the PHY, not
+> the clock (which you're handling manually).
+
+You're right. Copy and paste from the driver I'd based this on.
+Will correct in v3.
+
+  Dave
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
