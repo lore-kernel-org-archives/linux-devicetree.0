@@ -1,39 +1,55 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] ARM: dts: imx6dl-icore: Add LVDS support
-Date: Tue, 19 Sep 2017 12:52:20 -0300
-Message-ID: <CAOMZO5C+DXAQu=2OUAquB2AKn8dOzadoPsdGD05hXAUBdTnYjQ@mail.gmail.com>
-References: <1505121145-9507-1-git-send-email-jteki@openedev.com>
- <1505121145-9507-4-git-send-email-jteki@openedev.com> <CAOMZO5B0RAjdupLSe=S+tDEA-hpf-Si_4qjkcKC_ECX86PLScQ@mail.gmail.com>
- <CAMty3ZD3od1LXKai=kwq8hxGsa3EWcjQx5gyBtZvCM5ccC34ZQ@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/2] clocksource: stm32: rework driver to use only one
+ timer
+Date: Tue, 19 Sep 2017 17:54:37 +0200
+Message-ID: <cb440fab-b2a9-13ff-6f8a-4bce2eb2bc54@linaro.org>
+References: <1505375812-19037-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1505375812-19037-2-git-send-email-benjamin.gaignard@linaro.org>
+ <9e5cae53-0a57-f2e9-cbb1-dde484619fca@linaro.org>
+ <CA+M3ks45pUwv=dL6Gd6=Nvm1y5zRvtsFEU1bFoHht0xUDc3UVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMty3ZD3od1LXKai=kwq8hxGsa3EWcjQx5gyBtZvCM5ccC34ZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+M3ks45pUwv=dL6Gd6=Nvm1y5zRvtsFEU1bFoHht0xUDc3UVw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thomas Gleixner <tglx@linutronix.de>, Ludovic Barre <ludovic.barre@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jagan,
-
-On Tue, Sep 19, 2017 at 2:06 AM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wr=
-ote:
-> Hi Fabio,
->
->> Please add the support of this panel to drivers/gpu/drm/panel/panel-simp=
-le.c.
+On 19/09/2017 09:59, Benjamin Gaignard wrote:
+> 2017-09-18 23:30 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>> On 14/09/2017 09:56, Benjamin Gaignard wrote:
+>>> Rework driver code to use only one timer for both clocksource
+>>> and clockevent.
+>>> This patch also forbids to use 16 bits timers because they are
+>>> not enough accurate.
+>>> Do some clean up in structures and functions names too.
+>>>
+>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
 >>
->> Then you can refer its compatible in your board dts.
->
-> Yes, I'm trying to add the display timings but I couldn't find any
-> info how to find front_portch, back_porch and sync. I remember
-> blanking time =3D Sync Width + BP + FP so out of which how can we
-> determine each one respectively. Please let me know if you have any
-> idea, I=E2=80=99ve attached the data-sheet.
+>> Hi Benjamin,
+>>
+>> I have a few comments below. Can you when reposting split this patch
+>> into smaller changes ?
+> 
+> Not so easy because I change the way of how the hardware is used to be able
+> to provide clocksource and clockevent on the same hardware block.
+> 
+>>
+>> Also, can you consider using the timer-of API ?
+> 
+> Is it just about using TIMER_OF_DECLARE ? or do you have something
+> else in mind ?
 
-Does the existing ampire,am800480r3tmqwa1h binding work for your display?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It is something else, see commit dc11bae785.
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
