@@ -1,7 +1,7 @@
 From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] of/platform: dynamic: Use of_platform_bus_create() to create devices
-Date: Tue, 19 Sep 2017 18:51:13 +0200
-Message-ID: <20170919165114.6615-2-alexander.sverdlin@nokia.com>
+Subject: [PATCH v2 2/2] of/unittest: Test platform bus added from overlay
+Date: Tue, 19 Sep 2017 18:51:14 +0200
+Message-ID: <20170919165114.6615-3-alexander.sverdlin@nokia.com>
 References: <20170919165114.6615-1-alexander.sverdlin@nokia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,52 +12,191 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-of_platform_notify() requires parents to have OF_POPULATED_BUS to be set
-(which is correct way to verify healthy platform bus), but uses
-of_platform_device_create() to create devices, which never sets the above
-flag. Therefore it's not possible to add platform buses via overlays.
+Check that it's possible to:
+- add children to platform buses originating from overlays
+- use overlay to enable a platform bus originating from overlay
 
-Use of_platform_bus_create(), which is used in non-overlay case to populate
-both buses and devices.
+Explicitly avoid unittest_probe(), because this test case checks the correct
+creation of the devices only. Driver probing might be delayed (say, modules)
+and correct device creation must not depend on it.
 
 Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
 ---
- drivers/of/platform.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/of/unittest-data/tests-overlay.dtsi | 83 +++++++++++++++++++++++++++++
+ drivers/of/unittest.c                       | 60 +++++++++++++++++++++
+ 2 files changed, 143 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index ac15d0e..65078a7 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -642,6 +642,7 @@ static int of_platform_notify(struct notifier_block *nb,
- 	struct of_reconfig_data *rd = arg;
- 	struct platform_device *pdev_parent, *pdev;
- 	bool children_left;
+diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
+index 02ba56c..6925a99 100644
+--- a/drivers/of/unittest-data/tests-overlay.dtsi
++++ b/drivers/of/unittest-data/tests-overlay.dtsi
+@@ -325,5 +325,88 @@
+ 			};
+ 		};
+ 
++		/* test that platform buses from overlays are functional */
++		overlay16 {
++			fragment@0 {
++				target-path = "/testcase-data/overlay-node/test-bus";
++				__overlay__ {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					test-unittest16 {
++						/*
++						 * testing just device creation,
++						 * no unittest_probe() should
++						 * be called
++						 */
++						compatible = "simple-bus";
++						reg = <16>;
++					};
++				};
++			};
++		};
++
++		overlay17 {
++			fragment@0 {
++				target-path = "/testcase-data/overlay-node/test-bus";
++				__overlay__ {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					test-unittest16 {
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						test-unittest161 {
++							compatible = "unittest";
++							reg = <1>;
++						};
++					};
++				};
++			};
++		};
++
++		overlay18 {
++			fragment@0 {
++				target-path = "/testcase-data/overlay-node/test-bus";
++				__overlay__ {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					test-unittest18 {
++						#address-cells = <1>;
++						#size-cells = <0>;
++						/*
++						 * testing just device creation,
++						 * no unittest_probe() should
++						 * be called
++						 */
++						compatible = "simple-bus";
++						reg = <18>;
++						status = "disabled";
++
++						test-unittest181 {
++							compatible = "unittest";
++							reg = <1>;
++						};
++					};
++				};
++			};
++		};
++
++		overlay19 {
++			fragment@0 {
++				target-path = "/testcase-data/overlay-node/test-bus";
++				__overlay__ {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					test-unittest18 {
++						status = "okay";
++					};
++				};
++			};
++		};
++
+ 	};
+ };
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 29a35cb..6972363 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1922,6 +1922,63 @@ static inline void of_unittest_overlay_i2c_15(void) { }
+ 
+ #endif
+ 
++/* test that platform buses populated by overlays are functional */
++static void of_unittest_overlay_16(void)
++{
 +	int ret;
++	char *child_path;
++
++	/* add an empty bus */
++	ret = of_unittest_apply_overlay_check(16, 16, 0, 1, PDEV_OVERLAY);
++	if (unittest(ret == 0,
++			"overlay test %d failed; overlay application\n", 16))
++		return;
++
++	/* add a device to the bus */
++	ret = of_unittest_apply_overlay(17, 16, PDEV_OVERLAY);
++	if (unittest(ret == 0,
++			"overlay test %d failed; overlay application\n", 16))
++		return;
++
++	child_path = kasprintf(GFP_KERNEL, "%s/test-unittest161",
++			unittest_path(16, PDEV_OVERLAY));
++	if (unittest(child_path, "overlay test %d failed; kasprintf\n", 16))
++		return;
++
++	ret = of_path_device_type_exists(child_path, PDEV_OVERLAY);
++	kfree(child_path);
++	if (unittest(ret, "overlay test %d failed; no child device\n", 16))
++		return;
++}
++
++static void of_unittest_overlay_18(void)
++{
++	int ret;
++	char *child_path;
++
++	/* add a disabled bus */
++	ret = of_unittest_apply_overlay_check(18, 18, 0, 0, PDEV_OVERLAY);
++	if (unittest(ret == 0,
++			"overlay test %d failed; overlay application\n", 18))
++		return;
++
++	/* enable the bus */
++	ret = of_unittest_apply_overlay_check(19, 18, 0, 1, PDEV_OVERLAY);
++	if (unittest(ret == 0,
++			"overlay test %d failed; overlay application\n", 18))
++		return;
++
++	child_path = kasprintf(GFP_KERNEL, "%s/test-unittest181",
++			unittest_path(18, PDEV_OVERLAY));
++	if (unittest(child_path, "overlay test %d failed; kasprintf\n", 18))
++		return;
++
++	ret = of_path_device_type_exists(child_path, PDEV_OVERLAY);
++	kfree(child_path);
++	if (unittest(ret, "overlay test %d failed; no child device\n", 18))
++		return;
++}
++
+ static void __init of_unittest_overlay(void)
+ {
+ 	struct device_node *bus_np = NULL;
+@@ -1984,6 +2041,9 @@ static void __init of_unittest_overlay(void)
+ 	of_unittest_overlay_i2c_cleanup();
+ #endif
  
- 	switch (of_reconfig_get_state_change(action, rd)) {
- 	case OF_RECONFIG_CHANGE_ADD:
-@@ -655,15 +656,15 @@ static int of_platform_notify(struct notifier_block *nb,
++	of_unittest_overlay_16();
++	of_unittest_overlay_18();
++
+ 	of_unittest_destroy_tracked_overlays();
  
- 		/* pdev_parent may be NULL when no bus platform device */
- 		pdev_parent = of_find_device_by_node(rd->dn->parent);
--		pdev = of_platform_device_create(rd->dn, NULL,
--				pdev_parent ? &pdev_parent->dev : NULL);
-+		ret = of_platform_bus_create(rd->dn, of_default_bus_match_table,
-+					     NULL, pdev_parent ?
-+					     &pdev_parent->dev : NULL, true);
- 		of_dev_put(pdev_parent);
- 
--		if (pdev == NULL) {
-+		if (ret) {
- 			pr_err("%s: failed to create for '%pOF'\n",
- 					__func__, rd->dn);
--			/* of_platform_device_create tosses the error code */
--			return notifier_from_errno(-EINVAL);
-+			return notifier_from_errno(ret);
- 		}
- 		break;
- 
+ out:
 -- 
 2.4.6
 
