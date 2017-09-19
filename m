@@ -1,73 +1,53 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: overlay: Fix uninitialized vars in dup_and_fixup_symbol_prop()
-Date: Tue, 19 Sep 2017 14:15:33 -0500
-Message-ID: <CAL_JsqKh8=EpPorfRfu5PdYV4nbsaraBbzQA4pErh9j_nC-8Cg@mail.gmail.com>
-References: <1505039164-25468-1-git-send-email-geert@linux-m68k.org> <59C16197.4040403@gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v4 4/6] ARM: dts: imx6dl-icore: Add LVDS support
+Date: Wed, 20 Sep 2017 00:51:05 +0530
+Message-ID: <CAMty3ZCQP5vnrU5MSzRFwRS+vS9a_ULt3sNB07BOHv0dCton0w@mail.gmail.com>
+References: <1505121145-9507-1-git-send-email-jteki@openedev.com>
+ <1505121145-9507-4-git-send-email-jteki@openedev.com> <CAOMZO5B0RAjdupLSe=S+tDEA-hpf-Si_4qjkcKC_ECX86PLScQ@mail.gmail.com>
+ <CAMty3ZD3od1LXKai=kwq8hxGsa3EWcjQx5gyBtZvCM5ccC34ZQ@mail.gmail.com> <CAOMZO5C+DXAQu=2OUAquB2AKn8dOzadoPsdGD05hXAUBdTnYjQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59C16197.4040403-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAOMZO5C+DXAQu=2OUAquB2AKn8dOzadoPsdGD05hXAUBdTnYjQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 19, 2017 at 1:27 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 09/10/17 03:26, Geert Uytterhoeven wrote:
->> With gcc 4.1.2:
->>
->>     drivers/of/overlay.c: In function ‘dup_and_fixup_symbol_prop’:
->>     drivers/of/overlay.c:108: warning: ‘overlay_name_len’ may be used uninitialized in this function
->>     drivers/of/overlay.c:100: warning: ‘ovinfo’ may be used uninitialized in this function
->>
->> Indeed, if ov->count == 0, both variables are uninitialized, which may
->> lead to a crash when dereferencing ovinfo later.
->>
->> Currently this is a false positive, as the sole creator of of_overlay
->> structures (of_build_overlay_info(), introduced in commit
->> 7518b5890d8ac366 ("of/overlay: Introduce DT overlay support") checks for
->> this.
->>
->> To prevent future issues, add a check for a zero ov->count to
->> dup_and_fixup_symbol_prop().  Note that this does not get rid of the
->> actual compiler warning.
->>
->> Fixes: d1651b03c2df75db ("of: overlay: add overlay symbols to live device tree")
->> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->> ---
->>  drivers/of/overlay.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->> index 8ecfee31ab6d3874..ebe19e0f8e4d1f4b 100644
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -108,7 +108,7 @@ static struct property *dup_and_fixup_symbol_prop(struct of_overlay *ov,
->>       int overlay_name_len;
->>       int target_path_len;
->>
->> -     if (!prop->value)
->> +     if (!ov->count || !prop->value)
->>               return NULL;
->>       symbol_path = prop->value;
->>
->>
->
-> I did not see this patch due to an overzealous spam filter.  I noticed it
-> when Rob replied with his applied email.
->
-> This check is not needed to prevent accessing overlay_name_len and ovinfo
-> when ov->count == 0.  That is already prevented by:
->
->         if (k >= ov->count)
->                 goto err_free;
->
-> because k will be zero and ov->count will be zero.
+Hi Fabio,
 
-Okay, will drop.
+On Tue, Sep 19, 2017 at 9:22 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Jagan,
+>
+> On Tue, Sep 19, 2017 at 2:06 AM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> =
+wrote:
+>> Hi Fabio,
+>>
+>>> Please add the support of this panel to drivers/gpu/drm/panel/panel-sim=
+ple.c.
+>>>
+>>> Then you can refer its compatible in your board dts.
+>>
+>> Yes, I'm trying to add the display timings but I couldn't find any
+>> info how to find front_portch, back_porch and sync. I remember
+>> blanking time =3D Sync Width + BP + FP so out of which how can we
+>> determine each one respectively. Please let me know if you have any
+>> idea, I=E2=80=99ve attached the data-sheet.
+>
+> Does the existing ampire,am800480r3tmqwa1h binding work for your display?
 
-Rob
+Yes, it is working..but need to understand how these respective
+timings were calculated(because I need to add few more) . I tried this
+supported ampire but couldn't get the data-sheet. Please point me if
+you find any details.
+
+thanks!
+--=20
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
