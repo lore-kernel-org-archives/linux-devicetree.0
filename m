@@ -1,64 +1,30 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] tee: optee: allow selection of ti-smc as a calling
- method
-Date: Tue, 19 Sep 2017 15:09:20 +0100
-Message-ID: <20170919140920.GG30715@leverpostej>
-References: <20170918205005.30235-1-afd@ti.com>
- <20170918205005.30235-2-afd@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] gpio: rcar: Add r8a77995 (R-Car D3) support
+Date: Tue, 19 Sep 2017 09:12:20 -0500
+Message-ID: <20170919141220.kyjerbxvlemsylpa@rob-hp-laptop>
+References: <1505285329-6881-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170918205005.30235-2-afd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Jens Wiklander <jens.wiklander@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1505285329-6881-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 03:50:05PM -0500, Andrew F. Davis wrote:
-> On TI platforms OP-TEE must be called using a modified SMC call,
-> allow the selection of this though DT.
+On Wed, Sep 13, 2017 at 03:48:49PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds binding for r8a77995 (R-Car D3). This SoC can use
+> "renesas,rcar-gen3-gpio" fallback compatibility. So, this patch
+> doesn't modify the gpio-rcar driver.
 > 
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt | 2 ++
->  drivers/tee/optee/core.c                                           | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-> index d38834c67dff..a3275ecdf186 100644
-> --- a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-> +++ b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-> @@ -20,6 +20,8 @@ the reference implementation maintained by Linaro.
->                     "hvc" : HVC #0, with the register assignments specified
->  		           in drivers/tee/optee/optee_smc.h
->  
-> +                   "ti-smc" : Similar to "smc" with TI specific register
-> +		              adjustments
+>  Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-... which are what, exactly? Specified where?
-
-As Rob said, this should really have a new compat string.
-
-Thanks,
-Mark.
-
->  
->  
->  Example:
-> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-> index 7952357df9c8..dfa9de590d98 100644
-> --- a/drivers/tee/optee/core.c
-> +++ b/drivers/tee/optee/core.c
-> @@ -441,6 +441,8 @@ static optee_invoke_fn *get_invoke_func(struct device_node *np)
->  		return optee_smccc_hvc;
->  	else if (!strcmp("smc", method))
->  		return optee_smccc_smc;
-> +	else if (!strcmp("ti-smc", method))
-> +		return arm_ti_smccc_smc;
->  
->  	pr_warn("invalid \"method\" property: %s\n", method);
->  	return ERR_PTR(-EINVAL);
-> -- 
-> 2.14.1
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
