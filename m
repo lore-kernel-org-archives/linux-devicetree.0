@@ -1,65 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH/RFC 1/3] dt-bindings: i2c: i2c-gpio: Add support for named gpios
-Date: Tue, 19 Sep 2017 15:23:39 -0500
-Message-ID: <CAL_JsqLagjVaPgBJmOOFS6yw5axnZaCNbBafJd=r8dtQj-E9Qw@mail.gmail.com>
-References: <1503566474-5335-1-git-send-email-geert+renesas@glider.be>
- <1503566474-5335-2-git-send-email-geert+renesas@glider.be>
- <20170831175529.vuchpgvi2aigz2r5@rob-hp-laptop> <CAMuHMdXGm0XuuihG=L_JRBV_WHt2QPtZgdsMFT0PeyDH3ejsNg@mail.gmail.com>
- <CAL_JsqKS++33tOr6PVzX1Fifmn5teaZVYeY0UWeNiAfi=nHetA@mail.gmail.com> <CACRpkdZqEXJBZbOOVy0jNrDX=ayeiquAdXHyMMnNKmFqwELEuw@mail.gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 4/6] dt: bindings: as3645a: Improve label
+ documentation, DT example
+Date: Tue, 19 Sep 2017 23:01:02 +0200
+Message-ID: <809f7590-7641-e8bc-c009-4fed05d5827c@gmail.com>
+References: <20170918102349.8935-1-sakari.ailus@linux.intel.com>
+ <20170918102349.8935-5-sakari.ailus@linux.intel.com>
+ <20170918105655.GA14591@amd>
+ <20170918144923.dnhrxkirle3fvdfo@valkosipuli.retiisi.org.uk>
+ <20170918205407.GA1849@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZqEXJBZbOOVy0jNrDX=ayeiquAdXHyMMnNKmFqwELEuw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170918205407.GA1849@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 2:45 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Sep 18, 2017 at 6:52 PM, Rob Herring <robh@kernel.org> wrote:
->
->> In theory yes, but reality is pretty much everyone follows it. There's
->> no other way to specify active high vs. low for example. Furthermore,
->> if someone wanted to do flags in their own custom way, that would
->> still work. It is still the controller (or GPIO core) that interprets
->> the flags, not the client.
+Hi Pavel,
+
+On 09/18/2017 10:54 PM, Pavel Machek wrote:
+> On Mon 2017-09-18 17:49:23, Sakari Ailus wrote:
+>> Hi Pavel,
 >>
->> This is a new binding, so only new DT will have it and we can apply
->> new standards.
->
-> I'd like to get a picture of any one-cell GPIO DTS:es and/or drivers
-> still around.
+>> On Mon, Sep 18, 2017 at 12:56:55PM +0200, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> Specify the exact label used if the label property is omitted in DT, as
+>>>> well as use label in the example that conforms to LED device naming.
+>>>>
+>>>> @@ -69,11 +73,11 @@ Example
+>>>>  			flash-max-microamp = <320000>;
+>>>>  			led-max-microamp = <60000>;
+>>>>  			ams,input-max-microamp = <1750000>;
+>>>> -			label = "as3645a:flash";
+>>>> +			label = "as3645a:white:flash";
+>>>>  		};
+>>>>  		indicator@1 {
+>>>>  			reg = <0x1>;
+>>>>  			led-max-microamp = <10000>;
+>>>> -			label = "as3645a:indicator";
+>>>> +			label = "as3645a:red:indicator";
+>>>>  		};
+>>>>  	};
+>>>
+>>> Ok, but userspace still has no chance to determine if this is flash
+>>> from main camera or flash for front camera; todays smartphones have
+>>> flashes on both cameras.
+>>>
+>>> So.. Can I suggset as3645a:white:main_camera_flash or main_flash or
+>>> ....?
+>>
+>> If there's just a single one in the device, could you use that?
+>>
+>> Even if we name this so for N9 (and N900), the application still would only
+>> work with the two devices.
+> 
+> Well, I'd plan to name it on other devices, too.
+> 
+>> My suggestion would be to look for a flash LED, and perhaps the maximum
+>> current as well. That should generally work better than assumptions on the
+>> label.
+> 
+> If you just look for flash LED, you don't know if it is front one or
+> back one. Its true that if you have just one flash it is usually on
+> the back camera, but you can't know if maybe driver is not available
+> for the main flash.
+> 
+> Lets get this right, please "main_camera_flash" is 12 bytes more than
+> "flash", and it saves application logic.. more than 12 bytes, I'm sure. 
 
-$ git grep '#gpio-cells.*1'
-Documentation/devicetree/bindings/gpio/gpio.txt:
-#gpio-cells = <1>;
-Documentation/devicetree/bindings/gpio/spear_spics.txt:  *
-#gpio-cells: should be 1 and will mention chip select number
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt:
-                 #gpio-cells = <1>;
-Documentation/devicetree/bindings/mfd/twl6040.txt:- #gpio-cells = <1>:
-twl6040 provides GPO lines.
-arch/mips/boot/dts/xilfpga/nexys4ddr.dts:               #gpio-cells = <1>;
+What you are trying to introduce is yet another level of LED class
+device naming standard, one level below devicename:colour:function.
+It seems you want also to come up with the set of standarized LED
+function names. This would certainly have to be covered for consistency.
 
-...and this one may be out of date. All other instances for Xilinx
-gpio use 2 cells.
-
-We also have to look for custom translate functions of which there are
-a handful, but they all use standard flags.
-
->
-> I would like to deal with them somehow.
-
-Looks like we already warn in the kernel if <2. Might be worth adding
-this to dtc, then I can get the warning without booting a kernel on
-platforms I don't have.
-
-> When we started the big DT migration this was one of the areas
-> we made some screwups in, admittedly, but someone just has to
-> go first, and that was incidentally GPIO controllers.
-
-The move to standardize flags started before the Great ARM Conversion,
-so I would have expected some old PPC DTs. But it looks like we are
-good.
-
-Rob
+-- 
+Best regards,
+Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
