@@ -1,53 +1,60 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: spi: spi-davinci: Update binding for
- 66AK2Gx pwr dm property
-Date: Tue, 19 Sep 2017 13:35:14 +0100
-Message-ID: <20170919123514.sqzeglbbypp5edsz@sirena.co.uk>
-References: <20170908204638.13149-1-fcooper@ti.com>
- <20170908204638.13149-2-fcooper@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v13 21/25] smiapp: Add support for flash and lens devices
+Date: Tue, 19 Sep 2017 15:38:00 +0300
+Message-ID: <10998149.DTLv6WZvUP@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <1881974.bD6jRInLY1@avalon> <20170919122034.ux6refntfviofx3y@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uuuxcy532unqqv4g"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170908204638.13149-2-fcooper-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170919122034.ux6refntfviofx3y@paasikivi.fi.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sakari,
 
---uuuxcy532unqqv4g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tuesday, 19 September 2017 15:20:34 EEST Sakari Ailus wrote:
+> On Tue, Sep 19, 2017 at 03:08:25PM +0300, Laurent Pinchart wrote:
+> > On Friday, 15 September 2017 17:17:20 EEST Sakari Ailus wrote:
+> >> Parse async sub-devices by using
+> >> v4l2_subdev_fwnode_reference_parse_sensor_common().
+> >> 
+> >> These types devices aren't directly related to the sensor, but are
+> >> nevertheless handled by the smiapp driver due to the relationship of
+> >> these component to the main part of the camera module --- the sensor.
+> >> 
+> >> This does not yet address providing the user space with information on
+> >> how to associate the sensor or lens devices but the kernel now has the
+> >> necessary information to do that.
+> >> 
+> >> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> >> Acked-by: Pavel Machek <pavel@ucw.cz>
+> > 
+> > Something is bothering me here, not so much in the contents of the patch
+> > itself than in its nature. There are four patches in this series that add
+> > support for flash and lens devices to the smiapp, et8ek8, ov5670 and
+> > ov13858 drivers. We have way more sensor drivers than that, and I don't
+> > really want to patch them all to support flash and lens. I believe a less
+> > intrusive approach, more focussed on the V4L2 core, is needed.
+> 
+> You could move this to the framework, yes. Nothing prevents that. Perhaps a
+> flag telling the framework whether this should be done? Just being
+> opportunistic might work as well.
 
-On Fri, Sep 08, 2017 at 03:46:36PM -0500, Franklin S Cooper Jr wrote:
-> Add pm-domains property which is required for 66AK2Gx. Also document 66AK2G
-> unique clocks property usage.
+How is would be done is another matter which I haven't thought about yet :-) 
+My point is that I don't think converting all drivers is a good idea, you 
+should aim for an implementation in the core.
 
-Please submit patches using subject lines reflecting the style for the
-subsystem.  This makes it easier for people to identify relevant
-patches.  Look at what existing commits in the area you're changing are
-doing and make sure your subject lines visually resemble what they're
-doing.
+> >> ---
+> >> 
+> >>  drivers/media/i2c/smiapp/smiapp-core.c | 38 ++++++++++++++++++++-------
+> >>  drivers/media/i2c/smiapp/smiapp.h      |  4 +++-
+> >>  2 files changed, 33 insertions(+), 9 deletions(-)
 
---uuuxcy532unqqv4g
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Regards,
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnBDwEACgkQJNaLcl1U
-h9CA9Af7BR/5OwDtj5sz7V5TWfX5uyYF/aFHCuChr5vXUwSU/YdU3jPzV5KQW7Jt
-K1if5UVresM2ZICIPXfBJK0z8Vee4kTdRhbJbd6L+LQYb+Y12wB5tj+FybEHUSQU
-vYOoNCgpb7klZc8Oz6Qxh5HyIa+iEmbTjDof9JJSObThd3uoGnlGJ3iTY5otcSry
-fC8cb5KZ1DRUXHMjhBwluiDdZgT+flcznaMXlgWlvAeP+8DFzOxNPg7qo745mo2q
-c4tQzDOrYpSNsuoLENUOOcEEU9m6/yHfjchYm5/L0K9jCFhfnanNUHv/27Io8kb0
-ZkFAhE+pJFhFwtRGyAeUzrcB7A2AcA==
-=9bDr
------END PGP SIGNATURE-----
-
---uuuxcy532unqqv4g--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
