@@ -1,89 +1,67 @@
-From: Hans Verkuil <hansverk@cisco.com>
-Subject: Re: [PATCHv2 1/2] dt-bindings: adi,adv7511.txt: document cec clock
-Date: Tue, 19 Sep 2017 12:59:13 +0200
-Message-ID: <aa9c5c0e-c2c8-7913-0e6c-4b150ff09a9b@cisco.com>
-References: <20170919073331.29007-1-hverkuil@xs4all.nl>
- <20170919073331.29007-2-hverkuil@xs4all.nl>
- <505bc74f-6563-ab1d-9aab-7893410aef7e@cogentembedded.com>
- <74b252c8-c1eb-8498-7b9b-54604fe2806a@cisco.com>
- <e68cffb1-346c-2018-9048-3f8523903809@cogentembedded.com>
- <7bfcd125-db23-61e3-2bc9-67e5c11f27fa@xs4all.nl>
- <ce0588ed-eb3f-0008-0608-b54aefeee704@cogentembedded.com>
- <82f72432-51fa-722b-b1c7-d6f7ea6ae758@xs4all.nl>
- <5c8f3625-26f3-8c6e-d42a-def8251a9ac6@cogentembedded.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v13 01/25] v4l: fwnode: Move KernelDoc documentation to
+ the header
+Date: Tue, 19 Sep 2017 13:04:36 +0200
+Message-ID: <29354478-ec46-278b-c457-4e6f3cc6848c@xs4all.nl>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
+ <20170915141724.23124-2-sakari.ailus@linux.intel.com>
+ <9077921.hsjkiRftLf@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <5c8f3625-26f3-8c6e-d42a-def8251a9ac6@cogentembedded.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9077921.hsjkiRftLf@avalon>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, linux-renesas-soc@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/17 12:42, Sergei Shtylyov wrote:
-> On 9/19/2017 1:35 PM, Hans Verkuil wrote:
+On 09/19/17 12:48, Laurent Pinchart wrote:
+> Hi Sakari,
 > 
->>>>>>>> From: Hans Verkuil <hans.verkuil@cisco.com>
->>>>>>>>
->>>>>>>> Document the cec clock binding.
->>>>>>>>
->>>>>>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
->>>>>>>> Acked-by: Rob Herring <robh@kernel.org>
->>>>>>>> ---
->>>>>>>>      Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 4 ++++
->>>>>>>>      1 file changed, 4 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->>>>>>>> index 06668bca7ffc..4497ae054d49 100644
->>>>>>>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->>>>>>>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->>>>>>>> @@ -68,6 +68,8 @@ Optional properties:
->>>>>>>>      - adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
->>>>>>>>        generator. The chip will rely on the sync signals in the DSI data lanes,
->>>>>>>>        rather than generate its own timings for HDMI output.
->>>>>>>> +- clocks: from common clock binding: handle to CEC clock.
->>>>>>>
->>>>>>>        It's called "phandle" in the DT speak. :-)
->>>>>>>        Are you sure the clock specifier would always be absent?
->>>>>>
->>>>>> Sorry? I don't understand the question. Did you mean: "can be absent?"?
->>>>>
->>>>>       No, you only say that there'll be the clock phandle only. The clock
->>>>> specifier may follow the phandle for the clock devices that have
->>>>> "#clock-cells" prop != 0.
->>>>
->>>> I have to say that I just copy-and-pasted this from other bindings.
->>>
->>>      :-)
->>>
->>>> Would this be better?
->>>>
->>>> - clocks: list of clock specifiers, corresponding to entries in
->>>>     the clock-names property;
->>>
->>>      Didn't you say that there'll be only one clock, "cec"? If so, there's
->>> gonna  be a single clock phandle+specifier pair. They always go in pairs. :-)
->>>
->>>> - clock-names: from common clock binding: must be "cec".
+> Thank you for the patch.
+> 
+> On Friday, 15 September 2017 17:17:00 EEST Sakari Ailus wrote:
+>> In V4L2 the practice is to have the KernelDoc documentation in the header
+>> and not in .c source code files. This consequently makes the V4L2 fwnode
+>> function documentation part of the Media documentation build.
 >>
->> - clocks: cec clock phandle, corresponding to the clock-names entry.
-> 
->     The clock phandle and specifier.
-> 
->> - clock-names: from common clock binding: must be "cec".
+>> Also correct the link related function and argument naming in
+>> documentation.
 >>
->> This OK?
+>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+>> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 > 
->     Well, you seem to be going in circles, the above was almost the same as 
-> the original prop description...
+> I'm still very opposed to this. In addition to increasing the risk of 
+> documentation becoming stale, it also makes review more difficult. I'm 
+> reviewing patch 05/25 of this series and I have to jump around the patch to 
+> verify that the documentation matches the implementation, it's really 
+> annoying.
+> 
+> We should instead move all function documentation from header files to source 
+> files.
 
-- clocks: from common clock binding: reference to the CEC clock.
-- clock-names: from common clock binding: must be "cec".
-
-This avoids the whole issue of having just a phandle or a phandle + specifier.
+I disagree with this. Yes, it makes reviewing harder, but when you have to
+*use* these functions as e.g. a driver developer, then having it in the
+header is much more convenient.
 
 Regards,
 
 	Hans
+
+> 
+>> ---
+>>  drivers/media/v4l2-core/v4l2-fwnode.c | 75 --------------------------------
+>> include/media/v4l2-fwnode.h            | 81 +++++++++++++++++++++++++++++++-
+>> 2 files changed, 80 insertions(+), 76 deletions(-)
+> 
+> [snip]
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
