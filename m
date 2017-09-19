@@ -1,107 +1,217 @@
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 04/11] arm64: alternatives: use tpidr_el2 on VHE hosts
-Date: Tue, 19 Sep 2017 10:55:55 +0100
-Message-ID: <59C0E9AB.7040703@arm.com>
-References: <20170808164616.25949-1-james.morse@arm.com> <20170808164616.25949-5-james.morse@arm.com> <20170917144334.GB99021@lvm>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v13 05/25] v4l: fwnode: Support generic parsing of graph
+ endpoints in a device
+Date: Tue, 19 Sep 2017 13:00:48 +0300
+Message-ID: <20170919100048.7jut3benh2vbb32q@paasikivi.fi.intel.com>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
+ <20170915141724.23124-6-sakari.ailus@linux.intel.com>
+ <a17ab793-b859-f04a-2dff-d8f6a314e9bf@xs4all.nl>
+ <20170919082015.vt6olgirnvmpcrpa@paasikivi.fi.intel.com>
+ <af99e12c-6fb8-a633-eec2-c1eb9d82226a@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170917144334.GB99021@lvm>
+Content-Disposition: inline
+In-Reply-To: <af99e12c-6fb8-a633-eec2-c1eb9d82226a-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoffer Dall <cdall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christoffer,
+Hi Hans,
 
-On 17/09/17 15:43, Christoffer Dall wrote:
-> On Tue, Aug 08, 2017 at 05:46:09PM +0100, James Morse wrote:
->> Now that KVM uses tpidr_el2 in the same way as Linux's cpu_offset in
->> tpidr_el1, merge the two. This saves KVM from save/restoring tpidr_el1
->> on VHE hosts, and allows future code to blindly access per-cpu variables
->> without triggering world-switch.
-
->> Changes since v1:
->>  * cpu_copy_el2regs()'s 'have I been patched' test now always sets a register,
->>    just in case the compiler puts do_copyregs on the stack.
-
-> I don't understand this?
-
-Looks like this was a note to myself, translation below:
-
-
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index 9f9e0064c8c1..1960706d2422 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -1295,3 +1296,25 @@ static int __init enable_mrs_emulation(void)
->>  }
->>  
->>  late_initcall(enable_mrs_emulation);
->> +
->> +int cpu_copy_el2regs(void *__unused)
->> +{
->> +	int do_copyregs = 0;
->> +
->> +	/*
->> +	 * Copy register values that aren't redirected by hardware.
->> +	 *
->> +	 * Before code patching, we only set tpidr_el1, all CPUs need to copy
->> +	 * this value to tpidr_el2 before we patch the code. Once we've done
->> +	 * that, freshly-onlined CPUs will set tpidr_el2, so we don't need to
->> +	 * do anything here.
->> +	 */
->> +	asm volatile(ALTERNATIVE("mov %0, #1", "mov %0, #0",
->> +				 ARM64_HAS_VIRT_HOST_EXTN)
->> +		    : "=r" (do_copyregs) : : );
->> +
->> +	if (do_copyregs)
->> +		write_sysreg(read_sysreg(tpidr_el1), tpidr_el2);
+On Tue, Sep 19, 2017 at 10:40:14AM +0200, Hans Verkuil wrote:
+> On 09/19/2017 10:20 AM, Sakari Ailus wrote:
+> > Hi Hans,
+> > 
+> > Thank you for the review.
+> > 
+> > On Tue, Sep 19, 2017 at 10:03:27AM +0200, Hans Verkuil wrote:
+> >> On 09/15/2017 04:17 PM, Sakari Ailus wrote:
+...
+> >>> +static int __v4l2_async_notifier_parse_fwnode_endpoints(
+> >>> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> >>> +	size_t asd_struct_size, unsigned int port, bool has_port,
+> >>> +	int (*parse_endpoint)(struct device *dev,
+> >>> +			    struct v4l2_fwnode_endpoint *vep,
+> >>> +			    struct v4l2_async_subdev *asd))
+> >>> +{
+> >>> +	struct fwnode_handle *fwnode = NULL;
+> >>> +	unsigned int max_subdevs = notifier->max_subdevs;
+> >>> +	int ret;
+> >>> +
+> >>> +	if (WARN_ON(asd_struct_size < sizeof(struct v4l2_async_subdev)))
+> >>> +		return -EINVAL;
+> >>> +
+> >>> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
+> >>> +				     dev_fwnode(dev), fwnode)); ) {
+> >>
+> >> You can replace this by:
+> >>
+> >> 	while ((fwnode = fwnode_graph_get_next_endpoint(dev_fwnode(dev), fwnode))) {
+> >>
+> >>> +		if (!fwnode_device_is_available(
+> >>> +			    fwnode_graph_get_port_parent(fwnode)))
+> >>> +			continue;
+> >>> +
+> >>> +		if (has_port) {
+> >>> +			struct fwnode_endpoint ep;
+> >>> +
+> >>> +			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
+> >>> +			if (ret) {
+> >>> +				fwnode_handle_put(fwnode);
+> >>> +				return ret;
+> >>> +			}
+> >>> +
+> >>> +			if (ep.port != port)
+> >>> +				continue;
+> >>> +		}
+> >>> +		max_subdevs++;
+> >>> +	}
+> >>> +
+> >>> +	/* No subdevs to add? Return here. */
+> >>> +	if (max_subdevs == notifier->max_subdevs)
+> >>> +		return 0;
+> >>> +
+> >>> +	ret = v4l2_async_notifier_realloc(notifier, max_subdevs);
+> >>> +	if (ret)
+> >>> +		return ret;
+> >>> +
+> >>> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
+> >>> +				     dev_fwnode(dev), fwnode)); ) {
+> >>
+> >> Same here: this can be a 'while'.
+> > 
+> > The fwnode = NULL assignment still needs to be done. A for loop has a
+> > natural initialiser for the loop, I think it's cleaner than using while
+> > here.
 > 
-> Could you just use has_vhe() here ?
-
-This is the 'have I been patched' test.
-Before patching the my_cpu_offset value will be in tpidr_el1, we copy it to
-tpidr_el2.
-
-Once smp_cpus_done() calls apply_alternatives_all(), set_my_cpu_offset() is
-patched to write its value into tpidr_el2. CPUs that come online after this
-point don't need the value copying, but this cpufeature enable call will still
-be called.
-
-The skimmed-over information is that cpufeature's enable methods are called
-locally when any core comes online, even after the alternatives have been
-applied. (we also modify pstate and set sctlr bits from these).
-
-Would it be clearer if I rewrote the comment as:
-> cpufeature's enable methods are called whenever a CPU comes online, but we
-> only need to copy tpidr_el1 -> tpidr_el2 on CPUs that were online before the
-> alternatives are applied. After that point a VHE system will only use
-> tpidr_el2.
-
-
-The change-since-v1 was paranoia as 'do_copyregs' wasn't always updated: I was
-worried about the compiler ditching the '=0' initialisation as its written by
-the asm() before being read... but not once we've patched in the alternative.
-Having to put 'do_copyregs' on the stack, but then deciding to just allocate it
-late was where I thought this might happen. Short-version: I don't trust the
-compiler.
-
-
->> +
->> +	return 0;
->> +}
-
-
-
-> Otherwise:
+> After the previous while fwnode is NULL again (since that's when the while
+> stops).
 > 
-> Reviewed-by: Christoffer Dall <cdall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > The macro would be implemented this way as well.
+> > 
+> > For the loop above this one, I'd use for for consistency: it's the same
+> > loop after all.
+> > 
+> > This reminds me --- I'll send the patch for the macro.
+> 
+> If this is going to be replaced by a macro, then disregard my comment.
 
-Thanks!
+Yes. I just sent that to linux-acpi (as well as devicetree and to you).
 
-James
+...
+
+> >>> +/**
+> >>> + * v4l2_async_notifier_parse_fwnode_endpoints - Parse V4L2 fwnode endpoints in a
+> >>> + *						device node
+> >>> + * @dev: the device the endpoints of which are to be parsed
+> >>> + * @notifier: notifier for @dev
+> >>> + * @asd_struct_size: size of the driver's async sub-device struct, including
+> >>> + *		     sizeof(struct v4l2_async_subdev). The &struct
+> >>> + *		     v4l2_async_subdev shall be the first member of
+> >>> + *		     the driver's async sub-device struct, i.e. both
+> >>> + *		     begin at the same memory address.
+> >>> + * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
+> >>> + *		    endpoint. Optional.
+> >>> + *		    Return: %0 on success
+> >>> + *			    %-ENOTCONN if the endpoint is to be skipped but this
+> >>> + *				       should not be considered as an error
+> >>> + *			    %-EINVAL if the endpoint configuration is invalid
+> >>> + *
+> >>> + * Parse the fwnode endpoints of the @dev device and populate the async sub-
+> >>> + * devices array of the notifier. The @parse_endpoint callback function is
+> >>> + * called for each endpoint with the corresponding async sub-device pointer to
+> >>> + * let the caller initialize the driver-specific part of the async sub-device
+> >>> + * structure.
+> >>> + *
+> >>> + * The notifier memory shall be zeroed before this function is called on the
+> >>> + * notifier.
+> >>> + *
+> >>> + * This function may not be called on a registered notifier and may be called on
+> >>> + * a notifier only once.
+> >>> + *
+> >>> + * Do not change the notifier's subdevs array, take references to the subdevs
+> >>> + * array itself or change the notifier's num_subdevs field. This is because this
+> >>> + * function allocates and reallocates the subdevs array based on parsing
+> >>> + * endpoints.
+> >>> + *
+> >>> + * The @struct v4l2_fwnode_endpoint passed to the callback function
+> >>> + * @parse_endpoint is released once the function is finished. If there is a need
+> >>> + * to retain that configuration, the user needs to allocate memory for it.
+> >>> + *
+> >>> + * Any notifier populated using this function must be released with a call to
+> >>> + * v4l2_async_notifier_release() after it has been unregistered and the async
+> >>> + * sub-devices are no longer in use, even if the function returned an error.
+> >>> + *
+> >>> + * Return: %0 on success, including when no async sub-devices are found
+> >>> + *	   %-ENOMEM if memory allocation failed
+> >>> + *	   %-EINVAL if graph or endpoint parsing failed
+> >>> + *	   Other error codes as returned by @parse_endpoint
+> >>> + */
+> >>> +int v4l2_async_notifier_parse_fwnode_endpoints(
+> >>> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> >>> +	size_t asd_struct_size,
+> >>> +	int (*parse_endpoint)(struct device *dev,
+> >>> +			      struct v4l2_fwnode_endpoint *vep,
+> >>> +			      struct v4l2_async_subdev *asd));
+> >>> +
+> >>> +/**
+> >>> + * v4l2_async_notifier_parse_fwnode_endpoints_by_port - Parse V4L2 fwnode
+> >>> + *							endpoints of a port in a
+> >>> + *							device node
+> >>> + * @dev: the device the endpoints of which are to be parsed
+> >>> + * @notifier: notifier for @dev
+> >>> + * @asd_struct_size: size of the driver's async sub-device struct, including
+> >>> + *		     sizeof(struct v4l2_async_subdev). The &struct
+> >>> + *		     v4l2_async_subdev shall be the first member of
+> >>> + *		     the driver's async sub-device struct, i.e. both
+> >>> + *		     begin at the same memory address.
+> >>> + * @port: port number where endpoints are to be parsed
+> >>> + * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
+> >>> + *		    endpoint. Optional.
+> >>> + *		    Return: %0 on success
+> >>> + *			    %-ENOTCONN if the endpoint is to be skipped but this
+> >>> + *				       should not be considered as an error
+> >>> + *			    %-EINVAL if the endpoint configuration is invalid
+> >>> + *
+> >>> + * This function is just like @v4l2_async_notifier_parse_fwnode_endpoints with
+> >>> + * the exception that it only parses endpoints in a given port. This is useful
+> >>> + * on devices that have both sinks and sources: the async sub-devices connected
+> >>
+> >> on -> for
+> >>
+> >>> + * to sources have already been set up by another driver (on capture devices).
+> >>
+> >> on -> for
+> > 
+> > Agreed on both.
+> > 
+> >>
+> >> So if I understand this correctly for devices with both sinks and sources you use
+> >> this function to just parse the sink ports. And you have to give explicit port
+> >> numbers since you can't tell from parsing the device tree if a port is a sink or
+> >> source port, right? Only the driver knows this.
+> > 
+> > Correct. The graph data structure in DT isn't directed, so this is only
+> > known by the driver.
+> 
+> I think this should be clarified.
+> 
+> I wonder if there is any way around it. I don't have time to dig into this, but
+> isn't it possible to tell that the source ports are already configured?
+
+Well, this is essentially what the documentation is attempting to convey.
+:-)
+
+I can add this / change the existing wording, if you think it could help.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
