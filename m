@@ -1,56 +1,32 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: exynos: Add dwc3 SUSPHY quirk
-Date: Tue, 19 Sep 2017 19:40:38 +0200
-Message-ID: <20170919174038.2sspjvadt6ggka65@kozik-lap>
-References: <1505728934-6200-1-git-send-email-andrzej.p@samsung.com>
- <CGME20170918100230eucas1p29fae00c53f1106af1961a6e269740b2f@eucas1p2.samsung.com>
- <1505728934-6200-2-git-send-email-andrzej.p@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: dra7: Set a default parent to mcasp3_ahclkx_mux
+Date: Tue, 19 Sep 2017 10:45:40 -0700
+Message-ID: <20170919174539.GB5024@atomide.com>
+References: <1504705172-17781-1-git-send-email-j-keerthy@ti.com>
+ <c1d80795-f86c-23e4-5a6b-4829c0f9f8a0@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1505728934-6200-2-git-send-email-andrzej.p@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In-Reply-To: <c1d80795-f86c-23e4-5a6b-4829c0f9f8a0@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, t-kristo@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 12:02:13PM +0200, Andrzej Pietrasiewicz wrote:
-> Odroid XU4 board does not enumerate SuperSpeed devices.
-> This patch makes exynos5 series chips use USB SUSPHY quirk,
-> which solves the problem.
+* Keerthy <j-keerthy@ti.com> [170918 04:35]:
 > 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos54xx.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-
-Makes sense to me... was it tested also on XU3 and XU?
-
-Best regards,
-Krzysztof
-
 > 
-> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-> index 0389e8a..8ca4fef 100644
-> --- a/arch/arm/boot/dts/exynos54xx.dtsi
-> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
-> @@ -134,6 +134,7 @@
->  				interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
->  				phys = <&usbdrd_phy0 0>, <&usbdrd_phy0 1>;
->  				phy-names = "usb2-phy", "usb3-phy";
-> +				snps,dis_u3_susphy_quirk;
->  			};
->  		};
->  
-> @@ -154,6 +155,7 @@
->  				reg = <0x12400000 0x10000>;
->  				phys = <&usbdrd_phy1 0>, <&usbdrd_phy1 1>;
->  				phy-names = "usb2-phy", "usb3-phy";
-> +				snps,dis_u3_susphy_quirk;
->  			};
->  		};
->  
-> -- 
-> 1.9.1
+> On Wednesday 06 September 2017 07:09 PM, Keerthy wrote:
+> > Assign a default parent to mcasp3_ahclkx_mux clock using
+> > the assigned-clock-parents property. This is helpful in
+> > cases like kexec where in the clock parent can be something
+> > other than the value at reset.
 > 
+> Hi Tony,
+> 
+> A gentle ping on this.
+
+Applying into omap-for-v4.14/fixes thanks.
+
+Tony
