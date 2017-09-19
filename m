@@ -1,94 +1,488 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v7 1/5] Doc: iommu/arm-smmu-v3: Add workaround for
-	HiSilicon erratum 161010801
-Date: Tue, 19 Sep 2017 16:09:33 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA838411AD3@FRAEML521-MBX.china.huawei.com>
-References: <20170914125756.14836-1-shameerali.kolothum.thodi@huawei.com>
-	<20170914125756.14836-2-shameerali.kolothum.thodi@huawei.com>
-	<20170919145314.2irmqpsfneeydupo@rob-hp-laptop>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM64: dts: meson-gxm: Add support for Khadas VIM2
+Date: Tue, 19 Sep 2017 18:11:16 +0200
+Message-ID: <1505837476.2703.88.camel@baylibre.com>
+References: <1505832820-3517-1-git-send-email-narmstrong@baylibre.com>
+         <1505832820-3517-3-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170919145314.2irmqpsfneeydupo@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Guohanjun
-	(Hanjun Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "sudeep.holla-5wv7dgnIgG8@public.gmane.org" <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org" <devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505832820-3517-3-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gouwa <gouwa-GEqbEQZgqepWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Tuesday, September 19, 2017 3:53 PM
-> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; marc.zyngier-5wv7dgnIgG8@public.gmane.org;
-> sudeep.holla-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; robin.murphy-5wv7dgnIgG8@public.gmane.org;
-> joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Gabriele
-> Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; John Garry
-> <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org; Linuxarm
-> <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Wangzhou (B) <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>;
-> Guohanjun (Hanjun Guo) <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Subject: Re: [PATCH v7 1/5] Doc: iommu/arm-smmu-v3: Add workaround for
-> HiSilicon erratum 161010801
+On Tue, 2017-09-19 at 16:53 +0200, Neil Armstrong wrote:
+> The Khadas VIM2 is a Single Board Computer, respin of the origin
+> Khadas VIM board, using an Amlogic S912 SoC and more server oriented.
 > 
-> On Thu, Sep 14, 2017 at 01:57:52PM +0100, Shameer Kolothum wrote:
-> > From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >
-> > The HiSilicon erratum 161010801 describes the limitation of HiSilicon
-> platforms
-> > hip06/hip07 to support the SMMU mappings for MSI transactions.
-> >
-> > On these platforms, GICv3 ITS translator is presented with the deviceID
-> > by extending the MSI payload data to 64 bits to include the deviceID.
-> > Hence, the PCIe controller on this platforms has to differentiate the MSI
-> > payload against other DMA payload and has to modify the MSI payload.
-> > This basically makes it difficult for this platforms to have a SMMU
-> > translation for MSI.
-> >
-> > This patch adds a SMMUv3 binding to flag that the SMMU breaks msi
-> > translation at ITS.
-> >
-> > Also, the arm64 silicon errata is updated with this same erratum.
-> >
-> > Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Shameer Kolothum
-> <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-[...]
-> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> > @@ -55,6 +55,9 @@ the PCIe specification.
-> >  - hisilicon,broken-prefetch-cmd
-> >                      : Avoid sending CMD_PREFETCH_* commands to the SMMU.
-> >
-> > +- hisilicon,broken-untranslated-msi
-> > +                    : Reserve ITS HW region to avoid translating msi.
-> > +
+> It provides the same external connectors and header pinout, plus a SPI
+> NOR Flash, a reprogrammable STM8S003 MCU, FPC Connector, Cooling FAN header
+> and Pogo Pads Arrays.
 > 
-> This should be determined from the compatible string. Continuing to add
-> properties for each errata doesn't scale.
+> Cc: Gouwa <gouwa-GEqbEQZgqepWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+>  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+>  .../boot/dts/amlogic/meson-gxm-khadas-vim2.dts     | 401
+> +++++++++++++++++++++
+>  3 files changed, 403 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt
+> b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index 4e4bc0b..a445997 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -71,6 +71,7 @@ Board compatible values (alphabetically, grouped by SoC):
+>  
+>    - "amlogic,q200" (Meson gxm s912)
+>    - "amlogic,q201" (Meson gxm s912)
+> +  - "khadas,vim2" (Meson gxm s912)
+>    - "kingnovel,r-box-pro" (Meson gxm S912)
+>    - "nexbox,a1" (Meson gxm s912)
+>  
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile
+> b/arch/arm64/boot/dts/amlogic/Makefile
+> index 7a9f48c..70246e3 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -15,6 +15,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-gxm-khadas-vim2.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> new file mode 100644
+> index 0000000..692bb93
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> @@ -0,0 +1,401 @@
+> +/*
+> + * Copyright (c) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+> >.
+> + * Copyright (c) 2017 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/thermal/thermal.h>
+> +
+> +#include "meson-gxm.dtsi"
+> +
+> +/ {
+> +	compatible = "khadas,vim2", "amlogic,s912", "amlogic,meson-gxm";
+> +	model = "Khadas VIM2";
+> +
+> +	aliases {
+> +		serial0 = &uart_AO;
+> +		serial1 = &uart_A;
+> +		serial2 = &uart_AO_B;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x80000000>;
+> +	};
+> +
+> +	adc-keys {
+> +		compatible = "adc-keys";
+> +		io-channels = <&saradc 0>;
+> +		io-channel-names = "buttons";
+> +		keyup-threshold-microvolt = <1710000>;
+> +
+> +		button-function {
+> +			label = "Function";
+> +			linux,code = <KEY_FN>;
+> +			press-threshold-microvolt = <10000>;
+> +		};
+> +	};
+> +
+> +	emmc_pwrseq: emmc-pwrseq {
+> +		compatible = "mmc-pwrseq-emmc";
+> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	gpio_fan: gpio-fan {
+> +		compatible = "gpio-fan";
+> +		gpios = <&gpio GPIODV_14 GPIO_ACTIVE_HIGH
+> +			 &gpio GPIODV_15 GPIO_ACTIVE_HIGH>;
+> +		/* Dummy RPM values since fan is optional */
+> +		gpio-fan,speed-map = <0 0
+> +				      1 1
+> +				      2 2
+> +				      3 3>;
+> +		cooling-min-level = <0>;
+> +		cooling-max-level = <3>;
+> +		#cooling-cells = <2>;
+> +	};
+> +
+> +	gpio-keys-polled {
+> +		compatible = "gpio-keys-polled";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		poll-interval = <100>;
+> +
+> +		button@0 {
+> +			label = "power";
+> +			linux,code = <KEY_POWER>;
+> +			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	hdmi-connector {
+> +		compatible = "hdmi-connector";
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi_connector_in: endpoint {
+> +				remote-endpoint = <&hdmi_tx_tmds_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	pwmleds {
+> +		compatible = "pwm-leds";
+> +
+> +		power {
+> +			label = "vim:red:power";
+> +			pwms = <&pwm_AO_ab 1 7812500 0>;
+> +			max-brightness = <255>;
+> +			linux,default-trigger = "default-on";
+> +		};
+> +	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
+> +		clocks = <&wifi32k>;
+> +		clock-names = "ext_clock";
+> +	};
+> +
+> +	thermal-zones {
+> +		cpu-thermal {
+> +			polling-delay-passive = <250>; /* milliseconds */
+> +			polling-delay = <1000>; /* milliseconds */
+> +
+> +			thermal-sensors = <&scpi_sensors 0>;
+> +
+> +			trips {
+> +				cpu_alert0: cpu-alert0 {
+> +					temperature = <70000>; /*
+> millicelsius */
+> +					hysteresis = <2000>; /* millicelsius
+> */
+> +					type = "active";
+> +				};
+> +
+> +				cpu_alert1: cpu-alert1 {
+> +					temperature = <80000>; /*
+> millicelsius */
+> +					hysteresis = <2000>; /* millicelsius
+> */
+> +					type = "passive";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_alert0>;
+> +					cooling-device = <&gpio_fan
+> THERMAL_NO_LIMIT 1>;
+> +				};
+> +
+> +				map1 {
+> +					trip = <&cpu_alert1>;
+> +					cooling-device = <&gpio_fan 2
+> THERMAL_NO_LIMIT>;
+> +				};
+> +
+> +				map2 {
+> +					trip = <&cpu_alert1>;
+> +					cooling-device =
+> +						<&cpu0 THERMAL_NO_LIMIT
+> THERMAL_NO_LIMIT>;
+> +				};
+> +
+> +				map3 {
+> +					trip = <&cpu_alert1>;
+> +					cooling-device =
+> +						<&cpu4 THERMAL_NO_LIMIT
+> THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	vcc_3v3: regulator-vcc_3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VCC_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	vddio_ao18: regulator-vddio_ao18 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDIO_AO18";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+> +	vddio_boot: regulator-vddio_boot {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDIO_BOOT";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+> +	vddao_3v3: regulator-vddao_3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDAO_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	wifi32k: wifi32k {
+> +		compatible = "pwm-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
+> +	};
+> +};
+> +
+> +&cec_AO {
+> +	status = "okay";
+> +	pinctrl-0 = <&ao_cec_pins>;
+> +	pinctrl-names = "default";
+> +	hdmi-phandle = <&hdmi_tx>;
+> +};
+> +
+> +&cpu0 {
+> +	cooling-min-level = <0>;
+> +	cooling-max-level = <6>;
+> +	#cooling-cells = <2>;
+> +};
+> +
+> +&cpu4 {
+> +	cooling-min-level = <0>;
+> +	cooling-max-level = <4>;
+> +	#cooling-cells = <2>;
+> +};
+> +
+> +&ethmac {
+> +	pinctrl-0 = <&eth_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	/* Select external PHY by default */
+> +	phy-handle = <&external_phy>;
+> +
+> +	amlogic,tx-delay-ns = <2>;
+> +
+> +	/* External PHY reset is shared with internal PHY Led signals */
+> +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+> +	snps,reset-delays-us = <0 10000 1000000>;
+> +	snps,reset-active-low;
+> +
+> +	/* External PHY is in RGMII */
+> +	phy-mode = "rgmii";
+> +
+> +	status = "okay";
+> +};
+> +
+> +&external_mdio {
+> +	external_phy: ethernet-phy@1 {
+> +		compatible = "ethernet-phy-id001c.c916", "ethernet-phy-
+> ieee802.3-c22";
+> +		reg = <0>;
+> +		max-speed = <1000>;
+This entry is not necessary
 
-Ok. I think the suggestion here is to follow the arm-smmu.c (SMMUv1/v2) 
-driver way of implementing the errata. As you might have noticed,  the 
-SMMUv3 driver dt errata framework depends on properties  and this will
-change the way errata is implemented in the driver now.
+> +	};
+> +};
+> +
+> +&hdmi_tx {
+> +	status = "okay";
+> +	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&hdmi_tx_tmds_port {
+> +	hdmi_tx_tmds_out: endpoint {
+> +		remote-endpoint = <&hdmi_connector_in>;
+> +	};
+> +};
+> +
+> +&i2c_A {
+> +	status = "okay";
+> +	pinctrl-0 = <&i2c_a_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&i2c_B {
+> +	status = "okay";
+> +	pinctrl-0 = <&i2c_b_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	rtc: rtc@51 {
+> +		/* has to be enabled manually when a battery is connected: */
+> +		status = "disabled";
+> +		compatible = "haoyu,hym8563";
+> +		reg = <0x51>;
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "xin32k";
+> +	};
+> +};
+> +
+> +&ir {
+> +	status = "okay";
+> +	pinctrl-0 = <&remote_input_ao_pins>;
+> +	pinctrl-names = "default";
+> +	linux,rc-map-name = "rc-geekbox";
+> +};
+> +
+> +&pwm_AO_ab {
+> +	status = "okay";
+> +	pinctrl-0 = <&pwm_ao_a_3_pins>, <&pwm_ao_b_pins>;
+> +	pinctrl-names = "default";
+> +	clocks = <&clkc CLKID_FCLK_DIV4>;
+> +	clock-names = "clkin0";
+> +};
+> +
+> +&pwm_ef {
+> +	status = "okay";
+> +	pinctrl-0 = <&pwm_e_pins>, <&pwm_f_clk_pins>;
+> +	pinctrl-names = "default";
+> +	clocks = <&clkc CLKID_FCLK_DIV4>;
+> +	clock-names = "clkin0";
+> +};
+> +
+> +&sd_emmc_a {
+> +	status = "okay";
+> +	pinctrl-0 = <&sdio_pins>;
+> +	pinctrl-names = "default";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	max-frequency = <100000000>;
+> +
+> +	non-removable;
+> +	disable-wp;
+> +
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +
+> +	vmmc-supply = <&vddao_3v3>;
+> +	vqmmc-supply = <&vddio_boot>;
+> +
+> +	brcmf: wifi@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +	};
+> +};
+> +
+> +/* SD card */
+> +&sd_emmc_b {
+> +	status = "okay";
+> +	pinctrl-0 = <&sdcard_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	max-frequency = <100000000>;
+> +	disable-wp;
+> +
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> +	cd-inverted;
+> +
+> +	vmmc-supply = <&vddao_3v3>;
+> +	vqmmc-supply = <&vddio_boot>;
+> +};
+> +
+> +/* eMMC */
+> +&sd_emmc_c {
+> +	status = "okay";
+> +	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	bus-width = <8>;
+> +	cap-sd-highspeed;
+This entry is not necessary
 
-Hi Will/Robin,
-Could you please take a look and let us know your thoughts on changing
-the SMMUv3 dt errata implementation to version/model/compatible string
-framework for this quirk.
+> +	cap-mmc-highspeed;
+> +	max-frequency = <200000000>;
+> +	non-removable;
+> +	disable-wp;
+> +	mmc-ddr-1_8v;
+> +	mmc-hs200-1_8v;
+> +
+> +	mmc-pwrseq = <&emmc_pwrseq>;
+> +	vmmc-supply = <&vcc_3v3>;
+> +	vqmmc-supply = <&vddio_boot>;
+> +};
+> +
+> +/*
+> + * EMMC_DS pin is shared between SPI NOR CS and eMMC Data Strobe
+> + * Remove emmc_ds_pins from sd_emmc_c pinctrl-0 then spifc can be enabled
+> + */
+> +&spifc {
+> +	status = "disabled";
+> +	pinctrl-0 = <&nor_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	w25q32: spi-flash@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "winbond,w25q16", "jedec,spi-nor";
+> +		reg = <0>;
+> +		spi-max-frequency = <3000000>;
+> +	};
+> +};
+> +
+> +/* This one is connected to the Bluetooth module */
+> +&uart_A {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_a_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +/* This is brought out on the Linux_RX (18) and Linux_TX (19) pins: */
+> +&uart_AO {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_ao_a_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +/* This is brought out on the UART_RX_AO_B (15) and UART_TX_AO_B (16) pins:
+> */
+> +&uart_AO_B {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_ao_b_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&saradc {
+> +	status = "okay";
+> +	vref-supply = <&vddio_ao18>;
+> +};
 
-Thanks,
-Shameer
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
