@@ -1,49 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: overlay: Fix uninitialized vars in
- dup_and_fixup_symbol_prop()
-Date: Tue, 19 Sep 2017 12:27:56 -0500
-Message-ID: <20170919172756.3fsud4g4grracxqt@rob-hp-laptop>
-References: <1505039164-25468-1-git-send-email-geert@linux-m68k.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v4 2/4] ARM: dts: exynos: Add clean name of compatible.
+Date: Tue, 19 Sep 2017 19:32:50 +0200
+Message-ID: <20170919173250.o3yhqpxgopxmtlyj@kozik-lap>
+References: <1505302915-15699-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170913114215epcas2p30e9a4593bdb6cc3142c6e4dc108ff2f0@epcas2p3.samsung.com>
+ <1505302915-15699-3-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1505039164-25468-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1505302915-15699-3-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-media@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, kgene@kernel.org, dri-devel@lists.freedesktop.org, s.nawrocki@samsung.com, mchehab@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 10, 2017 at 12:26:04PM +0200, Geert Uytterhoeven wrote:
-> With gcc 4.1.2:
-> 
->     drivers/of/overlay.c: In function ‘dup_and_fixup_symbol_prop’:
->     drivers/of/overlay.c:108: warning: ‘overlay_name_len’ may be used uninitialized in this function
->     drivers/of/overlay.c:100: warning: ‘ovinfo’ may be used uninitialized in this function
-> 
-> Indeed, if ov->count == 0, both variables are uninitialized, which may
-> lead to a crash when dereferencing ovinfo later.
-> 
-> Currently this is a false positive, as the sole creator of of_overlay
-> structures (of_build_overlay_info(), introduced in commit
-> 7518b5890d8ac366 ("of/overlay: Introduce DT overlay support") checks for
-> this.
-> 
-> To prevent future issues, add a check for a zero ov->count to
-> dup_and_fixup_symbol_prop().  Note that this does not get rid of the
-> actual compiler warning.
-> 
-> Fixes: d1651b03c2df75db ("of: overlay: add overlay symbols to live device tree")
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> ---
->  drivers/of/overlay.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Applied.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBTZXAgMTMsIDIwMTcgYXQgMDg6NDE6NTNQTSArMDkwMCwgSG9lZ2V1biBLd29uIHdy
+b3RlOgo+IEV4eW5vcyA1MjUwIGFuZCA1NDIwIGhhdmUgZGlmZmVyZW50IGhhcmR3YXJlIHJvdGF0
+aW9uIGxpbWl0cy4gSG93ZXZlciwKPiBjdXJyZW50bHkgaXQgdXNlcyBvbmx5IG9uZSBjb21wYXRp
+YmxlIC0gImV4eW5vczUtZ3NjIi4gU2luY2Ugd2UgaGF2ZQo+IHRvIGRpc3Rpbmd1aXNoIGJldHdl
+ZW4gdGhlc2UgdHdvLCB3ZSBhZGQgZGlmZmVyZW50IGNvbXBhdGlibGUuCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogSG9lZ2V1biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+Cj4gLS0tCj4gIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAuZHRzaSB8IDggKysrKy0tLS0KPiAgYXJjaC9hcm0v
+Ym9vdC9kdHMvZXh5bm9zNTQyMC5kdHNpIHwgNCArKy0tCj4gIDIgZmlsZXMgY2hhbmdlZCwgNiBp
+bnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+IAoKVGhhbmtzLCBhcHBsaWVkIHdpdGggbW9k
+aWZpZWQgc3ViamVjdC4KCkJlc3QgcmVnYXJkcywKS3J6eXN6dG9mCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
