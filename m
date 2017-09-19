@@ -1,45 +1,90 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] ARM: dts: imx6dl-icore: Add LVDS support
-Date: Tue, 19 Sep 2017 17:11:17 -0300
-Message-ID: <CAOMZO5CwFV454Vt-LMMmjaJPatHXuONKshOPmJQVzR_mKuw1Aw@mail.gmail.com>
-References: <1505121145-9507-1-git-send-email-jteki@openedev.com>
- <1505121145-9507-4-git-send-email-jteki@openedev.com> <CAOMZO5B0RAjdupLSe=S+tDEA-hpf-Si_4qjkcKC_ECX86PLScQ@mail.gmail.com>
- <CAMty3ZD3od1LXKai=kwq8hxGsa3EWcjQx5gyBtZvCM5ccC34ZQ@mail.gmail.com>
- <CAOMZO5C+DXAQu=2OUAquB2AKn8dOzadoPsdGD05hXAUBdTnYjQ@mail.gmail.com> <CAMty3ZCQP5vnrU5MSzRFwRS+vS9a_ULt3sNB07BOHv0dCton0w@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] of: overlay: Fix uninitialized vars in dup_and_fixup_symbol_prop()
+Date: Tue, 19 Sep 2017 22:16:06 +0200
+Message-ID: <CAMuHMdUo=O6J4Qs8J+Jrx6LFeLRmE77hzpfaAUFYtdfYN1-hpw@mail.gmail.com>
+References: <1505039164-25468-1-git-send-email-geert@linux-m68k.org> <59C16197.4040403@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMty3ZCQP5vnrU5MSzRFwRS+vS9a_ULt3sNB07BOHv0dCton0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <59C16197.4040403@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 19, 2017 at 4:21 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+Hi Frank,
 
-> Yes, it is working..but need to understand how these respective
-> timings were calculated(because I need to add few more) . I tried this
-> supported ampire but couldn't get the data-sheet. Please point me if
-> you find any details.
+On Tue, Sep 19, 2017 at 8:27 PM, Frank Rowand <frowand.list@gmail.com> wrot=
+e:
+> On 09/10/17 03:26, Geert Uytterhoeven wrote:
+>> With gcc 4.1.2:
+>>
+>>     drivers/of/overlay.c: In function =E2=80=98dup_and_fixup_symbol_prop=
+=E2=80=99:
+>>     drivers/of/overlay.c:108: warning: =E2=80=98overlay_name_len=E2=80=
+=99 may be used uninitialized in this function
+>>     drivers/of/overlay.c:100: warning: =E2=80=98ovinfo=E2=80=99 may be u=
+sed uninitialized in this function
+>>
+>> Indeed, if ov->count =3D=3D 0, both variables are uninitialized, which m=
+ay
+>> lead to a crash when dereferencing ovinfo later.
+>>
+>> Currently this is a false positive, as the sole creator of of_overlay
+>> structures (of_build_overlay_info(), introduced in commit
+>> 7518b5890d8ac366 ("of/overlay: Introduce DT overlay support") checks for
+>> this.
+>>
+>> To prevent future issues, add a check for a zero ov->count to
+>> dup_and_fixup_symbol_prop().  Note that this does not get rid of the
+>> actual compiler warning.
+>>
+>> Fixes: d1651b03c2df75db ("of: overlay: add overlay symbols to live devic=
+e tree")
+>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> ---
+>>  drivers/of/overlay.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> index 8ecfee31ab6d3874..ebe19e0f8e4d1f4b 100644
+>> --- a/drivers/of/overlay.c
+>> +++ b/drivers/of/overlay.c
+>> @@ -108,7 +108,7 @@ static struct property *dup_and_fixup_symbol_prop(st=
+ruct of_overlay *ov,
+>>       int overlay_name_len;
+>>       int target_path_len;
+>>
+>> -     if (!prop->value)
+>> +     if (!ov->count || !prop->value)
+>>               return NULL;
+>>       symbol_path =3D prop->value;
+>>
+>
+> I did not see this patch due to an overzealous spam filter.  I noticed it
+> when Rob replied with his applied email.
+>
+> This check is not needed to prevent accessing overlay_name_len and ovinfo
+> when ov->count =3D=3D 0.  That is already prevented by:
+>
+>         if (k >=3D ov->count)
+>                 goto err_free;
+>
+> because k will be zero and ov->count will be zero.
 
-I don't have information about this panel.
+Thank you, I stand corrected.
 
-Maybe you could check with the author from commit:
+Gr{oetje,eeting}s,
 
-commit 1c550fa193d08920255240743f57731d4d57cd4d
-Author: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Date:   Wed Feb 11 18:50:09 2015 +0100
+                        Geert
 
-    drm/panel: Add support for Ampire AM-800480R3TMQW-A1H 800x480 7" panel
-
-    This adds support for the AM-800480R3TMQW-A1H 7" 800x480 panel to the
-    DRM simple panel driver.
-
-    Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-    Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
-via dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org list.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
