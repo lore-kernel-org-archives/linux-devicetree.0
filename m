@@ -1,48 +1,116 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: foundation-v8: Enable PSCI mode
-Date: Tue, 19 Sep 2017 17:20:29 +0100
-Message-ID: <20170919162029.GJ30715@leverpostej>
-References: <20170918153832.16356-1-daniel.thompson@linaro.org>
- <20170918161248.GB5106@leverpostej>
- <f0710af4-d414-1f2a-7d86-dd559a50171f@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v13 11/25] v4l: async: Introduce helpers for calling async ops callbacks
+Date: Tue, 19 Sep 2017 19:27:17 +0300
+Message-ID: <7185208.IfnHDmqMaa@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <2693952.YdpSRMO0xE@avalon> <20170919145049.uivohp6qvkf7x4fc@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f0710af4-d414-1f2a-7d86-dd559a50171f-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170919145049.uivohp6qvkf7x4fc@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 19, 2017 at 04:59:15PM +0100, Daniel Thompson wrote:
-> On 18/09/17 17:12, Mark Rutland wrote:
+Hi Sakari,
 
-> >Could we split spin-table / PSCI parts into separate dtsi files?
-> >
-> >e.g. have:
-> >
-> >* foundation-v8.dtsi
-> >* foundation-v8-gicv{2,3}.dtsi
-> >* foundation-v8-{psci,spin-table}.dtsi
-> >
-> >... and then combine those to build the dts files we want.
+On Tuesday, 19 September 2017 17:50:49 EEST Sakari Ailus wrote:
+> On Tue, Sep 19, 2017 at 03:43:48PM +0300, Laurent Pinchart wrote:
+> > On Tuesday, 19 September 2017 15:13:11 EEST Sakari Ailus wrote:
+> >> On Tue, Sep 19, 2017 at 03:01:14PM +0300, Laurent Pinchart wrote:
+> >>> On Friday, 15 September 2017 17:17:10 EEST Sakari Ailus wrote:
+> >>>> Add three helper functions to call async operations callbacks.
+> >>>> Besides simplifying callbacks, this allows async notifiers to have no
+> >>>> ops set, i.e. it can be left NULL.
+> >>>> 
+> >>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >>>> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> >>>> ---
+> >>>> 
+> >>>>  drivers/media/v4l2-core/v4l2-async.c | 49 ++++++++++++++++++--------
+> >>>>  include/media/v4l2-async.h           |  1 +
+> >>>>  2 files changed, 37 insertions(+), 13 deletions(-)
+> >>>> 
+> >>>> diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> >>>> b/drivers/media/v4l2-core/v4l2-async.c index
+> >>>> 7b2125b3d62f..c35d04b9122f
+> >>>> 100644
+> >>>> --- a/drivers/media/v4l2-core/v4l2-async.c
+> >>>> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> >>>> @@ -25,6 +25,34 @@
+> >>>> 
+> >>>>  #include <media/v4l2-fwnode.h>
+> >>>>  #include <media/v4l2-subdev.h>
+> >>>> 
+> >>>> +static int v4l2_async_notifier_call_bound(struct v4l2_async_notifier
+> >>>> *n,
+> >>>> +					  struct v4l2_subdev *subdev,
+> >>>> +					  struct v4l2_async_subdev *asd)
+> >>>> +{
+> >>>> +	if (!n->ops || !n->ops->bound)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	return n->ops->bound(n, subdev, asd);
+> >>>> +}
+> >>>> +
+> >>>> +static void v4l2_async_notifier_call_unbind(struct
+> >>>> v4l2_async_notifier
+> >>>> *n,
+> >>>> +					    struct v4l2_subdev *subdev,
+> >>>> +					    struct v4l2_async_subdev *asd)
+> >>>> +{
+> >>>> +	if (!n->ops || !n->ops->unbind)
+> >>>> +		return;
+> >>>> +
+> >>>> +	n->ops->unbind(n, subdev, asd);
+> >>>> +}
+> >>>> +
+> >>>> +static int v4l2_async_notifier_call_complete(struct
+> >>>> v4l2_async_notifier
+> >>>> *n)
+> >>>> +{
+> >>>> +	if (!n->ops || !n->ops->complete)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	return n->ops->complete(n);
+> >>>> +}
+> >>>> +
+> >>> 
+> >>> Wouldn't it be enough to add a single v4l2_async_notifier_call() macro
+> >>> ?
+> >>> 
+> >>> #define v4l2_async_notifier_call(n, op, args...) \
+> >>> 
+> >>> 	((n)->ops && (n)->ops->op ? (n)->ops->op(n, ##args) : 0)
+> >> 
+> >> I actually had that in an earlier version but I changed it based on
+> >> review comments from Hans. A single macro isn't enough: some functions
+> >> have int return type. I think the way it is now is nicer.
+> > 
+> > What bothers me there is the overhead of a function call.
 > 
-> Will do.
+> Overhead... of a function call?
 > 
-> >FWIW, with that:
-> >
-> >Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> 
-> Talking about what we want... if it's all split out I might as well
-> add a gicv2+psci DT as well. Will that still retain your Acked-by or
-> do you want to see it first ;-) ?
+> Do you really mean what you're saying? :-) The functions will be called a
+> relatively small number of times during module loading / device probing.
 
-Sure; that's fine by me. :)
+That's why I haven't said it's a big deal :-) There's of course no need to 
+optimize that if the tradeoff is large, but if all operations had the same 
+return type a macro could have been useful (although in this very specific 
+case I'm more concerned about code size than about CPU cycles).
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > By the way, what's the use case for ops being NULL ?
+> 
+> If a driver has no need for any of the callbacks, there's no benefit from
+> having to set ops struct either. This applies to devices that are
+> associated to the sensor, for instance.
+
+So in that case the subdev notifier is only registered to delay the complete() 
+callback until the flash and lens controllers are available, with the sensor 
+itself having no need to access the flash and lens controllers ?
+
+-- 
+Regards,
+
+Laurent Pinchart
