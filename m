@@ -1,7 +1,7 @@
 From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: [RESEND PATCH 2/3] ARM: dts: keystone-k2g-evm: Enable PWM ECAP0
-Date: Tue, 19 Sep 2017 11:45:50 +0530
-Message-ID: <20170919061551.11981-3-vigneshr@ti.com>
+Subject: [RESEND PATCH 1/3] ARM: dts: keystone-k2g: Add ECAP PWM DT nodes
+Date: Tue, 19 Sep 2017 11:45:49 +0530
+Message-ID: <20170919061551.11981-2-vigneshr@ti.com>
 References: <20170919061551.11981-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,43 @@ To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable PWM ECAP0 which will be used for display backlight.
+Add DT nodes for PWM ECAP IP present on 66AK2G SoC.
 
 Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2g-evm.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/keystone-k2g.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
-index f462f1043531..808618e747eb 100644
---- a/arch/arm/boot/dts/keystone-k2g-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
-@@ -81,6 +81,12 @@
- 			K2G_CORE_IOPAD(0x1110) (BUFFER_CLASS_B | PIN_PULLUP | MUX_MODE0)	/* mmc1_cmd.mmc1_cmd */
- 		>;
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index 826b286665e6..dace4672b1e6 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -343,5 +343,25 @@
+ 			clock-names = "fck", "mmchsdb_fck";
+ 			status = "disabled";
+ 		};
++
++		ecap0: pwm@21d1800 {
++			compatible = "ti,k2g-ecap", "ti,am3352-ecap";
++			#pwm-cells = <3>;
++			reg = <0x021d1800 0x60>;
++			power-domains = <&k2g_pds 0x38>;
++			clocks = <&k2g_clks 0x38 0>;
++			clock-names = "fck";
++			status = "disabled";
++		};
++
++		ecap1: pwm@21d1c00 {
++			compatible = "ti,k2g-ecap", "ti,am3352-ecap";
++			#pwm-cells = <3>;
++			reg = <0x021d1c00 0x60>;
++			power-domains = <&k2g_pds 0x39>;
++			clocks = <&k2g_clks 0x39 0x0>;
++			clock-names = "fck";
++			status = "disabled";
++		};
  	};
-+
-+	ecap0_pins: ecap0_pins {
-+		pinctrl-single,pins = <
-+			K2G_CORE_IOPAD(0x1374) (BUFFER_CLASS_B | MUX_MODE4)	/* pr1_mdio_data.ecap0_in_apwm0_out */
-+		>;
-+	};
  };
- 
- &uart0 {
-@@ -112,3 +118,9 @@
- 	memory-region = <&dsp_common_memory>;
- 	status = "okay";
- };
-+
-+&ecap0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ecap0_pins>;
-+};
 -- 
 2.14.1
 
