@@ -1,89 +1,76 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
-Date: Tue, 19 Sep 2017 17:25:29 +0300
-Message-ID: <6cbad342-aac8-d0d4-1d82-26aef33f0e82@ti.com>
-References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
- <70f446c1-64d8-928c-4ea7-aa16dda12253@ti.com>
- <20170919152533.78fb2b3e@bbrezillon>
- <2ccf3816-8a98-5626-7e4e-1dd13f167811@ti.com>
- <20170919154814.02485818@bbrezillon>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dt marvell: extend AP806 system controller size
+Date: Tue, 19 Sep 2017 16:25:58 +0200
+Message-ID: <877ewusr2h.fsf@free-electrons.com>
+References: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170919154814.02485818@bbrezillon>
-Content-Language: en-US
+In-Reply-To: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+        (Baruch Siach's message of "Fri, 15 Sep 2017 10:50:07 +0300")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=EF=BB=BF
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Bu=
-siness ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Hi Baruch,
+ 
+ On ven., sept. 15 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 
-On 19/09/17 16:48, Boris Brezillon wrote:
-> On Tue, 19 Sep 2017 16:38:31 +0300
-> Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
->=20
->> =EF=BB=BF
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus=
-/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
->> On 19/09/17 16:25, Boris Brezillon wrote:
->>> On Tue, 19 Sep 2017 15:59:20 +0300
->>> Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
->>>  =20
->>>> =EF=BB=BFHi Boris,
->>>>
->>>>
->>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunn=
-us/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>>>
->>>> On 31/08/17 18:55, Boris Brezillon wrote: =20
->>>>> Add a driver for Cadence DPI -> DSI bridge.
->>>>>
->>>>> This driver only support a subset of Cadence DSI bridge capabilities.
->>>>>
->>>>> Here is a non-exhaustive list of missing features:
->>>>>  * burst mode
->>>>>  * dynamic configuration of the DPHY based on the
->>>>>  * support for additional input interfaces (SDI input)
->>>>>
->>>>> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>  =
- =20
->>>>
->>>> <snip>
->>>> =20
->>>>> +	dsi->pclk =3D devm_clk_get(&pdev->dev, "pclk");
->>>>> +	if (IS_ERR(dsi->pclk))
->>>>> +		return PTR_ERR(dsi->pclk);   =20
->>>>
->>>> What's the purpose of pclk? Isn't that normally dealt with the normal
->>>> modesetting, enabled with the video stream? How could it even be enabl=
-ed
->>>> here, without anyone setting the rate? =20
->>>
->>> It's the peripheral clock, not the pixel clock, and AFAIU it has to be
->>> enabled before accessing DSI registers. =20
->>
->> Is that the dsi_p_clk? I can't find "peripheral clock" in the specs.
->=20
-> Yep, it is dsi_p_clk (the APB clock).
->=20
->>
->> I think calling it "pclk" in a display driver is very confusing, as
->> pclk, at least for me, always means pixel clock =3D).
->=20
-> I can rename it if you prefer. What name would you like to see?
-> abp_clk? periph_clk? Something else?
+> Extend the container size to 0x2000 to include the gpio controller at
+> offset 0x1040.
+>
+> While at it, add start address notation to the gpio node name to match
+> its 'offset' property.
+>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 
-Is there something wrong with dsi_p_clk? If possible, it's nice if the
-terms in SW match to the HW docs. In the minimum, the DT doc should give
-the mapping from SW to HW terms, at the moment it just says "pclk".
+I made a quick test on a mcbin and I confirm that the watchdog is here
+and usable.
 
- Tomi
+Tested-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+and 
+Applied on mvebu/dt64
 
+Thanks,
+
+Gregory
+
+> ---
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> index 4d360713ed12..30d48ecf46e0 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> @@ -254,7 +254,7 @@
+>  
+>  			ap_syscon: system-controller@6f4000 {
+>  				compatible = "syscon", "simple-mfd";
+> -				reg = <0x6f4000 0x1000>;
+> +				reg = <0x6f4000 0x2000>;
+>  
+>  				ap_clk: clock {
+>  					compatible = "marvell,ap806-clock";
+> @@ -265,7 +265,7 @@
+>  					compatible = "marvell,ap806-pinctrl";
+>  				};
+>  
+> -				ap_gpio: gpio {
+> +				ap_gpio: gpio@1040 {
+>  					compatible = "marvell,armada-8k-gpio";
+>  					offset = <0x1040>;
+>  					ngpios = <20>;
+> -- 
+> 2.14.1
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
