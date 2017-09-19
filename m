@@ -1,81 +1,64 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 1/5] PCI:xilinx-nwl: Enable Root DMA
-Date: Tue, 19 Sep 2017 14:36:35 -0500
-Message-ID: <20170919193635.GE22312@bhelgaas-glaptop.roam.corp.google.com>
-References: <1504873388-29195-1-git-send-email-vjonnal@xilinx.com>
- <1504873388-29195-2-git-send-email-vjonnal@xilinx.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 20/24] dt: bindings: smiapp: Document lens-focus and
+ flash properties
+Date: Tue, 19 Sep 2017 15:00:11 -0500
+Message-ID: <CAL_Jsq+YKSDn7Hoq-2wRsGyGRbQvNPEVXrj13bSNCqQpKE2CvQ@mail.gmail.com>
+References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+ <20170911080008.21208-21-sakari.ailus@linux.intel.com> <20170918210028.67sbpuetdh5j7wpf@rob-hp-laptop>
+ <ef8edab3-5b55-c298-2a40-72b5e22586ea@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1504873388-29195-2-git-send-email-vjonnal@xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ravi Shankar Jonnalagadda <venkata.ravi.jonnalagadda@xilinx.com>
-Cc: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, dan.j.williams@intel.com, bhelgaas@google.com, vjonnal@xilinx.com, lorenzo.pieralisi@arm.com, bharat.kumar.gogada@xilinx.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, rgummal@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ef8edab3-5b55-c298-2a40-72b5e22586ea-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mika.westerberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ravi,
+On Mon, Sep 18, 2017 at 4:56 PM, Sakari Ailus
+<sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> Hi Rob,
+>
+>
+> Rob Herring wrote:
+>>
+>> On Mon, Sep 11, 2017 at 11:00:04AM +0300, Sakari Ailus wrote:
+>>>
+>>> Document optional lens-focus and flash properties for the smiapp driver.
+>>>
+>>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+>
+> Thanks for the ack. There have been since a few iterations of the set, and
+> the corresponding patch in v13 has minor changes to this:
 
-Please make the subject line follow the existing convention, i.e., run
+My review script can't deal with subject changes...
 
-  $ git log --oneline drivers/pci/host/pcie-xilinx-nwl.c
+> <URL:http://www.spinics.net/lists/linux-media/msg121929.html>
+>
+> Essentially "flash" was renamed to "flash-leds" as the current flash devices
+> we have are all LEDs and the referencing assumes LED framework's ways to
+> describe LEDs. The same change is present in the patch adding the property
 
-and make yours match spacing, capitalization, and style (imperative
-sentence).
+So we're kind of creating a binding that mirrors the gpio bindings
+(*-gpios) which is a bit of an oddball as all other bindings have gone
+with a fixed property name and then a *-names property to name them.
+The main downside to this form is a prefixed property name is harder
+to parse and validate. So perhaps we should follow the more common
+pattern, but we're not really describing a h/w connection just an
+association. And now we also have the trigger source binding to
+associate LEDs with device nodes, so perhaps that should be used here.
+We shouldn't really have 2 ways to associate things in DT even if how
+that gets handled in the kernel is different.
 
-Also waiting for ack from Michal.
-
-On Fri, Sep 08, 2017 at 05:53:03PM +0530, Ravi Shankar Jonnalagadda wrote:
-> Enabling Root DMA interrupts
-> 
-> Adding Root DMA translations to bridge for Register Access
-> 
-> Signed-off-by: Ravi Shankar Jonnalagadda <vjonnal@xilinx.com>
-> Signed-off-by: RaviKiran Gummaluri <rgummal@xilinx.com>
-> ---
->  drivers/pci/host/pcie-xilinx-nwl.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
-> index eec641a..5766582 100644
-> --- a/drivers/pci/host/pcie-xilinx-nwl.c
-> +++ b/drivers/pci/host/pcie-xilinx-nwl.c
-> @@ -39,6 +39,11 @@
->  #define E_ECAM_CONTROL			0x00000228
->  #define E_ECAM_BASE_LO			0x00000230
->  #define E_ECAM_BASE_HI			0x00000234
-> +#define E_DREG_CTRL			0x00000288
-> +#define E_DREG_BASE_LO			0x00000290
-> +
-> +#define DREG_DMA_EN			BIT(0)
-> +#define DREG_DMA_BASE_LO		0xFD0F0000
->  
->  /* Ingress - address translations */
->  #define I_MSII_CAPABILITIES		0x00000300
-> @@ -57,6 +62,10 @@
->  #define MSGF_MSI_STATUS_HI		0x00000444
->  #define MSGF_MSI_MASK_LO		0x00000448
->  #define MSGF_MSI_MASK_HI		0x0000044C
-> +/* Root DMA Interrupt register */
-> +#define MSGF_DMA_MASK			0x00000464
-> +
-> +#define MSGF_INTR_EN			BIT(0)
->  
->  /* Msg filter mask bits */
->  #define CFG_ENABLE_PM_MSG_FWD		BIT(1)
-> @@ -766,6 +775,12 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
->  	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, MSGF_LEG_STATUS) &
->  			  MSGF_LEG_SR_MASKALL, MSGF_LEG_STATUS);
->  
-> +	/* Enabling DREG translations */
-> +	nwl_bridge_writel(pcie, DREG_DMA_EN, E_DREG_CTRL);
-> +	nwl_bridge_writel(pcie, DREG_DMA_BASE_LO, E_DREG_BASE_LO);
-> +	/* Enabling Root DMA interrupts */
-> +	nwl_bridge_writel(pcie, MSGF_INTR_EN, MSGF_DMA_MASK);
-> +
->  	/* Enable all legacy interrupts */
->  	nwl_bridge_writel(pcie, MSGF_LEG_SR_MASKALL, MSGF_LEG_MASK);
->  
-> -- 
-> 2.7.4
-> 
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
