@@ -1,110 +1,107 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add Vega S96 board
-Date: Tue, 19 Sep 2017 19:51:26 +0200
-Message-ID: <CAFBinCCVKFbU-kk9EFzbTbfKCGbOpmm+46spsVry=0E_JCTJgQ@mail.gmail.com>
-References: <1505822748-23431-1-git-send-email-narmstrong@baylibre.com> <1505822748-23431-2-git-send-email-narmstrong@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v13 14/25] v4l: async: Allow binding notifiers to sub-devices
+Date: Tue, 19 Sep 2017 20:52:56 +0300
+Message-ID: <2127988.4UKDZnTvMM@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <3338675.o4HGi8X83V@avalon> <20170919151732.4yafxfcxrreizd7r@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505822748-23431-2-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170919151732.4yafxfcxrreizd7r-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org, support-QbXJUBtoW2jby3iVrkZq2A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+Hi Sakari,
 
-On Tue, Sep 19, 2017 at 2:05 PM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> The Tronsmart Vega S96 is a TV box derived from Amlogic q200 reference design.
->
-> Cc: support-QbXJUBtoW2jby3iVrkZq2A@public.gmane.org
-> Signed-off-by: Oleg <balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org>
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile               |  1 +
->  arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts | 39 ++++++++++++++++++++++
->  2 files changed, 40 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
->
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 7a9f48c..a6c4a06 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
->
->  always         := $(dtb-y)
->  subdir-y       := $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-> new file mode 100644
-> index 0000000..ba74240
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-> @@ -0,0 +1,39 @@
-> +/*
-> + * Copyright (c) 2017 BayLibre, SAS.
-> + * Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> + * Copyright (c) 2017 Oleg <balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-gxm.dtsi"
-> +#include "meson-gx-p23x-q20x.dtsi"
-> +
-> +/ {
-> +       compatible = "tronsmart,vega-s96", "amlogic,s912", "amlogic,meson-gxm";
-> +       model = "Tronsmart Vega S96";
-> +
-> +};
-> +
-> +&ethmac {
-> +       pinctrl-0 = <&eth_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       /* Select external PHY by default */
-> +       phy-handle = <&external_phy>;
-> +
-> +       amlogic,tx-delay-ns = <2>;
-> +
-> +       /* External PHY is in RGMII */
-> +       phy-mode = "rgmii";
-> +};
-> +
-> +&external_mdio {
-> +       external_phy: ethernet-phy@0 {
-> +               compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
-some time ago I thought it was smart to add a compatible string with the PHY ID.
-this was until I figured out that it should only be done if the PHY
-reports an invalid ID: [0]
-that's why most .dts files that I've touched skip the "compatible"
-property and use a comment like "/* Realtek RTL8211F (0x001cc916) */"
-instead
+On Tuesday, 19 September 2017 18:17:32 EEST Sakari Ailus wrote:
+> On Tue, Sep 19, 2017 at 04:52:29PM +0300, Laurent Pinchart wrote:
+> > On Friday, 15 September 2017 17:17:13 EEST Sakari Ailus wrote:
+> > > Registering a notifier has required the knowledge of struct v4l2_device
+> >> for the reason that sub-devices generally are registered to the
+> >> v4l2_device (as well as the media device, also available through
+> >> v4l2_device).
+> >> 
+> >> This information is not available for sub-device drivers at probe time.
+> >> 
+> >> What this patch does is that it allows registering notifiers without
+> >> having v4l2_device around. Instead the sub-device pointer is stored in
+> >> the notifier. Once the sub-device of the driver that registered the
+> >> notifier is registered, the notifier will gain the knowledge of the
+> >> v4l2_device, and the binding of async sub-devices from the sub-device
+> >> driver's notifier may proceed.
+> >> 
+> >> The root notifier's complete callback is only called when all sub-device
+> >> notifiers are completed.
+> > 
+> > This is a bit hard to review, shouldn't it be split in two patches, one
+> > that refactors the functions, and another one that allows binding
+> > notifiers to subdevs ?
+> > 
+> >> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >> ---
+> >> 
+> >>  drivers/media/v4l2-core/v4l2-async.c | 218 ++++++++++++++++++++++++-----
+> >>  include/media/v4l2-async.h           |  16 ++-
+> >>  2 files changed, 203 insertions(+), 31 deletions(-)
+> >> 
+> >> diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> >> b/drivers/media/v4l2-core/v4l2-async.c index 4be2f16af051..52fe22b9b6b4
+> >> 100644
+> >> --- a/drivers/media/v4l2-core/v4l2-async.c
+> >> +++ b/drivers/media/v4l2-core/v4l2-async.c
 
-> +               reg = <0>;
-> +               max-speed = <1000>;
-> +       };
-> +};
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+[snip]
 
+> >> +/* Unbind all sub-devices in the notifier tree. */
+> >> +static void v4l2_async_notifier_unbind_all_subdevs(
+> >> +	struct v4l2_async_notifier *notifier)
+> >> +{
+> >> +	struct v4l2_subdev *sd, *tmp;
+> >> 
+> >>  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
+> >> 
+> >> +		struct v4l2_async_notifier *subdev_notifier =
+> >> +			v4l2_async_find_subdev_notifier(sd);
+> >> +
+> >> +		if (subdev_notifier)
+> >> +			v4l2_async_notifier_unbind_all_subdevs(subdev_notifier);
+> >> +
+> >>  		v4l2_async_cleanup(sd);
+> >>  		
+> >>  		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
+> >> -	}
+> >> 
+> >> -	mutex_unlock(&list_lock);
+> >> +		list_del(&sd->async_list);
+> >> +		list_add(&sd->async_list, &subdev_list);
+> > 
+> > How about list_move() ?
+> 
+> Yeah.
+> 
+> > This seems to be new code, and by the look of it, I wonder whether it
+> > doesn't belong in the reprobing removal patch.
+> 
+> This is not related to re-probing. Here we're moving an async sub-device
+> back to the global sub-device list when its notifier is going away.
 
+In order to make the subdev bindable again when the notifier will be re-
+registered. This wasn't needed before, as reprobing took care of that.
+
+> >> +	}
+> >> 
+> >> +	notifier->parent = NULL;
+> >> +	notifier->sd = NULL;
+> >>  	notifier->v4l2_dev = NULL;
+> >>  }
+
+-- 
 Regards,
-Martin
 
+Laurent Pinchart
 
-[0] https://github.com/torvalds/linux/commit/7630ea4bda18df2ee1c64dfdca1724a9cc32f920
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
