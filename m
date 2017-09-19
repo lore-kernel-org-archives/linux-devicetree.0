@@ -1,120 +1,125 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [linux-sunxi] Re: [PATCH] nvmem: sunxi-sid: add support for
- A64/H5's SID controller
-Date: Tue, 19 Sep 2017 20:19:01 +0800
-Message-ID: <a26630ba99845904fadf8356e3cb812a@aosc.io>
-References: <20170918154204.54427-1-icenowy@aosc.io>
- <20170919082019.6bopwauso4mbslqo@flea.lan>
- <E5C9EEDA-C24B-4F66-9F8A-1355B44F861F@aosc.io>
- <20170919115502.exfbpdwb3c3eenee@flea.lan>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v13 17/25] v4l: fwnode: Add a helper function for parsing generic references
+Date: Tue, 19 Sep 2017 15:19:59 +0300
+Message-ID: <2639286.bLnehYdF9o@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <20170915141724.23124-18-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170919115502.exfbpdwb3c3eenee-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <20170915141724.23124-18-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-在 2017-09-19 19:55，Maxime Ripard 写道：
-> On Tue, Sep 19, 2017 at 04:23:14PM +0800, Icenowy Zheng wrote:
->> 
->> 
->> 于 2017年9月19日 GMT+08:00 下午4:20:19, Maxime Ripard 
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> 写到:
->> >On Mon, Sep 18, 2017 at 11:42:04PM +0800, Icenowy Zheng wrote:
->> >> Allwinner A64/H5 SoCs come with a SID controller like the one in H3,
->> >but
->> >> without the silicon bug that makes the initial value at 0x200 wrong,
->> >so
->> >> the value at 0x200 can be directly read.
->> >>
->> >> Add support for this kind of SID controller.
->> >>
->> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> >> ---
->> >>  Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt | 1
->> >+
->> >>  drivers/nvmem/sunxi_sid.c                                       | 6
->> >++++++
->> >>  2 files changed, 7 insertions(+)
->> >>
->> >> diff --git
->> >a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
->> >b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
->> >> index ef06d061913c..6ea0836939ee 100644
->> >> --- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
->> >> +++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
->> >> @@ -5,6 +5,7 @@ Required properties:
->> >>    "allwinner,sun4i-a10-sid"
->> >>    "allwinner,sun7i-a20-sid"
->> >>    "allwinner,sun8i-h3-sid"
->> >> +  "allwinner,sun50i-a64-sid"
->> >>
->> >>  - reg: Should contain registers location and length
->> >>
->> >> diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
->> >> index 0d6648be93b8..3c9fd4fb9207 100644
->> >> --- a/drivers/nvmem/sunxi_sid.c
->> >> +++ b/drivers/nvmem/sunxi_sid.c
->> >> @@ -199,10 +199,16 @@ static const struct sunxi_sid_cfg sun8i_h3_cfg
->> >= {
->> >>  	.need_register_readout = true,
->> >>  };
->> >>
->> >> +static const struct sunxi_sid_cfg sun50i_a64_cfg = {
->> >> +	.value_offset = 0x200,
->> >> +	.size = 0x100,
->> >> +};
->> >> +
->> >
->> >How did you get those values?
->> 
->> In the BSP U-Boot headers.
+Hi Sakari,
+
+Thank you for the patch.
+
+On Friday, 15 September 2017 17:17:16 EEST Sakari Ailus wrote:
+> Add function v4l2_fwnode_reference_parse() for parsing them as async
+> sub-devices. This can be done on e.g. flash or lens async sub-devices that
+> are not part of but are associated with a sensor.
 > 
-> This should be mentionned in your commit log then.
-
-P.S. the 0x200 offset is not in the header, but as a proven experience
-on new generation SID controllers.
-
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-fwnode.c | 69 ++++++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
 > 
->> >Also, it's reported that the SID can only be accessed in secure
->> >mode, did you test it?
->> 
->> Yes, however the secure is broken again, and this only
->> happen if Secure Boot bit is burned.
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c
+> b/drivers/media/v4l2-core/v4l2-fwnode.c index 44ee35f6aad5..65e84ea1cc35
+> 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -498,6 +498,75 @@ int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+> }
+>  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
 > 
-> Is broken again, meaning?
-> 
-> As far as I know, the only breakage we've had is on the A80 / A83T,
-> but we don't have anything like it on the A64, do we?
+> +/*
+> + * v4l2_fwnode_reference_parse - parse references for async sub-devices
+> + * @dev: the device node the properties of which are parsed for references
+> + * @notifier: the async notifier where the async subdevs will be added
+> + * @prop: the name of the property
+> + *
+> + * Return: 0 on success
+> + *	   -ENOENT if no entries were found
+> + *	   -ENOMEM if memory allocation failed
+> + *	   -EINVAL if property parsing failed
+> + */
+> +static int v4l2_fwnode_reference_parse(
+> +	struct device *dev, struct v4l2_async_notifier *notifier,
+> +	const char *prop)
+> +{
+> +	struct fwnode_reference_args args;
+> +	unsigned int index;
+> +	int ret;
+> +
+> +	for (index = 0;
+> +	     !(ret = fwnode_property_get_reference_args(
+> +		       dev_fwnode(dev), prop, NULL, 0, index, &args));
+> +	     index++)
+> +		fwnode_handle_put(args.fwnode);
 
-A80/A83T is not the *only* breakage, but the *most serious* breakage,
-which affected correctly using SMP in non-secure.
+This seems to indicate that the fwnode API is missing a function to count the 
+number of references in a property. Should that be fixed ?
 
-Newer Allwinner SoCs doesn't have the GIC broken, but the TZPC still
-doesn't work when not Secure Boot, which means that all peripherals
-set to secure-only can still be accessed. Affected SoCs are at least
-H3, H5, A64.
+The rest looks OK to me.
 
-It seems that the registers marked as secure-only inside PRCM still
-works -- however this still has no meaningful secure/non-secure
-seperation, as the secure setting register in PRCM is not
-secure-only at least on SoCs without SB enabled.
+> +	if (!index)
+> +		return -ENOENT;
+> +
+> +	/*
+> +	 * Note that right now both -ENODATA and -ENOENT may signal
+> +	 * out-of-bounds access. Return the error in cases other than that.
+> +	 */
+> +	if (ret != -ENOENT && ret != -ENODATA)
+> +		return ret;
+> +
+> +	ret = v4l2_async_notifier_realloc(notifier,
+> +					  notifier->num_subdevs + index);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (index = 0; !fwnode_property_get_reference_args(
+> +		     dev_fwnode(dev), prop, NULL, 0, index, &args);
+> +	     index++) {
+> +		struct v4l2_async_subdev *asd;
+> +
+> +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
+> +			ret = -EINVAL;
+> +			goto error;
+> +		}
+> +
+> +		asd = kzalloc(sizeof(*asd), GFP_KERNEL);
+> +		if (!asd) {
+> +			ret = -ENOMEM;
+> +			goto error;
+> +		}
+> +
+> +		notifier->subdevs[notifier->num_subdevs] = asd;
+> +		asd->match.fwnode.fwnode = args.fwnode;
+> +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+> +		notifier->num_subdevs++;
+> +	}
+> +
+> +	return 0;
+> +
+> +error:
+> +	fwnode_handle_put(args.fwnode);
+> +	return ret;
+> +}
+> +
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+>  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
 
-> 
->> If it's really burned, we will have no clean way to access SID.
-> 
-> Well, in such a case we shouldn't access it either, so..
 
-We will need the THS calibration data.
+-- 
+Regards,
 
-Maybe a custom call to ATF can be created, but I consider it dirty.
+Laurent Pinchart
 
-> 
-> Maxime
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
