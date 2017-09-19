@@ -1,61 +1,50 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v3 5/5] ASoC: rt5514: Add devicetree binding support for rt5514-spi
-Date: Tue, 19 Sep 2017 20:58:00 +0800
-Message-ID: <20170919125800.336-6-jeffy.chen@rock-chips.com>
-References: <20170919125800.336-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170919125800.336-1-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: briannorris@chromium.org, mka@chromium.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
+Date: Tue, 19 Sep 2017 15:59:20 +0300
+Message-ID: <70f446c1-64d8-928c-4ea7-aa16dda12253@ti.com>
+References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170831155519.3704-1-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding support for rt5514 spi dsp codec.
+=EF=BB=BFHi Boris,
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
 
-Changes in v3: None
-Changes in v2: None
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Bu=
+siness ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
- Documentation/devicetree/bindings/sound/rt5514.txt | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+On 31/08/17 18:55, Boris Brezillon wrote:
+> Add a driver for Cadence DPI -> DSI bridge.
+>=20
+> This driver only support a subset of Cadence DSI bridge capabilities.
+>=20
+> Here is a non-exhaustive list of missing features:
+>  * burst mode
+>  * dynamic configuration of the DPHY based on the
+>  * support for additional input interfaces (SDI input)
+>=20
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/sound/rt5514.txt b/Documentation/devicetree/bindings/sound/rt5514.txt
-index 929ca6756b02..4f33b0d96afe 100644
---- a/Documentation/devicetree/bindings/sound/rt5514.txt
-+++ b/Documentation/devicetree/bindings/sound/rt5514.txt
-@@ -1,22 +1,27 @@
- RT5514 audio CODEC
- 
--This device supports I2C only.
-+This device supports both I2C and SPI.
- 
- Required properties:
- 
- - compatible : "realtek,rt5514".
- 
--- reg : The I2C address of the device.
-+- reg : the I2C address of the device for I2C, the chip select
-+        number for SPI.
- 
- Optional properties:
- 
- - clocks: The phandle of the master clock to the CODEC
- - clock-names: Should be "mclk"
- 
-+- interrupt-parent: The phandle for the interrupt controller.
-+- interrupts: The interrupt number to the cpu. The interrupt specifier format
-+	      depends on the interrupt controller.
-+
- - realtek,dmic-init-delay-ms
--  Set the DMIC initial delay (ms) to wait it ready.
-+  Set the DMIC initial delay (ms) to wait it ready for I2C.
- 
--Pins on the device (for linking into audio routes) for RT5514:
-+Pins on the device (for linking into audio routes) for I2C:
- 
-   * DMIC1L
-   * DMIC1R
--- 
-2.11.0
+<snip>
+
+> +	dsi->pclk =3D devm_clk_get(&pdev->dev, "pclk");
+> +	if (IS_ERR(dsi->pclk))
+> +		return PTR_ERR(dsi->pclk);
+
+What's the purpose of pclk? Isn't that normally dealt with the normal
+modesetting, enabled with the video stream? How could it even be enabled
+here, without anyone setting the rate?
+
+ Tomi
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
