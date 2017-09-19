@@ -1,37 +1,66 @@
-From: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add Spreadtrum watchdog
- documentation
-Date: Tue, 19 Sep 2017 10:32:45 +0800
-Message-ID: <20170919023245.GA24732@spreadtrum.com>
-References: <f3daa0f85dda0672c4b057e7f37c690365652e39.1505216059.git.eric.long@spreadtrum.com>
- <201709190143.v8J1husi078600@TPSPAM01.spreadtrum.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201709190143.v8J1husi078600-sL8b8dyCy1zpLeLZpxNaYL018wFwQdjl@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v12 1/2] ASoC: rt5514: Add devicetree binding support for rt5514-spi
+Date: Tue, 19 Sep 2017 10:54:38 +0800
+Message-ID: <20170919025439.7107-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
+Cc: briannorris@chromium.org, broonie@kernel.org, mka@chromium.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 05:31:11PM -0500, Rob Herring wrote:
-> On Tue, Sep 12, 2017 at 07:40:08PM +0800, Eric Long wrote:
-> > This patch adds the documentation for Spreadtrum watchdog driver.
-> > 
-> > Signed-off-by: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> > ---
-> > changes since v1:
-> >  - No updates.
-> > ---
-> >  .../devicetree/bindings/watchdog/sprd-wdt.txt         | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Add devicetree binding support for rt5514 spi dsp codec.
 
-Thanks Rob!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+---
+
+Changes in v12: None
+Changes in v11:
+Use same compatible for rt5514-i2c & rt5514-spi.
+
+Changes in v10:
+Put rt5514-i2c doc & rt5514-spi doc together.
+
+Changes in v9:
+Address comments from Brian.
+
+ Documentation/devicetree/bindings/sound/rt5514.txt | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/rt5514.txt b/Documentation/devicetree/bindings/sound/rt5514.txt
+index 929ca6756b02..4f33b0d96afe 100644
+--- a/Documentation/devicetree/bindings/sound/rt5514.txt
++++ b/Documentation/devicetree/bindings/sound/rt5514.txt
+@@ -1,22 +1,27 @@
+ RT5514 audio CODEC
+ 
+-This device supports I2C only.
++This device supports both I2C and SPI.
+ 
+ Required properties:
+ 
+ - compatible : "realtek,rt5514".
+ 
+-- reg : The I2C address of the device.
++- reg : the I2C address of the device for I2C, the chip select
++        number for SPI.
+ 
+ Optional properties:
+ 
+ - clocks: The phandle of the master clock to the CODEC
+ - clock-names: Should be "mclk"
+ 
++- interrupt-parent: The phandle for the interrupt controller.
++- interrupts: The interrupt number to the cpu. The interrupt specifier format
++	      depends on the interrupt controller.
++
+ - realtek,dmic-init-delay-ms
+-  Set the DMIC initial delay (ms) to wait it ready.
++  Set the DMIC initial delay (ms) to wait it ready for I2C.
+ 
+-Pins on the device (for linking into audio routes) for RT5514:
++Pins on the device (for linking into audio routes) for I2C:
+ 
+   * DMIC1L
+   * DMIC1R
+-- 
+2.11.0
