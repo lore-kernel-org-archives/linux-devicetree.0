@@ -1,51 +1,58 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: spi: Add Spreadtrum ADI controller
- documentation
-Date: Tue, 19 Sep 2017 12:54:03 +0100
-Message-ID: <20170919115403.wjacvlhxv52tg42u@sirena.co.uk>
-References: <385c61101941f4a7329d3092f0339514c531b740.1505388996.git.baolin.wang@spreadtrum.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v13 08/25] omap3isp: Fix check for our own sub-devices
+Date: Tue, 19 Sep 2017 14:55:43 +0300
+Message-ID: <3444678.JLWYLn9vNP@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <20170915141724.23124-9-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vubso2oqk76syw2u"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <385c61101941f4a7329d3092f0339514c531b740.1505388996.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+In-Reply-To: <20170915141724.23124-9-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sakari,
 
---vubso2oqk76syw2u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the patch.
 
-On Fri, Sep 15, 2017 at 03:29:15PM +0800, Baolin Wang wrote:
-> This patch adds the binding documentation for Spreadtrum ADI
-> controller device.
+On Friday, 15 September 2017 17:17:07 EEST Sakari Ailus wrote:
+> We only want to link sub-devices that were bound to the async notifier the
+> isp driver registered but there may be other sub-devices in the
+> v4l2_device as well. Check for the correct async notifier.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 
-Please submit patches using subject lines reflecting the style for the
-subsystem.  This makes it easier for people to identify relevant
-patches.  Look at what existing commits in the area you're changing are
-doing and make sure your subject lines visually resemble what they're
-doing.
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
---vubso2oqk76syw2u
-Content-Type: application/pgp-signature; name="signature.asc"
+> ---
+>  drivers/media/platform/omap3isp/isp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/omap3isp/isp.c
+> b/drivers/media/platform/omap3isp/isp.c index a546cf774d40..3b1a9cd0e591
+> 100644
+> --- a/drivers/media/platform/omap3isp/isp.c
+> +++ b/drivers/media/platform/omap3isp/isp.c
+> @@ -2155,7 +2155,7 @@ static int isp_subdev_notifier_complete(struct
+> v4l2_async_notifier *async) return ret;
+> 
+>  	list_for_each_entry(sd, &v4l2_dev->subdevs, list) {
+> -		if (!sd->asd)
+> +		if (sd->notifier != &isp->notifier)
+>  			continue;
+> 
+>  		ret = isp_link_entity(isp, &sd->entity,
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnBBVoACgkQJNaLcl1U
-h9CxMQf+IFdanvBM4JKrHYaDqkdUVxb1d2tXy1NOKiyrZo9j1a5ahjiRe1Kry5hU
-FC+z9r0L8J3fX7ewLZxbnRHOxDRbG21hWZsgJUsO4EeUVCc0qgA8/2eScv6274uM
-boQc3mvv4ybkWuyYjBOQrogpfUMAfk1ZsvYXrM5ApggpQ2cAWZbgsGIOtXYhjGU6
-+LgpvIF+mc1rr2uBow51zEeyJVmNUob0UVBBdIvKRh8anzTt6mQVnHvBT68BPE9u
-RtGtCpdlkdHcDzUFGyszZZk4pzzr6FEfdr8ef3pTWy82lYDOZb0QFvdLg/1xRvlh
-07NFc4ktgKdq0eHJnY3rKTF2XrgA1Q==
-=mnA6
------END PGP SIGNATURE-----
+-- 
+Regards,
 
---vubso2oqk76syw2u--
+Laurent Pinchart
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
