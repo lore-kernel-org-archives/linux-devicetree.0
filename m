@@ -1,63 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 20/24] dt: bindings: smiapp: Document lens-focus and
- flash properties
-Date: Tue, 19 Sep 2017 15:00:11 -0500
-Message-ID: <CAL_Jsq+YKSDn7Hoq-2wRsGyGRbQvNPEVXrj13bSNCqQpKE2CvQ@mail.gmail.com>
-References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
- <20170911080008.21208-21-sakari.ailus@linux.intel.com> <20170918210028.67sbpuetdh5j7wpf@rob-hp-laptop>
- <ef8edab3-5b55-c298-2a40-72b5e22586ea@linux.intel.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 4/6] ARM: dts: imx6dl-icore: Add LVDS support
+Date: Tue, 19 Sep 2017 17:11:17 -0300
+Message-ID: <CAOMZO5CwFV454Vt-LMMmjaJPatHXuONKshOPmJQVzR_mKuw1Aw@mail.gmail.com>
+References: <1505121145-9507-1-git-send-email-jteki@openedev.com>
+ <1505121145-9507-4-git-send-email-jteki@openedev.com> <CAOMZO5B0RAjdupLSe=S+tDEA-hpf-Si_4qjkcKC_ECX86PLScQ@mail.gmail.com>
+ <CAMty3ZD3od1LXKai=kwq8hxGsa3EWcjQx5gyBtZvCM5ccC34ZQ@mail.gmail.com>
+ <CAOMZO5C+DXAQu=2OUAquB2AKn8dOzadoPsdGD05hXAUBdTnYjQ@mail.gmail.com> <CAMty3ZCQP5vnrU5MSzRFwRS+vS9a_ULt3sNB07BOHv0dCton0w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ef8edab3-5b55-c298-2a40-72b5e22586ea-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <CAMty3ZCQP5vnrU5MSzRFwRS+vS9a_ULt3sNB07BOHv0dCton0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mika.westerberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 4:56 PM, Sakari Ailus
-<sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Hi Rob,
->
->
-> Rob Herring wrote:
->>
->> On Mon, Sep 11, 2017 at 11:00:04AM +0300, Sakari Ailus wrote:
->>>
->>> Document optional lens-focus and flash properties for the smiapp driver.
->>>
->>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
->>>  1 file changed, 2 insertions(+)
->>
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
->
-> Thanks for the ack. There have been since a few iterations of the set, and
-> the corresponding patch in v13 has minor changes to this:
+On Tue, Sep 19, 2017 at 4:21 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
 
-My review script can't deal with subject changes...
+> Yes, it is working..but need to understand how these respective
+> timings were calculated(because I need to add few more) . I tried this
+> supported ampire but couldn't get the data-sheet. Please point me if
+> you find any details.
 
-> <URL:http://www.spinics.net/lists/linux-media/msg121929.html>
->
-> Essentially "flash" was renamed to "flash-leds" as the current flash devices
-> we have are all LEDs and the referencing assumes LED framework's ways to
-> describe LEDs. The same change is present in the patch adding the property
+I don't have information about this panel.
 
-So we're kind of creating a binding that mirrors the gpio bindings
-(*-gpios) which is a bit of an oddball as all other bindings have gone
-with a fixed property name and then a *-names property to name them.
-The main downside to this form is a prefixed property name is harder
-to parse and validate. So perhaps we should follow the more common
-pattern, but we're not really describing a h/w connection just an
-association. And now we also have the trigger source binding to
-associate LEDs with device nodes, so perhaps that should be used here.
-We shouldn't really have 2 ways to associate things in DT even if how
-that gets handled in the kernel is different.
+Maybe you could check with the author from commit:
 
-Rob
+commit 1c550fa193d08920255240743f57731d4d57cd4d
+Author: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Date:   Wed Feb 11 18:50:09 2015 +0100
+
+    drm/panel: Add support for Ampire AM-800480R3TMQW-A1H 800x480 7" panel
+
+    This adds support for the AM-800480R3TMQW-A1H 7" 800x480 panel to the
+    DRM simple panel driver.
+
+    Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+    Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+via dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org list.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
