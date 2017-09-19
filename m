@@ -1,83 +1,84 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dt marvell: extend AP806 system controller size
-Date: Tue, 19 Sep 2017 16:39:53 +0200
-Message-ID: <871sn2sqfa.fsf@free-electrons.com>
-References: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch@tkos.co.il>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add document for rockchip RGB output
+ interface
+Date: Tue, 19 Sep 2017 09:46:21 -0500
+Message-ID: <20170919144621.eledmglqgn7nf7zp@rob-hp-laptop>
+References: <1505360594-196508-1-git-send-email-hjc@rock-chips.com>
+ <1505360600-196567-1-git-send-email-hjc@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-        (Baruch Siach's message of "Fri, 15 Sep 2017 10:50:07 +0300")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1505360600-196567-1-git-send-email-hjc@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandy Huang <hjc@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
- 
- On ven., sept. 15 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-
-> Extend the container size to 0x2000 to include the gpio controller at
-> offset 0x1040.
->
-
-Actually it is a fix as I don't see how we can use the gpio if it is not
-in the range. So I amended your patch by adding:
-Fixes: 63dac0f4924b ("arm64: dts: marvell: add gpio support for Armada
-7K/8K")
-Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-
-And I also modified the title to:
-arm64: dt marvell: Fix AP806 system controller size
-
-
-> While at it, add start address notation to the gpio node name to match
-> its 'offset' property.
->
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-
-Applied on mvebu/fixes
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> index 4d360713ed12..30d48ecf46e0 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> @@ -254,7 +254,7 @@
->  
->  			ap_syscon: system-controller@6f4000 {
->  				compatible = "syscon", "simple-mfd";
-> -				reg = <0x6f4000 0x1000>;
-> +				reg = <0x6f4000 0x2000>;
->  
->  				ap_clk: clock {
->  					compatible = "marvell,ap806-clock";
-> @@ -265,7 +265,7 @@
->  					compatible = "marvell,ap806-pinctrl";
->  				};
->  
-> -				ap_gpio: gpio {
-> +				ap_gpio: gpio@1040 {
->  					compatible = "marvell,armada-8k-gpio";
->  					offset = <0x1040>;
->  					ngpios = <20>;
-> -- 
-> 2.14.1
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBTZXAgMTQsIDIwMTcgYXQgMTE6NDM6MThBTSArMDgwMCwgU2FuZHkgSHVhbmcgd3Jv
+dGU6Cj4gVGhpcyBwYXRoIGFkZCBzdXBwb3J0IHJ2MTEwOCByZ2Igb3V0cHV0IGludGVyZmFjZSBk
+cml2ZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogU2FuZHkgSHVhbmcgPGhqY0Byb2NrLWNoaXBzLmNv
+bT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtcmdiLnR4
+dCAgICAgfCA4MCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA4MCBp
+bnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4gCj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlw
+L3JvY2tjaGlwLXJnYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBp
+bmRleCAwMDAwMDAwLi40MTY0NTEyCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXJnYi50eHQK
+PiBAQCAtMCwwICsxLDgwIEBACj4gK1JvY2tjaGlwIFJWMTEwOCBSR0IgaW50ZXJmYWNlCj4gKz09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
+Ogo+ICstIGNvbXBhdGlibGU6IG1hdGNoaW5nIHRoZSBzb2MgdHlwZToKPiArCS0gInJvY2tjaGlw
+LHJ2MTEwOC1yZ2IiOwo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSBwaW5jdHJsLW5h
+bWVzOiBtdXN0IGNvbnRhaW4gYSAibGNkYyIgZW50cnkuCj4gKy0gcGluY3RybC0wOiBwaW4gY29u
+dHJvbCBncm91cCB0byBiZSB1c2VkIGZvciB0aGlzIGludGVyZmFjZS4KPiArCj4gK1JlcXVpcmVk
+IG5vZGVzOgo+ICstIHJvY2tjaGlwLHJnYi1tb2RlOiBzaG91bGQgYmUgInA4ODgiLCAicDY2NiIs
+ICJwNTY1IiwgInM4ODgiLCAiczg4OC1kdW1teSIKClRoaXMgc2hvdWxkIGJlIGEgc3RhbmRhcmQg
+cHJvcGVydHkuIEFueSBkZXZpY2Ugd2l0aCBhIHBhcmFsbGVsIGludGVyZmFjZSAKaXMgZ29pbmcg
+dG8gbmVlZCBzb21ldGhpbmcgbGlrZSB0aGlzLgoKPiArCS0gcDg4ODogb3V0cHV0IHI4LWc4LWI4
+IGF0IGVhY2ggZGNsayBjeWNsZSBmb3IgcGVyLXBpeGVsCj4gKwktIHA2NjY6IG91dHB1dCByNi1n
+Ni1iNiBhdCBlYWNoIGRjbGsgY3ljbGUgZm9yIHBlci1waXhlbAo+ICsJLSBwNTY1OiBvdXRwdXQg
+cjUtZzYtYjUgYXQgZWFjaCBkY2xrIGN5Y2xlIGZvciBwZXItcGl4ZWwKPiArCS0gczg4ODogb3V0
+cHV0IHI4LWc4LWI4IGluIHRocmVlIGRjbGsgY3ljbGUgZm9yIHBlci1waXhlbAo+ICsJLSBzODg4
+LWRtbXk6IG91dHB1dCByOC1nOC1iOC1kdW1teSBpbiBmb3VyIGRjbGsgY3ljbGUgZm9yIHBlci1w
+aXhlbAo+ICsKPiArVGhlIHJnYiBoYXMgdHdvIHZpZGVvIHBvcnRzIGRlc2NyaWJlZCBieToKPiAr
+CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2Vz
+LnR4dAo+ICtUaGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxlZCB1c2luZyB0aGUgT0YgZ3JhcGgg
+YmluZGluZ3Mgc3BlY2lmaWVkIGluCj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZ3JhcGgudHh0Lgo+ICsKPiArLSB2aWRlbyBwb3J0IDAgZm9yIHRoZSBWT1AgaW5wdXQsIHRo
+ZSByZW1vdGUgZW5kcG9pbnQgbWF5YmUgdm9wYi92b3BsL3ZvcAo+ICstIHZpZGVvIHBvcnQgMSBm
+b3IgZWl0aGVyIGEgcGFuZWwgb3Igc3Vic2VxdWVudCBlbmNvZGVyCj4gKwo+ICt0aGUgcGFuZWwg
+ZGVzY3JpYmVkIGJ5Ogo+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAo+ICtQYW5lbCBvdGhlciByZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+ICstIHBvcnRzIGZvciByZW1vdGUgcmdiIG91dHB1dC4KPiArCj4gK0V4YW1wbGU6Cj4g
+Kwo+ICtwYW5lbDogcGFuZWwgewo+ICsJY29tcGF0aWJsZSA9ICJhdW8sYjEwMWVhbjAxIjsKPiAr
+CWVuYWJsZS1ncGlvcyA9IDwmZ3BpbzcgMjEgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwo+ICsJcG9y
+dHMgewo+ICsJCXBhbmVsX2luX3JnYjogZW5kcG9pbnQgewo+ICsJCQlyZW1vdGUtZW5kcG9pbnQg
+PSA8JnJnYl9vdXRfcGFuZWw+Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+ICsKPiArRm9yIFJvY2tj
+aGlwIFJWMTEwODoKPiArCj4gKwlyZ2I6IHJnYiB7Cj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hp
+cCxydjExMDgtcmdiIjsKPiArCQlwaW5jdHJsLW5hbWVzID0gImxjZGMiOwo+ICsJCXBpbmN0cmwt
+MCA9IDwmbGNkY19jdGw+Owo+ICsJCXJvY2tjaGlwLHJnYi1tb2RlID0gInA4ODgiOwo+ICsKPiAr
+CQlwb3J0cyB7Cj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9
+IDwwPjsKPiArCj4gKwkJCXJnYl9pbjogcG9ydEAwIHsKPiArCQkJCXJlZyA9IDwwPjsKPiArCQkJ
+CSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJ
+CQkJcmdiX2luX3ZvcDogZW5kcG9pbnRAMCB7Cj4gKwkJCQkJcmVnID0gPDA+OwoKRG9uJ3QgbmVl
+ZCByZWcgZm9yIGEgc2luZ2xlIGVuZHBvaW50LgoKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
+JnZvcF9vdXRfcmdiPjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlyZ2Jfb3V0OiBwb3J0
+QDEgewo+ICsJCQkJcmVnID0gPDE+Owo+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJ
+CQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQlyZ2Jfb3V0X3BhbmVsOiBlbmRwb2ludEAw
+IHsKPiArCQkJCQlyZWcgPSA8MD47CgpkaXR0by4KCj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0g
+PCZwYW5lbF9pbl9yZ2I+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiAtLSAK
+PiAyLjcuNAo+IAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
