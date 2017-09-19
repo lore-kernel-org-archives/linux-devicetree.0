@@ -1,16 +1,16 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v13 07/25] rcar-vin: Use generic parser for parsing
+Subject: Re: [PATCH v13 06/25] omap3isp: Use generic parser for parsing
  fwnode endpoints
-Date: Tue, 19 Sep 2017 15:39:30 +0300
-Message-ID: <20170919123930.xtq44elhwy6vdfxv@paasikivi.fi.intel.com>
+Date: Tue, 19 Sep 2017 15:41:38 +0300
+Message-ID: <20170919124138.scdpj7ebdoimb34j@paasikivi.fi.intel.com>
 References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
- <20170915141724.23124-8-sakari.ailus@linux.intel.com>
- <3549838.F21OCYHXEu@avalon>
+ <20170915141724.23124-7-sakari.ailus@linux.intel.com>
+ <1555926.RTv2yyCEgl@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3549838.F21OCYHXEu@avalon>
+In-Reply-To: <1555926.RTv2yyCEgl@avalon>
 Sender: linux-media-owner@vger.kernel.org
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
@@ -18,17 +18,20 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Laurent,
 
-On Tue, Sep 19, 2017 at 02:53:16PM +0300, Laurent Pinchart wrote:
+Thanks for the review!
+
+On Tue, Sep 19, 2017 at 02:40:29PM +0300, Laurent Pinchart wrote:
 > Hi Sakari,
 > 
 > Thank you for the patch.
 > 
-> On Friday, 15 September 2017 17:17:06 EEST Sakari Ailus wrote:
+> On Friday, 15 September 2017 17:17:05 EEST Sakari Ailus wrote:
 > > Instead of using driver implementation, use
 > 
-> Same comment as for patch 06/25.
+> Did you mean s/using driver implementation/using a driver implementation/ (or 
+> perhaps "custom driver implementation") ?
 
-Will fix.
+I think "custom driver implementation" best describes this. I'll use it.
 
 > 
 > > v4l2_async_notifier_parse_fwnode_endpoints() to parse the fwnode endpoints
@@ -37,166 +40,59 @@ Will fix.
 > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 > > ---
-> >  drivers/media/platform/rcar-vin/rcar-core.c | 112 ++++++++-----------------
-> >  drivers/media/platform/rcar-vin/rcar-dma.c  |  10 +--
-> >  drivers/media/platform/rcar-vin/rcar-v4l2.c |  14 ++--
-> >  drivers/media/platform/rcar-vin/rcar-vin.h  |   4 +-
-> >  4 files changed, 48 insertions(+), 92 deletions(-)
+> >  drivers/media/platform/omap3isp/isp.c | 115 ++++++++++---------------------
+> >  drivers/media/platform/omap3isp/isp.h |   5 +-
+> >  2 files changed, 37 insertions(+), 83 deletions(-)
 > > 
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c
-> > b/drivers/media/platform/rcar-vin/rcar-core.c index
-> > 142de447aaaa..62b4a94f9a39 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > diff --git a/drivers/media/platform/omap3isp/isp.c
+> > b/drivers/media/platform/omap3isp/isp.c index 1a428fe9f070..a546cf774d40
+> > 100644
+> > --- a/drivers/media/platform/omap3isp/isp.c
+> > +++ b/drivers/media/platform/omap3isp/isp.c
 > 
 > [snip]
 > 
-> > @@ -120,117 +121,70 @@ static int rvin_digital_notify_bound(struct
-> 
-> [snip]
-> 
-> > -static int rvin_digitial_parse_v4l2(struct rvin_dev *vin,
-> > -				    struct device_node *ep,
-> > -				    struct v4l2_mbus_config *mbus_cfg)
-> > +static int rvin_digital_parse_v4l2(struct device *dev,
-> > +				   struct v4l2_fwnode_endpoint *vep,
-> > +				   struct v4l2_async_subdev *asd)
-> >  {
-> > -	struct v4l2_fwnode_endpoint v4l2_ep;
-> > -	int ret;
-> > +	struct rvin_dev *vin = dev_get_drvdata(dev);
-> 
-> Doesn't this show that we miss a context argument to the callback function ? 
-> Storing the context in device driver data is probably OK if the driver parsing 
-> the endpoints controls the struct device, but is that always the case ?
-
-How does a driver know the hardware other than, uh, the device?
-
-I guess we could add a private pointer when the async notifier is
-registered if there's a real need for it. The notifier could be an
-alternative but it wouldn't be applicable to sub-devices.
-
-> 
-> > +	struct rvin_graph_entity *rvge =
-> > +		container_of(asd, struct rvin_graph_entity, asd);
-> > 
-> > -	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
-> > -	if (ret) {
-> > -		vin_err(vin, "Could not parse v4l2 endpoint\n");
-> > -		return -EINVAL;
-> > -	}
-> > +	if (vep->base.port || vep->base.id)
-> > +		return -ENOTCONN;
-> > 
-> > -	mbus_cfg->type = v4l2_ep.bus_type;
-> > +	rvge->mbus_cfg.type = vep->bus_type;
-> > 
-> > -	switch (mbus_cfg->type) {
-> > +	switch (rvge->mbus_cfg.type) {
-> >  	case V4L2_MBUS_PARALLEL:
-> >  		vin_dbg(vin, "Found PARALLEL media bus\n");
-> > -		mbus_cfg->flags = v4l2_ep.bus.parallel.flags;
-> > +		rvge->mbus_cfg.flags = vep->bus.parallel.flags;
-> >  		break;
-> >  	case V4L2_MBUS_BT656:
-> >  		vin_dbg(vin, "Found BT656 media bus\n");
-> > -		mbus_cfg->flags = 0;
-> > +		rvge->mbus_cfg.flags = 0;
-> >  		break;
-> >  	default:
-> >  		vin_err(vin, "Unknown media bus type\n");
-> >  		return -EINVAL;
-> >  	}
-> > 
-> > -	return 0;
-> > -}
-> > -
-> > -static int rvin_digital_graph_parse(struct rvin_dev *vin)
-> > -{
-> > -	struct device_node *ep, *np;
-> > -	int ret;
-> > -
-> > -	vin->digital.asd.match.fwnode.fwnode = NULL;
-> > -	vin->digital.subdev = NULL;
-> > -
-> > -	/*
-> > -	 * Port 0 id 0 is local digital input, try to get it.
-> > -	 * Not all instances can or will have this, that is OK
-> > -	 */
-> > -	ep = of_graph_get_endpoint_by_regs(vin->dev->of_node, 0, 0);
-> > -	if (!ep)
-> > -		return 0;
-> > -
-> > -	np = of_graph_get_remote_port_parent(ep);
-> > -	if (!np) {
-> > -		vin_err(vin, "No remote parent for digital input\n");
-> > -		of_node_put(ep);
-> > -		return -EINVAL;
-> > -	}
-> > -	of_node_put(np);
-> > -
-> > -	ret = rvin_digitial_parse_v4l2(vin, ep, &vin->digital.mbus_cfg);
-> > -	of_node_put(ep);
-> > -	if (ret)
-> > -		return ret;
-> > -
-> > -	vin->digital.asd.match.fwnode.fwnode = of_fwnode_handle(np);
-> > -	vin->digital.asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
-> > +	vin->digital = rvge;
-> > 
-> >  	return 0;
-> >  }
-> > 
-> >  static int rvin_digital_graph_init(struct rvin_dev *vin)
-> >  {
-> > -	struct v4l2_async_subdev **subdevs = NULL;
-> >  	int ret;
-> > 
-> > -	ret = rvin_digital_graph_parse(vin);
-> > +	ret = v4l2_async_notifier_parse_fwnode_endpoints(
-> > +		vin->dev, &vin->notifier,
-> > +		sizeof(struct rvin_graph_entity), rvin_digital_parse_v4l2);
+> > @@ -2256,7 +2210,9 @@ static int isp_probe(struct platform_device *pdev)
 > >  	if (ret)
 > >  		return ret;
 > > 
-> > -	if (!vin->digital.asd.match.fwnode.fwnode) {
-> > -		vin_dbg(vin, "No digital subdevice found\n");
-> > -		return -ENODEV;
-> > -	}
-> > -
-> > -	/* Register the subdevices notifier. */
-> > -	subdevs = devm_kzalloc(vin->dev, sizeof(*subdevs), GFP_KERNEL);
-> > -	if (subdevs == NULL)
-> > -		return -ENOMEM;
-> > -
-> > -	subdevs[0] = &vin->digital.asd;
-> > -
-> > -	vin_dbg(vin, "Found digital subdevice %pOF\n",
-> > -		to_of_node(subdevs[0]->match.fwnode.fwnode));
-> > +	if (vin->digital)
-> > +		vin_dbg(vin, "Found digital subdevice %pOF\n",
-> > +			to_of_node(
-> > +				vin->digital->asd.match.fwnode.fwnode));
+> > -	ret = isp_fwnodes_parse(&pdev->dev, &isp->notifier);
+> > +	ret = v4l2_async_notifier_parse_fwnode_endpoints(
+> > +		&pdev->dev, &isp->notifier, sizeof(struct isp_async_subdev),
+> > +		isp_fwnode_parse);
+> >  	if (ret < 0)
 > 
-> Isn't this is a change in behaviour ? The driver currently returns -ENODEV 
-> when no digital subdev is found.
+> The documentation in patch 05/25 states that v4l2_async_notifier_release() 
+> should be called even if v4l2_async_notifier_parse_fwnode_endpoints() fails. I 
+> don't think that's needed here, so you might want to update the documentation 
+> (and possibly the implementation of the function).
+> 
+> Apart from that,
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Seems so, I'll address that in v14.
+Thanks!
 
 > 
-> > -	vin->notifier.num_subdevs = 1;
-> > -	vin->notifier.subdevs = subdevs;
-> >  	vin->notifier.bound = rvin_digital_notify_bound;
-> >  	vin->notifier.unbind = rvin_digital_notify_unbind;
-> >  	vin->notifier.complete = rvin_digital_notify_complete;
-> > -
-> >  	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
-> >  	if (ret < 0) {
-> >  		vin_err(vin, "Notifier registration failed\n");
+> >  		return ret;
+> > 
+> > @@ -2407,6 +2363,7 @@ static int isp_probe(struct platform_device *pdev)
+> >  	__omap3isp_put(isp, false);
+> >  error:
+> >  	mutex_destroy(&isp->isp_mutex);
+> > +	v4l2_async_notifier_release(&isp->notifier);
+> > 
+> >  	return ret;
+> >  }
+> 
+> [snip]
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
 > 
 
 -- 
-Regards,
-
 Sakari Ailus
 sakari.ailus@linux.intel.com
