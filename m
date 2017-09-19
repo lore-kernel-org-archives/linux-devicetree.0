@@ -1,37 +1,28 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/platform: dynamic: Use of_platform_bus_create() to
- create devices
-Date: Tue, 19 Sep 2017 11:27:27 -0500
-Message-ID: <CAL_JsqKKso=VF=pERqZyR-re9iyYxaFohha4nP3Z_0pohFumWQ@mail.gmail.com>
-References: <b317f693-98b5-ba1e-1184-83735a68db9b@nokia.com>
- <CAL_JsqJZ__mUwRT14BmNQKaa_mAPsJm0iWP8sb6Oqs+_-Gu5hw@mail.gmail.com> <43407912-3ecd-97c7-a90a-a9cd07a4b3ae@nokia.com>
+Subject: Re: [PATCH] dt: Add vendor prefix 'shimafuji'
+Date: Tue, 19 Sep 2017 11:30:13 -0500
+Message-ID: <20170919163013.4v5phnrztq4fsguy@rob-hp-laptop>
+References: <1505398710-4496-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <43407912-3ecd-97c7-a90a-a9cd07a4b3ae-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1505398710-4496-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 19, 2017 at 10:13 AM, Alexander Sverdlin
-<alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
-> Hello Rob,
->
-> On 27/10/16 15:00, Rob Herring wrote:
->> On Thu, Oct 20, 2016 at 6:02 AM, Alexander Sverdlin
->> <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
->>> of_platform_notify() requires parents to have OF_POPULATED_BUS to be set
->>> (which is correct way to verify healthy platform bus), but uses
->>> of_platform_device_create() to create devices, which never sets the above
->>> flag. Therefore it's not possible to add platform buses via overlays.
->> Can you create a unit test case that has the problem.
->
-> PING
-> The tests for the highlighted problem were presented here:
-> http://www.spinics.net/lists/devicetree/msg160016.html
+On Thu, Sep 14, 2017 at 05:18:30PM +0300, Vladimir Barinov wrote:
+> Add Shimafuji Electric, Inc. to the list of device tree vendor
+> prefixes
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Can you please rebase and resend these.
+Applied, thanks.
 
 Rob
 --
