@@ -1,572 +1,320 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v13 05/25] v4l: fwnode: Support generic parsing of graph
- endpoints in a device
-Date: Tue, 19 Sep 2017 10:40:14 +0200
-Message-ID: <af99e12c-6fb8-a633-eec2-c1eb9d82226a@xs4all.nl>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v13 18/25] v4l: fwnode: Add a helper function to obtain
+ device / integer references
+Date: Tue, 19 Sep 2017 11:45:34 +0300
+Message-ID: <20170919084534.ivgmrlmgywdwuhoa@paasikivi.fi.intel.com>
 References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
- <20170915141724.23124-6-sakari.ailus@linux.intel.com>
- <a17ab793-b859-f04a-2dff-d8f6a314e9bf@xs4all.nl>
- <20170919082015.vt6olgirnvmpcrpa@paasikivi.fi.intel.com>
+ <20170915141724.23124-19-sakari.ailus@linux.intel.com>
+ <ee1252cf-3396-9bed-443f-56e3c2d621e5@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170919082015.vt6olgirnvmpcrpa-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ee1252cf-3396-9bed-443f-56e3c2d621e5@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2017 10:20 AM, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> Thank you for the review.
-> 
-> On Tue, Sep 19, 2017 at 10:03:27AM +0200, Hans Verkuil wrote:
->> On 09/15/2017 04:17 PM, Sakari Ailus wrote:
->>> Add two functions for parsing devices graph endpoints:
->>> v4l2_async_notifier_parse_fwnode_endpoints and
->>> v4l2_async_notifier_parse_fwnode_endpoints_by_port. The former iterates
->>> over all endpoints whereas the latter only iterates over the endpoints in
->>> a given port.
->>>
->>> The former is mostly useful for existing drivers that currently implement
->>> the iteration over all the endpoints themselves whereas the latter is
->>> especially intended for devices with both sinks and sources: async
->>> sub-devices for external devices connected to the device's sources will
->>> have already been set up, or they are part of the master device.
->>>
->>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>> ---
->>>  drivers/media/v4l2-core/v4l2-async.c  |  30 ++++++
->>>  drivers/media/v4l2-core/v4l2-fwnode.c | 185 ++++++++++++++++++++++++++++++++++
->>>  include/media/v4l2-async.h            |  24 ++++-
->>>  include/media/v4l2-fwnode.h           | 117 +++++++++++++++++++++
->>>  4 files changed, 354 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
->>> index 831f185ecd47..bf0215dde616 100644
->>> --- a/drivers/media/v4l2-core/v4l2-async.c
->>> +++ b/drivers/media/v4l2-core/v4l2-async.c
->>> @@ -22,6 +22,7 @@
->>>  
->>>  #include <media/v4l2-async.h>
->>>  #include <media/v4l2-device.h>
->>> +#include <media/v4l2-fwnode.h>
->>>  #include <media/v4l2-subdev.h>
->>>  
->>>  static bool match_i2c(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
->>> @@ -219,6 +220,35 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
->>>  }
->>>  EXPORT_SYMBOL(v4l2_async_notifier_unregister);
->>>  
->>> +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier)
->>> +{
->>> +	unsigned int i;
->>> +
->>> +	if (!notifier->max_subdevs)
->>> +		return;
->>> +
->>> +	for (i = 0; i < notifier->num_subdevs; i++) {
->>> +		struct v4l2_async_subdev *asd = notifier->subdevs[i];
->>> +
->>> +		switch (asd->match_type) {
->>> +		case V4L2_ASYNC_MATCH_FWNODE:
->>> +			fwnode_handle_put(asd->match.fwnode.fwnode);
->>> +			break;
->>> +		default:
->>> +			WARN_ON_ONCE(true);
->>
->> Please add a break here.
-> 
-> Yes.
-> 
->>
->>> +		}
->>> +
->>> +		kfree(asd);
->>> +	}
->>> +
->>> +	notifier->max_subdevs = 0;
->>> +	notifier->num_subdevs = 0;
->>> +
->>> +	kvfree(notifier->subdevs);
->>> +	notifier->subdevs = NULL;
->>> +}
->>> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_release);
->>> +
->>>  int v4l2_async_register_subdev(struct v4l2_subdev *sd)
->>>  {
->>>  	struct v4l2_async_notifier *notifier;
->>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
->>> index 706f9e7b90f1..44ee35f6aad5 100644
->>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
->>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
->>> @@ -19,6 +19,7 @@
->>>   */
->>>  #include <linux/acpi.h>
->>>  #include <linux/kernel.h>
->>> +#include <linux/mm.h>
->>>  #include <linux/module.h>
->>>  #include <linux/of.h>
->>>  #include <linux/property.h>
->>> @@ -26,6 +27,7 @@
->>>  #include <linux/string.h>
->>>  #include <linux/types.h>
->>>  
->>> +#include <media/v4l2-async.h>
->>>  #include <media/v4l2-fwnode.h>
->>>  
->>>  enum v4l2_fwnode_bus_type {
->>> @@ -313,6 +315,189 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
->>>  }
->>>  EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
->>>  
->>> +static int v4l2_async_notifier_realloc(struct v4l2_async_notifier *notifier,
->>> +				       unsigned int max_subdevs)
->>> +{
->>> +	struct v4l2_async_subdev **subdevs;
->>> +
->>> +	if (max_subdevs <= notifier->max_subdevs)
->>> +		return 0;
->>> +
->>> +	subdevs = kvmalloc_array(
->>> +		max_subdevs, sizeof(*notifier->subdevs),
->>> +		GFP_KERNEL | __GFP_ZERO);
->>> +	if (!subdevs)
->>> +		return -ENOMEM;
->>> +
->>> +	if (notifier->subdevs) {
->>> +		memcpy(subdevs, notifier->subdevs,
->>> +		       sizeof(*subdevs) * notifier->num_subdevs);
->>> +
->>> +		kvfree(notifier->subdevs);
->>> +	}
->>> +
->>> +	notifier->subdevs = subdevs;
->>> +	notifier->max_subdevs = max_subdevs;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int v4l2_async_notifier_fwnode_parse_endpoint(
->>> +	struct device *dev, struct v4l2_async_notifier *notifier,
->>> +	struct fwnode_handle *endpoint, unsigned int asd_struct_size,
->>> +	int (*parse_endpoint)(struct device *dev,
->>> +			    struct v4l2_fwnode_endpoint *vep,
->>> +			    struct v4l2_async_subdev *asd))
->>> +{
->>> +	struct v4l2_async_subdev *asd;
->>> +	struct v4l2_fwnode_endpoint *vep;
->>> +	int ret = 0;
->>> +
->>> +	asd = kzalloc(asd_struct_size, GFP_KERNEL);
->>> +	if (!asd)
->>> +		return -ENOMEM;
->>> +
->>> +	asd->match.fwnode.fwnode =
->>> +		fwnode_graph_get_remote_port_parent(endpoint);
->>> +	if (!asd->match.fwnode.fwnode) {
->>> +		dev_warn(dev, "bad remote port parent\n");
->>> +		ret = -EINVAL;
->>> +		goto out_err;
->>> +	}
->>> +
->>> +	/* Ignore endpoints the parsing of which failed. */
->>> +	vep = v4l2_fwnode_endpoint_alloc_parse(endpoint);
->>> +	if (IS_ERR(vep)) {
->>> +		ret = PTR_ERR(vep);
->>> +		dev_warn(dev, "unable to parse V4L2 fwnode endpoint (%d)\n",
->>> +			 ret);
->>> +		goto out_err;
->>> +	}
->>> +
->>> +	ret = parse_endpoint ? parse_endpoint(dev, vep, asd) : 0;
->>> +	if (ret == -ENOTCONN)
->>> +		dev_dbg(dev, "ignoring endpoint %u,%u\n", vep->base.port,
->>> +			vep->base.id);
->>> +	else if (ret < 0)
->>> +		dev_warn(dev, "driver could not parse endpoint %u,%u (%d)\n",
->>> +			 vep->base.port, vep->base.id, ret);
->>> +	v4l2_fwnode_endpoint_free(vep);
->>> +	if (ret < 0)
->>> +		goto out_err;
->>> +
->>> +	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
->>> +	notifier->subdevs[notifier->num_subdevs] = asd;
->>> +	notifier->num_subdevs++;
->>> +
->>> +	return 0;
->>> +
->>> +out_err:
->>> +	fwnode_handle_put(asd->match.fwnode.fwnode);
->>> +	kfree(asd);
->>> +
->>> +	return ret == -ENOTCONN ? 0 : ret;
->>> +}
->>> +
->>> +static int __v4l2_async_notifier_parse_fwnode_endpoints(
->>> +	struct device *dev, struct v4l2_async_notifier *notifier,
->>> +	size_t asd_struct_size, unsigned int port, bool has_port,
->>> +	int (*parse_endpoint)(struct device *dev,
->>> +			    struct v4l2_fwnode_endpoint *vep,
->>> +			    struct v4l2_async_subdev *asd))
->>> +{
->>> +	struct fwnode_handle *fwnode = NULL;
->>> +	unsigned int max_subdevs = notifier->max_subdevs;
->>> +	int ret;
->>> +
->>> +	if (WARN_ON(asd_struct_size < sizeof(struct v4l2_async_subdev)))
->>> +		return -EINVAL;
->>> +
->>> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
->>> +				     dev_fwnode(dev), fwnode)); ) {
->>
->> You can replace this by:
->>
->> 	while ((fwnode = fwnode_graph_get_next_endpoint(dev_fwnode(dev), fwnode))) {
->>
->>> +		if (!fwnode_device_is_available(
->>> +			    fwnode_graph_get_port_parent(fwnode)))
->>> +			continue;
->>> +
->>> +		if (has_port) {
->>> +			struct fwnode_endpoint ep;
->>> +
->>> +			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
->>> +			if (ret) {
->>> +				fwnode_handle_put(fwnode);
->>> +				return ret;
->>> +			}
->>> +
->>> +			if (ep.port != port)
->>> +				continue;
->>> +		}
->>> +		max_subdevs++;
->>> +	}
->>> +
->>> +	/* No subdevs to add? Return here. */
->>> +	if (max_subdevs == notifier->max_subdevs)
->>> +		return 0;
->>> +
->>> +	ret = v4l2_async_notifier_realloc(notifier, max_subdevs);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
->>> +				     dev_fwnode(dev), fwnode)); ) {
->>
->> Same here: this can be a 'while'.
-> 
-> The fwnode = NULL assignment still needs to be done. A for loop has a
-> natural initialiser for the loop, I think it's cleaner than using while
-> here.
+Hi Hans,
 
-After the previous while fwnode is NULL again (since that's when the while
-stops).
+Thank you for the review.
+
+On Tue, Sep 19, 2017 at 10:31:41AM +0200, Hans Verkuil wrote:
+> Hi Sakari,
+> 
+> I'm slowly starting to understand this. The example helped a lot. But I still have
+> some questions, see below.
+> 
+> On 09/15/2017 04:17 PM, Sakari Ailus wrote:
+> > v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
+> > the device's own fwnode, it will follow child fwnodes with the given
+> > property-value pair and return the resulting fwnode.
+> 
+> I think both the subject, commit log, function comment and function name should
+> reflect the fact that this function is for an ACPI reference.
+> 
+> It's only called for ACPI (from patch 19):
+> 
+> +		if (props[i].props && is_acpi_node(dev_fwnode(dev)))
+> +			ret = v4l2_fwnode_reference_parse_int_props(
+> 
+> So renaming it to v4l2_fwnode_acpi_reference_parse_int_props or something similar
+> would clarify this fact.
+
+I don't think we'll see many like this one. I presume we won't use it on DT
+albeit there are no direct references to ACPI in the code itself.
+
+How about v4l2_fwnode_parse_acpi_reference (+ "s" for the one below)?
 
 > 
-> The macro would be implemented this way as well.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 201 insertions(+)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > index 65e84ea1cc35..968a345a288f 100644
+> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > @@ -567,6 +567,207 @@ static int v4l2_fwnode_reference_parse(
+> >  	return ret;
+> >  }
+> >  
+> > +/*
+> > + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
+> > + *					arguments
+> > + * @dev: struct device pointer
+> > + * @notifier: notifier for @dev
+> > + * @prop: the name of the property
+> > + * @index: the index of the reference to get
+> > + * @props: the array of integer property names
+> > + * @nprops: the number of integer property names in @nprops
 > 
-> For the loop above this one, I'd use for for consistency: it's the same
-> loop after all.
-> 
-> This reminds me --- I'll send the patch for the macro.
+> You mean 'in @props'?
 
-If this is going to be replaced by a macro, then disregard my comment.
-
-> 
->>
->>> +		if (!fwnode_device_is_available(
->>> +			    fwnode_graph_get_port_parent(fwnode)))
->>> +			continue;
->>> +
->>> +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
->>> +			ret = -EINVAL;
->>> +			break;
->>> +		}
->>> +
->>> +		if (has_port) {
->>> +			struct fwnode_endpoint ep;
->>> +
->>> +			ret = fwnode_graph_parse_endpoint(fwnode, &ep);
->>> +			if (ret)
->>> +				break;
->>> +
->>> +			if (ep.port != port)
->>> +				continue;
->>> +		}
->>> +
->>> +		ret = v4l2_async_notifier_fwnode_parse_endpoint(
->>> +			dev, notifier, fwnode, asd_struct_size, parse_endpoint);
->>> +		if (ret < 0)
->>> +			break;
->>> +	}
->>> +
->>> +	fwnode_handle_put(fwnode);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +int v4l2_async_notifier_parse_fwnode_endpoints(
->>> +	struct device *dev, struct v4l2_async_notifier *notifier,
->>> +	size_t asd_struct_size,
->>> +	int (*parse_endpoint)(struct device *dev,
->>> +			    struct v4l2_fwnode_endpoint *vep,
->>> +			    struct v4l2_async_subdev *asd))
->>> +{
->>> +	return __v4l2_async_notifier_parse_fwnode_endpoints(
->>> +		dev, notifier, asd_struct_size, 0, false, parse_endpoint);
->>> +}
->>> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints);
->>> +
->>> +int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
->>> +	struct device *dev, struct v4l2_async_notifier *notifier,
->>> +	size_t asd_struct_size, unsigned int port,
->>> +	int (*parse_endpoint)(struct device *dev,
->>> +			    struct v4l2_fwnode_endpoint *vep,
->>> +			    struct v4l2_async_subdev *asd))
->>> +{
->>> +	return __v4l2_async_notifier_parse_fwnode_endpoints(
->>> +		dev, notifier, asd_struct_size, port, true, parse_endpoint);
->>> +}
->>> +EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
->>> +
->>>  MODULE_LICENSE("GPL");
->>>  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
->>>  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
->>> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
->>> index c69d8c8a66d0..96fa1afc00dd 100644
->>> --- a/include/media/v4l2-async.h
->>> +++ b/include/media/v4l2-async.h
->>> @@ -18,7 +18,6 @@ struct device;
->>>  struct device_node;
->>>  struct v4l2_device;
->>>  struct v4l2_subdev;
->>> -struct v4l2_async_notifier;
->>>  
->>>  /* A random max subdevice number, used to allocate an array on stack */
->>>  #define V4L2_MAX_SUBDEVS 128U
->>> @@ -50,6 +49,10 @@ enum v4l2_async_match_type {
->>>   * @match:	union of per-bus type matching data sets
->>>   * @list:	used to link struct v4l2_async_subdev objects, waiting to be
->>>   *		probed, to a notifier->waiting list
->>> + *
->>> + * When this struct is used as a member in a driver specific struct,
->>> + * the driver specific struct shall contain the @struct
->>> + * v4l2_async_subdev as its first member.
->>>   */
->>>  struct v4l2_async_subdev {
->>>  	enum v4l2_async_match_type match_type;
->>> @@ -78,7 +81,8 @@ struct v4l2_async_subdev {
->>>  /**
->>>   * struct v4l2_async_notifier - v4l2_device notifier data
->>>   *
->>> - * @num_subdevs: number of subdevices
->>> + * @num_subdevs: number of subdevices used in the subdevs array
->>> + * @max_subdevs: number of subdevices allocated in the subdevs array
->>>   * @subdevs:	array of pointers to subdevice descriptors
->>>   * @v4l2_dev:	pointer to struct v4l2_device
->>>   * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
->>> @@ -90,6 +94,7 @@ struct v4l2_async_subdev {
->>>   */
->>>  struct v4l2_async_notifier {
->>>  	unsigned int num_subdevs;
->>> +	unsigned int max_subdevs;
->>>  	struct v4l2_async_subdev **subdevs;
->>>  	struct v4l2_device *v4l2_dev;
->>>  	struct list_head waiting;
->>> @@ -121,6 +126,21 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
->>>  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier);
->>>  
->>>  /**
->>> + * v4l2_async_notifier_release - release notifier resources
->>> + * @notifier: the notifier the resources of which are to be released
->>> + *
->>> + * Release memory resources related to a notifier, including the async
->>> + * sub-devices allocated for the purposes of the notifier. The user is
->>> + * responsible for releasing the notifier's resources after calling
->>> + * @v4l2_async_notifier_parse_fwnode_endpoints.
->>> + *
->>> + * There is no harm from calling v4l2_async_notifier_release in other
->>> + * cases as long as its memory has been zeroed after it has been
->>> + * allocated.
->>> + */
->>> +void v4l2_async_notifier_release(struct v4l2_async_notifier *notifier);
->>> +
->>> +/**
->>>   * v4l2_async_register_subdev - registers a sub-device to the asynchronous
->>>   * 	subdevice framework
->>>   *
->>> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
->>> index 68eb22ba571b..83afac48ea6b 100644
->>> --- a/include/media/v4l2-fwnode.h
->>> +++ b/include/media/v4l2-fwnode.h
->>> @@ -25,6 +25,8 @@
->>>  #include <media/v4l2-mediabus.h>
->>>  
->>>  struct fwnode_handle;
->>> +struct v4l2_async_notifier;
->>> +struct v4l2_async_subdev;
->>>  
->>>  #define V4L2_FWNODE_CSI2_MAX_DATA_LANES	4
->>>  
->>> @@ -201,4 +203,119 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
->>>   */
->>>  void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
->>>  
->>> +/**
->>> + * v4l2_async_notifier_parse_fwnode_endpoints - Parse V4L2 fwnode endpoints in a
->>> + *						device node
->>> + * @dev: the device the endpoints of which are to be parsed
->>> + * @notifier: notifier for @dev
->>> + * @asd_struct_size: size of the driver's async sub-device struct, including
->>> + *		     sizeof(struct v4l2_async_subdev). The &struct
->>> + *		     v4l2_async_subdev shall be the first member of
->>> + *		     the driver's async sub-device struct, i.e. both
->>> + *		     begin at the same memory address.
->>> + * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
->>> + *		    endpoint. Optional.
->>> + *		    Return: %0 on success
->>> + *			    %-ENOTCONN if the endpoint is to be skipped but this
->>> + *				       should not be considered as an error
->>> + *			    %-EINVAL if the endpoint configuration is invalid
->>> + *
->>> + * Parse the fwnode endpoints of the @dev device and populate the async sub-
->>> + * devices array of the notifier. The @parse_endpoint callback function is
->>> + * called for each endpoint with the corresponding async sub-device pointer to
->>> + * let the caller initialize the driver-specific part of the async sub-device
->>> + * structure.
->>> + *
->>> + * The notifier memory shall be zeroed before this function is called on the
->>> + * notifier.
->>> + *
->>> + * This function may not be called on a registered notifier and may be called on
->>> + * a notifier only once.
->>> + *
->>> + * Do not change the notifier's subdevs array, take references to the subdevs
->>> + * array itself or change the notifier's num_subdevs field. This is because this
->>> + * function allocates and reallocates the subdevs array based on parsing
->>> + * endpoints.
->>> + *
->>> + * The @struct v4l2_fwnode_endpoint passed to the callback function
->>> + * @parse_endpoint is released once the function is finished. If there is a need
->>> + * to retain that configuration, the user needs to allocate memory for it.
->>> + *
->>> + * Any notifier populated using this function must be released with a call to
->>> + * v4l2_async_notifier_release() after it has been unregistered and the async
->>> + * sub-devices are no longer in use, even if the function returned an error.
->>> + *
->>> + * Return: %0 on success, including when no async sub-devices are found
->>> + *	   %-ENOMEM if memory allocation failed
->>> + *	   %-EINVAL if graph or endpoint parsing failed
->>> + *	   Other error codes as returned by @parse_endpoint
->>> + */
->>> +int v4l2_async_notifier_parse_fwnode_endpoints(
->>> +	struct device *dev, struct v4l2_async_notifier *notifier,
->>> +	size_t asd_struct_size,
->>> +	int (*parse_endpoint)(struct device *dev,
->>> +			      struct v4l2_fwnode_endpoint *vep,
->>> +			      struct v4l2_async_subdev *asd));
->>> +
->>> +/**
->>> + * v4l2_async_notifier_parse_fwnode_endpoints_by_port - Parse V4L2 fwnode
->>> + *							endpoints of a port in a
->>> + *							device node
->>> + * @dev: the device the endpoints of which are to be parsed
->>> + * @notifier: notifier for @dev
->>> + * @asd_struct_size: size of the driver's async sub-device struct, including
->>> + *		     sizeof(struct v4l2_async_subdev). The &struct
->>> + *		     v4l2_async_subdev shall be the first member of
->>> + *		     the driver's async sub-device struct, i.e. both
->>> + *		     begin at the same memory address.
->>> + * @port: port number where endpoints are to be parsed
->>> + * @parse_endpoint: Driver's callback function called on each V4L2 fwnode
->>> + *		    endpoint. Optional.
->>> + *		    Return: %0 on success
->>> + *			    %-ENOTCONN if the endpoint is to be skipped but this
->>> + *				       should not be considered as an error
->>> + *			    %-EINVAL if the endpoint configuration is invalid
->>> + *
->>> + * This function is just like @v4l2_async_notifier_parse_fwnode_endpoints with
->>> + * the exception that it only parses endpoints in a given port. This is useful
->>> + * on devices that have both sinks and sources: the async sub-devices connected
->>
->> on -> for
->>
->>> + * to sources have already been set up by another driver (on capture devices).
->>
->> on -> for
-> 
-> Agreed on both.
-> 
->>
->> So if I understand this correctly for devices with both sinks and sources you use
->> this function to just parse the sink ports. And you have to give explicit port
->> numbers since you can't tell from parsing the device tree if a port is a sink or
->> source port, right? Only the driver knows this.
-> 
-> Correct. The graph data structure in DT isn't directed, so this is only
-> known by the driver.
-
-I think this should be clarified.
-
-I wonder if there is any way around it. I don't have time to dig into this, but
-isn't it possible to tell that the source ports are already configured?
-
-Anyway, that can be looked at later.
-
-Regards,
-
-	Hans
+Yes, I'll fix that.
 
 > 
->>
->>> + *
->>> + * Parse the fwnode endpoints of the @dev device on a given @port and populate
->>> + * the async sub-devices array of the notifier. The @parse_endpoint callback
->>> + * function is called for each endpoint with the corresponding async sub-device
->>> + * pointer to let the caller initialize the driver-specific part of the async
->>> + * sub-device structure.
->>> + *
->>> + * The notifier memory shall be zeroed before this function is called on the
->>> + * notifier the first time.
->>> + *
->>> + * This function may not be called on a registered notifier and may be called on
->>> + * a notifier only once per port.
->>> + *
->>> + * Do not change the notifier's subdevs array, take references to the subdevs
->>> + * array itself or change the notifier's num_subdevs field. This is because this
->>> + * function allocates and reallocates the subdevs array based on parsing
->>> + * endpoints.
->>> + *
->>> + * The @struct v4l2_fwnode_endpoint passed to the callback function
->>> + * @parse_endpoint is released once the function is finished. If there is a need
->>> + * to retain that configuration, the user needs to allocate memory for it.
->>> + *
->>> + * Any notifier populated using this function must be released with a call to
->>> + * v4l2_async_notifier_release() after it has been unregistered and the async
->>> + * sub-devices are no longer in use, even if the function returned an error.
->>> + *
->>> + * Return: %0 on success, including when no async sub-devices are found
->>> + *	   %-ENOMEM if memory allocation failed
->>> + *	   %-EINVAL if graph or endpoint parsing failed
->>> + *	   Other error codes as returned by @parse_endpoint
->>> + */
->>> +int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
->>> +	struct device *dev, struct v4l2_async_notifier *notifier,
->>> +	size_t asd_struct_size, unsigned int port,
->>> +	int (*parse_endpoint)(struct device *dev,
->>> +			      struct v4l2_fwnode_endpoint *vep,
->>> +			      struct v4l2_async_subdev *asd));
->>> +
->>>  #endif /* _V4L2_FWNODE_H */
->>>
->>
-> 
+> One thing that is not clear to me is when you would use an nprops value > 1.
+> What's the use-case for that? It only makes sense (I think) if you would have
+> property names that are all aliases of one another.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There may be several flash LEDs related to a sensor. That's the use case,
+for instance.
+
+> 
+> > + *
+> > + * Find fwnodes referred to by a property @prop, then under that
+> > + * iteratively, @nprops times, follow each child node which has a
+> > + * property in @props array at a given child index the value of which
+> > + * matches the integer argument at an index.
+> > + *
+> > + * For example, if this function was called with arguments and values
+> > + * @dev corresponding to device "SEN", @prop == "flash-leds", @index
+> > + * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
+> > + * it would return the node marked with THISONE. The @dev argument in
+> > + * the ASL below.
+> 
+> That last sentence about the @dev seems incomplete. I'm not sure what is
+> meant by it.
+
+I think it was meant to convey some information but it got added to the
+previous sentence. I'll remove it.
+
+> 
+> > + *
+> > + *	Device (LED)
+> > + *	{
+> > + *		Name (_DSD, Package () {
+> > + *			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> > + *			Package () {
+> > + *				Package () { "led0", "LED0" },
+> > + *				Package () { "led1", "LED1" },
+> > + *			}
+> > + *		})
+> > + *		Name (LED0, Package () {
+> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > + *			Package () {
+> > + *				Package () { "led", 0 },
+> > + *			}
+> > + *		})
+> > + *		Name (LED1, Package () {
+> > + *			// THISONE
+> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > + *			Package () {
+> > + *				Package () { "led", 1 },
+> > + *			}
+> > + *		})
+> > + *	}
+> > + *
+> > + *	Device (SEN)
+> > + *	{
+> > + *		Name (_DSD, Package () {
+> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > + *			Package () {
+> > + *				Package () {
+> > + *					"flash-leds",
+> > + *					Package () { ^LED, 0, ^LED, 1 },
+> > + *				}
+> > + *			}
+> > + *		})
+> > + *	}
+> > + *
+> > + * where
+> > + *
+> > + *	LED	LED driver device
+> > + *	LED0	First LED
+> > + *	LED1	Second LED
+> > + *	SEN	Camera sensor device (or another device the LED is
+> > + *		related to)
+> > + *
+> > + * Return: 0 on success
+> > + *	   -ENOENT if no entries (or the property itself) were found
+> > + *	   -EINVAL if property parsing otherwise failed
+> > + *	   -ENOMEM if memory allocation failed
+> > + */
+> > +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
+> > +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
+> > +	const char **props, unsigned int nprops)
+> > +{
+> > +	struct fwnode_reference_args fwnode_args;
+> > +	unsigned int *args = fwnode_args.args;
+> > +	struct fwnode_handle *child;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Obtain remote fwnode as well as the integer arguments.
+> > +	 *
+> > +	 * Note that right now both -ENODATA and -ENOENT may signal
+> > +	 * out-of-bounds access. Return -ENOENT in that case.
+> > +	 */
+> > +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
+> > +						 index, &fwnode_args);
+> > +	if (ret)
+> > +		return ERR_PTR(ret == -ENODATA ? -ENOENT : ret);
+> > +
+> > +	/*
+> > +	 * Find a node in the tree under the referred fwnode corresponding the
+> > +	 * integer arguments.
+> > +	 */
+> > +	fwnode = fwnode_args.fwnode;
+> 
+> So given the example above, fwnode would point to the LED device?
+> 
+> If correct, then mention that in the comment.
+
+It could be a LED driver device, but it could be something else as well.
+Like a lens VCM, depending on the property being parsed. That's why I
+didn't put it in the comments. But this is a device node, not a
+hierarchical data extension node, for instance. That's what I think I
+should add.
+
+> 
+> > +	while (nprops--) {
+> > +		u32 val;
+> > +
+> > +		/* Loop over all child nodes under fwnode. */
+> 
+> And here you check if the LED device has child nodes that have a *props
+> property with a value matching the index.
+> 
+> So given the example above it is looking for a child with property "led"
+> and value 1.
+> 
+> It's useful if that is mentioned in the comment as well.
+
+But should I? This isn't specific to LEDs.
+
+> 
+> > +		fwnode_for_each_child_node(fwnode, child) {
+> > +			if (fwnode_property_read_u32(child, *props, &val))
+> > +				continue;
+> > +
+> > +			/* Found property, see if its value matches. */
+> > +			if (val == *args)
+> > +				break;
+> > +		}
+> > +
+> > +		fwnode_handle_put(fwnode);
+> > +
+> > +		/* No property found; return an error here. */
+> > +		if (!child) {
+> > +			fwnode = ERR_PTR(-ENOENT);
+> > +			break;
+> > +		}
+> > +
+> > +		props++;
+> > +		args++;
+> > +		fwnode = child;
+> > +	}
+> > +
+> > +	return fwnode;
+> > +}
+> > +
+> > +/*
+> > + * v4l2_fwnode_reference_parse_int_props - parse references for async sub-devices
+> > + * @dev: struct device pointer
+> > + * @notifier: notifier for @dev
+> > + * @prop: the name of the property
+> > + * @props: the array of integer property names
+> > + * @nprops: the number of integer properties
+> > + *
+> > + * Use v4l2_fwnode_reference_get_int_prop to find fwnodes through reference in
+> > + * property @prop with integer arguments with child nodes matching in properties
+> > + * @props. Then, set up V4L2 async sub-devices for those fwnodes in the notifier
+> > + * accordingly.
+> > + *
+> > + * While it is technically possible to use this function on DT, it is only
+> > + * meaningful on ACPI. On Device tree you can refer to any node in the tree but
+> > + * on ACPI the references are limited to devices.
+> > + *
+> > + * Return: 0 on success
+> > + *	   -ENOENT if no entries (or the property itself) were found
+> > + *	   -EINVAL if property parsing otherwisefailed
+> > + *	   -ENOMEM if memory allocation failed
+> > + */
+> > +static int v4l2_fwnode_reference_parse_int_props(
+> > +	struct device *dev, struct v4l2_async_notifier *notifier,
+> > +	const char *prop, const char **props, unsigned int nprops)
+> > +{
+> > +	struct fwnode_handle *fwnode;
+> > +	unsigned int index;
+> > +	int ret;
+> > +
+> > +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
+> > +					 dev_fwnode(dev), prop, index, props,
+> > +					 nprops))); index++)
+> > +		fwnode_handle_put(fwnode);
+> > +
+> > +	/*
+> > +	 * Note that right now both -ENODATA and -ENOENT may signal
+> > +	 * out-of-bounds access. Return the error in cases other than that.
+> > +	 */
+> > +	if (PTR_ERR(fwnode) != -ENOENT && PTR_ERR(fwnode) != -ENODATA)
+> > +		return PTR_ERR(fwnode);
+> > +
+> > +	ret = v4l2_async_notifier_realloc(notifier,
+> > +					  notifier->num_subdevs + index);
+> > +	if (ret)
+> > +		return -ENOMEM;
+> > +
+> > +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
+> > +					 dev_fwnode(dev), prop, index, props,
+> > +					 nprops))); index++) {
+> > +		struct v4l2_async_subdev *asd;
+> > +
+> > +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
+> > +			ret = -EINVAL;
+> > +			goto error;
+> > +		}
+> > +
+> > +		asd = kzalloc(sizeof(struct v4l2_async_subdev), GFP_KERNEL);
+> > +		if (!asd) {
+> > +			ret = -ENOMEM;
+> > +			goto error;
+> > +		}
+> > +
+> > +		notifier->subdevs[notifier->num_subdevs] = asd;
+> > +		asd->match.fwnode.fwnode = fwnode;
+> > +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+> > +		notifier->num_subdevs++;
+> > +	}
+> > +
+> > +	return PTR_ERR(fwnode) == -ENOENT ? 0 : PTR_ERR(fwnode);
+> > +
+> > +error:
+> > +	fwnode_handle_put(fwnode);
+> > +	return ret;
+> > +}
+> > +
+> >  MODULE_LICENSE("GPL");
+> >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
+> >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
