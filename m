@@ -1,51 +1,204 @@
-From: Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v4 7/9] soc: mediatek: add dependent clock jpgdec/audio for scpsys
-Date: Tue, 19 Sep 2017 12:00:28 +0800
-Message-ID: <1505793630-12590-8-git-send-email-weiyi.lu@mediatek.com>
+From: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 8/9] soc: mediatek: add MT2712 scpsys support
+Date: Tue, 19 Sep 2017 12:00:29 +0800
+Message-ID: <1505793630-12590-9-git-send-email-weiyi.lu@mediatek.com>
 References: <1505793630-12590-1-git-send-email-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505793630-12590-1-git-send-email-weiyi.lu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, Weiyi Lu <weiyi.lu@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1505793630-12590-1-git-send-email-weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There are dependent clock jpgdec/audio in scpsys on MT2712,
-and will exist three dependent clocks on MT2712 VDEC.
+add scpsys driver for MT2712
 
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+Signed-off-by: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/soc/mediatek/mtk-scpsys.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/soc/mediatek/mtk-scpsys.c | 112 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 106 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index 2569390..28c6e6a 100644
+index 28c6e6a..c8abd06 100644
 --- a/drivers/soc/mediatek/mtk-scpsys.c
 +++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -84,6 +84,8 @@ enum clk_id {
- 	CLK_ETHIF,
- 	CLK_VDEC,
- 	CLK_HIFSEL,
-+	CLK_JPGDEC,
-+	CLK_AUDIO,
- 	CLK_MAX,
+@@ -21,6 +21,7 @@
+ #include <linux/soc/mediatek/infracfg.h>
+ 
+ #include <dt-bindings/power/mt2701-power.h>
++#include <dt-bindings/power/mt2712-power.h>
+ #include <dt-bindings/power/mt6797-power.h>
+ #include <dt-bindings/power/mt7622-power.h>
+ #include <dt-bindings/power/mt8173-power.h>
+@@ -32,7 +33,7 @@
+ #define SPM_DIS_PWR_CON			0x023c
+ #define SPM_CONN_PWR_CON		0x0280
+ #define SPM_VEN2_PWR_CON		0x0298
+-#define SPM_AUDIO_PWR_CON		0x029c	/* MT8173 */
++#define SPM_AUDIO_PWR_CON		0x029c	/* MT8173, MT2712 */
+ #define SPM_BDP_PWR_CON			0x029c	/* MT2701 */
+ #define SPM_ETH_PWR_CON			0x02a0
+ #define SPM_HIF_PWR_CON			0x02a4
+@@ -40,12 +41,12 @@
+ #define SPM_MFG_2D_PWR_CON		0x02c0
+ #define SPM_MFG_ASYNC_PWR_CON		0x02c4
+ #define SPM_USB_PWR_CON			0x02cc
++#define SPM_USB2_PWR_CON		0x02d4	/* MT2712 */
+ #define SPM_ETHSYS_PWR_CON		0x02e0	/* MT7622 */
+ #define SPM_HIF0_PWR_CON		0x02e4	/* MT7622 */
+ #define SPM_HIF1_PWR_CON		0x02e8	/* MT7622 */
+ #define SPM_WB_PWR_CON			0x02ec	/* MT7622 */
+ 
+-
+ #define SPM_PWR_STATUS			0x060c
+ #define SPM_PWR_STATUS_2ND		0x0610
+ 
+@@ -64,12 +65,13 @@
+ #define PWR_STATUS_ETH			BIT(15)
+ #define PWR_STATUS_HIF			BIT(16)
+ #define PWR_STATUS_IFR_MSC		BIT(17)
++#define PWR_STATUS_USB2			BIT(19)	/* MT2712 */
+ #define PWR_STATUS_VENC_LT		BIT(20)
+ #define PWR_STATUS_VENC			BIT(21)
+-#define PWR_STATUS_MFG_2D		BIT(22)
+-#define PWR_STATUS_MFG_ASYNC		BIT(23)
+-#define PWR_STATUS_AUDIO		BIT(24)
+-#define PWR_STATUS_USB			BIT(25)
++#define PWR_STATUS_MFG_2D		BIT(22)	/* MT8173 */
++#define PWR_STATUS_MFG_ASYNC		BIT(23)	/* MT8173 */
++#define PWR_STATUS_AUDIO		BIT(24)	/* MT8173, MT2712 */
++#define PWR_STATUS_USB			BIT(25)	/* MT8173, MT2712 */
+ #define PWR_STATUS_ETHSYS		BIT(24)	/* MT7622 */
+ #define PWR_STATUS_HIF0			BIT(25)	/* MT7622 */
+ #define PWR_STATUS_HIF1			BIT(26)	/* MT7622 */
+@@ -618,6 +620,85 @@ static void mtk_register_power_domains(struct platform_device *pdev,
  };
  
-@@ -96,10 +98,12 @@ enum clk_id {
- 	"ethif",
- 	"vdec",
- 	"hif_sel",
-+	"jpgdec",
-+	"audio",
- 	NULL,
+ /*
++ * MT2712 power domain support
++ */
++static const struct scp_domain_data scp_domain_data_mt2712[] = {
++	[MT2712_POWER_DOMAIN_MM] = {
++		.name = "mm",
++		.sta_mask = PWR_STATUS_DISP,
++		.ctl_offs = SPM_DIS_PWR_CON,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++		.clk_id = {CLK_MM},
++		.active_wakeup = true,
++	},
++	[MT2712_POWER_DOMAIN_VDEC] = {
++		.name = "vdec",
++		.sta_mask = PWR_STATUS_VDEC,
++		.ctl_offs = SPM_VDE_PWR_CON,
++		.sram_pdn_bits = GENMASK(8, 8),
++		.sram_pdn_ack_bits = GENMASK(12, 12),
++		.clk_id = {CLK_MM, CLK_VDEC},
++		.active_wakeup = true,
++	},
++	[MT2712_POWER_DOMAIN_VENC] = {
++		.name = "venc",
++		.sta_mask = PWR_STATUS_VENC,
++		.ctl_offs = SPM_VEN_PWR_CON,
++		.sram_pdn_bits = GENMASK(11, 8),
++		.sram_pdn_ack_bits = GENMASK(15, 12),
++		.clk_id = {CLK_MM, CLK_VENC, CLK_JPGDEC},
++		.active_wakeup = true,
++	},
++	[MT2712_POWER_DOMAIN_ISP] = {
++		.name = "isp",
++		.sta_mask = PWR_STATUS_ISP,
++		.ctl_offs = SPM_ISP_PWR_CON,
++		.sram_pdn_bits = GENMASK(11, 8),
++		.sram_pdn_ack_bits = GENMASK(13, 12),
++		.clk_id = {CLK_MM},
++		.active_wakeup = true,
++	},
++	[MT2712_POWER_DOMAIN_AUDIO] = {
++		.name = "audio",
++		.sta_mask = PWR_STATUS_AUDIO,
++		.ctl_offs = SPM_AUDIO_PWR_CON,
++		.sram_pdn_bits = GENMASK(11, 8),
++		.sram_pdn_ack_bits = GENMASK(15, 12),
++		.clk_id = {CLK_AUDIO},
++		.active_wakeup = true,
++	},
++	[MT2712_POWER_DOMAIN_USB] = {
++		.name = "usb",
++		.sta_mask = PWR_STATUS_USB,
++		.ctl_offs = SPM_USB_PWR_CON,
++		.sram_pdn_bits = GENMASK(10, 8),
++		.sram_pdn_ack_bits = GENMASK(14, 12),
++		.clk_id = {CLK_NONE},
++		.active_wakeup = true,
++	},
++	[MT2712_POWER_DOMAIN_USB2] = {
++		.name = "usb2",
++		.sta_mask = PWR_STATUS_USB2,
++		.ctl_offs = SPM_USB2_PWR_CON,
++		.sram_pdn_bits = GENMASK(10, 8),
++		.sram_pdn_ack_bits = GENMASK(14, 12),
++		.clk_id = {CLK_NONE},
++		.active_wakeup = true,
++	},
++	[MT2712_POWER_DOMAIN_MFG] = {
++		.name = "mfg",
++		.sta_mask = PWR_STATUS_MFG,
++		.ctl_offs = SPM_MFG_PWR_CON,
++		.sram_pdn_bits = GENMASK(11, 8),
++		.sram_pdn_ack_bits = GENMASK(19, 16),
++		.clk_id = {CLK_MFG},
++		.bus_prot_mask = BIT(14) | BIT(21) | BIT(23),
++		.active_wakeup = true,
++	},
++};
++
++/*
+  * MT6797 power domain support
+  */
+ 
+@@ -852,6 +933,22 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+ 	}
  };
  
--#define MAX_CLKS	2
-+#define MAX_CLKS	3
- 
- struct scp_domain_data {
- 	const char *name;
++static const struct scp_soc_data mt2712_data = {
++	.domains = scp_domain_data_mt2712,
++	.num_domains = ARRAY_SIZE(scp_domain_data_mt2712),
++	.regs = {
++		.scp_ctrl = {
++			.pwr_sta_offs = SPM_PWR_STATUS,
++			.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
++		},
++		.bus_prot = {
++			.set_offs = INFRA_TOPAXI_PROTECTEN_SET,
++			.clr_offs = INFRA_TOPAXI_PROTECTEN_CLR,
++			.sta_offs = INFRA_TOPAXI_PROTECTSTA1
++		},
++	}
++};
++
+ static const struct scp_soc_data mt6797_data = {
+ 	.domains = scp_domain_data_mt6797,
+ 	.num_domains = ARRAY_SIZE(scp_domain_data_mt6797),
+@@ -910,6 +1007,9 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+ 		.compatible = "mediatek,mt2701-scpsys",
+ 		.data = &mt2701_data,
+ 	}, {
++		.compatible = "mediatek,mt2712-scpsys",
++		.data = &mt2712_data,
++	}, {
+ 		.compatible = "mediatek,mt6797-scpsys",
+ 		.data = &mt6797_data,
+ 	}, {
 -- 
 1.9.1
