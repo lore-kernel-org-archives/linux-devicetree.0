@@ -1,47 +1,82 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v13 06/25] omap3isp: Use generic parser for parsing fwnode endpoints
-Date: Tue, 19 Sep 2017 15:46:18 +0300
-Message-ID: <3468276.k9eAkeO3hH@avalon>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <1555926.RTv2yyCEgl@avalon> <20170919124326.f3q4c6kwt3cfyyno@paasikivi.fi.intel.com>
+Subject: Re: [PATCH v13 13/25] v4l: async: Allow async notifier register call succeed with no subdevs
+Date: Tue, 19 Sep 2017 15:52:02 +0300
+Message-ID: <2068881.oMWDSm4mNc@avalon>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <20170915141724.23124-14-sakari.ailus@linux.intel.com> <1674305.pu9Ti8eC3U@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170919124326.f3q4c6kwt3cfyyno@paasikivi.fi.intel.com>
+In-Reply-To: <1674305.pu9Ti8eC3U@avalon>
 Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Sakari,
 
-On Tuesday, 19 September 2017 15:43:26 EEST Sakari Ailus wrote:
-> On Tue, Sep 19, 2017 at 02:40:29PM +0300, Laurent Pinchart wrote:
-> > > @@ -2256,7 +2210,9 @@ static int isp_probe(struct platform_device *pdev)
-> > > 
-> > >  	if (ret)
-> > >  	
-> > >  		return ret;
-> > > 
-> > > -	ret = isp_fwnodes_parse(&pdev->dev, &isp->notifier);
-> > > +	ret = v4l2_async_notifier_parse_fwnode_endpoints(
-> > > +		&pdev->dev, &isp->notifier, sizeof(struct isp_async_subdev),
-> > > +		isp_fwnode_parse);
-> > > 
-> > >  	if (ret < 0)
-> > 
-> > The documentation in patch 05/25 states that v4l2_async_notifier_release()
-> > should be called even if v4l2_async_notifier_parse_fwnode_endpoints()
-> > fails. I don't think that's needed here, so you might want to update the
-> > documentation (and possibly the implementation of the function).
+On Tuesday, 19 September 2017 15:04:43 EEST Laurent Pinchart wrote:
+> Hi Sakari,
 > 
-> It is. If parsing fails, async sub-devices may have been already set up.
-> This happens e.g. when the parsing fails after the first one has been
-> successfully set up already.
+> Thank you for the patch.
+> 
+> On Friday, 15 September 2017 17:17:12 EEST Sakari Ailus wrote:
+> > The information on how many async sub-devices would be bindable to a
+> > notifier is typically dependent on information from platform firmware and
+> > it's not driver's business to be aware of that.
+> > 
+> > Many V4L2 main drivers are perfectly usable (and useful) without async
+> > sub-devices and so if there aren't any around, just proceed call the
+> > notifier's complete callback immediately without registering the notifier
+> > itself.
+> > 
+> > If a driver needs to check whether there are async sub-devices available,
+> > it can be done by inspecting the notifier's num_subdevs field which tells
+> > the number of async sub-devices.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-But for v4l2_async_notifier_parse_fwnode_endpoints() we could clean up 
-internally when an error occurs. Otherwise you need to call 
-v4l2_async_notifier_release() here.
+I take this back.
+
+> > ---
+> > 
+> >  drivers/media/v4l2-core/v4l2-async.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> > b/drivers/media/v4l2-core/v4l2-async.c index 9895b610e2a0..4be2f16af051
+> > 100644
+> > --- a/drivers/media/v4l2-core/v4l2-async.c
+> > +++ b/drivers/media/v4l2-core/v4l2-async.c
+> > @@ -170,14 +170,16 @@ int v4l2_async_notifier_register(struct v4l2_device
+> > *v4l2_dev, struct v4l2_async_subdev *asd;
+> > 
+> >  	int i;
+> > 
+> > -	if (!v4l2_dev || !notifier->num_subdevs ||
+> > -	    notifier->num_subdevs > V4L2_MAX_SUBDEVS)
+> > +	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
+> > 
+> >  		return -EINVAL;
+> >  	
+> >  	notifier->v4l2_dev = v4l2_dev;
+> >  	INIT_LIST_HEAD(&notifier->waiting);
+> >  	INIT_LIST_HEAD(&notifier->done);
+> > 
+> > +	if (!notifier->num_subdevs)
+> > +		return v4l2_async_notifier_call_complete(notifier);
+> > +
+
+This skips adding the notifier to the notifier_list. Won't this result in an 
+oops when calling list_del(&notifier->list) in 
+v4l2_async_notifier_unregister() ?
+
+> >  	for (i = 0; i < notifier->num_subdevs; i++) {
+> >  	
+> >  		asd = notifier->subdevs[i];
 
 -- 
 Regards,
