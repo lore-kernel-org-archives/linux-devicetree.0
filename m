@@ -1,188 +1,51 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v13 07/25] rcar-vin: Use generic parser for parsing fwnode endpoints
-Date: Tue, 19 Sep 2017 14:53:16 +0300
-Message-ID: <3549838.F21OCYHXEu@avalon>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <20170915141724.23124-8-sakari.ailus@linux.intel.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: spi: Add Spreadtrum ADI controller
+ documentation
+Date: Tue, 19 Sep 2017 12:54:03 +0100
+Message-ID: <20170919115403.wjacvlhxv52tg42u@sirena.co.uk>
+References: <385c61101941f4a7329d3092f0339514c531b740.1505388996.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vubso2oqk76syw2u"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915141724.23124-8-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <385c61101941f4a7329d3092f0339514c531b740.1505388996.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
 
-Thank you for the patch.
+--vubso2oqk76syw2u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Friday, 15 September 2017 17:17:06 EEST Sakari Ailus wrote:
-> Instead of using driver implementation, use
+On Fri, Sep 15, 2017 at 03:29:15PM +0800, Baolin Wang wrote:
+> This patch adds the binding documentation for Spreadtrum ADI
+> controller device.
 
-Same comment as for patch 06/25.
+Please submit patches using subject lines reflecting the style for the
+subsystem.  This makes it easier for people to identify relevant
+patches.  Look at what existing commits in the area you're changing are
+doing and make sure your subject lines visually resemble what they're
+doing.
 
-> v4l2_async_notifier_parse_fwnode_endpoints() to parse the fwnode endpoints
-> of the device.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/media/platform/rcar-vin/rcar-core.c | 112 ++++++++-----------------
->  drivers/media/platform/rcar-vin/rcar-dma.c  |  10 +--
->  drivers/media/platform/rcar-vin/rcar-v4l2.c |  14 ++--
->  drivers/media/platform/rcar-vin/rcar-vin.h  |   4 +-
->  4 files changed, 48 insertions(+), 92 deletions(-)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c
-> b/drivers/media/platform/rcar-vin/rcar-core.c index
-> 142de447aaaa..62b4a94f9a39 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+--vubso2oqk76syw2u
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[snip]
+-----BEGIN PGP SIGNATURE-----
 
-> @@ -120,117 +121,70 @@ static int rvin_digital_notify_bound(struct
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnBBVoACgkQJNaLcl1U
+h9CxMQf+IFdanvBM4JKrHYaDqkdUVxb1d2tXy1NOKiyrZo9j1a5ahjiRe1Kry5hU
+FC+z9r0L8J3fX7ewLZxbnRHOxDRbG21hWZsgJUsO4EeUVCc0qgA8/2eScv6274uM
+boQc3mvv4ybkWuyYjBOQrogpfUMAfk1ZsvYXrM5ApggpQ2cAWZbgsGIOtXYhjGU6
++LgpvIF+mc1rr2uBow51zEeyJVmNUob0UVBBdIvKRh8anzTt6mQVnHvBT68BPE9u
+RtGtCpdlkdHcDzUFGyszZZk4pzzr6FEfdr8ef3pTWy82lYDOZb0QFvdLg/1xRvlh
+07NFc4ktgKdq0eHJnY3rKTF2XrgA1Q==
+=mnA6
+-----END PGP SIGNATURE-----
 
-[snip]
-
-> -static int rvin_digitial_parse_v4l2(struct rvin_dev *vin,
-> -				    struct device_node *ep,
-> -				    struct v4l2_mbus_config *mbus_cfg)
-> +static int rvin_digital_parse_v4l2(struct device *dev,
-> +				   struct v4l2_fwnode_endpoint *vep,
-> +				   struct v4l2_async_subdev *asd)
->  {
-> -	struct v4l2_fwnode_endpoint v4l2_ep;
-> -	int ret;
-> +	struct rvin_dev *vin = dev_get_drvdata(dev);
-
-Doesn't this show that we miss a context argument to the callback function ? 
-Storing the context in device driver data is probably OK if the driver parsing 
-the endpoints controls the struct device, but is that always the case ?
-
-> +	struct rvin_graph_entity *rvge =
-> +		container_of(asd, struct rvin_graph_entity, asd);
-> 
-> -	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
-> -	if (ret) {
-> -		vin_err(vin, "Could not parse v4l2 endpoint\n");
-> -		return -EINVAL;
-> -	}
-> +	if (vep->base.port || vep->base.id)
-> +		return -ENOTCONN;
-> 
-> -	mbus_cfg->type = v4l2_ep.bus_type;
-> +	rvge->mbus_cfg.type = vep->bus_type;
-> 
-> -	switch (mbus_cfg->type) {
-> +	switch (rvge->mbus_cfg.type) {
->  	case V4L2_MBUS_PARALLEL:
->  		vin_dbg(vin, "Found PARALLEL media bus\n");
-> -		mbus_cfg->flags = v4l2_ep.bus.parallel.flags;
-> +		rvge->mbus_cfg.flags = vep->bus.parallel.flags;
->  		break;
->  	case V4L2_MBUS_BT656:
->  		vin_dbg(vin, "Found BT656 media bus\n");
-> -		mbus_cfg->flags = 0;
-> +		rvge->mbus_cfg.flags = 0;
->  		break;
->  	default:
->  		vin_err(vin, "Unknown media bus type\n");
->  		return -EINVAL;
->  	}
-> 
-> -	return 0;
-> -}
-> -
-> -static int rvin_digital_graph_parse(struct rvin_dev *vin)
-> -{
-> -	struct device_node *ep, *np;
-> -	int ret;
-> -
-> -	vin->digital.asd.match.fwnode.fwnode = NULL;
-> -	vin->digital.subdev = NULL;
-> -
-> -	/*
-> -	 * Port 0 id 0 is local digital input, try to get it.
-> -	 * Not all instances can or will have this, that is OK
-> -	 */
-> -	ep = of_graph_get_endpoint_by_regs(vin->dev->of_node, 0, 0);
-> -	if (!ep)
-> -		return 0;
-> -
-> -	np = of_graph_get_remote_port_parent(ep);
-> -	if (!np) {
-> -		vin_err(vin, "No remote parent for digital input\n");
-> -		of_node_put(ep);
-> -		return -EINVAL;
-> -	}
-> -	of_node_put(np);
-> -
-> -	ret = rvin_digitial_parse_v4l2(vin, ep, &vin->digital.mbus_cfg);
-> -	of_node_put(ep);
-> -	if (ret)
-> -		return ret;
-> -
-> -	vin->digital.asd.match.fwnode.fwnode = of_fwnode_handle(np);
-> -	vin->digital.asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
-> +	vin->digital = rvge;
-> 
->  	return 0;
->  }
-> 
->  static int rvin_digital_graph_init(struct rvin_dev *vin)
->  {
-> -	struct v4l2_async_subdev **subdevs = NULL;
->  	int ret;
-> 
-> -	ret = rvin_digital_graph_parse(vin);
-> +	ret = v4l2_async_notifier_parse_fwnode_endpoints(
-> +		vin->dev, &vin->notifier,
-> +		sizeof(struct rvin_graph_entity), rvin_digital_parse_v4l2);
->  	if (ret)
->  		return ret;
-> 
-> -	if (!vin->digital.asd.match.fwnode.fwnode) {
-> -		vin_dbg(vin, "No digital subdevice found\n");
-> -		return -ENODEV;
-> -	}
-> -
-> -	/* Register the subdevices notifier. */
-> -	subdevs = devm_kzalloc(vin->dev, sizeof(*subdevs), GFP_KERNEL);
-> -	if (subdevs == NULL)
-> -		return -ENOMEM;
-> -
-> -	subdevs[0] = &vin->digital.asd;
-> -
-> -	vin_dbg(vin, "Found digital subdevice %pOF\n",
-> -		to_of_node(subdevs[0]->match.fwnode.fwnode));
-> +	if (vin->digital)
-> +		vin_dbg(vin, "Found digital subdevice %pOF\n",
-> +			to_of_node(
-> +				vin->digital->asd.match.fwnode.fwnode));
-
-Isn't this is a change in behaviour ? The driver currently returns -ENODEV 
-when no digital subdev is found.
-
-> -	vin->notifier.num_subdevs = 1;
-> -	vin->notifier.subdevs = subdevs;
->  	vin->notifier.bound = rvin_digital_notify_bound;
->  	vin->notifier.unbind = rvin_digital_notify_unbind;
->  	vin->notifier.complete = rvin_digital_notify_complete;
-> -
->  	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
->  	if (ret < 0) {
->  		vin_err(vin, "Notifier registration failed\n");
-
-
-[snip]
-
--- 
-Regards,
-
-Laurent Pinchart
-
+--vubso2oqk76syw2u--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
