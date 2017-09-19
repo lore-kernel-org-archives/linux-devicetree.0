@@ -1,8 +1,8 @@
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 Subject: Re: [PATCH 0/4] arm64: Add initial Actions Semi S700 and CubieBoard7
  support
-Date: Tue, 19 Sep 2017 07:37:05 +0200
-Message-ID: <33bc3794-df11-6013-3b51-cb59f0476af1@linaro.org>
+Date: Tue, 19 Sep 2017 08:12:37 +0200
+Message-ID: <97d03615-2437-3890-eab2-16ee7109cb1f@linaro.org>
 References: <20170911022241.11603-1-afaerber@suse.de>
  <6beabaab-d95f-4ac9-96f1-7c1c98bd7811@linaro.org>
  <0a3e9a40-cb67-d2b2-7f06-fa0f24a4fb42@suse.de>
@@ -44,9 +44,11 @@ On 19/09/2017 07:08, Andreas Färber wrote:
 > Actually I'm even surprised that it works for the drivers - I would
 > expect a trailing "/" for the directory (see line 95ff).
 
-Right, thanks for pointing this out, I will fix it.
+Done.
 
-  -- Daniel
+https://git.linaro.org/people/daniel.lezcano/linux.git/commit/?h=clockevents/next&id=acdbb48efecb03bc5a6e8e82447208fdd342eb89
+
+Should hit linux-next soon.
 
 
 -- 
