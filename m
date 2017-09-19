@@ -1,55 +1,58 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/2] clocksource: stm32: rework driver to use only one
- timer
-Date: Tue, 19 Sep 2017 17:54:37 +0200
-Message-ID: <cb440fab-b2a9-13ff-6f8a-4bce2eb2bc54@linaro.org>
-References: <1505375812-19037-1-git-send-email-benjamin.gaignard@linaro.org>
- <1505375812-19037-2-git-send-email-benjamin.gaignard@linaro.org>
- <9e5cae53-0a57-f2e9-cbb1-dde484619fca@linaro.org>
- <CA+M3ks45pUwv=dL6Gd6=Nvm1y5zRvtsFEU1bFoHht0xUDc3UVw@mail.gmail.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] tee: optee: allow selection of ti-smc as a calling
+ method
+Date: Tue, 19 Sep 2017 10:54:34 -0500
+Message-ID: <830b4d20-26e2-02ce-76db-b63c73967e39@ti.com>
+References: <20170918205005.30235-1-afd@ti.com>
+ <20170918205005.30235-2-afd@ti.com>
+ <CAL_JsqJ00f3i3BQKjuVUXO8Rc_EC8BaycQi1Z_9OyRff7_kDpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+M3ks45pUwv=dL6Gd6=Nvm1y5zRvtsFEU1bFoHht0xUDc3UVw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJ00f3i3BQKjuVUXO8Rc_EC8BaycQi1Z_9OyRff7_kDpg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thomas Gleixner <tglx@linutronix.de>, Ludovic Barre <ludovic.barre@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/09/2017 09:59, Benjamin Gaignard wrote:
-> 2017-09-18 23:30 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->> On 14/09/2017 09:56, Benjamin Gaignard wrote:
->>> Rework driver code to use only one timer for both clocksource
->>> and clockevent.
->>> This patch also forbids to use 16 bits timers because they are
->>> not enough accurate.
->>> Do some clean up in structures and functions names too.
->>>
->>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+On 09/19/2017 08:36 AM, Rob Herring wrote:
+> On Mon, Sep 18, 2017 at 3:50 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+>> On TI platforms OP-TEE must be called using a modified SMC call,
+>> allow the selection of this though DT.
 >>
->> Hi Benjamin,
+>> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt | 2 ++
+>>  drivers/tee/optee/core.c                                           | 2 ++
+>>  2 files changed, 4 insertions(+)
 >>
->> I have a few comments below. Can you when reposting split this patch
->> into smaller changes ?
-> 
-> Not so easy because I change the way of how the hardware is used to be able
-> to provide clocksource and clockevent on the same hardware block.
-> 
+>> diff --git a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+>> index d38834c67dff..a3275ecdf186 100644
+>> --- a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+>> +++ b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+>> @@ -20,6 +20,8 @@ the reference implementation maintained by Linaro.
+>>                     "hvc" : HVC #0, with the register assignments specified
+>>                            in drivers/tee/optee/optee_smc.h
 >>
->> Also, can you consider using the timer-of API ?
+>> +                   "ti-smc" : Similar to "smc" with TI specific register
+>> +                             adjustments
 > 
-> Is it just about using TIMER_OF_DECLARE ? or do you have something
-> else in mind ?
+> Sigh, really? IMO, this should be determined from the compatible
+> string. Then the next TI (or any vendor) specific thing can be handled
+> without a DT change.
+> 
 
-It is something else, see commit dc11bae785.
+Which compatible string, do you mean the OP-TEE driver check the top
+level platform compatible string?
 
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> Maybe some day we'll figure out that not just h/w needs to be
+> probe-able, but all the firmware pieces do too.
+> 
+> Rob
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
