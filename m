@@ -1,85 +1,59 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ASoC: tfa9879: Add device tree bindings
-Date: Tue, 19 Sep 2017 19:59:04 -0300
-Message-ID: <1505861944-32447-1-git-send-email-festevam@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, lukma-ynQEQJNshbs@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC 0/5] Align and document return values of phandle and
+ reference parsing for OF and ACPI
+Date: Wed, 20 Sep 2017 02:01:25 +0300
+Message-ID: <20170919230125.l7fexsdrzbmwd6yp@valkosipuli.retiisi.org.uk>
+References: <20170914122914.14122-1-sakari.ailus@linux.intel.com>
+ <CAL_JsqKZVN+X0F3Z8s6Qv+ioh8LBDjNe277MAw30T3CXXTUV1Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKZVN+X0F3Z8s6Qv+ioh8LBDjNe277MAw30T3CXXTUV1Q@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Hi Rob,
 
-Even though the tfa9879 driver can probe via device tree trough the
-I2C core code, it is preferable to have explicit device tree
-bindings instead [1], so add this support.
+Thanks for the review.
 
-[1] https://www.spinics.net/lists/devicetree/msg195176.html
+On Fri, Sep 15, 2017 at 02:57:35PM -0500, Rob Herring wrote:
+> On Thu, Sep 14, 2017 at 7:29 AM, Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> > Hi everyone,
+> >
+> > I recently came across a difference in behaviour of OF phandle parsing and
+> > ACPI reference parsing, both of which can soon be accessed using
+> > fwnode_property_get_reference_args.
+> >
+> > The main change in this proposal touches OF, and specifically the change
+> > is about using -ENODATA to tell that the phandle reference list entry that
+> > was accessed does not exist. -ENOENT was used previously, but the same
+> > error code was also used to tell that a phandle was empty, making it
+> > impossible for the caller to figure out which of the two was the case.
+> >
+> > I'm sending the set as RFC. In my limited testing I have found no ill
+> > effects.
+> >
+> > These patches are on top of linux-next.
+> >
+> > Comments on the approach and the changes themselves would be most welcome.
+> 
+> It's not really valid to both have a variable count (and hence need to
+> retrieve it) and use blank phandle entries. The whole point of blank
+> entries is to have a fixed length and know what each index corresponds
+> too. Do you have an example where we hit this?
 
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
-Hi Lukasz,
+Well, the above is true. I think I'd still use different error codes to
+tell about different situations.
 
-Could you please test this on your hardware?
+The alternative is that the fwnode counterpart error codes are changed to
+to -ENOENT.
 
- .../devicetree/bindings/sound/tfa9879.txt          | 23 ++++++++++++++++++++++
- sound/soc/codecs/tfa9879.c                         |  6 ++++++
- 2 files changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/tfa9879.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/tfa9879.txt b/Documentation/devicetree/bindings/sound/tfa9879.txt
-new file mode 100644
-index 0000000..731ffe8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tfa9879.txt
-@@ -0,0 +1,23 @@
-+NXP TFA9879 class-D audio amplifier
-+
-+Required properties:
-+
-+- compatible : "nxp,tfa9879"
-+
-+- reg : the I2C address of the device
-+
-+Example:
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	codec: tfa9879@6c {
-+		#sound-dai-cells = <0>;
-+		compatible = "nxp,tfa9879";
-+		reg = <0x6c>;
-+        };
-+};
-+
-diff --git a/sound/soc/codecs/tfa9879.c b/sound/soc/codecs/tfa9879.c
-index 95e0a7a..f8dd67c 100644
---- a/sound/soc/codecs/tfa9879.c
-+++ b/sound/soc/codecs/tfa9879.c
-@@ -312,9 +312,15 @@ static const struct i2c_device_id tfa9879_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, tfa9879_i2c_id);
- 
-+static const struct of_device_id tfa9879_of_match[] = {
-+	{ .compatible = "nxp,tfa9879", },
-+	{ }
-+};
-+
- static struct i2c_driver tfa9879_i2c_driver = {
- 	.driver = {
- 		.name = "tfa9879",
-+		.of_match_table = tfa9879_of_match,
- 	},
- 	.probe = tfa9879_i2c_probe,
- 	.remove = tfa9879_i2c_remove,
 -- 
-2.7.4
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
