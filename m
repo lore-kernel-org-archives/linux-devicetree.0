@@ -1,101 +1,102 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v13 06/25] omap3isp: Use generic parser for parsing fwnode endpoints
-Date: Tue, 19 Sep 2017 19:12:14 +0300
-Message-ID: <2111815.EclloaXXVN@avalon>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <3468276.k9eAkeO3hH@avalon> <20170919144722.4s5j3vos3xsyaaa2@valkosipuli.retiisi.org.uk>
+From: =?iso-8859-1?Q?Br=FCns=2C_Stefan?= <Stefan.Bruens@rwth-aachen.de>
+Subject: Re: [PATCH v2 07/10] dmaengine: sun6i: Retrieve channel count/max
+ request from devicetree
+Date: Tue, 19 Sep 2017 16:17:59 +0000
+Message-ID: <6028407.VKu5LCmQv0@sbruens-linux>
+References: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de>
+ <2791817.czGZyN6WKS@sbruens-linux> <20170919142508.woslovwjtecgygpo@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170919144722.4s5j3vos3xsyaaa2@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170919142508.woslovwjtecgygpo@flea.lan>
+Content-Language: en-US
+Content-ID: <60C30A0C0F582C4E9A9378499AFB4D7D@rwth-ad.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Code Kipper <codekipper@gmail.com>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On Tuesday, 19 September 2017 17:47:22 EEST Sakari Ailus wrote:
-> On Tue, Sep 19, 2017 at 03:46:18PM +0300, Laurent Pinchart wrote:
-> > On Tuesday, 19 September 2017 15:43:26 EEST Sakari Ailus wrote:
-> >> On Tue, Sep 19, 2017 at 02:40:29PM +0300, Laurent Pinchart wrote:
-> >>>> @@ -2256,7 +2210,9 @@ static int isp_probe(struct platform_device
-> >>>> *pdev)
-> >>>>  	if (ret)
-> >>>>  		return ret;
-> >>>> 
-> >>>> -	ret = isp_fwnodes_parse(&pdev->dev, &isp->notifier);
-> >>>> +	ret = v4l2_async_notifier_parse_fwnode_endpoints(
-> >>>> +		&pdev->dev, &isp->notifier, sizeof(struct isp_async_subdev),
-> >>>> +		isp_fwnode_parse);
-> >>>>  	if (ret < 0)
-> >>> 
-> >>> The documentation in patch 05/25 states that
-> >>> v4l2_async_notifier_release() should be called even if
-> >>> v4l2_async_notifier_parse_fwnode_endpoints() fails. I don't think that's
-> >>> needed here, so you might want to update the documentation (and possibly
-> >>> the implementation of the function).
-> >> 
-> >> It is. If parsing fails, async sub-devices may have been already set up.
-> >> This happens e.g. when the parsing fails after the first one has been
-> >> successfully set up already.
+On Dienstag, 19. September 2017 16:25:08 CEST Maxime Ripard wrote:
+> On Mon, Sep 18, 2017 at 02:09:43PM +0000, Brüns, Stefan wrote:
+> > On Montag, 18. September 2017 10:18:24 CEST you wrote:
+> > > Hi,
+> > > 
+> > > On Sun, Sep 17, 2017 at 05:19:53AM +0200, Stefan Brüns wrote:
+> > > > +	ret = of_property_read_u32(np, "dma-channels", &sdc->num_pchans);
+> > > > +	if (ret && !sdc->num_pchans) {
+> > > > +		dev_err(&pdev->dev, "Can't get dma-channels.\n");
+> > > > +		return ret;
+> > > > +	}
+> > > > +
+> > > > +	if (sdc->num_pchans > DMA_MAX_CHANNELS) {
+> > > > +		dev_err(&pdev->dev, "Number of dma-channels out of range.\n");
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	ret = of_property_read_u32(np, "dma-requests", &sdc->max_request);
+> > > > +	if (ret && !sdc->max_request) {
+> > > > +		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
+> > > > +			 DMA_CHAN_MAX_DRQ);
+> > > > +		sdc->max_request = DMA_CHAN_MAX_DRQ;
+> > > > +	}
+> > > > +
+> > > > +	if (sdc->max_request > DMA_CHAN_MAX_DRQ) {
+> > > > +		dev_err(&pdev->dev, "Value of dma-requests out of range.\n");
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > 
+> > > I'm not really convinced about these two checks. They don't catch all
+> > > errors (the range between the actual number of channels / DRQ and the
+> > > maximum allowed per the registers), they might increase in the future
+> > > too, and if we want to make that check actually working, we would have
+> > > to duplicate the number of requests and channels into the driver.
 > > 
-> > But for v4l2_async_notifier_parse_fwnode_endpoints() we could clean up
-> > internally when an error occurs. Otherwise you need to call
-> > v4l2_async_notifier_release() here.
+> > 1. If these values increase, we have a new register layout and and
+> > need a new compatible anyway.
 > 
-> The functions that set up async sub-devices can be called multiple times
-> (on separate references). This is quite alike setting up a control handler
-> really, so I adopted the same pattern.
+> And you want to store a new maximum attached to the compatible? Isn't
+> that exactly the situation you're trying to get away from?
+
+Yes, and no. H3, H5, A64 and R40 have the exact same register layout, but 
+different number of channels and ports. They could share a compatible (if DMA 
+channels were generalized), and we already have several register offsets/
+widths (implicitly via the callbacks) attached to the compatible (so these 
+don't need generalization via DT).
+
+Now, we could also move everything that is currently attached to the 
+compatible, i.e. clock gate register offset, burst widths/lengths etc. into 
+the devicetree binding, but that would just be too much.
+
+The idea is to find a middle ground here, using common patterns in the 
+existing SoCs. The register layout has hardly changed, while the number of DMA 
+channels and ports changes all the time. Moving the number of DMA channels and 
+ports to the DT is trivial, and a pattern also found in other DMA controller 
+drivers. *If* the number of dma channels and ports is ever increased, 
+exceeding the current maximum, this would amount to major changes in the 
+driver and maybe even warrant a completely new driver.
+
+> > 2. As long as the the limits are adhered to, no other registers/register
+> > fields are overwritten. As the channel number and port are used to
+> > calculate memory offsets bounds checking is IMHO a good idea.
 > 
-> If there is a failure, how many async sub-devices should be cleaned up, if
-> there have been async sub-devices already set up before calling this
-> function?
+> And this is true for many other resources, starting with the one
+> defined in reg. We don't error check every register range, clock
+> index, reset line, interrupt, DMA channel, the memory size, etc. yet
+> you could make the same argument.
+> 
+> The DT has to be right, and we have to trust it. Otherwise we can just
+> throw it away.
 
-I'm not opposed to that pattern, I just thought that cleanup could be 
-automated for v4l2_async_notifier_parse_fwnode_endpoints() failures, as 
-opposed to v4l2_async_notifier_parse_fwnode_endpoints_by_port() failures.
+So your argument here basically is - don't do any checks on DT provided 
+values, these are always correct. So, following this argument, not only the 
+range check, but also the of_property_read return values should be ignored, as 
+the DT is correct, thus of_property_read will never return an error.
 
-As this patch, written by the author of 
-v4l2_async_notifier_parse_fwnode_endpoints() and part of the same patch 
-series, is missing a call to v4l2_async_notifier_release(), I expect driver 
-authors to make the same mistake and was thus wondering how to prevent that.
+That clearly does not match the implementation of drivers throughout the 
+various subsystems for DT properties, which is in general - do all the checks 
+that can be done, trust everything you can not verify.
 
-I believe that the issue here is that initialization of the notifier is done 
-implicitly by the first call to a parsing function. With explicit notification 
-it should be clear to driver authors that they need to call the cleanup 
-function:
+Kind regards,
 
-ret = init()
-if (ret)
-	return ret;
-
-ret = parse()
-if (ret) {
-	cleanup();
-	return ret;
-}
-
-ret = parse()
-if (ret) {
-	cleanup();
-	return ret;
-}
-
-ret = parse()
-if (ret) {
-	cleanup();
-	return ret;
-}
-
-But with an implicit initialization it's easy to miss cleanup when 
-v4l2_async_notifier_parse_fwnode_endpoints() fails, as that function can be 
-considered as an initilization function that performs cleanup internally.
-
-I'm not sure what the best pattern would be. At the very least you need to fix 
-this patch, but that wouldn't prevent future mistakes.
-
--- 
-Regards,
-
-Laurent Pinchart
+Stefan
