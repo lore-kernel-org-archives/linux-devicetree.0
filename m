@@ -1,489 +1,53 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM64: dts: meson-gxm: Add support for Khadas VIM2
-Date: Tue, 19 Sep 2017 19:55:04 +0200
-Message-ID: <CAFBinCD0ev5kY_5BY-fZ=fEZ7ZkKi7PdvO4NGAwzVxLEfOT=Dw@mail.gmail.com>
-References: <1505832820-3517-1-git-send-email-narmstrong@baylibre.com> <1505832820-3517-3-git-send-email-narmstrong@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] scripts/dtc: dtx_diff - 2nd update of include dts
+ paths to match build
+Date: Tue, 19 Sep 2017 13:02:01 -0500
+Message-ID: <20170919180201.nyeomtzzvbiwfeca@rob-hp-laptop>
+References: <1505780324-12922-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505832820-3517-3-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gouwa <gouwa-GEqbEQZgqepWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1505780324-12922-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
-
-On Tue, Sep 19, 2017 at 4:53 PM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> The Khadas VIM2 is a Single Board Computer, respin of the origin
-> Khadas VIM board, using an Amlogic S912 SoC and more server oriented.
->
-> It provides the same external connectors and header pinout, plus a SPI
-> NOR Flash, a reprogrammable STM8S003 MCU, FPC Connector, Cooling FAN header
-> and Pogo Pads Arrays.
->
-> Cc: Gouwa <gouwa-GEqbEQZgqepWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On Mon, Sep 18, 2017 at 05:18:44PM -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> Update dtx_diff include paths in the same manner as:
+> commit b12869a8d519 ("of: remove drivers/of/testcase-data from
+> include search path for CPP"), commit 5ffa2aed389c ("of: remove
+> arch/$(SRCARCH)/boot/dts from include search path for CPP"), and
+> commit 50f9ddaf64e1 ("of: search scripts/dtc/include-prefixes path
+> for both CPP and DTC").
+> 
+> Remove proposed include path kernel/dts/, which was never implemented
+> for the dtb build.
+> 
+> For the diff case, each source file is compiled separately.  For
+> each of those compiles, provide the location of the source file
+> as an include path, not the location of both source files.
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 > ---
->  Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
->  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
->  .../boot/dts/amlogic/meson-gxm-khadas-vim2.dts     | 401 +++++++++++++++++++++
->  3 files changed, 403 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
->
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-> index 4e4bc0b..a445997 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
-> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-> @@ -71,6 +71,7 @@ Board compatible values (alphabetically, grouped by SoC):
->
->    - "amlogic,q200" (Meson gxm s912)
->    - "amlogic,q201" (Meson gxm s912)
-> +  - "khadas,vim2" (Meson gxm s912)
->    - "kingnovel,r-box-pro" (Meson gxm S912)
->    - "nexbox,a1" (Meson gxm s912)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 7a9f48c..70246e3 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -15,6 +15,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxm-khadas-vim2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-> new file mode 100644
-> index 0000000..692bb93
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-> @@ -0,0 +1,401 @@
-> +/*
-> + * Copyright (c) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>.
-> + * Copyright (c) 2017 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/thermal/thermal.h>
-> +
-> +#include "meson-gxm.dtsi"
-> +
-> +/ {
-> +       compatible = "khadas,vim2", "amlogic,s912", "amlogic,meson-gxm";
-> +       model = "Khadas VIM2";
-> +
-> +       aliases {
-> +               serial0 = &uart_AO;
-> +               serial1 = &uart_A;
-> +               serial2 = &uart_AO_B;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "serial0:115200n8";
-> +       };
-> +
-> +       memory@0 {
-> +               device_type = "memory";
-> +               reg = <0x0 0x0 0x0 0x80000000>;
-> +       };
-> +
-> +       adc-keys {
-> +               compatible = "adc-keys";
-> +               io-channels = <&saradc 0>;
-> +               io-channel-names = "buttons";
-> +               keyup-threshold-microvolt = <1710000>;
-> +
-> +               button-function {
-> +                       label = "Function";
-> +                       linux,code = <KEY_FN>;
-> +                       press-threshold-microvolt = <10000>;
-> +               };
-> +       };
-> +
-> +       emmc_pwrseq: emmc-pwrseq {
-> +               compatible = "mmc-pwrseq-emmc";
-> +               reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-> +       };
-> +
-> +       gpio_fan: gpio-fan {
-> +               compatible = "gpio-fan";
-> +               gpios = <&gpio GPIODV_14 GPIO_ACTIVE_HIGH
-> +                        &gpio GPIODV_15 GPIO_ACTIVE_HIGH>;
-> +               /* Dummy RPM values since fan is optional */
-> +               gpio-fan,speed-map = <0 0
-> +                                     1 1
-> +                                     2 2
-> +                                     3 3>;
-> +               cooling-min-level = <0>;
-> +               cooling-max-level = <3>;
-> +               #cooling-cells = <2>;
-> +       };
-> +
-> +       gpio-keys-polled {
-> +               compatible = "gpio-keys-polled";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               poll-interval = <100>;
-> +
-> +               button@0 {
-> +                       label = "power";
-> +                       linux,code = <KEY_POWER>;
-> +                       gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
-> +               };
-> +       };
-> +
-> +       hdmi-connector {
-> +               compatible = "hdmi-connector";
-> +               type = "a";
-> +
-> +               port {
-> +                       hdmi_connector_in: endpoint {
-> +                               remote-endpoint = <&hdmi_tx_tmds_out>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       pwmleds {
-> +               compatible = "pwm-leds";
-> +
-> +               power {
-> +                       label = "vim:red:power";
-> +                       pwms = <&pwm_AO_ab 1 7812500 0>;
-> +                       max-brightness = <255>;
-> +                       linux,default-trigger = "default-on";
-> +               };
-> +       };
-> +
-> +       sdio_pwrseq: sdio-pwrseq {
-> +               compatible = "mmc-pwrseq-simple";
-> +               reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-> +               clocks = <&wifi32k>;
-> +               clock-names = "ext_clock";
-> +       };
-> +
-> +       thermal-zones {
-> +               cpu-thermal {
-> +                       polling-delay-passive = <250>; /* milliseconds */
-> +                       polling-delay = <1000>; /* milliseconds */
-> +
-> +                       thermal-sensors = <&scpi_sensors 0>;
-> +
-> +                       trips {
-> +                               cpu_alert0: cpu-alert0 {
-> +                                       temperature = <70000>; /* millicelsius */
-> +                                       hysteresis = <2000>; /* millicelsius */
-> +                                       type = "active";
-> +                               };
-> +
-> +                               cpu_alert1: cpu-alert1 {
-> +                                       temperature = <80000>; /* millicelsius */
-> +                                       hysteresis = <2000>; /* millicelsius */
-> +                                       type = "passive";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip = <&cpu_alert0>;
-> +                                       cooling-device = <&gpio_fan THERMAL_NO_LIMIT 1>;
-> +                               };
-> +
-> +                               map1 {
-> +                                       trip = <&cpu_alert1>;
-> +                                       cooling-device = <&gpio_fan 2 THERMAL_NO_LIMIT>;
-> +                               };
-> +
-> +                               map2 {
-> +                                       trip = <&cpu_alert1>;
-> +                                       cooling-device =
-> +                                               <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                               };
-> +
-> +                               map3 {
-> +                                       trip = <&cpu_alert1>;
-> +                                       cooling-device =
-> +                                               <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       vcc_3v3: regulator-vcc_3v3 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VCC_3V3";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +       };
-> +
-> +       vddio_ao18: regulator-vddio_ao18 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VDDIO_AO18";
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +       };
-> +
-> +       vddio_boot: regulator-vddio_boot {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VDDIO_BOOT";
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +       };
-> +
-> +       vddao_3v3: regulator-vddao_3v3 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VDDAO_3V3";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +       };
-> +
-> +       wifi32k: wifi32k {
-> +               compatible = "pwm-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <32768>;
-> +               pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-> +       };
-> +};
-> +
-> +&cec_AO {
-> +       status = "okay";
-> +       pinctrl-0 = <&ao_cec_pins>;
-> +       pinctrl-names = "default";
-> +       hdmi-phandle = <&hdmi_tx>;
-> +};
-> +
-> +&cpu0 {
-> +       cooling-min-level = <0>;
-> +       cooling-max-level = <6>;
-> +       #cooling-cells = <2>;
-> +};
-> +
-> +&cpu4 {
-> +       cooling-min-level = <0>;
-> +       cooling-max-level = <4>;
-> +       #cooling-cells = <2>;
-> +};
-> +
-> +&ethmac {
-> +       pinctrl-0 = <&eth_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       /* Select external PHY by default */
-> +       phy-handle = <&external_phy>;
-> +
-> +       amlogic,tx-delay-ns = <2>;
-> +
-> +       /* External PHY reset is shared with internal PHY Led signals */
-> +       snps,reset-gpio = <&gpio GPIOZ_14 0>;
-> +       snps,reset-delays-us = <0 10000 1000000>;
-> +       snps,reset-active-low;
-> +
-> +       /* External PHY is in RGMII */
-> +       phy-mode = "rgmii";
-> +
-> +       status = "okay";
-> +};
-> +
-> +&external_mdio {
-> +       external_phy: ethernet-phy@1 {
-> +               compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
-could you please remove the compatible property and replace it with a
-comment as explained in [0]?
+> 
+> changes from v2:
+>    - fix mangled email subject line
+> 
+> changes from v1:
+>    - update summary commit message, since there is a very similar message
+>      for b4b201d88b7c: dtx_diff - update include dts paths to match build
+>    - move signed-off-by to above "---"
+> 
+> The referenced commits b12869a8d519, 5ffa2aed389c, 50f9ddaf64e1
+> are in v4.14-rc1.  No stable kernels need this patch.
+> 
+>  scripts/dtc/dtx_diff | 22 +++++++++-------------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
 
-> +               reg = <0>;
-> +               max-speed = <1000>;
-> +       };
-> +};
-> +
-> +&hdmi_tx {
-> +       status = "okay";
-> +       pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-> +       pinctrl-names = "default";
-> +};
-> +
-> +&hdmi_tx_tmds_port {
-> +       hdmi_tx_tmds_out: endpoint {
-> +               remote-endpoint = <&hdmi_connector_in>;
-> +       };
-> +};
-> +
-> +&i2c_A {
-> +       status = "okay";
-> +       pinctrl-0 = <&i2c_a_pins>;
-> +       pinctrl-names = "default";
-> +};
-> +
-> +&i2c_B {
-> +       status = "okay";
-> +       pinctrl-0 = <&i2c_b_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       rtc: rtc@51 {
-> +               /* has to be enabled manually when a battery is connected: */
-> +               status = "disabled";
-> +               compatible = "haoyu,hym8563";
-> +               reg = <0x51>;
-> +               #clock-cells = <0>;
-> +               clock-frequency = <32768>;
-> +               clock-output-names = "xin32k";
-> +       };
-> +};
-> +
-> +&ir {
-> +       status = "okay";
-> +       pinctrl-0 = <&remote_input_ao_pins>;
-> +       pinctrl-names = "default";
-> +       linux,rc-map-name = "rc-geekbox";
-> +};
-> +
-> +&pwm_AO_ab {
-> +       status = "okay";
-> +       pinctrl-0 = <&pwm_ao_a_3_pins>, <&pwm_ao_b_pins>;
-> +       pinctrl-names = "default";
-> +       clocks = <&clkc CLKID_FCLK_DIV4>;
-> +       clock-names = "clkin0";
-> +};
-> +
-> +&pwm_ef {
-> +       status = "okay";
-> +       pinctrl-0 = <&pwm_e_pins>, <&pwm_f_clk_pins>;
-> +       pinctrl-names = "default";
-> +       clocks = <&clkc CLKID_FCLK_DIV4>;
-> +       clock-names = "clkin0";
-> +};
-> +
-> +&sd_emmc_a {
-> +       status = "okay";
-> +       pinctrl-0 = <&sdio_pins>;
-> +       pinctrl-names = "default";
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       bus-width = <4>;
-> +       cap-sd-highspeed;
-> +       max-frequency = <100000000>;
-> +
-> +       non-removable;
-> +       disable-wp;
-> +
-> +       mmc-pwrseq = <&sdio_pwrseq>;
-> +
-> +       vmmc-supply = <&vddao_3v3>;
-> +       vqmmc-supply = <&vddio_boot>;
-> +
-> +       brcmf: wifi@1 {
-> +               reg = <1>;
-> +               compatible = "brcm,bcm4329-fmac";
-> +       };
-> +};
-> +
-> +/* SD card */
-> +&sd_emmc_b {
-> +       status = "okay";
-> +       pinctrl-0 = <&sdcard_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       bus-width = <4>;
-> +       cap-sd-highspeed;
-> +       max-frequency = <100000000>;
-> +       disable-wp;
-> +
-> +       cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> +       cd-inverted;
-> +
-> +       vmmc-supply = <&vddao_3v3>;
-> +       vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* eMMC */
-> +&sd_emmc_c {
-> +       status = "okay";
-> +       pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       bus-width = <8>;
-> +       cap-sd-highspeed;
-> +       cap-mmc-highspeed;
-> +       max-frequency = <200000000>;
-> +       non-removable;
-> +       disable-wp;
-> +       mmc-ddr-1_8v;
-> +       mmc-hs200-1_8v;
-> +
-> +       mmc-pwrseq = <&emmc_pwrseq>;
-> +       vmmc-supply = <&vcc_3v3>;
-> +       vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/*
-> + * EMMC_DS pin is shared between SPI NOR CS and eMMC Data Strobe
-> + * Remove emmc_ds_pins from sd_emmc_c pinctrl-0 then spifc can be enabled
-> + */
-> +&spifc {
-> +       status = "disabled";
-> +       pinctrl-0 = <&nor_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       w25q32: spi-flash@0 {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "winbond,w25q16", "jedec,spi-nor";
-> +               reg = <0>;
-> +               spi-max-frequency = <3000000>;
-> +       };
-> +};
-> +
-> +/* This one is connected to the Bluetooth module */
-> +&uart_A {
-> +       status = "okay";
-> +       pinctrl-0 = <&uart_a_pins>;
-> +       pinctrl-names = "default";
-> +};
-> +
-> +/* This is brought out on the Linux_RX (18) and Linux_TX (19) pins: */
-> +&uart_AO {
-> +       status = "okay";
-> +       pinctrl-0 = <&uart_ao_a_pins>;
-> +       pinctrl-names = "default";
-> +};
-> +
-> +/* This is brought out on the UART_RX_AO_B (15) and UART_TX_AO_B (16) pins: */
-> +&uart_AO_B {
-> +       status = "okay";
-> +       pinctrl-0 = <&uart_ao_b_pins>;
-> +       pinctrl-names = "default";
-> +};
-> +
-> +&saradc {
-> +       status = "okay";
-> +       vref-supply = <&vddio_ao18>;
-> +};
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+Applied.
 
-with that and Jerome's comments fixed:
-Acked-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-
-
-Regards,
-Martin
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-September/004729.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
