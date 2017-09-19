@@ -1,115 +1,83 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: Re: [PATCH 1/2] regulator: core: Add coupled regulators mechanism
-Date: Tue, 19 Sep 2017 16:35:54 +0200
-Message-ID: <8ac4fa17-43ed-7a4d-d086-6ad81d97900e@samsung.com>
-References: <1505723992-11772-1-git-send-email-m.purski@samsung.com>
-        <CGME20170918084022eucas1p1398f18c5c90535ce484e3952fae80882@eucas1p1.samsung.com>
-        <1505723992-11772-2-git-send-email-m.purski@samsung.com>
-        <20170919130944.ldoskrm54tx2oemd@sirena.co.uk>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dt marvell: extend AP806 system controller size
+Date: Tue, 19 Sep 2017 16:39:53 +0200
+Message-ID: <871sn2sqfa.fsf@free-electrons.com>
+References: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20170919130944.ldoskrm54tx2oemd@sirena.co.uk>
-Content-language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+        (Baruch Siach's message of "Fri, 15 Sep 2017 10:50:07 +0300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2017 03:09 PM, Mark Brown wrote:
+Hi Baruch,
+ 
+ On ven., sept. 15 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 
-> On Mon, Sep 18, 2017 at 10:39:51AM +0200, Maciej Purski wrote:
->> On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
->> different devices on the board are supplied by different regulators
->> with non-fixed voltages. If one of these devices temporarily requires
->> higher voltage, there might occur a situation that the spread between
->> two devices' voltages is so high, that there is a risk of changing
->> 'high' and 'low' states on the interconnection between devices powered
->> by those two regulators.
->>
->> Keeping spread between those voltages below defined max_spread should
->> be handled by the framework. Information required to do so is obtained
->> from the device tree. On each voltage change the core should find the
->> best voltages which suit all consumers' demands and max_spread.
->> Then set them for a coupled regulator also.
-> This leads me none the wiser as to how this will be implemented which
-> makes this rather hard to review, especially since this appears to have
-> a lot of random refactoring mixed in with it.
-
-Sorry. I'll document it better in the next version.
-
+> Extend the container size to 0x2000 to include the gpio controller at
+> offset 0x1040.
 >
->> +static int regulator_set_voltage_safe(struct regulator_dev *rdev,
->> +				      int min_uV, int max_uV);
-> Why would we want a way to set voltages that isn't safe?
 
-This function is extracted from original regulator_set_voltage_unlocked(). It contains
-code responsible for calling do_set_voltage on the given regulator and its ancestors (if needed).
-This function is called both from regulator_set_voltage_unlocked(), from where it was extracted
-and from my new function regulator_set_coupled_voltage(). I added this in order to avoid
-code duplication. I agree that the name might not be adequate. What name would you find more suitable?
+Actually it is a fix as I don't see how we can use the gpio if it is not
+in the range. So I amended your patch by adding:
+Fixes: 63dac0f4924b ("arm64: dts: marvell: add gpio support for Armada
+7K/8K")
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 
+And I also modified the title to:
+arm64: dt marvell: Fix AP806 system controller size
+
+
+> While at it, add start address notation to the gpio node name to match
+> its 'offset' property.
 >
->> @@ -2181,6 +2183,8 @@ static int _regulator_enable(struct regulator_dev *rdev)
->>   		/* Fallthrough on positive return values - already enabled */
->>   	}
->>   
->> +	if (rdev->coupled_desc)
->> +		rdev->coupled_desc->enable_count++;
->>   	rdev->use_count++;
->>   
->>   	return 0;
-> There's no locking here, and we appear to take no action when these
-> counts change - do we need to bother with this at all?
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 
-Variable enable_count is used for checking if both regulators are enabled and there's a need for
-using the coupling mechanism. It is checked in regulator_set_coupled_voltage_unlocked(), where the
-mutex is already locked. I think that locking it here would be useful. Thanks.
+Applied on mvebu/fixes
 
+Thanks,
+
+Gregory
+
+> ---
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
->> +	/* check if changing voltage won't interfere with other
->> +	 * consumers' demands
->> +	 */
->>   	ret = regulator_check_consumers(rdev, &min_uV, &max_uV);
->>   	if (ret < 0)
->>   		goto out2;
-> These extra comments that are being added are pretty much all readouts
-> of the name of the function that's being called (and many of them are
-> misformatted)...
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> index 4d360713ed12..30d48ecf46e0 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> @@ -254,7 +254,7 @@
+>  
+>  			ap_syscon: system-controller@6f4000 {
+>  				compatible = "syscon", "simple-mfd";
+> -				reg = <0x6f4000 0x1000>;
+> +				reg = <0x6f4000 0x2000>;
+>  
+>  				ap_clk: clock {
+>  					compatible = "marvell,ap806-clock";
+> @@ -265,7 +265,7 @@
+>  					compatible = "marvell,ap806-pinctrl";
+>  				};
+>  
+> -				ap_gpio: gpio {
+> +				ap_gpio: gpio@1040 {
+>  					compatible = "marvell,armada-8k-gpio";
+>  					offset = <0x1040>;
+>  					ngpios = <20>;
+> -- 
+> 2.14.1
 >
->> +static int regulator_set_voltage_safe(struct regulator_dev *rdev, int min_uV,
->> +					   int max_uV)
->> +{
-> ...which is a bit ironic given that this isn't documented at all :/
 
-Everything will be documented better in the next version.
-
->
->> +static int regulator_set_coupled_voltage(struct coupled_reg_desc *c_desc)
->> +{
->> +	struct regulator_dev **c_rdevs = c_desc->coupled_rdevs;
->> +	int max_spread = c_desc->max_spread;
->> +	int best_volt[2] = { };
->> +	int actual_volt[2];
->> +	int min_volt, max_volt;
->> +	int ret = 0, i, max;
->> +	int ready = 0;
->> +
->> +	/* Get voltages desired by all consumers of the coupled regulator */
->> +	for (i = 0; i < 2; i++) {
-> It appears we can't couple more than two regulators?
-
-We can couple just two regulators. We have never found any case for coupling
-more than two regulators. Limiting the mechanism to just two regulators simplifies
-algorithm a little bit. Would you prefer it working for more than two
-regulators also even if there isn't any use case?
-
->
->> +	max_volt = max(best_volt[0], best_volt[1]);
->> +	min_volt = min(best_volt[0], best_volt[1]);
-> So the maximum and minimum are the *least* constrained?
->
->> +			max_possible = actual_volt[(i + 1) % 2] + max_spread;
->> +			min_possible = actual_volt[(i + 1) % 2] - max_spread;
-> I'm lost, this magic array indexing is just illegible.
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
