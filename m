@@ -1,138 +1,75 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v13 17/25] v4l: fwnode: Add a helper function for parsing generic references
-Date: Tue, 19 Sep 2017 17:01:38 +0300
-Message-ID: <1662065.mUdkDygaDL@avalon>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <2639286.bLnehYdF9o@avalon> <20170919130453.ii5kz54qxlot4of2@paasikivi.fi.intel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/1] iommu/arm-smmu: Add support for multiple TBU
+ child devices
+Date: Tue, 19 Sep 2017 09:10:34 -0500
+Message-ID: <20170919141034.ahhmuxfk6ldpegfp@rob-hp-laptop>
+References: <1505217667-31184-1-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170919130453.ii5kz54qxlot4of2-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1505217667-31184-1-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On Tuesday, 19 September 2017 16:04:53 EEST Sakari Ailus wrote:
-> On Tue, Sep 19, 2017 at 03:19:59PM +0300, Laurent Pinchart wrote:
-> > On Friday, 15 September 2017 17:17:16 EEST Sakari Ailus wrote:
-> > > Add function v4l2_fwnode_reference_parse() for parsing them as async
-> > > sub-devices. This can be done on e.g. flash or lens async sub-devices
-> > > that are not part of but are associated with a sensor.
-> > > 
-> > > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > > ---
-> > > 
-> > >  drivers/media/v4l2-core/v4l2-fwnode.c | 69 ++++++++++++++++++++++++++++
-> > >  1 file changed, 69 insertions(+)
-> > > 
-> > > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > > b/drivers/media/v4l2-core/v4l2-fwnode.c index 44ee35f6aad5..65e84ea1cc35
-> > > 100644
-> > > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > > @@ -498,6 +498,75 @@ int
-> > > v4l2_async_notifier_parse_fwnode_endpoints_by_port( }
-> > > 
-> > >  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
-> > > 
-> > > +/*
-> > > + * v4l2_fwnode_reference_parse - parse references for async sub-devices
-> > > + * @dev: the device node the properties of which are parsed for
-> > > references
-> > > + * @notifier: the async notifier where the async subdevs will be added
-> > > + * @prop: the name of the property
-> > > + *
-> > > + * Return: 0 on success
-> > > + *	   -ENOENT if no entries were found
-> > > + *	   -ENOMEM if memory allocation failed
-> > > + *	   -EINVAL if property parsing failed
-> > > + */
-> > > +static int v4l2_fwnode_reference_parse(
-> > > +	struct device *dev, struct v4l2_async_notifier *notifier,
-> > > +	const char *prop)
-> > > +{
-> > > +	struct fwnode_reference_args args;
-> > > +	unsigned int index;
-> > > +	int ret;
-> > > +
-> > > +	for (index = 0;
-> > > +	     !(ret = fwnode_property_get_reference_args(
-> > > +		       dev_fwnode(dev), prop, NULL, 0, index, &args));
-> > > +	     index++)
-> > > +		fwnode_handle_put(args.fwnode);
-> > 
-> > This seems to indicate that the fwnode API is missing a function to count
-> > the number of references in a property. Should that be fixed ?
+On Tue, Sep 12, 2017 at 05:31:07PM +0530, Vivek Gautam wrote:
+> ARM MMU-500 implements a TBU (uTLB) for each connected master
+> besides a single TCU which controls and manages the address
+> translations. Each of these TBUs can either be in the same
+> power domain as the master, or they can have a independent
+> power switch.
+> This design addresses the challenges to control TBU power.
+> Adding child devices for each TBUs present in the configuration
+> lets us control the power and clocks to TLBs having individual
+> power domains. The device link between master devices (such as,
+> display, and GPU) and TBU devices ensures that the master takes
+> care of powering the smmu as long as it's available.
+> When the master is not available, the TBUs are identified with
+> sid and powered on.
 > 
-> I can send a patch adding that.
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
 > 
-> OF has one available but it's only for cases where the number of integer
-> arguments isn't fixed.
+>  - The idea behind this patch is to handle the distributed smmu
+>    architectures, similar to MMU-500.
+>  - Untested yet.
+>  - There are still few instances where the correct tbu device has
+>    to be referenced and thus powered on to handle TLB maintenance
+>    operations.
+> 
+>  .../devicetree/bindings/iommu/arm,smmu.txt         |  27 +++
+>  drivers/iommu/arm-smmu.c                           | 191 +++++++++++++++++++--
+>  2 files changed, 205 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index d97a6bc8e608..7cf67e75022e 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -98,6 +98,18 @@ conditions.
+>                    accessed before master gets enabled and linked to its
+>                    SMMU.
+>  
+> +- child nodes:    ARM MMU-500 implements a TBU (page table cache or TLB) for
+> +                  each connected master besides a single TCU that controls
+> +                  and manages the address translations.
+> +                  Each of the child nodes represents a TBU that is attached to
+> +                  the master. This child node will have following property:
+> +
+> +  - compatibe:       must be "arm,mmu-500-tbu" for TBU child nodes of arm,mmu-500
+> +                     smmu.
+> +  - stream-id-range: array representing the starting stream id and the number
+> +                     of supported stream-ids. This gives information about
+> +                     the range of stream-ids that are supported by this TBU.
 
-Yes, in all other cases the size of one reference is known (it's the sum of 
-the sizes of all arguments), so the number of references can be computed with 
-size(property) / size(reference).
+Needs a vendor prefix.
 
-> > The rest looks OK to me.
-> > 
-> > > +	if (!index)
-> > > +		return -ENOENT;
-> > > +
-> > > +	/*
-> > > +	 * Note that right now both -ENODATA and -ENOENT may signal
-> > > +	 * out-of-bounds access. Return the error in cases other than that.
-> > > +	 */
-> > > +	if (ret != -ENOENT && ret != -ENODATA)
-> > > +		return ret;
-> > > +
-> > > +	ret = v4l2_async_notifier_realloc(notifier,
-> > > +					  notifier->num_subdevs + index);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	for (index = 0; !fwnode_property_get_reference_args(
-> > > +		     dev_fwnode(dev), prop, NULL, 0, index, &args);
-> > > +	     index++) {
-> > > +		struct v4l2_async_subdev *asd;
-> > > +
-> > > +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-> > > +			ret = -EINVAL;
-> > > +			goto error;
-> > > +		}
-> > > +
-> > > +		asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-> > > +		if (!asd) {
-> > > +			ret = -ENOMEM;
-> > > +			goto error;
-> > > +		}
-> > > +
-> > > +		notifier->subdevs[notifier->num_subdevs] = asd;
-> > > +		asd->match.fwnode.fwnode = args.fwnode;
-> > > +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> > > +		notifier->num_subdevs++;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +
-> > > +error:
-> > > +	fwnode_handle_put(args.fwnode);
-> > > +	return ret;
-> > > +}
-> > > +
-> > > 
-> > >  MODULE_LICENSE("GPL");
-> > >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
-> > >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+Also need to document reg property. What does reg represent? If just an 
+index with no correlation to h/w numbering, then perhaps stream ids 
+could be put into reg instead.
 
-
--- 
-Regards,
-
-Laurent Pinchart
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
