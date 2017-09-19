@@ -1,38 +1,63 @@
 From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/2] Ensure that platform buses from overlays are functional
-Date: Tue, 19 Sep 2017 18:51:12 +0200
-Message-ID: <20170919165114.6615-1-alexander.sverdlin@nokia.com>
+Subject: [PATCH v2 1/2] of/platform: dynamic: Use of_platform_bus_create() to create devices
+Date: Tue, 19 Sep 2017 18:51:13 +0200
+Message-ID: <20170919165114.6615-2-alexander.sverdlin@nokia.com>
+References: <20170919165114.6615-1-alexander.sverdlin@nokia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170919165114.6615-1-alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series addresses an issue, which prevents one to add child devices to
-a platform bus from an overlay if such a bus was in turn also created from
-an overlay.
+of_platform_notify() requires parents to have OF_POPULATED_BUS to be set
+(which is correct way to verify healthy platform bus), but uses
+of_platform_device_create() to create devices, which never sets the above
+flag. Therefore it's not possible to add platform buses via overlays.
 
-The root cause is missing OF_POPULATED_BUS flag for such buses and the
-difference, in the way, how static and dynamic platform devices are
-populated.
+Use of_platform_bus_create(), which is used in non-overlay case to populate
+both buses and devices.
 
-Second patch adds a couple of test cases which demonstrate the problem.
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/platform.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Changelog:
-v2:
- - Rebased to v4.14-rc1
-
-Alexander Sverdlin (2):
-  of/platform: dynamic: Use of_platform_bus_create() to create devices
-  of/unittest: Test platform bus added from overlay
-
- drivers/of/platform.c                       | 11 ++--
- drivers/of/unittest-data/tests-overlay.dtsi | 83 +++++++++++++++++++++++++++++
- drivers/of/unittest.c                       | 60 +++++++++++++++++++++
- 3 files changed, 149 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index ac15d0e..65078a7 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -642,6 +642,7 @@ static int of_platform_notify(struct notifier_block *nb,
+ 	struct of_reconfig_data *rd = arg;
+ 	struct platform_device *pdev_parent, *pdev;
+ 	bool children_left;
++	int ret;
+ 
+ 	switch (of_reconfig_get_state_change(action, rd)) {
+ 	case OF_RECONFIG_CHANGE_ADD:
+@@ -655,15 +656,15 @@ static int of_platform_notify(struct notifier_block *nb,
+ 
+ 		/* pdev_parent may be NULL when no bus platform device */
+ 		pdev_parent = of_find_device_by_node(rd->dn->parent);
+-		pdev = of_platform_device_create(rd->dn, NULL,
+-				pdev_parent ? &pdev_parent->dev : NULL);
++		ret = of_platform_bus_create(rd->dn, of_default_bus_match_table,
++					     NULL, pdev_parent ?
++					     &pdev_parent->dev : NULL, true);
+ 		of_dev_put(pdev_parent);
+ 
+-		if (pdev == NULL) {
++		if (ret) {
+ 			pr_err("%s: failed to create for '%pOF'\n",
+ 					__func__, rd->dn);
+-			/* of_platform_device_create tosses the error code */
+-			return notifier_from_errno(-EINVAL);
++			return notifier_from_errno(ret);
+ 		}
+ 		break;
+ 
 -- 
 2.4.6
 
