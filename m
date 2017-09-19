@@ -1,196 +1,107 @@
-From: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] [media] bcm2835-unicam: Driver for CCP2/CSI2
- camera interface
-Date: Tue, 19 Sep 2017 10:50:50 +0100
-Message-ID: <CAAoAYcMbSzr7_rtNke2hDKfp+a-vvP0be7_UhrJEgUCfgpfMtQ@mail.gmail.com>
-References: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
- <0d4dc119a2ba4917e0fecfe5084425830ec53ccb.1505314390.git.dave.stevenson@raspberrypi.org>
- <87k20vswdv.fsf@anholt.net>
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 04/11] arm64: alternatives: use tpidr_el2 on VHE hosts
+Date: Tue, 19 Sep 2017 10:55:55 +0100
+Message-ID: <59C0E9AB.7040703@arm.com>
+References: <20170808164616.25949-1-james.morse@arm.com> <20170808164616.25949-5-james.morse@arm.com> <20170917144334.GB99021@lvm>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87k20vswdv.fsf-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <20170917144334.GB99021@lvm>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christoffer Dall <cdall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric.
+Hi Christoffer,
 
-Thanks for the review.
+On 17/09/17 15:43, Christoffer Dall wrote:
+> On Tue, Aug 08, 2017 at 05:46:09PM +0100, James Morse wrote:
+>> Now that KVM uses tpidr_el2 in the same way as Linux's cpu_offset in
+>> tpidr_el1, merge the two. This saves KVM from save/restoring tpidr_el1
+>> on VHE hosts, and allows future code to blindly access per-cpu variables
+>> without triggering world-switch.
 
-On 18 September 2017 at 19:18, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
-> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> writes:
->> diff --git a/drivers/media/platform/bcm2835/bcm2835-unicam.c b/drivers/media/platform/bcm2835/bcm2835-unicam.c
->> new file mode 100644
->> index 0000000..5b1adc3
->> --- /dev/null
->> +++ b/drivers/media/platform/bcm2835/bcm2835-unicam.c
->> @@ -0,0 +1,2192 @@
->> +/*
->> + * BCM2835 Unicam capture Driver
->> + *
->> + * Copyright (C) 2017 - Raspberry Pi (Trading) Ltd.
->> + *
->> + * Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
->> + *
->> + * Based on TI am437x driver by Benoit Parrot and Lad, Prabhakar and
->> + * TI CAL camera interface driver by Benoit Parrot.
->> + *
->
-> Possible future improvement: this description of the driver is really
-> nice and could be turned into kernel-doc.
+>> Changes since v1:
+>>  * cpu_copy_el2regs()'s 'have I been patched' test now always sets a register,
+>>    just in case the compiler puts do_copyregs on the stack.
 
-Documentation?! Surely not :-)
-For now I'll leave it as a task for another day.
+> I don't understand this?
 
->> + * There are two camera drivers in the kernel for BCM283x - this one
->> + * and bcm2835-camera (currently in staging).
->> + *
->> + * This driver is purely the kernel control the Unicam peripheral - there
->
-> Maybe "This driver directly controls..."?
+Looks like this was a note to myself, translation below:
 
-Will do in v3.
 
->> + * is no involvement with the VideoCore firmware. Unicam receives CSI-2
->> + * or CCP2 data and writes it into SDRAM. The only processing options are
->> + * to repack Bayer data into an alternate format, and applying windowing
->> + * (currently not implemented).
->> + * It should be possible to connect it to any sensor with a
->> + * suitable output interface and V4L2 subdevice driver.
->> + *
->> + * bcm2835-camera uses with the VideoCore firmware to control the sensor,
->
-> "uses the"
-
-Will do in v3.
-
->> + * Unicam, ISP, and all tuner control loops. Fully processed frames are
->> + * delivered to the driver by the firmware. It only has sensor drivers
->> + * for Omnivision OV5647, and Sony IMX219 sensors.
->> + *
->> + * The two drivers are mutually exclusive for the same Unicam instance.
->> + * The VideoCore firmware checks the device tree configuration during boot.
->> + * If it finds device tree nodes called csi0 or csi1 it will block the
->> + * firmware from accessing the peripheral, and bcm2835-camera will
->> + * not be able to stream data.
->
-> Thanks for describing this here!
->
->> +/*
->> + * The peripheral can unpack and repack between several of
->> + * the Bayer raw formats, so any Bayer format can be advertised
->> + * as the same Bayer order in each of the supported bit depths.
->> + * Use lower case to avoid clashing with V4L2_PIX_FMT_SGBRG8
->> + * formats.
->> + */
->> +#define PIX_FMT_ALL_BGGR  v4l2_fourcc('b', 'g', 'g', 'r')
->> +#define PIX_FMT_ALL_RGGB  v4l2_fourcc('r', 'g', 'g', 'b')
->> +#define PIX_FMT_ALL_GBRG  v4l2_fourcc('g', 'b', 'r', 'g')
->> +#define PIX_FMT_ALL_GRBG  v4l2_fourcc('g', 'r', 'b', 'g')
->
-> Should thes fourccs be defined in a common v4l2 header, to reserve it
-> from clashing with others later?
-
-I'm only using them as flags and probably in a manner that nothing
-else is likely to copy, so it seems a little excessive to put them in
-a common header.
-Perhaps it's better to switch to 0xFFFFFFF0 to 0xFFFFFFF3 or other
-value that won't come up as a fourcc under any normal circumstance.
-Any thoughts from other people?
-
-> This is really the only question I have about this driver before seeing
-> it merged.  As far as me wearing my platform maintainer hat, I'm happy
-> with the driver, and my other little notes are optional.
->
->> +static int unicam_probe(struct platform_device *pdev)
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 9f9e0064c8c1..1960706d2422 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -1295,3 +1296,25 @@ static int __init enable_mrs_emulation(void)
+>>  }
+>>  
+>>  late_initcall(enable_mrs_emulation);
+>> +
+>> +int cpu_copy_el2regs(void *__unused)
 >> +{
->> +     struct unicam_cfg *unicam_cfg;
->> +     struct unicam_device *unicam;
->> +     struct v4l2_ctrl_handler *hdl;
->> +     struct resource *res;
->> +     int ret;
+>> +	int do_copyregs = 0;
 >> +
->> +     unicam = devm_kzalloc(&pdev->dev, sizeof(*unicam), GFP_KERNEL);
->> +     if (!unicam)
->> +             return -ENOMEM;
+>> +	/*
+>> +	 * Copy register values that aren't redirected by hardware.
+>> +	 *
+>> +	 * Before code patching, we only set tpidr_el1, all CPUs need to copy
+>> +	 * this value to tpidr_el2 before we patch the code. Once we've done
+>> +	 * that, freshly-onlined CPUs will set tpidr_el2, so we don't need to
+>> +	 * do anything here.
+>> +	 */
+>> +	asm volatile(ALTERNATIVE("mov %0, #1", "mov %0, #0",
+>> +				 ARM64_HAS_VIRT_HOST_EXTN)
+>> +		    : "=r" (do_copyregs) : : );
 >> +
->> +     unicam->pdev = pdev;
->> +     unicam_cfg = &unicam->cfg;
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     unicam_cfg->base = devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(unicam_cfg->base)) {
->> +             unicam_err(unicam, "Failed to get main io block\n");
->> +             return PTR_ERR(unicam_cfg->base);
->> +     }
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +     unicam_cfg->clk_gate_base = devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(unicam_cfg->clk_gate_base)) {
->> +             unicam_err(unicam, "Failed to get 2nd io block\n");
->> +             return PTR_ERR(unicam_cfg->clk_gate_base);
->> +     }
->> +
->> +     unicam->clock = devm_clk_get(&pdev->dev, "lp_clock");
->> +     if (IS_ERR(unicam->clock)) {
->> +             unicam_err(unicam, "Failed to get clock\n");
->> +             return PTR_ERR(unicam->clock);
->> +     }
->> +
->> +     ret = platform_get_irq(pdev, 0);
->> +     if (ret <= 0) {
->> +             dev_err(&pdev->dev, "No IRQ resource\n");
->> +             return -ENODEV;
->> +     }
->> +     unicam_cfg->irq = ret;
->> +
->> +     ret = devm_request_irq(&pdev->dev, unicam_cfg->irq, unicam_isr, 0,
->> +                            "unicam_capture0", unicam);
->
-> Looks like there's no need to keep "irq" in the device private struct.
+>> +	if (do_copyregs)
+>> +		write_sysreg(read_sysreg(tpidr_el1), tpidr_el2);
+> 
+> Could you just use has_vhe() here ?
 
-Agreed. I'll remove in v3.
+This is the 'have I been patched' test.
+Before patching the my_cpu_offset value will be in tpidr_el1, we copy it to
+tpidr_el2.
 
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "Unable to request interrupt\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     ret = v4l2_device_register(&pdev->dev, &unicam->v4l2_dev);
->> +     if (ret) {
->> +             unicam_err(unicam,
->> +                        "Unable to register v4l2 device.\n");
->> +             return ret;
->> +     }
->> +
->> +     /* Reserve space for the controls */
->> +     hdl = &unicam->ctrl_handler;
->> +     ret = v4l2_ctrl_handler_init(hdl, 16);
->> +     if (ret < 0)
->> +             goto probe_out_v4l2_unregister;
->> +     unicam->v4l2_dev.ctrl_handler = hdl;
->> +
->> +     /* set the driver data in platform device */
->> +     platform_set_drvdata(pdev, unicam);
->> +
->> +     ret = of_unicam_connect_subdevs(unicam);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "Failed to connect subdevs\n");
->> +             goto free_hdl;
->> +     }
->> +
->> +     /* Enabling module functional clock */
->> +     pm_runtime_enable(&pdev->dev);
->
-> I think pm_runtime is only controlling the power domain for the PHY, not
-> the clock (which you're handling manually).
+Once smp_cpus_done() calls apply_alternatives_all(), set_my_cpu_offset() is
+patched to write its value into tpidr_el2. CPUs that come online after this
+point don't need the value copying, but this cpufeature enable call will still
+be called.
 
-You're right. Copy and paste from the driver I'd based this on.
-Will correct in v3.
+The skimmed-over information is that cpufeature's enable methods are called
+locally when any core comes online, even after the alternatives have been
+applied. (we also modify pstate and set sctlr bits from these).
 
-  Dave
+Would it be clearer if I rewrote the comment as:
+> cpufeature's enable methods are called whenever a CPU comes online, but we
+> only need to copy tpidr_el1 -> tpidr_el2 on CPUs that were online before the
+> alternatives are applied. After that point a VHE system will only use
+> tpidr_el2.
+
+
+The change-since-v1 was paranoia as 'do_copyregs' wasn't always updated: I was
+worried about the compiler ditching the '=0' initialisation as its written by
+the asm() before being read... but not once we've patched in the alternative.
+Having to put 'do_copyregs' on the stack, but then deciding to just allocate it
+late was where I thought this might happen. Short-version: I don't trust the
+compiler.
+
+
+>> +
+>> +	return 0;
+>> +}
+
+
+
+> Otherwise:
+> 
+> Reviewed-by: Christoffer Dall <cdall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Thanks!
+
+James
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
