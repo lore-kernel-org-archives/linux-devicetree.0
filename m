@@ -1,36 +1,35 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
-Date: Tue, 19 Sep 2017 17:03:12 +0200
-Message-ID: <CAMuHMdXsseoHtkmZAPTqXw5fKAhKuLjFN+R4ODuGaqBVbUq-vQ@mail.gmail.com>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com> <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/2] ARM64: Add Vega S96 board support
+Date: Tue, 19 Sep 2017 17:03:32 +0200
+Message-ID: <1505833412.2703.85.camel@baylibre.com>
+References: <1505822748-23431-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Paterson <chris.paterson2@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1505822748-23431-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, carlo@caione.org
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbes-150@yandex.ru
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 7:05 PM, Chris Paterson
-<chris.paterson2@renesas.com> wrote:
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->
-> Add DT node for the Advanced Power Management Unit (APMU), add the
-> second CPU core, and use "renesas,apmu" as "enable-method".
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+On Tue, 2017-09-19 at 14:05 +0200, Neil Armstrong wrote:
+> This patchset adds support for the Tronsmart Vega S96 TV Box based
+> on the Q200 Amlogic Reference design.
+> 
+> Neil Armstrong (2):
+>   ARM64: dts: meson-gxm: Add Vega S96 board
+>   dt-bindings: arm: amlogic: Add Tronsmart Vega S96 binding
+> 
+>  Documentation/devicetree/bindings/arm/amlogic.txt  |  1 +
+>  arch/arm64/boot/dts/amlogic/Makefile               |  1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts | 39
+> ++++++++++++++++++++++
+>  3 files changed, 41 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Apart from the 2 comments on patch 1, Series looks good to me
+With this fixed, feel free to add
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
