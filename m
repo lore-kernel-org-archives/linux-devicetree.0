@@ -1,57 +1,57 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 05/10] dt-bindings: net: dwmac-sun8i: update
- documentation about integrated PHY
-Date: Tue, 19 Sep 2017 07:31:12 +0200
-Message-ID: <20170919053112.GA15105@Red>
-References: <20170908071156.5115-1-clabbe.montjoie@gmail.com>
- <20170908071156.5115-6-clabbe.montjoie@gmail.com>
- <20170908072538.rqsp6dobwsqmzrsr@flea.lan>
- <20170908074325.GB29999@Red>
- <20170913182004.uniyo5opeilcfk7r@rob-hp-laptop>
- <20170914185301.GB4021@Red>
- <20170914191949.GA3796@lunn.ch>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 0/4] arm64: Add initial Actions Semi S700 and CubieBoard7
+ support
+Date: Tue, 19 Sep 2017 07:37:05 +0200
+Message-ID: <33bc3794-df11-6013-3b51-cb59f0476af1@linaro.org>
+References: <20170911022241.11603-1-afaerber@suse.de>
+ <6beabaab-d95f-4ac9-96f1-7c1c98bd7811@linaro.org>
+ <0a3e9a40-cb67-d2b2-7f06-fa0f24a4fb42@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170914191949.GA3796-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0a3e9a40-cb67-d2b2-7f06-fa0f24a4fb42@suse.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Cc: Thomas Liau <thomas.liau@actions-semi.com>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf@actions-semi.com>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, =?UTF-8?B?5byg5aSp55uK?= <tyzhang@actions-semi.com>, =?UTF-8?B?5qKF5Yip?= <harrymei@actions-semi.com>, support@cubietech.com, linux-kernel@vger.kernel.org, Ahha Lee <lee@cubietech.com>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 14, 2017 at 09:19:49PM +0200, Andrew Lunn wrote:
-> > > Is the MDIO controller "allwinner,sun8i-h3-emac" or "snps,dwmac-mdio"? 
-> > > If the latter, then I think the node is fine, but then the mux should be 
-> > > a child node of it. IOW, the child of an MDIO controller should either 
-> > > be a mux node or slave devices.
+On 19/09/2017 07:08, Andreas Färber wrote:
+> Hi Daniel,
 > 
-> Hi Rob
+> Am 18.09.2017 um 23:50 schrieb Daniel Lezcano:
+>> On 11/09/2017 04:22, Andreas Färber wrote:
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>>
+>>> Andreas Färber (4):
+>>>   dt-bindings: arm: actions: Add S700 and CubieBoard7
+>>>   dt-bindings: timer: Add Actions Semi S700
+>>>   clocksource: owl: Prepare S700
+>>>   arm64: dts: actions: Add S700 and CubieBoard7
+>>>
+>>>  Documentation/devicetree/bindings/arm/actions.txt  |  15 ++
+>>>  .../bindings/timer/actions,owl-timer.txt           |   1 +
+>>
+>> Usually sub system maintainers are also Cc'ed with Dt bindings
+>> definitions and usage.
 > 
-> Up until now, children of an MDIO bus have been MDIO devices. Those
-> MDIO devices are either Ethernet PHYs, Ethernet Switches, or the
-> oddball devices that Broadcom iProc has, like generic PHYs.
+> Your MAINTAINERS entry is lacking an entry for the bindings. Can you
+> please fix that in linux-next? Then the next patches should reach you.
 > 
-> We have never had MDIO-muxes as MDIO children. A Mux is not an MDIO
-> device, and does not have the properties of an MDIO device. It is not
-> addressable on the MDIO bus. The current MUXes are addressed via GPIOs
-> or MMIO.
-> 
-> There other similar cases. i2c-mux-gpio is not a child of an i2c bus,
-> nor i2c-mux-reg or gpio-mux. nxp,pca9548 is however a child of the i2c
-> bus, because it is an i2c device itself...
-> 
-> If the MDIO mux was an MDIO device, i would agree with you. Bit it is
-> not, so lets not make it a child.
-> 
-> 	    Andrew
+> Actually I'm even surprised that it works for the drivers - I would
+> expect a trailing "/" for the directory (see line 95ff).
 
-Hello Rob, could you anwser/confirm please.
-I wait on this for sending the next version.
+Right, thanks for pointing this out, I will fix it.
 
-Thanks
-Regards
-Corentin Labbe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  -- Daniel
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
