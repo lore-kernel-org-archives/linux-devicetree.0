@@ -1,53 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] scripts/dtc: dtx_diff - 2nd update of include dts
- paths to match build
-Date: Tue, 19 Sep 2017 13:02:01 -0500
-Message-ID: <20170919180201.nyeomtzzvbiwfeca@rob-hp-laptop>
-References: <1505780324-12922-1-git-send-email-frowand.list@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 0/3] Add support for BCM7271 style interrupt controller
+Date: Tue, 19 Sep 2017 11:05:35 -0700
+Message-ID: <db82458e-5656-1eb2-b4b8-051cc12e7095@gmail.com>
+References: <20170919010000.32072-1-opendmb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1505780324-12922-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <20170919010000.32072-1-opendmb@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Doug Berger <opendmb@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Mans Rullgard <mans@mansr.com>, Mason <slash.tmp@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>, Sebastian Frias <sf84@laposte.net>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 05:18:44PM -0700, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On 09/18/2017 05:59 PM, Doug Berger wrote:
+> This patch set extends the functionality of the irq-brcmstb-l2 interrupt
+> controller driver to cover a hardware variant first introduced in the
+> BCM7271 SoC.  The main difference between this variant and the block
+> found in earlier brcmstb SoCs is that this variant only supports level
+> sensitive interrupts and therefore does not latch the interrupt state
+> based on edges.  Since there is no longer a need to ack interrupts with
+> a register write to clear the latch the register map has been changed.
 > 
-> Update dtx_diff include paths in the same manner as:
-> commit b12869a8d519 ("of: remove drivers/of/testcase-data from
-> include search path for CPP"), commit 5ffa2aed389c ("of: remove
-> arch/$(SRCARCH)/boot/dts from include search path for CPP"), and
-> commit 50f9ddaf64e1 ("of: search scripts/dtc/include-prefixes path
-> for both CPP and DTC").
+> Therefore the change to add support for the new hardware block is to
+> abstract the register accesses to accommodate different maps and to
+> identify the block with a new device-tree compatible string.
 > 
-> Remove proposed include path kernel/dts/, which was never implemented
-> for the dtb build.
-> 
-> For the diff case, each source file is compiled separately.  For
-> each of those compiles, provide the location of the source file
-> as an include path, not the location of both source files.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> 
-> changes from v2:
->    - fix mangled email subject line
-> 
-> changes from v1:
->    - update summary commit message, since there is a very similar message
->      for b4b201d88b7c: dtx_diff - update include dts paths to match build
->    - move signed-off-by to above "---"
-> 
-> The referenced commits b12869a8d519, 5ffa2aed389c, 50f9ddaf64e1
-> are in v4.14-rc1.  No stable kernels need this patch.
-> 
->  scripts/dtc/dtx_diff | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
+> I also took the opportunity to make some small efficiency enhancements
+> to the driver.  One of these was to make use of the slightly more
+> efficient irq_mask_ack method.  However, I discovered that the defined
+> irq_gc_mask_disable_reg_and_ack() generic irq function was insufficient
+> for my needs.  Previous submissions offered candidate solutions to
+> address my needs within the generic irqchip library, but since those
+> submissions appear to have stalled I am submitting this version that
+> includes the function in the driver to prevent controversy and allow
+> the new functionality to be included. 
 
-Applied.
+For this entire series:
 
-Rob
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Thanks Doug.
+
+> 
+> Changes in v4:
+> 
+> - The first three commits were removed from the patch set to remove any
+>   dependencies on changing the generic irqchip or irqchip-tango imple-
+>   mentations. If there is a will to make those changes in the future
+>   they can be applied at that time, but they needn't hold up the accept-
+>   ance of this patch set.
+>   
+> Changes in v3:
+> 
+> - I did not submit a v3 patch set, but Marc Gonzalez included a PATCH v3
+>   in a response to the v2 patch so I am skipping ahead to v4 to avoid
+>   confusion.
+>   
+> Changes in v2:
+> 
+> - removed unused permutations of irq_mask_ack methods
+> - added Reviewed-by and Acked-by responses from first submission
+> 
+> Doug Berger (3):
+>   irqchip: brcmstb-l2: Remove some processing from the handler
+>   irqchip: brcmstb-l2: Abstract register accesses
+>   irqchip: brcmstb-l2: Add support for the BCM7271 L2 controller
+> 
+>  .../bindings/interrupt-controller/brcm,l2-intc.txt |   3 +-
+>  drivers/irqchip/irq-brcmstb-l2.c                   | 171 +++++++++++++++------
+>  2 files changed, 126 insertions(+), 48 deletions(-)
+> 
+
+
+-- 
+Florian
