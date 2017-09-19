@@ -1,71 +1,30 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v13 13/25] v4l: async: Allow async notifier register call succeed with no subdevs
-Date: Tue, 19 Sep 2017 15:04:43 +0300
-Message-ID: <1674305.pu9Ti8eC3U@avalon>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com> <20170915141724.23124-14-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170915141724.23124-14-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] ARM64: Add Vega S96 board support
+Date: Tue, 19 Sep 2017 14:05:46 +0200
+Message-ID: <1505822748-23431-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+This patchset adds support for the Tronsmart Vega S96 TV Box based
+on the Q200 Amlogic Reference design.
 
-Thank you for the patch.
+Neil Armstrong (2):
+  ARM64: dts: meson-gxm: Add Vega S96 board
+  dt-bindings: arm: amlogic: Add Tronsmart Vega S96 binding
 
-On Friday, 15 September 2017 17:17:12 EEST Sakari Ailus wrote:
-> The information on how many async sub-devices would be bindable to a
-> notifier is typically dependent on information from platform firmware and
-> it's not driver's business to be aware of that.
-> 
-> Many V4L2 main drivers are perfectly usable (and useful) without async
-> sub-devices and so if there aren't any around, just proceed call the
-> notifier's complete callback immediately without registering the notifier
-> itself.
-> 
-> If a driver needs to check whether there are async sub-devices available,
-> it can be done by inspecting the notifier's num_subdevs field which tells
-> the number of async sub-devices.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c
-> b/drivers/media/v4l2-core/v4l2-async.c index 9895b610e2a0..4be2f16af051
-> 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -170,14 +170,16 @@ int v4l2_async_notifier_register(struct v4l2_device
-> *v4l2_dev, struct v4l2_async_subdev *asd;
->  	int i;
-> 
-> -	if (!v4l2_dev || !notifier->num_subdevs ||
-> -	    notifier->num_subdevs > V4L2_MAX_SUBDEVS)
-> +	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
->  		return -EINVAL;
-> 
->  	notifier->v4l2_dev = v4l2_dev;
->  	INIT_LIST_HEAD(&notifier->waiting);
->  	INIT_LIST_HEAD(&notifier->done);
-> 
-> +	if (!notifier->num_subdevs)
-> +		return v4l2_async_notifier_call_complete(notifier);
-> +
->  	for (i = 0; i < notifier->num_subdevs; i++) {
->  		asd = notifier->subdevs[i];
-
+ Documentation/devicetree/bindings/arm/amlogic.txt  |  1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |  1 +
+ arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts | 39 ++++++++++++++++++++++
+ 3 files changed, 41 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
 
 -- 
-Regards,
+1.9.1
 
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
