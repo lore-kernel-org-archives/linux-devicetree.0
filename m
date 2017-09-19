@@ -1,7 +1,7 @@
 From: Doug Berger <opendmb@gmail.com>
-Subject: [PATCH v4 1/3] irqchip: brcmstb-l2: Remove some processing from the handler
-Date: Mon, 18 Sep 2017 17:59:58 -0700
-Message-ID: <20170919010000.32072-2-opendmb@gmail.com>
+Subject: [PATCH v4 3/3] irqchip: brcmstb-l2: Add support for the BCM7271 L2 controller
+Date: Mon, 18 Sep 2017 18:00:00 -0700
+Message-ID: <20170919010000.32072-4-opendmb@gmail.com>
 References: <20170919010000.32072-1-opendmb@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170919010000.32072-1-opendmb@gmail.com>
@@ -10,194 +10,177 @@ To: Thomas Gleixner <tglx@linutronix.de>
 Cc: Doug Berger <opendmb@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Mans Rullgard <mans@mansr.com>, Mason <slash.tmp@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>, Sebastian Frias <sf84@laposte.net>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Saving the generic chip pointer in the brcmstb_l2_intc_data prevents
-the need to call irq_get_domain_generic_chip().  Also don't need to
-save parent_irq and base there since local variables in the
-brcmstb_l2_intc_of_init() function are just as good.
+Add the initialization of the generic irq chip for the BCM7271 L2
+interrupt controller.  This controller only supports level
+interrupts and uses the "brcm,bcm7271-l2-intc" compatibility
+string.
 
-The handle_edge_irq flow or chained_irq_enter takes care of the
-acknowledgment of the interrupt so it is redundant to clear it in
-brcmstb_l2_intc_irq_handle().
-
-irq_linear_revmap() is a fast path equivalent of irq_find_mapping()
-that is appropriate to use for domain controllers of this type.
-
-Defining irq_mask_ack is slightly more efficient than just
-implementing irq_mask and irq_ack separately.
-
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/irqchip/irq-brcmstb-l2.c | 72 ++++++++++++++++++++++++++--------------
- 1 file changed, 48 insertions(+), 24 deletions(-)
+ .../bindings/interrupt-controller/brcm,l2-intc.txt |  3 +-
+ drivers/irqchip/irq-brcmstb-l2.c                   | 86 ++++++++++++++++------
+ 2 files changed, 66 insertions(+), 23 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+index 448273a30a11..36df06c5c567 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+@@ -2,7 +2,8 @@ Broadcom Generic Level 2 Interrupt Controller
+ 
+ Required properties:
+ 
+-- compatible: should be "brcm,l2-intc"
++- compatible: should be "brcm,l2-intc" for latched interrupt controllers
++              should be "brcm,bcm7271-l2-intc" for level interrupt controllers
+ - reg: specifies the base physical address and size of the registers
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: specifies the number of cells needed to encode an
 diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-index b009b916a292..48bd1a36c7d4 100644
+index 8d54cd7a090d..691d20eb0bec 100644
 --- a/drivers/irqchip/irq-brcmstb-l2.c
 +++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -1,7 +1,7 @@
- /*
-  * Generic Broadcom Set Top Box Level 2 Interrupt controller driver
-  *
-- * Copyright (C) 2014 Broadcom Corporation
-+ * Copyright (C) 2014-2017 Broadcom
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -41,25 +41,49 @@
+@@ -31,13 +31,34 @@
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/chained_irq.h>
+ 
+-/* Register offsets in the L2 interrupt controller */
+-#define CPU_STATUS	0x00
+-#define CPU_SET		0x04
+-#define CPU_CLEAR	0x08
+-#define CPU_MASK_STATUS	0x0c
+-#define CPU_MASK_SET	0x10
+-#define CPU_MASK_CLEAR	0x14
++struct brcmstb_intc_init_params {
++	irq_flow_handler_t handler;
++	int cpu_status;
++	int cpu_clear;
++	int cpu_mask_status;
++	int cpu_mask_set;
++	int cpu_mask_clear;
++};
++
++/* Register offsets in the L2 latched interrupt controller */
++static const struct brcmstb_intc_init_params l2_edge_intc_init = {
++	.handler		= handle_edge_irq,
++	.cpu_status		= 0x00,
++	.cpu_clear		= 0x08,
++	.cpu_mask_status	= 0x0c,
++	.cpu_mask_set		= 0x10,
++	.cpu_mask_clear		= 0x14
++};
++
++/* Register offsets in the L2 level interrupt controller */
++static const struct brcmstb_intc_init_params l2_lvl_intc_init = {
++	.handler		= handle_level_irq,
++	.cpu_status		= 0x00,
++	.cpu_clear		= -1, /* Register not present */
++	.cpu_mask_status	= 0x04,
++	.cpu_mask_set		= 0x08,
++	.cpu_mask_clear		= 0x0C
++};
  
  /* L2 intc private data structure */
  struct brcmstb_l2_intc_data {
--	int parent_irq;
--	void __iomem *base;
- 	struct irq_domain *domain;
-+	struct irq_chip_generic *gc;
- 	bool can_wake;
- 	u32 saved_mask; /* for suspend/resume */
- };
+@@ -128,7 +149,7 @@ static void brcmstb_l2_intc_resume(struct irq_data *d)
+ 	struct brcmstb_l2_intc_data *b = gc->private;
  
-+/**
-+ * brcmstb_l2_mask_and_ack - Mask and ack pending interrupt
-+ * @d: irq_data
-+ *
-+ * Chip has separate enable/disable registers instead of a single mask
-+ * register and pending interrupt is acknowledged by setting a bit.
-+ *
-+ * Note: This function is generic and could easily be added to the
-+ * generic irqchip implementation if there ever becomes a will to do so.
-+ * Perhaps with a name like irq_gc_mask_disable_and_ack_set().
-+ *
-+ * e.g.: https://patchwork.kernel.org/patch/9831047/
-+ */
-+static void brcmstb_l2_mask_and_ack(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct irq_chip_type *ct = irq_data_get_chip_type(d);
-+	u32 mask = d->mask;
-+
-+	irq_gc_lock(gc);
-+	irq_reg_writel(gc, mask, ct->regs.disable);
-+	*ct->mask_cache &= ~mask;
-+	irq_reg_writel(gc, mask, ct->regs.ack);
-+	irq_gc_unlock(gc);
-+}
-+
- static void brcmstb_l2_intc_irq_handle(struct irq_desc *desc)
- {
- 	struct brcmstb_l2_intc_data *b = irq_desc_get_handler_data(desc);
--	struct irq_chip_generic *gc = irq_get_domain_generic_chip(b->domain, 0);
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	unsigned int irq;
- 	u32 status;
+ 	irq_gc_lock(gc);
+-	if (ct->chip.irq_ack != irq_gc_noop) {
++	if (ct->chip.irq_ack) {
+ 		/* Clear unmasked non-wakeup interrupts */
+ 		irq_reg_writel(gc, ~b->saved_mask & ~gc->wake_active,
+ 				ct->regs.ack);
+@@ -141,7 +162,9 @@ static void brcmstb_l2_intc_resume(struct irq_data *d)
+ }
  
- 	chained_irq_enter(chip, desc);
- 
--	status = irq_reg_readl(gc, CPU_STATUS) &
--		~(irq_reg_readl(gc, CPU_MASK_STATUS));
-+	status = irq_reg_readl(b->gc, CPU_STATUS) &
-+		~(irq_reg_readl(b->gc, CPU_MASK_STATUS));
- 
- 	if (status == 0) {
- 		raw_spin_lock(&desc->lock);
-@@ -70,10 +94,8 @@ static void brcmstb_l2_intc_irq_handle(struct irq_desc *desc)
- 
- 	do {
- 		irq = ffs(status) - 1;
--		/* ack at our level */
--		irq_reg_writel(gc, 1 << irq, CPU_CLEAR);
- 		status &= ~(1 << irq);
--		generic_handle_irq(irq_find_mapping(b->domain, irq));
-+		generic_handle_irq(irq_linear_revmap(b->domain, irq));
- 	} while (status);
- out:
- 	chained_irq_exit(chip, desc);
-@@ -116,32 +138,33 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+-					  struct device_node *parent)
++					  struct device_node *parent,
++					  const struct brcmstb_intc_init_params
++					  *init_params)
  {
  	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
  	struct brcmstb_l2_intc_data *data;
--	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
- 	int ret;
- 	unsigned int flags;
-+	int parent_irq;
-+	void __iomem *base;
- 
- 	data = kzalloc(sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
- 
--	data->base = of_iomap(np, 0);
--	if (!data->base) {
-+	base = of_iomap(np, 0);
-+	if (!base) {
- 		pr_err("failed to remap intc L2 registers\n");
- 		ret = -ENOMEM;
- 		goto out_free;
+@@ -163,12 +186,12 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
  	}
  
  	/* Disable all interrupts by default */
--	writel(0xffffffff, data->base + CPU_MASK_SET);
-+	writel(0xffffffff, base + CPU_MASK_SET);
+-	writel(0xffffffff, base + CPU_MASK_SET);
++	writel(0xffffffff, base + init_params->cpu_mask_set);
  
  	/* Wakeup interrupts may be retained from S5 (cold boot) */
  	data->can_wake = of_property_read_bool(np, "brcm,irq-can-wake");
- 	if (!data->can_wake)
--		writel(0xffffffff, data->base + CPU_CLEAR);
-+		writel(0xffffffff, base + CPU_CLEAR);
+-	if (!data->can_wake)
+-		writel(0xffffffff, base + CPU_CLEAR);
++	if (!data->can_wake && (init_params->cpu_clear >= 0))
++		writel(0xffffffff, base + init_params->cpu_clear);
  
--	data->parent_irq = irq_of_parse_and_map(np, 0);
--	if (!data->parent_irq) {
-+	parent_irq = irq_of_parse_and_map(np, 0);
-+	if (!parent_irq) {
- 		pr_err("failed to find parent interrupt\n");
- 		ret = -EINVAL;
- 		goto out_unmap;
-@@ -170,18 +193,19 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
- 	}
+ 	parent_irq = irq_of_parse_and_map(np, 0);
+ 	if (!parent_irq) {
+@@ -193,7 +216,7 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
  
- 	/* Set the IRQ chaining logic */
--	irq_set_chained_handler_and_data(data->parent_irq,
-+	irq_set_chained_handler_and_data(parent_irq,
- 					 brcmstb_l2_intc_irq_handle, data);
+ 	/* Allocate a single Generic IRQ chip for this node */
+ 	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1,
+-				np->full_name, handle_edge_irq, clr, 0, flags);
++			np->full_name, init_params->handler, clr, 0, flags);
+ 	if (ret) {
+ 		pr_err("failed to allocate generic irq chip\n");
+ 		goto out_free_domain;
+@@ -206,21 +229,26 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ 	data->gc = irq_get_domain_generic_chip(data->domain, 0);
+ 	data->gc->reg_base = base;
+ 	data->gc->private = data;
+-	data->status_offset = CPU_STATUS;
+-	data->mask_offset = CPU_MASK_STATUS;
++	data->status_offset = init_params->cpu_status;
++	data->mask_offset = init_params->cpu_mask_status;
  
--	gc = irq_get_domain_generic_chip(data->domain, 0);
--	gc->reg_base = data->base;
--	gc->private = data;
--	ct = gc->chip_types;
-+	data->gc = irq_get_domain_generic_chip(data->domain, 0);
-+	data->gc->reg_base = base;
-+	data->gc->private = data;
-+	ct = data->gc->chip_types;
+ 	ct = data->gc->chip_types;
  
- 	ct->chip.irq_ack = irq_gc_ack_set_bit;
- 	ct->regs.ack = CPU_CLEAR;
+-	ct->chip.irq_ack = irq_gc_ack_set_bit;
+-	ct->regs.ack = CPU_CLEAR;
++	if (init_params->cpu_clear >= 0) {
++		ct->regs.ack = init_params->cpu_clear;
++		ct->chip.irq_ack = irq_gc_ack_set_bit;
++		ct->chip.irq_mask_ack = brcmstb_l2_mask_and_ack;
++	} else {
++		/* No Ack - but still slightly more efficient to define this */
++		ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
++	}
  
  	ct->chip.irq_mask = irq_gc_mask_disable_reg;
-+	ct->chip.irq_mask_ack = brcmstb_l2_mask_and_ack;
- 	ct->regs.disable = CPU_MASK_SET;
+-	ct->chip.irq_mask_ack = brcmstb_l2_mask_and_ack;
+-	ct->regs.disable = CPU_MASK_SET;
+-	ct->regs.mask = CPU_MASK_STATUS;
++	ct->regs.disable = init_params->cpu_mask_set;
++	ct->regs.mask = init_params->cpu_mask_status;
  
  	ct->chip.irq_unmask = irq_gc_unmask_enable_reg;
-@@ -195,19 +219,19 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
- 		/* This IRQ chip can wake the system, set all child interrupts
- 		 * in wake_enabled mask
- 		 */
--		gc->wake_enabled = 0xffffffff;
-+		data->gc->wake_enabled = 0xffffffff;
- 		ct->chip.irq_set_wake = irq_gc_set_wake;
- 	}
+-	ct->regs.enable = CPU_MASK_CLEAR;
++	ct->regs.enable = init_params->cpu_mask_clear;
  
- 	pr_info("registered L2 intc (mem: 0x%p, parent irq: %d)\n",
--			data->base, data->parent_irq);
-+			base, parent_irq);
- 
- 	return 0;
- 
- out_free_domain:
- 	irq_domain_remove(data->domain);
- out_unmap:
--	iounmap(data->base);
-+	iounmap(base);
- out_free:
+ 	ct->chip.irq_suspend = brcmstb_l2_intc_suspend;
+ 	ct->chip.irq_resume = brcmstb_l2_intc_resume;
+@@ -247,4 +275,18 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
  	kfree(data);
  	return ret;
+ }
+-IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_intc_of_init);
++
++int __init brcmstb_l2_edge_intc_of_init(struct device_node *np,
++	struct device_node *parent)
++{
++	return brcmstb_l2_intc_of_init(np, parent, &l2_edge_intc_init);
++}
++IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_edge_intc_of_init);
++
++int __init brcmstb_l2_lvl_intc_of_init(struct device_node *np,
++	struct device_node *parent)
++{
++	return brcmstb_l2_intc_of_init(np, parent, &l2_lvl_intc_init);
++}
++IRQCHIP_DECLARE(bcm7271_l2_intc, "brcm,bcm7271-l2-intc",
++	brcmstb_l2_lvl_intc_of_init);
 -- 
 2.14.1
