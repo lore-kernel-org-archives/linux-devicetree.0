@@ -1,79 +1,114 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: core: Add coupled regulators mechanism
-Date: Tue, 19 Sep 2017 15:47:38 +0100
-Message-ID: <20170919144738.g2xwjaph6bjvwt35@sirena.co.uk>
-References: <1505723992-11772-1-git-send-email-m.purski@samsung.com>
- <CGME20170918084022eucas1p1398f18c5c90535ce484e3952fae80882@eucas1p1.samsung.com>
- <1505723992-11772-2-git-send-email-m.purski@samsung.com>
- <20170919130944.ldoskrm54tx2oemd@sirena.co.uk>
- <8ac4fa17-43ed-7a4d-d086-6ad81d97900e@samsung.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v13 11/25] v4l: async: Introduce helpers for calling
+ async ops callbacks
+Date: Tue, 19 Sep 2017 17:50:49 +0300
+Message-ID: <20170919145049.uivohp6qvkf7x4fc@valkosipuli.retiisi.org.uk>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
+ <1751597.tWjkEME5YS@avalon>
+ <20170919121311.n2fvoo7tebywsc5d@paasikivi.fi.intel.com>
+ <2693952.YdpSRMO0xE@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mz7u2bgfyjphaezv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8ac4fa17-43ed-7a4d-d086-6ad81d97900e@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <2693952.YdpSRMO0xE@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
---mz7u2bgfyjphaezv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Sep 19, 2017 at 03:43:48PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Tuesday, 19 September 2017 15:13:11 EEST Sakari Ailus wrote:
+> > On Tue, Sep 19, 2017 at 03:01:14PM +0300, Laurent Pinchart wrote:
+> > > On Friday, 15 September 2017 17:17:10 EEST Sakari Ailus wrote:
+> > >> Add three helper functions to call async operations callbacks. Besides
+> > >> simplifying callbacks, this allows async notifiers to have no ops set,
+> > >> i.e. it can be left NULL.
+> > >> 
+> > >> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > >> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> > >> ---
+> > >> 
+> > >>  drivers/media/v4l2-core/v4l2-async.c | 49 +++++++++++++++++++++--------
+> > >>  include/media/v4l2-async.h           |  1 +
+> > >>  2 files changed, 37 insertions(+), 13 deletions(-)
+> > >> 
+> > >> diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> > >> b/drivers/media/v4l2-core/v4l2-async.c index 7b2125b3d62f..c35d04b9122f
+> > >> 100644
+> > >> --- a/drivers/media/v4l2-core/v4l2-async.c
+> > >> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> > >> @@ -25,6 +25,34 @@
+> > >> 
+> > >>  #include <media/v4l2-fwnode.h>
+> > >>  #include <media/v4l2-subdev.h>
+> > >> 
+> > >> +static int v4l2_async_notifier_call_bound(struct v4l2_async_notifier
+> > >> *n,
+> > >> +					  struct v4l2_subdev *subdev,
+> > >> +					  struct v4l2_async_subdev *asd)
+> > >> +{
+> > >> +	if (!n->ops || !n->ops->bound)
+> > >> +		return 0;
+> > >> +
+> > >> +	return n->ops->bound(n, subdev, asd);
+> > >> +}
+> > >> +
+> > >> +static void v4l2_async_notifier_call_unbind(struct v4l2_async_notifier
+> > >> *n,
+> > >> +					    struct v4l2_subdev *subdev,
+> > >> +					    struct v4l2_async_subdev *asd)
+> > >> +{
+> > >> +	if (!n->ops || !n->ops->unbind)
+> > >> +		return;
+> > >> +
+> > >> +	n->ops->unbind(n, subdev, asd);
+> > >> +}
+> > >> +
+> > >> +static int v4l2_async_notifier_call_complete(struct v4l2_async_notifier
+> > >> *n)
+> > >> +{
+> > >> +	if (!n->ops || !n->ops->complete)
+> > >> +		return 0;
+> > >> +
+> > >> +	return n->ops->complete(n);
+> > >> +}
+> > >> +
+> > > 
+> > > Wouldn't it be enough to add a single v4l2_async_notifier_call() macro ?
+> > > 
+> > > #define v4l2_async_notifier_call(n, op, args...) \
+> > > 
+> > > 	((n)->ops && (n)->ops->op ? (n)->ops->op(n, ##args) : 0)
+> > 
+> > I actually had that in an earlier version but I changed it based on review
+> > comments from Hans. A single macro isn't enough: some functions have int
+> > return type. I think the way it is now is nicer.
+> 
+> What bothers me there is the overhead of a function call.
 
-On Tue, Sep 19, 2017 at 04:35:54PM +0200, Maciej Purski wrote:
+Overhead... of a function call?
 
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
+Do you really mean what you're saying? :-) The functions will be called a
+relatively small number of times during module loading / device probing.
 
-> On 09/19/2017 03:09 PM, Mark Brown wrote:
+> 
+> By the way, what's the use case for ops being NULL ?
 
-> and from my new function regulator_set_coupled_voltage(). I added this in order to avoid
-> code duplication. I agree that the name might not be adequate. What name would you find more suitable?
+If a driver has no need for any of the callbacks, there's no benefit from
+having to set ops struct either. This applies to devices that are
+associated to the sensor, for instance.
 
-I think if the single regulator case isn't just a special case of the
-multi regulator case then we're doing this wrong and there will be
-maintainability problems so I'm not sure if this split makes sense at
-all.
+-- 
+Regards,
 
-> > There's no locking here, and we appear to take no action when these
-> > counts change - do we need to bother with this at all?
-
-> Variable enable_count is used for checking if both regulators are enabled and there's a need for
-> using the coupling mechanism. It is checked in regulator_set_coupled_voltage_unlocked(), where the
-> mutex is already locked. I think that locking it here would be useful. Thanks.
-
-So what happens if one regulator is enabled after the other and the
-constraints become unsatisified?
-
-> > > +	/* Get voltages desired by all consumers of the coupled regulator */
-> > > +	for (i = 0; i < 2; i++) {
-
-> > It appears we can't couple more than two regulators?
-
-> We can couple just two regulators. We have never found any case for coupling
-> more than two regulators. Limiting the mechanism to just two regulators simplifies
-> algorithm a little bit. Would you prefer it working for more than two
-> regulators also even if there isn't any use case?
-
-It seems cleaner.
-
---mz7u2bgfyjphaezv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnBLgoACgkQJNaLcl1U
-h9BpbAf+O6y+47GMZTUjelTc9NmYcIJ+lgdn62IWxghy2KrjeBBLOuEhk7m3R8FI
-8k2eglu/mC4Wl8ydXsjFWecMDJHDqw1L6EzsMbfFKuTk7/PfrRdoHjbugb7Nk1YW
-N980oWAsVxQfgY/dZWGllQ/AzXNv6EesImh8/IvJ67/FU5VHmLUHMeQn7gr0LThK
-756pkShQWQzhF8UTPvC22PNsxGRWWP43Yapd49sx44f6+DoN7pwUZNjOmu8iTB95
-42Sq0hsOiXd7U24jX4MMMn9831z0yJ+LAEBDjm3UMrgAf1SrIIk1m94Cq2Nu2/Td
-FJWCjeulQdJY5ZF5e9UTnVubG/Jz+w==
-=tuXM
------END PGP SIGNATURE-----
-
---mz7u2bgfyjphaezv--
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
