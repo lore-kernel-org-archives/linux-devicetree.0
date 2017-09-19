@@ -1,249 +1,216 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v13 18/25] v4l: fwnode: Add a helper function to obtain
- device / integer references
-Date: Tue, 19 Sep 2017 13:16:57 +0300
-Message-ID: <20170919101657.m3yr5sdznndeopkd@paasikivi.fi.intel.com>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
- <20170915141724.23124-19-sakari.ailus@linux.intel.com>
- <ee1252cf-3396-9bed-443f-56e3c2d621e5@xs4all.nl>
- <20170919084534.ivgmrlmgywdwuhoa@paasikivi.fi.intel.com>
- <09f8ce37-c6e0-e448-c773-e1f3510d1024@xs4all.nl>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v2 3/4] [media] bcm2835-unicam: Driver for CCP2/CSI2
+ camera interface
+Date: Tue, 19 Sep 2017 12:20:17 +0200
+Message-ID: <d9f7334d-df40-5cd6-93c8-b753f41aa56d@xs4all.nl>
+References: <cover.1505140980.git.dave.stevenson@raspberrypi.org>
+ <0d4dc119a2ba4917e0fecfe5084425830ec53ccb.1505314390.git.dave.stevenson@raspberrypi.org>
+ <87k20vswdv.fsf@anholt.net>
+ <CAAoAYcMbSzr7_rtNke2hDKfp+a-vvP0be7_UhrJEgUCfgpfMtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <09f8ce37-c6e0-e448-c773-e1f3510d1024-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAAoAYcMbSzr7_rtNke2hDKfp+a-vvP0be7_UhrJEgUCfgpfMtQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Stefan Wahren <stefan.wahren@i2se.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On Tue, Sep 19, 2017 at 11:21:50AM +0200, Hans Verkuil wrote:
-> On 09/19/17 10:45, Sakari Ailus wrote:
-> > Hi Hans,
-> > 
-> > Thank you for the review.
-> > 
-> > On Tue, Sep 19, 2017 at 10:31:41AM +0200, Hans Verkuil wrote:
-> >> Hi Sakari,
-> >>
-> >> I'm slowly starting to understand this. The example helped a lot. But I still have
-> >> some questions, see below.
-> >>
-> >> On 09/15/2017 04:17 PM, Sakari Ailus wrote:
-> >>> v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
-> >>> the device's own fwnode, it will follow child fwnodes with the given
-> >>> property-value pair and return the resulting fwnode.
-> >>
-> >> I think both the subject, commit log, function comment and function name should
-> >> reflect the fact that this function is for an ACPI reference.
-> >>
-> >> It's only called for ACPI (from patch 19):
-> >>
-> >> +		if (props[i].props && is_acpi_node(dev_fwnode(dev)))
-> >> +			ret = v4l2_fwnode_reference_parse_int_props(
-> >>
-> >> So renaming it to v4l2_fwnode_acpi_reference_parse_int_props or something similar
-> >> would clarify this fact.
-> > 
-> > I don't think we'll see many like this one. I presume we won't use it on DT
-> > albeit there are no direct references to ACPI in the code itself.
-> > 
-> > How about v4l2_fwnode_parse_acpi_reference (+ "s" for the one below)?
+On 09/19/17 11:50, Dave Stevenson wrote:
+> Hi Eric.
 > 
-> Sounds good.
+> Thanks for the review.
 > 
-> > 
-> >>
-> >>>
-> >>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> >>> ---
-> >>>  drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
-> >>>  1 file changed, 201 insertions(+)
-> >>>
-> >>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> index 65e84ea1cc35..968a345a288f 100644
-> >>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> @@ -567,6 +567,207 @@ static int v4l2_fwnode_reference_parse(
-> >>>  	return ret;
-> >>>  }
-> >>>  
-> >>> +/*
-> >>> + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
-> >>> + *					arguments
-> >>> + * @dev: struct device pointer
-> >>> + * @notifier: notifier for @dev
-> >>> + * @prop: the name of the property
-> >>> + * @index: the index of the reference to get
-> >>> + * @props: the array of integer property names
-> >>> + * @nprops: the number of integer property names in @nprops
-> >>
-> >> You mean 'in @props'?
-> > 
-> > Yes, I'll fix that.
-> > 
-> >>
-> >> One thing that is not clear to me is when you would use an nprops value > 1.
-> >> What's the use-case for that? It only makes sense (I think) if you would have
-> >> property names that are all aliases of one another.
-> > 
-> > There may be several flash LEDs related to a sensor. That's the use case,
-> > for instance.
+> On 18 September 2017 at 19:18, Eric Anholt <eric@anholt.net> wrote:
+>> Dave Stevenson <dave.stevenson@raspberrypi.org> writes:
+>>> diff --git a/drivers/media/platform/bcm2835/bcm2835-unicam.c b/drivers/media/platform/bcm2835/bcm2835-unicam.c
+>>> new file mode 100644
+>>> index 0000000..5b1adc3
+>>> --- /dev/null
+>>> +++ b/drivers/media/platform/bcm2835/bcm2835-unicam.c
+>>> @@ -0,0 +1,2192 @@
+>>> +/*
+>>> + * BCM2835 Unicam capture Driver
+>>> + *
+>>> + * Copyright (C) 2017 - Raspberry Pi (Trading) Ltd.
+>>> + *
+>>> + * Dave Stevenson <dave.stevenson@raspberrypi.org>
+>>> + *
+>>> + * Based on TI am437x driver by Benoit Parrot and Lad, Prabhakar and
+>>> + * TI CAL camera interface driver by Benoit Parrot.
+>>> + *
+>>
+>> Possible future improvement: this description of the driver is really
+>> nice and could be turned into kernel-doc.
 > 
-> I think it would be helpful if the example shows two LEDs related to a
-> sensor. Part of the problem I have in understanding this code is that I
-> have zero experience with ACPI (and that is probably true for most other
-> developers), so I don't know how this is encoded. With a good example it
-> is much easier to understand.
-
-I'm a bit at loss here. Are you happy with the example below, or do you
-think something is missing in the documentation here.
-
+> Documentation?! Surely not :-)
+> For now I'll leave it as a task for another day.
 > 
-> > 
-> >>
-> >>> + *
-> >>> + * Find fwnodes referred to by a property @prop, then under that
-> >>> + * iteratively, @nprops times, follow each child node which has a
-> >>> + * property in @props array at a given child index the value of which
-> >>> + * matches the integer argument at an index.
-> >>> + *
-> >>> + * For example, if this function was called with arguments and values
-> >>> + * @dev corresponding to device "SEN", @prop == "flash-leds", @index
-> >>> + * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
-> >>> + * it would return the node marked with THISONE. The @dev argument in
-> >>> + * the ASL below.
-> >>
-> >> That last sentence about the @dev seems incomplete. I'm not sure what is
-> >> meant by it.
-> > 
-> > I think it was meant to convey some information but it got added to the
-> > previous sentence. I'll remove it.
-> > 
-> >>
-> >>> + *
-> >>> + *	Device (LED)
-> >>> + *	{
-> >>> + *		Name (_DSD, Package () {
-> >>> + *			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> >>> + *			Package () {
-> >>> + *				Package () { "led0", "LED0" },
-> >>> + *				Package () { "led1", "LED1" },
-> >>> + *			}
-> >>> + *		})
-> >>> + *		Name (LED0, Package () {
-> >>> + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> >>> + *			Package () {
-> >>> + *				Package () { "led", 0 },
-> >>> + *			}
-> >>> + *		})
-> >>> + *		Name (LED1, Package () {
-> >>> + *			// THISONE
-> >>> + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> >>> + *			Package () {
-> >>> + *				Package () { "led", 1 },
-> >>> + *			}
-> >>> + *		})
-> >>> + *	}
-> >>> + *
-> >>> + *	Device (SEN)
-> >>> + *	{
-> >>> + *		Name (_DSD, Package () {
-> >>> + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> >>> + *			Package () {
-> >>> + *				Package () {
-> >>> + *					"flash-leds",
-> >>> + *					Package () { ^LED, 0, ^LED, 1 },
-> >>> + *				}
-> >>> + *			}
-> >>> + *		})
-> >>> + *	}
-> >>> + *
-> >>> + * where
-> >>> + *
-> >>> + *	LED	LED driver device
-> >>> + *	LED0	First LED
-> >>> + *	LED1	Second LED
-> >>> + *	SEN	Camera sensor device (or another device the LED is
-> >>> + *		related to)
-> >>> + *
-> >>> + * Return: 0 on success
-> >>> + *	   -ENOENT if no entries (or the property itself) were found
-> >>> + *	   -EINVAL if property parsing otherwise failed
-> >>> + *	   -ENOMEM if memory allocation failed
-> >>> + */
-> >>> +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
-> >>> +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
-> >>> +	const char **props, unsigned int nprops)
-> >>> +{
-> >>> +	struct fwnode_reference_args fwnode_args;
-> >>> +	unsigned int *args = fwnode_args.args;
-> >>> +	struct fwnode_handle *child;
-> >>> +	int ret;
-> >>> +
-> >>> +	/*
-> >>> +	 * Obtain remote fwnode as well as the integer arguments.
-> >>> +	 *
-> >>> +	 * Note that right now both -ENODATA and -ENOENT may signal
-> >>> +	 * out-of-bounds access. Return -ENOENT in that case.
-> >>> +	 */
-> >>> +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
-> >>> +						 index, &fwnode_args);
-> >>> +	if (ret)
-> >>> +		return ERR_PTR(ret == -ENODATA ? -ENOENT : ret);
-> >>> +
-> >>> +	/*
-> >>> +	 * Find a node in the tree under the referred fwnode corresponding the
-> >>> +	 * integer arguments.
-> >>> +	 */
-> >>> +	fwnode = fwnode_args.fwnode;
-> >>
-> >> So given the example above, fwnode would point to the LED device?
-> >>
-> >> If correct, then mention that in the comment.
-> > 
-> > It could be a LED driver device, but it could be something else as well.
-> > Like a lens VCM, depending on the property being parsed. That's why I
-> > didn't put it in the comments. But this is a device node, not a
-> > hierarchical data extension node, for instance. That's what I think I
-> > should add.
+>>> + * There are two camera drivers in the kernel for BCM283x - this one
+>>> + * and bcm2835-camera (currently in staging).
+>>> + *
+>>> + * This driver is purely the kernel control the Unicam peripheral - there
+>>
+>> Maybe "This driver directly controls..."?
 > 
-> I think that will help.
+> Will do in v3.
+> 
+>>> + * is no involvement with the VideoCore firmware. Unicam receives CSI-2
+>>> + * or CCP2 data and writes it into SDRAM. The only processing options are
+>>> + * to repack Bayer data into an alternate format, and applying windowing
+>>> + * (currently not implemented).
+>>> + * It should be possible to connect it to any sensor with a
+>>> + * suitable output interface and V4L2 subdevice driver.
+>>> + *
+>>> + * bcm2835-camera uses with the VideoCore firmware to control the sensor,
+>>
+>> "uses the"
+> 
+> Will do in v3.
+> 
+>>> + * Unicam, ISP, and all tuner control loops. Fully processed frames are
+>>> + * delivered to the driver by the firmware. It only has sensor drivers
+>>> + * for Omnivision OV5647, and Sony IMX219 sensors.
+>>> + *
+>>> + * The two drivers are mutually exclusive for the same Unicam instance.
+>>> + * The VideoCore firmware checks the device tree configuration during boot.
+>>> + * If it finds device tree nodes called csi0 or csi1 it will block the
+>>> + * firmware from accessing the peripheral, and bcm2835-camera will
+>>> + * not be able to stream data.
+>>
+>> Thanks for describing this here!
+>>
+>>> +/*
+>>> + * The peripheral can unpack and repack between several of
+>>> + * the Bayer raw formats, so any Bayer format can be advertised
+>>> + * as the same Bayer order in each of the supported bit depths.
+>>> + * Use lower case to avoid clashing with V4L2_PIX_FMT_SGBRG8
+>>> + * formats.
+>>> + */
+>>> +#define PIX_FMT_ALL_BGGR  v4l2_fourcc('b', 'g', 'g', 'r')
+>>> +#define PIX_FMT_ALL_RGGB  v4l2_fourcc('r', 'g', 'g', 'b')
+>>> +#define PIX_FMT_ALL_GBRG  v4l2_fourcc('g', 'b', 'r', 'g')
+>>> +#define PIX_FMT_ALL_GRBG  v4l2_fourcc('g', 'r', 'b', 'g')
+>>
+>> Should thes fourccs be defined in a common v4l2 header, to reserve it
+>> from clashing with others later?
+> 
+> I'm only using them as flags and probably in a manner that nothing
+> else is likely to copy, so it seems a little excessive to put them in
+> a common header.
+> Perhaps it's better to switch to 0xFFFFFFF0 to 0xFFFFFFF3 or other
+> value that won't come up as a fourcc under any normal circumstance.
+> Any thoughts from other people?
 
-Agreed.
-
-Yeah, in DT all fwnodes are DT nodes but in ACPI some are device nodes and
-others hierarchical data extension nodes. Oh well...
+I think that's better, yes.
 
 > 
-> > 
-> >>
-> >>> +	while (nprops--) {
-> >>> +		u32 val;
-> >>> +
-> >>> +		/* Loop over all child nodes under fwnode. */
-> >>
-> >> And here you check if the LED device has child nodes that have a *props
-> >> property with a value matching the index.
-> >>
-> >> So given the example above it is looking for a child with property "led"
-> >> and value 1.
-> >>
-> >> It's useful if that is mentioned in the comment as well.
-> > 
-> > But should I? This isn't specific to LEDs.
+>> This is really the only question I have about this driver before seeing
+>> it merged.  As far as me wearing my platform maintainer hat, I'm happy
+>> with the driver, and my other little notes are optional.
+>>
+>>> +static int unicam_probe(struct platform_device *pdev)
+>>> +{
+>>> +     struct unicam_cfg *unicam_cfg;
+>>> +     struct unicam_device *unicam;
+>>> +     struct v4l2_ctrl_handler *hdl;
+>>> +     struct resource *res;
+>>> +     int ret;
+>>> +
+>>> +     unicam = devm_kzalloc(&pdev->dev, sizeof(*unicam), GFP_KERNEL);
+>>> +     if (!unicam)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     unicam->pdev = pdev;
+>>> +     unicam_cfg = &unicam->cfg;
+>>> +
+>>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +     unicam_cfg->base = devm_ioremap_resource(&pdev->dev, res);
+>>> +     if (IS_ERR(unicam_cfg->base)) {
+>>> +             unicam_err(unicam, "Failed to get main io block\n");
+>>> +             return PTR_ERR(unicam_cfg->base);
+>>> +     }
+>>> +
+>>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>> +     unicam_cfg->clk_gate_base = devm_ioremap_resource(&pdev->dev, res);
+>>> +     if (IS_ERR(unicam_cfg->clk_gate_base)) {
+>>> +             unicam_err(unicam, "Failed to get 2nd io block\n");
+>>> +             return PTR_ERR(unicam_cfg->clk_gate_base);
+>>> +     }
+>>> +
+>>> +     unicam->clock = devm_clk_get(&pdev->dev, "lp_clock");
+>>> +     if (IS_ERR(unicam->clock)) {
+>>> +             unicam_err(unicam, "Failed to get clock\n");
+>>> +             return PTR_ERR(unicam->clock);
+>>> +     }
+>>> +
+>>> +     ret = platform_get_irq(pdev, 0);
+>>> +     if (ret <= 0) {
+>>> +             dev_err(&pdev->dev, "No IRQ resource\n");
+>>> +             return -ENODEV;
+>>> +     }
+>>> +     unicam_cfg->irq = ret;
+>>> +
+>>> +     ret = devm_request_irq(&pdev->dev, unicam_cfg->irq, unicam_isr, 0,
+>>> +                            "unicam_capture0", unicam);
+>>
+>> Looks like there's no need to keep "irq" in the device private struct.
 > 
-> Ignore this comment for now. I'll take another look when I see v14.
+> Agreed. I'll remove in v3.
+> 
+>>> +     if (ret) {
+>>> +             dev_err(&pdev->dev, "Unable to request interrupt\n");
+>>> +             return -EINVAL;
+>>> +     }
+>>> +
+>>> +     ret = v4l2_device_register(&pdev->dev, &unicam->v4l2_dev);
+>>> +     if (ret) {
+>>> +             unicam_err(unicam,
+>>> +                        "Unable to register v4l2 device.\n");
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     /* Reserve space for the controls */
+>>> +     hdl = &unicam->ctrl_handler;
+>>> +     ret = v4l2_ctrl_handler_init(hdl, 16);
+>>> +     if (ret < 0)
+>>> +             goto probe_out_v4l2_unregister;
+>>> +     unicam->v4l2_dev.ctrl_handler = hdl;
+>>> +
+>>> +     /* set the driver data in platform device */
+>>> +     platform_set_drvdata(pdev, unicam);
+>>> +
+>>> +     ret = of_unicam_connect_subdevs(unicam);
+>>> +     if (ret) {
+>>> +             dev_err(&pdev->dev, "Failed to connect subdevs\n");
+>>> +             goto free_hdl;
+>>> +     }
+>>> +
+>>> +     /* Enabling module functional clock */
+>>> +     pm_runtime_enable(&pdev->dev);
+>>
+>> I think pm_runtime is only controlling the power domain for the PHY, not
+>> the clock (which you're handling manually).
+> 
+> You're right. Copy and paste from the driver I'd based this on.
+> Will correct in v3.
+> 
+>   Dave
+> 
 
--- 
+Dave, I plan to review this Friday or Monday. It would help me if you could
+post a v3 before Friday so that I'm reviewing the latest code.
+
+It would be great if you can also post your tc358743 patches. I have an RPi
+with a tc358743 attached, so it would be very useful if I can review and test
+both this driver and the tc358743 changes.
+
+I also have a selfish motive: I want to do a CEC demo next week during the
+Kernel Recipes conference with my RPi/tc358743 and your driver. It's nice if
+I can use the latest version for that.
+
 Regards,
 
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
