@@ -1,61 +1,80 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: foundation-v8: Enable PSCI mode
-Date: Tue, 19 Sep 2017 16:59:15 +0100
-Message-ID: <f0710af4-d414-1f2a-7d86-dd559a50171f@linaro.org>
-References: <20170918153832.16356-1-daniel.thompson@linaro.org>
- <20170918161248.GB5106@leverpostej>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dt marvell: extend AP806 system controller size
+Date: Tue, 19 Sep 2017 19:08:13 +0300
+Message-ID: <20170919160813.yz4ez2hsuaejbf4t@tarshish>
+References: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch@tkos.co.il>
+ <877ewusr2h.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170918161248.GB5106@leverpostej>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <877ewusr2h.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/09/17 17:12, Mark Rutland wrote:
-> Hi Daniel,
-> 
-> On Mon, Sep 18, 2017 at 04:38:32PM +0100, Daniel Thompson wrote:
->> Currently if the Foundation model is running ARM Trusted Firmware then
->> the kernel, which is configured to use spin tables, cannot start secondary
->> processors or "power off" the simulation.
->>
->> Add a couple of labels to the include file, and introduce a new .dts
->> file that uses these to override the enable-method.
->>
->> Signed-off-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> This looks good, but has the unfortunate effect of leaving the
-> (irrelevant) cpu-release-addr property in the PSCI dts files, as that's
-> in the underlying dtsi file.
-> 
-> Could we split spin-table / PSCI parts into separate dtsi files?
-> 
-> e.g. have:
-> 
-> * foundation-v8.dtsi
-> * foundation-v8-gicv{2,3}.dtsi
-> * foundation-v8-{psci,spin-table}.dtsi
-> 
-> ... and then combine those to build the dts files we want.
+Hi Gregory,
 
-Will do.
-
+On Tue, Sep 19, 2017 at 04:25:58PM +0200, Gregory CLEMENT wrote:
+>  On ven., sept. 15 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 > 
-> FWIW, with that:
+> > Extend the container size to 0x2000 to include the gpio controller at
+> > offset 0x1040.
+> >
+> > While at it, add start address notation to the gpio node name to match
+> > its 'offset' property.
+> >
+> > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 > 
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> I made a quick test on a mcbin and I confirm that the watchdog is here
+> and usable.
+> 
+> Tested-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> and 
+> Applied on mvebu/dt64
 
-Talking about what we want... if it's all split out I might as well add 
-a gicv2+psci DT as well. Will that still retain your Acked-by or do you 
-want to see it first ;-) ?
+This is meant to be a reply to https://patchwork.kernel.org/patch/9947525/, 
+right?
 
+Anyway, I see the right patch[1] at mvebu/dt64.
 
-Daniel.
+Thanks,
+baruch
 
+[1] http://git.infradead.org/linux-mvebu.git/commitdiff/e34ffe32f6e7ae9191d14226ff9d8c0c47400a71
+
+> > ---
+> >  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> > index 4d360713ed12..30d48ecf46e0 100644
+> > --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> > +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> > @@ -254,7 +254,7 @@
+> >  
+> >  			ap_syscon: system-controller@6f4000 {
+> >  				compatible = "syscon", "simple-mfd";
+> > -				reg = <0x6f4000 0x1000>;
+> > +				reg = <0x6f4000 0x2000>;
+> >  
+> >  				ap_clk: clock {
+> >  					compatible = "marvell,ap806-clock";
+> > @@ -265,7 +265,7 @@
+> >  					compatible = "marvell,ap806-pinctrl";
+> >  				};
+> >  
+> > -				ap_gpio: gpio {
+> > +				ap_gpio: gpio@1040 {
+> >  					compatible = "marvell,armada-8k-gpio";
+> >  					offset = <0x1040>;
+> >  					ngpios = <20>;
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
