@@ -1,345 +1,247 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 04/10] ARM: dts: omap4: add clkctrl nodes
-Date: Wed, 20 Sep 2017 15:46:15 -0700
-Message-ID: <20170920224621.16236-5-tony@atomide.com>
-References: <20170920224621.16236-1-tony@atomide.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920224621.16236-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+From: "Marty E. Plummer" <hanetzer@startmail.com>
+Subject: Re: [RFC RESEND 3/3] arm: dts: add Hi3521A dts
+Date: Wed, 20 Sep 2017 18:04:12 -0500
+Message-ID: <20170920230405.tz3vzoys2vn72rgv@proprietary-killer.fossland>
+References: <20170917082327.10058-1-hanetzer@startmail.com>
+ <20170917082327.10058-4-hanetzer@startmail.com>
+ <20170920205303.lcycfuai75a7namk@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170920205303.lcycfuai75a7namk@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, xuejiancheng@hisilicon.com, leo.yan@linaro.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, wenpan@hisilicon.com, linux@armlinux.org.uk, sboyd@codeaurora.org, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, gregkh@linuxfoundation.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-
-Add clkctrl nodes for OMAP4 SoC. These are going to be acting as
-replacement for part of the existing clock data and the existing
-clkctrl hooks under hwmod data.
-
-Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/omap4.dtsi           |   1 +
- arch/arm/boot/dts/omap44xx-clocks.dtsi | 289 +++++++++++++++++++++++++++++++++
- 2 files changed, 290 insertions(+)
-
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/omap.h>
-+#include <dt-bindings/clock/omap4.h>
- 
- / {
- 	compatible = "ti,omap4430", "ti,omap4";
-diff --git a/arch/arm/boot/dts/omap44xx-clocks.dtsi b/arch/arm/boot/dts/omap44xx-clocks.dtsi
---- a/arch/arm/boot/dts/omap44xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap44xx-clocks.dtsi
-@@ -628,6 +628,7 @@
- 		clock-frequency = <0>;
- 	};
- };
-+
- &prm_clocks {
- 	sys_clkin_ck: sys_clkin_ck@110 {
- 		#clock-cells = <0>;
-@@ -1631,3 +1632,291 @@
- 		reg = <0x0224>;
- 	};
- };
-+
-+&cm1 {
-+	mpuss_cm: mpuss_cm@300 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x300 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x300 0x100>;
-+
-+		mpuss_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	tesla_cm: tesla_cm@400 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x400 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x400 0x100>;
-+
-+		tesla_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	abe_cm: abe_cm@500 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x500 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x500 0x100>;
-+
-+		abe_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x6c>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+};
-+
-+&cm2 {
-+	l4_ao_cm: l4_ao_cm@600 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x600 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x600 0x100>;
-+
-+		l4_ao_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x1c>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l3_1_cm: l3_1_cm@700 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x700 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x700 0x100>;
-+
-+		l3_1_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l3_2_cm: l3_2_cm@800 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x800 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x800 0x100>;
-+
-+		l3_2_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x14>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	ducati_cm: ducati_cm@900 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x900 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x900 0x100>;
-+
-+		ducati_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l3_dma_cm: l3_dma_cm@a00 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0xa00 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xa00 0x100>;
-+
-+		l3_dma_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l3_emif_cm: l3_emif_cm@b00 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0xb00 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xb00 0x100>;
-+
-+		l3_emif_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x1c>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	d2d_cm: d2d_cm@c00 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0xc00 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xc00 0x100>;
-+
-+		d2d_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l4_cfg_cm: l4_cfg_cm@d00 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0xd00 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xd00 0x100>;
-+
-+		l4_cfg_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x14>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l3_instr_cm: l3_instr_cm@e00 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0xe00 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xe00 0x100>;
-+
-+		l3_instr_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x24>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	ivahd_cm: ivahd_cm@f00 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0xf00 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xf00 0x100>;
-+
-+		ivahd_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0xc>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	iss_cm: iss_cm@1000 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1000 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1000 0x100>;
-+
-+		iss_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0xc>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l3_dss_cm: l3_dss_cm@1100 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1100 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1100 0x100>;
-+
-+		l3_dss_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l3_gfx_cm: l3_gfx_cm@1200 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1200 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1200 0x100>;
-+
-+		l3_gfx_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l3_init_cm: l3_init_cm@1300 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1300 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1300 0x100>;
-+
-+		l3_init_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0xc4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l4_per_cm: l4_per_cm@1400 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1400 0x200>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1400 0x200>;
-+
-+		l4_per_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x144>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+};
-+
-+&prm {
-+	l4_wkup_cm: l4_wkup_cm@1800 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1800 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1800 0x100>;
-+
-+		l4_wkup_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x5c>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	emu_sys_cm: emu_sys_cm@1a00 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1a00 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1a00 0x100>;
-+
-+		emu_sys_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+};
--- 
-2.14.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Sep 20, 2017 at 08:53:03PM +0000, Rob Herring wrote:
+> On Sun, Sep 17, 2017 at 03:23:27AM -0500, Marty E. Plummer wrote:
+> > Add hi3521a.dtsi and hi3521a-rs-dm290e.dts for RaySharp CCTV systems,
+> > marketed under the name Samsung SDR-B74301N
+> > 
+> > Signed-off-by: Marty E. Plummer <hanetzer@startmail.com>
+> > ---
+> >  arch/arm/boot/dts/Makefile              |   2 +
+> >  arch/arm/boot/dts/hi3521a-rs-dm290e.dts |  52 ++++++
+> >  arch/arm/boot/dts/hi3521a.dtsi          | 310 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 364 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/hi3521a-rs-dm290e.dts
+> >  create mode 100644 arch/arm/boot/dts/hi3521a.dtsi
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index faf46abaa4a2..e7b9b5dde20f 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -189,6 +189,8 @@ dtb-$(CONFIG_ARCH_GEMINI) += \
+> >  	gemini-sq201.dtb \
+> >  	gemini-wbd111.dtb \
+> >  	gemini-wbd222.dtb
+> > +dtb-$(CONFIG_ARCH_HI3521A) += \
+> > +	hi3521a-rs-dm290e.dtb
+> >  dtb-$(CONFIG_ARCH_HI3xxx) += \
+> >  	hi3620-hi4511.dtb
+> >  dtb-$(CONFIG_ARCH_HIGHBANK) += \
+> > diff --git a/arch/arm/boot/dts/hi3521a-rs-dm290e.dts b/arch/arm/boot/dts/hi3521a-rs-dm290e.dts
+> > new file mode 100644
+> > index 000000000000..b32c8392c93f
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/hi3521a-rs-dm290e.dts
+> > @@ -0,0 +1,52 @@
+> > +/*
+> > + * Copyright (C) 2017 Marty Plummer <hanetzer@startmail.com>
+> > + *
+> > + * This program is free software: you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation, either version 3 of the License, or
+> > + * (at your option) any later version.
+> 
+> Should be version 2 or later? Doesn't really matter to me from a DT 
+> perspective, but it is in the kernel tree.
+> 
+> You can use SPDX tags if you want.
+>
+Oh, that's a good idea. I hadn't seen any SPDX tags in the tree that I
+noticed before. I ended up just using the :Gpl command from neovim. 
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License
+> > + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "hi3521a.dtsi"
+> > +
+> > +/ {
+> > +	model = "RaySharp RS-DM-290E DVR Board";
+> > +	compatible = "hisilicon,hi3521a";
+> 
+> Needs a board compatible too.
+>
+Something like `compatible = "hisilicon,hi3521a", "raysharp,rs-dm-290e";` ? 
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +		serial1 = &uart1;
+> > +		serial2 = &uart2;
+> > +	};
+> > +
+> > +	memory {
+> 
+> Needs a unit-address.
+>
+Could you explain what you mean here? As in, memory@someaddr? What would
+I use here? 
+> > +		device_type = "memory";
+> > +		reg = <0x80000000 0xf00000>;
+> > +	};
+> > +};
+> > +
+> > +&hi_sfc {
+> > +	status = "okay";
+> > +	spi-nor@0 {
+> > +		compatible = "jedec,spi-nor";
+> 
+> I don't remember offhand, but I think this should have a device specific 
+> compatible too.
+>
+Instead of "jedec,spi-nor" ? Specific to the SPI chip? 
+> > +		reg = <0>;
+> > +		spi-max-frequency = <104000000>;
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&dual_timer0 {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm/boot/dts/hi3521a.dtsi b/arch/arm/boot/dts/hi3521a.dtsi
+> > new file mode 100644
+> > index 000000000000..2af746fdec46
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/hi3521a.dtsi
+> > @@ -0,0 +1,310 @@
+> > +/*
+> > + * Copyright (C) 2017 Marty Plummer <hanetzer@startmail.com>
+> > + *
+> > + * This program is free software: you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation, either version 3 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License
+> > + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> > + */
+> > +
+> > +#include <dt-bindings/clock/hi3521a-clock.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +/ {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +	chosen { };
+> > +
+> > +	cpus {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		cpu0: cpu@0 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a7";
+> > +			reg = <0>;
+> > +		};
+> > +	};
+> > +
+> > +	hi_sfc: spi-nor-controller@10000000 {
+> > +		compatible = "hisilicon,hi3521a-spi-nor", "hisilicon,fmc-spi-nor";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		reg = <0x10000000 0x10000>, <0x14000000 0x1000000>;
+> > +		reg-names = "control", "memory";
+> > +		clocks = <&crg HI3521A_FMC_CLK>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	gic: interrupt-controller@10300000 {
+> > +		compatible = "arm,pl390";
+> > +		#interrupt-cells = <3>;
+> > +		interrupt-controller;
+> > +		reg = <0x10301000 0x1000>, <0x10302000 0x1000>;
+> > +	};
+> > +
+> > +	clk_3m: clk_3m {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <3000000>;
+> > +	};
+> > +
+> > +	crg: clock-reset-controller@12040000 {
+> > +		compatible = "hisilicon,hi3521a-crg";
+> > +		#clock-cells = <1>;
+> > +		#reset-cells = <2>;
+> > +		reg = <0x12040000 0x10000>;
+> > +	};
+> 
+> These memory mapped peripherals should be under a bus node.
+>
+Crap, will fix. 
+> > +
+> > +	soc {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		compatible = "simple-bus";
+> > +		interrupt-parent = <&gic>;
+> > +		ranges;
+> 
+> It is preferred to have a value here and limit the range of the bus 
+> addresses.
+> 
+Yeah, I think I've seen that before, I don't quite grok how that works.
+> > +
+> > +		dmac: dma@10060000 {
+> 
+> dma-controller@...
+> 
+Will fix.
+> > +			compatible = "arm,pl080", "arm,primecell";
+> > +			reg = <0x10060000 0x1000>;
+> > +			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> > +			status = "disabled";
+> 
+> I wouldn't think enabling dma would be a per board decision.
+> 
+I've just noticed that in general dtsi files just lay it all out and are
+mostly "disabled", though if you think this should be explicitly enabled
+thats fine by me.
+> > +		};
+> > +
+> > +		dual_timer0: timer@12000000 {
+> > +			compatible = "arm,sp804", "arm,primecell";
+> > +			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> > +			reg = <0x12000000 0x1000>;
+> > +			clocks = <&clk_3m>;
+> > +			clock-names = "apb_pclk";
+> 
+> IIRC, it is deprecated to have a single clock here. The h/w has 2 clock 
+> inputs.
+>
+Are you meaning for the 0x0 index and 0x20 index clocks?
+> Where's the ARM architected timer?
+> 
+Unsure tbqf, just doing my best to translate a datasheet into code. Do
+all ARM soc's have one?
+> > -- 
+> > 2.14.1
+> > 
