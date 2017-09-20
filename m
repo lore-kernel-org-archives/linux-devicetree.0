@@ -1,73 +1,458 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: input: Add document bindings for
- mtk-pmic-keys
-Date: Wed, 20 Sep 2017 15:53:01 -0500
-Message-ID: <20170920205301.v6gpmhll4pdpuyxv@rob-hp-laptop>
-References: <1505635252-27716-1-git-send-email-chen.zhong@mediatek.com>
- <1505635252-27716-3-git-send-email-chen.zhong@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC RESEND 3/3] arm: dts: add Hi3521A dts
+Date: Wed, 20 Sep 2017 15:53:03 -0500
+Message-ID: <20170920205303.lcycfuai75a7namk@rob-hp-laptop>
+References: <20170917082327.10058-1-hanetzer@startmail.com>
+ <20170917082327.10058-4-hanetzer@startmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1505635252-27716-3-git-send-email-chen.zhong@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Zhong <chen.zhong@mediatek.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Andi Shyti <andi.shyti@samsung.com>, Jaechul Lee <jcsing.lee@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+In-Reply-To: <20170917082327.10058-4-hanetzer-zVALfsKDk1AS+FvcfC7Uqw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Marty E. Plummer" <hanetzer-zVALfsKDk1AS+FvcfC7Uqw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 17, 2017 at 04:00:49PM +0800, Chen Zhong wrote:
-> This patch adds the device tree binding documentation for the MediaTek
-> pmic keys found on PMIC MT6397/MT6323.
+On Sun, Sep 17, 2017 at 03:23:27AM -0500, Marty E. Plummer wrote:
+> Add hi3521a.dtsi and hi3521a-rs-dm290e.dts for RaySharp CCTV systems,
+> marketed under the name Samsung SDR-B74301N
 > 
-> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+> Signed-off-by: Marty E. Plummer <hanetzer-zVALfsKDk1AS+FvcfC7Uqw@public.gmane.org>
 > ---
->  .../devicetree/bindings/input/mtk-pmic-keys.txt    |   41 ++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+>  arch/arm/boot/dts/Makefile              |   2 +
+>  arch/arm/boot/dts/hi3521a-rs-dm290e.dts |  52 ++++++
+>  arch/arm/boot/dts/hi3521a.dtsi          | 310 ++++++++++++++++++++++++++++++++
+>  3 files changed, 364 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/hi3521a-rs-dm290e.dts
+>  create mode 100644 arch/arm/boot/dts/hi3521a.dtsi
 > 
-> diff --git a/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index faf46abaa4a2..e7b9b5dde20f 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -189,6 +189,8 @@ dtb-$(CONFIG_ARCH_GEMINI) += \
+>  	gemini-sq201.dtb \
+>  	gemini-wbd111.dtb \
+>  	gemini-wbd222.dtb
+> +dtb-$(CONFIG_ARCH_HI3521A) += \
+> +	hi3521a-rs-dm290e.dtb
+>  dtb-$(CONFIG_ARCH_HI3xxx) += \
+>  	hi3620-hi4511.dtb
+>  dtb-$(CONFIG_ARCH_HIGHBANK) += \
+> diff --git a/arch/arm/boot/dts/hi3521a-rs-dm290e.dts b/arch/arm/boot/dts/hi3521a-rs-dm290e.dts
 > new file mode 100644
-> index 0000000..fd48ff7
+> index 000000000000..b32c8392c93f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> @@ -0,0 +1,41 @@
-> +MediaTek MT6397/MT6323 PMIC Keys Device Driver
+> +++ b/arch/arm/boot/dts/hi3521a-rs-dm290e.dts
+> @@ -0,0 +1,52 @@
+> +/*
+> + * Copyright (C) 2017 Marty Plummer <hanetzer-zVALfsKDk1AS+FvcfC7Uqw@public.gmane.org>
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation, either version 3 of the License, or
+> + * (at your option) any later version.
+
+Should be version 2 or later? Doesn't really matter to me from a DT 
+perspective, but it is in the kernel tree.
+
+You can use SPDX tags if you want.
+
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
 > +
-> +There are two key functions provided by MT6397/MT6323 PMIC, pwrkey
-> +and homekey. The key functions are defined as the subnode of the function
-> +node provided by MT6397/MT6323 PMIC that is being defined as one kind
-> +of Muti-Function Device (MFD)
+> +/dts-v1/;
+> +#include "hi3521a.dtsi"
 > +
-> +For MT6397/MT6323 MFD bindings see:
-> +Documentation/devicetree/bindings/mfd/mt6397.txt
+> +/ {
+> +	model = "RaySharp RS-DM-290E DVR Board";
+> +	compatible = "hisilicon,hi3521a";
+
+Needs a board compatible too.
+
 > +
-> +Required properties:
-> +- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
-> +- linux,keycodes: Specifies the numeric keycode values to
-> +	be used for reporting keys presses. The array can
-> +	contain up to 2 entries.
+> +	aliases {
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +	};
 > +
-> +Optional Properties:
-> +- mediatek,wakeup-keys: Specifies each key can be used as a wakeup source
-> +	or not. This can be customized depends on board design.
+> +	memory {
 
-I think this should be a common property if we're going to put into DT. 
-Something like "wakeup-scancodes" to be clear the values are the raw 
-scancodes. Alternatively, we could list Linux keycodes instead with 
-something like "linux,wakeup-keycodes".
+Needs a unit-address.
 
-> +- wakeup-source: PMIC keys can be used as wakeup sources.
+> +		device_type = "memory";
+> +		reg = <0x80000000 0xf00000>;
+> +	};
+> +};
+> +
+> +&hi_sfc {
+> +	status = "okay";
+> +	spi-nor@0 {
+> +		compatible = "jedec,spi-nor";
 
-Just "See ../power/wakeup-source.txt" for the description.
+I don't remember offhand, but I think this should have a device specific 
+compatible too.
 
-> +- mediatek,long-press-mode: Long press key shutdown setting, 1 for
-> +	pwrkey only, 2 for pwrkey/homekey together, others for disabled.
-> +- debounce-interval: Long press key shutdown debouncing interval time
-> +	in seconds. 0/1/2/3 for 8/11/14/5 seconds. If not specified defaults to 0.
+> +		reg = <0>;
+> +		spi-max-frequency = <104000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&dual_timer0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/hi3521a.dtsi b/arch/arm/boot/dts/hi3521a.dtsi
+> new file mode 100644
+> index 000000000000..2af746fdec46
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/hi3521a.dtsi
+> @@ -0,0 +1,310 @@
+> +/*
+> + * Copyright (C) 2017 Marty Plummer <hanetzer-zVALfsKDk1AS+FvcfC7Uqw@public.gmane.org>
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation, either version 3 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <dt-bindings/clock/hi3521a-clock.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	chosen { };
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0>;
+> +		};
+> +	};
+> +
+> +	hi_sfc: spi-nor-controller@10000000 {
+> +		compatible = "hisilicon,hi3521a-spi-nor", "hisilicon,fmc-spi-nor";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x10000000 0x10000>, <0x14000000 0x1000000>;
+> +		reg-names = "control", "memory";
+> +		clocks = <&crg HI3521A_FMC_CLK>;
+> +		status = "disabled";
+> +	};
+> +
+> +	gic: interrupt-controller@10300000 {
+> +		compatible = "arm,pl390";
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		reg = <0x10301000 0x1000>, <0x10302000 0x1000>;
+> +	};
+> +
+> +	clk_3m: clk_3m {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <3000000>;
+> +	};
+> +
+> +	crg: clock-reset-controller@12040000 {
+> +		compatible = "hisilicon,hi3521a-crg";
+> +		#clock-cells = <1>;
+> +		#reset-cells = <2>;
+> +		reg = <0x12040000 0x10000>;
+> +	};
 
-This property units should be in milliseconds. However, this doesn't 
-sound like debounce filtering time if 5-14 seconds. That sounds like 
-forced power off time (i.e. for a hung device). This also should be 
-common. I imagine we already have some drivers with similar properties.
+These memory mapped peripherals should be under a bus node.
 
-Rob
+> +
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		interrupt-parent = <&gic>;
+> +		ranges;
+
+It is preferred to have a value here and limit the range of the bus 
+addresses.
+
+> +
+> +		dmac: dma@10060000 {
+
+dma-controller@...
+
+> +			compatible = "arm,pl080", "arm,primecell";
+> +			reg = <0x10060000 0x1000>;
+> +			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+
+I wouldn't think enabling dma would be a per board decision.
+
+> +		};
+> +
+> +		dual_timer0: timer@12000000 {
+> +			compatible = "arm,sp804", "arm,primecell";
+> +			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg = <0x12000000 0x1000>;
+> +			clocks = <&clk_3m>;
+> +			clock-names = "apb_pclk";
+
+IIRC, it is deprecated to have a single clock here. The h/w has 2 clock 
+inputs.
+
+Where's the ARM architected timer?
+
+> +			status = "disabled";
+> +		};
+> +
+> +		dual_timer1: timer@12010000 {
+> +			compatible = "arm,sp804", "arm,primecell";
+> +			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg = <0x12010000 0x1000>;
+> +			clocks = <&clk_3m>;
+> +			clock-name = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		dual_timer2: timer@12020000 {
+> +			compatible = "arm,sp804", "arm,primecell";
+> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg = <0x12020000 0x1000>;
+> +			clocks = <&clk_3m>;
+> +			clock-name = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		dual_timer3: timer@12030000 {
+> +			compatible = "arm,sp804", "arm,primecell";
+> +			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg = <0x12030000 0x1000>;
+> +			clocks = <&clk_3m>;
+> +			clock-name = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		wdt0: watchdog@12070000 {
+> +			compatible = "arm,sp805", "arm,primecell";
+> +			arm,primecell-periphid = <0x00141805>;
+> +			reg = <0x12070000 0x1000>;
+> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clk_3m>;
+> +			clock-names = "apb_pclk";
+> +		};
+> +
+> +		uart0: serial@12080000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x12080000 0x1000>;
+> +			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&crg HI3521A_UART0_CLK>;
+> +			clock-names = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@12090000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x12090000 0x1000>;
+> +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&crg HI3521A_UART1_CLK>;
+> +			clock-names = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@120a0000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0x120a0000 0x1000>;
+> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&crg HI3521A_UART2_CLK>;
+> +			clock-names = "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio0: gpio@12150000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12150000 0x1000>;
+> +			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio1: gpio@12160000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12160000 0x1000>;
+> +			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio2: gpio@12170000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12170000 0x1000>;
+> +			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio3: gpio@12180000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12180000 0x1000>;
+> +			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio4: gpio@12190000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12190000 0x1000>;
+> +			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio5: gpio@121a0000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x121a0000 0x1000>;
+> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio6: gpio@121b0000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x121b0000 0x1000>;
+> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio7: gpio@121c0000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x121c0000 0x1000>;
+> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio8: gpio@121d0000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x121d0000 0x1000>;
+> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio9: gpio@121e0000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x121e0000 0x1000>;
+> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio10: gpio@121f0000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x121f0000 0x1000>;
+> +			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio11: gpio@12200000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12200000 0x1000>;
+> +			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio12: gpio@12210000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12210000 0x1000>;
+> +			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio13: gpio@12220000 {
+> +			compatible = "arm,pl061", "arm,primecell";
+> +			reg = <0x12220000 0x1000>;
+> +			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> -- 
+> 2.14.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
