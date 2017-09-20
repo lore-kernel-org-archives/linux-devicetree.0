@@ -1,492 +1,95 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] dmaengine: zynqmp_ps_pcie: Adding PS PCIe DMA
- driver
-Date: Wed, 20 Sep 2017 07:49:19 +0200
-Message-ID: <1e17381d-0e60-e563-4f74-96245fe00aaf@monstr.eu>
-References: <1504873388-29195-1-git-send-email-vjonnal@xilinx.com>
- <1504873388-29195-4-git-send-email-vjonnal@xilinx.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dt marvell: extend AP806 system controller size
+Date: Wed, 20 Sep 2017 09:51:05 +0200
+Message-ID: <87shfhreom.fsf@free-electrons.com>
+References: <d230651ed28aa4344bab7e13e9964d69673ecace.1505461807.git.baruch@tkos.co.il>
+        <877ewusr2h.fsf@free-electrons.com>
+        <20170919160813.yz4ez2hsuaejbf4t@tarshish>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="XdTKFfbuBq9kglatFEa7htSw2crG8Q3Rv"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504873388-29195-4-git-send-email-vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170919160813.yz4ez2hsuaejbf4t@tarshish> (Baruch Siach's
+        message of "Tue, 19 Sep 2017 19:08:13 +0300")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ravi Shankar Jonnalagadda <venkata.ravi.jonnalagadda-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---XdTKFfbuBq9kglatFEa7htSw2crG8Q3Rv
-Content-Type: multipart/mixed; boundary="q6VRODlwBwGACoR5fSf8TA15CMXvj9LnM";
- protected-headers="v1"
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-To: Ravi Shankar Jonnalagadda <venkata.ravi.jonnalagadda-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>,
- vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org,
- michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org,
- dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org,
- lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org,
- dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Message-ID: <1e17381d-0e60-e563-4f74-96245fe00aaf-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] dmaengine: zynqmp_ps_pcie: Adding PS PCIe DMA
- driver
-References: <1504873388-29195-1-git-send-email-vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
- <1504873388-29195-4-git-send-email-vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-In-Reply-To: <1504873388-29195-4-git-send-email-vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Hi Baruch,
+ 
+ On mar., sept. 19 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 
---q6VRODlwBwGACoR5fSf8TA15CMXvj9LnM
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+> Hi Gregory,
+>
+> On Tue, Sep 19, 2017 at 04:25:58PM +0200, Gregory CLEMENT wrote:
+>>  On ven., sept. 15 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+>> 
+>> > Extend the container size to 0x2000 to include the gpio controller at
+>> > offset 0x1040.
+>> >
+>> > While at it, add start address notation to the gpio node name to match
+>> > its 'offset' property.
+>> >
+>> > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+>> 
+>> I made a quick test on a mcbin and I confirm that the watchdog is here
+>> and usable.
+>> 
+>> Tested-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> and 
+>> Applied on mvebu/dt64
+>
+> This is meant to be a reply to https://patchwork.kernel.org/patch/9947525/, 
+> right?
 
-On 8.9.2017 14:23, Ravi Shankar Jonnalagadda wrote:
-> Adding support for ZynqmMP PS PCIe EP driver.
-> Adding support for ZynqmMP PS PCIe Root DMA driver.
-> Modifying Kconfig and Makefile to add the support.
->=20
-> Signed-off-by: Ravi Shankar Jonnalagadda <vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: RaviKiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/dma/Kconfig               |  12 +++
->  drivers/dma/xilinx/Makefile       |   2 +
->  drivers/dma/xilinx/ps_pcie.h      |  44 +++++++++
->  drivers/dma/xilinx/ps_pcie_main.c | 200 ++++++++++++++++++++++++++++++=
-++++++++
->  include/linux/dma/ps_pcie_dma.h   |  69 +++++++++++++
->  5 files changed, 327 insertions(+)
->  create mode 100644 drivers/dma/xilinx/ps_pcie.h
->  create mode 100644 drivers/dma/xilinx/ps_pcie_main.c
->  create mode 100644 include/linux/dma/ps_pcie_dma.h
->=20
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index fa8f9c0..e2fe4e5 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -586,6 +586,18 @@ config XILINX_ZYNQMP_DMA
->  	help
->  	  Enable support for Xilinx ZynqMP DMA controller.
-> =20
-> +config XILINX_PS_PCIE_DMA
-> +	tristate "Xilinx PS PCIe DMA support"
-> +	depends on (PCI && X86_64 || ARM64)
-> +	select DMA_ENGINE
-> +	help
-> +	  Enable support for the Xilinx PS PCIe DMA engine present
-> +	  in recent Xilinx ZynqMP chipsets.
-> +
-> +	  Say Y here if you have such a chipset.
-> +
-> +	  If unsure, say N.
-> +
->  config ZX_DMA
->  	tristate "ZTE ZX DMA support"
->  	depends on ARCH_ZX || COMPILE_TEST
-> diff --git a/drivers/dma/xilinx/Makefile b/drivers/dma/xilinx/Makefile
-> index 9e91f8f..04f6f99 100644
-> --- a/drivers/dma/xilinx/Makefile
-> +++ b/drivers/dma/xilinx/Makefile
-> @@ -1,2 +1,4 @@
->  obj-$(CONFIG_XILINX_DMA) +=3D xilinx_dma.o
->  obj-$(CONFIG_XILINX_ZYNQMP_DMA) +=3D zynqmp_dma.o
-> +ps_pcie_dma-objs :=3D ps_pcie_main.o ps_pcie_platform.o
-> +obj-$(CONFIG_XILINX_PS_PCIE_DMA) +=3D ps_pcie_dma.o
-> diff --git a/drivers/dma/xilinx/ps_pcie.h b/drivers/dma/xilinx/ps_pcie.=
-h
-> new file mode 100644
-> index 0000000..351f051
-> --- /dev/null
-> +++ b/drivers/dma/xilinx/ps_pcie.h
-> @@ -0,0 +1,44 @@
-> +/*
-> + * Xilinx PS PCIe DMA Engine platform header file
-> + *
-> + * Copyright (C) 2010-2017 Xilinx, Inc. All rights reserved.
-> + *
-> + * This program is free software: you can redistribute it and/or modif=
-y
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation
-> + */
-> +
-> +#ifndef __XILINX_PS_PCIE_H
-> +#define __XILINX_PS_PCIE_H
-> +
-> +#include <linux/delay.h>
-> +#include <linux/dma-direction.h>
+Yes!
+Sorry for hte confusion.
 
-this is included via dma-mapping.h below.
+>
+> Anyway, I see the right patch[1] at mvebu/dt64.
+>
+> Thanks,
+> baruch
+>
+> [1] http://git.infradead.org/linux-mvebu.git/commitdiff/e34ffe32f6e7ae9191d14226ff9d8c0c47400a71
+>
+>> > ---
+>> >  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 4 ++--
+>> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>> >
+>> > diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+>> > index 4d360713ed12..30d48ecf46e0 100644
+>> > --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+>> > +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+>> > @@ -254,7 +254,7 @@
+>> >  
+>> >  			ap_syscon: system-controller@6f4000 {
+>> >  				compatible = "syscon", "simple-mfd";
+>> > -				reg = <0x6f4000 0x1000>;
+>> > +				reg = <0x6f4000 0x2000>;
+>> >  
+>> >  				ap_clk: clock {
+>> >  					compatible = "marvell,ap806-clock";
+>> > @@ -265,7 +265,7 @@
+>> >  					compatible = "marvell,ap806-pinctrl";
+>> >  				};
+>> >  
+>> > -				ap_gpio: gpio {
+>> > +				ap_gpio: gpio@1040 {
+>> >  					compatible = "marvell,armada-8k-gpio";
+>> >  					offset = <0x1040>;
+>> >  					ngpios = <20>;
+>
+> -- 
+>      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+> =}------------------------------------------------ooO--U--Ooo------------{=
+>    - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
 
-> +#include <linux/dmaengine.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/ioport.h>
-> +#include <linux/irqreturn.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mempool.h>
-> +#include <linux/of.h>
-> +#include <linux/pci.h>
-> +#include <linux/property.h>
-
-this is already include via of.h
-
-> +#include <linux/platform_device.h>
-> +#include <linux/timer.h>
-> +#include <linux/dma/ps_pcie_dma.h>
-
-Don't we have any script for checking this?
-
-> +
-> +/**
-> + * dma_platform_driver_register - This will be invoked by module init
-> + *
-> + * Return: returns status of platform_driver_register
-> + */
-> +int dma_platform_driver_register(void);
-
-
-put empty line here.
-
-> +/**
-> + * dma_platform_driver_unregister - This will be invoked by module exi=
-t
-> + *
-> + * Return: returns void after unregustering platform driver
-> + */
-> +void dma_platform_driver_unregister(void);
-> +
-> +#endif
-> diff --git a/drivers/dma/xilinx/ps_pcie_main.c b/drivers/dma/xilinx/ps_=
-pcie_main.c
-> new file mode 100644
-> index 0000000..4ccd8ef
-> --- /dev/null
-> +++ b/drivers/dma/xilinx/ps_pcie_main.c
-> @@ -0,0 +1,200 @@
-> +/*
-> + * XILINX PS PCIe driver
-> + *
-> + * Copyright (C) 2017 Xilinx, Inc. All rights reserved.
-> + *
-> + * Description
-> + * PS PCIe DMA is memory mapped DMA used to execute PS to PL transfers=
-
-> + * on ZynqMP UltraScale+ Devices.
-> + * This PCIe driver creates a platform device with specific platform
-> + * info enabling creation of DMA device corresponding to the channel
-> + * information provided in the properties
-> + *
-> + * This program is free software: you can redistribute it and/or modif=
-y
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation
-> + */
-> +
-> +#include "ps_pcie.h"
-> +#include "../dmaengine.h"
-> +
-> +#define DRV_MODULE_NAME		  "ps_pcie_dma"
-> +
-> +static int ps_pcie_dma_probe(struct pci_dev *pdev,
-> +			     const struct pci_device_id *ent);
-> +static void ps_pcie_dma_remove(struct pci_dev *pdev);
-> +
-> +static u32 channel_properties_pcie_axi[] =3D {
-> +	(u32)(PCIE_AXI_DIRECTION), (u32)(NUMBER_OF_BUFFER_DESCRIPTORS),
-> +	(u32)(DEFAULT_DMA_QUEUES), (u32)(CHANNEL_COAELSE_COUNT),
-> +	(u32)(CHANNEL_POLL_TIMER_FREQUENCY) };
-> +
-> +static u32 channel_properties_axi_pcie[] =3D {
-> +	(u32)(AXI_PCIE_DIRECTION), (u32)(NUMBER_OF_BUFFER_DESCRIPTORS),
-> +	(u32)(DEFAULT_DMA_QUEUES), (u32)(CHANNEL_COAELSE_COUNT),
-> +	(u32)(CHANNEL_POLL_TIMER_FREQUENCY) };
-> +
-> +static struct property_entry generic_pcie_ep_property[] =3D {
-> +	PROPERTY_ENTRY_U32("numchannels", (u32)MAX_NUMBER_OF_CHANNELS),
-> +	PROPERTY_ENTRY_U32_ARRAY("ps_pcie_channel0",
-> +				 channel_properties_pcie_axi),
-> +	PROPERTY_ENTRY_U32_ARRAY("ps_pcie_channel1",
-> +				 channel_properties_axi_pcie),
-> +	PROPERTY_ENTRY_U32_ARRAY("ps_pcie_channel2",
-> +				 channel_properties_pcie_axi),
-> +	PROPERTY_ENTRY_U32_ARRAY("ps_pcie_channel3",
-> +				 channel_properties_axi_pcie),
-> +	{ },
-> +};
-> +
-> +static const struct platform_device_info xlnx_std_platform_dev_info =3D=
- {
-> +	.name           =3D XLNX_PLATFORM_DRIVER_NAME,
-> +	.properties     =3D generic_pcie_ep_property,
-> +};
-> +
-> +/**
-> + * ps_pcie_dma_probe - Driver probe function
-> + * @pdev: Pointer to the pci_dev structure
-> + * @ent: pci device id
-> + *
-> + * Return: '0' on success and failure value on error
-> + */
-> +static int ps_pcie_dma_probe(struct pci_dev *pdev,
-> +			     const struct pci_device_id *ent)
-> +{
-> +	int err;
-> +	struct platform_device *platform_dev;
-> +	struct platform_device_info platform_dev_info;
-> +
-> +	dev_info(&pdev->dev, "PS PCIe DMA Driver probe\n");
-> +
-> +	err =3D pcim_enable_device(pdev);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Cannot enable PCI device, aborting\n");
-> +		return err;
-> +	}
-> +
-> +	err =3D pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
-> +	if (err) {
-> +		dev_info(&pdev->dev, "Cannot set 64 bit DMA mask\n");
-> +		err =3D pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-> +		if (err) {
-> +			dev_err(&pdev->dev, "DMA mask set error\n");
-> +			return err;
-> +		}
-> +	}
-> +
-> +	err =3D pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
-> +	if (err) {
-> +		dev_info(&pdev->dev, "Cannot set 64 bit consistent DMA mask\n");
-> +		err =3D pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
-> +		if (err) {
-> +			dev_err(&pdev->dev, "Cannot set consistent DMA mask\n");
-> +			return err;
-> +		}
-> +	}
-> +
-> +	pci_set_master(pdev);
-> +
-> +	/* For Root DMA platform device will be created through device tree *=
-/
-> +	if (pdev->vendor =3D=3D PCI_VENDOR_ID_XILINX &&
-> +	    pdev->device =3D=3D ZYNQMP_RC_DMA_DEVID)
-> +		return 0;
-> +
-> +	memcpy(&platform_dev_info, &xlnx_std_platform_dev_info,
-> +	       sizeof(xlnx_std_platform_dev_info));
-> +
-> +	/* Do device specific channel configuration changes to
-> +	 * platform_dev_info.properties if required
-> +	 * More information on channel properties can be found
-> +	 * at Documentation/devicetree/bindings/dma/xilinx/ps-pcie-dma.txt
-> +	 */
-> +
-> +	platform_dev_info.parent =3D &pdev->dev;
-> +	platform_dev_info.data =3D &pdev;
-> +	platform_dev_info.size_data =3D sizeof(struct pci_dev **);
-> +
-> +	platform_dev =3D platform_device_register_full(&platform_dev_info);
-> +	if (IS_ERR(platform_dev)) {
-> +		dev_err(&pdev->dev,
-> +			"Cannot create platform device, aborting\n");
-> +		return PTR_ERR(platform_dev);
-> +	}
-> +
-> +	pci_set_drvdata(pdev, platform_dev);
-> +
-> +	dev_info(&pdev->dev, "PS PCIe DMA driver successfully probed\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static struct pci_device_id ps_pcie_dma_tbl[] =3D {
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_XILINX, ZYNQMP_DMA_DEVID) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_XILINX, ZYNQMP_RC_DMA_DEVID) },
-> +	{ }
-> +};
-> +
-> +static struct pci_driver ps_pcie_dma_driver =3D {
-> +	.name     =3D DRV_MODULE_NAME,
-> +	.id_table =3D ps_pcie_dma_tbl,
-> +	.probe    =3D ps_pcie_dma_probe,
-> +	.remove   =3D ps_pcie_dma_remove,
-> +};
-> +
-> +/**
-> + * ps_pcie_init - Driver init function
-> + *
-> + * Return: 0 on success. Non zero on failure
-> + */
-> +static int __init ps_pcie_init(void)
-> +{
-> +	int ret;
-> +
-> +	pr_info("%s init()\n", DRV_MODULE_NAME);
-> +
-> +	ret =3D pci_register_driver(&ps_pcie_dma_driver);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D dma_platform_driver_register();
-> +	if (ret)
-> +		pci_unregister_driver(&ps_pcie_dma_driver);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * ps_pcie_dma_remove - Driver remove function
-> + * @pdev: Pointer to the pci_dev structure
-> + *
-> + * Return: void
-> + */
-> +static void ps_pcie_dma_remove(struct pci_dev *pdev)
-> +{
-> +	struct platform_device *platform_dev;
-> +
-> +	platform_dev =3D (struct platform_device *)pci_get_drvdata(pdev);
-> +
-> +	if (platform_dev)
-> +		platform_device_unregister(platform_dev);
-> +}
-> +
-> +/**
-> + * ps_pcie_exit - Driver exit function
-> + *
-> + * Return: void
-> + */
-> +static void __exit ps_pcie_exit(void)
-> +{
-> +	pr_info("%s exit()\n", DRV_MODULE_NAME);
-> +
-> +	dma_platform_driver_unregister();
-> +	pci_unregister_driver(&ps_pcie_dma_driver);
-> +}
-> +
-> +module_init(ps_pcie_init);
-> +module_exit(ps_pcie_exit);
-> +
-> +MODULE_AUTHOR("Xilinx Inc");
-> +MODULE_DESCRIPTION("Xilinx PS PCIe DMA Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/dma/ps_pcie_dma.h b/include/linux/dma/ps_pci=
-e_dma.h
-> new file mode 100644
-> index 0000000..d11323a
-> --- /dev/null
-> +++ b/include/linux/dma/ps_pcie_dma.h
-> @@ -0,0 +1,69 @@
-> +/*
-> + * Xilinx PS PCIe DMA Engine support header file
-> + *
-> + * Copyright (C) 2017 Xilinx, Inc. All rights reserved.
-> + *
-> + * This program is free software: you can redistribute it and/or modif=
-y
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation
-> + */
-> +
-> +#ifndef __DMA_XILINX_PS_PCIE_H
-> +#define __DMA_XILINX_PS_PCIE_H
-> +
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dmaengine.h>
-> +
-> +#define XLNX_PLATFORM_DRIVER_NAME "xlnx-platform-dma-driver"
-> +
-> +#define ZYNQMP_DMA_DEVID	(0xD024)
-> +#define ZYNQMP_RC_DMA_DEVID	(0xD021)
-
-
-Are these hardcoded? If yes, maybe we have better location where these
-should be put.
-
-
-> +
-> +#define MAX_ALLOWED_CHANNELS_IN_HW	4
-> +
-> +#define MAX_NUMBER_OF_CHANNELS	MAX_ALLOWED_CHANNELS_IN_HW
-> +
-> +#define DEFAULT_DMA_QUEUES	4
-> +#define TWO_DMA_QUEUES		2
-> +
-> +#define NUMBER_OF_BUFFER_DESCRIPTORS	1999
-> +#define MAX_DESCRIPTORS			65536
-> +
-> +#define CHANNEL_COAELSE_COUNT		0
-> +
-> +#define CHANNEL_POLL_TIMER_FREQUENCY	1000 /* in milli seconds */
-> +
-> +#define PCIE_AXI_DIRECTION	DMA_TO_DEVICE
-> +#define AXI_PCIE_DIRECTION	DMA_FROM_DEVICE
-> +
-> +/**
-> + * struct BAR_PARAMS - PCIe Bar Parameters
-> + * @BAR_PHYS_ADDR: PCIe BAR Physical address
-> + * @BAR_LENGTH: Length of PCIe BAR
-> + * @BAR_VIRT_ADDR: Virtual Address to access PCIe BAR
-> + */
-> +struct BAR_PARAMS {
-> +	dma_addr_t BAR_PHYS_ADDR; /**< Base physical address of BAR memory */=
-
-> +	unsigned long BAR_LENGTH; /**< Length of BAR memory window */
-> +	void *BAR_VIRT_ADDR;      /**< Virtual Address of mapped BAR memory *=
-/
-> +};
-> +
-> +/**
-> + * struct ps_pcie_dma_channel_match - Match structure for dma clients
-> + * @pci_vendorid: PCIe Vendor id of PS PCIe DMA device
-> + * @pci_deviceid: PCIe Device id of PS PCIe DMA device
-> + * @board_number: Unique id to identify individual device in a system
-> + * @channel_number: Unique channel number of the device
-> + * @direction: DMA channel direction
-> + * @bar_params: Pointer to BAR_PARAMS for accessing application specif=
-ic data
-> + */
-> +struct ps_pcie_dma_channel_match {
-> +	u16 pci_vendorid;
-> +	u16 pci_deviceid;
-> +	u16 board_number;
-> +	u16 channel_number;
-> +	enum dma_data_direction direction;
-> +	struct BAR_PARAMS *bar_params;
-> +};
-> +
-> +#endif
->=20
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
-
-
-
---q6VRODlwBwGACoR5fSf8TA15CMXvj9LnM--
-
---XdTKFfbuBq9kglatFEa7htSw2crG8Q3Rv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEARECAAYFAlnCAV8ACgkQykllyylKDCEcngCeKoXk/7ozWyNLOEFLj3N3NrDt
-PdkAnRJAil2CBYVFwQVjgtpot5M/NLPA
-=ZEaF
------END PGP SIGNATURE-----
-
---XdTKFfbuBq9kglatFEa7htSw2crG8Q3Rv--
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
