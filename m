@@ -1,32 +1,26 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/8] dt-bindings: gpu: mali-utgard: add optional
- power-domain reference
-Date: Wed, 20 Sep 2017 15:52:29 -0500
-Message-ID: <20170920205229.jwnz7uyx2wi6uqd4@rob-hp-laptop>
-References: <20170915091812.13368-1-heiko@sntech.de>
- <20170915091812.13368-4-heiko@sntech.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] dt: watchdog: Document compatibility with JZ4780
+Date: Wed, 20 Sep 2017 15:52:32 -0500
+Message-ID: <20170920131308.nq6dovhd4rng3z3m@rob-hp-laptop>
+References: <20170915192040.27768-1-malat@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170915091812.13368-4-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170915192040.27768-1-malat@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 15, 2017 at 11:18:07AM +0200, Heiko Stuebner wrote:
-> On some socs Mali Utgard gpu have both soc power-domains and external
-> supplying regulators, so add an optional power-domains property for
-> reference.
-> 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+On Fri, Sep 15, 2017 at 09:20:40PM +0200, Mathieu Malaterre wrote:
+> Suggested-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 > ---
->  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> Changes in v2:
+> * Document the new compatible string
+> 
+>  Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
