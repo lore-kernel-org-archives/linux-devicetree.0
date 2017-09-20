@@ -1,206 +1,86 @@
-From: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: Add document for rockchip RGB output
- interface
-Date: Wed, 20 Sep 2017 10:57:29 +0800
-Message-ID: <6cd1ac0d-bc99-f8f3-15da-799f8623ce65@rock-chips.com>
-References: <1505360594-196508-1-git-send-email-hjc@rock-chips.com>
- <1505360600-196567-1-git-send-email-hjc@rock-chips.com>
- <20170919144621.eledmglqgn7nf7zp@rob-hp-laptop>
- <d631ff56-e3e6-688f-d9b6-a7101ce047d5@rock-chips.com>
+From: "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v6 0/3] enable eeprom "size" property and runtime pm
+Date: Wed, 20 Sep 2017 03:51:36 +0000
+Message-ID: <6F87890CF0F5204F892DEA1EF0D77A5972FC1250@FMSMSX114.amr.corp.intel.com>
+References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
+ <20170905134821.vyrita5fssc5uxxh@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d631ff56-e3e6-688f-d9b6-a7101ce047d5-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170905134821.vyrita5fssc5uxxh-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, "Mohandass, Divagar" <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Adding Tomasz...
 
-
-在 2017/9/20 9:51, Sandy Huang 写道:
-> Hi rob,
->      thanks for you review.
+> -----Original Message-----
+> From: Sakari Ailus [mailto:sakari.ailus-X3B1VOXEql0@public.gmane.org]
+> Sent: Tuesday, September 05, 2017 6:48 AM
+> To: Mohandass, Divagar <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mani, Rajmohan <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Subject: Re: [PATCH v6 0/3] enable eeprom "size" property and runtime pm
 > 
-> 在 2017/9/19 22:46, Rob Herring 写道:
->> On Thu, Sep 14, 2017 at 11:43:18AM +0800, Sandy Huang wrote:
->>> This path add support rv1108 rgb output interface driver.
->>>
->>> Signed-off-by: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> ---
->>>   .../bindings/display/rockchip/rockchip-rgb.txt     | 80 
->>> ++++++++++++++++++++++
->>>   1 file changed, 80 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt 
->>> b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
->>> new file mode 100644
->>> index 0000000..4164512
->>> --- /dev/null
->>> +++ 
->>> b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
->>> @@ -0,0 +1,80 @@
->>> +Rockchip RV1108 RGB interface
->>> +================================
->>> +
->>> +Required properties:
->>> +- compatible: matching the soc type:
->>> +    - "rockchip,rv1108-rgb";
->>> +
->>> +Optional properties:
->>> +- pinctrl-names: must contain a "lcdc" entry.
->>> +- pinctrl-0: pin control group to be used for this interface.
->>> +
->>> +Required nodes:
->>> +- rockchip,rgb-mode: should be "p888", "p666", "p565", "s888", 
->>> "s888-dummy"
->>
->> This should be a standard property. Any device with a parallel interface
->> is going to need something like this.
->>
-> so, i need to move this property to panel? or just rename 
-> rockchip,rgb-mode to rgb-mode?
+> Hi Divagar,
 > 
->>> +    - p888: output r8-g8-b8 at each dclk cycle for per-pixel
->>> +    - p666: output r6-g6-b6 at each dclk cycle for per-pixel
->>> +    - p565: output r5-g6-b5 at each dclk cycle for per-pixel
->>> +    - s888: output r8-g8-b8 in three dclk cycle for per-pixel
->>> +    - s888-dmmy: output r8-g8-b8-dummy in four dclk cycle for per-pixel
->>> +
->>> +The rgb has two video ports described by:
->>> +    Documentation/devicetree/bindings/media/video-interfaces.txt
->>> +Their connections are modeled using the OF graph bindings specified in
->>> +    Documentation/devicetree/bindings/graph.txt.
->>> +
->>> +- video port 0 for the VOP input, the remote endpoint maybe 
->>> vopb/vopl/vop
->>> +- video port 1 for either a panel or subsequent encoder
->>> +
->>> +the panel described by:
->>> +    Documentation/devicetree/bindings/display/panel/simple-panel.txt
->>> +Panel other required properties:
->>> +- ports for remote rgb output.
->>> +
->>> +Example:
->>> +
->>> +panel: panel {
->>> +    compatible = "auo,b101ean01";
->>> +    enable-gpios = <&gpio7 21 GPIO_ACTIVE_HIGH>;
->>> +
->>> +    ports {
->>> +        panel_in_rgb: endpoint {
->>> +            remote-endpoint = <&rgb_out_panel>;
->>> +        };
->>> +    };
->>> +};
->>> +
->>> +For Rockchip RV1108:
->>> +
->>> +    rgb: rgb {
->>> +        compatible = "rockchip,rv1108-rgb";
->>> +        pinctrl-names = "lcdc";
->>> +        pinctrl-0 = <&lcdc_ctl>;
->>> +        rockchip,rgb-mode = "p888";
->>> +
->>> +        ports {
->>> +            #address-cells = <1>;
->>> +            #size-cells = <0>;
->>> +
->>> +            rgb_in: port@0 {
->>> +                reg = <0>;
->>> +                #address-cells = <1>;
->>> +                #size-cells = <0>;
->>> +
->>> +                rgb_in_vop: endpoint@0 {
->>> +                    reg = <0>;
->>
->> Don't need reg for a single endpoint.
->>
-> ok, this will be deleted at next version.
->>> +                    remote-endpoint = <&vop_out_rgb>;
->>> +                };
->>> +            };
->>> +
->>> +            rgb_out: port@1 {
->>> +                reg = <1>;
->>> +                #address-cells = <1>;
->>> +                #size-cells = <0>;
->>> +
->>> +                rgb_out_panel: endpoint@0 {
->>> +                    reg = <0>;
->>
->> ditto.
->>
-> ok, this will be deleted at next version.
-sorry,this can't be deleted, because rgb output remote endpoint maybe 
-panel or convert chip, the dts node maybe like this:
-
-panel: panel {
-	status = "disabled";
-	ports {
-		panel_in_rgb: endpoint {
-			remote-endpoint =  <&rgb_out_panel>;
-		};
-	};
-};
-
-bridge: bridge {
-	status = "okay";
-	ports {
-		bridge_in_rgb: endpoint {
-			remote-endpoint =  <&rgb_out_bridge>;
-		};
-	};
-};
-
-rgb_out: port@1 {
-	reg = <1>;
-	#address-cells = <1>;
-	#size-cells = <0>;
-	rgb_out_panel: endpoint@0 {
-		 reg = <0>;
-		remote-endpoint = <&panel_in_rgb>;
-	};
-	rgb_out_bridge: endpoint@1 {
-		 reg = <1>;
-		remote-endpoint = <&bridge_in_rgb>;
-	};
-  };
-
-so rockchip_rgb_bind() @ rockchip_rgb.c use reg id to find the remote 
-actived endpoint.
-
-for_each_child_of_node(port, endpoint) {
-	of_property_read_u32(endpoint, "reg", &endpoint_id);
-	ret = drm_of_find_panel_or_bridge(dev->of_node, 1, endpoint_id, 
-&rgb->panel, &rgb->bridge);
-	if (!ret)
-		break;
-}
-
->>> +                    remote-endpoint = <&panel_in_rgb>;
->>> +                };
->>> +            };
->>> +        };
->>> +    };
->>> -- 
->>> 2.7.4
->>>
->>>
->>
->>
->>
+> On Mon, Sep 04, 2017 at 03:58:45PM +0530, Divagar Mohandass wrote:
+> > This series adds support for eeprom "size" property which will be read
+> > by the driver for eeprom size. The existing ACPI has a different
+> > default size which can be overridden with a DSD property value provided by
+> the platform FW.
+> >
+> > This series also adds support for runtime PM. The eeprom driver
+> > currently did not have support for runtime PM and the device was kept in D0
+> throughout.
+> >
+> > [v1]
+> > - Add support for eeprom "size" property.
+> > - Add runtime PM support to the driver.
+> >
+> > [v2]
+> > - Improved the patch subject.
+> >
+> > [v3]
+> > - Addressed comments from Sakari Ailus.
+> > - Improved patch description.
+> > - Improved pm support patch.
+> >
+> > [v4]
+> > - Improved runtime pm support.
+> > - Addressed comments from Sakari Ailus.
+> >
+> > [v5]
+> > - Addressed comments from Sakari Ailus.
+> > - Improved error handling for PM support.
+> >
+> > [v6]
+> > - Addressed comments from Sakari Ailus.
+> >
+> > Divagar Mohandass (3):
+> >   dt-bindings: add eeprom "size" property
+> >   eeprom: at24: add support to fetch eeprom device property "size"
+> >   eeprom: at24: enable runtime pm support
+> >
+> >  .../devicetree/bindings/eeprom/eeprom.txt          |  2 ++
+> >  drivers/misc/eeprom/at24.c                         | 42 ++++++++++++++++++++++
+> >  2 files changed, 44 insertions(+)
 > 
+> Thanks for the update!
 > 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
+> For the set:
+> 
+> Reviewed-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
+> --
+> Kind regards,
+> 
+> Sakari Ailus
+> e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
