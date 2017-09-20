@@ -1,94 +1,35 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: foundation-v8: Enable PSCI mode
-Date: Wed, 20 Sep 2017 12:17:19 +0100
-Message-ID: <9a542b9a-3c37-ed8a-04e6-de41493f4b0d@linaro.org>
-References: <20170918153832.16356-1-daniel.thompson@linaro.org>
- <20170919183204.12751-1-daniel.thompson@linaro.org>
- <da8a0cf5-3c1e-1398-b5c3-ac489ae955fa@arm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 4/8] ARM: dts: iwg22d: Enable SDHI0 controller
+Date: Wed, 20 Sep 2017 13:40:20 +0200
+Message-ID: <CAMuHMdVFPiXe9trwprNfX=p8-OKbrcgVSrwmveYhXGm=kd2bfQ@mail.gmail.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com> <1505322341-9480-5-git-send-email-chris.paterson2@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <da8a0cf5-3c1e-1398-b5c3-ac489ae955fa-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1505322341-9480-5-git-send-email-chris.paterson2@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Paterson <chris.paterson2@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/09/17 10:42, Sudeep Holla wrote:
-> 
-> 
-> On 19/09/17 19:32, Daniel Thompson wrote:
->> Currently if the Foundation model is running ARM Trusted Firmware then
->> the kernel, which is configured to use spin tables, cannot start secondary
->> processors or "power off" the simulation.
->>
->> After adding a couple of labels to the include file and splitting out the
->> spin-table configuration into a header, we add a couple of new headers
->> together with two new DTs (GICv2+PSCI and GICv3+PSCI).
->>
->> The new GICv3+PSCI DT has been boot tested, the remaining three (two of
->> which existed prior to this patch) have been "tested" by decompiling the
->> blobs and comparing them against a reference.
->>
-> 
-> How different are these from the ones hosted in [1] ?
+On Wed, Sep 13, 2017 at 7:05 PM, Chris Paterson
+<chris.paterson2@renesas.com> wrote:
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>
+> Enable the SDHI0 controller on iWave RZ/G1E carrier board.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
 
-They look like they were either independently written or diverged a long 
-time ago. The existing kernel DTs describe hardware absent from the ARM 
-TF ones and vice versa.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-With specific reference to PSCI it looks like my patches could perhaps 
-be improved by adding idle-state support.
+Gr{oetje,eeting}s,
 
+                        Geert
 
-> On argument is that we want to take the DTS out of device tree as
-> firmware is responsible for generating them. Alternatively, we may be
-> duplicating resulting in discrepancies over time by coping it into kernel.
-
-The general problem is copying from where?
-
-The kernel DTs are a well maintained centralized repository which is 
-*really* useful. git grep across the kernel DTs is a hugely powerful 
-tool when trying to better understand an ecosystem as sprawling and 
-diverse as ARMs. In fact I've even seen those sort of searchs used as a 
-basis to clean up unused code. Seeing that centralized repository 
-splinter into separate per-vendor silos would be a huge loss for kernel 
-developers.
-
-
-> Since users of ARM TF must be able to access these, I am not sure if it
-> makes sense to merge these. Or we remove it from ARM TF to avoid any
-> conflicts/discrepancies. >
-> Thoughts ?
-
-I kind of agree that maintaining DTs and DT documentation in the kernel 
-is a little odd given that the kernel is not the only player here 
-(FreeBSD, u-boot, etc). However it is sufficiently well maintained that 
-projects are content(ish) to regard the kernel as the canonical source 
-for these things (u-boot, for example, seeks to shadow kernel DTs 
-without modifying them).
-
-However regardless of the above I'd say they should be removed from ARM 
-TF. ARM TF does not use, modify, pass on or in any way consume DT... it 
-has no skin in the game here. Why does it want to own a few of blobs for 
-a small subset of the platforms it supports? I'm afraid that makes no 
-sense to me, to the extent that it didn't even occur to me to *look* in 
-the ARM TF sources to find any DTs for FVP until you pointed them out.
-
-In other words, whilst people could discuss alternative ways to manage 
-DTs[1], I can't see any universe where ARM TF would be a logical place 
-to keep them.
-
-
-Daniel.
-
-
-[1] ... and I'd further suggest that only perhaps people who are
-     prepared to put resources into fixing it should convene such a
-     discussion.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
