@@ -1,75 +1,54 @@
-From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv2] arm64: dts: stratix10: add ethernet/sdmmc support to the S10 devkit
-Date: Wed, 20 Sep 2017 10:17:55 -0500
-Message-ID: <1505920675-9641-1-git-send-email-dinguyen@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [RFC PATCH 0/7] AXP803 AC/Battery support
+Date: Wed, 20 Sep 2017 23:18:07 +0800
+Message-ID: <20170920151814.22461-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBSMNRLHAKGQEOLMOC4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable ethernet and sdmmc support on the Stratix10 devkit.
+The AXP803 PMIC, used by most Allwinner A64 boards, features 3 power inputs:
+AC, USB and Battery.
 
-Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v2: Create a separate PHY node
----
- .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+This patchset adds support for the AC and Battery supplies, which is useful
+for the boards from Pine64 (Pine64, SoPine w/ baseboard model A, Pinebook).
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-index 41ea2db..5907586 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-@@ -34,6 +34,44 @@
- 	};
- };
- 
-+&gmac0 {
-+	status = "okay";
-+	phy-mode = "rgmii";
-+	phy-handle = <&phy0>;
-+
-+	max-frame-size = <3800>;
-+
-+	mdio0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@0 {
-+			reg = <4>;
-+
-+			txd0-skew-ps = <0>; /* -420ps */
-+			txd1-skew-ps = <0>; /* -420ps */
-+			txd2-skew-ps = <0>; /* -420ps */
-+			txd3-skew-ps = <0>; /* -420ps */
-+			rxd0-skew-ps = <420>; /* 0ps */
-+			rxd1-skew-ps = <420>; /* 0ps */
-+			rxd2-skew-ps = <420>; /* 0ps */
-+			rxd3-skew-ps = <420>; /* 0ps */
-+			txen-skew-ps = <0>; /* -420ps */
-+			txc-skew-ps = <1860>; /* 960ps */
-+			rxdv-skew-ps = <420>; /* 0ps */
-+			rxc-skew-ps = <1680>; /* 780ps */
-+		};
-+	};
-+};
-+
-+&mmc {
-+	status = "okay";
-+	num-slots = <1>;
-+	cap-sd-highspeed;
-+	broken-cd;
-+	bus-width = <4>;
-+};
-+
- &uart0 {
- 	status = "okay";
- };
+The USB supply is not yet supported in this patchset because it's not
+present on Pine series boards.
+
+In order to enable battery monitoring the ADC for battery is also enabled
+for AXs.
+
+In order to enable battery monitoring the ADC for battery is also enabled
+for AXP803.
+
+Icenowy Zheng (7):
+  dt-bindings: add compatibles for AXP803 Battery/USB power supplies
+  iio: adc: axp20x-adc: allow to skip ADC rate setup now
+  iio: adc: axp20x-adc: add support for AXP803
+  power: supply: axp20x-battery: support AXP803
+  mfd: axp20x: add cells for AXP803 ADC/AC Power/Battery
+  arm64: allwinner: a64: add power supply nodes in AXP803 DTSI
+  arm64: allwinner: a64: enable AC and Battery for Pine64
+
+ .../bindings/power/supply/axp20x_battery.txt       |   1 +
+ .../bindings/power/supply/axp20x_usb_power.txt     |   1 +
+ arch/arm64/boot/dts/allwinner/axp803.dtsi          |  15 +++
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |   8 ++
+ drivers/iio/adc/axp20x_adc.c                       | 114 ++++++++++++++++++++-
+ drivers/mfd/axp20x.c                               |  11 ++
+ drivers/power/supply/axp20x_battery.c              |  88 ++++++++++++++--
+ 7 files changed, 226 insertions(+), 12 deletions(-)
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.5
