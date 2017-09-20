@@ -1,64 +1,27 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
+From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Subject: RE: [PATCH 3/8] ARM: dts: iwg22m: Enable SDHI1 controller
-Date: Wed, 20 Sep 2017 13:05:07 +0000
-Message-ID: <TY1PR06MB07026CA91F110214FF170FA3B7610@TY1PR06MB0702.apcprd06.prod.outlook.com>
+Date: Wed, 20 Sep 2017 13:06:30 +0000
+Message-ID: <TY1PR06MB07024A3CACDC8399EE8F6C62B7610@TY1PR06MB0702.apcprd06.prod.outlook.com>
 References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
  <1505322341-9480-4-git-send-email-chris.paterson2@renesas.com>
  <20170915081144.GI3924@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170915081144.GI3924@verge.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gU2ltb24sDQoNCj4gRnJvbTogZGV2aWNldHJlZS1vd25lckB2Z2VyLmtlcm5lbC5vcmcg
-W21haWx0bzpkZXZpY2V0cmVlLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBP
-ZiBTaW1vbiBIb3JtYW4NCj4gU2VudDogMTUgU2VwdGVtYmVyIDIwMTcgMDk6MTINCj4gVG86IENo
-cmlzIFBhdGVyc29uIDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+DQo+IA0KPiBPbiBXZWQs
-IFNlcCAxMywgMjAxNyBhdCAwNjowNTozNlBNICswMTAwLCBDaHJpcyBQYXRlcnNvbiB3cm90ZToN
-Cj4gPiBGcm9tOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNv
-bT4NCj4gPg0KPiA+IEVuYWJsZSB0aGUgU0RISTEgY29udHJvbGxlciBvbiBpV2F2ZSBSWi9HMUUg
-U29NLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5j
-YXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGF0ZXJzb24g
-PGNocmlzLnBhdGVyc29uMkByZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiBUaGlzIHBhdGNoIGlz
-IGJhc2VkIG9uIHJlbmVzYXMtZGV2ZWwtMjAxNzA5MTMtdjQuMTMuDQo+ID4NCj4gPg0KPiA+ICBh
-cmNoL2FybS9ib290L2R0cy9yOGE3NzQ1LWl3ZzIybS5kdHNpIHwgMTcgKysrKysrKysrKysrKysr
-KysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQ1LWl3ZzIybS5kdHNpDQo+ID4gYi9hcmNo
-L2FybS9ib290L2R0cy9yOGE3NzQ1LWl3ZzIybS5kdHNpDQo+ID4gaW5kZXggZTMwNmU3Yy4uZjdm
-OWNlZiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQ1LWl3ZzIybS5k
-dHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0NS1pd2cyMm0uZHRzaQ0KPiA+
-IEBAIC05LDYgKzksNyBAQA0KPiA+ICAgKi8NCj4gPg0KPiA+ICAjaW5jbHVkZSAicjhhNzc0NS5k
-dHNpIg0KPiA+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+DQo+ID4NCj4gPiAg
-LyB7DQo+ID4gIAljb21wYXRpYmxlID0gIml3YXZlLGcyMm0iLCAicmVuZXNhcyxyOGE3NzQ1Ijsg
-QEAgLTM4LDYgKzM5LDEyDQo+IEBADQo+ID4gIAkJZnVuY3Rpb24gPSAibW1jIjsNCj4gPiAgCX07
-DQo+ID4NCj4gPiArCXNkaGkxX3BpbnM6IHNkMSB7DQo+ID4gKwkJZ3JvdXBzID0gInNkaGkxX2Rh
-dGE0IiwgInNkaGkxX2N0cmwiOw0KPiA+ICsJCWZ1bmN0aW9uID0gInNkaGkxIjsNCj4gPiArCQlw
-b3dlci1zb3VyY2UgPSA8MzMwMD47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiAgCWkyYzNfcGluczog
-aTJjMyB7DQo+ID4gIAkJZ3JvdXBzID0gImkyYzNfYiI7DQo+ID4gIAkJZnVuY3Rpb24gPSAiaTJj
-MyI7DQo+ID4gQEAgLTU0LDYgKzYxLDE2IEBADQo+ID4gIAlzdGF0dXMgPSAib2theSI7DQo+ID4g
-IH07DQo+ID4NCj4gPiArJnNkaGkxIHsNCj4gPiArCXBpbmN0cmwtMCA9IDwmc2RoaTFfcGlucz47
-DQo+ID4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsNCj4gPiArCXZtbWMtc3Vw
-cGx5ID0gPCZyZWdfM3Azdj47DQo+ID4gKwl2cW1tYy1zdXBwbHkgPSA8JnJlZ18zcDN2PjsNCj4g
-PiArCWNkLWdwaW9zID0gPCZncGlvMyAzMSBHUElPX0FDVElWRV9MT1c+Ow0KPiANCj4gTm8gd3At
-Z3Bpb3MgcHJvcGVydHkgbWVhbnMgdGhpcyBpcyBhIMK1U0Qgc2xvdCwgcmlnaHQ/DQoNCkNvcnJl
-Y3QNCg0KPiANCj4gRG8geW91IGhhdmUgYW55IHBsYW5zIHRvIGVuYWJsZSBzZHItNTAgYW5kIHNk
-ci0xMDQ/DQo+IElzIGl0IG5vdCBzdXBwb3J0ZWQgZm9yIHNvbWUgcmVhc29uPw0KDQpOb3BlICh1
-bmxlc3MgdGhlIGhhcmR3YXJlIGNoYW5nZXMgZG93biB0aGUgbGluZSkuDQpCb3RoIHZtbWMgYW5k
-IHZxbW1jIGFyZSBmaXhlZCB0byAzVjMgb24gdGhlIGlXYXZlLUUgU09NIG1vZHVsZS4NCg0KS2lu
-ZCByZWdhcmRzLCBDaHJpcw0KDQoNCj4gDQo+IEkgZG9uJ3QgbWluZCBpZiBpdHMgbm90IGVuYWJs
-ZWQgaW4gdGhpcyBwYXRjaCBidXQgSSB3b3VsZCBsaWtlIHRvIGtub3cgaWYgaXQgY2FuIGJlDQo+
-IGVuYWJsZWQgb3Igbm90IGFuZCByZWZsZWN0IHRoYXQgaW5mb3JtYXRpb24gaW4gdGhlIHdpa2ku
-DQo+IA0KPiBodHRwOi8vZWxpbnV4Lm9yZy9pbmRleC5waHA/dGl0bGU9UmVuZXNhcy1NTUMtRW5h
-YmxlZC1TcGVlZHMNCj4gDQo+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gK307DQo+ID4gKw0K
-PiA+ICAmaTJjMyB7DQo+ID4gIAlwaW5jdHJsLTAgPSA8JmkyYzNfcGlucz47DQo+ID4gIAlwaW5j
-dHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+IC0tDQo+ID4gMS45LjENCj4gPg0KPiAtLQ0KPiBU
-byB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUg
-ZGV2aWNldHJlZSIgaW4gdGhlDQo+IGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2Vy
-Lmtlcm5lbC5vcmcgTW9yZSBtYWpvcmRvbW8gaW5mbyBhdA0KPiBodHRwOi8vdmdlci5rZXJuZWwu
-b3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg==
+DQo+IEZyb206IENocmlzIFBhdGVyc29uDQo+IFNlbnQ6IDIwIFNlcHRlbWJlciAyMDE3IDE0OjA1
+DQoNCj4gDQo+ID4NCj4gPiBJIGRvbid0IG1pbmQgaWYgaXRzIG5vdCBlbmFibGVkIGluIHRoaXMg
+cGF0Y2ggYnV0IEkgd291bGQgbGlrZSB0byBrbm93DQo+ID4gaWYgaXQgY2FuIGJlIGVuYWJsZWQg
+b3Igbm90IGFuZCByZWZsZWN0IHRoYXQgaW5mb3JtYXRpb24gaW4gdGhlIHdpa2kuDQo+ID4NCj4g
+PiBodHRwOi8vZWxpbnV4Lm9yZy9pbmRleC5waHA/dGl0bGU9UmVuZXNhcy1NTUMtRW5hYmxlZC1T
+cGVlZHMNCg0KV2lsbCBkby4NCg0KQ2hyaXMNCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
