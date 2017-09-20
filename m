@@ -1,66 +1,106 @@
-From: matthew.gerlach@linux.intel.com
-Subject: [PATCH v2 0/3] Altera ASMI Parallel II IP Core
-Date: Wed, 20 Sep 2017 11:28:56 -0700
-Message-ID: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [RFC PATCH 0/7] sun8i H3 HDMI glue driver for DW HDMI
+Date: Wed, 20 Sep 2017 21:38:24 +0200
+Message-ID: <20170920193831.20268-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, linux-fpga@vger.kernel.org, tien.hock.loh@intel.com, hean.loong.ong@intel.com
-Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBQ4HRPHAKGQE3QC5QTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+This patch series adds a HDMI glue driver for Allwinner H3 SoC. For now, only
+video and CEC functionality is supported. Audio needs more tweaks.
 
-This patch set adds a spi-nor flash driver for the Altera ASMI Parallel II 
-IP Core.  This driver was created based on feedback from Marek Vasut,
-Cyrill Pitchen, and Michal Suchanek regarding Version 2 of the Altera
-Quadspi Controller: https://lkml.org/lkml/2017/6/26/518
+Series is based on the H3 DE2 patch series available on mailing list:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-August/522697.html
+(ignore patches marked with [NOT FOR REVIEW NOW] tag)
 
-The overall problem with Version 2 of the Altera Quadspi Controller and 
-its driver was the fact that there was much duplication of code and logic
-with the spi-nor framework.  This new combination of fpga hardware and 
-software "gets out of the way" of the spi-nor framework.  The result is a
-much simpler driver with the spi-nor framework performing the bulk of the work.
+Patch 1 adds support for polling plug detection since custom PHY used here
+doesn't support HPD interrupt.
 
-Patch 1 contains the device tree bindings for the driver for
-the Altera ASMI-Parallel II IP Core.
+Patch 2 enables overflow workaround for v1.32a. This HDMI controller exhibits
+same issues as HDMI controller used in iMX6 SoCs.
 
-Patch 2 contains the driver code for the Altera ASMI-Parallel II IP Core.
-This driver supports being configured via a device tree or with platform
-data.  In the later case, the memory for the registers has been remapped.
+Patch 3 adds CLK_SET_RATE_PARENT to hdmi clock.
 
-Patch 3 contains a work around for some non-standard behavior of EPCQ flash.
+Patch 4 adds dt bindings documentation.
 
-Matthew Gerlach (3):
-  dt-bindings: mtd: Altera ASMI Parallel II IP Core
-  mtd: spi-nor: Altera ASMI Parallel II IP Core
-  mtd: spi-nor: add flag for reading dummy cycles from nv cfg reg
+Patch 5 adds actual H3 HDMI glue driver.
 
- .../devicetree/bindings/mtd/altera-asmip2.txt      |  15 +
- MAINTAINERS                                        |   7 +
- drivers/mtd/spi-nor/Kconfig                        |   6 +
- drivers/mtd/spi-nor/Makefile                       |   1 +
- drivers/mtd/spi-nor/altera-asmip2.c                | 478 +++++++++++++++++++++
- include/linux/mtd/altera-asmip2.h                  |  27 ++
- 6 files changed, 534 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/altera-asmip2.txt
- create mode 100644 drivers/mtd/spi-nor/altera-asmip2.c
- create mode 100644 include/linux/mtd/altera-asmip2.h
+Patch 6 and 7 add HDMI node to DT and enable it where needed.
+
+Allwinner used DW HDMI controller in a non standard way:
+- register offsets obfuscation layer, which can fortunately be turned off
+- register read lock, which has to be disabled by magic number
+- custom PHY, which have to be initialized before DW HDMI controller
+- non standard clocks
+- no HPD interrupt
+
+Because of that, I have two questions:
+- Since HPD have to be polled, is it enough just to enable poll mode? I'm
+  mainly concerned about invalidating CEC address here.
+- PHY has to be initialized before DW HDMI controller to disable offset
+  obfuscation and read lock among other things. This means that all clocks have
+  to be enabled in glue driver. This poses a problem, since when using
+  component model, dw-hdmi bridge uses drvdata for it's own private data and
+  prevents glue layer to pass a pointer to unbind function, where clocks should
+  be disabled. I noticed same issue in meson DW HDMI glue driver, where clocks
+  are also not disabled when unbind callback is called. I noticed that when H3
+  SoC is shutdown, HDMI output is still enabled and lastest image is shown on
+  monitor until it is unplugged from power supply. Is there any simple solution
+  to this?
+
+Chen-Yu,
+TL Lim was unable to obtain any answer from Allwinner about HDMI clocks. I think
+it is safe to assume that divider in HDMI clock doesn't have any effect.
+
+Branch based on linux-next from 1. September with integrated patches is
+available here:
+https://github.com/jernejsk/linux-1/tree/h3_hdmi_rfc
+
+Some additonal info about H3 HDMI:
+https://linux-sunxi.org/DWC_HDMI_Controller
+
+Thanks to Jens Kuske, who figured out that it is actually DW HDMI controller
+and mapped scrambled register offsets to original ones.
+
+Icenowy Zheng (1):
+  ARM: sun8i: h3: Add DesignWare HDMI controller node
+
+Jernej Skrabec (6):
+  drm: bridge: Enable polling hpd event in dw_hdmi
+  drm: bridge: Enable workaround in dw_hdmi for v1.32a
+  clk: sunxi: Add CLK_SET_RATE_PARENT flag for H3 HDMI clock
+  dt-bindings: Document Allwinner DWC HDMI TX node
+  drm: sun4i: Add a glue for the DesignWare HDMI controller in H3
+  ARM: sun8i: h3: Enable HDMI output on H3 boards
+
+ .../bindings/display/sunxi/sun4i-drm.txt           | 158 ++++++-
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  33 ++
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts          |  33 ++
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts           |  33 ++
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |  33 ++
+ arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       |  33 ++
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |  33 ++
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  33 ++
+ arch/arm/boot/dts/sun8i-h3.dtsi                    |   5 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  36 ++
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |   2 +-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |  14 +-
+ drivers/gpu/drm/sun4i/Kconfig                      |   9 +
+ drivers/gpu/drm/sun4i/Makefile                     |   1 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c              | 500 +++++++++++++++++++++
+ 15 files changed, 950 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
 
 -- 
-2.7.4
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.14.1
