@@ -1,59 +1,91 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 4/8] ARM: dts: iwg22d: Enable SDHI0 controller
-Date: Wed, 20 Sep 2017 17:17:44 +0000
-Message-ID: <TY1PR06MB0895D8F201C57A65EBE5F5D2C0610@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-5-git-send-email-chris.paterson2@renesas.com>
- <20170915080530.GH3924@verge.net.au>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v5 05/10] dt-bindings: net: dwmac-sun8i: update
+ documentation about integrated PHY
+Date: Wed, 20 Sep 2017 20:23:50 +0200
+Message-ID: <20170920182350.GA21482@Red>
+References: <20170908071156.5115-1-clabbe.montjoie@gmail.com>
+ <20170908071156.5115-6-clabbe.montjoie@gmail.com>
+ <20170908072538.rqsp6dobwsqmzrsr@flea.lan>
+ <20170908074325.GB29999@Red>
+ <20170913182004.uniyo5opeilcfk7r@rob-hp-laptop>
+ <20170914185301.GB4021@Red>
+ <20170914191949.GA3796@lunn.ch>
+ <CAL_JsqJ2eVA9Zg60Hagqm732ZoOzHWTwVBqOabOhjE5aQ26L+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915080530.GH3924-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ2eVA9Zg60Hagqm732ZoOzHWTwVBqOabOhjE5aQ26L+g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, netdev <netdev@vger.kernel.org>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gU2ltb24sIEdlZXJ0DQoNCnRoYW5rIHlvdSBmb3IgeW91ciBwYXRpZW5jZSBvbiB0aGlz
-IG9uZS4gV2UgZm91bmQgb3V0IHRoYXQgdGhlcmUgaXMgYW4gSFcgaXNzdWUgb24gU0RISTAgLCBT
-REhDX0NEIyBhbmQgU0RIQ19DTUQgKG9uIHRoZSBjYXJyaWVyIGJvYXJkKSBhcmUgcHVsbGVkIHVw
-IHRvIDMuM1YsIHRoZXJlZm9yZSB3ZSBhcmUgZHJvcHBpbmcgVUhTIG9uIHRoaXMgaW50ZXJmYWNl
-LCBhbmQgYXMgcmVzdWx0IHdlIGFyZSBkcm9wcGluZyB0aGlzIHBhdGNoLiBXZSB3aWxsIHNlbmQg
-YSBWMiBzaG9ydGx5Lg0KDQpUaGFua3MsDQpGYWJyaXppbw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+IEZyb206IFNpbW9uIEhvcm1hbiBbbWFpbHRvOmhvcm1zQHZlcmdlLm5ldC5h
-dV0NCj4gU2VudDogMTUgU2VwdGVtYmVyIDIwMTcgMDk6MDYNCj4gVG86IENocmlzIFBhdGVyc29u
-IDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaCtk
-dEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IE1hZ251
-cyBEYW1tIDxtYWdudXMuZGFtbUBnbWFpbC5jb20+Ow0KPiBSdXNzZWxsIEtpbmcgPGxpbnV4QGFy
-bWxpbnV4Lm9yZy51az47IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVz
-YXMuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXJlbmVzYXMtDQo+IHNv
-Y0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDQvOF0gQVJNOiBkdHM6IGl3ZzIyZDogRW5hYmxlIFNESEkw
-IGNvbnRyb2xsZXINCj4NCj4gT24gV2VkLCBTZXAgMTMsIDIwMTcgYXQgMDY6MDU6MzdQTSArMDEw
-MCwgQ2hyaXMgUGF0ZXJzb24gd3JvdGU6DQo+ID4gRnJvbTogRmFicml6aW8gQ2FzdHJvIDxmYWJy
-aXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4NCj4gPiBFbmFibGUgdGhlIFNESEkwIGNv
-bnRyb2xsZXIgb24gaVdhdmUgUlovRzFFIGNhcnJpZXIgYm9hcmQuDQo+DQo+IC4uLg0KPg0KPiA+
-IEBAIC02MywzICs4OCwxNSBAQA0KPiA+ICBtaWNyZWwsbGVkLW1vZGUgPSA8MT47DQo+ID4gIH07
-DQo+ID4gIH07DQo+ID4gKw0KPiA+ICsmc2RoaTAgew0KPiA+ICtwaW5jdHJsLTAgPSA8JnNkaGkw
-X3BpbnM+Ow0KPiA+ICtwaW5jdHJsLTEgPSA8JnNkaGkwX3BpbnNfdWhzPjsNCj4gPiArcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IiwgInN0YXRlX3VocyI7DQo+ID4gKw0KPiA+ICt2bW1jLXN1cHBs
-eSA9IDwmcmVnXzNwM3Y+Ow0KPiA+ICt2cW1tYy1zdXBwbHkgPSA8JnZjY3Ffc2RoaTA+Ow0KPiA+
-ICtjZC1ncGlvcyA9IDwmZ3BpbzYgNiBHUElPX0FDVElWRV9MT1c+Ow0KPg0KPiBJIHRha2UgdGhh
-dCB0aGUgYWJzZW5jZSBvZiBhIHdwLWdwaW8gbWVhbnMgdGhhdCB0aGF0IHRoaXMgaXMgYSDCtVNE
-IHNsb3QuDQo+IENvdWxkIHlvdSBoZWxwIG1lIGJ5IGRvY3VtZW50aW5nIHRoaXMgY29ycmVjdGx5
-IG9uDQo+IGh0dHA6Ly9lbGludXgub3JnL2luZGV4LnBocD90aXRsZT1SZW5lc2FzLU1NQy1FbmFi
-bGVkLVNwZWVkcyA/DQo+DQo+IEZvciBzb21lIHJlYXNvbiBJIHRob3VnaHQgdGhhdCBTREhJMCB3
-YXNuJ3QgZXhwb3NlZCBhdCBhbGwsIHNvIEkgZ3Vlc3MNCj4gbXkgcmVhZGluZyBvZiB0aGUgZG9j
-dW1lbnRhdGlvbiB3YXMgaW5jb3JyZWN0Lg0KPg0KPg0KPiBJIHRoaW5rIHlvdSBhbHNvIHdhbnQg
-c2QtdWhzLXNkcjUwIGhlcmUgdG9vLg0KPiBZb3UgY2FuIHRlc3QgaXQgYnkgcmVtb3ZpbmcgdGhl
-IHNkLXVocy1zZHIxMDQgcHJvcGVydHkuDQo+DQo+ID4gK3NkLXVocy1zZHIxMDQ7DQo+ID4gK3N0
-YXR1cyA9ICJva2F5IjsNCj4gPiArfTsNCj4gPiAtLQ0KPiA+IDEuOS4xDQo+ID4NCg0KDQoNClJl
-bmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9h
-ZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBp
-biBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Sep 19, 2017 at 09:49:52PM -0500, Rob Herring wrote:
+> On Thu, Sep 14, 2017 at 2:19 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> >> > Is the MDIO controller "allwinner,sun8i-h3-emac" or "snps,dwmac-mdio"?
+> >> > If the latter, then I think the node is fine, but then the mux should be
+> >> > a child node of it. IOW, the child of an MDIO controller should either
+> >> > be a mux node or slave devices.
+> >
+> > Hi Rob
+> >
+> > Up until now, children of an MDIO bus have been MDIO devices. Those
+> > MDIO devices are either Ethernet PHYs, Ethernet Switches, or the
+> > oddball devices that Broadcom iProc has, like generic PHYs.
+> >
+> > We have never had MDIO-muxes as MDIO children. A Mux is not an MDIO
+> > device, and does not have the properties of an MDIO device. It is not
+> > addressable on the MDIO bus. The current MUXes are addressed via GPIOs
+> > or MMIO.
+> 
+> The DT parent/child relationship defines the bus topology. We describe
+> MDIO buses in that way and if a mux is sitting between the controller
+> and the devices, then the DT hierarchy should reflect that. Now
+> sometimes we have 2 options for what interface has the parent/child
+> relationship (e.g. an I2C controlled USB hub chip), but in this case
+> we don't.
+> 
+
+Putting mdio-mux as a child of it (the mdio node) give me:
+[   18.175338] libphy: stmmac: probed
+[   18.175379] mdio_bus stmmac-0: /soc/ethernet@1c30000/mdio/mdio-mux has invalid PHY address
+[   18.175408] mdio_bus stmmac-0: scan phy mdio-mux at address 0
+[   18.175450] mdio_bus stmmac-0: scan phy mdio-mux at address 1
+[   18.175482] mdio_bus stmmac-0: scan phy mdio-mux at address 2
+[   18.175513] mdio_bus stmmac-0: scan phy mdio-mux at address 3
+[   18.175544] mdio_bus stmmac-0: scan phy mdio-mux at address 4
+[   18.175575] mdio_bus stmmac-0: scan phy mdio-mux at address 5
+[   18.175607] mdio_bus stmmac-0: scan phy mdio-mux at address 6
+[   18.175638] mdio_bus stmmac-0: scan phy mdio-mux at address 7
+[   18.175669] mdio_bus stmmac-0: scan phy mdio-mux at address 8
+[   18.175700] mdio_bus stmmac-0: scan phy mdio-mux at address 9
+[   18.175731] mdio_bus stmmac-0: scan phy mdio-mux at address 10
+[   18.175762] mdio_bus stmmac-0: scan phy mdio-mux at address 11
+[   18.175795] mdio_bus stmmac-0: scan phy mdio-mux at address 12
+[   18.175827] mdio_bus stmmac-0: scan phy mdio-mux at address 13
+[   18.175858] mdio_bus stmmac-0: scan phy mdio-mux at address 14
+[   18.175889] mdio_bus stmmac-0: scan phy mdio-mux at address 15
+[   18.175919] mdio_bus stmmac-0: scan phy mdio-mux at address 16
+[   18.175951] mdio_bus stmmac-0: scan phy mdio-mux at address 17
+[   18.175982] mdio_bus stmmac-0: scan phy mdio-mux at address 18
+[   18.176014] mdio_bus stmmac-0: scan phy mdio-mux at address 19
+[   18.176045] mdio_bus stmmac-0: scan phy mdio-mux at address 20
+[   18.176076] mdio_bus stmmac-0: scan phy mdio-mux at address 21
+[   18.176107] mdio_bus stmmac-0: scan phy mdio-mux at address 22
+[   18.176139] mdio_bus stmmac-0: scan phy mdio-mux at address 23
+[   18.176170] mdio_bus stmmac-0: scan phy mdio-mux at address 24
+[   18.176202] mdio_bus stmmac-0: scan phy mdio-mux at address 25
+[   18.176233] mdio_bus stmmac-0: scan phy mdio-mux at address 26
+[   18.176271] mdio_bus stmmac-0: scan phy mdio-mux at address 27
+[   18.176320] mdio_bus stmmac-0: scan phy mdio-mux at address 28
+[   18.176371] mdio_bus stmmac-0: scan phy mdio-mux at address 29
+[   18.176420] mdio_bus stmmac-0: scan phy mdio-mux at address 30
+[   18.176452] mdio_bus stmmac-0: scan phy mdio-mux at address 31
+
+Adding a fake <reg> to mdio-mux remove it, but I found that a bit ugly.
+Or perhaps patching of_mdiobus_register() to not scan node with compatible "mdio-mux".
+
+What do you think ?
+
+Regards
