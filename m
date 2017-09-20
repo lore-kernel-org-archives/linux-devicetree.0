@@ -1,84 +1,84 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: input: Add document bindings for
- mtk-pmic-keys
-Date: Wed, 20 Sep 2017 14:14:13 -0700
-Message-ID: <20170920211413.GA36148@dtor-ws>
-References: <1505635252-27716-1-git-send-email-chen.zhong@mediatek.com>
- <1505635252-27716-3-git-send-email-chen.zhong@mediatek.com>
- <20170920205301.v6gpmhll4pdpuyxv@rob-hp-laptop>
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH 1/5] usb: usb251xb: Add USB2517/i hub support
+Date: Thu, 21 Sep 2017 00:15:17 +0300
+Message-ID: <20170920211517.GA3547@mobilestation>
+References: <20170915233113.17855-1-fancer.lancer@gmail.com>
+ <20170915233113.17855-2-fancer.lancer@gmail.com>
+ <20170920205235.qhxhq3it6377bjcq@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170920205301.v6gpmhll4pdpuyxv@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170920205235.qhxhq3it6377bjcq@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: richard.leitner@skidata.com, gregkh@linuxfoundation.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 03:53:01PM -0500, Rob Herring wrote:
-> On Sun, Sep 17, 2017 at 04:00:49PM +0800, Chen Zhong wrote:
-> > This patch adds the device tree binding documentation for the MediaTek
-> > pmic keys found on PMIC MT6397/MT6323.
+On Wed, Sep 20, 2017 at 03:52:35PM -0500, Rob Herring <robh@kernel.org> wrote:
+> On Sat, Sep 16, 2017 at 02:31:09AM +0300, Serge Semin wrote:
+> > USB2517i hubs are very like USB251xb devices series. They have almost
+> > the same configuration registers space except number of ports, led
+> > configurations and lack of battery settings. All these peculiarities
+> > are reflected in this patch.
 > > 
-> > Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 > > ---
-> >  .../devicetree/bindings/input/mtk-pmic-keys.txt    |   41 ++++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> > new file mode 100644
-> > index 0000000..fd48ff7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> > @@ -0,0 +1,41 @@
-> > +MediaTek MT6397/MT6323 PMIC Keys Device Driver
-> > +
-> > +There are two key functions provided by MT6397/MT6323 PMIC, pwrkey
-> > +and homekey. The key functions are defined as the subnode of the function
-> > +node provided by MT6397/MT6323 PMIC that is being defined as one kind
-> > +of Muti-Function Device (MFD)
-> > +
-> > +For MT6397/MT6323 MFD bindings see:
-> > +Documentation/devicetree/bindings/mfd/mt6397.txt
-> > +
-> > +Required properties:
-> > +- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
-> > +- linux,keycodes: Specifies the numeric keycode values to
-> > +	be used for reporting keys presses. The array can
-> > +	contain up to 2 entries.
-> > +
-> > +Optional Properties:
-> > +- mediatek,wakeup-keys: Specifies each key can be used as a wakeup source
-> > +	or not. This can be customized depends on board design.
+> >  Documentation/devicetree/bindings/usb/usb251xb.txt |  4 +-
 > 
-> I think this should be a common property if we're going to put into DT. 
-> Something like "wakeup-scancodes" to be clear the values are the raw 
-> scancodes. Alternatively, we could list Linux keycodes instead with 
-> something like "linux,wakeup-keycodes".
+> Though Greg wants the code split, I want the binding as one change. H/w 
+> doesn't gain features one by one.
+> 
+> It's preferred to split bindings to a separate patch.
+> 
 
-Should we go the gpio-keys way and describe keys as sub-nodes, possibly
-using address as index?
+Folks, you are really driving people crazy. When I was reviewing a
+kernel-patchset from a Logan-guy, I asked him to combine some of his patches,
+since in fact their combination represented one solid driver. I was told to go
+very far, and Greg supported him with it. I'm not going to be that rude and will
+do as you asked me to. But really, isn't it possible to have some strict rule
+created so a developer would always follow it thereby not being asked to
+combine/split patches almost everytime?
+The only way I see for now is to know each maintainer personal preferences.
 
-		mt6397keys: mt6397keys {
-			...
+> >  drivers/usb/misc/usb251xb.c                        | 84 +++++++++++++++++++---
+> >  2 files changed, 78 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > index 3957d4eda..3d84626d3 100644
+> > --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > @@ -6,7 +6,8 @@ Hi-Speed Controller.
+> >  Required properties :
+> >   - compatible : Should be "microchip,usb251xb" or one of the specific types:
+> >  	"microchip,usb2512b", "microchip,usb2512bi", "microchip,usb2513b",
+> > -	"microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi"
+> > +	"microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi",
+> > +	"microchip,usb2517", "microchip,usb2517i"
+> >   - reset-gpios : Should specify the gpio for hub reset
+> >   - reg : I2C address on the selected bus (default is <0x2C>)
+> >  
+> > @@ -36,6 +37,7 @@ Optional properties :
+> >  	an invalid value is given, the default is used instead.
+> >   - compound-device : indicate the hub is part of a compound device
+> >   - port-mapping-mode : enable port mapping mode
+> > + - speed-led-mode : led speed indiation mode selection (usb2517 only)
+> 
+> This is a boolean or has values? What are valid values?
+> 
 
-			power@0 {
-				linux,code = <116>;
-				wakeup-source;
-			};
+It's boolean. Shall I rename it as:
+"- speed-led-mode : enable led speed indication mode (usb2517 only)"?
 
-			home@1 {
-				linux,code = <...>;
-			};
-		};
+> This needs a vendor prefix. Somehow the other properties got in without.
+> 
 
-Thanks.
+Hmm, it's not vendor specific, but device-specific. USB2517 is produced
+by the same vendor - microchip. The new device got almost the same functionality as
+the others, except number or ports, LED feature and battery enable feature.
+The last one isn't configurable by dts. The rest of the properties are the same
+for all the compatible devices. So what properties you are talking about then?
 
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >   - string-support : enable string descriptor support (required for manufacturer,
+> >  	product and serial string configuration)
+> >   - non-removable-ports : Should specify the ports which have a non-removable
