@@ -1,64 +1,65 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add and enable DSP device on OMAPL138 LCDK board
-Date: Wed, 20 Sep 2017 11:55:12 -0500
-Message-ID: <be3c9155-efe1-7c14-0b04-bc25cb7e1d40@ti.com>
-References: <20170919002833.5677-1-s-anna@ti.com>
- <8bd08406-3fd8-9742-c1b9-d3ec9712c4ee@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8bd08406-3fd8-9742-c1b9-d3ec9712c4ee-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: arizona: Add device tree binding doc for volume limits" to the asoc tree
+Date: Wed, 20 Sep 2017 18:13:55 +0100
+Message-ID: <E1duiZP-00033S-5n@debutante>
+References: <20170904154154.4395-8-ckeepax@opensource.cirrus.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170904154154.4395-8-ckeepax@opensource.cirrus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>broonie@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2017 10:14 AM, Sekhar Nori wrote:
-> Hi Suman,
-> 
-> On Tuesday 19 September 2017 05:58 AM, Suman Anna wrote:
->> Hi Sekhar,
->>
->> The following series adds the DT node for the DSP device present on
->> on DA850/OMAPL138 SoCs. The node is disabled in the base dts file, and
->> enabled in the corresponding LCDK board file alongside the reserved
->> CMA pool required by the DSP device. The DT bindings and driver
->> adaptation were added to mainline in 4.14-rc1, and this series adds
->> the remaining dt portions. Nodes are added as per bindings in
->> Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
->>
->> Patches are based on 4.14-rc1. The first 2 patches adds the base DTS
->> node and enables the device on OMAPL138 LCDK board. The last patch
->> allows the non-DT clock to be bound to the DT DSP device by using
->> of_auxdata which renames the device to the same as the non-DT device
->> name. This is required by the davinci remoteproc driver to properly
->> acquire and enable the clock for this device.
->>
->> Validation done on OMAPL138 LCDK board. Supported features include
->> basic load/boot (tested with rpmsg_client_sample) using external
->> memory from the CMA pool.
-> 
-> Applied for v4.15. The patches are on my master branch. They will be in
-> linux-next when I send my pull request to ARM-SoC, which typically will
-> take a couple of weeks more.
+The patch
 
-Thanks Sekhar.
+   ASoC: arizona: Add device tree binding doc for volume limits
 
-> 
-> davinci_all_defconfig seems to be missing the CMA options needed. Could
-> you send a patch enabling them?
+has been applied to the asoc tree at
 
-These are tracked as dependencies on the remoteproc Kconfig, so you
-won't be able to enable the driver without turning them on. I left them
-as there were before my DT adaptation, but I can enable the CMA options
-by default going forward.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-regards
-Suman
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 0340afe74d43e9c82bc0f5904d8f5b99d0fc3ab0 Mon Sep 17 00:00:00 2001
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date: Mon, 4 Sep 2017 16:41:54 +0100
+Subject: [PATCH] ASoC: arizona: Add device tree binding doc for volume limits
+
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/wlf,arizona.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/wlf,arizona.txt b/Documentation/devicetree/bindings/sound/wlf,arizona.txt
+index 4e67224488d8..e172c62dc2df 100644
+--- a/Documentation/devicetree/bindings/sound/wlf,arizona.txt
++++ b/Documentation/devicetree/bindings/sound/wlf,arizona.txt
+@@ -47,3 +47,7 @@ Optional properties:
+     See the datasheet for values.
+     The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
+     wm8998, wm1814)
++
++  - wlf,out-volume-limit : The volume limit value that should be applied to each
++    output channel. See the datasheet for exact values. Channels are specified
++    in the order OUT1L, OUT1R, OUT2L, OUT2R, etc.
+-- 
+2.14.1
