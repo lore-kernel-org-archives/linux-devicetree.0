@@ -1,49 +1,34 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v13 13/25] v4l: async: Allow async notifier register call
- succeed with no subdevs
-Date: Wed, 20 Sep 2017 13:51:53 +0300
-Message-ID: <20170920105153.ohsdp4cgawdsjsae@paasikivi.fi.intel.com>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
- <20170919145831.uztphjdtd3fdxzvr@valkosipuli.retiisi.org.uk>
- <20170919150348.2jsqtxbk6bji4gdb@valkosipuli.retiisi.org.uk>
- <2195038.iUeBRvYfe2@avalon>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] doc: dt: mtd: Add sst25vf016b to the list of supported
+ chip names
+Date: Wed, 20 Sep 2017 13:03:34 +0200
+Message-ID: <CAMuHMdUM8WBMkcw1P3YJTbx7Oje89nCsiH6VeC-9hMp8xrO6Xg@mail.gmail.com>
+References: <1505118928-3987-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2195038.iUeBRvYfe2@avalon>
+In-Reply-To: <1505118928-3987-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Mon, Sep 11, 2017 at 10:35 AM, Fabrizio Castro
+<fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-On Tue, Sep 19, 2017 at 08:54:12PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Tuesday, 19 September 2017 18:03:48 EEST Sakari Ailus wrote:
-> > On Tue, Sep 19, 2017 at 05:58:32PM +0300, Sakari Ailus wrote:
-> > >> This skips adding the notifier to the notifier_list. Won't this result
-> > >> in an oops when calling list_del(&notifier->list) in
-> > >> v4l2_async_notifier_unregister() ?
-> > > 
-> > > Good point. I'll add initialising the list head to the register function,
-> > > with an appropriate comment.
-> > 
-> > I'll set v4l2_dev NULL instead; no tricks with lists needed.
-> 
-> Shouldn't the notifier still be added to the notifier_list ?
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Would there be any benefit of that?
+Gr{oetje,eeting}s,
 
-The notifier's v4l2_dev field is also used to determine whether the
-notifier is registered currently. If the notifier is added to the notifier
-list, we need to remove it in unregistration as well.
+                        Geert
 
--- 
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
