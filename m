@@ -1,221 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "mfd: arizona: Remove audio related device tree code" to the asoc tree
-Date: Wed, 20 Sep 2017 18:14:07 +0100
-Message-ID: <E1duiZb-0003Ac-LF@debutante>
-References: <20170904154154.4395-5-ckeepax@opensource.cirrus.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170904154154.4395-5-ckeepax@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>broonie@kernel.orglee.jones@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.orgalsa-devel@alsa-project.org
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 4/8] ARM: dts: iwg22d: Enable SDHI0 controller
+Date: Wed, 20 Sep 2017 17:17:44 +0000
+Message-ID: <TY1PR06MB0895D8F201C57A65EBE5F5D2C0610@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-5-git-send-email-chris.paterson2@renesas.com>
+ <20170915080530.GH3924@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915080530.GH3924-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   mfd: arizona: Remove audio related device tree code
-
-has been applied to the asoc tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 6000c99ee6e9876cb33275c752937d99f77cdb95 Mon Sep 17 00:00:00 2001
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Date: Mon, 4 Sep 2017 16:41:51 +0100
-Subject: [PATCH] mfd: arizona: Remove audio related device tree code
-
-This code has now been moved to the audio subsystem so is no longer
-required in the MFD code.
-
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/mfd/arizona-core.c | 132 +--------------------------------------------
- 1 file changed, 1 insertion(+), 131 deletions(-)
-
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index 8d46e3ad9529..77875250abe5 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -797,12 +797,7 @@ EXPORT_SYMBOL_GPL(arizona_of_get_type);
- static int arizona_of_get_core_pdata(struct arizona *arizona)
- {
- 	struct arizona_pdata *pdata = &arizona->pdata;
--	struct property *prop;
--	const __be32 *cur;
--	u32 val;
--	u32 pdm_val[ARIZONA_MAX_PDM_SPK];
- 	int ret, i;
--	int count = 0;
- 
- 	pdata->reset = of_get_named_gpio(arizona->dev->of_node, "wlf,reset", 0);
- 	if (pdata->reset == -EPROBE_DEFER) {
-@@ -836,64 +831,6 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
- 			ret);
- 	}
- 
--	of_property_for_each_u32(arizona->dev->of_node, "wlf,inmode", prop,
--				 cur, val) {
--		if (count == ARRAY_SIZE(pdata->inmode))
--			break;
--
--		pdata->inmode[count] = val;
--		count++;
--	}
--
--	count = 0;
--	of_property_for_each_u32(arizona->dev->of_node, "wlf,dmic-ref", prop,
--				 cur, val) {
--		if (count == ARRAY_SIZE(pdata->dmic_ref))
--			break;
--
--		pdata->dmic_ref[count] = val;
--		count++;
--	}
--
--	count = 0;
--	of_property_for_each_u32(arizona->dev->of_node, "wlf,out-mono", prop,
--				 cur, val) {
--		if (count == ARRAY_SIZE(pdata->out_mono))
--			break;
--
--		pdata->out_mono[count] = !!val;
--		count++;
--	}
--
--	count = 0;
--	of_property_for_each_u32(arizona->dev->of_node,
--				 "wlf,max-channels-clocked",
--				 prop, cur, val) {
--		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
--			break;
--
--		pdata->max_channels_clocked[count] = val;
--		count++;
--	}
--
--	ret = of_property_read_u32_array(arizona->dev->of_node,
--					 "wlf,spk-fmt",
--					 pdm_val,
--					 ARRAY_SIZE(pdm_val));
--
--	if (ret >= 0)
--		for (count = 0; count < ARRAY_SIZE(pdata->spk_fmt); ++count)
--			pdata->spk_fmt[count] = pdm_val[count];
--
--	ret = of_property_read_u32_array(arizona->dev->of_node,
--					 "wlf,spk-mute",
--					 pdm_val,
--					 ARRAY_SIZE(pdm_val));
--
--	if (ret >= 0)
--		for (count = 0; count < ARRAY_SIZE(pdata->spk_mute); ++count)
--			pdata->spk_mute[count] = pdm_val[count];
--
- 	return 0;
- }
- 
-@@ -1026,7 +963,7 @@ int arizona_dev_init(struct arizona *arizona)
- 	const char * const mclk_name[] = { "mclk1", "mclk2" };
- 	struct device *dev = arizona->dev;
- 	const char *type_name = NULL;
--	unsigned int reg, val, mask;
-+	unsigned int reg, val;
- 	int (*apply_patch)(struct arizona *) = NULL;
- 	const struct mfd_cell *subdevs = NULL;
- 	int n_subdevs, ret, i;
-@@ -1429,73 +1366,6 @@ int arizona_dev_init(struct arizona *arizona)
- 				   ARIZONA_MICB1_RATE, val);
- 	}
- 
--	for (i = 0; i < ARIZONA_MAX_INPUT; i++) {
--		/* Default for both is 0 so noop with defaults */
--		val = arizona->pdata.dmic_ref[i]
--			<< ARIZONA_IN1_DMIC_SUP_SHIFT;
--		if (arizona->pdata.inmode[i] & ARIZONA_INMODE_DMIC)
--			val |= 1 << ARIZONA_IN1_MODE_SHIFT;
--
--		switch (arizona->type) {
--		case WM8998:
--		case WM1814:
--			regmap_update_bits(arizona->regmap,
--				ARIZONA_ADC_DIGITAL_VOLUME_1L + (i * 8),
--				ARIZONA_IN1L_SRC_SE_MASK,
--				(arizona->pdata.inmode[i] & ARIZONA_INMODE_SE)
--					<< ARIZONA_IN1L_SRC_SE_SHIFT);
--
--			regmap_update_bits(arizona->regmap,
--				ARIZONA_ADC_DIGITAL_VOLUME_1R + (i * 8),
--				ARIZONA_IN1R_SRC_SE_MASK,
--				(arizona->pdata.inmode[i] & ARIZONA_INMODE_SE)
--					<< ARIZONA_IN1R_SRC_SE_SHIFT);
--
--			mask = ARIZONA_IN1_DMIC_SUP_MASK |
--				ARIZONA_IN1_MODE_MASK;
--			break;
--		default:
--			if (arizona->pdata.inmode[i] & ARIZONA_INMODE_SE)
--				val |= 1 << ARIZONA_IN1_SINGLE_ENDED_SHIFT;
--
--			mask = ARIZONA_IN1_DMIC_SUP_MASK |
--				ARIZONA_IN1_MODE_MASK |
--				ARIZONA_IN1_SINGLE_ENDED_MASK;
--			break;
--		}
--
--		regmap_update_bits(arizona->regmap,
--				   ARIZONA_IN1L_CONTROL + (i * 8),
--				   mask, val);
--	}
--
--	for (i = 0; i < ARIZONA_MAX_OUTPUT; i++) {
--		/* Default is 0 so noop with defaults */
--		if (arizona->pdata.out_mono[i])
--			val = ARIZONA_OUT1_MONO;
--		else
--			val = 0;
--
--		regmap_update_bits(arizona->regmap,
--				   ARIZONA_OUTPUT_PATH_CONFIG_1L + (i * 8),
--				   ARIZONA_OUT1_MONO, val);
--	}
--
--	for (i = 0; i < ARIZONA_MAX_PDM_SPK; i++) {
--		if (arizona->pdata.spk_mute[i])
--			regmap_update_bits(arizona->regmap,
--					   ARIZONA_PDM_SPK1_CTRL_1 + (i * 2),
--					   ARIZONA_SPK1_MUTE_ENDIAN_MASK |
--					   ARIZONA_SPK1_MUTE_SEQ1_MASK,
--					   arizona->pdata.spk_mute[i]);
--
--		if (arizona->pdata.spk_fmt[i])
--			regmap_update_bits(arizona->regmap,
--					   ARIZONA_PDM_SPK1_CTRL_2 + (i * 2),
--					   ARIZONA_SPK1_FMT_MASK,
--					   arizona->pdata.spk_fmt[i]);
--	}
--
- 	pm_runtime_set_active(arizona->dev);
- 	pm_runtime_enable(arizona->dev);
- 
--- 
-2.14.1
+SGVsbG8gU2ltb24sIEdlZXJ0DQoNCnRoYW5rIHlvdSBmb3IgeW91ciBwYXRpZW5jZSBvbiB0aGlz
+IG9uZS4gV2UgZm91bmQgb3V0IHRoYXQgdGhlcmUgaXMgYW4gSFcgaXNzdWUgb24gU0RISTAgLCBT
+REhDX0NEIyBhbmQgU0RIQ19DTUQgKG9uIHRoZSBjYXJyaWVyIGJvYXJkKSBhcmUgcHVsbGVkIHVw
+IHRvIDMuM1YsIHRoZXJlZm9yZSB3ZSBhcmUgZHJvcHBpbmcgVUhTIG9uIHRoaXMgaW50ZXJmYWNl
+LCBhbmQgYXMgcmVzdWx0IHdlIGFyZSBkcm9wcGluZyB0aGlzIHBhdGNoLiBXZSB3aWxsIHNlbmQg
+YSBWMiBzaG9ydGx5Lg0KDQpUaGFua3MsDQpGYWJyaXppbw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+IEZyb206IFNpbW9uIEhvcm1hbiBbbWFpbHRvOmhvcm1zQHZlcmdlLm5ldC5h
+dV0NCj4gU2VudDogMTUgU2VwdGVtYmVyIDIwMTcgMDk6MDYNCj4gVG86IENocmlzIFBhdGVyc29u
+IDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaCtk
+dEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IE1hZ251
+cyBEYW1tIDxtYWdudXMuZGFtbUBnbWFpbC5jb20+Ow0KPiBSdXNzZWxsIEtpbmcgPGxpbnV4QGFy
+bWxpbnV4Lm9yZy51az47IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVz
+YXMuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXJlbmVzYXMtDQo+IHNv
+Y0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDQvOF0gQVJNOiBkdHM6IGl3ZzIyZDogRW5hYmxlIFNESEkw
+IGNvbnRyb2xsZXINCj4NCj4gT24gV2VkLCBTZXAgMTMsIDIwMTcgYXQgMDY6MDU6MzdQTSArMDEw
+MCwgQ2hyaXMgUGF0ZXJzb24gd3JvdGU6DQo+ID4gRnJvbTogRmFicml6aW8gQ2FzdHJvIDxmYWJy
+aXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4NCj4gPiBFbmFibGUgdGhlIFNESEkwIGNv
+bnRyb2xsZXIgb24gaVdhdmUgUlovRzFFIGNhcnJpZXIgYm9hcmQuDQo+DQo+IC4uLg0KPg0KPiA+
+IEBAIC02MywzICs4OCwxNSBAQA0KPiA+ICBtaWNyZWwsbGVkLW1vZGUgPSA8MT47DQo+ID4gIH07
+DQo+ID4gIH07DQo+ID4gKw0KPiA+ICsmc2RoaTAgew0KPiA+ICtwaW5jdHJsLTAgPSA8JnNkaGkw
+X3BpbnM+Ow0KPiA+ICtwaW5jdHJsLTEgPSA8JnNkaGkwX3BpbnNfdWhzPjsNCj4gPiArcGluY3Ry
+bC1uYW1lcyA9ICJkZWZhdWx0IiwgInN0YXRlX3VocyI7DQo+ID4gKw0KPiA+ICt2bW1jLXN1cHBs
+eSA9IDwmcmVnXzNwM3Y+Ow0KPiA+ICt2cW1tYy1zdXBwbHkgPSA8JnZjY3Ffc2RoaTA+Ow0KPiA+
+ICtjZC1ncGlvcyA9IDwmZ3BpbzYgNiBHUElPX0FDVElWRV9MT1c+Ow0KPg0KPiBJIHRha2UgdGhh
+dCB0aGUgYWJzZW5jZSBvZiBhIHdwLWdwaW8gbWVhbnMgdGhhdCB0aGF0IHRoaXMgaXMgYSDCtVNE
+IHNsb3QuDQo+IENvdWxkIHlvdSBoZWxwIG1lIGJ5IGRvY3VtZW50aW5nIHRoaXMgY29ycmVjdGx5
+IG9uDQo+IGh0dHA6Ly9lbGludXgub3JnL2luZGV4LnBocD90aXRsZT1SZW5lc2FzLU1NQy1FbmFi
+bGVkLVNwZWVkcyA/DQo+DQo+IEZvciBzb21lIHJlYXNvbiBJIHRob3VnaHQgdGhhdCBTREhJMCB3
+YXNuJ3QgZXhwb3NlZCBhdCBhbGwsIHNvIEkgZ3Vlc3MNCj4gbXkgcmVhZGluZyBvZiB0aGUgZG9j
+dW1lbnRhdGlvbiB3YXMgaW5jb3JyZWN0Lg0KPg0KPg0KPiBJIHRoaW5rIHlvdSBhbHNvIHdhbnQg
+c2QtdWhzLXNkcjUwIGhlcmUgdG9vLg0KPiBZb3UgY2FuIHRlc3QgaXQgYnkgcmVtb3ZpbmcgdGhl
+IHNkLXVocy1zZHIxMDQgcHJvcGVydHkuDQo+DQo+ID4gK3NkLXVocy1zZHIxMDQ7DQo+ID4gK3N0
+YXR1cyA9ICJva2F5IjsNCj4gPiArfTsNCj4gPiAtLQ0KPiA+IDEuOS4xDQo+ID4NCg0KDQoNClJl
+bmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9h
+ZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBp
+biBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
