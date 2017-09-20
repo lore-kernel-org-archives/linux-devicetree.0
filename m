@@ -1,51 +1,130 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dts: display5: Device tree description of LWN's
- DISPLAY5 board
-Date: Wed, 20 Sep 2017 06:39:16 -0300
-Message-ID: <CAOMZO5CHR14LWqkgpSiPnMV_6X+Fq=fe-KmE5CrdiqxRUyT8xg@mail.gmail.com>
-References: <1505746765-965-1-git-send-email-lukma@denx.de>
- <CAOMZO5Du4gH1jwcP4ssRPD17GsEAVERpkNBD7W2z5f+4TAd=nA@mail.gmail.com> <f203efc5-b85c-aa3d-0dc6-929ea348e5f6@denx.de>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] reset: mediatek: add reset controller dt-bindings required header for MT7622 SoC
+Date: Wed, 20 Sep 2017 17:40:16 +0800
+Message-ID: <4bb149ef1801c578177beb5e61d19358dd2950ae.1505899696.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f203efc5-b85c-aa3d-0dc6-929ea348e5f6-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?=C5=81ukasz_Majewski?= <lukma-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-On Wed, Sep 20, 2017 at 6:22 AM, =C5=81ukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org> wrote=
-:
+Add the reset controller dt-bindings exported from infracfg, pericfg,
+hifsys and ethsys which could be found on MT7622 SoC. So that we can
+reference them from within a device-tree file.
 
-> Could you be more specific here?
->
-> The 0x80000000 corresponds to IMX_NO_PAD_CTL in pinctrl-imx.c, which
-> prevents from manual GPIO control.
->
-> The 0x80000000 value is the IOMUXC_SW_PAD_CTL_PAD_CSI0_DATA11 (0x020E_065=
-4)
-> config data (16 bits only -> 0x0).
->
-> Writing 0x0 to this register is perfectly fine for my application.
->
->
-> I'm a bit in doubt to what I shall do more?
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ include/dt-bindings/reset/mt7622-reset.h | 94 ++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+ create mode 100644 include/dt-bindings/reset/mt7622-reset.h
 
-As per the Reference Manual, the POR reset for
-IOMUXC_SW_PAD_CTL_PAD_CSI0_DATA11 is 0x1b0b0.
+diff --git a/include/dt-bindings/reset/mt7622-reset.h b/include/dt-bindings/reset/mt7622-reset.h
+new file mode 100644
+index 0000000..234052f
+--- /dev/null
++++ b/include/dt-bindings/reset/mt7622-reset.h
+@@ -0,0 +1,94 @@
++/*
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT7622
++#define _DT_BINDINGS_RESET_CONTROLLER_MT7622
++
++/* INFRACFG resets */
++#define MT7622_INFRA_EMI_REG_RST		0
++#define MT7622_INFRA_DRAMC0_A0_RST		1
++#define MT7622_INFRA_APCIRQ_EINT_RST		3
++#define MT7622_INFRA_APXGPT_RST			4
++#define MT7622_INFRA_SCPSYS_RST			5
++#define MT7622_INFRA_PMIC_WRAP_RST		7
++#define MT7622_INFRA_IRRX_RST			9
++#define MT7622_INFRA_EMI_RST			16
++#define MT7622_INFRA_WED0_RST			17
++#define MT7622_INFRA_DRAMC_RST			18
++#define MT7622_INFRA_CCI_INTF_RST		19
++#define MT7622_INFRA_TRNG_RST			21
++#define MT7622_INFRA_SYSIRQ_RST			22
++#define MT7622_INFRA_WED1_RST			25
++
++/* PERICFG Subsystem resets */
++#define MT7622_PERI_UART0_SW_RST		0
++#define MT7622_PERI_UART1_SW_RST		1
++#define MT7622_PERI_UART2_SW_RST		2
++#define MT7622_PERI_UART3_SW_RST		3
++#define MT7622_PERI_UART4_SW_RST		4
++#define MT7622_PERI_BTIF_SW_RST			6
++#define MT7622_PERI_PWM_SW_RST			8
++#define MT7622_PERI_AUXADC_SW_RST		10
++#define MT7622_PERI_DMA_SW_RST			11
++#define MT7622_PERI_IRTX_SW_RST			13
++#define MT7622_PERI_NFI_SW_RST			14
++#define MT7622_PERI_THERM_SW_RST		16
++#define MT7622_PERI_MSDC0_SW_RST		19
++#define MT7622_PERI_MSDC1_SW_RST		20
++#define MT7622_PERI_I2C0_SW_RST			22
++#define MT7622_PERI_I2C1_SW_RST			23
++#define MT7622_PERI_I2C2_SW_RST			24
++#define MT7622_PERI_SPI0_SW_RST			33
++#define MT7622_PERI_SPI1_SW_RST			34
++#define MT7622_PERI_FLASHIF_SW_RST		36
++
++/* TOPRGU resets */
++#define MT7622_TOPRGU_INFRA_RST			0
++#define MT7622_TOPRGU_ETHDMA_RST		1
++#define MT7622_TOPRGU_DDRPHY_RST		6
++#define MT7622_TOPRGU_INFRA_AO_RST		8
++#define MT7622_TOPRGU_CONN_RST			9
++#define MT7622_TOPRGU_APMIXED_RST		10
++#define MT7622_TOPRGU_CONN_MCU_RST		12
++
++/* PCIe/SATA Subsystem resets */
++#define MT7622_SATA_PHY_REG_RST			12
++#define MT7622_SATA_PHY_SW_RST			13
++#define MT7622_SATA_AXI_BUS_RST			15
++#define MT7622_PCIE1_CORE_RST			19
++#define MT7622_PCIE1_MMIO_RST			20
++#define MT7622_PCIE1_HRST			21
++#define MT7622_PCIE1_USER_RST			22
++#define MT7622_PCIE1_PIPE_RST			23
++#define MT7622_PCIE0_CORE_RST			27
++#define MT7622_PCIE0_MMIO_RST			28
++#define MT7622_PCIE0_HRST			29
++#define MT7622_PCIE0_USER_RST			30
++#define MT7622_PCIE0_PIPE_RST			31
++
++/* SSUSB Subsystem resets */
++#define MT7622_SSUSB_PHY_PWR_RST		3
++#define MT7622_SSUSB_MAC_PWR_RST		4
++
++/* ETHSYS Subsystem resets */
++#define MT7622_ETHSYS_SYS_RST			0
++#define MT7622_ETHSYS_MCM_RST			2
++#define MT7622_ETHSYS_HSDMA_RST			5
++#define MT7622_ETHSYS_FE_RST			6
++#define MT7622_ETHSYS_GMAC_RST			23
++#define MT7622_ETHSYS_EPHY_RST			24
++#define MT7622_ETHSYS_CRYPTO_RST		29
++#define MT7622_ETHSYS_PPE_RST			31
++
++#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT7622 */
+-- 
+2.7.4
 
-0x80000000 tells the kernel to not touch this IOMUX and use whatever
-value comes from the bootloader.
-
-If your bootloader does not touch this register, then you probably
-read 0x1b0b0 from it.
-
-In this case, please do this instead:
-
-MX6QDL_PAD_CSI0_DAT11__GPIO5_IO29 0x1b0b0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
