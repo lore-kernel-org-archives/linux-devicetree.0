@@ -1,82 +1,176 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
-Date: Wed, 20 Sep 2017 14:32:28 +0200
-Message-ID: <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
-References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
+Date: Wed, 20 Sep 2017 14:32:41 +0200
+Message-ID: <20170920143241.44a20bc6@bbrezillon>
+References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
+        <27834b62-664f-d403-6396-2339cb4fda1c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <27834b62-664f-d403-6396-2339cb4fda1c-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+On Wed, 20 Sep 2017 14:55:02 +0300
+Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
 
-[CC Pantelis]
+> ﻿Hi Boris,
+> 
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> On 31/08/17 18:55, Boris Brezillon wrote:
+> > Add a driver for Cadence DPI -> DSI bridge.
+> > 
+> > This driver only support a subset of Cadence DSI bridge capabilities.
+> > 
+> > Here is a non-exhaustive list of missing features:
+> >  * burst mode
+> >  * dynamic configuration of the DPHY based on the
+> >  * support for additional input interfaces (SDI input)
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> > Changes in v3:
+> > - replace magic values by real timing calculation. The DPHY PLL clock
+> >   is still hardcoded since we don't have a working DPHY block yet, and
+> >   this is the piece of HW we need to dynamically configure the PLL
+> >   rate based on the display refresh rate and the resolution.
+> > - parse DSI devices represented with the OF-graph. This is needed to
+> >   support DSI devices controlled through an external bus like I2C or
+> >   SPI.
+> > - use the DRM panel-bridge infrastructure to simplify the DRM panel
+> >   logic
+> > 
+> > Changes in v2:
+> > - rebase on v4.12-rc1 and adapt to driver to the drm_bridge API changes
+> > - return the correct error when devm_clk_get(sysclk) fails
+> > - add missing depends on OF and select DRM_PANEL in the Kconfig entry
+> > ---
+> >  drivers/gpu/drm/bridge/Kconfig    |    9 +
+> >  drivers/gpu/drm/bridge/Makefile   |    1 +
+> >  drivers/gpu/drm/bridge/cdns-dsi.c | 1090 +++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 1100 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/bridge/cdns-dsi.c  
+> 
+> We need some power management. At the moment the clocks are kept always
+> enabled. Those need to be turned off when the IP is not used.
 
-On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
-<vladimir.barinov@cogentembedded.com> wrote:
-> Add the initial device tree for the M3ULCB with Kingfisher extension
-> infotainment board.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> ---
-> Changes in version 2:
-> - added own compatible value "shimafuji,kingfisher"
+I can try to move the clk_prepare_enable/disable_unprepare() calls in
+the bridge->enable/disable() hooks, but I'm not sure the DSI regs
+content is kept when I disable dsi_p_clk.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> > +static irqreturn_t cdns_dsi_interrupt(int irq, void *data)
+> > +{
+> > +	struct cdns_dsi *dsi = data;
+> > +	irqreturn_t ret = IRQ_NONE;
+> > +	u32 flag, ctl;
+> > +
+> > +	flag = readl(dsi->regs + DIRECT_CMD_STS_FLAG);
+> > +	if (flag) {
+> > +		ctl = readl(dsi->regs + DIRECT_CMD_STS_CTL);
+> > +		ctl &= ~flag;
+> > +		writel(ctl, dsi->regs + DIRECT_CMD_STS_CTL);  
+> 
+> I presume it's the enable/disable bit in STS_CTL that prevents the
+> interrupt from triggering again, instead of the status flag?
 
-Some food for thought below...
+Yep.
 
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
-> @@ -0,0 +1,19 @@
-> +/*
-> + * Device Tree Source for the M3ULCB Kingfisher board
-> + *
-> + * Copyright (C) 2017 Renesas Electronics Corp.
-> + * Copyright (C) 2017 Cogent Embedded, Inc.
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + */
-> +
-> +#include "r8a7796-m3ulcb.dts"
+> Just making
+> sure, because I think on some IPs the status flag has been the one that
+> triggers the interrupt.
+> 
+> > +		complete(&dsi->direct_cmd_comp);
+> > +		ret = IRQ_HANDLED;
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
+> > +				 const struct mipi_dsi_msg *msg)
+> > +{
+> > +	struct cdns_dsi *dsi = to_cdns_dsi(host);
+> > +	u32 cmd, sts, val, wait = WRITE_COMPLETED, ctl = 0;
+> > +	struct mipi_dsi_packet packet;
+> > +	int ret, i, tx_len, rx_len;
+> > +
+> > +	ret = mipi_dsi_create_packet(&packet, msg);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	tx_len = msg->tx_buf ? msg->tx_len : 0;
+> > +	rx_len = msg->rx_buf ? msg->rx_len : 0;
+> > +
+> > +	/* For read operations, the maximum TX len is 2. */  
+> 
+> Hmm, why is that?
 
-Ideally, we don't include *.dts files, only *.dtsi.
-But I don't see a better immediate solution.
+I don't know, that's what is stated in the spec.
+Excerpt from the CMD_SIZE field description:
 
-> +#include "ulcb-kf.dtsi"
+"
+For read operations, any value
+written which is larger than 2
+bytes will be ignored and the
+command payload will be truncated
+to 2 bytes.
+"
 
-As the Kingfisher is actually an expansion board for H3ULCB (with R-Car H3
-ES1.1 and ES2.0) and M3ULCB (with R-Car M3-W), turning ulcb-kf.dtsi into a
-DT overlay would make sense.
-That would also solve the issue of the 3 extra DTSes needed for all possible
-combinations of ULCB and Kingfisher (r8a7795-es1-h3ulcb-kf.dts,
-r8a7795-h3ulcb-kf.dts, r8a7796-h3ulcb-kf.dts (perhaps more to follow?)).
+> 
+> > +	if (rx_len && tx_len > 2)
+> > +		return -ENOTSUPP;
+> > +
+> > +	/* TX len is limited by the CMD FIFO depth. */
+> > +	if (tx_len > dsi->direct_cmd_fifo_depth)
+> > +		return -ENOTSUPP;
+> > +
+> > +	/* RX len is limited by the RX FIFO depth. */
+> > +	if (rx_len > dsi->rx_fifo_depth)
+> > +		return -ENOTSUPP;
+> > +
+> > +	cmd = CMD_SIZE(tx_len) | CMD_VCHAN_ID(msg->channel) |
+> > +	      CMD_DATATYPE(msg->type);
+> > +
+> > +	if (msg->flags & MIPI_DSI_MSG_USE_LPM)
+> > +		cmd |= CMD_LP_EN;
+> > +
+> > +	if (mipi_dsi_packet_format_is_long(msg->type))
+> > +		cmd |= CMD_LONG;
+> > +
+> > +	if (rx_len) {
+> > +		cmd |= READ_CMD;
+> > +		wait = READ_COMPLETED_WITH_ERR | READ_COMPLETED;
+> > +		ctl = READ_EN | BTA_EN;
+> > +	} else if (msg->flags & MIPI_DSI_MSG_REQ_ACK) {
+> > +		cmd |= BTA_REQ;
+> > +		wait = ACK_WITH_ERR_RCVD | ACK_RCVD;
+> > +		ctl = BTA_EN;
+> > +	}  
+> 
+> It's been a while since I worked with DSI, but... Shouldn't there be a
+> check somewhere that the packet(s) can fit into the blanking intervals?
 
-But that's too premature, without upstream support for the easy loading of
-DT overlays.
+Hm, I'm not sure. DSI commands are usually sent when the encoder/bridge
+is not transmitting video, so in this case we don't have any constraint
+on the packet length. Also, it seems other drivers are not checking the
+vblank timing constraint when sending commands so either it's handled in
+HW and the controller is able to report invalid lengths or no one cared
+enough to take this case into account.
 
-> +/ {
-> +       model = "Renesas M3ULCB Kingfisher board based on r8a7796";
-> +       compatible = "shimafuji,kingfisher", "renesas,m3ulcb",
-> +                    "renesas,r8a7796";
-> +};
+Anyway, I'll ask Cadence engineers to know how they deal with this
+video+command situation.
 
-And how to support from an overlay the addition of "shimafuji,kingfisher" to
-(not replacement of!) the main compatible value?
+Thanks,
 
-Gr{oetje,eeting}s,
-
-                        Geert
+Boris
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
