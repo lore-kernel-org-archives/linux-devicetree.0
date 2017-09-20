@@ -1,119 +1,60 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v13 14/25] v4l: async: Allow binding notifiers to
- sub-devices
-Date: Wed, 20 Sep 2017 12:42:28 +0300
-Message-ID: <20170920094228.2sqweboecndi4z3u@paasikivi.fi.intel.com>
-References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
- <3338675.o4HGi8X83V@avalon>
- <20170919151732.4yafxfcxrreizd7r@valkosipuli.retiisi.org.uk>
- <2127988.4UKDZnTvMM@avalon>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH 0/4] add support of clock driver on MediaTek MT7622
+Date: Wed, 20 Sep 2017 17:49:24 +0800
+Message-ID: <cover.1505890481.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2127988.4UKDZnTvMM@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+From: Sean Wang <sean.wang@mediatek.com>
 
-On Tue, Sep 19, 2017 at 08:52:56PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Tuesday, 19 September 2017 18:17:32 EEST Sakari Ailus wrote:
-> > On Tue, Sep 19, 2017 at 04:52:29PM +0300, Laurent Pinchart wrote:
-> > > On Friday, 15 September 2017 17:17:13 EEST Sakari Ailus wrote:
-> > > > Registering a notifier has required the knowledge of struct v4l2_device
-> > >> for the reason that sub-devices generally are registered to the
-> > >> v4l2_device (as well as the media device, also available through
-> > >> v4l2_device).
-> > >> 
-> > >> This information is not available for sub-device drivers at probe time.
-> > >> 
-> > >> What this patch does is that it allows registering notifiers without
-> > >> having v4l2_device around. Instead the sub-device pointer is stored in
-> > >> the notifier. Once the sub-device of the driver that registered the
-> > >> notifier is registered, the notifier will gain the knowledge of the
-> > >> v4l2_device, and the binding of async sub-devices from the sub-device
-> > >> driver's notifier may proceed.
-> > >> 
-> > >> The root notifier's complete callback is only called when all sub-device
-> > >> notifiers are completed.
-> > > 
-> > > This is a bit hard to review, shouldn't it be split in two patches, one
-> > > that refactors the functions, and another one that allows binding
-> > > notifiers to subdevs ?
-> > > 
-> > >> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > >> ---
-> > >> 
-> > >>  drivers/media/v4l2-core/v4l2-async.c | 218 ++++++++++++++++++++++++-----
-> > >>  include/media/v4l2-async.h           |  16 ++-
-> > >>  2 files changed, 203 insertions(+), 31 deletions(-)
-> > >> 
-> > >> diff --git a/drivers/media/v4l2-core/v4l2-async.c
-> > >> b/drivers/media/v4l2-core/v4l2-async.c index 4be2f16af051..52fe22b9b6b4
-> > >> 100644
-> > >> --- a/drivers/media/v4l2-core/v4l2-async.c
-> > >> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> 
-> [snip]
-> 
-> > >> +/* Unbind all sub-devices in the notifier tree. */
-> > >> +static void v4l2_async_notifier_unbind_all_subdevs(
-> > >> +	struct v4l2_async_notifier *notifier)
-> > >> +{
-> > >> +	struct v4l2_subdev *sd, *tmp;
-> > >> 
-> > >>  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
-> > >> 
-> > >> +		struct v4l2_async_notifier *subdev_notifier =
-> > >> +			v4l2_async_find_subdev_notifier(sd);
-> > >> +
-> > >> +		if (subdev_notifier)
-> > >> +			v4l2_async_notifier_unbind_all_subdevs(subdev_notifier);
-> > >> +
-> > >>  		v4l2_async_cleanup(sd);
-> > >>  		
-> > >>  		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
-> > >> -	}
-> > >> 
-> > >> -	mutex_unlock(&list_lock);
-> > >> +		list_del(&sd->async_list);
-> > >> +		list_add(&sd->async_list, &subdev_list);
-> > > 
-> > > How about list_move() ?
-> > 
-> > Yeah.
-> > 
-> > > This seems to be new code, and by the look of it, I wonder whether it
-> > > doesn't belong in the reprobing removal patch.
-> > 
-> > This is not related to re-probing. Here we're moving an async sub-device
-> > back to the global sub-device list when its notifier is going away.
-> 
-> In order to make the subdev bindable again when the notifier will be re-
-> registered. This wasn't needed before, as reprobing took care of that.
+Add clock driver required by each function driver on MT7622 SoC with
+adding all clocks exported from every hardware subsystem such as topckgen,
+apmixedsys, infracfg, pericfg , pciessys, ssusbsys, ethsys and audsys.
 
-Ah, I see what you mean now. That the async sub-device is returned to the
-global list?
+Chen Zhong (2):
+  clk: mediatek: add the option for determining PLL source clock
+  clk: mediatek: add clocks dt-bindings required header for MT7622 SoC
 
-I also noticed the sd shouldn't be set NULL except to the notifier this is
-directly called on. I'll fix that as well.
+Sean Wang (2):
+  dt-bindings: clock: mediatek: document clk bindings for MediaTek
+    MT7622 SoC
+  clk: mediatek: add clock support for MT7622 SoC
 
-> 
-> > >> +	}
-> > >> 
-> > >> +	notifier->parent = NULL;
-> > >> +	notifier->sd = NULL;
-> > >>  	notifier->v4l2_dev = NULL;
-> > >>  }
-> 
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |   1 +
+ .../bindings/arm/mediatek/mediatek,audsys.txt      |  22 +
+ .../bindings/arm/mediatek/mediatek,ethsys.txt      |   1 +
+ .../bindings/arm/mediatek/mediatek,hifsys.txt      |   1 +
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |   1 +
+ .../bindings/arm/mediatek/mediatek,pciesys.txt     |  22 +
+ .../bindings/arm/mediatek/mediatek,pericfg.txt     |   1 +
+ .../bindings/arm/mediatek/mediatek,sgmiisys.txt    |  22 +
+ .../bindings/arm/mediatek/mediatek,ssusbsys.txt    |  22 +
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |   1 +
+ drivers/clk/mediatek/Kconfig                       |  30 +
+ drivers/clk/mediatek/Makefile                      |   4 +
+ drivers/clk/mediatek/clk-mt7622-aud.c              | 195 ++++++
+ drivers/clk/mediatek/clk-mt7622-eth.c              | 156 +++++
+ drivers/clk/mediatek/clk-mt7622-hif.c              | 169 +++++
+ drivers/clk/mediatek/clk-mt7622.c                  | 780 +++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.h                     |   1 +
+ drivers/clk/mediatek/clk-pll.c                     |   5 +-
+ include/dt-bindings/clock/mt7622-clk.h             | 289 ++++++++
+ 19 files changed, 1722 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
+ create mode 100644 drivers/clk/mediatek/clk-mt7622-aud.c
+ create mode 100644 drivers/clk/mediatek/clk-mt7622-eth.c
+ create mode 100644 drivers/clk/mediatek/clk-mt7622-hif.c
+ create mode 100644 drivers/clk/mediatek/clk-mt7622.c
+ create mode 100644 include/dt-bindings/clock/mt7622-clk.h
 
 -- 
-Regards,
+2.7.4
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
