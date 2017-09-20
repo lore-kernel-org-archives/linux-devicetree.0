@@ -1,120 +1,74 @@
-From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v1] usb: host: Implement workaround for Erratum A-007463
-Date: Wed, 20 Sep 2017 15:57:21 +0300
-Message-ID: <59C265B1.6020909@linux.intel.com>
-References: <20170920092441.21292-1-yinbo.zhu@nxp.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 09/18] arm64: dts: ulcb-kf: enable USB2 PHY of channel 0
+Date: Wed, 20 Sep 2017 14:59:31 +0200
+Message-ID: <CAMuHMdX1FZ3_iKCMRkDozsn7QzEmmvuUzkjq5Hn9+L42F=X7sQ@mail.gmail.com>
+References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1504737377-23191-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920092441.21292-1-yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1504737377-23191-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yinbo.zhu-3arQi8VN3Tc@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20.09.2017 12:24, yinbo.zhu-3arQi8VN3Tc@public.gmane.org wrote:
-> From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+Hi Vladimir,
+
+On Thu, Sep 7, 2017 at 12:36 AM, Vladimir Barinov
+<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> This supports USB2 PHY channel #0 on ULCB Kingfisher board
 >
-> When a transaction error (defined in Section 4.10.2.3, "USB
-> Transaction Error" of the xHCI Specification) occurs on the
-> USB, the host controller reports this through a transfer
-> event with the completion code "USB Transaction Error". When
-> this happens, the endpoint is placed in the Halted state.
-> In response, software must issue a Reset Endpoint command to
-> transition the endpoint to the Stopped state. In order to
-> restart the transfer, the driver can perform either of the
-> following:
-> • Ring the doorbell again, which restarts the transfer from
->    where it stopped, or
-> • Issue a Set TR (Transfer Ring) Dequeue Pointer command for
->    the endpoint to start the transfer from a different
->    Transfer Ring pointer Consider the following scenario:
-> 1. The xHCI driver prepares a control transfer read to one
->     of the device's control endpoints;
-> 2. During the IN data stage, a transaction error occurs on
->     the USB, causing a transfer event with the completion
->     code "USB Transaction Error";
-> 3. The driver issues a Reset Endpoint command;
-> 4. The driver rings the doorbell of the control endpoint to
->     resume the transfer. In this scenario, the controller
->     may reverse the direction of the data stage from IN to OUT.
->     Instead of sending an ACK to the endpoint to poll for read
->     data, it sends a Data Packet (DP) to the endpoint. It
->     fetches the data from the data stage Transfer Request Block
->     (TRB) that is being resumed, even though the data buffer is
->     setup to receive data and not transmit it.
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Sound very odd,
-Can you check the xhci side if the data stage TRB in the control
-endpoint ring still looks valid after endpoint reset?
-That is, make sure that the data stage TRB still has DIR bit 16 set.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-If something zeroed that TRB then the DIR bit it would be set to 0
-which means DIR OUT.
-Reset endpoint command forces xHC hardware to re-read the TRB from
-memory  (i.e. the endpoint ring).
-zeroing the trb could happen for example if the TRB gets turned
-into a no-op.
-
-> NOTE
-> This issue occurs only if the transaction error happens during
-> an IN data stage. There is no issue if the transaction error
-> happens during an OUT data stage.
+> index ca8de1a..0854600 100644
+> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> @@ -60,6 +60,11 @@
+>                 groups = "scif1_data_b";
+>                 function = "scif1";
+>         };
+> +
+> +       usb0_pins: usb0 {
+> +               groups = "usb0";
+> +               function = "usb0";
+> +       };
+>  };
 >
-> Impact: When this issue occurs, the device likely responds in
-> one of the following ways:
-> • The device responds with a STALL because the data stage has
-> unexpectedly changed directions. The controller then generates
-> a Stall Error transfer event, to which software must issue a
-> Reset Endpoint command followed by a Set TR Dequeue Pointer
-> command pointing to a new Setup TRB to clear the STALL condition.
-> • The device does not respond to the inverted data stage and the
-> transaction times out. The controller generates another USB
-> Transaction Error transfer event, to which software likely
-> performs a USB Reset to the device because it is unresponsive.
-> It is not expected that any of these recovery steps will cause
-> instability in the system because this recovery is part of a
-> standard xHCI driver and could happen regardless of the defect.
-> Another possible system-level impact is that the controller
-> attempts to read from the memory location pointed at by the Data
-> Stage TRB or a Normal TRB chained to it. associated with this
-> TRB is intended to be written by the controller, but the
-> controller reads from it instead. Normally, this does not cause
-> a problem. However, if the system has some type of memory
-> protection where this unexpected read is treated as a bus error,
-> it may cause the system to become unstable or to crash.
+>  &scif1 {
+> @@ -68,3 +73,10 @@
 >
-> Workaround: If a USB Transaction Error occurs during the IN
-> data phase of a control transfer, the driver must use the
-> Set TR Dequeue Pointer command to either restart the data
-> phase or restart the entire control transfer from the
-> Setup phase.
+>         status = "okay";
+>  };
+> +
+> +&usb2_phy0 {
+> +       pinctrl-0 = <&usb0_pins>;
+> +       pinctrl-names = "default";
+> +
 
+Don't you need
 
-This is already the intended workflow.
-We should already queue a new Set TR Dequeue pointer if
-we receive a transaction error on the TD the xHC is processing.
-the whole control transfer (SETUP, DATA and STATUS) is one TD.
+    vbus-supply = <&vbus0_usb2>;
 
-code flow when we receive a TRANSACTION_ERROR in finish_td:
+with vbus0_usb2 a fixed regulator controlled by GPIO P11 (OTG_EXTLPn) from
+GPIO expander U11 (TCA9539)?
+May be optional, though. salvator-common.dtsi has it.
 
-xhci_requires_manual_halt_endpoint() // true due to transaction error
-   xhci_cleanup_halted_endpoint(EP_HARD_RESET);
-     ep->ep_state |= EP_HALTED;
-     xhci_queue_reset_ep();
-     xhci_cleanup_stalled_ring();
-       xhci_find_new_dequeue_state()
-       xhci_queue_new_dequeue_state()
+> +       status = "okay";
+> +};
 
-what your code does different is that it skips the reset endpoint command.
+Gr{oetje,eeting}s,
 
-It's also possible this is toggle/sequence number issue,
-you could try issuing a EP_SOFT_RESET endpoint reset instead.
+                        Geert
 
--Mathias
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
