@@ -1,182 +1,135 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
-Date: Wed, 20 Sep 2017 17:59:18 +0900
-Message-ID: <CAAFQd5B65bJHsZkMgtjGgyd3btuoWzJwYQRQb5j2kSaefxCZ7Q@mail.gmail.com>
-References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
- <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
- <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
- <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com> <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
+From: =?UTF-8?Q?=c5=81ukasz_Majewski?= <lukma-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 1/2] dts: display5: Device tree description of LWN's
+ DISPLAY5 board
+Date: Wed, 20 Sep 2017 11:22:21 +0200
+Message-ID: <f203efc5-b85c-aa3d-0dc6-929ea348e5f6@denx.de>
+References: <1505746765-965-1-git-send-email-lukma@denx.de>
+ <CAOMZO5Du4gH1jwcP4ssRPD17GsEAVERpkNBD7W2z5f+4TAd=nA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
-Sender: linux-i2c-owner@vger.kernel.org
-To: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
-Cc: "Mani, Rajmohan" <rajmohan.mani@intel.com>, "Mohandass, Divagar" <divagar.mohandass@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mika.westerberg@linux.intel.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5Du4gH1jwcP4ssRPD17GsEAVERpkNBD7W2z5f+4TAd=nA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 5:45 PM, sakari.ailus@iki.fi
-<sakari.ailus@iki.fi> wrote:
-> Hi Tomasz,
->
-> On Wed, Sep 20, 2017 at 12:56:09PM +0900, Tomasz Figa wrote:
->> Thanks Raj.
->>
->> Let me post my comments inline.
->>
->> On Wed, Sep 20, 2017 at 12:52 PM, Mani, Rajmohan
->> <rajmohan.mani@intel.com> wrote:
->> > Adding Tomasz...
->> >
->> >> -----Original Message-----
->> >> From: Mohandass, Divagar
->> >> Sent: Monday, September 04, 2017 3:29 AM
->> >> To: robh+dt@kernel.org; mark.rutland@arm.com; wsa@the-dreams.de;
->> >> sakari.ailus@iki.fi
->> >> Cc: devicetree@vger.kernel.org; linux-i2c@vger.kernel.org; linux-
->> >> kernel@vger.kernel.org; Mani, Rajmohan <rajmohan.mani@intel.com>;
->> >> Mohandass, Divagar <divagar.mohandass@intel.com>
->> >> Subject: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
->> >>
->> >> Currently the device is kept in D0, there is an opportunity to save p=
-ower by
->> >> enabling runtime pm.
->> >>
->> >> Device can be daisy chained from PMIC and we can't rely on I2C core f=
-or auto
->> >> resume/suspend. Driver will decide when to resume/suspend.
->> >>
->> >> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
->> >> ---
->> >>  drivers/misc/eeprom/at24.c | 38
->> >> ++++++++++++++++++++++++++++++++++++++
->> >>  1 file changed, 38 insertions(+)
->> >>
->> >> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c =
-index
->> >> 2199c42..d718a7a 100644
->> >> --- a/drivers/misc/eeprom/at24.c
->> >> +++ b/drivers/misc/eeprom/at24.c
->> >> @@ -24,6 +24,7 @@
->> >>  #include <linux/i2c.h>
->> >>  #include <linux/nvmem-provider.h>
->> >>  #include <linux/platform_data/at24.h>
->> >> +#include <linux/pm_runtime.h>
->> >>
->> >>  /*
->> >>   * I2C EEPROMs from most vendors are inexpensive and mostly
->> >> interchangeable.
->> >> @@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct
->> >> at24_data *at24, const char *buf,  static int at24_read(void *priv, u=
-nsigned int
->> >> off, void *val, size_t count)  {
->> >>       struct at24_data *at24 =3D priv;
->> >> +     struct i2c_client *client;
->> >>       char *buf =3D val;
->> >> +     int ret;
->> >>
->> >>       if (unlikely(!count))
->> >>               return count;
->> >>
->> >> +     client =3D at24_translate_offset(at24, &off);
->> >> +
->> >> +     ret =3D pm_runtime_get_sync(&client->dev);
->> >> +     if (ret < 0) {
->> >> +             pm_runtime_put_noidle(&client->dev);
->> >> +             return ret;
->> >> +     }
->> >> +
->> >>       /*
->> >>        * Read data from chip, protecting against concurrent updates
->> >>        * from this host, but not from other I2C masters.
->> >> @@ -518,6 +529,7 @@ static int at24_read(void *priv, unsigned int off=
-, void
->> >> *val, size_t count)
->> >>               status =3D at24->read_func(at24, buf, off, count);
->> >>               if (status < 0) {
->> >>                       mutex_unlock(&at24->lock);
->> >> +                     pm_runtime_put(&client->dev);
->> >>                       return status;
->> >>               }
->> >>               buf +=3D status;
->> >> @@ -527,17 +539,29 @@ static int at24_read(void *priv, unsigned int o=
-ff, void
->> >> *val, size_t count)
->> >>
->> >>       mutex_unlock(&at24->lock);
->> >>
->> >> +     pm_runtime_put(&client->dev);
->> >> +
->> >>       return 0;
->> >>  }
->> >>
->> >>  static int at24_write(void *priv, unsigned int off, void *val, size_=
-t count)  {
->> >>       struct at24_data *at24 =3D priv;
->> >> +     struct i2c_client *client;
->> >>       char *buf =3D val;
->> >> +     int ret;
->> >>
->> >>       if (unlikely(!count))
->> >>               return -EINVAL;
->> >>
->> >> +     client =3D at24_translate_offset(at24, &off);
->> >> +
->> >> +     ret =3D pm_runtime_get_sync(&client->dev);
->> >> +     if (ret < 0) {
->> >> +             pm_runtime_put_noidle(&client->dev);
->> >> +             return ret;
->> >> +     }
->> >> +
->> >>       /*
->> >>        * Write data to chip, protecting against concurrent updates
->> >>        * from this host, but not from other I2C masters.
->> >> @@ -550,6 +574,7 @@ static int at24_write(void *priv, unsigned int of=
-f, void
->> >> *val, size_t count)
->> >>               status =3D at24->write_func(at24, buf, off, count);
->> >>               if (status < 0) {
->> >>                       mutex_unlock(&at24->lock);
->> >> +                     pm_runtime_put(&client->dev);
->> >>                       return status;
->> >>               }
->> >>               buf +=3D status;
->> >> @@ -559,6 +584,8 @@ static int at24_write(void *priv, unsigned int of=
-f, void
->> >> *val, size_t count)
->> >>
->> >>       mutex_unlock(&at24->lock);
->> >>
->> >> +     pm_runtime_put(&client->dev);
->> >> +
->> >>       return 0;
->> >>  }
->> >>
->> >> @@ -743,11 +770,17 @@ static int at24_probe(struct i2c_client *client=
-, const
->> >> struct i2c_device_id *id)
->> >>
->> >>       i2c_set_clientdata(client, at24);
->> >>
->> >> +     /* enable runtime pm */
->> >> +     pm_runtime_get_noresume(&client->dev);
->> >> +     pm_runtime_set_active(&client->dev);
->> >> +     pm_runtime_enable(&client->dev);
->>
->> Do we need this get_noresume/set_active dance? I remember it was for
->> some reason needed for PCI devices, but I don't see why for I2C
->> anything else than just pm_runtime_enable() would be necessary.
->
-> You specifically do not need (all) this for PCI devices, but AFAIU for I=
-=E6=B6=8E
-> devices you do. The runtime PM status of a device is disabled by default
-> and the use count is zero, but on ACPI based systems the device is still
-> powered on.
+On 09/18/2017 06:06 PM, Fabio Estevam wrote:
+> Hi Lukasz,
+> 
+> On Mon, Sep 18, 2017 at 11:59 AM, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org> wrote:
+> 
+>> diff --git a/arch/arm/boot/dts/imx6q-display5-mitsubishi-aa070-800x480.dts b/arch/arm/boot/dts/imx6q-display5-mitsubishi-aa070-800x480.dts
+>> new file mode 100644
+>> index 0000000..0160ecf
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/imx6q-display5-mitsubishi-aa070-800x480.dts
+>> @@ -0,0 +1,24 @@
+>> +/*
+>> + * Copyright 2017
+>> + * Lukasz Majewski, DENX Software Engineering, lukma-ynQEQJNshbs@public.gmane.org
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+> 
+> Have you considered using a dual GPL/X11 license? Same apply to the
+> other new dts/dtsi files.
 
-Okay, so _get_noresume() and _set_active() would do the thing for ACPI
-indeed, but not sure about other platforms. Perhaps _enable(),
-_get_sync() would be more general?
+Ok. I will provide dual license in v2.
 
-Bets regards,
-Tomasz
+> 
+>> +/dts-v1/;
+>> +
+>> +#include "imx6q-display5.dtsi"
+>> +
+>> +&panel {
+>> +       compatible = "mitsubishi,aa070mc01-ca1";
+> 
+> I don't see this binding accepted in mainline, so it would be better
+> to resend it after it reaches mainline.
+
+I did not yet received any reply for this patch.
+
+> 
+>> +&ssi2 {
+>> +       fsl,mode = "i2s-master";
+> 
+> Please remove this property. simple-audio-card already specifies who is master.
+
+Ok.
+
+> 
+>> +       pinctrl_ecspi2_cs: ecspi2csgrp {
+>> +               fsl,pins = <
+>> +                       MX6QDL_PAD_CSI0_DAT11__GPIO5_IO29 0x80000000
+> 
+> Please do not use 0x80000000. Use the real IOMUX value instead.
+
+Could you be more specific here?
+
+The 0x80000000 corresponds to IMX_NO_PAD_CTL in pinctrl-imx.c, which 
+prevents from manual GPIO control.
+
+The 0x80000000 value is the IOMUXC_SW_PAD_CTL_PAD_CSI0_DATA11 
+(0x020E_0654) config data (16 bits only -> 0x0).
+
+Writing 0x0 to this register is perfectly fine for my application.
+
+
+I'm a bit in doubt to what I shall do more?
+
+> 
+>> +               >;
+>> +       };
+>> +
+>> +       pinctrl_ecspi2_flwp: ecspi2flwpgrp {
+>> +               fsl,pins = <
+>> +                       MX6QDL_PAD_SD3_DAT5__GPIO7_IO00 0x80000000
+> 
+> Ditto.
+> 
+>> +               >;
+>> +       };
+>> +
+>> +       pinctrl_ecspi3: ecspi3grp {
+>> +               fsl,pins = <
+>> +                       MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO      0x100b1
+>> +                       MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI      0x100b1
+>> +                       MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK      0x100b1
+>> +               >;
+>> +       };
+>> +
+>> +       pinctrl_ecspi3_cs: ecspi3csgrp {
+>> +               fsl,pins = <
+>> +                       MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x80000000
+> 
+> Ditto.
+> 
+>> +               >;
+>> +       };
+>> +
+>> +       pinctrl_ecspi3_flwp: ecspi3flwpgrp {
+>> +               fsl,pins = <
+>> +                       MX6QDL_PAD_DISP0_DAT6__GPIO4_IO27 0x80000000
+> 
+> Ditto.
+> 
+
+
+-- 
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
