@@ -1,118 +1,182 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add Vega S96 board
-Date: Wed, 20 Sep 2017 10:36:26 +0200
-Message-ID: <5e034ee7-278a-5b89-8ebc-ca24a00ae095@baylibre.com>
-References: <1505822748-23431-1-git-send-email-narmstrong@baylibre.com>
- <1505822748-23431-2-git-send-email-narmstrong@baylibre.com>
- <CAFBinCCVKFbU-kk9EFzbTbfKCGbOpmm+46spsVry=0E_JCTJgQ@mail.gmail.com>
+From: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
+Date: Wed, 20 Sep 2017 11:45:20 +0300
+Message-ID: <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
+References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
+ <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
+ <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
+ <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCCVKFbU-kk9EFzbTbfKCGbOpmm+46spsVry=0E_JCTJgQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, balbes-150@yandex.ru, support@tronsmart.com, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: "Mani, Rajmohan" <rajmohan.mani@intel.com>, "Mohandass, Divagar" <divagar.mohandass@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mika.westerberg@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2017 07:51 PM, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Tue, Sep 19, 2017 at 2:05 PM, Neil Armstrong <narmstrong@baylibre.com> wrote:
->> The Tronsmart Vega S96 is a TV box derived from Amlogic q200 reference design.
->>
->> Cc: support@tronsmart.com
->> Signed-off-by: Oleg <balbes-150@yandex.ru>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/Makefile               |  1 +
->>  arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts | 39 ++++++++++++++++++++++
->>  2 files changed, 40 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
->> index 7a9f48c..a6c4a06 100644
->> --- a/arch/arm64/boot/dts/amlogic/Makefile
->> +++ b/arch/arm64/boot/dts/amlogic/Makefile
->> @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
->> +dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
->>
->>  always         := $(dtb-y)
->>  subdir-y       := $(dts-dirs)
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
->> new file mode 100644
->> index 0000000..ba74240
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
->> @@ -0,0 +1,39 @@
->> +/*
->> + * Copyright (c) 2017 BayLibre, SAS.
->> + * Author: Neil Armstrong <narmstrong@baylibre.com>
->> + * Copyright (c) 2017 Oleg <balbes-150@yandex.ru>
->> + *
->> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "meson-gxm.dtsi"
->> +#include "meson-gx-p23x-q20x.dtsi"
->> +
->> +/ {
->> +       compatible = "tronsmart,vega-s96", "amlogic,s912", "amlogic,meson-gxm";
->> +       model = "Tronsmart Vega S96";
->> +
->> +};
->> +
->> +&ethmac {
->> +       pinctrl-0 = <&eth_pins>;
->> +       pinctrl-names = "default";
->> +
->> +       /* Select external PHY by default */
->> +       phy-handle = <&external_phy>;
->> +
->> +       amlogic,tx-delay-ns = <2>;
->> +
->> +       /* External PHY is in RGMII */
->> +       phy-mode = "rgmii";
->> +};
->> +
->> +&external_mdio {
->> +       external_phy: ethernet-phy@0 {
->> +               compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
-> some time ago I thought it was smart to add a compatible string with the PHY ID.
-> this was until I figured out that it should only be done if the PHY
-> reports an invalid ID: [0]
-> that's why most .dts files that I've touched skip the "compatible"
-> property and use a comment like "/* Realtek RTL8211F (0x001cc916) */"
-> instead
+Hi Tomasz,
 
-Done, thanks !
+On Wed, Sep 20, 2017 at 12:56:09PM +0900, Tomasz Figa wrote:
+> Thanks Raj.
+> 
+> Let me post my comments inline.
+> 
+> On Wed, Sep 20, 2017 at 12:52 PM, Mani, Rajmohan
+> <rajmohan.mani@intel.com> wrote:
+> > Adding Tomasz...
+> >
+> >> -----Original Message-----
+> >> From: Mohandass, Divagar
+> >> Sent: Monday, September 04, 2017 3:29 AM
+> >> To: robh+dt@kernel.org; mark.rutland@arm.com; wsa@the-dreams.de;
+> >> sakari.ailus@iki.fi
+> >> Cc: devicetree@vger.kernel.org; linux-i2c@vger.kernel.org; linux-
+> >> kernel@vger.kernel.org; Mani, Rajmohan <rajmohan.mani@intel.com>;
+> >> Mohandass, Divagar <divagar.mohandass@intel.com>
+> >> Subject: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
+> >>
+> >> Currently the device is kept in D0, there is an opportunity to save power by
+> >> enabling runtime pm.
+> >>
+> >> Device can be daisy chained from PMIC and we can't rely on I2C core for auto
+> >> resume/suspend. Driver will decide when to resume/suspend.
+> >>
+> >> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
+> >> ---
+> >>  drivers/misc/eeprom/at24.c | 38
+> >> ++++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 38 insertions(+)
+> >>
+> >> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c index
+> >> 2199c42..d718a7a 100644
+> >> --- a/drivers/misc/eeprom/at24.c
+> >> +++ b/drivers/misc/eeprom/at24.c
+> >> @@ -24,6 +24,7 @@
+> >>  #include <linux/i2c.h>
+> >>  #include <linux/nvmem-provider.h>
+> >>  #include <linux/platform_data/at24.h>
+> >> +#include <linux/pm_runtime.h>
+> >>
+> >>  /*
+> >>   * I2C EEPROMs from most vendors are inexpensive and mostly
+> >> interchangeable.
+> >> @@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct
+> >> at24_data *at24, const char *buf,  static int at24_read(void *priv, unsigned int
+> >> off, void *val, size_t count)  {
+> >>       struct at24_data *at24 = priv;
+> >> +     struct i2c_client *client;
+> >>       char *buf = val;
+> >> +     int ret;
+> >>
+> >>       if (unlikely(!count))
+> >>               return count;
+> >>
+> >> +     client = at24_translate_offset(at24, &off);
+> >> +
+> >> +     ret = pm_runtime_get_sync(&client->dev);
+> >> +     if (ret < 0) {
+> >> +             pm_runtime_put_noidle(&client->dev);
+> >> +             return ret;
+> >> +     }
+> >> +
+> >>       /*
+> >>        * Read data from chip, protecting against concurrent updates
+> >>        * from this host, but not from other I2C masters.
+> >> @@ -518,6 +529,7 @@ static int at24_read(void *priv, unsigned int off, void
+> >> *val, size_t count)
+> >>               status = at24->read_func(at24, buf, off, count);
+> >>               if (status < 0) {
+> >>                       mutex_unlock(&at24->lock);
+> >> +                     pm_runtime_put(&client->dev);
+> >>                       return status;
+> >>               }
+> >>               buf += status;
+> >> @@ -527,17 +539,29 @@ static int at24_read(void *priv, unsigned int off, void
+> >> *val, size_t count)
+> >>
+> >>       mutex_unlock(&at24->lock);
+> >>
+> >> +     pm_runtime_put(&client->dev);
+> >> +
+> >>       return 0;
+> >>  }
+> >>
+> >>  static int at24_write(void *priv, unsigned int off, void *val, size_t count)  {
+> >>       struct at24_data *at24 = priv;
+> >> +     struct i2c_client *client;
+> >>       char *buf = val;
+> >> +     int ret;
+> >>
+> >>       if (unlikely(!count))
+> >>               return -EINVAL;
+> >>
+> >> +     client = at24_translate_offset(at24, &off);
+> >> +
+> >> +     ret = pm_runtime_get_sync(&client->dev);
+> >> +     if (ret < 0) {
+> >> +             pm_runtime_put_noidle(&client->dev);
+> >> +             return ret;
+> >> +     }
+> >> +
+> >>       /*
+> >>        * Write data to chip, protecting against concurrent updates
+> >>        * from this host, but not from other I2C masters.
+> >> @@ -550,6 +574,7 @@ static int at24_write(void *priv, unsigned int off, void
+> >> *val, size_t count)
+> >>               status = at24->write_func(at24, buf, off, count);
+> >>               if (status < 0) {
+> >>                       mutex_unlock(&at24->lock);
+> >> +                     pm_runtime_put(&client->dev);
+> >>                       return status;
+> >>               }
+> >>               buf += status;
+> >> @@ -559,6 +584,8 @@ static int at24_write(void *priv, unsigned int off, void
+> >> *val, size_t count)
+> >>
+> >>       mutex_unlock(&at24->lock);
+> >>
+> >> +     pm_runtime_put(&client->dev);
+> >> +
+> >>       return 0;
+> >>  }
+> >>
+> >> @@ -743,11 +770,17 @@ static int at24_probe(struct i2c_client *client, const
+> >> struct i2c_device_id *id)
+> >>
+> >>       i2c_set_clientdata(client, at24);
+> >>
+> >> +     /* enable runtime pm */
+> >> +     pm_runtime_get_noresume(&client->dev);
+> >> +     pm_runtime_set_active(&client->dev);
+> >> +     pm_runtime_enable(&client->dev);
+> 
+> Do we need this get_noresume/set_active dance? I remember it was for
+> some reason needed for PCI devices, but I don't see why for I2C
+> anything else than just pm_runtime_enable() would be necessary.
 
-Neil
+You specifically do not need (all) this for PCI devices, but AFAIU for I²C
+devices you do. The runtime PM status of a device is disabled by default
+and the use count is zero, but on ACPI based systems the device is still
+powered on.
 
 > 
->> +               reg = <0>;
->> +               max-speed = <1000>;
->> +       };
->> +};
->> --
->> 1.9.1
->>
->>
->> _______________________________________________
->> linux-amlogic mailing list
->> linux-amlogic@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-amlogic
-> 
-> 
-> Regards,
-> Martin
-> 
-> 
-> [0] https://github.com/torvalds/linux/commit/7630ea4bda18df2ee1c64dfdca1724a9cc32f920
-> 
+> Also, we enable runtime PM, but we don't provide any callbacks. If
+> there is no callback in any level of the hierarchy, NULL would be
+> returned in [3], making [2] return -ENOSYS and [1] fail. The behavior
+> depends on subsystem and whether the device is attached to a
+> pm_domain. In our particular case I'd guess the device would be in an
+> ACPI pm_domain and that would work, but the driver is generic and must
+> work in any cases.
+
+Agreed.
+
+Cc Mika, too.
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
