@@ -1,140 +1,33 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v1] usb: host: Implement workaround for Erratum A-007463
-Date: Wed, 20 Sep 2017 11:53:12 +0200
-Message-ID: <20170920095312.GB16198@kroah.com>
-References: <20170920092441.21292-1-yinbo.zhu@nxp.com>
+From: Oleg <balbes-150@yandex.ru>
+Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add Vega S96 board
+Date: Wed, 20 Sep 2017 13:47:15 +0300
+Message-ID: <8c982826-4f5d-5e91-dfe5-ca9f3a0ce8af@yandex.ru>
+References: <1505822748-23431-1-git-send-email-narmstrong@baylibre.com>
+ <1505822748-23431-2-git-send-email-narmstrong@baylibre.com>
+ <1505833280.2703.83.camel@baylibre.com>
+ <a79c801a-c6bc-87d6-34f5-1a52f77704c6@yandex.ru>
+ <a342b95d-0300-f408-266f-e48deb1f72d7@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170920092441.21292-1-yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yinbo.zhu-3arQi8VN3Tc@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a342b95d-0300-f408-266f-e48deb1f72d7@baylibre.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, khilman@baylibre.com, carlo@caione.org
+Cc: devicetree@vger.kernel.org, support@tronsmart.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 05:24:41PM +0800, yinbo.zhu-3arQi8VN3Tc@public.gmane.org wrote:
-> From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-> 
-> When a transaction error (defined in Section 4.10.2.3, "USB
-> Transaction Error" of the xHCI Specification) occurs on the
-> USB, the host controller reports this through a transfer
-> event with the completion code "USB Transaction Error". When
-> this happens, the endpoint is placed in the Halted state.
-> In response, software must issue a Reset Endpoint command to
-> transition the endpoint to the Stopped state. In order to
-> restart the transfer, the driver can perform either of the
-> following:
-> • Ring the doorbell again, which restarts the transfer from
->   where it stopped, or
-> • Issue a Set TR (Transfer Ring) Dequeue Pointer command for
->   the endpoint to start the transfer from a different
->   Transfer Ring pointer Consider the following scenario:
-> 1. The xHCI driver prepares a control transfer read to one
->    of the device's control endpoints;
-> 2. During the IN data stage, a transaction error occurs on
->    the USB, causing a transfer event with the completion
->    code "USB Transaction Error";
-> 3. The driver issues a Reset Endpoint command;
-> 4. The driver rings the doorbell of the control endpoint to
->    resume the transfer. In this scenario, the controller
->    may reverse the direction of the data stage from IN to OUT.
->    Instead of sending an ACK to the endpoint to poll for read
->    data, it sends a Data Packet (DP) to the endpoint. It
->    fetches the data from the data stage Transfer Request Block
->    (TRB) that is being resumed, even though the data buffer is
->    setup to receive data and not transmit it.
-> NOTE
-> This issue occurs only if the transaction error happens during
-> an IN data stage. There is no issue if the transaction error
-> happens during an OUT data stage.
-> 
-> Impact: When this issue occurs, the device likely responds in
-> one of the following ways:
-> • The device responds with a STALL because the data stage has
-> unexpectedly changed directions. The controller then generates
-> a Stall Error transfer event, to which software must issue a
-> Reset Endpoint command followed by a Set TR Dequeue Pointer
-> command pointing to a new Setup TRB to clear the STALL condition.
-> • The device does not respond to the inverted data stage and the
-> transaction times out. The controller generates another USB
-> Transaction Error transfer event, to which software likely
-> performs a USB Reset to the device because it is unresponsive.
-> It is not expected that any of these recovery steps will cause
-> instability in the system because this recovery is part of a
-> standard xHCI driver and could happen regardless of the defect.
-> Another possible system-level impact is that the controller
-> attempts to read from the memory location pointed at by the Data
-> Stage TRB or a Normal TRB chained to it. associated with this
-> TRB is intended to be written by the controller, but the
-> controller reads from it instead. Normally, this does not cause
-> a problem. However, if the system has some type of memory
-> protection where this unexpected read is treated as a bus error,
-> it may cause the system to become unstable or to crash.
-> 
-> Workaround: If a USB Transaction Error occurs during the IN
-> data phase of a control transfer, the driver must use the
-> Set TR Dequeue Pointer command to either restart the data
-> phase or restart the entire control transfer from the
-> Setup phase.
-> 
-> Configs Affected:
-> LS1021-20-22A-R1.0, LS1021-20-22A-R2.007463
 
-What does this reference?
+> Ok, then can I replace the Signed-off-bys with "Signed-off-by: Oleg Ivanov <balbes-150@yandex.ru>" ?
+>
 
-Same for the subject: line, I don't know what that means.
-
-> Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-> ---
->  arch/arm/boot/dts/ls1021a.dtsi |  1 +
->  drivers/usb/dwc3/core.c        |  2 ++
->  drivers/usb/dwc3/core.h        |  2 ++
->  drivers/usb/dwc3/host.c        |  2 ++
->  drivers/usb/host/xhci-plat.c   |  3 +++
->  drivers/usb/host/xhci-ring.c   | 28 +++++++++++++++++++++++-----
->  drivers/usb/host/xhci.h        |  3 ++-
->  7 files changed, 35 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 7bb9df2c1460..9f76b2b82dce 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -683,6 +683,7 @@
->  			dr_mode = "host";
->  			snps,quirk-frame-length-adjustment = <0x20>;
->  			snps,dis_rxdet_inp3_quirk;
-> +			snps,quirk_reverse_in_out;
-
-Doesn't that value have to be added to some other DT documentation file?
-
-> -		/* Issue a reset endpoint command to clear the host side
-> -		 * halt, followed by a set dequeue command to move the
-> -		 * dequeue pointer past the TD.
-> -		 * The class driver clears the device side halt later.
-> +		/*
-> +		 * A-007463: After transaction error, controller switches
-> +		 * control transfer data stage from IN to OUT direction.
->  		 */
-
-What does A-007463 refer to?
-
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -1780,7 +1780,7 @@ struct xhci_hcd {
->  #define XHCI_STATE_DYING	(1 << 0)
->  #define XHCI_STATE_HALTED	(1 << 1)
->  #define XHCI_STATE_REMOVING	(1 << 2)
-> -	unsigned int		quirks;
-> +	u64            quirks;
-
-Why change this to a u64?
-
-thanks,
-
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, that's right. Thanks for the patch.
