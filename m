@@ -1,52 +1,74 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add and enable DSP device on OMAPL138 LCDK board
-Date: Wed, 20 Sep 2017 20:44:39 +0530
-Message-ID: <8bd08406-3fd8-9742-c1b9-d3ec9712c4ee@ti.com>
-References: <20170919002833.5677-1-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv2] arm64: dts: stratix10: add ethernet/sdmmc support to the S10 devkit
+Date: Wed, 20 Sep 2017 10:17:55 -0500
+Message-ID: <1505920675-9641-1-git-send-email-dinguyen@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170919002833.5677-1-s-anna-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
+Enable ethernet and sdmmc support on the Stratix10 devkit.
 
-On Tuesday 19 September 2017 05:58 AM, Suman Anna wrote:
-> Hi Sekhar,
-> 
-> The following series adds the DT node for the DSP device present on
-> on DA850/OMAPL138 SoCs. The node is disabled in the base dts file, and
-> enabled in the corresponding LCDK board file alongside the reserved
-> CMA pool required by the DSP device. The DT bindings and driver
-> adaptation were added to mainline in 4.14-rc1, and this series adds
-> the remaining dt portions. Nodes are added as per bindings in
-> Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-> 
-> Patches are based on 4.14-rc1. The first 2 patches adds the base DTS
-> node and enables the device on OMAPL138 LCDK board. The last patch
-> allows the non-DT clock to be bound to the DT DSP device by using
-> of_auxdata which renames the device to the same as the non-DT device
-> name. This is required by the davinci remoteproc driver to properly
-> acquire and enable the clock for this device.
-> 
-> Validation done on OMAPL138 LCDK board. Supported features include
-> basic load/boot (tested with rpmsg_client_sample) using external
-> memory from the CMA pool.
+Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+v2: Create a separate PHY node
+---
+ .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-Applied for v4.15. The patches are on my master branch. They will be in
-linux-next when I send my pull request to ARM-SoC, which typically will
-take a couple of weeks more.
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 41ea2db..5907586 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -34,6 +34,44 @@
+ 	};
+ };
+ 
++&gmac0 {
++	status = "okay";
++	phy-mode = "rgmii";
++	phy-handle = <&phy0>;
++
++	max-frame-size = <3800>;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy0: ethernet-phy@0 {
++			reg = <4>;
++
++			txd0-skew-ps = <0>; /* -420ps */
++			txd1-skew-ps = <0>; /* -420ps */
++			txd2-skew-ps = <0>; /* -420ps */
++			txd3-skew-ps = <0>; /* -420ps */
++			rxd0-skew-ps = <420>; /* 0ps */
++			rxd1-skew-ps = <420>; /* 0ps */
++			rxd2-skew-ps = <420>; /* 0ps */
++			rxd3-skew-ps = <420>; /* 0ps */
++			txen-skew-ps = <0>; /* -420ps */
++			txc-skew-ps = <1860>; /* 960ps */
++			rxdv-skew-ps = <420>; /* 0ps */
++			rxc-skew-ps = <1680>; /* 780ps */
++		};
++	};
++};
++
++&mmc {
++	status = "okay";
++	num-slots = <1>;
++	cap-sd-highspeed;
++	broken-cd;
++	bus-width = <4>;
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+-- 
+2.7.4
 
-davinci_all_defconfig seems to be missing the CMA options needed. Could
-you send a patch enabling them?
-
-Thanks,
-Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
