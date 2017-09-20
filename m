@@ -1,109 +1,182 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] arm: sun8i: nanopi-neo: Enable USB OTG
-Date: Wed, 20 Sep 2017 10:54:00 +0200
-Message-ID: <20170920085400.ipaduwj5ccslkg43@flea.home>
-References: <20170920043923.16425-1-ddiss@suse.de>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
+Date: Wed, 20 Sep 2017 17:59:18 +0900
+Message-ID: <CAAFQd5B65bJHsZkMgtjGgyd3btuoWzJwYQRQb5j2kSaefxCZ7Q@mail.gmail.com>
+References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
+ <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
+ <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
+ <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com> <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vyvsp4e6jxzav4gr"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170920043923.16425-1-ddiss-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Disseldorp <ddiss-l3A5Bk7waGM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
+Sender: linux-i2c-owner@vger.kernel.org
+To: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
+Cc: "Mani, Rajmohan" <rajmohan.mani@intel.com>, "Mohandass, Divagar" <divagar.mohandass@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mika.westerberg@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 20, 2017 at 5:45 PM, sakari.ailus@iki.fi
+<sakari.ailus@iki.fi> wrote:
+> Hi Tomasz,
+>
+> On Wed, Sep 20, 2017 at 12:56:09PM +0900, Tomasz Figa wrote:
+>> Thanks Raj.
+>>
+>> Let me post my comments inline.
+>>
+>> On Wed, Sep 20, 2017 at 12:52 PM, Mani, Rajmohan
+>> <rajmohan.mani@intel.com> wrote:
+>> > Adding Tomasz...
+>> >
+>> >> -----Original Message-----
+>> >> From: Mohandass, Divagar
+>> >> Sent: Monday, September 04, 2017 3:29 AM
+>> >> To: robh+dt@kernel.org; mark.rutland@arm.com; wsa@the-dreams.de;
+>> >> sakari.ailus@iki.fi
+>> >> Cc: devicetree@vger.kernel.org; linux-i2c@vger.kernel.org; linux-
+>> >> kernel@vger.kernel.org; Mani, Rajmohan <rajmohan.mani@intel.com>;
+>> >> Mohandass, Divagar <divagar.mohandass@intel.com>
+>> >> Subject: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
+>> >>
+>> >> Currently the device is kept in D0, there is an opportunity to save p=
+ower by
+>> >> enabling runtime pm.
+>> >>
+>> >> Device can be daisy chained from PMIC and we can't rely on I2C core f=
+or auto
+>> >> resume/suspend. Driver will decide when to resume/suspend.
+>> >>
+>> >> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
+>> >> ---
+>> >>  drivers/misc/eeprom/at24.c | 38
+>> >> ++++++++++++++++++++++++++++++++++++++
+>> >>  1 file changed, 38 insertions(+)
+>> >>
+>> >> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c =
+index
+>> >> 2199c42..d718a7a 100644
+>> >> --- a/drivers/misc/eeprom/at24.c
+>> >> +++ b/drivers/misc/eeprom/at24.c
+>> >> @@ -24,6 +24,7 @@
+>> >>  #include <linux/i2c.h>
+>> >>  #include <linux/nvmem-provider.h>
+>> >>  #include <linux/platform_data/at24.h>
+>> >> +#include <linux/pm_runtime.h>
+>> >>
+>> >>  /*
+>> >>   * I2C EEPROMs from most vendors are inexpensive and mostly
+>> >> interchangeable.
+>> >> @@ -501,11 +502,21 @@ static ssize_t at24_eeprom_write_i2c(struct
+>> >> at24_data *at24, const char *buf,  static int at24_read(void *priv, u=
+nsigned int
+>> >> off, void *val, size_t count)  {
+>> >>       struct at24_data *at24 =3D priv;
+>> >> +     struct i2c_client *client;
+>> >>       char *buf =3D val;
+>> >> +     int ret;
+>> >>
+>> >>       if (unlikely(!count))
+>> >>               return count;
+>> >>
+>> >> +     client =3D at24_translate_offset(at24, &off);
+>> >> +
+>> >> +     ret =3D pm_runtime_get_sync(&client->dev);
+>> >> +     if (ret < 0) {
+>> >> +             pm_runtime_put_noidle(&client->dev);
+>> >> +             return ret;
+>> >> +     }
+>> >> +
+>> >>       /*
+>> >>        * Read data from chip, protecting against concurrent updates
+>> >>        * from this host, but not from other I2C masters.
+>> >> @@ -518,6 +529,7 @@ static int at24_read(void *priv, unsigned int off=
+, void
+>> >> *val, size_t count)
+>> >>               status =3D at24->read_func(at24, buf, off, count);
+>> >>               if (status < 0) {
+>> >>                       mutex_unlock(&at24->lock);
+>> >> +                     pm_runtime_put(&client->dev);
+>> >>                       return status;
+>> >>               }
+>> >>               buf +=3D status;
+>> >> @@ -527,17 +539,29 @@ static int at24_read(void *priv, unsigned int o=
+ff, void
+>> >> *val, size_t count)
+>> >>
+>> >>       mutex_unlock(&at24->lock);
+>> >>
+>> >> +     pm_runtime_put(&client->dev);
+>> >> +
+>> >>       return 0;
+>> >>  }
+>> >>
+>> >>  static int at24_write(void *priv, unsigned int off, void *val, size_=
+t count)  {
+>> >>       struct at24_data *at24 =3D priv;
+>> >> +     struct i2c_client *client;
+>> >>       char *buf =3D val;
+>> >> +     int ret;
+>> >>
+>> >>       if (unlikely(!count))
+>> >>               return -EINVAL;
+>> >>
+>> >> +     client =3D at24_translate_offset(at24, &off);
+>> >> +
+>> >> +     ret =3D pm_runtime_get_sync(&client->dev);
+>> >> +     if (ret < 0) {
+>> >> +             pm_runtime_put_noidle(&client->dev);
+>> >> +             return ret;
+>> >> +     }
+>> >> +
+>> >>       /*
+>> >>        * Write data to chip, protecting against concurrent updates
+>> >>        * from this host, but not from other I2C masters.
+>> >> @@ -550,6 +574,7 @@ static int at24_write(void *priv, unsigned int of=
+f, void
+>> >> *val, size_t count)
+>> >>               status =3D at24->write_func(at24, buf, off, count);
+>> >>               if (status < 0) {
+>> >>                       mutex_unlock(&at24->lock);
+>> >> +                     pm_runtime_put(&client->dev);
+>> >>                       return status;
+>> >>               }
+>> >>               buf +=3D status;
+>> >> @@ -559,6 +584,8 @@ static int at24_write(void *priv, unsigned int of=
+f, void
+>> >> *val, size_t count)
+>> >>
+>> >>       mutex_unlock(&at24->lock);
+>> >>
+>> >> +     pm_runtime_put(&client->dev);
+>> >> +
+>> >>       return 0;
+>> >>  }
+>> >>
+>> >> @@ -743,11 +770,17 @@ static int at24_probe(struct i2c_client *client=
+, const
+>> >> struct i2c_device_id *id)
+>> >>
+>> >>       i2c_set_clientdata(client, at24);
+>> >>
+>> >> +     /* enable runtime pm */
+>> >> +     pm_runtime_get_noresume(&client->dev);
+>> >> +     pm_runtime_set_active(&client->dev);
+>> >> +     pm_runtime_enable(&client->dev);
+>>
+>> Do we need this get_noresume/set_active dance? I remember it was for
+>> some reason needed for PCI devices, but I don't see why for I2C
+>> anything else than just pm_runtime_enable() would be necessary.
+>
+> You specifically do not need (all) this for PCI devices, but AFAIU for I=
+=E6=B6=8E
+> devices you do. The runtime PM status of a device is disabled by default
+> and the use count is zero, but on ACPI based systems the device is still
+> powered on.
 
---vyvsp4e6jxzav4gr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Okay, so _get_noresume() and _set_active() would do the thing for ACPI
+indeed, but not sure about other platforms. Perhaps _enable(),
+_get_sync() would be more general?
 
-On Wed, Sep 20, 2017 at 04:39:23AM +0000, David Disseldorp wrote:
-> From: David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
->=20
-> The NanoPi NEO features a MicroUSB port that can work in both host mode
-> and peripheral mode. Switching is handled via GPIO PG12.
->=20
-> Signed-off-by: David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> ---
-> Changes since v1
-> - remove duplicate ehci3/ohci3 definitions, which are already carried in
->   sun8i-h3-nanopi.dtsi
->=20
->  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dt=
-s/sun8i-h3-nanopi-neo.dts
-> index 78f6c24952dd..17b07c3df369 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-> @@ -47,9 +47,28 @@
->  	compatible =3D "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
->  };
-> =20
-> +&ehci0 {
-> +	status =3D "okay";
-> +};
-> +
->  &emac {
->  	phy-handle =3D <&int_mii_phy>;
->  	phy-mode =3D "mii";
->  	allwinner,leds-active-low;
->  	status =3D "okay";
->  };
-> +
-> +&ohci0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&usb_otg {
-> +	dr_mode =3D "otg";
-> +	status =3D "okay";
-> +};
-> +
-> +&usbphy {
-> +	/* USB Type-A port's VBUS is always on */
-
-I'm not sure what that comment is here for.
-
-> +	usb0_id_det-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-
-And that means that you cannot switch VBUS on on the board?
-
-In this case, it's not able to do proper OTG like advertised above.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---vyvsp4e6jxzav4gr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZwiyoAAoJEBx+YmzsjxAgEEoP/jDJGGmuK+1S57E005HCl9Jf
-qxLyHscYO8+E9s6MnfMnkp1G/96S5FYKo7GNUdZLWwHWQ1a1HYar8OdZclZu3A9o
-QtZKqVqyMTZAkg7fszAiir0H8qy8SHitXhb1MfKsB7i9JMboRnghGYVNWkFrQSZA
-7mzOwWkgD0odLZ8Q5CKSQw9zlm4oPElUnOVDFmcXHtAV1SxPvLumP3ltB6W5k2Dm
-LgvMOgVob6/qQ38H7cgXbz6xqXmsjZFtn9rxuTvQbkA497ljhxr0Zc4b3YX3VbrV
-wYX75mN3Wz89tAAajn5dfqFVFH3LnjKNXYNr9JyigQR8hwlmQuhyLJvzMHT9Z+wn
-Ym2AbiuTS7/aSD27my+48WFHV3DjRpVjI8x6oj6ms4nVyQ5fJeuo2DoJSjJVVxIk
-KDoWAP6WgLufSGLxkRBroDSdy7Om9jgBarC50pwDaawNwDuI50Q+IS3w2iZtzOuZ
-oW/GEhyd6dP+p3zk1x1gDVjwLGOWHZSZJVJ2ZIR410yz/wM/PnT6XDY5glRaFlNo
-CbJptSAXblHr4TRLBXhdSHu8h8Naf4fd8ebUKEtKTTXMZ9j0qs9dl0cvZsaBs8ZK
-jvSV0ykdvbdNV3MJ9MyMonWZ39XZ05IEwoLoWB1fr436bkG5sPwe2IeQDA4yBT+8
-EmZ89uPIqaOqf2sq7cio
-=MoVT
------END PGP SIGNATURE-----
-
---vyvsp4e6jxzav4gr--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bets regards,
+Tomasz
