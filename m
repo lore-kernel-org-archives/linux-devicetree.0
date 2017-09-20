@@ -1,51 +1,59 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 8/9 v2] usb: usb251xb: Add max power/current dts property
- support
-Date: Wed, 20 Sep 2017 15:52:55 -0500
-Message-ID: <20170920205255.5txbub3y6v6avolh@rob-hp-laptop>
-References: <20170915233113.17855-1-fancer.lancer@gmail.com>
- <20170916104220.3742-1-fancer.lancer@gmail.com>
- <20170916104220.3742-9-fancer.lancer@gmail.com>
+Subject: Re: [PATCH v2 2/2] mmc: sdhci-msm: Enable delay circuit calibration
+ clocks
+Date: Wed, 20 Sep 2017 15:52:38 -0500
+Message-ID: <20170920133051.pqmae3ggomr5bm5k@rob-hp-laptop>
+References: <20170915233524.1375-1-bjorn.andersson@linaro.org>
+ <20170915233524.1375-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170916104220.3742-9-fancer.lancer@gmail.com>
+In-Reply-To: <20170915233524.1375-3-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: richard.leitner@skidata.com, gregkh@linuxfoundation.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Ritesh Harjani <riteshh@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 16, 2017 at 01:42:19PM +0300, Serge Semin wrote:
-> This parameters may be varied in accordance with hardware specifics.
-> So lets add the corresponding settings to the usb251x driver dts
-> specification.
+On Fri, Sep 15, 2017 at 04:35:24PM -0700, Bjorn Andersson wrote:
+> The delay circuit used to support HS400 is calibrated based on two
+> additional clocks. When these clocks are not available and
+> FF_CLK_SW_RST_DIS is not set in CORE_HC_MODE, reset might fail. But on
+> some platforms this doesn't work properly and below dump can be seen in
+> the kernel log.
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+>   mmc0: Reset 0x1 never completed.
+>   mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+>   mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00001102
+>   mmc0: sdhci: Blk size:  0x00004000 | Blk cnt:  0x00000000
+>   mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000000
+>   mmc0: sdhci: Present:   0x01f80000 | Host ctl: 0x00000000
+>   mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000000
+>   mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000002
+>   mmc0: sdhci: Timeout:   0x00000000 | Int stat: 0x00000000
+>   mmc0: sdhci: Int enab:  0x00000000 | Sig enab: 0x00000000
+>   mmc0: sdhci: AC12 err:  0x00000000 | Slot int: 0x00000000
+>   mmc0: sdhci: Caps:      0x742dc8b2 | Caps_1:   0x00008007
+>   mmc0: sdhci: Cmd:       0x00000000 | Max curr: 0x00000000
+>   mmc0: sdhci: Resp[0]:   0x00000000 | Resp[1]:  0x00000000
+>   mmc0: sdhci: Resp[2]:   0x00000000 | Resp[3]:  0x00000000
+>   mmc0: sdhci: Host ctl2: 0x00000000
+>   mmc0: sdhci: ============================================
+> 
+> Add support for the additional calibration clocks to allow these
+> platforms to be configured appropriately.
+> 
+> Cc: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+> Cc: Ritesh Harjani <riteshh@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  Documentation/devicetree/bindings/usb/usb251xb.txt   |  6 ++++++
->  drivers/usb/misc/usb251xb.c                          | 20 ++++++++++++++++----
->  2 files changed, 22 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-> index 3d84626d3..dd59a32e7 100644
-> --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-> @@ -44,6 +44,12 @@ Optional properties :
->  	device connected.
->   - sp-disabled-ports : Specifies the ports which will be self-power disabled
->   - bp-disabled-ports : Specifies the ports which will be bus-power disabled
-> + - sp-max-{power,current} : Indicates the power/current consumed by hub from
-> +	an upstream port (VBUS) when operation as a self-powered hub. The value
-> +	is given in mA in a 0 - 100 range (default is 1mA).
-> + - bp-max-{power,current} : Indicates the power/current consumed by hub from
-> +	an upstream port (VBUS) when operation as a bus-powered hub. The value
-> +	is given in mA in a 0 - 510 range (default is 100mA).
+> Changes since v1:
+> - Add new clocks to DT binding
+> 
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt |  2 ++
 
-These need units as defined in property-units.txt.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Why do you need power and current? Can't you calculate power?
-
->   - power-on-time-ms : Specifies the time it takes from the time the host
->  	initiates the power-on sequence to a port until the port has adequate
->  	power. The value is given in ms in a 0 - 510 range (default is 100ms).
+>  drivers/mmc/host/sdhci-msm.c                        | 12 +++++++++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
