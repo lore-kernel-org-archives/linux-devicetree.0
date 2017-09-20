@@ -1,52 +1,88 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5 0/4] Add Broadcom STB USB phy driver
-Date: Wed, 20 Sep 2017 15:37:21 -0700
-Message-ID: <4068eb4a-3982-742f-2b23-28a4b1484de2@gmail.com>
-References: <1503683495-11766-1-git-send-email-alcooperx@gmail.com>
- <f4625f5e-db00-ebcc-4618-6f00247edfab@gmail.com>
- <f7bb89bf-1a09-891c-4ae5-3dc2e4b38d97@ti.com>
- <5DDF9572-B2D1-4316-B307-14749365221E@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCHv3 00/10] Fix remaining issues to drop more omap platform data
+Date: Wed, 20 Sep 2017 15:46:11 -0700
+Message-ID: <20170920224621.16236-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5DDF9572-B2D1-4316-B307-14749365221E-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hi all,
 
-On 09/15/2017 04:49 PM, Florian Fainelli wrote:
-> On September 4, 2017 11:11:47 PM PDT, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->> Florian,
->>
->> On Saturday 02 September 2017 07:46 AM, Florian Fainelli wrote:
->>>
->>>
->>> On 08/25/2017 10:51 AM, Al Cooper wrote:
->>>> Add a new USB Phy driver for Broadcom STB SoCs. This driver
->>>> supports Broadcom STB ARM SoCs. This driver in
->>>> combination with the Broadcom STB ohci, ehci and xhci
->>>> drivers will enable USB1.1, USB2.0 and USB3.0 support.
->>>> This Phy driver also supports the Broadcom BDC gadget
->>>> driver.
->>>
->>> Thanks Al! Kishon, feel free to merge everything through your tree
->> there
->>> should not be any conflicts with drivers/soc/bcm/brcmstb/common.c and
->>> include/linux/soc/brcmstb/brcmstb.h.
->>
->> I'll start merging once 4.14 -rc1 is tagged.
-> 
-> OK, does not that mean we will be missing this driver in 4.14? I suppose that's fine. Thanks!
+Here's v3 of the remaining fixes needed before we can drop omap hwmod
+platform data for interrupts, dma channels and IO ranges.
 
-Gentle ping, v4.14-rc1 is now out, can you let us know if this patch
-series is good with you? Thanks!
+The earlier trivial dts fixes are now applied and in Linux next. I've
+reworked the remaining fixes to make use of the ti-sysc interconnect
+target module binding. We can already this generic binding for the
+interconnect target modules with no device drivers to idle them on init.
+So these are based on current Linux next.
+
+Regards,
+
+Tony
+
+Changes since v2:
+
+- Drop attempted bindings for devices with no drivers and start using
+  generic ti sysc interconnect target module binding, the bindings
+  for the child devices can be sent separately as needed
+
+- Add Tero's pathces for omap4 clkctrl nodes as we need those
+
+- Add support for parsing IO ranges from dts if "ti,hwmods" is set
+  and fix-up omap device code to work without platform data for
+  legacy dma and smartreflex
+
+- Add minimal ti-sysc driver
+
+Changes since v1:
+
+- Updated hsi, iss, fdif, gpu, and smartreflex patches based on
+  the subsystem maintainer comments
+
+- Added Rob and Mark in Cc for the patches touching binding
+  documentation
+
+
+Tero Kristo (3):
+  ARM: dts: omap4: add fck under timer1
+  ARM: dts: omap4: add bus functionality to base PRCM nodes
+  ARM: dts: omap4: add clkctrl nodes
+
+Tony Lindgren (7):
+  dt-bindings: bus: Minimal TI sysc interconnect target module binding
+  ARM: OMAP2+: Parse module IO range from dts for legacy "ti,hwmods"
+    support
+  ARM: OMAP2+: Populate legacy resources for dma and smartreflex
+  bus: ti-sysc: Add minimal TI sysc interconnect target driver
+  ARM: dts: Add nodes for missing omap4 interconnect target modules
+  ARM: dts: Configure SmartReflex only to idle the interconnect target
+    module
+  ARM: dts: Use ti-sysc module driver for omap4 musb
+
+ Documentation/devicetree/bindings/bus/ti-sysc.txt |  88 ++++
+ arch/arm/boot/dts/dra7.dtsi                       |  26 +
+ arch/arm/boot/dts/omap4.dtsi                      | 233 ++++++++-
+ arch/arm/boot/dts/omap44xx-clocks.dtsi            | 289 +++++++++++
+ arch/arm/mach-omap2/Kconfig                       |   1 +
+ arch/arm/mach-omap2/omap_device.c                 | 137 ++++--
+ arch/arm/mach-omap2/omap_device.h                 |   4 -
+ arch/arm/mach-omap2/omap_hwmod.c                  |  80 ++-
+ arch/arm/mach-omap2/omap_hwmod.h                  |   5 +
+ drivers/bus/Kconfig                               |   7 +
+ drivers/bus/Makefile                              |   1 +
+ drivers/bus/ti-sysc.c                             | 571 ++++++++++++++++++++++
+ 12 files changed, 1380 insertions(+), 62 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/ti-sysc.txt
+ create mode 100644 drivers/bus/ti-sysc.c
+
 -- 
-Florian
+2.14.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
