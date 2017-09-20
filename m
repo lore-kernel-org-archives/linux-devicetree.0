@@ -1,131 +1,50 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] reset: mediatek: add reset controller dt-bindings required header for MT7622 SoC
-Date: Wed, 20 Sep 2017 17:40:16 +0800
-Message-ID: <4bb149ef1801c578177beb5e61d19358dd2950ae.1505899696.git.sean.wang@mediatek.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2] arm64: dts: foundation-v8: Enable PSCI mode
+Date: Wed, 20 Sep 2017 10:42:52 +0100
+Message-ID: <da8a0cf5-3c1e-1398-b5c3-ac489ae955fa@arm.com>
+References: <20170918153832.16356-1-daniel.thompson@linaro.org>
+ <20170919183204.12751-1-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170919183204.12751-1-daniel.thompson@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Add the reset controller dt-bindings exported from infracfg, pericfg,
-hifsys and ethsys which could be found on MT7622 SoC. So that we can
-reference them from within a device-tree file.
 
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- include/dt-bindings/reset/mt7622-reset.h | 94 ++++++++++++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 include/dt-bindings/reset/mt7622-reset.h
+On 19/09/17 19:32, Daniel Thompson wrote:
+> Currently if the Foundation model is running ARM Trusted Firmware then
+> the kernel, which is configured to use spin tables, cannot start secondary
+> processors or "power off" the simulation.
+> 
+> After adding a couple of labels to the include file and splitting out the
+> spin-table configuration into a header, we add a couple of new headers
+> together with two new DTs (GICv2+PSCI and GICv3+PSCI).
+> 
+> The new GICv3+PSCI DT has been boot tested, the remaining three (two of
+> which existed prior to this patch) have been "tested" by decompiling the
+> blobs and comparing them against a reference.
+> 
 
-diff --git a/include/dt-bindings/reset/mt7622-reset.h b/include/dt-bindings/reset/mt7622-reset.h
-new file mode 100644
-index 0000000..234052f
---- /dev/null
-+++ b/include/dt-bindings/reset/mt7622-reset.h
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (c) 2017 MediaTek Inc.
-+ * Author: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT7622
-+#define _DT_BINDINGS_RESET_CONTROLLER_MT7622
-+
-+/* INFRACFG resets */
-+#define MT7622_INFRA_EMI_REG_RST		0
-+#define MT7622_INFRA_DRAMC0_A0_RST		1
-+#define MT7622_INFRA_APCIRQ_EINT_RST		3
-+#define MT7622_INFRA_APXGPT_RST			4
-+#define MT7622_INFRA_SCPSYS_RST			5
-+#define MT7622_INFRA_PMIC_WRAP_RST		7
-+#define MT7622_INFRA_IRRX_RST			9
-+#define MT7622_INFRA_EMI_RST			16
-+#define MT7622_INFRA_WED0_RST			17
-+#define MT7622_INFRA_DRAMC_RST			18
-+#define MT7622_INFRA_CCI_INTF_RST		19
-+#define MT7622_INFRA_TRNG_RST			21
-+#define MT7622_INFRA_SYSIRQ_RST			22
-+#define MT7622_INFRA_WED1_RST			25
-+
-+/* PERICFG Subsystem resets */
-+#define MT7622_PERI_UART0_SW_RST		0
-+#define MT7622_PERI_UART1_SW_RST		1
-+#define MT7622_PERI_UART2_SW_RST		2
-+#define MT7622_PERI_UART3_SW_RST		3
-+#define MT7622_PERI_UART4_SW_RST		4
-+#define MT7622_PERI_BTIF_SW_RST			6
-+#define MT7622_PERI_PWM_SW_RST			8
-+#define MT7622_PERI_AUXADC_SW_RST		10
-+#define MT7622_PERI_DMA_SW_RST			11
-+#define MT7622_PERI_IRTX_SW_RST			13
-+#define MT7622_PERI_NFI_SW_RST			14
-+#define MT7622_PERI_THERM_SW_RST		16
-+#define MT7622_PERI_MSDC0_SW_RST		19
-+#define MT7622_PERI_MSDC1_SW_RST		20
-+#define MT7622_PERI_I2C0_SW_RST			22
-+#define MT7622_PERI_I2C1_SW_RST			23
-+#define MT7622_PERI_I2C2_SW_RST			24
-+#define MT7622_PERI_SPI0_SW_RST			33
-+#define MT7622_PERI_SPI1_SW_RST			34
-+#define MT7622_PERI_FLASHIF_SW_RST		36
-+
-+/* TOPRGU resets */
-+#define MT7622_TOPRGU_INFRA_RST			0
-+#define MT7622_TOPRGU_ETHDMA_RST		1
-+#define MT7622_TOPRGU_DDRPHY_RST		6
-+#define MT7622_TOPRGU_INFRA_AO_RST		8
-+#define MT7622_TOPRGU_CONN_RST			9
-+#define MT7622_TOPRGU_APMIXED_RST		10
-+#define MT7622_TOPRGU_CONN_MCU_RST		12
-+
-+/* PCIe/SATA Subsystem resets */
-+#define MT7622_SATA_PHY_REG_RST			12
-+#define MT7622_SATA_PHY_SW_RST			13
-+#define MT7622_SATA_AXI_BUS_RST			15
-+#define MT7622_PCIE1_CORE_RST			19
-+#define MT7622_PCIE1_MMIO_RST			20
-+#define MT7622_PCIE1_HRST			21
-+#define MT7622_PCIE1_USER_RST			22
-+#define MT7622_PCIE1_PIPE_RST			23
-+#define MT7622_PCIE0_CORE_RST			27
-+#define MT7622_PCIE0_MMIO_RST			28
-+#define MT7622_PCIE0_HRST			29
-+#define MT7622_PCIE0_USER_RST			30
-+#define MT7622_PCIE0_PIPE_RST			31
-+
-+/* SSUSB Subsystem resets */
-+#define MT7622_SSUSB_PHY_PWR_RST		3
-+#define MT7622_SSUSB_MAC_PWR_RST		4
-+
-+/* ETHSYS Subsystem resets */
-+#define MT7622_ETHSYS_SYS_RST			0
-+#define MT7622_ETHSYS_MCM_RST			2
-+#define MT7622_ETHSYS_HSDMA_RST			5
-+#define MT7622_ETHSYS_FE_RST			6
-+#define MT7622_ETHSYS_GMAC_RST			23
-+#define MT7622_ETHSYS_EPHY_RST			24
-+#define MT7622_ETHSYS_CRYPTO_RST		29
-+#define MT7622_ETHSYS_PPE_RST			31
-+
-+#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT7622 */
--- 
-2.7.4
+How different are these from the ones hosted in [1] ?
+
+On argument is that we want to take the DTS out of device tree as
+firmware is responsible for generating them. Alternatively, we may be
+duplicating resulting in discrepancies over time by coping it into kernel.
+
+Since users of ARM TF must be able to access these, I am not sure if it
+makes sense to merge these. Or we remove it from ARM TF to avoid any
+conflicts/discrepancies.
+
+Thoughts ?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sudeep
+
+[1] https://github.com/ARM-software/arm-trusted-firmware/tree/master/fdts
