@@ -1,70 +1,119 @@
-From: =?UTF-8?Q?=c5=81ukasz_Majewski?= <lukma-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 1/2] dts: display5: Device tree description of LWN's
- DISPLAY5 board
-Date: Wed, 20 Sep 2017 11:45:12 +0200
-Message-ID: <3537f09b-be9d-0b43-0bec-87d08b43312f@denx.de>
-References: <1505746765-965-1-git-send-email-lukma@denx.de>
- <CAOMZO5Du4gH1jwcP4ssRPD17GsEAVERpkNBD7W2z5f+4TAd=nA@mail.gmail.com>
- <f203efc5-b85c-aa3d-0dc6-929ea348e5f6@denx.de>
- <CAOMZO5CHR14LWqkgpSiPnMV_6X+Fq=fe-KmE5CrdiqxRUyT8xg@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v13 14/25] v4l: async: Allow binding notifiers to
+ sub-devices
+Date: Wed, 20 Sep 2017 12:42:28 +0300
+Message-ID: <20170920094228.2sqweboecndi4z3u@paasikivi.fi.intel.com>
+References: <20170915141724.23124-1-sakari.ailus@linux.intel.com>
+ <3338675.o4HGi8X83V@avalon>
+ <20170919151732.4yafxfcxrreizd7r@valkosipuli.retiisi.org.uk>
+ <2127988.4UKDZnTvMM@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5CHR14LWqkgpSiPnMV_6X+Fq=fe-KmE5CrdiqxRUyT8xg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2127988.4UKDZnTvMM@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Hi Laurent,
 
-> Hi Lukasz,
+On Tue, Sep 19, 2017 at 08:52:56PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
 > 
-> On Wed, Sep 20, 2017 at 6:22 AM, Łukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org> wrote:
+> On Tuesday, 19 September 2017 18:17:32 EEST Sakari Ailus wrote:
+> > On Tue, Sep 19, 2017 at 04:52:29PM +0300, Laurent Pinchart wrote:
+> > > On Friday, 15 September 2017 17:17:13 EEST Sakari Ailus wrote:
+> > > > Registering a notifier has required the knowledge of struct v4l2_device
+> > >> for the reason that sub-devices generally are registered to the
+> > >> v4l2_device (as well as the media device, also available through
+> > >> v4l2_device).
+> > >> 
+> > >> This information is not available for sub-device drivers at probe time.
+> > >> 
+> > >> What this patch does is that it allows registering notifiers without
+> > >> having v4l2_device around. Instead the sub-device pointer is stored in
+> > >> the notifier. Once the sub-device of the driver that registered the
+> > >> notifier is registered, the notifier will gain the knowledge of the
+> > >> v4l2_device, and the binding of async sub-devices from the sub-device
+> > >> driver's notifier may proceed.
+> > >> 
+> > >> The root notifier's complete callback is only called when all sub-device
+> > >> notifiers are completed.
+> > > 
+> > > This is a bit hard to review, shouldn't it be split in two patches, one
+> > > that refactors the functions, and another one that allows binding
+> > > notifiers to subdevs ?
+> > > 
+> > >> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > >> ---
+> > >> 
+> > >>  drivers/media/v4l2-core/v4l2-async.c | 218 ++++++++++++++++++++++++-----
+> > >>  include/media/v4l2-async.h           |  16 ++-
+> > >>  2 files changed, 203 insertions(+), 31 deletions(-)
+> > >> 
+> > >> diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> > >> b/drivers/media/v4l2-core/v4l2-async.c index 4be2f16af051..52fe22b9b6b4
+> > >> 100644
+> > >> --- a/drivers/media/v4l2-core/v4l2-async.c
+> > >> +++ b/drivers/media/v4l2-core/v4l2-async.c
 > 
->> Could you be more specific here?
->>
->> The 0x80000000 corresponds to IMX_NO_PAD_CTL in pinctrl-imx.c, which
->> prevents from manual GPIO control.
->>
->> The 0x80000000 value is the IOMUXC_SW_PAD_CTL_PAD_CSI0_DATA11 (0x020E_0654)
->> config data (16 bits only -> 0x0).
->>
->> Writing 0x0 to this register is perfectly fine for my application.
->>
->>
->> I'm a bit in doubt to what I shall do more?
+> [snip]
 > 
-> As per the Reference Manual, the POR reset for
-> IOMUXC_SW_PAD_CTL_PAD_CSI0_DATA11 is 0x1b0b0.
+> > >> +/* Unbind all sub-devices in the notifier tree. */
+> > >> +static void v4l2_async_notifier_unbind_all_subdevs(
+> > >> +	struct v4l2_async_notifier *notifier)
+> > >> +{
+> > >> +	struct v4l2_subdev *sd, *tmp;
+> > >> 
+> > >>  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
+> > >> 
+> > >> +		struct v4l2_async_notifier *subdev_notifier =
+> > >> +			v4l2_async_find_subdev_notifier(sd);
+> > >> +
+> > >> +		if (subdev_notifier)
+> > >> +			v4l2_async_notifier_unbind_all_subdevs(subdev_notifier);
+> > >> +
+> > >>  		v4l2_async_cleanup(sd);
+> > >>  		
+> > >>  		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
+> > >> -	}
+> > >> 
+> > >> -	mutex_unlock(&list_lock);
+> > >> +		list_del(&sd->async_list);
+> > >> +		list_add(&sd->async_list, &subdev_list);
+> > > 
+> > > How about list_move() ?
+> > 
+> > Yeah.
+> > 
+> > > This seems to be new code, and by the look of it, I wonder whether it
+> > > doesn't belong in the reprobing removal patch.
+> > 
+> > This is not related to re-probing. Here we're moving an async sub-device
+> > back to the global sub-device list when its notifier is going away.
 > 
-> 0x80000000 tells the kernel to not touch this IOMUX and use whatever
-> value comes from the bootloader.
-> 
-> If your bootloader does not touch this register, then you probably
-> read 0x1b0b0 from it.
-> 
-> In this case, please do this instead:
-> 
-> MX6QDL_PAD_CSI0_DAT11__GPIO5_IO29 0x1b0b0
-> 
+> In order to make the subdev bindable again when the notifier will be re-
+> registered. This wasn't needed before, as reprobing took care of that.
 
-Ok. Thanks for explanation :-)
+Ah, I see what you mean now. That the async sub-device is returned to the
+global list?
 
+I also noticed the sd shouldn't be set NULL except to the notifier this is
+directly called on. I'll fix that as well.
+
+> 
+> > >> +	}
+> > >> 
+> > >> +	notifier->parent = NULL;
+> > >> +	notifier->sd = NULL;
+> > >>  	notifier->v4l2_dev = NULL;
+> > >>  }
+> 
 
 -- 
-Best regards,
+Regards,
 
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+sakari.ailus@linux.intel.com
