@@ -1,59 +1,80 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC 0/5] Align and document return values of phandle and
- reference parsing for OF and ACPI
-Date: Wed, 20 Sep 2017 02:01:25 +0300
-Message-ID: <20170919230125.l7fexsdrzbmwd6yp@valkosipuli.retiisi.org.uk>
-References: <20170914122914.14122-1-sakari.ailus@linux.intel.com>
- <CAL_JsqKZVN+X0F3Z8s6Qv+ioh8LBDjNe277MAw30T3CXXTUV1Q@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: overlay: Fix uninitialized vars in
+ dup_and_fixup_symbol_prop()
+Date: Tue, 19 Sep 2017 17:20:53 -0700
+Message-ID: <59C1B465.1010209@gmail.com>
+References: <1505039164-25468-1-git-send-email-geert@linux-m68k.org>
+ <59C16197.4040403@gmail.com>
+ <CAMuHMdUo=O6J4Qs8J+Jrx6LFeLRmE77hzpfaAUFYtdfYN1-hpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKZVN+X0F3Z8s6Qv+ioh8LBDjNe277MAw30T3CXXTUV1Q@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUo=O6J4Qs8J+Jrx6LFeLRmE77hzpfaAUFYtdfYN1-hpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the review.
-
-On Fri, Sep 15, 2017 at 02:57:35PM -0500, Rob Herring wrote:
-> On Thu, Sep 14, 2017 at 7:29 AM, Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> > Hi everyone,
-> >
-> > I recently came across a difference in behaviour of OF phandle parsing and
-> > ACPI reference parsing, both of which can soon be accessed using
-> > fwnode_property_get_reference_args.
-> >
-> > The main change in this proposal touches OF, and specifically the change
-> > is about using -ENODATA to tell that the phandle reference list entry that
-> > was accessed does not exist. -ENOENT was used previously, but the same
-> > error code was also used to tell that a phandle was empty, making it
-> > impossible for the caller to figure out which of the two was the case.
-> >
-> > I'm sending the set as RFC. In my limited testing I have found no ill
-> > effects.
-> >
-> > These patches are on top of linux-next.
-> >
-> > Comments on the approach and the changes themselves would be most welcome.
+On 09/19/17 13:16, Geert Uytterhoeven wrote:
+> Hi Frank,
 > 
-> It's not really valid to both have a variable count (and hence need to
-> retrieve it) and use blank phandle entries. The whole point of blank
-> entries is to have a fixed length and know what each index corresponds
-> too. Do you have an example where we hit this?
+> On Tue, Sep 19, 2017 at 8:27 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 09/10/17 03:26, Geert Uytterhoeven wrote:
+>>> With gcc 4.1.2:
+>>>
+>>>     drivers/of/overlay.c: In function ‘dup_and_fixup_symbol_prop’:
+>>>     drivers/of/overlay.c:108: warning: ‘overlay_name_len’ may be used uninitialized in this function
+>>>     drivers/of/overlay.c:100: warning: ‘ovinfo’ may be used uninitialized in this function
+>>>
+>>> Indeed, if ov->count == 0, both variables are uninitialized, which may
+>>> lead to a crash when dereferencing ovinfo later.
+>>>
+>>> Currently this is a false positive, as the sole creator of of_overlay
+>>> structures (of_build_overlay_info(), introduced in commit
+>>> 7518b5890d8ac366 ("of/overlay: Introduce DT overlay support") checks for
+>>> this.
+>>>
+>>> To prevent future issues, add a check for a zero ov->count to
+>>> dup_and_fixup_symbol_prop().  Note that this does not get rid of the
+>>> actual compiler warning.
+>>>
+>>> Fixes: d1651b03c2df75db ("of: overlay: add overlay symbols to live device tree")
+>>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>>> ---
+>>>  drivers/of/overlay.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>> index 8ecfee31ab6d3874..ebe19e0f8e4d1f4b 100644
+>>> --- a/drivers/of/overlay.c
+>>> +++ b/drivers/of/overlay.c
+>>> @@ -108,7 +108,7 @@ static struct property *dup_and_fixup_symbol_prop(struct of_overlay *ov,
+>>>       int overlay_name_len;
+>>>       int target_path_len;
+>>>
+>>> -     if (!prop->value)
+>>> +     if (!ov->count || !prop->value)
+>>>               return NULL;
+>>>       symbol_path = prop->value;
+>>>
+>>
+>> I did not see this patch due to an overzealous spam filter.  I noticed it
+>> when Rob replied with his applied email.
+>>
+>> This check is not needed to prevent accessing overlay_name_len and ovinfo
+>> when ov->count == 0.  That is already prevented by:
+>>
+>>         if (k >= ov->count)
+>>                 goto err_free;
+>>
+>> because k will be zero and ov->count will be zero.
+> 
+> Thank you, I stand corrected.
 
-Well, the above is true. I think I'd still use different error codes to
-tell about different situations.
-
-The alternative is that the fwnode counterpart error codes are changed to
-to -ENOENT.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+No problem.  It's not real obvious, you really need to stop and
+ponder.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
