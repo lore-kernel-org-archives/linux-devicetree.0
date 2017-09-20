@@ -1,52 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 01/18] arm: shmobile: Document Kingfisher board DT
- bindings
-Date: Wed, 20 Sep 2017 15:52:58 -0500
-Message-ID: <20170920133945.6yfeio56lohduvvi@rob-hp-laptop>
-References: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH 8/9 v2] usb: usb251xb: Add max power/current dts property
+ support
+Date: Wed, 20 Sep 2017 15:52:55 -0500
+Message-ID: <20170920205255.5txbub3y6v6avolh@rob-hp-laptop>
+References: <20170915233113.17855-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-9-fancer.lancer@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20170916104220.3742-9-fancer.lancer@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: richard.leitner@skidata.com, gregkh@linuxfoundation.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 16, 2017 at 09:48:47PM +0300, Vladimir Barinov wrote:
-> Add Kingfisher Device tree bindings Documentation, listing it as a
-> supported board.
-> Kingfisher is the H3ULCB/M3ULCB extension board.
+On Sat, Sep 16, 2017 at 01:42:19PM +0300, Serge Semin wrote:
+> This parameters may be varied in accordance with hardware specifics.
+> So lets add the corresponding settings to the usb251x driver dts
+> specification.
 > 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 > ---
-> Changes in version 2:
-> - added own compatible value "shimafuji,kingfisher"
-> Changes in version 3:
-> - seperate Kingfisher entry from H3ULCB/M3ULCB
+>  Documentation/devicetree/bindings/usb/usb251xb.txt   |  6 ++++++
+>  drivers/usb/misc/usb251xb.c                          | 20 ++++++++++++++++----
+>  2 files changed, 22 insertions(+), 4 deletions(-)
 > 
->  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-> index ae75cb3..5921ac2 100644
-> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
-> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> @@ -76,6 +76,8 @@ Boards:
->      compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7743"
->    - iWave Systems RZ/G1M Qseven System On Module (iW-RainboW-G20M-Qseven)
->      compatible = "iwave,g20m", "renesas,r8a7743"
-> +  - Kingfisher (SBEV-RCAR-KF-M03)
-> +    compatible = "shimafuji,kingfisher";
+> diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+> index 3d84626d3..dd59a32e7 100644
+> --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+> @@ -44,6 +44,12 @@ Optional properties :
+>  	device connected.
+>   - sp-disabled-ports : Specifies the ports which will be self-power disabled
+>   - bp-disabled-ports : Specifies the ports which will be bus-power disabled
+> + - sp-max-{power,current} : Indicates the power/current consumed by hub from
+> +	an upstream port (VBUS) when operation as a self-powered hub. The value
+> +	is given in mA in a 0 - 100 range (default is 1mA).
+> + - bp-max-{power,current} : Indicates the power/current consumed by hub from
+> +	an upstream port (VBUS) when operation as a bus-powered hub. The value
+> +	is given in mA in a 0 - 510 range (default is 100mA).
 
-Not consistent with the ';'. Otherwise,
+These need units as defined in property-units.txt.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Why do you need power and current? Can't you calculate power?
 
->    - Koelsch (RTP0RC7791SEB00010S)
->      compatible = "renesas,koelsch", "renesas,r8a7791"
->    - Kyoto Microcomputer Co. KZM-A9-Dual
-> -- 
-> 1.9.1
-> 
+>   - power-on-time-ms : Specifies the time it takes from the time the host
+>  	initiates the power-on sequence to a port until the port has adequate
+>  	power. The value is given in ms in a 0 - 510 range (default is 100ms).
