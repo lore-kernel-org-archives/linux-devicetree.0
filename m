@@ -1,26 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/5] dt: watchdog: Document compatibility with JZ4780
-Date: Wed, 20 Sep 2017 15:52:32 -0500
-Message-ID: <20170920131308.nq6dovhd4rng3z3m@rob-hp-laptop>
-References: <20170915192040.27768-1-malat@debian.org>
+Subject: Re: [PATCH 1/3] RTC: rv3029: fix vendor string
+Date: Wed, 20 Sep 2017 15:52:22 -0500
+Message-ID: <20170920205222.u445mraruddz3ufl@rob-hp-laptop>
+References: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170915192040.27768-1-malat@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170915020004.24272-1-alexandre.belloni@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 15, 2017 at 09:20:40PM +0200, Mathieu Malaterre wrote:
-> Suggested-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
-> Changes in v2:
-> * Document the new compatible string
+On Fri, Sep 15, 2017 at 04:00:02AM +0200, Alexandre Belloni wrote:
+> The vendor string for Microcrystal is microcrystal.
 > 
->  Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.txt | 2 +-
+>  drivers/rtc/rtc-rv3029c2.c                            | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
