@@ -1,36 +1,54 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 17/18] arm64: dts: ulcb-kf: enable PCA9548 on I2C4
-Date: Wed, 20 Sep 2017 15:28:55 +0200
-Message-ID: <CAMuHMdVgOCHe6AXqKbtK0Za5iujYYsP80N7yFGTf2hnUY8GPxg@mail.gmail.com>
-References: <1505398788-4892-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1505398788-4892-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/8] pinctrl: meson: clean pin offsets
+Date: Wed, 20 Sep 2017 15:39:19 +0200
+Message-ID: <20170920133927.17390-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 14, 2017 at 4:19 PM, Vladimir Barinov
-<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> This supports PCA9548 I2C switch on I2C4 bus on ULCB Kingfisher board
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+The initial goal of this series was move to TEST_N pin from the EE
+controller to AO controller, where it belongs. This meant modify the
+EE_OFF value.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+This offset is a quirk we brought from the vendor driver when it was
+initially merged. There no reason to keep this around and we could simply
+let pinctrl figure the pin base value.
 
-Gr{oetje,eeting}s,
+Removing this offset, while simple, ends up being quite a patch bomb.
+This is why I split the change over 5 first patches, so the important
+change, patch #1 remains visible. Of course, to avoid breaking bisect,
+these first 5 patches should be squashed into one. (If you prefer that I
+squash it myself, I may have to send you a PR as the patch would exceed
+VGER 100000 characters limit)
 
-                        Geert
+The last change is this series, while not directly related, also requires
+to adjust the gpio-line-names property in DT. Having these changes going
+together would make it easier to coordinate the DTS changes.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+This was changeset has been test on gxbb P200, gxl libretech-cc.  It was
+also boot tested on meson8 (Thx Martin!)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jerome Brunet (8):
+  pinctrl: meson: remove offset from pinctrl
+  pinctrl: meson: remove offset continued - gxbb
+  pinctrl: meson: remove offset continued - gxl
+  pinctrl: meson: remove offset continued - meson8
+  pinctrl: meson: remove offset continued - meson8b
+  pinctrl: meson: get rid of pin_base
+  pinctrl: meson-gx: TEST_N belongs to the AO controller
+  pinctrl: meson-gxbb: add missing GPIOX_22 pin
+
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 859 +++++++++++++------------
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 818 ++++++++++++------------
+ drivers/pinctrl/meson/pinctrl-meson.c      |  48 +-
+ drivers/pinctrl/meson/pinctrl-meson.h      |   8 +-
+ drivers/pinctrl/meson/pinctrl-meson8.c     | 964 ++++++++++++++---------------
+ drivers/pinctrl/meson/pinctrl-meson8b.c    | 780 ++++++++++++-----------
+ include/dt-bindings/gpio/meson-gxbb-gpio.h |   2 +-
+ include/dt-bindings/gpio/meson-gxl-gpio.h  |   2 +-
+ 8 files changed, 1713 insertions(+), 1768 deletions(-)
+
+-- 
+2.13.5
