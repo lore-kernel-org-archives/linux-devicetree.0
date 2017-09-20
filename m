@@ -1,100 +1,49 @@
-From: Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [RESEND RFC PATCH 0/7] sun8i H3 HDMI glue driver for DW HDMI
-Date: Wed, 20 Sep 2017 22:01:17 +0200
-Message-ID: <20170920200124.20457-1-jernej.skrabec@siol.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: maxime.ripard@free-electrons.com, wens@csie.org
-Cc: Laurent.pinchart@ideasonboard.com, hans.verkuil@cisco.com, narmstrong@baylibre.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, icenowy@aosc.io, linux-sunxi@googlegroups.com, linux-media@vger.kernel.org
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [RESEND RFC PATCH 1/7] drm: bridge: Enable polling hpd
+ event in dw_hdmi
+Date: Wed, 20 Sep 2017 22:01:18 +0200
+Message-ID: <20170920200124.20457-2-jernej.skrabec@siol.net>
+References: <20170920200124.20457-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBIUSRPHAKGQES7EKNVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170920200124.20457-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[added media mailing list due to CEC question]
+Some custom phys don't support hpd interrupts. Add support for polling
+such events.
 
-This patch series adds a HDMI glue driver for Allwinner H3 SoC. For now, only
-video and CEC functionality is supported. Audio needs more tweaks.
+Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+---
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Series is based on the H3 DE2 patch series available on mailing list:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-August/522697.html
-(ignore patches marked with [NOT FOR REVIEW NOW] tag)
-
-Patch 1 adds support for polling plug detection since custom PHY used here
-doesn't support HPD interrupt.
-
-Patch 2 enables overflow workaround for v1.32a. This HDMI controller exhibits
-same issues as HDMI controller used in iMX6 SoCs.
-
-Patch 3 adds CLK_SET_RATE_PARENT to hdmi clock.
-
-Patch 4 adds dt bindings documentation.
-
-Patch 5 adds actual H3 HDMI glue driver.
-
-Patch 6 and 7 add HDMI node to DT and enable it where needed.
-
-Allwinner used DW HDMI controller in a non standard way:
-- register offsets obfuscation layer, which can fortunately be turned off
-- register read lock, which has to be disabled by magic number
-- custom PHY, which have to be initialized before DW HDMI controller
-- non standard clocks
-- no HPD interrupt
-
-Because of that, I have two questions:
-- Since HPD have to be polled, is it enough just to enable poll mode? I'm
-  mainly concerned about invalidating CEC address here.
-- PHY has to be initialized before DW HDMI controller to disable offset
-  obfuscation and read lock among other things. This means that all clocks have
-  to be enabled in glue driver. This poses a problem, since when using
-  component model, dw-hdmi bridge uses drvdata for it's own private data and
-  prevents glue layer to pass a pointer to unbind function, where clocks should
-  be disabled. I noticed same issue in meson DW HDMI glue driver, where clocks
-  are also not disabled when unbind callback is called. I noticed that when H3
-  SoC is shutdown, HDMI output is still enabled and lastest image is shown on
-  monitor until it is unplugged from power supply. Is there any simple solution
-  to this?
-
-Chen-Yu,
-TL Lim was unable to obtain any answer from Allwinner about HDMI clocks. I think
-it is safe to assume that divider in HDMI clock doesn't have any effect.
-
-Branch based on linux-next from 1. September with integrated patches is
-available here:
-https://github.com/jernejsk/linux-1/tree/h3_hdmi_rfc
-
-Some additonal info about H3 HDMI:
-https://linux-sunxi.org/DWC_HDMI_Controller
-
-Thanks to Jens Kuske, who figured out that it is actually DW HDMI controller
-and mapped scrambled register offsets to original ones.
-
-Icenowy Zheng (1):
-  ARM: sun8i: h3: Add DesignWare HDMI controller node
-
-Jernej Skrabec (6):
-  drm: bridge: Enable polling hpd event in dw_hdmi
-  drm: bridge: Enable workaround in dw_hdmi for v1.32a
-  clk: sunxi: Add CLK_SET_RATE_PARENT flag for H3 HDMI clock
-  dt-bindings: Document Allwinner DWC HDMI TX node
-  drm: sun4i: Add a glue for the DesignWare HDMI controller in H3
-  ARM: sun8i: h3: Enable HDMI output on H3 boards
-
- .../bindings/display/sunxi/sun4i-drm.txt           | 158 ++++++-
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  33 ++
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts          |  33 ++
- arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts           |  33 ++
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |  33 ++
- arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       |  33 ++
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |  33 ++
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  33 ++
- arch/arm/boot/dts/sun8i-h3.dtsi                    |   5 +
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  36 ++
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |   2 +-
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |  14 +-
- drivers/gpu/drm/sun4i/Kconfig                      |   9 +
- drivers/gpu/drm/sun4i/Makefile                     |   1 +
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c              | 500 +++++++++++++++++++++
- 15 files changed, 950 insertions(+), 6 deletions(-)
- create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index bf14214fa464..09cb5a3e4c71 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -1954,7 +1954,11 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+ 	struct drm_connector *connector = &hdmi->connector;
+ 
+ 	connector->interlace_allowed = 1;
+-	connector->polled = DRM_CONNECTOR_POLL_HPD;
++	if (hdmi->phy.ops->setup_hpd)
++		connector->polled = DRM_CONNECTOR_POLL_HPD;
++	else
++		connector->polled = DRM_CONNECTOR_POLL_CONNECT |
++				    DRM_CONNECTOR_POLL_DISCONNECT;
+ 
+ 	drm_connector_helper_add(connector, &dw_hdmi_connector_helper_funcs);
+ 
 -- 
 2.14.1
-
