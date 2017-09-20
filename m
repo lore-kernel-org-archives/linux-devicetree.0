@@ -1,26 +1,63 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: add HDMI CEC pinctrl
-Date: Wed, 20 Sep 2017 13:51:53 -0300
-Message-ID: <CAOMZO5AuNwODeRFerL6yJa9E9OM2YMiC=tafLz3P+HFO6-hEQg@mail.gmail.com>
-References: <8c5150c5-3aff-4068-a548-05eb02b73138@rwthex-s3-b.rwth-ad.de>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add and enable DSP device on OMAPL138 LCDK board
+Date: Wed, 20 Sep 2017 11:55:12 -0500
+Message-ID: <be3c9155-efe1-7c14-0b04-bc25cb7e1d40@ti.com>
+References: <20170919002833.5677-1-s-anna@ti.com>
+ <8bd08406-3fd8-9742-c1b9-d3ec9712c4ee@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8c5150c5-3aff-4068-a548-05eb02b73138-gtPewvpZjL+4J1eExpnLBV5UTUQ924AY@public.gmane.org>
+In-Reply-To: <8bd08406-3fd8-9742-c1b9-d3ec9712c4ee-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 1:48 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
-> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
->
-> On the Utilite Pro the CEC line is wired up to the HDMI connector.
-> Add the required pinctrl setting.
->
-> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+On 09/20/2017 10:14 AM, Sekhar Nori wrote:
+> Hi Suman,
+> 
+> On Tuesday 19 September 2017 05:58 AM, Suman Anna wrote:
+>> Hi Sekhar,
+>>
+>> The following series adds the DT node for the DSP device present on
+>> on DA850/OMAPL138 SoCs. The node is disabled in the base dts file, and
+>> enabled in the corresponding LCDK board file alongside the reserved
+>> CMA pool required by the DSP device. The DT bindings and driver
+>> adaptation were added to mainline in 4.14-rc1, and this series adds
+>> the remaining dt portions. Nodes are added as per bindings in
+>> Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
+>>
+>> Patches are based on 4.14-rc1. The first 2 patches adds the base DTS
+>> node and enables the device on OMAPL138 LCDK board. The last patch
+>> allows the non-DT clock to be bound to the DT DSP device by using
+>> of_auxdata which renames the device to the same as the non-DT device
+>> name. This is required by the davinci remoteproc driver to properly
+>> acquire and enable the clock for this device.
+>>
+>> Validation done on OMAPL138 LCDK board. Supported features include
+>> basic load/boot (tested with rpmsg_client_sample) using external
+>> memory from the CMA pool.
+> 
+> Applied for v4.15. The patches are on my master branch. They will be in
+> linux-next when I send my pull request to ARM-SoC, which typically will
+> take a couple of weeks more.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Thanks Sekhar.
+
+> 
+> davinci_all_defconfig seems to be missing the CMA options needed. Could
+> you send a patch enabling them?
+
+These are tracked as dependencies on the remoteproc Kconfig, so you
+won't be able to enable the driver without turning them on. I left them
+as there were before my DT adaptation, but I can enable the CMA options
+by default going forward.
+
+regards
+Suman
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
