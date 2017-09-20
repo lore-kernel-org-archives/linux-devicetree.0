@@ -1,152 +1,62 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 5/8] MIPS: BMIPS: name the refclk clock for uart
-Date: Wed, 20 Sep 2017 13:14:05 +0200
-Message-ID: <20170920111408.29711-6-jonas.gorski@gmail.com>
-References: <20170920111408.29711-1-jonas.gorski@gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 3/8] ARM: dts: iwg22m: Enable SDHI1 controller
+Date: Wed, 20 Sep 2017 13:16:58 +0200
+Message-ID: <CAMuHMdVLXauMA_cbFJafHNdX_XHVGccO00vm6mdvgB7-7xh3RA@mail.gmail.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-4-git-send-email-chris.paterson2@renesas.com> <20170915081144.GI3924@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920111408.29711-1-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170915081144.GI3924-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the clock name to the uart nodes, to name the input clock
-properly.
+On Fri, Sep 15, 2017 at 10:11 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> On Wed, Sep 13, 2017 at 06:05:36PM +0100, Chris Paterson wrote:
+>> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+>>
+>> Enable the SDHI1 controller on iWave RZ/G1E SoM.
+>>
+>> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+>> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/mips/boot/dts/brcm/bcm3368.dtsi  | 2 ++
- arch/mips/boot/dts/brcm/bcm63268.dtsi | 2 ++
- arch/mips/boot/dts/brcm/bcm6328.dtsi  | 2 ++
- arch/mips/boot/dts/brcm/bcm6358.dtsi  | 2 ++
- arch/mips/boot/dts/brcm/bcm6362.dtsi  | 2 ++
- arch/mips/boot/dts/brcm/bcm6368.dtsi  | 2 ++
- 6 files changed, 12 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-diff --git a/arch/mips/boot/dts/brcm/bcm3368.dtsi b/arch/mips/boot/dts/brcm/bcm3368.dtsi
-index bee855cb8073..772fb42b7730 100644
---- a/arch/mips/boot/dts/brcm/bcm3368.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm3368.dtsi
-@@ -82,6 +82,7 @@
- 			interrupts = <2>;
- 
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 
- 			status = "disabled";
- 		};
-@@ -94,6 +95,7 @@
- 			interrupts = <3>;
- 
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 
- 			status = "disabled";
- 		};
-diff --git a/arch/mips/boot/dts/brcm/bcm63268.dtsi b/arch/mips/boot/dts/brcm/bcm63268.dtsi
-index 7e6bf2cc0287..b033a23b5e13 100644
---- a/arch/mips/boot/dts/brcm/bcm63268.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm63268.dtsi
-@@ -83,6 +83,7 @@
- 			interrupts = <5>;
- 
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 
- 			status = "disabled";
- 		};
-@@ -95,6 +96,7 @@
- 			interrupts = <34>;
- 
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 
- 			status = "disabled";
- 		};
-diff --git a/arch/mips/boot/dts/brcm/bcm6328.dtsi b/arch/mips/boot/dts/brcm/bcm6328.dtsi
-index 5633b9d90f55..7c3061ba6d38 100644
---- a/arch/mips/boot/dts/brcm/bcm6328.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6328.dtsi
-@@ -68,6 +68,7 @@
- 			interrupt-parent = <&periph_intc>;
- 			interrupts = <28>;
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 			status = "disabled";
- 		};
- 
-@@ -77,6 +78,7 @@
- 			interrupt-parent = <&periph_intc>;
- 			interrupts = <39>;
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/mips/boot/dts/brcm/bcm6358.dtsi b/arch/mips/boot/dts/brcm/bcm6358.dtsi
-index f9d8d392162b..ab9d6c268a84 100644
---- a/arch/mips/boot/dts/brcm/bcm6358.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6358.dtsi
-@@ -92,6 +92,7 @@
- 			interrupts = <2>;
- 
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 
- 			status = "disabled";
- 		};
-@@ -104,6 +105,7 @@
- 			interrupts = <3>;
- 
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 
- 			status = "disabled";
- 		};
-diff --git a/arch/mips/boot/dts/brcm/bcm6362.dtsi b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-index c507da594f2f..ca93c9a6f23f 100644
---- a/arch/mips/boot/dts/brcm/bcm6362.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-@@ -83,6 +83,7 @@
- 			interrupts = <3>;
- 
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 
- 			status = "disabled";
- 		};
-@@ -95,6 +96,7 @@
- 			interrupts = <4>;
- 
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 
- 			status = "disabled";
- 		};
-diff --git a/arch/mips/boot/dts/brcm/bcm6368.dtsi b/arch/mips/boot/dts/brcm/bcm6368.dtsi
-index d0e3a70b32e2..da4ec89710fd 100644
---- a/arch/mips/boot/dts/brcm/bcm6368.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6368.dtsi
-@@ -89,6 +89,7 @@
- 			interrupt-parent = <&periph_intc>;
- 			interrupts = <2>;
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 			status = "disabled";
- 		};
- 
-@@ -98,6 +99,7 @@
- 			interrupt-parent = <&periph_intc>;
- 			interrupts = <3>;
- 			clocks = <&periph_clk>;
-+			clock-names = "refclk";
- 			status = "disabled";
- 		};
- 
--- 
-2.13.2
+>> --- a/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
+>> +++ b/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
 
+>> @@ -54,6 +61,16 @@
+>>       status =3D "okay";
+>>  };
+>>
+>> +&sdhi1 {
+>> +     pinctrl-0 =3D <&sdhi1_pins>;
+>> +     pinctrl-names =3D "default";
+>> +
+>> +     vmmc-supply =3D <&reg_3p3v>;
+>> +     vqmmc-supply =3D <&reg_3p3v>;
+>> +     cd-gpios =3D <&gpio3 31 GPIO_ACTIVE_LOW>;
+>
+> No wp-gpios property means this is a =C2=B5SD slot, right?
+
+Correct.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
