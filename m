@@ -1,68 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: RTC: merge ds1339 in ds1307 documentation
-Date: Wed, 20 Sep 2017 15:52:20 -0500
-Message-ID: <20170920205220.ykkxsqrxu5t47px5@rob-hp-laptop>
-References: <20170915014551.22664-1-alexandre.belloni@free-electrons.com>
- <20170915014551.22664-2-alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 1/5] dt-bindings: Explicitely mark Exynos HDMI DDC node
+ as deprecated
+Date: Wed, 20 Sep 2017 15:52:26 -0500
+Message-ID: <20170920205226.pg6rjw27h3tvhqzs@rob-hp-laptop>
+References: <1505466683-32148-1-git-send-email-m.szyprowski@samsung.com>
+ <CGME20170915091139eucas1p2d3ee5da70946b4f377242642af117635@eucas1p2.samsung.com>
+ <1505466683-32148-2-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170915014551.22664-2-alexandre.belloni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1505466683-32148-2-git-send-email-m.szyprowski@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel@lists.freedesktop.org, Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 15, 2017 at 03:45:51AM +0200, Alexandre Belloni wrote:
-> Now that there is documentation for the ds1307 and compatible RTCs, merge
-> the ds1339 documentation in it.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> ---
->  .../devicetree/bindings/rtc/dallas,ds1339.txt          | 18 ------------------
->  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt   |  6 ++++++
->  2 files changed, 6 insertions(+), 18 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> deleted file mode 100644
-> index 916f57601a8f..000000000000
-> --- a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> +++ /dev/null
-> @@ -1,18 +0,0 @@
-> -* Dallas DS1339		I2C Serial Real-Time Clock
-> -
-> -Required properties:
-> -- compatible: Should contain "dallas,ds1339".
-> -- reg: I2C address for chip
-> -
-> -Optional properties:
-> -- trickle-resistor-ohms : Selected resistor for trickle charger
-> -	Values usable for ds1339 are 250, 2000, 4000
-> -	Should be given if trickle charger should be enabled
-> -- trickle-diode-disable : Do not use internal trickle charger diode
-> -	Should be given if internal trickle charger diode should be disabled
-> -Example:
-> -	ds1339: rtc@68 {
-> -		compatible = "dallas,ds1339";
-> -		trickle-resistor-ohms = <250>;
-> -		reg = <0x68>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> index d1a820e25cb9..2eacc17a9b8d 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> @@ -26,6 +26,11 @@ Optional properties:
->  - clock-output-names: From common clock binding to override the default output
->                        clock name
->  - wakeup-source: Enables wake up of host system on alarm
-> +- trickle-resistor-ohms : Selected resistor for trickle charger
-> +	Values usable for ds1339 are 250, 2000, 4000
-> +	Should be given if trickle charger should be enabled
-> +- trickle-diode-disable : Do not use internal trickle charger diode
-> +	Should be given if internal trickle charger diode should be disabled
-
-Do these apply to all compatibles or just 1339?
-
-Rob
+T24gRnJpLCBTZXAgMTUsIDIwMTcgYXQgMTE6MTE6MTlBTSArMDIwMCwgTWFyZWsgU3p5cHJvd3Nr
+aSB3cm90ZToKPiBDb21taXQgMmI3NjgxMzI2ZGMyICgiZHJtL2V4eW5vczogaGRtaTogcmVtb3Zl
+IHRoZSBpMmMgZHJpdmVycyBhbmQgdXNlIikKPiBtZXJnZWQgdG8gdjMuMTUga2VybmVsIGFkZGVk
+IGEgcmVxdWlyZWQgJ2RkYycgcHJvcGVydHkgdG8gRXh5bm9zIEhETUkKPiBkZXZpY2UgdHJlZSBi
+aW5kaW5ncywgd2hpY2ggc2hvdWxkIHBvaW50IHRvIGkyYyBidXMgdXNlZCBmb3IgaGFuZGxpbmcg
+RERDCj4gKG1haW5seSByZWFkaW5nIGRpc3BsYXkncyBFRElEIGluZm9ybWF0aW9uKS4gU2luY2Ug
+dGhhdCBjb21taXQKPiBzZXBhcmF0ZSBub2RlIHdpdGggInNhbXN1bmcsZXh5bm9zNDIxMC1oZG1p
+ZGRjIiBjb21wYXRpYmxlIGlzIG5vIGxvbmdlcgo+IG5lZWRlZCwgc28gbWFyayBpdCBmaW5hbGx5
+IGFzIGRlcHJlY2F0ZWQuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWFyZWsgU3p5cHJvd3NraSA8bS5z
+enlwcm93c2tpQHNhbXN1bmcuY29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2hkbWlkZGMudHh0IHwgNSArKysrLQo+ICAx
+IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpBY2tlZC1ieTog
+Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
