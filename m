@@ -1,156 +1,109 @@
-From: Zhi Mao <zhi.mao@mediatek.com>
-Subject: Re: [PATCH v4 1/1] pwm: mediatek: add MT2712/MT7622 support
-Date: Wed, 20 Sep 2017 16:48:32 +0800
-Message-ID: <1505897312.28692.2.camel@mhfsdcap03>
-References: <1503367755-6519-1-git-send-email-zhi.mao@mediatek.com>
-         <1503367755-6519-2-git-send-email-zhi.mao@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] arm: sun8i: nanopi-neo: Enable USB OTG
+Date: Wed, 20 Sep 2017 10:54:00 +0200
+Message-ID: <20170920085400.ipaduwj5ccslkg43@flea.home>
+References: <20170920043923.16425-1-ddiss@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1503367755-6519-2-git-send-email-zhi.mao@mediatek.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: john@phrozen.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pwm@vger.kernel.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, zhenbao.liu@mediatek.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vyvsp4e6jxzav4gr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170920043923.16425-1-ddiss-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Disseldorp <ddiss-l3A5Bk7waGM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
 
-Just a gentle ping on this issue.
-Would you please have a review to this patch?
+--vyvsp4e6jxzav4gr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Zhi
-
-
-On Tue, 2017-08-22 at 10:09 +0800, Zhi Mao wrote:
-> Add support to MT2712 and MT7622.
-> Due to register offset address of pwm7 for MT2712 is not fixed 0x40,
-> add mtk_pwm_reg_offset array for pwm register offset.
-> 
-> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
+On Wed, Sep 20, 2017 at 04:39:23AM +0000, David Disseldorp wrote:
+> From: David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+>=20
+> The NanoPi NEO features a MicroUSB port that can work in both host mode
+> and peripheral mode. Switching is handled via GPIO PG12.
+>=20
+> Signed-off-by: David Disseldorp <ddiss-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 > ---
->  drivers/pwm/pwm-mediatek.c |   51 ++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 42 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index 1d78ab1..ccd86e7 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -16,6 +16,7 @@
->  #include <linux/module.h>
->  #include <linux/clk.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
->  #include <linux/slab.h>
-> @@ -40,11 +41,19 @@ enum {
->  	MTK_CLK_PWM3,
->  	MTK_CLK_PWM4,
->  	MTK_CLK_PWM5,
-> +	MTK_CLK_PWM6,
-> +	MTK_CLK_PWM7,
-> +	MTK_CLK_PWM8,
->  	MTK_CLK_MAX,
+> Changes since v1
+> - remove duplicate ehci3/ohci3 definitions, which are already carried in
+>   sun8i-h3-nanopi.dtsi
+>=20
+>  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dt=
+s/sun8i-h3-nanopi-neo.dts
+> index 78f6c24952dd..17b07c3df369 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> @@ -47,9 +47,28 @@
+>  	compatible =3D "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
 >  };
->  
-> -static const char * const mtk_pwm_clk_name[] = {
-> -	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5"
-> +static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
-> +	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6", "pwm7",
-> +	"pwm8"
+> =20
+> +&ehci0 {
+> +	status =3D "okay";
 > +};
 > +
-> +struct mtk_pwm_platform_data {
-> +	unsigned int num_pwms;
+>  &emac {
+>  	phy-handle =3D <&int_mii_phy>;
+>  	phy-mode =3D "mii";
+>  	allwinner,leds-active-low;
+>  	status =3D "okay";
 >  };
->  
->  /**
-> @@ -57,6 +66,11 @@ struct mtk_pwm_chip {
->  	struct pwm_chip chip;
->  	void __iomem *regs;
->  	struct clk *clks[MTK_CLK_MAX];
-> +	const struct mtk_pwm_platform_data *data;
+> +
+> +&ohci0 {
+> +	status =3D "okay";
 > +};
 > +
-> +static const unsigned int mtk_pwm_reg_offset[] = {
-> +	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
->  };
->  
->  static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
-> @@ -103,14 +117,14 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
->  				unsigned int offset)
->  {
-> -	return readl(chip->regs + 0x10 + (num * 0x40) + offset);
-> +	return readl(chip->regs + mtk_pwm_reg_offset[num] + offset);
->  }
->  
->  static inline void mtk_pwm_writel(struct mtk_pwm_chip *chip,
->  				  unsigned int num, unsigned int offset,
->  				  u32 value)
->  {
-> -	writel(value, chip->regs + 0x10 + (num * 0x40) + offset);
-> +	writel(value, chip->regs + mtk_pwm_reg_offset[num] + offset);
->  }
->  
->  static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> @@ -194,15 +208,20 @@ static int mtk_pwm_probe(struct platform_device *pdev)
->  	if (!pc)
->  		return -ENOMEM;
->  
-> +	pc->data = of_device_get_match_data(&pdev->dev);
-> +
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	pc->regs = devm_ioremap_resource(&pdev->dev, res);
->  	if (IS_ERR(pc->regs))
->  		return PTR_ERR(pc->regs);
->  
-> -	for (i = 0; i < MTK_CLK_MAX; i++) {
-> +	for (i = 0; i < pc->data->num_pwms + 2; i++) {
->  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
-> -		if (IS_ERR(pc->clks[i]))
-> +		if (IS_ERR(pc->clks[i])) {
-> +			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-> +				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
->  			return PTR_ERR(pc->clks[i]);
-> +		}
->  	}
->  
->  	platform_set_drvdata(pdev, pc);
-> @@ -210,7 +229,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
->  	pc->chip.dev = &pdev->dev;
->  	pc->chip.ops = &mtk_pwm_ops;
->  	pc->chip.base = -1;
-> -	pc->chip.npwm = 5;
-> +	pc->chip.npwm = pc->data->num_pwms;
->  
->  	ret = pwmchip_add(&pc->chip);
->  	if (ret < 0) {
-> @@ -228,9 +247,23 @@ static int mtk_pwm_remove(struct platform_device *pdev)
->  	return pwmchip_remove(&pc->chip);
->  }
->  
-> +static const struct mtk_pwm_platform_data mt2712_pwm_data = {
-> +	.num_pwms = 8,
+> +&usb_otg {
+> +	dr_mode =3D "otg";
+> +	status =3D "okay";
 > +};
 > +
-> +static const struct mtk_pwm_platform_data mt7622_pwm_data = {
-> +	.num_pwms = 6,
-> +};
-> +
-> +static const struct mtk_pwm_platform_data mt7623_pwm_data = {
-> +	.num_pwms = 5,
-> +};
-> +
->  static const struct of_device_id mtk_pwm_of_match[] = {
-> -	{ .compatible = "mediatek,mt7623-pwm" },
-> -	{ }
-> +	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
-> +	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
-> +	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
-> +	{ },
->  };
->  MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
->  
+> +&usbphy {
+> +	/* USB Type-A port's VBUS is always on */
+
+I'm not sure what that comment is here for.
+
+> +	usb0_id_det-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+
+And that means that you cannot switch VBUS on on the board?
+
+In this case, it's not able to do proper OTG like advertised above.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--vyvsp4e6jxzav4gr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZwiyoAAoJEBx+YmzsjxAgEEoP/jDJGGmuK+1S57E005HCl9Jf
+qxLyHscYO8+E9s6MnfMnkp1G/96S5FYKo7GNUdZLWwHWQ1a1HYar8OdZclZu3A9o
+QtZKqVqyMTZAkg7fszAiir0H8qy8SHitXhb1MfKsB7i9JMboRnghGYVNWkFrQSZA
+7mzOwWkgD0odLZ8Q5CKSQw9zlm4oPElUnOVDFmcXHtAV1SxPvLumP3ltB6W5k2Dm
+LgvMOgVob6/qQ38H7cgXbz6xqXmsjZFtn9rxuTvQbkA497ljhxr0Zc4b3YX3VbrV
+wYX75mN3Wz89tAAajn5dfqFVFH3LnjKNXYNr9JyigQR8hwlmQuhyLJvzMHT9Z+wn
+Ym2AbiuTS7/aSD27my+48WFHV3DjRpVjI8x6oj6ms4nVyQ5fJeuo2DoJSjJVVxIk
+KDoWAP6WgLufSGLxkRBroDSdy7Om9jgBarC50pwDaawNwDuI50Q+IS3w2iZtzOuZ
+oW/GEhyd6dP+p3zk1x1gDVjwLGOWHZSZJVJ2ZIR410yz/wM/PnT6XDY5glRaFlNo
+CbJptSAXblHr4TRLBXhdSHu8h8Naf4fd8ebUKEtKTTXMZ9j0qs9dl0cvZsaBs8ZK
+jvSV0ykdvbdNV3MJ9MyMonWZ39XZ05IEwoLoWB1fr436bkG5sPwe2IeQDA4yBT+8
+EmZ89uPIqaOqf2sq7cio
+=MoVT
+-----END PGP SIGNATURE-----
+
+--vyvsp4e6jxzav4gr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
