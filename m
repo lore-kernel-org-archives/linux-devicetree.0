@@ -1,54 +1,51 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/7] ARM64: dts: meson-gx: remove gpio offset
-Date: Thu, 21 Sep 2017 19:14:45 +0200
-Message-ID: <20170921171450.27407-3-jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 4/7] ARM64: dts: meson-gxbb: adjust nanopi-k2 gpio-line-names
+Date: Thu, 21 Sep 2017 19:14:47 +0200
+Message-ID: <20170921171450.27407-5-jbrunet@baylibre.com>
 References: <20170921171450.27407-1-jbrunet@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170921171450.27407-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170921171450.27407-1-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove pin offset on the EE controller. Meson pinctrl no longer has
-this quirk
+GPIOX22 is now declared properly and TEST_N has been moved so
+the gpio-line-names of the nanopi-k2 must be adjusted accordingly
 
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 52f1687e7a09..fb4baed97a01 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -379,7 +379,7 @@
- 			reg-names = "mux", "pull", "pull-enable", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			gpio-ranges = <&pinctrl_periphs 0 14 120>;
-+			gpio-ranges = <&pinctrl_periphs 0 0 120>;
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+index 9697a7a79464..3c445030ed52 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+@@ -180,7 +180,9 @@
+ 			  "VCCK En", "CON1 Header Pin31",
+ 			  "I2S Header Pin6", "IR In", "I2S Header Pin7",
+ 			  "I2S Header Pin3", "I2S Header Pin4",
+-			  "I2S Header Pin5", "HDMI CEC", "SYS LED";
++			  "I2S Header Pin5", "HDMI CEC", "SYS LED",
++			  /* GPIO_TEST_N */
++			  "";
+ };
  
- 		emmc_pins: emmc {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index d6876e64979e..f3fca26c9658 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -268,7 +268,7 @@
- 			reg-names = "mux", "pull", "pull-enable", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			gpio-ranges = <&pinctrl_periphs 0 10 101>;
-+			gpio-ranges = <&pinctrl_periphs 0 0 101>;
- 		};
+ &pinctrl_periphs {
+@@ -226,11 +228,9 @@
+ 			  "Bluetooth UART TX", "Bluetooth UART RX",
+ 			  "Bluetooth UART CTS", "Bluetooth UART RTS",
+ 			  "", "", "", "WIFI 32K", "Bluetooth Enable",
+-			  "Bluetooth WAKE HOST",
++			  "Bluetooth WAKE HOST", "",
+ 			  /* Bank GPIOCLK */
+-			  "", "CON1 Header Pin35", "", "",
+-			  /* GPIO_TEST_N */
+-			  "";
++			  "", "CON1 Header Pin35", "", "";
+ };
  
- 		emmc_pins: emmc {
+ &pwm_ef {
 -- 
 2.13.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
