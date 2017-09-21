@@ -1,34 +1,88 @@
-From: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 08/10] ARM: dts: Add nodes for missing omap4 interconnect
- target modules
-Date: Thu, 21 Sep 2017 04:56:56 +0200
-Message-ID: <20170921025656.omeoippus7b4mmig@squirrel.local>
-References: <20170920224621.16236-1-tony@atomide.com>
- <20170920224621.16236-9-tony@atomide.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2] arm64: dts: stratix10: add ethernet/sdmmc support to
+ the S10 devkit
+Date: Wed, 20 Sep 2017 22:11:02 -0700
+Message-ID: <9fc4c173-6d98-052f-50cc-aefeeec9c264@gmail.com>
+References: <1505920675-9641-1-git-send-email-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170920224621.16236-9-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1505920675-9641-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 03:46:19PM -0700, Tony Lindgren wrote:
-> For AESS there is old Android 3.4 kernel
-> driver available but it's unlikely that anybody is going to update
-> it for the mainline kernel.
 
-We do actually hope to get the Audio Engine in ABE working eventually on
-omap5 (which would presumably also make it work on omap4). and there are
-more recent kernels that support it: a TI 3.8 kernel and a 3.15 branch
-from Peter Ujfalusi [1].
 
-[1] https://pyra-handheld.com/pipermail/kernel/2017-September/002060.html
+On 09/20/2017 08:17 AM, Dinh Nguyen wrote:
+> Enable ethernet and sdmmc support on the Stratix10 devkit.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> v2: Create a separate PHY node
+
+The gmac/phy nodes look fine now, thanks!
+
+> ---
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> index 41ea2db..5907586 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> @@ -34,6 +34,44 @@
+>  	};
+>  };
+>  
+> +&gmac0 {
+> +	status = "okay";
+> +	phy-mode = "rgmii";
+> +	phy-handle = <&phy0>;
+> +
+> +	max-frame-size = <3800>;
+> +
+> +	mdio0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "snps,dwmac-mdio";
+> +		phy0: ethernet-phy@0 {
+> +			reg = <4>;
+> +
+> +			txd0-skew-ps = <0>; /* -420ps */
+> +			txd1-skew-ps = <0>; /* -420ps */
+> +			txd2-skew-ps = <0>; /* -420ps */
+> +			txd3-skew-ps = <0>; /* -420ps */
+> +			rxd0-skew-ps = <420>; /* 0ps */
+> +			rxd1-skew-ps = <420>; /* 0ps */
+> +			rxd2-skew-ps = <420>; /* 0ps */
+> +			rxd3-skew-ps = <420>; /* 0ps */
+> +			txen-skew-ps = <0>; /* -420ps */
+> +			txc-skew-ps = <1860>; /* 960ps */
+> +			rxdv-skew-ps = <420>; /* 0ps */
+> +			rxc-skew-ps = <1680>; /* 780ps */
+> +		};
+> +	};
+> +};
+> +
+> +&mmc {
+> +	status = "okay";
+> +	num-slots = <1>;
+> +	cap-sd-highspeed;
+> +	broken-cd;
+> +	bus-width = <4>;
+> +};
+> +
+>  &uart0 {
+>  	status = "okay";
+>  };
+> 
 
 -- 
-Matthijs van Duin
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
