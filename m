@@ -1,57 +1,40 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: enable gpio for pin groups
-Date: Thu, 21 Sep 2017 08:28:08 +0200
-Message-ID: <20170921062808.fde5bpvn3wfau67h@pengutronix.de>
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1] usb: host: Implement workaround for Erratum A-007463
+Date: Thu, 21 Sep 2017 09:48:03 +0300
+Message-ID: <87fubg4kf0.fsf@linux.intel.com>
+References: <Pine.LNX.4.44L0.1709201004040.1563-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1709201004040.1563-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, yinbo.zhu-3arQi8VN3Tc@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-on an i.MX25 machine on my desk a UART RX line is guarded by a transistor
-like this:
+Hi,
 
-	,------------------------.
-	| ,---------.            |
-	| |  imx25  o--RX----◁---o---
-	| |         o--GPIO--'   |
-	| `---------'            |
-	`------------------------'
+Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> writes:
 
-The reason is that the reset default setting of the pin in question
-(MX25_PAD_LBA) is driving the line. So after switching the pad to its
-UART function the gpio must be driven to make the transistor
-transparent.
+> The Subject: line should specify which type of USB host controller the
+> patch is for.  The kernel contains lots of different USB host
+> controller drivers.  How are we supposed to know that Erratum A-007463
+> applies to dwc3 xHCI controllers?
+>
+> The Subject: line should say something like:
+>
+> [PATCH v1] USB: host: dwc3: Implement workaround for Erratum A-007643
 
-My first idea was to make this a property of the UART and added a
-enable-gpios property for it[1]. But now I wonder if this is better
-abstracted as an enable-gpios property in the pinctrl node. Something
-like:
+If we're talking about a dwc3 implementation, we need a quirk flag on
+dwc3 core to be passed down to the xhci-plat device, like every other
+quirk on this controller.
 
-	pinctrl_uart5: uart5 {
-		fsl,pins = <
-			MX25_PAD_ECB__UART5_TXD                 0x00002080 /* TXD */
-			MX25_PAD_LBA__UART5_RXD                 0x00000000 /* RXD */
-			MX25_PAD_CS4__UART5_CTS                 0x00002001 /* RTS */
-			MX25_PAD_CS5__GPIO_3_21                 0x00002001 /* #RXD_EN */
-		>;
-		enable-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
-	};
-
-Would this make sense? Maybe with a more intuitive name?
-
-Best regards
-Uwe
-
-[1] http://patchwork.ozlabs.org/patch/647787/
+I also need a reference to SNPS stars ticket that talks about this problem.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+balbi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
