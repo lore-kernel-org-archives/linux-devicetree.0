@@ -1,74 +1,86 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 8/9 v2] usb: usb251xb: Add max power/current dts property support
-Date: Thu, 21 Sep 2017 11:26:04 -0500
-Message-ID: <CAL_Jsq+ftbGSQOOor_1L9NO9h7rjYm9nB26PxNOPgyHU6k3j_A@mail.gmail.com>
-References: <20170915233113.17855-1-fancer.lancer@gmail.com>
- <20170916104220.3742-1-fancer.lancer@gmail.com> <20170916104220.3742-9-fancer.lancer@gmail.com>
- <20170920205255.5txbub3y6v6avolh@rob-hp-laptop> <20170920212739.GB3547@mobilestation>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v9 0/7] Add support for Qualcomm A53 CPU clock
+Date: Thu, 21 Sep 2017 19:49:33 +0300
+Message-ID: <20170921164940.20343-1-georgi.djakov@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920212739.GB3547@mobilestation>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 4:27 PM, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Sep 20, 2017 at 03:52:55PM -0500, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Sat, Sep 16, 2017 at 01:42:19PM +0300, Serge Semin wrote:
->> > This parameters may be varied in accordance with hardware specifics.
->> > So lets add the corresponding settings to the usb251x driver dts
->> > specification.
->> >
->> > Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > ---
->> >  Documentation/devicetree/bindings/usb/usb251xb.txt   |  6 ++++++
->> >  drivers/usb/misc/usb251xb.c                          | 20 ++++++++++++++++----
->> >  2 files changed, 22 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
->> > index 3d84626d3..dd59a32e7 100644
->> > --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
->> > +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
->> > @@ -44,6 +44,12 @@ Optional properties :
->> >     device connected.
->> >   - sp-disabled-ports : Specifies the ports which will be self-power disabled
->> >   - bp-disabled-ports : Specifies the ports which will be bus-power disabled
->> > + - sp-max-{power,current} : Indicates the power/current consumed by hub from
->> > +   an upstream port (VBUS) when operation as a self-powered hub. The value
->> > +   is given in mA in a 0 - 100 range (default is 1mA).
->> > + - bp-max-{power,current} : Indicates the power/current consumed by hub from
->> > +   an upstream port (VBUS) when operation as a bus-powered hub. The value
->> > +   is given in mA in a 0 - 510 range (default is 100mA).
->>
->> These need units as defined in property-units.txt.
->>
->
-> Ok.
->
->> Why do you need power and current? Can't you calculate power?
->>
->
-> These are different parameters of the device. They got different configuration
-> registers and descriptions:
-> max_power* - ... This value also includes the power consumption of a
-> permanently attached peripheral if the hub is configured as a compound
-> device, and the embedded peripheral reports 0mA in its descriptors.
-> max_current* - ... This value does NOT include the power consumption of a
-> permanently attached peripheral if the hub is configured as a compound
-> device.
+This patchset adds support for the A53 CPU clock on MSM8916 platforms
+and allows scaling of the CPU frequency on msm8916 based platforms.
 
-Then the names here should somehow reflect the above. Perhaps
-"composite-current" and "hub-current" or something like that.
+Changes since v8 (https://lkml.org/lkml/2017/6/23/476)
+ * Converted APCS mailbox driver to use regmap and to populate child
+ platform devices that will handle the rest of the functionality
+ provided by APCS block.
+ * Picked Rob's Ack for the PLL binding.
+ * Changed the APCS binding and put it into a separate patch.
+ * Addressed review comments.
+ * Minor changes.
 
->
-> Additionally as you can see, they both are measured in "mA", so it isn't
-> a real physical power.
+Changes since v7 (https://lkml.org/lkml/2016/10/31/296)
+ * Add the APCS clock controller to the APCS driver to expose both the
+ mailbox and clock controller functionality as discussed earlier:
+ https://lkml.org/lkml/2016/11/14/860
+ * Changed the a53pll compatible string as suggested by Rob.
 
-Well, I can't because there's no units.
+Changes since v6 (https://lkml.org/lkml/2016/9/7/347)
+ * Addressed various comments from Stephen Boyd
 
-Rob
+Changes since v5 (https://lkml.org/lkml/2016/2/1/407)
+ * Rebase to clk-next and update according to the recent API changes.
+
+Changes since v4 (https://lkml.org/lkml/2015/12/14/367)
+ * Convert to builtin drivers as now __clk_lookup() is used
+
+Changes since v3 (https://lkml.org/lkml/2015/8/12/585)
+ * Split driver into two parts - and separate A53 PLL and
+   A53 clock controller drivers.
+ * Drop the safe switch hook patch. Add a clock notifier in
+   the clock provider to handle switching via safe mux and
+   divider configuration.
+
+Changes since v2 (https://lkml.org/lkml/2015/7/24/526)
+ * Drop gpll0_vote patch.
+ * Switch to the new clk_hw_* APIs.
+ * Rebase to the current clk-next.
+
+Changes since v1 (https://lkml.org/lkml/2015/6/12/193)
+ * Drop SR2 PLL patch, as it is already applied.
+ * Add gpll0_vote rate propagation patch.
+ * Update/rebase patches to the current clk-next.
+
+
+Georgi Djakov (7):
+  mailbox: qcom: Convert APCS IPC driver to use regmap
+  mailbox: qcom: Populate APCS child platform devices
+  mailbox: qcom: Move the apcs struct into a separate header
+  clk: qcom: Add A53 PLL support
+  clk: qcom: Add regmap mux-div clocks support
+  dt-bindings: clock: Document qcom,apcs binding
+  clk: qcom: Add APCS clock controller support
+
+ .../devicetree/bindings/clock/qcom,a53pll.txt      |  22 ++
+ .../devicetree/bindings/clock/qcom,apcs.txt        |  27 +++
+ drivers/clk/qcom/Kconfig                           |  21 ++
+ drivers/clk/qcom/Makefile                          |   3 +
+ drivers/clk/qcom/a53-pll.c                         | 107 ++++++++++
+ drivers/clk/qcom/apcs-msm8916.c                    | 172 +++++++++++++++
+ drivers/clk/qcom/clk-regmap-mux-div.c              | 237 +++++++++++++++++++++
+ drivers/clk/qcom/clk-regmap-mux-div.h              |  54 +++++
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |  36 ++--
+ include/linux/mailbox/qcom-apcs.h                  |  34 +++
+ 10 files changed, 700 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,apcs.txt
+ create mode 100644 drivers/clk/qcom/a53-pll.c
+ create mode 100644 drivers/clk/qcom/apcs-msm8916.c
+ create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.c
+ create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.h
+ create mode 100644 include/linux/mailbox/qcom-apcs.h
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
