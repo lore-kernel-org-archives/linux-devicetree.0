@@ -1,57 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/3] arm64: dts: mt2712: add pintcrl device node.
-Date: Thu, 21 Sep 2017 14:17:21 +0200
-Message-ID: <CACRpkdaX0n7BZVkXYFEh_XSN3P7huvhE6j5My=p=2Lh45oFZaQ@mail.gmail.com>
-References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com>
- <1501489333-23145-3-git-send-email-zhiyong.tao@mediatek.com>
- <2f883a8a-5402-5625-bada-bcfed53c098e@gmail.com> <CACRpkdZHyXec+L8ueRHOs=9TLT1Arqe3KeQpRZ6D0K1Ag1c+Zw@mail.gmail.com>
- <1505981592.22452.7.camel@mhfsdcap03>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/8] pinctrl: meson: clean pin offsets
+Date: Thu, 21 Sep 2017 14:21:19 +0200
+Message-ID: <CACRpkdYmO2PSKU-qkBMW7C35kHf=usfOoEAobQDMMdzd1RFSTw@mail.gmail.com>
+References: <20170920133927.17390-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1505981592.22452.7.camel@mhfsdcap03>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, srv_heupstream@mediatek.com, Liguo Zhang <liguo.zhang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, hongkun.cao@mediatek.com, Biao Huang <biao.huang@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170920133927.17390-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 10:13 AM, Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
-> On Tue, 2017-08-22 at 15:04 +0200, Linus Walleij wrote:
->> On Mon, Aug 14, 2017 at 5:23 PM, Matthias Brugger
->> <matthias.bgg@gmail.com> wrote:
->> > On 07/31/2017 10:22 AM, Zhiyong Tao wrote:
->> >>
->> >> The commit includes two change:
->> >> 1)add pintcrl device node for mt2712.
->> >> 2)add pinfunc file for mt2712.
->> >>
->> >> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
->> >> ---
->> >>   arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 1014
->> >> +++++++++++++++++++++++++
->> >
->> >
->> > Shouldn't this file be in include/dt-bindings/pinctrl?
->>
->> Only if it is also #included in the driver.
->>
->> Yours,
->> Linus Walleij
+On Wed, Sep 20, 2017 at 3:39 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+
+> The initial goal of this series was move to TEST_N pin from the EE
+> controller to AO controller, where it belongs. This meant modify the
+> EE_OFF value.
 >
-> ==>
-> Thanks for your comment.
-> We see our some ICs(mt7623) which move the file to
-> "include/dt-bindings/pinctrl". other ICs(mt2701) which is put in
-> "arch/arm64/boot/dts/mediatek".
-> In mt2712, mt2712-pinfunc.h is only include by dts file. It won't be
-> included by driver. So which is better? "arch/arm64/boot/dts/mediatek/"
-> or "include/dt-bindings/pinctrl".
+> This offset is a quirk we brought from the vendor driver when it was
+> initially merged. There no reason to keep this around and we could simply
+> let pinctrl figure the pin base value.
+>
+> Removing this offset, while simple, ends up being quite a patch bomb.
+> This is why I split the change over 5 first patches, so the important
+> change, patch #1 remains visible. Of course, to avoid breaking bisect,
+> these first 5 patches should be squashed into one. (If you prefer that I
+> squash it myself, I may have to send you a PR as the patch would exceed
+> VGER 100000 characters limit)
+>
+> The last change is this series, while not directly related, also requires
+> to adjust the gpio-line-names property in DT. Having these changes going
+> together would make it easier to coordinate the DTS changes.
+>
+> This was changeset has been test on gxbb P200, gxl libretech-cc.  It was
+> also boot tested on meson8 (Thx Martin!)
+>
+> Jerome Brunet (8):
+>   pinctrl: meson: remove offset from pinctrl
+>   pinctrl: meson: remove offset continued - gxbb
+>   pinctrl: meson: remove offset continued - gxl
+>   pinctrl: meson: remove offset continued - meson8
+>   pinctrl: meson: remove offset continued - meson8b
+>   pinctrl: meson: get rid of pin_base
+>   pinctrl: meson-gx: TEST_N belongs to the AO controller
+>   pinctrl: meson-gxbb: add missing GPIOX_22 pin
 
-If it is used in both arm and arm64 it is helpful to have it in
-include/dt-bindings so it can be shared between the two
-archs.
-
-If it is just (ever) for arm64 it can stay inside the arch tree.
+Looks good just waiting for review from Carlo && || Kevin.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
