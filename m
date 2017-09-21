@@ -1,7 +1,7 @@
 From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 05/12] ARM: dts: orangepi2: Fix node with unit name and no reg property
-Date: Thu, 21 Sep 2017 19:21:44 +0200
-Message-ID: <20170921172151.29779-6-clabbe.montjoie@gmail.com>
+Subject: [PATCH 02/12] ARM: dts: sunxi: h3/h5: Fix i2c2 register address
+Date: Thu, 21 Sep 2017 19:21:41 +0200
+Message-ID: <20170921172151.29779-3-clabbe.montjoie@gmail.com>
 References: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
@@ -10,46 +10,29 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripa
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch fix the warning "xxx has a unit name, but no reg property" by
-removing "@0" from such node.
+The unit address and register address does not match.
+This patch fix the register address with the good one.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index 17cdeae19c6f..b20be95b49d5 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -160,24 +160,24 @@
- };
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 59ddac9f65a7..37464d4d07f6 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -630,9 +630,9 @@
+ 			#size-cells = <0>;
+ 		};
  
- &pio {
--	leds_opc: led_pins@0 {
-+	leds_opc: led_pins {
- 		pins = "PA15";
- 		function = "gpio_out";
- 	};
- };
- 
- &r_pio {
--	leds_r_opc: led_pins@0 {
-+	leds_r_opc: led_pins {
- 		pins = "PL10";
- 		function = "gpio_out";
- 	};
- 
--	sw_r_opc: key_pins@0 {
-+	sw_r_opc: key_pins {
- 		pins = "PL3", "PL4";
- 		function = "gpio_in";
- 	};
- 
--	wifi_pwrseq_pin_orangepi: wifi_pwrseq_pin@0 {
-+	wifi_pwrseq_pin_orangepi: wifi_pwrseq_pin {
- 		pins = "PL7";
- 		function = "gpio_out";
- 	};
+-		i2c2: i2c@01c2b400 {
++		i2c2: i2c@1c2b400 {
+ 			compatible = "allwinner,sun6i-a31-i2c";
+-			reg = <0x01c2b000 0x400>;
++			reg = <0x1c2b400 0x400>;
+ 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_BUS_I2C2>;
+ 			resets = <&ccu RST_BUS_I2C2>;
 -- 
 2.13.5
