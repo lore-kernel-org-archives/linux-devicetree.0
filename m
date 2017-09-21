@@ -1,102 +1,42 @@
-From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 8/9 v2] usb: usb251xb: Add max power/current dts property
- support
-Date: Thu, 21 Sep 2017 20:10:22 +0300
-Message-ID: <20170921171022.GA13721@mobilestation>
-References: <20170915233113.17855-1-fancer.lancer@gmail.com>
- <20170916104220.3742-1-fancer.lancer@gmail.com>
- <20170916104220.3742-9-fancer.lancer@gmail.com>
- <20170920205255.5txbub3y6v6avolh@rob-hp-laptop>
- <20170920212739.GB3547@mobilestation>
- <CAL_Jsq+ftbGSQOOor_1L9NO9h7rjYm9nB26PxNOPgyHU6k3j_A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+ftbGSQOOor_1L9NO9h7rjYm9nB26PxNOPgyHU6k3j_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/7] ARM: dts: meson: clean pin offsets
+Date: Thu, 21 Sep 2017 19:14:43 +0200
+Message-ID: <20170921171450.27407-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 11:26:04AM -0500, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Sep 20, 2017 at 4:27 PM, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Wed, Sep 20, 2017 at 03:52:55PM -0500, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >> On Sat, Sep 16, 2017 at 01:42:19PM +0300, Serge Semin wrote:
-> >> > This parameters may be varied in accordance with hardware specifics.
-> >> > So lets add the corresponding settings to the usb251x driver dts
-> >> > specification.
-> >> >
-> >> > Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> > ---
-> >> >  Documentation/devicetree/bindings/usb/usb251xb.txt   |  6 ++++++
-> >> >  drivers/usb/misc/usb251xb.c                          | 20 ++++++++++++++++----
-> >> >  2 files changed, 22 insertions(+), 4 deletions(-)
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-> >> > index 3d84626d3..dd59a32e7 100644
-> >> > --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
-> >> > +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-> >> > @@ -44,6 +44,12 @@ Optional properties :
-> >> >     device connected.
-> >> >   - sp-disabled-ports : Specifies the ports which will be self-power disabled
-> >> >   - bp-disabled-ports : Specifies the ports which will be bus-power disabled
-> >> > + - sp-max-{power,current} : Indicates the power/current consumed by hub from
-> >> > +   an upstream port (VBUS) when operation as a self-powered hub. The value
-> >> > +   is given in mA in a 0 - 100 range (default is 1mA).
-> >> > + - bp-max-{power,current} : Indicates the power/current consumed by hub from
-> >> > +   an upstream port (VBUS) when operation as a bus-powered hub. The value
-> >> > +   is given in mA in a 0 - 510 range (default is 100mA).
-> >>
-> >> These need units as defined in property-units.txt.
-> >>
-> >
-> > Ok.
-> >
-> >> Why do you need power and current? Can't you calculate power?
-> >>
-> >
-> > These are different parameters of the device. They got different configuration
-> > registers and descriptions:
-> > max_power* - ... This value also includes the power consumption of a
-> > permanently attached peripheral if the hub is configured as a compound
-> > device, and the embedded peripheral reports 0mA in its descriptors.
-> > max_current* - ... This value does NOT include the power consumption of a
-> > permanently attached peripheral if the hub is configured as a compound
-> > device.
-> 
-> Then the names here should somehow reflect the above. Perhaps
-> "composite-current" and "hub-current" or something like that.
-> 
+The series is the device-tree part of the series sent to pinctrl [0]
+The present patchset depends on the pinctrl part.
 
-I left the naming in accordance with the device datasheet. I thought it would be
-better since the driver user would still need to consult with the device
-documentation to properly set them. I don't really get how the difference is reflected
-with the naming declared there though. So what naming would you prefer then? Might be
-something like:
-{sp,bp}-max-total-current - for so named {sp,bp}-max-power, since it includes all the
-permanently attached peripherals.
-{sp,bp}-max-removable-current - for so named {sp,bp}-max-current, since it doesn't
-include the permanently attached peripherals.
+The purpose of this series is to:
+1) remove the hardcoded gpio offset
+2) adjust gpio-ranges with respect to the new pin number of each
+   controller
+3) adjust gpio-line-names accordingly for the boards having this property.
 
-Or is it better to leave it in compliance with the documentation naming?
+[0]: https://lkml.kernel.org/r/20170918134610.17743-1-jbrunet@baylibre.com
 
-> >
-> > Additionally as you can see, they both are measured in "mA", so it isn't
-> > a real physical power.
-> 
-> Well, I can't because there's no units.
-> 
+Jerome Brunet (7):
+  ARM: dts: meson8: remove gpio offset
+  ARM64: dts: meson-gx: remove gpio offset
+  ARM64: dts: meson-gx: adjust gpio-ranges for TEST_N
+  ARM64: dts: meson-gxbb: adjust nanopi-k2 gpio-line-names
+  ARM64: dts: meson-gxbb: adjust odroid-c2 gpio-line-names
+  ARM64: dts: meson-gxl: adjust kvim gpio-line-names
+  ARM64: dts: meson-gxl: adjust libretech-cc gpio-line-names
 
-What this line means then?
-- sp-max-{power,current} : ... The value is given in mA in a 0 - 100 range (default is 1mA).
-- bp-max-{power,current} : ... The value is given in mA in a 0 - 510 range (default is 100mA).
+ arch/arm/boot/dts/meson8.dtsi                                |  2 +-
+ arch/arm/boot/dts/meson8b.dtsi                               |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts         | 10 +++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts          | 10 +++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi                  |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts   |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi                   |  2 +-
+ 8 files changed, 22 insertions(+), 22 deletions(-)
 
-Maybe I don't know something and the description line should state the units somehow
-clearer?
-
-> Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.13.5
