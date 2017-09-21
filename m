@@ -1,29 +1,42 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [v5 08/12] soc/fsl/qbman: Rework portal mapping calls for ARM/PPC
-Date: Thu, 21 Sep 2017 15:32:42 +0100
-Message-ID: <20170921143242.f3bdqpa4gq6r7dj3@localhost>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [v5 00/12] soc/fsl/qbman: Enable QBMan on ARM Platforms
+Date: Thu, 21 Sep 2017 15:40:28 +0100
+Message-ID: <20170921144028.nv2f54w55quyabje@localhost>
 References: <1505767187-4596-1-git-send-email-roy.pledge@nxp.com>
- <1505767187-4596-9-git-send-email-roy.pledge@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1505767187-4596-9-git-send-email-roy.pledge-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
-Cc: leoyang.li-3arQi8VN3Tc@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, madalin.bucur-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org
+In-Reply-To: <1505767187-4596-1-git-send-email-roy.pledge@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roy Pledge <roy.pledge@nxp.com>
+Cc: leoyang.li@nxp.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, arnd@arndb.de, madalin.bucur@nxp.com, linux@armlinux.org.uk, oss@buserror.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 04:39:43PM -0400, Roy Pledge wrote:
-> Rework portal mapping for PPC and ARM. The PPC devices require a
-> cacheable coherent mapping while ARM will work with a non-cachable/write
-> combine mapping. This also eliminates the need for manual cache
-> flushes on ARM. This also fixes the code so sparse checking is clean.
+On Mon, Sep 18, 2017 at 04:39:35PM -0400, Roy Pledge wrote:
+> Madalin Bucur (4):
+>   soc/fsl/qbman: Drop set/clear_bits usage
+>   soc/fsl/qbman: add QMAN_REV32
+>   soc/fsl/qbman: different register offsets on ARM
+>   soc/fsl/qbman: Enable FSL_LAYERSCAPE config on ARM
 > 
-> Signed-off-by: Roy Pledge <roy.pledge-3arQi8VN3Tc@public.gmane.org>
+> Roy Pledge (5):
+>   soc/fsl/qbman: Add common routine for QBMan private allocations
+>   soc/fsl/qbman: Use shared-dma-pool for BMan private memory allocations
+>   soc/fsl/qbman: Use shared-dma-pool for QMan private memory allocations
+>   dt-bindings: soc/fsl: Update reserved memory binding for QBMan
+>   soc/fsl/qbman: Rework portal mapping calls for ARM/PPC
+> 
+> Valentin Rothberg (1):
+>   soc/fsl/qbman: Fix ARM32 typo
 
-Reviewed-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I reviewed the patches specific to the arm qbman buffer mappings, they
+look fine to me. The DT bindings would need acks from the devicetree
+maintainers. The rest of the patches are qbman-specific definitions
+which I haven't checked for correctness (I guess they are fine).
+
+How do you plan to upstream these patches? They would probably go in via
+arm-soc.
+
+-- 
+Catalin
