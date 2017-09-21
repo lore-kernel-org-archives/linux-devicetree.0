@@ -1,42 +1,50 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 0/7] ARM: dts: meson: clean pin offsets
-Date: Thu, 21 Sep 2017 19:14:43 +0200
-Message-ID: <20170921171450.27407-1-jbrunet@baylibre.com>
+Subject: [PATCH 1/7] ARM: dts: meson8: remove gpio offset
+Date: Thu, 21 Sep 2017 19:14:44 +0200
+Message-ID: <20170921171450.27407-2-jbrunet@baylibre.com>
+References: <20170921171450.27407-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170921171450.27407-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The series is the device-tree part of the series sent to pinctrl [0]
-The present patchset depends on the pinctrl part.
+Remove pin offset on the AO controller. meson pinctrl no longer has
+this quirk
 
-The purpose of this series is to:
-1) remove the hardcoded gpio offset
-2) adjust gpio-ranges with respect to the new pin number of each
-   controller
-3) adjust gpio-line-names accordingly for the boards having this property.
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm/boot/dts/meson8.dtsi  | 2 +-
+ arch/arm/boot/dts/meson8b.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-[0]: https://lkml.kernel.org/r/20170918134610.17743-1-jbrunet@baylibre.com
-
-Jerome Brunet (7):
-  ARM: dts: meson8: remove gpio offset
-  ARM64: dts: meson-gx: remove gpio offset
-  ARM64: dts: meson-gx: adjust gpio-ranges for TEST_N
-  ARM64: dts: meson-gxbb: adjust nanopi-k2 gpio-line-names
-  ARM64: dts: meson-gxbb: adjust odroid-c2 gpio-line-names
-  ARM64: dts: meson-gxl: adjust kvim gpio-line-names
-  ARM64: dts: meson-gxl: adjust libretech-cc gpio-line-names
-
- arch/arm/boot/dts/meson8.dtsi                                |  2 +-
- arch/arm/boot/dts/meson8b.dtsi                               |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts         | 10 +++++-----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts          | 10 +++++-----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi                  |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts   |  8 ++++----
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts |  8 ++++----
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi                   |  2 +-
- 8 files changed, 22 insertions(+), 22 deletions(-)
-
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index b98d44fde6b6..aff0243ea7d5 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -132,7 +132,7 @@
+ 			reg-names = "mux", "pull", "gpio";
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+-			gpio-ranges = <&pinctrl_aobus 0 120 16>;
++			gpio-ranges = <&pinctrl_aobus 0 0 16>;
+ 		};
+ 
+ 		uart_ao_a_pins: uart_ao_a {
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index bc278da7df0d..09ceec93b4c8 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -104,7 +104,7 @@
+ 			reg-names = "mux", "pull", "gpio";
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+-			gpio-ranges = <&pinctrl_aobus 0 130 16>;
++			gpio-ranges = <&pinctrl_aobus 0 0 16>;
+ 		};
+ 
+ 		uart_ao_a_pins: uart_ao_a {
 -- 
 2.13.5
