@@ -1,56 +1,109 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH V5 0/4] Add Broadcom STB USB phy driver
-Date: Thu, 21 Sep 2017 15:09:32 +0530
-Message-ID: <73815a53-b07c-64f2-3648-b50e12e92958@ti.com>
-References: <1503683495-11766-1-git-send-email-alcooperx@gmail.com>
- <f4625f5e-db00-ebcc-4618-6f00247edfab@gmail.com>
- <f7bb89bf-1a09-891c-4ae5-3dc2e4b38d97@ti.com>
- <5DDF9572-B2D1-4316-B307-14749365221E@gmail.com>
- <4068eb4a-3982-742f-2b23-28a4b1484de2@gmail.com>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
+Date: Thu, 21 Sep 2017 12:40:55 +0300
+Message-ID: <1505986855.23573.80.camel@hp800z>
+References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
+         <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
+         <1505983900.23573.76.camel@hp800z>
+         <CAMuHMdU87p0xjtfOtaoHPcqZZxVvxJc-b1jdP_iJYBwHv1=ebw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4068eb4a-3982-742f-2b23-28a4b1484de2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, bcm-kernel-feedback-list@broadcom.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdU87p0xjtfOtaoHPcqZZxVvxJc-b1jdP_iJYBwHv1=ebw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+Hi Geert,
 
-On Thursday 21 September 2017 04:07 AM, Florian Fainelli wrote:
-> Hi Kishon,
+On Thu, 2017-09-21 at 11:10 +0200, Geert Uytterhoeven wrote:
+> Hi Pantelis,
 > 
-> On 09/15/2017 04:49 PM, Florian Fainelli wrote:
->> On September 4, 2017 11:11:47 PM PDT, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>> Florian,
->>>
->>> On Saturday 02 September 2017 07:46 AM, Florian Fainelli wrote:
->>>>
->>>>
->>>> On 08/25/2017 10:51 AM, Al Cooper wrote:
->>>>> Add a new USB Phy driver for Broadcom STB SoCs. This driver
->>>>> supports Broadcom STB ARM SoCs. This driver in
->>>>> combination with the Broadcom STB ohci, ehci and xhci
->>>>> drivers will enable USB1.1, USB2.0 and USB3.0 support.
->>>>> This Phy driver also supports the Broadcom BDC gadget
->>>>> driver.
->>>>
->>>> Thanks Al! Kishon, feel free to merge everything through your tree
->>> there
->>>> should not be any conflicts with drivers/soc/bcm/brcmstb/common.c and
->>>> include/linux/soc/brcmstb/brcmstb.h.
->>>
->>> I'll start merging once 4.14 -rc1 is tagged.
->>
->> OK, does not that mean we will be missing this driver in 4.14? I suppose that's fine. Thanks!
+> On Thu, Sep 21, 2017 at 10:51 AM, Pantelis Antoniou
+> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> > On Wed, 2017-09-20 at 14:32 +0200, Geert Uytterhoeven wrote:
+> >> On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
+> >> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> >> > +#include "ulcb-kf.dtsi"
+> >>
+> >> As the Kingfisher is actually an expansion board for H3ULCB (with R-Car H3
+> >> ES1.1 and ES2.0) and M3ULCB (with R-Car M3-W), turning ulcb-kf.dtsi into a
+> >> DT overlay would make sense.
+> >> That would also solve the issue of the 3 extra DTSes needed for all possible
+> >> combinations of ULCB and Kingfisher (r8a7795-es1-h3ulcb-kf.dts,
+> >> r8a7795-h3ulcb-kf.dts, r8a7796-h3ulcb-kf.dts (perhaps more to follow?)).
+> >>
+> >> But that's too premature, without upstream support for the easy loading of
+> >> DT overlays.
+> >>
+> >
+> > Sigh, yes.
+> >
+> >> > +/ {
+> >> > +       model = "Renesas M3ULCB Kingfisher board based on r8a7796";
+> >> > +       compatible = "shimafuji,kingfisher", "renesas,m3ulcb",
+> >> > +                    "renesas,r8a7796";
+> >> > +};
+> >>
+> >> And how to support from an overlay the addition of "shimafuji,kingfisher" to
+> >> (not replacement of!) the main compatible value?
+> >
+> > You can hack something in DT but it will be gross indeed.
+> >
+> > Ideally you'd want a += operator, but it's going to take a lot of
+> > changes starting from DTB blob format.
+> >
+> > In yaml we could easily do this with an append tag type
+> >
+> > compatible: [ "renesas,m3ulcb", "renesas,r8a7796" ]
+> >
+> > compatible: !append "shimafuji,kingfisher"
 > 
-> Gentle ping, v4.14-rc1 is now out, can you let us know if this patch
-> series is good with you? Thanks!
+> As we already have /delete-property/, we could add /append-property/ and
+> /prepend-property/? Would be useful for a .dts including and enhancing
+> an .dtsi, too.
+> 
 
-Thank you for reminding. Actually the patch series has quite a few "CHECK"
-checkpatch warnings. Can that be fixed before merging it?
+Yes, that would work on the DTS source level. Doesn't help at runtime.
 
-Thanks
-Kishon
+> That doesn't solve the DTB blob format issue yet, though.
+> 
+
+Right. The tree and property deletion commands do not have a mapping to
+the DTB format. You could add special characters to a property name and
+have the overlay application code do something about it.
+
+For instance the original overlay submission did support property and
+node deletion by using '-property' & '-node'. Alas it was removed.
+
+> > Are you going to be at ELCE? I have a bunch of thing to ask you about
+> > your DT usage patterns.
+> 
+> Yes, and registered for the Device Tree Workshop.
+> 
+
+Great. See you then.
+
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+
+Regards
+
+-- Pantelis
+
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
