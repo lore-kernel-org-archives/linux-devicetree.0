@@ -1,7 +1,7 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 2/2] uio: add default compatible string to uio_pdrv_genirq
-Date: Fri, 22 Sep 2017 03:48:14 +1200
-Message-ID: <20170921154814.7510-3-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 1/2] uio: dt-bindings: document binding for uio-pdrv-genirq
+Date: Fri, 22 Sep 2017 03:48:13 +1200
+Message-ID: <20170921154814.7510-2-chris.packham@alliedtelesis.co.nz>
 References: <20170921154814.7510-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170921154814.7510-1-chris.packham@alliedtelesis.co.nz>
@@ -10,32 +10,48 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, device
 Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-Add a default compatible string "linux,uio-pdrv-genirq" to
-uio_pdrv_genirq to make it usable without supplying a module parameter.
-The module parameter is still supported in addition to the default.
+Document the device tree bindings for the uio-prv-genirq driver. Provide
+some examples on how it can be used.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- drivers/uio/uio_pdrv_genirq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../bindings/uio/linux,uio-pdrv-genirq.txt         | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/uio/linux,uio-pdrv-genirq.txt
 
-diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-index f598ecddc8a7..4d089240533e 100644
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -253,11 +253,12 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
- 
- #ifdef CONFIG_OF
- static struct of_device_id uio_of_genirq_match[] = {
-+	{ .compatible = "linux,uio-pdrv-genirq" },
- 	{ /* This is filled with module_parm */ },
- 	{ /* Sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
--module_param_string(of_id, uio_of_genirq_match[0].compatible, 128, 0);
-+module_param_string(of_id, uio_of_genirq_match[1].compatible, 128, 0);
- MODULE_PARM_DESC(of_id, "Openfirmware id of the device to be handled by uio");
- #endif
- 
+diff --git a/Documentation/devicetree/bindings/uio/linux,uio-pdrv-genirq.txt b/Documentation/devicetree/bindings/uio/linux,uio-pdrv-genirq.txt
+new file mode 100644
+index 000000000000..90447905e886
+--- /dev/null
++++ b/Documentation/devicetree/bindings/uio/linux,uio-pdrv-genirq.txt
+@@ -0,0 +1,28 @@
++*Generic UIO platform driver with interrupts
++
++Required properties:
++- compatible: Should be "linux,uio-pdrv-genirq" or a value set with the of_id
++  module parameter.
++
++Optional properties:
++- interrupts: Should contain the interrupt to be associated with this device
++  (only a single interrupt is supported per device).
++- interrupt-parent: Specifies the phandle to the parent interrupt controller.
++- reg: Should specify the physical address spaces used by this device.
++
++Example:
++
++/* Device with MM IO and interrupt */
++my-device@10000 {
++	compatible = "linux,uio-pdrv-genirq";
++	reg = <0x10000 0x40>;
++	interrupts = <4 IRQ_TYPE_EDGE_BOTH>;
++	interrupt-parent = <&gic>;
++};
++
++/* Device with interrupt only */
++my-int {
++	compatible = "linux,uio-pdrv-genirq";
++	interrupts = <6 IRQ_TYPE_EDGE_BOTH>;
++	interrupt-parent = <&gic>;
++};
 -- 
 2.14.1
