@@ -1,38 +1,34 @@
-From: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCHv2 0/3] arm64: dts: ls1012a: add the DTS node for DSPI
- support
-Date: Thu, 21 Sep 2017 02:47:16 +0000
-Message-ID: <AM5PR0402MB2771A60E9CBD1A1CA13C2B2084660@AM5PR0402MB2771.eurprd04.prod.outlook.com>
-References: <20170830101238.28378-1-Zhiqiang.Hou@nxp.com>
- <20170920141044.GC1244@dragon>
+From: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 08/10] ARM: dts: Add nodes for missing omap4 interconnect
+ target modules
+Date: Thu, 21 Sep 2017 04:56:56 +0200
+Message-ID: <20170921025656.omeoippus7b4mmig@squirrel.local>
+References: <20170920224621.16236-1-tony@atomide.com>
+ <20170920224621.16236-9-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920141044.GC1244@dragon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170920224621.16236-9-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
-R3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogMjAxN8TqOdTCMjDI1SAy
-MjoxMQ0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZHdtdzJAaW5mcmFkZWFkLm9yZzsg
-cm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgY29tcHV0ZXJzZm9y
-cGVhY2VAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2MiAwLzNdIGFybTY0OiBkdHM6
-IGxzMTAxMmE6IGFkZCB0aGUgRFRTIG5vZGUgZm9yIERTUEkNCj4gc3VwcG9ydA0KPiANCj4gT24g
-V2VkLCBBdWcgMzAsIDIwMTcgYXQgMDY6MTI6MzVQTSArMDgwMCwgWmhpcWlhbmcgSG91IHdyb3Rl
-Og0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4NCj4g
-PiBDb3JyZWN0ZWQgdGhlIHN1YmplY3QgZm9yIDMvNSBwYXRjaCB2MS4NCj4gPg0KPiA+IFl1YW4g
-WWFvICgzKToNCj4gPiAgIGFybTY0OiBkdHM6IGxzMTAxMmE6IGFkZCB0aGUgRFRTIG5vZGUgZm9y
-IERTUEkgc3VwcG9ydA0KPiA+ICAgRG9jdW1lbnRhdGlvbjogZnNsOiBkc3BpOiBBZGQgZnNsLGxz
-MTAxMmEtZHNwaSBjb21wYXRpYmxlIHN0cmluZw0KPiA+ICAgRG9jdW1lbnRhdGlvbjogZHQ6IG10
-ZDogYWRkIHNzdDI1d2YwNDBiIGFuZCBlbjI1czY0IHRvIHRoZSBTUEkgTk9SDQo+ID4gICAgIHN1
-cHBvcnQgbGlzdA0KPiANCj4gSSBlZGl0ZWQgYmluZGluZ3MgZG9jIHBhdGNoIHN1YmplY3QgYSBi
-aXQsIGFuZCBhcHBsaWVkIGFsbC4NCg0KVGhhbmtzIGEgbG90IQ0KDQotIFpoaXFpYW5nDQo=
+On Wed, Sep 20, 2017 at 03:46:19PM -0700, Tony Lindgren wrote:
+> For AESS there is old Android 3.4 kernel
+> driver available but it's unlikely that anybody is going to update
+> it for the mainline kernel.
+
+We do actually hope to get the Audio Engine in ABE working eventually on
+omap5 (which would presumably also make it work on omap4). and there are
+more recent kernels that support it: a TI 3.8 kernel and a 3.15 branch
+from Peter Ujfalusi [1].
+
+[1] https://pyra-handheld.com/pipermail/kernel/2017-September/002060.html
+
+-- 
+Matthijs van Duin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
