@@ -1,113 +1,64 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: media: Document port and endpoint numbering
-Date: Thu, 21 Sep 2017 10:58:34 -0500
-Message-ID: <CAL_JsqLX_cZv3_hwYjzFTcSkF+3bMoOeQw5qpFzT0W4agiXj1g@mail.gmail.com>
-References: <1505723105-16238-1-git-send-email-sakari.ailus@linux.intel.com>
- <1505723105-16238-2-git-send-email-sakari.ailus@linux.intel.com>
- <20170920142438.wva4a5gz7ikfnlyh@rob-hp-laptop> <20170921092516.yzjelpxka4firnwx@paasikivi.fi.intel.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 8/8] arm64: dts: renesas: eagle: add EtherAVB support
+Date: Thu, 21 Sep 2017 19:03:26 +0300
+Message-ID: <c0390fc1-7da4-ac60-afee-97126d1fd372@cogentembedded.com>
+References: <20170915194449.538504992@cogentembedded.com>
+ <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170921092516.yzjelpxka4firnwx-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
+In-Reply-To: <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 4:25 AM, Sakari Ailus
-<sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Hi Rob,
->
-> Thanks for the reply.
->
-> On Wed, Sep 20, 2017 at 03:53:13PM -0500, Rob Herring wrote:
->> On Mon, Sep 18, 2017 at 11:25:04AM +0300, Sakari Ailus wrote:
->> > A lot of devices do not need and do not document port or endpoint
->> > numbering at all, e.g. in case where there's just a single port and a
->> > single endpoint. Whereas this is just common sense, document it to make it
->> > explicit.
->> >
->> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> > ---
->> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 12 ++++++++++++
->> >  1 file changed, 12 insertions(+)
+On 9/21/2017 4:08 PM, Geert Uytterhoeven wrote:
+
+>> Define the Eagle board  dependent part of the EtherAVB device node.
+>> Enable DHCP  and NFS root for the kernel booting.
 >>
->> This is fine, but bindings should still be explicit. Otherwise, I'm
->> wondering if it's a single port/endpoint or they just forgot to document
->> it. And I shouldn't have to look at the example to infer that.
+>> Based  on the original (and large) patch by Vladimir Barinov.
 >>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> The purpose of the patch was to actually document port and endpoint
-> numbering for devices for which it is not documented, not to suggest that
-> this would be omitted in in binding documentation. The fact is that I
-> couldn't find documentation for endpoint numbering for a single device
-> under Documentation/devicetree/bindings/media/ . Yet I haven't come across
-> DT source where other than zero would have been used. And the drivers
-> (mostly?) have ignored endpoint numbers so far.
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+[...]
+>> @@ -43,3 +44,14 @@
+>>   &scif0 {
+>>          status = "okay";
+>>   };
+>> +
+>> +&avb {
+>> +       renesas,no-ether-link;
+>> +       phy-handle = <&phy0>;
+>> +       status = "okay";
+>> +
+>> +       phy0: ethernet-phy@0 {
+>> +               rxc-skew-ps = <1500>;
+>> +               reg = <0>;
+> 
+> Any specific reason why you don't want to wire up the interrupt?
+> 
+>                  interrupt-parent = <&gpio2>;
 
-That's surprising. I know there are some for display controllers and
-it's a common review comment I give.
+    I thought it's quite obvious -- we don't have GPIOs yet, and GPIOs seem to 
+require PFC.
 
->
-> Some bindings have been omitted on the grounds that they're documented in
-> video-interfaces.txt.
->
-> What would you think of the following? I'm not sure it'd really belong
-> there, but it'd be a small piece of documentation one can easily refer to.
+>                  interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+> 
+>> +       };
+>> +};
+> 
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
 
-Looks good.
-
->
->
-> From e735979005244eb10597fe5333130b93e41d5a38 Mon Sep 17 00:00:00 2001
-> From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Date: Mon, 18 Sep 2017 11:15:53 +0300
-> Subject: [PATCH 1/1] dt: bindings: media: Document practices for DT bindings,
->  ports, endpoints
->
-> Port and endpoint numbering has been omitted in DT binding documentation
-> for a large number of devices. Also common properties the device uses have
-> been missed in binding documentation. Make it explicit that these things
-> need to be documented.
->
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/video-interfaces.txt        | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index 852041a..3c5382f 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -55,6 +55,21 @@ divided into two separate ITU-R BT.656 8-bit busses.  In such case bus-width
->  and data-shift properties can be used to assign physical data lines to each
->  endpoint node (logical bus).
->
-> +Documenting bindings for devices
-> +--------------------------------
-> +
-> +All required and optional bindings the device supports shall be explicitly
-> +documented in device DT binding documentation. This also includes port and
-> +endpoint numbering for the device.
-> +
-> +Port and endpoint numbering
-> +---------------------------
-> +
-> +Old binding documentation may have omitted explicitly specifying port and
-> +endpoint numbers. This often applies to devices that have a single port and a
-> +single endpoint in that port. In this case, the only valid port number for such
-> +a device is zero. The same applies for devices for which bindings do not
-> +document endpoint numbering: only zero is a valid endpoint.
->
->  Required properties
->  -------------------
-> --
-> 2.7.4
->
-> --
-> Sakari Ailus
-> sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+MBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
