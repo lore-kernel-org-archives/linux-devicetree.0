@@ -1,63 +1,105 @@
-From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: [PATCH] ARM: shmobile: remove inconsistent ; from documentation
-Date: Thu, 21 Sep 2017 11:44:59 +0200
-Message-ID: <1505987099-19944-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v1 3/4] arm: dts: mt7623: add display related nodes
+Date: Thu, 21 Sep 2017 17:50:24 +0800
+Message-ID: <1505987424.3084.8.camel@mtkswgap22>
+References: <cover.1505801355.git.ryder.lee@mediatek.com>
+         <0eb19ae1a4717d316cdaec44f6c20bfa8aa24ddc.1505801355.git.ryder.lee@mediatek.com>
+         <1505834813.16414.5.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1505834813.16414.5.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Consistently do not suffix compat string documentation with a ';'
+On Tue, 2017-09-19 at 23:26 +0800, CK Hu wrote:
+> Hi, Ryder:
+> 
+> Some comment inline.
+> 
+> On Tue, 2017-09-19 at 14:27 +0800, Ryder Lee wrote:
+> > This patch adds the device nodes for the display function block.
+> > Also, we add some missing pin macros in mt7623-pinfunc.h.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > CC: Linus Walleij <linus.walleij@linaro.org>
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/mt7623.dtsi                 | 210 ++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  41 ++++-
+> >  include/dt-bindings/pinctrl/mt7623-pinfunc.h  |  12 ++
+> >  3 files changed, 261 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> > index 9ec3767..e11e5e7 100644
+> > --- a/arch/arm/boot/dts/mt7623.dtsi
+> > +++ b/arch/arm/boot/dts/mt7623.dtsi
+> > @@ -20,6 +20,7 @@
+> >  #include <dt-bindings/power/mt2701-power.h>
+> >  #include <dt-bindings/gpio/gpio.h>
+> >  #include <dt-bindings/phy/phy.h>
+> > +#include <dt-bindings/memory/mt2701-larb-port.h>
+> >  #include <dt-bindings/reset/mt2701-resets.h>
+> >  #include <dt-bindings/thermal/thermal.h>
+> >  #include "skeleton64.dtsi"
+> > @@ -28,6 +29,11 @@
+> >  	compatible = "mediatek,mt7623";
+> >  	interrupt-parent = <&sysirq>;
+> >  
+> > +	aliases {
+> > +		rdma0 = &rdma0;
+> > +		rdma1 = &rdma1;
+> 
+> For display, are these two aliases enough?
 
-Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/shmobile.txt | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Yes, this part is the same as mt2701.
 
-Based on renesas-devel-20170921-v4.14-rc1
+https://patchwork.kernel.org/patch/9803813/
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 4fa984ada912..020d758fc0c5 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -69,7 +69,7 @@ Boards:
-     compatible = "renesas,gose", "renesas,r8a7793"
-   - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKBX0010SA00 (H3 ES1.1))
-     H3ULCB (R-Car Starter Kit Premier, RTP0RC77951SKBX010SA00 (H3 ES2.0))
--    compatible = "renesas,h3ulcb", "renesas,r8a7795";
-+    compatible = "renesas,h3ulcb", "renesas,r8a7795"
-   - Henninger
-     compatible = "renesas,henninger", "renesas,r8a7791"
-   - iWave Systems RZ/G1E SODIMM SOM Development Platform (iW-RainboW-G22D)
-@@ -91,7 +91,7 @@ Boards:
-   - Lager (RTP0RC7790SEB00010S)
-     compatible = "renesas,lager", "renesas,r8a7790"
-   - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
--    compatible = "renesas,m3ulcb", "renesas,r8a7796";
-+    compatible = "renesas,m3ulcb", "renesas,r8a7796"
-   - Marzen (R0P7779A00010S)
-     compatible = "renesas,marzen", "renesas,r8a7779"
-   - Porter (M2-LCDP)
-@@ -99,11 +99,11 @@ Boards:
-   - RSKRZA1 (YR0K77210C000BE)
-     compatible = "renesas,rskrza1", "renesas,r7s72100"
-   - Salvator-X (RTP0RC7795SIPB0010S)
--    compatible = "renesas,salvator-x", "renesas,r8a7795";
-+    compatible = "renesas,salvator-x", "renesas,r8a7795"
-   - Salvator-X (RTP0RC7796SIPB0011S)
--    compatible = "renesas,salvator-x", "renesas,r8a7796";
-+    compatible = "renesas,salvator-x", "renesas,r8a7796"
-   - Salvator-XS (Salvator-X 2nd version, RTP0RC7795SIPB0012S)
--    compatible = "renesas,salvator-xs", "renesas,r8a7795";
-+    compatible = "renesas,salvator-xs", "renesas,r8a7795"
-   - SILK (RTP0RC7794LCB00011S)
-     compatible = "renesas,silk", "renesas,r8a7794"
-   - SK-RZG1E (YR8A77450S000BE)
--- 
-2.1.4
+> > +	};
+> > +
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+...
+> > +	wdma@14009000 {
+> > +		compatible = "mediatek,mt7623-disp-wdma",
+> > +			     "mediatek,mt2701-disp-wdma";
+> 
+> There is neither "mediatek,mt7623-disp-wdma" nor
+> "mediatek,mt2701-disp-wdma" in driver, do you really need this device
+> node?
+
+Okay, I will remove it.
+
+> > +		reg = <0 0x14009000 0 0x1000>;
+> > +		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&mmsys CLK_MM_DISP_WDMA>;
+> > +		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
+> > +		mediatek,larb = <&larb0>;
+> > +	};
+> > +
+> > +	bls: bls@1400a000 {
+> > +		compatible = "mediatek,mt7623-disp-pwm",
+> > +			     "mediatek,mt2701-disp-pwm";
+> > +		reg = <0 0x1400a000 0 0x1000>;
+> > +		#pwm-cells = <2>;
+> > +		clocks = <&mmsys CLK_MM_MDP_BLS_26M>,
+> > +			 <&mmsys CLK_MM_DISP_BLS>;
+> > +		clock-names = "main", "mm";
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	color@1400b000 {
+> 
+> color: color@1400b000 {
+
+Okay.
+> > +		compatible = "mediatek,mt7623-disp-color",
+> > +			     "mediatek,mt2701-disp-color";
+> > +		reg = <0 0x1400b000 0 0x1000>;
+> > +		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&mmsys CLK_MM_DISP_COLOR>;
+> > +	};
+> > +
