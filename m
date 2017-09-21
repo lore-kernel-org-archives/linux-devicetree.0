@@ -1,48 +1,76 @@
-From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 9/9 v2] usb: usb251xb: Use GPIO descriptor consumer
- interface
-Date: Thu, 21 Sep 2017 17:51:29 +0300
-Message-ID: <20170921145129.GA25888@mobilestation>
-References: <20170915233113.17855-1-fancer.lancer@gmail.com>
- <20170916104220.3742-1-fancer.lancer@gmail.com>
- <20170916104220.3742-10-fancer.lancer@gmail.com>
- <20170921082338.GA30669@kroah.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/8] pinctrl: meson: clean pin offsets
+Date: Thu, 21 Sep 2017 17:00:09 +0200
+Message-ID: <1506006009.2703.175.camel@baylibre.com>
+References: <20170920133927.17390-1-jbrunet@baylibre.com>
+         <CACRpkdYmO2PSKU-qkBMW7C35kHf=usfOoEAobQDMMdzd1RFSTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170921082338.GA30669-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYmO2PSKU-qkBMW7C35kHf=usfOoEAobQDMMdzd1RFSTw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 10:23:38AM +0200, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Sat, Sep 16, 2017 at 01:42:20PM +0300, Serge Semin wrote:
-> > diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-> > index 71994b883..c2dd9742f 100644
-> > --- a/drivers/usb/misc/usb251xb.c
-> > +++ b/drivers/usb/misc/usb251xb.c
-> > @@ -3,6 +3,7 @@
-> >   * Configuration via SMBus.
-> >   *
-> >   * Copyright (c) 2017 SKIDATA AG
-> > + * Copyright (c) 2017 T-platforms
+On Thu, 2017-09-21 at 14:21 +0200, Linus Walleij wrote:
+> On Wed, Sep 20, 2017 at 3:39 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
 > 
-> Again, no, please consult with your corporate lawyers why this isn't ok.
+> > The initial goal of this series was move to TEST_N pin from the EE
+> > controller to AO controller, where it belongs. This meant modify the
+> > EE_OFF value.
+> > 
+> > This offset is a quirk we brought from the vendor driver when it was
+> > initially merged. There no reason to keep this around and we could simply
+> > let pinctrl figure the pin base value.
+> > 
+> > Removing this offset, while simple, ends up being quite a patch bomb.
+> > This is why I split the change over 5 first patches, so the important
+> > change, patch #1 remains visible. Of course, to avoid breaking bisect,
+> > these first 5 patches should be squashed into one. (If you prefer that I
+> > squash it myself, I may have to send you a PR as the patch would exceed
+> > VGER 100000 characters limit)
+> > 
+> > The last change is this series, while not directly related, also requires
+> > to adjust the gpio-line-names property in DT. Having these changes going
+> > together would make it easier to coordinate the DTS changes.
+> > 
+> > This was changeset has been test on gxbb P200, gxl libretech-cc.  It was
+> > also boot tested on meson8 (Thx Martin!)
+> > 
+> > Jerome Brunet (8):
+> >   pinctrl: meson: remove offset from pinctrl
+> >   pinctrl: meson: remove offset continued - gxbb
+> >   pinctrl: meson: remove offset continued - gxl
+> >   pinctrl: meson: remove offset continued - meson8
+> >   pinctrl: meson: remove offset continued - meson8b
+> >   pinctrl: meson: get rid of pin_base
+> >   pinctrl: meson-gx: TEST_N belongs to the AO controller
+> >   pinctrl: meson-gxbb: add missing GPIOX_22 pin
 > 
-> greg k-h
+> Looks good just waiting for review from Carlo && || Kevin.
 
-I still can't see why this isn't right. We submitted the patchset. It is not
-that big and still it isn't just two lines. As I've seen all over the kernel, It is
-a common practice to have multiple copyrights in kernel files. We are not claiming
-the copyright to the whole file, but to the contribution only. I got a consent to
-contribute when I was employed by the company. What's wrong with that? Shall I
-send the patchset from my corporate e-mail then?
+Thanks Linus,
 
--Sergey
+After doing this rework, I noticed that this driver (not the only one though)
+assume gpio offset (param of gpio calls) and pin offset are the same thing ...
+instead of relying pinctrl (and gpio-ranges) to do the translation.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To make things a bit more clean, I was thinking about forwarding all gpios
+framework calls to pinconf, so the gpio to pin offset would go through the
+proper mapping function.
+
+Is this the way to do it ?
+
+Using gpio_pinctrl_set_config() I should be able to achieve almost any "write"
+functions but I got stuck on gpio_get()
+
+ATM the moment there is no gpio_pinctrl_get_config() or something similar to
+read stuff in the gpio framework from pinconf. Would you be open to add
+something like this ?
+
+> 
+> Yours,
+> Linus Walleij
+
