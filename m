@@ -1,32 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5] clk: qcom: Add spmi_pmic clock divider support
-Date: Thu, 21 Sep 2017 18:36:09 -0500
-Message-ID: <20170921233609.t65nskglysn4v4qp@rob-hp-laptop>
-References: <1505817286-12445-1-git-send-email-tirupath@codeaurora.org>
+Subject: Re: [PATCH] dt-bindings: clk: stm32h7: fix clock-cell size
+Date: Thu, 21 Sep 2017 18:39:34 -0500
+Message-ID: <20170921233934.syq5onkdwtikvyso@rob-hp-laptop>
+References: <1505821446-6847-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1505817286-12445-1-git-send-email-tirupath@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tirupathi Reddy <tirupath@codeaurora.org>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+In-Reply-To: <1505821446-6847-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gabriel.fernandez@st.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com, gabriel.fernandez.st@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 19, 2017 at 04:04:46PM +0530, Tirupathi Reddy wrote:
-> Clkdiv module provides a clock output on the PMIC with CXO as
-> the source. This clock can be routed through PMIC GPIOs. Add
-> a device driver to configure this clkdiv module.
+On Tue, Sep 19, 2017 at 01:44:06PM +0200, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
 > 
-> Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
+> The clock-cell size is 1 on stm32h7 plaform.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> Fixes: 3e4d618b0722 ("clk: stm32h7: Add stm32h743 clock driver")
 > ---
->  .../bindings/clock/clk-spmi-pmic-div.txt           |  56 ++++
+>  Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
 
->  drivers/clk/qcom/Kconfig                           |   9 +
->  drivers/clk/qcom/Makefile                          |   1 +
->  drivers/clk/qcom/clk-spmi-pmic-div.c               | 343 +++++++++++++++++++++
->  4 files changed, 409 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
->  create mode 100644 drivers/clk/qcom/clk-spmi-pmic-div.c
+Rob
