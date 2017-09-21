@@ -1,74 +1,74 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 8/8] arm64: dts: renesas: eagle: add EtherAVB support
-Date: Thu, 21 Sep 2017 18:09:34 +0200
-Message-ID: <CAMuHMdVCTORpfKN+GTka_6pT1VWjOneV2GBhGo7Y8DsZYSxdvw@mail.gmail.com>
-References: <20170915194449.538504992@cogentembedded.com> <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg@mail.gmail.com>
- <c0390fc1-7da4-ac60-afee-97126d1fd372@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 8/9 v2] usb: usb251xb: Add max power/current dts property support
+Date: Thu, 21 Sep 2017 11:26:04 -0500
+Message-ID: <CAL_Jsq+ftbGSQOOor_1L9NO9h7rjYm9nB26PxNOPgyHU6k3j_A@mail.gmail.com>
+References: <20170915233113.17855-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-1-fancer.lancer@gmail.com> <20170916104220.3742-9-fancer.lancer@gmail.com>
+ <20170920205255.5txbub3y6v6avolh@rob-hp-laptop> <20170920212739.GB3547@mobilestation>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c0390fc1-7da4-ac60-afee-97126d1fd372-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20170920212739.GB3547@mobilestation>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Thu, Sep 21, 2017 at 6:03 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> On 9/21/2017 4:08 PM, Geert Uytterhoeven wrote:
->>> Define the Eagle board  dependent part of the EtherAVB device node.
->>> Enable DHCP  and NFS root for the kernel booting.
->>>
->>> Based  on the original (and large) patch by Vladimir Barinov.
->>>
->>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On Wed, Sep 20, 2017 at 4:27 PM, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Sep 20, 2017 at 03:52:55PM -0500, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Sat, Sep 16, 2017 at 01:42:19PM +0300, Serge Semin wrote:
+>> > This parameters may be varied in accordance with hardware specifics.
+>> > So lets add the corresponding settings to the usb251x driver dts
+>> > specification.
+>> >
+>> > Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/usb/usb251xb.txt   |  6 ++++++
+>> >  drivers/usb/misc/usb251xb.c                          | 20 ++++++++++++++++----
+>> >  2 files changed, 22 insertions(+), 4 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+>> > index 3d84626d3..dd59a32e7 100644
+>> > --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
+>> > +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+>> > @@ -44,6 +44,12 @@ Optional properties :
+>> >     device connected.
+>> >   - sp-disabled-ports : Specifies the ports which will be self-power disabled
+>> >   - bp-disabled-ports : Specifies the ports which will be bus-power disabled
+>> > + - sp-max-{power,current} : Indicates the power/current consumed by hub from
+>> > +   an upstream port (VBUS) when operation as a self-powered hub. The value
+>> > +   is given in mA in a 0 - 100 range (default is 1mA).
+>> > + - bp-max-{power,current} : Indicates the power/current consumed by hub from
+>> > +   an upstream port (VBUS) when operation as a bus-powered hub. The value
+>> > +   is given in mA in a 0 - 510 range (default is 100mA).
 >>
+>> These need units as defined in property-units.txt.
 >>
->>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
->>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
 >
-> [...]
->>>
->>> @@ -43,3 +44,14 @@
->>>   &scif0 {
->>>          status = "okay";
->>>   };
->>> +
->>> +&avb {
->>> +       renesas,no-ether-link;
->>> +       phy-handle = <&phy0>;
->>> +       status = "okay";
->>> +
->>> +       phy0: ethernet-phy@0 {
->>> +               rxc-skew-ps = <1500>;
->>> +               reg = <0>;
->>
->>
->> Any specific reason why you don't want to wire up the interrupt?
->>
->>                  interrupt-parent = <&gpio2>;
+> Ok.
 >
+>> Why do you need power and current? Can't you calculate power?
+>>
 >
->    I thought it's quite obvious -- we don't have GPIOs yet, and GPIOs seem
-> to require PFC.
+> These are different parameters of the device. They got different configuration
+> registers and descriptions:
+> max_power* - ... This value also includes the power consumption of a
+> permanently attached peripheral if the hub is configured as a compound
+> device, and the embedded peripheral reports 0mA in its descriptors.
+> max_current* - ... This value does NOT include the power consumption of a
+> permanently attached peripheral if the hub is configured as a compound
+> device.
 
-Of course. And these can be added later.
+Then the names here should somehow reflect the above. Perhaps
+"composite-current" and "hub-current" or something like that.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>
+> Additionally as you can see, they both are measured in "mA", so it isn't
+> a real physical power.
 
-Gr{oetje,eeting}s,
+Well, I can't because there's no units.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
