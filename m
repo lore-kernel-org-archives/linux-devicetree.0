@@ -1,7 +1,7 @@
 From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 06/12] ARM: dts: sun8i: orangepi-lite: Fix node with unit name and no reg property
-Date: Thu, 21 Sep 2017 19:21:45 +0200
-Message-ID: <20170921172151.29779-7-clabbe.montjoie@gmail.com>
+Subject: [PATCH 12/12] ARM: sun8i: a83t: Fix simple-bus unit address format error
+Date: Thu, 21 Sep 2017 19:21:51 +0200
+Message-ID: <20170921172151.29779-13-clabbe.montjoie@gmail.com>
 References: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
@@ -10,40 +10,44 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripa
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch fix the warning "xxx has a unit name, but no reg property" by
-removing "@0" from such node.
+This patch remove leading 0 of unit address and so remove
+lots of warning when building DT with W=1.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts | 6 +++---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
-index 9b47a0def740..a70a1daf4e2c 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
-@@ -141,19 +141,19 @@
- };
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 7f99ef37f61f..dd6a393725c6 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -248,7 +248,7 @@
+ 			status = "disabled";
+ 		};
  
- &pio {
--	leds_opc: led_pins@0 {
-+	leds_opc: led_pins {
- 		pins = "PA15";
- 		function = "gpio_out";
- 	};
- };
+-		usb_otg: usb@01c19000 {
++		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-a83t-musb",
+ 				     "allwinner,sun8i-a33-musb";
+ 			reg = <0x01c19000 0x0400>;
+@@ -436,7 +436,7 @@
+ 			status = "disabled";
+ 		};
  
- &r_pio {
--	leds_r_opc: led_pins@0 {
-+	leds_r_opc: led_pins {
- 		pins = "PL10";
- 		function = "gpio_out";
- 	};
+-		uart0: serial@01c28000 {
++		uart0: serial@1c28000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x01c28000 0x400>;
+ 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+@@ -447,7 +447,7 @@
+ 			status = "disabled";
+ 		};
  
--	sw_r_opc: key_pins@0 {
-+	sw_r_opc: key_pins {
- 		pins = "PL3";
- 		function = "gpio_in";
- 	};
+-		uart1: serial@01c28400 {
++		uart1: serial@1c28400 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x01c28400 0x400>;
+ 			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.13.5
