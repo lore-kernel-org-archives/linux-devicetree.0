@@ -1,87 +1,84 @@
-From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v9 0/7] Add support for Qualcomm A53 CPU clock
-Date: Thu, 21 Sep 2017 19:49:33 +0300
-Message-ID: <20170921164940.20343-1-georgi.djakov@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v9 3/7] mailbox: qcom: Move the apcs struct into a separate header
+Date: Thu, 21 Sep 2017 19:49:36 +0300
+Message-ID: <20170921164940.20343-4-georgi.djakov@linaro.org>
+References: <20170921164940.20343-1-georgi.djakov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170921164940.20343-1-georgi.djakov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the A53 CPU clock on MSM8916 platforms
-and allows scaling of the CPU frequency on msm8916 based platforms.
+Move the structure shared by the APCS IPC device and its subdevices
+into a separate header file.
 
-Changes since v8 (https://lkml.org/lkml/2017/6/23/476)
- * Converted APCS mailbox driver to use regmap and to populate child
- platform devices that will handle the rest of the functionality
- provided by APCS block.
- * Picked Rob's Ack for the PLL binding.
- * Changed the APCS binding and put it into a separate patch.
- * Addressed review comments.
- * Minor changes.
-
-Changes since v7 (https://lkml.org/lkml/2016/10/31/296)
- * Add the APCS clock controller to the APCS driver to expose both the
- mailbox and clock controller functionality as discussed earlier:
- https://lkml.org/lkml/2016/11/14/860
- * Changed the a53pll compatible string as suggested by Rob.
-
-Changes since v6 (https://lkml.org/lkml/2016/9/7/347)
- * Addressed various comments from Stephen Boyd
-
-Changes since v5 (https://lkml.org/lkml/2016/2/1/407)
- * Rebase to clk-next and update according to the recent API changes.
-
-Changes since v4 (https://lkml.org/lkml/2015/12/14/367)
- * Convert to builtin drivers as now __clk_lookup() is used
-
-Changes since v3 (https://lkml.org/lkml/2015/8/12/585)
- * Split driver into two parts - and separate A53 PLL and
-   A53 clock controller drivers.
- * Drop the safe switch hook patch. Add a clock notifier in
-   the clock provider to handle switching via safe mux and
-   divider configuration.
-
-Changes since v2 (https://lkml.org/lkml/2015/7/24/526)
- * Drop gpll0_vote patch.
- * Switch to the new clk_hw_* APIs.
- * Rebase to the current clk-next.
-
-Changes since v1 (https://lkml.org/lkml/2015/6/12/193)
- * Drop SR2 PLL patch, as it is already applied.
- * Add gpll0_vote rate propagation patch.
- * Update/rebase patches to the current clk-next.
-
-
-Georgi Djakov (7):
-  mailbox: qcom: Convert APCS IPC driver to use regmap
-  mailbox: qcom: Populate APCS child platform devices
-  mailbox: qcom: Move the apcs struct into a separate header
-  clk: qcom: Add A53 PLL support
-  clk: qcom: Add regmap mux-div clocks support
-  dt-bindings: clock: Document qcom,apcs binding
-  clk: qcom: Add APCS clock controller support
-
- .../devicetree/bindings/clock/qcom,a53pll.txt      |  22 ++
- .../devicetree/bindings/clock/qcom,apcs.txt        |  27 +++
- drivers/clk/qcom/Kconfig                           |  21 ++
- drivers/clk/qcom/Makefile                          |   3 +
- drivers/clk/qcom/a53-pll.c                         | 107 ++++++++++
- drivers/clk/qcom/apcs-msm8916.c                    | 172 +++++++++++++++
- drivers/clk/qcom/clk-regmap-mux-div.c              | 237 +++++++++++++++++++++
- drivers/clk/qcom/clk-regmap-mux-div.h              |  54 +++++
- drivers/mailbox/qcom-apcs-ipc-mailbox.c            |  36 ++--
- include/linux/mailbox/qcom-apcs.h                  |  34 +++
- 10 files changed, 700 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,apcs.txt
- create mode 100644 drivers/clk/qcom/a53-pll.c
- create mode 100644 drivers/clk/qcom/apcs-msm8916.c
- create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.c
- create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.h
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 11 +----------
+ include/linux/mailbox/qcom-apcs.h       | 34 +++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 10 deletions(-)
  create mode 100644 include/linux/mailbox/qcom-apcs.h
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index fd9055eacf42..50c7f6c54b74 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -20,16 +20,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/mailbox_controller.h>
+-
+-#define QCOM_APCS_IPC_BITS	32
+-
+-struct qcom_apcs_ipc {
+-	struct mbox_controller mbox;
+-	struct mbox_chan mbox_chans[QCOM_APCS_IPC_BITS];
+-
+-	struct regmap *regmap;
+-	unsigned long offset;
+-};
++#include <linux/mailbox/qcom-apcs.h>
+ 
+ static const struct regmap_config apcs_regmap_config = {
+ 	.reg_bits = 32,
+diff --git a/include/linux/mailbox/qcom-apcs.h b/include/linux/mailbox/qcom-apcs.h
+new file mode 100644
+index 000000000000..7e48fa2372dc
+--- /dev/null
++++ b/include/linux/mailbox/qcom-apcs.h
+@@ -0,0 +1,34 @@
++/*
++ * Copyright (c) 2017, Linaro Limited
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _LINUX_QCOM_APCS_H_
++#define _LINUX_QCOM_APCS_H_
++
++#define QCOM_APCS_IPC_BITS	32
++
++/**
++ * struct qcom_apcs_ipc - APCS shared struct
++ *
++ * @mbox: mailbox controller
++ * @mbox_chans: array of the available communication channels
++ * @offset: mailbox IPC register offset
++ * @regmap: register map used to access APCS registers
++ */
++struct qcom_apcs_ipc {
++	struct mbox_controller mbox;
++	struct mbox_chan mbox_chans[QCOM_APCS_IPC_BITS];
++	unsigned long offset;
++	struct regmap *regmap;
++};
++
++#endif /* _LINUX_QCOM_APCS_H_ */
