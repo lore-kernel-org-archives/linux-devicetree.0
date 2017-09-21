@@ -1,28 +1,71 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 1/2] uio: dt-bindings: document binding for
- uio-pdrv-genirq
-Date: Thu, 21 Sep 2017 09:24:14 +0200
-Message-ID: <20170921072414.GC4588@kroah.com>
-References: <20170921005326.30490-1-chris.packham@alliedtelesis.co.nz>
- <20170921005326.30490-2-chris.packham@alliedtelesis.co.nz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] arm64: dts: marvell: Enable Armada-8040-DB CPS SPI1
+Date: Thu, 21 Sep 2017 09:36:43 +0200
+Message-ID: <20170921073643.5677-1-miquel.raynal@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170921005326.30490-2-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christine Gharzuzi <chrisg-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 12:53:25PM +1200, Chris Packham wrote:
-> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+From: Christine Gharzuzi <chrisg-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-I can't take patches without any changelog text, sorry.
+Add the DT node enabling Armada-8040-DB CPS SPI controller driver.
 
-thanks,
+Add the SPI NAND flash device connected on the bus. Fill the MTD
+partitions layout.
 
-greg k-h
+Signed-off-by: Christine Gharzuzi <chrisg-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm64/boot/dts/marvell/armada-8040-db.dts | 31 ++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+index 0d7b2ae46610..f5be6ffe0106 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+@@ -216,6 +216,37 @@
+ 	clock-frequency = <100000>;
+ };
+ 
++&cps_spi1 {
++	status = "okay";
++
++	spi-flash@0 {
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		compatible = "jedec,spi-nor";
++		reg = <0x0>;
++		spi-max-frequency = <20000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "Boot";
++				reg = <0x0 0x200000>;
++			};
++			partition@200000 {
++				label = "Filesystem";
++				reg = <0x200000 0xd00000>;
++			};
++			partition@d00000 {
++				label = "Boot_2nd";
++				reg = <0xf00000 0x100000>;
++			};
++		};
++	};
++};
++
+ /* CON4 on CP1 expansion */
+ &cps_sata0 {
+ 	status = "okay";
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
