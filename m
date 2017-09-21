@@ -1,32 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: nand: denali: reduce the register space in
- the example
-Date: Thu, 21 Sep 2017 17:55:09 -0500
-Message-ID: <20170921225509.u5x7sxenxzx3lndm@rob-hp-laptop>
-References: <1505373456-24047-1-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: fix vendor prefix for Abracon
+Date: Thu, 21 Sep 2017 17:57:35 -0500
+Message-ID: <20170921225735.qkxpbjmiip5krhvw@rob-hp-laptop>
+References: <20170914213938.4980-1-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1505373456-24047-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170914213938.4980-1-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 14, 2017 at 04:17:36PM +0900, Masahiro Yamada wrote:
-> This example allocates too much for register regions.  Especially,
-> there are only two registers in the "nand_data" interface of this
-> hardware (ADDR: 0x00, DATA: 0x10).
+On Thu, Sep 14, 2017 at 11:39:38PM +0200, Alexandre Belloni wrote:
+> Commit 446810f2dd41 ("of: add vendor prefix for Abracon Corporation")
+> claimed that "abcn" was used as the vendor prefix while in fact "abracon"
+> was used in the subsequent commits. It is also the only prefix used in the
+> tree.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 > ---
-> 
->  Documentation/devicetree/bindings/mtd/denali-nand.txt | 2 +-
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied with alphabetical ordering fixed.
+
+Rob
