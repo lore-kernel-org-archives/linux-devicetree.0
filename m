@@ -1,59 +1,100 @@
-From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 0/7] AXP803 AC/Battery support
-Date: Thu, 21 Sep 2017 15:46:21 +0100
-Message-ID: <20170921154621.0000328d@huawei.com>
-References: <20170920151814.22461-1-icenowy@aosc.io>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: smccc-call: Use r12 to route secure monitor
+ calls on TI platforms
+Date: Thu, 21 Sep 2017 15:47:19 +0100
+Message-ID: <20170921144719.GA31434@leverpostej>
+References: <20170918205005.30235-1-afd@ti.com>
+ <20170919141953.GH30715@leverpostej>
+ <7390d268-5c72-b263-f153-fbf0d728e05e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920151814.22461-1-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7390d268-5c72-b263-f153-fbf0d728e05e-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Sep 2017 23:18:07 +0800
-Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+On Tue, Sep 19, 2017 at 10:07:39AM -0500, Andrew F. Davis wrote:
+> On 09/19/2017 09:19 AM, Mark Rutland wrote:
+> > On Mon, Sep 18, 2017 at 03:50:04PM -0500, Andrew F. Davis wrote:
+> >> We need a way to signal that a call is for the OP-TEE SM and not for
+> >> the ROM SM in a way that is safe for the ROM SM, in case it is still
+> >> present. We do this by putting a value of 0x200 in r12 when the call
+> >> is for OP-TEE or any other ARM by modifying the SMCCC caller function.
+> > 
+> > So IIUC, you have a secure monitor which is not SMCCC compliant, but you
+> > want to use it at the same time as OP-TEE, which is SMCCC compliant.
+> 
+> Not at the same time, our old secure monitor is in ROM, it will be
+> present anytime OP-TEE is not installed. OP-TEE is not mandatory, and so
+> any call to the secure side must be safe for both secure monitors.
+> 
+> > It would be much better to have a new version of that monitor that was
+> > SMCCC compliant, and have to update the code for that, than to have to
+> > move OP-TEE away from standards compliance.
+> 
+> The current monitor is part of ROM and dates back to OMAP3 days, so
+> looks to pre-date ARM standardizing the SMCCC by several years, so I
+> hope our lack of compliance here can be forgiven here..
 
-> The AXP803 PMIC, used by most Allwinner A64 boards, features 3 power inputs:
-> AC, USB and Battery.
-> 
-> This patchset adds support for the AC and Battery supplies, which is useful
-> for the boards from Pine64 (Pine64, SoPine w/ baseboard model A, Pinebook).
-> 
-> The USB supply is not yet supported in this patchset because it's not
-> present on Pine series boards.
-> 
-> In order to enable battery monitoring the ADC for battery is also enabled
-> for AXs.
-> 
-> In order to enable battery monitoring the ADC for battery is also enabled
-> for AXP803.
+For the existing ROM, as that stands, certainly. I appreciate it's older
+than SMCCC.
 
-I'll go with the obvious question...
-
-Why an RFC rather than a standard patch submission? I'm not immediately
-seeing what is controversial!
-
-Jonathan
-
+> Luckily, OP-TEE does not have to move away from compliance to support
+> our platforms, it only needs to check for this sentinel value in r12,
+> which it already has support upstream for:
 > 
-> Icenowy Zheng (7):
->   dt-bindings: add compatibles for AXP803 Battery/USB power supplies
->   iio: adc: axp20x-adc: allow to skip ADC rate setup now
->   iio: adc: axp20x-adc: add support for AXP803
->   power: supply: axp20x-battery: support AXP803
->   mfd: axp20x: add cells for AXP803 ADC/AC Power/Battery
->   arm64: allwinner: a64: add power supply nodes in AXP803 DTSI
->   arm64: allwinner: a64: enable AC and Battery for Pine64
+> https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/plat-ti/sm_platform_handler_a15.c#L34
+
+That *is* a move away from compliance, as an SMCCC-compliant TEE should
+not look at r12, and an SMCCC-compliant client can (and will) leave
+arbitrary values in r12.
+
+[...]
+
+> >> If OP-TEE is present and we make a legacy style SMC call, r12 will
+> >> not be set to 0x200, and OP-TEE will emulate the functionality that
+> >> the call is requesting.
+> > 
+> > AFAICT this means that OP-TEE completely replaces your existing monitor.
 > 
->  .../bindings/power/supply/axp20x_battery.txt       |   1 +
->  .../bindings/power/supply/axp20x_usb_power.txt     |   1 +
->  arch/arm64/boot/dts/allwinner/axp803.dtsi          |  15 +++
->  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |   8 ++
->  drivers/iio/adc/axp20x_adc.c                       | 114 ++++++++++++++++++++-
->  drivers/mfd/axp20x.c                               |  11 ++
->  drivers/power/supply/axp20x_battery.c              |  88 ++++++++++++++--
->  7 files changed, 226 insertions(+), 12 deletions(-)
+> Correct.
 > 
+> > Please fix this properly. Implement SMCCC-compliant versions of those
+> > calls you wish to retain, and come up with a new binding for those.
+> > Describe that in the DT for systems which have OP-TEE providing these
+> > services.
+> 
+> This might not be possible, these old SMCs are made very early and are
+> used all over our existing platform code:
+> 
+> git grep "smc" -- arch/arm/mach-omap2
+
+Given that one can build a multi-platform kernel, parts of the DT have
+already been parsed (in order to determine that the machine is an OMAP2)
+before any of this is executed.
+
+These are not too early to preclude runtime switching based on the DT.
+
+I can appreciate that it's a pain to have to alter these, but it's
+certainly possible, and it would eliminate the problem rather than
+spreading it further.
+
+> > Systems with the old monitor should have that descrbied in their DT, and
+> > not OP-TEE.
+> 
+> All systems have the old monitor by default, OP-TEE is the new and
+> optional case, I think its node should be the entity modified when
+> adding something OP-TEE specific like this.
+
+... and so the DT can also be altered to describe a new SMCCC-compliant
+set of OMAP2 SMCs in this case.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
