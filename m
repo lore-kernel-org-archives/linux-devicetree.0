@@ -1,54 +1,63 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v5 4/4] ARM: configs: stm32: Add DMAMUX support in STM32
- defconfig
-Date: Thu, 21 Sep 2017 17:29:21 +0200
-Message-ID: <1506007761-11621-5-git-send-email-pierre-yves.mordret@st.com>
-References: <1506007761-11621-1-git-send-email-pierre-yves.mordret@st.com>
+From: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v5 0/4] Add STM32 DMAMUX support
+Date: Thu, 21 Sep 2017 17:29:17 +0200
+Message-ID: <1506007761-11621-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1506007761-11621-1-git-send-email-pierre-yves.mordret@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba
- Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DMAMUX support in STM32 defconfig file
+This patchset adds support for the STM32 DMA multiplexer.
+It allows to map any peripheral DMA request to any channel of the product
+DMAs.
+This IP has been introduced with STM32H7 SoC.
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 ---
  Version history:
     v5:
+        * Set selected channel ID within a lock to avoid race condition.
+          Release if any error occurs
     v4:
+        * Add multi-master ability for STM32 DMAMUX
+        * Get rid of st,dmamux property and custom API between STM32
+          DMAMUX and DMA. Bindings has changed.
+          DMAMUX will read DMA masters from Device Tree from now on.
+          Merely one DMAMUX node is needed now.
+        * Only STM32 DMA are allowed to be connected onto DMAMUX
+        * channelID is computed locally within the driver and crafted in
+          dma_psec to be passed toward DMA master.
+          DMAMUX router sorts out which DMA master will serve the
+          request automatically.
+        * This version forbids the use of DMA in standalone and DMAMUX at
+          the same time : all clients need to be connected either on DMA
+          or DMAMUX ; no mix up
     v3:
-    v2:
-        * None
+        * change compatible to st,stm32h7-dmamux to be mode Soc specific
+        * add verbosity in dma-cells
 ---
----
- arch/arm/configs/stm32_defconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-index 90e5c46..988f395 100644
---- a/arch/arm/configs/stm32_defconfig
-+++ b/arch/arm/configs/stm32_defconfig
-@@ -67,6 +67,7 @@ CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_STM32=y
- CONFIG_DMADEVICES=y
- CONFIG_STM32_DMA=y
-+CONFIG_STM32_DMAMUX=y
- CONFIG_IIO=y
- CONFIG_STM32_ADC_CORE=y
- CONFIG_STM32_ADC=y
+Pierre-Yves MORDRET (4):
+  dt-bindings: Document the STM32 DMAMUX bindings
+  dmaengine: Add STM32 DMAMUX driver
+  dt-bindings: stm32-dma: add a property to handle STM32 DMAMUX
+  ARM: configs: stm32: Add DMAMUX support in STM32 defconfig
+
+ .../devicetree/bindings/dma/stm32-dma.txt          |   4 +-
+ .../devicetree/bindings/dma/stm32-dmamux.txt       |  84 ++++++
+ arch/arm/configs/stm32_defconfig                   |   1 +
+ drivers/dma/Kconfig                                |   9 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/stm32-dmamux.c                         | 327 +++++++++++++++++++++
+ 6 files changed, 425 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/stm32-dmamux.txt
+ create mode 100644 drivers/dma/stm32-dmamux.c
+
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
