@@ -1,42 +1,32 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] dt-bindings: timer: renesas,cmt: Fix SoC-specific
- compatible values
-Date: Thu, 21 Sep 2017 18:10:20 -0500
-Message-ID: <20170921231020.jehitdqvlpkxw6dp@rob-hp-laptop>
-References: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
- <1505742407-31576-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH] nvmem: sunxi-sid: add support for A64/H5's SID controller
+Date: Thu, 21 Sep 2017 18:12:40 -0500
+Message-ID: <20170921231240.tsoapk6zlwcysiud@rob-hp-laptop>
+References: <20170918154204.54427-1-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1505742407-31576-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20170918154204.54427-1-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18, 2017 at 03:46:41PM +0200, Geert Uytterhoeven wrote:
-> While the new family-specific compatible values introduced by commit
-> 6f54cc1adcc8957f ("devicetree: bindings: R-Car Gen2 CMT0 and CMT1
-> bindings") use the recommended order "<vendor>,<family>-<device>", the
-> new SoC-specific compatible values still use the old and deprecated
-> order "<vendor>,<device>-<soc>".
+On Mon, Sep 18, 2017 at 11:42:04PM +0800, Icenowy Zheng wrote:
+> Allwinner A64/H5 SoCs come with a SID controller like the one in H3, but
+> without the silicon bug that makes the initial value at 0x200 wrong, so
+> the value at 0x200 can be directly read.
 > 
-> Switch the SoC-specific compatible values to the recommended order while
-> there are no upstream users of these compatible values yet.
+> Add support for this kind of SID controller.
 > 
-> Fixes: 7f03a0ecfdc786c1 ("devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings")
-> Fixes: 63d9e8ca0dd4bfa4 ("devicetree: bindings: Deprecate property, update example")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
-> v3:
->   - New.
-> ---
->  .../devicetree/bindings/timer/renesas,cmt.txt      | 24 +++++++++++-----------
->  1 file changed, 12 insertions(+), 12 deletions(-)
+>  Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt | 1 +
+>  drivers/nvmem/sunxi_sid.c                                       | 6 ++++++
+>  2 files changed, 7 insertions(+)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
