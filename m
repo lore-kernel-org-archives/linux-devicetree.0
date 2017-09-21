@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v4 5/7] soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
-Date: Thu, 21 Sep 2017 16:26:55 +0800
-Message-ID: <c5e8c585437623b7eae1a95e5d3632da339fdd3d.1505980364.git.sean.wang@mediatek.com>
+Subject: [PATCH v4 7/7] soc: mediatek: pwrap: fixup warnings from coding style
+Date: Thu, 21 Sep 2017 16:26:57 +0800
+Message-ID: <378110a7db137dd89b63b9f7bfd4ec6da2c2395a.1505980364.git.sean.wang@mediatek.com>
 References: <cover.1505980364.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,99 +14,71 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Add MediaTek MT6380 regulator becoming one of PMIC wrapper slave
-and also add extra new regmap_config of 32-bit mode for MT6380
-since old regmap_config of 16-bit mode can't be fit into the need.
+fixup those warnings such as lines over 80 words and parenthesis
+alignment which would be complained by checkpatch.pl.
 
-Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-pmic-wrap.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index 9c6d855..5e3a41b 100644
+index 567d038..2d13cf6 100644
 --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
 +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -501,6 +501,7 @@ struct pmic_wrapper;
- struct pwrap_slv_type {
- 	const u32 *dew_regs;
- 	enum pmic_type type;
-+	const struct regmap_config *regmap;
- 	/* pwrap operations are highly associated with the PMIC types,
- 	 * so the pointers added increases flexibility allowing determination
- 	 * which type is used by the detection through device tree.
-@@ -1109,7 +1110,7 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static const struct regmap_config pwrap_regmap_config = {
-+static const struct regmap_config pwrap_regmap_config16 = {
- 	.reg_bits = 16,
- 	.val_bits = 16,
- 	.reg_stride = 2,
-@@ -1118,9 +1119,19 @@ static const struct regmap_config pwrap_regmap_config = {
- 	.max_register = 0xffff,
- };
- 
-+static const struct regmap_config pwrap_regmap_config32 = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.reg_read = pwrap_regmap_read,
-+	.reg_write = pwrap_regmap_write,
-+	.max_register = 0xffff,
-+};
-+
- static const struct pwrap_slv_type pmic_mt6323 = {
- 	.dew_regs = mt6323_regs,
- 	.type = PMIC_MT6323,
-+	.regmap = &pwrap_regmap_config16,
- 	.pwrap_read = pwrap_read16,
- 	.pwrap_write = pwrap_write16,
- };
-@@ -1128,6 +1139,7 @@ static const struct pwrap_slv_type pmic_mt6323 = {
- static const struct pwrap_slv_type pmic_mt6380 = {
- 	.dew_regs = NULL,
- 	.type = PMIC_MT6380,
-+	.regmap = &pwrap_regmap_config32,
- 	.pwrap_read = pwrap_read32,
- 	.pwrap_write = pwrap_write32,
- };
-@@ -1135,6 +1147,7 @@ static const struct pwrap_slv_type pmic_mt6380 = {
- static const struct pwrap_slv_type pmic_mt6397 = {
- 	.dew_regs = mt6397_regs,
- 	.type = PMIC_MT6397,
-+	.regmap = &pwrap_regmap_config16,
- 	.pwrap_read = pwrap_read16,
- 	.pwrap_write = pwrap_write16,
- };
-@@ -1144,9 +1157,15 @@ static const struct of_device_id of_slave_match_tbl[] = {
- 		.compatible = "mediatek,mt6323",
- 		.data = &pmic_mt6323,
- 	}, {
-+		/* The MT6380 slave device is directly pointed to the regulator
-+		 * device which is different from the cases MT6323 and MT6397
-+		 * where they're one kind of MFDs.
-+		 */
-+		.compatible = "mediatek,mt6380-regulator",
-+		.data = &pmic_mt6380,
-+	}, {
- 		.compatible = "mediatek,mt6397",
- 		.data = &pmic_mt6397,
--	}, {
- 		/* sentinel */
+@@ -1057,7 +1057,8 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+ 	/* wait for cipher data ready@PMIC */
+ 	ret = pwrap_wait_for_state(wrp, pwrap_is_pmic_cipher_ready);
+ 	if (ret) {
+-		dev_err(wrp->dev, "timeout waiting for cipher data ready@PMIC\n");
++		dev_err(wrp->dev,
++			"timeout waiting for cipher data ready@PMIC\n");
+ 		return ret;
  	}
- };
-@@ -1325,7 +1344,7 @@ static int pwrap_probe(struct platform_device *pdev)
+ 
+@@ -1458,23 +1459,27 @@ static int pwrap_probe(struct platform_device *pdev)
+ 		if (IS_ERR(wrp->bridge_base))
+ 			return PTR_ERR(wrp->bridge_base);
+ 
+-		wrp->rstc_bridge = devm_reset_control_get(wrp->dev, "pwrap-bridge");
++		wrp->rstc_bridge = devm_reset_control_get(wrp->dev,
++							  "pwrap-bridge");
+ 		if (IS_ERR(wrp->rstc_bridge)) {
+ 			ret = PTR_ERR(wrp->rstc_bridge);
+-			dev_dbg(wrp->dev, "cannot get pwrap-bridge reset: %d\n", ret);
++			dev_dbg(wrp->dev,
++				"cannot get pwrap-bridge reset: %d\n", ret);
+ 			return ret;
+ 		}
+ 	}
+ 
+ 	wrp->clk_spi = devm_clk_get(wrp->dev, "spi");
+ 	if (IS_ERR(wrp->clk_spi)) {
+-		dev_dbg(wrp->dev, "failed to get clock: %ld\n", PTR_ERR(wrp->clk_spi));
++		dev_dbg(wrp->dev, "failed to get clock: %ld\n",
++			PTR_ERR(wrp->clk_spi));
+ 		return PTR_ERR(wrp->clk_spi);
+ 	}
+ 
+ 	wrp->clk_wrap = devm_clk_get(wrp->dev, "wrap");
+ 	if (IS_ERR(wrp->clk_wrap)) {
+-		dev_dbg(wrp->dev, "failed to get clock: %ld\n", PTR_ERR(wrp->clk_wrap));
++		dev_dbg(wrp->dev, "failed to get clock: %ld\n",
++			PTR_ERR(wrp->clk_wrap));
+ 		return PTR_ERR(wrp->clk_wrap);
+ 	}
+ 
+@@ -1519,8 +1524,9 @@ static int pwrap_probe(struct platform_device *pdev)
+ 	pwrap_writel(wrp, wrp->master->int_en_all, PWRAP_INT_EN);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	ret = devm_request_irq(wrp->dev, irq, pwrap_interrupt, IRQF_TRIGGER_HIGH,
+-			"mt-pmic-pwrap", wrp);
++	ret = devm_request_irq(wrp->dev, irq, pwrap_interrupt,
++			       IRQF_TRIGGER_HIGH,
++			       "mt-pmic-pwrap", wrp);
  	if (ret)
  		goto err_out2;
  
--	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, &pwrap_regmap_config);
-+	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, wrp->slave->regmap);
- 	if (IS_ERR(wrp->regmap)) {
- 		ret = PTR_ERR(wrp->regmap);
- 		goto err_out2;
 -- 
 2.7.4
