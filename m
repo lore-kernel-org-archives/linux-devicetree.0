@@ -1,65 +1,49 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v4 0/4] Add STM32 MDMA driver
-Date: Thu, 21 Sep 2017 10:01:17 +0200
-Message-ID: <07712135-3840-d1da-c087-ca95300f96da@st.com>
-References: <1503671466-32029-1-git-send-email-pierre-yves.mordret@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 01/18] arm: shmobile: Document Kingfisher board DT
+ bindings
+Date: Thu, 21 Sep 2017 10:08:56 +0200
+Message-ID: <20170921080856.GB15749@verge.net.au>
+References: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <20170920133945.6yfeio56lohduvvi@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503671466-32029-1-git-send-email-pierre-yves.mordret@st.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170920133945.6yfeio56lohduvvi@rob-hp-laptop>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-Gentle ping for driver review submitted on August 25th.
-
-Thanks
-Regards
-
-On 08/25/2017 04:31 PM, Pierre-Yves MORDRET wrote:
-> This patchset adds support for the STM32 MDMA controller.
-> The Master Direct memory access (MDMA) provides high-speed data transfer
-> between memory and memory or between peripherals and memory.
-> Contrary to STM32 DMA, the STM32 MDMA controller supports hardware LLI and
-> uses a larger integrated FIFO (128 vs 16 bytes)
-> ---
->   Version history:
->      v4:
->          * Add safe getter/setter macros
->          * forbid DMA preparation in cyclic mode yet
->          * Optimize burst and memory width for memcpy
->          * replace of_property_xx by device_property_xx
->      v3:
->          * Update header template
->          * Unsigned expression compared with zero
->          * Rework stm32_mdma_get_max_width
->          * moved to src/dst case where they are used in set_xfer
->          * Change of_property_* with device_property_*
->          * Add dev_warn whether default value is used
->          * Indentation
->          * Add MODULE_*
->      v2:
->          * change compatible into st,stm32h7-mdma to be more SoC specific
->          * Add MDMA support in DT for H7
->          * Add MDMA support in STM32 defconfig
-> ---
-> Pierre-Yves MORDRET (4):
->   dt-bindings: Document the STM32 MDMA bindings
->   dmaengine: Add STM32 MDMA driver
->   ARM: dts: stm32: Add MDMA support for STM32H743 SoC
->   ARM: configs: stm32: Add MDMA support in STM32 defconfig
+On Wed, Sep 20, 2017 at 03:52:58PM -0500, Rob Herring wrote:
+> On Sat, Sep 16, 2017 at 09:48:47PM +0300, Vladimir Barinov wrote:
+> > Add Kingfisher Device tree bindings Documentation, listing it as a
+> > supported board.
+> > Kingfisher is the H3ULCB/M3ULCB extension board.
+> > 
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> > ---
+> > Changes in version 2:
+> > - added own compatible value "shimafuji,kingfisher"
+> > Changes in version 3:
+> > - seperate Kingfisher entry from H3ULCB/M3ULCB
+> > 
+> >  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+> > index ae75cb3..5921ac2 100644
+> > --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> > +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> > @@ -76,6 +76,8 @@ Boards:
+> >      compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7743"
+> >    - iWave Systems RZ/G1M Qseven System On Module (iW-RainboW-G20M-Qseven)
+> >      compatible = "iwave,g20m", "renesas,r8a7743"
+> > +  - Kingfisher (SBEV-RCAR-KF-M03)
+> > +    compatible = "shimafuji,kingfisher";
 > 
->  .../devicetree/bindings/dma/stm32-mdma.txt         |   94 ++
->  arch/arm/boot/dts/stm32h743.dtsi                   |   10 +
->  arch/arm/configs/stm32_defconfig                   |    1 +
->  drivers/dma/Kconfig                                |   12 +
->  drivers/dma/Makefile                               |    1 +
->  drivers/dma/stm32-mdma.c                           | 1618 ++++++++++++++++++++
->  6 files changed, 1736 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
->  create mode 100644 drivers/dma/stm32-mdma.c
+> Not consistent with the ';'. Otherwise,
 > 
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Thanks, applied with the ';' removed.
