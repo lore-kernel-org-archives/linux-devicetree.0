@@ -1,70 +1,44 @@
 From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 04/12] ARM: dts: nanopi: Fix node with unit name and no reg
- property
-Date: Thu, 21 Sep 2017 19:21:43 +0200
-Message-ID: <20170921172151.29779-5-clabbe.montjoie@gmail.com>
+Subject: [PATCH 11/12] arm64: allwinner: a64: Fix node with unit name and no reg property
+Date: Thu, 21 Sep 2017 19:21:50 +0200
+Message-ID: <20170921172151.29779-12-clabbe.montjoie@gmail.com>
 References: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 This patch fix the warning "xxx has a unit name, but no reg property" by
-removing "@0" from such node.
+removing "@0" from such node
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- arch/arm/boot/dts/sun8i-h3-nanopi.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi b/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
-index c6decee41a27..7646e331bd29 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
-@@ -81,7 +81,7 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&sw_r_npi>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 662e8b7981b5..b02a8476b0c8 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -347,7 +347,7 @@
+ 				function = "spi1";
+ 			};
  
--		k1@0 {
-+		k1 {
- 			label = "k1";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-@@ -108,19 +108,19 @@
- };
+-			uart0_pins_a: uart0@0 {
++			uart0_pins_a: uart0 {
+ 				pins = "PB8", "PB9";
+ 				function = "uart0";
+ 			};
+@@ -571,7 +571,7 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
- &pio {
--	leds_npi: led_pins@0 {
-+	leds_npi: led_pins {
- 		pins = "PA10";
- 		function = "gpio_out";
- 	};
- };
- 
- &r_pio {
--	leds_r_npi: led_pins@0 {
-+	leds_r_npi: led_pins {
- 		pins = "PL10";
- 		function = "gpio_out";
- 	};
- 
--	sw_r_npi: key_pins@0 {
-+	sw_r_npi: key_pins {
- 		pins = "PL3";
- 		function = "gpio_in";
- 	};
+-			r_rsb_pins: rsb@0 {
++			r_rsb_pins: rsb {
+ 				pins = "PL0", "PL1";
+ 				function = "s_rsb";
+ 			};
 -- 
 2.13.5
