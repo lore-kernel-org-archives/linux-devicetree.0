@@ -1,152 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 1/6] dt-bindings: update the
- Allwinner GPADC device tree binding for H3
-Date: Thu, 21 Sep 2017 21:32:11 +0200
-Message-ID: <20170921193211.pjsikkez5by46mfh@flea>
-References: <20170914145251.21784-1-icenowy@aosc.io>
- <20170914145251.21784-2-icenowy@aosc.io>
- <20170918073336.j7finend3g76chsu@flea.lan>
- <310CE549-B8CE-4C0C-95B1-B545E38BDAF5@aosc.io>
- <20170918083045.7bfiialtbm7w6i7j@flea.lan>
- <e73ead447af89031749e85207cac1e69@aosc.io>
- <20170920075223.jaeswlhcqgu4yhse@flea.home>
- <27449039-F0D4-4663-B596-C95D4408D471@aosc.io>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: Re: [v2,1/3] can: m_can: Make hclk optional
+Date: Thu, 21 Sep 2017 14:35:54 -0500
+Message-ID: <022598ec-8de7-5f3f-2bb4-f6320658725d@ti.com>
+References: <20170724225142.19975-2-fcooper@ti.com>
+ <6f574628-51cd-0db8-e5aa-e7ae4a9cf79a@ti.com>
+ <eb45fe94-c476-3919-603d-ff2a6b13487c@ti.com>
+ <895ab55a-fede-3a67-27aa-1ac1af9843d7@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xrpfzdegowdydefx"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <27449039-F0D4-4663-B596-C95D4408D471-h8G6r0blFSE@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <895ab55a-fede-3a67-27aa-1ac1af9843d7@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com
+Cc: "Kristo, Tero" <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP List <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---xrpfzdegowdydefx
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 20, 2017 at 08:04:02AM +0000, Icenowy Zheng wrote:
-> =E4=BA=8E 2017=E5=B9=B49=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-3:52:23, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
-=B0:
-> >On Mon, Sep 18, 2017 at 03:47:25PM +0000, icenowy-h8G6r0blFSE@public.gmane.org wrote:
-> >> =E5=9C=A8 2017-09-18 16:30=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=
-=BC=9A
-> >> > On Mon, Sep 18, 2017 at 03:36:43PM +0800, Icenowy Zheng wrote:
-> >> > > =E4=BA=8E 2017=E5=B9=B49=E6=9C=8818=E6=97=A5 GMT+08:00 =E4=B8=8B=
-=E5=8D=883:33:36, Maxime Ripard
-> >> > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
-> >> > > >On Thu, Sep 14, 2017 at 10:52:46PM +0800, Icenowy Zheng wrote:
-> >> > > >> Allwinner H3 features a thermal sensor like the one in A33,
-> >but has
-> >> > > >its
-> >> > > >> register re-arranged, the clock divider moved to CCU
-> >(originally the
-> >> > > >> clock divider is in ADC) and added a pair of bus clock and
-> >reset.
-> >> > > >>
-> >> > > >> Update the binding document to cover H3.
-> >> > > >>
-> >> > > >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >> > > >> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> > > >> ---
-> >> > > >> Changes in v4:
-> >> > > >> - Add nvmem calibration data (not yet used by the driver)
-> >> > > >> Changes in v3:
-> >> > > >> - Clock name changes.
-> >> > > >> - Example node name changes.
-> >> > > >> - Add interupts (not yet used by the driver).
-> >> > > >>
-> >> > > >>  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 30
-> >> > > >++++++++++++++++++++--
-> >> > > >>  1 file changed, 28 insertions(+), 2 deletions(-)
-> >> > > >>
-> >> > > >> diff --git
-> >a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> >> > > >b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> >> > > >> index badff3611a98..6c470d584bf9 100644
-> >> > > >> --- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> >> > > >> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> >> > > >> @@ -4,12 +4,26 @@ The Allwinner SoCs all have an ADC that can
-> >also
-> >> > > >act as a thermal sensor
-> >> > > >>  and sometimes as a touchscreen controller.
-> >> > > >>
-> >> > > >>  Required properties:
-> >> > > >> -  - compatible: "allwinner,sun8i-a33-ths",
-> >> > > >> +  - compatible: must contain one of the following
-> >compatibles:
-> >> > > >> +		- "allwinner,sun8i-a33-ths"
-> >> > > >> +		- "allwinner,sun8i-h3-ths"
-> >> > > >>    - reg: mmio address range of the chip,
-> >> > > >>    - #thermal-sensor-cells: shall be 0,
-> >> > > >>    - #io-channel-cells: shall be 0,
-> >> > > >>
-> >> > > >> -Example:
-> >> > > >> +Optional properties:
-> >> > > >> +  - nvmem-cells: A phandle to the calibration data provided
-> >by a
-> >> > > >nvmem device.
-> >> > > >> +                 If unspecified default values shall be used.
-> >> > > >> +  - nvmem-cell-names: Should be "calibration-data"
-> >> > > >
-> >> > > >I'd prefer to have which sensor it applies to here. It wouldn't
-> >change
-> >> > > >anything for the H3, but it definitely does for example for the
-> >A83t
-> >> > > >that has two sensors, one for each cluster, and one for the GPU,
-> >each
-> >> > > >with calibration data.
-> >> > > >
-> >> > > >What about cluster0-calibration?
-> >>=20
-> >> I prefer sensor0-calibration to sensor3-calibration now.
-> >> (Theortically the new generation THS can support up to 4 sensors)
-> >
-> >The mapping that explains what sensor0 means can change in the
-> >future. It's better to be explicit here, and just say upfront what
-> >it's about.
->=20
-> I think for some SoC (e.g. A64) there's no clear explain on
-> the functions of the sensors.
+On 09/21/2017 09:08 AM, Sekhar Nori wrote:
+> On Thursday 21 September 2017 06:01 AM, Franklin S Cooper Jr wrote:
+>>
+>>
+>> On 08/24/2017 03:00 AM, Sekhar Nori wrote:
+>>> + some OMAP folks and Linux OMAP list
+>>>
+>>> On Tuesday 25 July 2017 04:21 AM, Franklin Cooper wrote:
+>>>> Hclk is the MCAN's interface clock. However, for OMAP based devices such as
+>>>> DRA7 SoC family the interface clock is handled by hwmod. Therefore, this
+>>>> interface clock is managed by hwmod driver via pm_runtime_get and
+>>>> pm_runtime_put calls. Therefore, this interface clock isn't defined in DT
+>>>> and thus the driver shouldn't fail if this clock isn't found.
+>>>
+>>> I agree that hclk is defined as interface clock for M_CAN IP on DRA76x.
+>>>
+>>> However, there may be a need for the driver to know the value of hclk to
+>>> properly configure the RAM watchdog register which has a counter
+>>> counting down using hclk. Looks like the driver does not use the RAM
+>>> watchdog today. But if there is a need to configure it in future, it
+>>> might be a problem.
+>>
+>> Honestly the RAM watchdog seems like a fundamental design problem.
+>> This RAM watchdog seems to be used in case a request to access the
+>> message ram is made but it hangs for what ever reason. Its even more
+>> complicated since the Message RAM is external to the MCAN IP so its
+>> implementation or how its handled probably differs from device to
+>> device. From example say you do have this error it isn't clear how you
+>> would recover from it. A logically answer would be to reset the entire
+>> IP but that also assumes that Message RAM will be reset along with the
+>> ip which likely depends on each SoC.
+>>
+>> But if a readl/writel command hangs will the kernel eventually throw an
+>> error on its on or will the driver just hang? If it does hang can a
+>> driver in the ISR do something to properly terminate the driver or even
+>> recover from it?
+>>>
+>>> Is there a restriction in OMAP architecture against passing the
+>>> interface clock also in the 'clocks' property in DT. I have not tried it
+>>> myself, but wonder if you hit an issue that led to this patch.
+>>
+>> No but not passing the interface clock is typical.
+> 
+> Okay, then it sounds like it will just be easier to pass the hclk too?
+> 
+> So it can be used if needed in future and also so that the driver can
+> stay the same as today.
 
-It's documented in the user manual ("sensor0 located in the CPU, sensor1 and
-sensor2 located in the GPU"
-
-> In addition, in the THS controller the sensors has a explicit
-> sequence, and when referencing it in the DT the number is still
-> needed (in thermal zones).
-
-Yes, but that's something that can be made easier through defines too.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---xrpfzdegowdydefx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZxBO7AAoJEBx+YmzsjxAg6f4P/30UxRxlmMOxvj6Pb00SZ/R9
-pUnGUwcyWdLSvR/dp6sQC85b75OGsX9kxp0ntFITQ9Bx9CHbsZa29GGa+zKMRw1L
-ONcyRG3vt8bqUuwlXe6xIIWnUW5p5Gp/iIS2V1ZHT0d+vSha9MmldAO5RwvlK0NI
-vW90Q++EDGS/X2jmv/Qi8kh2gtf+ghREVMuN8Mgh/LPIXyJ2BcodvHGXZFIRZ91S
-rBTB4K9tZMl7CLaSJtlj7/hOuquUUfQUMD8ftbwyt0jbUJQA+NfkwmB2a3kPIVVz
-qIzr++Rhl+d5B2Ipi4gjh6UFN/Pvnka94d06HMzr534HaTKByyki6MvIuBKiLLVJ
-JpYIA4OAiEvkmBPf2JObFej0iyB3crbT9gVeau/f8eP11JwPDeqCFrd3yPVsbDtL
-XP/E4x+b217mjNWPx9mFRg4MNCKFR5om8Qyzhkp+F3EJu6TppeJp/05nx+PK4OtC
-Ljs2iWLPSarNH8bt7gL4E9HL+/vXfvo12CgxAkbCsvUQ8iwmSNQGIRzJLw46XBTv
-qpJw7X4gKNGH93OboA518bGDIO3etr8+tmzxKaCOkrBU/lNgT6ewrNeM6NAIk53f
-8BaBXNHXB2E4qbFeuW8IM+fc6fejT26tFVlZw7VR/tPUVE/WCWxbYyXt2IJQSuT/
-TZEQiHAbBuCYMChM5gwU
-=aKAN
------END PGP SIGNATURE-----
-
---xrpfzdegowdydefx--
+That is fine. For now I can just drop this patch unless I discover when
+enabling it on DRA76x I am unable to add the interface clock to dt.
+> 
+> Thanks,
+> Sekhar
+> 
