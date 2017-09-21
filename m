@@ -1,13 +1,25 @@
 From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 09/12] ARM: dts: sun8i: orangepi-plus: Fix node with unit name and no reg property
-Date: Thu, 21 Sep 2017 19:21:48 +0200
-Message-ID: <20170921172151.29779-10-clabbe.montjoie@gmail.com>
+Subject: [PATCH 04/12] ARM: dts: nanopi: Fix node with unit name and no reg
+ property
+Date: Thu, 21 Sep 2017 19:21:43 +0200
+Message-ID: <20170921172151.29779-5-clabbe.montjoie@gmail.com>
 References: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: devicetree@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 This patch fix the warning "xxx has a unit name, but no reg property" by
@@ -15,21 +27,44 @@ removing "@0" from such node.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-h3-nanopi.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index 331ed683ac62..119732505844 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -114,7 +114,7 @@
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi b/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
+index c6decee41a27..7646e331bd29 100644
+--- a/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
+@@ -81,7 +81,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sw_r_npi>;
+ 
+-		k1@0 {
++		k1 {
+ 			label = "k1";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
+@@ -108,19 +108,19 @@
  };
  
  &pio {
--	usb3_vbus_pin_a: usb3_vbus_pin@0 {
-+	usb3_vbus_pin_a: usb3_vbus_pin {
- 		pins = "PG11";
+-	leds_npi: led_pins@0 {
++	leds_npi: led_pins {
+ 		pins = "PA10";
  		function = "gpio_out";
+ 	};
+ };
+ 
+ &r_pio {
+-	leds_r_npi: led_pins@0 {
++	leds_r_npi: led_pins {
+ 		pins = "PL10";
+ 		function = "gpio_out";
+ 	};
+ 
+-	sw_r_npi: key_pins@0 {
++	sw_r_npi: key_pins {
+ 		pins = "PL3";
+ 		function = "gpio_in";
  	};
 -- 
 2.13.5
