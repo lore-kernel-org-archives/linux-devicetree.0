@@ -1,46 +1,78 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 7/7] ARM64: dts: meson-gxl: adjust libretech-cc gpio-line-names
-Date: Thu, 21 Sep 2017 19:16:04 +0200
-Message-ID: <20170921171604.27675-1-jbrunet@baylibre.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH 03/12] ARM: dts: sunxi: h3/h5: Fix node with unit name and no reg property
+Date: Thu, 21 Sep 2017 19:21:42 +0200
+Message-ID: <20170921172151.29779-4-clabbe.montjoie@gmail.com>
+References: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-TEST_N gpio has been moved so the gpio-line-names of the cc
-must be adjusted accordingly
+This patch fix the warning "xxx has a unit name, but no reg property" by
+removing "@0" from such node.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 69ca14ac10fa..3e9b9c8b72f0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -146,7 +146,9 @@
- 			  "7J1 Header Pin12",
- 			  "IR In",
- 			  "9J3 Switch HDMI CEC/7J1 Header Pin11",
--			  "7J1 Header Pin13";
-+			  "7J1 Header Pin13",
-+			  /* GPIO_TEST_N */
-+			  "7J1 Header Pin15";
- };
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 37464d4d07f6..917e8c7434b2 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -322,7 +322,7 @@
+ 				function = "i2c2";
+ 			};
  
- &pinctrl_periphs {
-@@ -188,9 +190,7 @@
- 			  "7J1 Header Pin32", "7J1 Header Pin29",
- 			  "7J1 Header Pin31",
- 			  /* Bank GPIOCLK */
--			  "7J1 Header Pin7", "",
--			  /* GPIO_TEST_N */
--			  "7J1 Header Pin15";
-+			  "7J1 Header Pin7", "";
- };
+-			mmc0_pins_a: mmc0@0 {
++			mmc0_pins_a: mmc0 {
+ 				pins = "PF0", "PF1", "PF2", "PF3",
+ 				       "PF4", "PF5";
+ 				function = "mmc0";
+@@ -330,13 +330,13 @@
+ 				bias-pull-up;
+ 			};
  
- /* SD card */
+-			mmc0_cd_pin: mmc0_cd_pin@0 {
++			mmc0_cd_pin: mmc0_cd_pin {
+ 				pins = "PF6";
+ 				function = "gpio_in";
+ 				bias-pull-up;
+ 			};
+ 
+-			mmc1_pins_a: mmc1@0 {
++			mmc1_pins_a: mmc1 {
+ 				pins = "PG0", "PG1", "PG2", "PG3",
+ 				       "PG4", "PG5";
+ 				function = "mmc1";
+@@ -354,7 +354,7 @@
+ 				bias-pull-up;
+ 			};
+ 
+-			spdif_tx_pins_a: spdif@0 {
++			spdif_tx_pins_a: spdif {
+ 				pins = "PA17";
+ 				function = "spdif";
+ 			};
+@@ -369,7 +369,7 @@
+ 				function = "spi1";
+ 			};
+ 
+-			uart0_pins_a: uart0@0 {
++			uart0_pins_a: uart0 {
+ 				pins = "PA4", "PA5";
+ 				function = "uart0";
+ 			};
+@@ -697,7 +697,7 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+ 
+-			ir_pins_a: ir@0 {
++			ir_pins_a: ir {
+ 				pins = "PL11";
+ 				function = "s_cir_rx";
+ 			};
 -- 
 2.13.5
