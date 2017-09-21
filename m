@@ -1,107 +1,61 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
-Date: Thu, 21 Sep 2017 12:40:55 +0300
-Message-ID: <1505986855.23573.80.camel@hp800z>
-References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
-         <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
-         <1505983900.23573.76.camel@hp800z>
-         <CAMuHMdU87p0xjtfOtaoHPcqZZxVvxJc-b1jdP_iJYBwHv1=ebw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: [PATCH] ARM: shmobile: remove inconsistent ; from documentation
+Date: Thu, 21 Sep 2017 11:44:59 +0200
+Message-ID: <1505987099-19944-1-git-send-email-horms+renesas@verge.net.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdU87p0xjtfOtaoHPcqZZxVvxJc-b1jdP_iJYBwHv1=ebw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Consistently do not suffix compat string documentation with a ';'
 
-On Thu, 2017-09-21 at 11:10 +0200, Geert Uytterhoeven wrote:
-> Hi Pantelis,
-> 
-> On Thu, Sep 21, 2017 at 10:51 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> > On Wed, 2017-09-20 at 14:32 +0200, Geert Uytterhoeven wrote:
-> >> On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
-> >> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> >> > +#include "ulcb-kf.dtsi"
-> >>
-> >> As the Kingfisher is actually an expansion board for H3ULCB (with R-Car H3
-> >> ES1.1 and ES2.0) and M3ULCB (with R-Car M3-W), turning ulcb-kf.dtsi into a
-> >> DT overlay would make sense.
-> >> That would also solve the issue of the 3 extra DTSes needed for all possible
-> >> combinations of ULCB and Kingfisher (r8a7795-es1-h3ulcb-kf.dts,
-> >> r8a7795-h3ulcb-kf.dts, r8a7796-h3ulcb-kf.dts (perhaps more to follow?)).
-> >>
-> >> But that's too premature, without upstream support for the easy loading of
-> >> DT overlays.
-> >>
-> >
-> > Sigh, yes.
-> >
-> >> > +/ {
-> >> > +       model = "Renesas M3ULCB Kingfisher board based on r8a7796";
-> >> > +       compatible = "shimafuji,kingfisher", "renesas,m3ulcb",
-> >> > +                    "renesas,r8a7796";
-> >> > +};
-> >>
-> >> And how to support from an overlay the addition of "shimafuji,kingfisher" to
-> >> (not replacement of!) the main compatible value?
-> >
-> > You can hack something in DT but it will be gross indeed.
-> >
-> > Ideally you'd want a += operator, but it's going to take a lot of
-> > changes starting from DTB blob format.
-> >
-> > In yaml we could easily do this with an append tag type
-> >
-> > compatible: [ "renesas,m3ulcb", "renesas,r8a7796" ]
-> >
-> > compatible: !append "shimafuji,kingfisher"
-> 
-> As we already have /delete-property/, we could add /append-property/ and
-> /prepend-property/? Would be useful for a .dts including and enhancing
-> an .dtsi, too.
-> 
+Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/shmobile.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Yes, that would work on the DTS source level. Doesn't help at runtime.
+Based on renesas-devel-20170921-v4.14-rc1
 
-> That doesn't solve the DTB blob format issue yet, though.
-> 
-
-Right. The tree and property deletion commands do not have a mapping to
-the DTB format. You could add special characters to a property name and
-have the overlay application code do something about it.
-
-For instance the original overlay submission did support property and
-node deletion by using '-property' & '-node'. Alas it was removed.
-
-> > Are you going to be at ELCE? I have a bunch of thing to ask you about
-> > your DT usage patterns.
-> 
-> Yes, and registered for the Device Tree Workshop.
-> 
-
-Great. See you then.
-
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-
-Regards
-
--- Pantelis
-
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 4fa984ada912..020d758fc0c5 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -69,7 +69,7 @@ Boards:
+     compatible = "renesas,gose", "renesas,r8a7793"
+   - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKBX0010SA00 (H3 ES1.1))
+     H3ULCB (R-Car Starter Kit Premier, RTP0RC77951SKBX010SA00 (H3 ES2.0))
+-    compatible = "renesas,h3ulcb", "renesas,r8a7795";
++    compatible = "renesas,h3ulcb", "renesas,r8a7795"
+   - Henninger
+     compatible = "renesas,henninger", "renesas,r8a7791"
+   - iWave Systems RZ/G1E SODIMM SOM Development Platform (iW-RainboW-G22D)
+@@ -91,7 +91,7 @@ Boards:
+   - Lager (RTP0RC7790SEB00010S)
+     compatible = "renesas,lager", "renesas,r8a7790"
+   - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
+-    compatible = "renesas,m3ulcb", "renesas,r8a7796";
++    compatible = "renesas,m3ulcb", "renesas,r8a7796"
+   - Marzen (R0P7779A00010S)
+     compatible = "renesas,marzen", "renesas,r8a7779"
+   - Porter (M2-LCDP)
+@@ -99,11 +99,11 @@ Boards:
+   - RSKRZA1 (YR0K77210C000BE)
+     compatible = "renesas,rskrza1", "renesas,r7s72100"
+   - Salvator-X (RTP0RC7795SIPB0010S)
+-    compatible = "renesas,salvator-x", "renesas,r8a7795";
++    compatible = "renesas,salvator-x", "renesas,r8a7795"
+   - Salvator-X (RTP0RC7796SIPB0011S)
+-    compatible = "renesas,salvator-x", "renesas,r8a7796";
++    compatible = "renesas,salvator-x", "renesas,r8a7796"
+   - Salvator-XS (Salvator-X 2nd version, RTP0RC7795SIPB0012S)
+-    compatible = "renesas,salvator-xs", "renesas,r8a7795";
++    compatible = "renesas,salvator-xs", "renesas,r8a7795"
+   - SILK (RTP0RC7794LCB00011S)
+     compatible = "renesas,silk", "renesas,r8a7794"
+   - SK-RZG1E (YR8A77450S000BE)
+-- 
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
