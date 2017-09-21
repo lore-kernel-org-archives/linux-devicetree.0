@@ -1,30 +1,41 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 0/2] using uio_pdrv_genirq without module param
-Date: Fri, 22 Sep 2017 03:48:12 +1200
-Message-ID: <20170921154814.7510-1-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 2/2] uio: add default compatible string to uio_pdrv_genirq
+Date: Fri, 22 Sep 2017 03:48:14 +1200
+Message-ID: <20170921154814.7510-3-chris.packham@alliedtelesis.co.nz>
+References: <20170921154814.7510-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170921154814.7510-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-I found myself about to add a driver that was a sub-optimal clone of
-uio_pdrv_genirq the only difference was that I didn't want to modify the args
-passed to the kernel by my bootloader. If uio_pdrv_genirq had a default
-of_match entry I could simply use that. This series attempts to implement this.
+Add a default compatible string "linux,uio-pdrv-genirq" to
+uio_pdrv_genirq to make it usable without supplying a module parameter.
+The module parameter is still supported in addition to the default.
 
-Changes in v2:
-- added a better commit message to 1/2
-- remove bogus checkpatch fix in 2/2
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/uio/uio_pdrv_genirq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Chris Packham (2):
-  uio: dt-bindings: document binding for uio-pdrv-genirq
-  uio: add default compatible string to uio_pdrv_genirq
-
- .../bindings/uio/linux,uio-pdrv-genirq.txt         | 28 ++++++++++++++++++++++
- drivers/uio/uio_pdrv_genirq.c                      |  3 ++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/uio/linux,uio-pdrv-genirq.txt
-
+diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+index f598ecddc8a7..4d089240533e 100644
+--- a/drivers/uio/uio_pdrv_genirq.c
++++ b/drivers/uio/uio_pdrv_genirq.c
+@@ -253,11 +253,12 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
+ 
+ #ifdef CONFIG_OF
+ static struct of_device_id uio_of_genirq_match[] = {
++	{ .compatible = "linux,uio-pdrv-genirq" },
+ 	{ /* This is filled with module_parm */ },
+ 	{ /* Sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
+-module_param_string(of_id, uio_of_genirq_match[0].compatible, 128, 0);
++module_param_string(of_id, uio_of_genirq_match[1].compatible, 128, 0);
+ MODULE_PARM_DESC(of_id, "Openfirmware id of the device to be handled by uio");
+ #endif
+ 
 -- 
 2.14.1
