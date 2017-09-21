@@ -1,59 +1,38 @@
-From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Subject: Re: [PATCH 2/3] arm64: dts: mt2712: add pintcrl device node.
-Date: Thu, 21 Sep 2017 16:13:12 +0800
-Message-ID: <1505981592.22452.7.camel@mhfsdcap03>
-References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com>
- <1501489333-23145-3-git-send-email-zhiyong.tao@mediatek.com>
- <2f883a8a-5402-5625-bada-bcfed53c098e@gmail.com>
- <CACRpkdZHyXec+L8ueRHOs=9TLT1Arqe3KeQpRZ6D0K1Ag1c+Zw@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
+Date: Thu, 21 Sep 2017 10:20:06 +0200
+Message-ID: <20170921082006.GC15749@verge.net.au>
+References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdZHyXec+L8ueRHOs=9TLT1Arqe3KeQpRZ6D0K1Ag1c+Zw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, hongkun.cao@mediatek.com, srv_heupstream@mediatek.com, Hongzhou Yang <hongzhou.yang@mediatek.com>, Biao Huang <biao.huang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Liguo Zhang <liguo.zhang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC
- support" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-22 at 15:04 +0200, Linus Walleij wrote:
-> On Mon, Aug 14, 2017 at 5:23 PM, Matthias Brugger
-> <matthias.bgg@gmail.com> wrote:
-> > On 07/31/2017 10:22 AM, Zhiyong Tao wrote:
-> >>
-> >> The commit includes two change:
-> >> 1)add pintcrl device node for mt2712.
-> >> 2)add pinfunc file for mt2712.
-> >>
-> >> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> >> ---
-> >>   arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 1014
-> >> +++++++++++++++++++++++++
-> >
-> >
-> > Shouldn't this file be in include/dt-bindings/pinctrl?
+On Wed, Sep 20, 2017 at 02:32:28PM +0200, Geert Uytterhoeven wrote:
+> Hi Vladimir,
 > 
-> Only if it is also #included in the driver.
+> [CC Pantelis]
 > 
-> Yours,
-> Linus Walleij
+> On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
+> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> > Add the initial device tree for the M3ULCB with Kingfisher extension
+> > infotainment board.
+> >
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> > ---
+> > Changes in version 2:
+> > - added own compatible value "shimafuji,kingfisher"
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-==>
-Thanks for your comment. 
-We see our some ICs(mt7623) which move the file to
-"include/dt-bindings/pinctrl". other ICs(mt2701) which is put in
-"arch/arm64/boot/dts/mediatek".
-In mt2712, mt2712-pinfunc.h is only include by dts file. It won't be
-included by driver. So which is better? "arch/arm64/boot/dts/mediatek/"
-or "include/dt-bindings/pinctrl".
-
-Thanks.
+Thanks, applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
