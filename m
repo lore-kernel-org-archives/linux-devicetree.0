@@ -1,49 +1,59 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 01/18] arm: shmobile: Document Kingfisher board DT
- bindings
-Date: Thu, 21 Sep 2017 10:08:56 +0200
-Message-ID: <20170921080856.GB15749@verge.net.au>
-References: <1505587727-15543-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <20170920133945.6yfeio56lohduvvi@rob-hp-laptop>
+From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: Re: [PATCH 2/3] arm64: dts: mt2712: add pintcrl device node.
+Date: Thu, 21 Sep 2017 16:13:12 +0800
+Message-ID: <1505981592.22452.7.camel@mhfsdcap03>
+References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com>
+ <1501489333-23145-3-git-send-email-zhiyong.tao@mediatek.com>
+ <2f883a8a-5402-5625-bada-bcfed53c098e@gmail.com>
+ <CACRpkdZHyXec+L8ueRHOs=9TLT1Arqe3KeQpRZ6D0K1Ag1c+Zw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170920133945.6yfeio56lohduvvi@rob-hp-laptop>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZHyXec+L8ueRHOs=9TLT1Arqe3KeQpRZ6D0K1Ag1c+Zw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, hongkun.cao@mediatek.com, srv_heupstream@mediatek.com, Hongzhou Yang <hongzhou.yang@mediatek.com>, Biao Huang <biao.huang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Liguo Zhang <liguo.zhang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC
+ support" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 03:52:58PM -0500, Rob Herring wrote:
-> On Sat, Sep 16, 2017 at 09:48:47PM +0300, Vladimir Barinov wrote:
-> > Add Kingfisher Device tree bindings Documentation, listing it as a
-> > supported board.
-> > Kingfisher is the H3ULCB/M3ULCB extension board.
-> > 
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > ---
-> > Changes in version 2:
-> > - added own compatible value "shimafuji,kingfisher"
-> > Changes in version 3:
-> > - seperate Kingfisher entry from H3ULCB/M3ULCB
-> > 
-> >  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-> > index ae75cb3..5921ac2 100644
-> > --- a/Documentation/devicetree/bindings/arm/shmobile.txt
-> > +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> > @@ -76,6 +76,8 @@ Boards:
-> >      compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7743"
-> >    - iWave Systems RZ/G1M Qseven System On Module (iW-RainboW-G20M-Qseven)
-> >      compatible = "iwave,g20m", "renesas,r8a7743"
-> > +  - Kingfisher (SBEV-RCAR-KF-M03)
-> > +    compatible = "shimafuji,kingfisher";
+On Tue, 2017-08-22 at 15:04 +0200, Linus Walleij wrote:
+> On Mon, Aug 14, 2017 at 5:23 PM, Matthias Brugger
+> <matthias.bgg@gmail.com> wrote:
+> > On 07/31/2017 10:22 AM, Zhiyong Tao wrote:
+> >>
+> >> The commit includes two change:
+> >> 1)add pintcrl device node for mt2712.
+> >> 2)add pinfunc file for mt2712.
+> >>
+> >> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> >> ---
+> >>   arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 1014
+> >> +++++++++++++++++++++++++
+> >
+> >
+> > Shouldn't this file be in include/dt-bindings/pinctrl?
 > 
-> Not consistent with the ';'. Otherwise,
+> Only if it is also #included in the driver.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> Yours,
+> Linus Walleij
 
-Thanks, applied with the ';' removed.
+==>
+Thanks for your comment. 
+We see our some ICs(mt7623) which move the file to
+"include/dt-bindings/pinctrl". other ICs(mt2701) which is put in
+"arch/arm64/boot/dts/mediatek".
+In mt2712, mt2712-pinfunc.h is only include by dts file. It won't be
+included by driver. So which is better? "arch/arm64/boot/dts/mediatek/"
+or "include/dt-bindings/pinctrl".
+
+Thanks.
