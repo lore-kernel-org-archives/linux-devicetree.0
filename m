@@ -1,91 +1,37 @@
-From: Simon Horman <horms@verge.net.au>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Subject: Re: [PATCH 3/8] ARM: dts: iwg22m: Enable SDHI1 controller
-Date: Thu, 21 Sep 2017 10:31:16 +0200
-Message-ID: <20170921083116.GE15749@verge.net.au>
+Date: Thu, 21 Sep 2017 10:37:41 +0200
+Message-ID: <20170921083741.GF15749@verge.net.au>
 References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
  <1505322341-9480-4-git-send-email-chris.paterson2@renesas.com>
  <20170915081144.GI3924@verge.net.au>
- <TY1PR06MB07026CA91F110214FF170FA3B7610@TY1PR06MB0702.apcprd06.prod.outlook.com>
+ <TY1PR06MB07024A3CACDC8399EE8F6C62B7610@TY1PR06MB0702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <TY1PR06MB07026CA91F110214FF170FA3B7610@TY1PR06MB0702.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Paterson <Chris.Paterson2@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <TY1PR06MB07024A3CACDC8399EE8F6C62B7610-/PRLmSCtZ14u2TXDOttQZW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 01:05:07PM +0000, Chris Paterson wrote:
-> Hello Simon,
+On Wed, Sep 20, 2017 at 01:06:30PM +0000, Chris Paterson wrote:
 > 
-> > From: devicetree-owner@vger.kernel.org [mailto:devicetree-
-> > owner@vger.kernel.org] On Behalf Of Simon Horman
-> > Sent: 15 September 2017 09:12
-> > To: Chris Paterson <Chris.Paterson2@renesas.com>
-> > 
-> > On Wed, Sep 13, 2017 at 06:05:36PM +0100, Chris Paterson wrote:
-> > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >
-> > > Enable the SDHI1 controller on iWave RZ/G1E SoM.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-> > > ---
-> > > This patch is based on renesas-devel-20170913-v4.13.
-> > >
-> > >
-> > >  arch/arm/boot/dts/r8a7745-iwg22m.dtsi | 17 +++++++++++++++++
-> > >  1 file changed, 17 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
-> > > b/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
-> > > index e306e7c..f7f9cef 100644
-> > > --- a/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
-> > > +++ b/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
-> > > @@ -9,6 +9,7 @@
-> > >   */
-> > >
-> > >  #include "r8a7745.dtsi"
-> > > +#include <dt-bindings/gpio/gpio.h>
-> > >
-> > >  / {
-> > >  	compatible = "iwave,g22m", "renesas,r8a7745"; @@ -38,6 +39,12
-> > @@
-> > >  		function = "mmc";
-> > >  	};
-> > >
-> > > +	sdhi1_pins: sd1 {
-> > > +		groups = "sdhi1_data4", "sdhi1_ctrl";
-> > > +		function = "sdhi1";
-> > > +		power-source = <3300>;
-> > > +	};
-> > > +
-> > >  	i2c3_pins: i2c3 {
-> > >  		groups = "i2c3_b";
-> > >  		function = "i2c3";
-> > > @@ -54,6 +61,16 @@
-> > >  	status = "okay";
-> > >  };
-> > >
-> > > +&sdhi1 {
-> > > +	pinctrl-0 = <&sdhi1_pins>;
-> > > +	pinctrl-names = "default";
-> > > +
-> > > +	vmmc-supply = <&reg_3p3v>;
-> > > +	vqmmc-supply = <&reg_3p3v>;
-> > > +	cd-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
-> > 
-> > No wp-gpios property means this is a µSD slot, right?
-> 
-> Correct
+> > From: Chris Paterson
+> > Sent: 20 September 2017 14:05
 > 
 > > 
-> > Do you have any plans to enable sdr-50 and sdr-104?
-> > Is it not supported for some reason?
+> > >
+> > > I don't mind if its not enabled in this patch but I would like to know
+> > > if it can be enabled or not and reflect that information in the wiki.
+> > >
+> > > http://elinux.org/index.php?title=Renesas-MMC-Enabled-Speeds
 > 
-> Nope (unless the hardware changes down the line).
-> Both vmmc and vqmmc are fixed to 3V3 on the iWave-E SOM module.
+> Will do.
 
-Thanks, got it.
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
