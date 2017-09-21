@@ -1,138 +1,91 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v4 3/7] soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
-Date: Thu, 21 Sep 2017 16:26:53 +0800
-Message-ID: <636fdf9b4e5ae29b1c6f0a0a680b61cf0513c97e.1505980364.git.sean.wang@mediatek.com>
-References: <cover.1505980364.git.sean.wang@mediatek.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/8] ARM: dts: iwg22m: Enable SDHI1 controller
+Date: Thu, 21 Sep 2017 10:31:16 +0200
+Message-ID: <20170921083116.GE15749@verge.net.au>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-4-git-send-email-chris.paterson2@renesas.com>
+ <20170915081144.GI3924@verge.net.au>
+ <TY1PR06MB07026CA91F110214FF170FA3B7610@TY1PR06MB0702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1505980364.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <TY1PR06MB07026CA91F110214FF170FA3B7610@TY1PR06MB0702.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+On Wed, Sep 20, 2017 at 01:05:07PM +0000, Chris Paterson wrote:
+> Hello Simon,
+> 
+> > From: devicetree-owner@vger.kernel.org [mailto:devicetree-
+> > owner@vger.kernel.org] On Behalf Of Simon Horman
+> > Sent: 15 September 2017 09:12
+> > To: Chris Paterson <Chris.Paterson2@renesas.com>
+> > 
+> > On Wed, Sep 13, 2017 at 06:05:36PM +0100, Chris Paterson wrote:
+> > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > >
+> > > Enable the SDHI1 controller on iWave RZ/G1E SoM.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > > ---
+> > > This patch is based on renesas-devel-20170913-v4.13.
+> > >
+> > >
+> > >  arch/arm/boot/dts/r8a7745-iwg22m.dtsi | 17 +++++++++++++++++
+> > >  1 file changed, 17 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
+> > > b/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
+> > > index e306e7c..f7f9cef 100644
+> > > --- a/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
+> > > +++ b/arch/arm/boot/dts/r8a7745-iwg22m.dtsi
+> > > @@ -9,6 +9,7 @@
+> > >   */
+> > >
+> > >  #include "r8a7745.dtsi"
+> > > +#include <dt-bindings/gpio/gpio.h>
+> > >
+> > >  / {
+> > >  	compatible = "iwave,g22m", "renesas,r8a7745"; @@ -38,6 +39,12
+> > @@
+> > >  		function = "mmc";
+> > >  	};
+> > >
+> > > +	sdhi1_pins: sd1 {
+> > > +		groups = "sdhi1_data4", "sdhi1_ctrl";
+> > > +		function = "sdhi1";
+> > > +		power-source = <3300>;
+> > > +	};
+> > > +
+> > >  	i2c3_pins: i2c3 {
+> > >  		groups = "i2c3_b";
+> > >  		function = "i2c3";
+> > > @@ -54,6 +61,16 @@
+> > >  	status = "okay";
+> > >  };
+> > >
+> > > +&sdhi1 {
+> > > +	pinctrl-0 = <&sdhi1_pins>;
+> > > +	pinctrl-names = "default";
+> > > +
+> > > +	vmmc-supply = <&reg_3p3v>;
+> > > +	vqmmc-supply = <&reg_3p3v>;
+> > > +	cd-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+> > 
+> > No wp-gpios property means this is a µSD slot, right?
+> 
+> Correct
+> 
+> > 
+> > Do you have any plans to enable sdr-50 and sdr-104?
+> > Is it not supported for some reason?
+> 
+> Nope (unless the hardware changes down the line).
+> Both vmmc and vqmmc are fixed to 3V3 on the iWave-E SOM module.
 
-Some regulators such as MediaTek MT6380 also has to be written in
-32-bit mode. So the patch adds pwrap_write32, rename old pwrap_write
-into pwrap_write16 and one additional function pointer is introduced
-for increasing flexibility allowing the determination which mode is
-used by the pwrap slave detection through device tree.
-
-Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- drivers/soc/mediatek/mtk-pmic-wrap.c | 63 +++++++++++++++++++++++++++---------
- 1 file changed, 47 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index db55f13..27d7ccc 100644
---- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-+++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -506,6 +506,7 @@ struct pwrap_slv_type {
- 	 * which type is used by the detection through device tree.
- 	 */
- 	int (*pwrap_read)(struct pmic_wrapper *wrp, u32 adr, u32 *rdata);
-+	int (*pwrap_write)(struct pmic_wrapper *wrp, u32 adr, u32 wdata);
- };
- 
- struct pmic_wrapper {
-@@ -600,22 +601,6 @@ static int pwrap_wait_for_state(struct pmic_wrapper *wrp,
- 	} while (1);
- }
- 
--static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
--{
--	int ret;
--
--	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
--	if (ret) {
--		pwrap_leave_fsm_vldclr(wrp);
--		return ret;
--	}
--
--	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
--			PWRAP_WACS2_CMD);
--
--	return 0;
--}
--
- static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
- {
- 	int ret;
-@@ -672,6 +657,49 @@ static int pwrap_read(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
- 	return wrp->slave->pwrap_read(wrp, adr, rdata);
- }
- 
-+static int pwrap_write16(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
-+{
-+	int ret;
-+
-+	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
-+	if (ret) {
-+		pwrap_leave_fsm_vldclr(wrp);
-+		return ret;
-+	}
-+
-+	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
-+		     PWRAP_WACS2_CMD);
-+
-+	return 0;
-+}
-+
-+static int pwrap_write32(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
-+{
-+	int ret, msb, rdata;
-+
-+	for (msb = 0; msb < 2; msb++) {
-+		ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
-+		if (ret) {
-+			pwrap_leave_fsm_vldclr(wrp);
-+			return ret;
-+		}
-+
-+		pwrap_writel(wrp, (1 << 31) | (msb << 30) | (adr << 16) |
-+			     ((wdata >> (msb * 16)) & 0xffff),
-+			     PWRAP_WACS2_CMD);
-+
-+		if (!msb)
-+			pwrap_read(wrp, adr, &rdata);
-+	}
-+
-+	return 0;
-+}
-+
-+static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
-+{
-+	return wrp->slave->pwrap_write(wrp, adr, wdata);
-+}
-+
- static int pwrap_regmap_read(void *context, u32 adr, u32 *rdata)
- {
- 	return pwrap_read(context, adr, rdata);
-@@ -1080,18 +1108,21 @@ static const struct pwrap_slv_type pmic_mt6323 = {
- 	.dew_regs = mt6323_regs,
- 	.type = PMIC_MT6323,
- 	.pwrap_read = pwrap_read16,
-+	.pwrap_write = pwrap_write16,
- };
- 
- static const struct pwrap_slv_type pmic_mt6380 = {
- 	.dew_regs = NULL,
- 	.type = PMIC_MT6380,
- 	.pwrap_read = pwrap_read32,
-+	.pwrap_write = pwrap_write32,
- };
- 
- static const struct pwrap_slv_type pmic_mt6397 = {
- 	.dew_regs = mt6397_regs,
- 	.type = PMIC_MT6397,
- 	.pwrap_read = pwrap_read16,
-+	.pwrap_write = pwrap_write16,
- };
- 
- static const struct of_device_id of_slave_match_tbl[] = {
--- 
-2.7.4
+Thanks, got it.
