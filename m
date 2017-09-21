@@ -1,140 +1,34 @@
-From: Guochun Mao <guochun.mao@mediatek.com>
-Subject: [PATCH v1 2/2] mtd: mtk-nor: add suspend/resume support
-Date: Thu, 21 Sep 2017 20:45:06 +0800
-Message-ID: <1505997906-30921-3-git-send-email-guochun.mao@mediatek.com>
-References: <1505997906-30921-1-git-send-email-guochun.mao@mediatek.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a7795: add USB3.0 peripheral
+ device node
+Date: Thu, 21 Sep 2017 14:46:18 +0200
+Message-ID: <CAMuHMdUGztJO3zchzR4msJvFPFuTHPMCV4ENqBn1EL5QPR7joQ@mail.gmail.com>
+References: <1505971886-14916-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1505971886-14916-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505997906-30921-1-git-send-email-guochun.mao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Mark Rutland <mark.rutland@arm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Guochun Mao <guochun.mao@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1505971886-14916-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Abstract functions of clock setting, to avoid duplicated code,
-these functions been used in new feature.
-Implement suspend/resume functions.
+On Thu, Sep 21, 2017 at 7:31 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This patch adds USB3.0 peripheral channel 0 device node for r8a7795.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
----
- drivers/mtd/spi-nor/mtk-quadspi.c |   70 ++++++++++++++++++++++++++++++-------
- 1 file changed, 58 insertions(+), 12 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
-index c258c7a..abe455c 100644
---- a/drivers/mtd/spi-nor/mtk-quadspi.c
-+++ b/drivers/mtd/spi-nor/mtk-quadspi.c
-@@ -404,6 +404,29 @@ static int mt8173_nor_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
- 	return ret;
- }
- 
-+static void mt8173_nor_disable_clk(struct mt8173_nor *mt8173_nor)
-+{
-+	clk_disable_unprepare(mt8173_nor->spi_clk);
-+	clk_disable_unprepare(mt8173_nor->nor_clk);
-+}
-+
-+static int mt8173_nor_enable_clk(struct mt8173_nor *mt8173_nor)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(mt8173_nor->spi_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(mt8173_nor->nor_clk);
-+	if (ret) {
-+		clk_disable_unprepare(mt8173_nor->spi_clk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int mtk_nor_init(struct mt8173_nor *mt8173_nor,
- 			struct device_node *flash_node)
- {
-@@ -468,15 +491,11 @@ static int mtk_nor_drv_probe(struct platform_device *pdev)
- 		return PTR_ERR(mt8173_nor->nor_clk);
- 
- 	mt8173_nor->dev = &pdev->dev;
--	ret = clk_prepare_enable(mt8173_nor->spi_clk);
-+
-+	ret = mt8173_nor_enable_clk(mt8173_nor);
- 	if (ret)
- 		return ret;
- 
--	ret = clk_prepare_enable(mt8173_nor->nor_clk);
--	if (ret) {
--		clk_disable_unprepare(mt8173_nor->spi_clk);
--		return ret;
--	}
- 	/* only support one attached flash */
- 	flash_np = of_get_next_available_child(pdev->dev.of_node, NULL);
- 	if (!flash_np) {
-@@ -487,10 +506,9 @@ static int mtk_nor_drv_probe(struct platform_device *pdev)
- 	ret = mtk_nor_init(mt8173_nor, flash_np);
- 
- nor_free:
--	if (ret) {
--		clk_disable_unprepare(mt8173_nor->spi_clk);
--		clk_disable_unprepare(mt8173_nor->nor_clk);
--	}
-+	if (ret)
-+		mt8173_nor_disable_clk(mt8173_nor);
-+
- 	return ret;
- }
- 
-@@ -498,11 +516,38 @@ static int mtk_nor_drv_remove(struct platform_device *pdev)
- {
- 	struct mt8173_nor *mt8173_nor = platform_get_drvdata(pdev);
- 
--	clk_disable_unprepare(mt8173_nor->spi_clk);
--	clk_disable_unprepare(mt8173_nor->nor_clk);
-+	mt8173_nor_disable_clk(mt8173_nor);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int mtk_nor_suspend(struct device *dev)
-+{
-+	struct mt8173_nor *mt8173_nor = dev_get_drvdata(dev);
-+
-+	mt8173_nor_disable_clk(mt8173_nor);
-+
- 	return 0;
- }
- 
-+static int mtk_nor_resume(struct device *dev)
-+{
-+	struct mt8173_nor *mt8173_nor = dev_get_drvdata(dev);
-+
-+	return mt8173_nor_enable_clk(mt8173_nor);
-+}
-+
-+static const struct dev_pm_ops mtk_nor_dev_pm_ops = {
-+	.suspend = mtk_nor_suspend,
-+	.resume = mtk_nor_resume,
-+};
-+
-+#define MTK_NOR_DEV_PM_OPS	(&mtk_nor_dev_pm_ops)
-+#else
-+#define MTK_NOR_DEV_PM_OPS	NULL
-+#endif
-+
- static const struct of_device_id mtk_nor_of_ids[] = {
- 	{ .compatible = "mediatek,mt8173-nor"},
- 	{ /* sentinel */ }
-@@ -514,6 +559,7 @@ static int mtk_nor_drv_remove(struct platform_device *pdev)
- 	.remove = mtk_nor_drv_remove,
- 	.driver = {
- 		.name = "mtk-nor",
-+		.pm = MTK_NOR_DEV_PM_OPS,
- 		.of_match_table = mtk_nor_of_ids,
- 	},
- };
--- 
-1.7.9.5
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
