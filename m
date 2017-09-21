@@ -1,61 +1,84 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 9/9 v2] usb: usb251xb: Use GPIO descriptor consumer
- interface
-Date: Thu, 21 Sep 2017 17:07:14 +0200
-Message-ID: <20170921150714.GA7791@kroah.com>
-References: <20170915233113.17855-1-fancer.lancer@gmail.com>
- <20170916104220.3742-1-fancer.lancer@gmail.com>
- <20170916104220.3742-10-fancer.lancer@gmail.com>
- <20170921082338.GA30669@kroah.com>
- <20170921145129.GA25888@mobilestation>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [RFC PATCH 0/7] AXP803 AC/Battery support
+Date: Thu, 21 Sep 2017 23:20:11 +0800
+Message-ID: <CF74A2A9-B9F4-4413-975B-A0F4B24686A3@aosc.io>
+References: <20170920151814.22461-1-icenowy@aosc.io> <20170921154621.0000328d@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170921145129.GA25888@mobilestation>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: richard.leitner@skidata.com, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170921154621.0000328d-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 05:51:29PM +0300, Serge Semin wrote:
-> On Thu, Sep 21, 2017 at 10:23:38AM +0200, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Sat, Sep 16, 2017 at 01:42:20PM +0300, Serge Semin wrote:
-> > > diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-> > > index 71994b883..c2dd9742f 100644
-> > > --- a/drivers/usb/misc/usb251xb.c
-> > > +++ b/drivers/usb/misc/usb251xb.c
-> > > @@ -3,6 +3,7 @@
-> > >   * Configuration via SMBus.
-> > >   *
-> > >   * Copyright (c) 2017 SKIDATA AG
-> > > + * Copyright (c) 2017 T-platforms
-> > 
-> > Again, no, please consult with your corporate lawyers why this isn't ok.
-> > 
-> > greg k-h
-> 
-> I still can't see why this isn't right. We submitted the patchset. It is not
-> that big and still it isn't just two lines. As I've seen all over the kernel, It is
-> a common practice to have multiple copyrights in kernel files. We are not claiming
-> the copyright to the whole file, but to the contribution only. I got a consent to
-> contribute when I was employed by the company. What's wrong with that? Shall I
-> send the patchset from my corporate e-mail then?
 
-Well, yes, I need some way to properly identify that this corporation
-did do the changes.  I said that before, I don't know why you ignored
-that.
 
-And yes, multiple copyrights are just fine, but again, please talk to
-your corporate lawyer about why these changes don't seem to warrant that
-"mark".  If they do think that they do warrant that, great, I will be
-glad to discuss that with them, off-list if needed.
+于 2017年9月21日 GMT+08:00 下午10:46:21, Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> 写到:
+>On Wed, 20 Sep 2017 23:18:07 +0800
+>Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>
+>> The AXP803 PMIC, used by most Allwinner A64 boards, features 3 power
+>inputs:
+>> AC, USB and Battery.
+>> 
+>> This patchset adds support for the AC and Battery supplies, which is
+>useful
+>> for the boards from Pine64 (Pine64, SoPine w/ baseboard model A,
+>Pinebook).
+>> 
+>> The USB supply is not yet supported in this patchset because it's not
+>> present on Pine series boards.
+>> 
+>> In order to enable battery monitoring the ADC for battery is also
+>enabled
+>> for AXs.
+>> 
+>> In order to enable battery monitoring the ADC for battery is also
+>enabled
+>> for AXP803.
+>
+>I'll go with the obvious question...
+>
+>Why an RFC rather than a standard patch submission? I'm not immediately
+>seeing what is controversial!
 
-For even more fun, try discussing with your lawyers about why copyright
-marks like this don't even mean anything anymore, and haven't for 20+
-years now (can't remember the actual date...)  But that's a different
-topic, and one not really relevant here.
+Oh I am just not confident about this patchset,
+especially the IIO part.
 
-thanks,
-
-greg k-h
+>
+>Jonathan
+>
+>> 
+>> Icenowy Zheng (7):
+>>   dt-bindings: add compatibles for AXP803 Battery/USB power supplies
+>>   iio: adc: axp20x-adc: allow to skip ADC rate setup now
+>>   iio: adc: axp20x-adc: add support for AXP803
+>>   power: supply: axp20x-battery: support AXP803
+>>   mfd: axp20x: add cells for AXP803 ADC/AC Power/Battery
+>>   arm64: allwinner: a64: add power supply nodes in AXP803 DTSI
+>>   arm64: allwinner: a64: enable AC and Battery for Pine64
+>> 
+>>  .../bindings/power/supply/axp20x_battery.txt       |   1 +
+>>  .../bindings/power/supply/axp20x_usb_power.txt     |   1 +
+>>  arch/arm64/boot/dts/allwinner/axp803.dtsi          |  15 +++
+>>  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |   8 ++
+>>  drivers/iio/adc/axp20x_adc.c                       | 114
+>++++++++++++++++++++-
+>>  drivers/mfd/axp20x.c                               |  11 ++
+>>  drivers/power/supply/axp20x_battery.c              |  88
+>++++++++++++++--
+>>  7 files changed, 226 insertions(+), 12 deletions(-)
+>> 
+>
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
