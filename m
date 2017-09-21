@@ -1,71 +1,32 @@
-From: Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND RFC PATCH 0/7] sun8i H3 HDMI glue driver for DW HDMI
-Date: Thu, 21 Sep 2017 11:59:27 +0200
-Message-ID: <68fa56f8-9878-12d0-1696-4393abe45db5@cisco.com>
-References: <20170920200124.20457-1-jernej.skrabec@siol.net>
- <5172c185-c6b5-49c3-cf0a-c3e073459346@synopsys.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: shmobile: remove inconsistent ; from documentation
+Date: Thu, 21 Sep 2017 12:04:27 +0200
+Message-ID: <CAMuHMdUx5SrFZZq+f5e-ym-zmr-JJLC-E1GYZGVJpz9-qkYqJQ@mail.gmail.com>
+References: <1505987099-19944-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5172c185-c6b5-49c3-cf0a-c3e073459346-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1505987099-19944-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/17 11:39, Jose Abreu wrote:
-> Hi Jernej,
-> 
-> On 20-09-2017 21:01, Jernej Skrabec wrote:
->> [added media mailing list due to CEC question]
->>
->> This patch series adds a HDMI glue driver for Allwinner H3 SoC. For now, only
->> video and CEC functionality is supported. Audio needs more tweaks.
->>
->> Series is based on the H3 DE2 patch series available on mailing list:
->> https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_pipermail_linux-2Darm-2Dkernel_2017-2DAugust_522697.html&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=WHDsc6kcWAl4i96Vm5hJ_19IJiuxx_p_Rzo2g-uHDKw&m=coyfcQKSr2asrHcaCeWFmAP_9nkFkRK8s7Uw5bmVei4&s=JCFaMXK1MmZ3jE745_YcqZhZkaqtc6UapGfSSapcz_s&e= 
->> (ignore patches marked with [NOT FOR REVIEW NOW] tag)
->>
->> Patch 1 adds support for polling plug detection since custom PHY used here
->> doesn't support HPD interrupt.
->>
->> Patch 2 enables overflow workaround for v1.32a. This HDMI controller exhibits
->> same issues as HDMI controller used in iMX6 SoCs.
->>
->> Patch 3 adds CLK_SET_RATE_PARENT to hdmi clock.
->>
->> Patch 4 adds dt bindings documentation.
->>
->> Patch 5 adds actual H3 HDMI glue driver.
->>
->> Patch 6 and 7 add HDMI node to DT and enable it where needed.
->>
->> Allwinner used DW HDMI controller in a non standard way:
->> - register offsets obfuscation layer, which can fortunately be turned off
->> - register read lock, which has to be disabled by magic number
->> - custom PHY, which have to be initialized before DW HDMI controller
->> - non standard clocks
->> - no HPD interrupt
->>
->> Because of that, I have two questions:
->> - Since HPD have to be polled, is it enough just to enable poll mode? I'm
->>   mainly concerned about invalidating CEC address here.
-> 
-> You mean you get no interrupt when HPD status changes? Hans can
-> answer this better but then you will need to invalidate the cec
-> physical address yourself because right now its invalidated in
-> the dw-hdmi irq handler (see dw_hdmi_irq()).
+On Thu, Sep 21, 2017 at 11:44 AM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> Consistently do not suffix compat string documentation with a ';'
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-That's correct. When the HPD goes low you need to call cec_notifier_phys_addr_invalidate()
-to invalidate the physical address. This is not terribly time sensitive, i.e.
-checking this once a second would be quick enough.
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Regards,
+Gr{oetje,eeting}s,
 
-	Hans
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
