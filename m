@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 4/7] ARM64: dts: meson-gxbb: adjust nanopi-k2 gpio-line-names
-Date: Thu, 21 Sep 2017 19:14:47 +0200
-Message-ID: <20170921171450.27407-5-jbrunet@baylibre.com>
+Subject: [PATCH 6/7] ARM64: dts: meson-gxl: adjust kvim gpio-line-names
+Date: Thu, 21 Sep 2017 19:14:49 +0200
+Message-ID: <20170921171450.27407-7-jbrunet@baylibre.com>
 References: <20170921171450.27407-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170921171450.27407-1-jbrunet@baylibre.com>
@@ -10,42 +10,39 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-GPIOX22 is now declared properly and TEST_N has been moved so
-the gpio-line-names of the nanopi-k2 must be adjusted accordingly
+TEST_N gpio has been moved so the gpio-line-names of the kvim
+must be adjusted accordingly
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index 9697a7a79464..3c445030ed52 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -180,7 +180,9 @@
- 			  "VCCK En", "CON1 Header Pin31",
- 			  "I2S Header Pin6", "IR In", "I2S Header Pin7",
- 			  "I2S Header Pin3", "I2S Header Pin4",
--			  "I2S Header Pin5", "HDMI CEC", "SYS LED";
-+			  "I2S Header Pin5", "HDMI CEC", "SYS LED",
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+index edc512ad0bac..71a6e1ce7ad5 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+@@ -122,7 +122,9 @@
+ 			  "J9 Header Pin33",
+ 			  "IR In",
+ 			  "HDMI CEC",
+-			  "SYS LED";
++			  "SYS LED",
 +			  /* GPIO_TEST_N */
 +			  "";
  };
  
  &pinctrl_periphs {
-@@ -226,11 +228,9 @@
- 			  "Bluetooth UART TX", "Bluetooth UART RX",
- 			  "Bluetooth UART CTS", "Bluetooth UART RTS",
- 			  "", "", "", "WIFI 32K", "Bluetooth Enable",
--			  "Bluetooth WAKE HOST",
-+			  "Bluetooth WAKE HOST", "",
+@@ -163,9 +165,7 @@
+ 			  "WIFI 32K", "Bluetooth Enable",
+ 			  "Bluetooth WAKE HOST",
  			  /* Bank GPIOCLK */
--			  "", "CON1 Header Pin35", "", "",
+-			  "", "J9 Header Pin39",
 -			  /* GPIO_TEST_N */
 -			  "";
-+			  "", "CON1 Header Pin35", "", "";
++			  "", "J9 Header Pin39";
  };
  
- &pwm_ef {
+ &pwm_AO_ab {
 -- 
 2.13.5
