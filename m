@@ -1,94 +1,654 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] usb: usb251xb: Add USB2517/i hub support
-Date: Thu, 21 Sep 2017 11:53:29 -0500
-Message-ID: <CAL_Jsq+8RqmOzwrH7U=F7Fh9aUHALK-SpJQWfdOR-0J8Pna23g@mail.gmail.com>
-References: <20170915233113.17855-1-fancer.lancer@gmail.com>
- <20170915233113.17855-2-fancer.lancer@gmail.com> <20170920205235.qhxhq3it6377bjcq@rob-hp-laptop>
- <20170920211517.GA3547@mobilestation>
+From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6ul: Remove leading zeroes from unit addresses
+Date: Thu, 21 Sep 2017 14:01:25 -0300
+Message-ID: <1506013285-31170-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170920211517.GA3547@mobilestation>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Richard Leitner <richard.leitner@skidata.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Sergey.Semin@t-platforms.ru, Linux USB List <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWPLiZjB17Co1B2eb7JE58TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 4:15 PM, Serge Semin <fancer.lancer@gmail.com> wrote:
-> On Wed, Sep 20, 2017 at 03:52:35PM -0500, Rob Herring <robh@kernel.org> wrote:
->> On Sat, Sep 16, 2017 at 02:31:09AM +0300, Serge Semin wrote:
->> > USB2517i hubs are very like USB251xb devices series. They have almost
->> > the same configuration registers space except number of ports, led
->> > configurations and lack of battery settings. All these peculiarities
->> > are reflected in this patch.
->> >
->> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
->> > ---
->> >  Documentation/devicetree/bindings/usb/usb251xb.txt |  4 +-
->>
->> Though Greg wants the code split, I want the binding as one change. H/w
->> doesn't gain features one by one.
->>
->> It's preferred to split bindings to a separate patch.
->>
->
-> Folks, you are really driving people crazy. When I was reviewing a
-> kernel-patchset from a Logan-guy, I asked him to combine some of his patches,
-> since in fact their combination represented one solid driver. I was told to go
-> very far, and Greg supported him with it. I'm not going to be that rude and will
-> do as you asked me to. But really, isn't it possible to have some strict rule
-> created so a developer would always follow it thereby not being asked to
-> combine/split patches almost everytime?
-> The only way I see for now is to know each maintainer personal preferences.
+The following build warnings are seen with W=1:
 
-That rule is in Documentation/devicetree/bindings/submitting-patches.txt.
+Warning (unit_address_format): Node /interrupt-controller@00a01000 unit 
+name should not have leading 0s
+Warning (simple_bus_reg): Node /soc/sram@00900000 simple-bus unit address 
+format error, expected "900000"
+Warning (simple_bus_reg): Node /soc/dma-apbh@01804000 simple-bus unit 
+address format error, expected "1804000"
+(...)
 
-I generally only ask to respin and split bindings if there's other changes.
+Remove the leading zeroes from unit addresses to fix the warnings.
 
->> >  drivers/usb/misc/usb251xb.c                        | 84 +++++++++++++++++++---
->> >  2 files changed, 78 insertions(+), 10 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
->> > index 3957d4eda..3d84626d3 100644
->> > --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
->> > +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
->> > @@ -6,7 +6,8 @@ Hi-Speed Controller.
->> >  Required properties :
->> >   - compatible : Should be "microchip,usb251xb" or one of the specific types:
->> >     "microchip,usb2512b", "microchip,usb2512bi", "microchip,usb2513b",
->> > -   "microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi"
->> > +   "microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi",
->> > +   "microchip,usb2517", "microchip,usb2517i"
->> >   - reset-gpios : Should specify the gpio for hub reset
->> >   - reg : I2C address on the selected bus (default is <0x2C>)
->> >
->> > @@ -36,6 +37,7 @@ Optional properties :
->> >     an invalid value is given, the default is used instead.
->> >   - compound-device : indicate the hub is part of a compound device
->> >   - port-mapping-mode : enable port mapping mode
->> > + - speed-led-mode : led speed indiation mode selection (usb2517 only)
->>
->> This is a boolean or has values? What are valid values?
->>
->
-> It's boolean. Shall I rename it as:
-> "- speed-led-mode : enable led speed indication mode (usb2517 only)"?
+Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6ul.dtsi | 142 +++++++++++++++++++++---------------------
+ 1 file changed, 71 insertions(+), 71 deletions(-)
 
-Having the the word "boolean" in there would help.
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index f11a241..2057ee6 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -98,7 +98,7 @@
+ 		};
+ 	};
+ 
+-	intc: interrupt-controller@00a01000 {
++	intc: interrupt-controller@a01000 {
+ 		compatible = "arm,gic-400", "arm,cortex-a7-gic";
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+@@ -149,12 +149,12 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ocram: sram@00900000 {
++		ocram: sram@900000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x00900000 0x20000>;
+ 		};
+ 
+-		dma_apbh: dma-apbh@01804000 {
++		dma_apbh: dma-apbh@1804000 {
+ 			compatible = "fsl,imx6q-dma-apbh", "fsl,imx28-dma-apbh";
+ 			reg = <0x01804000 0x2000>;
+ 			interrupts = <0 13 IRQ_TYPE_LEVEL_HIGH>,
+@@ -167,7 +167,7 @@
+ 			clocks = <&clks IMX6UL_CLK_APBHDMA>;
+ 		};
+ 
+-		gpmi: gpmi-nand@01806000         {
++		gpmi: gpmi-nand@1806000         {
+ 			compatible = "fsl,imx6q-gpmi-nand";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -187,21 +187,21 @@
+ 			status = "disabled";
+ 		};
+ 
+-		aips1: aips-bus@02000000 {
++		aips1: aips-bus@2000000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			reg = <0x02000000 0x100000>;
+ 			ranges;
+ 
+-			spba-bus@02000000 {
++			spba-bus@2000000 {
+ 				compatible = "fsl,spba-bus", "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				reg = <0x02000000 0x40000>;
+ 				ranges;
+ 
+-				ecspi1: ecspi@02008000 {
++				ecspi1: ecspi@2008000 {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
+@@ -213,7 +213,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				ecspi2: ecspi@0200c000 {
++				ecspi2: ecspi@200c000 {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
+@@ -225,7 +225,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				ecspi3: ecspi@02010000 {
++				ecspi3: ecspi@2010000 {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
+@@ -237,7 +237,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				ecspi4: ecspi@02014000 {
++				ecspi4: ecspi@2014000 {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
+@@ -249,7 +249,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				uart7: serial@02018000 {
++				uart7: serial@2018000 {
+ 					compatible = "fsl,imx6ul-uart",
+ 						     "fsl,imx6q-uart";
+ 					reg = <0x02018000 0x4000>;
+@@ -260,7 +260,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				uart1: serial@02020000 {
++				uart1: serial@2020000 {
+ 					compatible = "fsl,imx6ul-uart",
+ 						     "fsl,imx6q-uart";
+ 					reg = <0x02020000 0x4000>;
+@@ -271,7 +271,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				uart8: serial@02024000 {
++				uart8: serial@2024000 {
+ 					compatible = "fsl,imx6ul-uart",
+ 						     "fsl,imx6q-uart";
+ 					reg = <0x02024000 0x4000>;
+@@ -282,7 +282,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				sai1: sai@02028000 {
++				sai1: sai@2028000 {
+ 					#sound-dai-cells = <0>;
+ 					compatible = "fsl,imx6ul-sai", "fsl,imx6sx-sai";
+ 					reg = <0x02028000 0x4000>;
+@@ -297,7 +297,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				sai2: sai@0202c000 {
++				sai2: sai@202c000 {
+ 					#sound-dai-cells = <0>;
+ 					compatible = "fsl,imx6ul-sai", "fsl,imx6sx-sai";
+ 					reg = <0x0202c000 0x4000>;
+@@ -312,7 +312,7 @@
+ 					status = "disabled";
+ 				};
+ 
+-				sai3: sai@02030000 {
++				sai3: sai@2030000 {
+ 					#sound-dai-cells = <0>;
+ 					compatible = "fsl,imx6ul-sai", "fsl,imx6sx-sai";
+ 					reg = <0x02030000 0x4000>;
+@@ -328,7 +328,7 @@
+ 				};
+ 			};
+ 
+-			tsc: tsc@02040000 {
++			tsc: tsc@2040000 {
+ 				compatible = "fsl,imx6ul-tsc";
+ 				reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
+ 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+@@ -339,7 +339,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm1: pwm@02080000 {
++			pwm1: pwm@2080000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02080000 0x4000>;
+ 				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+@@ -350,7 +350,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm2: pwm@02084000 {
++			pwm2: pwm@2084000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02084000 0x4000>;
+ 				interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+@@ -361,7 +361,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm3: pwm@02088000 {
++			pwm3: pwm@2088000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02088000 0x4000>;
+ 				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+@@ -372,7 +372,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm4: pwm@0208c000 {
++			pwm4: pwm@208c000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x0208c000 0x4000>;
+ 				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+@@ -383,7 +383,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			can1: flexcan@02090000 {
++			can1: flexcan@2090000 {
+ 				compatible = "fsl,imx6ul-flexcan", "fsl,imx6q-flexcan";
+ 				reg = <0x02090000 0x4000>;
+ 				interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+@@ -393,7 +393,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			can2: flexcan@02094000 {
++			can2: flexcan@2094000 {
+ 				compatible = "fsl,imx6ul-flexcan", "fsl,imx6q-flexcan";
+ 				reg = <0x02094000 0x4000>;
+ 				interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+@@ -403,7 +403,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			gpt1: gpt@02098000 {
++			gpt1: gpt@2098000 {
+ 				compatible = "fsl,imx6ul-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x02098000 0x4000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+@@ -412,7 +412,7 @@
+ 				clock-names = "ipg", "per";
+ 			};
+ 
+-			gpio1: gpio@0209c000 {
++			gpio1: gpio@209c000 {
+ 				compatible = "fsl,imx6ul-gpio", "fsl,imx35-gpio";
+ 				reg = <0x0209c000 0x4000>;
+ 				interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
+@@ -425,7 +425,7 @@
+ 					      <&iomuxc 16 33 16>;
+ 			};
+ 
+-			gpio2: gpio@020a0000 {
++			gpio2: gpio@20a0000 {
+ 				compatible = "fsl,imx6ul-gpio", "fsl,imx35-gpio";
+ 				reg = <0x020a0000 0x4000>;
+ 				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+@@ -437,7 +437,7 @@
+ 				gpio-ranges = <&iomuxc 0 49 16>, <&iomuxc 16 111 6>;
+ 			};
+ 
+-			gpio3: gpio@020a4000 {
++			gpio3: gpio@20a4000 {
+ 				compatible = "fsl,imx6ul-gpio", "fsl,imx35-gpio";
+ 				reg = <0x020a4000 0x4000>;
+ 				interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+@@ -449,7 +449,7 @@
+ 				gpio-ranges = <&iomuxc 0 65 29>;
+ 			};
+ 
+-			gpio4: gpio@020a8000 {
++			gpio4: gpio@20a8000 {
+ 				compatible = "fsl,imx6ul-gpio", "fsl,imx35-gpio";
+ 				reg = <0x020a8000 0x4000>;
+ 				interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+@@ -461,7 +461,7 @@
+ 				gpio-ranges = <&iomuxc 0 94 17>, <&iomuxc 17 117 12>;
+ 			};
+ 
+-			gpio5: gpio@020ac000 {
++			gpio5: gpio@20ac000 {
+ 				compatible = "fsl,imx6ul-gpio", "fsl,imx35-gpio";
+ 				reg = <0x020ac000 0x4000>;
+ 				interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+@@ -473,7 +473,7 @@
+ 				gpio-ranges = <&iomuxc 0 7 10>, <&iomuxc 10 5 2>;
+ 			};
+ 
+-			fec2: ethernet@020b4000 {
++			fec2: ethernet@20b4000 {
+ 				compatible = "fsl,imx6ul-fec", "fsl,imx6q-fec";
+ 				reg = <0x020b4000 0x4000>;
+ 				interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+@@ -490,7 +490,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			kpp: kpp@020b8000 {
++			kpp: kpp@20b8000 {
+ 				compatible = "fsl,imx6ul-kpp", "fsl,imx6q-kpp", "fsl,imx21-kpp";
+ 				reg = <0x020b8000 0x4000>;
+ 				interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+@@ -498,14 +498,14 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog1: wdog@020bc000 {
++			wdog1: wdog@20bc000 {
+ 				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_WDOG1>;
+ 			};
+ 
+-			wdog2: wdog@020c0000 {
++			wdog2: wdog@20c0000 {
+ 				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+@@ -513,7 +513,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			clks: ccm@020c4000 {
++			clks: ccm@20c4000 {
+ 				compatible = "fsl,imx6ul-ccm";
+ 				reg = <0x020c4000 0x4000>;
+ 				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
+@@ -523,7 +523,7 @@
+ 				clock-names = "ckil", "osc", "ipp_di0", "ipp_di1";
+ 			};
+ 
+-			anatop: anatop@020c8000 {
++			anatop: anatop@20c8000 {
+ 				compatible = "fsl,imx6ul-anatop", "fsl,imx6q-anatop",
+ 					     "syscon", "simple-bus";
+ 				reg = <0x020c8000 0x1000>;
+@@ -580,7 +580,7 @@
+ 				};
+ 			};
+ 
+-			usbphy1: usbphy@020c9000 {
++			usbphy1: usbphy@20c9000 {
+ 				compatible = "fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
+ 				reg = <0x020c9000 0x1000>;
+ 				interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+@@ -589,7 +589,7 @@
+ 				fsl,anatop = <&anatop>;
+ 			};
+ 
+-			usbphy2: usbphy@020ca000 {
++			usbphy2: usbphy@20ca000 {
+ 				compatible = "fsl,imx6ul-usbphy", "fsl,imx23-usbphy";
+ 				reg = <0x020ca000 0x1000>;
+ 				interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+@@ -598,7 +598,7 @@
+ 				fsl,anatop = <&anatop>;
+ 			};
+ 
+-			snvs: snvs@020cc000 {
++			snvs: snvs@20cc000 {
+ 				compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+ 				reg = <0x020cc000 0x4000>;
+ 
+@@ -628,17 +628,17 @@
+ 				};
+ 			};
+ 
+-			epit1: epit@020d0000 {
++			epit1: epit@20d0000 {
+ 				reg = <0x020d0000 0x4000>;
+ 				interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 
+-			epit2: epit@020d4000 {
++			epit2: epit@20d4000 {
+ 				reg = <0x020d4000 0x4000>;
+ 				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 
+-			src: src@020d8000 {
++			src: src@20d8000 {
+ 				compatible = "fsl,imx6ul-src", "fsl,imx51-src";
+ 				reg = <0x020d8000 0x4000>;
+ 				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
+@@ -646,7 +646,7 @@
+ 				#reset-cells = <1>;
+ 			};
+ 
+-			gpc: gpc@020dc000 {
++			gpc: gpc@20dc000 {
+ 				compatible = "fsl,imx6ul-gpc", "fsl,imx6q-gpc";
+ 				reg = <0x020dc000 0x4000>;
+ 				interrupt-controller;
+@@ -655,18 +655,18 @@
+ 				interrupt-parent = <&intc>;
+ 			};
+ 
+-			iomuxc: iomuxc@020e0000 {
++			iomuxc: iomuxc@20e0000 {
+ 				compatible = "fsl,imx6ul-iomuxc";
+ 				reg = <0x020e0000 0x4000>;
+ 			};
+ 
+-			gpr: iomuxc-gpr@020e4000 {
++			gpr: iomuxc-gpr@20e4000 {
+ 				compatible = "fsl,imx6ul-iomuxc-gpr",
+ 					     "fsl,imx6q-iomuxc-gpr", "syscon";
+ 				reg = <0x020e4000 0x4000>;
+ 			};
+ 
+-			gpt2: gpt@020e8000 {
++			gpt2: gpt@20e8000 {
+ 				compatible = "fsl,imx6ul-gpt", "fsl,imx6sx-gpt";
+ 				reg = <0x020e8000 0x4000>;
+ 				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+@@ -675,7 +675,7 @@
+ 				clock-names = "ipg", "per";
+ 			};
+ 
+-			sdma: sdma@020ec000 {
++			sdma: sdma@20ec000 {
+ 				compatible = "fsl,imx6ul-sdma", "fsl,imx6q-sdma",
+ 					     "fsl,imx35-sdma";
+ 				reg = <0x020ec000 0x4000>;
+@@ -687,7 +687,7 @@
+ 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx6q.bin";
+ 			};
+ 
+-			pwm5: pwm@020f0000 {
++			pwm5: pwm@20f0000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x020f0000 0x4000>;
+ 				interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+@@ -698,7 +698,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm6: pwm@020f4000 {
++			pwm6: pwm@20f4000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x020f4000 0x4000>;
+ 				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+@@ -709,7 +709,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm7: pwm@020f8000 {
++			pwm7: pwm@20f8000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x020f8000 0x4000>;
+ 				interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+@@ -720,7 +720,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm8: pwm@020fc000 {
++			pwm8: pwm@20fc000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x020fc000 0x4000>;
+ 				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+@@ -732,14 +732,14 @@
+ 			};
+ 		};
+ 
+-		aips2: aips-bus@02100000 {
++		aips2: aips-bus@2100000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			reg = <0x02100000 0x100000>;
+ 			ranges;
+ 
+-			usbotg1: usb@02184000 {
++			usbotg1: usb@2184000 {
+ 				compatible = "fsl,imx6ul-usb", "fsl,imx27-usb";
+ 				reg = <0x02184000 0x200>;
+ 				interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+@@ -753,7 +753,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			usbotg2: usb@02184200 {
++			usbotg2: usb@2184200 {
+ 				compatible = "fsl,imx6ul-usb", "fsl,imx27-usb";
+ 				reg = <0x02184200 0x200>;
+ 				interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+@@ -766,13 +766,13 @@
+ 				status = "disabled";
+ 			};
+ 
+-			usbmisc: usbmisc@02184800 {
++			usbmisc: usbmisc@2184800 {
+ 				#index-cells = <1>;
+ 				compatible = "fsl,imx6ul-usbmisc", "fsl,imx6q-usbmisc";
+ 				reg = <0x02184800 0x200>;
+ 			};
+ 
+-			fec1: ethernet@02188000 {
++			fec1: ethernet@2188000 {
+ 				compatible = "fsl,imx6ul-fec", "fsl,imx6q-fec";
+ 				reg = <0x02188000 0x4000>;
+ 				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
+@@ -789,7 +789,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			usdhc1: usdhc@02190000 {
++			usdhc1: usdhc@2190000 {
+ 				compatible = "fsl,imx6ul-usdhc", "fsl,imx6sx-usdhc";
+ 				reg = <0x02190000 0x4000>;
+ 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+@@ -801,7 +801,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			usdhc2: usdhc@02194000 {
++			usdhc2: usdhc@2194000 {
+ 				compatible = "fsl,imx6ul-usdhc", "fsl,imx6sx-usdhc";
+ 				reg = <0x02194000 0x4000>;
+ 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+@@ -813,7 +813,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			adc1: adc@02198000 {
++			adc1: adc@2198000 {
+ 				compatible = "fsl,imx6ul-adc", "fsl,vf610-adc";
+ 				reg = <0x02198000 0x4000>;
+ 				interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+@@ -825,7 +825,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2c1: i2c@021a0000 {
++			i2c1: i2c@21a0000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "fsl,imx6ul-i2c", "fsl,imx21-i2c";
+@@ -835,7 +835,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2c2: i2c@021a4000 {
++			i2c2: i2c@21a4000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "fsl,imx6ul-i2c", "fsl,imx21-i2c";
+@@ -845,7 +845,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2c3: i2c@021a8000 {
++			i2c3: i2c@21a8000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "fsl,imx6ul-i2c", "fsl,imx21-i2c";
+@@ -855,18 +855,18 @@
+ 				status = "disabled";
+ 			};
+ 
+-			mmdc: mmdc@021b0000 {
++			mmdc: mmdc@21b0000 {
+ 				compatible = "fsl,imx6ul-mmdc", "fsl,imx6q-mmdc";
+ 				reg = <0x021b0000 0x4000>;
+ 			};
+ 
+-			ocotp: ocotp-ctrl@021bc000 {
++			ocotp: ocotp-ctrl@21bc000 {
+ 				compatible = "fsl,imx6ul-ocotp", "syscon";
+ 				reg = <0x021bc000 0x4000>;
+ 				clocks = <&clks IMX6UL_CLK_OCOTP>;
+ 			};
+ 
+-			lcdif: lcdif@021c8000 {
++			lcdif: lcdif@21c8000 {
+ 				compatible = "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
+ 				reg = <0x021c8000 0x4000>;
+ 				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+@@ -877,7 +877,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			qspi: qspi@021e0000 {
++			qspi: qspi@21e0000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "fsl,imx6ul-qspi", "fsl,imx6sx-qspi";
+@@ -890,7 +890,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart2: serial@021e8000 {
++			uart2: serial@21e8000 {
+ 				compatible = "fsl,imx6ul-uart",
+ 					     "fsl,imx6q-uart";
+ 				reg = <0x021e8000 0x4000>;
+@@ -901,7 +901,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart3: serial@021ec000 {
++			uart3: serial@21ec000 {
+ 				compatible = "fsl,imx6ul-uart",
+ 					     "fsl,imx6q-uart";
+ 				reg = <0x021ec000 0x4000>;
+@@ -912,7 +912,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart4: serial@021f0000 {
++			uart4: serial@21f0000 {
+ 				compatible = "fsl,imx6ul-uart",
+ 					     "fsl,imx6q-uart";
+ 				reg = <0x021f0000 0x4000>;
+@@ -923,7 +923,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart5: serial@021f4000 {
++			uart5: serial@21f4000 {
+ 				compatible = "fsl,imx6ul-uart",
+ 					     "fsl,imx6q-uart";
+ 				reg = <0x021f4000 0x4000>;
+@@ -934,7 +934,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2c4: i2c@021f8000 {
++			i2c4: i2c@21f8000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "fsl,imx6ul-i2c", "fsl,imx21-i2c";
+@@ -944,7 +944,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart6: serial@021fc000 {
++			uart6: serial@21fc000 {
+ 				compatible = "fsl,imx6ul-uart",
+ 					     "fsl,imx6q-uart";
+ 				reg = <0x021fc000 0x4000>;
+-- 
+2.7.4
 
->> This needs a vendor prefix. Somehow the other properties got in without.
->>
->
-> Hmm, it's not vendor specific, but device-specific. USB2517 is produced
-> by the same vendor - microchip. The new device got almost the same functionality as
-> the others, except number or ports, LED feature and battery enable feature.
-> The last one isn't configurable by dts. The rest of the properties are the same
-> for all the compatible devices. So what properties you are talking about then?
-
-Well, we don't name things after devices. Properties are either common
-(either from DT Spec or a class of device (clocks, regulators, USB
-device, USB hubs, etc.)) or vendor specific. I haven't looked at which
-other ones specifically could be common for hubs or USB devices and
-which ones should be MicroChip specific.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
