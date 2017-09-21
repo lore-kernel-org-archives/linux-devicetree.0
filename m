@@ -1,35 +1,59 @@
-From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Subject: [PATCH 2/3] iio: adc: mt2712: Add compatible node for mt2712.
-Date: Thu, 21 Sep 2017 09:26:51 +0800
-Message-ID: <1505957212-13402-3-git-send-email-zhiyong.tao@mediatek.com>
-References: <1505957212-13402-1-git-send-email-zhiyong.tao@mediatek.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: [PATCH v2] mmc: dt-bindings: Add reg/source_cg/latch-ck for Mediatek MMC bindings
+Date: Thu, 21 Sep 2017 09:52:54 +0800
+Message-ID: <1505958774-14410-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505957212-13402-1-git-send-email-zhiyong.tao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, sean.wang@mediatek.com, yt.shen@mediatek.com, matthias.bgg@gmail.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chaotian Jing <chaotian.jing@mediatek.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This commit adds mt2712 compatible node.
+Change the comptiable for support of multi-platform
+Add description for reg
+Add description for source_cg
+Add description for mediatek,latch-ck
+Note that source_cg and mediatek,latch-ck are optional for some projects,
+eg, MT2701 do not have source_cg, and MT2712 do not need
+mediatek,latch-ck
 
-Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
 ---
- drivers/iio/adc/mt6577_auxadc.c |    1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-index 414cf44..70bfa1e 100644
---- a/drivers/iio/adc/mt6577_auxadc.c
-+++ b/drivers/iio/adc/mt6577_auxadc.c
-@@ -306,6 +306,7 @@ static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
+diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+index 4182ea3..405cd06 100644
+--- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
++++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+@@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
+ and the properties used by the msdc driver.
  
- static const struct of_device_id mt6577_auxadc_of_match[] = {
- 	{ .compatible = "mediatek,mt2701-auxadc", },
-+	{ .compatible = "mediatek,mt2712-auxadc", },
- 	{ .compatible = "mediatek,mt7622-auxadc", },
- 	{ .compatible = "mediatek,mt8173-auxadc", },
- 	{ }
+ Required properties:
+-- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
++- compatible: value should be either of the following.
++	"mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
++	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
++	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
++	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
++- reg: physical base address of the controller and length
+ - interrupts: Should contain MSDC interrupt number
+-- clocks: MSDC source clock, HCLK
+-- clock-names: "source", "hclk"
++- clocks: MSDC source clock, HCLK, source_cg
++- clock-names: "source", "hclk", "source_cg"
+ - pinctrl-names: should be "default", "state_uhs"
+ - pinctrl-0: should contain default/high speed pin ctrl
+ - pinctrl-1: should contain uhs mode pin ctrl
+@@ -30,6 +35,8 @@ Optional properties:
+ - mediatek,hs400-cmd-resp-sel-rising:  HS400 command response sample selection
+ 				       If present,HS400 command responses are sampled on rising edges.
+ 				       If not present,HS400 command responses are sampled on falling edges.
++- mediatek,latch-ck: Some projects do not support enhance_rx, need set correct latch-ck to avoid data crc
++		     error caused by stop clock(fifo full)
+ 
+ Examples:
+ mmc0: mmc@11230000 {
 -- 
-1.7.9.5
+1.8.1.1.dirty
