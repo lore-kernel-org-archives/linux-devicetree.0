@@ -1,34 +1,77 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] [trivial] dt-bindings: i2c: i2c-mux: Spelling s/required is/required if/
-Date: Thu, 21 Sep 2017 14:52:29 +0200
-Message-ID: <1505998349-10091-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 8/8] arm64: dts: renesas: eagle: add EtherAVB support
+Date: Thu, 21 Sep 2017 15:08:40 +0200
+Message-ID: <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg@mail.gmail.com>
+References: <20170915194449.538504992@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915194449.538504992-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/i2c/i2c-mux.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Sergei,
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux.txt b/Documentation/devicetree/bindings/i2c/i2c-mux.txt
-index 212e6779dc5c0caf..b38f58a1c8784184 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mux.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mux.txt
-@@ -6,10 +6,10 @@ multiplexer/switch will have one child node for each child bus.
- 
- Optional properties:
- - #address-cells = <1>;
--   This property is required is the i2c-mux child node does not exist.
-+   This property is required if the i2c-mux child node does not exist.
- 
- - #size-cells = <0>;
--   This property is required is the i2c-mux child node does not exist.
-+   This property is required if the i2c-mux child node does not exist.
- 
- - i2c-mux
-    For i2c multiplexers/switches that have child nodes that are a mixture
--- 
-2.7.4
+On Fri, Sep 15, 2017 at 9:43 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Define the Eagle board  dependent part of the EtherAVB device node.
+> Enable DHCP  and NFS root for the kernel booting.
+>
+> Based  on the original (and large) patch by Vladimir Barinov.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> @@ -18,10 +18,11 @@
+>
+>         aliases {
+>                 serial0 = &scif0;
+> +               ethernet0 = &avb;
+>         };
+>
+>         chosen {
+> -               bootargs = "ignore_loglevel";
+> +               bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+>                 stdout-path = "serial0:115200n8";
+>         };
+>
+> @@ -43,3 +44,14 @@
+>  &scif0 {
+>         status = "okay";
+>  };
+> +
+> +&avb {
+> +       renesas,no-ether-link;
+> +       phy-handle = <&phy0>;
+> +       status = "okay";
+> +
+> +       phy0: ethernet-phy@0 {
+> +               rxc-skew-ps = <1500>;
+> +               reg = <0>;
+
+Any specific reason why you don't want to wire up the interrupt?
+
+                interrupt-parent = <&gpio2>;
+                interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+
+> +       };
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
