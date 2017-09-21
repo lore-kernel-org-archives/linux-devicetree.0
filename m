@@ -1,67 +1,51 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [v2,1/3] can: m_can: Make hclk optional
-Date: Thu, 21 Sep 2017 19:38:22 +0530
-Message-ID: <895ab55a-fede-3a67-27aa-1ac1af9843d7@ti.com>
-References: <20170724225142.19975-2-fcooper@ti.com>
- <6f574628-51cd-0db8-e5aa-e7ae4a9cf79a@ti.com>
- <eb45fe94-c476-3919-603d-ff2a6b13487c@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <eb45fe94-c476-3919-603d-ff2a6b13487c@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com
-Cc: "Kristo, Tero" <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP List <linux-omap@vger.kernel.org>
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/3] arm64: dts: stratix10: include the reset manager bindings
+Date: Thu, 21 Sep 2017 09:17:58 -0500
+Message-ID: <1506003480-22955-1-git-send-email-dinguyen@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 September 2017 06:01 AM, Franklin S Cooper Jr wrote:
-> 
-> 
-> On 08/24/2017 03:00 AM, Sekhar Nori wrote:
->> + some OMAP folks and Linux OMAP list
->>
->> On Tuesday 25 July 2017 04:21 AM, Franklin Cooper wrote:
->>> Hclk is the MCAN's interface clock. However, for OMAP based devices such as
->>> DRA7 SoC family the interface clock is handled by hwmod. Therefore, this
->>> interface clock is managed by hwmod driver via pm_runtime_get and
->>> pm_runtime_put calls. Therefore, this interface clock isn't defined in DT
->>> and thus the driver shouldn't fail if this clock isn't found.
->>
->> I agree that hclk is defined as interface clock for M_CAN IP on DRA76x.
->>
->> However, there may be a need for the driver to know the value of hclk to
->> properly configure the RAM watchdog register which has a counter
->> counting down using hclk. Looks like the driver does not use the RAM
->> watchdog today. But if there is a need to configure it in future, it
->> might be a problem.
-> 
-> Honestly the RAM watchdog seems like a fundamental design problem.
-> This RAM watchdog seems to be used in case a request to access the
-> message ram is made but it hangs for what ever reason. Its even more
-> complicated since the Message RAM is external to the MCAN IP so its
-> implementation or how its handled probably differs from device to
-> device. From example say you do have this error it isn't clear how you
-> would recover from it. A logically answer would be to reset the entire
-> IP but that also assumes that Message RAM will be reset along with the
-> ip which likely depends on each SoC.
-> 
-> But if a readl/writel command hangs will the kernel eventually throw an
-> error on its on or will the driver just hang? If it does hang can a
-> driver in the ISR do something to properly terminate the driver or even
-> recover from it?
->>
->> Is there a restriction in OMAP architecture against passing the
->> interface clock also in the 'clocks' property in DT. I have not tried it
->> myself, but wonder if you hit an issue that led to this patch.
-> 
-> No but not passing the interface clock is typical.
+Add the reset manager includes for Stratix10. Need to use the '#include'
+instead of '/include/' to avoid a DTC syntax error.
 
-Okay, then it sounds like it will just be easier to pass the hclk too?
+Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi      | 1 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-So it can be used if needed in future and also so that the driver can
-stay the same as today.
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 631e09a..f7fbc38 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -15,6 +15,7 @@
+  */
+ 
+ /dts-v1/;
++#include <dt-bindings/reset/altr,rst-mgr-s10.h>
+ 
+ / {
+ 	compatible = "altr,socfpga-stratix10";
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 5907586..46f27ed 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -14,7 +14,7 @@
+  * this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+-/include/ "socfpga_stratix10.dtsi"
++#include "socfpga_stratix10.dtsi"
+ 
+ / {
+ 	model = "SoCFPGA Stratix 10 SoCDK";
+-- 
+2.7.4
 
-Thanks,
-Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
