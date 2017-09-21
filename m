@@ -1,37 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 4/7] clk: qcom: Add A53 PLL support
-Date: Thu, 21 Sep 2017 17:51:25 -0500
-Message-ID: <20170921225125.f4dhxsodfgq5rrdt@rob-hp-laptop>
-References: <20170921164940.20343-1-georgi.djakov@linaro.org>
- <20170921164940.20343-5-georgi.djakov@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: nand: denali: reduce the register space in
+ the example
+Date: Thu, 21 Sep 2017 17:55:09 -0500
+Message-ID: <20170921225509.u5x7sxenxzx3lndm@rob-hp-laptop>
+References: <1505373456-24047-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170921164940.20343-5-georgi.djakov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1505373456-24047-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 07:49:37PM +0300, Georgi Djakov wrote:
-> The CPUs on Qualcomm MSM8916-based platforms are clocked by two PLLs,
-> a primary (A53) CPU PLL and a secondary fixed-rate GPLL0. These sources
-> are connected to a mux and half-integer divider, which is feeding the
-> CPU cores.
+On Thu, Sep 14, 2017 at 04:17:36PM +0900, Masahiro Yamada wrote:
+> This example allocates too much for register regions.  Especially,
+> there are only two registers in the "nand_data" interface of this
+> hardware (ADDR: 0x00, DATA: 0x10).
 > 
-> This patch adds support for the primary CPU PLL which generates the
-> higher range of frequencies above 1GHz.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 > ---
->  .../devicetree/bindings/clock/qcom,a53pll.txt      |  22 +++++
+> 
+>  Documentation/devicetree/bindings/mtd/denali-nand.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please add acks when posting new versions.
-
->  drivers/clk/qcom/Kconfig                           |  10 ++
->  drivers/clk/qcom/Makefile                          |   1 +
->  drivers/clk/qcom/a53-pll.c                         | 107 +++++++++++++++++++++
->  4 files changed, 140 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
->  create mode 100644 drivers/clk/qcom/a53-pll.c
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
