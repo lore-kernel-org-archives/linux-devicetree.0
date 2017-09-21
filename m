@@ -1,39 +1,47 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
-Date: Thu, 21 Sep 2017 10:24:11 +0200
-Message-ID: <20170921082410.GD15749@verge.net.au>
-References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
- <20170921082006.GC15749@verge.net.au>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/7] Add PMIC support to MediaTek MT7622 SoC
+Date: Thu, 21 Sep 2017 16:26:50 +0800
+Message-ID: <cover.1505980364.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170921082006.GC15749@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 10:20:06AM +0200, Simon Horman wrote:
-> On Wed, Sep 20, 2017 at 02:32:28PM +0200, Geert Uytterhoeven wrote:
-> > Hi Vladimir,
-> > 
-> > [CC Pantelis]
-> > 
-> > On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
-> > <vladimir.barinov@cogentembedded.com> wrote:
-> > > Add the initial device tree for the M3ULCB with Kingfisher extension
-> > > infotainment board.
-> > >
-> > > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > > ---
-> > > Changes in version 2:
-> > > - added own compatible value "shimafuji,kingfisher"
-> > 
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Thanks, applied.
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Sorry, I spoke to soon. I seem to be missing
-[PATCH v2 03/18] arm64: dts: ulcb-kf: initial device tree
+Changes since v3
+- rebase into Linux 4.14-rc1
+- removed those patches already applied
+
+Changes since v2:
+- for patch 1/2, enhance the document as the suggestions from v2.
+- for patch 3, constify the table with struct regulator_ops, also fix that
+regulator doesn't have modesetting facilities it just shouldn't have the ops
+and finally fix copy+paste mistake in warranty disclaimer.
+- for patch 7/8, sort the things added for MT7622/MT6380 alphabetically.
+
+Chenglin Xu (1):
+  soc: mediatek: pwrap: add support for MT7622 SoC
+
+Sean Wang (6):
+  dt-bindings: arm: mediatek: add MT7622 string to the PMIC wrapper doc
+  soc: mediatek: pwrap: add pwrap_read32 for reading in 32-bit mode
+  soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
+  soc: mediatek: pwrap: update pwrap_init without slave programming
+  soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
+  soc: mediatek: pwrap: fixup warnings from coding style
+
+ .../devicetree/bindings/soc/mediatek/pwrap.txt     |   1 +
+ drivers/soc/mediatek/mtk-pmic-wrap.c               | 417 ++++++++++++++++++---
+ 2 files changed, 362 insertions(+), 56 deletions(-)
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
