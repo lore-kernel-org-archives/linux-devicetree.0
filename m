@@ -1,115 +1,68 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
-Date: Thu, 21 Sep 2017 11:51:40 +0300
-Message-ID: <1505983900.23573.76.camel@hp800z>
-References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
-         <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 4/8] ARM: dts: iwg22d: Enable SDHI0 controller
+Date: Thu, 21 Sep 2017 08:53:00 +0000
+Message-ID: <TY1PR06MB089549AB7DCF1C03605EF421C0660@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-5-git-send-email-chris.paterson2@renesas.com>
+ <CAMuHMdVFPiXe9trwprNfX=p8-OKbrcgVSrwmveYhXGm=kd2bfQ@mail.gmail.com>
+ <20170921083839.GH15749@verge.net.au> <20170921084219.GK15749@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170921084219.GK15749@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hello Simon,
 
-On Wed, 2017-09-20 at 14:32 +0200, Geert Uytterhoeven wrote:
-> Hi Vladimir,
-> 
-> [CC Pantelis]
-> 
-> On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
-> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> > Add the initial device tree for the M3ULCB with Kingfisher extension
-> > infotainment board.
+> -----Original Message-----
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: 21 September 2017 09:42
+> To: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Chris Paterson <Chris.Paterson2@renesas.com>; Rob Herring <robh+dt@ke=
+rnel.org>; Mark Rutland <mark.rutland@arm.com>;
+> Magnus Damm <magnus.damm@gmail.com>; Russell King <linux@armlinux.org.uk>=
+; Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com>; devicetree@vger.kernel.org; Linux-Renes=
+as <linux-renesas-soc@vger.kernel.org>; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH 4/8] ARM: dts: iwg22d: Enable SDHI0 controller
+>
+> On Thu, Sep 21, 2017 at 10:38:40AM +0200, Simon Horman wrote:
+> > On Wed, Sep 20, 2017 at 01:40:20PM +0200, Geert Uytterhoeven wrote:
+> > > On Wed, Sep 13, 2017 at 7:05 PM, Chris Paterson
+> > > <chris.paterson2@renesas.com> wrote:
+> > > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > >
+> > > > Enable the SDHI0 controller on iWave RZ/G1E carrier board.
+> > > >
+> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > >
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > >
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> > ---
-> > Changes in version 2:
-> > - added own compatible value "shimafuji,kingfisher"
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> 
-> Some food for thought below...
-> 
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
-> > @@ -0,0 +1,19 @@
-> > +/*
-> > + * Device Tree Source for the M3ULCB Kingfisher board
-> > + *
-> > + * Copyright (C) 2017 Renesas Electronics Corp.
-> > + * Copyright (C) 2017 Cogent Embedded, Inc.
-> > + *
-> > + * This file is licensed under the terms of the GNU General Public License
-> > + * version 2.  This program is licensed "as is" without any warranty of any
-> > + * kind, whether express or implied.
-> > + */
-> > +
-> > +#include "r8a7796-m3ulcb.dts"
-> 
-> Ideally, we don't include *.dts files, only *.dtsi.
-> But I don't see a better immediate solution.
-> 
-> > +#include "ulcb-kf.dtsi"
-> 
-> As the Kingfisher is actually an expansion board for H3ULCB (with R-Car H3
-> ES1.1 and ES2.0) and M3ULCB (with R-Car M3-W), turning ulcb-kf.dtsi into a
-> DT overlay would make sense.
-> That would also solve the issue of the 3 extra DTSes needed for all possible
-> combinations of ULCB and Kingfisher (r8a7795-es1-h3ulcb-kf.dts,
-> r8a7795-h3ulcb-kf.dts, r8a7796-h3ulcb-kf.dts (perhaps more to follow?)).
-> 
-> But that's too premature, without upstream support for the easy loading of
-> DT overlays.
-> 
+> > Thanks, applied.
+>
+> Sorry, I somehow overlooked Fabrizio's comments.
+> I have dropped this patch for now.
 
-Sigh, yes.
+Thank you for doing this.
+We are working on a new patch now, I'll submit a V2 as soon as it is ready.
+Just to recap (all in one place), we found an HW issue and a SW one prevent=
+ing SDHI0 from working properly at UHS SDR50 and SDR104, therefore we need =
+a new patch to limit the speed of this interface.
 
-> > +/ {
-> > +       model = "Renesas M3ULCB Kingfisher board based on r8a7796";
-> > +       compatible = "shimafuji,kingfisher", "renesas,m3ulcb",
-> > +                    "renesas,r8a7796";
-> > +};
-> 
-> And how to support from an overlay the addition of "shimafuji,kingfisher" to
-> (not replacement of!) the main compatible value?
-> 
-
-You can hack something in DT but it will be gross indeed.
-
-Ideally you'd want a += operator, but it's going to take a lot of
-changes starting from DTB blob format.
-
-In yaml we could easily do this with an append tag type
-
-compatible: [ "renesas,m3ulcb", "renesas,r8a7796" ]
-
-compatible: !append "shimafuji,kingfisher"
-
-Are you going to be at ELCE? I have a bunch of thing to ask you about
-your DT usage patterns.
-
-Regards
-
--- Pantelis
-
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Thanks,
+Fabrizio
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
