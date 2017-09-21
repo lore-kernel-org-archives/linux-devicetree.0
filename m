@@ -1,46 +1,103 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: dts: renesas: r8a77995: draak: enable USB2.0
- Host (EHCI/OHCI)
-Date: Thu, 21 Sep 2017 11:12:12 +0200
-Message-ID: <CAMuHMdUxerxm0BUzXjmQniDsgE2gxEEScCF=rBMdEVcET3EmFg@mail.gmail.com>
-References: <1505385043-1554-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1505385043-1554-5-git-send-email-yoshihiro.shimoda.uh@renesas.com> <20170921085803.GQ15749@verge.net.au>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 1/2] dt: bindings: media: Document port and endpoint
+ numbering
+Date: Thu, 21 Sep 2017 12:25:17 +0300
+Message-ID: <20170921092516.yzjelpxka4firnwx@paasikivi.fi.intel.com>
+References: <1505723105-16238-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1505723105-16238-2-git-send-email-sakari.ailus@linux.intel.com>
+ <20170920142438.wva4a5gz7ikfnlyh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170921085803.GQ15749-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170920142438.wva4a5gz7ikfnlyh@rob-hp-laptop>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 10:58 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> [CC Geert]
->
-> On Thu, Sep 14, 2017 at 07:30:43PM +0900, Yoshihiro Shimoda wrote:
->> This patch enables USB2.0 Host (EHCI/OHCI) for r8a77995.
->>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->
-> Hi Geert,
->
-> thanks for reviewing patches 1-3 of this series.
-> I think you missed this one.
+Hi Rob,
 
-Oops, this time with Reply-to-all:
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Thanks for the reply.
 
-Gr{oetje,eeting}s,
+On Wed, Sep 20, 2017 at 03:53:13PM -0500, Rob Herring wrote:
+> On Mon, Sep 18, 2017 at 11:25:04AM +0300, Sakari Ailus wrote:
+> > A lot of devices do not need and do not document port or endpoint
+> > numbering at all, e.g. in case where there's just a single port and a
+> > single endpoint. Whereas this is just common sense, document it to make it
+> > explicit.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> 
+> This is fine, but bindings should still be explicit. Otherwise, I'm 
+> wondering if it's a single port/endpoint or they just forgot to document 
+> it. And I shouldn't have to look at the example to infer that.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-                        Geert
+The purpose of the patch was to actually document port and endpoint
+numbering for devices for which it is not documented, not to suggest that
+this would be omitted in in binding documentation. The fact is that I
+couldn't find documentation for endpoint numbering for a single device
+under Documentation/devicetree/bindings/media/ . Yet I haven't come across
+DT source where other than zero would have been used. And the drivers
+(mostly?) have ignored endpoint numbers so far.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Some bindings have been omitted on the grounds that they're documented in
+video-interfaces.txt.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What would you think of the following? I'm not sure it'd really belong
+there, but it'd be a small piece of documentation one can easily refer to.
+
+
+>From e735979005244eb10597fe5333130b93e41d5a38 Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Mon, 18 Sep 2017 11:15:53 +0300
+Subject: [PATCH 1/1] dt: bindings: media: Document practices for DT bindings,
+ ports, endpoints
+
+Port and endpoint numbering has been omitted in DT binding documentation
+for a large number of devices. Also common properties the device uses have
+been missed in binding documentation. Make it explicit that these things
+need to be documented.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ .../devicetree/bindings/media/video-interfaces.txt        | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index 852041a..3c5382f 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -55,6 +55,21 @@ divided into two separate ITU-R BT.656 8-bit busses.  In such case bus-width
+ and data-shift properties can be used to assign physical data lines to each
+ endpoint node (logical bus).
+ 
++Documenting bindings for devices
++--------------------------------
++
++All required and optional bindings the device supports shall be explicitly
++documented in device DT binding documentation. This also includes port and
++endpoint numbering for the device.
++
++Port and endpoint numbering
++---------------------------
++
++Old binding documentation may have omitted explicitly specifying port and
++endpoint numbers. This often applies to devices that have a single port and a
++single endpoint in that port. In this case, the only valid port number for such
++a device is zero. The same applies for devices for which bindings do not
++document endpoint numbering: only zero is a valid endpoint.
+ 
+ Required properties
+ -------------------
+-- 
+2.7.4
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
