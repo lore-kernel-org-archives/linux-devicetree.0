@@ -1,90 +1,150 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/2] arm64: dts: renesas: r8a77995: draak: enable
- EthernetAVB
-Date: Thu, 21 Sep 2017 10:37:15 +0000
-Message-ID: <TY1PR06MB09920DE49B74D16FABE7699DD8660@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1505305119-4257-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1505305119-4257-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdX3q=foc1hkcqTc3WQYxCh1x+bc8fu9+YcqVAx9bp4qaA@mail.gmail.com>
- <TY1PR06MB0992906ACD39FA3D176CDFE6D86E0@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <20170915073501.GD3924@verge.net.au>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] phy: exynos5-usbdrd: Calibrate LOS levels for
+ exynos5420/5800
+Date: Thu, 21 Sep 2017 16:37:52 +0530
+Message-ID: <ba580a0c-36c3-b227-61ee-97637532823e@ti.com>
+References: <1505728934-6200-1-git-send-email-andrzej.p@samsung.com>
+ <CGME20170918100944eucas1p2735d3d6a6ee562b927fb9dfaeb0d4090@eucas1p2.samsung.com>
+ <1505729371-6509-1-git-send-email-andrzej.p@samsung.com>
+ <87y3pcmgv6.fsf@linux.intel.com>
+ <e1e1b4e5-0678-faaf-e97b-b18095342af2@ti.com>
+ <96001441-2a67-ac9c-a606-eac66138d09e@samsung.com>
+ <5c90f022-5cb1-c746-6015-c93a58805cfe@samsung.com>
+ <87vakgmb24.fsf@linux.intel.com>
+ <7d87727a-e65e-f25b-0cdc-fe6ff0b7bb90@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170915073501.GD3924@verge.net.au>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7d87727a-e65e-f25b-0cdc-fe6ff0b7bb90-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon-san,
+Hi,
 
-> From: Simon Horman
-> Sent: Friday, September 15, 2017 4:35 PM
->=20
-> On Wed, Sep 13, 2017 at 11:58:47PM +0000, Yoshihiro Shimoda wrote:
-> > Hi Geert-san,
-> >
-> > > From: Geert Uytterhoeven
-> > > Sent: Wednesday, September 13, 2017 11:55 PM
-> > >
-> > > Hi Shimoda-san,
-> > >
-> > > On Wed, Sep 13, 2017 at 2:18 PM, Yoshihiro Shimoda
-> > > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > > > This patch enables EthernetAVB for R-Car D3 draak board.
-> > > >
-> > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-> > > > +++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-> > >
-> > > > @@ -37,6 +39,14 @@
-> > > >  };
-> > > >
-> > > >  &pfc {
-> > > > +       avb0_pins: avb {
-> > > > +               mux {
-> > > > +                       groups =3D "avb0_link", "avb0_phy_int", "av=
-b0_mdc",
-> > > > +                                "avb0_mii";
-> > > > +                       function =3D "avb0";
-> > >
-> > > This part depends on (an updated version of) "[PATCH 5/8] pinctrl: sh=
--pfc:
-> > > r8a77995: Add EthernetAVB pins, groups and functions", so it may chan=
-ge?
-> >
-> > Oops, I fotgot to submit v2 PFC patch yesterday...
-> > Yes, it is changed like other gen3 SoCs. I submitted it now.
-> >
-> > > And we will probably have to add driver-strengths later, to avoid a
-> > > dependency on bootloader setup?
-> >
-> > Yes, I will do so, if needed.
-> >
-> > > Apart from that:
-> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Thank you for your review!
->=20
-> Thanks. I have marked this as "Deferred" pending acceptance of the PFC
-> patch. Please repost or ping me, f.e. via a reply-to-all to this email,
-> once that dependency is resolved.
+On Monday 18 September 2017 07:50 PM, Andrzej Pietrasiewicz wrote:
+> Hi,
+> 
+> W dniu 18.09.2017 o 14:43, Felipe Balbi pisze:
+>>
+>> Hi,
+>>
+>> Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> writes:
+>>>>>>> +static int exynos5_usbdrd_phy_reset(struct phy *phy)
+>>>>>>> +{
+>>>>>>> +    struct phy_usb_instance *inst = phy_get_drvdata(phy);
+>>>>>>> +    struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+>>>>>>> +
+>>>>>>> +    return exynos5420_usbdrd_phy_calibrate(phy_drd);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>     static const struct phy_ops exynos5_usbdrd_phy_ops = {
+>>>>>>>         .init        = exynos5_usbdrd_phy_init,
+>>>>>>>         .exit        = exynos5_usbdrd_phy_exit,
+>>>>>>>         .power_on    = exynos5_usbdrd_phy_power_on,
+>>>>>>>         .power_off    = exynos5_usbdrd_phy_power_off,
+>>>>>>> +    .reset        = exynos5_usbdrd_phy_reset,
+>>>>>>>         .owner        = THIS_MODULE,
+>>>>>>>     };
+>>>>>>>     diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>>>>>> index 03474d3..1d5836e 100644
+>>>>>>> --- a/drivers/usb/dwc3/core.c
+>>>>>>> +++ b/drivers/usb/dwc3/core.c
+>>>>>>> @@ -156,9 +156,10 @@ static void __dwc3_set_mode(struct work_struct *work)
+>>>>>>>             } else {
+>>>>>>>                 if (dwc->usb2_phy)
+>>>>>>>                     otg_set_vbus(dwc->usb2_phy->otg, true);
+>>>>>>> -            if (dwc->usb2_generic_phy)
+>>>>>>> +            if (dwc->usb2_generic_phy) {
+>>>>>>>                     phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
+>>>>>>> -
+>>>>>>> +                phy_reset(dwc->usb2_generic_phy);
+>>>>>>
+>>>>>> it doesn't look like this is the best place to reset the phy. Also,
+>>>>>
+>>>>> right, phy_reset is done during initialization before
+>>>>> phy_power_on/phy_init or
+>>>>> in error cases.
+>>>>>
+>>>>>> ->reset() doesn't seem to match correctly with a calibration. That seems
+>>>>>> to be more fitting to a ->power_on() or ->init() implementation.
+>>>>>
+>>>>> yeah, the initial patch seems to calibrate in phy_init(). Not sure why it's
+>>>>> modified.
+>>>>
+>>>> The original patch used a hack like below, in xhci_plat_probe():
+>>>>
+>>>> +       /* Initialize and power-on USB 3.0 PHY */
+>>>> +       xhci->shared_hcd->phy->init_count = 0;
+>>>> +       ret = phy_init(xhci->shared_hcd->phy);
+>>>> +       if (ret)
+>>>> +               goto dealloc_usb3_hcd;
+>>>> +
+>>>> +       xhci->shared_hcd->phy->power_count = 0;
+>>>> +       ret = phy_power_on(xhci->shared_hcd->phy);
+>>>> +       if (ret) {
+>>>> +               phy_exit(xhci->shared_hcd->phy);
+>>>> +               goto dealloc_usb3_hcd;
+>>>> +       }
+>>>> +
+>>>>
+>>>> Manually setting init_count to 0 in order for the subsequent phy_init() to
+>>>> happen probably does not look good.
+>>>>
+>>>> The calibration is clearly needed. However, I don't have any strong opinions
+>>>> on from which place exactly to trigger the calibration process.
+>>>> The original patch did not make it upstream, but if that patch is ok,
+>>>> it is perfectly fine with me to drop my version and take that one instead.
+>>>
+>>> Me bad, I did not write about an important issue.
+>>> The calibration must happen after usb_add_hcd(), otherwise
+>>> usb_add_hcd() indirectly triggers overwriting the effects of calibration.
+>>
+>> in that case, you should do that from xhci-plat indeed. I think the
+>> whole idea with init_count is just to make sure you don't initialize it
+>> twice.
+> 
+> As far as I understand the code in question the desired result is exactly the
+> opposite:
+> to make sure it _does_ initialize twice, otherwise after the first
+> initialization the
+> calibration results were lost. In other words, in the code snippet above,
+> in xhci_plat_probe() the phy_init() was creatively (ab)used in order to force
+> the calibration at a desired moment, while in the original invocation of
+> phy_init()
+> the calibration result was merely a short-term side effect discarded soon
+> afterwards.
+> 
+>>
+>> One thing's for sure, ->reset() doesn't seem to be the matching callback
+>> for you to use and, given your explanation above, dwc3 doesn't seem to
+>> be the right place to fiddle with that.
+>>
+>> Seems like we need an extension of the generic PHY framework to cope
+>> with your requirement.
+>>
+> 
+> Here are old patches from Vivek:
+> 
+> https://lkml.org/lkml/2014/9/2/166
+> 
+> In particular:
+> 
+> https://lkml.org/lkml/2014/9/2/170
+> 
+> Please see the discussion that follows the latter.
+> 
+> All in all, is adding the calibrate() method to phy_ops the way to go or not?
 
-Since the PFC patch is applied into renesas-drivers.git / sh-pfc-for-v4.15 =
-branch,
-I'd like to ping you :)
-https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/c=
-ommit/?h=3Dsh-pfc-for-v4.15&id=3D66abd968d0ef3eb10dea45b48a31321eb29258f8
+Adding calibrate is fine but doing init() and power_on() in one driver and
+calibrate() in another doesn't look correct. Why not let xhci do init() and
+power_on() of phy instead of dwc3?
 
-Or, should I rebase this patch on latest devel tag?
-If so, I will rebase it in next Monday because I'll take a day off tomorrow=
-.
-
-Best regards,
-Yoshihiro Shimoda
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
