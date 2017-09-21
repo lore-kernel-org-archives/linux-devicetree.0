@@ -1,99 +1,47 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: smccc-call: Use r12 to route secure monitor
- calls on TI platforms
-Date: Thu, 21 Sep 2017 15:47:19 +0100
-Message-ID: <20170921144719.GA31434@leverpostej>
-References: <20170918205005.30235-1-afd@ti.com>
- <20170919141953.GH30715@leverpostej>
- <7390d268-5c72-b263-f153-fbf0d728e05e@ti.com>
+From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 9/9 v2] usb: usb251xb: Use GPIO descriptor consumer
+ interface
+Date: Thu, 21 Sep 2017 17:51:29 +0300
+Message-ID: <20170921145129.GA25888@mobilestation>
+References: <20170915233113.17855-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-10-fancer.lancer@gmail.com>
+ <20170921082338.GA30669@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <7390d268-5c72-b263-f153-fbf0d728e05e-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170921082338.GA30669-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 19, 2017 at 10:07:39AM -0500, Andrew F. Davis wrote:
-> On 09/19/2017 09:19 AM, Mark Rutland wrote:
-> > On Mon, Sep 18, 2017 at 03:50:04PM -0500, Andrew F. Davis wrote:
-> >> We need a way to signal that a call is for the OP-TEE SM and not for
-> >> the ROM SM in a way that is safe for the ROM SM, in case it is still
-> >> present. We do this by putting a value of 0x200 in r12 when the call
-> >> is for OP-TEE or any other ARM by modifying the SMCCC caller function.
-> > 
-> > So IIUC, you have a secure monitor which is not SMCCC compliant, but you
-> > want to use it at the same time as OP-TEE, which is SMCCC compliant.
+On Thu, Sep 21, 2017 at 10:23:38AM +0200, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Sat, Sep 16, 2017 at 01:42:20PM +0300, Serge Semin wrote:
+> > diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> > index 71994b883..c2dd9742f 100644
+> > --- a/drivers/usb/misc/usb251xb.c
+> > +++ b/drivers/usb/misc/usb251xb.c
+> > @@ -3,6 +3,7 @@
+> >   * Configuration via SMBus.
+> >   *
+> >   * Copyright (c) 2017 SKIDATA AG
+> > + * Copyright (c) 2017 T-platforms
 > 
-> Not at the same time, our old secure monitor is in ROM, it will be
-> present anytime OP-TEE is not installed. OP-TEE is not mandatory, and so
-> any call to the secure side must be safe for both secure monitors.
+> Again, no, please consult with your corporate lawyers why this isn't ok.
 > 
-> > It would be much better to have a new version of that monitor that was
-> > SMCCC compliant, and have to update the code for that, than to have to
-> > move OP-TEE away from standards compliance.
-> 
-> The current monitor is part of ROM and dates back to OMAP3 days, so
-> looks to pre-date ARM standardizing the SMCCC by several years, so I
-> hope our lack of compliance here can be forgiven here..
+> greg k-h
 
-For the existing ROM, as that stands, certainly. I appreciate it's older
-than SMCCC.
+I still can't see why this isn't right. We submitted the patchset. It is not
+that big and still it isn't just two lines. As I've seen all over the kernel, It is
+a common practice to have multiple copyrights in kernel files. We are not claiming
+the copyright to the whole file, but to the contribution only. I got a consent to
+contribute when I was employed by the company. What's wrong with that? Shall I
+send the patchset from my corporate e-mail then?
 
-> Luckily, OP-TEE does not have to move away from compliance to support
-> our platforms, it only needs to check for this sentinel value in r12,
-> which it already has support upstream for:
-> 
-> https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/plat-ti/sm_platform_handler_a15.c#L34
+-Sergey
 
-That *is* a move away from compliance, as an SMCCC-compliant TEE should
-not look at r12, and an SMCCC-compliant client can (and will) leave
-arbitrary values in r12.
-
-[...]
-
-> >> If OP-TEE is present and we make a legacy style SMC call, r12 will
-> >> not be set to 0x200, and OP-TEE will emulate the functionality that
-> >> the call is requesting.
-> > 
-> > AFAICT this means that OP-TEE completely replaces your existing monitor.
-> 
-> Correct.
-> 
-> > Please fix this properly. Implement SMCCC-compliant versions of those
-> > calls you wish to retain, and come up with a new binding for those.
-> > Describe that in the DT for systems which have OP-TEE providing these
-> > services.
-> 
-> This might not be possible, these old SMCs are made very early and are
-> used all over our existing platform code:
-> 
-> git grep "smc" -- arch/arm/mach-omap2
-
-Given that one can build a multi-platform kernel, parts of the DT have
-already been parsed (in order to determine that the machine is an OMAP2)
-before any of this is executed.
-
-These are not too early to preclude runtime switching based on the DT.
-
-I can appreciate that it's a pain to have to alter these, but it's
-certainly possible, and it would eliminate the problem rather than
-spreading it further.
-
-> > Systems with the old monitor should have that descrbied in their DT, and
-> > not OP-TEE.
-> 
-> All systems have the old monitor by default, OP-TEE is the new and
-> optional case, I think its node should be the entity modified when
-> adding something OP-TEE specific like this.
-
-... and so the DT can also be altered to describe a new SMCCC-compliant
-set of OMAP2 SMCs in this case.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
