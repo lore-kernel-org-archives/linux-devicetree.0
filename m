@@ -1,69 +1,65 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] Add STM32 DMAMUX support
-Date: Thu, 21 Sep 2017 09:59:07 +0200
-Message-ID: <19fea8c6-5c23-025f-6048-532011055044@st.com>
-References: <1504785168-26572-1-git-send-email-pierre-yves.mordret@st.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v4 0/4] Add STM32 MDMA driver
+Date: Thu, 21 Sep 2017 10:01:17 +0200
+Message-ID: <07712135-3840-d1da-c087-ca95300f96da@st.com>
+References: <1503671466-32029-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1504785168-26572-1-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503671466-32029-1-git-send-email-pierre-yves.mordret@st.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello
+Hello,
 
-Gentle ping for driver review since DT Bindings have been acked by Rob Herring.
+Gentle ping for driver review submitted on August 25th.
 
 Thanks
-Py
+Regards
 
-On 09/07/2017 01:52 PM, Pierre-Yves MORDRET wrote:
-> This patchset adds support for the STM32 DMA multiplexer.
-> It allows to map any peripheral DMA request to any channel of the product
-> DMAs.
-> This IP has been introduced with STM32H7 SoC.
-> 
+On 08/25/2017 04:31 PM, Pierre-Yves MORDRET wrote:
+> This patchset adds support for the STM32 MDMA controller.
+> The Master Direct memory access (MDMA) provides high-speed data transfer
+> between memory and memory or between peripherals and memory.
+> Contrary to STM32 DMA, the STM32 MDMA controller supports hardware LLI and
+> uses a larger integrated FIFO (128 vs 16 bytes)
 > ---
->  Version history:
->     v4:
->         * Add multi-master ability for STM32 DMAMUX
->         * Get rid of st,dmamux property and custom API between STM32
->           DMAMUX and DMA. Bindings has changed.
->           DMAMUX will read DMA masters from Device Tree from now on.
->           Merely one DMAMUX node is needed now.
->         * Only STM32 DMA are allowed to be connected onto DMAMUX
->         * channelID is computed locally within the driver and crafted in
->           dma_psec to be passed toward DMA master.
->           DMAMUX router sorts out which DMA master will serve the
->           request automatically.
->         * This version forbids the use of DMA in standalone and DMAMUX at
->           the same time : all clients need to be connected either on DMA
->           or DMAMUX ; no mix up
->     v3:
->         * change compatible to st,stm32h7-dmamux to be mode Soc specific
->         * add verbosity in dma-cells
+>   Version history:
+>      v4:
+>          * Add safe getter/setter macros
+>          * forbid DMA preparation in cyclic mode yet
+>          * Optimize burst and memory width for memcpy
+>          * replace of_property_xx by device_property_xx
+>      v3:
+>          * Update header template
+>          * Unsigned expression compared with zero
+>          * Rework stm32_mdma_get_max_width
+>          * moved to src/dst case where they are used in set_xfer
+>          * Change of_property_* with device_property_*
+>          * Add dev_warn whether default value is used
+>          * Indentation
+>          * Add MODULE_*
+>      v2:
+>          * change compatible into st,stm32h7-mdma to be more SoC specific
+>          * Add MDMA support in DT for H7
+>          * Add MDMA support in STM32 defconfig
 > ---
-> 
 > Pierre-Yves MORDRET (4):
->   dt-bindings: Document the STM32 DMAMUX bindings
->   dmaengine: Add STM32 DMAMUX driver
->   dt-bindings: stm32-dma: add a property to handle STM32 DMAMUX
+>   dt-bindings: Document the STM32 MDMA bindings
+>   dmaengine: Add STM32 MDMA driver
+>   ARM: dts: stm32: Add MDMA support for STM32H743 SoC
 >   ARM: configs: stm32: Add MDMA support in STM32 defconfig
 > 
->  .../devicetree/bindings/dma/stm32-dma.txt          |   4 +-
->  .../devicetree/bindings/dma/stm32-dmamux.txt       |  84 ++++++
->  arch/arm/configs/stm32_defconfig                   |   1 +
->  drivers/dma/Kconfig                                |   9 +
->  drivers/dma/Makefile                               |   1 +
->  drivers/dma/stm32-dmamux.c                         | 321 +++++++++++++++++++++
->  6 files changed, 419 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/stm32-dmamux.txt
->  create mode 100644 drivers/dma/stm32-dmamux.c
+>  .../devicetree/bindings/dma/stm32-mdma.txt         |   94 ++
+>  arch/arm/boot/dts/stm32h743.dtsi                   |   10 +
+>  arch/arm/configs/stm32_defconfig                   |    1 +
+>  drivers/dma/Kconfig                                |   12 +
+>  drivers/dma/Makefile                               |    1 +
+>  drivers/dma/stm32-mdma.c                           | 1618 ++++++++++++++++++++
+>  6 files changed, 1736 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
+>  create mode 100644 drivers/dma/stm32-mdma.c
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
