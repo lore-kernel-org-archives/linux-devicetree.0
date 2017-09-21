@@ -1,270 +1,39 @@
-From: "Marty E. Plummer" <hanetzer@startmail.com>
-Subject: Re: [RFC RESEND 3/3] arm: dts: add Hi3521A dts
-Date: Wed, 20 Sep 2017 21:15:16 -0500
-Message-ID: <20170921021511.q6cbew5d5ec5cxxd@proprietary-killer.fossland>
-References: <20170917082327.10058-1-hanetzer@startmail.com>
- <20170917082327.10058-4-hanetzer@startmail.com>
- <20170920205303.lcycfuai75a7namk@rob-hp-laptop>
- <20170920230405.tz3vzoys2vn72rgv@proprietary-killer.fossland>
- <CAL_JsqLfRN=CjcDbwANE7gwCQS-_s99f6UANPLAooiaWB1mvfA@mail.gmail.com>
+From: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCHv2 0/3] arm64: dts: ls1012a: add the DTS node for DSPI
+ support
+Date: Thu, 21 Sep 2017 02:47:16 +0000
+Message-ID: <AM5PR0402MB2771A60E9CBD1A1CA13C2B2084660@AM5PR0402MB2771.eurprd04.prod.outlook.com>
+References: <20170830101238.28378-1-Zhiqiang.Hou@nxp.com>
+ <20170920141044.GC1244@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLfRN=CjcDbwANE7gwCQS-_s99f6UANPLAooiaWB1mvfA@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, xuejiancheng@hisilicon.com, leo.yan@linaro.org, linux-clk@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mark.rutland@arm.com, mturquette@baylibre.com, wenpan@hisilicon.com, linux@armlinux.org.uk, sboyd@codeaurora.org, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, gregkh@linuxfoundation.org, arnd@arndb.de
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170920141044.GC1244@dragon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 01:08:39AM +0000, Rob Herring wrote:
-> On Wed, Sep 20, 2017 at 6:04 PM, Marty E. Plummer
-> <hanetzer@startmail.com> wrote:
-> > On Wed, Sep 20, 2017 at 08:53:03PM +0000, Rob Herring wrote:
-> >> On Sun, Sep 17, 2017 at 03:23:27AM -0500, Marty E. Plummer wrote:
-> >> > Add hi3521a.dtsi and hi3521a-rs-dm290e.dts for RaySharp CCTV systems,
-> >> > marketed under the name Samsung SDR-B74301N
-> >> >
-> >> > Signed-off-by: Marty E. Plummer <hanetzer@startmail.com>
-> >> > ---
-> >> >  arch/arm/boot/dts/Makefile              |   2 +
-> >> >  arch/arm/boot/dts/hi3521a-rs-dm290e.dts |  52 ++++++
-> >> >  arch/arm/boot/dts/hi3521a.dtsi          | 310 ++++++++++++++++++++++++++++++++
-> >> >  3 files changed, 364 insertions(+)
-> >> >  create mode 100644 arch/arm/boot/dts/hi3521a-rs-dm290e.dts
-> >> >  create mode 100644 arch/arm/boot/dts/hi3521a.dtsi
-> >> >
-> >> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> >> > index faf46abaa4a2..e7b9b5dde20f 100644
-> >> > --- a/arch/arm/boot/dts/Makefile
-> >> > +++ b/arch/arm/boot/dts/Makefile
-> >> > @@ -189,6 +189,8 @@ dtb-$(CONFIG_ARCH_GEMINI) += \
-> >> >     gemini-sq201.dtb \
-> >> >     gemini-wbd111.dtb \
-> >> >     gemini-wbd222.dtb
-> >> > +dtb-$(CONFIG_ARCH_HI3521A) += \
-> >> > +   hi3521a-rs-dm290e.dtb
-> >> >  dtb-$(CONFIG_ARCH_HI3xxx) += \
-> >> >     hi3620-hi4511.dtb
-> >> >  dtb-$(CONFIG_ARCH_HIGHBANK) += \
-> >> > diff --git a/arch/arm/boot/dts/hi3521a-rs-dm290e.dts b/arch/arm/boot/dts/hi3521a-rs-dm290e.dts
-> >> > new file mode 100644
-> >> > index 000000000000..b32c8392c93f
-> >> > --- /dev/null
-> >> > +++ b/arch/arm/boot/dts/hi3521a-rs-dm290e.dts
-> >> > @@ -0,0 +1,52 @@
-> >> > +/*
-> >> > + * Copyright (C) 2017 Marty Plummer <hanetzer@startmail.com>
-> >> > + *
-> >> > + * This program is free software: you can redistribute it and/or modify
-> >> > + * it under the terms of the GNU General Public License as published by
-> >> > + * the Free Software Foundation, either version 3 of the License, or
-> >> > + * (at your option) any later version.
-> >>
-> >> Should be version 2 or later? Doesn't really matter to me from a DT
-> >> perspective, but it is in the kernel tree.
-> >>
-> >> You can use SPDX tags if you want.
-> >>
-> > Oh, that's a good idea. I hadn't seen any SPDX tags in the tree that I
-> > noticed before. I ended up just using the :Gpl command from neovim.
-> >> > + *
-> >> > + * This program is distributed in the hope that it will be useful,
-> >> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >> > + * GNU General Public License for more details.
-> >> > + *
-> >> > + * You should have received a copy of the GNU General Public License
-> >> > + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> >> > + */
-> >> > +
-> >> > +/dts-v1/;
-> >> > +#include "hi3521a.dtsi"
-> >> > +
-> >> > +/ {
-> >> > +   model = "RaySharp RS-DM-290E DVR Board";
-> >> > +   compatible = "hisilicon,hi3521a";
-> >>
-> >> Needs a board compatible too.
-> >>
-> > Something like `compatible = "hisilicon,hi3521a", "raysharp,rs-dm-290e";` ?
-> 
-> Yes, but flip the order. Most specific compatible first.
-> 
-> >> > +
-> >> > +   aliases {
-> >> > +           serial0 = &uart0;
-> >> > +           serial1 = &uart1;
-> >> > +           serial2 = &uart2;
-> >> > +   };
-> >> > +
-> >> > +   memory {
-> >>
-> >> Needs a unit-address.
-> >>
-> > Could you explain what you mean here? As in, memory@someaddr? What would
-> > I use here?
-> 
-> "memory@80000000". Building with W=2 will tell you.
-> 
-Ah, nice trick. Suppose that makes sense, as every other thing was the
-same on that sort of thing. Not sure if I've ever seen memory@addr
-before.
-> >> > +           device_type = "memory";
-> >> > +           reg = <0x80000000 0xf00000>;
-> >> > +   };
-> >> > +};
-> >> > +
-> >> > +&hi_sfc {
-> >> > +   status = "okay";
-> >> > +   spi-nor@0 {
-> >> > +           compatible = "jedec,spi-nor";
-> >>
-> >> I don't remember offhand, but I think this should have a device specific
-> >> compatible too.
-> >>
-> > Instead of "jedec,spi-nor" ? Specific to the SPI chip?
-> 
-> No, both with jedec,spi-nor 2nd.
-> 
-Gotcha, will fix it up.
-> >> > +           reg = <0>;
-> >> > +           spi-max-frequency = <104000000>;
-> >> > +   };
-> >> > +};
-> >> > +
-> >> > +&uart0 {
-> >> > +   status = "okay";
-> >> > +};
-> >> > +
-> >> > +&dual_timer0 {
-> >> > +   status = "okay";
-> >> > +};
-> >> > diff --git a/arch/arm/boot/dts/hi3521a.dtsi b/arch/arm/boot/dts/hi3521a.dtsi
-> >> > new file mode 100644
-> >> > index 000000000000..2af746fdec46
-> >> > --- /dev/null
-> >> > +++ b/arch/arm/boot/dts/hi3521a.dtsi
-> >> > @@ -0,0 +1,310 @@
-> >> > +/*
-> >> > + * Copyright (C) 2017 Marty Plummer <hanetzer@startmail.com>
-> >> > + *
-> >> > + * This program is free software: you can redistribute it and/or modify
-> >> > + * it under the terms of the GNU General Public License as published by
-> >> > + * the Free Software Foundation, either version 3 of the License, or
-> >> > + * (at your option) any later version.
-> >> > + *
-> >> > + * This program is distributed in the hope that it will be useful,
-> >> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >> > + * GNU General Public License for more details.
-> >> > + *
-> >> > + * You should have received a copy of the GNU General Public License
-> >> > + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> >> > + */
-> >> > +
-> >> > +#include <dt-bindings/clock/hi3521a-clock.h>
-> >> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> >> > +/ {
-> >> > +   #address-cells = <1>;
-> >> > +   #size-cells = <1>;
-> >> > +   chosen { };
-> >> > +
-> >> > +   cpus {
-> >> > +           #address-cells = <1>;
-> >> > +           #size-cells = <0>;
-> >> > +
-> >> > +           cpu0: cpu@0 {
-> >> > +                   device_type = "cpu";
-> >> > +                   compatible = "arm,cortex-a7";
-> >> > +                   reg = <0>;
-> >> > +           };
-> >> > +   };
-> >> > +
-> >> > +   hi_sfc: spi-nor-controller@10000000 {
-> >> > +           compatible = "hisilicon,hi3521a-spi-nor", "hisilicon,fmc-spi-nor";
-> >> > +           #address-cells = <1>;
-> >> > +           #size-cells = <0>;
-> >> > +           reg = <0x10000000 0x10000>, <0x14000000 0x1000000>;
-> >> > +           reg-names = "control", "memory";
-> >> > +           clocks = <&crg HI3521A_FMC_CLK>;
-> >> > +           status = "disabled";
-> >> > +   };
-> >> > +
-> >> > +   gic: interrupt-controller@10300000 {
-> >> > +           compatible = "arm,pl390";
-> >> > +           #interrupt-cells = <3>;
-> >> > +           interrupt-controller;
-> >> > +           reg = <0x10301000 0x1000>, <0x10302000 0x1000>;
-> >> > +   };
-> >> > +
-> >> > +   clk_3m: clk_3m {
-> >> > +           compatible = "fixed-clock";
-> >> > +           #clock-cells = <0>;
-> >> > +           clock-frequency = <3000000>;
-> >> > +   };
-> >> > +
-> >> > +   crg: clock-reset-controller@12040000 {
-> >> > +           compatible = "hisilicon,hi3521a-crg";
-> >> > +           #clock-cells = <1>;
-> >> > +           #reset-cells = <2>;
-> >> > +           reg = <0x12040000 0x10000>;
-> >> > +   };
-> >>
-> >> These memory mapped peripherals should be under a bus node.
-> >>
-> > Crap, will fix.
-> >> > +
-> >> > +   soc {
-> >> > +           #address-cells = <1>;
-> >> > +           #size-cells = <1>;
-> >> > +           compatible = "simple-bus";
-> >> > +           interrupt-parent = <&gic>;
-> >> > +           ranges;
-> >>
-> >> It is preferred to have a value here and limit the range of the bus
-> >> addresses.
-> >>
-> > Yeah, I think I've seen that before, I don't quite grok how that works.
-> >> > +
-> >> > +           dmac: dma@10060000 {
-> >>
-> >> dma-controller@...
-> >>
-> > Will fix.
-> >> > +                   compatible = "arm,pl080", "arm,primecell";
-> >> > +                   reg = <0x10060000 0x1000>;
-> >> > +                   interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> >> > +                   status = "disabled";
-> >>
-> >> I wouldn't think enabling dma would be a per board decision.
-> >>
-> > I've just noticed that in general dtsi files just lay it all out and are
-> > mostly "disabled", though if you think this should be explicitly enabled
-> > thats fine by me.
-> >> > +           };
-> >> > +
-> >> > +           dual_timer0: timer@12000000 {
-> >> > +                   compatible = "arm,sp804", "arm,primecell";
-> >> > +                   interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> >> > +                                <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> >> > +                   reg = <0x12000000 0x1000>;
-> >> > +                   clocks = <&clk_3m>;
-> >> > +                   clock-names = "apb_pclk";
-> >>
-> >> IIRC, it is deprecated to have a single clock here. The h/w has 2 clock
-> >> inputs.
-> >>
-> > Are you meaning for the 0x0 index and 0x20 index clocks?
-> 
-> Yes. Maybe it's 3 clocks. Anyway, should all be in the sp804 binding doc.
-> 
-> >> Where's the ARM architected timer?
-> >>
-> > Unsure tbqf, just doing my best to translate a datasheet into code. Do
-> > all ARM soc's have one?
-> 
-> All A7's should I think.
-> 
-Gotcha.
-> Rob
+SGkgU2hhd24sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
+R3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogMjAxN8TqOdTCMjDI1SAy
+MjoxMQ0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZHdtdzJAaW5mcmFkZWFkLm9yZzsg
+cm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgY29tcHV0ZXJzZm9y
+cGVhY2VAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2MiAwLzNdIGFybTY0OiBkdHM6
+IGxzMTAxMmE6IGFkZCB0aGUgRFRTIG5vZGUgZm9yIERTUEkNCj4gc3VwcG9ydA0KPiANCj4gT24g
+V2VkLCBBdWcgMzAsIDIwMTcgYXQgMDY6MTI6MzVQTSArMDgwMCwgWmhpcWlhbmcgSG91IHdyb3Rl
+Og0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4NCj4g
+PiBDb3JyZWN0ZWQgdGhlIHN1YmplY3QgZm9yIDMvNSBwYXRjaCB2MS4NCj4gPg0KPiA+IFl1YW4g
+WWFvICgzKToNCj4gPiAgIGFybTY0OiBkdHM6IGxzMTAxMmE6IGFkZCB0aGUgRFRTIG5vZGUgZm9y
+IERTUEkgc3VwcG9ydA0KPiA+ICAgRG9jdW1lbnRhdGlvbjogZnNsOiBkc3BpOiBBZGQgZnNsLGxz
+MTAxMmEtZHNwaSBjb21wYXRpYmxlIHN0cmluZw0KPiA+ICAgRG9jdW1lbnRhdGlvbjogZHQ6IG10
+ZDogYWRkIHNzdDI1d2YwNDBiIGFuZCBlbjI1czY0IHRvIHRoZSBTUEkgTk9SDQo+ID4gICAgIHN1
+cHBvcnQgbGlzdA0KPiANCj4gSSBlZGl0ZWQgYmluZGluZ3MgZG9jIHBhdGNoIHN1YmplY3QgYSBi
+aXQsIGFuZCBhcHBsaWVkIGFsbC4NCg0KVGhhbmtzIGEgbG90IQ0KDQotIFpoaXFpYW5nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
