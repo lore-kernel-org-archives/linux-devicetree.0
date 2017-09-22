@@ -1,10 +1,12 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH 0/4] rtc: mediatek: add support for SoC based RTC on MT7622
-Date: Fri, 22 Sep 2017 11:33:13 +0800
-Message-ID: <cover.1506049341.git.sean.wang@mediatek.com>
+Subject: [PATCH 1/4] dt-bindings: rtc: mediatek: add bindings for MediaTek SoC based RTC
+Date: Fri, 22 Sep 2017 11:33:14 +0800
+Message-ID: <1357cb02adb88a8a2d7c2268b8573c0a9b6f8d0c.1506049341.git.sean.wang@mediatek.com>
+References: <cover.1506049341.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1506049341.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
@@ -12,27 +14,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-This patchset introduces support for MediaTek SoC based real time clock
-(RTC) Currently, the driver is already tested successfully with hwclock
-and wakealarm on MT7622 SoC. And it should also be workable on other
-similar MediaTek SoCs. And patch 3 is a distinct patch used to distinguish
-between either SoC based or PMIC based RTC to avoid confusion for the RTC
-selection for the target SoC.
+Add device-tree binding for MediaTek SoC based RTC
 
-Sean Wang (4):
-  dt-bindings: rtc: mediatek: add bindings for MediaTek SoC based RTC
-  rtc: mediatek: add driver for RTC on MT7622 SoC
-  rtc: mediatek: enhance the description for MediaTek PMIC based RTC
-  rtc: mediatek: update MAINTAINERS entry with MediaTek RTC driver
-
- .../devicetree/bindings/rtc/rtc-mediatek.txt       |  21 ++
- MAINTAINERS                                        |   3 +
- drivers/rtc/Kconfig                                |  18 +-
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-mediatek.c                         | 398 +++++++++++++++++++++
- 5 files changed, 437 insertions(+), 4 deletions(-)
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ .../devicetree/bindings/rtc/rtc-mediatek.txt        | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
- create mode 100644 drivers/rtc/rtc-mediatek.c
 
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+new file mode 100644
+index 0000000..09fe8f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+@@ -0,0 +1,21 @@
++Device-Tree bindings for MediaTek SoC based RTC
++
++Required properties:
++- compatible	    : Should be
++			"mediatek,mt7622-rtc", "mediatek,soc-rtc" : for MT7622 SoC
++- reg 		    : Specifies base physical address and size of the registers;
++- interrupts	    : Should contain the interrupt for RTC alarm;
++- clocks	    : Specifies list of clock specifiers, corresponding to
++		      entries in clock-names property;
++- clock-names	    : Should contain "rtc" entries
++
++Example:
++
++rtc: rtc@10212800 {
++	compatible = "mediatek,mt7622-rtc",
++		     "mediatek,soc-rtc";
++	reg = <0 0x10212800 0 0x200>;
++	interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_LOW>;
++	clocks = <&topckgen CLK_TOP_RTC>;
++	clock-names = "rtc";
++};
 -- 
 2.7.4
