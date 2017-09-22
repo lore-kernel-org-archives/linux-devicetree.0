@@ -1,7 +1,7 @@
 From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 12/12] ARM: dts: sun8i: a83t: Fix simple-bus unit address format error
-Date: Fri, 22 Sep 2017 20:40:45 +0200
-Message-ID: <20170922184045.6498-13-clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 11/12] arm64: allwinner: a64: Fix node with unit name and no reg property
+Date: Fri, 22 Sep 2017 20:40:44 +0200
+Message-ID: <20170922184045.6498-12-clabbe.montjoie@gmail.com>
 References: <20170922184045.6498-1-clabbe.montjoie@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170922184045.6498-1-clabbe.montjoie@gmail.com>
@@ -10,45 +10,36 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripa
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch remove leading 0 of unit address and so remove
-lots of warning when building DT with W=1.
+This patch fix the warning "xxx has a unit name, but no reg property" by
+removing "@0" from such node
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 7f99ef37f61f..dd6a393725c6 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -248,7 +248,7 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 662e8b7981b5..b02a8476b0c8 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -347,7 +347,7 @@
+ 				function = "spi1";
+ 			};
  
--		usb_otg: usb@01c19000 {
-+		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-a83t-musb",
- 				     "allwinner,sun8i-a33-musb";
- 			reg = <0x01c19000 0x0400>;
-@@ -436,7 +436,7 @@
- 			status = "disabled";
- 		};
+-			uart0_pins_a: uart0@0 {
++			uart0_pins_a: uart0 {
+ 				pins = "PB8", "PB9";
+ 				function = "uart0";
+ 			};
+@@ -571,7 +571,7 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
--		uart0: serial@01c28000 {
-+		uart0: serial@1c28000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01c28000 0x400>;
- 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-@@ -447,7 +447,7 @@
- 			status = "disabled";
- 		};
- 
--		uart1: serial@01c28400 {
-+		uart1: serial@1c28400 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01c28400 0x400>;
- 			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+-			r_rsb_pins: rsb@0 {
++			r_rsb_pins: rsb {
+ 				pins = "PL0", "PL1";
+ 				function = "s_rsb";
+ 			};
 -- 
 2.13.5
