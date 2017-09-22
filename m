@@ -1,33 +1,49 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] ARM: dts: rockchip: add Utgard Mali nodes for some socs
-Date: Fri, 22 Sep 2017 11:23:27 +0200
-Message-ID: <3670729.UWqOD6MBPG@phil>
-References: <20170915091812.13368-1-heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915091812.13368-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 0/4] AS3645A fixes
+Date: Fri, 22 Sep 2017 12:32:34 +0300
+Message-ID: <20170922093238.13070-1-sakari.ailus@linux.intel.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com
+Cc: linux-media@vger.kernel.org, devicetree@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 15. September 2017, 11:18:04 CEST schrieb Heiko Stuebner:
-> This adds a mali-supply similar to the Midgard binding, the
-> compatibles for 3 Rockchip socs and the nodes for these.
-> 
-> The rk3036 and rk3188 gpus were tested, on the boards that
-> get their gpus enabled, using the current Lima resurrection
-> project and were able to probe the gpus sucessfully and draw
-> a nice red-triangle in an off-screen application.
-> 
-> The only special thing Rockchip Malis do, is that all MMUs have
-> a shared interrupt and all PPs also have a shared interrupt, but
-> that works out well with the current binding.
+Hi Jacek and others,
 
-applied all 8 for 4.15 with Rob's Acks for the binding changes.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Here are a few fixes for the as3645a DTS as well as changes in bindings.
+The driver is not in a release yet.
+
+Jacek: Could you take these to your fixes branch so we don't get faulty DT
+bindings to a release? I've dropped the patches related to LED naming and
+label property as the discusion appears to continue on that.
+
+Thanks.
+
+
+since v2:
+
+- Drop patches related to LED naming.
+
+- No other changes.
+
+since v1:
+
+- Add LED colour to the name of the LED, this adds two patches to the set.
+
+- Add a patch to unregister the indicator LED in driver remove function.
+
+- No changes to v1 patches.
+
+Sakari Ailus (4):
+  as3645a: Use ams,input-max-microamp as documented in DT bindings
+  dt: bindings: as3645a: Use LED number to refer to LEDs
+  as3645a: Use integer numbers for parsing LEDs
+  as3645a: Unregister indicator LED on device unbind
+
+ .../devicetree/bindings/leds/ams,as3645a.txt       | 28 +++++++++++++--------
+ arch/arm/boot/dts/omap3-n950-n9.dtsi               | 10 +++++---
+ drivers/leds/leds-as3645a.c                        | 29 +++++++++++++++++++---
+ 3 files changed, 51 insertions(+), 16 deletions(-)
+
+-- 
+2.11.0
