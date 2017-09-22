@@ -1,197 +1,142 @@
-From: Jiaying Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC LINUX PATCH] Dcoumentation: dt: mailbox: Add Xilinx IPI
- Mailbox
-Date: Fri, 22 Sep 2017 17:37:07 +0000
-Message-ID: <BY1PR0201MB088507AE303DC61E172DDF5BB0670@BY1PR0201MB0885.namprd02.prod.outlook.com>
-References: <1506034724-14639-1-git-send-email-jliang@xilinx.com>
- <BY1PR0201MB0885E6563EBAFE83DF8822A4B0670@BY1PR0201MB0885.namprd02.prod.outlook.com>
- <20170922111005.GA11613@e107155-lin>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2
+ receiver
+Date: Fri, 22 Sep 2017 19:39:45 +0200 (CEST)
+Message-ID: <73619863.196918.1506101985740@email.1und1.de>
+References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
+ <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson@raspberrypi.org>
+ <1814950930.414004.1506062733728@email.1und1.de>
+ <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170922111005.GA11613@e107155-lin>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyril Chemparathy <cyrilc-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
+List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-HI Sudeep,
+Hi Dave,
 
-> -----Original Message-----
-> From: Sudeep Holla [mailto:sudeep.holla-5wv7dgnIgG8@public.gmane.org]
-> Sent: Friday, September 22, 2017 4:10 AM
-> To: Jiaying Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; Cyril Chemparathy
-> <cyrilc-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
-> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; Soren Brinkmann
-> <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> Subject: Re: [RFC LINUX PATCH] Dcoumentation: dt: mailbox: Add Xilinx IPI
-> Mailbox
->=20
-> On Fri, Sep 22, 2017 at 06:05:18AM +0000, Jiaying Liang wrote:
+> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 22. September 2017 um 18:07 geschrieben:
+> 
+> 
+> Hi Stefan
+> 
+> On 22 September 2017 at 07:45, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+> > Hi Dave,
 > >
-> > Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block in
-> > ZynqMP SoC used for the communication between various processor
-> systems.
+> >> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 20. September 2017 um 18:07 geschrieben:
+> >>
+> >>
+> >> Document the DT bindings for the CSI2/CCP2 receiver peripheral
+> >> (known as Unicam) on BCM283x SoCs.
+> >>
+> >> Signed-off-by: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+> >> ---
+> >>
+> >> Changes since v2
+> >> - Removed all references to Linux drivers.
+> >> - Reworded section about disabling the firmware driver.
+> >> - Renamed clock from "lp_clock" to "lp" in description and example.
+> >> - Referred to video-interfaces.txt and stated requirements on remote-endpoint
+> >>   and data-lanes.
+> >> - Corrected typo in example from csi to csi1.
+> >> - Removed unnecessary #address-cells and #size-cells in example.
+> >> - Removed setting of status from the example.
+> >>
+> >>  .../devicetree/bindings/media/bcm2835-unicam.txt   | 85 ++++++++++++++++++++++
+> >>  1 file changed, 85 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+> >> new file mode 100644
+> >> index 0000000..7714fb3
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+> >> @@ -0,0 +1,85 @@
+> >> +Broadcom BCM283x Camera Interface (Unicam)
+> >> +------------------------------------------
+> >> +
+> >> +The Unicam block on BCM283x SoCs is the receiver for either
+> >> +CSI-2 or CCP2 data from image sensors or similar devices.
+> >> +
+> >> +The main platform using this SoC is the Raspberry Pi family of boards.
+> >> +On the Pi the VideoCore firmware can also control this hardware block,
+> >> +and driving it from two different processors will cause issues.
+> >> +To avoid this, the firmware checks the device tree configuration
+> >> +during boot. If it finds device tree nodes called csi0 or csi1 then
+> >> +it will stop the firmware accessing the block, and it can then
+> >> +safely be used via the device tree binding.
+> >> +
+> >> +Required properties:
+> >> +===================
+> >> +- compatible : must be "brcm,bcm2835-unicam".
+> >> +- reg                : physical base address and length of the register sets for the
+> >> +               device.
+> >> +- interrupts : should contain the IRQ line for this Unicam instance.
+> >> +- clocks     : list of clock specifiers, corresponding to entries in
+> >> +               clock-names property.
+> >> +- clock-names        : must contain an "lp" entry, matching entries in the
+> >> +               clocks property.
+> >> +
+> >> +Unicam supports a single port node. It should contain one 'port' child node
+> >> +with child 'endpoint' node. Please refer to the bindings defined in
+> >> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> >> +
+> >> +Within the endpoint node the "remote-endpoint" and "data-lanes" properties
+> >> +are mandatory.
+> >> +Data lane reordering is not supported so the data lanes must be in order,
+> >> +starting at 1. The number of data lanes should represent the number of
+> >> +usable lanes for the hardware block. That may be limited by either the SoC or
+> >> +how the platform presents the interface, and the lower value must be used.
+> >> +
+> >> +Lane reordering is not supported on the clock lane either, so the optional
+> >> +property "clock-lane" will implicitly be <0>.
+> >> +Similarly lane inversion is not supported, therefore "lane-polarities" will
+> >> +implicitly be <0 0 0 0 0>.
+> >> +Neither of these values will be checked.
+> >> +
+> >> +Example:
+> >> +     csi1: csi1@7e801000 {
+> >> +             compatible = "brcm,bcm2835-unicam";
+> >> +             reg = <0x7e801000 0x800>,
+> >> +                   <0x7e802004 0x4>;
 > >
-> > Signed-off-by: Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 88
-> ++++++++++++++++++++++
-> >  1 file changed, 88 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-
-> > mailbox.txt
-> > b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-
-> > mailbox.txt
-> > new file mode 100644
-> > index 0000000..5d915d1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-
-> mailbox.
-> > +++ txt
-> > @@ -0,0 +1,88 @@
-> > +Xilinx IPI Mailbox Driver
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +The Xilinx IPI(Inter Processor Interrupt) mailbox driver is a mailbox
-> > +controller that manages the messaging between two IPI agents. Each
-> > +IPI mailbox has request and response buffers between the two IPI agent=
-s.
-> > +
-> > ++-------------------------------------+
-> > +|                                     | Xilinx ZynqMP IPI Mailbox
-> > +| Controller|
-> > +|                                     |
-> > +|                       +-------------+
-> > +|                       |     SMC     |
-> > +|                       |             |
-> > ++--------+--------------+------+------+
-> > +         |                     |
-> > +         |          +-----------------+
-> > +         |                     |   ATF (ARM trusted firmware)
->=20
-> I suppose it should work with any EL3 firmware, ATF reference can be
-> removed IMO.
->=20
-> > +         |                     |
-> > ++-------------------------------------+
-> > +         |                     |   Hardware
-> > +         |                     |
-> > + +--------------------------------------+
-> > +                               |        |
-> > + +----------------------+ +-----------+ |
-> > + | | Buffers between    | | IPI Agent | |
-> > + | | two IPI agents     | | Registers | |
-> > + | +--------------------+ +-----------+ |
-> > + |                                      |
-> > + |   Xilinx ZynqMP IPI                  |
-> > + +--------------------------------------+
-> > +
-> > +
-> > +Message Manager Device Node:
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> > +Required properties:
-> > +--------------------
-> > +- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
-> > +- ipi-smc-fid-base	Base offset of SMC function IDs for IPI mailbox SMC=
-.
-> > +			It contains the IPI IDs of the two IPI agents.
->=20
-> Why is "SMC" associated with this hardware block ? Is it secure device ?
-> Can Linux access it ? If so, why do you need SMC ?
-[Wendy] one IPI agent uses its own IPI agent registers to notify (write to =
-register to raise interrupt)
-Other IPI agents. The IPI agent registers are shared between secure and non=
--secure.
-And thus, I think about to access the IPI agent registers in ATF. And thus
-Use SMC for registers access.
+> > sorry, i didn't noticed this before. I'm afraid this is using a small range of the CMI. Are there possible other users of this range? Does it make sense to handle this by a separate clock driver?
+> 
+> CMI (Clock Manager Image) consists of a total of 4 registers.
+> 0x7e802000 is CMI_CAM0, with only bits 0-5 used for gating and
+> inversion of the clock and data lanes (2 data lanes available on
+> CAM0).
+> 0x7e802004 is CMI_CAM1, with only bits 0-9 used for gating and
+> inversion of the clock and data lanes (4 data lanes available on
+> CAM1).
+> 0x7e802008 is CMI_CAMTEST which I have no documentation or drivers for.
+> 0x7e802010 is CMI_USBCTL. Only bit 6 is documented and is a reset. The
+> default value is the required value. Nothing touches it that I can
+> find.
 
->=20
-> > +- reg:			IPI request and response buffers address
-> range. It
-> > +			can be the IPI buffers from the hardware or it can
-> > +			be carved out shared memory.
->=20
-> It sounds like buffer used for communication and not part of this IP.
-> Shouldn't this be part of mailbox client binding rather than controller
-> binding.
-[Wendy] the IPI hardware has IPI buffers (32bytes request buffer and 32byte=
-s response buffer per)
-But we also want user to be able to use other shared memory.
-The reason I am considering to make it part of the mailbox is, we can have =
-logical
-Channels on top of the physical channels.
-Each mailbox controller controls the physical connection(IPI agent register=
-s and buffers), each
-Mailbox client requests for a logical channel.
+thanks for providing these information.
 
->=20
-> > +- reg-names:		Reg resource name of the IPI request and response
-> > +			buffers.
-> > +- #mbox-cells:		Shall be 1. Contains the logical channel IDs of
-> the
-> > +			channels on the IPI mailbox.
-> > +- interrupt-parent:	Phandle for the interrupt controller.
-> > +- interrupts:		Interrupt mapping.
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- method:		The method of accessing the IPI agent registers.
-> > +			Permitted values are: "smc" and "hvc". Default is
-> > +			"smc".
-> > +Example:
-> > +------------
-> > +	/* APU IPI mailbox driver */
-> > +	ipis {
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +		ipi_mailbox_apu_rpu0: ipi_mailbox@0 {
-> > +			compatible =3D "xlnx,zynqmp-ipi-mailbox";
-> > +			reg =3D <0 0xff990400 40>;
-> > +			reg-names =3D "apu-rpu0";
-> > +			ipi-smc-fid-base =3D <0x1010>;
-> > +			method =3D "smc";
-> > +			#mbox-cells =3D <1>;
-> > +			interrupt-parent =3D <&gic>;
-> > +			interrupts =3D <0 35 4>;
-> > +		};
-> > +		ipi_mailbox_apu_rpu1: ipi_mailbox@1 {
-> > +			compatible =3D "xlnx,zynqmp-ipi-mailbox";
-> > +			reg =3D <0 0xff990440 40>;
-> > +			reg-names =3D "apu-rpu1";
-> > +			ipi-smc-fid-base =3D <0x1020>;
-> > +			method =3D "smc";
-> > +			#mbox-cells =3D <1>;
-> > +			interrupt-parent =3D <&gic>;
-> > +			interrupts =3D <0 35 4>;
-> > +		};
->=20
-> Why do you need the above 2 ? They don't look like 2 controller blocks.
-> You just need to represent single mailbox controller.
-[Wendy] I just wanted to have single mailbox controller to control one
-Physical connection and allows logical channels on top of it. Is there any =
-framework
-to support logical channels on top of mailbox? Or we need to write the mail=
-box client
-driver to support logical channels on top of one mailbox client?
+> 
+> The range listed only covers the one register associated with that
+> Unicam instance, so no other users. The other two aren't touched.
+> Do 16 active register bits solely for camera clock gating really
+> warrant a full clock driver?
 
-Thanks,
-Wendy
+As long as there no new driver in the future, which also needs to touch these gates i'm fine.
 
->=20
-> --
-> Regards,
-> Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+> 
+>   Dave
