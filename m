@@ -1,80 +1,96 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add compatible string
- for Allwinner V3s SoC
-Date: Fri, 22 Sep 2017 22:27:08 +0200
-Message-ID: <20170922202708.c5q45sbg44fsvhwt@flea.home>
-References: <20170822052322.15338-1-icenowy@aosc.io>
- <01d17ee85f0e59b927a9f24d1c541d33@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH RFC] gpio: of: document gpio-init nodes
+Date: Fri, 22 Sep 2017 22:41:38 +0200
+Message-ID: <20170922204138.29951-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p7rjaysluewoj3ho"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHXESXHAKGQECVOYOMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <01d17ee85f0e59b927a9f24d1c541d33-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+Sometimes it is desirable to define a "safe" configuration for a GPIO in
+the device tree but let the operating system later still make use of
+this pin.
 
---p7rjaysluewoj3ho
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This might for example be useful to initially configure a debug pin that
+is usually unconnected as output to prevent floating until it is used
+later.
 
-On Fri, Sep 22, 2017 at 02:52:19PM +0000, icenowy-h8G6r0blFSE@public.gmane.org wrote:
-> =E5=9C=A8 2017-08-22 13:23=EF=BC=8CIcenowy Zheng =E5=86=99=E9=81=93=EF=BC=
-=9A
-> > The compatible string for Allwinner V3s SoC used to be missing.
-> >=20
-> > Add it to the binding document.
-> >=20
-> > Fixes: b074fede01c0 ("arm: sunxi: add support for V3s SoC")
-> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->=20
-> Maxime,
-> Ping. Have you checked this patchset?
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-Applied, thanks!
-Maxime
+this picks up a discussion that pops up now and then with our customers.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Last time I discussed this topic with Linus Walleij my suggestion was to
+merge this usecase with gpio-hogs, but he wasn't happy with it because
+hogging implies that the pin is not free for other usage and he
+suggested to use "gpio-init" instead.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Maybe it's arguable if this "initial configuration" belongs into the
+device tree, but IMHO defining a "safe configuration" should have a
+place and the requirements are identical. This isn't implied by the name
+however, but I don't have a better idea for a different name.
 
---p7rjaysluewoj3ho
-Content-Type: application/pgp-signature; name="signature.asc"
+Thinking further (which was also discussed last time) it would also be
+nice to restrict usage. For example that a given pin that has
+"output-low" as its safe setting might be configured later als high
+output but not as input. Maybe:
 
------BEGIN PGP SIGNATURE-----
+	companion-reset {
+		gpio-somethingwithsafe;
+		gpios = <12 0>;
+		output-low;
+		fixed-direction;
+	};
 
-iQIcBAEBAgAGBQJZxXIcAAoJEBx+YmzsjxAgZYAP/iiUS36uH2aAoM9O6+uRkts4
-sHfQYHzmvnNPYojUN4CtjGXDRMS4AekFdGlEqZ9o5jbqI2BouOp5hfM4Qy/xRS5f
-vPtmD2lsjgAocAC6N6W0nlNIw/LWC0yJGBIg/bHLccazhnrHP002SFjvOZdboxvs
-5hF97cwWVDllKpaAbqmxlGXVhZDVds9anJUmteC9vS+aIQbNWFHNuio7wqJtCLcA
-2wESMrFxpEtwD3fqp5AhRNsLRqSwYc00V6cv1wXoDJwtN8lS6FmYSVzjI1oGOn4+
-U97g9eX/uavefrhgT+h+ccVxLec/Gozo1x8Yo1GBFW03rKV2XAX4XFNZosGviQmt
-cYJ4LqeuU/yVCvCXFr0DfVd6iMyBv1p2uEgbEAON6E5k+CSIaIHYHRiTmo42FSNK
-YRx+D4mqDYQy6xRbh3kARtV4g6iNx9s21vPeF6DEYtlYZQgA+Jme1gqvtb/hy88C
-RlEAFuGr92p+GxC2xT/3mlwQiOAJKyre0DGkUF88fZHUmWNgZay3Ja0KKC7iB+Fc
-LmXV4c+eiL4JVbdqDHRFeUi2bnIpo+ugYGYpZcJm3lgtbAnBbO1Ja9NladqDW4oO
-Z2hUjG9qI06iWw3lxdVXqn277v44m/+XNbKSlsa1cJfOAueKIPW3XT6Syrs9hbnJ
-+KBKtchuT9qNYpjHWGHZ
-=1AMB
------END PGP SIGNATURE-----
+(Conceptually we would have a hog then when also adding "fixed-value".)
 
---p7rjaysluewoj3ho--
+I'm not sure the early configuration should be implemented in Linux. I'd
+target the bootloader for that instead, still having the blessing of a
+binding document would be great.
+
+I look forward to your comments and ideas.
+
+Best regards
+Uwe
+
+ Documentation/devicetree/bindings/gpio/gpio.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 802402f6cc5d..849d620cee4d 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -207,6 +207,11 @@ configuration.
+ Optional properties:
+ - line-name:  The GPIO label name. If not present the node name is used.
+ 
++Similar to hogging above GPIOs can be initialized to a certain configuration
++only which compared to hogs doesn't prevent the operating system to change the
++pin later. The syntax is similar to hog definitons, the difference is only that
++the identifying property is "gpio-init" instead of "gpio-hog".
++
+ Example of two SOC GPIO banks defined as gpio-controller nodes:
+ 
+ 	qe_pio_a: gpio-controller@1400 {
+@@ -221,6 +226,12 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
+ 			output-low;
+ 			line-name = "foo-bar-gpio";
+ 		};
++
++		companion-reset {
++			gpio-init;
++			gpios = <12 0>;
++			output-low;
++		};
+ 	};
+ 
+ 	qe_pio_e: gpio-controller@1460 {
+-- 
+2.11.0
+
