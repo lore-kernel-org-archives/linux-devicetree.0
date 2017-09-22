@@ -1,42 +1,54 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: [PATCH] Input: stmfts - use devm_device_add_group
-Date: Fri, 22 Sep 2017 16:52:38 +0900
-Message-ID: <20170922075238.22938-1-andi.shyti@samsung.com>
-References: <CGME20170922075230epcas1p141c817bf8524e69bba1a3482c62e9f67@epcas1p1.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 02/12] ARM: dts: sunxi: h3/h5: Fix i2c2 register address
+Date: Fri, 22 Sep 2017 10:02:11 +0200
+Message-ID: <20170922080211.GA24768@Red>
+References: <20170921172151.29779-1-clabbe.montjoie@gmail.com>
+ <20170921172151.29779-3-clabbe.montjoie@gmail.com>
+ <20170922074945.jzibcgromgbhggxy@flea.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170922074945.jzibcgromgbhggxy-ZC1Zs529Oq4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-instead of sysfs_create_group.
+On Fri, Sep 22, 2017 at 09:49:45AM +0200, Maxime Ripard wrote:
+> On Thu, Sep 21, 2017 at 05:21:41PM +0000, Corentin Labbe wrote:
+> > The unit address and register address does not match.
+> > This patch fix the register address with the good one.
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > index 59ddac9f65a7..37464d4d07f6 100644
+> > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > @@ -630,9 +630,9 @@
+> >  			#size-cells = <0>;
+> >  		};
+> >  
+> > -		i2c2: i2c@01c2b400 {
+> > +		i2c2: i2c@1c2b400 {
+> 
+> This one should be merged into the previous patch.
+> 
+> The serie looks good otherwise, onec it's fixed, you can add my
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
+> Maxime
+> 
 
-Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
----
- drivers/input/touchscreen/stmfts.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+For me this patch could be backported (since it fixes a bug) so I have put it appart.
+But as requsted, I will merge it.
 
-diff --git a/drivers/input/touchscreen/stmfts.c b/drivers/input/touchscreen/stmfts.c
-index 157fdb4bb2e8..2351199189a4 100644
---- a/drivers/input/touchscreen/stmfts.c
-+++ b/drivers/input/touchscreen/stmfts.c
-@@ -727,8 +727,7 @@ static int stmfts_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	err = sysfs_create_group(&sdata->client->dev.kobj,
--				 &stmfts_attribute_group);
-+	err = devm_device_add_group(&client->dev, &stmfts_attribute_group);
- 	if (err)
- 		return err;
- 
-@@ -740,7 +739,6 @@ static int stmfts_probe(struct i2c_client *client,
- static int stmfts_remove(struct i2c_client *client)
- {
- 	pm_runtime_disable(&client->dev);
--	sysfs_remove_group(&client->dev.kobj, &stmfts_attribute_group);
- 
- 	return 0;
- }
--- 
-2.14.1
+Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
