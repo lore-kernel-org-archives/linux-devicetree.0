@@ -1,44 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: single: Allow indicating loss of pin states
- during low-power
-Date: Fri, 22 Sep 2017 15:03:45 +0200
-Message-ID: <CACRpkdbmrEottfArW-Hnv63M1k4zASfMg7W+SUNY6D1N2nxOVA@mail.gmail.com>
-References: <20170921010421.7467-1-f.fainelli@gmail.com> <20170921010421.7467-3-f.fainelli@gmail.com>
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: marvell: Enable Armada-8040-DB CPS SPI1
+Date: Fri, 22 Sep 2017 15:05:40 +0200
+Message-ID: <20170922150540.06196cc1@xps13>
+References: <20170922125012.6715-1-miquel.raynal@free-electrons.com>
+        <20170922130022.GA31634@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170921010421.7467-3-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170922130022.GA31634-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ext Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christine Gharzuzi <chrisg-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 3:04 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Andrew,
 
-> Some platforms (e.g: Broadcom STB: BMIPS_GENERIC/ARCH_BRCMSTB) will lose
-> their register contents when entering their lower power state. In such a
-> case, the pinctrl-single driver that is used will not be able to restore
-> the power states without telling the core about it and having
-> pinctrl_select_state() check for that.
->
-> This patch adds a new optional boolean property that Device Tree can
-> define in order to obtain exactly that and having the core pinctrl code
-> take that into account.
->
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Fri, 22 Sep 2017 15:00:22 +0200
+Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
 
-If we use this per-controller approach rather than the per-state approach
-I discuss in reply to patch 1/2, we should probably make it a generic
-property for pin controllers and not just a pinctrl-single business.
+> On Fri, Sep 22, 2017 at 02:50:12PM +0200, Miquel Raynal wrote:
+> > From: Christine Gharzuzi <chrisg-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > Add the DT node enabling Armada-8040-DB CPS SPI controller driver.
+> > 
+> > Add the SPI NAND flash device connected on the bus. Fill the MTD
+> > partitions layout.
+> > 
+> > Signed-off-by: Christine Gharzuzi <chrisg-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---  
+> 
+> Hi Miquel
+> 
+> Please put under the --- what you changed between v1 and v2. It helps
+> make the reviewing easier.
 
-So patch pinctrl-bindings.txt and put the code somewhere in
-core.
+Sure.
 
-But that is more of a detail, first we need to figure out how to
-handle this business in general.
+Plus, I just realized I sent the v1 patch instead of the v2.
+Sorry for that.
 
-Yours,
-Linus Walleij
+Thanks,
+Miquèl
+
+> 
+>      Thanks
+> 	Andrew
+
+
+
+-- 
+Miquel Raynal, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
