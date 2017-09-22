@@ -1,143 +1,150 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2 receiver
-Date: Fri, 22 Sep 2017 11:04:46 -0700
-Message-ID: <877ewqd2yp.fsf@anholt.net>
-References: <cover.1505916622.git.dave.stevenson@raspberrypi.org> <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson@raspberrypi.org> <1814950930.414004.1506062733728@email.1und1.de> <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 00/13] arm64/firmware: Software Delegated Exception Interface
+Date: Fri, 22 Sep 2017 19:26:01 +0100
+Message-ID: <20170922182614.27885-1-james.morse@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hello!
 
-Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> writes:
+The Software Delegated Exception Interface (SDEI) is an ARM specification
+for registering callbacks from the platform firmware into the OS.
+This is intended to be used to implement firmware-first RAS notifications,
+but also supports vendor-defined events and binding IRQs as events.
 
-> Hi Stefan
->
-> On 22 September 2017 at 07:45, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
->> Hi Dave,
->>
->>> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 20. September 2017 um 18:07 geschrieben:
->>>
->>>
->>> Document the DT bindings for the CSI2/CCP2 receiver peripheral
->>> (known as Unicam) on BCM283x SoCs.
->>>
->>> Signed-off-by: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
->>> ---
->>>
->>> Changes since v2
->>> - Removed all references to Linux drivers.
->>> - Reworded section about disabling the firmware driver.
->>> - Renamed clock from "lp_clock" to "lp" in description and example.
->>> - Referred to video-interfaces.txt and stated requirements on remote-endpoint
->>>   and data-lanes.
->>> - Corrected typo in example from csi to csi1.
->>> - Removed unnecessary #address-cells and #size-cells in example.
->>> - Removed setting of status from the example.
->>>
->>>  .../devicetree/bindings/media/bcm2835-unicam.txt   | 85 ++++++++++++++++++++++
->>>  1 file changed, 85 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->>> new file mode 100644
->>> index 0000000..7714fb3
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->>> @@ -0,0 +1,85 @@
->>> +Broadcom BCM283x Camera Interface (Unicam)
->>> +------------------------------------------
->>> +
->>> +The Unicam block on BCM283x SoCs is the receiver for either
->>> +CSI-2 or CCP2 data from image sensors or similar devices.
->>> +
->>> +The main platform using this SoC is the Raspberry Pi family of boards.
->>> +On the Pi the VideoCore firmware can also control this hardware block,
->>> +and driving it from two different processors will cause issues.
->>> +To avoid this, the firmware checks the device tree configuration
->>> +during boot. If it finds device tree nodes called csi0 or csi1 then
->>> +it will stop the firmware accessing the block, and it can then
->>> +safely be used via the device tree binding.
->>> +
->>> +Required properties:
->>> +===================
->>> +- compatible : must be "brcm,bcm2835-unicam".
->>> +- reg                : physical base address and length of the register sets for the
->>> +               device.
->>> +- interrupts : should contain the IRQ line for this Unicam instance.
->>> +- clocks     : list of clock specifiers, corresponding to entries in
->>> +               clock-names property.
->>> +- clock-names        : must contain an "lp" entry, matching entries in the
->>> +               clocks property.
->>> +
->>> +Unicam supports a single port node. It should contain one 'port' child node
->>> +with child 'endpoint' node. Please refer to the bindings defined in
->>> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->>> +
->>> +Within the endpoint node the "remote-endpoint" and "data-lanes" properties
->>> +are mandatory.
->>> +Data lane reordering is not supported so the data lanes must be in order,
->>> +starting at 1. The number of data lanes should represent the number of
->>> +usable lanes for the hardware block. That may be limited by either the SoC or
->>> +how the platform presents the interface, and the lower value must be used.
->>> +
->>> +Lane reordering is not supported on the clock lane either, so the optional
->>> +property "clock-lane" will implicitly be <0>.
->>> +Similarly lane inversion is not supported, therefore "lane-polarities" will
->>> +implicitly be <0 0 0 0 0>.
->>> +Neither of these values will be checked.
->>> +
->>> +Example:
->>> +     csi1: csi1@7e801000 {
->>> +             compatible = "brcm,bcm2835-unicam";
->>> +             reg = <0x7e801000 0x800>,
->>> +                   <0x7e802004 0x4>;
->>
->> sorry, i didn't noticed this before. I'm afraid this is using a small range of the CMI. Are there possible other users of this range? Does it make sense to handle this by a separate clock driver?
->
-> CMI (Clock Manager Image) consists of a total of 4 registers.
-> 0x7e802000 is CMI_CAM0, with only bits 0-5 used for gating and
-> inversion of the clock and data lanes (2 data lanes available on
-> CAM0).
-> 0x7e802004 is CMI_CAM1, with only bits 0-9 used for gating and
-> inversion of the clock and data lanes (4 data lanes available on
-> CAM1).
-> 0x7e802008 is CMI_CAMTEST which I have no documentation or drivers for.
-> 0x7e802010 is CMI_USBCTL. Only bit 6 is documented and is a reset. The
-> default value is the required value. Nothing touches it that I can
-> find.
+The document is here:
+http://infocenter.arm.com/help/topic/com.arm.doc.den0054a/ARM_DEN0054A_Software_Delegated_Exception_Interface.pdf
 
-Yeah, my conclusion previously was that it's appropriate to consider
-this register as part of the unicam instance.  No other HW block could
-want to talk to it.
+I anticpate once reviewed this series will go via the arm-soc tree, as the
+bulk of the code is under /drivers/firmware/.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+The major change in v3 is due to VMAP stacks. We can't trust sp when we take
+an event, so need our own SDEI stack. Events can nest, so we need two. Private
+events can be delivered per-cpu, so we need two per-cpu SDEI stacks.
 
------BEGIN PGP SIGNATURE-----
+The APCICA support for the SDEI table is now in mainline, so this series has
+grown the detection code for non-DT systems. The APEI/GHES wire-up is still
+being held back as APEI's ghes_proc() isn't (yet) safe for multiple sources
+of NMI.
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlnFUL8ACgkQtdYpNtH8
-nujHug//cIvAfg5NGU41AGlwItA8yaj1GTwOqiQn4LE7g6u/N8yVG7AVoCmoWLLe
-2c6sbCD/aLGGlOJ6AfhpG9v4ZW8Mi38SGLC5z/q1UR0Sa5J+UtjLqppLUdy6Dh+g
-EW8DnP1MqZuVd1FGnx+hFc0bycwdgD9ihngZfeHJz1MEjjUvDjEXgagvE7SEiqKb
-nTbtKijtbVQFsj2Gv5HvUrOxrlmYMEG7eDIyKEE/cuAKA1cm9qipCOyRXKngvGi8
-1hMRbUanBq+H2uoYDTsVy16DZrQJHadkPgbaeZsTmN0RoOA2XA5kroL6Z8iH47Ba
-J5VyaX3VYVkUMd9AS6PHs5N4FsG/3X/G8s0uIBqNj4L0k6UkBwE9zwDbT3H/StGt
-1S34WTvbEm+vpUHmsxLLE7EAxAvmNnRioHUqXtxHgfOHekegwGcSSnhwYz6fJwmN
-zLT2+Z8Uhlm5GBBbW2ZIdA3XvEWU5ODMJfl56nMbmulhT7srTj9LLS4JuoBkkqe/
-xYntIxkneNSITt3Ku2ZvMsuPnNnD5wZ9yOTFUUOpMu8KLbqHYm6u4Ul8t0hLT/dl
-mZZcJEgtADZ1Tnrt0WlW7eRWJcL1f/EaqCmG7bPI1MSU/cHdhaZjxozmSDZuFtVD
-LI6m13Qo7i1vhBsRWPdeeXbYeQqSH9nYgJvtYGx2845yrBBYlyM=
-=uk2T
------END PGP SIGNATURE-----
---=-=-=--
+Exposing the HVC range through KVM to user-space is gone, this will be
+re-incarnated as something that better fits KVMs architecture emulation,
+as opposed to assuming all-the-world's-SMC-CC.
+
+
+This series (juggles some registers with KVM+VHE, then) adds a DT binding to
+trigger probing of the interface and support for the SDEI API.
+
+SDEI runs between adjacent exception levels, so events will always be delivered
+to EL2 if firmware is at EL3. For VHE hosts we run the SDEI event handler
+behind KVM's back with all exceptions masked. Once the handler has done its
+work we return to the appropriate vbar+irq entry. This allows KVM to
+world-switch and deliver any signals sent by the handler to Qemu/kvmtool. We
+do the same thing if we interrupt host EL0. If we interrupted code with
+interrupts masked, we use a different API call to return to the interrupted
+context.
+
+What about non-VHE KVM? If you don't have VHE support and boot at EL2, the
+kernel drops to EL1. This driver will print an error message then give up. This
+is because events would still be delivered to EL2 hitting either KVM, or the
+hyp-stub. Supporting this is complicated, but because the main use-case is
+RAS, and ARM v8.2's RAS extensions imply v8.1's Virtual Host Extensions, we
+can assume all platforms with SDEI will support VHE too. (I have some ideas
+on how to support non-VHE).
+
+Running the event handler behind VHE-KVM's back has some side effects: The
+event handler will blindly use any registers that are shared between the host
+and guest. The two that I think matter are TPIDR_EL1, and the debug state. The
+guest may have set MDSCR_EL1 so debug exceptions must remain masked. The
+guest's TPIDR_EL1 will be used by the event handler if it accesses per-cpu
+variables. This needs fixing. The first part of this series juggles KVMs use
+of TPIDR_EL2 so that we share it with the host on VHE systems. An equivalent
+change for 32bit is (still) on my todo list. (the alternative to this is to
+have a parody world switch in the SDEI event handler, but this would mean
+special casing interrupted guests, and be an ABI link to KVM.)
+
+Is this another begins-with-S RAS mechanism for arm64? Yes.
+Why? Any notification delivered as an exception will overwrite the exception
+registers. This is fatal for the running thread if it happens during entry.S's
+kernel_enter or kernel_exit. Instead of adding masking and routing controls,
+events are delivered to a registered address at a fixed exception level and
+don't change the exception registers when delivered.
+
+This series can be retrieved from:
+git://linux-arm.org/linux-jm.git -b sdei/v3/base
+
+Questions and contradictions welcome!
+
+Thanks,
+
+James
+
+[Changes since previous versions are noted on each patch]
+
+
+James Morse (13):
+  KVM: arm64: Store vcpu on the stack during __guest_enter()
+  KVM: arm/arm64: Convert kvm_host_cpu_state to a static per-cpu
+    allocation
+  KVM: arm64: Change hyp_panic()s dependency on tpidr_el2
+  arm64: alternatives: use tpidr_el2 on VHE hosts
+  KVM: arm64: Stop save/restoring host tpidr_el1 on VHE
+  Docs: dt: add devicetree binding for describing arm64 SDEI firmware
+  firmware: arm_sdei: Add driver for Software Delegated Exceptions
+  arm64: Add vmap_stack header file
+  arm64: kernel: Add arch-specific SDEI entry code and CPU masking
+  firmware: arm_sdei: Add support for CPU and system power states
+  firmware: arm_sdei: add support for CPU private events
+  arm64: acpi: Remove __init from acpi_psci_use_hvc() for use by SDEI
+  firmware: arm_sdei: Discover SDEI support via ACPI
+
+ .../devicetree/bindings/arm/firmware/sdei.txt      |   42 +
+ arch/arm64/Kconfig                                 |    2 +-
+ arch/arm64/include/asm/assembler.h                 |    8 +
+ arch/arm64/include/asm/kvm_host.h                  |    2 +
+ arch/arm64/include/asm/percpu.h                    |   11 +-
+ arch/arm64/include/asm/processor.h                 |    1 +
+ arch/arm64/include/asm/sdei.h                      |   63 ++
+ arch/arm64/include/asm/stacktrace.h                |    3 +
+ arch/arm64/include/asm/vmap_stack.h                |   41 +
+ arch/arm64/kernel/Makefile                         |    1 +
+ arch/arm64/kernel/acpi.c                           |    2 +-
+ arch/arm64/kernel/asm-offsets.c                    |    5 +
+ arch/arm64/kernel/cpufeature.c                     |   23 +
+ arch/arm64/kernel/irq.c                            |   13 +-
+ arch/arm64/kernel/sdei-entry.S                     |  122 +++
+ arch/arm64/kernel/sdei.c                           |  235 +++++
+ arch/arm64/kernel/smp.c                            |   11 +-
+ arch/arm64/kvm/hyp-init.S                          |    4 +
+ arch/arm64/kvm/hyp/entry.S                         |   10 +-
+ arch/arm64/kvm/hyp/hyp-entry.S                     |   18 +-
+ arch/arm64/kvm/hyp/switch.c                        |   25 +-
+ arch/arm64/kvm/hyp/sysreg-sr.c                     |   16 +-
+ arch/arm64/mm/proc.S                               |    8 +
+ drivers/firmware/Kconfig                           |    8 +
+ drivers/firmware/Makefile                          |    1 +
+ drivers/firmware/arm_sdei.c                        | 1096 ++++++++++++++++++++
+ include/linux/cpuhotplug.h                         |    1 +
+ include/linux/psci.h                               |    3 +-
+ include/linux/sdei.h                               |  105 ++
+ include/uapi/linux/sdei.h                          |   91 ++
+ virt/kvm/arm/arm.c                                 |   18 +-
+ 31 files changed, 1931 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/sdei.txt
+ create mode 100644 arch/arm64/include/asm/sdei.h
+ create mode 100644 arch/arm64/include/asm/vmap_stack.h
+ create mode 100644 arch/arm64/kernel/sdei-entry.S
+ create mode 100644 arch/arm64/kernel/sdei.c
+ create mode 100644 drivers/firmware/arm_sdei.c
+ create mode 100644 include/linux/sdei.h
+ create mode 100644 include/uapi/linux/sdei.h
+
+-- 
+2.13.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
