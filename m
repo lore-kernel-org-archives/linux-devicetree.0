@@ -1,25 +1,156 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] mmc: dt-bindings: Add reg/source_cg/latch-ck for
- Mediatek MMC bindings
-Date: Fri, 22 Sep 2017 13:25:52 +0200
-Message-ID: <CACRpkdaco5XnWK-gAdGLWFZtjqnM16iT424ist5Zmd3RyAXAEQ@mail.gmail.com>
-References: <1505958774-14410-1-git-send-email-chaotian.jing@mediatek.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX
+ Device Tree bindings
+Date: Fri, 22 Sep 2017 14:35:23 +0300
+Message-ID: <20170922113522.4nbls3bb3sglsu55@valkosipuli.retiisi.org.uk>
+References: <20170922100823.18184-1-maxime.ripard@free-electrons.com>
+ <20170922100823.18184-2-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1505958774-14410-1-git-send-email-chaotian.jing@mediatek.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170922100823.18184-2-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 3:52 AM, Chaotian Jing
-<chaotian.jing@mediatek.com> wrote:
+Hi Maxime,
 
-> +- mediatek,latch-ck: Some projects do not support enhance_rx, need set correct latch-ck to avoid data crc
-> +                    error caused by stop clock(fifo full)
+On Fri, Sep 22, 2017 at 12:08:22PM +0200, Maxime Ripard wrote:
+> The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
+> 4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
+> the hardware implementation.
+> 
+> It can operate with an external D-PHY, an internal one or no D-PHY at all
+> in some configurations.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+> Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/cdns,csi2rx.txt      | 97 ++++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+> new file mode 100644
+> index 000000000000..e9c30f964a96
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+> @@ -0,0 +1,97 @@
+> +Cadence MIPI-CSI2 RX controller
+> +===============================
+> +
+> +The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
+> +lanes in input, and 4 different pixel streams in output.
+> +
+> +Required properties:
+> +  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
+> +  - reg: base address and size of the memory mapped region
+> +  - clocks: phandles to the clocks driving the controller
+> +  - clock-names: must contain:
+> +    * sys_clk: main clock
+> +    * p_clk: register bank clock
+> +    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
+> +                         implemented in hardware, between 0 and 3
+> +
+> +Optional properties:
+> +  - phys: phandle to the external D-PHY, phy-names must be provided
+> +  - phy-names: must contain dphy, if the implementation uses an
+> +               external D-PHY
+> +
+> +Required subnodes:
+> +  - ports: A ports node with one port child node per device input and output
+> +           port, in accordance with the video interface bindings defined in
+> +           Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> +           port nodes numbered as follows.
+> +
+> +           Port Description
+> +           -----------------------------
+> +           0    CSI-2 input
+> +           1    Stream 0 output
+> +           2    Stream 1 output
+> +           3    Stream 2 output
+> +           4    Stream 3 output
+> +
+> +           The stream output port nodes are optional if they are not connected
+> +           to anything at the hardware level or implemented in the design.
 
-I think I wrote elsewhere: replace "projects" with "systems" or "SoCs".
+Could you add supported endpoint numbers, please?
 
-Yours,
-Linus Walleij
+<URL:https://patchwork.linuxtv.org/patch/44409/>
+
+> +
+> +Example:
+> +
+> +csi2rx: csi-bridge@0d060000 {
+> +	compatible = "cdns,csi2rx";
+> +	reg = <0x0d060000 0x1000>;
+> +	clocks = <&byteclock>, <&byteclock>
+> +		 <&coreclock>, <&coreclock>,
+> +		 <&coreclock>, <&coreclock>;
+> +	clock-names = "sys_clk", "p_clk",
+> +		      "pixel_if0_clk", "pixel_if1_clk",
+> +		      "pixel_if2_clk", "pixel_if3_clk";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			csi2rx_in_sensor: endpoint {
+> +				remote-endpoint = <&sensor_out_csi2rx>;
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			csi2rx_out_grabber0: endpoint {
+> +				remote-endpoint = <&grabber0_in_csi2rx>;
+> +			};
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +
+> +			csi2rx_out_grabber1: endpoint {
+> +				remote-endpoint = <&grabber1_in_csi2rx>;
+> +			};
+> +		};
+> +
+> +		port@3 {
+> +			reg = <3>;
+> +
+> +			csi2rx_out_grabber2: endpoint {
+> +				remote-endpoint = <&grabber2_in_csi2rx>;
+> +			};
+> +		};
+> +
+> +		port@4 {
+> +			reg = <4>;
+> +
+> +			csi2rx_out_grabber3: endpoint {
+> +				remote-endpoint = <&grabber3_in_csi2rx>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.13.5
+> 
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
