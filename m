@@ -1,141 +1,38 @@
-From: Sandy Huang <hjc@rock-chips.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add document for rockchip RGB output
- interface
-Date: Fri, 22 Sep 2017 10:59:58 +0800
-Message-ID: <e70e572d-5b44-43dd-3b66-0cd6e71cbedc@rock-chips.com>
-References: <1505360594-196508-1-git-send-email-hjc@rock-chips.com>
- <1505360600-196567-1-git-send-email-hjc@rock-chips.com>
- <20170919144621.eledmglqgn7nf7zp@rob-hp-laptop>
- <d631ff56-e3e6-688f-d9b6-a7101ce047d5@rock-chips.com>
- <6cd1ac0d-bc99-f8f3-15da-799f8623ce65@rock-chips.com>
- <CAL_JsqK7kR5QuBCCgGkOTfw041_k4qsUsNdm0cft=C3UWTfxoQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqK7kR5QuBCCgGkOTfw041_k4qsUsNdm0cft=C3UWTfxoQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/3] Add support rockchip RGB output interface
+Date: Fri, 22 Sep 2017 11:00:21 +0800
+Message-ID: <1506049221-117283-1-git-send-email-hjc@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgcm9iLAoK5ZyoIDIwMTcvOS8yMiAzOjQwLCBSb2IgSGVycmluZyDlhpnpgZM6Cj4gT24gVHVl
-LCBTZXAgMTksIDIwMTcgYXQgOTo1NyBQTSwgU2FuZHkgSHVhbmcgPGhqY0Byb2NrLWNoaXBzLmNv
-bT4gd3JvdGU6Cj4+Cj4+Cj4+IOWcqCAyMDE3LzkvMjAgOTo1MSwgU2FuZHkgSHVhbmcg5YaZ6YGT
-Ogo+Pj4KPj4+IEhpIHJvYiwKPj4+ICAgICAgIHRoYW5rcyBmb3IgeW91IHJldmlldy4KPj4+Cj4+
-PiDlnKggMjAxNy85LzE5IDIyOjQ2LCBSb2IgSGVycmluZyDlhpnpgZM6Cj4+Pj4KPj4+PiBPbiBU
-aHUsIFNlcCAxNCwgMjAxNyBhdCAxMTo0MzoxOEFNICswODAwLCBTYW5keSBIdWFuZyB3cm90ZToK
-Pj4+Pj4KPj4+Pj4gVGhpcyBwYXRoIGFkZCBzdXBwb3J0IHJ2MTEwOCByZ2Igb3V0cHV0IGludGVy
-ZmFjZSBkcml2ZXIuCj4+Pj4+Cj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNA
-cm9jay1jaGlwcy5jb20+Cj4+Pj4+IC0tLQo+Pj4+PiAgICAuLi4vYmluZGluZ3MvZGlzcGxheS9y
-b2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0ICAgICB8IDgwCj4+Pj4+ICsrKysrKysrKysrKysrKysr
-KysrKysKPj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKykKPj4+Pj4gICAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0Cj4+Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXJnYi50eHQKPj4+Pj4KPj4+Pj4gZGlmZiAtLWdp
-dAo+Pj4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tj
-aGlwL3JvY2tjaGlwLXJnYi50eHQKPj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4+Pj4+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0Cj4+Pj4+IGluZGV4IDAwMDAwMDAuLjQxNjQ1MTIKPj4+Pj4gLS0tIC9kZXYvbnVs
-bAo+Pj4+PiArKysKPj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4+Pj4+IEBAIC0wLDAgKzEsODAgQEAKPj4+
-Pj4gK1JvY2tjaGlwIFJWMTEwOCBSR0IgaW50ZXJmYWNlCj4+Pj4+ICs9PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PQo+Pj4+PiArCj4+Pj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+Pj4+
-PiArLSBjb21wYXRpYmxlOiBtYXRjaGluZyB0aGUgc29jIHR5cGU6Cj4+Pj4+ICsgICAgLSAicm9j
-a2NoaXAscnYxMTA4LXJnYiI7Cj4+Pj4+ICsKPj4+Pj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+
-Pj4+ICstIHBpbmN0cmwtbmFtZXM6IG11c3QgY29udGFpbiBhICJsY2RjIiBlbnRyeS4KPj4+Pj4g
-Ky0gcGluY3RybC0wOiBwaW4gY29udHJvbCBncm91cCB0byBiZSB1c2VkIGZvciB0aGlzIGludGVy
-ZmFjZS4KPj4+Pj4gKwo+Pj4+PiArUmVxdWlyZWQgbm9kZXM6Cj4+Pj4+ICstIHJvY2tjaGlwLHJn
-Yi1tb2RlOiBzaG91bGQgYmUgInA4ODgiLCAicDY2NiIsICJwNTY1IiwgInM4ODgiLAo+Pj4+PiAi
-czg4OC1kdW1teSIKPj4+Pgo+Pj4+Cj4+Pj4gVGhpcyBzaG91bGQgYmUgYSBzdGFuZGFyZCBwcm9w
-ZXJ0eS4gQW55IGRldmljZSB3aXRoIGEgcGFyYWxsZWwgaW50ZXJmYWNlCj4+Pj4gaXMgZ29pbmcg
-dG8gbmVlZCBzb21ldGhpbmcgbGlrZSB0aGlzLgo+Pj4+Cj4+PiBzbywgaSBuZWVkIHRvIG1vdmUg
-dGhpcyBwcm9wZXJ0eSB0byBwYW5lbD8gb3IganVzdCByZW5hbWUKPj4+IHJvY2tjaGlwLHJnYi1t
-b2RlIHRvIHJnYi1tb2RlPwo+Pj4KPj4+Pj4gKyAgICAtIHA4ODg6IG91dHB1dCByOC1nOC1iOCBh
-dCBlYWNoIGRjbGsgY3ljbGUgZm9yIHBlci1waXhlbAo+Pj4+PiArICAgIC0gcDY2Njogb3V0cHV0
-IHI2LWc2LWI2IGF0IGVhY2ggZGNsayBjeWNsZSBmb3IgcGVyLXBpeGVsCj4+Pj4+ICsgICAgLSBw
-NTY1OiBvdXRwdXQgcjUtZzYtYjUgYXQgZWFjaCBkY2xrIGN5Y2xlIGZvciBwZXItcGl4ZWwKPj4+
-Pj4gKyAgICAtIHM4ODg6IG91dHB1dCByOC1nOC1iOCBpbiB0aHJlZSBkY2xrIGN5Y2xlIGZvciBw
-ZXItcGl4ZWwKPj4+Pj4gKyAgICAtIHM4ODgtZG1teTogb3V0cHV0IHI4LWc4LWI4LWR1bW15IGlu
-IGZvdXIgZGNsayBjeWNsZSBmb3IgcGVyLXBpeGVsCj4+Pj4+ICsKPj4+Pj4gK1RoZSByZ2IgaGFz
-IHR3byB2aWRlbyBwb3J0cyBkZXNjcmliZWQgYnk6Cj4+Pj4+ICsgICAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4+Pj4+ICtUaGVp
-ciBjb25uZWN0aW9ucyBhcmUgbW9kZWxlZCB1c2luZyB0aGUgT0YgZ3JhcGggYmluZGluZ3Mgc3Bl
-Y2lmaWVkIGluCj4+Pj4+ICsgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dy
-YXBoLnR4dC4KPj4+Pj4gKwo+Pj4+PiArLSB2aWRlbyBwb3J0IDAgZm9yIHRoZSBWT1AgaW5wdXQs
-IHRoZSByZW1vdGUgZW5kcG9pbnQgbWF5YmUKPj4+Pj4gdm9wYi92b3BsL3ZvcAo+Pj4+PiArLSB2
-aWRlbyBwb3J0IDEgZm9yIGVpdGhlciBhIHBhbmVsIG9yIHN1YnNlcXVlbnQgZW5jb2Rlcgo+Pj4+
-PiArCj4+Pj4+ICt0aGUgcGFuZWwgZGVzY3JpYmVkIGJ5Ogo+Pj4+PiArICAgIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPj4+
-Pj4gK1BhbmVsIG90aGVyIHJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4+ICstIHBvcnRzIGZvciBy
-ZW1vdGUgcmdiIG91dHB1dC4KPj4+Pj4gKwo+Pj4+PiArRXhhbXBsZToKPj4+Pj4gKwo+Pj4+PiAr
-cGFuZWw6IHBhbmVsIHsKPj4+Pj4gKyAgICBjb21wYXRpYmxlID0gImF1byxiMTAxZWFuMDEiOwo+
-Pj4+PiArICAgIGVuYWJsZS1ncGlvcyA9IDwmZ3BpbzcgMjEgR1BJT19BQ1RJVkVfSElHSD47Cj4+
-Pj4+ICsKPj4+Pj4gKyAgICBwb3J0cyB7Cj4+Pj4+ICsgICAgICAgIHBhbmVsX2luX3JnYjogZW5k
-cG9pbnQgewo+Pj4+PiArICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZyZ2Jfb3V0X3Bh
-bmVsPjsKPj4+Pj4gKyAgICAgICAgfTsKPj4+Pj4gKyAgICB9Owo+Pj4+PiArfTsKPj4+Pj4gKwo+
-Pj4+PiArRm9yIFJvY2tjaGlwIFJWMTEwODoKPj4+Pj4gKwo+Pj4+PiArICAgIHJnYjogcmdiIHsK
-Pj4+Pj4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxydjExMDgtcmdiIjsKPj4+Pj4g
-KyAgICAgICAgcGluY3RybC1uYW1lcyA9ICJsY2RjIjsKPj4+Pj4gKyAgICAgICAgcGluY3RybC0w
-ID0gPCZsY2RjX2N0bD47Cj4+Pj4+ICsgICAgICAgIHJvY2tjaGlwLHJnYi1tb2RlID0gInA4ODgi
-Owo+Pj4+PiArCj4+Pj4+ICsgICAgICAgIHBvcnRzIHsKPj4+Pj4gKyAgICAgICAgICAgICNhZGRy
-ZXNzLWNlbGxzID0gPDE+Owo+Pj4+PiArICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+
-Pj4+ICsKPj4+Pj4gKyAgICAgICAgICAgIHJnYl9pbjogcG9ydEAwIHsKPj4+Pj4gKyAgICAgICAg
-ICAgICAgICByZWcgPSA8MD47Cj4+Pj4+ICsgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMg
-PSA8MT47Cj4+Pj4+ICsgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+Pj4+ICsK
-Pj4+Pj4gKyAgICAgICAgICAgICAgICByZ2JfaW5fdm9wOiBlbmRwb2ludEAwIHsKPj4+Pj4gKyAg
-ICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+Pj4+Cj4+Pj4KPj4+PiBEb24ndCBuZWVkIHJl
-ZyBmb3IgYSBzaW5nbGUgZW5kcG9pbnQuCj4+Pj4KPj4+IG9rLCB0aGlzIHdpbGwgYmUgZGVsZXRl
-ZCBhdCBuZXh0IHZlcnNpb24uCj4+Pj4+Cj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgIHJlbW90
-ZS1lbmRwb2ludCA9IDwmdm9wX291dF9yZ2I+Owo+Pj4+PiArICAgICAgICAgICAgICAgIH07Cj4+
-Pj4+ICsgICAgICAgICAgICB9Owo+Pj4+PiArCj4+Pj4+ICsgICAgICAgICAgICByZ2Jfb3V0OiBw
-b3J0QDEgewo+Pj4+PiArICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPj4+Pj4gKyAgICAgICAg
-ICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+Pj4gKyAgICAgICAgICAgICAgICAjc2l6
-ZS1jZWxscyA9IDwwPjsKPj4+Pj4gKwo+Pj4+PiArICAgICAgICAgICAgICAgIHJnYl9vdXRfcGFu
-ZWw6IGVuZHBvaW50QDAgewo+Pj4+PiArICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4+
-Pj4KPj4+Pgo+Pj4+IGRpdHRvLgo+Pj4+Cj4+PiBvaywgdGhpcyB3aWxsIGJlIGRlbGV0ZWQgYXQg
-bmV4dCB2ZXJzaW9uLgo+Pgo+PiBzb3JyeSx0aGlzIGNhbid0IGJlIGRlbGV0ZWQsIGJlY2F1c2Ug
-cmdiIG91dHB1dCByZW1vdGUgZW5kcG9pbnQgbWF5YmUgcGFuZWwKPj4gb3IgY29udmVydCBjaGlw
-LCB0aGUgZHRzIG5vZGUgbWF5YmUgbGlrZSB0aGlzOgo+Pgo+PiBwYW5lbDogcGFuZWwgewo+PiAg
-ICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiAgICAgICAgICBwb3J0cyB7Cj4+ICAgICAg
-ICAgICAgICAgICAgcGFuZWxfaW5fcmdiOiBlbmRwb2ludCB7Cj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSAgPCZyZ2Jfb3V0X3BhbmVsPjsKPj4gICAgICAgICAg
-ICAgICAgICB9Owo+PiAgICAgICAgICB9Owo+PiB9Owo+Pgo+PiBicmlkZ2U6IGJyaWRnZSB7Cj4+
-ICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gICAgICAgICAgcG9ydHMgewo+PiAgICAgICAg
-ICAgICAgICAgIGJyaWRnZV9pbl9yZ2I6IGVuZHBvaW50IHsKPj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgIHJlbW90ZS1lbmRwb2ludCA9ICA8JnJnYl9vdXRfYnJpZGdlPjsKPj4gICAgICAgICAg
-ICAgICAgICB9Owo+PiAgICAgICAgICB9Owo+PiB9Owo+Pgo+PiByZ2Jfb3V0OiBwb3J0QDEgewo+
-PiAgICAgICAgICByZWcgPSA8MT47Cj4+ICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+
-PiAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKPj4gICAgICAgICAgcmdiX291dF9wYW5lbDog
-ZW5kcG9pbnRAMCB7Cj4+ICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPj4gICAgICAgICAg
-ICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luX3JnYj47Cj4+ICAgICAgICAgIH07
-Cj4+ICAgICAgICAgIHJnYl9vdXRfYnJpZGdlOiBlbmRwb2ludEAxIHsKPj4gICAgICAgICAgICAg
-ICAgICAgcmVnID0gPDE+Owo+PiAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwm
-YnJpZGdlX2luX3JnYj47Cj4+ICAgICAgICAgIH07Cj4+ICAgfTsKPj4KPj4gc28gcm9ja2NoaXBf
-cmdiX2JpbmQoKSBAIHJvY2tjaGlwX3JnYi5jIHVzZSByZWcgaWQgdG8gZmluZCB0aGUgcmVtb3Rl
-Cj4+IGFjdGl2ZWQgZW5kcG9pbnQuCj4+Cj4+IGZvcl9lYWNoX2NoaWxkX29mX25vZGUocG9ydCwg
-ZW5kcG9pbnQpIHsKPj4gICAgICAgICAgb2ZfcHJvcGVydHlfcmVhZF91MzIoZW5kcG9pbnQsICJy
-ZWciLCAmZW5kcG9pbnRfaWQpOwo+IAo+IExhY2sgb2YgcmVnIHByb3BlcnR5IGhlcmUgc2hvdWxk
-IGltcGx5IDAgZm9yIGVuZHBvaW50X2lkLgo+IApvaywgaSB3aWxsIGRlbGV0ZSB0aGlzIHJlZyBp
-ZCBhbmQgc2V0IHRoZSBlbmRwb2ludF9pZCBkZWZhdWx0IHZhbHVlIHRvIDAgCndoZW4gbGFjayBv
-ZiByZWcgcHJvcGVydHkgYXQgbmV4dCB2ZXJzaW9uLCB0aGFua3MuCj4+ICAgICAgICAgIHJldCA9
-IGRybV9vZl9maW5kX3BhbmVsX29yX2JyaWRnZShkZXYtPm9mX25vZGUsIDEsIGVuZHBvaW50X2lk
-LAo+PiAmcmdiLT5wYW5lbCwgJnJnYi0+YnJpZGdlKTsKPj4gICAgICAgICAgaWYgKCFyZXQpCj4+
-ICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4+IH0KPj4KPj4+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbl9yZ2I+Owo+Pj4+PiArICAgICAgICAgICAg
-ICAgIH07Cj4+Pj4+ICsgICAgICAgICAgICB9Owo+Pj4+PiArICAgICAgICB9Owo+Pj4+PiArICAg
-IH07Cj4+Pj4+IC0tCj4+Pj4+IDIuNy40Cj4+Pj4+Cj4+Pj4+Cj4+Pj4KPj4+Pgo+Pj4+Cj4+Pgo+
-Pj4KPj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4+
-PiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKPj4+IExpbnV4LXJvY2tjaGlwQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKPj4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtcm9ja2NoaXAKPj4KPj4KPiAKPiAKPiAKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patches add support rockchip RGB output, Some Rockchip CRTCs, like rv1108,
+can directly output parallel and serial RGB data to panel or to conversion chip.
+So we add this driver to probe encoder and connector to support this case.
+
+Sandy Huang (3):
+  dt-bindings: Add document for rockchip RGB output interface
+  drm/rockchip: Add support for Rockchip Soc RGB output interface
+  drm/rockchip: vop: Add more RGB output interface type
+
+ .../bindings/display/rockchip/rockchip-rgb.txt     |  78 +++++
+ drivers/gpu/drm/rockchip/Kconfig                   |   9 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_rgb.c            | 343 +++++++++++++++++++++
+ 7 files changed, 436 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+ create mode 100644 drivers/gpu/drm/rockchip/rockchip_rgb.c
+
+-- 
+2.7.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
