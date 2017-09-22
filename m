@@ -1,142 +1,138 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC LINUX PATCH] Dcoumentation: dt: mailbox: Add Xilinx IPI
- Mailbox
-Date: Fri, 22 Sep 2017 12:10:05 +0100
-Message-ID: <20170922111005.GA11613@e107155-lin>
-References: <1506034724-14639-1-git-send-email-jliang@xilinx.com>
- <BY1PR0201MB0885E6563EBAFE83DF8822A4B0670@BY1PR0201MB0885.namprd02.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Fri, 22 Sep 2017 12:08:22 +0200
+Message-ID: <20170922100823.18184-2-maxime.ripard@free-electrons.com>
+References: <20170922100823.18184-1-maxime.ripard@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BY1PR0201MB0885E6563EBAFE83DF8822A4B0670-QYJsKn8jqXIWAWX5OQc4qhrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20170922100823.18184-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jiaying Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyril Chemparathy <cyrilc-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 06:05:18AM +0000, Jiaying Liang wrote:
-> 
-> Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block in ZynqMP
-> SoC used for the communication between various processor systems.
-> 
-> Signed-off-by: Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 88 ++++++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-
-> mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-
-> mailbox.txt
-> new file mode 100644
-> index 0000000..5d915d1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.
-> +++ txt
-> @@ -0,0 +1,88 @@
-> +Xilinx IPI Mailbox Driver
-> +========================================
-> +
-> +The Xilinx IPI(Inter Processor Interrupt) mailbox driver is a mailbox
-> +controller that manages the messaging between two IPI agents. Each IPI
-> +mailbox has request and response buffers between the two IPI agents.
-> +
-> ++-------------------------------------+
-> +|                                     | Xilinx ZynqMP IPI Mailbox
-> +| Controller|
-> +|                                     |
-> +|                       +-------------+
-> +|                       |     SMC     |
-> +|                       |             |
-> ++--------+--------------+------+------+
-> +         |                     |
-> +         |          +-----------------+
-> +         |                     |   ATF (ARM trusted firmware)
+The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
+4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
+the hardware implementation.
 
-I suppose it should work with any EL3 firmware, ATF reference can be
-removed IMO.
+It can operate with an external D-PHY, an internal one or no D-PHY at all
+in some configurations.
 
-> +         |                     |
-> ++-------------------------------------+
-> +         |                     |   Hardware
-> +         |                     |
-> + +--------------------------------------+
-> +                               |        |
-> + +----------------------+ +-----------+ |
-> + | | Buffers between    | | IPI Agent | |
-> + | | two IPI agents     | | Registers | |
-> + | +--------------------+ +-----------+ |
-> + |                                      |
-> + |   Xilinx ZynqMP IPI                  |
-> + +--------------------------------------+
-> +
-> +
-> +Message Manager Device Node:
-> +===========================
-> +Required properties:
-> +--------------------
-> +- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
-> +- ipi-smc-fid-base	Base offset of SMC function IDs for IPI mailbox SMC.
-> +			It contains the IPI IDs of the two IPI agents.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../devicetree/bindings/media/cdns,csi2rx.txt      | 97 ++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
 
-Why is "SMC" associated with this hardware block ? Is it secure device ?
-Can Linux access it ? If so, why do you need SMC ?
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+new file mode 100644
+index 000000000000..e9c30f964a96
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+@@ -0,0 +1,97 @@
++Cadence MIPI-CSI2 RX controller
++===============================
++
++The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
++lanes in input, and 4 different pixel streams in output.
++
++Required properties:
++  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
++  - reg: base address and size of the memory mapped region
++  - clocks: phandles to the clocks driving the controller
++  - clock-names: must contain:
++    * sys_clk: main clock
++    * p_clk: register bank clock
++    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
++                         implemented in hardware, between 0 and 3
++
++Optional properties:
++  - phys: phandle to the external D-PHY, phy-names must be provided
++  - phy-names: must contain dphy, if the implementation uses an
++               external D-PHY
++
++Required subnodes:
++  - ports: A ports node with one port child node per device input and output
++           port, in accordance with the video interface bindings defined in
++           Documentation/devicetree/bindings/media/video-interfaces.txt. The
++           port nodes numbered as follows.
++
++           Port Description
++           -----------------------------
++           0    CSI-2 input
++           1    Stream 0 output
++           2    Stream 1 output
++           3    Stream 2 output
++           4    Stream 3 output
++
++           The stream output port nodes are optional if they are not connected
++           to anything at the hardware level or implemented in the design.
++
++Example:
++
++csi2rx: csi-bridge@0d060000 {
++	compatible = "cdns,csi2rx";
++	reg = <0x0d060000 0x1000>;
++	clocks = <&byteclock>, <&byteclock>
++		 <&coreclock>, <&coreclock>,
++		 <&coreclock>, <&coreclock>;
++	clock-names = "sys_clk", "p_clk",
++		      "pixel_if0_clk", "pixel_if1_clk",
++		      "pixel_if2_clk", "pixel_if3_clk";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			csi2rx_in_sensor: endpoint {
++				remote-endpoint = <&sensor_out_csi2rx>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			csi2rx_out_grabber0: endpoint {
++				remote-endpoint = <&grabber0_in_csi2rx>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			csi2rx_out_grabber1: endpoint {
++				remote-endpoint = <&grabber1_in_csi2rx>;
++			};
++		};
++
++		port@3 {
++			reg = <3>;
++
++			csi2rx_out_grabber2: endpoint {
++				remote-endpoint = <&grabber2_in_csi2rx>;
++			};
++		};
++
++		port@4 {
++			reg = <4>;
++
++			csi2rx_out_grabber3: endpoint {
++				remote-endpoint = <&grabber3_in_csi2rx>;
++			};
++		};
++	};
++};
+-- 
+2.13.5
 
-> +- reg:			IPI request and response buffers address range. It
-> +			can be the IPI buffers from the hardware or it can
-> +			be carved out shared memory.
-
-It sounds like buffer used for communication and not part of this IP.
-Shouldn't this be part of mailbox client binding rather than controller
-binding.
-
-> +- reg-names:		Reg resource name of the IPI request and response
-> +			buffers.
-> +- #mbox-cells:		Shall be 1. Contains the logical channel IDs of the
-> +			channels on the IPI mailbox.
-> +- interrupt-parent:	Phandle for the interrupt controller.
-> +- interrupts:		Interrupt mapping.
-> +
-> +Required properties:
-> +--------------------
-> +- method:		The method of accessing the IPI agent registers.
-> +			Permitted values are: "smc" and "hvc". Default is
-> +			"smc".
-> +Example:
-> +------------
-> +	/* APU IPI mailbox driver */
-> +	ipis {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		ipi_mailbox_apu_rpu0: ipi_mailbox@0 {
-> +			compatible = "xlnx,zynqmp-ipi-mailbox";
-> +			reg = <0 0xff990400 40>;
-> +			reg-names = "apu-rpu0";
-> +			ipi-smc-fid-base = <0x1010>;
-> +			method = "smc";
-> +			#mbox-cells = <1>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <0 35 4>;
-> +		};
-> +		ipi_mailbox_apu_rpu1: ipi_mailbox@1 {
-> +			compatible = "xlnx,zynqmp-ipi-mailbox";
-> +			reg = <0 0xff990440 40>;
-> +			reg-names = "apu-rpu1";
-> +			ipi-smc-fid-base = <0x1020>;
-> +			method = "smc";
-> +			#mbox-cells = <1>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <0 35 4>;
-> +		};
-
-Why do you need the above 2 ? They don't look like 2 controller blocks.
-You just need to represent single mailbox controller.
-
---
-Regards,
-Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
