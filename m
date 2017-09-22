@@ -1,102 +1,72 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2
- receiver
-Date: Fri, 22 Sep 2017 08:45:33 +0200 (CEST)
-Message-ID: <1814950930.414004.1506062733728@email.1und1.de>
-References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
- <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson@raspberrypi.org>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH 4/8] ARM: dts: iwg22d: Enable SDHI0 controller
+Date: Fri, 22 Sep 2017 06:52:48 +0000
+Message-ID: <TY1PR06MB0702E99A48352C055705E3A9B7670@TY1PR06MB0702.apcprd06.prod.outlook.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-5-git-send-email-chris.paterson2@renesas.com>
+ <CAMuHMdVFPiXe9trwprNfX=p8-OKbrcgVSrwmveYhXGm=kd2bfQ@mail.gmail.com>
+ <20170921083839.GH15749@verge.net.au> <20170921084219.GK15749@verge.net.au>
+ <TY1PR06MB089549AB7DCF1C03605EF421C0660@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <20170921090332.GS15749@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170921090332.GS15749@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dave,
 
-> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 20. September 2017 um 18:07 geschrieben:
-> 
-> 
-> Document the DT bindings for the CSI2/CCP2 receiver peripheral
-> (known as Unicam) on BCM283x SoCs.
-> 
-> Signed-off-by: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-> ---
-> 
-> Changes since v2
-> - Removed all references to Linux drivers.
-> - Reworded section about disabling the firmware driver.
-> - Renamed clock from "lp_clock" to "lp" in description and example.
-> - Referred to video-interfaces.txt and stated requirements on remote-endpoint
->   and data-lanes.
-> - Corrected typo in example from csi to csi1.
-> - Removed unnecessary #address-cells and #size-cells in example.
-> - Removed setting of status from the example.
-> 
->  .../devicetree/bindings/media/bcm2835-unicam.txt   | 85 ++++++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> new file mode 100644
-> index 0000000..7714fb3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> @@ -0,0 +1,85 @@
-> +Broadcom BCM283x Camera Interface (Unicam)
-> +------------------------------------------
-> +
-> +The Unicam block on BCM283x SoCs is the receiver for either
-> +CSI-2 or CCP2 data from image sensors or similar devices.
-> +
-> +The main platform using this SoC is the Raspberry Pi family of boards.
-> +On the Pi the VideoCore firmware can also control this hardware block,
-> +and driving it from two different processors will cause issues.
-> +To avoid this, the firmware checks the device tree configuration
-> +during boot. If it finds device tree nodes called csi0 or csi1 then
-> +it will stop the firmware accessing the block, and it can then
-> +safely be used via the device tree binding.
-> +
-> +Required properties:
-> +===================
-> +- compatible	: must be "brcm,bcm2835-unicam".
-> +- reg		: physical base address and length of the register sets for the
-> +		  device.
-> +- interrupts	: should contain the IRQ line for this Unicam instance.
-> +- clocks	: list of clock specifiers, corresponding to entries in
-> +		  clock-names property.
-> +- clock-names	: must contain an "lp" entry, matching entries in the
-> +		  clocks property.
-> +
-> +Unicam supports a single port node. It should contain one 'port' child node
-> +with child 'endpoint' node. Please refer to the bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Within the endpoint node the "remote-endpoint" and "data-lanes" properties
-> +are mandatory.
-> +Data lane reordering is not supported so the data lanes must be in order,
-> +starting at 1. The number of data lanes should represent the number of
-> +usable lanes for the hardware block. That may be limited by either the SoC or
-> +how the platform presents the interface, and the lower value must be used.
-> +
-> +Lane reordering is not supported on the clock lane either, so the optional
-> +property "clock-lane" will implicitly be <0>.
-> +Similarly lane inversion is not supported, therefore "lane-polarities" will
-> +implicitly be <0 0 0 0 0>.
-> +Neither of these values will be checked.
-> +
-> +Example:
-> +	csi1: csi1@7e801000 {
-> +		compatible = "brcm,bcm2835-unicam";
-> +		reg = <0x7e801000 0x800>,
-> +		      <0x7e802004 0x4>;
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: 21 September 2017 10:04
+>=20
+> On Thu, Sep 21, 2017 at 08:53:00AM +0000, Fabrizio Castro wrote:
+> > Hello Simon,
+> >
+> > > -----Original Message-----
+> > > From: Simon Horman [mailto:horms@verge.net.au]
+> > > Sent: 21 September 2017 09:42
+> > > To: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > Cc: Chris Paterson <Chris.Paterson2@renesas.com>; Rob Herring
+> > > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> Magnus
+> > > Damm <magnus.damm@gmail.com>; Russell King
+> <linux@armlinux.org.uk>;
+> > > Fabrizio Castro <fabrizio.castro@bp.renesas.com>;
+> > > devicetree@vger.kernel.org; Linux-Renesas
+> > > <linux-renesas-soc@vger.kernel.org>; linux-arm-
+> > > kernel@lists.infradead.org
+> > > Subject: Re: [PATCH 4/8] ARM: dts: iwg22d: Enable SDHI0 controller
+> > >
+> > > On Thu, Sep 21, 2017 at 10:38:40AM +0200, Simon Horman wrote:
+> > > > On Wed, Sep 20, 2017 at 01:40:20PM +0200, Geert Uytterhoeven wrote:
+> > > > > On Wed, Sep 13, 2017 at 7:05 PM, Chris Paterson
+> > > > > <chris.paterson2@renesas.com> wrote:
+> > > > > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > > > >
+> > > > > > Enable the SDHI0 controller on iWave RZ/G1E carrier board.
+> > > > > >
+> > > > > > Signed-off-by: Fabrizio Castro
+> > > > > > <fabrizio.castro@bp.renesas.com>
+> > > > > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > > > >
+> > > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > >
+> > > > Thanks, applied.
+> > >
+> > > Sorry, I somehow overlooked Fabrizio's comments.
+> > > I have dropped this patch for now.
+> >
+> > Thank you for doing this.
+> > We are working on a new patch now, I'll submit a V2 as soon as it is re=
+ady.
+> > Just to recap (all in one place), we found an HW issue and a SW one
+> preventing SDHI0 from working properly at UHS SDR50 and SDR104,
+> therefore we need a new patch to limit the speed of this interface.
+>=20
+> Thanks for catching this, UHS can be quite troublesome in my experience.
 
-sorry, i didn't noticed this before. I'm afraid this is using a small range of the CMI. Are there possible other users of this range? Does it make sense to handle this by a separate clock driver?
-
-Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So we've seen!
