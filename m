@@ -1,86 +1,67 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/8] pinctrl: meson: clean pin offsets
-Date: Fri, 22 Sep 2017 10:47:59 +0200
-Message-ID: <CACRpkdb+gv+LALF-3wL8AHRC02LF5KHXqSO7=4De-tW4p43=og@mail.gmail.com>
-References: <20170920133927.17390-1-jbrunet@baylibre.com> <CACRpkdYmO2PSKU-qkBMW7C35kHf=usfOoEAobQDMMdzd1RFSTw@mail.gmail.com>
- <1506006009.2703.175.camel@baylibre.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [RESEND PATCH v2 2/5] mtd: spi-nor: cadence-quadspi: add a delay
+ in write sequence
+Date: Fri, 22 Sep 2017 14:32:18 +0530
+Message-ID: <5ba0a2f5-9dce-7d8a-6c94-3ac0355499dc@ti.com>
+References: <201709221614.9GmeyqNH%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1506006009.2703.175.camel@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201709221614.9GmeyqNH%fengguang.wu@intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild-all@01.org
+Cc: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 5:00 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-> After doing this rework, I noticed that this driver (not the only one though)
-> assume gpio offset (param of gpio calls) and pin offset are the same thing ...
-> instead of relying pinctrl (and gpio-ranges) to do the translation.
 
-Hm yeah I guess drivers tend to do that if the two are identical.
+On Friday 22 September 2017 01:34 PM, kbuild test robot wrote:
+> Hi Vignesh,
+> 
+> [auto build test WARNING on l2-mtd-boris/spi-nor/next]
+> [also build test WARNING on v4.14-rc1 next-20170921]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Vignesh-R/K2G-Add-QSPI-support/20170922-152110
+> base:   git://git.infradead.org/l2-mtd.git spi-nor/next
+> config: sparc64-allmodconfig (attached as .config)
+> compiler: sparc64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=sparc64 
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/mtd/spi-nor/cadence-quadspi.c: In function 'cqspi_probe':
+>>> drivers/mtd/spi-nor/cadence-quadspi.c:1230:10: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>      data  = (u32)of_device_get_match_data(&pdev->dev);
+>              ^
+> 
 
-> To make things a bit more clean, I was thinking about forwarding all gpios
-> framework calls to pinconf, so the gpio to pin offset would go through the
-> proper mapping function.
->
-> Is this the way to do it ?
->
-> Using gpio_pinctrl_set_config() I should be able to achieve almost any "write"
-> functions but I got stuck on gpio_get()
+Oops, that should have been unsigned long. will send a v3 shortly.
+Thanks for the report!
 
-The intention is not to let pin config be the solve-all backend for
-combined GPIO drivers, we still want separation of concerns.
 
-The idea is that the GPIO part of the driver still drive a line high/low
-and that means it can also handle things like .set_multiple() to set
-several lines at once. There is also .get_multiple() in the works.
 
-I do not think these things should be relayed to pin config,
-pin config is not for driving GPIO lines, only for setting up
-the electrical properties of them.
+>   1219			dev_err(dev, "Cannot obtain IRQ.\n");
+>   1220			return -ENXIO;
+>   1221		}
+>   1222	
+>   1223		ret = clk_prepare_enable(cqspi->clk);
+>   1224		if (ret) {
+>   1225			dev_err(dev, "Cannot enable QSPI clock.\n");
+>   1226			return ret;
+>   1227		}
+>   1228	
+>   1229		cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+>> 1230		data  = (u32)of_device_get_match_data(&pdev->dev);
+>   1231		if (data & CQSPI_NEEDS_WR_DELAY)
 
-What we have is optional pin config back-end to set direction
-and set configs such as debounce or open drain by relaying
-the gpiochip .set_config() callback to pinctrl_gpio_set_config().
-This function is in <linux/pinctrl/consumer.h> for a reason: the
-GPIO driver is a consumer of pinctrl services.
 
-These:
-extern int pinctrl_request_gpio(unsigned gpio);
-extern void pinctrl_free_gpio(unsigned gpio);
-extern int pinctrl_gpio_direction_input(unsigned gpio);
-extern int pinctrl_gpio_direction_output(unsigned gpio);
-extern int pinctrl_gpio_set_config(unsigned gpio, unsigned long config);
-
-Hm I should rename the first two to pinctrl_gpio_request()
-and pinctrl_gpio_free() don't you think... My OCD kicks in.
-
-Anyways: as you can see we even have special callbacks
-to set the lines as input and output, we do not use the
-pin config calls with parameters PIN_CONFIG_OUTPUT
-and there isn't even a corresponding PIN_CONFIG_INPUT
-that will really set the pin to input mode for GPIO.
-And that would have been the first refactoring here
-(getting rid of pinctrl_gpio_direction*).
-
-That is already a bit of a daunting task, and I don't even
-know if it makes sense :/
-
-Relaying setting the output value or getting the input
-value to pinctrl doesn't make sense to me at all.
-
-> ATM the moment there is no gpio_pinctrl_get_config() or something similar to
-> read stuff in the gpio framework from pinconf. Would you be open to add
-> something like this ?
-
-I do not see the use case, but if you can describe it I can respond.
-
-.pin_config_get() in <linux/pinctrl/pinconf.h> is already seldom
-implemented correctly and drivers do not read out the hardware
-state at probe() time. And they don't read out the mux setting
-at all, ever, just set it.
-
-Yours,
-Linus Walleij
+-- 
+Regards
+Vignesh
