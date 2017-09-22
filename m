@@ -1,59 +1,53 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 13/14] staging: typec: fusb302: Hook up mux support using tcpc_gen_mux support
-Date: Fri, 22 Sep 2017 20:38:02 +0200
-Message-ID: <20170922183803.10701-13-hdegoede@redhat.com>
-References: <20170922183803.10701-1-hdegoede@redhat.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 00/12] ARM: dts: sunxi: Fix DT build warnings
+Date: Fri, 22 Sep 2017 20:40:33 +0200
+Message-ID: <20170922184045.6498-1-clabbe.montjoie@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170922183803.10701-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
-to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
+Hello
 
-Also document the mux-names used by the generic tcpc_mux_dev code in
-our devicetree bindings.
+The goal of this patch series is to have a clean DT build with W=1.
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v3:
--Drop devicetree bindings documentation, since this is only used with
- device-properties set by platform code on X86/ACPI now, we don't need
- bindings yet
----
- drivers/usb/typec/fusb302/fusb302.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Regards
 
-diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
-index e790b67d4953..10415d6b2292 100644
---- a/drivers/usb/typec/fusb302/fusb302.c
-+++ b/drivers/usb/typec/fusb302/fusb302.c
-@@ -1259,7 +1259,6 @@ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
- 	fusb302_tcpc_dev->set_roles = tcpm_set_roles;
- 	fusb302_tcpc_dev->start_drp_toggling = tcpm_start_drp_toggling;
- 	fusb302_tcpc_dev->pd_transmit = tcpm_pd_transmit;
--	fusb302_tcpc_dev->mux = NULL;
- }
- 
- static const char * const cc_polarity_name[] = {
-@@ -1817,6 +1816,10 @@ static int fusb302_probe(struct i2c_client *client,
- 			return -EPROBE_DEFER;
- 	}
- 
-+	chip->tcpc_dev.mux = devm_tcpc_gen_mux_create(dev);
-+	if (IS_ERR(chip->tcpc_dev.mux))
-+		return PTR_ERR(chip->tcpc_dev.mux);
-+
- 	cfg.drv_data = chip;
- 	chip->psy = devm_power_supply_register(dev, &fusb302_psy_desc, &cfg);
- 	if (IS_ERR(chip->psy)) {
+Changes since v1:
+- moved i2c2 unit address change from patch #2 in patch #1
+
+Corentin Labbe (12):
+  ARM: dts: sunxi: h3/h5: Fix simple-bus unit address format error
+  ARM: dts: sunxi: h3/h5: Fix i2c2 register address
+  ARM: dts: sunxi: h3/h5: Fix node with unit name and no reg property
+  ARM: dts: nanopi: Fix node with unit name and no reg property
+  ARM: dts: orangepi2: Fix node with unit name and no reg property
+  ARM: dts: sun8i: orangepi-lite: Fix node with unit name and no reg
+    property
+  ARM: dts: sun8i: orangepi one: Fix node with unit name and no reg
+    property
+  ARM: dts: sun8i: orangepipc: Fix node with unit name and no reg
+    property
+  ARM: dts: sun8i: orangepi-plus: Fix node with unit name and no reg
+    property
+  arm64: allwinner: a64: Fix simple-bus unit address format error
+  arm64: allwinner: a64: Fix node with unit name and no reg property
+  ARM: dts: sun8i: a83t: Fix simple-bus unit address format error
+
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  6 +-
+ arch/arm/boot/dts/sun8i-h3-nanopi.dtsi        |  8 +--
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts     |  8 +--
+ arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts  |  6 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts   |  6 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts    |  6 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts  |  2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            | 88 +++++++++++++--------------
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 24 ++++----
+ 9 files changed, 77 insertions(+), 77 deletions(-)
+
 -- 
-2.14.1
+2.13.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
