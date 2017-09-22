@@ -1,110 +1,38 @@
-From: Sandy Huang <hjc@rock-chips.com>
-Subject: [PATCH v2 1/3] dt-bindings: Add document for rockchip RGB output interface
-Date: Fri, 22 Sep 2017 11:00:26 +0800
-Message-ID: <1506049229-117376-1-git-send-email-hjc@rock-chips.com>
-References: <1506049221-117283-1-git-send-email-hjc@rock-chips.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH 0/4] rtc: mediatek: add support for SoC based RTC on MT7622
+Date: Fri, 22 Sep 2017 11:33:13 +0800
+Message-ID: <cover.1506049341.git.sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506049221-117283-1-git-send-email-hjc@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Sandy Huang <hjc@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This path add support rv1108 rgb output interface driver.
+From: Sean Wang <sean.wang@mediatek.com>
 
-Signed-off-by: Sandy Huang <hjc@rock-chips.com>
----
-Changes in v2:
- 1. rename rockchip,rgb-mode to rgb-mode;
- 2. delete reg for signle endpoint;
+This patchset introduces support for MediaTek SoC based real time clock
+(RTC) Currently, the driver is already tested successfully with hwclock
+and wakealarm on MT7622 SoC. And it should also be workable on other
+similar MediaTek SoCs. And patch 3 is a distinct patch used to distinguish
+between either SoC based or PMIC based RTC to avoid confusion for the RTC
+selection for the target SoC.
 
- .../bindings/display/rockchip/rockchip-rgb.txt     | 78 ++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+Sean Wang (4):
+  dt-bindings: rtc: mediatek: add bindings for MediaTek SoC based RTC
+  rtc: mediatek: add driver for RTC on MT7622 SoC
+  rtc: mediatek: enhance the description for MediaTek PMIC based RTC
+  rtc: mediatek: update MAINTAINERS entry with MediaTek RTC driver
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
-new file mode 100644
-index 0000000..86bd1ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
-@@ -0,0 +1,78 @@
-+Rockchip RV1108 RGB interface
-+================================
-+
-+Required properties:
-+- compatible: matching the soc type:
-+	- "rockchip,rv1108-rgb";
-+
-+Optional properties:
-+- pinctrl-names: must contain a "lcdc" entry.
-+- pinctrl-0: pin control group to be used for this interface.
-+
-+Required nodes:
-+- rgb-mode: should be "p888", "p666", "p565", "s888", "s888-dummy"
-+	- p888: output r8-g8-b8 at each dclk cycle for per-pixel
-+	- p666: output r6-g6-b6 at each dclk cycle for per-pixel
-+	- p565: output r5-g6-b5 at each dclk cycle for per-pixel
-+	- s888: output r8-g8-b8 in three dclk cycle for per-pixel
-+	- s888-dmmy: output r8-g8-b8-dummy in four dclk cycle for per-pixel
-+
-+The rgb has two video ports described by:
-+	Documentation/devicetree/bindings/media/video-interfaces.txt
-+Their connections are modeled using the OF graph bindings specified in
-+	Documentation/devicetree/bindings/graph.txt.
-+
-+- video port 0 for the VOP input, the remote endpoint maybe vopb/vopl/vop
-+- video port 1 for either a panel or subsequent encoder
-+
-+the panel described by:
-+	Documentation/devicetree/bindings/display/panel/simple-panel.txt
-+Panel other required properties:
-+- ports for remote rgb output.
-+
-+Example:
-+
-+panel: panel {
-+	compatible = "auo,b101ean01";
-+	enable-gpios = <&gpio7 21 GPIO_ACTIVE_HIGH>;
-+
-+	ports {
-+		panel_in_rgb: endpoint {
-+			remote-endpoint = <&rgb_out_panel>;
-+		};
-+	};
-+};
-+
-+For Rockchip RV1108:
-+
-+	rgb: rgb {
-+		compatible = "rockchip,rv1108-rgb";
-+		pinctrl-names = "lcdc";
-+		pinctrl-0 = <&lcdc_ctl>;
-+		rgb-mode = "p888";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			rgb_in: port@0 {
-+				reg = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				rgb_in_vop: endpoint {
-+					remote-endpoint = <&vop_out_rgb>;
-+				};
-+			};
-+
-+			rgb_out: port@1 {
-+				reg = <1>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				rgb_out_panel: endpoint {
-+					remote-endpoint = <&panel_in_rgb>;
-+				};
-+			};
-+		};
-+	};
+ .../devicetree/bindings/rtc/rtc-mediatek.txt       |  21 ++
+ MAINTAINERS                                        |   3 +
+ drivers/rtc/Kconfig                                |  18 +-
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-mediatek.c                         | 398 +++++++++++++++++++++
+ 5 files changed, 437 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+ create mode 100644 drivers/rtc/rtc-mediatek.c
+
 -- 
 2.7.4
