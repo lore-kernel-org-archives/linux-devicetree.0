@@ -1,130 +1,145 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-Date: Fri, 22 Sep 2017 13:47:02 +0200
-Message-ID: <20170922114703.30511-2-maxime.ripard@free-electrons.com>
-References: <20170922114703.30511-1-maxime.ripard@free-electrons.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170922114703.30511-1-maxime.ripard@free-electrons.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinctrl: Allow a device to indicate when to force a state
+Date: Fri, 22 Sep 2017 13:55:22 +0200
+Message-ID: <CACRpkdbVs1b0y91xWtb+8EwcDnkeLd4jbcZnWFnzOytmCLvDXw@mail.gmail.com>
+References: <20170921010421.7467-1-f.fainelli@gmail.com> <20170921010421.7467-2-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170921010421.7467-2-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, ext Tony Lindgren <tony@atomide.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Al Cooper <alcooperx@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The Cadence MIPI-CSI2 RX controller is a CSI2 bridge that supports up to 4
-video streams and can output on up to 4 CSI-2 lanes, depending on the
-hardware implementation.
+On Thu, Sep 21, 2017 at 3:04 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-It can operate with an external D-PHY, an internal one or no D-PHY at all
-in some configurations.
+> It may happen that a device needs to force applying a state, e.g:
+> because it only defines one state of pin states (default) but loses
+> power/register contents when entering low power modes. Add a
+> pinctrl_dev::flags bitmask to help describe future quirks and define
+> PINCTRL_FLG_FORCE_STATE as such a settable flag.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- .../devicetree/bindings/media/cdns,csi2tx.txt      | 97 ++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+But I'm uncertain about the design.
 
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-new file mode 100644
-index 000000000000..5fb70bba910e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-@@ -0,0 +1,97 @@
-+Cadence MIPI-CSI2 TX controller
-+===============================
-+
-+The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
-+4 CSI lanes in output, and up to 4 different pixel streams in input.
-+
-+Required properties:
-+  - compatible: must be set to "cdns,csi2tx"
-+  - reg: base address and size of the memory mapped region
-+  - clocks: phandles to the clocks driving the controller
-+  - clock-names: must contain:
-+    * esc_clk: escape mode clock
-+    * p_clk: register bank clock
-+    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-+                         implemented in hardware, between 0 and 3
-+
-+Optional properties
-+  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
-+  - phy-names: must contain dphy
-+
-+Required subnodes:
-+  - ports: A ports node with one port child node per device input and output
-+           port, in accordance with the video interface bindings defined in
-+           Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+           port nodes numbered as follows.
-+
-+           Port Description
-+           -----------------------------
-+           0    CSI-2 output
-+           1    Stream 0 input
-+           2    Stream 1 input
-+           3    Stream 2 input
-+           4    Stream 3 input
-+
-+           The stream input port nodes are optional if they are not
-+           connected to anything at the hardware level or implemented
-+           in the design.
-+
-+Example:
-+
-+csi2tx: csi-bridge@0d0e1000 {
-+	compatible = "cdns,csi2tx";
-+	reg = <0x0d0e1000 0x1000>;
-+	clocks = <&byteclock>, <&byteclock>,
-+		 <&coreclock>, <&coreclock>,
-+		 <&coreclock>, <&coreclock>;
-+	clock-names = "p_clk", "esc_clk",
-+		      "pixel_if0_clk", "pixel_if1_clk",
-+		      "pixel_if2_clk", "pixel_if3_clk";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			csi2tx_out: endpoint {
-+				remote-endpoint = <&remote_in>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			csi2tx_in_stream0: endpoint {
-+				remote-endpoint = <&stream0_out>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			csi2tx_in_stream1: endpoint {
-+				remote-endpoint = <&stream1_out>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			csi2tx_in_stream2: endpoint {
-+				remote-endpoint = <&stream2_out>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			csi2tx_in_stream3: endpoint {
-+				remote-endpoint = <&stream3_out>;
-+			};
-+		};
-+	};
-+};
--- 
-2.13.5
+A while back, I applied this patch to the GPIO subsystem:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/linux/gpio/machine.h?id=05f479bf7d239f01ff6546f2bdeb14ad0fe65601
+
+commit 05f479bf7d239f01ff6546f2bdeb14ad0fe65601
+Author: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Date:   Tue May 23 15:47:29 2017 +0100
+
+    gpio: Add new flags to control sleep status of GPIOs
+
+    Add new flags to allow users to specify that they are not concerned with
+    the status of GPIOs whilst in a sleep/low power state.
+
+    Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+    Acked-by: Rob Herring <robh@kernel.org>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+diff --git a/include/linux/gpio/machine.h b/include/linux/gpio/machine.h
+index c0d712d22b07..13adadf53c09 100644
+--- a/include/linux/gpio/machine.h
++++ b/include/linux/gpio/machine.h
+@@ -9,6 +9,8 @@ enum gpio_lookup_flags {
+        GPIO_ACTIVE_LOW = (1 << 0),
+        GPIO_OPEN_DRAIN = (1 << 1),
+        GPIO_OPEN_SOURCE = (1 << 2),
++       GPIO_SLEEP_MAINTAIN_VALUE = (0 << 3),
++       GPIO_SLEEP_MAY_LOOSE_VALUE = (1 << 3),
+ };
+
+Charles is also working on pin control and will probably have some
+input on design.
+
+Maybe we could do the same: a flag to maintain the value and
+a flag to allow it to be lost across suspend/resume, which is the
+core issue here.
+
+Your case is analogous to GPIO_SLEEP_MAY_LOOSE_VALUE
+and you restore the state when you come back from sleep.
+
+Note how gpiolib does this:
+
+bool gpiochip_line_is_persistent(struct gpio_chip *chip, unsigned int offset)
+{
+        if (offset >= chip->ngpio)
+                return false;
+
+        return !test_bit(FLAG_SLEEP_MAY_LOOSE_VALUE,
+                         &chip->gpiodev->descs[offset].flags);
+}
+EXPORT_SYMBOL_GPL(gpiochip_line_is_persistent);
+
+(Notice ! in front of test_bit(), the name of the function makes sense.)
+
+Then the driver in drivers/gpio/gpio-arizona.c does some
+special quirks like this:
+
+static int arizona_gpio_direction_in(struct gpio_chip *chip, unsigned offset)
+{
+        struct arizona_gpio *arizona_gpio = gpiochip_get_data(chip);
+        struct arizona *arizona = arizona_gpio->arizona;
+        bool persistent = gpiochip_line_is_persistent(chip, offset);
+        bool change;
+        int ret;
+
+        ret = regmap_update_bits_check(arizona->regmap,
+                                       ARIZONA_GPIO1_CTRL + offset,
+                                       ARIZONA_GPN_DIR, ARIZONA_GPN_DIR,
+                                       &change);
+        if (ret < 0)
+                return ret;
+
+        if (change && persistent) {
+                pm_runtime_mark_last_busy(chip->parent);
+                pm_runtime_put_autosuspend(chip->parent);
+        }
+
+        return 0;
+}
+
+So what this driver does is allow the GPIO block to loose power
+using runtime PM if and only if the line is flagged as persistent, i.e. it
+will not loose its state when sleeping, so let it sleep.
+
+Next point, this commit from Baolin:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt?id=6606bc9dee63ad8cda2cc310d2ad5992673a785a
+
+output-low - set the pin to output mode with low level
+output-high - set the pin to output mode with high level
++sleep-hardware-state - indicate this is sleep related state which
+will be programmed
++ into the registers for the sleep state.
+slew-rate - set the slew rate
+
+This is another thing: here we are defining a state that will be managed
+by autonomous hardware. The state settings will be poked into some
+special registers that will automatically take effect when the system
+goes into sleep.
+
+This is a hardware-induced state: the SLEEP line for the entire SoC
+is asserted.
+
+What you want is something different: a flag like:
+
+sleep-restore-state - indicate that this state needs to be restored after sleep
+  as the hardware loose states when sleeping.
+
+The driver could look for this in a more granular per-state manner, instead
+of all states of the pin controller being restored, we mark what
+states need to be restored on the way up after sleep.
+
+What are your thoughts about this?
+
+I do not rule out a global flag for the whole controller, it is just a bit
+confusing if we start to have per-state, per-pin and per-controller
+sleep behaviour. If we have to have this we have to, but I want to
+fully understand the problem first.
+
+Yours,
+Linus Walleij
