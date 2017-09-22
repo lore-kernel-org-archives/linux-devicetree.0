@@ -1,110 +1,75 @@
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v5] iio: dac: ds4422/ds4424 dac driver
-Date: Fri, 22 Sep 2017 16:09:46 +0100
-Message-ID: <20170922160946.00007c7d@huawei.com>
-References: <DM5PR11MB18650DDCB6E1D4D2EA0C327AFD600@DM5PR11MB1865.namprd11.prod.outlook.com>
-        <20170919072341.10249-1-Ismail.Kose@maximintegrated.com>
-        <20170921232659.yfvdkynzlqeetuau@rob-hp-laptop>
+From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 9/9 v2] usb: usb251xb: Use GPIO descriptor consumer
+ interface
+Date: Fri, 22 Sep 2017 18:26:54 +0300
+Message-ID: <20170922152654.GA10152@mobilestation>
+References: <20170915233113.17855-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-10-fancer.lancer@gmail.com>
+ <20170921082338.GA30669@kroah.com>
+ <20170921145129.GA25888@mobilestation>
+ <20170921150714.GA7791@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170921232659.yfvdkynzlqeetuau@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ismail Kose <Ismail.Kose@maximintegrated.com>, "Ismail H. Kose" <ihkose@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Peter Rosin <peda@axentia.se>, Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>, Jean-Francois Dagenais <jeff.dagenais@gmail.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Mike Looijmans <mike.looijmans@topic.nl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170921150714.GA7791-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Sep 2017 18:26:59 -0500
-Rob Herring <robh@kernel.org> wrote:
+On Thu, Sep 21, 2017 at 05:07:14PM +0200, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Thu, Sep 21, 2017 at 05:51:29PM +0300, Serge Semin wrote:
+> > On Thu, Sep 21, 2017 at 10:23:38AM +0200, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> > > On Sat, Sep 16, 2017 at 01:42:20PM +0300, Serge Semin wrote:
+> > > > diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> > > > index 71994b883..c2dd9742f 100644
+> > > > --- a/drivers/usb/misc/usb251xb.c
+> > > > +++ b/drivers/usb/misc/usb251xb.c
+> > > > @@ -3,6 +3,7 @@
+> > > >   * Configuration via SMBus.
+> > > >   *
+> > > >   * Copyright (c) 2017 SKIDATA AG
+> > > > + * Copyright (c) 2017 T-platforms
+> > > 
+> > > Again, no, please consult with your corporate lawyers why this isn't ok.
+> > > 
+> > > greg k-h
+> > 
+> > I still can't see why this isn't right. We submitted the patchset. It is not
+> > that big and still it isn't just two lines. As I've seen all over the kernel, It is
+> > a common practice to have multiple copyrights in kernel files. We are not claiming
+> > the copyright to the whole file, but to the contribution only. I got a consent to
+> > contribute when I was employed by the company. What's wrong with that? Shall I
+> > send the patchset from my corporate e-mail then?
+> 
+> Well, yes, I need some way to properly identify that this corporation
+> did do the changes.  I said that before, I don't know why you ignored
+> that.
+> 
+> And yes, multiple copyrights are just fine, but again, please talk to
+> your corporate lawyer about why these changes don't seem to warrant that
+> "mark".  If they do think that they do warrant that, great, I will be
+> glad to discuss that with them, off-list if needed.
+> 
+> For even more fun, try discussing with your lawyers about why copyright
+> marks like this don't even mean anything anymore, and haven't for 20+
+> years now (can't remember the actual date...)  But that's a different
+> topic, and one not really relevant here.
+> 
+> thanks,
+> 
+> greg k-h
 
-> On Tue, Sep 19, 2017 at 12:23:32AM -0700, Ismail Kose wrote:
-> > From: "Ismail H. Kose" <ihkose@gmail.com>
-> > 
-> > This patch provides an iio device driver for DS4422/DS4424 chips that support
-> > two/four channel 7-bit Sink/Source Current DAC.
-> > 
-> > Signed-off-by: Ismail Kose <Ismail.Kose@maximintegrated.com>
+Alright then. We'll remove the Copyright mark and I'll resend the patchset
+from my corporate e-mail. Hope it will solve this issue.
+Could you review the rest of the patchset?
 
-Just a quick one before V6.  Please don't reply to a previous version
-when sending a new version.  It leads to very deep and confusing thread
-structures.
+Regards,
+-Sergey
 
-Just start a new thread.
-
-Jonathan
-> > ---
-> > v5:
-> > 	* Removed unused variable
-> > v4:
-> > 	* Removed unnecessary code and space optimization
-> > 	* Alphabetic order in Kcobfig and Makefile
-> > v3:
-> > 	* Removed iio-map and platform file support
-> > 	* Removed ds4424.h file
-> > 	* Fixed ADC value read bug
-> > 	* Removed confused comments
-> > 	* Added device tree binding file
-> > 	* Fixed bugs in probe and read function
-> > 
-> > v2:
-> > 	* Fixed coding style and removed unncessary code
-> > 	* Removed min/max rfs, ifs-scale, etc values from device tree
-> > 	* Removed unused code, definitions and some comments
-> > 	* Removed regulator control and made standard structure
-> > 	* Removed data processing and channel scale
-> > 	* Removed device tree binding file
-> > 
-> >  .../devicetree/bindings/iio/dac/ds4424.txt         |  20 ++  
-> 
-> It's preferred to split bindings to separate patch.
-> 
-> >  drivers/iio/dac/Kconfig                            |   9 +
-> >  drivers/iio/dac/Makefile                           |   1 +
-> >  drivers/iio/dac/ds4424.c                           | 394 +++++++++++++++++++++
-> >  4 files changed, 424 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ds4424.txt
-> >  create mode 100644 drivers/iio/dac/ds4424.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/dac/ds4424.txt b/Documentation/devicetree/bindings/iio/dac/ds4424.txt
-> > new file mode 100644
-> > index 000000000000..840b11e1d813
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/dac/ds4424.txt
-> > @@ -0,0 +1,20 @@
-> > +Maxim Integrated DS4422/DS4424 7-bit Sink/Source Current DAC Device Driver
-> > +
-> > +Datasheet publicly available at:
-> > +https://datasheets.maximintegrated.com/en/ds/DS4422-DS4424.pdf
-> > +
-> > +Required properties:
-> > +	- compatible: Must be "maxim,ds4422" or "maxim,ds4424"  
-> 
-> One compatible per line please.
-> 
-> > +	- reg: Should contain the DAC I2C address
-> > +	- maxim,rfs-resistors-ohms: Should contain reference resistor  
-> 
-> ...reference resistor ohms
-> 
-> > +
-> > +Optional properties:
-> > +	- vcc-supply: Power supply is optional. If not defined, driver will ignore it.
-> > +
-> > +Example:
-> > +	ds4224@10 {
-> > +		compatible = "maxim,ds4424";
-> > +		reg = <0x10>; /* When A0, A1 pins are ground */
-> > +		vcc-supply = "dac_vcc_3v3";  
-> 
-> This is not how the regulator binding works.
-> 
-> > +		maxim,rfs-resistors-ohms = <400 800 1000 1600>;  
-> 
-> The description needs to explain this is 4 values.
-> 
-> > +	};  
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
