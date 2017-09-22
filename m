@@ -1,87 +1,142 @@
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 03/11] KVM: arm64: Change hyp_panic()s dependency on
- tpidr_el2
-Date: Fri, 22 Sep 2017 11:53:55 +0100
-Message-ID: <59C4EBC3.3050103@arm.com>
-References: <20170808164616.25949-1-james.morse@arm.com> <20170808164616.25949-4-james.morse@arm.com> <20170917144314.GA99021@lvm>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC LINUX PATCH] Dcoumentation: dt: mailbox: Add Xilinx IPI
+ Mailbox
+Date: Fri, 22 Sep 2017 12:10:05 +0100
+Message-ID: <20170922111005.GA11613@e107155-lin>
+References: <1506034724-14639-1-git-send-email-jliang@xilinx.com>
+ <BY1PR0201MB0885E6563EBAFE83DF8822A4B0670@BY1PR0201MB0885.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170917144314.GA99021@lvm>
+Content-Disposition: inline
+In-Reply-To: <BY1PR0201MB0885E6563EBAFE83DF8822A4B0670-QYJsKn8jqXIWAWX5OQc4qhrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoffer Dall <cdall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Jiaying Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyril Chemparathy <cyrilc-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christoffer,
-
-On 17/09/17 15:43, Christoffer Dall wrote:
-> On Tue, Aug 08, 2017 at 05:46:08PM +0100, James Morse wrote:
->> Make tpidr_el2 a cpu-offset for per-cpu variables in the same way the
->> host uses tpidr_el1. This lets tpidr_el{1,2} have the same value, and
->> on VHE they can be the same register.
->>
->> KVM calls hyp_panic() when anything unexpected happens. This may occur
->> while a guest owns the EL1 registers. KVM stashes the vcpu pointer in
->> tpidr_el2, which it uses to find the host context in order to restore
->> the host EL1 registers before parachuting into the host's panic().
->>
->> The host context is a struct kvm_cpu_context allocated in the per-cpu
->> area, and mapped to hyp. Given the per-cpu offset for this CPU, this is
->> easy to find. Change hyp_panic() to take a pointer to the
->> struct kvm_cpu_context. Wrap these calls with an asm function that
->> retrieves the struct kvm_cpu_context from the host's per-cpu area.
->>
->> Copy the per-cpu offset from the hosts tpidr_el1 into tpidr_el2 during
->> kvm init. (Later patches will make this unnecessary for VHE hosts)
->>
->> We print out the vcpu pointer as part of the panic message. Add a back
->> reference to the 'running vcpu' in the host cpu context to preserve this.
-
->> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
->> index 945e79c641c4..235d615cee30 100644
->> --- a/arch/arm64/kvm/hyp/switch.c
->> +++ b/arch/arm64/kvm/hyp/switch.c
->> @@ -286,9 +286,9 @@ int __hyp_text __kvm_vcpu_run(struct kvm_vcpu *vcpu)
->>  	u64 exit_code;
->>  
->>  	vcpu = kern_hyp_va(vcpu);
->> -	write_sysreg(vcpu, tpidr_el2);
->>  
->>  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
->> +	host_ctxt->__hyp_running_vcpu = vcpu;
+On Fri, Sep 22, 2017 at 06:05:18AM +0000, Jiaying Liang wrote:
 > 
-> I'm fine with this for now, but eventually when we optimize KVM further
-> we may want to avoid doing this in every world-switch.  One option is to
-> just set this pointer in vcpu_get and vcpu_load, but would it also be
-> possible to use the kvm_arm_running_vcpu per-cpu array directly?
+> Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block in ZynqMP
+> SoC used for the communication between various processor systems.
+> 
+> Signed-off-by: Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 88 ++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-
+> mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-
+> mailbox.txt
+> new file mode 100644
+> index 0000000..5d915d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.
+> +++ txt
+> @@ -0,0 +1,88 @@
+> +Xilinx IPI Mailbox Driver
+> +========================================
+> +
+> +The Xilinx IPI(Inter Processor Interrupt) mailbox driver is a mailbox
+> +controller that manages the messaging between two IPI agents. Each IPI
+> +mailbox has request and response buffers between the two IPI agents.
+> +
+> ++-------------------------------------+
+> +|                                     | Xilinx ZynqMP IPI Mailbox
+> +| Controller|
+> +|                                     |
+> +|                       +-------------+
+> +|                       |     SMC     |
+> +|                       |             |
+> ++--------+--------------+------+------+
+> +         |                     |
+> +         |          +-----------------+
+> +         |                     |   ATF (ARM trusted firmware)
 
-Yes, that would have been better, I didn't know that existed...
-After this point we can find per-cpu variables easily, they just need mapping to
-HYP.
+I suppose it should work with any EL3 firmware, ATF reference can be
+removed IMO.
 
-This pointer is just for the panic message, I'm not sure how useful it is.
-For kdump the kvm_arm_running_vcpu array holds the same information, so is
-printing this out just so we can spot if its totally-bogus?
+> +         |                     |
+> ++-------------------------------------+
+> +         |                     |   Hardware
+> +         |                     |
+> + +--------------------------------------+
+> +                               |        |
+> + +----------------------+ +-----------+ |
+> + | | Buffers between    | | IPI Agent | |
+> + | | two IPI agents     | | Registers | |
+> + | +--------------------+ +-----------+ |
+> + |                                      |
+> + |   Xilinx ZynqMP IPI                  |
+> + +--------------------------------------+
+> +
+> +
+> +Message Manager Device Node:
+> +===========================
+> +Required properties:
+> +--------------------
+> +- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
+> +- ipi-smc-fid-base	Base offset of SMC function IDs for IPI mailbox SMC.
+> +			It contains the IPI IDs of the two IPI agents.
 
+Why is "SMC" associated with this hardware block ? Is it secure device ?
+Can Linux access it ? If so, why do you need SMC ?
 
-As your fine with this for now, I'll put tidying it up on my todo list...
+> +- reg:			IPI request and response buffers address range. It
+> +			can be the IPI buffers from the hardware or it can
+> +			be carved out shared memory.
 
+It sounds like buffer used for communication and not part of this IP.
+Shouldn't this be part of mailbox client binding rather than controller
+binding.
 
->>  	guest_ctxt = &vcpu->arch.ctxt;
->>  
->>  	__sysreg_save_host_state(host_ctxt);
+> +- reg-names:		Reg resource name of the IPI request and response
+> +			buffers.
+> +- #mbox-cells:		Shall be 1. Contains the logical channel IDs of the
+> +			channels on the IPI mailbox.
+> +- interrupt-parent:	Phandle for the interrupt controller.
+> +- interrupts:		Interrupt mapping.
+> +
+> +Required properties:
+> +--------------------
+> +- method:		The method of accessing the IPI agent registers.
+> +			Permitted values are: "smc" and "hvc". Default is
+> +			"smc".
+> +Example:
+> +------------
+> +	/* APU IPI mailbox driver */
+> +	ipis {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		ipi_mailbox_apu_rpu0: ipi_mailbox@0 {
+> +			compatible = "xlnx,zynqmp-ipi-mailbox";
+> +			reg = <0 0xff990400 40>;
+> +			reg-names = "apu-rpu0";
+> +			ipi-smc-fid-base = <0x1010>;
+> +			method = "smc";
+> +			#mbox-cells = <1>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <0 35 4>;
+> +		};
+> +		ipi_mailbox_apu_rpu1: ipi_mailbox@1 {
+> +			compatible = "xlnx,zynqmp-ipi-mailbox";
+> +			reg = <0 0xff990440 40>;
+> +			reg-names = "apu-rpu1";
+> +			ipi-smc-fid-base = <0x1020>;
+> +			method = "smc";
+> +			#mbox-cells = <1>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <0 35 4>;
+> +		};
 
+Why do you need the above 2 ? They don't look like 2 controller blocks.
+You just need to represent single mailbox controller.
 
-> Reviewed-by: Christoffer Dall <cdall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Thanks!
-
-James
-
-
-
+--
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
