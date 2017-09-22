@@ -1,76 +1,76 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: Allow a device to indicate when to force a
- state
-Date: Fri, 22 Sep 2017 09:45:48 -0700
-Message-ID: <bbb3e112-c9ed-889b-713c-c4b5641d22d8@gmail.com>
-References: <20170921010421.7467-1-f.fainelli@gmail.com>
- <20170921010421.7467-2-f.fainelli@gmail.com>
- <20170922124704.yfu46ak4rypai3vp@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v3] ARC: [plat-hsdk]: Add reset controller node to manage ethernet reset
+Date: Fri, 22 Sep 2017 19:49:11 +0300
+Message-ID: <20170922164911.1125-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170922124704.yfu46ak4rypai3vp@localhost.localdomain>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bcm-kernel-feedback-list@broadcom.com
+To: linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2017 05:47 AM, Charles Keepax wrote:
-> On Wed, Sep 20, 2017 at 06:04:20PM -0700, Florian Fainelli wrote:
->> It may happen that a device needs to force applying a state, e.g:
->> because it only defines one state of pin states (default) but loses
->> power/register contents when entering low power modes. Add a
->> pinctrl_dev::flags bitmask to help describe future quirks and define
->> PINCTRL_FLG_FORCE_STATE as such a settable flag.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  drivers/pinctrl/core.c | 15 +++++++++++++++
->>  drivers/pinctrl/core.h |  4 ++++
->>  2 files changed, 19 insertions(+)
->>
->> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
->> index 56fbe4c3e800..c450a97de88f 100644
->> --- a/drivers/pinctrl/core.c
->> +++ b/drivers/pinctrl/core.c
->> @@ -1197,11 +1197,26 @@ int pinctrl_select_state(struct pinctrl *p, struct pinctrl_state *state)
->>  {
->>  	struct pinctrl_setting *setting, *setting2;
->>  	struct pinctrl_state *old_state = p->state;
->> +	bool force = false;
->>  	int ret;
->>  
->>  	if (p->state == state)
->>  		return 0;
-> 
-> I am guessing you probably intended to remove these two lines.
+DW ethernet controller on HSDK hangs sometimes after SW reset, so
+add reset node to make possible to reset DW ethernet controller HW.
 
-Argh right, I cherry-picked what I done on an earlier kernel version and
-this resolved to this, thanks for noticing!
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+Changes v2 -> v3:
+  * Remove v1 suffix as we finaly got rid of v1 suffix in reset
+    driver and docs.
+  * Rename reset node to "reset-controller" for consistency with
+    the other bindings.
 
-> 
->>  
->> +	if (p->state) {
->> +		list_for_each_entry(setting, &p->state->settings, node) {
->> +			if (setting->pctldev->flags & PINCTRL_FLG_FORCE_STATE)
->> +				force = true;
->> +		}
->> +	}
->> +
->> +	/* Some controllers may want to force this operation when they define
->> +	 * only one set of functions and lose power state, e.g: pinctrl-single
->> +	 * with its pinctrl-single,low-power-state-loss property.
->> +	 */
->> +	if (p->state == state && !force)
->> +		return 0;
->> +
-> 
-> Thanks,
-> Charles
-> 
+Changes v1 -> v2:
+  * Enable HSDK reset driver in hsdk_defconfig
 
+ arch/arc/boot/dts/hsdk.dts      | 9 +++++++++
+ arch/arc/configs/hsdk_defconfig | 1 +
+ 2 files changed, 10 insertions(+)
 
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index b922f3f..8adde1b 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -12,6 +12,7 @@
+ /dts-v1/;
+ 
+ #include <dt-bindings/net/ti-dp83867.h>
++#include <dt-bindings/reset/snps,hsdk-reset.h>
+ 
+ / {
+ 	model = "snps,hsdk";
+@@ -102,6 +103,12 @@
+ 
+ 		ranges = <0x00000000 0xf0000000 0x10000000>;
+ 
++		cgu_rst: reset-controller@8a0 {
++			compatible = "snps,hsdk-reset";
++			#reset-cells = <1>;
++			reg = <0x8A0 0x4>, <0xFF0 0x4>;
++		};
++
+ 		core_clk: core-clk@0 {
+ 			compatible = "snps,hsdk-core-pll-clock";
+ 			reg = <0x00 0x10>, <0x14B8 0x4>;
+@@ -158,6 +165,8 @@
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
++			resets = <&cgu_rst HSDK_ETH_RESET>;
++			reset-names = "stmmaceth";
+ 
+ 			mdio {
+ 				#address-cells = <1>;
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 7b8f8fa..15f0f6b 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -63,6 +63,7 @@ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_DW=y
+ # CONFIG_IOMMU_SUPPORT is not set
++CONFIG_RESET_HSDK=y
+ CONFIG_EXT3_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
 -- 
-Florian
+2.9.3
