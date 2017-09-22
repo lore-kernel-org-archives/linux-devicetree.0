@@ -1,121 +1,74 @@
-From: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2 receiver
-Date: Fri, 22 Sep 2017 17:07:22 +0100
-Message-ID: <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg@mail.gmail.com>
-References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
- <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson@raspberrypi.org>
- <1814950930.414004.1506062733728@email.1und1.de>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] eeprom: at24: add support to fetch eeprom device
+ property "size"
+Date: Fri, 22 Sep 2017 19:11:40 +0300
+Message-ID: <CAHp75Ve_1oRe6w_yyQW_76NHf-boF+VqYNenTKit0PJPFj+N7A@mail.gmail.com>
+References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
+ <1504520928-5191-3-git-send-email-divagar.mohandass@intel.com> <6F87890CF0F5204F892DEA1EF0D77A5972FC126B@FMSMSX114.amr.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1814950930.414004.1506062733728-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
+In-Reply-To: <6F87890CF0F5204F892DEA1EF0D77A5972FC126B-XfjTATA9Em864kNsxIetb7fspsVTdybXVpNB7YpNyf8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "Mohandass, Divagar" <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "sakari.ailus-X3B1VOXEql0@public.gmane.org" <sakari.ailus-X3B1VOXEql0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan
+On Wed, Sep 20, 2017 at 6:52 AM, Mani, Rajmohan <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> Adding Tomasz...
 
-On 22 September 2017 at 07:45, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
-> Hi Dave,
->
->> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 20. September 2017 um 18:07 geschrieben:
+Please, don't top post.
+Better to resend entire series with all stakeholders included.
+
+>> Obtain the size of the EEPROM chip from DT if the "size" property is specified
+>> for the device.
 >>
->>
->> Document the DT bindings for the CSI2/CCP2 receiver peripheral
->> (known as Unicam) on BCM283x SoCs.
->>
->> Signed-off-by: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+
+I guess it lacks
+Suggested-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+Other than that, looks good to me!
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+
+Wolfram, the binding is ACKed by Rob and this one is in a good shape.
+Moreover, it seems like a demand for the property since some IoT stuff
+would like to use the driver on ACPI enabled platforms with different
+sizes.
+
+Can you go ahead and apply first two patches? It would be really appreciated.
+
+>> Signed-off-by: Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 >> ---
+>>  drivers/misc/eeprom/at24.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
 >>
->> Changes since v2
->> - Removed all references to Linux drivers.
->> - Reworded section about disabling the firmware driver.
->> - Renamed clock from "lp_clock" to "lp" in description and example.
->> - Referred to video-interfaces.txt and stated requirements on remote-endpoint
->>   and data-lanes.
->> - Corrected typo in example from csi to csi1.
->> - Removed unnecessary #address-cells and #size-cells in example.
->> - Removed setting of status from the example.
+>> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c index
+>> 764ff5df..2199c42 100644
+>> --- a/drivers/misc/eeprom/at24.c
+>> +++ b/drivers/misc/eeprom/at24.c
+>> @@ -570,6 +570,10 @@ static void at24_get_pdata(struct device *dev, struct
+>> at24_platform_data *chip)
+>>       if (device_property_present(dev, "read-only"))
+>>               chip->flags |= AT24_FLAG_READONLY;
 >>
->>  .../devicetree/bindings/media/bcm2835-unicam.txt   | 85 ++++++++++++++++++++++
->>  1 file changed, 85 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->> new file mode 100644
->> index 0000000..7714fb3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->> @@ -0,0 +1,85 @@
->> +Broadcom BCM283x Camera Interface (Unicam)
->> +------------------------------------------
+>> +     err = device_property_read_u32(dev, "size", &val);
+>> +     if (!err)
+>> +             chip->byte_len = val;
 >> +
->> +The Unicam block on BCM283x SoCs is the receiver for either
->> +CSI-2 or CCP2 data from image sensors or similar devices.
->> +
->> +The main platform using this SoC is the Raspberry Pi family of boards.
->> +On the Pi the VideoCore firmware can also control this hardware block,
->> +and driving it from two different processors will cause issues.
->> +To avoid this, the firmware checks the device tree configuration
->> +during boot. If it finds device tree nodes called csi0 or csi1 then
->> +it will stop the firmware accessing the block, and it can then
->> +safely be used via the device tree binding.
->> +
->> +Required properties:
->> +===================
->> +- compatible : must be "brcm,bcm2835-unicam".
->> +- reg                : physical base address and length of the register sets for the
->> +               device.
->> +- interrupts : should contain the IRQ line for this Unicam instance.
->> +- clocks     : list of clock specifiers, corresponding to entries in
->> +               clock-names property.
->> +- clock-names        : must contain an "lp" entry, matching entries in the
->> +               clocks property.
->> +
->> +Unicam supports a single port node. It should contain one 'port' child node
->> +with child 'endpoint' node. Please refer to the bindings defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +Within the endpoint node the "remote-endpoint" and "data-lanes" properties
->> +are mandatory.
->> +Data lane reordering is not supported so the data lanes must be in order,
->> +starting at 1. The number of data lanes should represent the number of
->> +usable lanes for the hardware block. That may be limited by either the SoC or
->> +how the platform presents the interface, and the lower value must be used.
->> +
->> +Lane reordering is not supported on the clock lane either, so the optional
->> +property "clock-lane" will implicitly be <0>.
->> +Similarly lane inversion is not supported, therefore "lane-polarities" will
->> +implicitly be <0 0 0 0 0>.
->> +Neither of these values will be checked.
->> +
->> +Example:
->> +     csi1: csi1@7e801000 {
->> +             compatible = "brcm,bcm2835-unicam";
->> +             reg = <0x7e801000 0x800>,
->> +                   <0x7e802004 0x4>;
+>>       err = device_property_read_u32(dev, "pagesize", &val);
+>>       if (!err) {
+>>               chip->page_size = val;
+>> --
+>> 1.9.1
 >
-> sorry, i didn't noticed this before. I'm afraid this is using a small range of the CMI. Are there possible other users of this range? Does it make sense to handle this by a separate clock driver?
 
-CMI (Clock Manager Image) consists of a total of 4 registers.
-0x7e802000 is CMI_CAM0, with only bits 0-5 used for gating and
-inversion of the clock and data lanes (2 data lanes available on
-CAM0).
-0x7e802004 is CMI_CAM1, with only bits 0-9 used for gating and
-inversion of the clock and data lanes (4 data lanes available on
-CAM1).
-0x7e802008 is CMI_CAMTEST which I have no documentation or drivers for.
-0x7e802010 is CMI_USBCTL. Only bit 6 is documented and is a reset. The
-default value is the required value. Nothing touches it that I can
-find.
 
-The range listed only covers the one register associated with that
-Unicam instance, so no other users. The other two aren't touched.
-Do 16 active register bits solely for camera clock gating really
-warrant a full clock driver?
 
-  Dave
+-- 
+With Best Regards,
+Andy Shevchenko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
