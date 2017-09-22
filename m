@@ -1,24 +1,23 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6sx: add vining-2000 board support
-Date: Fri, 22 Sep 2017 13:32:10 +0800
-Message-ID: <20170922053208.GC26358@dragon>
-References: <1504195599.1918.17.camel@googlemail.com>
- <CAOMZO5BSvyJCSGVF_7EOqia=ufX77JTkQwDCeey8kEaqDB_PBA@mail.gmail.com>
- <1504431311.1939.11.camel@googlemail.com>
+Subject: Re: [PATCH] arm64: dts: ls: Add optee node
+Date: Fri, 22 Sep 2017 13:42:52 +0800
+Message-ID: <20170922054251.GD26358@dragon>
+References: <1504913608-21804-1-git-send-email-sumit.garg@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1504431311.1939.11.camel-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1504913608-21804-1-git-send-email-sumit.garg-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Sumit Garg <sumit.garg-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sahil.malhotra-3arQi8VN3Tc@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, pankaj.gupta-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arun.pathak-3arQi8VN3Tc@public.gmane.org, jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ruchika.gupta-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 03, 2017 at 11:35:11AM +0200, Christoph Fritz wrote:
-> Add initial imx6sx-softing-vining-2000 board support.
+On Sat, Sep 09, 2017 at 05:03:28AM +0530, Sumit Garg wrote:
+> Add optee device tree node on ls1012a, ls1043a, ls1046a, ls1088a
+> and ls208xa.
 > 
-> Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Sumit Garg <sumit.garg-3arQi8VN3Tc@public.gmane.org>
 
 Applied, thanks.
 --
