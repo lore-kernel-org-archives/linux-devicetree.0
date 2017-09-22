@@ -1,32 +1,28 @@
-From: Chaotian Jing <chaotian.jing@mediatek.com>
-Subject: Re: [PATCH v2] mmc: dt-bindings: Add reg/source_cg/latch-ck for
- Mediatek MMC bindings
-Date: Fri, 22 Sep 2017 19:59:08 +0800
-Message-ID: <1506081548.28930.1.camel@mhfsdcap03>
-References: <1505958774-14410-1-git-send-email-chaotian.jing@mediatek.com>
-         <CACRpkdaco5XnWK-gAdGLWFZtjqnM16iT424ist5Zmd3RyAXAEQ@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device
+ Tree bindings
+Date: Fri, 22 Sep 2017 15:01:06 +0300
+Message-ID: <20170922120106.mfxoh34anazqakvz@valkosipuli.retiisi.org.uk>
+References: <20170922114703.30511-1-maxime.ripard@free-electrons.com>
+ <20170922114703.30511-2-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaco5XnWK-gAdGLWFZtjqnM16iT424ist5Zmd3RyAXAEQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170922114703.30511-2-maxime.ripard@free-electrons.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-09-22 at 13:25 +0200, Linus Walleij wrote:
-> On Thu, Sep 21, 2017 at 3:52 AM, Chaotian Jing
-> <chaotian.jing@mediatek.com> wrote:
-> 
-> > +- mediatek,latch-ck: Some projects do not support enhance_rx, need set correct latch-ck to avoid data crc
-> > +                    error caused by stop clock(fifo full)
-> 
-> I think I wrote elsewhere: replace "projects" with "systems" or "SoCs".
+On Fri, Sep 22, 2017 at 01:47:02PM +0200, Maxime Ripard wrote:
+> The Cadence MIPI-CSI2 RX controller is a CSI2 bridge that supports up to 4
 
-Sorry about that, will change to SoCs at v3.
-> 
-> Yours,
-> Linus Walleij
+Should this be TX?
 
+I was just thinking what does this chip do, and saw both. RX it at least
+less common. :-)
 
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
