@@ -1,32 +1,33 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 1/3] crypto: engine - permit to enqueue aead_request
-Date: Fri, 22 Sep 2017 17:09:21 +0800
-Message-ID: <20170922090921.GA15677@gondor.apana.org.au>
-References: <1503047946-27799-1-git-send-email-fabien.dessenne@st.com>
- <1503047946-27799-2-git-send-email-fabien.dessenne@st.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] ARM: dts: rockchip: add Utgard Mali nodes for some socs
+Date: Fri, 22 Sep 2017 11:23:27 +0200
+Message-ID: <3670729.UWqOD6MBPG@phil>
+References: <20170915091812.13368-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1503047946-27799-2-git-send-email-fabien.dessenne@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Dessenne <fabien.dessenne@st.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Lionel Debieve <lionel.debieve@st.com>, Ludovic Barre <ludovic.barre@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915091812.13368-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 18, 2017 at 11:19:04AM +0200, Fabien Dessenne wrote:
-> The current crypto engine allows ablkcipher_request and ahash_request to
-> be enqueued. Extend this to aead_request.
+Am Freitag, 15. September 2017, 11:18:04 CEST schrieb Heiko Stuebner:
+> This adds a mali-supply similar to the Midgard binding, the
+> compatibles for 3 Rockchip socs and the nodes for these.
 > 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> The rk3036 and rk3188 gpus were tested, on the boards that
+> get their gpus enabled, using the current Lima resurrection
+> project and were able to probe the gpus sucessfully and draw
+> a nice red-triangle in an off-screen application.
+> 
+> The only special thing Rockchip Malis do, is that all MMUs have
+> a shared interrupt and all PPs also have a shared interrupt, but
+> that works out well with the current binding.
 
-I'd like to see the crypto_engine interface cleaned up a little
-before we expand it further.  Please refer to
-
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1474434.html
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+applied all 8 for 4.15 with Rob's Acks for the binding changes.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
